@@ -1,37 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl
- and gpio bindings
-Date: Fri, 8 Apr 2016 13:16:01 +0200
-Message-ID: <CACRpkda75E+B=vsgouks4ei=jc=Q-Uj1fzQnhGR4sVJBOkMBnQ@mail.gmail.com>
-References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-	<1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
-	<20160325144834.GA27177@rob-hp-laptop>
-	<CACRpkdbem5a_aLTHErp0ZvanwvVPbGnDiWxM5e7iX_FdHtXprQ@mail.gmail.com>
-	<CAL_JsqLsKEb+dWLg9VD3p=kjgEV84_r8z89p0QgMJWKqjrGNpw@mail.gmail.com>
-	<56FE8602.8020405@baylibre.com>
-	<CAL_JsqJS31gNS-dYXQvkLHb=qsVz4Vccztufnd08yfD+p52v_w@mail.gmail.com>
-	<56FE984C.10807@baylibre.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] PM / Domains: Define DT bindings for PM QoS device latencies
+Date: Fri, 8 Apr 2016 13:19:36 +0200
+Message-ID: <CAPDyKFrdbxuT9kh-j1_RDjCovq80=g_q4USzYxPQgPch1sm08A@mail.gmail.com>
+References: <1459432226-22562-1-git-send-email-ulf.hansson@linaro.org>
+	<20160401184429.GA18950@rob-hp-laptop>
+	<CAPDyKFombK0Kv-r40xbTm=Y3q07bM5woOPB63xzbrck37Vxrqw@mail.gmail.com>
+	<20160407175704.GA32257@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56FE984C.10807@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160407175704.GA32257@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lina Iyer <lina.iyer@linaro.org>, Axel Haslam <ahaslam@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Jon Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 1, 2016 at 5:48 PM, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> On 04/01/2016 05:19 PM, Rob Herring wrote:
->> On Fri, Apr 1, 2016 at 9:30 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>
->>> What should I use ?
+[...]
+
+>> >
+>> > Shouldn't this be split into latency of the domain (and in the domain's
+>> > node) and latency of the device?
 >>
->> Maybe gpio-ranges as you asked. Not really sure as I haven't used it.
+>> Yes! $Subject patch only takes device latencies into account.
+>>
+>> Perhaps what you mean is that we should document device PM QoS
+>> latencies in another place than
+>> Documentation/devicetree/bindings/power/power_domain.txt as well?
 >
-> If I use gpio-ranges I can get rid of gpio-bank and ngpios properties.
+> Yes, the location is confusing that this is device latency which has
+> nothing to do with power domains other than the fact we've lost all
+> state (which a reset could cause too).
 
-I'm not super-happy about that but I see that it can be used
-this way... hm.
+Okay, will a new file,
+Documentation/devicetree/bindings/power/device_qos.txt make sense for
+you?
 
-Yours,
-Linus Walleij
+>
+>> Regarding bindings for the domain latencies, I will post that as a
+>> separate patch soonish.
+>
+> It probably makes sense to look at latency bindings as a whole series.
+
+Well, unless you insist, I would rather look at this first.
+
+The domain latencies might be a bit more complex and those shouldn't
+affect how we describe device latencies, or you think so?
+
+Kind regards
+Uffe
