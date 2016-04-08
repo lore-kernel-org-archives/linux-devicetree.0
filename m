@@ -1,97 +1,53 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v16 1/6] efi: ARM/arm64: ignore DT memory nodes instead of removing them
-Date: Fri,  8 Apr 2016 15:50:23 -0700
-Message-ID: <1460155828-8690-2-git-send-email-ddaney.cavm@gmail.com>
-References: <1460155828-8690-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460155828-8690-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
+Date: Fri, 8 Apr 2016 18:01:08 -0500
+Message-ID: <57083834.2060102@codeaurora.org>
+References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
+ <20151231231039.GA8886@rob-hp-laptop> <56ABADEA.40801@codeaurora.org>
+ <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
+ <5706B4EF.2050600@codeaurora.org> <20160407201009.GA16136@lunn.ch>
+ <5706D493.8020700@codeaurora.org> <20160408005317.GA28125@lunn.ch>
+ <5708013F.90207@codeaurora.org>
+ <CAOCOHw5R=PnkafRqx2eGKKm10eLgD4H3u7TjbbhdZMbqVR7LrA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAOCOHw5R=PnkafRqx2eGKKm10eLgD4H3u7TjbbhdZMbqVR7LrA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Gilad Avidov <gavidov@codeaurora.org>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, shankerd@codeaurora.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, vikrams@codeaurora.org, Christopher Covington <cov@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Bjorn Andersson wrote:
 
-There are two problems with the UEFI stub DT memory node removal
-routine:
-- it deletes nodes as it traverses the tree, which happens to work
-  but is not supported, as deletion invalidates the node iterator;
-- deleting memory nodes entirely may discard annotations in the form
-  of additional properties on the nodes.
+> It sounds like you're trying to say that the pins used can be are
+> muxed as GPIO or MDIO, in the TLMM.
 
-Since the discovery of DT memory nodes occurs strictly before the
-UEFI init sequence, we can simply clear the memblock memory table
-before parsing the UEFI memory map. This way, it is no longer
-necessary to remove the nodes, so we can remove that logic from the
-stub as well.
+I'm not 100% sure, but I think that's correct.  If you don't want to 
+have normal networking, you could connect those external pins to some 
+GPIO device (like an LED or whatever), and then configure the pin muxing 
+for GPIO purposes.  But if that's true, it's only true on the FSM9900. 
+On the QDF2432, those lines are not connected to the TLMM.  They are 
+instead hard-wired to the Emac.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
----
- drivers/firmware/efi/arm-init.c    |  8 ++++++++
- drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
- 2 files changed, 9 insertions(+), 23 deletions(-)
+> In the downstream kernel this is often seen with the drivers calling
+> gpio_request() to "reserve" said pins, but all you should do is
+> described the desired configuration and muxing in the pinctrl node,
+> reference that from your driver and simply ignore the fact that those
+> pins could have been used as GPIO pins.
 
-diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-index aa1f743..5d6945b 100644
---- a/drivers/firmware/efi/arm-init.c
-+++ b/drivers/firmware/efi/arm-init.c
-@@ -143,6 +143,14 @@ static __init void reserve_regions(void)
- 	if (efi_enabled(EFI_DBG))
- 		pr_info("Processing EFI memory map:\n");
- 
-+	/*
-+	 * Discard memblocks discovered so far: if there are any at this
-+	 * point, they originate from memory nodes in the DT, and UEFI
-+	 * uses its own memory map instead.
-+	 */
-+	memblock_dump_all();
-+	memblock_remove(0, ULLONG_MAX);
-+
- 	for_each_efi_memory_desc(&memmap, md) {
- 		paddr = md->phys_addr;
- 		npages = md->num_pages;
-diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-index 6dba78a..e58abfa 100644
---- a/drivers/firmware/efi/libstub/fdt.c
-+++ b/drivers/firmware/efi/libstub/fdt.c
-@@ -24,7 +24,7 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
- 			unsigned long map_size, unsigned long desc_size,
- 			u32 desc_ver)
- {
--	int node, prev, num_rsv;
-+	int node, num_rsv;
- 	int status;
- 	u32 fdt_val32;
- 	u64 fdt_val64;
-@@ -54,28 +54,6 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
- 		goto fdt_set_fail;
- 
- 	/*
--	 * Delete any memory nodes present. We must delete nodes which
--	 * early_init_dt_scan_memory may try to use.
--	 */
--	prev = 0;
--	for (;;) {
--		const char *type;
--		int len;
--
--		node = fdt_next_node(fdt, prev, NULL);
--		if (node < 0)
--			break;
--
--		type = fdt_getprop(fdt, node, "device_type", &len);
--		if (type && strncmp(type, "memory", len) == 0) {
--			fdt_del_node(fdt, node);
--			continue;
--		}
--
--		prev = node;
--	}
--
--	/*
- 	 * Delete all memory reserve map entries. When booting via UEFI,
- 	 * kernel will use the UEFI memory map to find reserved regions.
- 	 */
+That makes sense, but I think the driver already does that.
+
+https://patchwork.ozlabs.org/patch/561667/
+
+Function emac_probe_resources() has a call to of_get_named_gpio().  And 
+then emac_mac_up() calls gpio_request().  As far as I can tell, that's it.
+
+I'm guessing that the of_get_named_gpio() call needs to be changed 
+somehow, but I'm not sure how.
+
 -- 
-1.8.3.1
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
