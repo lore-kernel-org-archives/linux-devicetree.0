@@ -1,67 +1,127 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
-Date: Fri, 8 Apr 2016 14:06:39 -0500
-Message-ID: <5708013F.90207@codeaurora.org>
-References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
- <20151231231039.GA8886@rob-hp-laptop> <56ABADEA.40801@codeaurora.org>
- <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
- <5706B4EF.2050600@codeaurora.org> <20160407201009.GA16136@lunn.ch>
- <5706D493.8020700@codeaurora.org> <20160408005317.GA28125@lunn.ch>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Fri, 8 Apr 2016 14:11:42 -0500
+Message-ID: <20160408191142.GD15034@localhost>
+References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160408005317.GA28125@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh@kernel.org>, Gilad Avidov <gavidov@codeaurora.org>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, shankerd@codeaurora.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, vikrams@codeaurora.org, Christopher Covington <cov@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460131994-24493-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Andrew Lunn wrote:
+Hi Thierry,
 
-> There are two different things here. One is configuring the pin to be
-> a GPIO. The second is using the GPIO as a GPIO. In this case,
-> bit-banging the MDIO bus.
->
-> The firmware could be doing the configuration, setting the pin as a
-> GPIO. However, the firmware cannot be doing the MDIO bit-banging to
-> make an MDIO bus available. Linux has to do that.
->
-> Or it could be we have all completely misunderstood the hardware, and
-> we are not doing bit-banging GPIO MDIO. There is a real MDIO
-> controller there, we don't use these pins as GPIOs, etc....
+I have a couple more questions, probably just because I'm
+DT-illiterate.
 
-Actually, I think there is a misunderstanding.
+On Fri, Apr 08, 2016 at 06:13:13PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Changes to the pad controller device tree binding have required that
+> each lane be associated with a separate PHY. Update the PCI host bridge
+> device tree binding to allow each root port to define the list of PHYs
+> required to drive the lanes associated with it.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v4:
+> - add additional lanes subnode when dereferencing PHYs from the XUSB pad
+>   controller to reflect changes in its binding
+> 
+>  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt    | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> index 75321ae23c08..f5364084b494 100644
+> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> @@ -60,11 +60,14 @@ Required properties:
+>    - afi
+>    - pcie_x
+>  
+> -Required properties on Tegra124 and later:
+> +Required properties on Tegra124 and later (deprecated):
+>  - phys: Must contain an entry for each entry in phy-names.
+>  - phy-names: Must include the following entries:
+>    - pcie
+>  
+> +These properties are deprecated in favour of per-lane PHYs define in each of
+> +the root ports (see below).
+> +
+>  Power supplies for Tegra20:
+>  - avdd-pex-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
+>  - vdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
+> @@ -122,6 +125,13 @@ Required properties:
+>    - Root port 0 uses 4 lanes, root port 1 is unused.
+>    - Both root ports use 2 lanes.
+>  
+> +Required properties for Tegra124 and later:
 
-On the FSM9900 SOC (which uses device-tree), the two pins that connect 
-to the external PHY are gpio pins.  However, the driver needs to 
-reprogram the pinmux so that those pins are wired to the Emac 
-controller.  That's what the the gpio code in this driver is doing: it's 
-just configuring the pins so that they connect directly between the Emac 
-and the external PHY.  After that, they are no longer GPIO pins, and you 
-cannot use the "GPIO controlled MDIO bus".  There is no MDIO controller 
-on the SOC.  The external PHY is controlled directly from the Emac and 
-also from the internal PHY.  It is screwy, I know, but that's what Gilad 
-was trying to explain.
+I had a little trouble disambiguating this from the "Required
+properties on Tegra124 and later (deprecated)" line above.  It might
+help if they said:
 
-On the QDF2432 (which uses ACPI), those two wires are now dedicated. 
-There are not muxed GPIOs any more -- they are hard wired between Emac 
-and the external PHY.
+  Required PCIe controller properties on Tegra124 and later (deprecated):
+  Required PCIe Root Port properties for Tegra124 and later:
 
-In both cases, you need to use Emac registers to communicate with the 
-external PHY.  Stuff like link detect and link speed are configured by 
-programming the Emac and/or the internal phy.
+I'm not sure how to interpret the "deprecated" part.  Assume I'm
+writing a DTS.  What am I supposed to include?
 
-And the internal phy isn't really an internal phy.  It's an SGMII-like 
-device that's connected to the Emac and handles various phy-related 
-tasks.  It has its own register block, but you still have to program it 
-in concert with the Emac.  You can't really treat it separately.
+  - "phys" and "phy-names" under the PCIe controller *and*
+    "phys" and "phy-names" under the Root Port?
 
-So I'm beginning to believe that Gilad's driver is actually correct 
-as-is.  There are a few minor bug fixes, but in general it's correct.  I 
-would like to post a V4 soon that has those minor fixes.
+  - "phys" and "phy-names" under the PCIe controller only if I don't
+    supply "phys" and "phy-names" under the Root Port?
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+My guess is that a board with more than one PHY for PCIe should omit
+"phys" and "phy-names" under the PCIe controller and include them
+under each Root Port.  And a board with only one PHY could conceivably
+supply these properties either under the controller or the Root Port
+or both.
+
+> +- phys: Must contain an phandle to a PHY for each entry in phy-names.
+> +- phy-names: Must include an entry for each active lane. Note that the number
+> +  of entries does not have to (though usually will) be equal to the specified
+> +  number of lanes in the nvidia,num-lanes property. Entries are of the form
+> +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num-lanes.
+> +
+>  Example:
+>  
+>  SoC DTSI:
+> @@ -169,6 +179,9 @@ SoC DTSI:
+>  			ranges;
+>  
+>  			nvidia,num-lanes = <2>;
+> +
+> +			phys = <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-4}>;
+> +			phy-names = "pcie-0";
+
+I'm also a little confused here because it looks like this root port
+supports two lanes, but there's only one entry in phy-names.  I
+thought you needed one entry for each lane.
+
+>  		};
+>  
+>  		pci@2,0 {
+> @@ -183,6 +196,9 @@ SoC DTSI:
+>  			ranges;
+>  
+>  			nvidia,num-lanes = <2>;
+> +
+> +			phys = <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-2}>;
+> +			phy-names = "pcie-0";
+>  		};
+>  	};
+>  
+> -- 
+> 2.8.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
