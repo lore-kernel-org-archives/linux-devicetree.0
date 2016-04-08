@@ -1,58 +1,48 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [RESEND PATCH v9] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Fri, 08 Apr 2016 12:04:15 +0200
-Message-ID: <5707821F.4020300@denx.de>
-References: <1458979861-3619-1-git-send-email-xuejiancheng@huawei.com> <56F73BC9.5000300@gmail.com> <56F8F630.5050008@huawei.com> <20160404064418.GC13995@localhost> <5705C17F.9030904@huawei.com> <5705C5E2.6070206@denx.de> <57076B26.7030700@huawei.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] rtc: omap: Support ext_wakeup configuration
+Date: Fri, 8 Apr 2016 13:40:09 +0300
+Message-ID: <57078A89.3080809@ti.com>
+References: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
+ <20160404224046.GA17042@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57076B26.7030700@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org, robh+dt@kernel.org, dwmw2@infradead.org, boris.brezillon@free-electrons.com, juhosg@openwrt.org, furquan@google.com, suwenping@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, raojun@hisilicon.com, xuejiancheng@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, yanghongwei@hisilicon.com, zhangzhenxing@hisilicon.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160404224046.GA17042-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2016 10:26 AM, Jiancheng Xue wrote:
+Hi Tony,
+
+On 04/05/2016 01:40 AM, Tony Lindgren wrote:
 > Hi,
 > 
-> On 2016/4/7 10:28, Marek Vasut wrote:
->> On 04/07/2016 04:10 AM, Jiancheng Xue wrote:
->>> Hi Brian,
->>>    Thank you very much for your comments. I'll fix these issues in next version.
->>> In addition, for easy understanding I'd like to rewrite hisi_spi_nor_write and
->>> hisi_spi_nor_read. Your comments on these modifications will be highly appreciated.
->>
->> Would you please stop top-posting ? It rubs some people the wrong way.
->>
-> I feel very sorry about that. I have read the etiquette and won't make the same mistake again.
+> * Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> [160404 08:57]:
+>> Support configuration of ext_wakeup sources. This patch makes it
+>> possible to enable ext_wakeup and set it's polarity, depending on board
+>> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
+>> notify about power-button presses. Handling power-button presses enables
+>> to recover from RTC-only power states correctly.
 > 
->>> static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
->>> 		size_t *retlen, u_char *read_buf)
->>> {
->>> 	struct hifmc_priv *priv = nor->priv;
->>> 	struct hifmc_host *host = priv->host;
->>> 	int i;
->>>
->>> 	/* read all bytes in only one time */
->>> 	if (len <= HIFMC_DMA_MAX_LEN) {
->>> 		hisi_spi_nor_dma_transfer(nor, from, host->dma_buffer,
->>> 				len, FMC_OP_READ);
->>> 		memcpy(read_buf, host->buffer, len);
->>
->> Is all the ad-hoc memcpying necessary? I think you can use
->> dma_map_single() and co to obtain DMAble memory for your
->> controller's use and then you can probably get rid of most
->> of this stuff.
->>
-> Considering read_buf >= high_mem case, I think it is also complicated to use dma_map_*
-> and the DMA buffer allocated by the driver is still needed. But I am not sure about
-> this. Please let me know if I am wrong. Thank you!
+> I suggest you just set this pin up as a minimal gpiochip. That way
+> we can use the standard binding :) And if we get lucky, this pin can
+> also trigger during runtime.
+> 
 
-Does your controller/DMA have a limitation where it's buffers must be in
-the bottom 4GiB range ? The DMA framework should be able to take care of
-such platform limitations.
+Following my comments on v2 of this patch I propose to rollback to
+this version of the patch.
 
-Best regards,
-Marek Vasut
+It seems doesn't fit in gpiochip, it's more likely irqchip, but since
+rtc can't generate IRQ there are nor reasons for these genetic
+experiments and RTC's specific bindings looks more suitable, at least for me.
+
+
+-- 
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
