@@ -1,45 +1,58 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio: dt-bindings: document the concept of GPIO banks
-Date: Fri, 8 Apr 2016 11:30:20 +0200
-Message-ID: <CACRpkdY02Skx4v80PjmAN_0U0KGHhEzVOKnu2GWjAsG61zoU_Q@mail.gmail.com>
-References: <1459415459-8107-1-git-send-email-linus.walleij@linaro.org>
-	<CAL_JsqK+n-EwHx52=d9-dTJaVsSOzRS+PAmyCYwe6HK=kDoyGQ@mail.gmail.com>
-	<56FD2689.1080707@atmel.com>
-	<CAL_JsqKzzoSOFY9b9jwOVa4EZdzzRDusOEtDuOwnB7Q3x6W=eQ@mail.gmail.com>
-	<56FD399A.8090600@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/9] drivers: irqchip: Add STM32 external interrupts support
+Date: Fri, 8 Apr 2016 11:38:40 +0200
+Message-ID: <CACRpkdaiE1cJM6uq_bQuRS2NJTwniPREBsgwuxEjRjB5yTfc9Q@mail.gmail.com>
+References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1459436979-17275-3-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56FD399A.8090600-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459436979-17275-3-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 4:52 PM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> On 03/31/2016 04:48 PM, Rob Herring wrote:
+On Thu, Mar 31, 2016 at 5:09 PM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
 
->>>> We generally avoid indexing blocks in DT.
->>
->> Which is a global number space that might not work in all cases. I
->> don't think gpio should be using aliases either. If you need to
->> describe the connections between nodes, then keep that between nodes.
->
-> Couldn't we use gpio-ranges ?
+> +static void stm32_irq_handler(struct irq_desc *desc)
+> +{
+> +       struct irq_domain *domain = irq_desc_get_handler_data(desc);
+> +       struct irq_chip_generic *gc = domain->gc->gc[0];
+> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       unsigned long pending;
+> +       int n;
+> +
+> +       chained_irq_enter(chip, desc);
+> +
+> +       pending = irq_reg_readl(gc, EXTI_PR);
+> +       for_each_set_bit(n, &pending, BITS_PER_LONG) {
+> +               generic_handle_irq(irq_find_mapping(domain, n));
+> +       }
+> +
+> +       chained_irq_exit(chip, desc);
+> +}
 
-GPIO ranges are normally for cross-referencing GPIO blocks to
-pin controllers but in essence, yes we *could*.
+Is this one of those cases where you should re-read the status register
+on every iteration, so as to avoid exiting and immediately re-entering
+the irq handler?
 
-But what people will do is to use that backwards to calculate
-the bank ID.
+C.g irq-vic.c:
 
-They would just get the GPIO base offset from the
-range and /32 to get the bank ID. All over the place...
-Also for GPIO controllers without pin control back-ends.
+static int handle_one_vic(struct vic_device *vic, struct pt_regs *regs)
+{
+        u32 stat, irq;
+        int handled = 0;
+
+        while ((stat = readl_relaxed(vic->base + VIC_IRQ_STATUS))) {
+                irq = ffs(stat) - 1;
+                handle_domain_irq(vic->domain, irq, regs);
+                handled = 1;
+        }
+
+        return handled;
+}
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
