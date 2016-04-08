@@ -1,75 +1,82 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3] Input: rotary_encoder - support binary encoding of
- states
-Date: Fri, 8 Apr 2016 08:40:58 +0200
-Message-ID: <20160408064058.GC10108@pengutronix.de>
-References: <1460055528-13814-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CAL_JsqLfQQu69LcsFuJkKmjppp047vW5Ga+y5XiDAAG-Weh6ug@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Revert "ARM: dts: porter: Enable SCIF_CLK frequency and
+ pins"
+Date: Fri, 8 Apr 2016 15:58:44 +0900
+Message-ID: <20160408065844.GA27209@verge.net.au>
+References: <1459971126-26622-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLfQQu69LcsFuJkKmjppp047vW5Ga+y5XiDAAG-Weh6ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459971126-26622-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+On Wed, Apr 06, 2016 at 09:32:06PM +0200, Sjoerd Simons wrote:
+> This reverts commit 19417bd9c5112f58ea63e97ba72edabd5e1cc0fe as
+> according to
+> http://elinux.org/File:R-CarM2-KOELSCH_PORTER-B_PORTER_C_Comparison.pdf
+> the external oscilator for SCIF_CLK is not mounted on the porter boards.
+> 
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 
-On Thu, Apr 07, 2016 at 05:45:00PM -0500, Rob Herring wrote:
-> On Thu, Apr 7, 2016 at 1:58 PM, Uwe Kleine-K=F6nig
-> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > It's not advisable to use this encoding, but to support existing de=
-vices
-> > add support for this to the driver.
-> >
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
->=20
-> Ack for the binding, but...
+Thanks, I will queue up the following as a fix for v4.6 based
+on v4.6-rc1.
 
-Thanks. Actually I already had your ack for v2 and only dropped it to
-make you look over the patch again :-)
-=20
-> > @@ -213,6 +222,17 @@ static int rotary_encoder_probe(struct platfor=
-m_device *pdev)
-> >         encoder->rollover =3D
-> >                 device_property_read_bool(dev, "rotary-encoder,roll=
-over");
-> >
-> > +       err =3D device_property_read_string(dev, "rotary-encoder,en=
-coding",
-> > +                                         &encoding);
-> > +       if (!err && !strcmp(encoding, "binary")) {
-> > +               encoder->encoding =3D ROTENC_BINARY;
-> > +       } else if (err || !strcmp(encoding, "gray")) {
-> > +               encoder->encoding =3D ROTENC_GRAY;
-> > +       } else {
-> > +               dev_err(dev, "unknown encoding setting");
-> > +               return -EINVAL;
->=20
-> device_property_match_string() here instead.
+>From e885767418bff0c591cc1e45babdd25d91b4a795 Mon Sep 17 00:00:00 2001
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Date: Wed, 6 Apr 2016 21:32:06 +0200
+Subject: [PATCH] Revert "ARM: dts: porter: Enable SCIF_CLK frequency and pins"
 
-With the added downside that the property is parsed at least twice from
-dt, right? This is not a hot path, but still I wonder if it simplyfies
-the driver code enough to be worth the effort?
+This reverts commit 19417bd9c511 ("ARM: dts: porter: Enable SCIF_CLK
+frequency and pins") as according to
+http://elinux.org/File:R-CarM2-KOELSCH_PORTER-B_PORTER_C_Comparison.pdf
+the external oscillator for SCIF_CLK is not mounted on the porter boards.
 
-Also this seems to have a different semantic and allows the property to
-be an array.
+Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ arch/arm/boot/dts/r8a7791-porter.dts | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a7791-porter.dts
+index 6c08314427d6..329a9dcc88e9 100644
+--- a/arch/arm/boot/dts/r8a7791-porter.dts
++++ b/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -143,19 +143,11 @@
+ };
+ 
+ &pfc {
+-	pinctrl-0 = <&scif_clk_pins>;
+-	pinctrl-names = "default";
+-
+ 	scif0_pins: serial0 {
+ 		renesas,groups = "scif0_data_d";
+ 		renesas,function = "scif0";
+ 	};
+ 
+-	scif_clk_pins: scif_clk {
+-		renesas,groups = "scif_clk";
+-		renesas,function = "scif_clk";
+-	};
+-
+ 	ether_pins: ether {
+ 		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
+ 		renesas,function = "eth";
+@@ -229,11 +221,6 @@
+ 	status = "okay";
+ };
+ 
+-&scif_clk {
+-	clock-frequency = <14745600>;
+-	status = "okay";
+-};
+-
+ &ether {
+ 	pinctrl-0 = <&ether_pins &phy1_pins>;
+ 	pinctrl-names = "default";
+-- 
+2.1.4
