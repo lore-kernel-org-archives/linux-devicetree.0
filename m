@@ -1,50 +1,121 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
-Date: Fri, 8 Apr 2016 02:53:17 +0200
-Message-ID: <20160408005317.GA28125@lunn.ch>
-References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
- <20151231231039.GA8886@rob-hp-laptop>
- <56ABADEA.40801@codeaurora.org>
- <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
- <5706B4EF.2050600@codeaurora.org>
- <20160407201009.GA16136@lunn.ch>
- <5706D493.8020700@codeaurora.org>
+From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] hwrng: hisi: Add support for Hisilicon SoC RNG
+Date: Fri, 8 Apr 2016 10:03:14 +0800
+Message-ID: <57071162.908@huawei.com>
+References: <1460017397-30996-1-git-send-email-wangkefeng.wang@huawei.com>
+ <1460017397-30996-3-git-send-email-wangkefeng.wang@huawei.com>
+ <CANLsYkwRGm3oBWaoKki4Ge3A_-temOsdJcwby6ds_X5_XGYZtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5706D493.8020700@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Gilad Avidov <gavidov@codeaurora.org>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, shankerd@codeaurora.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, vikrams@codeaurora.org, Christopher Covington <cov@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANLsYkwRGm3oBWaoKki4Ge3A_-temOsdJcwby6ds_X5_XGYZtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 07, 2016 at 04:43:47PM -0500, Timur Tabi wrote:
-> On my platform, firmware (UEFI) configures all of the GPIOs.  I need
-> to get confirmation, but it appears that we don't actually make any
-> GPIO calls at all.  I see code that looks like this:
+
+
+On 2016/4/7 22:55, Mathieu Poirier wrote:
+> On 7 April 2016 at 02:23, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>> This adds the Hisilicon Random Number Generator(RNG) support,
+>> which is found in Hip04 and Hip05 soc.
+>>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  drivers/char/hw_random/Kconfig    |  13 ++++
+>>  drivers/char/hw_random/Makefile   |   1 +
+>>  drivers/char/hw_random/hisi-rng.c | 121 ++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 135 insertions(+)
+>>  create mode 100644 drivers/char/hw_random/hisi-rng.c
+[...]
+>> +
+>> +#define RNG_SEED       0x0
+>> +#define RNG_CTRL       0x4
+>> +  #define RNG_SEED_SEL BIT(2)
+>> +  #define RNG_RING_EN  BIT(1)
+>> +  #define RNG_EN       BIT(0)
+>> +#define RNG_RAN_NUM    0x10
+>> +#define RNG_PHY_SEED   0x14
+>> +#define RNG_RELOAD_ERR 0x84
+>> +
+>> +#define to_hisi_rng(p) container_of(p, struct hisi_rng, rng)
+>> +
+>> +static int seed_sel;
+>> +module_param(seed_sel, int, S_IRUGO);
+>> +MODULE_PARM_DESC(seed_sel, "Auto reload seed. 0, use LFSR(default); 1, use ring oscillator.");
+>> +
+>> +struct hisi_rng {
+>> +       void __iomem *base;
+>> +       struct hwrng rng;
+>> +};
+>> +
+>> +static int hisi_rng_init(struct hwrng *rng)
+>> +{
+>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
+>> +       int val = RNG_EN;
+>> +       u32 seed;
+>> +
+>> +       /* get a random number as initial seed */
+>> +       get_random_bytes(&seed, sizeof(seed));
+>> +
+>> +       writel_relaxed(seed, hrng->base + RNG_SEED);
+>> +
+>> +       if (seed_sel == 1)
+>> +               val |= RNG_RING_EN | RNG_SEED_SEL;
 > 
-> 	for (i = 0; (!adpt->no_mdio_gpio) && i < EMAC_NUM_GPIO; i++) {
-> 		gpio_info = &adpt->gpio_info[i];
-> 		retval = of_get_named_gpio(node, gpio_info->name, 0);
-> 		if (retval < 0)
-> 			return retval;
+> Hello Kefeng,
 > 
-> And on our ACPI system, adpt->no_mdio_gpio is always true:
+> Please explain what this mode does.  Otherwise reviewers have to make
+> a guess based on the description of the module parameter.
+The seed is reload periodically, there are two choice of seeds, default using
+the val from LFSR, seed_sel = 1  will use the val generated by ring oscillator.
 > 
-> 	/* Assume GPIOs required for MDC/MDIO are enabled in firmware */
-> 	adpt->no_mdio_gpio = true;
+>> +
+>> +       writel_relaxed(val, hrng->base + RNG_CTRL);
+>> +       return 0;
+>> +}
+>> +
+>> +static void hisi_rng_cleanup(struct hwrng *rng)
+>> +{
+>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
+>> +
+>> +       writel_relaxed(0, hrng->base + RNG_CTRL);
+>> +}
+>> +
+>> +static int hisi_rng_read(struct hwrng *rng, void *buf, size_t max,
+>> +                          bool wait)
+> 
+> What are variable 'max' and 'wait' used for?  As far as I can tell
+> they can be removed.
+Ok, will use data_read callback in struct hwrng.
 
-There are two different things here. One is configuring the pin to be
-a GPIO. The second is using the GPIO as a GPIO. In this case,
-bit-banging the MDIO bus.
+> 
+>> +{
+>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
+>> +       u32 *data = buf;
+>> +
+>> +       *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
+>> +       return 4;
+> 
+> Why not simply doing the readl_relaxed() in the the code rather than
+> introducing a new function?
+Not clear, your mean introduce the data variable?
+Will use following data_read, thanks.
 
-The firmware could be doing the configuration, setting the pin as a
-GPIO. However, the firmware cannot be doing the MDIO bit-banging to
-make an MDIO bus available. Linux has to do that.
+static int hisi_rng_data_read(struct hwrng *rng, u32 *data)
+{
+       struct hisi_rng *hrng = to_hisi_rng(rng);
+       *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
+       return 4;
+}
 
-Or it could be we have all completely misunderstood the hardware, and
-we are not doing bit-banging GPIO MDIO. There is a real MDIO
-controller there, we don't use these pins as GPIOs, etc....
+Thanks,
+Kefeng
 
-	   Andrew
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
