@@ -1,109 +1,45 @@
-From: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional
- clocks
-Date: Fri, 8 Apr 2016 14:20:34 +0000
-Message-ID: <HK2PR0601MB13938CB5B56DDCF340FBAC37F5910@HK2PR0601MB1393.apcprd06.prod.outlook.com>
-References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
- <57059874.1070309@cogentembedded.com>
- <1460012450.13819.38.camel@collabora.co.uk>
- <5706B191.3060903@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4 2/3] ARM: i.MX25: add scc module to dtsi
+Date: Fri,  8 Apr 2016 16:31:00 +0200
+Message-ID: <1460125861-22876-2-git-send-email-s.trumtrar@pengutronix.de>
+References: <1460125861-22876-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5706B191.3060903-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1460125861-22876-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCk9uIDA3IEFwcmlsIDIwMTYgMjA6MTQsIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4g
-T24gMDQvMDcvMjAxNiAxMDowMCBBTSwgU2pvZXJkIFNpbW9ucyB3cm90ZToNCj4gDQo+ID4gSGV5
-IFNlcmdlaSwNCj4gPg0KPiA+IFRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQo+IA0KPiAgICAgWW91
-J3JlIHdlbGNvbWUuIDotKQ0KPiANCj4gPiBPbiBUaHUsIDIwMTYtMDQtMDcgYXQgMDI6MTUgKzAz
-MDAsIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4gPj4gT24gMDQvMDYvMjAxNiAwMzo1MiBQTSwg
-U2pvZXJkIFNpbW9ucyB3cm90ZToNCj4gPj4NCj4gPj4+DQo+ID4+PiBjbGtfZ2V0IG9uIGEgZGlz
-YWJsZWQgY2xvY2sgbm9kZSB3aWxsIHJldHVybiBFUFJPQkVfREVGRVIsIHdoaWNoDQo+ID4+PiBj
-YW4NCj4gPj4+IGNhdXNlIGRyaXZlcnMgdG8gYmUgZGVmZXJyZWQgZm9yZXZlciBpZiBzdWNoIGNs
-b2NrcyBhcmUgcmVmZXJlbmNlZA0KPiA+Pj4gaW4NCj4gPj4+IHRoZWlyIGNsb2NrcyBwcm9wZXJ0
-eS4NCj4gPj4+DQo+ID4+PiBVcGRhdGUgdGhlIHZhcmlvdXMgZGlzYWJsZWQgZXh0ZXJuYWwgY2xv
-Y2sgbm9kZXMgdG8gZGVmYXVsdCB0byBhDQo+ID4+PiBmcmVxdWVuY3kgb2YgMCwgYnV0IGRvbid0
-IGRpc2FibGUgdGhlbSB0byBwcmV2ZW50IHRoaXMuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1i
-eTogU2pvZXJkIFNpbW9ucyA8c2pvZXJkLnNpbW9uc0Bjb2xsYWJvcmEuY28udWs+DQo+ID4+Pg0K
-PiA+Pj4gLS0tDQo+ID4+Pg0KPiA+Pj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1rb2Vs
-c2NoLmR0cyB8IDEgKw0KPiA+Pj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1wb3J0ZXIu
-ZHRzICB8IDEgKw0KPiA+Pj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNpICAgICAg
-ICB8IDUgKy0tLS0NCj4gPj4+ICAgIDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCA0
-IGRlbGV0aW9ucygtKQ0KPiA+Pj4NCj4gPj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy9yOGE3NzkxLWtvZWxzY2guZHRzDQo+ID4+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEt
-a29lbHNjaC5kdHMNCj4gPj4+IGluZGV4IDFhZGY4NzcuLmRhNTljMjggMTAwNjQ0DQo+ID4+PiAt
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzDQo+ID4+PiArKysgYi9h
-cmNoL2FybS9ib290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzDQo+ID4+PiBAQCAtNjYwLDYgKzY2
-MCw3IEBADQo+ID4+PiAgICB9Ow0KPiA+Pj4NCj4gPj4+ICAgICZwY2llX2J1c19jbGsgew0KPiA+
-Pj4gKwljbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsNCj4gDQo+ID4+ICAgICAgSG1tbSwg
-bG9va2luZyBhdCB0aGUgS29lbHNjaCBzY2hlbWF0aWNzLCBJIGRvbid0IHNlZSB0aGlzIGNsb2Nr
-Lg0KPiA+PiA6LS8NCj4gPg0KPiA+IEkgZG9uJ3QgaGF2ZSB0aGUgc2NoZW1hdGljcyBzbyBpIHdh
-cyBzaW1wbHkga2VlcGluZyB0aGUgY3VycmVudCBzdGF0ZS4NCj4gDQo+ICAgICBJIHVuZGVyc3Rh
-bmQuIEkgd2FzIGp1c3Qgc3VycHJpc2VkIGJ5IHdoYXQgY2hlY2tpbmcgdGhlIGNvZGUgYWdhaW5z
-dCB0aGUNCj4gc2NoZW1hdGljcyByZXZlYWxlZC4NCj4gDQo+ID4gSSd2ZSBhZGRlZCBQaGlsIEVk
-d29ydGh5IHRvIHRoZSBsaXN0IGFzIGhlIHdhcyB0aGUgb25lIG9yaWdpbmFsbHkNCj4gDQo+ICAg
-ICBJIHNob3VsZCd2ZSBDQydlZCBQaGlsIG15c2VsZi4uLg0KPg0KPiA+IGVuYWJsZSB0aGUgYnVz
-IGNsayBmb3IgS29lbHNoIGFjY29yZGluZyB0byBnaXQuIEhvcGVmdWxseSBoZSBjYW4NCj4gPiBj
-bGFyaWZ5IDopDQo+IA0KPiAgICAgTGV0J3MgaG9wZSBoZSdkIHJlcGx5Li4uDQo+IA0KPiA+Pj4g
-ICAgCXN0YXR1cyA9ICJva2F5IjsNCj4gPj4+ICAgIH07DQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEtcG9ydGVyLmR0cw0KPiA+Pj4gYi9hcmNoL2Fy
-bS9ib290L2R0cy9yOGE3NzkxLXBvcnRlci5kdHMNCj4gPj4+IGluZGV4IDk1NTRkMTMuLjE5YjI1
-N2UgMTAwNjQ0DQo+ID4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLXBvcnRlci5k
-dHMNCj4gPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEtcG9ydGVyLmR0cw0KPiA+
-Pj4gQEAgLTQxMyw2ICs0MTMsNyBAQA0KPiA+Pj4gICAgfTsNCj4gPj4+DQo+ID4+PiAgICAmcGNp
-ZV9idXNfY2xrIHsNCj4gPj4+ICsJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMDAwMD47DQo+ID4+
-PiAgICAJc3RhdHVzID0gIm9rYXkiOw0KPiA+Pj4gICAgfTsNCj4gPj4+DQo+ID4+ICAgICAgQWdh
-aW4sIGxvb2tpbmcgYXQgdGhlIFBvcnRlciBzY2hlbWF0aWNzLCBJIGRvbid0IHNlZSB0aGlzIGNs
-b2NrDQo+ID4+IGVpdGhlci4gOi0vDQo+ID4NCj4gPiBZb3Ugd2VyZSB0aGUgb25lIGVuYWJsaW5n
-IHRoaXMgY2xvY2sgZm9yIFBvcnRlciA7KSBJIGRvbid0IGhhdmUgUENJRQ0KPiANCj4gICAgIFll
-cywgb2YgY291cnNlLiBJIGRvbid0IHJlbWVtYmVyIHRoZSBnb3J5IGRldGFpbHMgYWxyZWFkeSAt
-LSBJIG1pZ2h0IGhhdmUNCj4gYmxpbmRseSBjb3BpZWQgd2hhdCB3YXMgaW4gdGhlIEtvZWxzY2gn
-cyAuZHRzLg0KPiANCj4gPiBoYXJkd2FyZSB0byB0ZXN0IHdpdGggb24gbXkgcG9ydGVyIGJvYXJk
-LCBtaWdodCBiZSB3b3J0aCBpZiB5b3UgY291bGQNCj4gPiBkaXNhYmxlIHRoaXMgY2xvY2sgYW5k
-IHNlZSBpZiBQQ0ktRSBzdGlsbCBmdWNudGlvbnMgYXMgZXhwZWN0ZWQgKG1heWJlDQo+ID4gaW4g
-cHJhY3Rpc2UgaXQganVzdCBoYXBwZW5zIHRvIHByZWZlciB0aGUgaW50ZXJuYWwgY2xvY2s/KSA/
-DQo+IA0KPiAgICAgSSBrbm93IHRoZSBQQ0llIGRyaXZlciBkb2VzIHJlcXVpcmUgdGhpcyBjbG9j
-ayBpbiBvcmRlciB0byBmdW5jdGlvbiAtLSBpdA0KPiB3b3VsZCBiZSB0aGUgc2FtZSBldGVybmFs
-IC1FUFJPQkVfREVGRVIgY29uZGl0aW9uIHlvdSdkIGFscmVhZHkgZGVzY3JpYmVkOw0KPiBzZWUg
-ZHJpdmVycy9wY2kvaG9zdC9wY2llLXJjYXIuYyB5b3Vyc2VsZi4uLg0KPiANCj4gPj4+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLmR0c2kNCj4gPj4+IGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvcjhhNzc5MS5kdHNpDQo+ID4+PiBpbmRleCA4NjkzODg4Li42NzZkZjYzIDEwMDY0
-NA0KPiA+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNpDQo+ID4+PiArKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLmR0c2kNCj4gPj4+IEBAIC0xMTA0LDggKzExMDQs
-NyBAQA0KPiA+Pj4gICAgCQlwY2llX2J1c19jbGs6IHBjaWVfYnVzIHsNCj4gPj4+ICAgIAkJCWNv
-bXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+Pj4gICAgCQkJI2Nsb2NrLWNlbGxzID0gPDA+
-Ow0KPiA+Pj4gLQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwxMDAwMDAwMDA+Ow0KPiA+Pj4gLQkJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4+PiArCQkJY2xvY2stZnJlcXVlbmN5ID0gPDA+Ow0KPiA+
-PiAgICAgIElmIHRoZSBjbG9jayBoYXMgYSBnb29kIGRlZmF1bHQgZnJlcXVlbmN5LCBJIGRvbid0
-IHRoaW5rIHlvdSBuZWVkDQo+ID4+IHRvDQo+ID4+IHJlbW92ZSBpdC4gT3RoZXJ3aXNlIHlvdSBt
-aXNzZWQgVVNCX0VYVEFMIHdoaWNoIGlzIDQ4IE1IeiAoYW5kIGNhbiBiZQ0KPiA+PiBvdmVycmlk
-ZGVuKS4NCj4gPg0KPiA+IEkgZGlkIHRoYXQgYXMgaXQgd2FzIGJ5IGRlZmF1bHQgZGlzYWJsZWQs
-IHNvIGlmIGkgZG8gZW5hYmxlIGl0IGJ1dA0KPiA+IGRvbid0IGRyb3AgdGhlIGRlZmF1bHQgZnJl
-cXVlbmN5IHRvIDAgYm9hcmQgc3dpdGhvdXQgdGhhdCBjbG9jayB3aWxsDQo+ID4gc3VkZGVubHkg
-aGF2ZSBpdCBhZGRlZCB0byB0aGVpciBkdGIuDQo+IA0KPiAgICAgWmVybyBmcmVxdWVuY3kgaXMg
-aGFyZGx5IGFueSBiZXR0ZXIgdGhlbiB0aGUgZGVmYXVsdC4uLg0KPiANCj4gPiBGb3IgdGhlIHVz
-YiBleHRlcm5hbCBjbG9jayBJIGRpZG4ndCB0b3VjaCBpdCBhcyBpdCB3YXMgYWxyZWFkeSBlbmFi
-bGVkDQo+ID4gYnkgZGVmYXVsdCB3aXRoIGEgcHJvcGVyIGZyZXF1ZW5jeSwgc28gaXQgd291bGRu
-J3QgaGl0IHRoZSBpc3N1ZSBpIHdhcw0KPiA+IHRyeWluZyB0byBmaXggaGVyZS4gQnV0IGkgYWdy
-ZWUsIGJvdGggbG9va2luZyBhdCBvdGhlciBSZW5lc2FzIGR0c2lzDQo+ID4gYW5kIGhvdyBhbGwg
-b3RoZXIgZXh0ZXJuYWwgY2xvY2tzIGFyZSBkb25lIGluIHRoaXMgZHRzaSwgdGhpcyBub2RlIGlz
-DQo+ID4gb2RkLg0KPiANCj4gICAgIEl0J3Mgbm90IHRoYXQgb2RkIGdpdmVuIHRoYXQgdGhlIFIt
-Q2FyIGdlbjIgbWFudWFsIHNwZWNpZmljYWxseSBzYXlzIGl0DQo+IHNob3VsZCBiZSA0OCBNSHou
-DQo+ICAgICBMb29raW5nIGludG8gdGhlIG1hbnVhbCBhZ2FpbiwgdGhlIFBDSWUgYnVzIGNsb2Nr
-IG11c3QgYmUgdGhlIG9ubmUNCj4gcHJlc2VudGVkIG9uIHRoZSBDSUNSRUZbUE5dMV9TQVRBL1BD
-SWUgaW5wdXQgc2lnbmFscyBhbmQgaXQgaW5kZWVkIHNob3VsZCBiZQ0KPiAxMDAgTUh6Li4uIFNv
-IFBoaWwgd2FzIGNvcnJlY3QuDQoNClBDSWUgYWx3YXlzIHJlcXVpcmVzIGEgMTAwTUh6IHJlZmVy
-ZW5jZSBjbG9jay4gT24gS29lbHNjaCwgdGhpcyBjbG9jayBpcw0KZ2VuZXJhdGVkIGJ5IFU2IGFu
-ZCBhbHdheXMgb24uIFNvbWUgYm9hcmRzIG1heSBuZWVkIGFkZGl0aW9uYWwgaGFyZHdhcmUNCnRv
-IGJlIHNldHVwIGluIG9yZGVyIHRvIG91dHB1dCB0aGUgY2xvY2ssIGhlbmNlIHRoZSBEVCBub2Rl
-IGZvciB0aGUgY2xvY2suDQoNCkkgaG9wZSB0aGF0IGNsYXJpZmllcyB0aGUgc2l0dWF0aW9uIQ0K
-UGhpbA0KDQo=
+Add the Security Controller (SCC) module to the dtsi.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx25.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index 6b1f4bbe6ec6..af6af8741fe5 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -420,6 +420,15 @@
+ 				interrupts = <41>;
+ 			};
+ 
++			scc: crypto@53fac000 {
++				compatible = "fsl,imx25-scc";
++				reg = <0x53fac000 0x4000>;
++				clocks = <&clks 111>;
++				clock-names = "ipg";
++				interrupts = <49>, <50>;
++				interrupt-names = "scm", "smn";
++			};
++
+ 			esdhc1: esdhc@53fb4000 {
+ 				compatible = "fsl,imx25-esdhc";
+ 				reg = <0x53fb4000 0x4000>;
+-- 
+2.7.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
