@@ -1,74 +1,69 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v3 0/3] Add ANX7814 I2C bridge driver
-Date: Fri,  8 Apr 2016 14:52:49 +0200
-Message-ID: <1460119972-8658-1-git-send-email-enric.balletbo@collabora.com>
+From: Markus Reichl <m.reichl@fivetechno.de>
+Subject: Re: [PATCH 0/7] PM / devfreq: Add NoCP devfreq-event and support
+ busfreq on exyno5422-odroidxu3
+Date: Fri, 8 Apr 2016 14:55:35 +0200
+Message-ID: <5707AA47.7090506@fivetechno.de>
+References: <1460091646-28701-1-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460091646-28701-1-git-send-email-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: airlied@linux.ie, treding@nvidia.com, robh+dt@kernel.org, djkurtz@chromium.org, drinkcat@chromium.org, dan.carpenter@oracle.com
+To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
+Cc: rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Chanwoo,
 
-This is the third version of the patch, thanks to all that did some comments.
-Since I got some reviews and acks I'm wondering if would be possible to land
-these patches. Otherwise all reviews are welcome.
+I tested both sets on odroid XU4 and U3.
+Tested-by: Markus Reichl <m.reichl@fivetechno.de>
 
-I'm not sure if there is a drm bridge maintainer, I think Thierry Reding
-maintained this in the past but I'm not sure he's still maintaining the bridge
-drivers, so who is the most suitable person to pick up the patches if they are
-ok? Maybe Dave?
+Am 08.04.2016 um 07:00 schrieb Chanwoo Choi:
+> This patchset support the AMBA bus frequency scaling on Exynos5422-based
+> Odroid-XU3 board. But, this series only support the bus frequency scaling
+> for INT (Internal) block using VDD_INT power line.
+> 
+> Also, to support the bus frequency scaling for Exynos542x SoC,
+> Exynos542x SoC has the specific 'NoC (Network on Chip) Probe' device
+> to measure the transfered data traffic on NoC (Network on Chip)
+> instead of PPMU (Platform Performance Monitoring Unit). NoC Probe device
+> provide the utilization for INT block of Exynos542x SoC.
+> 
+> The generic exynos-bus frequency driver uses the 'NoC Probe' devfreq-event
+> device (drivers/devfreq/event/exynos-nocp.c) without any modification.
+> Just add the phandle of 'NoC Probe' dt node to bus dt node.
+> 
+> Depend on:
+> This patchset depends on patch[1] which support the generic exynos-bus
+> frequency driver.
+> 
+> [1] https://lkml.org/lkml/2016/4/8/14
+> - [PATCH v8 00/20] PM / devferq: Add generic exynos bus frequency driver and new passive governor
+> 
+> Chanwoo Choi (7):
+>   PM / devfreq: event: Add new Exynos NoC probe driver
+>   PM / devfreq: exynos: Add the detailed correlation for Exynos5422 bus
+>   ARM: dts: Add NoC Probe dt node for Exynos542x SoC
+>   dt-bindings: clock: Add the clock id for ACLK clock of Exynos542x SoC
+>   clk: samsung: exynos542x: Add the clock id for ACLK
+>   ARM: dts: Add bus nodes using VDD_INT for Exynos542x SoC
+>   ARM: dts: Add support of Bus frequency using VDD_INT for exynos5422-odroidxu3
+> 
+>  .../bindings/devfreq/event/exynos-nocp.txt         |  86 +++++
+>  .../devicetree/bindings/devfreq/exynos-bus.txt     |  19 +
+>  arch/arm/boot/dts/exynos5420.dtsi                  | 407 +++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  99 +++++
+>  drivers/clk/samsung/clk-exynos5420.c               |  85 +++--
+>  drivers/devfreq/event/Kconfig                      |   8 +
+>  drivers/devfreq/event/Makefile                     |   2 +
+>  drivers/devfreq/event/exynos-nocp.c                | 247 +++++++++++++
+>  drivers/devfreq/event/exynos-nocp.h                |  78 ++++
+>  include/dt-bindings/clock/exynos5420.h             |  24 +-
+>  10 files changed, 1024 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/event/exynos-nocp.txt
+>  create mode 100644 drivers/devfreq/event/exynos-nocp.c
+>  create mode 100644 drivers/devfreq/event/exynos-nocp.h
+> 
 
-This patch set to introduces the anx7814 slimport transmitter driver. These
-new series will replace the old series that can be found here [1]. The reason
-why I introduce these new series is because the driver changed significantly.
-The old approach used a polled state machine ans was not really well using the
-kernel mode setting API. With this new driver I tried to use better the drm API
-and use an interrupt driven model.
-
-Changes since v2:
- - Add Acked-by: Rob Herring <robh@kernel.org> for patch 0002
- - Add Tested-by: Nicolas Boichat <drinkcat@chromium.org>
- - Add Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
- - Nicolas Boichat:
-   - Get rid of wait_for macro since is only used once.
-   - Do not replace the error code if it's readily available to you.
-
-Changes since v1:
- - Add Acked-by: Rob Herring <robh@kernel.org> for patch 0001
- - Dan Carpenter: 
-   - Fix missing error code
-   - Use meaningful names for goto exit paths
- - Rob Herring:
-   - Rename cable-det-gpios for hpd-gpios as is more standard
-   - Fix HDMI output for HDMI input
-   - Use hpd instead cable_det as is the more standard name.
- - Daniel Kurtz: 
-   - Use regmap_bulk in aux_transfer
-   - Fix gpio reset polarity.
-   - Turn off v10 last so we mirror poweron sequence
-   - Fix some error paths.
-   - Remove mutex in anx78xx_detect
- - kbuild:
-   - WARNING: PTR_ERR_OR_ZERO can be used
-
-[1] https://lwn.net/Articles/666885/
-
-Enric Balletbo i Serra (3):
-  of: Add vendor prefix for Analogix Semiconductor
-  devicetree: Add ANX7814 SlimPort transmitter binding.
-  drm: bridge: anx78xx: Add anx78xx driver support.
-
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- .../devicetree/bindings/video/bridge/anx7814.txt   |   41 +
- drivers/gpu/drm/bridge/Kconfig                     |    8 +
- drivers/gpu/drm/bridge/Makefile                    |    1 +
- drivers/gpu/drm/bridge/anx78xx.c                   | 1403 ++++++++++++++++++++
- drivers/gpu/drm/bridge/anx78xx.h                   |  719 ++++++++++
- 6 files changed, 2173 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/bridge/anx7814.txt
- create mode 100644 drivers/gpu/drm/bridge/anx78xx.c
- create mode 100644 drivers/gpu/drm/bridge/anx78xx.h
-
--- 
-2.1.0
+Thanks,
