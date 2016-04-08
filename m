@@ -1,201 +1,110 @@
-From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Subject: [RFC PATCH v1 3/3] iio:imu:mpu6050: enhance mounting matrix support
-Date: Fri, 8 Apr 2016 16:12:05 +0200
-Message-ID: <594bc2f45d1894c9c3308509062b991e4a5fcc7e.1460113510.git.gregor.boirie@parrot.com>
-References: <cover.1460113510.git.gregor.boirie@parrot.com>
+From: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional
+ clocks
+Date: Fri, 8 Apr 2016 14:20:34 +0000
+Message-ID: <HK2PR0601MB13938CB5B56DDCF340FBAC37F5910@HK2PR0601MB1393.apcprd06.prod.outlook.com>
+References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
+ <57059874.1070309@cogentembedded.com>
+ <1460012450.13819.38.camel@collabora.co.uk>
+ <5706B191.3060903@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1460113510.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Cristina Opriceana <cristina.opriceana-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5706B191.3060903-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a new rotation matrix sysfs attribute compliant with IIO core
-mounting matrix API.
-Matrix is retrieved from "in_anglvel_mount_matrix" and
-"in_accel_mount_matrix" sysfs attributes. It is declared into mpu6050 DTS
-entry as a "mount-matrix" property.
-
-Old interface is kept for backward userspace compatibility and may be
-retrieved from legacy platform_data mechanism only.
-
-Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/iio/imu/inv_mpu6050.txt    | 13 +++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         | 56 ++++++++++++++++++++--
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h          |  4 +-
- include/linux/platform_data/invensense_mpu6050.h   |  5 +-
- 4 files changed, 72 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-index e4d8f1c..a9fc11e 100644
---- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-@@ -8,10 +8,23 @@ Required properties:
-  - interrupt-parent : should be the phandle for the interrupt controller
-  - interrupts : interrupt mapping for GPIO IRQ
- 
-+Optional properties:
-+ - mount-matrix: an optional 3x3 mounting rotation matrix
-+
-+
- Example:
- 	mpu6050@68 {
- 		compatible = "invensense,mpu6050";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <18 1>;
-+		mount-matrix = "-0.984807753012208",  /* x0 */
-+		               "0",                   /* y0 */
-+		               "-0.173648177666930",  /* z0 */
-+		               "0",                   /* x1 */
-+		               "-1",                  /* y1 */
-+		               "0",                   /* z1 */
-+		               "-0.173648177666930",  /* x2 */
-+		               "0",                   /* y2 */
-+		               "0.984807753012208";   /* z2 */
- 	};
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index d192953..deb93bc 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -599,7 +599,11 @@ inv_fifo_rate_show(struct device *dev, struct device_attribute *attr,
- 
- /**
-  * inv_attr_show() - calling this function will show current
-- *                    parameters.
-+ *                   parameters.
-+ *
-+ * Deprecated in favor of IIO mounting matrix API.
-+ *
-+ * See inv_show_mount_matrix()
-  */
- static ssize_t inv_attr_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
-@@ -625,6 +629,30 @@ static ssize_t inv_attr_show(struct device *dev, struct device_attribute *attr,
- }
- 
- /**
-+ * inv_show_mount_matrix() - calling this function will show current sensor's
-+ *                           orientation.
-+ */
-+static ssize_t inv_show_mount_matrix(struct device *dev,
-+				     struct device_attribute *attr,
-+				     char *buf)
-+{
-+	struct inv_mpu6050_state *st = iio_priv(dev_to_iio_dev(dev));
-+	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
-+
-+	switch (this_attr->address) {
-+	/*
-+	 * In MPU6050, the two matrix are the same because gyro and accel
-+	 * are integrated in one chip
-+	 */
-+	case ATTR_GYRO_MATRIX:
-+	case ATTR_ACCL_MATRIX:
-+		return iio_show_mount_matrix(&st->orientation, buf);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+/**
-  * inv_mpu6050_validate_trigger() - validate_trigger callback for invensense
-  *                                  MPU6050 device.
-  * @indio_dev: The IIO device
-@@ -692,14 +720,23 @@ static IIO_CONST_ATTR(in_accel_scale_available,
- 					  "0.000598 0.001196 0.002392 0.004785");
- static IIO_DEV_ATTR_SAMP_FREQ(S_IRUGO | S_IWUSR, inv_fifo_rate_show,
- 	inv_mpu6050_fifo_rate_store);
-+
-+/* Deprecated: kept for userspace backward compatibility. */
- static IIO_DEVICE_ATTR(in_gyro_matrix, S_IRUGO, inv_attr_show, NULL,
- 	ATTR_GYRO_MATRIX);
- static IIO_DEVICE_ATTR(in_accel_matrix, S_IRUGO, inv_attr_show, NULL,
- 	ATTR_ACCL_MATRIX);
-+/* Replacement for old matrix attribute interface. */
-+static IIO_DEV_ATTR_MOUNT_MATRIX(in_anglvel_mount_matrix, inv_show_mount_matrix,
-+	ATTR_GYRO_MATRIX);
-+static IIO_DEV_ATTR_MOUNT_MATRIX(in_accel_mount_matrix, inv_show_mount_matrix,
-+	ATTR_ACCL_MATRIX);
- 
- static struct attribute *inv_attributes[] = {
--	&iio_dev_attr_in_gyro_matrix.dev_attr.attr,
--	&iio_dev_attr_in_accel_matrix.dev_attr.attr,
-+	&iio_dev_attr_in_gyro_matrix.dev_attr.attr, /* deprecated */
-+	&iio_dev_attr_in_accel_matrix.dev_attr.attr,/* deprecated */
-+	&iio_dev_attr_in_anglvel_mount_matrix.dev_attr.attr,
-+	&iio_dev_attr_in_accel_mount_matrix.dev_attr.attr,
- 	&iio_dev_attr_sampling_frequency.dev_attr.attr,
- 	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
- 	&iio_const_attr_in_accel_scale_available.dev_attr.attr,
-@@ -779,9 +816,20 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 	st->powerup_count = 0;
- 	st->irq = irq;
- 	st->map = regmap;
-+
- 	pdata = dev_get_platdata(dev);
--	if (pdata)
-+	if (!pdata) {
-+		result = of_iio_read_mount_matrix(dev, "mount-matrix",
-+						  &st->orientation);
-+		if (result) {
-+			dev_err(dev, "Failed to retrieve mounting matrix %d\n",
-+				result);
-+			return result;
-+		}
-+	} else {
- 		st->plat_data = *pdata;
-+	}
-+
- 	/* power is turned on inside check chip type*/
- 	result = inv_check_and_setup_chip(st);
- 	if (result)
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index e302a49..52d60cd 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -114,7 +114,8 @@ struct inv_mpu6050_hw {
-  *  @hw:		Other hardware-specific information.
-  *  @chip_type:		chip type.
-  *  @time_stamp_lock:	spin lock to time stamp.
-- *  @plat_data:		platform data.
-+ *  @plat_data:		platform data (deprecated in favor of @orientation).
-+ *  @orientation:	sensor chip orientation relative to main hardware.
-  *  @timestamps:        kfifo queue to store time stamp.
-  *  @map		regmap pointer.
-  *  @irq		interrupt number.
-@@ -131,6 +132,7 @@ struct inv_mpu6050_state {
- 	struct i2c_client *mux_client;
- 	unsigned int powerup_count;
- 	struct inv_mpu6050_platform_data plat_data;
-+	struct iio_mount_matrix orientation;
- 	DECLARE_KFIFO(timestamps, long long, TIMESTAMP_FIFO_SIZE);
- 	struct regmap *map;
- 	int irq;
-diff --git a/include/linux/platform_data/invensense_mpu6050.h b/include/linux/platform_data/invensense_mpu6050.h
-index ad3aa7b..554b598 100644
---- a/include/linux/platform_data/invensense_mpu6050.h
-+++ b/include/linux/platform_data/invensense_mpu6050.h
-@@ -16,13 +16,16 @@
- 
- /**
-  * struct inv_mpu6050_platform_data - Platform data for the mpu driver
-- * @orientation:	Orientation matrix of the chip
-+ * @orientation:	Orientation matrix of the chip (deprecated in favor of
-+ *			mounting matrix retrieved from device-tree)
-  *
-  * Contains platform specific information on how to configure the MPU6050 to
-  * work on this platform.  The orientation matricies are 3x3 rotation matricies
-  * that are applied to the data to rotate from the mounting orientation to the
-  * platform orientation.  The values must be one of 0, 1, or -1 and each row and
-  * column should have exactly 1 non-zero value.
-+ *
-+ * Deprecated in favor of mounting matrix retrieved from device-tree.
-  */
- struct inv_mpu6050_platform_data {
- 	__s8 orientation[9];
--- 
-2.1.4
+SGksDQoNCk9uIDA3IEFwcmlsIDIwMTYgMjA6MTQsIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4g
+T24gMDQvMDcvMjAxNiAxMDowMCBBTSwgU2pvZXJkIFNpbW9ucyB3cm90ZToNCj4gDQo+ID4gSGV5
+IFNlcmdlaSwNCj4gPg0KPiA+IFRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQo+IA0KPiAgICAgWW91
+J3JlIHdlbGNvbWUuIDotKQ0KPiANCj4gPiBPbiBUaHUsIDIwMTYtMDQtMDcgYXQgMDI6MTUgKzAz
+MDAsIFNlcmdlaSBTaHR5bHlvdiB3cm90ZToNCj4gPj4gT24gMDQvMDYvMjAxNiAwMzo1MiBQTSwg
+U2pvZXJkIFNpbW9ucyB3cm90ZToNCj4gPj4NCj4gPj4+DQo+ID4+PiBjbGtfZ2V0IG9uIGEgZGlz
+YWJsZWQgY2xvY2sgbm9kZSB3aWxsIHJldHVybiBFUFJPQkVfREVGRVIsIHdoaWNoDQo+ID4+PiBj
+YW4NCj4gPj4+IGNhdXNlIGRyaXZlcnMgdG8gYmUgZGVmZXJyZWQgZm9yZXZlciBpZiBzdWNoIGNs
+b2NrcyBhcmUgcmVmZXJlbmNlZA0KPiA+Pj4gaW4NCj4gPj4+IHRoZWlyIGNsb2NrcyBwcm9wZXJ0
+eS4NCj4gPj4+DQo+ID4+PiBVcGRhdGUgdGhlIHZhcmlvdXMgZGlzYWJsZWQgZXh0ZXJuYWwgY2xv
+Y2sgbm9kZXMgdG8gZGVmYXVsdCB0byBhDQo+ID4+PiBmcmVxdWVuY3kgb2YgMCwgYnV0IGRvbid0
+IGRpc2FibGUgdGhlbSB0byBwcmV2ZW50IHRoaXMuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1i
+eTogU2pvZXJkIFNpbW9ucyA8c2pvZXJkLnNpbW9uc0Bjb2xsYWJvcmEuY28udWs+DQo+ID4+Pg0K
+PiA+Pj4gLS0tDQo+ID4+Pg0KPiA+Pj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1rb2Vs
+c2NoLmR0cyB8IDEgKw0KPiA+Pj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1wb3J0ZXIu
+ZHRzICB8IDEgKw0KPiA+Pj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNpICAgICAg
+ICB8IDUgKy0tLS0NCj4gPj4+ICAgIDMgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCA0
+IGRlbGV0aW9ucygtKQ0KPiA+Pj4NCj4gPj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
+cy9yOGE3NzkxLWtvZWxzY2guZHRzDQo+ID4+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEt
+a29lbHNjaC5kdHMNCj4gPj4+IGluZGV4IDFhZGY4NzcuLmRhNTljMjggMTAwNjQ0DQo+ID4+PiAt
+LS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzDQo+ID4+PiArKysgYi9h
+cmNoL2FybS9ib290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzDQo+ID4+PiBAQCAtNjYwLDYgKzY2
+MCw3IEBADQo+ID4+PiAgICB9Ow0KPiA+Pj4NCj4gPj4+ICAgICZwY2llX2J1c19jbGsgew0KPiA+
+Pj4gKwljbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsNCj4gDQo+ID4+ICAgICAgSG1tbSwg
+bG9va2luZyBhdCB0aGUgS29lbHNjaCBzY2hlbWF0aWNzLCBJIGRvbid0IHNlZSB0aGlzIGNsb2Nr
+Lg0KPiA+PiA6LS8NCj4gPg0KPiA+IEkgZG9uJ3QgaGF2ZSB0aGUgc2NoZW1hdGljcyBzbyBpIHdh
+cyBzaW1wbHkga2VlcGluZyB0aGUgY3VycmVudCBzdGF0ZS4NCj4gDQo+ICAgICBJIHVuZGVyc3Rh
+bmQuIEkgd2FzIGp1c3Qgc3VycHJpc2VkIGJ5IHdoYXQgY2hlY2tpbmcgdGhlIGNvZGUgYWdhaW5z
+dCB0aGUNCj4gc2NoZW1hdGljcyByZXZlYWxlZC4NCj4gDQo+ID4gSSd2ZSBhZGRlZCBQaGlsIEVk
+d29ydGh5IHRvIHRoZSBsaXN0IGFzIGhlIHdhcyB0aGUgb25lIG9yaWdpbmFsbHkNCj4gDQo+ICAg
+ICBJIHNob3VsZCd2ZSBDQydlZCBQaGlsIG15c2VsZi4uLg0KPg0KPiA+IGVuYWJsZSB0aGUgYnVz
+IGNsayBmb3IgS29lbHNoIGFjY29yZGluZyB0byBnaXQuIEhvcGVmdWxseSBoZSBjYW4NCj4gPiBj
+bGFyaWZ5IDopDQo+IA0KPiAgICAgTGV0J3MgaG9wZSBoZSdkIHJlcGx5Li4uDQo+IA0KPiA+Pj4g
+ICAgCXN0YXR1cyA9ICJva2F5IjsNCj4gPj4+ICAgIH07DQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEtcG9ydGVyLmR0cw0KPiA+Pj4gYi9hcmNoL2Fy
+bS9ib290L2R0cy9yOGE3NzkxLXBvcnRlci5kdHMNCj4gPj4+IGluZGV4IDk1NTRkMTMuLjE5YjI1
+N2UgMTAwNjQ0DQo+ID4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLXBvcnRlci5k
+dHMNCj4gPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEtcG9ydGVyLmR0cw0KPiA+
+Pj4gQEAgLTQxMyw2ICs0MTMsNyBAQA0KPiA+Pj4gICAgfTsNCj4gPj4+DQo+ID4+PiAgICAmcGNp
+ZV9idXNfY2xrIHsNCj4gPj4+ICsJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMDAwMD47DQo+ID4+
+PiAgICAJc3RhdHVzID0gIm9rYXkiOw0KPiA+Pj4gICAgfTsNCj4gPj4+DQo+ID4+ICAgICAgQWdh
+aW4sIGxvb2tpbmcgYXQgdGhlIFBvcnRlciBzY2hlbWF0aWNzLCBJIGRvbid0IHNlZSB0aGlzIGNs
+b2NrDQo+ID4+IGVpdGhlci4gOi0vDQo+ID4NCj4gPiBZb3Ugd2VyZSB0aGUgb25lIGVuYWJsaW5n
+IHRoaXMgY2xvY2sgZm9yIFBvcnRlciA7KSBJIGRvbid0IGhhdmUgUENJRQ0KPiANCj4gICAgIFll
+cywgb2YgY291cnNlLiBJIGRvbid0IHJlbWVtYmVyIHRoZSBnb3J5IGRldGFpbHMgYWxyZWFkeSAt
+LSBJIG1pZ2h0IGhhdmUNCj4gYmxpbmRseSBjb3BpZWQgd2hhdCB3YXMgaW4gdGhlIEtvZWxzY2gn
+cyAuZHRzLg0KPiANCj4gPiBoYXJkd2FyZSB0byB0ZXN0IHdpdGggb24gbXkgcG9ydGVyIGJvYXJk
+LCBtaWdodCBiZSB3b3J0aCBpZiB5b3UgY291bGQNCj4gPiBkaXNhYmxlIHRoaXMgY2xvY2sgYW5k
+IHNlZSBpZiBQQ0ktRSBzdGlsbCBmdWNudGlvbnMgYXMgZXhwZWN0ZWQgKG1heWJlDQo+ID4gaW4g
+cHJhY3Rpc2UgaXQganVzdCBoYXBwZW5zIHRvIHByZWZlciB0aGUgaW50ZXJuYWwgY2xvY2s/KSA/
+DQo+IA0KPiAgICAgSSBrbm93IHRoZSBQQ0llIGRyaXZlciBkb2VzIHJlcXVpcmUgdGhpcyBjbG9j
+ayBpbiBvcmRlciB0byBmdW5jdGlvbiAtLSBpdA0KPiB3b3VsZCBiZSB0aGUgc2FtZSBldGVybmFs
+IC1FUFJPQkVfREVGRVIgY29uZGl0aW9uIHlvdSdkIGFscmVhZHkgZGVzY3JpYmVkOw0KPiBzZWUg
+ZHJpdmVycy9wY2kvaG9zdC9wY2llLXJjYXIuYyB5b3Vyc2VsZi4uLg0KPiANCj4gPj4+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLmR0c2kNCj4gPj4+IGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvcjhhNzc5MS5kdHNpDQo+ID4+PiBpbmRleCA4NjkzODg4Li42NzZkZjYzIDEwMDY0
+NA0KPiA+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS5kdHNpDQo+ID4+PiArKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLmR0c2kNCj4gPj4+IEBAIC0xMTA0LDggKzExMDQs
+NyBAQA0KPiA+Pj4gICAgCQlwY2llX2J1c19jbGs6IHBjaWVfYnVzIHsNCj4gPj4+ICAgIAkJCWNv
+bXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+Pj4gICAgCQkJI2Nsb2NrLWNlbGxzID0gPDA+
+Ow0KPiA+Pj4gLQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwxMDAwMDAwMDA+Ow0KPiA+Pj4gLQkJCXN0
+YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4+PiArCQkJY2xvY2stZnJlcXVlbmN5ID0gPDA+Ow0KPiA+
+PiAgICAgIElmIHRoZSBjbG9jayBoYXMgYSBnb29kIGRlZmF1bHQgZnJlcXVlbmN5LCBJIGRvbid0
+IHRoaW5rIHlvdSBuZWVkDQo+ID4+IHRvDQo+ID4+IHJlbW92ZSBpdC4gT3RoZXJ3aXNlIHlvdSBt
+aXNzZWQgVVNCX0VYVEFMIHdoaWNoIGlzIDQ4IE1IeiAoYW5kIGNhbiBiZQ0KPiA+PiBvdmVycmlk
+ZGVuKS4NCj4gPg0KPiA+IEkgZGlkIHRoYXQgYXMgaXQgd2FzIGJ5IGRlZmF1bHQgZGlzYWJsZWQs
+IHNvIGlmIGkgZG8gZW5hYmxlIGl0IGJ1dA0KPiA+IGRvbid0IGRyb3AgdGhlIGRlZmF1bHQgZnJl
+cXVlbmN5IHRvIDAgYm9hcmQgc3dpdGhvdXQgdGhhdCBjbG9jayB3aWxsDQo+ID4gc3VkZGVubHkg
+aGF2ZSBpdCBhZGRlZCB0byB0aGVpciBkdGIuDQo+IA0KPiAgICAgWmVybyBmcmVxdWVuY3kgaXMg
+aGFyZGx5IGFueSBiZXR0ZXIgdGhlbiB0aGUgZGVmYXVsdC4uLg0KPiANCj4gPiBGb3IgdGhlIHVz
+YiBleHRlcm5hbCBjbG9jayBJIGRpZG4ndCB0b3VjaCBpdCBhcyBpdCB3YXMgYWxyZWFkeSBlbmFi
+bGVkDQo+ID4gYnkgZGVmYXVsdCB3aXRoIGEgcHJvcGVyIGZyZXF1ZW5jeSwgc28gaXQgd291bGRu
+J3QgaGl0IHRoZSBpc3N1ZSBpIHdhcw0KPiA+IHRyeWluZyB0byBmaXggaGVyZS4gQnV0IGkgYWdy
+ZWUsIGJvdGggbG9va2luZyBhdCBvdGhlciBSZW5lc2FzIGR0c2lzDQo+ID4gYW5kIGhvdyBhbGwg
+b3RoZXIgZXh0ZXJuYWwgY2xvY2tzIGFyZSBkb25lIGluIHRoaXMgZHRzaSwgdGhpcyBub2RlIGlz
+DQo+ID4gb2RkLg0KPiANCj4gICAgIEl0J3Mgbm90IHRoYXQgb2RkIGdpdmVuIHRoYXQgdGhlIFIt
+Q2FyIGdlbjIgbWFudWFsIHNwZWNpZmljYWxseSBzYXlzIGl0DQo+IHNob3VsZCBiZSA0OCBNSHou
+DQo+ICAgICBMb29raW5nIGludG8gdGhlIG1hbnVhbCBhZ2FpbiwgdGhlIFBDSWUgYnVzIGNsb2Nr
+IG11c3QgYmUgdGhlIG9ubmUNCj4gcHJlc2VudGVkIG9uIHRoZSBDSUNSRUZbUE5dMV9TQVRBL1BD
+SWUgaW5wdXQgc2lnbmFscyBhbmQgaXQgaW5kZWVkIHNob3VsZCBiZQ0KPiAxMDAgTUh6Li4uIFNv
+IFBoaWwgd2FzIGNvcnJlY3QuDQoNClBDSWUgYWx3YXlzIHJlcXVpcmVzIGEgMTAwTUh6IHJlZmVy
+ZW5jZSBjbG9jay4gT24gS29lbHNjaCwgdGhpcyBjbG9jayBpcw0KZ2VuZXJhdGVkIGJ5IFU2IGFu
+ZCBhbHdheXMgb24uIFNvbWUgYm9hcmRzIG1heSBuZWVkIGFkZGl0aW9uYWwgaGFyZHdhcmUNCnRv
+IGJlIHNldHVwIGluIG9yZGVyIHRvIG91dHB1dCB0aGUgY2xvY2ssIGhlbmNlIHRoZSBEVCBub2Rl
+IGZvciB0aGUgY2xvY2suDQoNCkkgaG9wZSB0aGF0IGNsYXJpZmllcyB0aGUgc2l0dWF0aW9uIQ0K
+UGhpbA0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
