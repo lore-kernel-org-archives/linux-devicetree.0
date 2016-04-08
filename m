@@ -1,183 +1,88 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2] rtc: omap: Support ext_wakeup configuration
-Date: Fri, 8 Apr 2016 13:42:30 +0300
-Message-ID: <57078B16.2020402@ti.com>
-References: <1459960367-29399-1-git-send-email-m.niestroj@grinn-global.com>
- <1459960367-29399-2-git-send-email-m.niestroj@grinn-global.com>
- <20160406191103.GE27411@atomide.com> <57056352.1060801@grinn-global.com>
- <57063B1A.7080700@ti.com> <570694B0.4040500@grinn-global.com>
- <57077769.1050101@ti.com> <57078313.70803@grinn-global.com>
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: Re: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional
+ clocks
+Date: Fri, 08 Apr 2016 12:50:54 +0200
+Message-ID: <1460112654.31245.20.camel@collabora.co.uk>
+References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
+	 <CAMuHMdUtPhBT0_+hSk_t5osHC8TssyGMFo+YOWetTGBkbpB4PQ@mail.gmail.com>
+	 <1459949826.23936.19.camel@collabora.co.uk>
+	 <20160407232155.GH18567@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <57078313.70803@grinn-global.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>, Tony Lindgren <tony@atomide.com>
-Cc: rtc-linux@googlegroups.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Keerthy <j-keerthy@ti.com>, linux-omap@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160407232155.GH18567@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2016 01:08 PM, Marcin Niestroj wrote:
-> 
-> 
-> On 08.04.2016 11:18, Grygorii Strashko wrote:
->> On 04/07/2016 08:11 PM, Marcin Niestroj wrote:
->>>
->>> On 07.04.2016 12:48, Grygorii Strashko wrote:
->>>> On 04/06/2016 10:28 PM, Marcin Niestroj wrote:
->>>>> Hi,
->>>>>
->>>>> On 06.04.2016 21:11, Tony Lindgren wrote:
->>>>>> * Marcin Niestroj <m.niestroj@grinn-global.com> [160406 09:34]:
->>>>>>> Support configuration of ext_wakeup sources. This patch makes it
->>>>>>> possible to enable ext_wakeup (and set it's polarity), depending on
->>>>>>> board configuration. AM335x's dedicated PMIC (tps65217) uses
->>>>>>> ext_wakeup
->>>>>>> in SLEEP mode (RTC-only) to notify about power-button presses.
->>>>>>> Handling
->>>>>>> power-button presses enables to recover from RTC-only power states
->>>>>>> correctly.
->>>>>>>
->>>>>>> Implementation uses gpiochip to utilize standard bindings. However,
->>>>>>> configuration is possible only using device-tree (no runtime 
->>>>>>> changes).
->>>>>>
->>>>>> Hey looks good to me, adding linux-omap list to Cc.
->>>>>>
->>>>>> Can you please check that the "depends on GPIOLIB" does not disable
->>>>>> the RTC driver for omap1?
->>>>>
->>>>> Looks ok for omap1. ARCH_OMAP1 selects ARCH_REQUIRE_GPIOLIB, which
->>>>> selects GPIOLIB.
->>>>>
->>>>> Best regards,
->>>>> Marcin
->>>>>
->>>>>>
->>>>>> Regards,
->>>>>>
->>>>>> Tony
->>>>>>
->>>>>>> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
->>>>>>> ---
->>>>>>>    Documentation/devicetree/bindings/rtc/rtc-omap.txt |  18 ++-
->>>>>>>    drivers/rtc/Kconfig                                |   2 +-
->>>>>>>    drivers/rtc/rtc-omap.c                             | 137
->>>>>>> ++++++++++++++++++++-
->>>>>>>    3 files changed, 154 insertions(+), 3 deletions(-)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->>>>>>> b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->>>>>>> index bf7d11a..4a7738e 100644
->>>>>>> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->>>>>>> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->>>>>>> @@ -18,8 +18,12 @@ Optional properties:
->>>>>>>      through pmic_power_en
->>>>>>>    - clocks: Any internal or external clocks feeding in to rtc
->>>>>>>    - clock-names: Corresponding names of the clocks
->>>>>>> +- gpio-controller: Mark as gpio controller when using ext_wakeup
->>>>>>> +- #gpio-cells: Should be set to 2
->>>>>>> +- ngpios: Number of ext_wakeup sources supported by processor 
->>>>>>> (board)
->>>>>>> +- ext-wakeup-gpios: List of ext_wakeup sources to configure
->>>>>>>
->>>>>>> -Example:
->>>>>>> +Examples:
->>>>>>>
->>>>>>>    rtc@1c23000 {
->>>>>>>        compatible = "ti,da830-rtc";
->>>>>>> @@ -31,3 +35,15 @@ rtc@1c23000 {
->>>>>>>        clocks = <&clk_32k_rtc>, <&clk_32768_ck>;
->>>>>>>        clock-names = "ext-clk", "int-clk";
->>>>>>>    };
->>>>>>> +
->>>>>>> +rtc: rtc@44e3e000 {
->>>>>>> +    compatible = "ti,am3352-rtc", "ti,da830-rtc";
->>>>>>> +    reg = <0x44e3e000 0x1000>;
->>>>>>> +    interrupts = <75
->>>>>>> +              76>;
->>>>>>> +    system-power-controller;
->>>>>>> +    gpio-controller;
->>>>>>> +    #gpio-cells = <2>;
->>>>>>> +    ngpios = <1>;
->>>>>>> +    ext-wakeup-gpios = <&rtc 0 GPIO_ACTIVE_LOW>;
->>>>>>> +};
->>>>
->>>> I'm not sure that rtc can request gpios by itself in this
->>>> way (if i rememberer this can break modules isnmod/rmmod).
->>>>
->>>> cc: linux-gpio
->>>>
->>>> The gpio-hog is more correct way follow if I'm not mistaken)
->>>> - see gpiochip_request_own_desc().
->>>
->>> You are right. It is not possible to rmmod module, as it is "in use"
->>> all the time. I'll try with gpio_requst_own_desc().
->>>
->>>>
->>>> Another question, in commit message you refer to  power-button,
->>>> but i do not see anything related in binding description.
->>>
->>> We don't have power-button connected right to the processor. It is
->>> connected to PMIC. During runtime we receive IRQs about power-button
->>> from PMIC using i2c bus. The only purpose of this patch is to
->>> configure processor's ext_wakeup line, which is triggered during
->>> RTC-only mode (for example when power-button is pressed), causing
->>> device wakeup. On the other hand, it is not possible to use ext_wakeup
->>> during runtime, as we are only able to read it's status, but it
->>> cannot trigger any interrupts.
->>
->> Sry, but I don't like this approach - it could make sense if RTC
->> EXT_WAKEUP will be at least partially mapped on gpiolib interface.
->> But your gpiochip is fake, you do not/can't use GPIO hogging mechanism
->> and you're even parsing DT on your own (in V3).
-> 
-> With gpio hogging we can't pass polarity to the driver. It is hidden
-> in gpiolib.
+On Thu, 2016-04-07 at 16:21 -0700, Stephen Boyd wrote:
+> On 04/06, Sjoerd Simons wrote:
+> >=20
+> > On Wed, 2016-04-06 at 15:11 +0200, Geert Uytterhoeven wrote:
+> > >=20
+> > > CC Mike, Stephen, linux-clk (this time with the new Mike)
+> > >=20
+> > > On Wed, Apr 6, 2016 at 2:52 PM, Sjoerd Simons
+> > > <sjoerd.simons@collabora.co.uk> wrote:
+> > > >=20
+> > > >=20
+> > > > clk_get on a disabled clock node will return EPROBE_DEFER,
+> > > > which
+> > > > can
+> > > > cause drivers to be deferred forever if such clocks are
+> > > > referenced
+> > > > in
+> > > > their clocks property.
+> > > Is this a side effect of commit 3e5dd6f6e690048d ("clk: Ignore
+> > > disabled DT
+> > > clock providers")?
+> > Yes it seems so. Reverting that patch means that i can drop this
+> > one
+> > and get the expected behaviour again.
+> The DT is broken then? Is it possible to mark these status =3D
+> "okay" so that things work again?
 
-kirkwood-openrd.dtsi-			p2 {
-kirkwood-openrd.dtsi:				gpio-hog;
-kirkwood-openrd.dtsi-				gpios = <2 GPIO_ACTIVE_HIGH>;
-						[input;]
+> >=20
+> >=20
+> > Though even so I'm not sure what the convention is for clocks like
+> > these, the r8a7791.dtsi is inconsistent, as some are disabled while
+> > others (e.g. the audio clocks) are 0hz. Would be good to get some
+> > input
+> > on that regardless.
+> >=20
+> What's the question here?
 
-Sry, if you can't do smth like above - it's just prove that this approach is not right.
+So the question is how to model unconnected external clocks in device-
+tree.
 
-> 
->>
->> In general it's more like irqchip than gpiochip, but RTC can
->> trigger IRQ on ext_wakeup :(
->>
->> As per above, your first version of the patch looks more sensible to me.
->>
->> Additional note. Shouldn't EXT_WAKEUP_STATUS be cleared after wake up?
->> This is requested by am57x trm at least: "SW must clear the events before
->> PMIC_PWR_ENABLE can go from 1 - 0. "
-> 
-> I haven't seen that in am335x TRM. In current implementation if
-> EXT_WAKEUP_STATUS is set, we read it and write it back together with 
-> EXT_WAKEUP_EN and EXT_WAKEUP_POL, which results in clearing of this
-> event.
+The dtsi we're loooking at has (in pseudo dt):
 
-ok. I found this in omap_rtc_power_off(). Thanks for your explanation.
+device {
+=C2=A0 clock-names =3D "internal", "external";
+=C2=A0 clocks =3D <&internal, &external>
+};
 
-> 
->>
->>>
->>>>
->>>> Shouldn't some gpio-key node be here, which will consume rtc-gpio?
->>>>
->>>>
->>>>>>> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
->>>>>>> index 3e84315..f013346 100644
->>>>>>> --- a/drivers/rtc/Kconfig
->>>>>>> +++ b/drivers/rtc/Kconfig
->>
->> [...]
->>
->>
-> 
+external {
+=C2=A0 compatible =3D "fixed-clock";
+=C2=A0 clock-frequency =3D <12345>;
+=C2=A0 status =3D "disabled";
+};
+
+Before=C2=A03e5dd6f6e690048d ("clk: Ignore=C2=A0disabled DT=C2=A0clock =
+providers")
+this apparently worked. Afterwards drivers getting all the clocks would
+fail to probe with -EPROBE_DEFER.
+
+Judging by your comment I assume this way of modelling it is broken
+(and the behaviour caused by the patch is correct)?=C2=A0
+
+And as a follow-up, is modelling unconnected clocks as enabled with a
+frequency of 0hz as my proposed patch does seen as the right way of
+doing things?
 
 
--- 
-regards,
--grygorii
+--=20
+Sjoerd Simons
+Collabora Ltd.
