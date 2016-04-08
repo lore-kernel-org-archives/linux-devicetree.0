@@ -1,132 +1,136 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] btmrvl: add platform specific wakeup interrupt support
-Date: Fri, 8 Apr 2016 10:09:55 -0700
-Message-ID: <B99FD549-3D36-4A89-83F3-E4170ADE1336@holtmann.org>
-References: <1459344056-5234-1-git-send-email-akarwar@marvell.com> <1459344056-5234-2-git-send-email-akarwar@marvell.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459344056-5234-2-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ASoC: rockchip: i2s: configure the sdio pins' iomux mode
+Date: Fri, 08 Apr 2016 19:14:57 +0200
+Message-ID: <3304388.ZeDefZvcUO@phil>
+References: <1459931902-77324-1-git-send-email-sugar.zhang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459931902-77324-1-git-send-email-sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Amitkumar,
+Hi,
 
-> On some arm-based platforms, we need to configure platform specific
-> parameters by device tree node and we need define our node as a child
-> node of parent SDIO host controller.
-> This patch parses these parameters from device tree. It includes
-> calibration data download to firmware, wakeup pin configured to firmware,
-> and soc specific wakeup interrupt pin.
+Am Mittwoch, 6. April 2016, 16:38:22 schrieb Sugar Zhang:
+> There are 3 i2s sdio pins, which iomux mode is as follows:
 > 
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>  - sdi3_sdo1
+>  - sdi2_sdo2
+>  - sdi1_sdo3
+> 
+> we need to configure these pins' iomux mode via the GRF register
+> when use multi channel playback/capture.
+> 
+> Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
-> drivers/bluetooth/btmrvl_drv.h  | 11 ++++++
-> drivers/bluetooth/btmrvl_main.c | 33 +++++++++--------
-> drivers/bluetooth/btmrvl_sdio.c | 79 +++++++++++++++++++++++++++++++++++++++++
-> drivers/bluetooth/btmrvl_sdio.h |  6 ++++
-> 4 files changed, 115 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/bluetooth/btmrvl_drv.h b/drivers/bluetooth/btmrvl_drv.h
-> index 0590473..f742384 100644
-> --- a/drivers/bluetooth/btmrvl_drv.h
-> +++ b/drivers/bluetooth/btmrvl_drv.h
-> @@ -23,6 +23,17 @@
-> #include <linux/bitops.h>
-> #include <linux/slab.h>
-> #include <net/bluetooth/bluetooth.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio.h>
-> +#include <linux/gfp.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/of_irq.h>
+>  .../devicetree/bindings/sound/rockchip-i2s.txt     |  5 +++
+>  sound/soc/rockchip/rockchip_i2s.c                  | 39
+> +++++++++++++++++++++- sound/soc/rockchip/rockchip_i2s.h                 
+> |  8 +++++
+>  3 files changed, 51 insertions(+), 1 deletion(-)
 > 
-> #define BTM_HEADER_LEN			4
-> #define BTM_UPLD_SIZE			2312
-> diff --git a/drivers/bluetooth/btmrvl_main.c b/drivers/bluetooth/btmrvl_main.c
-> index f25a825..25343ef 100644
-> --- a/drivers/bluetooth/btmrvl_main.c
-> +++ b/drivers/bluetooth/btmrvl_main.c
-> @@ -510,34 +510,39 @@ static int btmrvl_download_cal_data(struct btmrvl_private *priv,
-> static int btmrvl_check_device_tree(struct btmrvl_private *priv)
-> {
-> 	struct device_node *dt_node;
-> +	struct btmrvl_sdio_card *card = priv->btmrvl_dev.card;
-> 	u8 cal_data[BT_CAL_HDR_LEN + BT_CAL_DATA_SIZE];
-> -	int ret;
-> -	u32 val;
-> +	int ret = 0;
-> +	u16 gpio, gap;
+> diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+> b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt index
+> 6e86d8a..ad72a7d 100644
+> --- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+> +++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+> @@ -23,6 +23,11 @@ Required properties:
+>  - rockchip,playback-channels: max playback channels, if not set, 8
+> channels default. - rockchip,capture-channels: max capture channels, if
+> not set, 2 channels default.
+> 
+> +Required properties for controller which support multi channels
+> playback/capture: +
+> +- rockchip,grf: Should be phandle/offset pair. the phandle of the syscon
+> node for GRF register, +  and the offset of the GRF for control register.
+
+I think I'd like it more to use the generic grf-binding we always use 
+everwhere else (just the phandle without any offset) and keep the actual 
+offset in the driver on a per-soc basis.
+
+That way rockchip,grf stays consistent over all users.
+
+We already have the per-soc compatible values, so it should a easy to add a 
+.data element with the necessary offset-information.
+
 > +
-> +	if (card->plt_of_node) {
-> +		dt_node = card->plt_of_node;
-> +		ret = of_property_read_u16(dt_node, "btmrvl,wakeup-pin",
-> +					   &gpio);
-> +		if (ret)
-> +			gpio = (priv->btmrvl_dev.gpio_gap & 0xff00) >> 8;
+>  Example for rk3288 I2S controller:
+> 
+>  i2s@ff890000 {
+> diff --git a/sound/soc/rockchip/rockchip_i2s.c
+> b/sound/soc/rockchip/rockchip_i2s.c index 2f8e204..bc72780 100644
+> --- a/sound/soc/rockchip/rockchip_i2s.c
+> +++ b/sound/soc/rockchip/rockchip_i2s.c
+
+[...]
+
+> @@ -478,6 +504,18 @@ static int rockchip_i2s_probe(struct platform_device
+> *pdev) return -ENOMEM;
+>  	}
+> 
+> +	i2s->dev = &pdev->dev;
 > +
-> +		ret = of_property_read_u16(dt_node, "btmrvl,wakeup-gap",
-> +					   &gap);
-> +		if (ret)
-> +			gap = (u8)(priv->btmrvl_dev.gpio_gap & 0x00ff);
-> 
-> -	for_each_compatible_node(dt_node, NULL, "btmrvl,cfgdata") {
-> -		ret = of_property_read_u32(dt_node, "btmrvl,gpio-gap", &val);
-> -		if (!ret)
-> -			priv->btmrvl_dev.gpio_gap = val;
-> +		priv->btmrvl_dev.gpio_gap = (gpio << 8) + gap;
-> 
-> 		ret = of_property_read_u8_array(dt_node, "btmrvl,cal-data",
-> 						cal_data + BT_CAL_HDR_LEN,
-> 						BT_CAL_DATA_SIZE);
-> -		if (ret) {
-> -			of_node_put(dt_node);
-> +		if (ret)
-> 			return ret;
-> -		}
-> 
-> 		BT_DBG("Use cal data from device tree");
-> 		ret = btmrvl_download_cal_data(priv, cal_data,
-> 					       BT_CAL_DATA_SIZE);
-> -		if (ret) {
-> +		if (ret)
-> 			BT_ERR("Fail to download calibrate data");
-> -			of_node_put(dt_node);
-> -			return ret;
-> -		}
-> 	}
-> 
-> -	return 0;
-> +	return ret;
-> }
-> 
-> static int btmrvl_setup(struct hci_dev *hdev)
-> diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
-> index 6ed8acf..c714040 100644
-> --- a/drivers/bluetooth/btmrvl_sdio.c
-> +++ b/drivers/bluetooth/btmrvl_sdio.c
-> @@ -52,6 +52,68 @@ static struct memory_type_mapping mem_type_mapping_tbl[] = {
-> 	{"EXTLAST", NULL, 0, 0xFE},
-> };
-> 
-> +static const struct of_device_id btmrvl_sdio_of_match_table[] = {
-> +	{ .compatible = "marvell,sd8897-bt" },
-> +	{ .compatible = "marvell,sd8997-bt" },
-> +	{ }
-> +};
+> +	i2s->grf = syscon_regmap_lookup_by_phandle(node, "rockchip,grf");
+> +	if (!IS_ERR(i2s->grf)) {
+> +		ret = of_property_read_u32_index(node, "rockchip,grf",
+> +						 1, &i2s->iocfg_reg);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Can't get iocfg_reg offset\n");
+> +			return ret;
+> +		}
+> +	}
+> +
 
-is this agreed upon by the DT maintainer? I only want to merge this patch if we have agreement.
+as said in the binding part, please use the generic grf handling and get the 
+io-offset from per-soc devicetree data in the driver itself.
 
-Regards
 
-Marcel
+>  	/* try to prepare related clocks */
+>  	i2s->hclk = devm_clk_get(&pdev->dev, "i2s_hclk");
+>  	if (IS_ERR(i2s->hclk)) {
+> @@ -517,7 +555,6 @@ static int rockchip_i2s_probe(struct platform_device
+> *pdev) i2s->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> i2s->capture_dma_data.maxburst = 4;
+> 
+> -	i2s->dev = &pdev->dev;
+>  	dev_set_drvdata(&pdev->dev, i2s);
+> 
+>  	pm_runtime_enable(&pdev->dev);
+> diff --git a/sound/soc/rockchip/rockchip_i2s.h
+> b/sound/soc/rockchip/rockchip_i2s.h index dc6e2c7..9a6aabf 100644
+> --- a/sound/soc/rockchip/rockchip_i2s.h
+> +++ b/sound/soc/rockchip/rockchip_i2s.h
+> @@ -236,4 +236,12 @@ enum {
+>  #define I2S_TXDR	(0x0024)
+>  #define I2S_RXDR	(0x0028)
+> 
+> +/* io direction cfg register */
+> +#define I2S_IO_DIRECTION_SHIFT	11
+
+this setting is sitting in GRF_SOC_CON8 on the rk3399. That is part of the 
+very volatile register set where settings move around a lot for each soc.
+
+So if we're having the io-offset in per-soc data, we can easily put the 
+shift into it as well.
+
+> +#define I2S_IO_DIRECTION_MASK	(7 << I2S_IO_DIRECTION_SHIFT)
+> +#define I2S_IO_8CH_OUT_2CH_IN	(0 << I2S_IO_DIRECTION_SHIFT)
+> +#define I2S_IO_6CH_OUT_4CH_IN	(1 << I2S_IO_DIRECTION_SHIFT)
+> +#define I2S_IO_4CH_OUT_6CH_IN	(3 << I2S_IO_DIRECTION_SHIFT)
+> +#define I2S_IO_2CH_OUT_8CH_IN	(7 << I2S_IO_DIRECTION_SHIFT)
+
+Keep the settings without the shift here and do the shift dynamically with 
+the per-soc setting when changing the setting.
+
+
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
