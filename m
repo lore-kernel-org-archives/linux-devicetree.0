@@ -1,115 +1,132 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Fri, 8 Apr 2016 11:48:14 -0500
-Message-ID: <20160408164814.GB15034@localhost>
-References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
-Mime-Version: 1.0
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] btmrvl: add platform specific wakeup interrupt support
+Date: Fri, 8 Apr 2016 10:09:55 -0700
+Message-ID: <B99FD549-3D36-4A89-83F3-E4170ADE1336@holtmann.org>
+References: <1459344056-5234-1-git-send-email-akarwar@marvell.com> <1459344056-5234-2-git-send-email-akarwar@marvell.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460131994-24493-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459344056-5234-2-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Hi Amitkumar,
 
-On Fri, Apr 08, 2016 at 06:13:13PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> On some arm-based platforms, we need to configure platform specific
+> parameters by device tree node and we need define our node as a child
+> node of parent SDIO host controller.
+> This patch parses these parameters from device tree. It includes
+> calibration data download to firmware, wakeup pin configured to firmware,
+> and soc specific wakeup interrupt pin.
 > 
-> Changes to the pad controller device tree binding 
-
-Is there a commit we can reference for this pad controller binding
-change?  If so, I can fold it in.
-
-Is there a benefit to keeping this binding patch separate from the
-corresponding driver patch?  It seems like it'd nice to have a
-connection between them.  (Sorry, I'm sure I've asked this before,
-but I can't remember the answer.)
-
-Trivial typos below that I've already fixed, but you can fold them in
-if there's any reason to repost this.
-
-> have required that
-> each lane be associated with a separate PHY. Update the PCI host bridge
-> device tree binding to allow each root port to define the list of PHYs
-> required to drive the lanes associated with it.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
-> Changes in v4:
-> - add additional lanes subnode when dereferencing PHYs from the XUSB pad
->   controller to reflect changes in its binding
+> drivers/bluetooth/btmrvl_drv.h  | 11 ++++++
+> drivers/bluetooth/btmrvl_main.c | 33 +++++++++--------
+> drivers/bluetooth/btmrvl_sdio.c | 79 +++++++++++++++++++++++++++++++++++++++++
+> drivers/bluetooth/btmrvl_sdio.h |  6 ++++
+> 4 files changed, 115 insertions(+), 14 deletions(-)
 > 
->  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt    | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+> diff --git a/drivers/bluetooth/btmrvl_drv.h b/drivers/bluetooth/btmrvl_drv.h
+> index 0590473..f742384 100644
+> --- a/drivers/bluetooth/btmrvl_drv.h
+> +++ b/drivers/bluetooth/btmrvl_drv.h
+> @@ -23,6 +23,17 @@
+> #include <linux/bitops.h>
+> #include <linux/slab.h>
+> #include <net/bluetooth/bluetooth.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gfp.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +#include <linux/of_irq.h>
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> index 75321ae23c08..f5364084b494 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> @@ -60,11 +60,14 @@ Required properties:
->    - afi
->    - pcie_x
->  
-> -Required properties on Tegra124 and later:
-> +Required properties on Tegra124 and later (deprecated):
->  - phys: Must contain an entry for each entry in phy-names.
->  - phy-names: Must include the following entries:
->    - pcie
->  
-> +These properties are deprecated in favour of per-lane PHYs define in each of
-
-s/define/defined/
-
-> +the root ports (see below).
+> #define BTM_HEADER_LEN			4
+> #define BTM_UPLD_SIZE			2312
+> diff --git a/drivers/bluetooth/btmrvl_main.c b/drivers/bluetooth/btmrvl_main.c
+> index f25a825..25343ef 100644
+> --- a/drivers/bluetooth/btmrvl_main.c
+> +++ b/drivers/bluetooth/btmrvl_main.c
+> @@ -510,34 +510,39 @@ static int btmrvl_download_cal_data(struct btmrvl_private *priv,
+> static int btmrvl_check_device_tree(struct btmrvl_private *priv)
+> {
+> 	struct device_node *dt_node;
+> +	struct btmrvl_sdio_card *card = priv->btmrvl_dev.card;
+> 	u8 cal_data[BT_CAL_HDR_LEN + BT_CAL_DATA_SIZE];
+> -	int ret;
+> -	u32 val;
+> +	int ret = 0;
+> +	u16 gpio, gap;
 > +
->  Power supplies for Tegra20:
->  - avdd-pex-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
->  - vdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
-> @@ -122,6 +125,13 @@ Required properties:
->    - Root port 0 uses 4 lanes, root port 1 is unused.
->    - Both root ports use 2 lanes.
->  
-> +Required properties for Tegra124 and later:
-> +- phys: Must contain an phandle to a PHY for each entry in phy-names.
-
-s/an phandle/a phandle/
-
-> +- phy-names: Must include an entry for each active lane. Note that the number
-> +  of entries does not have to (though usually will) be equal to the specified
-> +  number of lanes in the nvidia,num-lanes property. Entries are of the form
-> +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num-lanes.
+> +	if (card->plt_of_node) {
+> +		dt_node = card->plt_of_node;
+> +		ret = of_property_read_u16(dt_node, "btmrvl,wakeup-pin",
+> +					   &gpio);
+> +		if (ret)
+> +			gpio = (priv->btmrvl_dev.gpio_gap & 0xff00) >> 8;
 > +
->  Example:
->  
->  SoC DTSI:
-> @@ -169,6 +179,9 @@ SoC DTSI:
->  			ranges;
->  
->  			nvidia,num-lanes = <2>;
-> +
-> +			phys = <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-4}>;
-> +			phy-names = "pcie-0";
->  		};
->  
->  		pci@2,0 {
-> @@ -183,6 +196,9 @@ SoC DTSI:
->  			ranges;
->  
->  			nvidia,num-lanes = <2>;
-> +
-> +			phys = <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-2}>;
-> +			phy-names = "pcie-0";
->  		};
->  	};
->  
-> -- 
-> 2.8.0
+> +		ret = of_property_read_u16(dt_node, "btmrvl,wakeup-gap",
+> +					   &gap);
+> +		if (ret)
+> +			gap = (u8)(priv->btmrvl_dev.gpio_gap & 0x00ff);
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -	for_each_compatible_node(dt_node, NULL, "btmrvl,cfgdata") {
+> -		ret = of_property_read_u32(dt_node, "btmrvl,gpio-gap", &val);
+> -		if (!ret)
+> -			priv->btmrvl_dev.gpio_gap = val;
+> +		priv->btmrvl_dev.gpio_gap = (gpio << 8) + gap;
+> 
+> 		ret = of_property_read_u8_array(dt_node, "btmrvl,cal-data",
+> 						cal_data + BT_CAL_HDR_LEN,
+> 						BT_CAL_DATA_SIZE);
+> -		if (ret) {
+> -			of_node_put(dt_node);
+> +		if (ret)
+> 			return ret;
+> -		}
+> 
+> 		BT_DBG("Use cal data from device tree");
+> 		ret = btmrvl_download_cal_data(priv, cal_data,
+> 					       BT_CAL_DATA_SIZE);
+> -		if (ret) {
+> +		if (ret)
+> 			BT_ERR("Fail to download calibrate data");
+> -			of_node_put(dt_node);
+> -			return ret;
+> -		}
+> 	}
+> 
+> -	return 0;
+> +	return ret;
+> }
+> 
+> static int btmrvl_setup(struct hci_dev *hdev)
+> diff --git a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
+> index 6ed8acf..c714040 100644
+> --- a/drivers/bluetooth/btmrvl_sdio.c
+> +++ b/drivers/bluetooth/btmrvl_sdio.c
+> @@ -52,6 +52,68 @@ static struct memory_type_mapping mem_type_mapping_tbl[] = {
+> 	{"EXTLAST", NULL, 0, 0xFE},
+> };
+> 
+> +static const struct of_device_id btmrvl_sdio_of_match_table[] = {
+> +	{ .compatible = "marvell,sd8897-bt" },
+> +	{ .compatible = "marvell,sd8997-bt" },
+> +	{ }
+> +};
+
+is this agreed upon by the DT maintainer? I only want to merge this patch if we have agreement.
+
+Regards
+
+Marcel
