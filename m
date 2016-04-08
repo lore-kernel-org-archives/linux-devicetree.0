@@ -1,381 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH RFT 1/2] phylib: add device reset GPIO support
-Date: Sat, 09 Apr 2016 01:22:47 +0300
-Message-ID: <3381543.SDQLqND8Pp@wasted.cogentembedded.com>
-References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
+Date: Fri, 8 Apr 2016 15:43:38 -0700
+Message-ID: <CAOCOHw5R=PnkafRqx2eGKKm10eLgD4H3u7TjbbhdZMbqVR7LrA@mail.gmail.com>
+References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
+	<20151231231039.GA8886@rob-hp-laptop>
+	<56ABADEA.40801@codeaurora.org>
+	<CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
+	<5706B4EF.2050600@codeaurora.org>
+	<20160407201009.GA16136@lunn.ch>
+	<5706D493.8020700@codeaurora.org>
+	<20160408005317.GA28125@lunn.ch>
+	<5708013F.90207@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5708013F.90207-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PHY  devices sometimes do have their reset signal (maybe even power
-supply?) tied to some GPIO and sometimes it also does happen that a boot
-loader does not leave it deasserted. So far this issue has been attacked
-from (as I believe) a wrong angle: by teaching the MAC driver to manipulate
-the GPIO in question;  that solution, when  applied to the device trees,
-led to adding the PHY reset GPIO properties to the MAC device node, with
-one exception: Cadence MACB driver which could handle the "reset-gpios"
-prop  in a PHY device  subnode.  I believe that the correct approach is to
-teach the 'phylib' to get the MDIO device reset GPIO from the device tree
-node corresponding to this device -- which this patch is doing...
+On Fri, Apr 8, 2016 at 12:06 PM, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Andrew Lunn wrote:
+>
+>> There are two different things here. One is configuring the pin to be
+>> a GPIO. The second is using the GPIO as a GPIO. In this case,
+>> bit-banging the MDIO bus.
+>>
+>> The firmware could be doing the configuration, setting the pin as a
+>> GPIO. However, the firmware cannot be doing the MDIO bit-banging to
+>> make an MDIO bus available. Linux has to do that.
+>>
+>> Or it could be we have all completely misunderstood the hardware, and
+>> we are not doing bit-banging GPIO MDIO. There is a real MDIO
+>> controller there, we don't use these pins as GPIOs, etc....
+>
+>
+> Actually, I think there is a misunderstanding.
+>
+> On the FSM9900 SOC (which uses device-tree), the two pins that connect to
+> the external PHY are gpio pins.  However, the driver needs to reprogram the
+> pinmux so that those pins are wired to the Emac controller.  That's what the
+> the gpio code in this driver is doing: it's just configuring the pins so
+> that they connect directly between the Emac and the external PHY.  After
+> that, they are no longer GPIO pins, and you cannot use the "GPIO controlled
+> MDIO bus".  There is no MDIO controller on the SOC.  The external PHY is
+> controlled directly from the Emac and also from the internal PHY.  It is
+> screwy, I know, but that's what Gilad was trying to explain.
+>
 
-Note that I had to modify the  AT803x PHY driver as it would stop working
-otherwise as it made use of the reset GPIO for its own purposes...
+It sounds like you're trying to say that the pins used can be are
+muxed as GPIO or MDIO, in the TLMM.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+In the downstream kernel this is often seen with the drivers calling
+gpio_request() to "reserve" said pins, but all you should do is
+described the desired configuration and muxing in the pinctrl node,
+reference that from your driver and simply ignore the fact that those
+pins could have been used as GPIO pins.
 
----
- Documentation/devicetree/bindings/net/phy.txt |    2 +
- drivers/net/phy/at803x.c                      |   19 ++------------
- drivers/net/phy/mdio_bus.c                    |    4 +++
- drivers/net/phy/mdio_device.c                 |   27 +++++++++++++++++++--
- drivers/net/phy/phy_device.c                  |   33 ++++++++++++++++++++++++--
- drivers/of/of_mdio.c                          |   16 ++++++++++++
- include/linux/mdio.h                          |    3 ++
- include/linux/phy.h                           |    5 +++
- 8 files changed, 89 insertions(+), 20 deletions(-)
-
-Index: net-next/Documentation/devicetree/bindings/net/phy.txt
-===================================================================
---- net-next.orig/Documentation/devicetree/bindings/net/phy.txt
-+++ net-next/Documentation/devicetree/bindings/net/phy.txt
-@@ -35,6 +35,8 @@ Optional Properties:
- - broken-turn-around: If set, indicates the PHY device does not correctly
-   release the turn around line low at the end of a MDIO transaction.
- 
-+- reset-gpios: The GPIO phandle and specifier for the PHY reset signal.
-+
- Example:
- 
- ethernet-phy@0 {
-Index: net-next/drivers/net/phy/at803x.c
-===================================================================
---- net-next.orig/drivers/net/phy/at803x.c
-+++ net-next/drivers/net/phy/at803x.c
-@@ -65,7 +65,6 @@ MODULE_LICENSE("GPL");
- 
- struct at803x_priv {
- 	bool phy_reset:1;
--	struct gpio_desc *gpiod_reset;
- };
- 
- struct at803x_context {
-@@ -271,22 +270,10 @@ static int at803x_probe(struct phy_devic
- {
- 	struct device *dev = &phydev->mdio.dev;
- 	struct at803x_priv *priv;
--	struct gpio_desc *gpiod_reset;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
--
--	if (phydev->drv->phy_id != ATH8030_PHY_ID)
--		goto does_not_require_reset_workaround;
--
--	gpiod_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
--	if (IS_ERR(gpiod_reset))
--		return PTR_ERR(gpiod_reset);
--
--	priv->gpiod_reset = gpiod_reset;
--
--does_not_require_reset_workaround:
- 	phydev->priv = priv;
- 
- 	return 0;
-@@ -361,14 +348,14 @@ static void at803x_link_change_notify(st
- 	 */
- 	if (phydev->drv->phy_id == ATH8030_PHY_ID) {
- 		if (phydev->state == PHY_NOLINK) {
--			if (priv->gpiod_reset && !priv->phy_reset) {
-+			if (phydev->mdio.reset && !priv->phy_reset) {
- 				struct at803x_context context;
- 
- 				at803x_context_save(phydev, &context);
- 
--				gpiod_set_value(priv->gpiod_reset, 1);
-+				phy_device_reset(phydev, 1);
- 				msleep(1);
--				gpiod_set_value(priv->gpiod_reset, 0);
-+				phy_device_reset(phydev, 0);
- 				msleep(1);
- 
- 				at803x_context_restore(phydev, &context);
-Index: net-next/drivers/net/phy/mdio_bus.c
-===================================================================
---- net-next.orig/drivers/net/phy/mdio_bus.c
-+++ net-next/drivers/net/phy/mdio_bus.c
-@@ -35,6 +35,7 @@
- #include <linux/phy.h>
- #include <linux/io.h>
- #include <linux/uaccess.h>
-+#include <linux/gpio/consumer.h>
- 
- #include <asm/irq.h>
- 
-@@ -371,6 +372,9 @@ void mdiobus_unregister(struct mii_bus *
- 		if (!mdiodev)
- 			continue;
- 
-+		if (mdiodev->reset)
-+			gpiod_put(mdiodev->reset);
-+
- 		mdiodev->device_remove(mdiodev);
- 		mdiodev->device_free(mdiodev);
- 	}
-Index: net-next/drivers/net/phy/mdio_device.c
-===================================================================
---- net-next.orig/drivers/net/phy/mdio_device.c
-+++ net-next/drivers/net/phy/mdio_device.c
-@@ -12,6 +12,8 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/errno.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
-@@ -103,6 +105,13 @@ void mdio_device_remove(struct mdio_devi
- }
- EXPORT_SYMBOL(mdio_device_remove);
- 
-+void mdio_device_reset(struct mdio_device *mdiodev, int value)
-+{
-+	if (mdiodev->reset)
-+		gpiod_set_value(mdiodev->reset, value);
-+}
-+EXPORT_SYMBOL(mdio_device_reset);
-+
- /**
-  * mdio_probe - probe an MDIO device
-  * @dev: device to probe
-@@ -117,9 +126,16 @@ static int mdio_probe(struct device *dev
- 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
- 	int err = 0;
- 
--	if (mdiodrv->probe)
-+	if (mdiodrv->probe) {
-+		/* Deassert the reset signal */
-+		mdio_device_reset(mdiodev, 0);
-+
- 		err = mdiodrv->probe(mdiodev);
- 
-+		/* Assert the reset signal */
-+		mdio_device_reset(mdiodev, 1);
-+	}
-+
- 	return err;
- }
- 
-@@ -129,9 +145,16 @@ static int mdio_remove(struct device *de
- 	struct device_driver *drv = mdiodev->dev.driver;
- 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
- 
--	if (mdiodrv->remove)
-+	if (mdiodrv->remove) {
-+		/* Deassert the reset signal */
-+		mdio_device_reset(mdiodev, 0);
-+
- 		mdiodrv->remove(mdiodev);
- 
-+		/* Assert the reset signal */
-+		mdio_device_reset(mdiodev, 1);
-+	}
-+
- 	return 0;
- }
- 
-Index: net-next/drivers/net/phy/phy_device.c
-===================================================================
---- net-next.orig/drivers/net/phy/phy_device.c
-+++ net-next/drivers/net/phy/phy_device.c
-@@ -589,6 +589,9 @@ int phy_device_register(struct phy_devic
- 	if (err)
- 		return err;
- 
-+	/* Deassert the reset signal */
-+	phy_device_reset(phydev, 0);
-+
- 	/* Run all of the fixups for this PHY */
- 	err = phy_scan_fixups(phydev);
- 	if (err) {
-@@ -604,9 +607,15 @@ int phy_device_register(struct phy_devic
- 		goto out;
- 	}
- 
-+	/* Assert the reset signal */
-+	phy_device_reset(phydev, 1);
-+
- 	return 0;
- 
-  out:
-+	/* Assert the reset signal */
-+	phy_device_reset(phydev, 1);
-+
- 	mdiobus_unregister_device(&phydev->mdio);
- 	return err;
- }
-@@ -792,6 +801,9 @@ int phy_init_hw(struct phy_device *phyde
- {
- 	int ret = 0;
- 
-+	/* Deassert the reset signal */
-+	phy_device_reset(phydev, 0);
-+
- 	if (!phydev->drv || !phydev->drv->config_init)
- 		return 0;
- 
-@@ -997,6 +1009,9 @@ void phy_detach(struct phy_device *phyde
- 
- 	put_device(&phydev->mdio.dev);
- 	module_put(bus->owner);
-+
-+	/* Assert the reset signal */
-+	phy_device_reset(phydev, 1);
- }
- EXPORT_SYMBOL(phy_detach);
- 
-@@ -1595,9 +1610,16 @@ static int phy_probe(struct device *dev)
- 	/* Set the state to READY by default */
- 	phydev->state = PHY_READY;
- 
--	if (phydev->drv->probe)
-+	if (phydev->drv->probe) {
-+		/* Deassert the reset signal */
-+		phy_device_reset(phydev, 0);
-+
- 		err = phydev->drv->probe(phydev);
- 
-+		/* Assert the reset signal */
-+		phy_device_reset(phydev, 1);
-+	}
-+
- 	mutex_unlock(&phydev->lock);
- 
- 	return err;
-@@ -1611,8 +1633,15 @@ static int phy_remove(struct device *dev
- 	phydev->state = PHY_DOWN;
- 	mutex_unlock(&phydev->lock);
- 
--	if (phydev->drv->remove)
-+	if (phydev->drv->remove) {
-+		/* Deassert the reset signal */
-+		phy_device_reset(phydev, 0);
-+
- 		phydev->drv->remove(phydev);
-+
-+		/* Assert the reset signal */
-+		phy_device_reset(phydev, 1);
-+	}
- 	phydev->drv = NULL;
- 
- 	return 0;
-Index: net-next/drivers/of/of_mdio.c
-===================================================================
---- net-next.orig/drivers/of/of_mdio.c
-+++ net-next/drivers/of/of_mdio.c
-@@ -44,6 +44,7 @@ static int of_get_phy_id(struct device_n
- static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *child,
- 				   u32 addr)
- {
-+	struct gpio_desc *gpiod;
- 	struct phy_device *phy;
- 	bool is_c45;
- 	int rc;
-@@ -52,10 +53,17 @@ static int of_mdiobus_register_phy(struc
- 	is_c45 = of_device_is_compatible(child,
- 					 "ethernet-phy-ieee802.3-c45");
- 
-+	gpiod = fwnode_get_named_gpiod(&child->fwnode, "reset-gpios");
-+	/* Deassert the reset signal */
-+	if (!IS_ERR(gpiod))
-+		gpiod_direction_output(gpiod, 0);
- 	if (!is_c45 && !of_get_phy_id(child, &phy_id))
- 		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
- 	else
- 		phy = get_phy_device(mdio, addr, is_c45);
-+	/* Assert the reset signal again */
-+	if (!IS_ERR(gpiod))
-+		gpiod_set_value(gpiod, 1);
- 	if (IS_ERR_OR_NULL(phy))
- 		return 1;
- 
-@@ -75,6 +83,9 @@ static int of_mdiobus_register_phy(struc
- 	of_node_get(child);
- 	phy->mdio.dev.of_node = child;
- 
-+	if (!IS_ERR(gpiod))
-+		phy->mdio.reset = gpiod;
-+
- 	/* All data is now stored in the phy struct;
- 	 * register it */
- 	rc = phy_device_register(phy);
-@@ -95,6 +106,7 @@ static int of_mdiobus_register_device(st
- 				      u32 addr)
- {
- 	struct mdio_device *mdiodev;
-+	struct gpio_desc *gpiod;
- 	int rc;
- 
- 	mdiodev = mdio_device_create(mdio, addr);
-@@ -107,6 +119,10 @@ static int of_mdiobus_register_device(st
- 	of_node_get(child);
- 	mdiodev->dev.of_node = child;
- 
-+	gpiod = fwnode_get_named_gpiod(&child->fwnode, "reset-gpios");
-+	if (!IS_ERR(gpiod))
-+		mdiodev->reset = gpiod;
-+
- 	/* All data is now stored in the mdiodev struct; register it. */
- 	rc = mdio_device_register(mdiodev);
- 	if (rc) {
-Index: net-next/include/linux/mdio.h
-===================================================================
---- net-next.orig/include/linux/mdio.h
-+++ net-next/include/linux/mdio.h
-@@ -11,6 +11,7 @@
- 
- #include <uapi/linux/mdio.h>
- 
-+struct gpio_desc;
- struct mii_bus;
- 
- struct mdio_device {
-@@ -26,6 +27,7 @@ struct mdio_device {
- 	/* Bus address of the MDIO device (0-31) */
- 	int addr;
- 	int flags;
-+	struct gpio_desc *reset;
- };
- #define to_mdio_device(d) container_of(d, struct mdio_device, dev)
- 
-@@ -58,6 +60,7 @@ void mdio_device_free(struct mdio_device
- struct mdio_device *mdio_device_create(struct mii_bus *bus, int addr);
- int mdio_device_register(struct mdio_device *mdiodev);
- void mdio_device_remove(struct mdio_device *mdiodev);
-+void mdio_device_reset(struct mdio_device *mdiodev, int value);
- int mdio_driver_register(struct mdio_driver *drv);
- void mdio_driver_unregister(struct mdio_driver *drv);
- 
-Index: net-next/include/linux/phy.h
-===================================================================
---- net-next.orig/include/linux/phy.h
-+++ net-next/include/linux/phy.h
-@@ -769,6 +769,11 @@ static inline int phy_read_status(struct
- 	return phydev->drv->read_status(phydev);
- }
- 
-+static inline void phy_device_reset(struct phy_device *phydev, int value)
-+{
-+	mdio_device_reset(&phydev->mdio, value);
-+}
-+
- #define phydev_err(_phydev, format, args...)	\
- 	dev_err(&_phydev->mdio.dev, format, ##args)
- 
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
