@@ -1,55 +1,115 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v1] regulator: twl: Provide of_map_mode for twl4030
-Date: Fri, 8 Apr 2016 09:19:24 -0700
-Message-ID: <20160408161923.GW16484@atomide.com>
-References: <20160404222638.GM2350@sirena.org.uk>
- <1459835974-31664-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160407175745.GK32257@rob-hp-laptop>
- <20160408154907.GT16484@atomide.com>
- <20160408160828.GA10562@earth>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Fri, 8 Apr 2016 11:48:14 -0500
+Message-ID: <20160408164814.GB15034@localhost>
+References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160408160828.GA10562@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1460131994-24493-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org> [160408 09:09]:
-> Hi Tony,
+Hi Thierry,
+
+On Fri, Apr 08, 2016 at 06:13:13PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> On Fri, Apr 08, 2016 at 08:49:07AM -0700, Tony Lindgren wrote:
-> > * Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160407 10:58]:
-> > > On Tue, Apr 05, 2016 at 08:59:34AM +0300, Ivaylo Dimitrov wrote:
-> > > > of_map_mode is needed so to be possible to set initial regulators mode from
-> > > > the board DTS. Otherwise, for DT boot, regulators are left in their default
-> > > > state after reset/reboot. Document device specific modes as well.
-> > > > 
-> > > > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > ---
-> > > >  .../bindings/regulator/twl-regulator.txt           |  6 ++++++
-> > > 
-> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > 
-> > I'd like to test these patches, but I don't know which combination
-> > of patches needed? It seems we're waiting for an update on at least
-> > one of the patches in this series?
-> > 
-> > Might be best to repost the whole series so people can test the
-> > right patches.
+> Changes to the pad controller device tree binding 
+
+Is there a commit we can reference for this pad controller binding
+change?  If so, I can fold it in.
+
+Is there a benefit to keeping this binding patch separate from the
+corresponding driver patch?  It seems like it'd nice to have a
+connection between them.  (Sorry, I'm sure I've asked this before,
+but I can't remember the answer.)
+
+Trivial typos below that I've already fixed, but you can fold them in
+if there's any reason to repost this.
+
+> have required that
+> each lane be associated with a separate PHY. Update the PCI host bridge
+> device tree binding to allow each root port to define the list of PHYs
+> required to drive the lanes associated with it.
 > 
-> As far as I can see Mark has already queued all patches in his
-> for-next branch and they are already in today's linux-next, so
-> you can just test linux-next.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v4:
+> - add additional lanes subnode when dereferencing PHYs from the XUSB pad
+>   controller to reflect changes in its binding
+> 
+>  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt    | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> index 75321ae23c08..f5364084b494 100644
+> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> @@ -60,11 +60,14 @@ Required properties:
+>    - afi
+>    - pcie_x
+>  
+> -Required properties on Tegra124 and later:
+> +Required properties on Tegra124 and later (deprecated):
+>  - phys: Must contain an entry for each entry in phy-names.
+>  - phy-names: Must include the following entries:
+>    - pcie
+>  
+> +These properties are deprecated in favour of per-lane PHYs define in each of
 
-OK thanks will do.
+s/define/defined/
 
-Tony
+> +the root ports (see below).
+> +
+>  Power supplies for Tegra20:
+>  - avdd-pex-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
+>  - vdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
+> @@ -122,6 +125,13 @@ Required properties:
+>    - Root port 0 uses 4 lanes, root port 1 is unused.
+>    - Both root ports use 2 lanes.
+>  
+> +Required properties for Tegra124 and later:
+> +- phys: Must contain an phandle to a PHY for each entry in phy-names.
 
+s/an phandle/a phandle/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- phy-names: Must include an entry for each active lane. Note that the number
+> +  of entries does not have to (though usually will) be equal to the specified
+> +  number of lanes in the nvidia,num-lanes property. Entries are of the form
+> +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num-lanes.
+> +
+>  Example:
+>  
+>  SoC DTSI:
+> @@ -169,6 +179,9 @@ SoC DTSI:
+>  			ranges;
+>  
+>  			nvidia,num-lanes = <2>;
+> +
+> +			phys = <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-4}>;
+> +			phy-names = "pcie-0";
+>  		};
+>  
+>  		pci@2,0 {
+> @@ -183,6 +196,9 @@ SoC DTSI:
+>  			ranges;
+>  
+>  			nvidia,num-lanes = <2>;
+> +
+> +			phys = <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-2}>;
+> +			phy-names = "pcie-0";
+>  		};
+>  	};
+>  
+> -- 
+> 2.8.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
