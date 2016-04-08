@@ -1,119 +1,327 @@
-From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] hwrng: hisi: Add support for Hisilicon SoC RNG
-Date: Fri, 8 Apr 2016 10:03:14 +0800
-Message-ID: <57071162.908@huawei.com>
-References: <1460017397-30996-1-git-send-email-wangkefeng.wang@huawei.com>
- <1460017397-30996-3-git-send-email-wangkefeng.wang@huawei.com>
- <CANLsYkwRGm3oBWaoKki4Ge3A_-temOsdJcwby6ds_X5_XGYZtQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v8 07/20] PM / devfreq: exynos: Update documentation for bus
+ devices using passive governor
+Date: Fri, 08 Apr 2016 13:24:56 +0900
+Message-ID: <1460089509-16260-8-git-send-email-cw00.choi@samsung.com>
+References: <1460089509-16260-1-git-send-email-cw00.choi@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANLsYkwRGm3oBWaoKki4Ge3A_-temOsdJcwby6ds_X5_XGYZtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-reply-to: <1460089509-16260-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch updates the documentation for passive bus devices and adds the
+detailed example of Exynos3250.
 
+Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/devfreq/exynos-bus.txt     | 250 ++++++++++++++++++++-
+ 1 file changed, 247 insertions(+), 3 deletions(-)
 
-On 2016/4/7 22:55, Mathieu Poirier wrote:
-> On 7 April 2016 at 02:23, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->> This adds the Hisilicon Random Number Generator(RNG) support,
->> which is found in Hip04 and Hip05 soc.
->>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/char/hw_random/Kconfig    |  13 ++++
->>  drivers/char/hw_random/Makefile   |   1 +
->>  drivers/char/hw_random/hisi-rng.c | 121 ++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 135 insertions(+)
->>  create mode 100644 drivers/char/hw_random/hisi-rng.c
-[...]
->> +
->> +#define RNG_SEED       0x0
->> +#define RNG_CTRL       0x4
->> +  #define RNG_SEED_SEL BIT(2)
->> +  #define RNG_RING_EN  BIT(1)
->> +  #define RNG_EN       BIT(0)
->> +#define RNG_RAN_NUM    0x10
->> +#define RNG_PHY_SEED   0x14
->> +#define RNG_RELOAD_ERR 0x84
->> +
->> +#define to_hisi_rng(p) container_of(p, struct hisi_rng, rng)
->> +
->> +static int seed_sel;
->> +module_param(seed_sel, int, S_IRUGO);
->> +MODULE_PARM_DESC(seed_sel, "Auto reload seed. 0, use LFSR(default); 1, use ring oscillator.");
->> +
->> +struct hisi_rng {
->> +       void __iomem *base;
->> +       struct hwrng rng;
->> +};
->> +
->> +static int hisi_rng_init(struct hwrng *rng)
->> +{
->> +       struct hisi_rng *hrng = to_hisi_rng(rng);
->> +       int val = RNG_EN;
->> +       u32 seed;
->> +
->> +       /* get a random number as initial seed */
->> +       get_random_bytes(&seed, sizeof(seed));
->> +
->> +       writel_relaxed(seed, hrng->base + RNG_SEED);
->> +
->> +       if (seed_sel == 1)
->> +               val |= RNG_RING_EN | RNG_SEED_SEL;
-> 
-> Hello Kefeng,
-> 
-> Please explain what this mode does.  Otherwise reviewers have to make
-> a guess based on the description of the module parameter.
-The seed is reload periodically, there are two choice of seeds, default using
-the val from LFSR, seed_sel = 1  will use the val generated by ring oscillator.
-> 
->> +
->> +       writel_relaxed(val, hrng->base + RNG_CTRL);
->> +       return 0;
->> +}
->> +
->> +static void hisi_rng_cleanup(struct hwrng *rng)
->> +{
->> +       struct hisi_rng *hrng = to_hisi_rng(rng);
->> +
->> +       writel_relaxed(0, hrng->base + RNG_CTRL);
->> +}
->> +
->> +static int hisi_rng_read(struct hwrng *rng, void *buf, size_t max,
->> +                          bool wait)
-> 
-> What are variable 'max' and 'wait' used for?  As far as I can tell
-> they can be removed.
-Ok, will use data_read callback in struct hwrng.
-
-> 
->> +{
->> +       struct hisi_rng *hrng = to_hisi_rng(rng);
->> +       u32 *data = buf;
->> +
->> +       *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
->> +       return 4;
-> 
-> Why not simply doing the readl_relaxed() in the the code rather than
-> introducing a new function?
-Not clear, your mean introduce the data variable?
-Will use following data_read, thanks.
-
-static int hisi_rng_data_read(struct hwrng *rng, u32 *data)
-{
-       struct hisi_rng *hrng = to_hisi_rng(rng);
-       *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
-       return 4;
-}
-
-Thanks,
-Kefeng
-
+diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+index 78171b918e3f..03f13d38f1a1 100644
+--- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
++++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+@@ -8,22 +8,46 @@ of the bus in runtime. To monitor the usage of each bus in runtime,
+ the driver uses the PPMU (Platform Performance Monitoring Unit), which
+ is able to measure the current load of sub-blocks.
+ 
++The Exynos SoC includes the various sub-blocks which have the each AXI bus.
++The each AXI bus has the owned source clock but, has not the only owned
++power line. The power line might be shared among one more sub-blocks.
++So, we can divide into two type of device as the role of each sub-block.
++There are two type of bus devices as following:
++- parent bus device
++- passive bus device
++
++Basically, parent and passive bus device share the same power line.
++The parent bus device can only change the voltage of shared power line
++and the rest bus devices (passive bus device) depend on the decision of
++the parent bus device. If there are three blocks which share the VDD_xxx
++power line, Only one block should be parent device and then the rest blocks
++should depend on the parent device as passive device.
++
++	VDD_xxx |--- A block (parent)
++		|--- B block (passive)
++		|--- C block (passive)
++
+ There are a little different composition among Exynos SoC because each Exynos
+ SoC has different sub-blocks. Therefore, shch difference should be specified
+ in devicetree file instead of each device driver. In result, this driver
+ is able to support the bus frequency for all Exynos SoCs.
+ 
+-Required properties for bus device:
++Required properties for all bus devices:
+ - compatible: Should be "samsung,exynos-bus".
+ - clock-names : the name of clock used by the bus, "bus".
+ - clocks : phandles for clock specified in "clock-names" property.
+ - operating-points-v2: the OPP table including frequency/voltage information
+   to support DVFS (Dynamic Voltage/Frequency Scaling) feature.
++
++Required properties only for parent bus device:
+ - vdd-supply: the regulator to provide the buses with the voltage.
+ - devfreq-events: the devfreq-event device to monitor the current utilization
+   of buses.
+ 
+-Optional properties for bus device:
++Required properties only for passive bus device:
++- devfreq: the parent bus device.
++
++Optional properties only for parent bus device:
+ - exynos,saturation-ratio: the percentage value which is used to calibrate
+ 			the performance count against total cycle count.
+ - exynos,voltage-tolerance: the percentage value for bus voltage tolerance
+@@ -34,7 +58,20 @@ Example1:
+ 	power line (regulator). The MIF (Memory Interface) AXI bus is used to
+ 	transfer data between DRAM and CPU and uses the VDD_MIF regualtor.
+ 
+-	- power line(VDD_MIF) --> bus for DMC (Dynamic Memory Controller) block
++	- MIF (Memory Interface) block
++	: VDD_MIF |--- DMC (Dynamic Memory Controller)
++
++	- INT (Internal) block
++	: VDD_INT |--- LEFTBUS (parent device)
++		  |--- PERIL
++		  |--- MFC
++		  |--- G3D
++		  |--- RIGHTBUS
++		  |--- FSYS
++		  |--- LCD0
++		  |--- PERIR
++		  |--- ISP
++		  |--- CAM
+ 
+ 	- MIF bus's frequency/voltage table
+ 	-----------------------
+@@ -47,6 +84,24 @@ Example1:
+ 	|L5| 400000 |875000   |
+ 	-----------------------
+ 
++	- INT bus's frequency/voltage table
++	----------------------------------------------------------
++	|Block|LEFTBUS|RIGHTBUS|MCUISP |ISP    |PERIL  ||VDD_INT |
++	| name|       |LCD0    |       |       |       ||        |
++	|     |       |FSYS    |       |       |       ||        |
++	|     |       |MFC     |       |       |       ||        |
++	----------------------------------------------------------
++	|Mode |*parent|passive |passive|passive|passive||        |
++	----------------------------------------------------------
++	|Lv   |Frequency                               ||Voltage |
++	----------------------------------------------------------
++	|L1   |50000  |50000   |50000  |50000  |50000  ||900000  |
++	|L2   |80000  |80000   |80000  |80000  |80000  ||900000  |
++	|L3   |100000 |100000  |100000 |100000 |100000 ||1000000 |
++	|L4   |134000 |134000  |200000 |200000 |       ||1000000 |
++	|L5   |200000 |200000  |400000 |300000 |       ||1000000 |
++	----------------------------------------------------------
++
+ Example2 :
+ 	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dtsi
+ 	is listed below:
+@@ -85,6 +140,154 @@ Example2 :
+ 		};
+ 	};
+ 
++	bus_leftbus: bus_leftbus {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_DIV_GDL>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_leftbus_opp_table>;
++		status = "disabled";
++	};
++
++	bus_rightbus: bus_rightbus {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_DIV_GDR>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_leftbus_opp_table>;
++		status = "disabled";
++	};
++
++	bus_lcd0: bus_lcd0 {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_DIV_ACLK_160>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_leftbus_opp_table>;
++		status = "disabled";
++	};
++
++	bus_fsys: bus_fsys {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_DIV_ACLK_200>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_leftbus_opp_table>;
++		status = "disabled";
++	};
++
++	bus_mcuisp: bus_mcuisp {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_DIV_ACLK_400_MCUISP>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_mcuisp_opp_table>;
++		status = "disabled";
++	};
++
++	bus_isp: bus_isp {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_DIV_ACLK_266>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_isp_opp_table>;
++		status = "disabled";
++	};
++
++	bus_peril: bus_peril {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_DIV_ACLK_100>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_peril_opp_table>;
++		status = "disabled";
++	};
++
++	bus_mfc: bus_mfc {
++		compatible = "samsung,exynos-bus";
++		clocks = <&cmu CLK_SCLK_MFC>;
++		clock-names = "bus";
++		operating-points-v2 = <&bus_leftbus_opp_table>;
++		status = "disabled";
++	};
++
++	bus_leftbus_opp_table: opp_table1 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@50000000 {
++			opp-hz = /bits/ 64 <50000000>;
++			opp-microvolt = <900000>;
++		};
++		opp@80000000 {
++			opp-hz = /bits/ 64 <80000000>;
++			opp-microvolt = <900000>;
++		};
++		opp@100000000 {
++			opp-hz = /bits/ 64 <100000000>;
++			opp-microvolt = <1000000>;
++		};
++		opp@134000000 {
++			opp-hz = /bits/ 64 <134000000>;
++			opp-microvolt = <1000000>;
++		};
++		opp@200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <1000000>;
++		};
++	};
++
++	bus_mcuisp_opp_table: opp_table2 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@50000000 {
++			opp-hz = /bits/ 64 <50000000>;
++		};
++		opp@80000000 {
++			opp-hz = /bits/ 64 <80000000>;
++		};
++		opp@100000000 {
++			opp-hz = /bits/ 64 <100000000>;
++		};
++		opp@200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++		};
++		opp@400000000 {
++			opp-hz = /bits/ 64 <400000000>;
++		};
++	};
++
++	bus_isp_opp_table: opp_table3 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@50000000 {
++			opp-hz = /bits/ 64 <50000000>;
++		};
++		opp@80000000 {
++			opp-hz = /bits/ 64 <80000000>;
++		};
++		opp@100000000 {
++			opp-hz = /bits/ 64 <100000000>;
++		};
++		opp@200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++		};
++		opp@300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++		};
++	};
++
++	bus_peril_opp_table: opp_table4 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@50000000 {
++			opp-hz = /bits/ 64 <50000000>;
++		};
++		opp@80000000 {
++			opp-hz = /bits/ 64 <80000000>;
++		};
++		opp@100000000 {
++			opp-hz = /bits/ 64 <100000000>;
++		};
++	};
++
++
+ 	Usage case to handle the frequency and voltage of bus on runtime
+ 	in exynos3250-rinato.dts is listed below:
+ 
+@@ -93,3 +296,44 @@ Example2 :
+ 		vdd-supply = <&buck1_reg>;	/* VDD_MIF */
+ 		status = "okay";
+ 	};
++
++	&bus_leftbus {
++		devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
++		vdd-supply = <&buck3_reg>;
++		status = "okay";
++	};
++
++	&bus_rightbus {
++		devfreq = <&bus_leftbus>;
++		status = "okay";
++	};
++
++	&bus_lcd0 {
++		devfreq = <&bus_leftbus>;
++		status = "okay";
++	};
++
++	&bus_fsys {
++		devfreq = <&bus_leftbus>;
++		status = "okay";
++	};
++
++	&bus_mcuisp {
++		devfreq = <&bus_leftbus>;
++		status = "okay";
++	};
++
++	&bus_isp {
++		devfreq = <&bus_leftbus>;
++		status = "okay";
++	};
++
++	&bus_peril {
++		devfreq = <&bus_leftbus>;
++		status = "okay";
++	};
++
++	&bus_mfc {
++		devfreq = <&bus_leftbus>;
++		status = "okay";
++	};
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
