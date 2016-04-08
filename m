@@ -1,48 +1,50 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v11 11/60] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Thu,  7 Apr 2016 17:15:24 -0700
-Message-ID: <1460074573-7481-12-git-send-email-yinghai@kernel.org>
-References: <1460074573-7481-1-git-send-email-yinghai@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460074573-7481-1-git-send-email-yinghai@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Wei Yang <weiyang@linux.vnet.ibm.com>, TJ <linux@iam.tj>, Yijing Wang <wangyijing@huawei.com>, Khalid Aziz <khalid.aziz@oracle.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
+Date: Fri, 8 Apr 2016 02:53:17 +0200
+Message-ID: <20160408005317.GA28125@lunn.ch>
+References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
+ <20151231231039.GA8886@rob-hp-laptop>
+ <56ABADEA.40801@codeaurora.org>
+ <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
+ <5706B4EF.2050600@codeaurora.org>
+ <20160407201009.GA16136@lunn.ch>
+ <5706D493.8020700@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5706D493.8020700@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, Gilad Avidov <gavidov@codeaurora.org>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, shankerd@codeaurora.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, vikrams@codeaurora.org, Christopher Covington <cov@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource.
+On Thu, Apr 07, 2016 at 04:43:47PM -0500, Timur Tabi wrote:
+> On my platform, firmware (UEFI) configures all of the GPIOs.  I need
+> to get confirmation, but it appears that we don't actually make any
+> GPIO calls at all.  I see code that looks like this:
+> 
+> 	for (i = 0; (!adpt->no_mdio_gpio) && i < EMAC_NUM_GPIO; i++) {
+> 		gpio_info = &adpt->gpio_info[i];
+> 		retval = of_get_named_gpio(node, gpio_info->name, 0);
+> 		if (retval < 0)
+> 			return retval;
+> 
+> And on our ACPI system, adpt->no_mdio_gpio is always true:
+> 
+> 	/* Assume GPIOs required for MDC/MDIO are enabled in firmware */
+> 	adpt->no_mdio_gpio = true;
 
-This patch set IORESOUCE_MEM_64 for 64bit resource during OF device resource
-flags parsing.
+There are two different things here. One is configuring the pin to be
+a GPIO. The second is using the GPIO as a GPIO. In this case,
+bit-banging the MDIO bus.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Tested-by: Khalid Aziz <khalid.aziz@oracle.com>
----
- drivers/of/address.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The firmware could be doing the configuration, setting the pin as a
+GPIO. However, the firmware cannot be doing the MDIO bit-banging to
+make an MDIO bus available. Linux has to do that.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 91a469d..3b09261 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
--- 
-1.8.4.5
+Or it could be we have all completely misunderstood the hardware, and
+we are not doing bit-banging GPIO MDIO. There is a real MDIO
+controller there, we don't use these pins as GPIOs, etc....
+
+	   Andrew
