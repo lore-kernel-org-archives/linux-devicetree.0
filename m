@@ -1,108 +1,90 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: dt-bindings: document the concept of GPIO banks
-Date: Fri, 8 Apr 2016 11:26:55 +0200
-Message-ID: <CACRpkdY+zqyzZv7iy-9B3jp+42D3s==YZu=70DHN6nkzwKhLmg@mail.gmail.com>
-References: <1459415459-8107-1-git-send-email-linus.walleij@linaro.org>
-	<CAL_JsqK+n-EwHx52=d9-dTJaVsSOzRS+PAmyCYwe6HK=kDoyGQ@mail.gmail.com>
+From: sugar <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] ASoC: rockchip: i2s: configure the sdio pins' iomux mode
+Date: Fri, 8 Apr 2016 17:26:57 +0800
+Message-ID: <57077961.6010200@rock-chips.com>
+References: <1459931902-77324-1-git-send-email-sugar.zhang@rock-chips.com>
+ <20160407175811.GP32257@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK+n-EwHx52=d9-dTJaVsSOzRS+PAmyCYwe6HK=kDoyGQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160407175811.GP32257@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 3:22 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Mar 31, 2016 at 4:10 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+Hi Rob,
 
-> We generally avoid indexing blocks in DT.
+On 4/8/2016 01:58, Rob Herring Wrote:
+> On Wed, Apr 06, 2016 at 04:38:22PM +0800, Sugar Zhang wrote:
+>> There are 3 i2s sdio pins, which iomux mode is as follows:
+>
+> s/i2s sdio/I2S\/SDIO muxed/
+>
+>>
+>>   - sdi3_sdo1
+>>   - sdi2_sdo2
+>>   - sdi1_sdo3
+>>
+>> we need to configure these pins' iomux mode via the GRF register
+>> when use multi channel playback/capture.
+>
+> Why not a pinctrl binding here? If you want SDIO mode, then you need
+> similar code in the SDIO driver (or just rely on default mode).
+>
+here, i2s_sdio means i2s_sdi/i2s_sdo, not means SDIO bus interface.
+for example:
 
-I am trying to come up with some standard way before I get
-even more custom bindings slipping in. We have:
+gpio3d[6] iomux select:
+2'b 00: gpio
+2'b 01: i2s0_sdi3sdo1
+2'b 10: xxx
+2'b 11: xxx
 
-gpio-nmk.txt
-   gpio-bank = <n>;
+we configure the i2s_sdi3sdo1 mode via the pinctrl, and then need another
+grf register to configure it is used for i2s0_sdi3 or i2s0_sdo1.
 
-gpio_lpc32xx.txt
-   #gpio-cells = <3>; /* bank, pin, flags */
+>>
+>> Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>>   .../devicetree/bindings/sound/rockchip-i2s.txt     |  5 +++
+>>   sound/soc/rockchip/rockchip_i2s.c                  | 39 +++++++++++++++++++++-
+>>   sound/soc/rockchip/rockchip_i2s.h                  |  8 +++++
+>>   3 files changed, 51 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+>> index 6e86d8a..ad72a7d 100644
+>> --- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+>> +++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+>> @@ -23,6 +23,11 @@ Required properties:
+>>   - rockchip,playback-channels: max playback channels, if not set, 8 channels default.
+>>   - rockchip,capture-channels: max capture channels, if not set, 2 channels default.
+>>
+>> +Required properties for controller which support multi channels playback/capture:
+>> +
+>> +- rockchip,grf: Should be phandle/offset pair. the phandle of the syscon node for GRF register,
+>
+> Wrap your lines at less than 80 chars.
 
-microchip,pic32-gpio.txt
-   microchip,gpio-bank = <n>;
+Ok, will fix.
+>
+>> +  and the offset of the GRF for control register.
+>> +
+>>   Example for rk3288 I2S controller:
+>>
+>>   i2s@ff890000 {
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+>
+>
 
-The usecase Nicolas describe with aliases used for numbering
-the controllers is the same as well.
-
-So we presently have four ways of doing the same thing:
-
-(1) In gpio-controller node:
-     gpio-bank = <n>;
-     microchip,gpio-bank = <n>;
-
-(2) In the first GPIO specifier cell. (This is a bit special.)
-
-(3) Using alias.
-
-I could also invent something like:
-
-hardware-block-iterator = <n>;
-hwid = <n>;
-etc
-
-it would have the same effect. Something counting up
-from zero.
-
-They could also use (heaven forbid) the order in which
-the banks are specified in the device tree. Or, as tz1090
-does, the order of bank subnodes in a bigger gpio-controller
-node.
-
->> +A GPIO controller may specify a bank ID. This is a hardware index that
->> +indicate the logical order of the GPIO controller in the hardware architecture,
->> +usually in the sequence 0, 1, 2 .. n.
-(...)
-> I still don't understand why do you need to know this?
-
-One reason is to (maybe sneakily) get around encoding the
-often-proposed linux-gpio-base = <n> property to map the
-GPIOs of the bank to the global Linux GPIO numberspace.
-
-By tradition that space begins at 0 and if e.g. each bank
-has 32 GPIOs then the driver can calculate
-the offset into the global space with:
-
-linux-gpio-base = <gpio-bank> * 32;
-
-So rather than encoding the pointless linux base number,
-something less intrusive is encoded: the order of the
-banks used when enumerating to a global scope.
-
-Something like this was necessary for DT-ifying some old
-systems as they relied on being able to control the
-numberspace.
-
-It has some physical counterpart: the pins in a datasheet
-are often numbered 0..31, 32..63, 64.. etc corresponding
-to the (bank number) * 32 + offset. Also for simple GPIOs
-that are not pin control-enabled and not using pin control
-as a back-end.
-
-I think many operating systems may be using the same
-concept of a fixed numberspace and then they also need
-something like this: a hardware index ID starting from zero of
-the GPIO bank. It's more neutral, as they can be doing
-some other numberspace-slicing if they want.
-
-> If you need
-> some mapping of gpio nodes into pin controller, the pin controller
-> should have a mapping using phandles.
-
-It actually has the concept of gpio-range that maps a local
-GPIO offset on a gpio-controller to a pin offset on a
-pin controller, so we have a solution for that.
-
-As Neil Armstrong suggests, it *could* be reused to
-enumerate the banks but I'm not too happy about that.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
