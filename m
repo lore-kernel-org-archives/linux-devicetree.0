@@ -1,91 +1,30 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
-Date: Fri, 8 Apr 2016 16:25:42 -0700
-Message-ID: <20160408232542.GL391@tuxbot>
-References: <20151231231039.GA8886@rob-hp-laptop>
- <56ABADEA.40801@codeaurora.org>
- <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
- <5706B4EF.2050600@codeaurora.org>
- <20160407201009.GA16136@lunn.ch>
- <5706D493.8020700@codeaurora.org>
- <20160408005317.GA28125@lunn.ch>
- <5708013F.90207@codeaurora.org>
- <CAOCOHw5R=PnkafRqx2eGKKm10eLgD4H3u7TjbbhdZMbqVR7LrA@mail.gmail.com>
- <57083834.2060102@codeaurora.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 03/15] irqchip/gic: Don't unnecessarily write the IRQ
+ configuration
+Date: Sat, 9 Apr 2016 11:50:28 +0100
+Message-ID: <20160409115028.38038e47@arm.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+	<1458224359-32665-4-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57083834.2060102@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Gilad Avidov <gavidov@codeaurora.org>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, shankerd@codeaurora.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, vikrams@codeaurora.org, Christopher Covington <cov@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458224359-32665-4-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 08 Apr 16:01 PDT 2016, Timur Tabi wrote:
+On Thu, 17 Mar 2016 14:19:07 +0000
+Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-> Bjorn Andersson wrote:
+> If the interrupt configuration matches the current configuration, then
+> don't bother writing the configuration again.
 > 
-> >It sounds like you're trying to say that the pins used can be are
-> >muxed as GPIO or MDIO, in the TLMM.
-> 
-> I'm not 100% sure, but I think that's correct.  If you don't want to have
-> normal networking, you could connect those external pins to some GPIO device
-> (like an LED or whatever), and then configure the pin muxing for GPIO
-> purposes.  But if that's true, it's only true on the FSM9900. On the
-> QDF2432, those lines are not connected to the TLMM.  They are instead
-> hard-wired to the Emac.
-> 
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Then through proper use of the pinctrl framework you should configure
-the FSM9900 to mux these pins appropriately and the two solutions are
-equivalent.
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-> >In the downstream kernel this is often seen with the drivers calling
-> >gpio_request() to "reserve" said pins, but all you should do is
-> >described the desired configuration and muxing in the pinctrl node,
-> >reference that from your driver and simply ignore the fact that those
-> >pins could have been used as GPIO pins.
-> 
-> That makes sense, but I think the driver already does that.
-> 
-> https://patchwork.ozlabs.org/patch/561667/
-> 
-> Function emac_probe_resources() has a call to of_get_named_gpio().  And then
-> emac_mac_up() calls gpio_request().  As far as I can tell, that's it.
-> 
-> I'm guessing that the of_get_named_gpio() call needs to be changed somehow,
-> but I'm not sure how.
-> 
-
-Thanks for the link.
-
-In short those call to the gpio framework should just be removed. They
-should only be there if you're using the gpiolib to control the state of
-those pins, and you're not as far as I can see.
-
-
-The general outline of what you should have in your dts instead is:
-
-soc {
-	tlmm {
-		compatible = "qcom,pinctrl-xyz";
-
-		mdio_pins_a: mdio {
-			state {
-				pins = "gpio0", "gpio1";
-				function = "mdio";
-			};
-		};
-	};
-
-	emac {
-		compatible = "qcom,somthing-emac";
-
-		pinctrl-names = "default";
-		pinctrl-0 = <&mdio_pins_a>;
-	};
-};
-
-Regards,
-Bjorn
+	M.
+-- 
+Jazz is not dead. It just smells funny.
