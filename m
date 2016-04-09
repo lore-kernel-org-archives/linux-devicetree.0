@@ -1,79 +1,22 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 5/7] soc: renesas: Add r8a7793 SYSC PM Domain Binding Definitions
-Date: Sat, 09 Apr 2016 21:53:23 +0300
-Message-ID: <47107072.xvsYncjQ5Q@avalon>
-References: <1460031620-13240-1-git-send-email-geert+renesas@glider.be> <1460031620-13240-6-git-send-email-geert+renesas@glider.be>
+From: =?utf-8?B?5L2z5pyf5LiN5Y+v6am7?= <happyqq-ZQDVPq5WhXJNJje9z4SY94+3UJwe1uzS@public.gmane.org>
+Subject: =?utf-8?B?5L2z5pyf5LiN5Y+v6am7?=
+Date: Sun, 10 Apr 2016 03:34:00 +0800
+Message-ID: <20160410033412265561@huaxuanmachine.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1460031620-13240-6-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+5L2g55qE6ICB5pyL5Y+L6YKA5L2g5p2lUee+pDozNDMyNTc3NTkg5oqi57qi5YyFIOaKouenkuad
+gCDmiqJ2aXAg5LuA5LmI6YO96KaB5oqi44CC5aSq5Yi65r+A5LqG44CC5LiN6Z2g5omL5rCU5Y+q
+5ou85omL6YCfDQo=
 
-Thank you for the patch.
 
-On Thursday 07 Apr 2016 14:20:18 Geert Uytterhoeven wrote:
-> R-Car M2-N is identical to R-Car M2-W w.r.t. power domains, so reuse the
-> definitions from the latter.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> v4:
->   - Rename R8A7793_PD_SH to R8A7793_PD_SH_4A,
->   - Use the numbers directly, to make the header file self-contained,
->   - Add always-on power area,
-> 
-> v3:
->   - New.
-> ---
->  include/dt-bindings/power/r8a7793-sysc.h | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 include/dt-bindings/power/r8a7793-sysc.h
-> 
-> diff --git a/include/dt-bindings/power/r8a7793-sysc.h
-> b/include/dt-bindings/power/r8a7793-sysc.h new file mode 100644
-> index 0000000000000000..b5693df3d830ed42
-> --- /dev/null
-> +++ b/include/dt-bindings/power/r8a7793-sysc.h
-> @@ -0,0 +1,28 @@
-> +/*
-> + * Copyright (C) 2016 Glider bvba
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + */
-> +#ifndef __DT_BINDINGS_POWER_R8A7793_SYSC_H__
-> +#define __DT_BINDINGS_POWER_R8A7793_SYSC_H__
-> +
-> +/*
-> + * These power domain indices match the numbers of the interrupt bits
-> + * representing the power areas in the various Interrupt Registers
-> + * (e.g. SYSCISR, Interrupt Status Register)
-> + *
-> + * Note that R-Car M2-N is identical to R-Car M2-W w.r.t. power domains.
-> + */
-> +
-> +#define R8A7793_PD_CA15_CPU0		 0
-> +#define R8A7793_PD_CA15_CPU1		 1
-> +#define R8A7793_PD_CA15_SCU		12
-> +#define R8A7793_PD_SH_4A		16
-> +#define R8A7793_PD_SGX			20
-> +
-> +/* Always-on power area */
-> +#define R8A7793_PD_ALWAYS_ON		32
-> +
-> +#endif /* __DT_BINDINGS_POWER_R8A7793_SYSC_H__ */
-
--- 
-Regards,
-
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
