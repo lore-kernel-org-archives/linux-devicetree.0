@@ -1,162 +1,158 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 00/12] ARM/arm64: dts: rcar: Add SYSC PM domains
-Date: Sat, 09 Apr 2016 23:00:35 +0300
-Message-ID: <1837405.iVihM6eUVQ@avalon>
-References: <1460031635-13452-1-git-send-email-geert+renesas@glider.be>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH V2 1/5] iommu/msm: Add DT adaptation
+Date: Sun, 10 Apr 2016 01:38:05 +0300
+Message-ID: <6297087.btlKtGepct@avalon>
+References: <1459952975-1250-1-git-send-email-sricharan@codeaurora.org>
+	<1459952975-1250-2-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1460031635-13452-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1459952975-1250-2-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Sricharan,
 
-Thank you for the patches.
+Thank you for the patch.
 
-Patches 01 to 06 look good to me expect for the power-domains = <&cpg_clocks>; 
-property as explained in a reply to the SYSC driver patches.
+On Wednesday 06 Apr 2016 19:59:31 Sricharan R wrote:
+> The driver currently works based on platform data. Remove this
+> and add support for DT. A single master can have multiple ports
+> connected to more than one iommu.
+> 
+>                      master
+>                        |
+>                        |
+>                        |
+>           ------------------------
+>           |                      |
+>        IOMMU0                  IOMMU1
+>           |                      |
+>      ctx0   ctx1            ctx0   ctx1
+> 
+> This association of master and iommus/contexts were previously
+> represented by platform data parent/child device details. The client
+> drivers were responsible for programming all of the iommus/contexts
+> for the device. Now while adapting to generic DT bindings we maintain the
+> list of iommus, contexts that each master domain is connected to and
+> program all of them on attach/detach.
+> 
+> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  59 ++++
+>  drivers/iommu/msm_iommu.c                          | 252 +++++++++--------
+>  drivers/iommu/msm_iommu.h                          |  73 ++---
+>  drivers/iommu/msm_iommu_dev.c                      | 315 ++++--------------
+>  4 files changed, 296 insertions(+), 403 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+> b/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt new file mode
+> 100644
+> index 0000000..21bfbfc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+> @@ -0,0 +1,59 @@
+> +* QCOM IOMMU
+> +
+> +The QCOM IOMMU is an implementation compatible with the ARM VMSA short
+> +descriptor page tables. It provides address translation for bus masters
+> outside
+> +of the CPU, each connected to the IOMMU through a port called micro-TLB.
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must contain "qcom,iommu-v0".
+> +  - reg: Base address and size of the IOMMU registers.
+> +  - interrupts: Specifiers for the MMU fault interrupts. For instances that
+> +    support secure mode two interrupts must be specified, for non-secure
+> and
+> +    secure mode, in that order. For instances that don't support secure
+> mode a
+> +    single interrupt must be specified.
+> +  - #iommu-cells: This is the total number of stream ids that a master
+> would
+> +		  use during transactions which will be specified as a list
+> +		  as a part of iommus property below.
 
-For patches 07 to 12,
+That's not correct. #iommu-cells, as defined in the core IOMMU DT bindings, is 
+"the number of cells in an IOMMU specifier needed to encode an address" 
+(address being a stream id here).
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Can the number of cells differ from instance to instance, or is it always 2 ?
 
-On Thursday 07 Apr 2016 14:20:23 Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series adds the R-Car System Controller to the DTS files for
-> the various Renesas R-Car SoCs, and hooks up devices to their respective
-> PM domains.
-> 
-> This is a dependency for the enablement of DU and VSP on R-Car H3, as
-> on this SoC the VSPs are located in a PM Domain.
-> 
-> This series contains 2 parts:
->   1. Patches 1-6 add device node for the System Controllers, and hook
->      up CPU cores and L2 caches/SCUs to their respective PM Domains,
->   2. Patches 7-12 hook up devices to the SYSC "always-on" PM Domain, for
->      a more consistent device-power-area description in DT.
-> 
-> While part 1 is safe to apply, part 2 causes more deferred probing,
-> which exposes a few deficiencies in subsystems and drivers:
-> 
->   1. The PHY subsystem doesn't support deferred probe, so Micrel
->      KSZ8041RNLI (R-Car Gen2) or KSZ9031 (R-Car Gen3) falls back to
->      polling:
-> 
-> 	irq: no irq domain found for /interrupt-controller@e61c0000 !
-> 	Micrel KSZ8041RNLI ee700000.etherne:01: attached PHY driver [Micrel
-> KSZ8041RNLI] (mii_bus:phy_addr=ee700000.etherne:01, irq=-1)
-> 
-> 	irq: no irq domain found for /soc/gpio@e6052000 !
-> 	Micrel KSZ9031 Gigabit PHY e6800000.etherne:00: attached PHY driver 
-[Micrel
-> KSZ9031 Gigabit PHY] (mii_bus:phy_addr=e6800000.etherne:00, irq=-1)
-> 
->   2. The Audio DMAC is now initialized after rcar_sound on R-Car Gen2
->      and Gen3, so rcar_sound falls back to PIO:
-> 
-> 	rcar_sound ec500000.sound: can't get dma channel
-> 	rcar_sound ec500000.sound: ssi[0] fallback to PIO mode
-> 	rcar_sound ec500000.sound: can't get dma channel
-> 	rcar_sound ec500000.sound: ssi[1] fallback to PIO mode
-> 
->   3. The System DMAC is now initialized after the SPI drivers on R-Car
->      Gen2, hence they fall back to PIO:
-> 
-> 	renesas_spi e6b10000.spi: dma_request_slave_channel_compat failed
-> 	renesas_spi e6b10000.spi: DMA not available, using PIO
-> 
-> 	spi_sh_msiof e6e20000.spi: dma_request_slave_channel_compat failed
-> 	spi_sh_msiof e6e20000.spi: DMA not available, using PIO
-> 
->   4. On r8a7790/lager, I see various i2c failures:
-> 
-> 	adv7180 6-0020: chip found @ 0x20 (e6520000.i2c)
-> 	adv7180: probe of 6-0020 failed with error -110
-> 
-> 	i2c 7-0058: Masking da9063 interrupt sources
-> 	i2c 7-0058: i2c error -110
-> 	da9063 7-0058: Cannot read FAULT_LOG.
-> 	da9063 7-0058: Cannot clear fault log
-> 	da9063 7-0058: Cannot read chip model id.
-> 	da9063: probe of 7-0058 failed with error -5
-> 	i2c 7-0068: Masking da9210 interrupt sources
-> 	i2c 7-0068: i2c error -110
-> 	da9210 7-0068: Failed to write to mask reg: -110
-> 	da9210: probe of 7-0068 failed with error -110
-> 
-> Hence for now I think it's best to just apply the first part, to allow
-> progress on R-Car H3, and postpone the second part until the issues are
-> sorted out.
-> 
-> Changes compared to v3:
->   - Add power-domains properties to the sysc nodes, to refer to the
->     SoC's Clock Domains,
->   - Extract using the SYSC "always-on" PM Domain on R-Car H3 into its
->     own patch,
->   - Add patches to use the SYSC "always-on" PM Domain on R-Car H1 and
->     R-Car Gen2,
->   - Update for recently added can0, can1, pciec0, and pciec1 device
->     nodes on R-Car H3.
-> 
-> Changes compared to v2:
->   - Move power area hierarchy from DT to C (cfr. DT bindings for Renesas
->     CPG/MSSR), and switch to "#power-domain-cells = <1>",
->   - Drop fallback compatibility strings, as the bindings are
->     SoC-specific,
->   - Add an "always-on" power area on R-Car H3.
-> 
-> Changes compared to v1:
->   - Add R-Car H3 (r8a7795) support,
->   - Use "renesas,<type>-sysc" instead of "renesas,sysc-<type>",
->   - Add fallback compatibility strings for R-Car Gen2 and Gen3.
-> 
-> Dependencies:
->   - renesas-devel-20160406-v4.6-rc2,
->   - "[PATCH v4 0/7] PM / Domains: Add DT bindings for the R-Car System
->     Controller",
->   - "[PATCH v4 00/11] soc: renesas: Add R-Car SYSC PM Domain Support".
-> Note that these are hard dependencies: adding SYSC PM Domains to DTS
-> files without driver support may cause breakage!
-> 
-> For your convenience, I've pushed this, incl. all dependencies, to the
-> topic/rcar-sysc-pd-v4 branch of
-> https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git
-> 
-> This has been tested on r8a7779/marzen, r8a7790/lager, r8a7791/koelsch,
-> r8a7794/alt, and r8a7795/salvator-x.
-> 
-> Thanks for applying part 1 (patches 1-6)!
-> 
-> Geert Uytterhoeven (12):
->   ARM: dts: r8a7779: Add SYSC PM Domains
->   ARM: dts: r8a7790: Add SYSC PM Domains
->   ARM: dts: r8a7791: Add SYSC PM Domains
->   ARM: dts: r8a7793: Add SYSC PM Domains
->   ARM: dts: r8a7794: Add SYSC PM Domains
->   arm64: dts: r8a7795: Add SYSC PM Domains
->   ARM: dts: r8a7779: Use SYSC "always-on" PM Domain
->   ARM: dts: r8a7790: Use SYSC "always-on" PM Domain
->   ARM: dts: r8a7791: Use SYSC "always-on" PM Domain
->   ARM: dts: r8a7793: Use SYSC "always-on" PM Domain
->   ARM: dts: r8a7794: Use SYSC "always-on" PM Domain
->   arm64: dts: r8a7795: Use SYSC "always-on" PM Domain
-> 
->  arch/arm/boot/dts/r8a7779.dtsi           |  55 ++++++-----
->  arch/arm/boot/dts/r8a7790.dtsi           | 156
-> ++++++++++++++++-------------- arch/arm/boot/dts/r8a7791.dtsi           |
-> 157 +++++++++++++++++-------------- arch/arm/boot/dts/r8a7793.dtsi         
->  | 106 +++++++++++---------- arch/arm/boot/dts/r8a7794.dtsi           | 117
-> ++++++++++++----------- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 124
-> +++++++++++++----------- 6 files changed, 395 insertions(+), 320
-> deletions(-)
+> +  - ncb: The total number of context banks in the IOMMU.
+
+Should this be qcom,ncb ?
+
+> +  - clocks	: List of clocks to be used during SMMU register access. See
+> +		  Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +		  for information about the format. For each clock specified
+> +		  here, there must be a corresponding entry in clock-names
+> +		  (see below).
+> +
+> +  - clock-names	: List of clock names corresponding to the clocks specified
+> in
+> +		  the "clocks" property (above). See
+> +		  Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +		  for more info.
+> +
+> +Each bus master connected to an IOMMU must reference the IOMMU in its
+> device
+> +node with the following property:
+> +
+> +  - iommus: A reference to the IOMMU in multiple cells. The first cell is a
+> +	    phandle to the IOMMU and the second cell is the list of the
+> +	    stream ids used by the device.
+
+You mention in your cover letter that a master device can be connected to 
+multiple iommus, shouldn't that be stated here ? On the same topic, do your 
+masters need to selectively enable/disable memory ports to IOMMUs, or can they 
+all be enabled/disabled together ?
+
+Also, the second cell can't be a list of stream ids, as one cell stores one 
+value. A master device using multiple stream ids should use multiple entries 
+in the iommus property.
+
+> +Example: mdp iommu and its bus master
+> +
+> +                mdp_port0: qcom,iommu@7500000 {
+
+I think you can use iommu instead of qcom,iommu.
+
+> +			compatible = "msm,iommu-v0";
+> +			#iommu-cells = <2>;
+> +			clock-names =
+> +			    "smmu_pclk",
+> +			    "iommu_clk";
+> +			clocks =
+> +			    <&mmcc SMMU_AHB_CLK>,
+> +			    <&mmcc MDP_AXI_CLK>;
+> +			reg = <0x07500000 0x100000>;
+> +			interrupts =
+> +			    <GIC_SPI 63 0>,
+> +			    <GIC_SPI 64 0>;
+> +			ncb = <2>;
+> +		};
+> +
+> +		mdp: qcom,mdp@5100000 {
+> +			compatible = "qcom,mdp";
+> +			...
+> +			iommus = <&mdp_port0 0 2>;
+> +		};
 
 -- 
 Regards,
 
 Laurent Pinchart
-
