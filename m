@@ -1,123 +1,94 @@
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-	<noltari@gmail.com>
-Subject: [PATCH 2/2] MIPS: BMIPS: improve BCM6368 device tree
-Date: Sat,  9 Apr 2016 12:57:49 +0200
-Message-ID: <1460199469-18880-2-git-send-email-noltari@gmail.com>
-References: <1459685585-11747-1-git-send-email-noltari@gmail.com>
- <1460199469-18880-1-git-send-email-noltari@gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 04/15] irqchip/gic: WARN if setting the interrupt type
+ fails
+Date: Sat, 9 Apr 2016 11:58:54 +0100
+Message-ID: <20160409115854.492090a5@arm.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+	<1458224359-32665-5-git-send-email-jonathanh@nvidia.com>
+	<alpine.DEB.2.11.1603171550200.3978@nanos>
+	<56EAC761.1040801@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460199469-18880-1-git-send-email-noltari@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ralf@linux-mips.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, robh@kernel.org, simon@fire.lp0.eu
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56EAC761.1040801-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-- Remove unneeded leds0 alias.
-- Switch to bcm6345-l1-intc interrupt controller.
-- Use interrupt-controller instead of periph_intc and cpu_intc.
-- Add uart1 node.
-- Single ohci and ehci nodes.
-- Avoid using underscores in node names.
-- Rename uart aliases to serial.
-- Remove blank line in cpus node.
+On Thu, 17 Mar 2016 15:04:01 +0000
+Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
----
- v2: more device tree improvements
-  - There is just ohci/ehci node.
-  - Avoid using underscores in node names.
-  - Use interrupt-controller for cpu_intc.
-  - Rename uart aliases to serial.
-  - Remove blank line.
+> 
+> On 17/03/16 14:51, Thomas Gleixner wrote:
+> > On Thu, 17 Mar 2016, Jon Hunter wrote:
+> > 
+> >> Setting the interrupt type for private peripheral interrupts (PPIs) may
+> >> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
+> >> whether this is allowed. There is no way to know if setting the type is
+> >> supported for a given GIC and so the value written is read back to
+> >> verify it matches the desired configuration. If it does not match then
+> >> an error is return.
+> >>
+> >> There are cases where the interrupt configuration read from firmware
+> >> (such as a device-tree blob), has been incorrect and hence
+> >> gic_configure_irq() has returned an error. This error has gone
+> >> undetected because the error code returned was ignored but the interrupt
+> >> still worked fine because the configuration for the interrupt could not
+> >> be overwritten.
+> >>
+> >> Given that this has done undetected and we should only fail to set the
+> >> type for PPIs whose configuration cannot be changed anyway, don't return
+> >> an error and simply WARN if this fails. This will allows us to fix up any
+> >> places in the kernel where we should be checking the return status and
+> >> maintain back compatibility with firmware images that may have incorrect
+> >> interrupt configurations.
+> > 
+> > Though silently returning 0 is really the wrong thing to do. You can add the
+> > warn, but why do you want to return success?
+> 
+> Yes that would be the correct thing to do I agree. However, the problem
+> is that if we do this, then after the patch "irqdomain: Don't set type
+> when mapping an IRQ" is applied, we may break interrupts for some
+> existing device-tree binaries that have bad configuration (such as omap4
+> and tegra20/30 ... see patches 1 and 2) that have gone unnoticed. So it
+> is a back compatibility issue.
+> 
+> If you are wondering why these interrupts break after "irqdomain: Don't
+> set type when mapping an IRQ", it is because today
+> irq_create_fwspec_mapping() does not check the return code from setting
+> the type, but if we defer setting the type until __setup_irq() which
+> does check the return code, then all of a sudden interrupts that were
+> working (even with bad configurations) start to fail.
+> 
+> The reason why I opted not to return an error code from
+> gic_configure_irq() is it really can't fail. The failure being reported
+> does not prevent the interrupt from working, but tells you your
+> configuration does not match the hardware setting which you cannot
+> overwrite.
+> 
+> So to maintain back compatibility and avoid any silent errors, I opted
+> to make it a WARN and not return an error.
+> 
+> If people are ok with potentially breaking interrupts for device-tree
+> binaries with bad settings, then I am ok to return an error here.
 
- arch/mips/boot/dts/brcm/bcm6368.dtsi | 32 ++++++++++++++++++++--------=
-----
- 1 file changed, 20 insertions(+), 12 deletions(-)
+I think we need to phase things. Let's start with warning people for a
+few kernel releases. Actively maintained platforms will quickly address
+the issue (fixing their DT). As I see it, this issue seems rather
+widespread (even kvmtool outputs a DT with the wrong triggering
+information).
 
-diff --git a/arch/mips/boot/dts/brcm/bcm6368.dtsi b/arch/mips/boot/dts/=
-brcm/bcm6368.dtsi
-index 1f6b9b5..d0e3a70 100644
---- a/arch/mips/boot/dts/brcm/bcm6368.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6368.dtsi
-@@ -20,11 +20,10 @@
- 			device_type =3D "cpu";
- 			reg =3D <1>;
- 		};
--
- 	};
-=20
- 	clocks {
--		periph_clk: periph_clk {
-+		periph_clk: periph-clk {
- 			compatible =3D "fixed-clock";
- 			#clock-cells =3D <0>;
- 			clock-frequency =3D <50000000>;
-@@ -32,11 +31,11 @@
- 	};
-=20
- 	aliases {
--		leds0 =3D &leds0;
--		uart0 =3D &uart0;
-+		serial0 =3D &uart0;
-+		serial1 =3D &uart1;
- 	};
-=20
--	cpu_intc: cpu_intc {
-+	cpu_intc: interrupt-controller {
- 		#address-cells =3D <0>;
- 		compatible =3D "mti,cpu-interrupt-controller";
-=20
-@@ -64,16 +63,16 @@
- 			mask =3D <0x1>;
- 		};
-=20
--		periph_intc: periph_intc@10000020 {
--			compatible =3D "brcm,bcm3380-l2-intc";
--			reg =3D <0x10000024 0x4 0x1000002c 0x4>,
--			      <0x10000020 0x4 0x10000028 0x4>;
-+		periph_intc: interrupt-controller@10000020 {
-+			compatible =3D "brcm,bcm6345-l1-intc";
-+			reg =3D <0x10000020 0x10>,
-+			      <0x10000030 0x10>;
-=20
- 			interrupt-controller;
- 			#interrupt-cells =3D <1>;
-=20
- 			interrupt-parent =3D <&cpu_intc>;
--			interrupts =3D <2>;
-+			interrupts =3D <2>, <3>;
- 		};
-=20
- 		leds0: led-controller@100000d0 {
-@@ -93,7 +92,16 @@
- 			status =3D "disabled";
- 		};
-=20
--		ehci0: usb@10001500 {
-+		uart1: serial@10000120 {
-+			compatible =3D "brcm,bcm6345-uart";
-+			reg =3D <0x10000120 0x18>;
-+			interrupt-parent =3D <&periph_intc>;
-+			interrupts =3D <3>;
-+			clocks =3D <&periph_clk>;
-+			status =3D "disabled";
-+		};
-+
-+		ehci: usb@10001500 {
- 			compatible =3D "brcm,bcm6368-ehci", "generic-ehci";
- 			reg =3D <0x10001500 0x100>;
- 			big-endian;
-@@ -102,7 +110,7 @@
- 			status =3D "disabled";
- 		};
-=20
--		ohci0: usb@10001600 {
-+		ohci: usb@10001600 {
- 			compatible =3D "brcm,bcm6368-ohci", "generic-ohci";
- 			reg =3D <0x10001600 0x100>;
- 			big-endian;
---=20
-2.1.4
+Once we've fixed the bulk of the platforms and virtual environments, we
+can start thinking about making it fail harder.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
