@@ -1,37 +1,40 @@
 From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/4] support control with using GPIO lines
-Date: Sun, 10 Apr 2016 23:59:22 +0900
-Message-ID: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH 1/4] rtc: ds1302: fix error check in set_time
+Date: Sun, 10 Apr 2016 23:59:23 +0900
+Message-ID: <1460300366-25248-2-git-send-email-akinobu.mita@gmail.com>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460300366-25248-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support access to DS1302 with GPIO lines.
+The set_time callback for rtc-ds1302 doesn't write clock registers
+because the error check for the return value from spi_write_then_read()
+is not correct.  spi_write_then_read() which returns zero on success.
 
-Recently rtc-ds1302 is rewritten using SPI 3wire mode.  This adds
-another platform driver using GPIO while supporting both modes.
-
-Thie series first fixes two problems I found while tesing, secondly
-introduces the abstraction layer for the register access which enables
-to share the most code between spi and platform driver, and adds
-the platform driver using GPIO.
-
-Akinobu Mita (4):
-  rtc: ds1302: fix error check in set_time
-  rtc: ds1302: fix write value for day of week register
-  rtc: ds1302: add register access abstraction layer
-  rtc: ds1302: support control with using GPIO lines
-
- .../devicetree/bindings/rtc/maxim-ds1302.txt       |  13 +
- drivers/rtc/Kconfig                                |  17 +-
- drivers/rtc/rtc-ds1302.c                           | 558 ++++++++++++++++++---
- 3 files changed, 503 insertions(+), 85 deletions(-)
-
+Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/rtc/rtc-ds1302.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/rtc/rtc-ds1302.c b/drivers/rtc/rtc-ds1302.c
+index 5cdc0f2..5e05653 100644
+--- a/drivers/rtc/rtc-ds1302.c
++++ b/drivers/rtc/rtc-ds1302.c
+@@ -54,7 +54,7 @@ static int ds1302_rtc_set_time(struct device *dev, struct rtc_time *time)
+ 
+ 	status = spi_write_then_read(spi, buf, 2,
+ 			NULL, 0);
+-	if (!status)
++	if (status)
+ 		return status;
+ 
+ 	/* Write registers starting at the first time/date address. */
 -- 
 2.5.0
 
