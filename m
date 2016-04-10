@@ -1,7 +1,7 @@
 From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/4] rtc: ds1302: add register access abstraction layer
-Date: Sun, 10 Apr 2016 23:59:25 +0900
-Message-ID: <1460300366-25248-4-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH 4/4] rtc: ds1302: support control with using GPIO lines
+Date: Sun, 10 Apr 2016 23:59:26 +0900
+Message-ID: <1460300366-25248-5-git-send-email-akinobu.mita@gmail.com>
 References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1460300366-25248-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,344 +10,452 @@ To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z
 Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The rtc-ds1302 driver now implemented using SPI 3wire mode.
-But I would like to access it with using three wires connected to GPIO
-lines.
-
-This adds abstraction layer for DS1302 register access in order to
-prepare to support for using GPIO lines.  This enables to share common
-code between SPI driver and GPIO driver.
+This adds support control with GPIO lines connected to the DS1302
+which can communicate with three wires.
 
 Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/rtc/rtc-ds1302.c | 224 ++++++++++++++++++++++++++++++++---------------
- 1 file changed, 155 insertions(+), 69 deletions(-)
+ .../devicetree/bindings/rtc/maxim-ds1302.txt       |  13 +
+ drivers/rtc/Kconfig                                |  17 +-
+ drivers/rtc/rtc-ds1302.c                           | 340 ++++++++++++++++++++-
+ 3 files changed, 351 insertions(+), 19 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt b/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
+index ba470c5..d489753 100644
+--- a/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
++++ b/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
+@@ -27,6 +27,12 @@ Required SPI properties:
+ - spi-cs-high: DS-1302 has active high chip select line. This is
+   required unless inverted in hardware.
+ 
++Required properties when using GPIO lines:
++
++- gpio-ce: GPIO connected to CE pin
++- gpio-io: GPIO connected to I/O pin
++- gpio-reset: GPIO connected to SCLK pin
++
+ Example:
+ 
+ spi@901c {
+@@ -44,3 +50,10 @@ spi@901c {
+ 		spi-cs-high;
+ 	};
+ };
++
++	rtc: ds1302 {
++		compatible = "maxim,ds1302";
++		gpio-ce = <&gpio2 6 GPIO_ACTIVE_HIGH>;
++		gpio-io = <&gpio2 7 GPIO_ACTIVE_HIGH>;
++		gpio-sclk = <&gpio2 8 GPIO_ACTIVE_HIGH>;
++	};
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a86a562..734dc1b 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -636,15 +636,6 @@ config RTC_DRV_M41T94
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-m41t94.
+ 
+-config RTC_DRV_DS1302
+-	tristate "Dallas/Maxim DS1302"
+-	depends on SPI
+-	help
+-	  If you say yes here you get support for the Dallas DS1302 RTC chips.
+-
+-	  This driver can also be built as a module. If so, the module
+-	  will be called rtc-ds1302.
+-
+ config RTC_DRV_DS1305
+ 	tristate "Dallas/Maxim DS1305/DS1306"
+ 	help
+@@ -1639,6 +1630,14 @@ config RTC_DRV_XGENE
+ 	  This driver can also be built as a module, if so, the module
+ 	  will be called "rtc-xgene".
+ 
++config RTC_DRV_DS1302
++	tristate "Dallas/Maxim DS1302"
++	help
++	  If you say yes here you get support for the Dallas DS1302 RTC chips.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called rtc-ds1302.
++
+ comment "HID Sensor RTC drivers"
+ 
+ config RTC_DRV_HID_SENSOR_TIME
 diff --git a/drivers/rtc/rtc-ds1302.c b/drivers/rtc/rtc-ds1302.c
-index 454248f..1647848 100644
+index 1647848..778f39a 100644
 --- a/drivers/rtc/rtc-ds1302.c
 +++ b/drivers/rtc/rtc-ds1302.c
-@@ -7,6 +7,8 @@
-  * This file is subject to the terms and conditions of the GNU General Public
-  * License version 2. See the file "COPYING" in the main directory of
-  * this archive for more details.
-+ *
-+ * Datasheet: https://datasheets.maximintegrated.com/en/ds/DS1302.pdf
-  */
+@@ -19,6 +19,10 @@
+ #include <linux/of.h>
+ #include <linux/rtc.h>
+ #include <linux/spi/spi.h>
++#include <linux/delay.h>
++#include <linux/platform_device.h>
++#include <linux/of_gpio.h>
++#include <linux/gpio/consumer.h>
  
- #include <linux/bcd.h>
-@@ -40,27 +42,58 @@
- #define	RTC_ADDR_MIN	0x01		/* Address of minute register */
- #define	RTC_ADDR_SEC	0x00		/* Address of second register */
- 
-+struct ds1302 {
-+	const struct ds1302_ops *ops;
-+	struct device *dev;
-+};
-+
-+struct ds1302_ops {
-+	int (*readbyte)(struct ds1302 *, u8);
-+	int (*writebyte)(struct ds1302 *, u8, u8);
-+	int (*readburst)(struct ds1302 *, u8, u8 *, int);
-+	int (*writeburst)(struct ds1302 *, u8, const u8 *, int);
-+};
-+
-+static int ds1302_readbyte(struct ds1302 *ds1302, u8 addr)
-+{
-+	return ds1302->ops->readbyte(ds1302, addr);
-+}
-+
-+static int ds1302_writebyte(struct ds1302 *ds1302, u8 addr, u8 val)
-+{
-+	return ds1302->ops->writebyte(ds1302, addr, val);
-+}
-+
-+static int ds1302_readburst(struct ds1302 *ds1302, u8 addr, u8 *buf, int size)
-+{
-+	if (addr != RTC_CLCK_BURST)
-+		return -EINVAL;
-+
-+	return ds1302->ops->readburst(ds1302, addr, buf, size);
-+}
-+
-+static int ds1302_writeburst(struct ds1302 *ds1302, u8 addr, const u8 *buf,
-+			     int size)
-+{
-+	if (addr != RTC_CLCK_BURST)
-+		return -EINVAL;
-+
-+	return ds1302->ops->writeburst(ds1302, addr, buf, size);
-+}
-+
- static int ds1302_rtc_set_time(struct device *dev, struct rtc_time *time)
- {
--	struct spi_device	*spi = dev_get_drvdata(dev);
--	u8		buf[1 + RTC_CLCK_LEN];
-+	struct ds1302	*ds1302 = dev_get_drvdata(dev);
-+	u8		buf[RTC_CLCK_LEN];
- 	u8		*bp = buf;
- 	int		status;
- 
- 	/* Enable writing */
--	bp = buf;
--	*bp++ = RTC_ADDR_CTRL << 1 | RTC_CMD_WRITE;
--	*bp++ = RTC_CMD_WRITE_ENABLE;
--
--	status = spi_write_then_read(spi, buf, 2,
--			NULL, 0);
-+	status = ds1302_writebyte(ds1302, RTC_ADDR_CTRL, RTC_CMD_WRITE_ENABLE);
- 	if (status)
- 		return status;
- 
- 	/* Write registers starting at the first time/date address. */
--	bp = buf;
--	*bp++ = RTC_CLCK_BURST << 1 | RTC_CMD_WRITE;
--
- 	*bp++ = bin2bcd(time->tm_sec);
- 	*bp++ = bin2bcd(time->tm_min);
- 	*bp++ = bin2bcd(time->tm_hour);
-@@ -70,23 +103,16 @@ static int ds1302_rtc_set_time(struct device *dev, struct rtc_time *time)
- 	*bp++ = bin2bcd(time->tm_year % 100);
- 	*bp++ = RTC_CMD_WRITE_DISABLE;
- 
--	/* use write-then-read since dma from stack is nonportable */
--	return spi_write_then_read(spi, buf, sizeof(buf),
--			NULL, 0);
-+	return ds1302_writeburst(ds1302, RTC_CLCK_BURST, buf, sizeof(buf));
- }
- 
- static int ds1302_rtc_get_time(struct device *dev, struct rtc_time *time)
- {
--	struct spi_device	*spi = dev_get_drvdata(dev);
--	u8		addr = RTC_CLCK_BURST << 1 | RTC_CMD_READ;
-+	struct ds1302	*ds1302 = dev_get_drvdata(dev);
- 	u8		buf[RTC_CLCK_LEN - 1];
- 	int		status;
- 
--	/* Use write-then-read to get all the date/time registers
--	 * since dma from stack is nonportable
--	 */
--	status = spi_write_then_read(spi, &addr, sizeof(addr),
--			buf, sizeof(buf));
-+	status = ds1302_readburst(ds1302, RTC_CLCK_BURST, buf, sizeof(buf));
- 	if (status < 0)
- 		return status;
- 
-@@ -108,94 +134,155 @@ static struct rtc_class_ops ds1302_rtc_ops = {
- 	.set_time	= ds1302_rtc_set_time,
- };
- 
--static int ds1302_probe(struct spi_device *spi)
-+static int ds1302_probe(struct ds1302 *ds1302)
- {
- 	struct rtc_device	*rtc;
--	u8		addr;
--	u8		buf[4];
--	u8		*bp = buf;
- 	int		status;
- 
--	/* Sanity check board setup data.  This may be hooked up
--	 * in 3wire mode, but we don't care.  Note that unless
--	 * there's an inverter in place, this needs SPI_CS_HIGH!
--	 */
--	if (spi->bits_per_word && (spi->bits_per_word != 8)) {
--		dev_err(&spi->dev, "bad word length\n");
--		return -EINVAL;
--	} else if (spi->max_speed_hz > 2000000) {
--		dev_err(&spi->dev, "speed is too high\n");
--		return -EINVAL;
--	} else if (spi->mode & SPI_CPHA) {
--		dev_err(&spi->dev, "bad mode\n");
--		return -EINVAL;
--	}
-+	dev_set_drvdata(ds1302->dev, ds1302);
- 
--	addr = RTC_ADDR_CTRL << 1 | RTC_CMD_READ;
--	status = spi_write_then_read(spi, &addr, sizeof(addr), buf, 1);
-+	status = ds1302_readbyte(ds1302, RTC_ADDR_CTRL);
- 	if (status < 0) {
--		dev_err(&spi->dev, "control register read error %d\n",
-+		dev_err(ds1302->dev, "control register read error %d\n",
- 				status);
- 		return status;
- 	}
- 
--	if ((buf[0] & ~RTC_CMD_WRITE_DISABLE) != 0) {
--		status = spi_write_then_read(spi, &addr, sizeof(addr), buf, 1);
-+	if (status & ~RTC_CMD_WRITE_DISABLE) {
-+		status = ds1302_readbyte(ds1302, RTC_ADDR_CTRL);
- 		if (status < 0) {
--			dev_err(&spi->dev, "control register read error %d\n",
-+			dev_err(ds1302->dev, "control register read error %d\n",
- 					status);
- 			return status;
- 		}
- 
--		if ((buf[0] & ~RTC_CMD_WRITE_DISABLE) != 0) {
--			dev_err(&spi->dev, "junk in control register\n");
-+		if (status & ~RTC_CMD_WRITE_DISABLE) {
-+			dev_err(ds1302->dev, "junk in control register\n");
- 			return -ENODEV;
- 		}
- 	}
--	if (buf[0] == 0) {
--		bp = buf;
--		*bp++ = RTC_ADDR_CTRL << 1 | RTC_CMD_WRITE;
--		*bp++ = RTC_CMD_WRITE_DISABLE;
--
--		status = spi_write_then_read(spi, buf, 2, NULL, 0);
-+	if (status == 0) {
-+		status = ds1302_writebyte(ds1302, RTC_ADDR_CTRL,
-+					  RTC_CMD_WRITE_DISABLE);
- 		if (status < 0) {
--			dev_err(&spi->dev, "control register write error %d\n",
--					status);
-+			dev_err(ds1302->dev,
-+				"control register write error %d\n", status);
- 			return status;
- 		}
- 
--		addr = RTC_ADDR_CTRL << 1 | RTC_CMD_READ;
--		status = spi_write_then_read(spi, &addr, sizeof(addr), buf, 1);
-+		status = ds1302_readbyte(ds1302, RTC_ADDR_CTRL);
- 		if (status < 0) {
--			dev_err(&spi->dev,
-+			dev_err(ds1302->dev,
- 					"error %d reading control register\n",
- 					status);
- 			return status;
- 		}
- 
--		if (buf[0] != RTC_CMD_WRITE_DISABLE) {
--			dev_err(&spi->dev, "failed to detect chip\n");
-+		if (status != RTC_CMD_WRITE_DISABLE) {
-+			dev_err(ds1302->dev, "failed to detect chip\n");
- 			return -ENODEV;
- 		}
- 	}
- 
--	spi_set_drvdata(spi, spi);
--
--	rtc = devm_rtc_device_register(&spi->dev, "ds1302",
-+	rtc = devm_rtc_device_register(ds1302->dev, "ds1302",
- 			&ds1302_rtc_ops, THIS_MODULE);
- 	if (IS_ERR(rtc)) {
- 		status = PTR_ERR(rtc);
--		dev_err(&spi->dev, "error %d registering rtc\n", status);
-+		dev_err(ds1302->dev, "error %d registering rtc\n", status);
- 		return status;
- 	}
- 
+ #define DRV_NAME	"rtc-ds1302"
+ #define DRV_VERSION	"1.0.0"
+@@ -195,6 +199,16 @@ static int ds1302_probe(struct ds1302 *ds1302)
  	return 0;
  }
  
--static int ds1302_remove(struct spi_device *spi)
-+static int ds1302_spi_readbyte(struct ds1302 *ds1302, u8 addr)
- {
--	spi_set_drvdata(spi, NULL);
--	return 0;
-+	struct spi_device *spi = to_spi_device(ds1302->dev);
-+	int err;
-+	u8 buf;
++#ifdef CONFIG_OF
++static const struct of_device_id ds1302_dt_ids[] = {
++	{ .compatible = "maxim,ds1302", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
++#endif
 +
-+	addr = addr << 1 | RTC_CMD_READ;
-+	err = spi_write_then_read(spi, &addr, sizeof(addr), &buf, 1);
++#if IS_ENABLED(CONFIG_SPI_MASTER)
++
+ static int ds1302_spi_readbyte(struct ds1302 *ds1302, u8 addr)
+ {
+ 	struct spi_device *spi = to_spi_device(ds1302->dev);
+@@ -285,21 +299,327 @@ static int ds1302_spi_probe(struct spi_device *spi)
+ 	return ds1302_probe(ds1302);
+ }
+ 
+-#ifdef CONFIG_OF
+-static const struct of_device_id ds1302_dt_ids[] = {
+-	{ .compatible = "maxim,ds1302", },
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
+-#endif
+-
+-static struct spi_driver ds1302_driver = {
++static struct spi_driver ds1302_spi_driver = {
+ 	.driver.name	= "rtc-ds1302",
+ 	.driver.of_match_table = of_match_ptr(ds1302_dt_ids),
+ 	.probe		= ds1302_spi_probe,
+ };
+ 
+-module_spi_driver(ds1302_driver);
++static int ds1302_spi_register_driver(void)
++{
++	return spi_register_driver(&ds1302_spi_driver);
++}
++
++static void ds1302_spi_unregister_driver(void)
++{
++	spi_unregister_driver(&ds1302_spi_driver);
++}
++
++#else
++
++static int ds1302_spi_register_driver(void)
++{
++	return 0;
++}
++
++static void ds1302_spi_unregister_driver(void)
++{
++}
++
++#endif
++
++/*
++ * ds1302 driver using three GPIO lines
++ *
++ * The information to implement this is gleaned from
++ * http://playground.arduino.cc/Main/DS1302
++ */
++struct ds1302_gpio {
++	struct gpio_desc *gpiod_ce;
++	struct gpio_desc *gpiod_io;
++	struct gpio_desc *gpiod_sclk;
++
++	struct ds1302 ds1302;
++};
++
++static struct ds1302_gpio *to_ds1302_gpio(struct ds1302 *ds1302)
++{
++	return container_of(ds1302, struct ds1302_gpio, ds1302);
++}
++
++static int ds1302_gpio_reset(struct ds1302 *ds1302)
++{
++	struct ds1302_gpio *gpio = to_ds1302_gpio(ds1302);
++	int ret;
++
++	ret = gpiod_direction_output(gpio->gpiod_ce, 0);
++	if (ret)
++		return ret;
++
++	ret = gpiod_direction_output(gpio->gpiod_io, 0);
++	if (ret)
++		return ret;
++
++	return gpiod_direction_output(gpio->gpiod_sclk, 0);
++}
++
++static void ds1302_gpio_chip_enable(struct ds1302 *ds1302, int enable)
++{
++	struct ds1302_gpio *gpio = to_ds1302_gpio(ds1302);
++
++	gpiod_set_value(gpio->gpiod_ce, enable);
++	if (enable) {
++		/*
++		 * tCC (CE to CLK Setup): 4us
++		 */
++		udelay(4);
++	} else {
++		/*
++		 * tCWH (CE Inactive Time): 4us
++		 */
++		udelay(4);
++	}
++}
++
++static int ds1302_gpio_sendbits(struct ds1302 *ds1302, u8 val)
++{
++	struct ds1302_gpio *gpio = to_ds1302_gpio(ds1302);
++	int i;
++
++	for (i = 0; i < 8; i++, val >>= 1) {
++		gpiod_set_value(gpio->gpiod_sclk, 0);
++		/* tCL (CLK Low Time): 1000ns */
++		udelay(1);
++
++		gpiod_set_value(gpio->gpiod_io, val & 0x1);
++		/* tDC (Data to CLK Setup): 200ns */
++		udelay(1);
++
++		gpiod_set_value(gpio->gpiod_sclk, 1);
++		/*
++		 * tCH (CLK High Time): 1000ns
++		 * tCDH (CLK to Data Hold): 800ns
++		 */
++		udelay(1);
++	}
++
++	return 0;
++}
++
++static unsigned int ds1302_gpio_recvbits(struct ds1302 *ds1302)
++{
++	unsigned int val;
++	int i;
++	struct ds1302_gpio *gpio = to_ds1302_gpio(ds1302);
++
++	for (i = 0, val = 0; i < 8; i++) {
++		int bit;
++
++		gpiod_set_value(gpio->gpiod_sclk, 0);
++		/*
++		 * tCL (CLK Low Time): 1000ns
++		 * tCDD (CLK to Data Delay): 800ns
++		 */
++		udelay(1);
++
++		bit = gpiod_get_value(gpio->gpiod_io);
++		if (bit < 0)
++			return bit;
++		val |= bit << i;
++
++		gpiod_set_value(gpio->gpiod_sclk, 1);
++		/* tCH (CLK High Time): 1000ns */
++		udelay(1);
++	}
++
++	return val;
++}
++
++static int ds1302_gpio_readburst(struct ds1302 *ds1302, u8 addr, u8 *buf,
++				 int size)
++{
++	int i;
++	int ret;
++	struct ds1302_gpio *gpio = to_ds1302_gpio(ds1302);
++
++	ret = ds1302_gpio_reset(ds1302);
++	if (ret)
++		return ret;
++
++	ds1302_gpio_chip_enable(ds1302, true);
++
++	ds1302_gpio_sendbits(ds1302, ((addr & 0x3f) << 1) | RTC_CMD_READ);
++
++	ret = gpiod_direction_input(gpio->gpiod_io);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < size; i++) {
++		ret = ds1302_gpio_recvbits(ds1302);
++		if (ret < 0)
++			break;
++		 buf[i] = ret;
++	}
++
++	ds1302_gpio_chip_enable(ds1302, false);
++
++	return ret < 0 ? ret : 0;
++}
++
++static int ds1302_gpio_readbyte(struct ds1302 *ds1302, u8 addr)
++{
++	u8 val;
++	int err;
++
++	err = ds1302_gpio_readburst(ds1302, addr, &val, 1);
 +	if (err)
 +		return err;
 +
-+	return buf;
++	return val;
 +}
 +
-+static int ds1302_spi_writebyte(struct ds1302 *ds1302, u8 addr, u8 val)
++static int ds1302_gpio_writeburst(struct ds1302 *ds1302, u8 addr, const u8 *buf,
++				  int size)
 +{
-+	struct spi_device *spi = to_spi_device(ds1302->dev);
-+	u8 buf[2] = {
-+		addr << 1 | RTC_CMD_WRITE,
-+		val,
-+	};
++	int err;
++	int i;
 +
-+	return spi_write_then_read(spi, buf, sizeof(buf), NULL, 0);
-+}
++	err = ds1302_gpio_reset(ds1302);
++	if (err)
++		return err;
 +
-+static int ds1302_spi_readburst(struct ds1302 *ds1302, u8 addr, u8 *buf,
-+				int size)
-+{
-+	struct spi_device *spi = to_spi_device(ds1302->dev);
++	ds1302_gpio_chip_enable(ds1302, true);
 +
-+	addr = addr << 1 | RTC_CMD_READ;
++	ds1302_gpio_sendbits(ds1302, ((addr & 0x3f) << 1) | RTC_CMD_WRITE);
 +
-+	/* Use write-then-read to get all the date/time registers
-+	 * since dma from stack is nonportable
-+	 */
-+	return spi_write_then_read(spi, &addr, sizeof(addr), buf, size);
-+}
-+
-+static int ds1302_spi_writeburst(struct ds1302 *ds1302, u8 addr, const u8 *buf,
-+				 int size)
-+{
-+	struct spi_device *spi = to_spi_device(ds1302->dev);
-+	u8 write_buf[RTC_CLCK_LEN + 1];
-+
-+	if (size + 1 > sizeof(write_buf))
-+		return -EINVAL;
-+
-+	write_buf[0] = addr << 1 | RTC_CMD_WRITE;
-+	memcpy(write_buf + 1, buf, size);
-+
-+	/* use write-then-read since dma from stack is nonportable */
-+	return spi_write_then_read(spi, write_buf, size + 1, NULL, 0);
-+}
-+
-+static const struct ds1302_ops ds1302_spi_ops = {
-+	.readbyte = ds1302_spi_readbyte,
-+	.writebyte = ds1302_spi_writebyte,
-+	.readburst = ds1302_spi_readburst,
-+	.writeburst = ds1302_spi_writeburst,
-+};
-+
-+static int ds1302_spi_probe(struct spi_device *spi)
-+{
-+	struct ds1302		*ds1302;
-+
-+	/* Sanity check board setup data.  This may be hooked up
-+	 * in 3wire mode, but we don't care.  Note that unless
-+	 * there's an inverter in place, this needs SPI_CS_HIGH!
-+	 */
-+	if (spi->bits_per_word && (spi->bits_per_word != 8)) {
-+		dev_err(&spi->dev, "bad word length\n");
-+		return -EINVAL;
-+	} else if (spi->max_speed_hz > 2000000) {
-+		dev_err(&spi->dev, "speed is too high\n");
-+		return -EINVAL;
-+	} else if (spi->mode & SPI_CPHA) {
-+		dev_err(&spi->dev, "bad mode\n");
-+		return -EINVAL;
++	for (i = 0; i < size; i++) {
++		err = ds1302_gpio_sendbits(ds1302, buf[i]);
++		if (err)
++			break;
 +	}
 +
-+	ds1302 = devm_kzalloc(&spi->dev, sizeof(*ds1302), GFP_KERNEL);
-+	if (!ds1302)
-+		return -ENOMEM;
++	ds1302_gpio_chip_enable(ds1302, false);
 +
-+	ds1302->ops = &ds1302_spi_ops;
-+	ds1302->dev = &spi->dev;
++	return err;
++}
++
++static int ds1302_gpio_writebyte(struct ds1302 *ds1302, u8 addr, u8 val)
++{
++	return ds1302_gpio_writeburst(ds1302, addr, &val, 1);
++}
++
++static const struct ds1302_ops ds1302_gpio_ops = {
++	.readbyte = ds1302_gpio_readbyte,
++	.writebyte = ds1302_gpio_writebyte,
++	.readburst = ds1302_gpio_readburst,
++	.writeburst = ds1302_gpio_writeburst,
++};
++
++static struct gpio_desc *ds1302_gpiod_request(struct device *dev,
++						const char *name)
++{
++	int gpio;
++	int ret;
++
++	if (!dev->of_node)
++		return ERR_PTR(-ENODEV);
++
++	gpio = of_get_named_gpio(dev->of_node, name, 0);
++	if (!gpio_is_valid(gpio))
++		return ERR_PTR(gpio);
++
++	ret = devm_gpio_request_one(dev, gpio, 0, name);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return gpio_to_desc(gpio);
++}
++
++static struct ds1302 *ds1302_gpio_init(struct device *dev)
++{
++	struct ds1302_gpio *ds1302_gpio;
++	struct gpio_desc *gpiod;
++
++	ds1302_gpio = devm_kzalloc(dev, sizeof(*ds1302_gpio), GFP_KERNEL);
++	if (!ds1302_gpio)
++		return ERR_PTR(-ENOMEM);
++
++	ds1302_gpio->ds1302.ops = &ds1302_gpio_ops;
++	ds1302_gpio->ds1302.dev = dev;
++
++	gpiod = ds1302_gpiod_request(dev, "gpio-ce");
++	if (IS_ERR(gpiod))
++		return ERR_CAST(gpiod);
++	ds1302_gpio->gpiod_ce = gpiod;
++
++	gpiod = ds1302_gpiod_request(dev, "gpio-io");
++	if (IS_ERR(gpiod))
++		return ERR_CAST(gpiod);
++	ds1302_gpio->gpiod_io = gpiod;
++
++	gpiod = ds1302_gpiod_request(dev, "gpio-sclk");
++	if (IS_ERR(gpiod))
++		return ERR_CAST(gpiod);
++	ds1302_gpio->gpiod_sclk = gpiod;
++
++	return &ds1302_gpio->ds1302;
++}
++
++static int ds1302_gpio_probe(struct platform_device *pdev)
++ {
++	struct ds1302 *ds1302;
++
++	ds1302 = ds1302_gpio_init(&pdev->dev);
++	if (IS_ERR(ds1302))
++		return PTR_ERR(ds1302);;
 +
 +	return ds1302_probe(ds1302);
- }
++}
++
++static struct platform_driver ds1302_gpio_driver = {
++	.probe = ds1302_gpio_probe,
++	.driver		= {
++		.name	= "rtc-ds1302",
++		.of_match_table = of_match_ptr(ds1302_dt_ids),
++	},
++};
++
++static int ds1302_gpio_register_driver(void)
++{
++	return platform_driver_register(&ds1302_gpio_driver);
++}
++
++static void ds1302_gpio_unregister_driver(void)
++{
++	return platform_driver_unregister(&ds1302_gpio_driver);
++}
++
++static int __init ds1302_init(void)
++{
++	int ret;
++
++	ret = ds1302_spi_register_driver();
++	if (ret) {
++		pr_err("Failed to register ds1302 spi driver: %d\n", ret);
++		return ret;
++	}
++
++	ret = ds1302_gpio_register_driver();
++        if (ret) {
++		pr_err("Failed to register ds1302 gpio driver: %d\n", ret);
++		ds1302_spi_unregister_driver();
++	}
++
++	return ret;
++}
++module_init(ds1302_init)
++
++static void __exit ds1302_exit(void)
++{
++	ds1302_spi_unregister_driver();
++	ds1302_gpio_unregister_driver();
++}
++module_exit(ds1302_exit)
  
- #ifdef CONFIG_OF
-@@ -209,8 +296,7 @@ MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
- static struct spi_driver ds1302_driver = {
- 	.driver.name	= "rtc-ds1302",
- 	.driver.of_match_table = of_match_ptr(ds1302_dt_ids),
--	.probe		= ds1302_probe,
--	.remove		= ds1302_remove,
-+	.probe		= ds1302_spi_probe,
- };
- 
- module_spi_driver(ds1302_driver);
+ MODULE_DESCRIPTION("Dallas DS1302 RTC driver");
+ MODULE_VERSION(DRV_VERSION);
 -- 
 2.5.0
 
