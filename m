@@ -1,60 +1,121 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] power: reset: support for Atmel alternative
- Shutdown Controller
-Date: Sun, 10 Apr 2016 18:27:03 +0200
-Message-ID: <20160410162703.GA25923@earth>
-References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH 3/3] clk: sunxi: Add sun8i PLL audio support
+Date: Sun, 10 Apr 2016 18:55:47 +0200
+Message-ID: <20160410185547.2829e5f3aee51d50ee454a91@free.fr>
+References: <cover.1459358017.git.moinejf@free.fr>
+	<8ba2e0d78c70ea4c54fb25969956fc31674df612.1459358017.git.moinejf@free.fr>
+	<20160410095322.GZ4227@lukather>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1458134390-23847-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160410095322.GZ4227@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Emilio Lopez <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, 10 Apr 2016 02:53:22 -0700
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Hi,
+>=20
+> On Wed, Mar 30, 2016 at 06:57:16PM +0200, Jean-Francois Moine wrote:
+> > Add the PLL type which is used by the sun8i family for audio.
+> >=20
+> > Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+> > ---
+> >  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+> >  drivers/clk/sunxi/clk-sunxi.c                     | 48 +++++++++++=
+++++++++++++
+> >  2 files changed, 49 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Do=
+cumentation/devicetree/bindings/clock/sunxi.txt
+> > index ff93aee..917d4aa 100644
+> > --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> > +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> > @@ -10,6 +10,7 @@ Required properties:
+> >  	"allwinner,sun4i-a10-pll1-clk" - for the main PLL clock and PLL4
+> >  	"allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
+> >  	"allwinner,sun8i-a23-pll1-clk" - for the main PLL clock on A23
+> > +	"allwinner,sun8i-pll2-clk" - for the audio PLL clock
+>=20
+> You should mention the name of the first SoC that introduced it.
 
-Hi,
+As I know only the pll2 of the H3, is it OK for
+	"allwinner,sun8i-h3-pll2-clk"
+?
 
-On Wed, Mar 16, 2016 at 02:19:48PM +0100, Nicolas Ferre wrote:
-> This is a series to add driver for a new Atmel Shutdown Controller. This new IP
-> is extensible and some features will be added later (see the TODO section).
-> Its extensible nature led to write a new binding so that wake-up sources can be
-> described easily.
+> >  	"allwinner,sun6i-a31-pll3-clk" - for the video PLL clock
+> >  	"allwinner,sun9i-a80-pll4-clk" - for the peripheral PLLs on A80
+> >  	"allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
+> > diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-=
+sunxi.c
+> > index 270f2a9..7386141 100644
+> > --- a/drivers/clk/sunxi/clk-sunxi.c
+> > +++ b/drivers/clk/sunxi/clk-sunxi.c
+> > @@ -1130,6 +1130,54 @@ CLK_OF_DECLARE(sun6i_pll6, "allwinner,sun6i-=
+a31-pll6-clk",
+> >  	       sun6i_pll6_clk_setup);
+> > =20
+> >  /*
+> > + * sun8i pll2
+> > + *
+> > + * rate =3D parent_rate / (m + 1) * (n + 1) / (p + 1);
+>=20
+>                          ^ I'm guessing it's a "*" instead?
 
-Thanks, queued.
+No, 'm' is a divider, as 'p'.
 
--- Sebastian
+> > + */
+> > +static void sun8i_pll2_factors(struct factors_request *req)
+> > +{
+> > +	unsigned long n, m;
+> > +
+> > +	/* set p =3D 4 so that pll2 =3D pll2x8 / 8 */
+> > +	req->p =3D 4 - 1;
+> > +	rational_best_approximation(req->rate,
+> > +				req->parent_rate / 4,
+> > +				1 << 7, 1 << 5, &n, &m);
+> > +	req->rate =3D req->parent_rate / m * n / 4;
+> > +	req->m =3D m - 1;
+> > +	req->n =3D n - 1;
+> > +}
+> > +
+> > +static void sun8i_pll2_recalc(struct factors_request *req)
+> > +{
+> > +	req->rate =3D req->parent_rate / (req->m + 1) * (req->n + 1) /
+> > +						(req->p + 1);
+> > +}
+> > +
+> > +static const struct clk_factors_config sun8i_pll2_config =3D {
+> > +	.mshift =3D 0,
+> > +	.mwidth =3D 5,
+> > +	.nshift =3D 8,
+> > +	.nwidth =3D 7,
+> > +	.pshift =3D 16,
+> > +	.pwidth =3D 4,
+> > +};
+> > +
+> > +static const struct factors_data sun8i_pll2_data __initconst =3D {
+> > +	.enable =3D 31,
+> > +	.table =3D &sun8i_pll2_config,
+> > +	.getter =3D sun8i_pll2_factors,
+> > +	.recalc =3D sun8i_pll2_recalc,
+> > +};
+> > +
+> > +static void __init sun8i_pll2_setup(struct device_node *node)
+> > +{
+> > +	sunxi_factors_clk_setup(node, &sun8i_pll2_data);
+> > +}
+> > +CLK_OF_DECLARE(sun8i_pll2, "allwinner,sun8i-pll2-clk",
+> > +	       sun8i_pll2_setup);
+>=20
+> How do you plan on supporting the multiple pll2 output?
 
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature; name="signature.asc"
+Using fixed-clocks in the DTS if needed.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXCn7RAAoJENju1/PIO/qaLnQP/15BKijz1OatwB/QZWTCncYf
-/KyQ0tc5cuogNG0ZnfpBr6ilRII5lE65/w7XWu2gfX0uxyE9kafjFQyaOHsi7+m4
-+sO0HYV0okzYLoEUnyaz0cIvVxuayMVjwBQ8Sm0OPNUXCCSos48ooNkBzRCIWACy
-eJXVdlMZkyFUvm58vHhUGEpe82VkSFiylOMy7klIcsb0x2TNFug3hNk72y4/vW/q
-jJOOBIL7F7qvrz615MiJlR13gZYQ4rycxsPywrr0Xi1Z/pc48m78DNfAmAFHJNIe
-F9p82mRJ+LVna3PzcqRy54n7fIfonSCW72XjBgcuRdRux+0NsKB3VbYOomihMsm/
-GBgdYIArGdTfhnN5K2kEPwI80xcxLpYldLBJmSH98z/cy3TqDJ7myTBtjE39NIH9
-J+/AiJvydCWGn41azok38tYrITLf3cYzyHdsDblLQq8+eOUaIEMWeJTUNWuXx1yU
-OIu0ckNlb4DKW/zh/MLaxNWwMZDKbywvxF2eAxgcOMN1ZapZnfJ8KD8M6jcqcjhL
-74F+ptAI+moZXWoAmj47yVS7uucGFtWgrhDDkavtlGYan9QSgRLSAeSMOkiHBlKH
-qNvdN3H6aSmfJ7ch2/UpVE1oJmTt6uWt592xJ5lj9waPKuIzgtfqNEROo+U5SzZH
-IYWV8WEIz0yr54oTO0l2
-=0Q0J
------END PGP SIGNATURE-----
-
---BOKacYhQ+x31HxR3--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
