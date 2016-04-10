@@ -1,64 +1,126 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 2/3] regulator: rk808: Add support for rk818
-Date: Sun, 10 Apr 2016 20:04:41 +0100
-Message-ID: <20160410190441.GC18319@sirena.org.uk>
-References: <1460108861-32818-1-git-send-email-w.egorov@phytec.de>
- <1460108861-32818-3-git-send-email-w.egorov@phytec.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1SQmhf2mF2YjsYvc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460108861-32818-3-git-send-email-w.egorov@phytec.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wadim Egorov <w.egorov@phytec.de>
-Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.com, dianders@chromium.org, zyw@rock-chips.com
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: add pxa25x .dtsi file
+Date: Sun, 10 Apr 2016 21:30:00 +0200
+Message-ID: <1460316600-15978-3-git-send-email-robert.jarzmik@free.fr>
+References: <1460316600-15978-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460316600-15978-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This file describes pxa25x SoCs. Not all devices are listed yet, only
+the subset which was already tested with a lubbock board.
 
---1SQmhf2mF2YjsYvc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+---
+ arch/arm/boot/dts/pxa25x.dtsi | 92 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 arch/arm/boot/dts/pxa25x.dtsi
 
-On Fri, Apr 08, 2016 at 11:47:40AM +0200, Wadim Egorov wrote:
+diff --git a/arch/arm/boot/dts/pxa25x.dtsi b/arch/arm/boot/dts/pxa25x.dtsi
+new file mode 100644
+index 000000000000..0d1e012178c4
+--- /dev/null
++++ b/arch/arm/boot/dts/pxa25x.dtsi
+@@ -0,0 +1,92 @@
++/*
++ * Copyright (C) 2016 Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++#include "pxa2xx.dtsi"
++#include "dt-bindings/clock/pxa-clock.h"
++
++/ {
++	model = "Marvell PXA25x family SoC";
++	compatible = "marvell,pxa250";
++
++	clocks {
++	       /*
++		* The muxing of external clocks/internal dividers for osc* clock
++		* sources has been hidden under the carpet by now.
++		*/
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		clks: pxa2xx_clks@41300004 {
++			compatible = "marvell,pxa250-core-clocks";
++			#clock-cells = <1>;
++			status = "okay";
++		};
++
++		/* timer oscillator */
++		clktimer: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency  = <3686400>;
++			clock-output-names = "ostimer";
++		};
++	};
++
++	pxabus {
++		pdma: dma-controller@40000000 {
++			compatible = "marvell,pdma-1.0";
++			reg = <0x40000000 0x10000>;
++			interrupts = <25>;
++			#dma-channels = <16>;
++			#dma-cells = <2>;
++			#dma-requests = <40>;
++			status = "okay";
++		};
++
++		pxairq: interrupt-controller@40d00000 {
++			marvell,intc-priority;
++			marvell,intc-nr-irqs = <32>;
++		};
++
++		pinctrl: pinctrl@40e00000 {
++			reg = <0x40e00054 0x20 0x40e0000c 0xc 0x40e0010c 4
++			       0x40f00020 0x10>;
++			compatible = "marvell,pxa25x-pinctrl";
++		};
++
++		gpio: gpio@40e00000 {
++			compatible = "intel,pxa25x-gpio";
++			gpio-ranges = <&pinctrl 0 0 84>;
++			clocks = <&clks CLK_NONE>;
++		};
++
++		pwm0: pwm@40b00000 {
++			compatible = "marvell,pxa250-pwm";
++			reg = <0x40b00000 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&clks CLK_PWM0>;
++		};
++
++		pwm1: pwm@40b00010 {
++			compatible = "marvell,pxa250-pwm";
++			reg = <0x40b00010 0x10>;
++			#pwm-cells = <1>;
++			clocks = <&clks CLK_PWM1>;
++		};
++	};
++
++	timer@40a00000 {
++		compatible = "marvell,pxa-timer";
++		reg = <0x40a00000 0x20>;
++		interrupts = <26>;
++		clocks = <&clktimer>;
++		status = "okay";
++	};
++};
+-- 
+2.1.4
 
-> +static const struct regulator_linear_range rk818_buck4_voltage_ranges[] = {
-> +	REGULATOR_LINEAR_RANGE(1800000, 0, 18, 100000),
-> +};
-> +
-> +static const struct regulator_linear_range rk818_boost_voltage_ranges[] = {
-> +	REGULATOR_LINEAR_RANGE(4700000, 0, 7, 100000),
-> +};
-
-Why are these done as linear ranges when there's only one range?  This
-just adds overhead, just specify the one range directly in the desc and
-use the appropriate ops.
-
-> +	if (rk808->variant == RK808_ID)
-> +		ret = of_regulator_match(dev, np, rk808_reg_matches,
-> +					 RK808_NUM_REGULATORS);
-> +	else if (rk808->variant == RK818_ID)
-> +		ret = of_regulator_match(dev, np, rk818_reg_matches,
-> +					RK818_NUM_REGULATORS);
-
-Don't use of_regulator_match, just specify the DT names for the
-regulator in the desc.  Also it looks like you're trying to write a
-switch statement with ifs here, just write a switch statement.  It's
-clearer and less error prone.
-
---1SQmhf2mF2YjsYvc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXCqPIAAoJECTWi3JdVIfQPGYH/A/ZgJZAnQYrDnJ+wHU8PzK7
-aaPM3HoGSJ2bsY5f4NXBd7JeKirjBSrehLNXxKzgGjcVT644msQ88je5Pdu5OH6L
-jyqOrW24TUv8eUA1xLh4/RRUSoIjTtVdGJOz3IdTZ88WJGYkXu7dhnR/8hejd3pk
-uU5lL0RSlD/1pM0mH9bfZSjqYcQZnzuNCZF29Cx/QbzaPeSgwcduBE6xLveeiIaQ
-Xb32MLaajRz+P4XrIRlabIXx5LiL0WWFbhRkFmJ47dCz0xutbQNgwnYq5WFwCOJE
-lMZRiH8uO93BGqkTobY9KoOBw8RklpIy3+2eSRNxwcdZdUaU5xls7NQ0cUW31x0=
-=FpIx
------END PGP SIGNATURE-----
-
---1SQmhf2mF2YjsYvc--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
