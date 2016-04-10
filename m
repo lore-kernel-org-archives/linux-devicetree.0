@@ -1,141 +1,189 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH 2/3] clk: sunxi: Add sun6i/8i PLL video support
-Date: Sun, 10 Apr 2016 19:11:21 +0200
-Message-ID: <20160410191121.6f791f375110cf358b0ee1ab@free.fr>
-References: <cover.1459358017.git.moinejf@free.fr>
-	<e63499f789971b8c45a0ae5e90bd127371cbcf19.1459358017.git.moinejf@free.fr>
-	<20160410095006.GY4227@lukather>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: GPIO character device next steps
+Date: Sun, 10 Apr 2016 18:18:54 +0100
+Message-ID: <570A8AFE.1060008@jic23.retrosnub.co.uk>
+References: <CACRpkdYDjN8R60hhhu4RK9LF2cChOkA98pgvy2TzG9MAT1qGRw@mail.gmail.com>
+ <570A6E67.8000802@kernel.org>
+ <CACRpkdZ6908HQpwaco6Ffredw0voJJAg-bPj-cxaJOnFj14Geg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160410095006.GY4227@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Emilio Lopez <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ6908HQpwaco6Ffredw0voJJAg-bPj-cxaJOnFj14Geg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lee Campbell <leecam@google.com>, Amit Kucheria <amit.kucheria@linaro.org>, Markus Pargmann <mpa@pengutronix.de>, Michael Welling <mwelling@ieee.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 10 Apr 2016 02:50:06 -0700
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+On 10/04/16 16:53, Linus Walleij wrote:
+> On Sun, Apr 10, 2016 at 5:16 PM, Jonathan Cameron <jic23@kernel.org> wrote:
+>> On 08/04/16 19:32, Linus Walleij wrote:
+>>>
+>>> As you know we froze the GPIO sysfs ABI in kernel v4.6 and
+>>> now we need to complete its replacement with a new mechanism
+>>> using the character device.
+>>
+>> Does it actually make sense to replace it?  Or rather extend
+>> it via the chardev. I've not really been following the discussion
+>> though if you've already addressed this.
+> 
+> We're freezing it. It can be used in parallel for the foreseeable
+> future but the chardev is default-enabled in order to make people
+> prefer that, the sysfs (/sys/class/gpio) needs to be turned on
+> explicitly.
+> 
+> The sysfs is a sad story because it is completely stateless, i.e.
+> we have no clue of knowing if a userspace process is actually
+> alive and using a certain GPIO or not, there is nothing that closes
+> it down if the consumer dies etc.
+Fair enough.
+> 
+>>> - Give them consumer names from userspace (label who's
+>>>   using this GPIO)
+>>
+>> Useful to what?  What is going to read this info? (debugfs?)
+> 
+> Also lsgpio, also the kernel can print "I can's use GPIO n just
+> right now because a userspace consumer is using it for <string>"
+> we just chose the model to name both ends of the
+> GPIO line, the producer and the consumer. The producer and
+> consumer can both label their end.
+> 
+> Of course I could just hard-code all userspace consumers as
+> the string "userspace" if people prefer that.
+> 
+>>> - Getting a filehandle to listen to input events (interrupts) from a
+>>>   certain GPIO line. Here I am primarily thinking about something
+>>>   akin to IIO's event mechanism using poll() which I like a lot.
+>>
+>> We don't support multiple listeners in IIO.  Maybe some combination
+>> of that and evdev which spins off a separate fifo for each listener.
+> 
+> Yes people were talking about evdev as a good example of
+> how to do this. I will have to look into that code, it seems like
+> a good idea.
+> 
+>>> I'm thinking about staying with a single open() on the chardev
+>>> from userspace, but several processes can open handles, then
+>>> we need to use an ioctl() to say what we want from this
+>>> filehandle: whether a handle on a few GPIO lines or a polled
+>>> event.
+>>
+>> Perhaps use anonymous file handles for each case.  So the exposed
+>> chardev is simply there for configuration of what others will do.
+>> Then you can have an ioctl to get an anonymous file handle for each of
+>> (with the appropriate description of what it is handling).
+> 
+> Sounds about right. Can you point me to a place where anonymous
+> file handles are delivered out from the kernel?
+Yup, do that in IIO for event chardevs.  See
+drivers/iio/industrialio/industrialio-core.c iio_ioctl
+> 
+>> * Read multiple inputs
+>> * Write multiple outputs
+>>
+>> (for both of these are you distinguishing between cases where you an guarantee
+>> they happen simultaneously and others where they are just close in time?
+>> Makes a huge difference in some cases obviously - such as reading from a parallel
+>> ADC - or writing to a DAC).
+> 
+> What happens in practice is that if the back-end supports
+> the .set_multiple() callback, and it turns out that it can be
+> performed by a single register write or so, then it will happen
+> simultaneously. Else the kernel will issue individual .set()
+> calls.
+Would be good to let userspace know if this can be done or not...
+Otherwise 'weird' timing bugs are likely to confuse people.
+> 
+> We have no .get_multiple(). Maybe one day someone will
+> implement it :/
+> 
+>> * Events - though that could probably be shared with a read multiple inputs
+>> chardev - or maybe not if it's about different pins...
+>>
+>> Re reading above I guess you may already mean this by one file for multiple
+>> things?
+> 
+> I guess
+> one filehandle for reading n GPIOs
+> one filehandle for writing/toggling n GPIOs
+> one event filehandler for getting events from one GPIO
+> 
+> Each which will relase its GPIO[s] at close.
+Sounds right.  Though a given userspace consumer may well use a
+number of each of those..
+> 
+>>> We want to be mutually exclusive to processes when getting
+>>> pins for output, while making it possible for several clients
+>>> to read the same line or subscribe to events from the same
+>>> line.
+>>
+>> Are you thinking one file descriptor for one pin (for events) or
+>> handling more complex registrations?  I can see the infrastructure
+>> for this getting rapidly complex.
+> 
+> No just one FD for one GPIO line for events. Else it's
+> going to get hopeless.
+Certainly fiddlier ;)
+> 
+>> Could do it with irq_chips like we do in IIO triggers - so you can
+>> have one irq fire multiple listening devices...
+> 
+> TBH I never quite wrapped my head around that forked irqchip
+> thing, it scares the living daylights out of me. Its like a virtual irqchip
+> and there it looses me.
+*laughs*  It's actually much simpler than you'd think.  We'd just ended
+up implementing our own logic for handling making an interrupt do a whole
+load of different things (registered by different drivers).
 
-> Hi,
->=20
-> On Wed, Mar 30, 2016 at 06:50:43PM +0200, Jean-Francois Moine wrote:
-> > Add the PLL type which is used by the sun6i/8i families for video d=
-isplay.
-> >=20
-> > Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
-> > ---
-> >  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
-> >  drivers/clk/sunxi/clk-sunxi.c                     | 65 +++++++++++=
-++++++++++++
-> >  2 files changed, 66 insertions(+)
-	[snip]
-> > diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-=
-sunxi.c
-> > index 0581e1b..270f2a9 100644
-> > --- a/drivers/clk/sunxi/clk-sunxi.c
-> > +++ b/drivers/clk/sunxi/clk-sunxi.c
-> > @@ -23,6 +23,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/spinlock.h>
-> >  #include <linux/log2.h>
-> > +#include <linux/rational.h>
-> > =20
-> >  #include "clk-factors.h"
-> > =20
-> > @@ -1129,6 +1130,70 @@ CLK_OF_DECLARE(sun6i_pll6, "allwinner,sun6i-=
-a31-pll6-clk",
-> >  	       sun6i_pll6_clk_setup);
-> > =20
-> >  /*
-> > + * sun6i pll3
-> > + *
-> > + * if (p =3D=3D 0) rate =3D k ? 270MHz : 297MHz
-> > + * else rate =3D parent_rate / (m + 1) * (n + 1);
-> > + */
-> > +static void sun6i_pll3_factors(struct factors_request *req)
-> > +{
-> > +	unsigned long n, m;
-> > +
-> > +	if (req->rate =3D=3D 270000000) {
-> > +		req->m =3D 0;
-> > +		req->p =3D 0;
-> > +		req->k =3D 0;
-> > +	} else if (req->rate =3D=3D 297000000) {
-> > +		req->m =3D 0;
-> > +		req->p =3D 0;
-> > +		req->k =3D 1;
-> > +	} else {
-> > +		rational_best_approximation(req->rate,
-> > +					req->parent_rate,
-> > +					1 << 7, 1 << 4, &n, &m);
-> > +		req->rate =3D req->parent_rate / m * n;
-> > +		req->p =3D 1;
-> > +		req->m =3D m - 1;
-> > +		req->n =3D n - 1;
-> > +	}
-> > +}
-> > +
-> > +static void sun6i_pll3_recalc(struct factors_request *req)
-> > +{
-> > +	if (req->p)
-> > +		req->rate =3D req->parent_rate / (req->m + 1) * (req->n + 1);
-> > +	else if (req->k)
-> > +		req->rate =3D 270000000;
-> > +	else
-> > +		req->rate =3D 297000000;
-> > +}
-> > +
-> > +static const struct clk_factors_config sun6i_pll3_config =3D {
-> > +	.mshift =3D 0,
-> > +	.mwidth =3D 4,
-> > +	.nshift =3D 8,
-> > +	.nwidth =3D 7,
-> > +	.pshift =3D 24,	/* mode selection fractional / integer */
-> > +	.pwidth =3D 1,
-> > +	.kshift =3D 25,	/* fraction 270 / 297 MHz */
-> > +	.kwidth =3D 1,
-> > +};
->=20
-> That's not what p and k are.
->=20
-> Please add extra parameters to deal with fractional rates in the
-> clk_factors_config (like an extra bit + an array with the two rate
-> exposed.
->=20
-> That way, you can also deal with it in the core, instead of doing a
-> hack.
+Arnd Bergman (IIRC) pointed out that the irq chip stuff does it already
+so we switched over.  Was hairy in the early days because of stupid
+restrictions on how many IRQs platforms would support, but I think that
+has mostly gone away now.  Lots of MFD parts use them the same way these
+days.
+> 
+>> I've been thinking about how to handle logic analyzer type
+>> inputs in IIO for a while.
+> 
+> A logic analyzer seems like a pretty extreme case of general
+> purpose input, does it not?
+Yup - always target the extremes - it's more fun that way ;)
+> 
+>> One example is beaglelogic with it's around
+>> 100MHz sampling of 8 channels, It might be interesting to use some of
+>> this same gpio infrastructure to play around with the ideas (though probably
+>> not the actual beaglelogic data flows - that will need some large block transfer
+>> tricks) - particularly once you have nice functions to feed sets of gpios
+>> from arbitrary locations out on a read.
+>>
+>> Clearly there would be some overlap, but I doubt you'll get into the
+>> complexity of triggered captures etc here or at least not without jumping
+>> to userspace and back again.  Some gpio chips do support this sort of
+>> sampling, but I suspect they aren't going to be found in many 'normal'
+>> systems. (e.g. an input bank latch on event).
+>>
+>> Anyhow, this was really just a request to keep any data handling/merging
+>> infrastructure nicely separated from the front end bit spitting it out of
+>> a chardev as there are/may be other usecases.
+> 
+> Hm I'll CC you on the patches when we get there and you can tell
+> me what to split out in its own .c/.h file :)
+Meh. Can always do it later if it makes sense - only have to get the userspace
+right at this stage.
+> 
+> I can easily see people setting up systems that will use a bunch of
+> GPIOs alongside a bunch of sensors or DAC/ADCs so I hope for the
+> GPIO and IIO worlds to stay close.
+Absolutely. Nothing the odd little bridge driver can't deal with as long
+as we can put in the relevant bits to avoid jumping backwards and forwards
+from userspace.
 
-It is really a good way to add generic code for only one clock?
-Otherwise, there is no 'P' nor 'K' in the pll3 documentation, what is
-the trouble of using the variables 'p' and 'k' for other functions? And
-noone said that the variables should have the same name as those of the
-documentation.
-Anyway, I am stupid and obedient: this code was proposed by Chen-Yu Tsa=
-i
-on Sat, 6 Feb 2016 17:56:00 +0800:
+Anyhow, the really fun bit is seeing what horrendous userspace hacks
+occur because we gave them the means to do crazy things ;)
 
-> clk-factors now supports a custom .recalc callback. Along with get_fa=
-ctors,
-> you can support pretty much any clock that has four variables, not in=
-cluding
-> the mux and clock gate.
->=20
-> So for this you'd have the div as factor m, and the integer mode bit =
-as p,
-> and the fraction bit as n, and recalc would be somewhat like this:
->=20
-> if (p) {
->         rate =3D parent_rate / (m + 1);
-> } else if (n) {
->         rate =3D 297000000;
-> } else {
->         rate =3D 270000000;
-> }
->=20
-> get_factors should be easy enough to figure out.
+Jonathan
+> 
+> Yours,
+> Linus Walleij
+> 
 
---=20
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
