@@ -1,151 +1,82 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH 2/3] ARM: pxa: add pxa25x device-tree support
-Date: Sun, 10 Apr 2016 21:29:59 +0200
-Message-ID: <1460316600-15978-2-git-send-email-robert.jarzmik@free.fr>
-References: <1460316600-15978-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460316600-15978-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/6] pwms: pwm-ti*: Get the clock from the PWMSS
+ (parent)
+Date: Sun, 10 Apr 2016 20:51:33 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1604102048380.11457@utopia.booyaka.com>
+References: <1457400224-24797-1-git-send-email-fcooper@ti.com> <1457400224-24797-2-git-send-email-fcooper@ti.com> <5703564C.7090700@ti.com> <5703A0C4.6010406@ti.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5703A0C4.6010406-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a device-tree machine entry (DT_MACHINE_START) for pxa25x based
-platforms.
+Hi guys
 
-Take the opportunity to sort the file machine descriptions by
-alphabetical order.
+On Tue, 5 Apr 2016, Franklin S Cooper Jr. wrote:
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
- arch/arm/mach-pxa/Kconfig  | 11 +++++++++++
- arch/arm/mach-pxa/Makefile |  3 ++-
- arch/arm/mach-pxa/pxa-dt.c | 37 ++++++++++++++++++++++++++-----------
- arch/arm/mach-pxa/pxa25x.c | 12 ++++++------
- 4 files changed, 45 insertions(+), 18 deletions(-)
+> On 04/05/2016 01:08 AM, Sekhar Nori wrote:
+> > On Tuesday 08 March 2016 06:53 AM, Franklin S Cooper Jr wrote:
+> > > The eCAP and ePWM doesn't have their own separate clocks. They simply
+> > > utilize the clock provided directly by the PWMSS. Therefore, they simply
+> > > need to grab a reference to their parent's clock.
+> > >
+> > > Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> >
+> > So this assumes that eCAP and eHRPWM are always under the PWMSS
+> > umbrella. But on TI AM18x, thats not true. These IPs exist independently
+> > and receive functional clock from PLL sysclk outputs.
+> >
+> > > ---
+> > >  drivers/pwm/pwm-tiecap.c   | 2 +-
+> > >  drivers/pwm/pwm-tiehrpwm.c | 2 +-
+> > >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
+> > > index 616af76..9418159 100644
+> > > --- a/drivers/pwm/pwm-tiecap.c
+> > > +++ b/drivers/pwm/pwm-tiecap.c
+> > > @@ -212,7 +212,7 @@ static int ecap_pwm_probe(struct platform_device *pdev)
+> > >      if (!pc)
+> > >          return -ENOMEM;
+> > >  
+> > > -    clk = devm_clk_get(&pdev->dev, "fck");
+> > > +    clk = devm_clk_get(pdev->dev.parent, "fck");
+> >
+> > Even keeping the AM18x usecase aside, this seems to be pushing too much
+> > platform information into the driver. The "fck" is a valid connection id
+> > for the eCAP IP. Whether its valid for the parent device too is not
+> > something this driver should need to know.
+> >
+> > So it looks like what you need is for the clock hierarchy for the
+> > platform to have clocks for eHRPWM and eCAP derived out of PWMSS clock?
+> 
+> So I believe this is a question on if we want to hide the minor
+> delta between AM18 vs AM335x, AM437x and AM57x/DRA7 in the driver
+> or within the DT.
+> 
+> Note that handling this by defining new clocks in DT will then
+> result in older DTBs not working. I don't think its worth breaking
+> backwards compatibility for AM335x and AM437x DTBs for fixing support
+> for AM18 based SOCs. Especially since those SOCs haven't worked with
+> this driver for several years. By handling things within the driver rather
+> than DT we can atleast insure that we can get everything working while
+> avoiding breaking backwards compatibility.
 
-diff --git a/arch/arm/mach-pxa/Kconfig b/arch/arm/mach-pxa/Kconfig
-index cd894d69e766..76fbc115ec33 100644
---- a/arch/arm/mach-pxa/Kconfig
-+++ b/arch/arm/mach-pxa/Kconfig
-@@ -4,6 +4,17 @@ menu "Intel PXA2xx/PXA3xx Implementations"
- 
- comment "Intel/Marvell Dev Platforms (sorted by hardware release time)"
- 
-+config MACH_PXA25X_DT
-+	bool "Support PXA25x platforms from device tree"
-+	select PINCTRL
-+	select POWER_SUPPLY
-+	select PXA25x
-+	select USE_OF
-+	help
-+	  Include support for Marvell PXA25x based platforms using
-+	  the device tree. Needn't select any other machine while
-+	  MACH_PXA25x_DT is enabled.
-+
- config MACH_PXA27X_DT
- 	bool "Support PXA27x platforms from device tree"
- 	select PINCTRL
-diff --git a/arch/arm/mach-pxa/Makefile b/arch/arm/mach-pxa/Makefile
-index 2ceed407eda9..ef25dc597f30 100644
---- a/arch/arm/mach-pxa/Makefile
-+++ b/arch/arm/mach-pxa/Makefile
-@@ -19,8 +19,9 @@ obj-$(CONFIG_CPU_PXA930)	+= pxa930.o
- # NOTE: keep the order of boards in accordance to their order in Kconfig
- 
- # Device Tree support
--obj-$(CONFIG_MACH_PXA3XX_DT)	+= pxa-dt.o
-+obj-$(CONFIG_MACH_PXA25X_DT)	+= pxa-dt.o
- obj-$(CONFIG_MACH_PXA27X_DT)	+= pxa-dt.o
-+obj-$(CONFIG_MACH_PXA3XX_DT)	+= pxa-dt.o
- 
- # Intel/Marvell Dev Platforms
- obj-$(CONFIG_ARCH_LUBBOCK)	+= lubbock.o
-diff --git a/arch/arm/mach-pxa/pxa-dt.c b/arch/arm/mach-pxa/pxa-dt.c
-index f128133a8f30..3e331e61f995 100644
---- a/arch/arm/mach-pxa/pxa-dt.c
-+++ b/arch/arm/mach-pxa/pxa-dt.c
-@@ -18,20 +18,18 @@
- 
- #include "generic.h"
- 
--#ifdef CONFIG_PXA3xx
--static const char *const pxa3xx_dt_board_compat[] __initconst = {
--	"marvell,pxa300",
--	"marvell,pxa310",
--	"marvell,pxa320",
-+#ifdef CONFIG_PXA25x
-+static const char * const pxa25x_dt_board_compat[] __initconst = {
-+	"marvell,pxa250",
- 	NULL,
- };
- 
--DT_MACHINE_START(PXA_DT, "Marvell PXA3xx (Device Tree Support)")
--	.map_io		= pxa3xx_map_io,
--	.init_irq	= pxa3xx_dt_init_irq,
--	.handle_irq	= pxa3xx_handle_irq,
-+DT_MACHINE_START(PXA25X_DT, "Marvell PXA25x (Device Tree Support)")
-+	.map_io		= pxa25x_map_io,
-+	.init_irq	= pxa25x_dt_init_irq,
-+	.handle_irq	= pxa25x_handle_irq,
- 	.restart	= pxa_restart,
--	.dt_compat	= pxa3xx_dt_board_compat,
-+	.dt_compat	= pxa25x_dt_board_compat,
- MACHINE_END
- #endif
- 
-@@ -41,7 +39,7 @@ static const char * const pxa27x_dt_board_compat[] __initconst = {
- 	NULL,
- };
- 
--DT_MACHINE_START(PXA27X_DT, "Marvell PXA2xx (Device Tree Support)")
-+DT_MACHINE_START(PXA27X_DT, "Marvell PXA27x (Device Tree Support)")
- 	.map_io		= pxa27x_map_io,
- 	.init_irq	= pxa27x_dt_init_irq,
- 	.handle_irq	= pxa27x_handle_irq,
-@@ -49,3 +47,20 @@ DT_MACHINE_START(PXA27X_DT, "Marvell PXA2xx (Device Tree Support)")
- 	.dt_compat	= pxa27x_dt_board_compat,
- MACHINE_END
- #endif
-+
-+#ifdef CONFIG_PXA3xx
-+static const char *const pxa3xx_dt_board_compat[] __initconst = {
-+	"marvell,pxa300",
-+	"marvell,pxa310",
-+	"marvell,pxa320",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(PXA_DT, "Marvell PXA3xx (Device Tree Support)")
-+	.map_io		= pxa3xx_map_io,
-+	.init_irq	= pxa3xx_dt_init_irq,
-+	.handle_irq	= pxa3xx_handle_irq,
-+	.restart	= pxa_restart,
-+	.dt_compat	= pxa3xx_dt_board_compat,
-+MACHINE_END
-+#endif
-diff --git a/arch/arm/mach-pxa/pxa25x.c b/arch/arm/mach-pxa/pxa25x.c
-index a0de9a9ae64e..6110fa91be5e 100644
---- a/arch/arm/mach-pxa/pxa25x.c
-+++ b/arch/arm/mach-pxa/pxa25x.c
-@@ -212,12 +212,12 @@ static int __init pxa25x_init(void)
- 		register_syscore_ops(&pxa_irq_syscore_ops);
- 		register_syscore_ops(&pxa2xx_mfp_syscore_ops);
- 
--		pxa2xx_set_dmac_info(16, 40);
--		pxa_register_device(&pxa25x_device_gpio, &pxa25x_gpio_info);
--		ret = platform_add_devices(pxa25x_devices,
--					   ARRAY_SIZE(pxa25x_devices));
--		if (ret)
--			return ret;
-+		if (!of_have_populated_dt()) {
-+			pxa2xx_set_dmac_info(16, 40);
-+			pxa_register_device(&pxa25x_device_gpio, &pxa25x_gpio_info);
-+			ret = platform_add_devices(pxa25x_devices,
-+						   ARRAY_SIZE(pxa25x_devices));
-+		}
- 	}
- 
- 	return ret;
--- 
-2.1.4
+I agree with Sekhar that we shouldn't embed this parent clock quirk 
+into the driver.  
+
+Can you just define a new compatibility string such that the driver can be 
+written with no embedded integration quirks?  Then add a workaround in the 
+driver that will use pdev->dev.parent for the old (deprecated) 
+compatibility string and log a warning to the kernel console that the DT 
+needs to be updated.
+
+
+- Paul
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
