@@ -1,54 +1,43 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 01/19] clk: composite: Add unregister function
-Date: Sun, 10 Apr 2016 02:16:30 -0700
-Message-ID: <20160410091630.GV4227@lukather>
-References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-2-git-send-email-maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for the
+ Orange Pi One SBC
+Date: Sun, 10 Apr 2016 12:35:55 +0100
+Message-ID: <20160410113555.GC4227@lukather>
+References: <1460208161-16463-1-git-send-email-hdegoede@redhat.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mgIE+9cwyCTt+85Z"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBBPBVG4AKGQEUBXFF3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="72pTQ1Q5L511SwPT"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFHBVG4AKGQEP2WZ67A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1458751122-23976-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1460208161-16463-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---mgIE+9cwyCTt+85Z
+--72pTQ1Q5L511SwPT
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi Stephen, Mike,
-
-On Wed, Mar 23, 2016 at 05:38:24PM +0100, Maxime Ripard wrote:
-> The composite clock didn't have any unregistration function, which forced
-> us to use clk_unregister directly on it.
+On Sat, Apr 09, 2016 at 03:22:41PM +0200, Hans de Goede wrote:
+> The Orange Pi One SBC, is a stripped down version of the popular
+> Orange Pi PC. The one is a H3 based SBC, with 512M of RAM,
+> micro-sd slot, 1 host usb, 1 otg usb, hdmi and 100Mbit ethernet.
 > 
-> While it was already not great from an API point of view, it also meant
-> that we were leaking the clk_composite structure allocated in
-> clk_register_composite.
-> 
-> Add a clk_unregister_composite function to fix this.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Any comment on this one ?
-
-(and the other clock patches)
-
-Thanks,
+Applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---mgIE+9cwyCTt+85Z--
+--72pTQ1Q5L511SwPT--
