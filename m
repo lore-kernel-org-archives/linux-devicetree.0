@@ -1,64 +1,89 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v6 00/24] i2c mux cleanup and locking update
-Date: Mon, 11 Apr 2016 14:39:59 +0200
-Message-ID: <20160411123959.GA4719@katana>
-References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 1/6] pwms: pwm-ti*: Get the clock from the PWMSS (parent)
+Date: Mon, 11 Apr 2016 07:45:22 -0500
+Message-ID: <CAL_JsqLkpQzVb6bzpsH5NwfLLWEtf3o6LezrL1hCejsw65J=Bw@mail.gmail.com>
+References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
+ <1457400224-24797-2-git-send-email-fcooper@ti.com> <5703564C.7090700@ti.com>
+ <5703A0C4.6010406@ti.com> <alpine.DEB.2.02.1604102048380.11457@utopia.booyaka.com>
+ <570B8F51.6040108@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459673574-11440-1-git-send-email-peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <570B8F51.6040108@ti.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Paul Walmsley <paul@pwsan.com>, "Franklin S Cooper Jr." <fcooper@ti.com>, "Kristo, Tero" <t-kristo@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 11, 2016 at 6:49 AM, Sekhar Nori <nsekhar@ti.com> wrote:
+> On Monday 11 April 2016 02:21 AM, Paul Walmsley wrote:
+>> Hi guys
+>>
+>> On Tue, 5 Apr 2016, Franklin S Cooper Jr. wrote:
+>>
+>>> On 04/05/2016 01:08 AM, Sekhar Nori wrote:
+>>>> On Tuesday 08 March 2016 06:53 AM, Franklin S Cooper Jr wrote:
+>>>>> The eCAP and ePWM doesn't have their own separate clocks. They simply
+>>>>> utilize the clock provided directly by the PWMSS. Therefore, they simply
+>>>>> need to grab a reference to their parent's clock.
+>>>>>
+>>>>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>>>>
+>>>> So this assumes that eCAP and eHRPWM are always under the PWMSS
+>>>> umbrella. But on TI AM18x, thats not true. These IPs exist independently
+>>>> and receive functional clock from PLL sysclk outputs.
+>>>>
+>>>>> ---
+>>>>>  drivers/pwm/pwm-tiecap.c   | 2 +-
+>>>>>  drivers/pwm/pwm-tiehrpwm.c | 2 +-
+>>>>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
+>>>>> index 616af76..9418159 100644
+>>>>> --- a/drivers/pwm/pwm-tiecap.c
+>>>>> +++ b/drivers/pwm/pwm-tiecap.c
+>>>>> @@ -212,7 +212,7 @@ static int ecap_pwm_probe(struct platform_device *pdev)
+>>>>>      if (!pc)
+>>>>>          return -ENOMEM;
+>>>>>
+>>>>> -    clk = devm_clk_get(&pdev->dev, "fck");
+>>>>> +    clk = devm_clk_get(pdev->dev.parent, "fck");
+>>>>
+>>>> Even keeping the AM18x usecase aside, this seems to be pushing too much
+>>>> platform information into the driver. The "fck" is a valid connection id
+>>>> for the eCAP IP. Whether its valid for the parent device too is not
+>>>> something this driver should need to know.
+>>>>
+>>>> So it looks like what you need is for the clock hierarchy for the
+>>>> platform to have clocks for eHRPWM and eCAP derived out of PWMSS clock?
+>>>
+>>> So I believe this is a question on if we want to hide the minor
+>>> delta between AM18 vs AM335x, AM437x and AM57x/DRA7 in the driver
+>>> or within the DT.
+>>>
+>>> Note that handling this by defining new clocks in DT will then
+>>> result in older DTBs not working. I don't think its worth breaking
+>>> backwards compatibility for AM335x and AM437x DTBs for fixing support
+>>> for AM18 based SOCs. Especially since those SOCs haven't worked with
+>>> this driver for several years. By handling things within the driver rather
+>>> than DT we can atleast insure that we can get everything working while
+>>> avoiding breaking backwards compatibility.
+>>
+>> I agree with Sekhar that we shouldn't embed this parent clock quirk
+>> into the driver.
+>>
+>> Can you just define a new compatibility string such that the driver can be
+>> written with no embedded integration quirks?  Then add a workaround in the
+>> driver that will use pdev->dev.parent for the old (deprecated)
+>> compatibility string and log a warning to the kernel console that the DT
+>> needs to be updated.
+>
+> Thanks Paul! Although not sure if adding a new compatible for the IP is
+> the best way (since that would denote a different version of the IP).
+> How about checking for parent clock iff clk_get() on own device fails
+> and of_machine_is_compatible() matches the platforms where backward
+> compatibility needs to be maintained?
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+New compatible strings are acceptable.
 
-Hi Peter,
-
-> To summarize the series, there's some i2c-mux infrastructure cleanup work
-> first (I think that part stands by itself as desireable regardless), the
-> locking changes are in 16/24 and after with the real meat in 18/24. There
-> is some documentation added in 19/24 while 20/24 and after are cleanups to
-> existing drivers utilizing the new stuff.
-
-My idea is to review and pull in the infrastructure work for 4.7 and the
-locking changes to 4.8. This gives us one cycle to fix regressions (if
-any) in the infrastructure work first. Is that okay with you?
-
-Thanks,
-
-   Wolfram
-
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXC5sfAAoJEBQN5MwUoCm2kUAP/jQGfszmD3bynHq8tQGbqTIh
-+jYVRM0/CXpQCPklXZgusOuo99Aq8PqHnuQz8FA4s8OJbdbJcYqlxUFzoFOWwRu2
-1OU4hQRfFKEgcbn8uDdH0nkV+Gzs9TLKQX1PJDOQEITi19kK7nncaOJanY1PWhc3
-5ySA/jXCjB43IGOicUNyOt9uJKv/+tL2UzZmYB6vR8HaFhlVSneBuVMERsDrDjBl
-8IZnUHxPrehmgQCRB/2mc7+8X2Urm1tayi0wslLrFxKr9++as3+UPK3cJ+7GT/Hu
-IvuuC20hlyjW2H5e/KhN60rP/sXmz10nZeZk662VpAkC2Y0euqBQbcnT7eO5VCKx
-Ovk5cs1VIYpMIn/0QR0ZAMM246v7M+Pjk+6Wi+v+TavG9Fxprd1iNcjD5dz9wi1L
-lz/5P3McULOS09SPbUTF4YhqcPPpma0JsMTjz5MqiEryXbqd0Zv/xx3PIzQ6czVA
-/PBHtZkkAp3Brmc0Xh7suVwuayxNBypCKHk61/Ka7dO1UYHQsK3kL+GFEbMeky00
-2J7jGXyW/HLvQRPHBAn1PJ8feFpNL0PqYY/i1M9HobHeb1PFOh3yndX3TXaBlVDA
-L2dASNJ4hfMqjkp2TqoO7LmFnR7ccQLBI9XezCSRQtrOQdQA3Ym3MvRKKsFAR6uE
-+1TcE5VAF4XveeTtw0qp
-=D4yv
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
