@@ -1,107 +1,197 @@
-From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v6 1/2] dt: bindings: add MARVELL's sd8xxx wireless device
-Date: Mon, 11 Apr 2016 11:23:52 +0000
-Message-ID: <44846d9ea4084dc4b2706104df8d3543@SC-EXCH04.marvell.com>
-References: <1459343998-5187-1-git-send-email-akarwar@marvell.com>
- <CAL_JsqK5TiNCub6XnBcE118gLkC-mjf437zWhLOsjgtz+1peuw@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Mon, 11 Apr 2016 13:26:54 +0200
+Message-ID: <20160411112654.GC17743@ulmo.ba.sec>
+References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
+ <20160408191142.GD15034@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqK5TiNCub6XnBcE118gLkC-mjf437zWhLOsjgtz+1peuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160408191142.GD15034@localhost>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gRnJvbTogUm9iIEhlcnJpbmcg
-W21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgTWFyY2ggMzAsIDIw
-MTYgNzo0NiBQTQ0KPiBUbzogQW1pdGt1bWFyIEthcndhcg0KPiBDYzogbGludXgtd2lyZWxlc3NA
-dmdlci5rZXJuZWwub3JnOyBDYXRoeSBMdW87IE5pc2hhbnQgU2FybXVrYWRhbTsNCj4gZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFdlaS1OaW5nIEh1YW5nOyBYaW5taW5nIEh1DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjYgMS8yXSBkdDogYmluZGluZ3M6IGFkZCBNQVJWRUxMJ3Mgc2Q4eHh4
-IHdpcmVsZXNzDQo+IGRldmljZQ0KPiANCj4gT24gV2VkLCBNYXIgMzAsIDIwMTYgYXQgODoxOSBB
-TSwgQW1pdGt1bWFyIEthcndhciA8YWthcndhckBtYXJ2ZWxsLmNvbT4NCj4gd3JvdGU6DQo+ID4g
-RnJvbTogWGlubWluZyBIdSA8aHV4bUBtYXJ2ZWxsLmNvbT4NCj4gPg0KPiA+IEFkZCBkZXZpY2Ug
-dHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIE1BUlZFTEwncyBzZDh4eHgNCj4gPiAoc2Q4
-ODk3IGFuZCBzZDg5OTcpIHdsYW4gY2hpcC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpbm1p
-bmcgSHUgPGh1eG1AbWFydmVsbC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW1pdGt1bWFyIEth
-cndhciA8YWthcndhckBtYXJ2ZWxsLmNvbT4NCj4gPiAtLS0NCj4gPiBMaXN0aW5nIGNoYW5nZWxp
-c3QgZm9yIGJvdGggMS8yIGFuZCAyLzIgcGF0Y2hlcw0KPiA+IHYzOiBEb24ndCB1cGRhdGUgYWRh
-cHRlci0+ZHRfbm9kZSBpZiBtd2lmaWV4X3BsdF9kZXYgaXMgTlVMTA0KPiA+DQo+ID4gdjQ6IGEp
-Q29ycmVjdGVkIHRoZSAnbmFtZScgYW5kICdjb21wYXRpYmxlJyBwcm9wZXJ0eSBuYW1lcy4oQXJu
-ZA0KPiBCZXJnbWFubiBhbmQgUm9iDQo+ID4gICAgIEhlcnJpbmcpDQo+ID4gICAgIGIpUGF0Y2gg
-ZGVzY3JpcHRpb24gd3JhcGVkIGluIDcyIGNvbHVtbnMoUm9iIEhlcnJpbmcpDQo+ID4gICAgIGMp
-TW92ZWQgRFQgYmluZGluZyBmaWxlIHRvIGJpbmRpbmdzL25ldC93aXJlbGVzcy8oUm9iIEhlcnJp
-bmcpDQo+ID4gICAgIGQpUmVuYW1lZCAibXdpZmlleCxjaGlwLWdwaW8iIHRvICJtYXJ2ZWxsLHdh
-a2V1cC1ncGlvcyIoUm9iDQo+IEhlcnJpbmcvDQo+ID4gICAgIEFybmQgQmVyZ21hbm4pDQo+ID4g
-ICAgIGUpUmVwbGFjZWQgI2lmZGVmIHdpdGggX19tYXliZV91bnVzZWQoQXJuZCBCZXJnbWFubikN
-Cj4gPg0KPiA+IHY1OiBhKVJlbW92ZWQgd2lsZGNhcmRzIGZyb20gY29tcGF0aWJsZSBzdHJpbmco
-QXJuZCBCZXJnbWFubikNCj4gPiAgICAgYilQcmVwYXJlZCBzaW5nbGUgcGF0Y2ggZm9yIGFsbCBi
-aW5kaW5nIGNoYW5nZXMoUm9iIEhlcnJpbmcpDQo+ID4gICAgIGMpU3BlY2lmaWVkIG91ciBub2Rl
-IGFzIGEgc3Vibm9kZSBvZiBTRElPIGNvbnRyb2xsZXIuIFdpdGggdGhpcw0KPiBhcHByb2FjaCwg
-d2UNCj4gPiAgICAgZG9uJ3QgbmVlZCB0byByZWdpc3RlciBuZXcgcGxhdGZvcm0gZHJpdmVyLiAo
-Um9iIGhlcnJpbmcpDQo+ID4NCj4gPiB2NjogYSlMaXN0IG91dCB0aGUgc3BlY2lmaWMgcHJvcGVy
-dHkgbmFtZXMgZm9yIG1hcnZlbGwsY2FsZGF0YSogYW5kDQo+IHNpemUgb2YgdGhlIGRhdGEoUm9i
-IEhlcnJpbmcpDQo+ID4gICAgIGIpVXNlIHNkaW8gZnVuY3Rpb24gbnVtYmVyIGZvciBib3RoIHRo
-ZSB1bml0IGFkZHJlc3MgYW5kIHJlZyhSb2INCj4gPiBIZXJyaW5nKQ0KPiA+IC0tLQ0KPiA+ICAu
-Li4vYmluZGluZ3MvbmV0L3dpcmVsZXNzL21hcnZlbGwtc2Q4eHh4LnR4dCAgICAgICB8IDYzDQo+
-ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYzIGluc2VydGlv
-bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL25ldC93aXJlbGVzcy9tYXJ2ZWxsLXNkOHh4eC50eHQNCj4gPg0KPiA+IGRp
-ZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvd2ly
-ZWxlc3MvbWFydmVsbC1zZDh4eHgudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbmV0L3dpcmVsZXNzL21hcnZlbGwtc2Q4eHh4LnR4dA0KPiA+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uMzM3ZmVkNA0KPiA+IC0tLSAvZGV2L251bGwN
-Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dpcmVsZXNz
-L21hcnZlbGwtc2Q4eHh4LnR4DQo+ID4gKysrIHQNCj4gPiBAQCAtMCwwICsxLDYzIEBADQo+ID4g
-K01hcnZlbGwgODg5Ny84OTk3IChzZDg4OTcvc2Q4OTk3KSBTRElPIGRldmljZXMNCj4gPiArLS0t
-LS0tDQo+ID4gKw0KPiA+ICtUaGlzIG5vZGUgcHJvdmlkZXMgcHJvcGVydGllcyBmb3IgY29udHJv
-bGxpbmcgdGhlIG1hcnZlbGwgc2Rpbw0KPiB3aXJlbGVzcyBkZXZpY2UuDQo+ID4gK1RoZSBub2Rl
-IGlzIGV4cGVjdGVkIHRvIGJlIHNwZWNpZmllZCBhcyBhIGNoaWxkIG5vZGUgdG8gdGhlIFNESU8N
-Cj4gPiArY29udHJvbGxlciB0aGF0IGNvbm5lY3RzIHRoZSBkZXZpY2UgdG8gdGhlIHN5c3RlbS4N
-Cj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKw0KPiA+ICsgIC0gY29tcGF0
-aWJsZSA6IHNob3VsZCBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoNCj4gPiArICAgICAgICogIm1h
-cnZlbGwsc2Q4ODk3Ig0KPiA+ICsgICAgICAgKiAibWFydmVsbCxzZDg5OTciDQo+ID4gKw0KPiA+
-ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICsNCj4gPiArICAtIG1hcnZlbGwsY2FsZGF0YSog
-OiBBIHNlcmllcyBvZiBwcm9wZXJ0aWVzIHdpdGggbWFydmVsbCxjYWxkYXRhDQo+IHByZWZpeCwN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgcmVwcmVzZW50IGNhbGlicmF0aW9uIGRhdGEgZG93
-bmxvYWRlZCB0byB0aGUNCj4gZGV2aWNlIGR1cmluZw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICBpbml0aWFsaXphdGlvbi4gVGhpcyBpcyBhbiBhcnJheSBvZiB1bnNpZ25lZA0KPiB2YWx1ZXMu
-DQo+IA0KPiB1bnNpZ25lZCA4LWJpdCB2YWx1ZXMuLi4NCj4gDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgIHRoZSBwcm9wZXJ0aWVzIHNob3VsZCBmb2xsb3cgYmVsb3cgcHJvcGVydHkgbmFtZQ0K
-PiBhbmQNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY29ycmVzcG9uZGluZyBhcnJheSBsZW5n
-dGg6DQo+ID4gKyAgICAgICAibWFydmVsbCxjYWxkYXRhXzAwX3R4cHdybGltaXRfMmdfY2ZnX3Nl
-dCIgKGxlbmd0aCA9IDU2NikuDQo+ID4gKyAgICAgICAibWFydmVsbCxjYWxkYXRhXzAwX3R4cHdy
-bGltaXRfNWdfY2ZnX3NldF9zdWIwIiAobGVuZ3RoID0NCj4gNTAyKS4NCj4gPiArICAgICAgICJt
-YXJ2ZWxsLGNhbGRhdGFfMDBfdHhwd3JsaW1pdF81Z19jZmdfc2V0X3N1YjEiIChsZW5ndGggPQ0K
-PiA2ODgpLg0KPiA+ICsgICAgICAgIm1hcnZlbGwsY2FsZGF0YV8wMF90eHB3cmxpbWl0XzVnX2Nm
-Z19zZXRfc3ViMiIgKGxlbmd0aCA9DQo+IDc1MCkuDQo+ID4gKyAgICAgICAibWFydmVsbCxjYWxk
-YXRhXzAwX3R4cHdybGltaXRfNWdfY2ZnX3NldF9zdWIzIiAobGVuZ3RoID0NCj4gNTAyKS4NCj4g
-DQo+IFRoZSAwMCBhbmQgY2ZnX3NldCBzZWVtIHByZXR0eSBwb2ludGxlc3MsIGFuZCAnLScgaXMg
-cHJlZmVycmVkIG92ZXIgJ18nLg0KPiBTbzoNCj4gDQo+IG1hcnZlbGwsY2FsZGF0YS10eHB3cmxp
-bWl0LTVnLXN1YjMNCj4gDQo+ID4gKyAgLSBtYXJ2ZWxsLHdha2V1cC1waW4gOiAnd2FrZXVwcGlu
-JyBpcyBhIHdha2V1cCBwaW4gbnVtYmVyIG9mIHdpZmkNCj4gPiArIGNoaXAgd2hpY2ggd2lsbA0K
-PiANCj4gRHJvcCAid2FrZXVwcGluIGlzIg0KPiANCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-YmUgY29uZmlndXJlZCB0byBmaXJtd2FyZS4gZmlybXdhcmUgd2lsbCB3YWtldXANCj4gaG9zdCBz
-aWRlIHVzZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICB0aGUgcGluIGR1cmluZyBzdXNwZW5k
-L3Jlc3VtZSBzdGFnZS4NCj4gPiArICAtIGludGVycnVwdC1wYXJlbnQ6IHBoYW5kbGUgb2YgdGhl
-IHBhcmVudCBpbnRlcnJ1cHQgY29udHJvbGxlcg0KPiA+ICsgIC0gaW50ZXJydXB0cyA6IGludGVy
-cnVwdCBwaW4gbnVtYmVyIHRvIHRoZSBjcHUuIGRyaXZlciB3aWxsIHJlcXVlc3QNCj4gYW4gaXJx
-IGJhc2VkIG9uDQo+ID4gKyAgICAgICAgICAgICAgICB0aGlzIGludGVycnVwdCBudW1iZXIuIGR1
-cmluZyBzeXN0ZW0gc3VzcGVuZCwgdGhlIGlycQ0KPiB3aWxsIGJlIGVuYWJsZWQNCj4gPiArICAg
-ICAgICAgICAgICAgIGFzIHN5c3RlbSB3YWtldXAgc291cmNlLCBzbyB0aGF0IHRoZSB3aWZpIGNo
-aXAgY2FuDQo+ID4gKyB3YWtldXAgaG9zdA0KPiANCj4gWW91IG5lZWQgdG8gdXNlIHRoZSB3YWtl
-dXAtc291cmNlIGJpbmRpbmcgaGVyZSAoYmluZGluZ3MvcG93ZXIvd2FrZXVwLQ0KPiBzb3VyY2Uu
-dHh0KS4gUHJvYmFibHkgb24gdGhlIEJUIGJpbmRpbmcgdG9vPw0KDQpXZSBkaWQgc29tZSBleHBl
-cmltZW50cyBhbmQgdHJpZWQgdG8gZXhwbG9yZSB0aGlzIG9wdGlvbi4gSXQgc2VlbXMgdG8gYmUg
-c3BlY2lmaWMgdG8gcnVudGltZSBwb3dlciBtYW5hZ2VtZW50Lg0KV2UgZG9uJ3QgdXNlIHJ1bnRp
-bWUgUE0gZm9yIG91ciBkZXZpY2UuIFdlIGFyZSBpbnRlcmVzdGVkIGluIHN5c3RlbSBzdXNwZW5k
-IGFuZCB3YWtldXAgKHVwb24gY2hhbmdpbmcgdGhlIElSUSBzdGF0dXMpDQpJIHdpbGwgc3VibWl0
-IHVwZGF0ZWQgdmVyc2lvbiBhZGRyZXNzaW5nIG90aGVyIHJldmlldyBjb21tZW50cy4NCg0KUmVn
-YXJkcywNCkFtaXRrdW1hcg0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--xesSdrSSBC0PokLI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 08, 2016 at 02:11:42PM -0500, Bjorn Helgaas wrote:
+> Hi Thierry,
+>=20
+> I have a couple more questions, probably just because I'm
+> DT-illiterate.
+>=20
+> On Fri, Apr 08, 2016 at 06:13:13PM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >=20
+> > Changes to the pad controller device tree binding have required that
+> > each lane be associated with a separate PHY. Update the PCI host bridge
+> > device tree binding to allow each root port to define the list of PHYs
+> > required to drive the lanes associated with it.
+> >=20
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > Changes in v4:
+> > - add additional lanes subnode when dereferencing PHYs from the XUSB pad
+> >   controller to reflect changes in its binding
+> >=20
+> >  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt    | 18 ++++++++++=
++++++++-
+> >  1 file changed, 17 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.=
+txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > index 75321ae23c08..f5364084b494 100644
+> > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > @@ -60,11 +60,14 @@ Required properties:
+> >    - afi
+> >    - pcie_x
+> > =20
+> > -Required properties on Tegra124 and later:
+> > +Required properties on Tegra124 and later (deprecated):
+> >  - phys: Must contain an entry for each entry in phy-names.
+> >  - phy-names: Must include the following entries:
+> >    - pcie
+> > =20
+> > +These properties are deprecated in favour of per-lane PHYs define in e=
+ach of
+> > +the root ports (see below).
+> > +
+> >  Power supplies for Tegra20:
+> >  - avdd-pex-supply: Power supply for analog PCIe logic. Must supply 1.0=
+5 V.
+> >  - vdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 =
+V.
+> > @@ -122,6 +125,13 @@ Required properties:
+> >    - Root port 0 uses 4 lanes, root port 1 is unused.
+> >    - Both root ports use 2 lanes.
+> > =20
+> > +Required properties for Tegra124 and later:
+>=20
+> I had a little trouble disambiguating this from the "Required
+> properties on Tegra124 and later (deprecated)" line above.  It might
+> help if they said:
+>=20
+>   Required PCIe controller properties on Tegra124 and later (deprecated):
+>   Required PCIe Root Port properties for Tegra124 and later:
+
+That's kind of implied by the structure of the binding. The first is in
+the section dedicated to the description of the host bridge controller,
+whereas the second in in the section for root port properties. Granted,
+the format for device tree bindings isn't very rich, so this isn't very
+easy to spot. Perhaps something like this could help:
+
+	NVIDIA Tegra PCIe controller
+
+	The top-level device tree node describes the host bridge
+	controller and properties listed therein apply to the controller
+	as a whole.
+
+	Required properties:
+	...
+
+	Root Ports:
+	-----------
+
+	Root ports are defined as subnodes of the PCIe controller node.
+
+	Required properties:
+	...
+
+Would that help clarify?
+
+> I'm not sure how to interpret the "deprecated" part.  Assume I'm
+> writing a DTS.  What am I supposed to include?
+>=20
+>   - "phys" and "phy-names" under the PCIe controller *and*
+>     "phys" and "phy-names" under the Root Port?
+>=20
+>   - "phys" and "phy-names" under the PCIe controller only if I don't
+>     supply "phys" and "phy-names" under the Root Port?
+>=20
+> My guess is that a board with more than one PHY for PCIe should omit
+> "phys" and "phy-names" under the PCIe controller and include them
+> under each Root Port.  And a board with only one PHY could conceivably
+> supply these properties either under the controller or the Root Port
+> or both.
+
+Whatever is marked as deprecated should not be used in new bindings at
+all. That is, new board files should move to per-lane PHYs, no matter
+how many lanes they enable.
+
+The XUSB pad controller that provides these PHYs can be driven by two
+different drivers: a pinctrl driver that exposes a single PHY for all
+PCI lanes (it uses per-lane nvidia,iddq properties to enable or disable
+each of the lanes) or a PHY driver that exposes one PHY per lane. Each
+PHY can separately be powered on.
+
+Perhaps a better approach would be to simply remove the deprecated
+properties to avoid any possible confusion. It does have the drawback
+that old device trees won't have a documentation counterpart.
+
+> > +- phys: Must contain an phandle to a PHY for each entry in phy-names.
+> > +- phy-names: Must include an entry for each active lane. Note that the=
+ number
+> > +  of entries does not have to (though usually will) be equal to the sp=
+ecified
+> > +  number of lanes in the nvidia,num-lanes property. Entries are of the=
+ form
+> > +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num=
+-lanes.
+> > +
+> >  Example:
+> > =20
+> >  SoC DTSI:
+> > @@ -169,6 +179,9 @@ SoC DTSI:
+> >  			ranges;
+> > =20
+> >  			nvidia,num-lanes =3D <2>;
+> > +
+> > +			phys =3D <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-4}>;
+> > +			phy-names =3D "pcie-0";
+>=20
+> I'm also a little confused here because it looks like this root port
+> supports two lanes, but there's only one entry in phy-names.  I
+> thought you needed one entry for each lane.
+
+Not necessarily. I'm not sure if the wording in the description makes it
+clear, but there are a limited number of configurations that the root
+ports support. However the ports may not want (or need) to drive all of
+the lanes that they support. Consider for example one possible
+configuration on Tegra124, which is to have one root port operate in x1
+mode and the other in x2 mode. The x2 port may have a fixed card wired
+to it (onboard) that is x1. Enabling the second lane would be wasting
+power because it is never used.
+
+Thierry
+
+--xesSdrSSBC0PokLI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXC4n8AAoJEN0jrNd/PrOhXeAQAIe4gUVQYHGxjT3iqqfW11bk
+1j4nxgPbW34aL48Ar7Yub4e3BcpMkvXhy0r3syBCRnDkRANrIxWdIQAZXeu8G6s5
+uFksh2m0/VmfEbDfSf5lHWewYtW3Zb1wEjaGBCPqgXcC3XgYel/GMykxs4pCBU5p
+eXLzigKPwUusx4mrgtYsafINBAtG5hyZVNtsAHjnW+0UUCn/UHYhFynN6aBxZzJH
+E/BjUKdL91gcv2+ypeIyvDXG60Su1lU2sCaeK1hwBO5NAJpseyureKTvGOaZasr7
+fOdSV344aZTzyc672QEMevDc+KnE3AJO4BHrMFQgVANavH3tCRm0BpBixo0mhEaH
+DSKqElQSH17f+mRkPo7XNEkT2Cv1vIr+X1uKiPiPzEr/nAqJ0gG+LIRaTEIcS6x9
+SkOzrhbnIIrYZYd9lJrU6wz6L1G9WBV5lanQRro6+VjTLYiej+w5O9vkkWk+aw1A
+ubV93mpOZLcH2b9dAFHaCABqlpPIWrcwJnE8RNmu5osz2ctCl/8mY6vbBQwZeqsr
+xOppeXj1qYdK7Pe/L55J12g+ni+ZLAq/4+xBHNAtVGWUxpXFBFyvUTA8ej3hqGCH
+foyVpn2ois+8iK47p2Cn/3WRDyegl7BanZY4k3nn4q3eDh7EJ3TbQ1lHDBwEwcX8
+0JLvRW0GlbxV7axkrc5w
+=40DO
+-----END PGP SIGNATURE-----
+
+--xesSdrSSBC0PokLI--
