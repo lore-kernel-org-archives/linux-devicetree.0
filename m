@@ -1,197 +1,46 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Mon, 11 Apr 2016 13:26:54 +0200
-Message-ID: <20160411112654.GC17743@ulmo.ba.sec>
-References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
- <20160408191142.GD15034@localhost>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 00/16] da8xx USB clocks
+Date: Mon, 11 Apr 2016 16:58:28 +0530
+Message-ID: <570B8A5C.1050907@ti.com>
+References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+ <57068AF1.8050909@lechnology.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160408191142.GD15034@localhost>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57068AF1.8050909-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi David,
 
---xesSdrSSBC0PokLI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thursday 07 April 2016 09:59 PM, David Lechner wrote:
+> Any further comments before I submit a v4 patchset? Particularly on
+> patches 3 and 4 which are new in this v3 submission and have not been
+> commented on yet.
 
-On Fri, Apr 08, 2016 at 02:11:42PM -0500, Bjorn Helgaas wrote:
-> Hi Thierry,
->=20
-> I have a couple more questions, probably just because I'm
-> DT-illiterate.
->=20
-> On Fri, Apr 08, 2016 at 06:13:13PM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > Changes to the pad controller device tree binding have required that
-> > each lane be associated with a separate PHY. Update the PCI host bridge
-> > device tree binding to allow each root port to define the list of PHYs
-> > required to drive the lanes associated with it.
-> >=20
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Changes in v4:
-> > - add additional lanes subnode when dereferencing PHYs from the XUSB pad
-> >   controller to reflect changes in its binding
-> >=20
-> >  .../devicetree/bindings/pci/nvidia,tegra20-pcie.txt    | 18 ++++++++++=
-+++++++-
-> >  1 file changed, 17 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.=
-txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> > index 75321ae23c08..f5364084b494 100644
-> > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> > @@ -60,11 +60,14 @@ Required properties:
-> >    - afi
-> >    - pcie_x
-> > =20
-> > -Required properties on Tegra124 and later:
-> > +Required properties on Tegra124 and later (deprecated):
-> >  - phys: Must contain an entry for each entry in phy-names.
-> >  - phy-names: Must include the following entries:
-> >    - pcie
-> > =20
-> > +These properties are deprecated in favour of per-lane PHYs define in e=
-ach of
-> > +the root ports (see below).
-> > +
-> >  Power supplies for Tegra20:
-> >  - avdd-pex-supply: Power supply for analog PCIe logic. Must supply 1.0=
-5 V.
-> >  - vdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 =
-V.
-> > @@ -122,6 +125,13 @@ Required properties:
-> >    - Root port 0 uses 4 lanes, root port 1 is unused.
-> >    - Both root ports use 2 lanes.
-> > =20
-> > +Required properties for Tegra124 and later:
->=20
-> I had a little trouble disambiguating this from the "Required
-> properties on Tegra124 and later (deprecated)" line above.  It might
-> help if they said:
->=20
->   Required PCIe controller properties on Tegra124 and later (deprecated):
->   Required PCIe Root Port properties for Tegra124 and later:
+I applied some patches which could be applied independently without
+driver dependency. I have pushed those to my for-testing[1] branch where
+they will get tested a little more before I send my pull request to ARM-SoC.
 
-That's kind of implied by the structure of the binding. The first is in
-the section dedicated to the description of the host bridge controller,
-whereas the second in in the section for root port properties. Granted,
-the format for device tree bindings isn't very rich, so this isn't very
-easy to spot. Perhaps something like this could help:
+For your future submissions, you can drop the patches already applied to
+the branch above.
 
-	NVIDIA Tegra PCIe controller
+Also, I think it will help if you divide the series into driver and
+platform changes. You should keep all maintainers copied in both places.
+But dividing the series this way should help concentrate review. This is
+a complex series with multiple maintainers involved so it will take some
+co-ordination. Hopefully it can still all go into the upcoming merge window.
 
-	The top-level device tree node describes the host bridge
-	controller and properties listed therein apply to the controller
-	as a whole.
+Regards,
+Sekhar
 
-	Required properties:
-	...
+[1]
+http://git.kernel.org/cgit/linux/kernel/git/nsekhar/linux-davinci.git/log/?h=for-testing
 
-	Root Ports:
-	-----------
-
-	Root ports are defined as subnodes of the PCIe controller node.
-
-	Required properties:
-	...
-
-Would that help clarify?
-
-> I'm not sure how to interpret the "deprecated" part.  Assume I'm
-> writing a DTS.  What am I supposed to include?
->=20
->   - "phys" and "phy-names" under the PCIe controller *and*
->     "phys" and "phy-names" under the Root Port?
->=20
->   - "phys" and "phy-names" under the PCIe controller only if I don't
->     supply "phys" and "phy-names" under the Root Port?
->=20
-> My guess is that a board with more than one PHY for PCIe should omit
-> "phys" and "phy-names" under the PCIe controller and include them
-> under each Root Port.  And a board with only one PHY could conceivably
-> supply these properties either under the controller or the Root Port
-> or both.
-
-Whatever is marked as deprecated should not be used in new bindings at
-all. That is, new board files should move to per-lane PHYs, no matter
-how many lanes they enable.
-
-The XUSB pad controller that provides these PHYs can be driven by two
-different drivers: a pinctrl driver that exposes a single PHY for all
-PCI lanes (it uses per-lane nvidia,iddq properties to enable or disable
-each of the lanes) or a PHY driver that exposes one PHY per lane. Each
-PHY can separately be powered on.
-
-Perhaps a better approach would be to simply remove the deprecated
-properties to avoid any possible confusion. It does have the drawback
-that old device trees won't have a documentation counterpart.
-
-> > +- phys: Must contain an phandle to a PHY for each entry in phy-names.
-> > +- phy-names: Must include an entry for each active lane. Note that the=
- number
-> > +  of entries does not have to (though usually will) be equal to the sp=
-ecified
-> > +  number of lanes in the nvidia,num-lanes property. Entries are of the=
- form
-> > +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num=
--lanes.
-> > +
-> >  Example:
-> > =20
-> >  SoC DTSI:
-> > @@ -169,6 +179,9 @@ SoC DTSI:
-> >  			ranges;
-> > =20
-> >  			nvidia,num-lanes =3D <2>;
-> > +
-> > +			phys =3D <&{/padctl@0,7009f000/pads/pcie/lanes/pcie-4}>;
-> > +			phy-names =3D "pcie-0";
->=20
-> I'm also a little confused here because it looks like this root port
-> supports two lanes, but there's only one entry in phy-names.  I
-> thought you needed one entry for each lane.
-
-Not necessarily. I'm not sure if the wording in the description makes it
-clear, but there are a limited number of configurations that the root
-ports support. However the ports may not want (or need) to drive all of
-the lanes that they support. Consider for example one possible
-configuration on Tegra124, which is to have one root port operate in x1
-mode and the other in x2 mode. The x2 port may have a fixed card wired
-to it (onboard) that is x1. Enabling the second lane would be wasting
-power because it is never used.
-
-Thierry
-
---xesSdrSSBC0PokLI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXC4n8AAoJEN0jrNd/PrOhXeAQAIe4gUVQYHGxjT3iqqfW11bk
-1j4nxgPbW34aL48Ar7Yub4e3BcpMkvXhy0r3syBCRnDkRANrIxWdIQAZXeu8G6s5
-uFksh2m0/VmfEbDfSf5lHWewYtW3Zb1wEjaGBCPqgXcC3XgYel/GMykxs4pCBU5p
-eXLzigKPwUusx4mrgtYsafINBAtG5hyZVNtsAHjnW+0UUCn/UHYhFynN6aBxZzJH
-E/BjUKdL91gcv2+ypeIyvDXG60Su1lU2sCaeK1hwBO5NAJpseyureKTvGOaZasr7
-fOdSV344aZTzyc672QEMevDc+KnE3AJO4BHrMFQgVANavH3tCRm0BpBixo0mhEaH
-DSKqElQSH17f+mRkPo7XNEkT2Cv1vIr+X1uKiPiPzEr/nAqJ0gG+LIRaTEIcS6x9
-SkOzrhbnIIrYZYd9lJrU6wz6L1G9WBV5lanQRro6+VjTLYiej+w5O9vkkWk+aw1A
-ubV93mpOZLcH2b9dAFHaCABqlpPIWrcwJnE8RNmu5osz2ctCl/8mY6vbBQwZeqsr
-xOppeXj1qYdK7Pe/L55J12g+ni+ZLAq/4+xBHNAtVGWUxpXFBFyvUTA8ej3hqGCH
-foyVpn2ois+8iK47p2Cn/3WRDyegl7BanZY4k3nn4q3eDh7EJ3TbQ1lHDBwEwcX8
-0JLvRW0GlbxV7axkrc5w
-=40DO
------END PGP SIGNATURE-----
-
---xesSdrSSBC0PokLI--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
