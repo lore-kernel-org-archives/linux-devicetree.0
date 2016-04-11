@@ -1,156 +1,45 @@
-From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] hwrng: hisi: Add support for Hisilicon SoC RNG
-Date: Mon, 11 Apr 2016 09:36:01 +0800
-Message-ID: <570AFF81.7000403@huawei.com>
-References: <1460017397-30996-1-git-send-email-wangkefeng.wang@huawei.com>
- <1460017397-30996-3-git-send-email-wangkefeng.wang@huawei.com>
- <CANLsYkwRGm3oBWaoKki4Ge3A_-temOsdJcwby6ds_X5_XGYZtQ@mail.gmail.com>
- <57071162.908@huawei.com>
- <CANLsYkwm6ABM_SijZWe8X7Y6APqYKMcvmK+n6Uh3784L6nCuGw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] devicetree/bindings: Add binding for operator panel on FSP machines
+Date: Mon, 11 Apr 2016 11:41:29 +1000
+Message-ID: <1460338890-19693-1-git-send-email-sjitindarsingh@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANLsYkwm6ABM_SijZWe8X7Y6APqYKMcvmK+n6Uh3784L6nCuGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add a binding to Documentation/devicetree/bindings/powerpc/opal
+(oppanel-opal.txt) for the operator panel which is present on IBM
+pseries machines with FSPs.
 
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/powerpc/opal/oppanel-opal.txt      | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/opal/oppanel-opal.txt
 
-On 2016/4/8 22:35, Mathieu Poirier wrote:
-> On 7 April 2016 at 20:03, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->>
->>
->> On 2016/4/7 22:55, Mathieu Poirier wrote:
->>> On 7 April 2016 at 02:23, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->>>> This adds the Hisilicon Random Number Generator(RNG) support,
->>>> which is found in Hip04 and Hip05 soc.
->>>>
->>>> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  drivers/char/hw_random/Kconfig    |  13 ++++
->>>>  drivers/char/hw_random/Makefile   |   1 +
->>>>  drivers/char/hw_random/hisi-rng.c | 121 ++++++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 135 insertions(+)
->>>>  create mode 100644 drivers/char/hw_random/hisi-rng.c
->> [...]
->>>> +
->>>> +#define RNG_SEED       0x0
->>>> +#define RNG_CTRL       0x4
->>>> +  #define RNG_SEED_SEL BIT(2)
->>>> +  #define RNG_RING_EN  BIT(1)
->>>> +  #define RNG_EN       BIT(0)
->>>> +#define RNG_RAN_NUM    0x10
->>>> +#define RNG_PHY_SEED   0x14
->>>> +#define RNG_RELOAD_ERR 0x84
->>>> +
->>>> +#define to_hisi_rng(p) container_of(p, struct hisi_rng, rng)
->>>> +
->>>> +static int seed_sel;
->>>> +module_param(seed_sel, int, S_IRUGO);
->>>> +MODULE_PARM_DESC(seed_sel, "Auto reload seed. 0, use LFSR(default); 1, use ring oscillator.");
->>>> +
->>>> +struct hisi_rng {
->>>> +       void __iomem *base;
->>>> +       struct hwrng rng;
->>>> +};
->>>> +
->>>> +static int hisi_rng_init(struct hwrng *rng)
->>>> +{
->>>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
->>>> +       int val = RNG_EN;
->>>> +       u32 seed;
->>>> +
->>>> +       /* get a random number as initial seed */
->>>> +       get_random_bytes(&seed, sizeof(seed));
->>>> +
->>>> +       writel_relaxed(seed, hrng->base + RNG_SEED);
->>>> +
->>>> +       if (seed_sel == 1)
->>>> +               val |= RNG_RING_EN | RNG_SEED_SEL;
->>>
->>> Hello Kefeng,
->>>
->>> Please explain what this mode does.  Otherwise reviewers have to make
->>> a guess based on the description of the module parameter.
->> The seed is reload periodically, there are two choice of seeds, default using
->> the val from LFSR, seed_sel = 1  will use the val generated by ring oscillator.
-> 
-> This is the kind of comment that should be in the code.  That way
-> people can understand what is going on.
-> 
-
-Ok, will add them into code.
-
->>>
->>>> +
->>>> +       writel_relaxed(val, hrng->base + RNG_CTRL);
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +static void hisi_rng_cleanup(struct hwrng *rng)
->>>> +{
->>>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
->>>> +
->>>> +       writel_relaxed(0, hrng->base + RNG_CTRL);
->>>> +}
->>>> +
->>>> +static int hisi_rng_read(struct hwrng *rng, void *buf, size_t max,
->>>> +                          bool wait)
->>>
->>> What are variable 'max' and 'wait' used for?  As far as I can tell
->>> they can be removed.
->> Ok, will use data_read callback in struct hwrng.
-> 
-> Sorry about that, I just noticed this morning the "data_read()"
-> callback is obsolete [1].  As such you can probably keep the code the
-> way you had it.
-> 
-> [1]. http://lxr.free-electrons.com/source/include/linux/hw_random.h#L28
-> 
->>
->>>
->>>> +{
->>>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
->>>> +       u32 *data = buf;
->>>> +
->>>> +       *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
->>>> +       return 4;
->>>
->>> Why not simply doing the readl_relaxed() in the the code rather than
->>> introducing a new function?
->> Not clear, your mean introduce the data variable?
->> Will use following data_read, thanks.
->>
->> static int hisi_rng_data_read(struct hwrng *rng, u32 *data)
->> {
->>        struct hisi_rng *hrng = to_hisi_rng(rng);
->>        *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
->>        return 4;
->> }
-> 
-> See my comment above, you were right the first time.
-
-Will resend it, thanks for your review, :)
-
-> 
-> Apology and regards,
-> Mathieu
-> 
->>
->> Thanks,
->> Kefeng
->>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+diff --git a/Documentation/devicetree/bindings/powerpc/opal/oppanel-opal.txt b/Documentation/devicetree/bindings/powerpc/opal/oppanel-opal.txt
+new file mode 100644
+index 0000000..dffb791
+--- /dev/null
++++ b/Documentation/devicetree/bindings/powerpc/opal/oppanel-opal.txt
+@@ -0,0 +1,14 @@
++IBM OPAL Operator Panel Binding
++-------------------------------
++
++Required properties:
++- compatible : Should be "ibm,opal-oppanel".
++- #lines     : Number of lines on the operator panel e.g. <0x2>.
++- #length    : Number of characters per line of the operator panel e.g. <0x10>.
++
++Example:
++	oppanel {
++		compatible = "ibm,opal-oppanel";
++		#lines = <0x2>;
++		#length = <0x10>;
++	};
+-- 
+2.5.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
