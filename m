@@ -1,190 +1,133 @@
-From: "Gabriel L. Somlo" <somlo@cmu.edu>
-Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI
- global lock during device access
-Date: Mon, 11 Apr 2016 09:13:00 -0400
-Message-ID: <20160411131300.GW2060@HEDWIG.INI.CMU.EDU>
-References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
-	<20160316185440-mutt-send-email-mst@redhat.com>
-	<20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
-	<20160405114156-mutt-send-email-mst@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-Content-Disposition: inline
-In-Reply-To: <20160405114156-mutt-send-email-mst@redhat.com>
-List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
-List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel/>
-List-Post: <mailto:qemu-devel@nongnu.org>
-List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
-List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-Sender: "Qemu-devel" <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: mark.rutland@arm.com, peter.maydell@linaro.org, matt@codeblueprint.co.uk, stefanha@gmail.com, qemu-devel@nongnu.org, eric@anholt.net, kraxel@redhat.com, linux-api@vger.kernel.org, agross@codeaurora.org, pawel.moll@arm.com, zajec5@gmail.com, rmk+kernel@arm.linux.org.uk, lersek@redhat.com, devicetree@vger.kernel.org, ehabkost@redhat.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, leif.lindholm@linaro.org, robh+dt@kernel.org, pbonzini@redhat.com, rth@twiddle.net, ard.biesheuvel@linaro.org, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, luto@amacapital.net, hanjun.guo@linaro.org, sudeep.holla@arm.com, imammedo@redhat.com, revol@free.fr
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: [PATCH V2 0/3] dmaengine: bcm2835: support dma channel 11 to 14
+Date: Mon, 11 Apr 2016 13:29:06 +0000
+Message-ID: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 05, 2016 at 11:54:19AM +0300, Michael S. Tsirkin wrote:
-> On Thu, Mar 17, 2016 at 09:33:40AM -0400, Gabriel L. Somlo wrote:
-> > On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
-> > > On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
-> > > > Allowing for the future possibility of implementing AML-based
-> > > > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
-> > > > acquire the global ACPI lock when accessing the device on behalf
-> > > > of the guest-side sysfs driver, to prevent any potential race
-> > > > conditions.
-> > > > 
-> > > > Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > Signed-off-by: Gabriel Somlo <somlo@cmu.edu>
-> > > 
-> > > So this patch makes sense of course.
-> > > 
-> > > 
-> > > Given the recent discussion on QEMU mailing list,
-> > > I think there is an additional patch that we need:
-> > > filter the files exposed to userspace by "opt/" prefix.
-> > > 
-> > > This will ensure that we can change all other fw cfg files
-> > > at will without breaking guest scripts.
-> > > 
-> > > Gabriel, could you code this up? Or do you see a
-> > > pressing need to expose internal QEMU registers to
-> > > userspace?
-> > 
-> > I'd be happy to update the docs to (better) emphasisze that:
-> 
-> Well my experience shows people do not read the docs.
-> And really, good interfaces should be self-documenting.
-> 
-> >         1 the only way to guarantee any particular item shows up in
-> >           guest-side fw_cfg sysfs is manually putting it there via the
-> >           host-side command line
-> > 
-> >                 - and BTW, unless you prefixed it with "opt/..." you
-> >                   are off the reservation, and it might collide with
-> >                   qemu->firmware communications.
-> > 
-> >         2 anything one didn't place there themselves via the qemu
-> >           command line is informational only, might change or go away
-> >           at any time, and developing expectations about it based on
-> >           past observation is done at the observer's own risk.
-> > 
-> > While I don't *personally* care about items outside of "opt/", I'm a bit
-> > uncomfortable actively *hiding* them from userspace -- I could easily
-> > imagine the ability to see (read-only) fw_cfg content from userspace
-> > being a handy debugging/troubleshooting tool. It's back to separating
-> > between mechanism and policy: hiding things from userspace would IMHO
-> > fall into the policy enforcement side of things, and I'm still unclear
-> > about the failure scenario we'd be trying to prevent, and its likelihood.
-> > 
-> > Thanks,
-> > --Gabriel
-> 
-> Mostly, we can change internal qemu/firmware interfaces
-> as long as we verify that firmware that ships with QEMU
-> does not rely on them.
-> 
-> I'm fine with exposing stuff for debugging purposes
-> but I would like a cleaner separation between the two,
-> and self-documenting interfaces.
-> How about:
-> 	- place everything that is under "opt/" in e.g. "supported"
-> 	  directory, or at root
-> 	- place everything that is not under "opt/" in e.g. "unsupported"
-> 	  directory
-> 
-> Abstracting hardware is what OS is all about, this is not policy.
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-I'm not sure I agree with this last point:
+Right now the dma engine officially supports dma channel 11 and 12.
+But the use of dma channel 12 immediately stalls the system.
 
-Arguably, fw_cfg could be viewed as a glorified out-of-band USB stick
-with special files prepared by QEMU for the guest VM.
+The reason is that the interrupt assigned right now to dma channel 11
+is actually a shared interrupt for dma channels 11 to 12.
+So whenever the dma channel 12, 13 or 14 is used, it triggers the interrupt
+for dma 11 which only clears the interrupt flag for dma channel 11.
+This results in the interrupt 11 is triggered all the time.
 
-The sysfs driver is a mechanism to list/access these files, and is
-IMHO the only thing one can reasonably construe as "kernel interface".
+On top the requesting dma channel12 (and the corresponding irq) triggers
+an immeditate stall of the system, because for the 12th interrupt
+any dma channel will trigger also this interrupt - even if the dma channel
+is controlled by the firmware.
 
-What you're suggesting boils down to adding a translation layer between
-what QEMU names the files when preparing this magic USB stick, and what
-we tell users the names are (by adding additional folders named e.g.
-"supported" and "unsupported").
+As the description in the default device-tree is (for the above reasons)
+wrong a new means had to get devised that allows correct representation
+of the mapping between interrupts and dma channels.
 
-That to me looks like injecting policy ("look *here*, NOT there!") by
-doing this, instead of sticking with mechanism only ("here's what qemu
-wrote to fw_cfg, look at it if you want, or don't...").
+For this the existing (but unused) device-tree property "interrupt-names"
+is used to define the mapping.
 
-While I understand your concerns, I'm not sure we should have to go
-through this level of convolution to protect people from their own
-mistakes (such as assuming certain content on the magic USB stick will
-always be there, and writing some sort of script which would break if
-said content mysteriously disappears, then reasonably complain about
-either the sysfs kernel driver or qemu itself). Presence or absence of
-some file on a magic USB stick does NOT (again, IMHO) an interface make...
+Implementing shared interrupts is another necessity when using dma channel
+11 to 14, so it is a part of this patch.
 
-I was thinking of maybe adding a module parameter, let's call it
-"show-all", off by default, and which would cause the "by-name" folder
-to only be populated by things starting with "opt" when off, and
-all fw-cfg files when enabled. But I'm not sure I like having to do it
-in the first place (particularly hardcoding the string "opt" anywhere
-in the driver :) ) so let me think about this a bit more (additional
-pro/con thoughs and opinions welcome!)...
+This patchset requires: [PATCH 0/8 v4] bcm2835 DMA slave support
+to be applied.
 
-Thanks,
---Gabriel
+Tested playing BigBuckBunny on:
+* fb-tft device (fb_st7735r)
+  - via spi-bcm2835 using slave_sg dma
+* I2S Hifiberry DAC (snd_soc_hifiberry_dac)
+  - via bcm2835-i2s using cyclic dma
+(with a few pending patches to make i2s work propperly)
 
-> 
-> > > > ---
-> > > > 
-> > > > Changes since v1:
-> > > > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
-> > > > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
-> > > > 	  and only throw a warning/error message otherwise.
-> > > > 
-> > > > 	- didn't get any *negative* feedback from the QEMU crowd, so
-> > > > 	  this is now a bona-fide "please apply this", rather than just
-> > > > 	  an RFC :)
-> > > > 
-> > > > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
-> > > > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
-> > > > 
-> > > > Thanks much,
-> > > >   --Gabriel
-> > > > 
-> > > >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
-> > > >  1 file changed, 16 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> > > > index 7bba76c..a44dc32 100644
-> > > > --- a/drivers/firmware/qemu_fw_cfg.c
-> > > > +++ b/drivers/firmware/qemu_fw_cfg.c
-> > > > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
-> > > >  static inline void fw_cfg_read_blob(u16 key,
-> > > >  				    void *buf, loff_t pos, size_t count)
-> > > >  {
-> > > > +	u32 glk;
-> > > > +	acpi_status status;
-> > > > +
-> > > > +	/* If we have ACPI, ensure mutual exclusion against any potential
-> > > > +	 * device access by the firmware, e.g. via AML methods:
-> > > > +	 */
-> > > > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-> > > > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-> > > > +		/* Should never get here */
-> > > > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
-> > > > +		memset(buf, 0, count);
-> > > > +		return;
-> > > > +	}
-> > > > +
-> > > >  	mutex_lock(&fw_cfg_dev_lock);
-> > > >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
-> > > >  	while (pos-- > 0)
-> > > >  		ioread8(fw_cfg_reg_data);
-> > > >  	ioread8_rep(fw_cfg_reg_data, buf, count);
-> > > >  	mutex_unlock(&fw_cfg_dev_lock);
-> > > > +
-> > > > +	acpi_release_global_lock(glk);
-> > > >  }
-> > > >  
-> > > >  /* clean up fw_cfg device i/o */
-> > > > -- 
-> > > > 2.4.3
+Interrupt statistics after playing Big Buck Bunny:
+root@raspcm:~# cat /proc/interrupts
+           CPU0
+ 17:          0  ARMCTRL-level   1 Edge      2000b880.mailbox
+ 27:      47685  ARMCTRL-level  35 Edge      timer
+ 33:    6042130  ARMCTRL-level  41 Edge      20980000.usb, dwc2_hsotg:usb1
+ 40:      13250  ARMCTRL-level  48 Edge      DMA IRQ
+ 42:      13250  ARMCTRL-level  50 Edge      DMA IRQ
+ 44:      19087  ARMCTRL-level  52 Edge      DMA IRQ
+ 45:          0  ARMCTRL-level  53 Edge      DMA IRQ
+ 73:          0  ARMCTRL-level  81 Edge      20200000.gpio:bank0
+ 74:          0  ARMCTRL-level  82 Edge      20200000.gpio:bank1
+ 77:          0  ARMCTRL-level  85 Edge      20205000.i2c, 20804000.i2c, 20805000.i2c
+ 78:          0  ARMCTRL-level  86 Edge      20204000.spi
+ 81:        708  ARMCTRL-level  89 Edge      uart-pl011
+ 86:     277629  ARMCTRL-level  94 Edge      mmc0
+Err:          0
+
+Tested also with the following property set:
+  brcm,dma-channel-mask = <0x7800>;
+which results in only dma channels 11-14 being available
+and thus all using the single shared irq.
+
+Interrupt statistics for this case:
+           CPU0
+ 17:          0  ARMCTRL-level   1 Edge      2000b880.mailbox
+ 27:      46843  ARMCTRL-level  35 Edge      timer
+ 33:    5412801  ARMCTRL-level  41 Edge      20980000.usb, dwc2_hsotg:usb1
+ 51:      45502  ARMCTRL-level  59 Edge      DMA IRQ, DMA IRQ, DMA IRQ, DMA IRQ
+ 73:          0  ARMCTRL-level  81 Edge      20200000.gpio:bank0
+ 74:          0  ARMCTRL-level  82 Edge      20200000.gpio:bank1
+ 77:          0  ARMCTRL-level  85 Edge      20205000.i2c, 20804000.i2c, 20805000.i2c
+ 78:          0  ARMCTRL-level  86 Edge      20204000.spi
+ 81:        706  ARMCTRL-level  89 Edge      uart-pl011
+ 86:     297235  ARMCTRL-level  94 Edge      mmc0
+Err:          0
+
+Note that support for more interrupts than irq 0 to 14
+is not implemented (and this value is also hard-coded).
+
+Allowing dma channel 15 to get controlled well would require
+further extensive changes to the device-tree (separate register region).
+
+Also as mentioned above dma-channel 15 is used by the firmware
+and is - for all practical purposes - not available to
+the kernel.
+
+Only when this situation changes a valid effort can get made.
+
+One major concern here is the fact that we have no dedicated interrupt
+for dma channel 15. There is only the "catch all" interrupt, which - as
+mentioned above - also triggers for dma channels used by the firmware,
+which leads to an unnecessary amount of interrupts and can result
+in system lockups...
+
+The only potential usage would be for dma transfers where we do
+not need an interrupt, but that may require further changes
+to the dmaengine and more to support correctly.
+
+One such "candidate" for the use of dma channel 15 could be
+the tx-dma of spi-bcm2835, as for this specifically we only need
+to get the interrupt when the rx-dma finishes, but that is a
+very special case.
+
+Avoiding the interrupt for the spi-tx-dma is still something that
+could get investigated in a different patch-set.
+
+Changelog:
+  V1 -> V2: added explicit documentation for "dma-shared-all"
+            to the dt-bindings documentation
+
+Martin Sperl (3):
+  dt/bindings: bcm2835: add interrupt-names property
+  dmaengine: bcm2835: use platform_get_irq_byname
+  ARM: bcm2835: add interrupt-names and apply correct mapping
+
+ .../devicetree/bindings/dma/brcm,bcm2835-dma.txt   | 26 ++++++++
+ arch/arm/boot/dts/bcm283x.dtsi                     | 22 ++++++-
+ drivers/dma/bcm2835-dma.c                          | 77 ++++++++++++++++++----
+ 3 files changed, 110 insertions(+), 15 deletions(-)
+
+--
+2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
