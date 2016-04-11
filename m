@@ -1,267 +1,131 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V17 3/3] dmaengine: qcom_hidma: add support for object hierarchy
-Date: Mon, 11 Apr 2016 10:21:13 -0400
-Message-ID: <1460384473-5775-4-git-send-email-okaya@codeaurora.org>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: dts: imx: add Boundary Devices Nitrogen6_SoloX
+ board
+Date: Mon, 11 Apr 2016 22:31:50 +0800
+Message-ID: <20160411143150.GA15818@tiger>
+References: <1459614351-16731-7-git-send-email-gary.bisson@boundarydevices.com>
+ <1460037168-23292-1-git-send-email-gary.bisson@boundarydevices.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460037168-23292-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In order to create a relationship model between the channels and the
-management object, we are adding support for object hierarchy to the
-drivers. This patch simplifies the userspace application development.
-We will not have to traverse different firmware paths based on device
-tree or ACPI based kernels.
+On Thu, Apr 07, 2016 at 03:52:48PM +0200, Gary Bisson wrote:
 
-No matter what flavor of kernel is used, objects will be represented as
-platform devices.
+<snip>
 
-The new layout is as follows:
+> +&ecspi1 {
+> +	fsl,spi-num-chipselects = <1>;
+> +	cs-gpios = <&gpio2 16 GPIO_ACTIVE_LOW>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi1>;
+> +	status = "okay";
+> +
+> +	flash: m25p80@0 {
+> +		compatible = "microchip,sst25vf016b";
+> +		spi-max-frequency = <20000000>;
+> +		reg = <0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
 
-hidmam_10: hidma-mgmt@0x5A000000 {
-	compatible = "qcom,hidma-mgmt-1.0";
-	...
+Have a new line between properties and sub-nodes.
 
-	hidma_10: hidma@0x5a010000 {
-			compatible = "qcom,hidma-1.0";
-			...
-	}
-}
+> +		partition@0 {
+> +			label = "U-Boot";
+> +			reg = <0x0 0xC0000>;
 
-The hidma_mgmt_init detects each instance of the hidma-mgmt-1.0 objects
-in device tree and calls into the channel driver to create platform devices
-for each child of the management object.
+Please use lowercase for all hex values in device tree source.
 
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
----
- Documentation/ABI/testing/sysfs-platform-hidma |   9 ++
- drivers/dma/qcom/hidma.c                       |  39 ++++++++-
- drivers/dma/qcom/hidma_mgmt.c                  | 113 ++++++++++++++++++++++++-
- 3 files changed, 156 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+> +			read-only;
+> +		};
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-hidma b/Documentation/ABI/testing/sysfs-platform-hidma
-new file mode 100644
-index 0000000..d364415
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-hidma
-@@ -0,0 +1,9 @@
-+What:		/sys/devices/platform/hidma-*/chid
-+		/sys/devices/platform/QCOM8061:*/chid
-+Date:		Dec 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Contains the ID of the channel within the HIDMA instance.
-+		It is used to associate a given HIDMA channel with the
-+		priority and weight calls in the management interface.
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index 8972508..1f48f6d 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -549,6 +549,43 @@ static irqreturn_t hidma_chirq_handler(int chirq, void *arg)
- 	return hidma_ll_inthandler(chirq, lldev);
- }
- 
-+static ssize_t hidma_show_values(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct hidma_dev *mdev = platform_get_drvdata(pdev);
-+
-+	buf[0] = 0;
-+
-+	if (strcmp(attr->attr.name, "chid") == 0)
-+		sprintf(buf, "%d\n", mdev->chidx);
-+
-+	return strlen(buf);
-+}
-+
-+static int hidma_create_sysfs_entry(struct hidma_dev *dev, char *name,
-+				    int mode)
-+{
-+	struct device_attribute *attrs;
-+	char *name_copy;
-+
-+	attrs = devm_kmalloc(dev->ddev.dev, sizeof(struct device_attribute),
-+			     GFP_KERNEL);
-+	if (!attrs)
-+		return -ENOMEM;
-+
-+	name_copy = devm_kstrdup(dev->ddev.dev, name, GFP_KERNEL);
-+	if (!name_copy)
-+		return -ENOMEM;
-+
-+	attrs->attr.name = name_copy;
-+	attrs->attr.mode = mode;
-+	attrs->show = hidma_show_values;
-+	sysfs_attr_init(&attrs->attr);
-+
-+	return device_create_file(dev->ddev.dev, attrs);
-+}
-+
- static int hidma_probe(struct platform_device *pdev)
- {
- 	struct hidma_dev *dmadev;
-@@ -682,6 +719,7 @@ static int hidma_probe(struct platform_device *pdev)
- 	dmadev->irq = chirq;
- 	tasklet_init(&dmadev->task, hidma_issue_task, (unsigned long)dmadev);
- 	hidma_debug_init(dmadev);
-+	hidma_create_sysfs_entry(dmadev, "chid", S_IRUGO);
- 	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
- 	platform_set_drvdata(pdev, dmadev);
- 	pm_runtime_mark_last_busy(dmadev->ddev.dev);
-@@ -730,7 +768,6 @@ static const struct of_device_id hidma_match[] = {
- 	{.compatible = "qcom,hidma-1.0",},
- 	{},
- };
--
- MODULE_DEVICE_TABLE(of, hidma_match);
- 
- static struct platform_driver hidma_driver = {
-diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
-index ef491b8..c0e3653 100644
---- a/drivers/dma/qcom/hidma_mgmt.c
-+++ b/drivers/dma/qcom/hidma_mgmt.c
-@@ -1,7 +1,7 @@
- /*
-  * Qualcomm Technologies HIDMA DMA engine Management interface
-  *
-- * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -17,13 +17,14 @@
- #include <linux/acpi.h>
- #include <linux/of.h>
- #include <linux/property.h>
--#include <linux/interrupt.h>
--#include <linux/platform_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
- #include <linux/module.h>
- #include <linux/uaccess.h>
- #include <linux/slab.h>
- #include <linux/pm_runtime.h>
- #include <linux/bitops.h>
-+#include <linux/dma-mapping.h>
- 
- #include "hidma_mgmt.h"
- 
-@@ -298,5 +299,109 @@ static struct platform_driver hidma_mgmt_driver = {
- 	},
- };
- 
--module_platform_driver(hidma_mgmt_driver);
-+#if defined(CONFIG_OF) && defined(CONFIG_OF_IRQ)
-+static int object_counter;
-+
-+static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
-+{
-+	struct platform_device *pdev_parent = of_find_device_by_node(np);
-+	struct platform_device_info pdevinfo;
-+	struct of_phandle_args out_irq;
-+	struct device_node *child;
-+	struct resource *res;
-+	const __be32 *cell;
-+	int ret = 0, size, i, num;
-+	u64 addr, addr_size;
-+
-+	for_each_available_child_of_node(np, child) {
-+		struct resource *res_iter;
-+		struct platform_device *new_pdev;
-+
-+		cell = of_get_property(child, "reg", &size);
-+		if (!cell) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		size /= sizeof(*cell);
-+		num = size /
-+			(of_n_addr_cells(child) + of_n_size_cells(child)) + 1;
-+
-+		/* allocate a resource array */
-+		res = kcalloc(num, sizeof(*res), GFP_KERNEL);
-+		if (!res) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+
-+		/* read each reg value */
-+		i = 0;
-+		res_iter = res;
-+		while (i < size) {
-+			addr = of_read_number(&cell[i],
-+					      of_n_addr_cells(child));
-+			i += of_n_addr_cells(child);
-+
-+			addr_size = of_read_number(&cell[i],
-+						   of_n_size_cells(child));
-+			i += of_n_size_cells(child);
-+
-+			res_iter->start = addr;
-+			res_iter->end = res_iter->start + addr_size - 1;
-+			res_iter->flags = IORESOURCE_MEM;
-+			res_iter++;
-+		}
-+
-+		ret = of_irq_parse_one(child, 0, &out_irq);
-+		if (ret)
-+			goto out;
-+
-+		res_iter->start = irq_create_of_mapping(&out_irq);
-+		res_iter->name = "hidma event irq";
-+		res_iter->flags = IORESOURCE_IRQ;
-+
-+		memset(&pdevinfo, 0, sizeof(pdevinfo));
-+		pdevinfo.fwnode = &child->fwnode;
-+		pdevinfo.parent = pdev_parent ? &pdev_parent->dev : NULL;
-+		pdevinfo.name = child->name;
-+		pdevinfo.id = object_counter++;
-+		pdevinfo.res = res;
-+		pdevinfo.num_res = num;
-+		pdevinfo.data = NULL;
-+		pdevinfo.size_data = 0;
-+		pdevinfo.dma_mask = DMA_BIT_MASK(64);
-+		new_pdev = platform_device_register_full(&pdevinfo);
-+		if (!new_pdev) {
-+			ret = -ENODEV;
-+			goto out;
-+		}
-+		of_dma_configure(&new_pdev->dev, child);
-+
-+		kfree(res);
-+		res = NULL;
-+	}
-+out:
-+	kfree(res);
-+
-+	return ret;
-+}
-+#endif
-+
-+static int __init hidma_mgmt_init(void)
-+{
-+#if defined(CONFIG_OF) && defined(CONFIG_OF_IRQ)
-+	struct device_node *child;
-+
-+	for (child = of_find_matching_node(NULL, hidma_mgmt_match); child;
-+	     child = of_find_matching_node(child, hidma_mgmt_match)) {
-+		/* device tree based firmware here */
-+		hidma_mgmt_of_populate_channels(child);
-+		of_node_put(child);
-+	}
-+#endif
-+	platform_driver_register(&hidma_mgmt_driver);
-+
-+	return 0;
-+}
-+module_init(hidma_mgmt_init);
- MODULE_LICENSE("GPL v2");
--- 
-1.8.2.1
+Have a new line between nodes.
+
+> +		partition@C0000 {
+> +			label = "env";
+> +			reg = <0xC0000 0x2000>;
+> +			read-only;
+> +		};
+> +		partition@C2000 {
+> +			label = "Kernel";
+> +			reg = <0xC2000 0x11e000>;
+> +		};
+> +		partition@1E0000 {
+> +			label = "M4";
+> +			reg = <0x1E0000 0x20000>;
+> +		};
+> +	};
+> +};
+
+<snip>
+
+> +&ssi1 {
+> +	fsl,mode = "i2s-master";
+
+Take a look at Documentation/devicetree/bindings/sound/fsl,ssi.txt.
+fsl,mode is only for AC97 interface now.
+
+> +	status = "okay";
+> +};
+
+<snip>
+
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
+> +	keep-power-in-suspend;
+> +	enable-sdio-wakeup;
+
+Use wakeup-source instead, as enable-sdio-wakeup is deprecated.  See
+details in bindings/power/wakeup-source.txt.
+
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +	keep-power-in-suspend;
+> +	vmmc-supply = <&reg_wlan>;
+> +	cap-power-off-card;
+> +	cap-sdio-irq;
+> +	vqmmc-1-8-v;
+
+Your change log says this non-existent property is removed.
+
+> +	status = "okay";
+> +
+> +	brcmf: bcrmf@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +		interrupt-parent = <&gpio7>;
+> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+
+Have a new line between nodes.
+
+Shawn
+
+> +	wlcore: wlcore@2 {
+> +		compatible = "ti,wl1271";
+> +		reg = <2>;
+> +		interrupt-parent = <&gpio7>;
+> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
+> +		ref-clock-frequency = <38400000>;
+> +	};
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
