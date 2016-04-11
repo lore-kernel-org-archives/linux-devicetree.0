@@ -1,66 +1,82 @@
-From: =?big5?B?SmVmZnJleSBMaW4gKKpMuHGzuSk=?= <Jeffrey.Lin@rad-ic.com>
-Subject: RE: [PATCH] driver: input :touchscreen : add Raydium I2C touch
- driver
-Date: Mon, 11 Apr 2016 09:57:21 +0000
-Message-ID: <9BE4B49389AB2F41A64A32DFC844F1DF73F1BDB8@RADHCMS5.corp.rad-ic.com>
-References: <1458883269-3218-1-git-send-email-jeffrey.lin@rad-ic.com>
- <20160411082428.GA26066@dtor-ws>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Mon, 11 Apr 2016 12:23:27 +0200
+Message-ID: <20160411102327.GA17743@ulmo.ba.sec>
+References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
+ <20160408164814.GB15034@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160411082428.GA26066@dtor-ws>
-Content-Language: zh-TW
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "jeffrey.lin" <yajohn@gmail.com>
-Cc: "rydberg@euromail.se" <rydberg@euromail.se>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jeesw@melfas.com" <jeesw@melfas.com>, "bleung@chromium.org" <bleung@chromium.org>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, =?big5?B?Um9nZXIgWWFuZyAot6jC7d6zKQ==?= <Roger.Yang@rad-ic.com>, =?big5?B?S1AgTGkgKKf1qfitvyk=?= <KP.Li@rad-ic.com>, =?big5?B?QWxiZXJ0IFNoaWVoICjBwqpZ3rMp?= <Albert.Shieh@rad-ic.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160408164814.GB15034@localhost>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRG1pdHJ5Og0KVGhhbmsgeW91IGZvciB5b3VyIHJlc3BvbnNlLg0KCUFjdHVhbGx5LCB3ZSBk
-aWRuJ3QgaW1wbGVtZW50IEZXIHVwZGF0ZSBmdW5jdGlvbiBvbiB0aGUgY2hyb21lb3MgZGV2aWNl
-LCB3ZSBqdXN0IGNvcHkgZnVuY3Rpb24gZnJvbSBvdXIgcHJldmlvdXMgYW5kcm9pZCBkZXZpY2Uu
-IEknbGwgZml4IHRoYXQgb24gdGhlIG5leHQgdmVyc2lvbi4gUmF5ZGl1bSBjb250cm9sbGVyIGRv
-ZXNuJ3QgaGF2ZSBhY2Nlc3MgYnl0ZXMgbGltaXQsIGJ1dCBteSBwcmV2aW91cyBhbmRyb2lkIGV4
-cGVyaW1lbnRhbCBkZXZpY2UgaGFkIDYwIGJ5dGVzIGxpbWl0Lg0KCQ0KQWJvdXQgcmVmb3JtYXR0
-aW5nIGNvbW1hbmQgc3RydWN0dXJlLCBkbyB5b3Ugd2FudCBtZSB0byByZWZvcm0gYWxsIG15IGNv
-bW1hbmRzIGFzIHlvdSBzYWlkIGluIHRoZSBtYWlsIG9yIGp1c3QgaW4gY2FzZSBvZiBmdyB1cGRh
-dGUgZnVuY3Rpb24/IElmIG5vdCBqdXN0IGluIGNhc2Ugb2YgRlcgdXBkYXRlLCBpdCdzIGJldHRl
-ciB0byBtZWV0IG1heGltdW0gYnVmZmVyIHNpemUsIGxpa2UgIk1BWF9QQUNLRVRfU0laRSIuDQoN
-Cg0KQmVzdCBSZWdhcmRzDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpKZWZmcmV5IExpbiyqTLhxs7kNCrfnuams
-7KfeDQpSYXlkaXVtIFNlbWljb25kdWN0b3IgQ29ycG9yYXRpb24NClRlbDooMDMpNjY2LTE4MTgg
-RXh0LjQxNjMNCkZheDooMDMpNjY2LTE5MTkNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-CkZyb206IERtaXRyeSBUb3Jva2hvdiBbbWFpbHRvOmRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb21d
-IA0KU2VudDogTW9uZGF5LCBBcHJpbCAxMSwgMjAxNiA0OjI0IFBNDQpUbzogamVmZnJleS5saW4N
-CkNjOiByeWRiZXJnQGV1cm9tYWlsLnNlOyBncmFudC5saWtlbHlAbGluYXJvLm9yZzsgcm9iaCtk
-dEBrZXJuZWwub3JnOyBqZWVzd0BtZWxmYXMuY29tOyBibGV1bmdAY2hyb21pdW0ub3JnOyBzY290
-dC5saXVAZW1jLmNvbS50dzsgSmVmZnJleSBMaW4gKKpMuHGzuSk7IFJvZ2VyIFlhbmcgKLeowu3e
-syk7IEtQIExpICin9an4rb8pOyBBbGJlcnQgU2hpZWggKMHCqlnesyk7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0hdIGRyaXZlcjogaW5wdXQgOnRvdWNo
-c2NyZWVuIDogYWRkIFJheWRpdW0gSTJDIHRvdWNoIGRyaXZlcg0KDQpIaSBKZWZmcmV5LA0KDQpP
-biBGcmksIE1hciAyNSwgMjAxNiBhdCAwMToyMTowOVBNICswODAwLCBqZWZmcmV5LmxpbiB3cm90
-ZToNCj4gKyNkZWZpbmUgTUFYX1BBQ0tFVF9TSVpFCQk2MA0KLi4uDQo+ICsjZGVmaW5lIFJBWURJ
-VU1fRldfUEFHRVNJWkUJMTI4DQouLi4NCj4gKw0KPiArc3RhdGljIGludCByYXlkaXVtX2kyY19z
-ZW5kKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+ICsJdTggYWRkciwgdTggKmRhdGEsIHNp
-emVfdCBsZW4pDQo+ICt7DQo+ICsJdTggYnVmW01BWF9QQUNLRVRfU0laRSArIDFdOw0KPiArCWlu
-dCB0cmllcyA9IDA7DQo+ICsNCj4gKwlpZiAobGVuID4gTUFYX1BBQ0tFVF9TSVpFKQ0KPiArCQly
-ZXR1cm4gLUVJTlZBTDsNCi4uLg0KPiArc3RhdGljIGludCByYXlkaXVtX2kyY19md193cml0ZV9w
-YWdlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+ICsJCQkJY29uc3Qgdm9pZCAqcGFnZSkN
-Cj4gK3sNCj4gKwlzdGF0aWMgY29uc3QgdTggYWNrX29rW10gPSB7IDB4NTUsIDB4QUEgfTsNCj4g
-Kwl1OCBidWZbMl07DQo+ICsJaW50IHJldHJ5Ow0KPiArCWludCBlcnJvcjsNCj4gKw0KPiArCWZv
-ciAocmV0cnkgPSAwOyByZXRyeSA8IE1BWF9GV19VUERBVEVfUkVUUklFUzsgcmV0cnkrKykgew0K
-PiArCQllcnJvciA9IHJheWRpdW1faTJjX3NlbmQoY2xpZW50LCBDTURfQk9PVF9XUlQsDQo+ICsJ
-CQkodTggKilwYWdlLCBSQVlESVVNX0ZXX1BBR0VTSVpFKTsNCj4gKwkJaWYgKGVycm9yKSB7DQo+
-ICsJCQlkZXZfZXJyKCZjbGllbnQtPmRldiwNCj4gKwkJCQkiQkxEUiBXcml0ZSBQYWdlIGZhaWxl
-ZDogJWRcbiIsIGVycm9yKTsNCj4gKwkJCWNvbnRpbnVlOw0KPiArCQl9DQoNCkdpdmVuIHRoZSBh
-Ym92ZSBkZWZpbml0aW9ucyBvZiBNQVhfUEFDS0VUX1NJWkUgYW5kIFJBWURJVU1fRldfUEFHRVNJ
-WkUgSSBkbyBub3QgYmVsaWV2ZSB0aGF0IGZpcm13YXJlIHVwZGF0ZSBpcyB3b3JraW5nLg0KV2hh
-dCBpcyB0aGUgYmlnZ2VzdCBidWZmZXIgdGhhdCBjYW4gYmUgc2VudCB0byB0aGUgZGV2aWNlPyBN
-YXliZSB3ZSBzaG91bGQgYWxsb2NhdGUgaXQgZHluYW1pY2FsbHk/DQoNCkkgYW0gYWxzbyB3b25k
-ZXJpbmcgYWJvdXQgZm9ybWF0dGluZyBjb21tYW5kIHN0cnVjdHVyZSBhcyBieXRlIHNlcXVlbmNl
-Lg0KV291bGQgaXQgYmUgYmV0dGVyIHRvIGRlZmluZSBpdCBhczoNCg0Kc3RydWN0IHJhaWRpdW1f
-Y21kIHsNCgl1MzIgYmFuazsNCglpbnQgbGVuOw0KCXU4IGNtZFtSQUlESVVNX01BWF9DTURfTEVO
-XTsNCn0NCg0KV2hhdCBpcyB0aGUgbG9uZ2VzdCBjb21tYW5kIHRoYXQgdGhlIGNvbnRyb2xsZXIg
-c3VwcG9ydHM/DQoNCihEbyBub3QgcmVzdWJtaXQgdGhlIGRyaXZlciB5ZXQsIGxldCdzIGRpc2N1
-c3MgZmlyc3QpLg0KDQpUaGFua3MuDQoNCi0tDQpEbWl0cnkNCg==
+
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 08, 2016 at 11:48:14AM -0500, Bjorn Helgaas wrote:
+> Hi Thierry,
+>=20
+> On Fri, Apr 08, 2016 at 06:13:13PM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >=20
+> > Changes to the pad controller device tree binding=20
+>=20
+> Is there a commit we can reference for this pad controller binding
+> change?  If so, I can fold it in.
+
+It hasn't been merged yet. Technically this patch is a prerequisite for
+getting the new binding merged. And there's a specific order that needs
+to be observed for this not to regress (albeit only temporarily).
+
+The correct sequence for merging this would be:
+
+	1) XUSB pad controller binding & driver updates
+	2) PCI driver updates
+	3) DT changes that implement the new binding
+
+Because of the above I'd prefer to merge everything through the Tegra
+tree. If that's okay with you, I can provide stable branches once its
+all in place for you to merge back into the PCI tree.
+
+> Is there a benefit to keeping this binding patch separate from the
+> corresponding driver patch?  It seems like it'd nice to have a
+> connection between them.  (Sorry, I'm sure I've asked this before,
+> but I can't remember the answer.)
+
+I've seen both approaches applied. I think separate patches is (or was?)
+preferred because eventually the DT bindings were supposed to get moved
+to a separate repository. Having separate patches would make the
+transition easier by making it possible to cherry-pick between trees.
+
+Thierry
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXC3scAAoJEN0jrNd/PrOhVnoQAJQawbj9su8FAjoJiaLXV+qw
+SlKUEiJrqe5UNOKDFG682fHscmFkONiM+tLxwvy0zLVmkkvxXUo//jHD0lNJvyt2
+GM0TJDCgCow7pZiWAv54wROyaJvvRpNrRZIErBO/sYjZJQlopdW6iKxS6zqAzJo4
+3mMV5wmrXnxNkjPR5Ah7PjX9E/HU/9LwgQhUbKCRfczH616htE6MU30XevNrtp/0
+3gcLVwXIH5jMcw8hACsb+gUlFHvtwDJogjqYqx9TkVThOrH+rRnmfn6KmP8s12Pn
+thFZKARcyiCuW0VY3Roz8X8Q3JR9W0xYodzqAXXwEMnOALZewodV4NrO54eq6VWV
+uQzIlz/EQfWV41nPCsCBKnkOi0+gYm0GYdokrMSwY59bazdhZfDqB+reDcf8DTga
+tftp+91kzC7/Vr+L+9Str2V9Z8qcu+3cWCBP5vhv4Czea9ShU+yFZaoD9Z6fvB07
+jLsh8IGqwcJm5TIUcVlkMh6xnKY3GMoAcnGN1v7YHw3M2hlk2BGs+KqkvZzD9AiU
+c1dHnRV1p5EPpF/me/ucx3tNBAKHrxrV2wor/9h+c0Puy/PQBrkD79fbVajdmVoQ
+h7/SsdslZaKGOmrePKUZJ26Xr6KAkvt29zM6Sl8TtbQcEuF0bS29osYprpNTpLzG
+y3pSYkJ7argu7KfzHelp
+=85h5
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
