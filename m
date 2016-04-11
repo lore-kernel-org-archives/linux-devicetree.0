@@ -1,144 +1,107 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 2/2] PCI: tegra: Support per-lane PHYs
-Date: Mon, 11 Apr 2016 13:11:19 +0200
-Message-ID: <20160411111119.GB17743@ulmo.ba.sec>
-References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
- <1460131994-24493-2-git-send-email-thierry.reding@gmail.com>
- <20160408180528.GC15034@localhost>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v6 1/2] dt: bindings: add MARVELL's sd8xxx wireless device
+Date: Mon, 11 Apr 2016 11:23:52 +0000
+Message-ID: <44846d9ea4084dc4b2706104df8d3543@SC-EXCH04.marvell.com>
+References: <1459343998-5187-1-git-send-email-akarwar@marvell.com>
+ <CAL_JsqK5TiNCub6XnBcE118gLkC-mjf437zWhLOsjgtz+1peuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5/uDoXvLw7AC5HRs"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160408180528.GC15034@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqK5TiNCub6XnBcE118gLkC-mjf437zWhLOsjgtz+1peuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---5/uDoXvLw7AC5HRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 08, 2016 at 01:05:28PM -0500, Bjorn Helgaas wrote:
-> Hi Thierry,
->=20
-> I think there are a couple typos (one in a message and one that
-> actually looks important), and one question below.
->=20
-> On Fri, Apr 08, 2016 at 06:13:14PM +0200, Thierry Reding wrote:
-[...]
-> > +static int tegra_pcie_phy_power_off(struct tegra_pcie *pcie)
-> > +{
-> > +	struct tegra_pcie_port *port;
-> > +	int err;
-> > +
-> > +	if (pcie->legacy_phy) {
-> > +		if (pcie->phy)
-> > +			err =3D phy_power_on(pcie->phy);
->=20
-> s/phy_power_on/phy_power_off/
-
-Good catch. Fixed.
-
-> > @@ -899,13 +1025,9 @@ static int tegra_pcie_enable_controller(struct te=
-gra_pcie *pcie)
-> >  		afi_writel(pcie, value, AFI_FUSE);
-> >  	}
-> > =20
-> > -	if (!pcie->phy)
-> > -		err =3D tegra_pcie_phy_enable(pcie);
-> > -	else
-> > -		err =3D phy_power_on(pcie->phy);
-> > -
-> > +	err =3D tegra_pcie_phy_power_on(pcie);
-> >  	if (err < 0) {
-> > -		dev_err(pcie->dev, "failed to power on PHY: %d\n", err);
-> > +		dev_err(pcie->dev, "failed to power off PHY(s): %d\n", err);
->=20
-> s/off/on/
-
-Fixed.
-
-> > +static int tegra_pcie_phys_get(struct tegra_pcie *pcie)
-> > +{
-> > +	struct tegra_pcie_port *port;
-> > +	int err;
-> > +
-> > +	if (of_get_property(pcie->dev->of_node, "phys", NULL) !=3D NULL)
-> > +		return tegra_pcie_phys_get_legacy(pcie);
-> > +
-> > +	list_for_each_entry(port, &pcie->ports, list) {
-> > +		err =3D tegra_pcie_port_get_phys(port);
-> > +		if (err < 0) {
-> > +			return err;
-> > +		}
-> > +	}
->=20
-> This seems backwards: if I'm reading this right, you first check for
-> the legacy property ("phys") and use it if you find it.  If there is
-> no legacy property, you look for the new per-lane PHYs.
->=20
-> The usual pattern would be "look for the new stuff, and if you don't
-> find it, fall back to the old stuff." Is there a configuration that
-> could be described either way, e.g., something with only one lane and
-> only one PHY?
->=20
-> I'm not sure whether it matters, but if it *could* use the "new, fall
-> back to old" pattern, that would be nice and would keep people from
-> wondering whether it's safe to do it backwards.
-
-The reason why I wrote it this way is to special case the legacy code.
-The alternative would be to do:
-
-	if (of_get_property(...) =3D=3D NULL) {
-		list_for_each_entry(port, &pcie->ports, list) {
-			err =3D tegra_pcie_port_get_phys(port);
-			if (err < 0)
-				return err;
-		}
-	}
-
-	return tegra_pcie_phys_get_legacy(pcie);
-
-Which is better in the way you describe (fall back to legacy if new
-binding is not found). But like I said, it makes, from the code flow,
-the new binding the exception, which looks odd to me as well.
-
-Perhaps this could be somewhat mitigated by wrapping the new code into
-a separate function:
-
-	if (of_get_property(...) =3D=3D NULL)
-		return tegra_pcie_phys_get_per_lane(pcie);
-
-	return tegra_pcie_phys_get_legacy(pcie);
-
-I don't feel very strongly in either direction. Do you have a
-preference?
-
-Thierry
-
---5/uDoXvLw7AC5HRs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXC4ZVAAoJEN0jrNd/PrOhtfMP/2K8QEyHd4IkJO3Fd5nCYcA1
-DdZAgJBo2ZpJMHiWClcQ/GgpF4sTcvuD1YBav1mQBDxvr3qkkpHsT9Y2z/vgbKB9
-hzk6p7fjwhuOw3qAQ5yBEYPG7MO8+LvImNXFzB57An2mRruvkoLeOcxNj21kAQw6
-Kwmt1dLi0bW33J/emAnUi6JqZYd+/HLew4lsS1u/H5xMz3jqDW9xpP74Z3l1s8fy
-RQhtIpOZ4x7LciTg8nVEdXaAXfBAqxtvRvd4VbJe6l5msEzgmZVNZK+6LHmtYHrW
-BIYZriC3uT2rjbdFTLksFIKE6qWEfTGc8PTJ+QIDdlZG7wF1xnNmZlyXtmCi/P2+
-b1qzj33jPq7KtypzSxxe0zaaXWEVqxX5q2TwwUF5eSCePtebgBbOMN0WJyDvbBzd
-3PEGrPng+LhFlyLBveCAJbWzpxjTaMFlcX8Gk98DxwmiplT8BGQYJQ3yvU9Huh4b
-YNT3ztjgu4LbzON/LHE1oLDimpVqT6cEoKy4kreS8b1O0rAnV258wSqRWdN9Jbwg
-OfY+tbtxeODI5ibwYV2L74/17iq80TuHzYXDa6roaZH4vcJvHnsVQjqfW8mfQD9k
-jExVH1s9E6zOjeGvaUn5nxXxZCP0TTF3V8ZM3p6pkE7iAOGSo18/LLUEpFAMHqNE
-t5AxGktQnmQjmwSbGFNS
-=IsIL
------END PGP SIGNATURE-----
-
---5/uDoXvLw7AC5HRs--
+SGkgUm9iLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gRnJvbTogUm9iIEhlcnJpbmcg
+W21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgTWFyY2ggMzAsIDIw
+MTYgNzo0NiBQTQ0KPiBUbzogQW1pdGt1bWFyIEthcndhcg0KPiBDYzogbGludXgtd2lyZWxlc3NA
+dmdlci5rZXJuZWwub3JnOyBDYXRoeSBMdW87IE5pc2hhbnQgU2FybXVrYWRhbTsNCj4gZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFdlaS1OaW5nIEh1YW5nOyBYaW5taW5nIEh1DQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjYgMS8yXSBkdDogYmluZGluZ3M6IGFkZCBNQVJWRUxMJ3Mgc2Q4eHh4
+IHdpcmVsZXNzDQo+IGRldmljZQ0KPiANCj4gT24gV2VkLCBNYXIgMzAsIDIwMTYgYXQgODoxOSBB
+TSwgQW1pdGt1bWFyIEthcndhciA8YWthcndhckBtYXJ2ZWxsLmNvbT4NCj4gd3JvdGU6DQo+ID4g
+RnJvbTogWGlubWluZyBIdSA8aHV4bUBtYXJ2ZWxsLmNvbT4NCj4gPg0KPiA+IEFkZCBkZXZpY2Ug
+dHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIE1BUlZFTEwncyBzZDh4eHgNCj4gPiAoc2Q4
+ODk3IGFuZCBzZDg5OTcpIHdsYW4gY2hpcC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpbm1p
+bmcgSHUgPGh1eG1AbWFydmVsbC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW1pdGt1bWFyIEth
+cndhciA8YWthcndhckBtYXJ2ZWxsLmNvbT4NCj4gPiAtLS0NCj4gPiBMaXN0aW5nIGNoYW5nZWxp
+c3QgZm9yIGJvdGggMS8yIGFuZCAyLzIgcGF0Y2hlcw0KPiA+IHYzOiBEb24ndCB1cGRhdGUgYWRh
+cHRlci0+ZHRfbm9kZSBpZiBtd2lmaWV4X3BsdF9kZXYgaXMgTlVMTA0KPiA+DQo+ID4gdjQ6IGEp
+Q29ycmVjdGVkIHRoZSAnbmFtZScgYW5kICdjb21wYXRpYmxlJyBwcm9wZXJ0eSBuYW1lcy4oQXJu
+ZA0KPiBCZXJnbWFubiBhbmQgUm9iDQo+ID4gICAgIEhlcnJpbmcpDQo+ID4gICAgIGIpUGF0Y2gg
+ZGVzY3JpcHRpb24gd3JhcGVkIGluIDcyIGNvbHVtbnMoUm9iIEhlcnJpbmcpDQo+ID4gICAgIGMp
+TW92ZWQgRFQgYmluZGluZyBmaWxlIHRvIGJpbmRpbmdzL25ldC93aXJlbGVzcy8oUm9iIEhlcnJp
+bmcpDQo+ID4gICAgIGQpUmVuYW1lZCAibXdpZmlleCxjaGlwLWdwaW8iIHRvICJtYXJ2ZWxsLHdh
+a2V1cC1ncGlvcyIoUm9iDQo+IEhlcnJpbmcvDQo+ID4gICAgIEFybmQgQmVyZ21hbm4pDQo+ID4g
+ICAgIGUpUmVwbGFjZWQgI2lmZGVmIHdpdGggX19tYXliZV91bnVzZWQoQXJuZCBCZXJnbWFubikN
+Cj4gPg0KPiA+IHY1OiBhKVJlbW92ZWQgd2lsZGNhcmRzIGZyb20gY29tcGF0aWJsZSBzdHJpbmco
+QXJuZCBCZXJnbWFubikNCj4gPiAgICAgYilQcmVwYXJlZCBzaW5nbGUgcGF0Y2ggZm9yIGFsbCBi
+aW5kaW5nIGNoYW5nZXMoUm9iIEhlcnJpbmcpDQo+ID4gICAgIGMpU3BlY2lmaWVkIG91ciBub2Rl
+IGFzIGEgc3Vibm9kZSBvZiBTRElPIGNvbnRyb2xsZXIuIFdpdGggdGhpcw0KPiBhcHByb2FjaCwg
+d2UNCj4gPiAgICAgZG9uJ3QgbmVlZCB0byByZWdpc3RlciBuZXcgcGxhdGZvcm0gZHJpdmVyLiAo
+Um9iIGhlcnJpbmcpDQo+ID4NCj4gPiB2NjogYSlMaXN0IG91dCB0aGUgc3BlY2lmaWMgcHJvcGVy
+dHkgbmFtZXMgZm9yIG1hcnZlbGwsY2FsZGF0YSogYW5kDQo+IHNpemUgb2YgdGhlIGRhdGEoUm9i
+IEhlcnJpbmcpDQo+ID4gICAgIGIpVXNlIHNkaW8gZnVuY3Rpb24gbnVtYmVyIGZvciBib3RoIHRo
+ZSB1bml0IGFkZHJlc3MgYW5kIHJlZyhSb2INCj4gPiBIZXJyaW5nKQ0KPiA+IC0tLQ0KPiA+ICAu
+Li4vYmluZGluZ3MvbmV0L3dpcmVsZXNzL21hcnZlbGwtc2Q4eHh4LnR4dCAgICAgICB8IDYzDQo+
+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYzIGluc2VydGlv
+bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL25ldC93aXJlbGVzcy9tYXJ2ZWxsLXNkOHh4eC50eHQNCj4gPg0KPiA+IGRp
+ZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvd2ly
+ZWxlc3MvbWFydmVsbC1zZDh4eHgudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbmV0L3dpcmVsZXNzL21hcnZlbGwtc2Q4eHh4LnR4dA0KPiA+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uMzM3ZmVkNA0KPiA+IC0tLSAvZGV2L251bGwN
+Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dpcmVsZXNz
+L21hcnZlbGwtc2Q4eHh4LnR4DQo+ID4gKysrIHQNCj4gPiBAQCAtMCwwICsxLDYzIEBADQo+ID4g
+K01hcnZlbGwgODg5Ny84OTk3IChzZDg4OTcvc2Q4OTk3KSBTRElPIGRldmljZXMNCj4gPiArLS0t
+LS0tDQo+ID4gKw0KPiA+ICtUaGlzIG5vZGUgcHJvdmlkZXMgcHJvcGVydGllcyBmb3IgY29udHJv
+bGxpbmcgdGhlIG1hcnZlbGwgc2Rpbw0KPiB3aXJlbGVzcyBkZXZpY2UuDQo+ID4gK1RoZSBub2Rl
+IGlzIGV4cGVjdGVkIHRvIGJlIHNwZWNpZmllZCBhcyBhIGNoaWxkIG5vZGUgdG8gdGhlIFNESU8N
+Cj4gPiArY29udHJvbGxlciB0aGF0IGNvbm5lY3RzIHRoZSBkZXZpY2UgdG8gdGhlIHN5c3RlbS4N
+Cj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKw0KPiA+ICsgIC0gY29tcGF0
+aWJsZSA6IHNob3VsZCBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoNCj4gPiArICAgICAgICogIm1h
+cnZlbGwsc2Q4ODk3Ig0KPiA+ICsgICAgICAgKiAibWFydmVsbCxzZDg5OTciDQo+ID4gKw0KPiA+
+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICsNCj4gPiArICAtIG1hcnZlbGwsY2FsZGF0YSog
+OiBBIHNlcmllcyBvZiBwcm9wZXJ0aWVzIHdpdGggbWFydmVsbCxjYWxkYXRhDQo+IHByZWZpeCwN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgcmVwcmVzZW50IGNhbGlicmF0aW9uIGRhdGEgZG93
+bmxvYWRlZCB0byB0aGUNCj4gZGV2aWNlIGR1cmluZw0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICBpbml0aWFsaXphdGlvbi4gVGhpcyBpcyBhbiBhcnJheSBvZiB1bnNpZ25lZA0KPiB2YWx1ZXMu
+DQo+IA0KPiB1bnNpZ25lZCA4LWJpdCB2YWx1ZXMuLi4NCj4gDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgIHRoZSBwcm9wZXJ0aWVzIHNob3VsZCBmb2xsb3cgYmVsb3cgcHJvcGVydHkgbmFtZQ0K
+PiBhbmQNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY29ycmVzcG9uZGluZyBhcnJheSBsZW5n
+dGg6DQo+ID4gKyAgICAgICAibWFydmVsbCxjYWxkYXRhXzAwX3R4cHdybGltaXRfMmdfY2ZnX3Nl
+dCIgKGxlbmd0aCA9IDU2NikuDQo+ID4gKyAgICAgICAibWFydmVsbCxjYWxkYXRhXzAwX3R4cHdy
+bGltaXRfNWdfY2ZnX3NldF9zdWIwIiAobGVuZ3RoID0NCj4gNTAyKS4NCj4gPiArICAgICAgICJt
+YXJ2ZWxsLGNhbGRhdGFfMDBfdHhwd3JsaW1pdF81Z19jZmdfc2V0X3N1YjEiIChsZW5ndGggPQ0K
+PiA2ODgpLg0KPiA+ICsgICAgICAgIm1hcnZlbGwsY2FsZGF0YV8wMF90eHB3cmxpbWl0XzVnX2Nm
+Z19zZXRfc3ViMiIgKGxlbmd0aCA9DQo+IDc1MCkuDQo+ID4gKyAgICAgICAibWFydmVsbCxjYWxk
+YXRhXzAwX3R4cHdybGltaXRfNWdfY2ZnX3NldF9zdWIzIiAobGVuZ3RoID0NCj4gNTAyKS4NCj4g
+DQo+IFRoZSAwMCBhbmQgY2ZnX3NldCBzZWVtIHByZXR0eSBwb2ludGxlc3MsIGFuZCAnLScgaXMg
+cHJlZmVycmVkIG92ZXIgJ18nLg0KPiBTbzoNCj4gDQo+IG1hcnZlbGwsY2FsZGF0YS10eHB3cmxp
+bWl0LTVnLXN1YjMNCj4gDQo+ID4gKyAgLSBtYXJ2ZWxsLHdha2V1cC1waW4gOiAnd2FrZXVwcGlu
+JyBpcyBhIHdha2V1cCBwaW4gbnVtYmVyIG9mIHdpZmkNCj4gPiArIGNoaXAgd2hpY2ggd2lsbA0K
+PiANCj4gRHJvcCAid2FrZXVwcGluIGlzIg0KPiANCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+YmUgY29uZmlndXJlZCB0byBmaXJtd2FyZS4gZmlybXdhcmUgd2lsbCB3YWtldXANCj4gaG9zdCBz
+aWRlIHVzZQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICB0aGUgcGluIGR1cmluZyBzdXNwZW5k
+L3Jlc3VtZSBzdGFnZS4NCj4gPiArICAtIGludGVycnVwdC1wYXJlbnQ6IHBoYW5kbGUgb2YgdGhl
+IHBhcmVudCBpbnRlcnJ1cHQgY29udHJvbGxlcg0KPiA+ICsgIC0gaW50ZXJydXB0cyA6IGludGVy
+cnVwdCBwaW4gbnVtYmVyIHRvIHRoZSBjcHUuIGRyaXZlciB3aWxsIHJlcXVlc3QNCj4gYW4gaXJx
+IGJhc2VkIG9uDQo+ID4gKyAgICAgICAgICAgICAgICB0aGlzIGludGVycnVwdCBudW1iZXIuIGR1
+cmluZyBzeXN0ZW0gc3VzcGVuZCwgdGhlIGlycQ0KPiB3aWxsIGJlIGVuYWJsZWQNCj4gPiArICAg
+ICAgICAgICAgICAgIGFzIHN5c3RlbSB3YWtldXAgc291cmNlLCBzbyB0aGF0IHRoZSB3aWZpIGNo
+aXAgY2FuDQo+ID4gKyB3YWtldXAgaG9zdA0KPiANCj4gWW91IG5lZWQgdG8gdXNlIHRoZSB3YWtl
+dXAtc291cmNlIGJpbmRpbmcgaGVyZSAoYmluZGluZ3MvcG93ZXIvd2FrZXVwLQ0KPiBzb3VyY2Uu
+dHh0KS4gUHJvYmFibHkgb24gdGhlIEJUIGJpbmRpbmcgdG9vPw0KDQpXZSBkaWQgc29tZSBleHBl
+cmltZW50cyBhbmQgdHJpZWQgdG8gZXhwbG9yZSB0aGlzIG9wdGlvbi4gSXQgc2VlbXMgdG8gYmUg
+c3BlY2lmaWMgdG8gcnVudGltZSBwb3dlciBtYW5hZ2VtZW50Lg0KV2UgZG9uJ3QgdXNlIHJ1bnRp
+bWUgUE0gZm9yIG91ciBkZXZpY2UuIFdlIGFyZSBpbnRlcmVzdGVkIGluIHN5c3RlbSBzdXNwZW5k
+IGFuZCB3YWtldXAgKHVwb24gY2hhbmdpbmcgdGhlIElSUSBzdGF0dXMpDQpJIHdpbGwgc3VibWl0
+IHVwZGF0ZWQgdmVyc2lvbiBhZGRyZXNzaW5nIG90aGVyIHJldmlldyBjb21tZW50cy4NCg0KUmVn
+YXJkcywNCkFtaXRrdW1hcg0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
