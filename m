@@ -1,39 +1,62 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] ARM: DTS/clk: DRA7 family: enable eDMA and
- audio updates
-Date: Mon, 11 Apr 2016 13:06:26 -0700
-Message-ID: <20160411200625.GD5995@atomide.com>
-References: <1457363857-20797-1-git-send-email-peter.ujfalusi@ti.com>
- <570BA7A2.3080507@ti.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v9 00/20] PM / devferq: Add generic exynos bus frequency
+ driver and new passive governor
+Date: Tue, 12 Apr 2016 05:15:01 +0900
+Message-ID: <CAGTfZH3AVbo6w9KDVNNCs+JMi=+-CA0oL6pQ+3jcOFihtKaK3Q@mail.gmail.com>
+References: <1460347078-15175-1-git-send-email-cw00.choi@samsung.com>
+	<570B218E.5000908@samsung.com>
+	<20160411195557.GA6426@kozik-lap>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <570BA7A2.3080507-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160411195557.GA6426@kozik-lap>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Anand Moon <linux.amoon@gmail.com>, Markus Reichl <m.reichl@fivetechno.de>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, "inki.dae@samsung.com" <inki.dae@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>device
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160411 06:34]:
-> Tony,
-> 
-> according to Nishanth, linux-next is broken for dra7 family:
-> http://pastebin.ubuntu.com/15758542/ on x15 next-20160411
-> because of the missing DT patches.
+Hi Krzysztof,
 
-OK yeah thanks for letting me know.
+On Tue, Apr 12, 2016 at 4:55 AM, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On Mon, Apr 11, 2016 at 01:01:18PM +0900, Chanwoo Choi wrote:
+>> Dear Myungjoo and Krzysztof,
+>>
+>> This patch-set already get the acked-by or signed-off-by tag
+>> from Exynos SoC and DEVFREQ maintainer except for patch10.
+>>
+>> If there is no comment, could you pick this patch-set?
+>
+> I cannot find any description of dependencies between the patches so I
+> assume the obvious one: DTS patches do not depend on anything. This
+> means that:
+> 1. driver/devfreq related changes (including dt-bindings documentation)
+>    go to Myungjoo,
+> 2. I can pick DTS changes.
 
-> Do you want me to resend this series w/o the hwmod patch?
+Yes.
 
-No need to, applying your dts patches into omap-for-v4.7/dt
-thanks.
+>
+> But first I would like to see the bindings documentation beeing applied
+> by someone as a proof that there won't be more development in DTS in
+> these series. There is no sense of picking DTS if after comments from
+> Rob, you will rework them, right?
 
-The epwmss entries still produce warnings, looks like there's
-discussion still going on with those.
+I already discussed the Rob's question on December, last year on
+patchset[1]. But, after that, I didn't receive the any reply from him.
+[1] https://lkml.org/lkml/2015/12/10/943
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, I thought that there is no comment.  But, today, he give some
+question after 4 months.
+
+But I'll again reply to Rob's question.
+
+>
+> Anyway I see Rob's questions. For these bindings I think you should get
+> DT-guys ack first.
+
+OK.
+
+Best Regards,
+Chanwoo Choi
