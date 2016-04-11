@@ -1,115 +1,71 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend v2 2/9] mfd: axp20x: Add bindings for
- AXP809 PMIC
-Date: Mon, 11 Apr 2016 09:24:22 +0100
-Message-ID: <20160411082422.GH4592@x1>
-References: <1459243352-23344-1-git-send-email-wens@csie.org>
- <1459243352-23344-3-git-send-email-wens@csie.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
+Date: Mon, 11 Apr 2016 01:24:28 -0700
+Message-ID: <20160411082428.GA26066@dtor-ws>
+References: <1458883269-3218-1-git-send-email-jeffrey.lin@rad-ic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBON6VW4AKGQEVR5RHHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459243352-23344-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1458883269-3218-1-git-send-email-jeffrey.lin@rad-ic.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "jeffrey.lin" <yajohn@gmail.com>
+Cc: rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org, scott.liu@emc.com.tw, jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Mar 2016, Chen-Yu Tsai wrote:
+Hi Jeffrey,
 
-> This patch adds the basic and regulator bindings for the X-Powers AXP809
-> PMIC.
->=20
-> Also update the DC-DC converter operating frequency for AXP22X/AXP80X.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 31 ++++++++++++++++++=
-++++--
->  1 file changed, 29 insertions(+), 2 deletions(-)
-
-Applied, thanks.
-
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
-tion/devicetree/bindings/mfd/axp20x.txt
-> index fd39fa54571b..d20b1034e967 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -6,10 +6,11 @@ axp202 (X-Powers)
->  axp209 (X-Powers)
->  axp221 (X-Powers)
->  axp223 (X-Powers)
-> +axp809 (X-Powers)
-> =20
->  Required properties:
->  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
-> -	      "x-powers,axp221", "x-powers,axp223"
-> +	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp809"
->  - reg: The I2C slave address or RSB hardware address for the AXP chip
->  - interrupt-parent: The parent interrupt controller
->  - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
-> @@ -18,7 +19,9 @@ Required properties:
-> =20
->  Optional properties:
->  - x-powers,dcdc-freq: defines the work frequency of DC-DC in KHz
-> -		      (range: 750-1875). Default: 1.5MHz
-> +		      AXP152/20X: range:  750-1875, Default: 1.5 MHz
-> +		      AXP22X/80X: range: 1800-4050, Default: 3   MHz
+On Fri, Mar 25, 2016 at 01:21:09PM +0800, jeffrey.lin wrote:
+> +#define MAX_PACKET_SIZE		60
+...
+> +#define RAYDIUM_FW_PAGESIZE	128
+...
 > +
->  - <input>-supply: a phandle to the regulator supply node. May be omitted=
- if
->  		  inputs are unregulated, such as using the IPSOUT output
->  		  from the PMIC.
-> @@ -77,6 +80,30 @@ LDO_IO0		: LDO		: ips-supply		: GPIO 0
->  LDO_IO1		: LDO		: ips-supply		: GPIO 1
->  RTC_LDO		: LDO		: ips-supply		: always on
-> =20
-> +AXP809 regulators, type, and corresponding input supply names:
+> +static int raydium_i2c_send(struct i2c_client *client,
+> +	u8 addr, u8 *data, size_t len)
+> +{
+> +	u8 buf[MAX_PACKET_SIZE + 1];
+> +	int tries = 0;
 > +
-> +Regulator	  Type		  Supply Name		  Notes
-> +---------	  ----		  -----------		  -----
-> +DCDC1		: DC-DC buck	: vin1-supply
-> +DCDC2		: DC-DC buck	: vin2-supply
-> +DCDC3		: DC-DC	buck	: vin3-supply
-> +DCDC4		: DC-DC	buck	: vin4-supply
-> +DCDC5		: DC-DC	buck	: vin5-supply
-> +DC1SW		: On/Off Switch	:			: DCDC1 secondary output
-> +DC5LDO		: LDO		:			: input from DCDC5
-> +ALDO1		: LDO		: aldoin-supply		: shared supply
-> +ALDO2		: LDO		: aldoin-supply		: shared supply
-> +ALDO3		: LDO		: aldoin-supply		: shared supply
-> +DLDO1		: LDO		: dldoin-supply		: shared supply
-> +DLDO2		: LDO		: dldoin-supply		: shared supply
-> +ELDO1		: LDO		: eldoin-supply		: shared supply
-> +ELDO2		: LDO		: eldoin-supply		: shared supply
-> +ELDO3		: LDO		: eldoin-supply		: shared supply
-> +LDO_IO0		: LDO		: ips-supply		: GPIO 0
-> +LDO_IO1		: LDO		: ips-supply		: GPIO 1
-> +RTC_LDO		: LDO		: ips-supply		: always on
-> +SW		: On/Off Switch : swin-supply
+> +	if (len > MAX_PACKET_SIZE)
+> +		return -EINVAL;
+...
+> +static int raydium_i2c_fw_write_page(struct i2c_client *client,
+> +				const void *page)
+> +{
+> +	static const u8 ack_ok[] = { 0x55, 0xAA };
+> +	u8 buf[2];
+> +	int retry;
+> +	int error;
 > +
->  Example:
-> =20
->  axp209: pmic@34 {
+> +	for (retry = 0; retry < MAX_FW_UPDATE_RETRIES; retry++) {
+> +		error = raydium_i2c_send(client, CMD_BOOT_WRT,
+> +			(u8 *)page, RAYDIUM_FW_PAGESIZE);
+> +		if (error) {
+> +			dev_err(&client->dev,
+> +				"BLDR Write Page failed: %d\n", error);
+> +			continue;
+> +		}
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Given the above definitions of MAX_PACKET_SIZE and
+RAYDIUM_FW_PAGESIZE I do not believe that firmware update is working.
+What is the biggest buffer that can be sent to the device? Maybe we
+should allocate it dynamically?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I am also wondering about formatting command structure as byte sequence.
+Would it be better to define it as:
+
+struct raidium_cmd {
+	u32 bank;
+	int len;
+	u8 cmd[RAIDIUM_MAX_CMD_LEN];
+}
+
+What is the longest command that the controller supports?
+
+(Do not resubmit the driver yet, let's discuss first).
+
+Thanks.
+
+-- 
+Dmitry
