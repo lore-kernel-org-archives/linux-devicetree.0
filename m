@@ -1,98 +1,40 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v2 1/1] leds: pca9532: Add device tree binding
-Date: Mon, 11 Apr 2016 10:38:34 +0200
-Message-ID: <570B628A.4090406@samsung.com>
-References: <1460013772-129968-1-git-send-email-preid@electromag.com.au>
- <1460013772-129968-2-git-send-email-preid@electromag.com.au>
- <5706686F.7070102@samsung.com> <570B42F4.5070002@electromag.com.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <570B42F4.5070002@electromag.com.au>
-Sender: linux-leds-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v3 0/6] bam dma fixes and one dt extension
+Date: Mon, 11 Apr 2016 11:38:37 +0300
+Message-ID: <1460363923-16296-1-git-send-email-stanimir.varbanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vinod.koul@intel.com>, Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Sinan Kaya <okaya@codeaurora.org>, Pramod Gurav <gpramod@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2016 08:23 AM, Phil Reid wrote:
-> On 7/04/2016 10:02 PM, Jacek Anaszewski wrote:
->> Hi Phil,
->>
->> Thanks for the update. Few more remarks below.
->>
->> On 04/07/2016 09:22 AM, Phil Reid wrote:
->>> This patch adds basic device tree support for the pca9532 LEDs.
->>>
->>> Signed-off-by: Phil Reid <preid@electromag.com.au>
->>> ---
->>>   .../devicetree/bindings/leds/leds-pca9532.txt      | 42 +++++++++++++
->>>   drivers/leds/leds-pca9532.c                        | 69
->>> ++++++++++++++++++++--
->>>   include/dt-bindings/leds/leds-pca9532.h            | 23 ++++++++
->>>   include/linux/leds-pca9532.h                       | 18 ++----
->>>   4 files changed, 135 insertions(+), 17 deletions(-)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>> b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>> new file mode 100644
->>> index 0000000..284b96c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>> @@ -0,0 +1,42 @@
->>> +*NXP - pca9532 PWM LED Driver
->>> +
->>> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
->>> +The PWM support 256 steps.
->>> +
->>> +Required properties:
->>> +    - compatible:
->>> +        "nxp,pca9530"
->>> +        "nxp,pca9531"
->>> +        "nxp,pca9532"
->>> +        "nxp,pca9533"
->>> +    - reg -  I2C slave address
->>> +
->>> +Each led is represented as a sub-node of the nxp,pca9530.
->>> +
->>> +Optional sub-node properties:
->>> +    - label: Name for this LED. If omitted, the label is taken from
->>> the node name.
->>
->> Please also add a reference to common led bindings, as this property is
->> documented there:
->> "(see Documentation/devicetree/bindings/leds/common.txt):"
-> done.
->
->>
->>> +    - type: Output configuration, see
->>> dt-bindings/leds/leds-pca9532.h (default NONE)
->>> +    - state: Initial LED state (default OFF)
->>
->> We already have "default-on" trigger for this purpose.
-> Not sure it does exactly the same thing.
-> This setting also associates a led with a particular PWM controller.
-> The chip has 2 shared PWM that each led can be controlled by.
+Hi,
 
-default-on trigger sets the LED to max_brightness on init.
-As I see pca9532_set_brightness() sets PCA9532_ON state if
-passed LED_FULL and uses PCA9532_PWM0 for other values
-greater than zero.
+Here is version 3 with following changes:
+ - fixed a typo in 2/6.
+ - the patch which adds dt property is seperated in two, one
+   which adding binding document and another one which modifing
+   the driver - requested by Vinod.
+ - fixed a typo in 5/6.
+ - added collected Acked,Tested-by tags.
 
-So, maybe it would make more sense if we used default-on trigger to
-initialize LED to LED_FULL on init, but provide another DT property
-'default-pwm' to determine which PWM block should be used by default?
-Currently I see that driver uses only PWM0:
+The v2 can be found at:
+https://lkml.org/lkml/2016/4/5/922
 
-led->state = PCA9532_PWM0; /* Thecus: hardcode one pwm */
+regards,
+Stan
 
-Alternatively the driver could expose a dedicated sysfs attribute
-for changing the default pwm. This is of course out of this patch
-scope.
+Stanimir Varbanov (6):
+  dmaengine: qcom: bam_dma: fix dma free memory on remove
+  dmaengine: qcom: bam_dma: clear BAM interrupt only if it is raised
+  dmaengine: qcom: bam_dma: document controlled-remotely dt property
+  dmaengine: qcom: bam_dma: add controlled-remotely dt property
+  dmaengine: qcom: bam_dma: use correct pipe FIFO size
+  dmaengine: qcom: bam_dma: rename BAM_MAX_DATA_SIZE define
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |    2 ++
+ drivers/dma/qcom/bam_dma.c                         |   38 +++++++++++++-------
+ 2 files changed, 28 insertions(+), 12 deletions(-)
 
 -- 
-Best regards,
-Jacek Anaszewski
+1.7.9.5
