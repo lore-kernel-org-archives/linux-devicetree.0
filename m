@@ -1,49 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 08/10] devicetree: Add Trusted Computing Group to vendor-prefix.txt
-Date: Mon, 11 Apr 2016 17:37:28 -0500
-Message-ID: <CAL_JsqLCC7ZMiOQzp7-OAzfd1bL8dukcDg8rON1xiELV_wooPg@mail.gmail.com>
-References: <1460323386-16892-1-git-send-email-christophe-h.ricard@st.com>
- <1460323386-16892-9-git-send-email-christophe-h.ricard@st.com>
- <20160411200600.GA23902@rob-hp-laptop> <20160411202119.GA3357@obsidianresearch.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Mon, 11 Apr 2016 17:46:27 -0500
+Message-ID: <CAL_Jsq+RYTmRZPLBrXR-Jh66o3A7dpvGhaa451TFr8+=MixM9A@mail.gmail.com>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <3381543.SDQLqND8Pp@wasted.cogentembedded.com> <20160411192521.GA6896@rob-hp-laptop>
+ <570BFACF.30507@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160411202119.GA3357-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peterhuewe-Mmb7MZpHnFY@public.gmane.org, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, Ashley Lai <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, Marcel Selhorst <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Christophe RICARD <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570BFACF.30507@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 3:21 PM, Jason Gunthorpe
-<jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
-> On Mon, Apr 11, 2016 at 03:06:00PM -0500, Rob Herring wrote:
->> On Sun, Apr 10, 2016 at 11:23:04PM +0200, Christophe Ricard wrote:
->> > Add missing vendor to vendor-prefix.txt.
->> >
->> > Trusted Computing Group design common specifications for
->> > TPM (Trusted Platform Module) vendors.
->> > TCG designates a TPM answering to a public specification.
+On Mon, Apr 11, 2016 at 2:28 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 04/11/2016 10:25 PM, Rob Herring wrote:
+>
+>>> The PHY  devices sometimes do have their reset signal (maybe even power
+>>> supply?) tied to some GPIO and sometimes it also does happen that a boot
+>>> loader does not leave it deasserted. So far this issue has been attacked
+>>> from (as I believe) a wrong angle: by teaching the MAC driver to
+>>> manipulate
+>>> the GPIO in question;  that solution, when  applied to the device trees,
+>>> led to adding the PHY reset GPIO properties to the MAC device node, with
+>>> one exception: Cadence MACB driver which could handle the "reset-gpios"
+>>> prop  in a PHY device  subnode.  I believe that the correct approach is
+>>> to
+>>> teach the 'phylib' to get the MDIO device reset GPIO from the device tree
+>>> node corresponding to this device -- which this patch is doing...
+>>>
+>>> Note that I had to modify the  AT803x PHY driver as it would stop working
+>>> otherwise as it made use of the reset GPIO for its own purposes...
 >>
->> Not sure this should be a vendor prefix. Does TCG actually make h/w?
+>>
+>> Lots of double spaces in here. Please fix.
 >
-> They define the common multi-vendor register API, similar to AHCI.
 >
-> I would imagine compatible tags like
->
->  compatible = 'winbond,xxxx','tcg,tis_iomap';
->
-> Since there actually is a legal entity administering the spec (unlike
-> AHCI?) 'tgc,' seems like a better prefix to me than 'generic-' ?
+>    Oh, it's you again! :-D
 
-Well, Intel "manages" the AHCI and EHCI specs. All the generic strings
-are somewhat useless in the end IMO.
+Yep, one of those picky kernel maintainers that like a bad rash just
+won't go away. :)
 
-As long as you aren't planning to use it alone, it is fine.
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>
+>>> ---
+>>>   Documentation/devicetree/bindings/net/phy.txt |    2 +
+>>>   drivers/net/phy/at803x.c                      |   19 ++------------
+>>>   drivers/net/phy/mdio_bus.c                    |    4 +++
+>>>   drivers/net/phy/mdio_device.c                 |   27
+>>> +++++++++++++++++++--
+>>>   drivers/net/phy/phy_device.c                  |   33
+>>> ++++++++++++++++++++++++--
+>>>   drivers/of/of_mdio.c                          |   16 ++++++++++++
+>>>   include/linux/mdio.h                          |    3 ++
+>>>   include/linux/phy.h                           |    5 +++
+>>>   8 files changed, 89 insertions(+), 20 deletions(-)
+>>
+>>
+>> [...]
+>>
+>>> Index: net-next/drivers/of/of_mdio.c
+>>> ===================================================================
+>>> --- net-next.orig/drivers/of/of_mdio.c
+>>> +++ net-next/drivers/of/of_mdio.c
+>>> @@ -44,6 +44,7 @@ static int of_get_phy_id(struct device_n
+>>>   static int of_mdiobus_register_phy(struct mii_bus *mdio, struct
+>>> device_node *child,
+>>>                                    u32 addr)
+>>>   {
+>>> +       struct gpio_desc *gpiod;
+>>>         struct phy_device *phy;
+>>>         bool is_c45;
+>>>         int rc;
+>>> @@ -52,10 +53,17 @@ static int of_mdiobus_register_phy(struc
+>>>         is_c45 = of_device_is_compatible(child,
+>>>                                          "ethernet-phy-ieee802.3-c45");
+>>>
+>>> +       gpiod = fwnode_get_named_gpiod(&child->fwnode, "reset-gpios");
+>>
+>>
+>> Calling fwnode_* functions in a DT specific file/function? That doesn't
+>> make sense.
+>
+>
+>    Really?! 8-)
+>    Where is a DT-only analog I wonder...
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Ah, you're right. NM.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
