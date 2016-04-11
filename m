@@ -1,94 +1,100 @@
-From: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Subject: Re: [PATCH 2/2] powerpc/drivers: Add driver for operator panel on FSP
- machines
-Date: Mon, 11 Apr 2016 15:27:28 +1000
-Message-ID: <570B35C0.9040205@au1.ibm.com>
-References: <1460338890-19693-1-git-send-email-sjitindarsingh@gmail.com>
- <1460338890-19693-2-git-send-email-sjitindarsingh@gmail.com>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH 1/1] leds: pca9532: Add device tree binding
+Date: Mon, 11 Apr 2016 14:17:18 +0800
+Message-ID: <570B416E.7020507@electromag.com.au>
+References: <1459912250-50878-1-git-send-email-preid@electromag.com.au>
+ <1459912250-50878-2-git-send-email-preid@electromag.com.au>
+ <20160407175755.GN32257@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460338890-19693-2-git-send-email-sjitindarsingh@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suraj Jitindar Singh <sjitindarsingh@gmail.com>, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20160407175755.GN32257@rob-hp-laptop>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/16 11:41, Suraj Jitindar Singh wrote:
-> Implement new character device driver to allow access from user space
-> to the 2x16 character operator panel display present on powernv machines.
-
-Specifically, on IBM Power Systems machines with FSPs (see comments below).
-
-> This will allow status information to be presented on the display which
-> is visible to a user.
+On 8/04/2016 1:57 AM, Rob Herring wrote:
+> On Wed, Apr 06, 2016 at 11:10:50AM +0800, Phil Reid wrote:
+>> This patch adds basic device tree support for the pca9532 LEDs.
+>>
+>> Signed-off-by: Phil Reid <preid@electromag.com.au>
+>> ---
+>>   .../devicetree/bindings/leds/leds-pca9532.txt      | 32 +++++++++++
+>>   drivers/leds/leds-pca9532.c                        | 63 ++++++++++++++++++++--
+>>   include/dt-bindings/leds/leds-pca9532.h            | 18 +++++++
+>>   include/linux/leds-pca9532.h                       |  8 ++-
+>>   4 files changed, 112 insertions(+), 9 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>> new file mode 100644
+>> index 0000000..b48c223
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
 >
-> The driver implements a 32 character buffer which a user can read/write
-> by accessing the device (/dev/oppanel). This buffer is then displayed on
-> the operator panel display. Any attempt to write past the 32nd position
-> will have no effect and attempts to write more than 32 characters will be
-> truncated. Valid characters are ascii: '.', '/', ':', '0-9', 'a-z',
-> 'A-Z'. All other characters are considered invalid and will be replaced
-> with '.'.
+> Would leds-pca953x.txt be more appropriate.
+I have no objection. I just followed the driver file name.
+Other disucssions seem to indicate the preference to move away from
+the 'x' in driver names and just use one of the devices for the name.
+Note that there is a gpio-pca953x driver.
+Which support pca9534-9539 plus other gpio devices.
+Those devices don't have the same functionality as this series.
 
-For reference, the ASCII character whitelist is enforced by skiboot, not 
-by the driver (see 
-https://github.com/open-power/skiboot/blob/master/hw/fsp/fsp-op-panel.c#L217). 
-It's been included ever since the first public release of skiboot, so 
-this statement is true for all machines at present, though theoretically 
-might not be true in future skiboots or alternative OPAL implementations 
-(should someone be crazy enough to write one).
-
-> A write call past the 32nd character will return zero characters
-> written. A write call will not clear the display and it is up to the
-> user to put spaces (' ') where blank space is required. The device may
-> only be accessed by a single process at a time.
 >
-> Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-
-I reviewed an earlier version of this patch internally and Suraj has 
-fixed a bunch of issues which I raised. I'm not hugely experienced with 
-this, but all the obvious things I noticed have gone, so...
-
-Reviewed-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-
-A couple of minor nitpicks below.
-
-> diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-> index 3ec0766..8c91edf 100644
-> --- a/drivers/char/Kconfig
-> +++ b/drivers/char/Kconfig
-> @@ -178,6 +178,20 @@ config IBM_BSR
->   	  of threads across a large system which avoids bouncing a cacheline
->   	  between several cores on a system
+>> @@ -0,0 +1,32 @@
+>> +*NXP - pca9532 PWM LED Driver
+>> +
+>> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
+>> +The PWM support 256 steps.
 >
-> +config IBM_OP_PANEL
-> +	tristate "IBM POWER Operator Panel Display support"
-> +	depends on PPC_POWERNV
-> +	default m
-> +	help
-> +	  If you say Y here, a special character device node /dev/oppanel will
+> supports
+>
+>> +
+>> +Required properties:
+>> +	- compatible:
+>> +		"nxp,pca9530"
+>> +		"nxp,pca9531"
+>> +		"nxp,pca9532"
+>> +		"nxp,pca9533"
+>> +	- reg -  I2C slave address
+>> +
+>> +Each led is represented as a sub-node of the nxp,pca9530.
+>> +
+>> +LED sub-node properties:
+>
+> What are sub-node names and how many?
+They don't seem to be important. It's a fallback for when label isn't defined.
+I just following leds-netxbig.txt
 
-Add commas: "node, /dev/oppanel, will"
+>
+>> +- type: Output configuration
+>> +	0 = NONE, 1 = LED, 2 = N2100_BEEP, 3 = GPIO
+>
+> Add vendor prefix.
+Done.
+>
+>> +
+>> +Example:
+>> +
+>> +  ledBL: pca9530@60 {
+>> +    compatible = "nxp,pca9530";
+>> +    reg = <0x60>;
+>> +
+>> +    led0 {
+>> +      type = <PCA9532_TYPE_LED>;
+>> +    };
+>> +  };
+>> +
+>> +For more product information please see the link below:
+>> +http://nxp.com/documents/data_sheet/PCA9532.pdf
+>
+> Move this up to the top.
+Done, but note this doesn't follow the layout of other files in the folder.
 
-> diff --git a/drivers/char/op-panel-powernv.c b/drivers/char/op-panel-powernv.c
-> new file mode 100644
-> index 0000000..cc72c5d
-> --- /dev/null
-> +++ b/drivers/char/op-panel-powernv.c
-[...]
-> +/*
-> + * This driver creates a character device (/dev/oppanel) which exposes the
-> + * operator panel display (2x16 character display) on IBM pSeries machines.
-
-I'd prefer "IBM Power Systems machines with FSPs" so as to avoid 
-confusion with the Linux pseries platform, to be in line with current 
-IBM branding, and to emphasise that it's only FSP machines (the Power 
-Systems LC models are not).
-
-Hmm, perhaps also mention that in the Kconfig description too?
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
+Regards
+Phil Reid
