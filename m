@@ -1,66 +1,128 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v14 3/6] drm/mediatek: enable hdmi output control bit
-Date: Mon, 11 Apr 2016 17:10:13 +0200
-Message-ID: <1460387416-31254-4-git-send-email-p.zabel@pengutronix.de>
-References: <1460387416-31254-1-git-send-email-p.zabel@pengutronix.de>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] irqchip: add lpc18xx gpio pin interrupt driver
+Date: Mon, 11 Apr 2016 16:15:11 +0100
+Message-ID: <570BBF7F.2040001@arm.com>
+References: <1459614924-32670-1-git-send-email-manabian@gmail.com>
+ <1459614924-32670-2-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1460387416-31254-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459614924-32670-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSmllIFFpdSA8amllLnFpdUBtZWRpYXRlay5jb20+CgpNVDgxNzMgSERNSSBoYXJkd2Fy
-ZSBoYXMgYSBvdXRwdXQgY29udHJvbCBiaXQgdG8gZW5hYmxlL2Rpc2FibGUgSERNSQpvdXRwdXQu
-IEJlY2F1c2Ugb2Ygc2VjdXJpdHkgcmVhc29uLCBzbyB0aGlzIGJpdCBjYW4gT05MWSBiZSBjb250
-cm9sbGVkCmluIEFSTSBzdXBlcnZpc29yIG1vZGUuIE5vdyB0aGUgb25seSB3YXkgdG8gZW50ZXIg
-QVJNIHN1cGVydmlzb3IgaXMgdGhlCkFSTSB0cnVzdGVkIGZpcm13YXJlLiBTbyBhdGYgcHJvdmlk
-ZXMgYSBBUEkgZm9yIEhETUkgZHJpdmVyIHRvIGNhbGwgdG8Kc2V0dXAgdGhpcyBIRE1JIGNvbnRy
-b2wgYml0IHRvIGVuYWJsZSBIRE1JIG91dHB1dCBpbiBzdXBlcnZpc29yIG1vZGUuCgpTaWduZWQt
-b2ZmLWJ5OiBKaWUgUWl1IDxqaWUucWl1QG1lZGlhdGVrLmNvbT4KU2lnbmVkLW9mZi1ieTogUGhp
-bGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2hkbWkuYyAgICAgIHwgMTIgKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2hkbWlfcmVncy5oIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAxMyBp
-bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19o
-ZG1pLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYwppbmRleCA0Y2Q0YzAx
-Li4wNDRjMzU2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWku
-YworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYwpAQCAtMTYsNiArMTYs
-NyBAQAogI2luY2x1ZGUgPGRybS9kcm1fY3J0Yy5oPgogI2luY2x1ZGUgPGRybS9kcm1fY3J0Y19o
-ZWxwZXIuaD4KICNpbmNsdWRlIDxkcm0vZHJtX2VkaWQuaD4KKyNpbmNsdWRlIDxsaW51eC9hcm0t
-c21jY2MuaD4KICNpbmNsdWRlIDxsaW51eC9jbGsuaD4KICNpbmNsdWRlIDxsaW51eC9kZWxheS5o
-PgogI2luY2x1ZGUgPGxpbnV4L2hkbWkuaD4KQEAgLTI0Niw2ICsyNDcsMTcgQEAgc3RhdGljIHZv
-aWQgbXRrX2hkbWlfaHdfdmlkX2JsYWNrKHN0cnVjdCBtdGtfaGRtaSAqaGRtaSwgYm9vbCBibGFj
-aykKIAogc3RhdGljIHZvaWQgbXRrX2hkbWlfaHdfbWFrZV9yZWdfd3JpdGFibGUoc3RydWN0IG10
-a19oZG1pICpoZG1pLCBib29sIGVuYWJsZSkKIHsKKwlzdHJ1Y3QgYXJtX3NtY2NjX3JlcyByZXM7
-CisKKwkvKgorCSAqIE1UODE3MyBIRE1JIGhhcmR3YXJlIGhhcyBhbiBvdXRwdXQgY29udHJvbCBi
-aXQgdG8gZW5hYmxlL2Rpc2FibGUgSERNSQorCSAqIG91dHB1dC4gVGhpcyBiaXQgY2FuIG9ubHkg
-YmUgY29udHJvbGxlZCBpbiBBUk0gc3VwZXJ2aXNvciBtb2RlLgorCSAqIFRoZSBBUk0gdHJ1c3Rl
-ZCBmaXJtd2FyZSBwcm92aWRlcyBhbiBBUEkgZm9yIHRoZSBIRE1JIGRyaXZlciB0byBzZXQKKwkg
-KiB0aGlzIGNvbnRyb2wgYml0IHRvIGVuYWJsZSBIRE1JIG91dHB1dCBpbiBzdXBlcnZpc29yIG1v
-ZGUuCisJICovCisJYXJtX3NtY2NjX3NtYyhNVEtfU0lQX1NFVF9BVVRIT1JJWkVEX1NFQ1VSRV9S
-RUcsIDB4MTQwMDA5MDQsIDB4ODAwMDAwMDAsCisJCSAgICAgIDAsIDAsIDAsIDAsIDAsICZyZXMp
-OworCiAJcmVnbWFwX3VwZGF0ZV9iaXRzKGhkbWktPnN5c19yZWdtYXAsIGhkbWktPnN5c19vZmZz
-ZXQgKyBIRE1JX1NZU19DRkcyMCwKIAkJCSAgIEhETUlfUENMS19GUkVFX1JVTiwgZW5hYmxlID8g
-SERNSV9QQ0xLX0ZSRUVfUlVOIDogMCk7CiAJcmVnbWFwX3VwZGF0ZV9iaXRzKGhkbWktPnN5c19y
-ZWdtYXAsIGhkbWktPnN5c19vZmZzZXQgKyBIRE1JX1NZU19DRkcxQywKZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9yZWdzLmggYi9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2hkbWlfcmVncy5oCmluZGV4IDIwOWZiZTEuLmE1Y2IwN2QgMTAwNjQ0Ci0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9yZWdzLmgKKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pX3JlZ3MuaApAQCAtMjM0LDQgKzIzNCw1IEBACiAj
-ZGVmaW5lIE1ITF9TWU5DX0FVVE9fRU4JCUJJVCgzMCkKICNkZWZpbmUgSERNSV9QQ0xLX0ZSRUVf
-UlVOCQlCSVQoMzEpCiAKKyNkZWZpbmUgTVRLX1NJUF9TRVRfQVVUSE9SSVpFRF9TRUNVUkVfUkVH
-IDB4ODIwMDAwMDEKICNlbmRpZgotLSAKMi43LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Joachim,
+
+On 02/04/16 17:35, Joachim Eastwood wrote:
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+As a start, a commit message would be appreciated.
+
+> ---
+>  drivers/irqchip/Kconfig                 |   5 +
+>  drivers/irqchip/Makefile                |   1 +
+>  drivers/irqchip/irq-lpc18xx-gpio-pint.c | 219 ++++++++++++++++++++++++++++++++
+>  3 files changed, 225 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-lpc18xx-gpio-pint.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 3e12479..0278837e 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -211,6 +211,11 @@ config KEYSTONE_IRQ
+>  		Support for Texas Instruments Keystone 2 IRQ controller IP which
+>  		is part of the Keystone 2 IPC mechanism
+>  
+> +config LPC18XX_GPIO_PINT
+> +	bool
+> +	select IRQ_DOMAIN
+> +	select GENERIC_IRQ_CHIP
+> +
+>  config MIPS_GIC
+>  	bool
+>  	select GENERIC_IRQ_IPI
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index b03cfcb..bf60e0c 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -55,6 +55,7 @@ obj-$(CONFIG_BCM7038_L1_IRQ)		+= irq-bcm7038-l1.o
+>  obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
+>  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
+>  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
+> +obj-$(CONFIG_LPC18XX_GPIO_PINT)		+= irq-lpc18xx-gpio-pint.o
+>  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
+>  obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
+>  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
+> diff --git a/drivers/irqchip/irq-lpc18xx-gpio-pint.c b/drivers/irqchip/irq-lpc18xx-gpio-pint.c
+> new file mode 100644
+> index 0000000..d53e99b
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-lpc18xx-gpio-pint.c
+> @@ -0,0 +1,219 @@
+> +/*
+> + * Irqchip driver for GPIO Pin Interrupt (PINT) on NXP LPC18xx/43xx.
+> + *
+> + * Copyright (C) 2016 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/init.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +
+> +/* LPC18xx GPIO pin interrupt register offsets */
+> +#define LPC18XX_GPIO_PINT_ISEL		0x000
+> +#define LPC18XX_GPIO_PINT_SIENR		0x008
+> +#define LPC18XX_GPIO_PINT_CIENR		0x00c
+> +#define LPC18XX_GPIO_PINT_SIENF		0x014
+> +#define LPC18XX_GPIO_PINT_CIENF		0x018
+> +#define LPC18XX_GPIO_PINT_IST		0x024
+> +
+> +#define PINT_MAX_IRQS			32
+> +
+> +struct lpc18xx_gpio_pint_chip {
+> +	struct irq_domain *domain;
+> +	void __iomem	  *base;
+> +	struct clk	  *clk;
+> +	unsigned int	  revmap[];
+> +};
+> +
+> +static void lpc18xx_gpio_pint_handler(struct irq_desc *desc)
+> +{
+> +	struct lpc18xx_gpio_pint_chip *pint = irq_desc_get_handler_data(desc);
+> +	unsigned int irq = irq_desc_get_irq(desc);
+> +	unsigned int hwirq = pint->revmap[irq];
+> +	unsigned int virq;
+> +
+> +	virq = irq_find_mapping(pint->domain, hwirq);
+> +	generic_handle_irq(virq);
+
+Two things here:
+- It feels a bit weird that you are indirecting everything through a
+cascade interrupt. As you have a 1:1 relationship between the PINT
+interrupts and their NVIC counterparts, this would be better described
+as a hierarchical irqchip (see drivers/irqchip/irq-vf610-mscm-ir.c for
+an example)
+- If you decide to stick with the current approach, you're then missing
+the usual chained_irq_{enter,exit}.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
