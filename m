@@ -1,77 +1,84 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V16 0/3] dmaengine: add Qualcomm Technologies HIDMA driver
-Date: Mon, 11 Apr 2016 09:34:20 -0400
-Message-ID: <1460381663-16765-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] PCI: imx6: Add reset-gpio-active-high boolean
+ property to DT
+Date: Mon, 11 Apr 2016 08:38:10 -0500
+Message-ID: <20160411133810.GA15094@rob-hp-laptop>
+References: <1459936100.2256.30.camel@pengutronix.de>
+ <1459946207-11923-1-git-send-email-ynezz@true.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459946207-11923-1-git-send-email-ynezz@true.cz>
+Sender: linux-pci-owner@vger.kernel.org
+To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Richard Zhu <Richard.Zhu@freescale.com>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>, Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>, Fabio Estevam <festevam@gmail.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, stefan@agner.ch
 List-Id: devicetree@vger.kernel.org
 
-The Qualcomm Technologies HIDMA device has been designed
-to support virtualization technology. The driver has been
-divided into two to follow the hardware design.
+On Wed, Apr 06, 2016 at 02:36:47PM +0200, Petr =C5=A0tetiar wrote:
+> Currently the reset-gpio DT property which controls the PCI bus devic=
+e
+> reset signal defaults to active-low reset sequence (L=3Dreset state,
+> H=3Doperation state) plus the code in reset function isn't GPIO polar=
+ity
+> aware - it doesn't matter if the defined reset-gpio is active-low or
+> active-high, it will always result into active-low reset sequence.
+>=20
+> I've tried to fix it properly and changed the reset-gpio reset sequen=
+ce
+> to be polarity aware, but this patch has been accepted and then rever=
+ted
+> as it has introduced few backward incompatible issues:
+>=20
+> 1. Some of the DTBs as for example imx6qdl-sabresd, doesn't define
+> reset-gpio polarity correctly:
+>=20
+>   reset-gpio =3D <&gpio7 12 0>;
+>=20
+> which means, that it's defined as active-high, but in reality it's
+> active-low, thus it wouldn't work without DTS fix.
+>=20
+> 2. The logic in reset function is inverted:
+>=20
+> 	gpio_set_value_cansleep(imx6_pcie->reset_gpio, 0)
+> 	msleep(100);
+> 	gpio_set_value_cansleep(imx6_pcie->reset_gpio, 1);
+>=20
+> so even if some of the i.MX6 boards had reset-gpio polarity defined
+> correctly in their DTSes, they would stop working.
+>=20
+> As we can't break old DTBs, we can't fix them and that's why we need =
+to
+> introduce this new DT reset-gpio-active-high boolean property, so we =
+can
+> support boards with active-high reset sequence.
+>=20
+> This active-high reset sequence is for example needed on Apalis SoMs,
+> where GPIO1_IO28, used to PCIe reset is not connected directly to PER=
+ST#
+> PCIe signal, but it's ORed with RESETBMCU coming off the PMIC, and th=
+us
+> is inverted, active-high.
+>=20
+> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
+> ---
+>  Changes since v1:
+>=20
+>   * Added documentation of reset-gpio and reset-gpio-active-high DT p=
+roperties
+>   * Removed unnecessary double negation of GPIO value
+>=20
+>  Changes since v2:
+>=20
+>   * Changed commit message so it explains in more detail why we need =
+new DT
+>     property
+>   * Changed PHY to 'bus device' in binding's documentation
+>=20
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt |  6 ++++++
+>  drivers/pci/host/pci-imx6.c                              | 14 ++++++=
++++++---
+>  2 files changed, 17 insertions(+), 3 deletions(-)
 
-1. HIDMA Management driver
-2. HIDMA Channel driver
-
-Each HIDMA HW consists of multiple channels. These channels
-share some set of common parameters. These parameters are
-initialized by the management driver during power up.
-Same management driver is used for monitoring the execution
-of the channels. Management driver can change the performance
-behavior dynamically such as bandwidth allocation and
-prioritization in the future.
-
-The management driver is executed in host context and
-is the main management entity for all channels provided by
-the device.
-
-------------------------
-What's new
-------------------------
-- Fix tabs and spaces here and there.
-- Cleanup timeout in ISR
-
-------------------------
-Git repos
-------------------------
-QEMU Support
-https://www.codeaurora.org/cgit/quic/qemu/qemu/log/?h=v2.5.0-sriov
-
-------------------------
-History of Changes
-------------------------
-dma: qcom_hidma: add support for object hierarchy
-Changes from V15: (https://lkml.org/lkml/2016/3/11/619)
-* copyright year update
-
-dma: qcom_hidma: implement lower level hardware interface
-Changes from V15: (https://lkml.org/lkml/2016/3/11/617)
-* remove timeout in interrupt handling
-* fixed a couple of spaces and tabs
-
-dma: qcom_hidma: add debugfs hooks
-Changes from V15: (https://lkml.org/lkml/2016/3/11/616)
-* copyright year update
-
-
-Sinan Kaya (3):
-  dmaengine: qcom_hidma: implement lower level hardware interface
-  dmaengine: qcom_hidma: add debugfs hooks
-  dmaengine: qcom_hidma: add support for object hierarchy
-
- Documentation/ABI/testing/sysfs-platform-hidma |   9 +
- drivers/dma/qcom/Makefile                      |   2 +
- drivers/dma/qcom/hidma.c                       |  44 +-
- drivers/dma/qcom/hidma.h                       |  22 +-
- drivers/dma/qcom/hidma_dbg.c                   | 219 ++++++
- drivers/dma/qcom/hidma_ll.c                    | 900 +++++++++++++++++++++++++
- drivers/dma/qcom/hidma_mgmt.c                  | 113 +++-
- 7 files changed, 1293 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
- create mode 100644 drivers/dma/qcom/hidma_dbg.c
- create mode 100644 drivers/dma/qcom/hidma_ll.c
-
--- 
-1.8.2.1
+Acked-by: Rob Herring <robh@kernel.org>
