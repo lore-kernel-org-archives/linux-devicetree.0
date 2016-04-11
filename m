@@ -1,45 +1,41 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 1/6] ASoC: davinci-mcbsp: add binding for
- McBSP
-Date: Mon, 11 Apr 2016 10:20:52 +0200
-Message-ID: <570B5E64.3090505@barix.com>
-References: <1459948893-4206-1-git-send-email-petr@barix.com>
- <1459948893-4206-2-git-send-email-petr@barix.com> <570661A6.6020804@ti.com>
- <570778CC.1000600@barix.com> <570B5C26.9080402@ti.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH 25/30] clk: ti: am33xx: fix init time clock setup
+Date: Mon, 11 Apr 2016 11:19:16 +0300
+Message-ID: <1460362761-4842-26-git-send-email-t-kristo@ti.com>
+References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <570B5C26.9080402-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, tony@atomide.com, paul@pwsan.com, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Some of the clock names have changed, so replace these with the new ones.
 
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ drivers/clk/ti/clk-33xx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 11.04.2016 10:11, Peter Ujfalusi wrote:
-> On 04/08/16 12:24, Petr Kulhavy wrote:
->>
->> Hi Peter,
->>
->> what do you think about the following formulation?
->>
->> -- 
->> This binding describes the "Multi-channel Buffered Serial Port" (McBSP)
->> audio interface found in some TI DaVinci processors like the OMAP-L138 or AM180x.
->>
->> Some older DaVinci processors like the DM6446 or DA355 use a simpler version of
->> the digital audio interface, called ASP. This driver can support them as well if
->> the appropriate compatible string is added.
-> Hrm, I don't think we should mention the ASP, it looks out of context.
-> The ASP will have compatible of ti,dm644x-asp or something similar. We should
-> worry about this when the time comes.
-OK, I will keep just the first paragraph.
+diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
+index 43847bc..5228f48 100644
+--- a/drivers/clk/ti/clk-33xx.c
++++ b/drivers/clk/ti/clk-33xx.c
+@@ -65,10 +65,10 @@ int __init am33xx_dt_clk_init(void)
+ 	 */
+ 
+ 	clk1 = ti_clk_get("sys_clkin_ck");
+-	clk2 = ti_clk_get("timer3_fck");
++	clk2 = ti_clk_get("timer3_mod_ck");
+ 	clk_set_parent(clk2, clk1);
+ 
+-	clk2 = ti_clk_get("timer6_fck");
++	clk2 = ti_clk_get("timer6_mod_ck");
+ 	clk_set_parent(clk2, clk1);
+ 	/*
+ 	 * The On-Chip 32K RC Osc clock is not an accurate clock-source as per
+-- 
+1.7.9.5
 
-Thanks!
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
