@@ -1,56 +1,77 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 06/16] ARM: davinci: da850: use clk->set_parent for
- async3
-Date: Mon, 11 Apr 2016 16:19:30 +0530
-Message-ID: <570B813A.1030907@ti.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-7-git-send-email-david@lechnology.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 4/5] mfd: tps65217: Add power button as subdevice
+Date: Mon, 11 Apr 2016 14:05:01 +0300
+Message-ID: <570B84DD.6040003@ti.com>
+References: <1459789865-3704-1-git-send-email-m.niestroj@grinn-global.com>
+ <1459789865-3704-6-git-send-email-m.niestroj@grinn-global.com>
+ <20160411094452.GC8094@x1> <570B7BFE.6000501@ti.com>
+ <20160411103724.GD8094@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-7-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160411103724.GD8094@x1>
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Marcin Niestroj <m.niestroj@grinn-global.com>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 25 March 2016 05:21 AM, David Lechner wrote:
-> The da850 family of processors has an async3 clock domain that can be
-> muxed to either pll0_sysclk2 or pll1_sysclk2. Now that the davinci clocks
-> have a set_parent callback, we can use this to control the async3 mux
-> instead of a stand-alone function.
-> 
-> This adds a new async3_clk and sets the appropriate child clocks. The
-> default is use to pll1_sysclk2 since it is not affected by processor
-> frequency scaling.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+On 04/11/2016 01:37 PM, Lee Jones wrote:
+> On Mon, 11 Apr 2016, Grygorii Strashko wrote:
+>
+>> On 04/11/2016 12:44 PM, Lee Jones wrote:
+>>> On Mon, 04 Apr 2016, Marcin Niestroj wrote:
+>>>
+>>>> Add tps65217 power buttor subdevice with assigned IRQ resources.
+>>>>
+>>>> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+>>>> ---
+>>>>   drivers/mfd/tps65217.c | 10 ++++++++++
+>>>>   1 file changed, 10 insertions(+)
+>>>
+>>> Applied, thanks.
+>>
+>> Seems there is dependency from patch 1 :(
+>
+> What is the dependency?
 
-> +static int da850_async3_set_parent(struct clk *clk, struct clk *parent)
-> +{
-> +	u32 val;
-> +
-> +	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
-> +
-> +	/* Set the Async3 clock domain mux based on the parent clock. */
-> +	if (parent == &pll0_sysclk2)
-> +		val &= ~CFGCHIP3_ASYNC3_CLKSRC;
-> +	else if (parent == &pll1_sysclk2)
-> +		val |= CFGCHIP3_ASYNC3_CLKSRC;
-> +	else {
-> +		pr_err("Bad parent on async3 clock mux.\n");
-> +		return -EINVAL;
-> +	}
+TPS65217_IRQ_PB definition added in patch 1.
 
-Since else has braces, need braces on all arm of the if-else construct.
+>
+>>>> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
+>>>> index a20980f..fd3b5d8 100644
+>>>> --- a/drivers/mfd/tps65217.c
+>>>> +++ b/drivers/mfd/tps65217.c
+>>>> @@ -38,6 +38,10 @@ static struct resource charger_resources[] = {
+>>>>   	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
+>>>>   };
+>>>>
+>>>> +static struct resource pb_resources[] = {
+>>>> +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
+>>>> +};
+>>>> +
+>>>>   struct tps65217_irq {
+>>>>   	int mask;
+>>>>   	int interrupt;
+>>>> @@ -122,6 +126,12 @@ static struct mfd_cell tps65217s[] = {
+>>>>   		.resources = charger_resources,
+>>>>   		.of_compatible = "ti,tps65217-charger",
+>>>>   	},
+>>>> +	{
+>>>> +		.name = "tps65217-pwrbutton",
+>>>> +		.num_resources = ARRAY_SIZE(pb_resources),
+>>>> +		.resources = pb_resources,
+>>>> +		.of_compatible = "ti,tps65217-pwrbutton",
+>>>> +	},
+>>>>   };
+>>>>
+>>>>   static irqreturn_t tps65217_irq_thread(int irq, void *data)
+>>>
+>>
+>>
+>
 
-Applied this patch with this fixed locally. checkpatch complains about
-this too when --strict option is passed.
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+-grygorii
