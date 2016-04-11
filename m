@@ -1,196 +1,268 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
- device access
-Date: Mon, 11 Apr 2016 16:48:06 +0300
-Message-ID: <20160411164337-mutt-send-email-mst@redhat.com>
-References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
- <20160316185440-mutt-send-email-mst@redhat.com>
- <20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
- <20160405114156-mutt-send-email-mst@redhat.com>
- <20160411131300.GW2060@HEDWIG.INI.CMU.EDU>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 2/2] thermal: generic-adc: Add ADC based thermal sensor driver
+Date: Mon, 11 Apr 2016 19:11:42 +0530
+Message-ID: <1460382102-27755-2-git-send-email-ldewangan@nvidia.com>
+References: <1460382102-27755-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160411131300.GW2060@HEDWIG.INI.CMU.EDU>
+In-Reply-To: <1460382102-27755-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Gabriel L. Somlo" <somlo@cmu.edu>
-Cc: Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, lersek@redhat.com, ralf@linux-mips.org, rmk+kernel@arm.linux.org.uk, eric@anholt.net, hanjun.guo@linaro.org, zajec5@gmail.com, sudeep.holla@arm.com, agross@codeaurora.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, qemu-devel@nongnu.org, imammedo@redhat.com, peter.maydell@linaro.org, leif.lindholm@linaro.org, ard.biesheuvel@linaro.org, pbonzini@redhat.com, kraxel@redhat.com, ehabkost@redhat.com, luto@amacapital.net, stefanha@gmail.com, revol@free.fr, matt@codeblueprint.co.uk, rth@twiddle.net
+To: edubezval@gmail.com, rui.zhang@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, jic23@kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 09:13:00AM -0400, Gabriel L. Somlo wrote:
-> On Tue, Apr 05, 2016 at 11:54:19AM +0300, Michael S. Tsirkin wrote:
-> > On Thu, Mar 17, 2016 at 09:33:40AM -0400, Gabriel L. Somlo wrote:
-> > > On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
-> > > > On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
-> > > > > Allowing for the future possibility of implementing AML-based
-> > > > > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
-> > > > > acquire the global ACPI lock when accessing the device on behalf
-> > > > > of the guest-side sysfs driver, to prevent any potential race
-> > > > > conditions.
-> > > > > 
-> > > > > Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > > Signed-off-by: Gabriel Somlo <somlo@cmu.edu>
-> > > > 
-> > > > So this patch makes sense of course.
-> > > > 
-> > > > 
-> > > > Given the recent discussion on QEMU mailing list,
-> > > > I think there is an additional patch that we need:
-> > > > filter the files exposed to userspace by "opt/" prefix.
-> > > > 
-> > > > This will ensure that we can change all other fw cfg files
-> > > > at will without breaking guest scripts.
-> > > > 
-> > > > Gabriel, could you code this up? Or do you see a
-> > > > pressing need to expose internal QEMU registers to
-> > > > userspace?
-> > > 
-> > > I'd be happy to update the docs to (better) emphasisze that:
-> > 
-> > Well my experience shows people do not read the docs.
-> > And really, good interfaces should be self-documenting.
-> > 
-> > >         1 the only way to guarantee any particular item shows up in
-> > >           guest-side fw_cfg sysfs is manually putting it there via the
-> > >           host-side command line
-> > > 
-> > >                 - and BTW, unless you prefixed it with "opt/..." you
-> > >                   are off the reservation, and it might collide with
-> > >                   qemu->firmware communications.
-> > > 
-> > >         2 anything one didn't place there themselves via the qemu
-> > >           command line is informational only, might change or go away
-> > >           at any time, and developing expectations about it based on
-> > >           past observation is done at the observer's own risk.
-> > > 
-> > > While I don't *personally* care about items outside of "opt/", I'm a bit
-> > > uncomfortable actively *hiding* them from userspace -- I could easily
-> > > imagine the ability to see (read-only) fw_cfg content from userspace
-> > > being a handy debugging/troubleshooting tool. It's back to separating
-> > > between mechanism and policy: hiding things from userspace would IMHO
-> > > fall into the policy enforcement side of things, and I'm still unclear
-> > > about the failure scenario we'd be trying to prevent, and its likelihood.
-> > > 
-> > > Thanks,
-> > > --Gabriel
-> > 
-> > Mostly, we can change internal qemu/firmware interfaces
-> > as long as we verify that firmware that ships with QEMU
-> > does not rely on them.
-> > 
-> > I'm fine with exposing stuff for debugging purposes
-> > but I would like a cleaner separation between the two,
-> > and self-documenting interfaces.
-> > How about:
-> > 	- place everything that is under "opt/" in e.g. "supported"
-> > 	  directory, or at root
-> > 	- place everything that is not under "opt/" in e.g. "unsupported"
-> > 	  directory
-> > 
-> > Abstracting hardware is what OS is all about, this is not policy.
-> 
-> I'm not sure I agree with this last point:
-> 
-> Arguably, fw_cfg could be viewed as a glorified out-of-band USB stick
-> with special files prepared by QEMU for the guest VM.
-> 
-> The sysfs driver is a mechanism to list/access these files, and is
-> IMHO the only thing one can reasonably construe as "kernel interface".
-> 
-> What you're suggesting boils down to adding a translation layer between
-> what QEMU names the files when preparing this magic USB stick, and what
-> we tell users the names are (by adding additional folders named e.g.
-> "supported" and "unsupported").
-> 
-> That to me looks like injecting policy ("look *here*, NOT there!") by
-> doing this, instead of sticking with mechanism only ("here's what qemu
-> wrote to fw_cfg, look at it if you want, or don't...").
+Sometimes, thermal sensors like NCT thermistors are connected to
+the ADC channel. The temperature is read by reading the voltage
+across the sensor resistance via ADC and referring the lookup
+table for ADC value to temperature.  The ADC interface is provided
+through the IIO framework.
 
-It's a mechanism really. We have a mechanism to affect the
-names of files in guest.  What I'm saying is it would be nice to
-have a mechanism for QEMU to tell guest "hidden file".
+Add support for thermal sensor driver which read the sensor
+data through IIO framework which has ADC driver as HW driver.
 
-Consider that ACPI has a "hidden" attribute for devices.
-This is more of the same.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
+---
+Changes from V1:
+- Use the two dimensional lookup table for temperature vs ADC value.
+- Use non devm_ for thermal zone sensor registration as there may be
+  race between IIO channel release and temperature read.
 
-> While I understand your concerns, I'm not sure we should have to go
-> through this level of convolution to protect people from their own
-> mistakes (such as assuming certain content on the magic USB stick will
-> always be there, and writing some sort of script which would break if
-> said content mysteriously disappears, then reasonably complain about
-> either the sysfs kernel driver or qemu itself). Presence or absence of
-> some file on a magic USB stick does NOT (again, IMHO) an interface make...
-> 
-> I was thinking of maybe adding a module parameter, let's call it
-> "show-all", off by default, and which would cause the "by-name" folder
-> to only be populated by things starting with "opt" when off, and
-> all fw-cfg files when enabled. But I'm not sure I like having to do it
-> in the first place (particularly hardcoding the string "opt" anywhere
-> in the driver :) ) so let me think about this a bit more (additional
-> pro/con thoughs and opinions welcome!)...
-> 
-> Thanks,
-> --Gabriel
+ drivers/thermal/Kconfig               |  10 ++
+ drivers/thermal/Makefile              |   1 +
+ drivers/thermal/thermal-generic-adc.c | 195 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 206 insertions(+)
+ create mode 100644 drivers/thermal/thermal-generic-adc.c
 
-the "opt/" string is part of hardware - you already hardcore
-e.g. the acpi ID, correct? That's just more of the same IMHO.
-
-
-> > 
-> > > > > ---
-> > > > > 
-> > > > > Changes since v1:
-> > > > > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
-> > > > > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
-> > > > > 	  and only throw a warning/error message otherwise.
-> > > > > 
-> > > > > 	- didn't get any *negative* feedback from the QEMU crowd, so
-> > > > > 	  this is now a bona-fide "please apply this", rather than just
-> > > > > 	  an RFC :)
-> > > > > 
-> > > > > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
-> > > > > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
-> > > > > 
-> > > > > Thanks much,
-> > > > >   --Gabriel
-> > > > > 
-> > > > >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
-> > > > >  1 file changed, 16 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> > > > > index 7bba76c..a44dc32 100644
-> > > > > --- a/drivers/firmware/qemu_fw_cfg.c
-> > > > > +++ b/drivers/firmware/qemu_fw_cfg.c
-> > > > > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
-> > > > >  static inline void fw_cfg_read_blob(u16 key,
-> > > > >  				    void *buf, loff_t pos, size_t count)
-> > > > >  {
-> > > > > +	u32 glk;
-> > > > > +	acpi_status status;
-> > > > > +
-> > > > > +	/* If we have ACPI, ensure mutual exclusion against any potential
-> > > > > +	 * device access by the firmware, e.g. via AML methods:
-> > > > > +	 */
-> > > > > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-> > > > > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-> > > > > +		/* Should never get here */
-> > > > > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
-> > > > > +		memset(buf, 0, count);
-> > > > > +		return;
-> > > > > +	}
-> > > > > +
-> > > > >  	mutex_lock(&fw_cfg_dev_lock);
-> > > > >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
-> > > > >  	while (pos-- > 0)
-> > > > >  		ioread8(fw_cfg_reg_data);
-> > > > >  	ioread8_rep(fw_cfg_reg_data, buf, count);
-> > > > >  	mutex_unlock(&fw_cfg_dev_lock);
-> > > > > +
-> > > > > +	acpi_release_global_lock(glk);
-> > > > >  }
-> > > > >  
-> > > > >  /* clean up fw_cfg device i/o */
-> > > > > -- 
-> > > > > 2.4.3
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 594748e..d7d0136 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -400,4 +400,14 @@ config QCOM_SPMI_TEMP_ALARM
+ 	  real time die temperature if an ADC is present or an estimate of the
+ 	  temperature based upon the over temperature stage value.
+ 
++config GENERIC_ADC_THERMAL
++	tristate "Generic ADC based thermal sensor"
++	depends on IIO
++	help
++	  This enabled a thermal sysfs driver for the temperature sensor
++	  which is connected to the General Purpose ADC. The ADC channel
++	  is read via IIO framework and the channel information is provided
++	  to this driver. This driver reports the temperature by reading ADC
++	  channel and converts it to temperature based on lookup table.
++
+ endif
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index d64f7f7..904593a 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -49,3 +49,4 @@ obj-$(CONFIG_ST_THERMAL)	+= st/
+ obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra/
+ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+ obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
++obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
+diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/thermal-generic-adc.c
+new file mode 100644
+index 0000000..902cf12
+--- /dev/null
++++ b/drivers/thermal/thermal-generic-adc.c
+@@ -0,0 +1,195 @@
++/*
++ * Generic ADC thermal driver
++ *
++ * Copyright (C) 2016 NVIDIA CORPORATION. All rights reserved.
++ *
++ * Author: Laxman Dewangan <ldewangan@nvidia.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/iio/consumer.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/thermal.h>
++
++struct gadc_thermal_info {
++	struct device *dev;
++	struct thermal_zone_device *tz_dev;
++	struct iio_channel *channel;
++	s32 *lookup_table;
++	int nlookup_table;
++};
++
++static int gadc_thermal_read_channel(struct gadc_thermal_info *gti, int *val)
++{
++	int ret;
++
++	ret = iio_read_channel_processed(gti->channel, val);
++	if (ret < 0)
++		ret = iio_read_channel_raw(gti->channel, val);
++	if (ret < 0)
++		return ret;
++
++	return ret;
++}
++
++static int gadc_thermal_adc_to_temp(struct gadc_thermal_info *gti, int val)
++{
++	int temp, adc_hi, adc_lo;
++	int i;
++
++	for (i = 0; i < gti->nlookup_table; i++) {
++		if (val >= gti->lookup_table[2 * i + 1])
++			break;
++	}
++
++	if (i == 0) {
++		temp = gti->lookup_table[0];
++	} else if (i >= (gti->nlookup_table - 1)) {
++		temp = gti->lookup_table[2 * (gti->nlookup_table - 1)];
++	} else {
++		adc_hi = gti->lookup_table[2 * i - 1];
++		adc_lo = gti->lookup_table[2 * i + 1];
++		temp = gti->lookup_table[2 * i];
++		temp -= ((val - adc_lo) * 1000) / (adc_hi - adc_lo);
++	}
++
++	return temp;
++}
++
++static int gadc_thermal_get_temp(void *data, int *temp)
++{
++	struct gadc_thermal_info *gti = data;
++	int val;
++	int ret;
++
++	ret = gadc_thermal_read_channel(gti, &val);
++	if (ret < 0) {
++		dev_err(gti->dev, "IIO channel read failed %d\n", ret);
++		return ret;
++	}
++	*temp = gadc_thermal_adc_to_temp(gti, val);
++
++	return 0;
++}
++
++static const struct thermal_zone_of_device_ops gadc_thermal_ops = {
++	.get_temp = gadc_thermal_get_temp,
++};
++
++static int gadc_thermal_read_linear_lookup_table(struct device *dev,
++						 struct gadc_thermal_info *gti)
++{
++	struct device_node *np = dev->of_node;
++	int ntable;
++	int ret;
++
++	ntable = of_property_count_elems_of_size(np, "temperature-lookup-table",
++						 sizeof(u32));
++	if (ntable < 0) {
++		dev_err(dev, "Lookup table is not provided\n");
++		return ntable;
++	}
++
++	if (ntable % 2) {
++		dev_err(dev, "Pair of temperature vs ADC read value missing\n");
++		return -EINVAL;
++	}
++
++	gti->lookup_table = devm_kzalloc(dev, sizeof(*gti->lookup_table) *
++					 ntable, GFP_KERNEL);
++	if (!gti->lookup_table)
++		return -ENOMEM;
++
++	ret = of_property_read_u32_array(np, "temperature-lookup-table",
++					 (u32 *)gti->lookup_table, ntable);
++	if (ret < 0) {
++		dev_err(dev, "Failed to read temperature lookup table: %d\n",
++			ret);
++		return ret;
++	}
++
++	gti->nlookup_table = ntable / 2;
++
++	return 0;
++}
++
++static int gadc_thermal_probe(struct platform_device *pdev)
++{
++	struct gadc_thermal_info *gti;
++	int ret;
++
++	if (!pdev->dev.of_node) {
++		dev_err(&pdev->dev, "Only DT based supported\n");
++		return -ENODEV;
++	}
++
++	gti = devm_kzalloc(&pdev->dev, sizeof(*gti), GFP_KERNEL);
++	if (!gti)
++		return -ENOMEM;
++
++	ret = gadc_thermal_read_linear_lookup_table(&pdev->dev, gti);
++	if (ret < 0)
++		return ret;
++
++	gti->dev = &pdev->dev;
++	platform_set_drvdata(pdev, gti);
++
++	gti->channel = iio_channel_get(&pdev->dev, "sensor-channel");
++	if (IS_ERR(gti->channel)) {
++		ret = PTR_ERR(gti->channel);
++		dev_err(&pdev->dev, "IIO channel not found: %d\n", ret);
++		return ret;
++	}
++
++	gti->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0,
++						      gti, &gadc_thermal_ops);
++	if (IS_ERR(gti->tz_dev)) {
++		ret = PTR_ERR(gti->tz_dev);
++		dev_err(&pdev->dev, "Thermal zone sensor register failed: %d\n",
++			ret);
++		goto sensor_fail;
++	}
++
++	return 0;
++
++sensor_fail:
++	iio_channel_release(gti->channel);
++
++	return ret;
++}
++
++static int gadc_thermal_remove(struct platform_device *pdev)
++{
++	struct gadc_thermal_info *gti = platform_get_drvdata(pdev);
++
++	thermal_zone_of_sensor_unregister(&pdev->dev, gti->tz_dev);
++	iio_channel_release(gti->channel);
++
++	return 0;
++}
++
++static const struct of_device_id of_adc_thermal_match[] = {
++	{ .compatible = "generic-adc-thermal", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_adc_thermal_match);
++
++static struct platform_driver gadc_thermal_driver = {
++	.driver = {
++		.name = "generic-adc-thermal",
++		.of_match_table = of_adc_thermal_match,
++	},
++	.probe = gadc_thermal_probe,
++	.remove = gadc_thermal_remove,
++};
++
++module_platform_driver(gadc_thermal_driver);
++
++MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
++MODULE_DESCRIPTION("Generic ADC thermal driver using IIO framework with DT");
++MODULE_LICENSE("GPL v2");
+-- 
+2.1.4
