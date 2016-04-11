@@ -1,80 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] input: pwm-beeper: add feature to set volume via
- sysfs
-Date: Mon, 11 Apr 2016 10:21:54 -0500
-Message-ID: <20160411152154.GA9736@rob-hp-laptop>
-References: <1460044644-12419-1-git-send-email-frieder.schrempf@exceet.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/9] net: mediatek: update the IRQ part of the binding
+ document
+Date: Mon, 11 Apr 2016 10:24:38 -0500
+Message-ID: <20160411152438.GA16983@rob-hp-laptop>
+References: <1460051876-53135-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1460044644-12419-1-git-send-email-frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Schrempf Frieder <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
-Cc: "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460051876-53135-1-git-send-email-blogic@openwrt.org>
+Sender: netdev-owner@vger.kernel.org
+To: John Crispin <blogic@openwrt.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Felix Fietkau <nbd@openwrt.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang =?utf-8?B?KOeOi+W/l+S6mCk=?= <sean.wang@mediatek.com>, netdev@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 07, 2016 at 03:58:40PM +0000, Schrempf Frieder wrote:
-> Make the driver accept different volume levels via sysfs.
-> This can be helpful if the beep/bell sound intensity needs
-> to be adapted to the environment of the device.
+On Thu, Apr 07, 2016 at 07:57:48PM +0200, John Crispin wrote:
+> The current binding document only describes a single interrupt. Update the
+> document by adding the 2 other interrupts.
+> 
+> The driver currently only uses a single interrupt. The HW is however able
+> to using IRQ grouping to split TX and RX onto separate GIC irqs.
 
-It is preferred that bindings be a separate patch. Also, this is 2 
-independent features: the sysfs interface and DT properties. So that is 
-probably 3 patches.
-
-Also, sysfs interfaces are supposed to be documented.
+I assume you aren't breaking existing DTs, and the driver will continue 
+to work with a single irq specified?
 
 > 
-> The number of volume levels available and their values can
-> be specified via device tree (similar to pwm-backlight).
-> 
-> This patch was tested with linux-imx 3.10.17 and was
-> applied to current mainline without any changes.
-
-You need to test with something not 3 years old...
-
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+> Cc: devicetree@vger.kernel.org
 > ---
->  .../devicetree/bindings/input/pwm-beeper.txt    |  20 ++++
->  drivers/input/misc/pwm-beeper.c                 | 109 ++++++++++++++++++-
->  2 files changed, 126 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/net/mediatek-net.txt |    6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> index be332ae..153cd3f 100644
-> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> @@ -5,3 +5,23 @@ Registers a PWM device as beeper.
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> index 5ca7929..2f142be 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek-net.txt
+> +++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> @@ -9,7 +9,7 @@ have dual GMAC each represented by a child node..
 >  Required properties:
->  - compatible: should be "pwm-beeper"
->  - pwms: phandle to the physical PWM device
-> +- volume-levels: Array of distinct volume levels. These need to be in the
-> +      range of 0 to 500, while 0 means 0% duty cycle (mute) and 500 means
-> +      50% duty cycle (max volume).
+>  - compatible: Should be "mediatek,mt7623-eth"
+>  - reg: Address and length of the register set for the device
+> -- interrupts: Should contain the frame engines interrupt
+> +- interrupts: Should contain the three frame engines interrupts
 
-Where does the scale of 0-500 come from? It is tenth of a percent?
+Need to define what each irq is and the order.
 
-How many array entries?
-
-> +      Please note that the actual volume of most beepers is highly
-> +      non-linear, which means that low volume levels are probably somewhere
-> +      in the range of 1 to 30 (0.1-3% duty cycle).
-> +- default-volume-level: the default volume level (index into the
-> +      array defined by the "volume-levels" property)
-> +
-> +The volume level can be set via sysfs under /sys/class/input/inputX/volume.
-> +The maximum volume level index can be read from /sys/class/input/inputX/max_volume_level.
-> +
-> +Example:
-> +
-> +	pwm-beeper {
-> +		compatible = "pwm-beeper";
-> +		pwms = <&pwm4 0 5000>;
-> +		volume-levels = <0 8 20 40 500>;
-> +		default-volume-level = <4>;
-> +	};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  - clocks: the clock used by the core
+>  - clock-names: the names of the clock listed in the clocks property. These are
+>  	"ethif", "esw", "gp2", "gp1"
+> @@ -42,7 +42,9 @@ eth: ethernet@1b100000 {
+>  		 <&ethsys CLK_ETHSYS_GP2>,
+>  		 <&ethsys CLK_ETHSYS_GP1>;
+>  	clock-names = "ethif", "esw", "gp2", "gp1";
+> -	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
+> +	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW
+> +		      GIC_SPI 199 IRQ_TYPE_LEVEL_LOW
+> +		      GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
+>  	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+>  	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
+>  	reset-names = "eth";
+> -- 
+> 1.7.10.4
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
