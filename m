@@ -1,195 +1,462 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v8 01/10] drm/hisilicon: Add device tree binding for hi6220 display subsystem
-Date: Mon, 11 Apr 2016 16:55:34 +0800
-Message-ID: <1460364943-76135-2-git-send-email-xinliang.liu@linaro.org>
+From: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v8 02/10] drm/hisilicon: Add hisilicon kirin drm master driver
+Date: Mon, 11 Apr 2016 16:55:35 +0800
+Message-ID: <1460364943-76135-3-git-send-email-xinliang.liu@linaro.org>
 References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460364943-76135-1-git-send-email-xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lijianhua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add ADE display controller binding doc.
-Add DesignWare DSI Host Controller v1.20a binding doc.
+Add kirin DRM master driver for hi6220 SoC which used in HiKey board.
+Add dumb buffer feature.
+Add prime dmabuf feature.
 
 v8: None.
-v7: Acked by Rob Herring.
-v6:
-- Cleanup values part of reg and clocks properties.
-- Change "pclk_dsi" clock name to "pclk".
-v5:
-- Remove endpoint unit address of dsi output port.
-- Add "hisilicon,noc-syscon" property for ADE NOC QoS syscon.
-- Add "resets" property for ADE reset.
-v4:
-- Describe more specific of clocks and ports.
-- Fix indentation.
+v7:
+- Add config.mutex protection when accessing mode_config.connector_list.
+- Clean up match data getting.
+v6: None.
+v5: None.
+v4: None.
 v3:
-- Make ade as the drm master node.
-- Use assigned-clocks to set clock rate.
-- Use ports to connect display relavant nodes.
+- Move and rename all the files to kirin sub-directory.
+  So that we could separate different seires SoCs' driver.
+- Replace drm_platform_init, load, unload implementation.
 v2:
-- Move dt binding docs to bindings/display/hisilicon directory.
+- Remove abtraction layer.
 
-Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
- .../bindings/display/hisilicon/dw-dsi.txt          | 72 ++++++++++++++++++++++
- .../bindings/display/hisilicon/hisi-ade.txt        | 64 +++++++++++++++++++
- 2 files changed, 136 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
- create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+ drivers/gpu/drm/Kconfig                         |   2 +
+ drivers/gpu/drm/Makefile                        |   1 +
+ drivers/gpu/drm/hisilicon/Kconfig               |   5 +
+ drivers/gpu/drm/hisilicon/Makefile              |   5 +
+ drivers/gpu/drm/hisilicon/kirin/Kconfig         |   9 +
+ drivers/gpu/drm/hisilicon/kirin/Makefile        |   3 +
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 309 ++++++++++++++++++++++++
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |  20 ++
+ 8 files changed, 354 insertions(+)
+ create mode 100644 drivers/gpu/drm/hisilicon/Kconfig
+ create mode 100644 drivers/gpu/drm/hisilicon/Makefile
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/Kconfig
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/Makefile
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+ create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
 
-diff --git a/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 84c587a1fa93..838f99acc2c0 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -289,3 +289,5 @@ source "drivers/gpu/drm/imx/Kconfig"
+ source "drivers/gpu/drm/vc4/Kconfig"
+ 
+ source "drivers/gpu/drm/etnaviv/Kconfig"
++
++source "drivers/gpu/drm/hisilicon/Kconfig"
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index 6eb94fc561dc..327d29638137 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -78,3 +78,4 @@ obj-y			+= panel/
+ obj-y			+= bridge/
+ obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
+ obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
++obj-y			+= hisilicon/
+diff --git a/drivers/gpu/drm/hisilicon/Kconfig b/drivers/gpu/drm/hisilicon/Kconfig
 new file mode 100644
-index 000000000000..d270bfe4e4e0
+index 000000000000..558c61b1b8e8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
-@@ -0,0 +1,72 @@
-+Device-Tree bindings for DesignWare DSI Host Controller v1.20a driver
++++ b/drivers/gpu/drm/hisilicon/Kconfig
+@@ -0,0 +1,5 @@
++#
++# hisilicon drm device configuration.
++# Please keep this list sorted alphabetically
 +
-+A DSI Host Controller resides in the middle of display controller and external
-+HDMI converter or panel.
-+
-+Required properties:
-+- compatible: value should be "hisilicon,hi6220-dsi".
-+- reg: physical base address and length of dsi controller's registers.
-+- clocks: contains APB clock phandle + clock-specifier pair.
-+- clock-names: should be "pclk".
-+- ports: contains DSI controller input and output sub port.
-+  The input port connects to ADE output port with the reg value "0".
-+  The output port with the reg value "1", it could connect to panel or
-+  any other bridge endpoints.
-+  See Documentation/devicetree/bindings/graph.txt for more device graph info.
-+
-+A example of HiKey board hi6220 SoC and board specific DT entry:
-+Example:
-+
-+SoC specific:
-+	dsi: dsi@f4107800 {
-+		compatible = "hisilicon,hi6220-dsi";
-+		reg = <0x0 0xf4107800 0x0 0x100>;
-+		clocks = <&media_ctrl  HI6220_DSI_PCLK>;
-+		clock-names = "pclk";
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* 0 for input port */
-+			port@0 {
-+				reg = <0>;
-+				dsi_in: endpoint {
-+					remote-endpoint = <&ade_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+
-+Board specific:
-+	&dsi {
-+		status = "ok";
-+
-+		ports {
-+			/* 1 for output port */
-+			port@1 {
-+				reg = <1>;
-+
-+				dsi_out0: endpoint@0 {
-+					remote-endpoint = <&adv7533_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	&i2c2 {
-+		...
-+
-+		adv7533: adv7533@39 {
-+			...
-+
-+			port {
-+				adv7533_in: endpoint {
-+					remote-endpoint = <&dsi_out0>;
-+				};
-+			};
-+		};
-+	};
-+
-diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
++source "drivers/gpu/drm/hisilicon/kirin/Kconfig"
+diff --git a/drivers/gpu/drm/hisilicon/Makefile b/drivers/gpu/drm/hisilicon/Makefile
 new file mode 100644
-index 000000000000..38dc9d60eef8
+index 000000000000..e3f6d493c996
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
-@@ -0,0 +1,64 @@
-+Device-Tree bindings for hisilicon ADE display controller driver
++++ b/drivers/gpu/drm/hisilicon/Makefile
+@@ -0,0 +1,5 @@
++#
++# Makefile for hisilicon drm drivers.
++# Please keep this list sorted alphabetically
 +
-+ADE (Advanced Display Engine) is the display controller which grab image
-+data from memory, do composition, do post image processing, generate RGB
-+timing stream and transfer to DSI.
++obj-$(CONFIG_DRM_HISI_KIRIN) += kirin/
+diff --git a/drivers/gpu/drm/hisilicon/kirin/Kconfig b/drivers/gpu/drm/hisilicon/kirin/Kconfig
+new file mode 100644
+index 000000000000..3ac4b8edeac1
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/kirin/Kconfig
+@@ -0,0 +1,9 @@
++config DRM_HISI_KIRIN
++	tristate "DRM Support for Hisilicon Kirin series SoCs Platform"
++	depends on DRM
++	select DRM_KMS_HELPER
++	select DRM_GEM_CMA_HELPER
++	select DRM_KMS_CMA_HELPER
++	help
++	  Choose this option if you have a hisilicon Kirin chipsets(hi6220).
++	  If M is selected the module will be called kirin-drm.
+diff --git a/drivers/gpu/drm/hisilicon/kirin/Makefile b/drivers/gpu/drm/hisilicon/kirin/Makefile
+new file mode 100644
+index 000000000000..cb346de47d48
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/kirin/Makefile
+@@ -0,0 +1,3 @@
++kirin-drm-y := kirin_drm_drv.o
 +
-+Required properties:
-+- compatible: value should be "hisilicon,hi6220-ade".
-+- reg: physical base address and length of the ADE controller's registers.
-+- hisilicon,noc-syscon: ADE NOC QoS syscon.
-+- resets: The ADE reset controller node.
-+- interrupt: the ldi vblank interrupt number used.
-+- clocks: a list of phandle + clock-specifier pairs, one for each entry
-+  in clock-names.
-+- clock-names: should contain:
-+  "clk_ade_core" for the ADE core clock.
-+  "clk_codec_jpeg" for the media NOC QoS clock, which use the same clock with
-+  jpeg codec.
-+  "clk_ade_pix" for the ADE pixel clok.
-+- assigned-clocks: Should contain "clk_ade_core" and "clk_codec_jpeg" clocks'
-+  phandle + clock-specifier pairs.
-+- assigned-clock-rates: clock rates, one for each entry in assigned-clocks.
-+  The rate of "clk_ade_core" could be "360000000" or "180000000";
-+  The rate of "clk_codec_jpeg" could be or less than "1440000000".
-+  These rate values could be configured according to performance and power
-+  consumption.
-+- port: the output port. This contains one endpoint subnode, with its
-+  remote-endpoint set to the phandle of the connected DSI input endpoint.
-+  See Documentation/devicetree/bindings/graph.txt for more device graph info.
++obj-$(CONFIG_DRM_HISI_KIRIN) += kirin-drm.o
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+new file mode 100644
+index 000000000000..976c9b1a3fd3
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+@@ -0,0 +1,309 @@
++/*
++ * Hisilicon Kirin SoCs drm master driver
++ *
++ * Copyright (c) 2016 Linaro Limited.
++ * Copyright (c) 2014-2016 Hisilicon Limited.
++ *
++ * Author:
++ *	Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
++ *	Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *	Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
 +
-+Optional properties:
-+- dma-coherent: Present if dma operations are coherent.
++#include <linux/of_platform.h>
++#include <linux/component.h>
++#include <linux/of_graph.h>
 +
++#include <drm/drmP.h>
++#include <drm/drm_gem_cma_helper.h>
++#include <drm/drm_fb_cma_helper.h>
++#include <drm/drm_atomic_helper.h>
 +
-+A example of HiKey board hi6220 SoC specific DT entry:
-+Example:
++#include "kirin_drm_drv.h"
 +
-+	ade: ade@f4100000 {
-+		compatible = "hisilicon,hi6220-ade";
-+		reg = <0x0 0xf4100000 0x0 0x7800>;
-+		reg-names = "ade_base";
-+		hisilicon,noc-syscon = <&medianoc_ade>;
-+		resets = <&media_ctrl MEDIA_ADE>;
-+		interrupts = <0 115 4>; /* ldi interrupt */
++static struct kirin_dc_ops *dc_ops;
 +
-+		clocks = <&media_ctrl HI6220_ADE_CORE>,
-+			 <&media_ctrl HI6220_CODEC_JPEG>,
-+			 <&media_ctrl HI6220_ADE_PIX_SRC>;
-+		/*clock name*/
-+		clock-names  = "clk_ade_core",
-+			       "clk_codec_jpeg",
-+			       "clk_ade_pix";
++static int kirin_drm_kms_cleanup(struct drm_device *dev)
++{
++	dc_ops->cleanup(dev);
++	drm_mode_config_cleanup(dev);
 +
-+		assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
-+			<&media_ctrl HI6220_CODEC_JPEG>;
-+		assigned-clock-rates = <360000000>, <288000000>;
-+		dma-coherent;
++	return 0;
++}
 +
-+		port {
-+			ade_out: endpoint {
-+				remote-endpoint = <&dsi_in>;
-+			};
-+		};
-+	};
++static const struct drm_mode_config_funcs kirin_drm_mode_config_funcs = {
++	.fb_create = drm_fb_cma_create,
++	.atomic_check = drm_atomic_helper_check,
++	.atomic_commit = drm_atomic_helper_commit,
++};
++
++static void kirin_drm_mode_config_init(struct drm_device *dev)
++{
++	dev->mode_config.min_width = 0;
++	dev->mode_config.min_height = 0;
++
++	dev->mode_config.max_width = 2048;
++	dev->mode_config.max_height = 2048;
++
++	dev->mode_config.funcs = &kirin_drm_mode_config_funcs;
++}
++
++static int kirin_drm_kms_init(struct drm_device *dev)
++{
++	int ret;
++
++	dev_set_drvdata(dev->dev, dev);
++
++	/* dev->mode_config initialization */
++	drm_mode_config_init(dev);
++	kirin_drm_mode_config_init(dev);
++
++	/* display controller init */
++	ret = dc_ops->init(dev);
++	if (ret)
++		goto err_mode_config_cleanup;
++
++	/* bind and init sub drivers */
++	ret = component_bind_all(dev->dev, dev);
++	if (ret) {
++		DRM_ERROR("failed to bind all component.\n");
++		goto err_dc_cleanup;
++	}
++
++	/* reset all the states of crtc/plane/encoder/connector */
++	drm_mode_config_reset(dev);
++
++	return 0;
++
++err_dc_cleanup:
++	dc_ops->cleanup(dev);
++err_mode_config_cleanup:
++	drm_mode_config_cleanup(dev);
++
++	return ret;
++}
++
++static const struct file_operations kirin_drm_fops = {
++	.owner		= THIS_MODULE,
++	.open		= drm_open,
++	.release	= drm_release,
++	.unlocked_ioctl	= drm_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= drm_compat_ioctl,
++#endif
++	.poll		= drm_poll,
++	.read		= drm_read,
++	.llseek		= no_llseek,
++	.mmap		= drm_gem_cma_mmap,
++};
++
++static int kirin_gem_cma_dumb_create(struct drm_file *file,
++				     struct drm_device *dev,
++				     struct drm_mode_create_dumb *args)
++{
++	return drm_gem_cma_dumb_create_internal(file, dev, args);
++}
++
++static struct drm_driver kirin_drm_driver = {
++	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
++				  DRIVER_ATOMIC,
++	.fops			= &kirin_drm_fops,
++	.set_busid		= drm_platform_set_busid,
++
++	.gem_free_object	= drm_gem_cma_free_object,
++	.gem_vm_ops		= &drm_gem_cma_vm_ops,
++	.dumb_create		= kirin_gem_cma_dumb_create,
++	.dumb_map_offset	= drm_gem_cma_dumb_map_offset,
++	.dumb_destroy		= drm_gem_dumb_destroy,
++
++	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
++	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
++	.gem_prime_export	= drm_gem_prime_export,
++	.gem_prime_import	= drm_gem_prime_import,
++	.gem_prime_get_sg_table = drm_gem_cma_prime_get_sg_table,
++	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
++	.gem_prime_vmap		= drm_gem_cma_prime_vmap,
++	.gem_prime_vunmap	= drm_gem_cma_prime_vunmap,
++	.gem_prime_mmap		= drm_gem_cma_prime_mmap,
++
++	.name			= "kirin",
++	.desc			= "Hisilicon Kirin SoCs' DRM Driver",
++	.date			= "20150718",
++	.major			= 1,
++	.minor			= 0,
++};
++
++static int compare_of(struct device *dev, void *data)
++{
++	return dev->of_node == data;
++}
++
++static int kirin_drm_connectors_register(struct drm_device *dev)
++{
++	struct drm_connector *connector;
++	struct drm_connector *failed_connector;
++	int ret;
++
++	mutex_lock(&dev->mode_config.mutex);
++	drm_for_each_connector(connector, dev) {
++		ret = drm_connector_register(connector);
++		if (ret) {
++			failed_connector = connector;
++			goto err;
++		}
++	}
++	mutex_unlock(&dev->mode_config.mutex);
++
++	return 0;
++
++err:
++	drm_for_each_connector(connector, dev) {
++		if (failed_connector == connector)
++			break;
++		drm_connector_unregister(connector);
++	}
++	mutex_unlock(&dev->mode_config.mutex);
++
++	return ret;
++}
++
++static int kirin_drm_bind(struct device *dev)
++{
++	struct drm_driver *driver = &kirin_drm_driver;
++	struct drm_device *drm_dev;
++	int ret;
++
++	drm_dev = drm_dev_alloc(driver, dev);
++	if (!drm_dev)
++		return -ENOMEM;
++
++	drm_dev->platformdev = to_platform_device(dev);
++
++	ret = kirin_drm_kms_init(drm_dev);
++	if (ret)
++		goto err_drm_dev_unref;
++
++	ret = drm_dev_register(drm_dev, 0);
++	if (ret)
++		goto err_kms_cleanup;
++
++	/* connectors should be registered after drm device register */
++	ret = kirin_drm_connectors_register(drm_dev);
++	if (ret)
++		goto err_drm_dev_unregister;
++
++	DRM_INFO("Initialized %s %d.%d.%d %s on minor %d\n",
++		 driver->name, driver->major, driver->minor, driver->patchlevel,
++		 driver->date, drm_dev->primary->index);
++
++	return 0;
++
++err_drm_dev_unregister:
++	drm_dev_unregister(drm_dev);
++err_kms_cleanup:
++	kirin_drm_kms_cleanup(drm_dev);
++err_drm_dev_unref:
++	drm_dev_unref(drm_dev);
++
++	return ret;
++}
++
++static void kirin_drm_unbind(struct device *dev)
++{
++	drm_put_dev(dev_get_drvdata(dev));
++}
++
++static const struct component_master_ops kirin_drm_ops = {
++	.bind = kirin_drm_bind,
++	.unbind = kirin_drm_unbind,
++};
++
++static struct device_node *kirin_get_remote_node(struct device_node *np)
++{
++	struct device_node *endpoint, *remote;
++
++	/* get the first endpoint, in our case only one remote node
++	 * is connected to display controller.
++	 */
++	endpoint = of_graph_get_next_endpoint(np, NULL);
++	if (!endpoint) {
++		DRM_ERROR("no valid endpoint node\n");
++		return ERR_PTR(-ENODEV);
++	}
++	of_node_put(endpoint);
++
++	remote = of_graph_get_remote_port_parent(endpoint);
++	if (!remote) {
++		DRM_ERROR("no valid remote node\n");
++		return ERR_PTR(-ENODEV);
++	}
++	of_node_put(remote);
++
++	if (!of_device_is_available(remote)) {
++		DRM_ERROR("not available for remote node\n");
++		return ERR_PTR(-ENODEV);
++	}
++
++	return remote;
++}
++
++static int kirin_drm_platform_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct component_match *match = NULL;
++	struct device_node *remote;
++
++	dc_ops = (struct kirin_dc_ops *)of_device_get_match_data(dev);
++	if (!dc_ops) {
++		DRM_ERROR("failed to get dt id data\n");
++		return -EINVAL;
++	}
++
++	remote = kirin_get_remote_node(np);
++	if (IS_ERR(remote))
++		return PTR_ERR(remote);
++
++	component_match_add(dev, &match, compare_of, remote);
++
++	return component_master_add_with_match(dev, &kirin_drm_ops, match);
++
++	return 0;
++}
++
++static int kirin_drm_platform_remove(struct platform_device *pdev)
++{
++	component_master_del(&pdev->dev, &kirin_drm_ops);
++	dc_ops = NULL;
++	return 0;
++}
++
++static const struct of_device_id kirin_drm_dt_ids[] = {
++	{ .compatible = "hisilicon,hi6220-ade",
++	  .data = &ade_dc_ops,
++	},
++	{ /* end node */ },
++};
++MODULE_DEVICE_TABLE(of, kirin_drm_dt_ids);
++
++static struct platform_driver kirin_drm_platform_driver = {
++	.probe = kirin_drm_platform_probe,
++	.remove = kirin_drm_platform_remove,
++	.driver = {
++		.name = "kirin-drm",
++		.of_match_table = kirin_drm_dt_ids,
++	},
++};
++
++module_platform_driver(kirin_drm_platform_driver);
++
++MODULE_AUTHOR("Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
++MODULE_AUTHOR("Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>");
++MODULE_AUTHOR("Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>");
++MODULE_DESCRIPTION("hisilicon Kirin SoCs' DRM master driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+new file mode 100644
+index 000000000000..75e9d82356d4
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+@@ -0,0 +1,20 @@
++/*
++ * Copyright (c) 2016 Linaro Limited.
++ * Copyright (c) 2014-2016 Hisilicon Limited.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#ifndef __KIRIN_DRM_DRV_H__
++#define __KIRIN_DRM_DRV_H__
++
++/* display controller init/cleanup ops */
++struct kirin_dc_ops {
++	int (*init)(struct drm_device *dev);
++	void (*cleanup)(struct drm_device *dev);
++};
++
++#endif /* __KIRIN_DRM_DRV_H__ */
 -- 
 2.8.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
