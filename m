@@ -1,129 +1,190 @@
-From: Ashok Kumar <ashoks@broadcom.com>
-Subject: [PATCH v4 4/6] arm64/perf: Define complete ARMv8 recommended
- implementation defined events
-Date: Mon, 11 Apr 2016 06:02:19 -0700
-Message-ID: <1460379741-1181-5-git-send-email-ashoks@broadcom.com>
-References: <1460379741-1181-1-git-send-email-ashoks@broadcom.com>
+From: "Gabriel L. Somlo" <somlo@cmu.edu>
+Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI
+ global lock during device access
+Date: Mon, 11 Apr 2016 09:13:00 -0400
+Message-ID: <20160411131300.GW2060@HEDWIG.INI.CMU.EDU>
+References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
+	<20160316185440-mutt-send-email-mst@redhat.com>
+	<20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
+	<20160405114156-mutt-send-email-mst@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1460379741-1181-1-git-send-email-ashoks@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, Suzuki.Poulose@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com
-Cc: jchandra@broadcom.com, Ashok Kumar <ashoks@broadcom.com>, jglauber@cavium.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
+Content-Disposition: inline
+In-Reply-To: <20160405114156-mutt-send-email-mst@redhat.com>
+List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
+List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel/>
+List-Post: <mailto:qemu-devel@nongnu.org>
+List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
+List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
+Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+Sender: "Qemu-devel" <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: mark.rutland@arm.com, peter.maydell@linaro.org, matt@codeblueprint.co.uk, stefanha@gmail.com, qemu-devel@nongnu.org, eric@anholt.net, kraxel@redhat.com, linux-api@vger.kernel.org, agross@codeaurora.org, pawel.moll@arm.com, zajec5@gmail.com, rmk+kernel@arm.linux.org.uk, lersek@redhat.com, devicetree@vger.kernel.org, ehabkost@redhat.com, arnd@arndb.de, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, leif.lindholm@linaro.org, robh+dt@kernel.org, pbonzini@redhat.com, rth@twiddle.net, ard.biesheuvel@linaro.org, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, luto@amacapital.net, hanjun.guo@linaro.org, sudeep.holla@arm.com, imammedo@redhat.com, revol@free.fr
 List-Id: devicetree@vger.kernel.org
 
-Defined all the ARMv8 recommended implementation defined events
-from J3 - "ARM recommendations for IMPLEMENTATION DEFINED event numbers"
-in ARMv8 ARM.
+On Tue, Apr 05, 2016 at 11:54:19AM +0300, Michael S. Tsirkin wrote:
+> On Thu, Mar 17, 2016 at 09:33:40AM -0400, Gabriel L. Somlo wrote:
+> > On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
+> > > On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
+> > > > Allowing for the future possibility of implementing AML-based
+> > > > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
+> > > > acquire the global ACPI lock when accessing the device on behalf
+> > > > of the guest-side sysfs driver, to prevent any potential race
+> > > > conditions.
+> > > > 
+> > > > Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> > > > Signed-off-by: Gabriel Somlo <somlo@cmu.edu>
+> > > 
+> > > So this patch makes sense of course.
+> > > 
+> > > 
+> > > Given the recent discussion on QEMU mailing list,
+> > > I think there is an additional patch that we need:
+> > > filter the files exposed to userspace by "opt/" prefix.
+> > > 
+> > > This will ensure that we can change all other fw cfg files
+> > > at will without breaking guest scripts.
+> > > 
+> > > Gabriel, could you code this up? Or do you see a
+> > > pressing need to expose internal QEMU registers to
+> > > userspace?
+> > 
+> > I'd be happy to update the docs to (better) emphasisze that:
+> 
+> Well my experience shows people do not read the docs.
+> And really, good interfaces should be self-documenting.
+> 
+> >         1 the only way to guarantee any particular item shows up in
+> >           guest-side fw_cfg sysfs is manually putting it there via the
+> >           host-side command line
+> > 
+> >                 - and BTW, unless you prefixed it with "opt/..." you
+> >                   are off the reservation, and it might collide with
+> >                   qemu->firmware communications.
+> > 
+> >         2 anything one didn't place there themselves via the qemu
+> >           command line is informational only, might change or go away
+> >           at any time, and developing expectations about it based on
+> >           past observation is done at the observer's own risk.
+> > 
+> > While I don't *personally* care about items outside of "opt/", I'm a bit
+> > uncomfortable actively *hiding* them from userspace -- I could easily
+> > imagine the ability to see (read-only) fw_cfg content from userspace
+> > being a handy debugging/troubleshooting tool. It's back to separating
+> > between mechanism and policy: hiding things from userspace would IMHO
+> > fall into the policy enforcement side of things, and I'm still unclear
+> > about the failure scenario we'd be trying to prevent, and its likelihood.
+> > 
+> > Thanks,
+> > --Gabriel
+> 
+> Mostly, we can change internal qemu/firmware interfaces
+> as long as we verify that firmware that ships with QEMU
+> does not rely on them.
+> 
+> I'm fine with exposing stuff for debugging purposes
+> but I would like a cleaner separation between the two,
+> and self-documenting interfaces.
+> How about:
+> 	- place everything that is under "opt/" in e.g. "supported"
+> 	  directory, or at root
+> 	- place everything that is not under "opt/" in e.g. "unsupported"
+> 	  directory
+> 
+> Abstracting hardware is what OS is all about, this is not policy.
 
-Signed-off-by: Ashok Kumar <ashoks@broadcom.com>
----
- arch/arm64/kernel/perf_event.c | 79 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+I'm not sure I agree with this last point:
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 59d5091..2ee61e8 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -94,10 +94,89 @@
- #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR			0x41
- #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_RD		0x42
- #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR		0x43
-+#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_INNER		0x44
-+#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_OUTER		0x45
-+#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WB_VICTIM		0x46
-+#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WB_CLEAN			0x47
-+#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_INVAL			0x48
-+
- #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD			0x4C
- #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR			0x4D
- #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD				0x4E
- #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR				0x4F
-+#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_RD			0x50
-+#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_WR			0x51
-+#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_REFILL_RD		0x52
-+#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_REFILL_WR		0x53
-+
-+#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_WB_VICTIM		0x56
-+#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_WB_CLEAN			0x57
-+#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_INVAL			0x58
-+
-+#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_REFILL_RD			0x5C
-+#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_REFILL_WR			0x5D
-+#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_RD				0x5E
-+#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_WR				0x5F
-+
-+#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD			0x60
-+#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR			0x61
-+#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_SHARED			0x62
-+#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_NOT_SHARED		0x63
-+#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_NORMAL			0x64
-+#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_PERIPH			0x65
-+
-+#define ARMV8_IMPDEF_PERFCTR_MEM_ACCESS_RD			0x66
-+#define ARMV8_IMPDEF_PERFCTR_MEM_ACCESS_WR			0x67
-+#define ARMV8_IMPDEF_PERFCTR_UNALIGNED_LD_SPEC			0x68
-+#define ARMV8_IMPDEF_PERFCTR_UNALIGNED_ST_SPEC			0x69
-+#define ARMV8_IMPDEF_PERFCTR_UNALIGNED_LDST_SPEC		0x6A
-+
-+#define ARMV8_IMPDEF_PERFCTR_LDREX_SPEC				0x6C
-+#define ARMV8_IMPDEF_PERFCTR_STREX_PASS_SPEC			0x6D
-+#define ARMV8_IMPDEF_PERFCTR_STREX_FAIL_SPEC			0x6E
-+#define ARMV8_IMPDEF_PERFCTR_STREX_SPEC				0x6F
-+#define ARMV8_IMPDEF_PERFCTR_LD_SPEC				0x70
-+#define ARMV8_IMPDEF_PERFCTR_ST_SPEC				0x71
-+#define ARMV8_IMPDEF_PERFCTR_LDST_SPEC				0x72
-+#define ARMV8_IMPDEF_PERFCTR_DP_SPEC				0x73
-+#define ARMV8_IMPDEF_PERFCTR_ASE_SPEC				0x74
-+#define ARMV8_IMPDEF_PERFCTR_VFP_SPEC				0x75
-+#define ARMV8_IMPDEF_PERFCTR_PC_WRITE_SPEC			0x76
-+#define ARMV8_IMPDEF_PERFCTR_CRYPTO_SPEC			0x77
-+#define ARMV8_IMPDEF_PERFCTR_BR_IMMED_SPEC			0x78
-+#define ARMV8_IMPDEF_PERFCTR_BR_RETURN_SPEC			0x79
-+#define ARMV8_IMPDEF_PERFCTR_BR_INDIRECT_SPEC			0x7A
-+
-+#define ARMV8_IMPDEF_PERFCTR_ISB_SPEC				0x7C
-+#define ARMV8_IMPDEF_PERFCTR_DSB_SPEC				0x7D
-+#define ARMV8_IMPDEF_PERFCTR_DMB_SPEC				0x7E
-+
-+#define ARMV8_IMPDEF_PERFCTR_EXC_UNDEF				0x81
-+#define ARMV8_IMPDEF_PERFCTR_EXC_SVC				0x82
-+#define ARMV8_IMPDEF_PERFCTR_EXC_PABORT				0x83
-+#define ARMV8_IMPDEF_PERFCTR_EXC_DABORT				0x84
-+
-+#define ARMV8_IMPDEF_PERFCTR_EXC_IRQ				0x86
-+#define ARMV8_IMPDEF_PERFCTR_EXC_FIQ				0x87
-+#define ARMV8_IMPDEF_PERFCTR_EXC_SMC				0x88
-+
-+#define ARMV8_IMPDEF_PERFCTR_EXC_HVC				0x8A
-+#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_PABORT			0x8B
-+#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_DABORT			0x8C
-+#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_OTHER			0x8D
-+#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_IRQ			0x8E
-+#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_FIQ			0x8F
-+#define ARMV8_IMPDEF_PERFCTR_RC_LD_SPEC				0x90
-+#define ARMV8_IMPDEF_PERFCTR_RC_ST_SPEC				0x91
-+
-+#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_RD			0xA0
-+#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_WR			0xA1
-+#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_REFILL_RD		0xA2
-+#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_REFILL_WR		0xA3
-+
-+#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_WB_VICTIM		0xA6
-+#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_WB_CLEAN			0xA7
-+#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_INVAL			0xA8
- 
- /* ARMv8 Cortex-A53 specific event types. */
- #define ARMV8_A53_PERFCTR_PREFETCH_LINEFILL			0xC2
--- 
-2.1.0
+Arguably, fw_cfg could be viewed as a glorified out-of-band USB stick
+with special files prepared by QEMU for the guest VM.
+
+The sysfs driver is a mechanism to list/access these files, and is
+IMHO the only thing one can reasonably construe as "kernel interface".
+
+What you're suggesting boils down to adding a translation layer between
+what QEMU names the files when preparing this magic USB stick, and what
+we tell users the names are (by adding additional folders named e.g.
+"supported" and "unsupported").
+
+That to me looks like injecting policy ("look *here*, NOT there!") by
+doing this, instead of sticking with mechanism only ("here's what qemu
+wrote to fw_cfg, look at it if you want, or don't...").
+
+While I understand your concerns, I'm not sure we should have to go
+through this level of convolution to protect people from their own
+mistakes (such as assuming certain content on the magic USB stick will
+always be there, and writing some sort of script which would break if
+said content mysteriously disappears, then reasonably complain about
+either the sysfs kernel driver or qemu itself). Presence or absence of
+some file on a magic USB stick does NOT (again, IMHO) an interface make...
+
+I was thinking of maybe adding a module parameter, let's call it
+"show-all", off by default, and which would cause the "by-name" folder
+to only be populated by things starting with "opt" when off, and
+all fw-cfg files when enabled. But I'm not sure I like having to do it
+in the first place (particularly hardcoding the string "opt" anywhere
+in the driver :) ) so let me think about this a bit more (additional
+pro/con thoughs and opinions welcome!)...
+
+Thanks,
+--Gabriel
+
+> 
+> > > > ---
+> > > > 
+> > > > Changes since v1:
+> > > > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
+> > > > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
+> > > > 	  and only throw a warning/error message otherwise.
+> > > > 
+> > > > 	- didn't get any *negative* feedback from the QEMU crowd, so
+> > > > 	  this is now a bona-fide "please apply this", rather than just
+> > > > 	  an RFC :)
+> > > > 
+> > > > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
+> > > > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
+> > > > 
+> > > > Thanks much,
+> > > >   --Gabriel
+> > > > 
+> > > >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
+> > > >  1 file changed, 16 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> > > > index 7bba76c..a44dc32 100644
+> > > > --- a/drivers/firmware/qemu_fw_cfg.c
+> > > > +++ b/drivers/firmware/qemu_fw_cfg.c
+> > > > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
+> > > >  static inline void fw_cfg_read_blob(u16 key,
+> > > >  				    void *buf, loff_t pos, size_t count)
+> > > >  {
+> > > > +	u32 glk;
+> > > > +	acpi_status status;
+> > > > +
+> > > > +	/* If we have ACPI, ensure mutual exclusion against any potential
+> > > > +	 * device access by the firmware, e.g. via AML methods:
+> > > > +	 */
+> > > > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
+> > > > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
+> > > > +		/* Should never get here */
+> > > > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
+> > > > +		memset(buf, 0, count);
+> > > > +		return;
+> > > > +	}
+> > > > +
+> > > >  	mutex_lock(&fw_cfg_dev_lock);
+> > > >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
+> > > >  	while (pos-- > 0)
+> > > >  		ioread8(fw_cfg_reg_data);
+> > > >  	ioread8_rep(fw_cfg_reg_data, buf, count);
+> > > >  	mutex_unlock(&fw_cfg_dev_lock);
+> > > > +
+> > > > +	acpi_release_global_lock(glk);
+> > > >  }
+> > > >  
+> > > >  /* clean up fw_cfg device i/o */
+> > > > -- 
+> > > > 2.4.3
