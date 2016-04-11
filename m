@@ -1,107 +1,204 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] leds: pca9532: Add device tree binding
-Date: Mon, 11 Apr 2016 17:25:22 +0800
-Message-ID: <570B6D82.6040807@electromag.com.au>
-References: <1460013772-129968-1-git-send-email-preid@electromag.com.au>
- <1460013772-129968-2-git-send-email-preid@electromag.com.au>
- <5706686F.7070102@samsung.com> <570B42F4.5070002@electromag.com.au>
- <570B628A.4090406@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2] ASoC: rockchip: i2s: configure the sdio pins' iomux mode
+Date: Mon, 11 Apr 2016 17:26:03 +0800
+Message-ID: <1460366763-25658-1-git-send-email-sugar.zhang@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <570B628A.4090406-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/2016 4:38 PM, Jacek Anaszewski wrote:
-> On 04/11/2016 08:23 AM, Phil Reid wrote:
->> On 7/04/2016 10:02 PM, Jacek Anaszewski wrote:
->>> Hi Phil,
->>>
->>> Thanks for the update. Few more remarks below.
->>>
->>> On 04/07/2016 09:22 AM, Phil Reid wrote:
->>>> This patch adds basic device tree support for the pca9532 LEDs.
->>>>
->>>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
->>>> ---
->>>>   .../devicetree/bindings/leds/leds-pca9532.txt      | 42 +++++++++++++
->>>>   drivers/leds/leds-pca9532.c                        | 69
->>>> ++++++++++++++++++++--
->>>>   include/dt-bindings/leds/leds-pca9532.h            | 23 ++++++++
->>>>   include/linux/leds-pca9532.h                       | 18 ++----
->>>>   4 files changed, 135 insertions(+), 17 deletions(-)
->>>>   create mode 100644
->>>> Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>> b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>> new file mode 100644
->>>> index 0000000..284b96c
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
->>>> @@ -0,0 +1,42 @@
->>>> +*NXP - pca9532 PWM LED Driver
->>>> +
->>>> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
->>>> +The PWM support 256 steps.
->>>> +
->>>> +Required properties:
->>>> +    - compatible:
->>>> +        "nxp,pca9530"
->>>> +        "nxp,pca9531"
->>>> +        "nxp,pca9532"
->>>> +        "nxp,pca9533"
->>>> +    - reg -  I2C slave address
->>>> +
->>>> +Each led is represented as a sub-node of the nxp,pca9530.
->>>> +
->>>> +Optional sub-node properties:
->>>> +    - label: Name for this LED. If omitted, the label is taken from
->>>> the node name.
->>>
->>> Please also add a reference to common led bindings, as this property is
->>> documented there:
->>> "(see Documentation/devicetree/bindings/leds/common.txt):"
->> done.
->>
->>>
->>>> +    - type: Output configuration, see
->>>> dt-bindings/leds/leds-pca9532.h (default NONE)
->>>> +    - state: Initial LED state (default OFF)
->>>
->>> We already have "default-on" trigger for this purpose.
->> Not sure it does exactly the same thing.
->> This setting also associates a led with a particular PWM controller.
->> The chip has 2 shared PWM that each led can be controlled by.
->
-> default-on trigger sets the LED to max_brightness on init.
-> As I see pca9532_set_brightness() sets PCA9532_ON state if
-> passed LED_FULL and uses PCA9532_PWM0 for other values
-> greater than zero.
->
-> So, maybe it would make more sense if we used default-on trigger to
-> initialize LED to LED_FULL on init, but provide another DT property
-> 'default-pwm' to determine which PWM block should be used by default?
-> Currently I see that driver uses only PWM0:
->
-> led->state = PCA9532_PWM0; /* Thecus: hardcode one pwm */
->
-> Alternatively the driver could expose a dedicated sysfs attribute
-> for changing the default pwm. This is of course out of this patch
-> scope.
->
-I'll drop the state bit for this patch.
-I ideally need to have the 2 PWMs controlling the LEDs but it's
-going to take a bit more work.
+There are 3 i2s sdio pins, which iomux mode is as follows:
 
+ - sdi3_sdo1
+ - sdi2_sdo2
+ - sdi1_sdo3
+
+we need to configure these pins' iomux mode via the GRF register
+when use multi channel playback/capture.
+
+Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+
+Changes in v2:
+- fix a typo error.
+as suggested by Heiko:
+- use the general grf-binding without any offset
+- keep the actual offset in the driver on a per-soc basis.
+
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |  5 ++
+ sound/soc/rockchip/rockchip_i2s.c                  | 67 +++++++++++++++++++---
+ sound/soc/rockchip/rockchip_i2s.h                  |  7 +++
+ 3 files changed, 70 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+index 6e86d8a..4ea29aa 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+@@ -23,6 +23,11 @@ Required properties:
+ - rockchip,playback-channels: max playback channels, if not set, 8 channels default.
+ - rockchip,capture-channels: max capture channels, if not set, 2 channels default.
+ 
++Required properties for controller which support multi channels
++playback/capture:
++
++- rockchip,grf: the phandle of the syscon node for GRF register.
++
+ Example for rk3288 I2S controller:
+ 
+ i2s@ff890000 {
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 2f8e204..d4f7eac 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -11,8 +11,10 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/delay.h>
+ #include <linux/of_gpio.h>
++#include <linux/of_device.h>
+ #include <linux/clk.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+@@ -23,6 +25,11 @@
+ 
+ #define DRV_NAME "rockchip-i2s"
+ 
++struct rk_i2s_pins {
++	u32 reg_offset;
++	u32 shift;
++};
++
+ struct rk_i2s_dev {
+ 	struct device *dev;
+ 
+@@ -33,8 +40,10 @@ struct rk_i2s_dev {
+ 	struct snd_dmaengine_dai_dma_data playback_dma_data;
+ 
+ 	struct regmap *regmap;
++	struct regmap *grf;
+ 
+ 	bool is_master_mode;
++	const struct rk_i2s_pins *pins;
+ };
+ 
+ static int i2s_runtime_suspend(struct device *dev)
+@@ -277,6 +286,30 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+ 				   I2S_TXCR_VDW_MASK | I2S_TXCR_CSR_MASK,
+ 				   val);
+ 
++	if (!IS_ERR(i2s->grf) && i2s->pins) {
++		regmap_read(i2s->regmap, I2S_TXCR, &val);
++		val &= I2S_TXCR_CSR_MASK;
++
++		switch (val) {
++		case I2S_CHN_4:
++			val = I2S_IO_4CH_OUT_6CH_IN;
++			break;
++		case I2S_CHN_6:
++			val = I2S_IO_6CH_OUT_4CH_IN;
++			break;
++		case I2S_CHN_8:
++			val = I2S_IO_8CH_OUT_2CH_IN;
++			break;
++		default:
++			val = I2S_IO_2CH_OUT_8CH_IN;
++			break;
++		}
++
++		val <<= i2s->pins->shift;
++		val |= (I2S_IO_DIRECTION_MASK << i2s->pins->shift) << 16;
++		regmap_write(i2s->grf, i2s->pins->reg_offset, val);
++	}
++
+ 	regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_TDL_MASK,
+ 			   I2S_DMACR_TDL(16));
+ 	regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_RDL_MASK,
+@@ -462,9 +495,23 @@ static const struct regmap_config rockchip_i2s_regmap_config = {
+ 	.cache_type = REGCACHE_FLAT,
+ };
+ 
++static const struct rk_i2s_pins rk3399_i2s_pins = {
++	.reg_offset = 0xe220,
++	.shift = 11,
++};
++
++static const struct of_device_id rockchip_i2s_match[] = {
++	{ .compatible = "rockchip,rk3066-i2s", },
++	{ .compatible = "rockchip,rk3188-i2s", },
++	{ .compatible = "rockchip,rk3288-i2s", },
++	{ .compatible = "rockchip,rk3399-i2s", .data = &rk3399_i2s_pins },
++	{},
++};
++
+ static int rockchip_i2s_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *node = pdev->dev.of_node;
++	const struct of_device_id *of_id;
+ 	struct rk_i2s_dev *i2s;
+ 	struct snd_soc_dai_driver *soc_dai;
+ 	struct resource *res;
+@@ -478,6 +525,17 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
++	i2s->dev = &pdev->dev;
++
++	i2s->grf = syscon_regmap_lookup_by_phandle(node, "rockchip,grf");
++	if (!IS_ERR(i2s->grf)) {
++		of_id = of_match_device(rockchip_i2s_match, &pdev->dev);
++		if (!of_id || !of_id->data)
++			return -EINVAL;
++
++		i2s->pins = of_id->data;
++	}
++
+ 	/* try to prepare related clocks */
+ 	i2s->hclk = devm_clk_get(&pdev->dev, "i2s_hclk");
+ 	if (IS_ERR(i2s->hclk)) {
+@@ -517,7 +575,6 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	i2s->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	i2s->capture_dma_data.maxburst = 4;
+ 
+-	i2s->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, i2s);
+ 
+ 	pm_runtime_enable(&pdev->dev);
+@@ -583,14 +640,6 @@ static int rockchip_i2s_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id rockchip_i2s_match[] = {
+-	{ .compatible = "rockchip,rk3066-i2s", },
+-	{ .compatible = "rockchip,rk3188-i2s", },
+-	{ .compatible = "rockchip,rk3288-i2s", },
+-	{ .compatible = "rockchip,rk3399-i2s", },
+-	{},
+-};
+-
+ static const struct dev_pm_ops rockchip_i2s_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(i2s_runtime_suspend, i2s_runtime_resume,
+ 			   NULL)
+diff --git a/sound/soc/rockchip/rockchip_i2s.h b/sound/soc/rockchip/rockchip_i2s.h
+index dc6e2c7..8e239d3 100644
+--- a/sound/soc/rockchip/rockchip_i2s.h
++++ b/sound/soc/rockchip/rockchip_i2s.h
+@@ -236,4 +236,11 @@ enum {
+ #define I2S_TXDR	(0x0024)
+ #define I2S_RXDR	(0x0028)
+ 
++/* io direction cfg register */
++#define I2S_IO_DIRECTION_MASK	(7)
++#define I2S_IO_8CH_OUT_2CH_IN	(0)
++#define I2S_IO_6CH_OUT_4CH_IN	(4)
++#define I2S_IO_4CH_OUT_6CH_IN	(6)
++#define I2S_IO_2CH_OUT_8CH_IN	(7)
++
+ #endif /* _ROCKCHIP_IIS_H */
 -- 
-Regards
-Phil Reid
+1.9.1
 
 
 --
