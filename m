@@ -1,310 +1,195 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 03/16] ARM: davinici: da8xx: move usb code to new file
-Date: Mon, 11 Apr 2016 14:25:15 +0530
-Message-ID: <570B6673.80108@ti.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-4-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-4-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: [PATCH v8 01/10] drm/hisilicon: Add device tree binding for hi6220 display subsystem
+Date: Mon, 11 Apr 2016 16:55:34 +0800
+Message-ID: <1460364943-76135-2-git-send-email-xinliang.liu@linaro.org>
+References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 25 March 2016 05:21 AM, David Lechner wrote:
-> We will be adding more da8xx-specific code for phy and clocks, so it will
-> be better to have this in a separate file. This way we don't have a bunch
-> of #ifdefs for all of the da8xx stuff.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Add ADE display controller binding doc.
+Add DesignWare DSI Host Controller v1.20a binding doc.
 
-Applied this patch with a couple of local changes.
+v8: None.
+v7: Acked by Rob Herring.
+v6:
+- Cleanup values part of reg and clocks properties.
+- Change "pclk_dsi" clock name to "pclk".
+v5:
+- Remove endpoint unit address of dsi output port.
+- Add "hisilicon,noc-syscon" property for ADE NOC QoS syscon.
+- Add "resets" property for ADE reset.
+v4:
+- Describe more specific of clocks and ports.
+- Fix indentation.
+v3:
+- Make ade as the drm master node.
+- Use assigned-clocks to set clock rate.
+- Use ports to connect display relavant nodes.
+v2:
+- Move dt binding docs to bindings/display/hisilicon directory.
 
-1) The subject line has a typo: s/davinici/davinci
-2) There are checkpatch warnings in new code that are coming from old 
-code. Even though this is just code movement, I prefer new code is free 
-of checkpatch warnings.
-
-Here is the updated patch.
-
-Thanks,
-Sekhar
-
----8<---
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Date: Thu, 24 Mar 2016 18:51:28 -0500
-Subject: [PATCH] ARM: davinci: da8xx: move usb code to new file
-
-We will be adding more da8xx-specific code for phy and clocks, so it will
-be better to have this in a separate file. This way we don't have a bunch
-of #ifdefs for all of the da8xx stuff.
-
-While at it, fix some checkpatch warnings coming from existing code.
-
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-[nsekhar-l0cyMroinI0@public.gmane.org: typo and checkpatch fixes]
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/mach-davinci/Makefile    |   4 +-
- arch/arm/mach-davinci/usb-da8xx.c | 124 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-davinci/usb.c       |  74 +----------------------
- 3 files changed, 127 insertions(+), 75 deletions(-)
- create mode 100644 arch/arm/mach-davinci/usb-da8xx.c
+ .../bindings/display/hisilicon/dw-dsi.txt          | 72 ++++++++++++++++++++++
+ .../bindings/display/hisilicon/hisi-ade.txt        | 64 +++++++++++++++++++
+ 2 files changed, 136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
 
-diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
-index 2e3464b8bab4..da4c336b4637 100644
---- a/arch/arm/mach-davinci/Makefile
-+++ b/arch/arm/mach-davinci/Makefile
-@@ -14,8 +14,8 @@ obj-$(CONFIG_ARCH_DAVINCI_DM644x)       += dm644x.o devices.o
- obj-$(CONFIG_ARCH_DAVINCI_DM355)        += dm355.o devices.o
- obj-$(CONFIG_ARCH_DAVINCI_DM646x)       += dm646x.o devices.o
- obj-$(CONFIG_ARCH_DAVINCI_DM365)	+= dm365.o devices.o
--obj-$(CONFIG_ARCH_DAVINCI_DA830)        += da830.o devices-da8xx.o
--obj-$(CONFIG_ARCH_DAVINCI_DA850)        += da850.o devices-da8xx.o
-+obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= da830.o devices-da8xx.o usb-da8xx.o
-+obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= da850.o devices-da8xx.o usb-da8xx.o
- 
- obj-$(CONFIG_AINTC)			+= irq.o
- obj-$(CONFIG_CP_INTC)			+= cp_intc.o
-diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+diff --git a/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
 new file mode 100644
-index 000000000000..0cab01f79825
+index 000000000000..d270bfe4e4e0
 --- /dev/null
-+++ b/arch/arm/mach-davinci/usb-da8xx.c
-@@ -0,0 +1,124 @@
-+/*
-+ * DA8xx USB
-+ */
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/usb/musb.h>
++++ b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+@@ -0,0 +1,72 @@
++Device-Tree bindings for DesignWare DSI Host Controller v1.20a driver
 +
-+#include <mach/common.h>
-+#include <mach/irqs.h>
-+#include <mach/cputype.h>
-+#include <mach/da8xx.h>
-+#include <linux/platform_data/usb-davinci.h>
++A DSI Host Controller resides in the middle of display controller and external
++HDMI converter or panel.
 +
-+#define DA8XX_USB0_BASE		0x01e00000
-+#define DA8XX_USB1_BASE		0x01e25000
++Required properties:
++- compatible: value should be "hisilicon,hi6220-dsi".
++- reg: physical base address and length of dsi controller's registers.
++- clocks: contains APB clock phandle + clock-specifier pair.
++- clock-names: should be "pclk".
++- ports: contains DSI controller input and output sub port.
++  The input port connects to ADE output port with the reg value "0".
++  The output port with the reg value "1", it could connect to panel or
++  any other bridge endpoints.
++  See Documentation/devicetree/bindings/graph.txt for more device graph info.
 +
-+#if IS_ENABLED(CONFIG_USB_MUSB_HDRC)
++A example of HiKey board hi6220 SoC and board specific DT entry:
++Example:
 +
-+static struct musb_hdrc_eps_bits musb_eps[] = {
-+	{ "ep1_tx", 8, },
-+	{ "ep1_rx", 8, },
-+	{ "ep2_tx", 8, },
-+	{ "ep2_rx", 8, },
-+	{ "ep3_tx", 5, },
-+	{ "ep3_rx", 5, },
-+	{ "ep4_tx", 5, },
-+	{ "ep4_rx", 5, },
-+};
++SoC specific:
++	dsi: dsi@f4107800 {
++		compatible = "hisilicon,hi6220-dsi";
++		reg = <0x0 0xf4107800 0x0 0x100>;
++		clocks = <&media_ctrl  HI6220_DSI_PCLK>;
++		clock-names = "pclk";
++		status = "disabled";
 +
-+static struct musb_hdrc_config musb_config = {
-+	.multipoint	= true,
-+	.dyn_fifo	= true,
-+	.soft_con	= true,
-+	.dma		= true,
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	.num_eps	= 5,
-+	.dma_channels	= 8,
-+	.ram_bits	= 10,
-+	.eps_bits	= musb_eps,
-+};
++			/* 0 for input port */
++			port@0 {
++				reg = <0>;
++				dsi_in: endpoint {
++					remote-endpoint = <&ade_out>;
++				};
++			};
++		};
++	};
 +
-+static struct musb_hdrc_platform_data usb_data = {
-+	/* OTG requires a Mini-AB connector */
-+	.mode           = MUSB_OTG,
-+	.clock		= "usb20",
-+	.config		= &musb_config,
-+};
 +
-+static struct resource da8xx_usb20_resources[] = {
-+	{
-+		.start		= DA8XX_USB0_BASE,
-+		.end		= DA8XX_USB0_BASE + SZ_64K - 1,
-+		.flags		= IORESOURCE_MEM,
-+	},
-+	{
-+		.start		= IRQ_DA8XX_USB_INT,
-+		.flags		= IORESOURCE_IRQ,
-+		.name		= "mc",
-+	},
-+};
++Board specific:
++	&dsi {
++		status = "ok";
 +
-+static u64 usb_dmamask = DMA_BIT_MASK(32);
++		ports {
++			/* 1 for output port */
++			port@1 {
++				reg = <1>;
 +
-+static struct platform_device usb_dev = {
-+	.name		= "musb-da8xx",
-+	.id             = -1,
-+	.dev = {
-+		.platform_data		= &usb_data,
-+		.dma_mask		= &usb_dmamask,
-+		.coherent_dma_mask      = DMA_BIT_MASK(32),
-+	},
-+	.resource	= da8xx_usb20_resources,
-+	.num_resources	= ARRAY_SIZE(da8xx_usb20_resources),
-+};
++				dsi_out0: endpoint@0 {
++					remote-endpoint = <&adv7533_in>;
++				};
++			};
++		};
++	};
 +
-+int __init da8xx_register_usb20(unsigned int mA, unsigned int potpgt)
-+{
-+	usb_data.power	= mA > 510 ? 255 : mA / 2;
-+	usb_data.potpgt = (potpgt + 1) / 2;
++	&i2c2 {
++		...
 +
-+	return platform_device_register(&usb_dev);
-+}
++		adv7533: adv7533@39 {
++			...
 +
-+#else
++			port {
++				adv7533_in: endpoint {
++					remote-endpoint = <&dsi_out0>;
++				};
++			};
++		};
++	};
 +
-+int __init da8xx_register_usb20(unsigned int mA, unsigned int potpgt)
-+{
-+	return 0;
-+}
+diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+new file mode 100644
+index 000000000000..38dc9d60eef8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+@@ -0,0 +1,64 @@
++Device-Tree bindings for hisilicon ADE display controller driver
 +
-+#endif  /* CONFIG_USB_MUSB_HDRC */
++ADE (Advanced Display Engine) is the display controller which grab image
++data from memory, do composition, do post image processing, generate RGB
++timing stream and transfer to DSI.
 +
-+static struct resource da8xx_usb11_resources[] = {
-+	[0] = {
-+		.start	= DA8XX_USB1_BASE,
-+		.end	= DA8XX_USB1_BASE + SZ_4K - 1,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start	= IRQ_DA8XX_IRQN,
-+		.end	= IRQ_DA8XX_IRQN,
-+		.flags	= IORESOURCE_IRQ,
-+	},
-+};
++Required properties:
++- compatible: value should be "hisilicon,hi6220-ade".
++- reg: physical base address and length of the ADE controller's registers.
++- hisilicon,noc-syscon: ADE NOC QoS syscon.
++- resets: The ADE reset controller node.
++- interrupt: the ldi vblank interrupt number used.
++- clocks: a list of phandle + clock-specifier pairs, one for each entry
++  in clock-names.
++- clock-names: should contain:
++  "clk_ade_core" for the ADE core clock.
++  "clk_codec_jpeg" for the media NOC QoS clock, which use the same clock with
++  jpeg codec.
++  "clk_ade_pix" for the ADE pixel clok.
++- assigned-clocks: Should contain "clk_ade_core" and "clk_codec_jpeg" clocks'
++  phandle + clock-specifier pairs.
++- assigned-clock-rates: clock rates, one for each entry in assigned-clocks.
++  The rate of "clk_ade_core" could be "360000000" or "180000000";
++  The rate of "clk_codec_jpeg" could be or less than "1440000000".
++  These rate values could be configured according to performance and power
++  consumption.
++- port: the output port. This contains one endpoint subnode, with its
++  remote-endpoint set to the phandle of the connected DSI input endpoint.
++  See Documentation/devicetree/bindings/graph.txt for more device graph info.
 +
-+static u64 da8xx_usb11_dma_mask = DMA_BIT_MASK(32);
++Optional properties:
++- dma-coherent: Present if dma operations are coherent.
 +
-+static struct platform_device da8xx_usb11_device = {
-+	.name		= "ohci",
-+	.id		= 0,
-+	.dev = {
-+		.dma_mask		= &da8xx_usb11_dma_mask,
-+		.coherent_dma_mask	= DMA_BIT_MASK(32),
-+	},
-+	.num_resources	= ARRAY_SIZE(da8xx_usb11_resources),
-+	.resource	= da8xx_usb11_resources,
-+};
 +
-+int __init da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata)
-+{
-+	da8xx_usb11_device.dev.platform_data = pdata;
-+	return platform_device_register(&da8xx_usb11_device);
-+}
-diff --git a/arch/arm/mach-davinci/usb.c b/arch/arm/mach-davinci/usb.c
-index b0a6b522575f..9980ddb7ae83 100644
---- a/arch/arm/mach-davinci/usb.c
-+++ b/arch/arm/mach-davinci/usb.c
-@@ -10,15 +10,12 @@
- #include <mach/common.h>
- #include <mach/irqs.h>
- #include <mach/cputype.h>
--#include <mach/da8xx.h>
- #include <linux/platform_data/usb-davinci.h>
- 
- #define DAVINCI_USB_OTG_BASE	0x01c64000
- 
--#define DA8XX_USB0_BASE 	0x01e00000
--#define DA8XX_USB1_BASE 	0x01e25000
--
- #if IS_ENABLED(CONFIG_USB_MUSB_HDRC)
++A example of HiKey board hi6220 SoC specific DT entry:
++Example:
 +
- static struct musb_hdrc_eps_bits musb_eps[] = {
- 	{ "ep1_tx", 8, },
- 	{ "ep1_rx", 8, },
-@@ -97,79 +94,10 @@ void __init davinci_setup_usb(unsigned mA, unsigned potpgt_ms)
- 	platform_device_register(&usb_dev);
- }
- 
--#ifdef CONFIG_ARCH_DAVINCI_DA8XX
--static struct resource da8xx_usb20_resources[] = {
--	{
--		.start		= DA8XX_USB0_BASE,
--		.end		= DA8XX_USB0_BASE + SZ_64K - 1,
--		.flags		= IORESOURCE_MEM,
--	},
--	{
--		.start		= IRQ_DA8XX_USB_INT,
--		.flags		= IORESOURCE_IRQ,
--		.name		= "mc",
--	},
--};
--
--int __init da8xx_register_usb20(unsigned mA, unsigned potpgt)
--{
--	usb_data.clock  = "usb20";
--	usb_data.power	= mA > 510 ? 255 : mA / 2;
--	usb_data.potpgt = (potpgt + 1) / 2;
--
--	usb_dev.resource = da8xx_usb20_resources;
--	usb_dev.num_resources = ARRAY_SIZE(da8xx_usb20_resources);
--	usb_dev.name = "musb-da8xx";
--
--	return platform_device_register(&usb_dev);
--}
--#endif	/* CONFIG_DAVINCI_DA8XX */
--
- #else
- 
- void __init davinci_setup_usb(unsigned mA, unsigned potpgt_ms)
- {
- }
- 
--#ifdef CONFIG_ARCH_DAVINCI_DA8XX
--int __init da8xx_register_usb20(unsigned mA, unsigned potpgt)
--{
--	return 0;
--}
--#endif
--
- #endif  /* CONFIG_USB_MUSB_HDRC */
--
--#ifdef	CONFIG_ARCH_DAVINCI_DA8XX
--static struct resource da8xx_usb11_resources[] = {
--	[0] = {
--		.start	= DA8XX_USB1_BASE,
--		.end	= DA8XX_USB1_BASE + SZ_4K - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--	[1] = {
--		.start	= IRQ_DA8XX_IRQN,
--		.end	= IRQ_DA8XX_IRQN,
--		.flags	= IORESOURCE_IRQ,
--	},
--};
--
--static u64 da8xx_usb11_dma_mask = DMA_BIT_MASK(32);
--
--static struct platform_device da8xx_usb11_device = {
--	.name		= "ohci",
--	.id		= 0,
--	.dev = {
--		.dma_mask		= &da8xx_usb11_dma_mask,
--		.coherent_dma_mask	= DMA_BIT_MASK(32),
--	},
--	.num_resources	= ARRAY_SIZE(da8xx_usb11_resources),
--	.resource	= da8xx_usb11_resources,
--};
--
--int __init da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata)
--{
--	da8xx_usb11_device.dev.platform_data = pdata;
--	return platform_device_register(&da8xx_usb11_device);
--}
--#endif	/* CONFIG_DAVINCI_DA8XX */
++	ade: ade@f4100000 {
++		compatible = "hisilicon,hi6220-ade";
++		reg = <0x0 0xf4100000 0x0 0x7800>;
++		reg-names = "ade_base";
++		hisilicon,noc-syscon = <&medianoc_ade>;
++		resets = <&media_ctrl MEDIA_ADE>;
++		interrupts = <0 115 4>; /* ldi interrupt */
++
++		clocks = <&media_ctrl HI6220_ADE_CORE>,
++			 <&media_ctrl HI6220_CODEC_JPEG>,
++			 <&media_ctrl HI6220_ADE_PIX_SRC>;
++		/*clock name*/
++		clock-names  = "clk_ade_core",
++			       "clk_codec_jpeg",
++			       "clk_ade_pix";
++
++		assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
++			<&media_ctrl HI6220_CODEC_JPEG>;
++		assigned-clock-rates = <360000000>, <288000000>;
++		dma-coherent;
++
++		port {
++			ade_out: endpoint {
++				remote-endpoint = <&dsi_in>;
++			};
++		};
++	};
 -- 
-2.6.3
+2.8.0
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
