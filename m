@@ -1,460 +1,139 @@
-From: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 02/10] drm/hisilicon: Add hisilicon kirin drm master driver
-Date: Mon, 11 Apr 2016 16:55:35 +0800
-Message-ID: <1460364943-76135-3-git-send-email-xinliang.liu@linaro.org>
-References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/5] irqdomain: Allow domain matching on irq_fwspec
+Date: Mon, 11 Apr 2016 09:57:51 +0100
+Message-ID: <1460365075-7316-2-git-send-email-marc.zyngier@arm.com>
+References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460364943-76135-1-git-send-email-xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1460365075-7316-1-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lijianhua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add kirin DRM master driver for hi6220 SoC which used in HiKey board.
-Add dumb buffer feature.
-Add prime dmabuf feature.
+When iterating over the irq domain list, we try to match a domain
+either by calling a match() function or by comparing a number
+of fields passed as parameters.
 
-v8: None.
-v7:
-- Add config.mutex protection when accessing mode_config.connector_list.
-- Clean up match data getting.
-v6: None.
-v5: None.
-v4: None.
-v3:
-- Move and rename all the files to kirin sub-directory.
-  So that we could separate different seires SoCs' driver.
-- Replace drm_platform_init, load, unload implementation.
-v2:
-- Remove abtraction layer.
+Both approaches are a bit restrictive:
+- match() is DT specific and only takes a device node
+- the fallback case only deals with the fwnode_handle
 
-Signed-off-by: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+It would be useful if we had a per-domain function that would
+actually perform the matching check on the whole of the
+irq_fwspec structure. This would allow for a domain to triage
+matching attempts that need to extend beyond the fwnode.
+
+Let's introduce irq_find_matching_fwspec(), which takes a full
+blown irq_fwspec structure, and call into a select() function
+implemented by the irqdomain. irq_find_matching_fwnode() is
+made a wrapper around irq_find_matching_fwspec in order to
+preserve compatibility.
+
+Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 ---
- drivers/gpu/drm/Kconfig                         |   2 +
- drivers/gpu/drm/Makefile                        |   1 +
- drivers/gpu/drm/hisilicon/Kconfig               |   5 +
- drivers/gpu/drm/hisilicon/Makefile              |   5 +
- drivers/gpu/drm/hisilicon/kirin/Kconfig         |   9 +
- drivers/gpu/drm/hisilicon/kirin/Makefile        |   3 +
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 309 ++++++++++++++++++++++++
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |  20 ++
- 8 files changed, 354 insertions(+)
- create mode 100644 drivers/gpu/drm/hisilicon/Kconfig
- create mode 100644 drivers/gpu/drm/hisilicon/Makefile
- create mode 100644 drivers/gpu/drm/hisilicon/kirin/Kconfig
- create mode 100644 drivers/gpu/drm/hisilicon/kirin/Makefile
- create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
- create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+ include/linux/irqdomain.h | 15 ++++++++++++++-
+ kernel/irq/irqdomain.c    | 19 ++++++++++---------
+ 2 files changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 84c587a1fa93..838f99acc2c0 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -289,3 +289,5 @@ source "drivers/gpu/drm/imx/Kconfig"
- source "drivers/gpu/drm/vc4/Kconfig"
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 2aed043..997373b 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -96,6 +96,8 @@ enum irq_domain_bus_token {
+ struct irq_domain_ops {
+ 	int (*match)(struct irq_domain *d, struct device_node *node,
+ 		     enum irq_domain_bus_token bus_token);
++	int (*select)(struct irq_domain *d, struct irq_fwspec *fwspec,
++		      enum irq_domain_bus_token bus_token);
+ 	int (*map)(struct irq_domain *d, unsigned int virq, irq_hw_number_t hw);
+ 	void (*unmap)(struct irq_domain *d, unsigned int virq);
+ 	int (*xlate)(struct irq_domain *d, struct device_node *node,
+@@ -211,7 +213,7 @@ struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
+ 					 irq_hw_number_t first_hwirq,
+ 					 const struct irq_domain_ops *ops,
+ 					 void *host_data);
+-extern struct irq_domain *irq_find_matching_fwnode(struct fwnode_handle *fwnode,
++extern struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+ 						   enum irq_domain_bus_token bus_token);
+ extern void irq_set_default_host(struct irq_domain *host);
+ extern int irq_domain_alloc_descs(int virq, unsigned int nr_irqs,
+@@ -227,6 +229,17 @@ static inline bool is_fwnode_irqchip(struct fwnode_handle *fwnode)
+ 	return fwnode && fwnode->type == FWNODE_IRQCHIP;
+ }
  
- source "drivers/gpu/drm/etnaviv/Kconfig"
-+
-+source "drivers/gpu/drm/hisilicon/Kconfig"
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 6eb94fc561dc..327d29638137 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -78,3 +78,4 @@ obj-y			+= panel/
- obj-y			+= bridge/
- obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
- obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
-+obj-y			+= hisilicon/
-diff --git a/drivers/gpu/drm/hisilicon/Kconfig b/drivers/gpu/drm/hisilicon/Kconfig
-new file mode 100644
-index 000000000000..558c61b1b8e8
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/Kconfig
-@@ -0,0 +1,5 @@
-+#
-+# hisilicon drm device configuration.
-+# Please keep this list sorted alphabetically
-+
-+source "drivers/gpu/drm/hisilicon/kirin/Kconfig"
-diff --git a/drivers/gpu/drm/hisilicon/Makefile b/drivers/gpu/drm/hisilicon/Makefile
-new file mode 100644
-index 000000000000..e3f6d493c996
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/Makefile
-@@ -0,0 +1,5 @@
-+#
-+# Makefile for hisilicon drm drivers.
-+# Please keep this list sorted alphabetically
-+
-+obj-$(CONFIG_DRM_HISI_KIRIN) += kirin/
-diff --git a/drivers/gpu/drm/hisilicon/kirin/Kconfig b/drivers/gpu/drm/hisilicon/kirin/Kconfig
-new file mode 100644
-index 000000000000..3ac4b8edeac1
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/kirin/Kconfig
-@@ -0,0 +1,9 @@
-+config DRM_HISI_KIRIN
-+	tristate "DRM Support for Hisilicon Kirin series SoCs Platform"
-+	depends on DRM
-+	select DRM_KMS_HELPER
-+	select DRM_GEM_CMA_HELPER
-+	select DRM_KMS_CMA_HELPER
-+	help
-+	  Choose this option if you have a hisilicon Kirin chipsets(hi6220).
-+	  If M is selected the module will be called kirin-drm.
-diff --git a/drivers/gpu/drm/hisilicon/kirin/Makefile b/drivers/gpu/drm/hisilicon/kirin/Makefile
-new file mode 100644
-index 000000000000..cb346de47d48
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/kirin/Makefile
-@@ -0,0 +1,3 @@
-+kirin-drm-y := kirin_drm_drv.o
-+
-+obj-$(CONFIG_DRM_HISI_KIRIN) += kirin-drm.o
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-new file mode 100644
-index 000000000000..976c9b1a3fd3
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-@@ -0,0 +1,309 @@
-+/*
-+ * Hisilicon Kirin SoCs drm master driver
-+ *
-+ * Copyright (c) 2016 Linaro Limited.
-+ * Copyright (c) 2014-2016 Hisilicon Limited.
-+ *
-+ * Author:
-+ *	Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-+ *	Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *	Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/of_platform.h>
-+#include <linux/component.h>
-+#include <linux/of_graph.h>
-+
-+#include <drm/drmP.h>
-+#include <drm/drm_gem_cma_helper.h>
-+#include <drm/drm_fb_cma_helper.h>
-+#include <drm/drm_atomic_helper.h>
-+
-+#include "kirin_drm_drv.h"
-+
-+static struct kirin_dc_ops *dc_ops;
-+
-+static int kirin_drm_kms_cleanup(struct drm_device *dev)
++static inline
++struct irq_domain *irq_find_matching_fwnode(struct fwnode_handle *fwnode,
++					    enum irq_domain_bus_token bus_token)
 +{
-+	dc_ops->cleanup(dev);
-+	drm_mode_config_cleanup(dev);
++	struct irq_fwspec fwspec = {
++		.fwnode = fwnode,
++	};
 +
-+	return 0;
++	return irq_find_matching_fwspec(&fwspec, bus_token);
 +}
 +
-+static const struct drm_mode_config_funcs kirin_drm_mode_config_funcs = {
-+	.fb_create = drm_fb_cma_create,
-+	.atomic_check = drm_atomic_helper_check,
-+	.atomic_commit = drm_atomic_helper_commit,
-+};
-+
-+static void kirin_drm_mode_config_init(struct drm_device *dev)
-+{
-+	dev->mode_config.min_width = 0;
-+	dev->mode_config.min_height = 0;
-+
-+	dev->mode_config.max_width = 2048;
-+	dev->mode_config.max_height = 2048;
-+
-+	dev->mode_config.funcs = &kirin_drm_mode_config_funcs;
-+}
-+
-+static int kirin_drm_kms_init(struct drm_device *dev)
-+{
-+	int ret;
-+
-+	dev_set_drvdata(dev->dev, dev);
-+
-+	/* dev->mode_config initialization */
-+	drm_mode_config_init(dev);
-+	kirin_drm_mode_config_init(dev);
-+
-+	/* display controller init */
-+	ret = dc_ops->init(dev);
-+	if (ret)
-+		goto err_mode_config_cleanup;
-+
-+	/* bind and init sub drivers */
-+	ret = component_bind_all(dev->dev, dev);
-+	if (ret) {
-+		DRM_ERROR("failed to bind all component.\n");
-+		goto err_dc_cleanup;
-+	}
-+
-+	/* reset all the states of crtc/plane/encoder/connector */
-+	drm_mode_config_reset(dev);
-+
-+	return 0;
-+
-+err_dc_cleanup:
-+	dc_ops->cleanup(dev);
-+err_mode_config_cleanup:
-+	drm_mode_config_cleanup(dev);
-+
-+	return ret;
-+}
-+
-+static const struct file_operations kirin_drm_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= drm_open,
-+	.release	= drm_release,
-+	.unlocked_ioctl	= drm_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= drm_compat_ioctl,
-+#endif
-+	.poll		= drm_poll,
-+	.read		= drm_read,
-+	.llseek		= no_llseek,
-+	.mmap		= drm_gem_cma_mmap,
-+};
-+
-+static int kirin_gem_cma_dumb_create(struct drm_file *file,
-+				     struct drm_device *dev,
-+				     struct drm_mode_create_dumb *args)
-+{
-+	return drm_gem_cma_dumb_create_internal(file, dev, args);
-+}
-+
-+static struct drm_driver kirin_drm_driver = {
-+	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
-+				  DRIVER_ATOMIC,
-+	.fops			= &kirin_drm_fops,
-+	.set_busid		= drm_platform_set_busid,
-+
-+	.gem_free_object	= drm_gem_cma_free_object,
-+	.gem_vm_ops		= &drm_gem_cma_vm_ops,
-+	.dumb_create		= kirin_gem_cma_dumb_create,
-+	.dumb_map_offset	= drm_gem_cma_dumb_map_offset,
-+	.dumb_destroy		= drm_gem_dumb_destroy,
-+
-+	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
-+	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
-+	.gem_prime_export	= drm_gem_prime_export,
-+	.gem_prime_import	= drm_gem_prime_import,
-+	.gem_prime_get_sg_table = drm_gem_cma_prime_get_sg_table,
-+	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
-+	.gem_prime_vmap		= drm_gem_cma_prime_vmap,
-+	.gem_prime_vunmap	= drm_gem_cma_prime_vunmap,
-+	.gem_prime_mmap		= drm_gem_cma_prime_mmap,
-+
-+	.name			= "kirin",
-+	.desc			= "Hisilicon Kirin SoCs' DRM Driver",
-+	.date			= "20150718",
-+	.major			= 1,
-+	.minor			= 0,
-+};
-+
-+static int compare_of(struct device *dev, void *data)
-+{
-+	return dev->of_node == data;
-+}
-+
-+static int kirin_drm_connectors_register(struct drm_device *dev)
-+{
-+	struct drm_connector *connector;
-+	struct drm_connector *failed_connector;
-+	int ret;
-+
-+	mutex_lock(&dev->mode_config.mutex);
-+	drm_for_each_connector(connector, dev) {
-+		ret = drm_connector_register(connector);
-+		if (ret) {
-+			failed_connector = connector;
-+			goto err;
-+		}
-+	}
-+	mutex_unlock(&dev->mode_config.mutex);
-+
-+	return 0;
-+
-+err:
-+	drm_for_each_connector(connector, dev) {
-+		if (failed_connector == connector)
-+			break;
-+		drm_connector_unregister(connector);
-+	}
-+	mutex_unlock(&dev->mode_config.mutex);
-+
-+	return ret;
-+}
-+
-+static int kirin_drm_bind(struct device *dev)
-+{
-+	struct drm_driver *driver = &kirin_drm_driver;
-+	struct drm_device *drm_dev;
-+	int ret;
-+
-+	drm_dev = drm_dev_alloc(driver, dev);
-+	if (!drm_dev)
-+		return -ENOMEM;
-+
-+	drm_dev->platformdev = to_platform_device(dev);
-+
-+	ret = kirin_drm_kms_init(drm_dev);
-+	if (ret)
-+		goto err_drm_dev_unref;
-+
-+	ret = drm_dev_register(drm_dev, 0);
-+	if (ret)
-+		goto err_kms_cleanup;
-+
-+	/* connectors should be registered after drm device register */
-+	ret = kirin_drm_connectors_register(drm_dev);
-+	if (ret)
-+		goto err_drm_dev_unregister;
-+
-+	DRM_INFO("Initialized %s %d.%d.%d %s on minor %d\n",
-+		 driver->name, driver->major, driver->minor, driver->patchlevel,
-+		 driver->date, drm_dev->primary->index);
-+
-+	return 0;
-+
-+err_drm_dev_unregister:
-+	drm_dev_unregister(drm_dev);
-+err_kms_cleanup:
-+	kirin_drm_kms_cleanup(drm_dev);
-+err_drm_dev_unref:
-+	drm_dev_unref(drm_dev);
-+
-+	return ret;
-+}
-+
-+static void kirin_drm_unbind(struct device *dev)
-+{
-+	drm_put_dev(dev_get_drvdata(dev));
-+}
-+
-+static const struct component_master_ops kirin_drm_ops = {
-+	.bind = kirin_drm_bind,
-+	.unbind = kirin_drm_unbind,
-+};
-+
-+static struct device_node *kirin_get_remote_node(struct device_node *np)
-+{
-+	struct device_node *endpoint, *remote;
-+
-+	/* get the first endpoint, in our case only one remote node
-+	 * is connected to display controller.
-+	 */
-+	endpoint = of_graph_get_next_endpoint(np, NULL);
-+	if (!endpoint) {
-+		DRM_ERROR("no valid endpoint node\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+	of_node_put(endpoint);
-+
-+	remote = of_graph_get_remote_port_parent(endpoint);
-+	if (!remote) {
-+		DRM_ERROR("no valid remote node\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+	of_node_put(remote);
-+
-+	if (!of_device_is_available(remote)) {
-+		DRM_ERROR("not available for remote node\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	return remote;
-+}
-+
-+static int kirin_drm_platform_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct component_match *match = NULL;
-+	struct device_node *remote;
-+
-+	dc_ops = (struct kirin_dc_ops *)of_device_get_match_data(dev);
-+	if (!dc_ops) {
-+		DRM_ERROR("failed to get dt id data\n");
-+		return -EINVAL;
-+	}
-+
-+	remote = kirin_get_remote_node(np);
-+	if (IS_ERR(remote))
-+		return PTR_ERR(remote);
-+
-+	component_match_add(dev, &match, compare_of, remote);
-+
-+	return component_master_add_with_match(dev, &kirin_drm_ops, match);
-+
-+	return 0;
-+}
-+
-+static int kirin_drm_platform_remove(struct platform_device *pdev)
-+{
-+	component_master_del(&pdev->dev, &kirin_drm_ops);
-+	dc_ops = NULL;
-+	return 0;
-+}
-+
-+static const struct of_device_id kirin_drm_dt_ids[] = {
-+	{ .compatible = "hisilicon,hi6220-ade",
-+	  .data = &ade_dc_ops,
-+	},
-+	{ /* end node */ },
-+};
-+MODULE_DEVICE_TABLE(of, kirin_drm_dt_ids);
-+
-+static struct platform_driver kirin_drm_platform_driver = {
-+	.probe = kirin_drm_platform_probe,
-+	.remove = kirin_drm_platform_remove,
-+	.driver = {
-+		.name = "kirin-drm",
-+		.of_match_table = kirin_drm_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(kirin_drm_platform_driver);
-+
-+MODULE_AUTHOR("Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
-+MODULE_AUTHOR("Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>");
-+MODULE_AUTHOR("Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>");
-+MODULE_DESCRIPTION("hisilicon Kirin SoCs' DRM master driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-new file mode 100644
-index 000000000000..75e9d82356d4
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-@@ -0,0 +1,20 @@
-+/*
-+ * Copyright (c) 2016 Linaro Limited.
-+ * Copyright (c) 2014-2016 Hisilicon Limited.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#ifndef __KIRIN_DRM_DRV_H__
-+#define __KIRIN_DRM_DRV_H__
-+
-+/* display controller init/cleanup ops */
-+struct kirin_dc_ops {
-+	int (*init)(struct drm_device *dev);
-+	void (*cleanup)(struct drm_device *dev);
-+};
-+
-+#endif /* __KIRIN_DRM_DRV_H__ */
+ static inline struct irq_domain *irq_find_matching_host(struct device_node *node,
+ 							enum irq_domain_bus_token bus_token)
+ {
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 3a519a0..503c5b9 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -243,14 +243,15 @@ struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
+ EXPORT_SYMBOL_GPL(irq_domain_add_legacy);
+ 
+ /**
+- * irq_find_matching_fwnode() - Locates a domain for a given fwnode
+- * @fwnode: FW descriptor of the interrupt controller
++ * irq_find_matching_fwspec() - Locates a domain for a given fwspec
++ * @fwspec: FW specifier for an interrupt
+  * @bus_token: domain-specific data
+  */
+-struct irq_domain *irq_find_matching_fwnode(struct fwnode_handle *fwnode,
++struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+ 					    enum irq_domain_bus_token bus_token)
+ {
+ 	struct irq_domain *h, *found = NULL;
++	struct fwnode_handle *fwnode = fwspec->fwnode;
+ 	int rc;
+ 
+ 	/* We might want to match the legacy controller last since
+@@ -264,7 +265,9 @@ struct irq_domain *irq_find_matching_fwnode(struct fwnode_handle *fwnode,
+ 	 */
+ 	mutex_lock(&irq_domain_mutex);
+ 	list_for_each_entry(h, &irq_domain_list, link) {
+-		if (h->ops->match)
++		if (h->ops->select && fwspec->param_count)
++			rc = h->ops->select(h, fwspec, bus_token);
++		else if (h->ops->match)
+ 			rc = h->ops->match(h, to_of_node(fwnode), bus_token);
+ 		else
+ 			rc = ((fwnode != NULL) && (h->fwnode == fwnode) &&
+@@ -279,7 +282,7 @@ struct irq_domain *irq_find_matching_fwnode(struct fwnode_handle *fwnode,
+ 	mutex_unlock(&irq_domain_mutex);
+ 	return found;
+ }
+-EXPORT_SYMBOL_GPL(irq_find_matching_fwnode);
++EXPORT_SYMBOL_GPL(irq_find_matching_fwspec);
+ 
+ /**
+  * irq_set_default_host() - Set a "default" irq domain
+@@ -574,11 +577,9 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+ 	int virq;
+ 
+ 	if (fwspec->fwnode) {
+-		domain = irq_find_matching_fwnode(fwspec->fwnode,
+-						  DOMAIN_BUS_WIRED);
++		domain = irq_find_matching_fwspec(fwspec, DOMAIN_BUS_WIRED);
+ 		if (!domain)
+-			domain = irq_find_matching_fwnode(fwspec->fwnode,
+-							  DOMAIN_BUS_ANY);
++			domain = irq_find_matching_fwspec(fwspec, DOMAIN_BUS_ANY);
+ 	} else {
+ 		domain = irq_default_domain;
+ 	}
 -- 
-2.8.0
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
