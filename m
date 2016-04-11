@@ -1,67 +1,57 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 1/6] ASoC: davinci-mcbsp: add binding for
- McBSP
-Date: Mon, 11 Apr 2016 11:11:18 +0300
-Message-ID: <570B5C26.9080402@ti.com>
-References: <1459948893-4206-1-git-send-email-petr@barix.com>
- <1459948893-4206-2-git-send-email-petr@barix.com> <570661A6.6020804@ti.com>
- <570778CC.1000600@barix.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH 04/30] ARM: OMAP2+: hwmod: use new ti_clk_get API to search for clock handles
+Date: Mon, 11 Apr 2016 11:18:55 +0300
+Message-ID: <1460362761-4842-5-git-send-email-t-kristo@ti.com>
+References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <570778CC.1000600@barix.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Petr Kulhavy <petr@barix.com>, nsekhar@ti.com, khilman@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, tony@atomide.com, paul@pwsan.com, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/16 12:24, Petr Kulhavy wrote:
-> On 07.04.2016 15:33, Peter Ujfalusi wrote:
-> =
+The new API avoids the need to add clock aliases for most of the clocks,
+should use of it is preferred. Many of the existing clock aliases are
+only created because of hwmod data.
 
->> Given that the driver is actually a driver for daVinci ASP and it comple=
-tely
->> ignores registers introduced when the IP is renamed from ASP to McBSP,
->> should we say something about this? That the ASP is compatible or subset=
- of
->> McBSP (w/o the multichannel support) and these bindings could be used for
->> ASP, with adding new compatible? Or just leave that out and bother with =
-it
->> when we have such a device booting with DT? =
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ arch/arm/mach-omap2/omap_hwmod.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> Hi Peter,
-> =
+diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+index b6d62e4..c2f6811 100644
+--- a/arch/arm/mach-omap2/omap_hwmod.c
++++ b/arch/arm/mach-omap2/omap_hwmod.c
+@@ -786,7 +786,7 @@ static int _init_main_clk(struct omap_hwmod *oh)
+ 	if (!oh->main_clk)
+ 		return 0;
+ 
+-	oh->_clk = clk_get(NULL, oh->main_clk);
++	oh->_clk = ti_clk_get(oh->main_clk);
+ 	if (IS_ERR(oh->_clk)) {
+ 		pr_warn("omap_hwmod: %s: cannot clk_get main_clk %s\n",
+ 			oh->name, oh->main_clk);
+@@ -831,7 +831,7 @@ static int _init_interface_clks(struct omap_hwmod *oh)
+ 		if (!os->clk)
+ 			continue;
+ 
+-		c = clk_get(NULL, os->clk);
++		c = ti_clk_get(os->clk);
+ 		if (IS_ERR(c)) {
+ 			pr_warn("omap_hwmod: %s: cannot clk_get interface_clk %s\n",
+ 				oh->name, os->clk);
+@@ -868,7 +868,7 @@ static int _init_opt_clks(struct omap_hwmod *oh)
+ 	int ret = 0;
+ 
+ 	for (i = oh->opt_clks_cnt, oc = oh->opt_clks; i > 0; i--, oc++) {
+-		c = clk_get(NULL, oc->clk);
++		c = ti_clk_get(oc->clk);
+ 		if (IS_ERR(c)) {
+ 			pr_warn("omap_hwmod: %s: cannot clk_get opt_clk %s\n",
+ 				oh->name, oc->clk);
+-- 
+1.7.9.5
 
-> what do you think about the following formulation?
-> =
-
-> -- =
-
-> This binding describes the "Multi-channel Buffered Serial Port" (McBSP)
-> audio interface found in some TI DaVinci processors like the OMAP-L138 or=
- AM180x.
-> =
-
-> Some older DaVinci processors like the DM6446 or DA355 use a simpler vers=
-ion of
-> the digital audio interface, called ASP. This driver can support them as =
-well if
-> the appropriate compatible string is added.
-
-Hrm, I don't think we should mention the ASP, it looks out of context.
-The ASP will have compatible of ti,dm644x-asp or something similar. We shou=
-ld
-worry about this when the time comes.
-
--- =
-
-P=E9ter
