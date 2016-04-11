@@ -1,56 +1,74 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] bmips: add device tree example for BCM6358
-Date: Mon, 11 Apr 2016 14:33:06 -0500
-Message-ID: <20160411193305.GA14080@rob-hp-laptop>
-References: <1459757353-14683-1-git-send-email-noltari@gmail.com>
- <1460199408-18738-1-git-send-email-noltari@gmail.com>
- <1460199408-18738-2-git-send-email-noltari@gmail.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [RESEND PATCH v9] mtd: spi-nor: add hisilicon spi-nor flash controller
+ driver
+Date: Mon, 11 Apr 2016 21:21:23 +0200
+Message-ID: <570BF933.2000607@denx.de>
+References: <1458979861-3619-1-git-send-email-xuejiancheng@huawei.com> <56F73BC9.5000300@gmail.com> <56F8F630.5050008@huawei.com> <20160404064418.GC13995@localhost> <5705C17F.9030904@huawei.com> <5705C5E2.6070206@denx.de> <57076B26.7030700@huawei.com> <5707821F.4020300@denx.de> <570AFDAF.9050607@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460199408-18738-2-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <570AFDAF.9050607-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, furquan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 09, 2016 at 12:56:48PM +0200, =C1lvaro Fern=E1ndez Rojas wr=
-ote:
-> This adds a device tree example for SFR Neufbox4 (Sercomm version), w=
-hich
-> also serves as a real example for brcm,bcm6358-leds.
->=20
-> Signed-off-by: =C1lvaro Fern=E1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  v5: more device tree improvements
->   - There is just ohci/ehci node.
->   - Avoid using underscores in node names.
->   - Use interrupt-controller for cpu_intc.
->   - Rename uart aliases to serial.
->  v4: Device tree improvements:
->   - Switch to native-endian for syscon.
->   - Switch to bcm6345-l1-intc interrupt controller.
->   - Add ehci and ohci nodes.
->  v3: Device tree fixes
->   - Use interrupt-controller instead of periph_intc.
->   - Use led@# instead of naming the LEDs.
->  v2: Remove led0 alias and use stdout-path only
->=20
->  .../devicetree/bindings/mips/brcm/soc.txt          |   2 +-
->  arch/mips/bmips/Kconfig                            |   4 +
->  arch/mips/boot/dts/brcm/Makefile                   |   2 +
->  arch/mips/boot/dts/brcm/bcm6358.dtsi               | 130 +++++++++++=
-++++++++++
->  arch/mips/boot/dts/brcm/bcm96358nb4ser.dts         |  46 ++++++++
->  5 files changed, 183 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/boot/dts/brcm/bcm6358.dtsi
->  create mode 100644 arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
+On 04/11/2016 03:28 AM, Jiancheng Xue wrote:
+> Hi,
+> 
+> On 2016/4/8 18:04, Marek Vasut wrote:
+>> On 04/08/2016 10:26 AM, Jiancheng Xue wrote:
+>>> Hi,
+>>>
+>>> On 2016/4/7 10:28, Marek Vasut wrote:
+>>>> On 04/07/2016 04:10 AM, Jiancheng Xue wrote:
+>>>>> Hi Brian,
+>>>>>    Thank you very much for your comments. I'll fix these issues in next version.
+>>>>> In addition, for easy understanding I'd like to rewrite hisi_spi_nor_write and
+>>>>> hisi_spi_nor_read. Your comments on these modifications will be highly appreciated.
+>>>>
+>>>> Would you please stop top-posting ? It rubs some people the wrong way.
+>>>>
+>>> I feel very sorry about that. I have read the etiquette and won't make the same mistake again.
+>>>
+>>>>> static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
+>>>>> 		size_t *retlen, u_char *read_buf)
+>>>>> {
+>>>>> 	struct hifmc_priv *priv = nor->priv;
+>>>>> 	struct hifmc_host *host = priv->host;
+>>>>> 	int i;
+>>>>>
+>>>>> 	/* read all bytes in only one time */
+>>>>> 	if (len <= HIFMC_DMA_MAX_LEN) {
+>>>>> 		hisi_spi_nor_dma_transfer(nor, from, host->dma_buffer,
+>>>>> 				len, FMC_OP_READ);
+>>>>> 		memcpy(read_buf, host->buffer, len);
+>>>>
+>>>> Is all the ad-hoc memcpying necessary? I think you can use
+>>>> dma_map_single() and co to obtain DMAble memory for your
+>>>> controller's use and then you can probably get rid of most
+>>>> of this stuff.
+>>>>
+>>> Considering read_buf >= high_mem case, I think it is also complicated to use dma_map_*
+>>> and the DMA buffer allocated by the driver is still needed. But I am not sure about
+>>> this. Please let me know if I am wrong. Thank you!
+>>
+>> Does your controller/DMA have a limitation where it's buffers must be in
+>> the bottom 4GiB range ? The DMA framework should be able to take care of
+>> such platform limitations.
+>>
+> When read_buf is allocated by vmalloc, the underlying physical memory may be not contiguous.
+> In this case, dma_map_single can't be used directly. I think inner DMA buffer and memcpy are still
+> needed. Am I right?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Take a look at drivers/spi/spi-mxs.c , look for "vmalloc" , does that
+solution help you in any way ?
+
+-- 
+Best regards,
+Marek Vasut
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
