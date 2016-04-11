@@ -1,68 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v5 6/6] ARM: dts: DRA7: Add dt nodes for PWMSS
-Date: Mon, 11 Apr 2016 13:21:12 -0700
-Message-ID: <20160411202112.GE5995@atomide.com>
-References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
- <1457400224-24797-7-git-send-email-fcooper@ti.com>
- <20160317151147.GA29802@rob-hp-laptop>
- <56EAD315.1030307@ti.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 08/10] devicetree: Add Trusted Computing
+ Group to vendor-prefix.txt
+Date: Mon, 11 Apr 2016 14:21:19 -0600
+Message-ID: <20160411202119.GA3357@obsidianresearch.com>
+References: <1460323386-16892-1-git-send-email-christophe-h.ricard@st.com>
+	<1460323386-16892-9-git-send-email-christophe-h.ricard@st.com>
+	<20160411200600.GA23902@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56EAD315.1030307@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Franklin S Cooper Jr." <fcooper@ti.com>
-Cc: Rob Herring <robh@kernel.org>, thierry.reding@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, paul@pwsan.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vigneshr@ti.com
+In-Reply-To: <20160411200600.GA23902@rob-hp-laptop>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Franklin S Cooper Jr. <fcooper@ti.com> [160317 08:55]:
+On Mon, Apr 11, 2016 at 03:06:00PM -0500, Rob Herring wrote:
+> On Sun, Apr 10, 2016 at 11:23:04PM +0200, Christophe Ricard wrote:
+> > Add missing vendor to vendor-prefix.txt.
+> > 
+> > Trusted Computing Group design common specifications for
+> > TPM (Trusted Platform Module) vendors.
+> > TCG designates a TPM answering to a public specification.
 > 
-> 
-> On 03/17/2016 10:11 AM, Rob Herring wrote:
-> > On Mon, Mar 07, 2016 at 07:23:44PM -0600, Franklin S Cooper Jr wrote:
-> >> From: Vignesh R <vigneshr@ti.com>
-> >>
-> >> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
-> >> for dt bindings.
-> >>
-> >> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> >> [fcooper@ti.com: Add eCAP and use updated bindings for PWMSS and ePWM]
-> >> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> >> ---
-> >> Version 5 changes:
-> >> Add DT node for eCAP and update eCAP binding documentation
-> >>
-> >> Version 4 changes:
-> >> Updated link to the latest documentation
-> >>
-> >>  .../devicetree/bindings/pwm/pwm-tiecap.txt         |  9 +++
-> >>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |  9 +++
-> >>  .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 15 +++-
-> >>  arch/arm/boot/dts/dra7.dtsi                        | 84 ++++++++++++++++++++++
-> >>  4 files changed, 116 insertions(+), 1 deletion(-)
-> >
-> >> +			ehrpwm1: pwm@48440200 {
-> >> +				compatible = "ti,dra7xx-ehrpwm",
-> >> +					     "ti,am33xx-ehrpwm";
-> >> +				#pwm-cells = <3>;
-> >> +				reg = <0x48440200 0x80>;
-> >> +				clocks = <&ehrpwm1_tbclk>;
-> >> +				clock-names = "tbclk";
-> >> +				status = "disabled";
-> >> +			};
-> >> +
-> >> +			ecap1: ecap@48440100 {
-> > This also is a PWM? Then it should also be pwm@...
-> 
-> The enhanced capture module primary purpose is to measure
-> time between external signals which is called capture mode.
-> It also has a PWM mode. So I wouldn't recommend generalizing
-> the entire node to pwm.
+> Not sure this should be a vendor prefix. Does TCG actually make h/w?
 
-So is this patch safe for me to apply now or do we need more
-changes?
+They define the common multi-vendor register API, similar to AHCI.
 
-Regards,
+I would imagine compatible tags like
 
-Tony
+ compatible = 'winbond,xxxx','tcg,tis_iomap';
+
+Since there actually is a legal entity administering the spec (unlike
+AHCI?) 'tgc,' seems like a better prefix to me than 'generic-' ?
+
+Jason
+
+------------------------------------------------------------------------------
+Find and fix application performance issues faster with Applications Manager
+Applications Manager provides deep performance insights into multiple tiers of
+your business applications. It resolves application problems quickly and
+reduces your MTTR. Get your free trial!
+https://ad.doubleclick.net/ddm/clk/302982198;130105516;z
