@@ -1,126 +1,62 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH] Axi-usb: Add support for 64-bit addressing.
-Date: Mon, 11 Apr 2016 13:11:46 +0530
-Message-ID: <1460360506-14692-1-git-send-email-navam@xilinx.com>
+From: gpramod@codeaurora.org
+Subject: Re: [PATCH v2 2/5] dmaengine: qcom: bam_dma: clear BAM interrupt only
+ if it is rised
+Date: Mon, 11 Apr 2016 13:21:06 +0530
+Message-ID: <a31a31ec563059899440ea512a34aa19@codeaurora.org>
+References: <1459896982-30171-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1459896982-30171-3-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1459896982-30171-3-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vinod.koul@intel.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the driver to support 64-bit DMA
-addressing.
+On 2016-04-06 04:26, Stanimir Varbanov wrote:
+> Currently we write BAM_IRQ_CLR register with zero even when no
+> BAM_IRQ occured. This write has some bad side effects when the
+> BAM instance is for the crypto engine. In case of crypto engine
+> some of the BAM registers are xPU protected and they cannot be
+> controlled by the driver.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Reviewed-by: Andy Gross <andy.gross@linaro.org>
+> ---
+>  drivers/dma/qcom/bam_dma.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
 
-Signed-off-by: Nava kishore Manne <navam@xilinx.com>
----
- .../devicetree/bindings/usb/udc-xilinx.txt         |  3 +-
- drivers/usb/gadget/udc/udc-xilinx.c                | 38 ++++++++++++++++++++--
- 2 files changed, 37 insertions(+), 4 deletions(-)
+Tested-by: Pramod Gurav <gpramod@codeaurora.org>
 
-diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-index 47b4e39..d417872 100644
---- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-+++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-@@ -7,12 +7,13 @@ Required properties:
- - interrupts		: Should contain single irq line of USB2 device
- 			  controller
- - xlnx,has-builtin-dma	: if DMA is included
--
-+- xlnx,addrwidth       : Should be the dma addressing size in bits(ex: 40 bits).
- Example:
-  		axi-usb2-device@42e00000 {
-                         compatible = "xlnx,usb2-device-4.00.a";
-                         interrupts = <0x0 0x39 0x1>;
-                         reg = <0x42e00000 0x10000>;
-                         xlnx,has-builtin-dma;
-+			xlnx,addrwidth = <0x28>;
-                 };
- 
-diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
-index 1cbb0ac..eeb1401 100644
---- a/drivers/usb/gadget/udc/udc-xilinx.c
-+++ b/drivers/usb/gadget/udc/udc-xilinx.c
-@@ -47,6 +47,15 @@
- #define XUSB_DMA_LENGTH_OFFSET		0x0210	/* DMA Length Register */
- #define XUSB_DMA_STATUS_OFFSET		0x0214	/* DMA Status Register */
- 
-+/* DMA source Address Reg for LSB */
-+#define XUSB_DMA_DSAR_ADDR_OFFSET_LSB   0x0308
-+/* DMA source Address Reg for MSB */
-+#define XUSB_DMA_DSAR_ADDR_OFFSET_MSB   0x030C
-+/* DMA destination Addr Reg LSB */
-+#define XUSB_DMA_DDAR_ADDR_OFFSET_LSB   0x0310
-+/* DMA destination Addr Reg MSB */
-+#define XUSB_DMA_DDAR_ADDR_OFFSET_MSB   0x0314
-+
- /* Endpoint Configuration Space offsets */
- #define XUSB_EP_CFGSTATUS_OFFSET	0x00	/* Endpoint Config Status  */
- #define XUSB_EP_BUF0COUNT_OFFSET	0x08	/* Buffer 0 Count */
-@@ -176,6 +185,7 @@ struct xusb_ep {
-  * @addr: the usb device base address
-  * @lock: instance of spinlock
-  * @dma_enabled: flag indicating whether the dma is included in the system
-+ * @dma_addrwidth:Indicate the DMA address width.
-  * @read_fn: function pointer to read device registers
-  * @write_fn: function pointer to write to device registers
-  */
-@@ -193,7 +203,7 @@ struct xusb_udc {
- 	void __iomem *addr;
- 	spinlock_t lock;
- 	bool dma_enabled;
--
-+	u32 dma_addrwidth;
- 	unsigned int (*read_fn)(void __iomem *);
- 	void (*write_fn)(void __iomem *, u32, u32);
- };
-@@ -215,6 +225,19 @@ static const struct usb_endpoint_descriptor config_bulk_out_desc = {
- };
- 
- /**
-+ * xudc_write64 - write 64bit value to device registers
-+ * @addr: base addr of device registers
-+ * @offset: register offset
-+ * @val: data to be written
-+ **/
-+static void xudc_write64(void __iomem *addr, u32 offset, u64 val)
-+{
-+#if defined(CONFIG_PHYS_ADDR_T_64BIT)
-+	writeq(val, addr + offset);
-+#endif
-+}
-+
-+/**
-  * xudc_write32 - little endian write to device registers
-  * @addr: base addr of device registers
-  * @offset: register offset
-@@ -330,8 +353,13 @@ static int xudc_start_dma(struct xusb_ep *ep, dma_addr_t src,
- 	 * destination registers and then set the length
- 	 * into the DMA length register.
- 	 */
--	udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
--	udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
-+	if (udc->dma_addrwidth > 32) {
-+		xudc_write64(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET_LSB, src);
-+		xudc_write64(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET_LSB, dst);
-+	} else {
-+		udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
-+		udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
-+	}
- 	udc->write_fn(udc->addr, XUSB_DMA_LENGTH_OFFSET, length);
- 
- 	/*
-@@ -2097,6 +2125,10 @@ static int xudc_probe(struct platform_device *pdev)
- 
- 	udc->dma_enabled = of_property_read_bool(np, "xlnx,has-builtin-dma");
- 
-+	ret = of_property_read_u32(np, "xlnx,addrwidth", &udc->dma_addrwidth);
-+	if (ret < 0)
-+		dev_warn(&pdev->dev, "missing xlnx,addrwidth property\n");
-+
- 	/* Setup gadget structure */
- 	udc->gadget.ops = &xusb_udc_ops;
- 	udc->gadget.max_speed = USB_SPEED_HIGH;
--- 
-2.1.2
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index a486bc0f82e0..789d5f836bf7 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -801,13 +801,17 @@ static irqreturn_t bam_dma_irq(int irq, void 
+> *data)
+>  	if (srcs & P_IRQ)
+>  		tasklet_schedule(&bdev->task);
+> 
+> -	if (srcs & BAM_IRQ)
+> +	if (srcs & BAM_IRQ) {
+>  		clr_mask = readl_relaxed(bam_addr(bdev, 0, BAM_IRQ_STTS));
+> 
+> -	/* don't allow reorder of the various accesses to the BAM registers 
+> */
+> -	mb();
+> +		/*
+> +		 * don't allow reorder of the various accesses to the BAM
+> +		 * registers
+> +		 */
+> +		mb();
+> 
+> -	writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
+> +		writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
+> +	}
+> 
+>  	return IRQ_HANDLED;
+>  }
