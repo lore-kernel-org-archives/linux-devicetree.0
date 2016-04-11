@@ -1,54 +1,77 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v8 10/10] MAINTAINERS: Add maintainer for hisilicon DRM driver
-Date: Mon, 11 Apr 2016 16:55:43 +0800
-Message-ID: <1460364943-76135-11-git-send-email-xinliang.liu@linaro.org>
-References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: apm: Fix compatible string for X-Gene 2 SATA
+ controller DTS node
+Date: Mon, 11 Apr 2016 14:44:43 +0530
+Message-ID: <CAFd313y-VV1Kk754b=fV0-kToMz=7Y=COqwSJQh=agYaLjUzyw@mail.gmail.com>
+References: <1459245294-22678-1-git-send-email-rsahu@apm.com>
+	<CADaLNDnU7UJOOFs9euPP035iJX5b1-p7jLoKB5f0Sn==Ec3sYA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADaLNDnU7UJOOFs9euPP035iJX5b1-p7jLoKB5f0Sn==Ec3sYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainer and reviewer for hisilicon DRM driver.
+Hi Olof,
 
-v8: None.
-v7: None.
-v6: None.
-v5: None.
-v4:
-- Add Chen Feng <puck.chen@hisilicon.com> as Designated reviewer.
-v3: First version.
+On Wed, Mar 30, 2016 at 12:41 AM, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org> wrote:
+>
+> On Tue, Mar 29, 2016 at 2:54 AM, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org> wrote:
+> > Fix X-Gene SATA controller compatible string for Merlin board.
+> >
+> > Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+> > Acked-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+>
+> I will queue this patch into xgene-next tree.
+>
+> > ---
+> >  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi |    6 +++---
+> >  1 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> > index 5d87a3d..74d971e 100644
+> > --- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> > +++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> > @@ -524,7 +524,7 @@
+> >                 };
+> >
+> >                 sata1: sata@1a000000 {
+> > -                       compatible = "apm,xgene-ahci";
+> > +                       compatible = "apm,xgene-ahci-v2";
+> >                         reg = <0x0 0x1a000000 0x0 0x1000>,
+> >                               <0x0 0x1f200000 0x0 0x1000>,
+> >                               <0x0 0x1f20d000 0x0 0x1000>,
+> > @@ -534,7 +534,7 @@
+> >                 };
+> >
+> >                 sata2: sata@1a200000 {
+> > -                       compatible = "apm,xgene-ahci";
+> > +                       compatible = "apm,xgene-ahci-v2";
+> >                         reg = <0x0 0x1a200000 0x0 0x1000>,
+> >                               <0x0 0x1f210000 0x0 0x1000>,
+> >                               <0x0 0x1f21d000 0x0 0x1000>,
+> > @@ -544,7 +544,7 @@
+> >                 };
+> >
+> >                 sata3: sata@1a400000 {
+> > -                       compatible = "apm,xgene-ahci";
+> > +                       compatible = "apm,xgene-ahci-v2";
+> >                         reg = <0x0 0x1a400000 0x0 0x1000>,
+> >                               <0x0 0x1f220000 0x0 0x1000>,
+> >                               <0x0 0x1f22d000 0x0 0x1000>,
+> > --
+> > 1.7.1
+> >
 
-Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 61a323a6b2cf..a2ef58860689 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3840,6 +3840,16 @@ S:	Maintained
- F:	drivers/gpu/drm/gma500
- F:	include/drm/gma500*
-=20
-+DRM DRIVERS FOR HISILICON
-+M:	Xinliang Liu <z.liuxinliang@hisilicon.com>
-+R:	Xinwei Kong <kong.kongxinwei@hisilicon.com>
-+R:	Chen Feng <puck.chen@hisilicon.com>
-+L:	dri-devel@lists.freedesktop.org
-+T:	git git://github.com/xin3liang/linux.git
-+S:	Maintained
-+F:	drivers/gpu/drm/hisilicon
-+F:	Documentation/devicetree/bindings/display/hisilicon
-+
- DRM DRIVERS FOR NVIDIA TEGRA
- M:	Thierry Reding <thierry.reding@gmail.com>
- M:	Terje Bergstr=C3=B6m <tbergstrom@nvidia.com>
---=20
-2.8.0
-
+Any comments on this patch ??
+>
+>
+> Regards,
+> Duc Dang.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
