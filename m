@@ -1,92 +1,80 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 04/15] irqchip/gic: WARN if setting the interrupt type
- fails
-Date: Mon, 11 Apr 2016 16:31:22 +0100
-Message-ID: <570BC34A.5030806@nvidia.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-5-git-send-email-jonathanh@nvidia.com>
- <alpine.DEB.2.11.1603171550200.3978@nanos> <56EAC761.1040801@nvidia.com>
- <20160409115854.492090a5@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] Input: rotary_encoder - support binary encoding of
+ states
+Date: Mon, 11 Apr 2016 10:32:48 -0500
+Message-ID: <20160411153248.GA20044@rob-hp-laptop>
+References: <1460055528-13814-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <CAL_JsqLfQQu69LcsFuJkKmjppp047vW5Ga+y5XiDAAG-Weh6ug@mail.gmail.com>
+ <20160408064058.GC10108@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160409115854.492090a5@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160408064058.GC10108-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Fri, Apr 08, 2016 at 08:40:58AM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello Rob,
+>=20
+> On Thu, Apr 07, 2016 at 05:45:00PM -0500, Rob Herring wrote:
+> > On Thu, Apr 7, 2016 at 1:58 PM, Uwe Kleine-K=F6nig
+> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > > It's not advisable to use this encoding, but to support existing =
+devices
+> > > add support for this to the driver.
+> > >
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org=
+>
+> > > ---
+> >=20
+> > Ack for the binding, but...
+>=20
+> Thanks. Actually I already had your ack for v2 and only dropped it to
+> make you look over the patch again :-)
+> =20
+> > > @@ -213,6 +222,17 @@ static int rotary_encoder_probe(struct platf=
+orm_device *pdev)
+> > >         encoder->rollover =3D
+> > >                 device_property_read_bool(dev, "rotary-encoder,ro=
+llover");
+> > >
+> > > +       err =3D device_property_read_string(dev, "rotary-encoder,=
+encoding",
+> > > +                                         &encoding);
+> > > +       if (!err && !strcmp(encoding, "binary")) {
+> > > +               encoder->encoding =3D ROTENC_BINARY;
+> > > +       } else if (err || !strcmp(encoding, "gray")) {
+> > > +               encoder->encoding =3D ROTENC_GRAY;
+> > > +       } else {
+> > > +               dev_err(dev, "unknown encoding setting");
+> > > +               return -EINVAL;
+> >=20
+> > device_property_match_string() here instead.
+>=20
+> With the added downside that the property is parsed at least twice fr=
+om
+> dt, right? This is not a hot path, but still I wonder if it simplyfie=
+s
+> the driver code enough to be worth the effort?
 
-On 09/04/16 11:58, Marc Zyngier wrote:
-> On Thu, 17 Mar 2016 15:04:01 +0000
-> Jon Hunter <jonathanh@nvidia.com> wrote:
-> 
->>
->> On 17/03/16 14:51, Thomas Gleixner wrote:
->>> On Thu, 17 Mar 2016, Jon Hunter wrote:
->>>
->>>> Setting the interrupt type for private peripheral interrupts (PPIs) may
->>>> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
->>>> whether this is allowed. There is no way to know if setting the type is
->>>> supported for a given GIC and so the value written is read back to
->>>> verify it matches the desired configuration. If it does not match then
->>>> an error is return.
->>>>
->>>> There are cases where the interrupt configuration read from firmware
->>>> (such as a device-tree blob), has been incorrect and hence
->>>> gic_configure_irq() has returned an error. This error has gone
->>>> undetected because the error code returned was ignored but the interrupt
->>>> still worked fine because the configuration for the interrupt could not
->>>> be overwritten.
->>>>
->>>> Given that this has done undetected and we should only fail to set the
->>>> type for PPIs whose configuration cannot be changed anyway, don't return
->>>> an error and simply WARN if this fails. This will allows us to fix up any
->>>> places in the kernel where we should be checking the return status and
->>>> maintain back compatibility with firmware images that may have incorrect
->>>> interrupt configurations.
->>>
->>> Though silently returning 0 is really the wrong thing to do. You can add the
->>> warn, but why do you want to return success?
->>
->> Yes that would be the correct thing to do I agree. However, the problem
->> is that if we do this, then after the patch "irqdomain: Don't set type
->> when mapping an IRQ" is applied, we may break interrupts for some
->> existing device-tree binaries that have bad configuration (such as omap4
->> and tegra20/30 ... see patches 1 and 2) that have gone unnoticed. So it
->> is a back compatibility issue.
->>
->> If you are wondering why these interrupts break after "irqdomain: Don't
->> set type when mapping an IRQ", it is because today
->> irq_create_fwspec_mapping() does not check the return code from setting
->> the type, but if we defer setting the type until __setup_irq() which
->> does check the return code, then all of a sudden interrupts that were
->> working (even with bad configurations) start to fail.
->>
->> The reason why I opted not to return an error code from
->> gic_configure_irq() is it really can't fail. The failure being reported
->> does not prevent the interrupt from working, but tells you your
->> configuration does not match the hardware setting which you cannot
->> overwrite.
->>
->> So to maintain back compatibility and avoid any silent errors, I opted
->> to make it a WARN and not return an error.
->>
->> If people are ok with potentially breaking interrupts for device-tree
->> binaries with bad settings, then I am ok to return an error here.
-> 
-> I think we need to phase things. Let's start with warning people for a
-> few kernel releases. Actively maintained platforms will quickly address
-> the issue (fixing their DT). As I see it, this issue seems rather
-> widespread (even kvmtool outputs a DT with the wrong triggering
-> information).
-> 
-> Once we've fixed the bulk of the platforms and virtual environments, we
-> can start thinking about making it fail harder.
+IMO, yes.
+=20
+> Also this seems to have a different semantic and allows the property =
+to
+> be an array.
 
-Ok, so are you OK with this patch as-is? If so, can I add your ACK?
+It is not really the kernel's job to validate crap in bindings. If you=20
+put '"binary", "gray"' in your DT, then the kernel may or may not handl=
+e=20
+that.
 
-Cheers
-Jon
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
