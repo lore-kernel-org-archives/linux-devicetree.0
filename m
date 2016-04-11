@@ -1,96 +1,93 @@
 From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 0/5] Partitioning per-cpu interrupts
-Date: Mon, 11 Apr 2016 09:57:50 +0100
-Message-ID: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
+Subject: [PATCH 5/5] DT: arm,gic-v3: Documment PPI partition support
+Date: Mon, 11 Apr 2016 09:57:55 +0100
+Message-ID: <1460365075-7316-6-git-send-email-marc.zyngier@arm.com>
+References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460365075-7316-1-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We've unfortunately started seeing a situation where percpu interrupts
-are partitioned in the system: one arbitrary set of CPUs has an
-interrupt connected to a type of device, while another disjoint set of
-CPUs has the same interrupt connected to another type of device.
-    
-This makes it impossible to have a device driver requesting this
-interrupt using the current percpu-interrupt abstraction, as the same
-interrupt number is now potentially claimed by at least two drivers,
-and we forbid interrupt sharing on per-cpu interrupt.
+Add a decription of the PPI partitioning support.
 
-A potential solution to this has been proposed by Will Deacon,
-expanding the handling in the core code:
+Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+---
+ .../bindings/interrupt-controller/arm,gic-v3.txt   | 34 ++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/388800.html
-
-followed by a counter-proposal from Thomas Gleixner, which Will tried
-to implement, but ran into issues where the probing code was running
-in preemptible context, making the percpu-ness of interrupts difficult
-to guarantee.
-    
-Another approach to this is to turn things upside down. Let's assume
-that our system describes all the possible partitions for a given
-interrupt, and give each of them a unique identifier. It is then
-possible to create a namespace where the affinity identifier itself is
-a form of interrupt number. At this point, it becomes easy to
-implement a set of partitions as a cascaded irqchip, each affinity
-identifier being the secondary HW irq, as outlined in the following
-example:
-
-	Aff-0: { cpu0 cpu3 }
-	Aff-1: { cpu1 cpu2 }
-	Aff-2: { cpu4 cpu5 cpu6 cpu7 }
-
-Let's assume that HW interrupt 1 is partitioned over these 3
-affinities. When HW interrupt 1 fires on a given CPU, all it takes is
-to find out which affinity this CPU belongs to, which gives us a new
-HW interrupt number. Bingo. Of course, this only works as long as you
-don't have overlapping affinities (but if you do your system is broken
-anyway).
-    
-This allows us to keep a number of nice properties:
-
-- Each partition results in a separate percpu-interrupt (with a
-  restricted affinity), which keeps drivers happy. This alone
-  garantees that we do not have to change the programming model for
-  per-cpu interrupts.
-
-- Because the underlying interrupt is still per-cpu, the overhead of
-  the indirection can be kept pretty minimal.
-
-- The core code can ignore most of that crap.
-    
-For that purpose, we implement a small library that deals with some of
-the boilerplate code, relying on platform-specific drivers to provide
-a description of the affinity sets and a set of callbacks. This also
-relies on a small change in the irqdomain layer, and now offers a way
-for the affinity of a percpu interrupt to be retrieved by a driver.
-
-As an example, the GICv3 driver has been adapted to use this new
-feature. Patches on top of v4.6-r3, tested on an arm64 FVP model.
-
-Marc Zyngier (5):
-  irqdomain: Allow domain matching on irq_fwspec
-  genirq: Allow the affinity of a percpu interrupt to be set/retrieved
-  irqchip: Add per-cpu interrupt partitioning library
-  irqchip/gic-v3: Add support for partitioned PPIs
-  DT: arm,gic-v3: Documment PPI partition support
-
- .../bindings/interrupt-controller/arm,gic-v3.txt   |  34 ++-
- drivers/irqchip/Kconfig                            |   4 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-gic-v3.c                       | 176 +++++++++++++-
- drivers/irqchip/irq-partition-percpu.c             | 256 +++++++++++++++++++++
- include/linux/irq.h                                |   4 +
- include/linux/irqchip/irq-partition-percpu.h       |  59 +++++
- include/linux/irqdesc.h                            |   1 +
- include/linux/irqdomain.h                          |  15 +-
- kernel/irq/irqdesc.c                               |  26 ++-
- kernel/irq/irqdomain.c                             |  19 +-
- 11 files changed, 580 insertions(+), 15 deletions(-)
- create mode 100644 drivers/irqchip/irq-partition-percpu.c
- create mode 100644 include/linux/irqchip/irq-partition-percpu.h
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+index 007a5b4..4c29cda 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+@@ -11,6 +11,8 @@ Main node required properties:
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source. Must be a single cell with a value of at least 3.
++  If the system requires describing PPI affinity, then the value must
++  be at least 4.
+ 
+   The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
+   interrupts. Other values are reserved for future use.
+@@ -24,7 +26,14 @@ Main node required properties:
+ 		1 = edge triggered
+ 		4 = level triggered
+ 
+-  Cells 4 and beyond are reserved for future use and must have a value
++  The 4th cell is a phandle to a node describing a set of CPUs this
++  interrupt is affine to. The interrupt must be a PPI, and the node
++  pointed must be a subnode of the "ppi-partitions" subnode. For
++  interrupt types other than PPI or PPIs that are not partitionned,
++  this cell must be zero. See the "ppi-partitions" node description
++  below.
++
++  Cells 5 and beyond are reserved for future use and must have a value
+   of 0 if present.
+ 
+ - reg : Specifies base physical address(s) and size of the GIC
+@@ -50,6 +59,11 @@ Optional
+ 
+ Sub-nodes:
+ 
++PPI affinity can be expressed as a single "ppi-partitions" node,
++containing a set of sub-nodes, each with the following property:
++- affinity: Should be a list of phandles to CPU nodes (as described in
++Documentation/devicetree/bindings/arm/cpus.txt).
++
+ GICv3 has one or more Interrupt Translation Services (ITS) that are
+ used to route Message Signalled Interrupts (MSI) to the CPUs.
+ 
+@@ -91,7 +105,7 @@ Examples:
+ 
+ 	gic: interrupt-controller@2c010000 {
+ 		compatible = "arm,gic-v3";
+-		#interrupt-cells = <3>;
++		#interrupt-cells = <4>;
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+@@ -119,4 +133,20 @@ Examples:
+ 			#msi-cells = <1>;
+ 			reg = <0x0 0x2c400000 0 0x200000>;
+ 		};
++
++		ppi-partitions {
++			part0: interrupt-partition-0 {
++				affinity = <&cpu0 &cpu2>;
++			};
++
++			part1: interrupt-partition-1 {
++				affinity = <&cpu1 &cpu3>;
++			};
++		};
++	};
++
++
++	device@0 {
++		reg = <0 0 0 4>;
++		interrupts = <1 1 4 &part0>;
+ 	};
 -- 
 2.1.4
 
