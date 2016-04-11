@@ -1,159 +1,64 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 0/7] PM / devfreq: Add NoCP devfreq-event and support
- busfreq on exyno5422-odroidxu3
-Date: Mon, 11 Apr 2016 11:16:18 +0900
-Message-ID: <570B08F2.50302@samsung.com>
-References: <1460091646-28701-1-git-send-email-cw00.choi@samsung.com>
- <CANAwSgQuWBRiRhjd-E-WaSdhe2njE262CEG8uVH83jJDGFJVKA@mail.gmail.com>
- <CAGTfZH2gd5zhr4_JioSXTcpf8Fgu6r_Y9gPOJo-mYGTjAJsFyg@mail.gmail.com>
+From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [v7, 0/5] Fix eSDHC host version register bug
+Date: Mon, 11 Apr 2016 02:54:31 +0000
+Message-ID: <HE1PR04MB0889938012DBB9B1F91C6C65F8940@HE1PR04MB0889.eurprd04.prod.outlook.com>
+References: <1459480051-3701-1-git-send-email-yangbo.lu@nxp.com>
+	<CAPDyKFqgMCvbqMYZ-uM-rTnVvfJkCYbhv2kucCRyNyc9FWoR=Q@mail.gmail.com>
+	<HE1PR04MB0889D75DC56E180D3508E7A1F89F0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+	<CAPDyKFp8GDzSkpbTKoRL=rwiBrsWmsgN95zB-QJwfZTnq4M8BA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <CAGTfZH2gd5zhr4_JioSXTcpf8Fgu6r_Y9gPOJo-mYGTjAJsFyg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Markus Reichl <m.reichl@fivetechno.de>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, "inki.dae@samsung.com" <inki.dae@samsung.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@li>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAPDyKFp8GDzSkpbTKoRL=rwiBrsWmsgN95zB-QJwfZTnq4M8BA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Qiang <qiang.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
-
-On 2016=EB=85=84 04=EC=9B=94 09=EC=9D=BC 03:24, Chanwoo Choi wrote:
-> Hi Anand,
->=20
-> On Sat, Apr 9, 2016 at 3:11 AM, Anand Moon <linux.amoon@gmail.com> wr=
-ote:
->> Hi Chanwoo,
->>
-
-[snip]
-
->>>
->>
->> I am observing following deadlock. Both on Odroid U3 and Odroid XU4.
->=20
-> Thanks for your test. I'll test it again and fix it.
-
-This possible recursive locking is fixed with following diff:
-
-Thanks for your report. I'll fix it on next patchset[1] (v9).
-[1] https://lkml.org/lkml/2016/4/8/14
-
-
-diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/gover=
-nor_passive.c
-index 28a9ae32d330..a4b0b02ee797 100644
---- a/drivers/devfreq/governor_passive.c
-+++ b/drivers/devfreq/governor_passive.c
-@@ -102,7 +102,7 @@ static int update_devfreq_passive(struct devfreq *d=
-evfreq, unsigned long freq)
-        if (!devfreq->governor)
-                return -EINVAL;
-=20
--       mutex_lock(&devfreq->lock);
-+       mutex_lock_nested(&devfreq->lock, SINGLE_DEPTH_NESTING);
-=20
-        ret =3D devfreq->governor->get_target_freq(devfreq, &freq);
-        if (ret < 0)
-
-Best Regards,
-Chanwoo Choi
-
->=20
->>
->> [    7.718372] [ INFO: possible recursive locking detected ]
->> [    7.723747] 4.6.0-rc2-xu4ml #4 Not tainted
->> [    7.727817] ---------------------------------------------
->> [    7.733190] kworker/u16:1/136 is trying to acquire lock:
->> [    7.738476]  (&devfreq->lock){+.+.+.}, at: [<c05be41c>]
->> update_devfreq_passive+0x2c/0x88
->> [    7.746534]
->> [    7.746534] but task is already holding lock:
->> [    7.752339]  (&devfreq->lock){+.+.+.}, at: [<c05bd838>]
->> devfreq_monitor+0x1c/0x78
->> [    7.759791]
->> [    7.759791] other info that might help us debug this:
->> [    7.766291]  Possible unsafe locking scenario:
->> [    7.766291]
->> [    7.766307] usb 5-1: new high-speed USB device number 2 using xhc=
-i-hcd
->> [    7.778682]        CPU0
->> [    7.781107]        ----
->> [    7.783533]   lock(&devfreq->lock);
->> [    7.786999]   lock(&devfreq->lock);
->> [    7.790467]
->> [    7.790467]  *** DEADLOCK ***
->> [    7.790467]
->> [    7.796359]  May be due to missing lock nesting notation
->> [    7.796359]
->> [    7.803120] 4 locks held by kworker/u16:1/136:
->> [    7.807537]  #0:  ("%s"("devfreq_wq")){.+.+..}, at: [<c013b41c>]
->> process_one_work+0x13c/0x454
->> [    7.816029]  #1:  ((&(&devfreq->work)->work)){+.+...}, at:
->> [<c013b41c>] process_one_work+0x13c/0x454
->> [    7.825128]  #2:  (&devfreq->lock){+.+.+.}, at: [<c05bd838>]
->> devfreq_monitor+0x1c/0x78
->> [    7.833013]  #3:  (&nh->srcu){......}, at: [<c014309c>]
->> __srcu_notifier_call_chain+0x54/0xe0
->> [    7.841419]
->> [    7.841419] stack backtrace:
->> [    7.845758] CPU: 1 PID: 136 Comm: kworker/u16:1 Not tainted
->> 4.6.0-rc2-xu4ml #4
->> [    7.852946] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
->> [    7.859017] Workqueue: devfreq_wq devfreq_monitor
->> [    7.863717] [<c010eb48>] (unwind_backtrace) from [<c010b884>]
->> (show_stack+0x10/0x14)
->> [    7.871417] [<c010b884>] (show_stack) from [<c037715c>]
->> (dump_stack+0xa4/0xd0)
->> [    7.878613] [<c037715c>] (dump_stack) from [<c017112c>]
->> (__lock_acquire+0x1ce8/0x207c)
->> [    7.886492] [<c017112c>] (__lock_acquire) from [<c0172010>]
->> (lock_acquire+0x90/0xd4)
->> [    7.892726] usb 5-1: New USB device found, idVendor=3D0bda, idPro=
-duct=3D8153
->> [    7.892737] usb 5-1: New USB device strings: Mfr=3D1, Product=3D2=
-, SerialNumber=3D6
->> [    7.892745] usb 5-1: Product: USB 10/100/1000 LAN
->> [    7.892753] usb 5-1: Manufacturer: Realtek
->> [    7.892761] usb 5-1: SerialNumber: 000001000000
->> [    7.921248] [<c0172010>] (lock_acquire) from [<c075d298>]
->> (mutex_lock_nested+0x78/0x4ec)
->> [    7.929301] [<c075d298>] (mutex_lock_nested) from [<c05be41c>]
->> (update_devfreq_passive+0x2c/0x88)
->> [    7.938138] [<c05be41c>] (update_devfreq_passive) from [<c05be4c0=
->]
->> (devfreq_passive_notifier_call+0x48/0x50)
->> [    7.948016] [<c05be4c0>] (devfreq_passive_notifier_call) from
->> [<c0142d84>] (notifier_call_chain+0x54/0xa4)
->> [    7.957633] [<c0142d84>] (notifier_call_chain) from [<c01430e0>]
->> (__srcu_notifier_call_chain+0x98/0xe0)
->> [    7.966991] [<c01430e0>] (__srcu_notifier_call_chain) from
->> [<c0143140>] (srcu_notifier_call_chain+0x18/0x20)
->> [    7.976783] [<c0143140>] (srcu_notifier_call_chain) from
->> [<c05bd774>] (update_devfreq+0xe4/0x18c)
->> [    7.985622] [<c05bd774>] (update_devfreq) from [<c05bd840>]
->> (devfreq_monitor+0x24/0x78)
->> [    7.993595] [<c05bd840>] (devfreq_monitor) from [<c013b48c>]
->> (process_one_work+0x1ac/0x454)
->> [    8.001913] [<c013b48c>] (process_one_work) from [<c013b784>]
->> (worker_thread+0x50/0x508)
->> [    8.009976] [<c013b784>] (worker_thread) from [<c0141cf4>]
->> (kthread+0xf8/0x110)
->> [    8.017254] [<c0141cf4>] (kthread) from [<c0107750>]
->> (ret_from_fork+0x14/0x24)
->>
->> Best Regards
->> -Anand Moon
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-sams=
-ung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
-ng-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
->=20
-
+SGkgTGVvIGFuZCBTY290dCwNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IFVsZiBIYW5zc29uIFttYWlsdG86dWxmLmhhbnNzb25AbGluYXJvLm9yZ10NCj4gU2VudDog
+V2VkbmVzZGF5LCBBcHJpbCAwNiwgMjAxNiA0OjE1IFBNDQo+IFRvOiBZYW5nYm8gTHU7IFNjb3R0
+IFdvb2QNCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC0NCj4gY2xrQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtaTJjQHZnZXIua2VybmVsLm9yZzsgaW9tbXVAbGlzdHMubGludXgtDQo+IGZvdW5k
+YXRpb24ub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1tbWM7IFJvYiBIZXJyaW5n
+OyBSdXNzZWxsDQo+IEtpbmc7IEpvY2hlbiBGcmllZHJpY2g7IEpvZXJnIFJvZWRlbDsgQ2xhdWRp
+dSBNYW5vaWw7IEJodXBlc2ggU2hhcm1hOw0KPiBaaGFvIFFpYW5nOyBLdW1hciBHYWxhOyBTYW50
+b3NoIFNoaWxpbWthcjsgWWFuZy1MZW8gTGk7IFhpYW9ibyBYaWUNCj4gU3ViamVjdDogUmU6IFt2
+NywgMC81XSBGaXggZVNESEMgaG9zdCB2ZXJzaW9uIHJlZ2lzdGVyIGJ1Zw0KPiANCj4gPj4NCj4g
+Pj4gSSB3YXMgYWJvdXQgdG8gcXVldWUgdGhpcyBmb3IgbmV4dCwgd2hlbiBJIG5vdGljZWQgdGhh
+dCBjaGVja3BhdGNoIGlzDQo+ID4+IGNvbXBsYWluaW5nL3dhcm5pbmcgbG90cyBhYm91dCB0aGVz
+ZSBwYXRjaGVzLiBDYW4geW91IHBsZWFzZSBhIHJvdW5kDQo+ID4+IG9mIGNoZWNrcGF0Y2ggYW5k
+IGZpeCB3aGF0IG1ha2VzIHNlbnNlLg0KPiA+Pg0KPiA+PiBLaW5kIHJlZ2FyZHMNCj4gPj4gVWZm
+ZQ0KPiA+DQo+ID4gW0x1IFlhbmdiby1CNDcwOTNdIFNvcnJ5IGFib3V0IHRoaXMsIFVmZmUuLi4N
+Cj4gDQo+IE5vIHdvcnJpZXMhDQo+IA0KPiA+IFNob3VsZCBJIGlnbm9yZSB0aGUgd2FybmluZ3Mg
+dGhhdCB1cGRhdGUgTUFJTlRBSU5FUlM/DQo+IA0KPiBkcml2ZXJzL3NvYy9mc2wvZ3V0cy5jIGlz
+bid0IHBhcnQgb2YgdGhlIE1BSU5UQUlORVJTIGZpbGUsIGl0IHNob3VsZCBiZS4NCj4gDQo+IEkg
+YWxzbyByZWFsaXplIHRoYXQgdGhlIEZSRUVTQ0FMRSBRVUlDQyBFTkdJTkUgTElCUkFSWSBzZWN0
+aW9uDQo+IGRyaXZlcnMvc29jL2ZzbC9xZS8qIGFsc28gbmVlZCBhbiBhY3RpdmUgbWFpbnRhaW5l
+ciwgYXMgaXQncyBjdXJyZW50bHkNCj4gb3JwaGFuLg0KPiANCj4gUGVyaGFwcyB3ZSBzaG91bGQg
+aGF2ZSBjcmVhdGUgYSBuZXcgc2VjdGlvbiBmb3IgZHJpdmVycy9zb2MvZnNsLyogaW5zdGVhZA0K
+PiB0aGF0IGNvdmVycyBhbGwgb2YgdGhlIGFib3ZlPyBNYXliZSB5b3Ugb3IgU2NvdHQgYXJlIGlu
+dGVyZXN0ZWQgdG8gcGljaw0KPiBpdCB1cD8NCj4gDQo+IEkgYWxzbyBub3RlZCB0aGF0LCAiaW5j
+bHVkZS9saW51eC9mc2wvIiBpc24ndCBwcmVzZW50IGluIE1BSU5UQUlORVJTLA0KPiBwbGVhc2Ug
+YWRkIHRoYXQgYXMgd2VsbC4NCg0KW0x1IFlhbmdiby1CNDcwOTNdIENvdWxkIGdpdmUgc29tZSBh
+ZHZpY2Ugb24gdGhlIE1BSU5UQUlORVJTIGZvciB0aGVzZSAnZnNsJyBmaWxlcw0Kc2luY2UgSSBy
+ZWFsbHkgZG9u4oCZdCBrbm93IHdobyBzaG91bGQgYmUgdGhlIHJpZ2h0IHBlcnNvbj8NCkkgd2ls
+bCBhcHByZWNpYXRlIHRoYXQhDQoNClRoYW5rcyBhIGxvdC4NCg0KPiANCj4gPiBSZWdhcmRpbmcg
+dGhlICd1bmRvY3VtZW50ZWQnIHdhcm5pbmcsIEkgd2lsbCBhZGRlZCBhIHBhdGNoIHVwZGF0ZXMg
+ZG9jDQo+IGJlZm9yZSBhbGwgdGhlIHBhdGNoZXMsIE9rPw0KPiANCj4gWWVzLCBnb29kIQ0KPiAN
+Cj4gPg0KPiA+IFRoYW5rcyBhIGxvdCA6KQ0KPiA+DQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZm
+ZQ0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaW9tbXUg
+bWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlz
+dHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
