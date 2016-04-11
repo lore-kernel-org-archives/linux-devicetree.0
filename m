@@ -1,780 +1,131 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v5] ARM: dts: imx: add Boundary Devices Nitrogen6_SoloX board
-Date: Mon, 11 Apr 2016 23:01:36 +0200
-Message-ID: <1460408496-21164-1-git-send-email-gary.bisson@boundarydevices.com>
-References: <1460037168-23292-1-git-send-email-gary.bisson@boundarydevices.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
+Date: Mon, 11 Apr 2016 14:28:45 -0700
+Message-ID: <20160411212845.GJ5995@atomide.com>
+References: <1458311007-19168-1-git-send-email-peter.ujfalusi@ti.com>
+ <alpine.DEB.2.02.1603191937430.6629@utopia.booyaka.com>
+ <56EFB794.5010505@ti.com>
+ <alpine.DEB.2.02.1603211743200.31059@utopia.booyaka.com>
+ <56FE407E.9030803@ti.com>
+ <20160402001753.GR9329@atomide.com>
+ <57026205.6020105@ti.com>
+ <20160404151200.GA4652@atomide.com>
+ <5703BA6B.1080208@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460037168-23292-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5703BA6B.1080208-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on i.MX6 SoloX with 1GB of RAM.
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160405 06:16]:
+> On 04/04/16 18:12, Tony Lindgren wrote:
+> >> The reason for this is that in DT boot we can not provide the
+> >> enable_st_clock() callback to the mcbsp driver stack. This is done for legacy
+> >> boot in mach-omap2/mcbsp.c
+> > 
+> > Seems like the short term fix there is to pass enable_st_clock pointer
+> > in pdata using pdata-quirks.c.
+> 
+> I don't think there is a point to spend effort on a workaround via pdata-quirks.
+> 
+> > Then for the long term solution using
+> > PM runtime to block gating of the clock while sidetone is active is
+> > the way to go it seems.
+> 
+> Hrm, I think one of the main issue is that with pm_runtime we can not block
+> the clock gating, this is why legacy code uses enable_st_clock(), which will
+> call omap2_clk_deny_idle() or omap2_clk_allow_idle().
 
-https://boundarydevices.com/product/nit6_solox-imx6/
+I see. I think Tero wanted to export omap2_clk_allow_idle() and
+omap2_clk_deny_idle() for drivers to use. That should get discussed in
+the linux-clk list, probably best to use the pdata callbacks until
+the clock idling issue has been discussed.
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
+> >> The ST does not have clocks coming from PRCM level, it only uses the McBSP
+> >> iclk when it is enabled (the McBSP block of the McBSP). As far as pm_runtime
+> >> goes I think the ST module should not use it. We can not tell hwmod to
+> >> enable/disable the McBSP2/3 iclk when we pm_runtime for the ST. It does not
+> >> help at all. We can have nop action for the ST when pm_runtime is used, but
+> >> then why would we have it?
+> > 
+> > Using PM runtime in the sidetone driver should just work as long as the
+> > sidetone device driver depends on the McBSP driver before it gets probed.
+> > The clock framework handles things for the mcbsp ick with the usecount.
+> 
+> Yes, that is not the problem. The problem is that when McBSP is used w/o
+> sidetone the iclk can and should be autogated, but if the sidetone is enabled
+> then the iclk must not autogate and this needs to be prevented in PRCM level.
+> Note also that while the McBSP is running we must be able to enable/disable
+> the sidetone any time w/o affecting the McBSP operation.
 
-Changes v1 -> v2:
-- Remove lines commented out from nitrogen6sx dts as suggested by Vladimir
-Changes v2 -> v3:
-- none
-Changes v3 -> v4:
-- Use hyphen instead of underscore for backlight node name
-- Remove fake "simple-bus" for regulators declaration
-- Remove non existant vqmmc-1-8v property
-- Remove unused pinctrl entries (rfkill, lvds)
-- Remove pinctrl unnecessary container node
-Changes v4 -> v5:
-- Remove non existant vqmmc-1-8v for real
-- Add new line between properties and sub-nodes
-- Use lowercase for all hexadecimal values
-- Remove unnecessary fsl,mode of ssi node
-- Remove deprecated keep-power-in-suspend
+OK I see.
 
-Thanks for all your feedback!
+> > And doing pm_runtime_get() in the sidetone driver will do what the legacy
+> > enable_st_clock() does currently.
+> 
+> it can't do that as we do not have way to deny/enable just the autoidle for a
+> given clock.
+
+Yup. So I suggest the pdata callbacs for the omap2_clk_allow_idle() and
+omap2_clk_deny_idle() for now.
+
+> >>> So having two separate drivers might make things a lot simpler.
+> >>
+> >> Not really. It will make things way more complicated imho. How to handle
+> >> legacy boot as we still have that supported?
+> > 
+> > Hey both the legacy driver and DT driver are really just platform devices
+> > and drivers. And passing both dts and platform data can be done just
+> > fine, no?
+> 
+> Sure, but McBSP2-ST needs to bind with McBSP2 driver instance and the
+> McBSP3-ST should bind with McBSP3 instance. In legacy mode we can store the
+> McBSP pdev pointers in a array and use the devid or get the McBSP id from the
+> device name. While with DT boot we must have phandle pointing to/from ST
+> from/to McBSP node to be able to figure out who is who.
+> 
+> >> When the McBSP driver is loaded we must know if it has sidetone or not so
+> >> we can create the needed audio controls, sysfs entries. The sysfs and
+> >> kcontrol registration could be moved out to the new ST driver, true.
+> > 
+> > Yeah during the probe, the sidetone driver must register with the McBSP
+> > driver to tell it's there.
+> 
+> When McBSP driver probes, it registers itself to ASoC core and it needs to
+> know at that point if we need to prepare for ST or not. So probably the McBSP
+> driver needs to register to ST driver?
+
+OK yes if that makes more sense.
+
+> > I guess no need to pass anything in the
+> > dts or platform_data for that.
+> > 
+> >> I actually started with two separate drivers approach first, but decided that
+> >> it does not worth the effort (legacy boot support, pm_runtime/hwmod hassle,
+> >> platform data, callback API design, etc).
+> >> I know, it is not rocket science but it is king of shoot out of cannon into
+> >> sparrows.
+> >> I'll think about it for a little while ;)
+> > 
+> > Well what we've seen so far is that any kind of non-standard solution
+> > will always be a pain to maintain in the long run :)
+> 
+> The current implementation (one driver to handle McBSP and the ST) is there
+> ever since OMAP3 was introduced afaik. Changing a working (was working) design
+> to something which has not been tested will for sure going to open issues we
+> have not prepared for.
+> I would avoid the rewrite of a proven driver architecture if it is not broken.
+
+Well probably the best thing to do is the use of platform callback
+for now until we know how it can be done incrementally :)
 
 Regards,
-Gary
 
----
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/imx6sx-nitrogen6sx.dts | 709 +++++++++++++++++++++++++++++++
- 2 files changed, 710 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 54306aa..9eab5f5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -371,6 +371,7 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
- 	imx6sl-warp.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
-+	imx6sx-nitrogen6sx.dtb \
- 	imx6sx-sabreauto.dtb \
- 	imx6sx-sdb-reva.dtb \
- 	imx6sx-sdb.dtb
-diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-new file mode 100644
-index 0000000..ba62348
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-@@ -0,0 +1,709 @@
-+/*
-+ * Copyright (C) 2016 Boundary Devices, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6sx.dtsi"
-+
-+/ {
-+	model = "Boundary Devices i.MX6 SoloX Nitrogen6sx Board";
-+	compatible = "boundary,imx6sx-nitrogen6sx", "fsl,imx6sx";
-+
-+	aliases {
-+		fb_lcd = &lcdif1;
-+		t_lcd = &t_lcd;
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x40000000>;
-+	};
-+
-+	backlight-lvds {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm4 0 5000000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		power-supply = <&reg_3p3v>;
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_can1_3v3: regulator-can1-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "can1-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio4 27 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_can2_3v3: regulator-can2-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "can2-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio4 24 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbotg1_vbus>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_wlan: regulator-wlan {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_wlan>;
-+		compatible = "regulator-fixed";
-+		clocks = <&clks IMX6SX_CLK_CKO>;
-+		clock-names = "slow";
-+		regulator-name = "wlan-en";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <70000>;
-+		gpio = <&gpio7 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	sound {
-+		compatible = "fsl,imx-audio-sgtl5000";
-+		model = "imx6sx-nitrogen6sx-sgtl5000";
-+		cpu-dai = <&ssi1>;
-+		audio-codec = <&codec>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <5>;
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+};
-+
-+&ecspi1 {
-+	fsl,spi-num-chipselects = <1>;
-+	cs-gpios = <&gpio2 16 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	status = "okay";
-+
-+	flash: m25p80@0 {
-+		compatible = "microchip,sst25vf016b";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "U-Boot";
-+			reg = <0x0 0xc0000>;
-+			read-only;
-+		};
-+
-+		partition@c0000 {
-+			label = "env";
-+			reg = <0xc0000 0x2000>;
-+			read-only;
-+		};
-+
-+		partition@c2000 {
-+			label = "Kernel";
-+			reg = <0xc2000 0x11e000>;
-+		};
-+
-+		partition@1e0000 {
-+			label = "M4";
-+			reg = <0x1e0000 0x20000>;
-+		};
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy1>;
-+	phy-supply = <&reg_3p3v>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@4 {
-+			reg = <4>;
-+		};
-+
-+		ethphy2: ethernet-phy@5 {
-+			reg = <5>;
-+		};
-+	};
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy2>;
-+	phy-supply = <&reg_3p3v>;
-+	fsl,magic-packet;
-+	status = "okay";
-+};
-+
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	xceiver-supply = <&reg_can1_3v3>;
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	xceiver-supply = <&reg_can2_3v3>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_sgtl5000>;
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6SX_CLK_CKO2>;
-+		VDDA-supply = <&reg_1p8v>;
-+		VDDIO-supply = <&reg_1p8v>;
-+		VDDD-supply = <&reg_1p8v>;
-+		assigned-clocks = <&clks IMX6SX_CLK_CKO2_SEL>,
-+				  <&clks IMX6SX_CLK_CKO2>;
-+		assigned-clock-parents = <&clks IMX6SX_CLK_OSC>;
-+		assigned-clock-rates = <0>, <24000000>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+};
-+
-+&lcdif1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif1>;
-+	lcd-supply = <&reg_3p3v>;
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display0 {
-+		bits-per-pixel = <16>;
-+		bus-width = <24>;
-+
-+		display-timings {
-+			native-mode = <&t_lcd>;
-+			t_lcd: t_lcd_default {
-+				clock-frequency = <74160000>;
-+				hactive = <1280>;
-+				vactive = <720>;
-+				hback-porch = <220>;
-+				hfront-porch = <110>;
-+				vback-porch = <20>;
-+				vfront-porch = <5>;
-+				hsync-len = <40>;
-+				vsync-len = <5>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio4 10 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	fsl,uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg2>;
-+	dr_mode = "host";
-+	disable-over-current;
-+	reset-gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	bus-width = <4>;
-+	non-removable;
-+	keep-power-in-suspend;
-+	vmmc-supply = <&reg_wlan>;
-+	cap-power-off-card;
-+	cap-sdio-irq;
-+	status = "okay";
-+
-+	brcmf: bcrmf@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		ref-clock-frequency = <38400000>;
-+	};
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc4_50mhz>;
-+	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
-+	bus-width = <8>;
-+	non-removable;
-+	vmmc-supply = <&reg_1p8v>;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD1_DATA0__AUDMUX_AUD5_RXD	0x1b0b0
-+			MX6SX_PAD_SD1_DATA1__AUDMUX_AUD5_TXC	0x1b0b0
-+			MX6SX_PAD_SD1_DATA2__AUDMUX_AUD5_TXFS	0x1b0b0
-+			MX6SX_PAD_SD1_DATA3__AUDMUX_AUD5_TXD	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_COL1__ECSPI1_MISO		0x100b1
-+			MX6SX_PAD_KEY_ROW0__ECSPI1_MOSI		0x100b1
-+			MX6SX_PAD_KEY_COL0__ECSPI1_SCLK		0x100b1
-+			MX6SX_PAD_KEY_ROW1__GPIO2_IO_16		0x0b0b1
-+		>;
-+	};
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_ENET1_MDIO__ENET1_MDIO	0x1b0b0
-+			MX6SX_PAD_ENET1_MDC__ENET1_MDC		0x1b0b0
-+			MX6SX_PAD_RGMII1_TD0__ENET1_TX_DATA_0	0x30b1
-+			MX6SX_PAD_RGMII1_TD1__ENET1_TX_DATA_1	0x30b1
-+			MX6SX_PAD_RGMII1_TD2__ENET1_TX_DATA_2	0x30b1
-+			MX6SX_PAD_RGMII1_TD3__ENET1_TX_DATA_3	0x30b1
-+			MX6SX_PAD_RGMII1_TXC__ENET1_RGMII_TXC	0x30b1
-+			MX6SX_PAD_RGMII1_TX_CTL__ENET1_TX_EN	0x30b1
-+			MX6SX_PAD_RGMII1_RD0__ENET1_RX_DATA_0	0x3081
-+			MX6SX_PAD_RGMII1_RD1__ENET1_RX_DATA_1	0x3081
-+			MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
-+			MX6SX_PAD_RGMII1_RD2__ENET1_RX_DATA_2	0x3081
-+			MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
-+			MX6SX_PAD_RGMII1_RXC__ENET1_RX_CLK	0x3081
-+			MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0xb0b0
-+			MX6SX_PAD_ENET1_RX_CLK__GPIO2_IO_4	0xb0b0
-+			MX6SX_PAD_ENET1_TX_CLK__GPIO2_IO_5	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_RGMII2_TD0__ENET2_TX_DATA_0	0x30b1
-+			MX6SX_PAD_RGMII2_TD1__ENET2_TX_DATA_1	0x30b1
-+			MX6SX_PAD_RGMII2_TD2__ENET2_TX_DATA_2	0x30b1
-+			MX6SX_PAD_RGMII2_TD3__ENET2_TX_DATA_3	0x30b1
-+			MX6SX_PAD_RGMII2_TXC__ENET2_RGMII_TXC	0x30b1
-+			MX6SX_PAD_RGMII2_TX_CTL__ENET2_TX_EN	0x30b1
-+			MX6SX_PAD_RGMII2_RD0__ENET2_RX_DATA_0	0x3081
-+			MX6SX_PAD_RGMII2_RD1__ENET2_RX_DATA_1	0x3081
-+			MX6SX_PAD_RGMII2_RX_CTL__ENET2_RX_EN	0x3081
-+			MX6SX_PAD_RGMII2_RD2__ENET2_RX_DATA_2	0x3081
-+			MX6SX_PAD_RGMII2_RD3__ENET2_RX_DATA_3	0x3081
-+			MX6SX_PAD_RGMII2_RXC__ENET2_RX_CLK	0x3081
-+			MX6SX_PAD_ENET2_COL__GPIO2_IO_6		0xb0b0
-+			MX6SX_PAD_ENET2_RX_CLK__GPIO2_IO_8	0xb0b0
-+			MX6SX_PAD_ENET2_TX_CLK__GPIO2_IO_9	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_DQS__CAN1_TX		0x1b0b0
-+			MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX		0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA3__GPIO4_IO_27	0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA3__GPIO4_IO_27	0x0b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1A_DQS__CAN2_TX		0x1b0b0
-+			MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX		0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA0__GPIO4_IO_24	0x0b0b0
-+		>;
-+	};
-+
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX6SX_PAD_NAND_CE0_B__GPIO4_IO_1	0x1b0b0
-+			MX6SX_PAD_NAND_CLE__GPIO4_IO_3		0x1b0b0
-+			MX6SX_PAD_NAND_RE_B__GPIO4_IO_12	0x1b0b0
-+			MX6SX_PAD_NAND_WE_B__GPIO4_IO_14	0x1b0b0
-+			MX6SX_PAD_NAND_WP_B__GPIO4_IO_15	0x1b0b0
-+			MX6SX_PAD_NAND_READY_B__GPIO4_IO_13	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA0__GPIO4_IO_16	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA1__GPIO4_IO_17	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA2__GPIO4_IO_18	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA3__GPIO4_IO_19	0x1b0b0
-+			MX6SX_PAD_SD1_CMD__CCM_CLKO1		0x000b0
-+			MX6SX_PAD_SD3_DATA5__GPIO7_IO_7		0x1b0b0
-+			/* Test points */
-+			MX6SX_PAD_NAND_DATA04__GPIO4_IO_8	0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA1__GPIO4_IO_25	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO00__I2C1_SCL		0x4001b8b1
-+			MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO02__I2C2_SCL		0x4001b8b1
-+			MX6SX_PAD_GPIO1_IO03__I2C2_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_COL4__I2C3_SCL		0x4001b8b1
-+			MX6SX_PAD_KEY_ROW4__I2C3_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_lcdif1: lcdif1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_LCD1_CLK__LCDIF1_CLK		0x4001b0b0
-+			MX6SX_PAD_LCD1_ENABLE__LCDIF1_ENABLE	0x4001b0b0
-+			MX6SX_PAD_LCD1_HSYNC__LCDIF1_HSYNC	0x4001b0b0
-+			MX6SX_PAD_LCD1_VSYNC__LCDIF1_VSYNC	0x4001b0b0
-+			MX6SX_PAD_LCD1_RESET__GPIO3_IO_27	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA00__LCDIF1_DATA_0	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA01__LCDIF1_DATA_1	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA02__LCDIF1_DATA_2	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA03__LCDIF1_DATA_3	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA04__LCDIF1_DATA_4	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA05__LCDIF1_DATA_5	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA06__LCDIF1_DATA_6	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA07__LCDIF1_DATA_7	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA08__LCDIF1_DATA_8	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA09__LCDIF1_DATA_9	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA10__LCDIF1_DATA_10	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA11__LCDIF1_DATA_11	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA12__LCDIF1_DATA_12	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA13__LCDIF1_DATA_13	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA14__LCDIF1_DATA_14	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA15__LCDIF1_DATA_15	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA16__LCDIF1_DATA_16	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA17__LCDIF1_DATA_17	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA18__LCDIF1_DATA_18	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA19__LCDIF1_DATA_19	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA20__LCDIF1_DATA_20	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA21__LCDIF1_DATA_21	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA22__LCDIF1_DATA_22	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA23__LCDIF1_DATA_23	0x4001b0b0
-+		>;
-+	};
-+
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX6SX_PAD_NAND_DATA05__GPIO4_IO_9	0xb0b0
-+			MX6SX_PAD_NAND_DATA06__GPIO4_IO_10	0xb0b0
-+			MX6SX_PAD_NAND_DATA07__GPIO4_IO_11	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO13__PWM4_OUT		0x110b0
-+		>;
-+	};
-+
-+	pinctrl_reg_wlan: reg-wlangrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD3_DATA4__GPIO7_IO_6		0x1b0b0
-+			MX6SX_PAD_GPIO1_IO11__CCM_CLKO1		0x000b0
-+		>;
-+	};
-+
-+	pinctrl_sgtl5000: sgtl5000grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO12__CCM_CLKO2		0x000b0
-+			MX6SX_PAD_ENET1_COL__GPIO2_IO_0		0x1b0b0
-+			MX6SX_PAD_ENET1_CRS__GPIO2_IO_1		0x1b0b0
-+			MX6SX_PAD_QSPI1A_SS0_B__GPIO4_IO_22	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO06__UART2_TX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO07__UART2_RX		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_SS0_B__UART3_TX	0x1b0b1
-+			MX6SX_PAD_QSPI1B_SCLK__UART3_RX		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_COL3__UART5_TX		0x1b0b1
-+			MX6SX_PAD_KEY_ROW3__UART5_RX		0x1b0b1
-+			MX6SX_PAD_SD3_DATA6__UART3_RTS_B	0x1b0b1
-+			MX6SX_PAD_SD3_DATA7__UART3_CTS_B	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO08__USB_OTG1_OC	0x1b0b0
-+			MX6SX_PAD_GPIO1_IO10__ANATOP_OTG1_ID	0x170b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg1_vbus: usbotg1-vbusgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO09__GPIO1_IO_9	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_usbotg2: usbotg2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_DATA2__GPIO4_IO_26	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x17059
-+			MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x10059
-+			MX6SX_PAD_SD2_DATA0__USDHC2_DATA0	0x17059
-+			MX6SX_PAD_SD2_DATA1__USDHC2_DATA1	0x17059
-+			MX6SX_PAD_SD2_DATA2__USDHC2_DATA2	0x17059
-+			MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x17059
-+			MX6SX_PAD_KEY_COL2__GPIO2_IO_12		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x10071
-+			MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x17071
-+			MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x17071
-+			MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x17071
-+			MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x17071
-+			MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x17071
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_50mhz: usdhc4-50mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10071
-+			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17071
-+			MX6SX_PAD_SD4_RESET_B__USDHC4_RESET_B	0x17071
-+			MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x17071
-+			MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x17071
-+			MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x17071
-+			MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x17071
-+			MX6SX_PAD_SD4_DATA4__USDHC4_DATA4	0x17071
-+			MX6SX_PAD_SD4_DATA5__USDHC4_DATA5	0x17071
-+			MX6SX_PAD_SD4_DATA6__USDHC4_DATA6	0x17071
-+			MX6SX_PAD_SD4_DATA7__USDHC4_DATA7	0x17071
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_100mhz: usdhc4-100mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x100b9
-+			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x170b9
-+			MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x170b9
-+			MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x170b9
-+			MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x170b9
-+			MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x170b9
-+			MX6SX_PAD_SD4_DATA4__USDHC4_DATA4	0x170b9
-+			MX6SX_PAD_SD4_DATA5__USDHC4_DATA5	0x170b9
-+			MX6SX_PAD_SD4_DATA6__USDHC4_DATA6	0x170b9
-+			MX6SX_PAD_SD4_DATA7__USDHC4_DATA7	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_200mhz: usdhc4-200mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x100f9
-+			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x170f9
-+			MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x170f9
-+			MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x170f9
-+			MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x170f9
-+			MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x170f9
-+			MX6SX_PAD_SD4_DATA4__USDHC4_DATA4	0x170f9
-+			MX6SX_PAD_SD4_DATA5__USDHC4_DATA5	0x170f9
-+			MX6SX_PAD_SD4_DATA6__USDHC4_DATA6	0x170f9
-+			MX6SX_PAD_SD4_DATA7__USDHC4_DATA7	0x170f9
-+		>;
-+	};
-+};
--- 
-2.7.0
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
