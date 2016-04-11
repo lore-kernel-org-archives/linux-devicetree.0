@@ -1,30 +1,69 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: tegra: Remove 0, prefix from
- unit-addresses
-Date: Mon, 11 Apr 2016 09:55:56 -0600
-Message-ID: <570BC90C.5030704@wwwdotorg.org>
-References: <1460383086-26957-1-git-send-email-thierry.reding@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 2/2] pci: host: new driver for Marvell Armada 7K/8K PCIe
+ controller
+Date: Mon, 11 Apr 2016 17:56:51 +0200
+Message-ID: <20160411175651.5f32a990@free-electrons.com>
+References: <1459071058-18328-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1459071058-18328-3-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160327140348.GA19498@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460383086-26957-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160327140348.GA19498@lunn.ch>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2016 07:58 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> When Tegra124 support was first merged the unit-addresses of all devices
-> were listed with a "0," prefix to encode the reg property's second cell.
-> It turns out that this notation is not correct, and the "," separator is
-> only used to separate fields in the unit address (such as the device and
-> function number in PCI devices), not individual cells for addresses
-> with more than one cell.
+Hello,
 
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Sun, 27 Mar 2016 16:03:48 +0200, Andrew Lunn wrote:
+> > +static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+> > +{
+> > +	struct pcie_port *pp = arg;
+> > +	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
+> > +	void __iomem *base = pcie->base;
+> > +	u32 val;
+> > +
+> > +	val = readl(base + PCIE_GLOBAL_INT_CAUSE1_REG);
+> > +	writel(val, base + PCIE_GLOBAL_INT_CAUSE1_REG);
+> > +
+> > +	return IRQ_HANDLED;
+> 
+> Maybe a comment as to why you are just throwing them away.
 
-(Note that using the 0, prefix was correct at the time, but it appears 
-the rules have changed.)
+I'll have a look into this.
+
+> > +static int armada8k_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +	struct armada8k_pcie *pcie;
+> > +	struct pcie_port *pp;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct resource *base;
+> > +	int ret;
+> > +
+> > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> > +	if (!pcie)
+> > +		return -ENOMEM;
+> > +
+> > +	pcie->main_clk = devm_clk_get(dev, "main");
+> > +	if (!IS_ERR(pcie->main_clk))
+> > +		clk_prepare_enable(pcie->main_clk);
+> > +
+> > +	pcie->lane_clk = devm_clk_get(dev, "port");
+> > +	if (!IS_ERR(pcie->lane_clk))
+> > +		clk_prepare_enable(pcie->lane_clk);
+> 
+> Any need to handle -EPRODE_DEFERED here?
+
+Is this needed? The clocks are registered in of_clk_init(), i.e at
+time_init() time. This is way before the device drivers get probed, no?
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
