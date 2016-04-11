@@ -1,87 +1,124 @@
-From: gpramod@codeaurora.org
-Subject: Re: [PATCH v2 3/5] dmaengine: qcom: bam_dma: add controlled remotely
- dt property
-Date: Mon, 11 Apr 2016 13:23:14 +0530
-Message-ID: <ee74d1afe72c26fb865d55151c54e09f@codeaurora.org>
-References: <1459896982-30171-1-git-send-email-stanimir.varbanov@linaro.org>
- <1459896982-30171-4-git-send-email-stanimir.varbanov@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH resend v2 0/9] mfd: axp20x: Add support for
+ AXP809 PMIC
+Date: Mon, 11 Apr 2016 08:59:27 +0100
+Message-ID: <20160411075927.GA4592@x1>
+References: <1459243352-23344-1-git-send-email-wens@csie.org>
+ <CAGb2v64fU+n-mrVk=+ox5e-np_oK3ZiVk-YMknriGQsnxOVBvQ@mail.gmail.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1459896982-30171-4-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vinod.koul@intel.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBYVSVW4AKGQE4JTDERI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64fU+n-mrVk=+ox5e-np_oK3ZiVk-YMknriGQsnxOVBvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-04-06 04:26, Stanimir Varbanov wrote:
-> Some of the peripherals has bam which is controlled by remote
-> processor, thus the bam dma driver must avoid register writes
-> which initialise bam hw block. Those registers are protected
-> from xPU block and any writes to them will lead to secure
-> violation and system reboot.
-> 
-> Adding the contolled_remotely flag in bam driver to avoid
-> not permitted register writes in bam_init function.
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> Reviewed-by: Andy Gross <andy.gross@linaro.org>
-> ---
->  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 2 ++
->  drivers/dma/qcom/bam_dma.c                             | 7 +++++++
->  2 files changed, 9 insertions(+)
-> 
+On Mon, 11 Apr 2016, Chen-Yu Tsai wrote:
+> On Tue, Mar 29, 2016 at 5:22 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > Hi everyone,
+> >
+> > This is a resend of v2 of the AXP809 PMIC support series. This adds
+> > support for X-Powers' AXP809 PMIC. This is the primary PMIC accompanyin=
+g
+> > Allwinner's A80 SoC. For now, only the power button (PEK) and regulator=
+s
+> > are supported. These are supported using existing axp20x drivers.
+> >
+> > Driver patches are based on v4.6-rc1, while DT patches are based on
+> > Maxime's sunxi/dt-for-4.7 branch.
+>=20
+> Any news on this series? It's been almost 2 weeks since I reposted
+> them for 4.7, and longer since I first posted v2.
 
-Tested-by: Pramod Gurav <gpramod@codeaurora.org>
+Nope, no news yet.
 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> index 1c9d48ea4914..9cbf5d9df8fd 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -13,6 +13,8 @@ Required properties:
->  - clock-names: must contain "bam_clk" entry
->  - qcom,ee : indicates the active Execution Environment identifier 
-> (0-7) used in
->    the secure world.
-> +- qcom,controlled-remotely : optional, indicates that the bam is 
-> controlled by
-> +  remote proccessor i.e. execution environment.
-> 
->  Example:
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 789d5f836bf7..d0f878a78fae 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -387,6 +387,7 @@ struct bam_device {
-> 
->  	/* execution environment ID, from DT */
->  	u32 ee;
-> +	bool controlled_remotely;
-> 
->  	const struct reg_offset_data *layout;
-> 
-> @@ -1042,6 +1043,9 @@ static int bam_init(struct bam_device *bdev)
->  	val = readl_relaxed(bam_addr(bdev, 0, BAM_NUM_PIPES));
->  	bdev->num_channels = val & BAM_NUM_PIPES_MASK;
-> 
-> +	if (bdev->controlled_remotely)
-> +		return 0;
-> +
->  	/* s/w reset bam */
->  	/* after reset all pipes are disabled and idle */
->  	val = readl_relaxed(bam_addr(bdev, 0, BAM_CTRL));
-> @@ -1129,6 +1133,9 @@ static int bam_dma_probe(struct platform_device 
-> *pdev)
->  		return ret;
->  	}
-> 
-> +	bdev->controlled_remotely = of_property_read_bool(pdev->dev.of_node,
-> +						"qcom,controlled-remotely");
-> +
->  	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
->  	if (IS_ERR(bdev->bamclk))
->  		return PTR_ERR(bdev->bamclk);
+I'm swamped and will get round to them in good time.
+
+> > Some regulator patches were merged into v4.6-rc1. Those have been
+> > dropped from this series. Other than that there are no changes.
+> >
+> > Patch 1 adds a MAINTAINERS entry for the X-Powers AXP PMICs.
+> > I list myself as the maintainer.
+> >
+> > Patch 2 adds AXP809 to the axp20x bindings.
+> >
+> > Patch 3 adds AXP809 support to the axp20x mfd driver.
+> >
+> > Patch 4 adds AXP809 support to the axp20x regulator driver.
+> > This patch depends on patch 3.
+> >
+> > Patch 5 adds a dtsi file for AXP809.
+> >
+> > Patch 6 enables AXP809 support on the A80 Optimus board.
+> >
+> > Patch 7 enables AXP809 support on the Cubieboard 4.
+> >
+> > Patch 8 disables the dummy regulators from sunxi-common-regulators.dtsi
+> > on the A80 Optimus board. These aren't used in the board DTS anymore.
+> >
+> > Patch 9 disables the dummy regulators from sunxi-common-regulators.dtsi=
+,
+> > on the Cubieboard4. These aren't used in the board DTS anymore.
+> >
+> >
+> > Regards
+> > ChenYu
+> >
+> > Chen-Yu Tsai (9):
+> >   MAINTAINERS: Add entry for X-Powers AXP family PMIC drivers
+> >   mfd: axp20x: Add bindings for AXP809 PMIC
+> >   mfd: axp20x: Add support for AXP809 PMIC
+> >   regulator: axp20x: support AXP809 variant
+> >   ARM: dts: sunxi: Add dtsi file for AXP809 PMIC
+> >   ARM: dts: sun9i: a80-optimus: Add AXP809 PMIC device node and
+> >     regulators
+> >   ARM: dts: sun9i: cubieboard4: Add AXP809 PMIC device node and
+> >     regulators
+> >   ARM: dts: sun9i: a80-optimus: Disable dummy regulators vcc3v0, vcc3v3=
+,
+> >     vcc5v0
+> >   ARM: dts: sun9i: cubieboard4: Disable dummy regulators vcc3v0, vcc3v3=
+,
+> >     vcc5v0
+> >
+> >  Documentation/devicetree/bindings/mfd/axp20x.txt   |  31 ++++-
+> >  MAINTAINERS                                        |   6 +
+> >  .../dts/{sun9i-a80-cubieboard4.dts =3D> axp809.dtsi} |  98 ++---------=
+---
+> >  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts        | 143 +++++++++++++=
++++++++-
+> >  arch/arm/boot/dts/sun9i-a80-optimus.dts            | 143 +++++++++++++=
++++++++-
+> >  drivers/mfd/axp20x-rsb.c                           |   1 +
+> >  drivers/mfd/axp20x.c                               |  79 ++++++++++++
+> >  drivers/regulator/axp20x-regulator.c               | 119 ++++++++++++-=
+----
+> >  include/linux/mfd/axp20x.h                         |  59 +++++++++
+> >  9 files changed, 554 insertions(+), 125 deletions(-)
+> >  copy arch/arm/boot/dts/{sun9i-a80-cubieboard4.dts =3D> axp809.dtsi} (5=
+2%)
+> >
+> >
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
