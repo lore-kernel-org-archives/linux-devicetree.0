@@ -1,112 +1,126 @@
-Return-Path: <guodong.xu@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20160404225453.GD16484@atomide.com>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
-	<1459589383-16914-6-git-send-email-guodong.xu@linaro.org>
-	<CACRpkdaQdVL2A=0-8qQLMa0BBpxp4dugyT91DJW2kUm3BcB9aw@mail.gmail.com>
-	<20160404225453.GD16484@atomide.com>
-Date: Tue, 12 Apr 2016 16:28:35 +0800
-Message-ID: <CAFGCpxwmXGFCRvfdus=+uhJTb-tK2fpqgoF3q3QHEzRcWkT+_g@mail.gmail.com>
-Subject: Re: [PATCH v2 05/16] arm64: dts: add Hi6220 pinctrl configuration nodes
-From: Guodong Xu <guodong.xu@linaro.org>
-Content-Type: multipart/alternative; boundary=001a113f962285c47b0530457251
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Xu Wei <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd.bergmann@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, XinWei Kong <kong.kongxinwei@hisilicon.com>, Zhong Kaihua <zhongkaihua@huawei.com>
+In-Reply-To: <570B416E.7020507@electromag.com.au>
+References: <1459912250-50878-1-git-send-email-preid@electromag.com.au>
+	<1459912250-50878-2-git-send-email-preid@electromag.com.au>
+	<20160407175755.GN32257@rob-hp-laptop>
+	<570B416E.7020507@electromag.com.au>
+Date: Mon, 11 Apr 2016 09:41:34 -0500
+Message-ID: <CAL_JsqJMt5zB4OfteYuHcH6QacAjY3sA4c7Pg-JyYgFxk1=Q6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] leds: pca9532: Add device tree binding
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Phil Reid <preid@electromag.com.au>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, riku.voipio@iki.fi, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113f962285c47b0530457251
-Content-Type: text/plain; charset=UTF-8
-
-On 5 April 2016 at 06:54, Tony Lindgren <tony@atomide.com> wrote:
-
-> * Linus Walleij <linus.walleij@linaro.org> [160403 12:32]:
-> > On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu@linaro.org>
-> wrote:
-> >
-> > > From: Zhong Kaihua <zhongkaihua@huawei.com>
-> > >
-> > > Add Hi6220 pinctrl configuration nodes
-> > >
-> > > Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
-> > > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Nah. Acked-by is fine, but I didn't write handle or write this
-> > code. :)
-> >
-> > No ACK from Haojian? Tony? Looks allright?
+On Mon, Apr 11, 2016 at 1:17 AM, Phil Reid <preid@electromag.com.au> wrote:
+> On 8/04/2016 1:57 AM, Rob Herring wrote:
+>>
+>> On Wed, Apr 06, 2016 at 11:10:50AM +0800, Phil Reid wrote:
+>>>
+>>> This patch adds basic device tree support for the pca9532 LEDs.
+>>>
+>>> Signed-off-by: Phil Reid <preid@electromag.com.au>
+>>> ---
+>>>   .../devicetree/bindings/leds/leds-pca9532.txt      | 32 +++++++++++
+>>>   drivers/leds/leds-pca9532.c                        | 63
+>>> ++++++++++++++++++++--
+>>>   include/dt-bindings/leds/leds-pca9532.h            | 18 +++++++
+>>>   include/linux/leds-pca9532.h                       |  8 ++-
+>>>   4 files changed, 112 insertions(+), 9 deletions(-)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> new file mode 100644
+>>> index 0000000..b48c223
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>
+>>
+>> Would leds-pca953x.txt be more appropriate.
 >
+> I have no objection. I just followed the driver file name.
+> Other disucssions seem to indicate the preference to move away from
+> the 'x' in driver names and just use one of the devices for the name.
 
-Linus, Haojian, Tony,
+That preference (requirement really) is for compatible strings.
 
-I will add:
-Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-
-> Looks OK to me, I guess no driver changes needed (again :)?
+> Note that there is a gpio-pca953x driver.
+> Which support pca9534-9539 plus other gpio devices.
+> Those devices don't have the same functionality as this series.
 >
-
-No driver changes is needed.
-
-I will add:
-Acked-by: Tony Lindgren <tony@atomide.com>
-
-Thank you.
-
--Guodong
-
-
+>>
+>>> @@ -0,0 +1,32 @@
+>>> +*NXP - pca9532 PWM LED Driver
+>>> +
+>>> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
+>>> +The PWM support 256 steps.
+>>
+>>
+>> supports
+>>
+>>> +
+>>> +Required properties:
+>>> +       - compatible:
+>>> +               "nxp,pca9530"
+>>> +               "nxp,pca9531"
+>>> +               "nxp,pca9532"
+>>> +               "nxp,pca9533"
+>>> +       - reg -  I2C slave address
+>>> +
+>>> +Each led is represented as a sub-node of the nxp,pca9530.
+>>> +
+>>> +LED sub-node properties:
+>>
+>>
+>> What are sub-node names and how many?
 >
-> Tony
+> They don't seem to be important. It's a fallback for when label isn't
+> defined.
+
+
+> I just following leds-netxbig.txt
 >
-
---001a113f962285c47b0530457251
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On 5 April 2016 at 06:54, Tony Lindgren <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:tony@atomide.com" target=3D"_blank">tony@atomide.com</a>&gt;</sp=
-an> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
- 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);border-left=
--style:solid;padding-left:1ex">* Linus Walleij &lt;<a href=3D"mailto:linus.=
-walleij@linaro.org">linus.walleij@linaro.org</a>&gt; [160403 12:32]:<br>
-<span class=3D"">&gt; On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu &lt;<a hr=
-ef=3D"mailto:guodong.xu@linaro.org">guodong.xu@linaro.org</a>&gt; wrote:<br=
+>>
+>>> +- type: Output configuration
+>>> +       0 = NONE, 1 = LED, 2 = N2100_BEEP, 3 = GPIO
+>>
+>>
+>> Add vendor prefix.
 >
-&gt;<br>
-&gt; &gt; From: Zhong Kaihua &lt;<a href=3D"mailto:zhongkaihua@huawei.com">=
-zhongkaihua@huawei.com</a>&gt;<br>
-&gt; &gt;<br>
-&gt; &gt; Add Hi6220 pinctrl configuration nodes<br>
-&gt; &gt;<br>
-&gt; &gt; Signed-off-by: Zhong Kaihua &lt;<a href=3D"mailto:zhongkaihua@hua=
-wei.com">zhongkaihua@huawei.com</a>&gt;<br>
-&gt; &gt; Signed-off-by: Linus Walleij &lt;<a href=3D"mailto:linus.walleij@=
-linaro.org">linus.walleij@linaro.org</a>&gt;<br>
-&gt;<br>
-&gt; Nah. Acked-by is fine, but I didn&#39;t write handle or write this<br>
-&gt; code. :)<br>
-&gt;<br>
-&gt; No ACK from Haojian? Tony? Looks allright?<br></span></blockquote><div=
-><br></div><div>Linus, Haojian, Tony,</div><div><br></div><div>I will add:=
-=C2=A0<br></div><div><div>Acked-by: Haojian Zhuang &lt;<a href=3D"mailto:ha=
-ojian.zhuang@linaro.org">haojian.zhuang@linaro.org</a>&gt;=C2=A0</div></div=
-><div>Acked-by: Linus Walleij &lt;<a href=3D"mailto:linus.walleij@linaro.or=
-g">linus.walleij@linaro.org</a>&gt;<br></div><div><br></div><blockquote cla=
-ss=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;=
-border-left-color:rgb(204,204,204);border-left-style:solid;padding-left:1ex=
-"><span class=3D""><br>
-</span>Looks OK to me, I guess no driver changes needed (again :)?<br></blo=
-ckquote><div><br></div><div>No driver changes is needed.</div><div><br></di=
-v><div>I will add:</div><div>Acked-by:=C2=A0Tony Lindgren &lt;<a href=3D"ma=
-ilto:tony@atomide.com">tony@atomide.com</a>&gt;</div><div><br></div><div>Th=
-ank you.</div><div><br></div><div>-Guodong</div><div>=C2=A0</div><blockquot=
-e class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width=
-:1px;border-left-color:rgb(204,204,204);border-left-style:solid;padding-lef=
-t:1ex">
-<span class=3D""><font color=3D"#888888"><br>
-Tony<br>
-</font></span></blockquote></div><br></div></div>
-
---001a113f962285c47b0530457251--
+> Done.
+>>
+>>
+>>> +
+>>> +Example:
+>>> +
+>>> +  ledBL: pca9530@60 {
+>>> +    compatible = "nxp,pca9530";
+>>> +    reg = <0x60>;
+>>> +
+>>> +    led0 {
+>>> +      type = <PCA9532_TYPE_LED>;
+>>> +    };
+>>> +  };
+>>> +
+>>> +For more product information please see the link below:
+>>> +http://nxp.com/documents/data_sheet/PCA9532.pdf
+>>
+>>
+>> Move this up to the top.
+>
+> Done, but note this doesn't follow the layout of other files in the folder.
+>
+>
+> --
+> Regards
+> Phil Reid
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
