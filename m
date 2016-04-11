@@ -1,72 +1,156 @@
-From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RESEND PATCH v9] mtd: spi-nor: add hisilicon spi-nor flash
- controller driver
-Date: Mon, 11 Apr 2016 09:28:15 +0800
-Message-ID: <570AFDAF.9050607@huawei.com>
-References: <1458979861-3619-1-git-send-email-xuejiancheng@huawei.com>
- <56F73BC9.5000300@gmail.com> <56F8F630.5050008@huawei.com>
- <20160404064418.GC13995@localhost> <5705C17F.9030904@huawei.com>
- <5705C5E2.6070206@denx.de> <57076B26.7030700@huawei.com>
- <5707821F.4020300@denx.de>
+From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] hwrng: hisi: Add support for Hisilicon SoC RNG
+Date: Mon, 11 Apr 2016 09:36:01 +0800
+Message-ID: <570AFF81.7000403@huawei.com>
+References: <1460017397-30996-1-git-send-email-wangkefeng.wang@huawei.com>
+ <1460017397-30996-3-git-send-email-wangkefeng.wang@huawei.com>
+ <CANLsYkwRGm3oBWaoKki4Ge3A_-temOsdJcwby6ds_X5_XGYZtQ@mail.gmail.com>
+ <57071162.908@huawei.com>
+ <CANLsYkwm6ABM_SijZWe8X7Y6APqYKMcvmK+n6Uh3784L6nCuGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5707821F.4020300-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <CANLsYkwm6ABM_SijZWe8X7Y6APqYKMcvmK+n6Uh3784L6nCuGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, furquan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 2016/4/8 18:04, Marek Vasut wrote:
-> On 04/08/2016 10:26 AM, Jiancheng Xue wrote:
->> Hi,
+
+On 2016/4/8 22:35, Mathieu Poirier wrote:
+> On 7 April 2016 at 20:03, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
 >>
->> On 2016/4/7 10:28, Marek Vasut wrote:
->>> On 04/07/2016 04:10 AM, Jiancheng Xue wrote:
->>>> Hi Brian,
->>>>    Thank you very much for your comments. I'll fix these issues in next version.
->>>> In addition, for easy understanding I'd like to rewrite hisi_spi_nor_write and
->>>> hisi_spi_nor_read. Your comments on these modifications will be highly appreciated.
->>>
->>> Would you please stop top-posting ? It rubs some people the wrong way.
->>>
->> I feel very sorry about that. I have read the etiquette and won't make the same mistake again.
 >>
->>>> static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
->>>> 		size_t *retlen, u_char *read_buf)
->>>> {
->>>> 	struct hifmc_priv *priv = nor->priv;
->>>> 	struct hifmc_host *host = priv->host;
->>>> 	int i;
+>> On 2016/4/7 22:55, Mathieu Poirier wrote:
+>>> On 7 April 2016 at 02:23, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>>> This adds the Hisilicon Random Number Generator(RNG) support,
+>>>> which is found in Hip04 and Hip05 soc.
 >>>>
->>>> 	/* read all bytes in only one time */
->>>> 	if (len <= HIFMC_DMA_MAX_LEN) {
->>>> 		hisi_spi_nor_dma_transfer(nor, from, host->dma_buffer,
->>>> 				len, FMC_OP_READ);
->>>> 		memcpy(read_buf, host->buffer, len);
+>>>> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  drivers/char/hw_random/Kconfig    |  13 ++++
+>>>>  drivers/char/hw_random/Makefile   |   1 +
+>>>>  drivers/char/hw_random/hisi-rng.c | 121 ++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 135 insertions(+)
+>>>>  create mode 100644 drivers/char/hw_random/hisi-rng.c
+>> [...]
+>>>> +
+>>>> +#define RNG_SEED       0x0
+>>>> +#define RNG_CTRL       0x4
+>>>> +  #define RNG_SEED_SEL BIT(2)
+>>>> +  #define RNG_RING_EN  BIT(1)
+>>>> +  #define RNG_EN       BIT(0)
+>>>> +#define RNG_RAN_NUM    0x10
+>>>> +#define RNG_PHY_SEED   0x14
+>>>> +#define RNG_RELOAD_ERR 0x84
+>>>> +
+>>>> +#define to_hisi_rng(p) container_of(p, struct hisi_rng, rng)
+>>>> +
+>>>> +static int seed_sel;
+>>>> +module_param(seed_sel, int, S_IRUGO);
+>>>> +MODULE_PARM_DESC(seed_sel, "Auto reload seed. 0, use LFSR(default); 1, use ring oscillator.");
+>>>> +
+>>>> +struct hisi_rng {
+>>>> +       void __iomem *base;
+>>>> +       struct hwrng rng;
+>>>> +};
+>>>> +
+>>>> +static int hisi_rng_init(struct hwrng *rng)
+>>>> +{
+>>>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
+>>>> +       int val = RNG_EN;
+>>>> +       u32 seed;
+>>>> +
+>>>> +       /* get a random number as initial seed */
+>>>> +       get_random_bytes(&seed, sizeof(seed));
+>>>> +
+>>>> +       writel_relaxed(seed, hrng->base + RNG_SEED);
+>>>> +
+>>>> +       if (seed_sel == 1)
+>>>> +               val |= RNG_RING_EN | RNG_SEED_SEL;
 >>>
->>> Is all the ad-hoc memcpying necessary? I think you can use
->>> dma_map_single() and co to obtain DMAble memory for your
->>> controller's use and then you can probably get rid of most
->>> of this stuff.
+>>> Hello Kefeng,
 >>>
->> Considering read_buf >= high_mem case, I think it is also complicated to use dma_map_*
->> and the DMA buffer allocated by the driver is still needed. But I am not sure about
->> this. Please let me know if I am wrong. Thank you!
+>>> Please explain what this mode does.  Otherwise reviewers have to make
+>>> a guess based on the description of the module parameter.
+>> The seed is reload periodically, there are two choice of seeds, default using
+>> the val from LFSR, seed_sel = 1  will use the val generated by ring oscillator.
 > 
-> Does your controller/DMA have a limitation where it's buffers must be in
-> the bottom 4GiB range ? The DMA framework should be able to take care of
-> such platform limitations.
+> This is the kind of comment that should be in the code.  That way
+> people can understand what is going on.
 > 
-When read_buf is allocated by vmalloc, the underlying physical memory may be not contiguous.
-In this case, dma_map_single can't be used directly. I think inner DMA buffer and memcpy are still
-needed. Am I right?
 
-Regards,
-Jiancheng.
+Ok, will add them into code.
+
+>>>
+>>>> +
+>>>> +       writel_relaxed(val, hrng->base + RNG_CTRL);
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>> +static void hisi_rng_cleanup(struct hwrng *rng)
+>>>> +{
+>>>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
+>>>> +
+>>>> +       writel_relaxed(0, hrng->base + RNG_CTRL);
+>>>> +}
+>>>> +
+>>>> +static int hisi_rng_read(struct hwrng *rng, void *buf, size_t max,
+>>>> +                          bool wait)
+>>>
+>>> What are variable 'max' and 'wait' used for?  As far as I can tell
+>>> they can be removed.
+>> Ok, will use data_read callback in struct hwrng.
+> 
+> Sorry about that, I just noticed this morning the "data_read()"
+> callback is obsolete [1].  As such you can probably keep the code the
+> way you had it.
+> 
+> [1]. http://lxr.free-electrons.com/source/include/linux/hw_random.h#L28
+> 
+>>
+>>>
+>>>> +{
+>>>> +       struct hisi_rng *hrng = to_hisi_rng(rng);
+>>>> +       u32 *data = buf;
+>>>> +
+>>>> +       *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
+>>>> +       return 4;
+>>>
+>>> Why not simply doing the readl_relaxed() in the the code rather than
+>>> introducing a new function?
+>> Not clear, your mean introduce the data variable?
+>> Will use following data_read, thanks.
+>>
+>> static int hisi_rng_data_read(struct hwrng *rng, u32 *data)
+>> {
+>>        struct hisi_rng *hrng = to_hisi_rng(rng);
+>>        *data = readl_relaxed(hrng->base + RNG_RAN_NUM);
+>>        return 4;
+>> }
+> 
+> See my comment above, you were right the first time.
+
+Will resend it, thanks for your review, :)
+
+> 
+> Apology and regards,
+> Mathieu
+> 
+>>
+>> Thanks,
+>> Kefeng
+>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
