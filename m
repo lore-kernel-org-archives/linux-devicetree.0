@@ -1,77 +1,88 @@
-From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: apm: Fix compatible string for X-Gene 2 SATA
- controller DTS node
-Date: Mon, 11 Apr 2016 14:44:43 +0530
-Message-ID: <CAFd313y-VV1Kk754b=fV0-kToMz=7Y=COqwSJQh=agYaLjUzyw@mail.gmail.com>
-References: <1459245294-22678-1-git-send-email-rsahu@apm.com>
-	<CADaLNDnU7UJOOFs9euPP035iJX5b1-p7jLoKB5f0Sn==Ec3sYA@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 04/16] ARM: davinci: Move clock init after ioremap.
+Date: Mon, 11 Apr 2016 14:44:49 +0530
+Message-ID: <570B6B09.8060907@ti.com>
+References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+ <1458863503-31121-5-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADaLNDnU7UJOOFs9euPP035iJX5b1-p7jLoKB5f0Sn==Ec3sYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458863503-31121-5-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, David.Laight@ACULAB.COM, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+On Friday 25 March 2016 05:21 AM, David Lechner wrote:
+> Some clocks (such as the USB PHY clocks in DA8xx) will need to use iomem.
+> The davinci_common_init() function must be called before the ioremap, so
+> the clock init is now split out as separate function.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+> 
+> v3 changes: This is a new patch. It takes care of the issue of unwanted ioremap
+> in clock set_parent functions.
+> 
+> 
+>  arch/arm/mach-davinci/clock.c  | 4 ++--
+>  arch/arm/mach-davinci/clock.h  | 7 ++++++-
+>  arch/arm/mach-davinci/common.c | 6 ------
+>  arch/arm/mach-davinci/da830.c  | 2 ++
+>  arch/arm/mach-davinci/da850.c  | 2 ++
+>  arch/arm/mach-davinci/dm355.c  | 1 +
+>  arch/arm/mach-davinci/dm365.c  | 1 +
+>  arch/arm/mach-davinci/dm644x.c | 1 +
+>  arch/arm/mach-davinci/dm646x.c | 1 +
+>  9 files changed, 16 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/clock.c b/arch/arm/mach-davinci/clock.c
+> index 3424eac6..a5c2629 100644
+> --- a/arch/arm/mach-davinci/clock.c
+> +++ b/arch/arm/mach-davinci/clock.c
+> @@ -560,7 +560,7 @@ EXPORT_SYMBOL(davinci_set_pllrate);
+>   * than that used by default in <soc>.c file. The reference clock rate
+>   * should be updated early in the boot process; ideally soon after the
+>   * clock tree has been initialized once with the default reference clock
+> - * rate (davinci_common_init()).
+> + * rate (davinci_clk_init()).
+>   *
+>   * Returns 0 on success, error otherwise.
+>   */
+> @@ -581,7 +581,7 @@ int davinci_set_refclk_rate(unsigned long rate)
+>  	return 0;
+>  }
+>  
+> -int __init davinci_clk_init(struct clk_lookup *clocks)
+> +int __init _davinci_clk_init(struct clk_lookup *clocks)
+>  {
+>  	struct clk_lookup *c;
+>  	struct clk *clk;
+> diff --git a/arch/arm/mach-davinci/clock.h b/arch/arm/mach-davinci/clock.h
+> index 1e4e836..8b0fbbe 100644
+> --- a/arch/arm/mach-davinci/clock.h
+> +++ b/arch/arm/mach-davinci/clock.h
+> @@ -124,7 +124,12 @@ struct clk {
+>  		.clk = ck,	\
+>  	}			\
+>  
+> -int davinci_clk_init(struct clk_lookup *clocks);
+> +int _davinci_clk_init(struct clk_lookup *clocks);
+> +static inline void davinci_clk_init(struct davinci_soc_info *soc_info)
+> +{
+> +	if (soc_info->cpu_clks && _davinci_clk_init(soc_info->cpu_clks))
+> +		panic("davinci_clk_init: Failed to init clocks.\n");
+> +}
 
-On Wed, Mar 30, 2016 at 12:41 AM, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org> wrote:
->
-> On Tue, Mar 29, 2016 at 2:54 AM, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org> wrote:
-> > Fix X-Gene SATA controller compatible string for Merlin board.
-> >
-> > Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-> > Acked-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
->
-> I will queue this patch into xgene-next tree.
->
-> > ---
-> >  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi |    6 +++---
-> >  1 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> > index 5d87a3d..74d971e 100644
-> > --- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> > +++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-> > @@ -524,7 +524,7 @@
-> >                 };
-> >
-> >                 sata1: sata@1a000000 {
-> > -                       compatible = "apm,xgene-ahci";
-> > +                       compatible = "apm,xgene-ahci-v2";
-> >                         reg = <0x0 0x1a000000 0x0 0x1000>,
-> >                               <0x0 0x1f200000 0x0 0x1000>,
-> >                               <0x0 0x1f20d000 0x0 0x1000>,
-> > @@ -534,7 +534,7 @@
-> >                 };
-> >
-> >                 sata2: sata@1a200000 {
-> > -                       compatible = "apm,xgene-ahci";
-> > +                       compatible = "apm,xgene-ahci-v2";
-> >                         reg = <0x0 0x1a200000 0x0 0x1000>,
-> >                               <0x0 0x1f210000 0x0 0x1000>,
-> >                               <0x0 0x1f21d000 0x0 0x1000>,
-> > @@ -544,7 +544,7 @@
-> >                 };
-> >
-> >                 sata3: sata@1a400000 {
-> > -                       compatible = "apm,xgene-ahci";
-> > +                       compatible = "apm,xgene-ahci-v2";
-> >                         reg = <0x0 0x1a400000 0x0 0x1000>,
-> >                               <0x0 0x1f220000 0x0 0x1000>,
-> >                               <0x0 0x1f22d000 0x0 0x1000>,
-> > --
-> > 1.7.1
-> >
+I am not sure about the need for an additional API (_davinci_clk_init)
+especially when you end up exposing both through clock.h. Just make make
+calls from SoC files like:
 
+	davinci_clk_init(davinci_soc_info_da830.cpu_clks);
 
-Any comments on this patch ??
->
->
-> Regards,
-> Duc Dang.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would ignore the panic() call too since davinci_clk_init() does not
+really return an error (never has).
+
+Thanks,
+Sekhar
