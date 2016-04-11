@@ -1,62 +1,40 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH next v2 2/2] PCI: keystone: remove unnecessary goto statement
-Date: Mon, 11 Apr 2016 10:50:31 -0400
-Message-ID: <1460386231-8377-2-git-send-email-m-karicheri2@ti.com>
-References: <1460386231-8377-1-git-send-email-m-karicheri2@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 05/17] memory: omap-gpmc: Implement IRQ domain for
+ NAND IRQs
+Date: Mon, 11 Apr 2016 09:52:23 -0500
+Message-ID: <20160411145223.GA29936@rob-hp-laptop>
+References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
+ <1460023715-19332-6-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1460386231-8377-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460023715-19332-6-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the misuse of goto statement in ks_pcie_get_irq_controller_info()
-as simple return is more appropriate for this function. While at
-it add an error log for absence of interrupt controller node.
+On Thu, Apr 07, 2016 at 01:08:23PM +0300, Roger Quadros wrote:
+> GPMC provides 2 interrupts for NAND use. i.e. fifoevent and termcount.
+> Use IRQ domain for this. NAND device tree node can then
+> get the necessary interrupts by using gpmc as the interrupt parent.
+> 
+> Legacy boot uses gpmc_get_client_irq to get the
+> NAND interrupts from the GPMC IRQ domain.
+> Get rid of custom bitmasks and use IRQ domain for that
+> as well.
+> 
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/bus/ti-gpmc.txt |   8 +
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
----
- v2 - removed an unnecessary extra line added in the previous version
- v1 - same as before initial version
- drivers/pci/host/pci-keystone.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-index 299f2f0..0234828 100644
---- a/drivers/pci/host/pci-keystone.c
-+++ b/drivers/pci/host/pci-keystone.c
-@@ -181,11 +181,13 @@ static int ks_pcie_get_irq_controller_info(struct keystone_pcie *ks_pcie,
- 	*np_temp = of_find_node_by_name(np_pcie, controller);
- 	if (!(*np_temp)) {
- 		dev_err(dev, "Node for %s is absent\n", controller);
--		goto out;
-+		return ret;
- 	}
- 	temp = of_irq_count(*np_temp);
--	if (!temp)
--		goto out;
-+	if (!temp) {
-+		dev_err(dev, "No entries in %s\n", controller);
-+		return ret;
-+	}
- 	if (temp > max_host_irqs)
- 		dev_warn(dev, "Too many %s interrupts defined %u\n",
- 			(legacy ? "legacy" : "MSI"), temp);
-@@ -203,7 +205,6 @@ static int ks_pcie_get_irq_controller_info(struct keystone_pcie *ks_pcie,
- 		*num_irqs = temp;
- 		ret = 0;
- 	}
--out:
- 	return ret;
- }
- 
--- 
-1.9.1
+>  drivers/memory/omap-gpmc.c                        | 246 ++++++++++++----------
+>  include/linux/omap-gpmc.h                         |   5 +-
+>  3 files changed, 144 insertions(+), 115 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
