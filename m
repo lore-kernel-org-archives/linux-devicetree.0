@@ -1,60 +1,57 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: Remove 0, prefix from unit-addresses
-Date: Mon, 11 Apr 2016 12:47:23 -0600
-Message-ID: <570BF13B.4060108@wwwdotorg.org>
-References: <1460383271-27306-2-git-send-email-thierry.reding@gmail.com>
- <570BCB41.2030504@wwwdotorg.org>
- <CAL_JsqLASP+cytYA7rWn-Ox2W47rkf3t+n3KwBexvBQNc4J_RQ@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH RFT 2/2] macb: kill PHY reset code
+Date: Mon, 11 Apr 2016 20:51:15 +0200
+Message-ID: <20160411185115.GA30623@lunn.ch>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <2811962.eGX2i5RJbZ@wasted.cogentembedded.com>
+ <20160411022802.GB4307@lunn.ch>
+ <570BE1C5.70502@cogentembedded.com>
+ <20160411181904.GB29709@lunn.ch>
+ <570BEF46.7060105@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLASP+cytYA7rWn-Ox2W47rkf3t+n3KwBexvBQNc4J_RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <570BEF46.7060105-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2016 12:32 PM, Rob Herring wrote:
-> On Mon, Apr 11, 2016 at 11:05 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 04/11/2016 08:01 AM, Thierry Reding wrote:
->>>
->>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> When Tegra124 support was first merged the unit-addresses of all devices
->>> were listed with a "0," prefix to encode the reg property's second cell.
->>> It turns out that this notation is not correct, and the "," separator is
->>> only used to separate fields in the unit address (such as the device and
->>> function number in PCI devices), not individual cells for addresses with
->>> more than one cell.
->>
->>
->>> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
->>> b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
->>
->>
->>> -       gpu@0,57000000 {
->>> +       gpu@57000000 {
->>>                  /*
->>>                   * Node left disabled on purpose - the bootloader will
->>> enable
->>>                   * it after having set the VPR up
->>
->>
->> So the bootloader doesn't actually do that for the new node name at present.
->> I have written a patch to make it do so, but haven't sent it yet since I
->> wrote it in the middle of a large cleanup of U-Boot. I expect I can shuffle
->> it to the front of the series and send it soon though. Without a new
->> bootloader that contains this change, IIUC all graphics will be
->> non-operative if this change is applied.
->
-> Then you should leave this one alone for a while.
->
-> I also found this looking at u-boot:
->
-> arch/arm/dts/tegra124.dtsi:     gpu@57000000 {
+On Mon, Apr 11, 2016 at 09:39:02PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 04/11/2016 09:19 PM, Andrew Lunn wrote:
+> 
+> >>>The code you are deleting would of ignored the flags in the gpio
+> >>>property, i.e. active low.
+> >>
+> >>    Hm, you're right -- I forgot about that... :-/
+> >>
+> >>>The new code in the previous patch does
+> >>>however take the flags into account. Did you check if there are any
+> >>>device trees which have flags, which were never used, but are now
+> >>>going to be used and thus break...
+> >>
+> >>    Checked this now and found out arch/arm/boot/dts/ar91-vinco.dts.
+> >>Looks like it needs to be fixed indeed...
+> >>
+> >And this is where it gets tricky. You are breaking backwards
+> >compatibility by now respecting the flag. An old DT blob is not going
+> >to work.
+> 
+>    Do we care that much about the DT blobs that are just *wrong*?
 
-FWIW, that's because the U-Boot DTs use #address-cells=<1> on this chip 
-so there was no question of using commas in the unit address or not. 
-That may have been because U-Boot imported the DTs (or parts of them) 
-from Linux before Linux switched to #address-cells=<2> on this chip.
+Wrong, but currently works.
+
+> >You potentially need to add a new property and deprecate the old one.
+> 
+>    I would like to avoid that...
+
+You will need the agreement from the at91-vinco maintainer.
+
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
