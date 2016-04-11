@@ -1,133 +1,65 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH V2 0/3] dmaengine: bcm2835: support dma channel 11 to 14
-Date: Mon, 11 Apr 2016 13:29:06 +0000
-Message-ID: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] PM / Domains: Define DT bindings for PM QoS device
+ latencies
+Date: Mon, 11 Apr 2016 08:29:42 -0500
+Message-ID: <20160411132942.GA1519@rob-hp-laptop>
+References: <1459432226-22562-1-git-send-email-ulf.hansson@linaro.org>
+ <20160401184429.GA18950@rob-hp-laptop>
+ <CAPDyKFombK0Kv-r40xbTm=Y3q07bM5woOPB63xzbrck37Vxrqw@mail.gmail.com>
+ <20160407175704.GA32257@rob-hp-laptop>
+ <CAPDyKFrdbxuT9kh-j1_RDjCovq80=g_q4USzYxPQgPch1sm08A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFrdbxuT9kh-j1_RDjCovq80=g_q4USzYxPQgPch1sm08A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lina Iyer <lina.iyer@linaro.org>, Axel Haslam <ahaslam@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Jon Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Fri, Apr 08, 2016 at 01:19:36PM +0200, Ulf Hansson wrote:
+> [...]
+> 
+> >> >
+> >> > Shouldn't this be split into latency of the domain (and in the domain's
+> >> > node) and latency of the device?
+> >>
+> >> Yes! $Subject patch only takes device latencies into account.
+> >>
+> >> Perhaps what you mean is that we should document device PM QoS
+> >> latencies in another place than
+> >> Documentation/devicetree/bindings/power/power_domain.txt as well?
+> >
+> > Yes, the location is confusing that this is device latency which has
+> > nothing to do with power domains other than the fact we've lost all
+> > state (which a reset could cause too).
+> 
+> Okay, will a new file,
+> Documentation/devicetree/bindings/power/device_qos.txt make sense for
+> you?
+> 
+> >
+> >> Regarding bindings for the domain latencies, I will post that as a
+> >> separate patch soonish.
+> >
+> > It probably makes sense to look at latency bindings as a whole series.
+> 
+> Well, unless you insist, I would rather look at this first.
+> 
+> The domain latencies might be a bit more complex and those shouldn't
+> affect how we describe device latencies, or you think so?
 
-Right now the dma engine officially supports dma channel 11 and 12.
-But the use of dma channel 12 immediately stalls the system.
+Probably not, but I was thinking at least property names would be 
+common. Besides power domains, any external component can add latencies. 
+For example, what's the latency for a display (subsystem) when you have 
+display controller, phy, external bridge and panel? What I don't want to 
+see in DT are people doing some simple latency that's added up all the 
+components and then coming back later and saying they need to change it 
+to be more fine grained and distributed to each component. 
 
-The reason is that the interrupt assigned right now to dma channel 11
-is actually a shared interrupt for dma channels 11 to 12.
-So whenever the dma channel 12, 13 or 14 is used, it triggers the interrupt
-for dma 11 which only clears the interrupt flag for dma channel 11.
-This results in the interrupt 11 is triggered all the time.
+Rob
 
-On top the requesting dma channel12 (and the corresponding irq) triggers
-an immeditate stall of the system, because for the 12th interrupt
-any dma channel will trigger also this interrupt - even if the dma channel
-is controlled by the firmware.
-
-As the description in the default device-tree is (for the above reasons)
-wrong a new means had to get devised that allows correct representation
-of the mapping between interrupts and dma channels.
-
-For this the existing (but unused) device-tree property "interrupt-names"
-is used to define the mapping.
-
-Implementing shared interrupts is another necessity when using dma channel
-11 to 14, so it is a part of this patch.
-
-This patchset requires: [PATCH 0/8 v4] bcm2835 DMA slave support
-to be applied.
-
-Tested playing BigBuckBunny on:
-* fb-tft device (fb_st7735r)
-  - via spi-bcm2835 using slave_sg dma
-* I2S Hifiberry DAC (snd_soc_hifiberry_dac)
-  - via bcm2835-i2s using cyclic dma
-(with a few pending patches to make i2s work propperly)
-
-Interrupt statistics after playing Big Buck Bunny:
-root@raspcm:~# cat /proc/interrupts
-           CPU0
- 17:          0  ARMCTRL-level   1 Edge      2000b880.mailbox
- 27:      47685  ARMCTRL-level  35 Edge      timer
- 33:    6042130  ARMCTRL-level  41 Edge      20980000.usb, dwc2_hsotg:usb1
- 40:      13250  ARMCTRL-level  48 Edge      DMA IRQ
- 42:      13250  ARMCTRL-level  50 Edge      DMA IRQ
- 44:      19087  ARMCTRL-level  52 Edge      DMA IRQ
- 45:          0  ARMCTRL-level  53 Edge      DMA IRQ
- 73:          0  ARMCTRL-level  81 Edge      20200000.gpio:bank0
- 74:          0  ARMCTRL-level  82 Edge      20200000.gpio:bank1
- 77:          0  ARMCTRL-level  85 Edge      20205000.i2c, 20804000.i2c, 20805000.i2c
- 78:          0  ARMCTRL-level  86 Edge      20204000.spi
- 81:        708  ARMCTRL-level  89 Edge      uart-pl011
- 86:     277629  ARMCTRL-level  94 Edge      mmc0
-Err:          0
-
-Tested also with the following property set:
-  brcm,dma-channel-mask = <0x7800>;
-which results in only dma channels 11-14 being available
-and thus all using the single shared irq.
-
-Interrupt statistics for this case:
-           CPU0
- 17:          0  ARMCTRL-level   1 Edge      2000b880.mailbox
- 27:      46843  ARMCTRL-level  35 Edge      timer
- 33:    5412801  ARMCTRL-level  41 Edge      20980000.usb, dwc2_hsotg:usb1
- 51:      45502  ARMCTRL-level  59 Edge      DMA IRQ, DMA IRQ, DMA IRQ, DMA IRQ
- 73:          0  ARMCTRL-level  81 Edge      20200000.gpio:bank0
- 74:          0  ARMCTRL-level  82 Edge      20200000.gpio:bank1
- 77:          0  ARMCTRL-level  85 Edge      20205000.i2c, 20804000.i2c, 20805000.i2c
- 78:          0  ARMCTRL-level  86 Edge      20204000.spi
- 81:        706  ARMCTRL-level  89 Edge      uart-pl011
- 86:     297235  ARMCTRL-level  94 Edge      mmc0
-Err:          0
-
-Note that support for more interrupts than irq 0 to 14
-is not implemented (and this value is also hard-coded).
-
-Allowing dma channel 15 to get controlled well would require
-further extensive changes to the device-tree (separate register region).
-
-Also as mentioned above dma-channel 15 is used by the firmware
-and is - for all practical purposes - not available to
-the kernel.
-
-Only when this situation changes a valid effort can get made.
-
-One major concern here is the fact that we have no dedicated interrupt
-for dma channel 15. There is only the "catch all" interrupt, which - as
-mentioned above - also triggers for dma channels used by the firmware,
-which leads to an unnecessary amount of interrupts and can result
-in system lockups...
-
-The only potential usage would be for dma transfers where we do
-not need an interrupt, but that may require further changes
-to the dmaengine and more to support correctly.
-
-One such "candidate" for the use of dma channel 15 could be
-the tx-dma of spi-bcm2835, as for this specifically we only need
-to get the interrupt when the rx-dma finishes, but that is a
-very special case.
-
-Avoiding the interrupt for the spi-tx-dma is still something that
-could get investigated in a different patch-set.
-
-Changelog:
-  V1 -> V2: added explicit documentation for "dma-shared-all"
-            to the dt-bindings documentation
-
-Martin Sperl (3):
-  dt/bindings: bcm2835: add interrupt-names property
-  dmaengine: bcm2835: use platform_get_irq_byname
-  ARM: bcm2835: add interrupt-names and apply correct mapping
-
- .../devicetree/bindings/dma/brcm,bcm2835-dma.txt   | 26 ++++++++
- arch/arm/boot/dts/bcm283x.dtsi                     | 22 ++++++-
- drivers/dma/bcm2835-dma.c                          | 77 ++++++++++++++++++----
- 3 files changed, 110 insertions(+), 15 deletions(-)
-
---
-2.1.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Kind regards
+> Uffe
