@@ -1,194 +1,527 @@
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH v3 2/2] hwrng: hisi: Add support for Hisilicon SoC RNG
-Date: Mon, 11 Apr 2016 11:01:58 +0800
-Message-ID: <1460343718-2722-3-git-send-email-wangkefeng.wang@huawei.com>
-References: <1460343718-2722-1-git-send-email-wangkefeng.wang@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1460343718-2722-1-git-send-email-wangkefeng.wang@huawei.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, xuwei5@hisilicon.com
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, guohanjun@huawei.com, mathieu.poirier@linaro.org, Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v9 01/20] PM / devfreq: exynos: Add generic exynos bus
+ frequency driver
+Date: Mon, 11 Apr 2016 12:57:39 +0900
+Message-ID: <1460347078-15175-2-git-send-email-cw00.choi@samsung.com>
+References: <1460347078-15175-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1460347078-15175-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the Hisilicon Random Number Generator(RNG) support,
-which is found in Hip04 and Hip05 soc.
+This patch adds the generic exynos bus frequency driver for AMBA AXI bus
+of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exynos SoC
+have the common architecture for bus between DRAM and sub-blocks in SoC.
+This driver can support the generic bus frequency driver for Exynos SoCs.
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+In devicetree, Each bus block has a bus clock, regulator, operation-point
+and devfreq-event devices which measure the utilization of each bus block.
+
+Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+[m.reichl and linux.amoon: Tested it on exynos4412-odroidu3 board]
+Tested-by: Markus Reichl <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>
+Tested-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/char/hw_random/Kconfig    |  13 ++++
- drivers/char/hw_random/Makefile   |   1 +
- drivers/char/hw_random/hisi-rng.c | 125 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 139 insertions(+)
- create mode 100644 drivers/char/hw_random/hisi-rng.c
+ drivers/devfreq/Kconfig      |  15 ++
+ drivers/devfreq/Makefile     |   1 +
+ drivers/devfreq/exynos-bus.c | 443 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 459 insertions(+)
+ create mode 100644 drivers/devfreq/exynos-bus.c
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 67ee8b0..088b1bf 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -333,6 +333,19 @@ config HW_RANDOM_TPM
+diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+index 4de78c552251..cedda8f1e5eb 100644
+--- a/drivers/devfreq/Kconfig
++++ b/drivers/devfreq/Kconfig
+@@ -66,6 +66,21 @@ config DEVFREQ_GOV_USERSPACE
  
- 	  If unsure, say Y.
+ comment "DEVFREQ Drivers"
  
-+config HW_RANDOM_HISI
-+	tristate "Hisilicon Random Number Generator support"
-+	depends on HW_RANDOM && ARCH_HISI
-+	default HW_RANDOM
-+	---help---
-+	  This driver provides kernel-side support for the Random Number
-+	  Generator hardware found on Hisilicon Hip04 and Hip05 SoC.
++config ARM_EXYNOS_BUS_DEVFREQ
++	bool "ARM EXYNOS Generic Memory Bus DEVFREQ Driver"
++	depends on ARCH_EXYNOS
++	select DEVFREQ_GOV_SIMPLE_ONDEMAND
++	select DEVFREQ_EVENT_EXYNOS_PPMU
++	select PM_DEVFREQ_EVENT
++	select PM_OPP
++	help
++	  This adds the common DEVFREQ driver for Exynos Memory bus. Exynos
++	  Memory bus has one more group of memory bus (e.g, MIF and INT block).
++	  Each memory bus group could contain many memoby bus block. It reads
++	  PPMU counters of memory controllers by using DEVFREQ-event device
++	  and adjusts the operating frequencies and voltages with OPP support.
++	  This does not yet operate with optimal voltages.
 +
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called hisi-rng.
-+
-+	  If unsure, say Y.
-+
- config HW_RANDOM_MSM
- 	tristate "Qualcomm SoCs Random Number Generator support"
- 	depends on HW_RANDOM && ARCH_QCOM
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index f5a6fa7..e09305b 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_HW_RANDOM_PPC4XX) += ppc4xx-rng.o
- obj-$(CONFIG_HW_RANDOM_PSERIES) += pseries-rng.o
- obj-$(CONFIG_HW_RANDOM_POWERNV) += powernv-rng.o
- obj-$(CONFIG_HW_RANDOM_EXYNOS)	+= exynos-rng.o
-+obj-$(CONFIG_HW_RANDOM_HISI)	+= hisi-rng.o
- obj-$(CONFIG_HW_RANDOM_TPM) += tpm-rng.o
- obj-$(CONFIG_HW_RANDOM_BCM2835) += bcm2835-rng.o
- obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) += iproc-rng200.o
-diff --git a/drivers/char/hw_random/hisi-rng.c b/drivers/char/hw_random/hisi-rng.c
+ config ARM_EXYNOS4_BUS_DEVFREQ
+ 	bool "ARM Exynos4210/4212/4412 Memory Bus DEVFREQ Driver"
+ 	depends on (CPU_EXYNOS4210 || SOC_EXYNOS4212 || SOC_EXYNOS4412) && !ARCH_MULTIPLATFORM
+diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+index 5134f9ee983d..8af8aaf922a8 100644
+--- a/drivers/devfreq/Makefile
++++ b/drivers/devfreq/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
+ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
+ 
+ # DEVFREQ Drivers
++obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+ obj-$(CONFIG_ARM_EXYNOS4_BUS_DEVFREQ)	+= exynos/
+ obj-$(CONFIG_ARM_EXYNOS5_BUS_DEVFREQ)	+= exynos/
+ obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
 new file mode 100644
-index 0000000..6bdf28c
+index 000000000000..137de6196af3
 --- /dev/null
-+++ b/drivers/char/hw_random/hisi-rng.c
-@@ -0,0 +1,125 @@
++++ b/drivers/devfreq/exynos-bus.c
+@@ -0,0 +1,443 @@
 +/*
-+ * Copyright (C) 2016 HiSilicon Co., Ltd.
++ * Generic Exynos Bus frequency driver with DEVFREQ Framework
++ *
++ * Copyright (c) 2015 Samsung Electronics Co., Ltd.
++ * Author : Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This driver support Exynos Bus frequency feature by using
++ * DEVFREQ framework and is based on drivers/devfreq/exynos/exynos4_bus.c.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
 +
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/hw_random.h>
-+#include <linux/io.h>
++#include <linux/clk.h>
++#include <linux/devfreq.h>
++#include <linux/devfreq-event.h>
++#include <linux/device.h>
++#include <linux/export.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/pm_opp.h>
 +#include <linux/platform_device.h>
-+#include <linux/random.h>
++#include <linux/regulator/consumer.h>
++#include <linux/slab.h>
 +
-+#define RNG_SEED	0x0
-+#define RNG_CTRL	0x4
-+  #define RNG_SEED_SEL	BIT(2)
-+  #define RNG_RING_EN	BIT(1)
-+  #define RNG_EN	BIT(0)
-+#define RNG_RAN_NUM	0x10
-+#define RNG_PHY_SEED	0x14
++#define DEFAULT_SATURATION_RATIO	40
++#define DEFAULT_VOLTAGE_TOLERANCE	2
 +
-+#define to_hisi_rng(p)	container_of(p, struct hisi_rng, rng)
++struct exynos_bus {
++	struct device *dev;
 +
-+static int seed_sel;
-+module_param(seed_sel, int, S_IRUGO);
-+MODULE_PARM_DESC(seed_sel, "Auto reload seed. 0, use LFSR(default); 1, use ring oscillator.");
++	struct devfreq *devfreq;
++	struct devfreq_event_dev **edev;
++	unsigned int edev_count;
++	struct mutex lock;
 +
-+struct hisi_rng {
-+	void __iomem *base;
-+	struct hwrng rng;
++	struct dev_pm_opp *curr_opp;
++
++	struct regulator *regulator;
++	struct clk *clk;
++	unsigned int voltage_tolerance;
++	unsigned int ratio;
 +};
 +
-+static int hisi_rng_init(struct hwrng *rng)
++/*
++ * Control the devfreq-event device to get the current state of bus
++ */
++#define exynos_bus_ops_edev(ops)				\
++static int exynos_bus_##ops(struct exynos_bus *bus)		\
++{								\
++	int i, ret;						\
++								\
++	for (i = 0; i < bus->edev_count; i++) {			\
++		if (!bus->edev[i])				\
++			continue;				\
++		ret = devfreq_event_##ops(bus->edev[i]);	\
++		if (ret < 0)					\
++			return ret;				\
++	}							\
++								\
++	return 0;						\
++}
++exynos_bus_ops_edev(enable_edev);
++exynos_bus_ops_edev(disable_edev);
++exynos_bus_ops_edev(set_event);
++
++static int exynos_bus_get_event(struct exynos_bus *bus,
++				struct devfreq_event_data *edata)
 +{
-+	struct hisi_rng *hrng = to_hisi_rng(rng);
-+	int val = RNG_EN;
-+	u32 seed;
++	struct devfreq_event_data event_data;
++	unsigned long load_count = 0, total_count = 0;
++	int i, ret = 0;
 +
-+	/* get a random number as initial seed */
-+	get_random_bytes(&seed, sizeof(seed));
++	for (i = 0; i < bus->edev_count; i++) {
++		if (!bus->edev[i])
++			continue;
 +
-+	writel_relaxed(seed, hrng->base + RNG_SEED);
++		ret = devfreq_event_get_event(bus->edev[i], &event_data);
++		if (ret < 0)
++			return ret;
 +
-+	/**
-+	 * The seed is reload periodically, there are two choice
-+	 * of seeds, default seed using the value from LFSR, or
-+	 * will use seed generated by ring oscillator.
-+	 */
-+	if (seed_sel == 1)
-+		val |= RNG_RING_EN | RNG_SEED_SEL;
++		if (i == 0 || event_data.load_count > load_count) {
++			load_count = event_data.load_count;
++			total_count = event_data.total_count;
++		}
++	}
 +
-+	writel_relaxed(val, hrng->base + RNG_CTRL);
-+	return 0;
++	edata->load_count = load_count;
++	edata->total_count = total_count;
++
++	return ret;
 +}
 +
-+static void hisi_rng_cleanup(struct hwrng *rng)
++/*
++ * Must necessary function for devfreq governor
++ */
++static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
 +{
-+	struct hisi_rng *hrng = to_hisi_rng(rng);
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	struct dev_pm_opp *new_opp;
++	unsigned long old_freq, new_freq, old_volt, new_volt, tol;
++	int ret = 0;
 +
-+	writel_relaxed(0, hrng->base + RNG_CTRL);
++	/* Get new opp-bus instance according to new bus clock */
++	rcu_read_lock();
++	new_opp = devfreq_recommended_opp(dev, freq, flags);
++	if (IS_ERR(new_opp)) {
++		dev_err(dev, "failed to get recommended opp instance\n");
++		rcu_read_unlock();
++		return PTR_ERR(new_opp);
++	}
++
++	new_freq = dev_pm_opp_get_freq(new_opp);
++	new_volt = dev_pm_opp_get_voltage(new_opp);
++	old_freq = dev_pm_opp_get_freq(bus->curr_opp);
++	old_volt = dev_pm_opp_get_voltage(bus->curr_opp);
++	rcu_read_unlock();
++
++	if (old_freq == new_freq)
++		return 0;
++	tol = new_volt * bus->voltage_tolerance / 100;
++
++	/* Change voltage and frequency according to new OPP level */
++	mutex_lock(&bus->lock);
++
++	if (old_freq < new_freq) {
++		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
++		if (ret < 0) {
++			dev_err(bus->dev, "failed to set voltage\n");
++			goto out;
++		}
++	}
++
++	ret = clk_set_rate(bus->clk, new_freq);
++	if (ret < 0) {
++		dev_err(dev, "failed to change clock of bus\n");
++		clk_set_rate(bus->clk, old_freq);
++		goto out;
++	}
++
++	if (old_freq > new_freq) {
++		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
++		if (ret < 0) {
++			dev_err(bus->dev, "failed to set voltage\n");
++			goto out;
++		}
++	}
++	bus->curr_opp = new_opp;
++
++	dev_dbg(dev, "Set the frequency of bus (%lukHz -> %lukHz)\n",
++			old_freq/1000, new_freq/1000);
++out:
++	mutex_unlock(&bus->lock);
++
++	return ret;
 +}
 +
-+static int hisi_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
++static int exynos_bus_get_dev_status(struct device *dev,
++				     struct devfreq_dev_status *stat)
 +{
-+	struct hisi_rng *hrng = to_hisi_rng(rng);
-+	u32 *data = buf;
-+
-+	*data = readl_relaxed(hrng->base + RNG_RAN_NUM);
-+	return 4;
-+}
-+
-+static int hisi_rng_probe(struct platform_device *pdev)
-+{
-+	struct hisi_rng *rng;
-+	struct resource *res;
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	struct devfreq_event_data edata;
 +	int ret;
 +
-+	rng = devm_kzalloc(&pdev->dev, sizeof(*rng), GFP_KERNEL);
-+	if (!rng)
++	rcu_read_lock();
++	stat->current_frequency = dev_pm_opp_get_freq(bus->curr_opp);
++	rcu_read_unlock();
++
++	ret = exynos_bus_get_event(bus, &edata);
++	if (ret < 0) {
++		stat->total_time = stat->busy_time = 0;
++		goto err;
++	}
++
++	stat->busy_time = (edata.load_count * 100) / bus->ratio;
++	stat->total_time = edata.total_count;
++
++	dev_dbg(dev, "Usage of devfreq-event : %lu/%lu\n", stat->busy_time,
++							stat->total_time);
++
++err:
++	ret = exynos_bus_set_event(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to set event to devfreq-event devices\n");
++		return ret;
++	}
++
++	return ret;
++}
++
++static void exynos_bus_exit(struct device *dev)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	int ret;
++
++	ret = exynos_bus_disable_edev(bus);
++	if (ret < 0)
++		dev_warn(dev, "failed to disable the devfreq-event devices\n");
++
++	if (bus->regulator)
++		regulator_disable(bus->regulator);
++
++	dev_pm_opp_of_remove_table(dev);
++}
++
++static int exynos_bus_parse_of(struct device_node *np,
++			      struct exynos_bus *bus)
++{
++	struct device *dev = bus->dev;
++	unsigned long rate;
++	int i, ret, count, size;
++
++	/* Get the clock to provide each bus with source clock */
++	bus->clk = devm_clk_get(dev, "bus");
++	if (IS_ERR(bus->clk)) {
++		dev_err(dev, "failed to get bus clock\n");
++		return PTR_ERR(bus->clk);
++	}
++
++	ret = clk_prepare_enable(bus->clk);
++	if (ret < 0) {
++		dev_err(dev, "failed to get enable clock\n");
++		return ret;
++	}
++
++	/* Get the freq/voltage OPP table to scale the bus frequency */
++	rcu_read_lock();
++	ret = dev_pm_opp_of_add_table(dev);
++	if (ret < 0) {
++		dev_err(dev, "failed to get OPP table\n");
++		rcu_read_unlock();
++		goto err_clk;
++	}
++
++	rate = clk_get_rate(bus->clk);
++	bus->curr_opp = dev_pm_opp_find_freq_ceil(dev, &rate);
++	if (IS_ERR(bus->curr_opp)) {
++		dev_err(dev, "failed to find dev_pm_opp\n");
++		rcu_read_unlock();
++		ret = PTR_ERR(bus->curr_opp);
++		goto err_opp;
++	}
++	rcu_read_unlock();
++
++	/* Get the regulator to provide each bus with the power */
++	bus->regulator = devm_regulator_get(dev, "vdd");
++	if (IS_ERR(bus->regulator)) {
++		dev_err(dev, "failed to get VDD regulator\n");
++		ret = PTR_ERR(bus->regulator);
++		goto err_opp;
++	}
++
++	ret = regulator_enable(bus->regulator);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable VDD regulator\n");
++		goto err_opp;
++	}
++
++	/*
++	 * Get the devfreq-event devices to get the current utilization of
++	 * buses. This raw data will be used in devfreq ondemand governor.
++	 */
++	count = devfreq_event_get_edev_count(dev);
++	if (count < 0) {
++		dev_err(dev, "failed to get the count of devfreq-event dev\n");
++		ret = count;
++		goto err_regulator;
++	}
++	bus->edev_count = count;
++
++	size = sizeof(*bus->edev) * count;
++	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
++	if (!bus->edev) {
++		ret = -ENOMEM;
++		goto err_regulator;
++	}
++
++	for (i = 0; i < count; i++) {
++		bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
++		if (IS_ERR(bus->edev[i])) {
++			ret = -EPROBE_DEFER;
++			goto err_regulator;
++		}
++	}
++
++	/*
++	 * Optionally, Get the saturation ratio according to Exynos SoC
++	 * When measuring the utilization of each AXI bus with devfreq-event
++	 * devices, the measured real cycle might be much lower than the
++	 * total cycle of bus during sampling rate. In result, the devfreq
++	 * simple-ondemand governor might not decide to change the current
++	 * frequency due to too utilization (= real cycle/total cycle).
++	 * So, this property is used to adjust the utilization when calculating
++	 * the busy_time in exynos_bus_get_dev_status().
++	 */
++	if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
++		bus->ratio = DEFAULT_SATURATION_RATIO;
++
++	if (of_property_read_u32(np, "exynos,voltage-tolerance",
++					&bus->voltage_tolerance))
++		bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
++
++	return 0;
++
++err_regulator:
++	regulator_disable(bus->regulator);
++err_opp:
++	dev_pm_opp_of_remove_table(dev);
++err_clk:
++	clk_disable_unprepare(bus->clk);
++
++	return ret;
++}
++
++static int exynos_bus_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct devfreq_dev_profile *profile;
++	struct devfreq_simple_ondemand_data *ondemand_data;
++	struct exynos_bus *bus;
++	int ret;
++
++	if (!np) {
++		dev_err(dev, "failed to find devicetree node\n");
++		return -EINVAL;
++	}
++
++	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
++	if (!bus)
 +		return -ENOMEM;
++	mutex_init(&bus->lock);
++	bus->dev = &pdev->dev;
++	platform_set_drvdata(pdev, bus);
 +
-+	platform_set_drvdata(pdev, rng);
++	/* Parse the device-tree to get the resource information */
++	ret = exynos_bus_parse_of(np, bus);
++	if (ret < 0)
++		return ret;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rng->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(rng->base))
-+		return PTR_ERR(rng->base);
++	/* Initalize the struct profile and governor data */
++	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
++	if (!profile)
++		return -ENOMEM;
++	profile->polling_ms = 50;
++	profile->target = exynos_bus_target;
++	profile->get_dev_status = exynos_bus_get_dev_status;
++	profile->exit = exynos_bus_exit;
 +
-+	rng->rng.name = pdev->name;
-+	rng->rng.init = hisi_rng_init;
-+	rng->rng.cleanup = hisi_rng_cleanup;
-+	rng->rng.read = hisi_rng_read;
++	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
++	if (!ondemand_data)
++		return -ENOMEM;
++	ondemand_data->upthreshold = 40;
++	ondemand_data->downdifferential = 5;
 +
-+	ret = devm_hwrng_register(&pdev->dev, &rng->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register hwrng\n");
++	/* Add devfreq device to monitor and handle the exynos bus */
++	bus->devfreq = devm_devfreq_add_device(dev, profile, "simple_ondemand",
++						ondemand_data);
++	if (IS_ERR(bus->devfreq)) {
++		dev_err(dev, "failed to add devfreq device\n");
++		return  PTR_ERR(bus->devfreq);
++	}
++
++	/* Register opp_notifier to catch the change of OPP  */
++	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
++	if (ret < 0) {
++		dev_err(dev, "failed to register opp notifier\n");
++		return ret;
++	}
++
++	/*
++	 * Enable devfreq-event to get raw data which is used to determine
++	 * current bus load.
++	 */
++	ret = exynos_bus_enable_edev(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable devfreq-event devices\n");
++		return ret;
++	}
++
++	ret = exynos_bus_set_event(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to set event to devfreq-event devices\n");
 +		return ret;
 +	}
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id hisi_rng_dt_ids[] = {
-+	{ .compatible = "hisilicon,rng" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, hisi_rng_dt_ids);
++#ifdef CONFIG_PM_SLEEP
++static int exynos_bus_resume(struct device *dev)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	int ret;
 +
-+static struct platform_driver hisi_rng_driver = {
-+	.probe		= hisi_rng_probe,
-+	.driver		= {
-+		.name	= "hisi-rng",
-+		.of_match_table = of_match_ptr(hisi_rng_dt_ids),
++	ret = exynos_bus_enable_edev(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable the devfreq-event devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int exynos_bus_suspend(struct device *dev)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	int ret;
++
++	ret = exynos_bus_disable_edev(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to disable the devfreq-event devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops exynos_bus_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(exynos_bus_suspend, exynos_bus_resume)
++};
++
++static const struct of_device_id exynos_bus_of_match[] = {
++	{ .compatible = "samsung,exynos-bus", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, exynos_bus_of_match);
++
++static struct platform_driver exynos_bus_platdrv = {
++	.probe		= exynos_bus_probe,
++	.driver = {
++		.name	= "exynos-bus",
++		.pm	= &exynos_bus_pm,
++		.of_match_table = of_match_ptr(exynos_bus_of_match),
 +	},
 +};
++module_platform_driver(exynos_bus_platdrv);
 +
-+module_platform_driver(hisi_rng_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Kefeng Wang <wangkefeng.wang@huawei>");
-+MODULE_DESCRIPTION("Hisilicon random number generator driver");
++MODULE_DESCRIPTION("Generic Exynos Bus frequency driver");
++MODULE_AUTHOR("Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
 -- 
-1.7.12.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
