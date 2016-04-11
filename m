@@ -1,157 +1,94 @@
-From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v6 2/2] btmrvl: add platform specific wakeup interrupt
- support
-Date: Mon, 11 Apr 2016 04:38:40 +0000
-Message-ID: <171a54de45594926857b1bc3d76ea253@SC-EXCH04.marvell.com>
-References: <1459344056-5234-1-git-send-email-akarwar@marvell.com>
- <1459344056-5234-2-git-send-email-akarwar@marvell.com>
- <B99FD549-3D36-4A89-83F3-E4170ADE1336@holtmann.org>
+From: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Subject: Re: [PATCH 2/2] powerpc/drivers: Add driver for operator panel on FSP
+ machines
+Date: Mon, 11 Apr 2016 15:27:28 +1000
+Message-ID: <570B35C0.9040205@au1.ibm.com>
+References: <1460338890-19693-1-git-send-email-sjitindarsingh@gmail.com>
+ <1460338890-19693-2-git-send-email-sjitindarsingh@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B99FD549-3D36-4A89-83F3-E4170ADE1336-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org" <wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460338890-19693-2-git-send-email-sjitindarsingh@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suraj Jitindar Singh <sjitindarsingh@gmail.com>, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel,
+On 11/04/16 11:41, Suraj Jitindar Singh wrote:
+> Implement new character device driver to allow access from user space
+> to the 2x16 character operator panel display present on powernv machines.
 
-> From: Marcel Holtmann [mailto:marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org]
-> Sent: Friday, April 08, 2016 10:40 PM
-> To: Amitkumar Karwar
-> Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nishant Sarmukadam;
-> wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Xinming Hu
-> Subject: Re: [PATCH v6 2/2] btmrvl: add platform specific wakeup
-> interrupt support
-> 
-> Hi Amitkumar,
-> 
-> > On some arm-based platforms, we need to configure platform specific
-> > parameters by device tree node and we need define our node as a child
-> > node of parent SDIO host controller.
-> > This patch parses these parameters from device tree. It includes
-> > calibration data download to firmware, wakeup pin configured to
-> > firmware, and soc specific wakeup interrupt pin.
-> >
-> > Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> > drivers/bluetooth/btmrvl_drv.h  | 11 ++++++
-> > drivers/bluetooth/btmrvl_main.c | 33 +++++++++--------
-> > drivers/bluetooth/btmrvl_sdio.c | 79
-> > +++++++++++++++++++++++++++++++++++++++++
-> > drivers/bluetooth/btmrvl_sdio.h |  6 ++++
-> > 4 files changed, 115 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/bluetooth/btmrvl_drv.h
-> > b/drivers/bluetooth/btmrvl_drv.h index 0590473..f742384 100644
-> > --- a/drivers/bluetooth/btmrvl_drv.h
-> > +++ b/drivers/bluetooth/btmrvl_drv.h
-> > @@ -23,6 +23,17 @@
-> > #include <linux/bitops.h>
-> > #include <linux/slab.h>
-> > #include <net/bluetooth/bluetooth.h>
-> > +#include <linux/err.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/gfp.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/of_irq.h>
-> >
-> > #define BTM_HEADER_LEN			4
-> > #define BTM_UPLD_SIZE			2312
-> > diff --git a/drivers/bluetooth/btmrvl_main.c
-> > b/drivers/bluetooth/btmrvl_main.c index f25a825..25343ef 100644
-> > --- a/drivers/bluetooth/btmrvl_main.c
-> > +++ b/drivers/bluetooth/btmrvl_main.c
-> > @@ -510,34 +510,39 @@ static int btmrvl_download_cal_data(struct
-> > btmrvl_private *priv, static int btmrvl_check_device_tree(struct
-> > btmrvl_private *priv) {
-> > 	struct device_node *dt_node;
-> > +	struct btmrvl_sdio_card *card = priv->btmrvl_dev.card;
-> > 	u8 cal_data[BT_CAL_HDR_LEN + BT_CAL_DATA_SIZE];
-> > -	int ret;
-> > -	u32 val;
-> > +	int ret = 0;
-> > +	u16 gpio, gap;
-> > +
-> > +	if (card->plt_of_node) {
-> > +		dt_node = card->plt_of_node;
-> > +		ret = of_property_read_u16(dt_node, "btmrvl,wakeup-pin",
-> > +					   &gpio);
-> > +		if (ret)
-> > +			gpio = (priv->btmrvl_dev.gpio_gap & 0xff00) >> 8;
-> > +
-> > +		ret = of_property_read_u16(dt_node, "btmrvl,wakeup-gap",
-> > +					   &gap);
-> > +		if (ret)
-> > +			gap = (u8)(priv->btmrvl_dev.gpio_gap & 0x00ff);
-> >
-> > -	for_each_compatible_node(dt_node, NULL, "btmrvl,cfgdata") {
-> > -		ret = of_property_read_u32(dt_node, "btmrvl,gpio-gap",
-> &val);
-> > -		if (!ret)
-> > -			priv->btmrvl_dev.gpio_gap = val;
-> > +		priv->btmrvl_dev.gpio_gap = (gpio << 8) + gap;
-> >
-> > 		ret = of_property_read_u8_array(dt_node, "btmrvl,cal-data",
-> > 						cal_data + BT_CAL_HDR_LEN,
-> > 						BT_CAL_DATA_SIZE);
-> > -		if (ret) {
-> > -			of_node_put(dt_node);
-> > +		if (ret)
-> > 			return ret;
-> > -		}
-> >
-> > 		BT_DBG("Use cal data from device tree");
-> > 		ret = btmrvl_download_cal_data(priv, cal_data,
-> > 					       BT_CAL_DATA_SIZE);
-> > -		if (ret) {
-> > +		if (ret)
-> > 			BT_ERR("Fail to download calibrate data");
-> > -			of_node_put(dt_node);
-> > -			return ret;
-> > -		}
-> > 	}
-> >
-> > -	return 0;
-> > +	return ret;
-> > }
-> >
-> > static int btmrvl_setup(struct hci_dev *hdev) diff --git
-> > a/drivers/bluetooth/btmrvl_sdio.c b/drivers/bluetooth/btmrvl_sdio.c
-> > index 6ed8acf..c714040 100644
-> > --- a/drivers/bluetooth/btmrvl_sdio.c
-> > +++ b/drivers/bluetooth/btmrvl_sdio.c
-> > @@ -52,6 +52,68 @@ static struct memory_type_mapping
-> mem_type_mapping_tbl[] = {
-> > 	{"EXTLAST", NULL, 0, 0xFE},
-> > };
-> >
-> > +static const struct of_device_id btmrvl_sdio_of_match_table[] = {
-> > +	{ .compatible = "marvell,sd8897-bt" },
-> > +	{ .compatible = "marvell,sd8997-bt" },
-> > +	{ }
-> > +};
-> 
-> is this agreed upon by the DT maintainer? I only want to merge this
-> patch if we have agreement.
-> 
+Specifically, on IBM Power Systems machines with FSPs (see comments below).
 
-Please hold on for this patch. Rob Herring had suggested to use Linux kernel's generic wake irq handling. We found out it's not suitable for us. We will discuss it with Rob.
+> This will allow status information to be presented on the display which
+> is visible to a user.
+>
+> The driver implements a 32 character buffer which a user can read/write
+> by accessing the device (/dev/oppanel). This buffer is then displayed on
+> the operator panel display. Any attempt to write past the 32nd position
+> will have no effect and attempts to write more than 32 characters will be
+> truncated. Valid characters are ascii: '.', '/', ':', '0-9', 'a-z',
+> 'A-Z'. All other characters are considered invalid and will be replaced
+> with '.'.
 
-Regards,
-Amitkumar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For reference, the ASCII character whitelist is enforced by skiboot, not 
+by the driver (see 
+https://github.com/open-power/skiboot/blob/master/hw/fsp/fsp-op-panel.c#L217). 
+It's been included ever since the first public release of skiboot, so 
+this statement is true for all machines at present, though theoretically 
+might not be true in future skiboots or alternative OPAL implementations 
+(should someone be crazy enough to write one).
+
+> A write call past the 32nd character will return zero characters
+> written. A write call will not clear the display and it is up to the
+> user to put spaces (' ') where blank space is required. The device may
+> only be accessed by a single process at a time.
+>
+> Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+
+I reviewed an earlier version of this patch internally and Suraj has 
+fixed a bunch of issues which I raised. I'm not hugely experienced with 
+this, but all the obvious things I noticed have gone, so...
+
+Reviewed-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+
+A couple of minor nitpicks below.
+
+> diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+> index 3ec0766..8c91edf 100644
+> --- a/drivers/char/Kconfig
+> +++ b/drivers/char/Kconfig
+> @@ -178,6 +178,20 @@ config IBM_BSR
+>   	  of threads across a large system which avoids bouncing a cacheline
+>   	  between several cores on a system
+>
+> +config IBM_OP_PANEL
+> +	tristate "IBM POWER Operator Panel Display support"
+> +	depends on PPC_POWERNV
+> +	default m
+> +	help
+> +	  If you say Y here, a special character device node /dev/oppanel will
+
+Add commas: "node, /dev/oppanel, will"
+
+> diff --git a/drivers/char/op-panel-powernv.c b/drivers/char/op-panel-powernv.c
+> new file mode 100644
+> index 0000000..cc72c5d
+> --- /dev/null
+> +++ b/drivers/char/op-panel-powernv.c
+[...]
+> +/*
+> + * This driver creates a character device (/dev/oppanel) which exposes the
+> + * operator panel display (2x16 character display) on IBM pSeries machines.
+
+I'd prefer "IBM Power Systems machines with FSPs" so as to avoid 
+confusion with the Linux pseries platform, to be in line with current 
+IBM branding, and to emphasise that it's only FSP machines (the Power 
+Systems LC models are not).
+
+Hmm, perhaps also mention that in the Kconfig description too?
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+andrew.donnellan@au1.ibm.com  IBM Australia Limited
