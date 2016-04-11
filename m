@@ -1,7 +1,7 @@
 From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH V2 1/3] dt/bindings: bcm2835: add interrupt-names property
-Date: Mon, 11 Apr 2016 13:29:07 +0000
-Message-ID: <1460381349-14408-2-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH V2 3/3] ARM: bcm2835: add interrupt-names and apply correct mapping
+Date: Mon, 11 Apr 2016 13:29:09 +0000
+Message-ID: <1460381349-14408-4-git-send-email-kernel@martin.sperl.org>
 References: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1460381349-14408-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
@@ -12,71 +12,51 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-Added standard interrupt-names property so that
-platform_get_irq_byname() can get used to fetch the
-interrupt corresponding to each dma_channel
-instead of the current platform_get_irq() with
-an assumed ordering of the interrupts.
+Add interrupt-names properties to dt and apply the correct
+mapping between irq and dma channels.
 
 Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
- .../devicetree/bindings/dma/brcm,bcm2835-dma.txt   | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/arm/boot/dts/bcm283x.dtsi | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
-index 1396078..baf9b34 100644
---- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
-@@ -12,6 +12,10 @@ Required properties:
- - reg: Should contain DMA registers location and length.
- - interrupts: Should contain the DMA interrupts associated
- 		to the DMA channels in ascending order.
-+- interrupt-names: Should contain the names of the interrupt
-+		   in the form "dmaXX".
-+		   Use "dma-shared-all" for the common interrupt line
-+		   that is shared by all dma channels.
- - #dma-cells: Must be <1>, the cell in the dmas property of the
- 		client device represents the DREQ number.
- - brcm,dma-channel-mask: Bit mask representing the channels
-@@ -34,13 +38,35 @@ dma: dma@7e007000 {
- 		     <1 24>,
- 		     <1 25>,
- 		     <1 26>,
-+		     /* dma channel 11-14 share one irq */
- 		     <1 27>,
-+		     <1 27>,
-+		     <1 27>,
-+		     <1 27>,
-+		     /* unused shared irq for all channels */
- 		     <1 28>;
-+	interrupt-names = "dma0",
-+			  "dma1",
-+			  "dma2",
-+			  "dma3",
-+			  "dma4",
-+			  "dma5",
-+			  "dma6",
-+			  "dma7",
-+			  "dma8",
-+			  "dma9",
-+			  "dma10",
-+			  "dma11",
-+			  "dma12",
-+			  "dma13",
-+			  "dma14",
-+			  "dma-shared-all";
- 
- 	#dma-cells = <1>;
- 	brcm,dma-channel-mask = <0x7f35>;
- };
- 
-+
- DMA clients connected to the BCM2835 DMA controller must use the format
- described in the dma.txt file, using a two-cell specifier for each channel.
- 
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 8aaf193..84dcf3e 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -47,9 +47,29 @@
+ 				     <1 24>,
+ 				     <1 25>,
+ 				     <1 26>,
++				     /* dma channel 11-14 share one irq */
+ 				     <1 27>,
++				     <1 27>,
++				     <1 27>,
++				     <1 27>,
++				     /* unused shared irq for all channels */
+ 				     <1 28>;
+-
++			interrupt-names = "dma0",
++					  "dma1",
++					  "dma2",
++					  "dma3",
++					  "dma4",
++					  "dma5",
++					  "dma6",
++					  "dma7",
++					  "dma8",
++					  "dma9",
++					  "dma10",
++					  "dma11",
++					  "dma12",
++					  "dma13",
++					  "dma14",
++					  "dma-shared-all";
+ 			#dma-cells = <1>;
+ 			brcm,dma-channel-mask = <0x7f35>;
+ 		};
 -- 
 2.1.4
 
