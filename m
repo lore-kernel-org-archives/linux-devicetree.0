@@ -1,61 +1,30 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RFT 2/2] macb: kill PHY reset code
-Date: Mon, 11 Apr 2016 22:01:21 +0300
-Message-ID: <570BF481.9070903@cogentembedded.com>
-References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
- <2811962.eGX2i5RJbZ@wasted.cogentembedded.com>
- <20160411022802.GB4307@lunn.ch> <570BE1C5.70502@cogentembedded.com>
- <20160411181904.GB29709@lunn.ch> <570BEF46.7060105@cogentembedded.com>
- <20160411185115.GA30623@lunn.ch>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v1 2/3] iio:ak8975: add mounting matrix support
+Date: Mon, 11 Apr 2016 14:07:36 -0500
+Message-ID: <20160411190736.GA11591@rob-hp-laptop>
+References: <cover.1460113510.git.gregor.boirie@parrot.com>
+ <443cbafb38dc5ce38cbb7753aa6a4230d7188df9.1460113510.git.gregor.boirie@parrot.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160411185115.GA30623-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <443cbafb38dc5ce38cbb7753aa6a4230d7188df9.1460113510.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Cristina Opriceana <cristina.opriceana-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2016 09:51 PM, Andrew Lunn wrote:
+On Fri, Apr 08, 2016 at 04:12:04PM +0200, Gregor Boirie wrote:
+> Expose a rotation matrix to indicate userspace the chip orientation with
+> respect to the overall hardware system.
+> 
+> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/iio/magnetometer/ak8975.txt           | 10 ++++++
 
->>>>> The code you are deleting would of ignored the flags in the gpio
->>>>> property, i.e. active low.
->>>>
->>>>     Hm, you're right -- I forgot about that... :-/
->>>>
->>>>> The new code in the previous patch does
->>>>> however take the flags into account. Did you check if there are any
->>>>> device trees which have flags, which were never used, but are now
->>>>> going to be used and thus break...
->>>>
->>>>     Checked this now and found out arch/arm/boot/dts/ar91-vinco.dts.
->>>> Looks like it needs to be fixed indeed...
->>>>
->>> And this is where it gets tricky. You are breaking backwards
->>> compatibility by now respecting the flag. An old DT blob is not going
->>> to work.
->>
->>     Do we care that much about the DT blobs that are just *wrong*?
->
-> Wrong, but currently works.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-    Note that it's not only using GPIO_ACTIVE_HIGH but does that against what 
-the MACB binding documents.
-
->>> You potentially need to add a new property and deprecate the old one.
->>
->>     I would like to avoid that...
->
-> You will need the agreement from the at91-vinco maintainer.
-
-   I'll try submitting a formal DT patch...
-
->      Andrew
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/iio/magnetometer/ak8975.c                  | 40 ++++++++++++++++++++--
+>  include/linux/iio/magnetometer/ak8975.h            | 16 +++++++++
+>  3 files changed, 64 insertions(+), 2 deletions(-)
+>  create mode 100644 include/linux/iio/magnetometer/ak8975.h
