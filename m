@@ -1,67 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 3/3] mfd: dt-bindings: Add RK818 device tree bindings
- document
-Date: Mon, 11 Apr 2016 11:03:18 -0500
-Message-ID: <20160411160318.GA6478@rob-hp-laptop>
-References: <1460108861-32818-1-git-send-email-w.egorov@phytec.de>
- <1460108861-32818-4-git-send-email-w.egorov@phytec.de>
- <20160411084434.GJ4592@x1>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: Remove 0, prefix from unit-addresses
+Date: Mon, 11 Apr 2016 10:05:21 -0600
+Message-ID: <570BCB41.2030504@wwwdotorg.org>
+References: <1460383271-27306-2-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160411084434.GJ4592@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460383271-27306-2-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 09:44:34AM +0100, Lee Jones wrote:
-> On Fri, 08 Apr 2016, Wadim Egorov wrote:
-> 
-> > Add device tree bindings documentation for rockchip's RK818 pmic.
-> > 
-> > Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/rk808.txt | 37 +++++++++++++++++++++++--
-> >  1 file changed, 34 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-> > index 4ca6aab..8cceb07 100644
-> > --- a/Documentation/devicetree/bindings/mfd/rk808.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-> > @@ -1,7 +1,11 @@
-> > -RK808 Power Management Integrated Circuit
-> > +RK8xx Power Management Integrated Circuit
-> 
-> s/xx/XX/
+On 04/11/2016 08:01 AM, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> When Tegra124 support was first merged the unit-addresses of all devices
+> were listed with a "0," prefix to encode the reg property's second cell.
+> It turns out that this notation is not correct, and the "," separator is
+> only used to separate fields in the unit address (such as the device and
+> function number in PCI devices), not individual cells for addresses with
+> more than one cell.
 
-And others say this bikeshed should be lowercase...
+> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
 
-I say fine as is for bindings. Uppercase for actual part letters, 
-lowercase for wildcards.
+> -	gpu@0,57000000 {
+> +	gpu@57000000 {
+>   		/*
+>   		 * Node left disabled on purpose - the bootloader will enable
+>   		 * it after having set the VPR up
 
-> 
-> > +The rk8xx family current members:
-> > +rk808
-> > +rk818
-> >  
-> >  Required properties:
-> > -- compatible: "rockchip,rk808"
-> > +- compatible: "rockchip,rk808", "rockchip,rk818"
-> >  - reg: I2C slave address
-> >  - interrupt-parent: The parent interrupt controller.
-> >  - interrupts: the interrupt outputs of the controller.
-> > @@ -13,6 +17,8 @@ Optional properties:
-> >    default output clock name
-> >  - rockchip,system-power-controller: Telling whether or not this pmic is controlling
-> >    the system power.
-> > +
-> > +Optional rk808 properties:
-> 
-> When mentioning the chip by name, you should always do so using
-> uppercase, as it is in the datasheet.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So the bootloader doesn't actually do that for the new node name at 
+present. I have written a patch to make it do so, but haven't sent it 
+yet since I wrote it in the middle of a large cleanup of U-Boot. I 
+expect I can shuffle it to the front of the series and send it soon 
+though. Without a new bootloader that contains this change, IIUC all 
+graphics will be non-operative if this change is applied.
+
+Aside from that,
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
