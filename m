@@ -1,93 +1,384 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 1/6] pwms: pwm-ti*: Get the clock from the PWMSS
- (parent)
-Date: Mon, 11 Apr 2016 17:19:37 +0530
-Message-ID: <570B8F51.6040108@ti.com>
-References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
- <1457400224-24797-2-git-send-email-fcooper@ti.com> <5703564C.7090700@ti.com>
- <5703A0C4.6010406@ti.com>
- <alpine.DEB.2.02.1604102048380.11457@utopia.booyaka.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 2/2] mfd: lm3533: Support initialization from
+ Device Tree
+Date: Mon, 11 Apr 2016 13:30:09 +0100
+Message-ID: <20160411123009.GV8094@x1>
+References: <1459405677-15696-1-git-send-email-bjorn.andersson@linaro.org>
+ <1459405677-15696-2-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1604102048380.11457-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459405677-15696-2-git-send-email-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 11 April 2016 02:21 AM, Paul Walmsley wrote:
-> Hi guys
-> 
-> On Tue, 5 Apr 2016, Franklin S Cooper Jr. wrote:
-> 
->> On 04/05/2016 01:08 AM, Sekhar Nori wrote:
->>> On Tuesday 08 March 2016 06:53 AM, Franklin S Cooper Jr wrote:
->>>> The eCAP and ePWM doesn't have their own separate clocks. They simply
->>>> utilize the clock provided directly by the PWMSS. Therefore, they simply
->>>> need to grab a reference to their parent's clock.
->>>>
->>>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
->>>
->>> So this assumes that eCAP and eHRPWM are always under the PWMSS
->>> umbrella. But on TI AM18x, thats not true. These IPs exist independently
->>> and receive functional clock from PLL sysclk outputs.
->>>
->>>> ---
->>>>  drivers/pwm/pwm-tiecap.c   | 2 +-
->>>>  drivers/pwm/pwm-tiehrpwm.c | 2 +-
->>>>  2 files changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
->>>> index 616af76..9418159 100644
->>>> --- a/drivers/pwm/pwm-tiecap.c
->>>> +++ b/drivers/pwm/pwm-tiecap.c
->>>> @@ -212,7 +212,7 @@ static int ecap_pwm_probe(struct platform_device *pdev)
->>>>      if (!pc)
->>>>          return -ENOMEM;
->>>>  
->>>> -    clk = devm_clk_get(&pdev->dev, "fck");
->>>> +    clk = devm_clk_get(pdev->dev.parent, "fck");
->>>
->>> Even keeping the AM18x usecase aside, this seems to be pushing too much
->>> platform information into the driver. The "fck" is a valid connection id
->>> for the eCAP IP. Whether its valid for the parent device too is not
->>> something this driver should need to know.
->>>
->>> So it looks like what you need is for the clock hierarchy for the
->>> platform to have clocks for eHRPWM and eCAP derived out of PWMSS clock?
->>
->> So I believe this is a question on if we want to hide the minor
->> delta between AM18 vs AM335x, AM437x and AM57x/DRA7 in the driver
->> or within the DT.
->>
->> Note that handling this by defining new clocks in DT will then
->> result in older DTBs not working. I don't think its worth breaking
->> backwards compatibility for AM335x and AM437x DTBs for fixing support
->> for AM18 based SOCs. Especially since those SOCs haven't worked with
->> this driver for several years. By handling things within the driver rather
->> than DT we can atleast insure that we can get everything working while
->> avoiding breaking backwards compatibility.
-> 
-> I agree with Sekhar that we shouldn't embed this parent clock quirk 
-> into the driver.  
-> 
-> Can you just define a new compatibility string such that the driver can be 
-> written with no embedded integration quirks?  Then add a workaround in the 
-> driver that will use pdev->dev.parent for the old (deprecated) 
-> compatibility string and log a warning to the kernel console that the DT 
-> needs to be updated.
+On Wed, 30 Mar 2016, Bjorn Andersson wrote:
 
-Thanks Paul! Although not sure if adding a new compatible for the IP is
-the best way (since that would denote a different version of the IP).
-How about checking for parent clock iff clk_get() on own device fails
-and of_machine_is_compatible() matches the platforms where backward
-compatibility needs to be maintained?
+> From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>=20
+> Implement Device Tree parsing functions to support initialization of =
+the
+> lm3533 drivers.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Changes since v2:
+> - Drop vendor prefix of vendor properties
+> - Specify unit of various properties
+> - Fix reference paths
+>=20
+> Changes since v1:
+> - Added unit to boost-freq and als-resistance (as the frequency now c=
+omes with
+>   a unit specifier I changed it to be expressed in kHz)
+>=20
+>  drivers/mfd/lm3533-core.c | 264 ++++++++++++++++++++++++++++++++++++=
+++++++++++
+>  1 file changed, 264 insertions(+)
+>=20
+> diff --git a/drivers/mfd/lm3533-core.c b/drivers/mfd/lm3533-core.c
+> index 5abcbb2e8849..dbf26d86fe85 100644
+> --- a/drivers/mfd/lm3533-core.c
+> +++ b/drivers/mfd/lm3533-core.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/gpio.h>
+>  #include <linux/i2c.h>
+>  #include <linux/mfd/core.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/regmap.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/slab.h>
+> @@ -25,6 +26,7 @@
+> =20
+>  #include <linux/mfd/lm3533.h>
+> =20
+> +#define LM3533_DEFAULT_BRIGHTNESS	200
 
-Thanks,
-Sekhar
+The MFD doesn't care about child specifics.  These needs to go into
+the child driver.
+
+>  #define LM3533_BOOST_OVP_MASK		0x06
+>  #define LM3533_BOOST_OVP_SHIFT		1
+> @@ -588,10 +590,266 @@ static const struct regmap_config regmap_confi=
+g =3D {
+>  	.precious_reg	=3D lm3533_precious_register,
+>  };
+> =20
+> +static int lm3533_of_parse_enum(struct device_node *node,
+> +				const char *propname,
+> +				const unsigned *match, size_t num_matches)
+> +{
+> +	size_t i;
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret =3D of_property_read_u32(node, propname, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i =3D 0; i < num_matches; i++) {
+> +		if (val =3D=3D match[i])
+> +			return i;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int lm3533_of_parse_pwm_zones(struct device_node *node)
+> +{
+> +	const char *propname =3D "ti,pwm-zones";
+> +	u32 zones[5];
+> +	int count;
+> +	int ret;
+> +	int i;
+> +
+> +	count =3D of_property_count_u32_elems(node, propname);
+> +	if (count =3D=3D -EINVAL)
+> +		return 0;
+> +	if (count <=3D 0)
+> +		return count;
+> +	if (count >=3D ARRAY_SIZE(zones))
+> +		return -EINVAL;
+> +
+> +	ret =3D of_property_read_u32_array(node, propname, zones, count);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Enable pwm input, and enable the selected zones */
+> +	ret =3D BIT(0);
+> +	for (i =3D 0; i < count; i++)
+> +		ret |=3D BIT(zones[i] + 1);
+> +
+> +	return ret;
+> +}
+
+Move to PWM driver.
+
+> +static int lm3533_of_parse_als_node(struct device *dev,
+> +				    struct device_node *node,
+> +				    struct lm3533_platform_data *pdata)
+> +{
+> +	struct lm3533_als_platform_data *als_pdata;
+> +	int ret;
+> +	u32 val;
+> +
+> +	als_pdata =3D devm_kzalloc(dev,
+> +				 sizeof(struct lm3533_als_platform_data),
+> +				 GFP_KERNEL);
+> +	if (!als_pdata)
+> +		return -ENOMEM;
+> +
+> +	als_pdata->pwm_mode =3D of_property_read_bool(node, "ti,pwm-mode");
+> +
+> +	ret =3D of_property_read_u32(node, "ti,als-resistance-ohm", &val);
+> +	if (ret < 0 && ret !=3D -EINVAL) {
+> +		dev_err(dev, "unable to read ti,als-resistance-ohm");
+> +		return ret;
+> +	}
+> +
+> +	/* Leave at high-Z, if the property was omitted or specified as 0 *=
+/
+> +	if (!ret && val !=3D 0)
+> +		als_pdata->r_select =3D 200000 / val;
+> +
+> +	pdata->als =3D als_pdata;
+> +
+> +	return 0;
+> +}
+
+Move to wherever the ALS driver is.
+
+> +static int lm3533_of_parse_bl_node(struct device *dev,
+> +				   struct device_node *node,
+> +				   struct lm3533_platform_data *pdata)
+> +{
+> +	struct lm3533_bl_platform_data *bl_pdata;
+> +	int ret;
+> +	u32 reg;
+> +	u32 val;
+> +
+> +	ret =3D of_property_read_u32(node, "reg", &reg);
+> +	if (ret < 0 || reg >=3D ARRAY_SIZE(lm3533_bl_devs)) {
+> +		dev_err(dev, "invalid reg property\n");
+> +		return ret;
+> +	}
+> +
+> +	bl_pdata =3D &pdata->backlights[reg];
+> +
+> +	/* Increment num_backlights if we're filling a new space */
+> +	if (reg + 1 > pdata->num_backlights)
+> +		pdata->num_backlights =3D reg + 1;
+> +
+> +	ret =3D of_property_read_string(node, "label",
+> +				      (const char **)&bl_pdata->name);
+> +	if (ret < 0) {
+> +		dev_err(dev, "unable to parse label\n");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D of_property_read_u32(node, "led-max-microamp", &val);
+> +	if (ret < 0) {
+> +		dev_err(dev, "unable to parse led-max-microamp\n");
+> +		return ret;
+> +	}
+> +	bl_pdata->max_current =3D val;
+> +
+> +	val =3D LM3533_DEFAULT_BRIGHTNESS;
+> +	ret =3D of_property_read_u32(node, "default-brightness", &val);
+> +	if (ret < 0 && ret !=3D -EINVAL) {
+> +		dev_err(dev, "unable to parse default-brightness\n");
+> +		return ret;
+> +	}
+> +	bl_pdata->default_brightness =3D val;
+> +
+> +	ret =3D lm3533_of_parse_pwm_zones(node);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to parse ti,pwm-zones\n");
+> +		return ret;
+> +	}
+> +	bl_pdata->pwm =3D ret;
+> +
+> +	return 0;
+> +}
+
+Move to the Backlight driver.
+
+> +static int lm3533_of_parse_led_node(struct device *dev,
+> +				    struct device_node *node,
+> +				    struct lm3533_platform_data *pdata)
+> +{
+> +	struct lm3533_led_platform_data *led_pdata;
+> +	int ret;
+> +	u32 reg;
+> +	u32 val;
+> +
+> +	ret =3D of_property_read_u32(node, "reg", &reg);
+> +	if (ret < 0 || reg >=3D ARRAY_SIZE(lm3533_led_devs)) {
+> +		dev_err(dev, "invalid reg property\n");
+> +		return ret;
+> +	}
+> +
+> +	led_pdata =3D &pdata->leds[reg];
+> +
+> +	/* Increment num_leds if we're filling a new space */
+> +	if (reg + 1 > pdata->num_leds)
+> +		pdata->num_leds =3D reg + 1;
+> +
+> +	ret =3D of_property_read_string(node, "label",
+> +				      (const char **)&led_pdata->name);
+> +	if (ret < 0) {
+> +		dev_err(dev, "unable to parse label\n");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D of_property_read_u32(node, "led-max-microamp", &val);
+> +	if (ret < 0) {
+> +		dev_err(dev, "unable to parse led-max-microamp\n");
+> +		return ret;
+> +	}
+> +	led_pdata->max_current =3D val;
+> +
+> +	ret =3D of_property_read_string(node, "linux,default-trigger",
+> +				      &led_pdata->default_trigger);
+> +	if (ret < 0 && ret !=3D -EINVAL) {
+> +		dev_err(dev, "unable to parse default-trigger\n");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D lm3533_of_parse_pwm_zones(node);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to parse ti,pwm-zones\n");
+> +		return ret;
+> +	}
+> +	led_pdata->pwm =3D ret;
+> +
+> +	return 0;
+> +}
+
+Move to LED driver.
+
+> +static int lm3533_pdata_from_of_node(struct device *dev)
+> +{
+> +	struct lm3533_platform_data *pdata;
+> +	struct device_node *node;
+> +	int ret;
+> +	const unsigned freqs[] =3D {
+> +		[LM3533_BOOST_FREQ_500KHZ] =3D 500000,
+> +		[LM3533_BOOST_FREQ_1000KHZ] =3D 1000000,
+> +	};
+> +	const unsigned ovps[] =3D {
+> +		[LM3533_BOOST_OVP_16V] =3D 16000,
+> +		[LM3533_BOOST_OVP_24V] =3D 24000,
+> +		[LM3533_BOOST_OVP_32V] =3D 32000,
+> +		[LM3533_BOOST_OVP_40V] =3D 40000,
+> +	};
+> +
+> +	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return -ENOMEM;
+> +
+> +	pdata->backlights =3D devm_kcalloc(dev,
+> +					 ARRAY_SIZE(lm3533_bl_devs),
+> +					 sizeof(struct lm3533_bl_platform_data),
+> +					 GFP_KERNEL);
+> +	if (!pdata->backlights)
+> +		return -ENOMEM;
+
+These needs to go into the Backlight driver.
+
+> +	pdata->leds =3D devm_kcalloc(dev,
+> +				   ARRAY_SIZE(lm3533_led_devs),
+> +				   sizeof(struct lm3533_led_platform_data),
+> +				   GFP_KERNEL);
+> +	if (!pdata->leds)
+> +		return -ENOMEM;
+
+This needs to go into the LED driver.
+
+> +	pdata->gpio_hwen =3D of_get_named_gpio(dev->of_node, "hwen-gpios", =
+0);
+> +	if (pdata->gpio_hwen < 0)
+> +		return pdata->gpio_hwen;
+> +
+> +	ret =3D lm3533_of_parse_enum(dev->of_node, "ti,boost-freq-hz", freq=
+s, 2);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to parse ti,boost-freq-hz\n");
+> +		return ret;
+> +	}
+
+I'm not a big fan of this abstraction method, but at the very least
+you should place the error message into the function.
+
+> +	pdata->boost_freq =3D ret;
+> +
+> +	ret =3D lm3533_of_parse_enum(dev->of_node, "ti,boost-ovp-mv", ovps,=
+ 4);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to parse ti,boost-ovp-mv\n");
+> +		return ret;
+> +	}
+> +	pdata->boost_ovp =3D ret;
+> +
+> +	for_each_child_of_node(dev->of_node, node) {
+
+The MFD driver shouldn't have to care what child nodes are present.
+Just regiser them as devices in their own right via mfd_add_devices()
+or of_platform_populate.
+
+> +		if (!strcmp(node->name, "als"))
+> +			ret =3D lm3533_of_parse_als_node(dev, node, pdata);
+> +		else if (!strcmp(node->name, "backlight"))
+> +			ret =3D lm3533_of_parse_bl_node(dev, node, pdata);
+> +		else if (!strcmp(node->name, "led"))
+> +			ret =3D lm3533_of_parse_led_node(dev, node, pdata);
+> +
+> +		if (ret < 0) {
+> +			of_node_put(node);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	dev->platform_data =3D pdata;
+> +
+> +	return 0;
+> +}
+> +
+>  static int lm3533_i2c_probe(struct i2c_client *i2c,
+>  					const struct i2c_device_id *id)
+>  {
+>  	struct lm3533 *lm3533;
+> +	int ret;
+> =20
+>  	dev_dbg(&i2c->dev, "%s\n", __func__);
+> =20
+> @@ -608,6 +866,12 @@ static int lm3533_i2c_probe(struct i2c_client *i=
+2c,
+>  	lm3533->dev =3D &i2c->dev;
+>  	lm3533->irq =3D i2c->irq;
+> =20
+> +	if (i2c->dev.of_node) {
+> +		ret =3D lm3533_pdata_from_of_node(lm3533->dev);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+>  	return lm3533_device_init(lm3533);
+>  }
+> =20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
