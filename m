@@ -1,58 +1,98 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 02/16] mfd: da8xx-cfgchip: New header file for CFGCHIP
- registers.
-Date: Mon, 11 Apr 2016 13:53:57 +0530
-Message-ID: <570B5F1D.7030609@ti.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-3-git-send-email-david@lechnology.com>
- <56F573F3.90500@cogentembedded.com> <56F94772.7070009@lechnology.com>
- <56F95EE6.1010403@cogentembedded.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 1/1] leds: pca9532: Add device tree binding
+Date: Mon, 11 Apr 2016 10:38:34 +0200
+Message-ID: <570B628A.4090406@samsung.com>
+References: <1460013772-129968-1-git-send-email-preid@electromag.com.au>
+ <1460013772-129968-2-git-send-email-preid@electromag.com.au>
+ <5706686F.7070102@samsung.com> <570B42F4.5070002@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56F95EE6.1010403-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <570B42F4.5070002@electromag.com.au>
+Sender: linux-leds-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 28 March 2016 10:12 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 03/28/2016 06:02 PM, David Lechner wrote:
-> 
->>>> +/* register offsets */
->>>> +#define CFGCHIP_REG(n)                (n * 4)
->>>> +#define CFGCHIP0_REG                CFGCHIP_REG(0)
->>>> +#define CFGCHIP1_REG                CFGCHIP_REG(1)
->>>> +#define CFGCHIP2_REG                CFGCHIP_REG(2)
->>>> +#define CFGCHIP3_REG                CFGCHIP_REG(3)
->>>> +#define CFGCHIP4_REG                CFGCHIP_REG(4)
->>>
->>>     Why not just use CFGCHIP_REG(n) directly?
+On 04/11/2016 08:23 AM, Phil Reid wrote:
+> On 7/04/2016 10:02 PM, Jacek Anaszewski wrote:
+>> Hi Phil,
 >>
->> I considered that, but I went this way because A) the TRM uses, for
->> example,
->> "CFGCHIP2", so I wanted to keep "CFGCHIP" and "2" together
+>> Thanks for the update. Few more remarks below.
+>>
+>> On 04/07/2016 09:22 AM, Phil Reid wrote:
+>>> This patch adds basic device tree support for the pca9532 LEDs.
+>>>
+>>> Signed-off-by: Phil Reid <preid@electromag.com.au>
+>>> ---
+>>>   .../devicetree/bindings/leds/leds-pca9532.txt      | 42 +++++++++++++
+>>>   drivers/leds/leds-pca9532.c                        | 69
+>>> ++++++++++++++++++++--
+>>>   include/dt-bindings/leds/leds-pca9532.h            | 23 ++++++++
+>>>   include/linux/leds-pca9532.h                       | 18 ++----
+>>>   4 files changed, 135 insertions(+), 17 deletions(-)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> new file mode 100644
+>>> index 0000000..284b96c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>> @@ -0,0 +1,42 @@
+>>> +*NXP - pca9532 PWM LED Driver
+>>> +
+>>> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
+>>> +The PWM support 256 steps.
+>>> +
+>>> +Required properties:
+>>> +    - compatible:
+>>> +        "nxp,pca9530"
+>>> +        "nxp,pca9531"
+>>> +        "nxp,pca9532"
+>>> +        "nxp,pca9533"
+>>> +    - reg -  I2C slave address
+>>> +
+>>> +Each led is represented as a sub-node of the nxp,pca9530.
+>>> +
+>>> +Optional sub-node properties:
+>>> +    - label: Name for this LED. If omitted, the label is taken from
+>>> the node name.
+>>
+>> Please also add a reference to common led bindings, as this property is
+>> documented there:
+>> "(see Documentation/devicetree/bindings/leds/common.txt):"
+> done.
+>
+>>
+>>> +    - type: Output configuration, see
+>>> dt-bindings/leds/leds-pca9532.h (default NONE)
+>>> +    - state: Initial LED state (default OFF)
+>>
+>> We already have "default-on" trigger for this purpose.
+> Not sure it does exactly the same thing.
+> This setting also associates a led with a particular PWM controller.
+> The chip has 2 shared PWM that each led can be controlled by.
 
-IMO, this is not that big of an issue. Anyone reading should be able to
-make out that CFGCHIP_REG(0) is same as CFGCHIP0 referred to in the TRM.
+default-on trigger sets the LED to max_brightness on init.
+As I see pca9532_set_brightness() sets PCA9532_ON state if
+passed LED_FULL and uses PCA9532_PWM0 for other values
+greater than zero.
 
-> 
->    I'd just drop the _REG suffix.
-> 
->> and B) this tells
->> you how many CFGCHIP registers there are, i.e. there is no CFGCHIP5_REG.
-> 
->    You can tell that in a comment. Having a parametrized macro and using
-> it to just #define more macros doesn't appeal to me at all...
+So, maybe it would make more sense if we used default-on trigger to
+initialize LED to LED_FULL on init, but provide another DT property
+'default-pwm' to determine which PWM block should be used by default?
+Currently I see that driver uses only PWM0:
 
-Agree with Sergei, I don't prefer the additional #defines as well.
+led->state = PCA9532_PWM0; /* Thecus: hardcode one pwm */
 
-Regards,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alternatively the driver could expose a dedicated sysfs attribute
+for changing the default pwm. This is of course out of this patch
+scope.
+
+-- 
+Best regards,
+Jacek Anaszewski
