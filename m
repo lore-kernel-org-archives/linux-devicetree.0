@@ -1,131 +1,196 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/5] iommu/msm: Add DT adaptation
-Date: Mon, 11 Apr 2016 08:47:28 -0500
-Message-ID: <20160411134728.GA21468@rob-hp-laptop>
-References: <1459952975-1250-1-git-send-email-sricharan@codeaurora.org>
-	<1459952975-1250-2-git-send-email-sricharan@codeaurora.org>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
+ device access
+Date: Mon, 11 Apr 2016 16:48:06 +0300
+Message-ID: <20160411164337-mutt-send-email-mst@redhat.com>
+References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
+ <20160316185440-mutt-send-email-mst@redhat.com>
+ <20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
+ <20160405114156-mutt-send-email-mst@redhat.com>
+ <20160411131300.GW2060@HEDWIG.INI.CMU.EDU>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459952975-1250-2-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <20160411131300.GW2060@HEDWIG.INI.CMU.EDU>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Gabriel L. Somlo" <somlo@cmu.edu>
+Cc: Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, lersek@redhat.com, ralf@linux-mips.org, rmk+kernel@arm.linux.org.uk, eric@anholt.net, hanjun.guo@linaro.org, zajec5@gmail.com, sudeep.holla@arm.com, agross@codeaurora.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, qemu-devel@nongnu.org, imammedo@redhat.com, peter.maydell@linaro.org, leif.lindholm@linaro.org, ard.biesheuvel@linaro.org, pbonzini@redhat.com, kraxel@redhat.com, ehabkost@redhat.com, luto@amacapital.net, stefanha@gmail.com, revol@free.fr, matt@codeblueprint.co.uk, rth@twiddle.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 06, 2016 at 07:59:31PM +0530, Sricharan R wrote:
-> The driver currently works based on platform data. Remove this
-> and add support for DT. A single master can have multiple ports
-> connected to more than one iommu.
+On Mon, Apr 11, 2016 at 09:13:00AM -0400, Gabriel L. Somlo wrote:
+> On Tue, Apr 05, 2016 at 11:54:19AM +0300, Michael S. Tsirkin wrote:
+> > On Thu, Mar 17, 2016 at 09:33:40AM -0400, Gabriel L. Somlo wrote:
+> > > On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
+> > > > On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
+> > > > > Allowing for the future possibility of implementing AML-based
+> > > > > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
+> > > > > acquire the global ACPI lock when accessing the device on behalf
+> > > > > of the guest-side sysfs driver, to prevent any potential race
+> > > > > conditions.
+> > > > > 
+> > > > > Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> > > > > Signed-off-by: Gabriel Somlo <somlo@cmu.edu>
+> > > > 
+> > > > So this patch makes sense of course.
+> > > > 
+> > > > 
+> > > > Given the recent discussion on QEMU mailing list,
+> > > > I think there is an additional patch that we need:
+> > > > filter the files exposed to userspace by "opt/" prefix.
+> > > > 
+> > > > This will ensure that we can change all other fw cfg files
+> > > > at will without breaking guest scripts.
+> > > > 
+> > > > Gabriel, could you code this up? Or do you see a
+> > > > pressing need to expose internal QEMU registers to
+> > > > userspace?
+> > > 
+> > > I'd be happy to update the docs to (better) emphasisze that:
+> > 
+> > Well my experience shows people do not read the docs.
+> > And really, good interfaces should be self-documenting.
+> > 
+> > >         1 the only way to guarantee any particular item shows up in
+> > >           guest-side fw_cfg sysfs is manually putting it there via the
+> > >           host-side command line
+> > > 
+> > >                 - and BTW, unless you prefixed it with "opt/..." you
+> > >                   are off the reservation, and it might collide with
+> > >                   qemu->firmware communications.
+> > > 
+> > >         2 anything one didn't place there themselves via the qemu
+> > >           command line is informational only, might change or go away
+> > >           at any time, and developing expectations about it based on
+> > >           past observation is done at the observer's own risk.
+> > > 
+> > > While I don't *personally* care about items outside of "opt/", I'm a bit
+> > > uncomfortable actively *hiding* them from userspace -- I could easily
+> > > imagine the ability to see (read-only) fw_cfg content from userspace
+> > > being a handy debugging/troubleshooting tool. It's back to separating
+> > > between mechanism and policy: hiding things from userspace would IMHO
+> > > fall into the policy enforcement side of things, and I'm still unclear
+> > > about the failure scenario we'd be trying to prevent, and its likelihood.
+> > > 
+> > > Thanks,
+> > > --Gabriel
+> > 
+> > Mostly, we can change internal qemu/firmware interfaces
+> > as long as we verify that firmware that ships with QEMU
+> > does not rely on them.
+> > 
+> > I'm fine with exposing stuff for debugging purposes
+> > but I would like a cleaner separation between the two,
+> > and self-documenting interfaces.
+> > How about:
+> > 	- place everything that is under "opt/" in e.g. "supported"
+> > 	  directory, or at root
+> > 	- place everything that is not under "opt/" in e.g. "unsupported"
+> > 	  directory
+> > 
+> > Abstracting hardware is what OS is all about, this is not policy.
 > 
-> 	  	      master
->         	        |
-> 	                |
-> 	                |
-> 	   ------------------------
->            |  			  |
-> 	IOMMU0			IOMMU1
-
-You've got mixtures of tabs and spaces here. Either fully use leading 
-tabs or use spaces everywhere.
-
->            |			  |
->       ctx0   ctx1	     ctx0   ctx1
+> I'm not sure I agree with this last point:
 > 
-> This association of master and iommus/contexts were previously
-> represented by platform data parent/child device details. The client
-> drivers were responsible for programming all of the iommus/contexts
-> for the device. Now while adapting to generic DT bindings we maintain the
-> list of iommus, contexts that each master domain is connected to and
-> program all of them on attach/detach.
+> Arguably, fw_cfg could be viewed as a glorified out-of-band USB stick
+> with special files prepared by QEMU for the guest VM.
 > 
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  59 ++++
-
-It is preferred to split bindings to separate patch.
-
->  drivers/iommu/msm_iommu.c                          | 252 +++++++++--------
->  drivers/iommu/msm_iommu.h                          |  73 ++---
->  drivers/iommu/msm_iommu_dev.c                      | 315 +++++----------------
->  4 files changed, 296 insertions(+), 403 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+> The sysfs driver is a mechanism to list/access these files, and is
+> IMHO the only thing one can reasonably construe as "kernel interface".
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt b/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
-> new file mode 100644
-> index 0000000..21bfbfc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
-> @@ -0,0 +1,59 @@
-> +* QCOM IOMMU
-> +
-> +The QCOM IOMMU is an implementation compatible with the ARM VMSA short
-> +descriptor page tables. It provides address translation for bus masters outside
-> +of the CPU, each connected to the IOMMU through a port called micro-TLB.
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must contain "qcom,iommu-v0".
+> What you're suggesting boils down to adding a translation layer between
+> what QEMU names the files when preparing this magic USB stick, and what
+> we tell users the names are (by adding additional folders named e.g.
+> "supported" and "unsupported").
+> 
+> That to me looks like injecting policy ("look *here*, NOT there!") by
+> doing this, instead of sticking with mechanism only ("here's what qemu
+> wrote to fw_cfg, look at it if you want, or don't...").
 
-You need SoC specific compatible strings in addition.
+It's a mechanism really. We have a mechanism to affect the
+names of files in guest.  What I'm saying is it would be nice to
+have a mechanism for QEMU to tell guest "hidden file".
 
-> +  - reg: Base address and size of the IOMMU registers.
-> +  - interrupts: Specifiers for the MMU fault interrupts. For instances that
-> +    support secure mode two interrupts must be specified, for non-secure and
-> +    secure mode, in that order. For instances that don't support secure mode a
-> +    single interrupt must be specified.
-> +  - #iommu-cells: This is the total number of stream ids that a master would
-> +		  use during transactions which will be specified as a list
-> +		  as a part of iommus property below.
-> +  - ncb: The total number of context banks in the IOMMU.
-> +  - clocks	: List of clocks to be used during SMMU register access. See
-> +		  Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +		  for information about the format. For each clock specified
-> +		  here, there must be a corresponding entry in clock-names
-> +		  (see below).
-> +
-> +  - clock-names	: List of clock names corresponding to the clocks specified in
-> +		  the "clocks" property (above). See
-> +		  Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +		  for more info.
-> +
-> +Each bus master connected to an IOMMU must reference the IOMMU in its device
-> +node with the following property:
-> +
-> +  - iommus: A reference to the IOMMU in multiple cells. The first cell is a
-> +	    phandle to the IOMMU and the second cell is the list of the
-> +	    stream ids used by the device.
-> +
-> +Example: mdp iommu and its bus master
-> +
-> +                mdp_port0: qcom,iommu@7500000 {
-> +			compatible = "msm,iommu-v0";
-> +			#iommu-cells = <2>;
-> +			clock-names =
-> +			    "smmu_pclk",
-> +			    "iommu_clk";
-> +			clocks =
-> +			    <&mmcc SMMU_AHB_CLK>,
-> +			    <&mmcc MDP_AXI_CLK>;
-> +			reg = <0x07500000 0x100000>;
-> +			interrupts =
-> +			    <GIC_SPI 63 0>,
-> +			    <GIC_SPI 64 0>;
-> +			ncb = <2>;
-> +		};
-> +
-> +		mdp: qcom,mdp@5100000 {
-> +			compatible = "qcom,mdp";
-> +			...
-> +			iommus = <&mdp_port0 0 2>;
-> +		};
+Consider that ACPI has a "hidden" attribute for devices.
+This is more of the same.
+
+
+> While I understand your concerns, I'm not sure we should have to go
+> through this level of convolution to protect people from their own
+> mistakes (such as assuming certain content on the magic USB stick will
+> always be there, and writing some sort of script which would break if
+> said content mysteriously disappears, then reasonably complain about
+> either the sysfs kernel driver or qemu itself). Presence or absence of
+> some file on a magic USB stick does NOT (again, IMHO) an interface make...
+> 
+> I was thinking of maybe adding a module parameter, let's call it
+> "show-all", off by default, and which would cause the "by-name" folder
+> to only be populated by things starting with "opt" when off, and
+> all fw-cfg files when enabled. But I'm not sure I like having to do it
+> in the first place (particularly hardcoding the string "opt" anywhere
+> in the driver :) ) so let me think about this a bit more (additional
+> pro/con thoughs and opinions welcome!)...
+> 
+> Thanks,
+> --Gabriel
+
+the "opt/" string is part of hardware - you already hardcore
+e.g. the acpi ID, correct? That's just more of the same IMHO.
+
+
+> > 
+> > > > > ---
+> > > > > 
+> > > > > Changes since v1:
+> > > > > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
+> > > > > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
+> > > > > 	  and only throw a warning/error message otherwise.
+> > > > > 
+> > > > > 	- didn't get any *negative* feedback from the QEMU crowd, so
+> > > > > 	  this is now a bona-fide "please apply this", rather than just
+> > > > > 	  an RFC :)
+> > > > > 
+> > > > > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
+> > > > > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
+> > > > > 
+> > > > > Thanks much,
+> > > > >   --Gabriel
+> > > > > 
+> > > > >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
+> > > > >  1 file changed, 16 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> > > > > index 7bba76c..a44dc32 100644
+> > > > > --- a/drivers/firmware/qemu_fw_cfg.c
+> > > > > +++ b/drivers/firmware/qemu_fw_cfg.c
+> > > > > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
+> > > > >  static inline void fw_cfg_read_blob(u16 key,
+> > > > >  				    void *buf, loff_t pos, size_t count)
+> > > > >  {
+> > > > > +	u32 glk;
+> > > > > +	acpi_status status;
+> > > > > +
+> > > > > +	/* If we have ACPI, ensure mutual exclusion against any potential
+> > > > > +	 * device access by the firmware, e.g. via AML methods:
+> > > > > +	 */
+> > > > > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
+> > > > > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
+> > > > > +		/* Should never get here */
+> > > > > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
+> > > > > +		memset(buf, 0, count);
+> > > > > +		return;
+> > > > > +	}
+> > > > > +
+> > > > >  	mutex_lock(&fw_cfg_dev_lock);
+> > > > >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
+> > > > >  	while (pos-- > 0)
+> > > > >  		ioread8(fw_cfg_reg_data);
+> > > > >  	ioread8_rep(fw_cfg_reg_data, buf, count);
+> > > > >  	mutex_unlock(&fw_cfg_dev_lock);
+> > > > > +
+> > > > > +	acpi_release_global_lock(glk);
+> > > > >  }
+> > > > >  
+> > > > >  /* clean up fw_cfg device i/o */
+> > > > > -- 
+> > > > > 2.4.3
