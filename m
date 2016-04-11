@@ -1,90 +1,77 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: Re: [PATCH v6 00/24] i2c mux cleanup and locking update
-Date: Mon, 11 Apr 2016 15:36:05 +0200
-Message-ID: <570BA845.1060309@lysator.liu.se>
-References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
- <20160411123959.GA4719@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160411123959.GA4719@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Matt
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V16 0/3] dmaengine: add Qualcomm Technologies HIDMA driver
+Date: Mon, 11 Apr 2016 09:34:20 -0400
+Message-ID: <1460381663-16765-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+The Qualcomm Technologies HIDMA device has been designed
+to support virtualization technology. The driver has been
+divided into two to follow the hardware design.
 
-On 2016-04-11 14:39, Wolfram Sang wrote:
-> Hi Peter,
->
->> To summarize the series, there's some i2c-mux infrastructure cleanup work
->> first (I think that part stands by itself as desireable regardless), the
->> locking changes are in 16/24 and after with the real meat in 18/24. There
->> is some documentation added in 19/24 while 20/24 and after are cleanups to
->> existing drivers utilizing the new stuff.
->
-> My idea is to review and pull in the infrastructure work for 4.7 and the
-> locking changes to 4.8. This gives us one cycle to fix regressions (if
-> any) in the infrastructure work first. Is that okay with you?
+1. HIDMA Management driver
+2. HIDMA Channel driver
 
-I was just thinking about how it appears impossible to get it all of it
-merged in one go and what to do about it...
+Each HIDMA HW consists of multiple channels. These channels
+share some set of common parameters. These parameters are
+initialized by the management driver during power up.
+Same management driver is used for monitoring the execution
+of the channels. Management driver can change the performance
+behavior dynamically such as bandwidth allocation and
+prioritization in the future.
 
-The untra-defensive approach is only merge stuff that has actually been
-tested on real hw, and to hold off the rest until someone has tested. That
-can obviously take forever. At the same time, many of the patches are kind
-of mechanical, and feels rather safe.
+The management driver is executed in host context and
+is the main management entity for all channels provided by
+the device.
 
-  1 i2c-mux: add common data for every i2c-mux instance
-  2 i2c: i2c-mux-gpio: convert to use an explicit i2c mux core
-  3 i2c: i2c-mux-pinctrl: convert to use an explicit i2c mux core
-  4 i2c: i2c-arb-gpio-challenge: convert to use an explicit i2c mux core
-  5 i2c: i2c-mux-pca9541: convert to use an explicit i2c mux core
-  6 i2c: i2c-mux-pca954x: convert to use an explicit i2c mux core
-  7 i2c: i2c-mux-reg: convert to use an explicit i2c mux core
-  8 iio: imu: inv_mpu6050: convert to use an explicit i2c mux core
-  9 [media] m88ds3103: convert to use an explicit i2c mux core
-10 [media] rtl2830: convert to use an explicit i2c mux core
-11 [media] rtl2832: convert to use an explicit i2c mux core
-12 [media] si2168: convert to use an explicit i2c mux core
-13 [media] cx231xx: convert to use an explicit i2c mux core
-14 of/unittest: convert to use an explicit i2c mux core
-15 i2c-mux: drop old unused i2c-mux api
-16 i2c: allow adapter drivers to override the adapter locking
-17 i2c: muxes always lock the parent adapter
-18 i2c-mux: relax locking of the top i2c adapter during mux-locked muxing
-19 i2c-mux: document i2c muxes and elaborate on parent-/mux-locked muxes
-20 iio: imu: inv_mpu6050: change the i2c gate to be mux-locked
-21 [media] si2168: change the i2c gate to be mux-locked
-22 [media] rtl2832: change the i2c gate to be mux-locked
-23 [media] rtl2832_sdr: get rid of empty regmap wrappers
-24 [media] rtl2832: regmap is aware of lockdep, drop local locking hack
+------------------------
+What's new
+------------------------
+- Fix tabs and spaces here and there.
+- Cleanup timeout in ISR
 
-I have tested 1, 2, 14, 16, 17 and 18 on real hw.
-Antti has tested 9, 10, 11, 12, 16, 17, 21, 22, 23 and 24, but they
-have been rebased since and 22 in particular is not a pure rebase since
-the driver moved underneath me. And the locking was not 100% the same
-either, not that I expect things to have gone south, but...
-15 is a functional no-op once 2-14 are merged.
-19 is docs only.
-Jonathan acked 8 and 20, but 20 needs a tested-by from Daniel Baluta
-and/or Adriana Reus.
+------------------------
+Git repos
+------------------------
+QEMU Support
+https://www.codeaurora.org/cgit/quic/qemu/qemu/log/?h=v2.5.0-sriov
 
-That leaves 3, 4, 5, 6, 7, 13, but all those fall in the mechanical
-category, with the possible exception of 13 which is more complex
-than the other patches in the 2-14 range. But 13 builds, and besides,
-what can possibly go wrong with a patch with that number? :-)
+------------------------
+History of Changes
+------------------------
+dma: qcom_hidma: add support for object hierarchy
+Changes from V15: (https://lkml.org/lkml/2016/3/11/619)
+* copyright year update
 
-IIUC, your suggestion is to push 1-15 for 4.7, i.e. hope for the best
-with 3, 4, 5, 6, 7 and 13. And then hopefully get testing for 20, and
-retesting for 21, 22, 23 and 24 and merge 16-24 for 4.8.
+dma: qcom_hidma: implement lower level hardware interface
+Changes from V15: (https://lkml.org/lkml/2016/3/11/617)
+* remove timeout in interrupt handling
+* fixed a couple of spaces and tabs
 
-That seems like a good plan to me.
+dma: qcom_hidma: add debugfs hooks
+Changes from V15: (https://lkml.org/lkml/2016/3/11/616)
+* copyright year update
 
-Maybe we should give Antti some more time to re-add his tested-by tags
-on 9-12 before they are merged into non-rewritable branches?
 
-Cheers,
-Peter
+Sinan Kaya (3):
+  dmaengine: qcom_hidma: implement lower level hardware interface
+  dmaengine: qcom_hidma: add debugfs hooks
+  dmaengine: qcom_hidma: add support for object hierarchy
+
+ Documentation/ABI/testing/sysfs-platform-hidma |   9 +
+ drivers/dma/qcom/Makefile                      |   2 +
+ drivers/dma/qcom/hidma.c                       |  44 +-
+ drivers/dma/qcom/hidma.h                       |  22 +-
+ drivers/dma/qcom/hidma_dbg.c                   | 219 ++++++
+ drivers/dma/qcom/hidma_ll.c                    | 900 +++++++++++++++++++++++++
+ drivers/dma/qcom/hidma_mgmt.c                  | 113 +++-
+ 7 files changed, 1293 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
+
+-- 
+1.8.2.1
