@@ -1,37 +1,109 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 17/17] mtd: nand: omap2: Implement NAND ready using
- gpiolib
-Date: Mon, 11 Apr 2016 10:04:45 -0500
-Message-ID: <20160411150445.GA5482@rob-hp-laptop>
-References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
- <1460023715-19332-18-git-send-email-rogerq@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v14 0/8] MT8173 DRM support
+Date: Mon, 11 Apr 2016 17:09:28 +0200
+Message-ID: <1460387376-11799-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460023715-19332-18-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 07, 2016 at 01:08:35PM +0300, Roger Quadros wrote:
-> The GPMC WAIT pin status are now available over gpiolib.
-> Update the omap_dev_ready() function to use gpio instead of
-> directly accessing GPMC register space.
-> 
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |  2 ++
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/mtd/nand/omap2.c                           | 29 ++++++++++++++--------
->  include/linux/platform_data/mtd-nand-omap2.h       |  2 +-
->  3 files changed, 21 insertions(+), 12 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+UmViYXNlZCBvbnRvIHY0LjYtcmMxLCByZW1vdmVkIHRoZSBIRE1JIGRyaXZlciBmcm9tIHRoaXMg
+c2VyaWVzIGFuZAp1cGRhdGVkIHRoZSBzdXNwZW5kL3Jlc3VtZSBjb2RlLiBUaGUgZW5jb2RlciBk
+cml2ZXIgcG1fb3BzIGFyZSBub3cgZ29uZSwKdGhlIGVuY29kZXJzIGFyZSBkaXNhYmxlZCB2aWEg
+YXRvbWljIHN1c3BlbmQgaGVscGVycyBmcm9tIHRoZSBtYWluIGRyaXZlcgpzdXNwZW5kL3Jlc3Vt
+ZSBob29rcy4gUmVnaXN0ZXIgYWNjZXNzIGluIHRoZSBNSVBJIFRYIGRyaXZlciBoYXMgYmVlbgpj
+aGFuZ2VkIGFjY29yZGluZyB0byByZXZpZXcgY29tbWVudHMsIHRoZSBEU0kgY29ubmVjdG9yIGNy
+ZWF0aW9uIGhhcyBiZWVuCmNsYXJpZmllZCwgYW5kIHRoZSBtdGtfZHBpLmggaGVhZGVyIGZpbGUg
+d2FzIGZvbGRlZCBpbnRvIG10a19kcGkuYy4KCkNoYW5nZXMgc2luY2UgdjEzOgogLSBEcm9wcGVk
+IHRoZSBIRE1JIGRyaXZlcnMuIEknbGwgcmVzZW5kIHRoZW0gaW4gYSBzZXBhcmF0ZSBzZXJpZXMu
+CiAtIFVzZSBhdG9taWMgc3VzcGVuZCBoZWxwZXJzIGFuZCBkcm9wIGVuY29kZXIgc3VzcGVuZC9y
+ZXN1bWUgZnVuY3Rpb25zCiAtIENyZWF0ZSBEU0kgY29ubmVjdG9yIGluIGEgc2VwYXJhdGUgZnVu
+Y3Rpb24KIC0gQ2xlYW51cCBNSVBJIFRYIHJlZ2lzdGVyIGFjY2VzcwogLSBTb21lIERQSSBkcml2
+ZXIgY2xlYW51cAoKcmVnYXJkcwpQaGlsaXBwCgpDSyBIdSAoNCk6CiAgZHQtYmluZGluZ3M6IGRy
+bS9tZWRpYXRlazogQWRkIE1lZGlhdGVrIGRpc3BsYXkgc3Vic3lzdGVtIGR0cyBiaW5kaW5nCiAg
+ZHJtL21lZGlhdGVrOiBBZGQgRFJNIERyaXZlciBmb3IgTWVkaWF0ZWsgU29DIE1UODE3My4KICBk
+cm0vbWVkaWF0ZWs6IEFkZCBEU0kgc3ViIGRyaXZlcgogIGFybTY0OiBkdHM6IG10ODE3MzogQWRk
+IGRpc3BsYXkgc3Vic3lzdGVtIHJlbGF0ZWQgbm9kZXMKCkppZSBRaXUgKDEpOgogIGRybS9tZWRp
+YXRlazogQWRkIERQSSBzdWIgZHJpdmVyCgpQaGlsaXBwIFphYmVsICgzKToKICBjbGs6IG1lZGlh
+dGVrOiBtYWtlIGRwaTBfc2VsIHByb3BhZ2F0ZSByYXRlIGNoYW5nZXMKICBjbGs6IG1lZGlhdGVr
+OiBBZGQgaGRtaV9yZWYgSERNSSBQSFkgUExMIHJlZmVyZW5jZSBjbG9jayBvdXRwdXQKICBjbGs6
+IG1lZGlhdGVrOiByZW1vdmUgaGRtaXR4X2RpZ19jdHMgZnJvbSBUT1AgY2xvY2tzCgogLi4uL2Jp
+bmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgICAgfCAyMDMgKysrKysK
+IC4uLi9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgICAgIHwgIDM1
+ICsKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRzaS50eHQgICAgIHwg
+IDYwICsrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpICAgICAgICAg
+ICB8IDIyMyArKysrKwogZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jICAgICAgICAg
+ICAgICAgICAgfCAgMTIgKy0KIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdGsuaCAgICAgICAg
+ICAgICAgICAgICAgIHwgIDE1ICstCiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICB8ICAxNCArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAxNCArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2Rpc3Bfb3ZsLmMgICAgICAgICAgICB8IDMwMiArKysrKysrCiBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jICAgICAgICAgICB8IDI0MCArKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMgICAgICAgICAgICAgICAgIHwgNzY5ICsrKysr
+KysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaV9yZWdzLmggICAg
+ICAgICAgICB8IDIyOCArKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0
+Yy5jICAgICAgICAgICAgfCA1ODIgKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fY3J0Yy5oICAgICAgICAgICAgfCAgMzIgKwogZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZGRwLmMgICAgICAgICAgICAgfCAzNTUgKysrKysrKysKIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5oICAgICAgICAgICAgIHwgIDQxICsKIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgICAgICAgIHwgMjI1ICsrKysr
+CiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oICAgICAgICB8IDE1
+MCArKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgICAg
+ICB8IDU2NyArKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+cnYuaCAgICAgICAgICAgICB8ICA1OSArKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZmIuYyAgICAgICAgICAgICAgfCAxNjUgKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZmIuaCAgICAgICAgICAgICAgfCAgMjMgKwogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZ2VtLmMgICAgICAgICAgICAgfCAyNjkgKysrKysrCiBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uaCAgICAgICAgICAgICB8ICA1OSArKwogZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fcGxhbmUuYyAgICAgICAgICAgfCAyNDAgKysrKysrCiBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9wbGFuZS5oICAgICAgICAgICB8ICA1OSAr
+KwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAgICAgICAgICAgfCA5
+MjcgKysrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21p
+cGlfdHguYyAgICAgICAgICAgICB8IDQ2MyArKysrKysrKysrCiBpbmNsdWRlL2R0LWJpbmRpbmdz
+L2Nsb2NrL210ODE3My1jbGsuaCAgICAgICAgICAgICB8ICAgMyArLQogMzEgZmlsZXMgY2hhbmdl
+ZCwgNjMzMiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlh
+dGVrLGRpc3AudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dAogY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVr
+L21lZGlhdGVrLGRzaS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvS2NvbmZpZwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9NYWtlZmlsZQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZGlzcF9vdmwuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZGlzcF9yZG1hLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RwaS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcGlfcmVncy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fY3J0Yy5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fY3J0Yy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaAogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2ZiLmMKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5oCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmMKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uaAogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX3BsYW5lLmMK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9wbGFu
+ZS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2ku
+YwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90
+eC5jCgotLSAKMi43LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
