@@ -1,69 +1,59 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 2/2] pci: host: new driver for Marvell Armada 7K/8K PCIe
- controller
-Date: Mon, 11 Apr 2016 17:56:51 +0200
-Message-ID: <20160411175651.5f32a990@free-electrons.com>
-References: <1459071058-18328-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1459071058-18328-3-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160327140348.GA19498@lunn.ch>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: tegra: Rename some bindings for
+ consistency
+Date: Mon, 11 Apr 2016 09:58:14 -0600
+Message-ID: <570BC996.3050804@wwwdotorg.org>
+References: <1460383086-26957-1-git-send-email-thierry.reding@gmail.com>
+ <1460383086-26957-2-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160327140348.GA19498@lunn.ch>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460383086-26957-2-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 04/11/2016 07:58 AM, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> Device tree binding for NVIDIA Tegra have traditionally carried the
+> "nvidia," vendor prefix in the filename. A couple of odd ones don't, so
+> fix them up for consistency.
+>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>   .../devicetree/bindings/ata/nvidia,tegra-ahci.txt  |  32 ++
+>   .../devicetree/bindings/ata/tegra-sata.txt         |  32 --
+>   .../bindings/dma/nvidia,tegra20-apbdma.txt         |  44 +++
+>   .../devicetree/bindings/dma/tegra20-apbdma.txt     |  44 ---
+>   .../memory-controllers/nvidia,tegra-emc.txt        | 374 +++++++++++++++++++++
+>   .../bindings/memory-controllers/tegra-emc.txt      | 374 ---------------------
+>   .../bindings/thermal/nvidia,tegra-soctherm.txt     |  67 ++++
+>   .../devicetree/bindings/thermal/tegra-soctherm.txt |  67 ----
+>   8 files changed, 517 insertions(+), 517 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/ata/nvidia,tegra-ahci.txt
 
-On Sun, 27 Mar 2016 16:03:48 +0200, Andrew Lunn wrote:
-> > +static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
-> > +{
-> > +	struct pcie_port *pp = arg;
-> > +	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
-> > +	void __iomem *base = pcie->base;
-> > +	u32 val;
-> > +
-> > +	val = readl(base + PCIE_GLOBAL_INT_CAUSE1_REG);
-> > +	writel(val, base + PCIE_GLOBAL_INT_CAUSE1_REG);
-> > +
-> > +	return IRQ_HANDLED;
-> 
-> Maybe a comment as to why you are just throwing them away.
+The filenames should exactly match the (first) compatible value they 
+document for consistency with other bindings. That should be 
+nvidia,tegra124-ahci.txt.
 
-I'll have a look into this.
+>   delete mode 100644 Documentation/devicetree/bindings/ata/tegra-sata.txt
+>   create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
+>   delete mode 100644 Documentation/devicetree/bindings/dma/tegra20-apbdma.txt
+>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-emc.txt
 
-> > +static int armada8k_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct armada8k_pcie *pcie;
-> > +	struct pcie_port *pp;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct resource *base;
-> > +	int ret;
-> > +
-> > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > +	if (!pcie)
-> > +		return -ENOMEM;
-> > +
-> > +	pcie->main_clk = devm_clk_get(dev, "main");
-> > +	if (!IS_ERR(pcie->main_clk))
-> > +		clk_prepare_enable(pcie->main_clk);
-> > +
-> > +	pcie->lane_clk = devm_clk_get(dev, "port");
-> > +	if (!IS_ERR(pcie->lane_clk))
-> > +		clk_prepare_enable(pcie->lane_clk);
-> 
-> Any need to handle -EPRODE_DEFERED here?
+That should be nvidia,tegra124-emc.txt.
 
-Is this needed? The clocks are registered in of_clk_init(), i.e at
-time_init() time. This is way before the device drivers get probed, no?
+>   delete mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
+>   create mode 100644 Documentation/devicetree/bindings/thermal/nvidia,tegra-soctherm.txt
+>   delete mode 100644 Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
 
-Best regards,
+That should be nvidia,tegra124-soctherm.txt.
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+I assume the delete/create content is identical, although I didn't both 
+to check.
+
+With the fixes above,
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
