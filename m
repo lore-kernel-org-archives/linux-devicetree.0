@@ -1,127 +1,79 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] irqchip: add lpc18xx gpio pin interrupt driver
-Date: Mon, 11 Apr 2016 16:15:11 +0100
-Message-ID: <570BBF7F.2040001@arm.com>
-References: <1459614924-32670-1-git-send-email-manabian@gmail.com>
- <1459614924-32670-2-git-send-email-manabian@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] input: pwm-beeper: add feature to set volume via
+ sysfs
+Date: Mon, 11 Apr 2016 10:21:54 -0500
+Message-ID: <20160411152154.GA9736@rob-hp-laptop>
+References: <1460044644-12419-1-git-send-email-frieder.schrempf@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459614924-32670-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460044644-12419-1-git-send-email-frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Schrempf Frieder <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+Cc: "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joachim,
+On Thu, Apr 07, 2016 at 03:58:40PM +0000, Schrempf Frieder wrote:
+> Make the driver accept different volume levels via sysfs.
+> This can be helpful if the beep/bell sound intensity needs
+> to be adapted to the environment of the device.
 
-On 02/04/16 17:35, Joachim Eastwood wrote:
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+It is preferred that bindings be a separate patch. Also, this is 2 
+independent features: the sysfs interface and DT properties. So that is 
+probably 3 patches.
 
-As a start, a commit message would be appreciated.
+Also, sysfs interfaces are supposed to be documented.
 
-> ---
->  drivers/irqchip/Kconfig                 |   5 +
->  drivers/irqchip/Makefile                |   1 +
->  drivers/irqchip/irq-lpc18xx-gpio-pint.c | 219 ++++++++++++++++++++++++++++++++
->  3 files changed, 225 insertions(+)
->  create mode 100644 drivers/irqchip/irq-lpc18xx-gpio-pint.c
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 3e12479..0278837e 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -211,6 +211,11 @@ config KEYSTONE_IRQ
->  		Support for Texas Instruments Keystone 2 IRQ controller IP which
->  		is part of the Keystone 2 IPC mechanism
->  
-> +config LPC18XX_GPIO_PINT
-> +	bool
-> +	select IRQ_DOMAIN
-> +	select GENERIC_IRQ_CHIP
-> +
->  config MIPS_GIC
->  	bool
->  	select GENERIC_IRQ_IPI
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index b03cfcb..bf60e0c 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -55,6 +55,7 @@ obj-$(CONFIG_BCM7038_L1_IRQ)		+= irq-bcm7038-l1.o
->  obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
->  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
->  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-> +obj-$(CONFIG_LPC18XX_GPIO_PINT)		+= irq-lpc18xx-gpio-pint.o
->  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
->  obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
->  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
-> diff --git a/drivers/irqchip/irq-lpc18xx-gpio-pint.c b/drivers/irqchip/irq-lpc18xx-gpio-pint.c
-> new file mode 100644
-> index 0000000..d53e99b
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-lpc18xx-gpio-pint.c
-> @@ -0,0 +1,219 @@
-> +/*
-> + * Irqchip driver for GPIO Pin Interrupt (PINT) on NXP LPC18xx/43xx.
-> + *
-> + * Copyright (C) 2016 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/init.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +
-> +/* LPC18xx GPIO pin interrupt register offsets */
-> +#define LPC18XX_GPIO_PINT_ISEL		0x000
-> +#define LPC18XX_GPIO_PINT_SIENR		0x008
-> +#define LPC18XX_GPIO_PINT_CIENR		0x00c
-> +#define LPC18XX_GPIO_PINT_SIENF		0x014
-> +#define LPC18XX_GPIO_PINT_CIENF		0x018
-> +#define LPC18XX_GPIO_PINT_IST		0x024
-> +
-> +#define PINT_MAX_IRQS			32
-> +
-> +struct lpc18xx_gpio_pint_chip {
-> +	struct irq_domain *domain;
-> +	void __iomem	  *base;
-> +	struct clk	  *clk;
-> +	unsigned int	  revmap[];
-> +};
-> +
-> +static void lpc18xx_gpio_pint_handler(struct irq_desc *desc)
-> +{
-> +	struct lpc18xx_gpio_pint_chip *pint = irq_desc_get_handler_data(desc);
-> +	unsigned int irq = irq_desc_get_irq(desc);
-> +	unsigned int hwirq = pint->revmap[irq];
-> +	unsigned int virq;
-> +
-> +	virq = irq_find_mapping(pint->domain, hwirq);
-> +	generic_handle_irq(virq);
+> The number of volume levels available and their values can
+> be specified via device tree (similar to pwm-backlight).
+> 
+> This patch was tested with linux-imx 3.10.17 and was
+> applied to current mainline without any changes.
 
-Two things here:
-- It feels a bit weird that you are indirecting everything through a
-cascade interrupt. As you have a 1:1 relationship between the PINT
-interrupts and their NVIC counterparts, this would be better described
-as a hierarchical irqchip (see drivers/irqchip/irq-vf610-mscm-ir.c for
-an example)
-- If you decide to stick with the current approach, you're then missing
-the usual chained_irq_{enter,exit}.
+You need to test with something not 3 years old...
 
-Thanks,
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/input/pwm-beeper.txt    |  20 ++++
+>  drivers/input/misc/pwm-beeper.c                 | 109 ++++++++++++++++++-
+>  2 files changed, 126 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> index be332ae..153cd3f 100644
+> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> @@ -5,3 +5,23 @@ Registers a PWM device as beeper.
+>  Required properties:
+>  - compatible: should be "pwm-beeper"
+>  - pwms: phandle to the physical PWM device
+> +- volume-levels: Array of distinct volume levels. These need to be in the
+> +      range of 0 to 500, while 0 means 0% duty cycle (mute) and 500 means
+> +      50% duty cycle (max volume).
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Where does the scale of 0-500 come from? It is tenth of a percent?
+
+How many array entries?
+
+> +      Please note that the actual volume of most beepers is highly
+> +      non-linear, which means that low volume levels are probably somewhere
+> +      in the range of 1 to 30 (0.1-3% duty cycle).
+> +- default-volume-level: the default volume level (index into the
+> +      array defined by the "volume-levels" property)
+> +
+> +The volume level can be set via sysfs under /sys/class/input/inputX/volume.
+> +The maximum volume level index can be read from /sys/class/input/inputX/max_volume_level.
+> +
+> +Example:
+> +
+> +	pwm-beeper {
+> +		compatible = "pwm-beeper";
+> +		pwms = <&pwm4 0 5000>;
+> +		volume-levels = <0 8 20 40 500>;
+> +		default-volume-level = <4>;
+> +	};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
