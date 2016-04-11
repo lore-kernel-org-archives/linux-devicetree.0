@@ -1,27 +1,43 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Mon, 11 Apr 2016 11:38:49 -0600
-Message-ID: <570BE129.40907@wwwdotorg.org>
-References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 00/30] ARM: OMAP2+: hwmod module clock type support
+Date: Mon, 11 Apr 2016 10:40:59 -0700
+Message-ID: <20160411173518.GA5995@atomide.com>
+References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460131994-24493-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460362761-4842-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2016 10:13 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi,
+
+Nice to see this moving along :)
+
+* Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [160411 01:20]:
 >
-> Changes to the pad controller device tree binding have required that
-> each lane be associated with a separate PHY. Update the PCI host bridge
-> device tree binding to allow each root port to define the list of PHYs
-> required to drive the lanes associated with it.
+> The ordering on this set is kind of tricky to avoid any boot issues,
+> and it still currently causes a boot breakage between the DTS data
+> introduction and removal of hwmod data; this generates duplicate
+> entries for clocks which is prone to cause issues (both DT and hwmod
+> have the same entries in place under the hwmod data is removed.) I
+> didn't quite figure out a good way to avoid this, and could use some
+> guidance here. Shall we squash the DT + hwmod data patches together?
+> This avoids the boot breakage but creates pretty large patches. Also,
+> AMx3xx data needs to be grouped together as part of their data is
+> re-used commonly by both SoCs.
 
-I think the feedback I gave on v3 still applies here (I'm talking about 
-the comments on the patch, not the commit description).
+How about use clocks from dts if clocks property is defined? Otherwise
+fall back to the old static data. Then drop the static data later on
+with follow up patches.
 
-http://www.spinics.net/lists/linux-pci/msg49718.html
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
