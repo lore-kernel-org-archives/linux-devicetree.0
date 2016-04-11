@@ -1,96 +1,57 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: mxs-lradc: Move binding document out of staging as
- well
-Date: Mon, 11 Apr 2016 14:42:04 -0500
-Message-ID: <20160411194204.GA17762@rob-hp-laptop>
-References: <1460293398-23654-1-git-send-email-harald@ccbib.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Mon, 11 Apr 2016 14:46:15 -0500
+Message-ID: <20160411194615.GA20768@rob-hp-laptop>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+ <20160410151237.GD5377@piout.net>
+ <1460301781.17404.171.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460293398-23654-1-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1460301781.17404.171.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 10, 2016 at 01:03:18PM +0000, Harald Geyer wrote:
-> commit f836c45922446df872250a12dd08e48978aceb2f moved mxs-lradc driver
-> out of staging. However the binding document was left in the old place.
+On Sun, Apr 10, 2016 at 06:23:01PM +0300, Sergei Ianovich wrote:
+> On Sun, 2016-04-10 at 17:12 +0200, Alexandre Belloni wrote:
+> > Hi,
+> >=20
+> > On 10/04/2016 at 23:59:22 +0900, Akinobu Mita wrote :
+> > >=20
+> > > This series adds support access to DS1302 with GPIO lines.
+> > >=20
+> > > Recently rtc-ds1302 is rewritten using SPI 3wire mode.=A0=A0This =
+adds
+> > > another platform driver using GPIO while supporting both modes.
+> > >=20
+> > > Thie series first fixes two problems I found while tesing, second=
+ly
+> > > introduces the abstraction layer for the register access which
+> > > enables
+> > > to share the most code between spi and platform driver, and adds
+> > > the platform driver using GPIO.
+> > >=20
+> > Well, isn't spi-gpio fitting for that use case? I'd like to avoid
+> > open
+> > coding gpio bitbanging in the driver.
 
-A move out of staging should probably imply a review. Though we don't 
-have clear rules around that for bindings.
+And I'd like to avoid a custom binding...
 
-> 
-> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/mxs-lradc.txt      | 47 ++++++++++++++++++++++
->  .../bindings/staging/iio/adc/mxs-lradc.txt         | 47 ----------------------
->  2 files changed, 47 insertions(+), 47 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
->  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
-> new file mode 100644
-> index 0000000..555fb11
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
-> @@ -0,0 +1,47 @@
-> +* Freescale MXS LRADC device driver
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx23-lradc" for i.MX23 SoC and "fsl,imx28-lradc"
-> +              for i.MX28 SoC
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain the LRADC interrupts
-> +
-> +Optional properties:
-> +- fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
-> +                               to LRADC. Valid value is either 4 or 5. If this
-> +                               property is not present, then the touchscreen is
-> +                               disabled. 5 wires is valid for i.MX28 SoC only.
+> No, unfortunately. I've investigated this possibility for my platform=
+=2E
+> spi-gpio doesn't support LSB-first and 3-wire options. Adding support
+> there is a very big change. The best way to add GPIO support is to
+> create spi-gpio-3wire with LSB-first support.
 
-Standard touchscreen property?
+None of this is a concern of the binding.
 
-> +- fsl,ave-ctrl: number of samples per direction to calculate an average value.
-> +                Allowed value is 1 ... 32, default is 4
-> +- fsl,ave-delay: delay between consecutive samples. Allowed value is
-> +                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
-> +                 2 kHz and its default is 2 (= 1 ms)
-
-ditto.
-
-If not, it should have units.
-
-> +- fsl,settling: delay between plate switch to next sample. Allowed value is
-> +                1 ... 2047. It counts at 2 kHz and its default is
-> +                10 (= 5 ms)
-
-ditto.
-
-> +
-> +Example for i.MX23 SoC:
-> +
-> +	lradc@80050000 {
-> +		compatible = "fsl,imx23-lradc";
-> +		reg = <0x80050000 0x2000>;
-> +		interrupts = <36 37 38 39 40 41 42 43 44>;
-> +		status = "okay";
-> +		fsl,lradc-touchscreen-wires = <4>;
-> +		fsl,ave-ctrl = <4>;
-> +		fsl,ave-delay = <2>;
-> +		fsl,settling = <10>;
-> +	};
-> +
-> +Example for i.MX28 SoC:
-> +
-> +	lradc@80050000 {
-> +		compatible = "fsl,imx28-lradc";
-> +		reg = <0x80050000 0x2000>;
-> +		interrupts = <10 14 15 16 17 18 19 20 21 22 23 24 25>;
-> +		status = "okay";
-> +		fsl,lradc-touchscreen-wires = <5>;
-> +		fsl,ave-ctrl = <4>;
-> +		fsl,ave-delay = <2>;
-> +		fsl,settling = <10>;
-> +	};
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
