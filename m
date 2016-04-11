@@ -1,44 +1,123 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v14 5/6] dt-bindings: hdmi-connector: add DDC I2C bus phandle
- documentation
-Date: Mon, 11 Apr 2016 17:10:15 +0200
-Message-ID: <1460387416-31254-6-git-send-email-p.zabel@pengutronix.de>
-References: <1460387416-31254-1-git-send-email-p.zabel@pengutronix.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt/bindings/usb: Add bindings for PIC32 MUSB
+ driver.
+Date: Mon, 11 Apr 2016 10:10:22 -0500
+Message-ID: <20160411151022.GA6187@rob-hp-laptop>
+References: <460027775-20729-2-git-send-email-purna.mandal@microchip.com>
+ <1460032381-32677-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1460387416-31254-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460032381-32677-1-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGFuIG9wdGlvbmFsIGRkYy1pMmMtYnVzIHBoYW5kbGUgcHJvcGVydHkgdGhhdCBwb2ludHMg
-dG8KYW4gSTJDIG1hc3RlciBjb250cm9sbGVyIHRoYXQgaGFuZGxlcyB0aGUgY29ubmVjdG9yIERE
-QyBwaW5zLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25p
-eC5kZT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvY29ubmVjdG9yL2hkbWktY29ubmVj
-dG9yLnR4dCB8IDEgKwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvY29ubmVjdG9yL2hk
-bWktY29ubmVjdG9yLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2Nvbm5lY3Rvci9oZG1pLWNvbm5lY3Rvci50eHQKaW5kZXggYWNkNTY2OC4uNTA4YWVlNCAx
-MDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvY29u
-bmVjdG9yL2hkbWktY29ubmVjdG9yLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9jb25uZWN0b3IvaGRtaS1jb25uZWN0b3IudHh0CkBAIC04LDYgKzgs
-NyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogT3B0aW9uYWwgcHJvcGVydGllczoKIC0gbGFiZWw6
-IGEgc3ltYm9saWMgbmFtZSBmb3IgdGhlIGNvbm5lY3RvcgogLSBocGQtZ3Bpb3M6IEhQRCBHUElP
-IG51bWJlcgorLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBsaW5rIHRvIHRoZSBJMkMgY29udHJvbGxl
-ciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCiAKIFJlcXVpcmVkIG5vZGVzOgogLSBWaWRlbyBw
-b3J0IGZvciBIRE1JIGlucHV0Ci0tIAoyLjcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Apr 07, 2016 at 06:02:59PM +0530, Purna Chandra Mandal wrote:
+> Document devicetree binding for the USB controller
+> and USB Phy found on Microchip PIC32 class devices.
+> 
+> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> 
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../bindings/usb/microchip,pic32-musb.txt          | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+> new file mode 100644
+> index 0000000..e1cec9d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+> @@ -0,0 +1,67 @@
+> +Microchip PIC32 MUSB DRC/OTG controller
+> +-------------------------------------------
+> +
+> +Required properties:
+> + - compatible       : should be "microchip,pic32mzda-usb".
+> + - reg              : offset and length of "MUSB Core Registers" and
+> +                      "USB Clock & Reset Registers".
+> + - reg-names        : should be "mc", and "usbcr" in order
+> + - clocks           : clock specifier for the musb controller clock
+> + - clock-names      : should be "usb_clk"
+> + - interrupts       : interrupt number for MUSB Core General interrupt
+> +                      and DMA interrupt
+> + - interrupt-names  : must be "mc" and "dma" in order.
+> + - phys             : phy specifier for the otg phy.
+> + - dr_mode          : should be one of "host", "peripheral" or "otg".
+> + - mentor,multipoint: Should be "1" indicating the musb controller supports
+> +                      multipoint. This is MUSB configuration-specific setting.
+> + - mentor,num-eps   : Specifies the number of endpoints. This is also a
+> +                      MUSB configuration-specific setting. Should be set to "8".
+> + - mentor,ram-bits  : Specifies the ram address size. Should be set to "11".
+> + - mentor,power     : Should be "500". This signifies the controller can supply
+> +                      up to 500mA when operating in host mode.
+> + - phys             : phandle of the USB phy.
+> + - usb_overcurrent  : phandle to MUSB over-current note. It should have
+> +                      interrupt number for over-current detection logic.
+
+This node is only an interrupt? Then you should use interrupts-extended 
+and make this interrupt the 3rd one. interrupts-extended will let you 
+have different interrupt parents for each irq.
+
+> +
+> +Optional properties:
+> + - microchip,fifo-mode: Specifies layout of internal SRAM for end-point fifos.
+> +                        Should be 0 (default) or 1.
+
+Make this a boolean.
+
+> +
+> +Example:
+> +	aliases {
+> +		usb1 = &usb1;
+> +		phy1 = &usb1_phy;
+> +	};
+> +
+> +	usb1: hsusb1_core@1f8e3000 {
+> +		compatible = "microchip,pic32mzda-usb";
+> +		reg = <0x1f8e3000 0x1000>,
+> +		      <0x1f884000 0x1000>;
+> +		reg-names = "mc", "usbcr";
+> +		interrupts = <132 IRQ_TYPE_EDGE_RISING>,
+> +			     <133 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "mc", "dma";
+> +		dr_mode = "host";
+> +		mentor,multipoint = <1>;
+> +		mentor,num-eps = <8>;
+> +		mentor,ram-bits = <11>;
+> +		mentor,power = <500>;
+> +		phys = <&usb1_phy>;
+> +		clocks = <&rootclk PB5CLK>;
+> +		clock-names = "usb_clk";
+> +		usb_overcurrent = <&usb1_overcurrent>;
+> +	};
+> +
+> +	usb1_phy: hsusb1_phy@1f8e4000 {
+> +		compatible = "usb-nop-xceiv";
+> +		reg = <0x1f8e4000 0x1000>;
+> +		clocks = <&rootclk UPLLCLK>;
+> +		clock-names = "main_clk";
+> +		clock-frequency = <24000000>;
+> +	};
+> +
+> +	usb1_overcurrent: hsusb1_oc@0 {
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+> +	};
+> -- 
+> 1.8.3.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
