@@ -1,68 +1,56 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3 05/16] ARM: davinci: add set_parent callback for mux
- clocks
-Date: Mon, 11 Apr 2016 16:10:12 +0530
-Message-ID: <570B7F0C.8000503@ti.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 06/16] ARM: davinci: da850: use clk->set_parent for
+ async3
+Date: Mon, 11 Apr 2016 16:19:30 +0530
+Message-ID: <570B813A.1030907@ti.com>
 References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-6-git-send-email-david@lechnology.com>
+ <1458863503-31121-7-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1458863503-31121-6-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, David.Laight@ACULAB.COM, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458863503-31121-7-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Friday 25 March 2016 05:21 AM, David Lechner wrote:
-> Introduce a set_parent callback that will be used for mux clocks, such as
-> the USB PHY muxes and the async3 clock domain mux.
+> The da850 family of processors has an async3 clock domain that can be
+> muxed to either pll0_sysclk2 or pll1_sysclk2. Now that the davinci clocks
+> have a set_parent callback, we can use this to control the async3 mux
+> instead of a stand-alone function.
 > 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
+> This adds a new async3_clk and sets the appropriate child clocks. The
+> default is use to pll1_sysclk2 since it is not affected by processor
+> frequency scaling.
 > 
-> v3 changes: none.
-> 
-> 
->  arch/arm/mach-davinci/clock.c | 17 ++++++++++++++++-
->  arch/arm/mach-davinci/clock.h |  1 +
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-davinci/clock.c b/arch/arm/mach-davinci/clock.c
-> index a5c2629..dfc2eb3 100644
-> --- a/arch/arm/mach-davinci/clock.c
-> +++ b/arch/arm/mach-davinci/clock.c
-> @@ -195,6 +195,13 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
->  		return -EINVAL;
->  
->  	mutex_lock(&clocks_mutex);
-> +	if (clk->set_parent) {
-> +		int ret = clk->set_parent(clk, parent);
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 
-Need empty line here.
-
-> +		if (ret) {
-> +			mutex_unlock(&clocks_mutex);
-> +			return ret;
-> +		}
+> +static int da850_async3_set_parent(struct clk *clk, struct clk *parent)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
+> +
+> +	/* Set the Async3 clock domain mux based on the parent clock. */
+> +	if (parent == &pll0_sysclk2)
+> +		val &= ~CFGCHIP3_ASYNC3_CLKSRC;
+> +	else if (parent == &pll1_sysclk2)
+> +		val |= CFGCHIP3_ASYNC3_CLKSRC;
+> +	else {
+> +		pr_err("Bad parent on async3 clock mux.\n");
+> +		return -EINVAL;
 > +	}
->  	clk->parent = parent;
->  	list_del_init(&clk->childnode);
->  	list_add(&clk->childnode, &clk->parent->children);
-> @@ -224,8 +231,16 @@ int clk_register(struct clk *clk)
->  
->  	mutex_lock(&clocks_mutex);
->  	list_add_tail(&clk->node, &clocks);
-> -	if (clk->parent)
-> +	if (clk->parent) {
-> +		if (clk->set_parent) {
-> +			int ret = clk->set_parent(clk, clk->parent);
 
-Here too. Applying this patch with these local changes.
+Since else has braces, need braces on all arm of the if-else construct.
 
-BTW, checkpatch complained about these. Please try to address all
-warnings unless there is a good reason not to fix one.
+Applied this patch with this fixed locally. checkpatch complains about
+this too when --strict option is passed.
 
 Thanks,
 Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
