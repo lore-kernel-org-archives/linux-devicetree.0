@@ -1,62 +1,68 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v9 00/20] PM / devferq: Add generic exynos bus frequency
- driver and new passive governor
-Date: Tue, 12 Apr 2016 05:15:01 +0900
-Message-ID: <CAGTfZH3AVbo6w9KDVNNCs+JMi=+-CA0oL6pQ+3jcOFihtKaK3Q@mail.gmail.com>
-References: <1460347078-15175-1-git-send-email-cw00.choi@samsung.com>
-	<570B218E.5000908@samsung.com>
-	<20160411195557.GA6426@kozik-lap>
-Reply-To: cw00.choi@samsung.com
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 6/6] ARM: dts: DRA7: Add dt nodes for PWMSS
+Date: Mon, 11 Apr 2016 13:21:12 -0700
+Message-ID: <20160411202112.GE5995@atomide.com>
+References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
+ <1457400224-24797-7-git-send-email-fcooper@ti.com>
+ <20160317151147.GA29802@rob-hp-laptop>
+ <56EAD315.1030307@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160411195557.GA6426@kozik-lap>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Anand Moon <linux.amoon@gmail.com>, Markus Reichl <m.reichl@fivetechno.de>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, "inki.dae@samsung.com" <inki.dae@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>device
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56EAD315.1030307@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Franklin S Cooper Jr." <fcooper@ti.com>
+Cc: Rob Herring <robh@kernel.org>, thierry.reding@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, paul@pwsan.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vigneshr@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+* Franklin S Cooper Jr. <fcooper@ti.com> [160317 08:55]:
+> 
+> 
+> On 03/17/2016 10:11 AM, Rob Herring wrote:
+> > On Mon, Mar 07, 2016 at 07:23:44PM -0600, Franklin S Cooper Jr wrote:
+> >> From: Vignesh R <vigneshr@ti.com>
+> >>
+> >> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
+> >> for dt bindings.
+> >>
+> >> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> >> [fcooper@ti.com: Add eCAP and use updated bindings for PWMSS and ePWM]
+> >> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> >> ---
+> >> Version 5 changes:
+> >> Add DT node for eCAP and update eCAP binding documentation
+> >>
+> >> Version 4 changes:
+> >> Updated link to the latest documentation
+> >>
+> >>  .../devicetree/bindings/pwm/pwm-tiecap.txt         |  9 +++
+> >>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |  9 +++
+> >>  .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 15 +++-
+> >>  arch/arm/boot/dts/dra7.dtsi                        | 84 ++++++++++++++++++++++
+> >>  4 files changed, 116 insertions(+), 1 deletion(-)
+> >
+> >> +			ehrpwm1: pwm@48440200 {
+> >> +				compatible = "ti,dra7xx-ehrpwm",
+> >> +					     "ti,am33xx-ehrpwm";
+> >> +				#pwm-cells = <3>;
+> >> +				reg = <0x48440200 0x80>;
+> >> +				clocks = <&ehrpwm1_tbclk>;
+> >> +				clock-names = "tbclk";
+> >> +				status = "disabled";
+> >> +			};
+> >> +
+> >> +			ecap1: ecap@48440100 {
+> > This also is a PWM? Then it should also be pwm@...
+> 
+> The enhanced capture module primary purpose is to measure
+> time between external signals which is called capture mode.
+> It also has a PWM mode. So I wouldn't recommend generalizing
+> the entire node to pwm.
 
-On Tue, Apr 12, 2016 at 4:55 AM, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> On Mon, Apr 11, 2016 at 01:01:18PM +0900, Chanwoo Choi wrote:
->> Dear Myungjoo and Krzysztof,
->>
->> This patch-set already get the acked-by or signed-off-by tag
->> from Exynos SoC and DEVFREQ maintainer except for patch10.
->>
->> If there is no comment, could you pick this patch-set?
->
-> I cannot find any description of dependencies between the patches so I
-> assume the obvious one: DTS patches do not depend on anything. This
-> means that:
-> 1. driver/devfreq related changes (including dt-bindings documentation)
->    go to Myungjoo,
-> 2. I can pick DTS changes.
+So is this patch safe for me to apply now or do we need more
+changes?
 
-Yes.
+Regards,
 
->
-> But first I would like to see the bindings documentation beeing applied
-> by someone as a proof that there won't be more development in DTS in
-> these series. There is no sense of picking DTS if after comments from
-> Rob, you will rework them, right?
-
-I already discussed the Rob's question on December, last year on
-patchset[1]. But, after that, I didn't receive the any reply from him.
-[1] https://lkml.org/lkml/2015/12/10/943
-
-So, I thought that there is no comment.  But, today, he give some
-question after 4 months.
-
-But I'll again reply to Rob's question.
-
->
-> Anyway I see Rob's questions. For these bindings I think you should get
-> DT-guys ack first.
-
-OK.
-
-Best Regards,
-Chanwoo Choi
+Tony
