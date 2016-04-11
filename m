@@ -1,57 +1,30 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] support control with using GPIO lines
-Date: Mon, 11 Apr 2016 14:46:15 -0500
-Message-ID: <20160411194615.GA20768@rob-hp-laptop>
-References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
- <20160410151237.GD5377@piout.net>
- <1460301781.17404.171.camel@gmail.com>
+Subject: Re: [PATCH 07/10] devicetree: Add infineon to vendor-prefix.txt
+Date: Mon, 11 Apr 2016 14:47:01 -0500
+Message-ID: <20160411194701.GA23454@rob-hp-laptop>
+References: <1460323386-16892-1-git-send-email-christophe-h.ricard@st.com>
+ <1460323386-16892-8-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460301781.17404.171.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1460323386-16892-8-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, peterhuewe-Mmb7MZpHnFY@public.gmane.org, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 10, 2016 at 06:23:01PM +0300, Sergei Ianovich wrote:
-> On Sun, 2016-04-10 at 17:12 +0200, Alexandre Belloni wrote:
-> > Hi,
-> >=20
-> > On 10/04/2016 at 23:59:22 +0900, Akinobu Mita wrote :
-> > >=20
-> > > This series adds support access to DS1302 with GPIO lines.
-> > >=20
-> > > Recently rtc-ds1302 is rewritten using SPI 3wire mode.=A0=A0This =
-adds
-> > > another platform driver using GPIO while supporting both modes.
-> > >=20
-> > > Thie series first fixes two problems I found while tesing, second=
-ly
-> > > introduces the abstraction layer for the register access which
-> > > enables
-> > > to share the most code between spi and platform driver, and adds
-> > > the platform driver using GPIO.
-> > >=20
-> > Well, isn't spi-gpio fitting for that use case? I'd like to avoid
-> > open
-> > coding gpio bitbanging in the driver.
+On Sun, Apr 10, 2016 at 11:23:03PM +0200, Christophe Ricard wrote:
+> Add missing vendor to vendor-prefix.txt
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-And I'd like to avoid a custom binding...
-
-> No, unfortunately. I've investigated this possibility for my platform=
-=2E
-> spi-gpio doesn't support LSB-first and 3-wire options. Adding support
-> there is a very big change. The best way to add GPIO support is to
-> create spi-gpio-3wire with LSB-first support.
-
-None of this is a concern of the binding.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
