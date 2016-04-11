@@ -1,113 +1,160 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 2/5] genirq: Allow the affinity of a percpu interrupt to be set/retrieved
-Date: Mon, 11 Apr 2016 09:57:52 +0100
-Message-ID: <1460365075-7316-3-git-send-email-marc.zyngier@arm.com>
-References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460365075-7316-1-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: [PATCH v8 05/10] drm/hisilicon: Add vblank driver for ADE
+Date: Mon, 11 Apr 2016 16:55:38 +0800
+Message-ID: <1460364943-76135-6-git-send-email-xinliang.liu@linaro.org>
+References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to prepare the genirq layer for the concept of partitionned
-percpu interrupts, let's allow an affinity to be associated with
-such an interrupt. We introduce:
+Add vblank irq handle.
 
-- irq_set_percpu_devid_partition: flag an interrupt as a percpu-devid
-  interrupt, and associate it with an affinity
-- irq_get_percpu_devid_partition: allow the affinity of that interrupt
-  to be retrieved.
+v8: None.
+v7:
+- Fix irq flag "DRIVER_IRQF_SHARED" to "IRQF_SHARED".
+v6: None.
+v5: None.
+v4: None.
+v3:
+- Remove hisi_get_crtc_from_index func.
+- A few cleanup.
+v2:
+- Remove abtraction layer.
 
-This will allow a driver to discover which CPUs the per-cpu interrupt
-can actually fire on.
-
-Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
 ---
- include/linux/irq.h     |  4 ++++
- include/linux/irqdesc.h |  1 +
- kernel/irq/irqdesc.c    | 26 +++++++++++++++++++++++++-
- 3 files changed, 30 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 62 +++++++++++++++++++++++++
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 14 +++++-
+ 2 files changed, 75 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index c4de623..4d758a7 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -530,6 +530,10 @@ static inline void irq_set_chip_and_handler(unsigned int irq, struct irq_chip *c
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+index 8a7cb5e04bf4..fba6372d060e 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+@@ -302,6 +302,59 @@ static void ade_set_medianoc_qos(struct ade_crtc *acrtc)
+ 			   SOCKET_QOS_EN, SOCKET_QOS_EN);
  }
  
- extern int irq_set_percpu_devid(unsigned int irq);
-+extern int irq_set_percpu_devid_partition(unsigned int irq,
-+					  const struct cpumask *affinity);
-+extern int irq_get_percpu_devid_partition(unsigned int irq,
-+					  struct cpumask *affinity);
- 
- extern void
- __irq_set_handler(unsigned int irq, irq_flow_handler_t handle, int is_chained,
-diff --git a/include/linux/irqdesc.h b/include/linux/irqdesc.h
-index dcca77c..b51beeb 100644
---- a/include/linux/irqdesc.h
-+++ b/include/linux/irqdesc.h
-@@ -66,6 +66,7 @@ struct irq_desc {
- 	int			threads_handled_last;
- 	raw_spinlock_t		lock;
- 	struct cpumask		*percpu_enabled;
-+	const struct cpumask	*percpu_affinity;
- #ifdef CONFIG_SMP
- 	const struct cpumask	*affinity_hint;
- 	struct irq_affinity_notify *affinity_notify;
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 0ccd028..8731e1c 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -595,7 +595,8 @@ void __irq_put_desc_unlock(struct irq_desc *desc, unsigned long flags, bool bus)
- 		chip_bus_sync_unlock(desc);
- }
- 
--int irq_set_percpu_devid(unsigned int irq)
-+int irq_set_percpu_devid_partition(unsigned int irq,
-+				   const struct cpumask *affinity)
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
- 
-@@ -610,10 +611,33 @@ int irq_set_percpu_devid(unsigned int irq)
- 	if (!desc->percpu_enabled)
- 		return -ENOMEM;
- 
-+	if (affinity)
-+		desc->percpu_affinity = affinity;
-+	else
-+		desc->percpu_affinity = cpu_possible_mask;
-+
- 	irq_set_percpu_devid_flags(irq);
- 	return 0;
- }
- 
-+int irq_set_percpu_devid(unsigned int irq)
++static int ade_enable_vblank(struct drm_device *dev, unsigned int pipe)
 +{
-+	return irq_set_percpu_devid_partition(irq, NULL);
-+}
++	struct kirin_drm_private *priv = dev->dev_private;
++	struct ade_crtc *acrtc = to_ade_crtc(priv->crtc[pipe]);
++	struct ade_hw_ctx *ctx = acrtc->ctx;
++	void __iomem *base = ctx->base;
 +
-+int irq_get_percpu_devid_partition(unsigned int irq, struct cpumask *affinity)
-+{
-+	struct irq_desc *desc = irq_to_desc(irq);
++	if (!ctx->power_on)
++		(void)ade_power_up(ctx);
 +
-+	if (!desc || !desc->percpu_enabled)
-+		return -EINVAL;
-+
-+	if (affinity)
-+		cpumask_copy(affinity, desc->percpu_affinity);
++	ade_update_bits(base + LDI_INT_EN, FRAME_END_INT_EN_OFST,
++			MASK(1), 1);
 +
 +	return 0;
 +}
 +
- void kstat_incr_irq_this_cpu(unsigned int irq)
++static void ade_disable_vblank(struct drm_device *dev, unsigned int pipe)
++{
++	struct kirin_drm_private *priv = dev->dev_private;
++	struct ade_crtc *acrtc = to_ade_crtc(priv->crtc[pipe]);
++	struct ade_hw_ctx *ctx = acrtc->ctx;
++	void __iomem *base = ctx->base;
++
++	if (!ctx->power_on) {
++		DRM_ERROR("power is down! vblank disable fail\n");
++		return;
++	}
++
++	ade_update_bits(base + LDI_INT_EN, FRAME_END_INT_EN_OFST,
++			MASK(1), 0);
++}
++
++static irqreturn_t ade_irq_handler(int irq, void *data)
++{
++	struct ade_crtc *acrtc = data;
++	struct ade_hw_ctx *ctx = acrtc->ctx;
++	struct drm_crtc *crtc = &acrtc->base;
++	void __iomem *base = ctx->base;
++	u32 status;
++
++	status = readl(base + LDI_MSK_INT);
++	DRM_DEBUG_VBL("LDI IRQ: status=0x%X\n", status);
++
++	/* vblank irq */
++	if (status & BIT(FRAME_END_INT_EN_OFST)) {
++		ade_update_bits(base + LDI_INT_CLR, FRAME_END_INT_EN_OFST,
++				MASK(1), 1);
++		drm_crtc_handle_vblank(crtc);
++	}
++
++	return IRQ_HANDLED;
++}
++
+ static void ade_display_enable(struct ade_crtc *acrtc)
  {
- 	kstat_incr_irqs_this_cpu(irq_to_desc(irq));
+ 	struct ade_hw_ctx *ctx = acrtc->ctx;
+@@ -977,6 +1030,15 @@ static int ade_drm_init(struct drm_device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* vblank irq init */
++	ret = devm_request_irq(dev->dev, ctx->irq, ade_irq_handler,
++			       IRQF_SHARED, dev->driver->name, acrtc);
++	if (ret)
++		return ret;
++	dev->driver->get_vblank_counter = drm_vblank_no_hw_counter;
++	dev->driver->enable_vblank = ade_enable_vblank;
++	dev->driver->disable_vblank = ade_disable_vblank;
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+index 578a1eb94517..2a899c5bb14e 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+@@ -32,6 +32,7 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
+ {
+ 	struct kirin_drm_private *priv = dev->dev_private;
+ 
++	drm_vblank_cleanup(dev);
+ 	dc_ops->cleanup(dev);
+ 	drm_mode_config_cleanup(dev);
+ 	devm_kfree(dev->dev, priv);
+@@ -85,11 +86,22 @@ static int kirin_drm_kms_init(struct drm_device *dev)
+ 		goto err_dc_cleanup;
+ 	}
+ 
++	/* vblank init */
++	ret = drm_vblank_init(dev, dev->mode_config.num_crtc);
++	if (ret) {
++		DRM_ERROR("failed to initialize vblank.\n");
++		goto err_unbind_all;
++	}
++	/* with irq_enabled = true, we can use the vblank feature. */
++	dev->irq_enabled = true;
++
+ 	/* reset all the states of crtc/plane/encoder/connector */
+ 	drm_mode_config_reset(dev);
+ 
+ 	return 0;
+ 
++err_unbind_all:
++	component_unbind_all(dev->dev, dev);
+ err_dc_cleanup:
+ 	dc_ops->cleanup(dev);
+ err_mode_config_cleanup:
+@@ -123,7 +135,7 @@ static int kirin_gem_cma_dumb_create(struct drm_file *file,
+ 
+ static struct drm_driver kirin_drm_driver = {
+ 	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
+-				  DRIVER_ATOMIC,
++				  DRIVER_ATOMIC | DRIVER_HAVE_IRQ,
+ 	.fops			= &kirin_drm_fops,
+ 	.set_busid		= drm_platform_set_busid,
+ 
 -- 
-2.1.4
+2.8.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
