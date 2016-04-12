@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 13/13] ARM: dts: db600c: add support to magnetometer
-Date: Tue, 12 Apr 2016 10:34:02 +0100
-Message-ID: <1460453642-5809-14-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 09/13] ARM: dts: db600c: add on board sata support.
+Date: Tue, 12 Apr 2016 10:33:58 +0100
+Message-ID: <1460453642-5809-10-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,56 +10,45 @@ To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to on board LIS3MDLTR magnetometer.
+This patch enables sata and regulators required to get on board sata
+working.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi |  8 ++++++++
- arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts       | 13 +++++++++++++
- 2 files changed, 21 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-index 3b55bb9..a3efb97 100644
---- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-@@ -31,6 +31,14 @@
- 			output-low;
- 		};
- 	};
-+
-+	magneto_pins: magneto-pins {
-+		mux {
-+			pins = "gpio31", "gpio48";
-+			function = "gpio";
-+			bias-disable;
-+		};
-+	};
- };
- 
- &pm8921_mpps {
 diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-index 34bb415..e01b27e 100644
+index 4f2218c..6f97ddc 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
 +++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-@@ -153,6 +153,19 @@
- 				/* On Low speed expansion and Sensors */
- 				label = "LS-I2C0";
- 				status = "okay";
-+				lis3mdl_mag@1e {
-+					compatible = "st,lis3mdl-magn";
-+					reg = <0x1e>;
-+					vdd-supply = <&vcc3v3>;
-+					vddio-supply = <&pm8921_s4>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&magneto_pins>;
-+					interrupt-parent = <&tlmm_pinmux>;
+@@ -123,6 +123,10 @@
+ 				lvs6 {
+ 					bias-pull-down;
+ 				};
 +
-+					st,drdy-int-pin = <2>;
-+					interrupts = <48 IRQ_TYPE_EDGE_RISING>, /* DRDY line */
-+						     <31 IRQ_TYPE_EDGE_RISING>; /* INT */
++				lvs7 {
++					bias-pull-down;
 +				};
  			};
  		};
  
+@@ -159,6 +163,15 @@
+ 			perst-gpio = <&tlmm_pinmux 27 GPIO_ACTIVE_LOW>;
+ 		};
+ 
++		phy@1b400000 {
++			status = "okay";
++		};
++
++		sata@29000000 {
++			status	= "okay";
++			target-supply	= <&pm8921_lvs7>;
++		};
++
+ 		/* OTG */
+ 		phy@12500000 {
+ 			status		= "okay";
 -- 
 2.5.0
