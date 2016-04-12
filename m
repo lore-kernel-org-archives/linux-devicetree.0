@@ -1,46 +1,46 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 00/30] ARM: OMAP2+: hwmod module clock type support
-Date: Tue, 12 Apr 2016 16:55:28 +0300
-Message-ID: <570CFE50.5010709@ti.com>
-References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
- <20160411173518.GA5995@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160411173518.GA5995@atomide.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/4] STi DT updates
+Date: Tue, 12 Apr 2016 14:57:24 +0100
+Message-ID: <1460469448-9065-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2016 08:40 PM, Tony Lindgren wrote:
-> Hi,
->
-> Nice to see this moving along :)
->
-> * Tero Kristo <t-kristo@ti.com> [160411 01:20]:
->>
->> The ordering on this set is kind of tricky to avoid any boot issues,
->> and it still currently causes a boot breakage between the DTS data
->> introduction and removal of hwmod data; this generates duplicate
->> entries for clocks which is prone to cause issues (both DT and hwmod
->> have the same entries in place under the hwmod data is removed.) I
->> didn't quite figure out a good way to avoid this, and could use some
->> guidance here. Shall we squash the DT + hwmod data patches together?
->> This avoids the boot breakage but creates pretty large patches. Also,
->> AMx3xx data needs to be grouped together as part of their data is
->> re-used commonly by both SoCs.
->
-> How about use clocks from dts if clocks property is defined? Otherwise
-> fall back to the old static data. Then drop the static data later on
-> with follow up patches.
+Hi Maxime / Patrice / Srini,
 
-The underlying issue is the hardcoded names of hwmod clocks within hwmod 
-data. I think I figured out a fix for this, I am adding a few patches to 
-this series to lookup main_clk based on the hwmod name itself. This 
-allows re-directing the main_clk to the DT module clock in case one is 
-available for the hwmod. The bisect issues seem to be gone with this 
-also, I need to cleanup the patches a bit and re-post.
+This series adds some more alternate pin configurations which were missing
+upstream, the DT config for SSC12, and also a DT node for the at24c256 eeprom
+to better describe the hardware on the I2C bus.
 
--Tero
+As at23c256 can now be accessed via nvmem framework it will allow stmmac driver to
+be updated to obtain MAC address directlry from the eeprom.
+
+regards,
+
+Peter.
+
+Changes in v2:
+  - Add better patch description for 'STiH407: Add DT node for at24c256 eeprom'
+    (Lee)
+  - Rebase on v4.6-rc3 (Peter)
+
+Peter Griffin (4):
+  ARM: DT: STiH407: Add UART RTS/CTS pin configuration
+  ARM: DT: STiH407: Add i2c12 pin definition
+  ARM: DT: STiH407: Add node for i2c12 controller
+  ARM: STi: DT: STiH407: Add DT node for at24c256 eeprom
+
+ arch/arm/boot/dts/stih407-family.dtsi  | 13 ++++++
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 82 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stihxxx-b2120.dtsi   |  9 ++++
+ 3 files changed, 104 insertions(+)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
