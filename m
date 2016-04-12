@@ -1,69 +1,68 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 00/13] ARM: dts: Add DB600c support.
-Date: Tue, 12 Apr 2016 10:33:49 +0100
-Message-ID: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 02/13] ARM: dts: apq8064: add support to gsbi1 uart
+Date: Tue, 12 Apr 2016 10:33:51 +0100
+Message-ID: <1460453642-5809-3-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+This patch adds support to gsbi1 uart and its pinctrls nodes.
 
-This patchset adds support to DB600c which is based on APQ8064.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm/boot/dts/qcom-apq8064-pins.dtsi | 14 ++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi      | 10 ++++++++++
+ 2 files changed, 24 insertions(+)
 
-With this patchset, except spi I was able to test all the below features
-on this board on top of v4.6-rc3.
-1> i2c
-2> spi
-3> sd/mmc with card detect
-4> eMMC
-5> USB
-6> SATA
-7> on board Ethernet based on PCIE.
-8> user and activity leds.
-9> on board Magnetometer
-
-This patchset also has a fix to i2c/spi pinctrls which was not set correctly
-in my previous apq8064 patches, I have verified this patchset with eeprom and
-sensors on the board, you might want to take that patch in next rc.
-
-Changes since v1:
-	- renamed the dts and compatible strings according to the discussion.
-	- fixed/renamed led labels as suggeste by Rob, Nico and others.
-	- Added Acks for Bjorn
-	- Added Magnetometer support.
-	- Split the pinconfs to seperate file as suggested by Bjorn
-	- Remove activity leds default triggers, as it was not clear
-	 which trigger was correct according to 96boards specs.
-	 Can be added once we fix that.
-
-Thanks,
-srini
-
-Srinivas Kandagatla (13):
-  ARM: dts: apq8064: fix the pinctrls for i2c and spi
-  ARM: dts: apq8064: add support to gsbi1 uart
-  ARM: dts: apq8064: add gsbi7 i2c support
-  ARM: dts: db600c: add board support with serial
-  ARM: dts: db600c: add pmic regulator supplies
-  ARM: dts: db600c: Add eMMC and SD card support
-  ARM: dts: db600c: add usb support
-  ARM: dts: db600c: add pcie support
-  ARM: dts: db600c: add on board sata support.
-  ARM: dts: db600c: Add on board leds support
-  ARM: dts: db600c: add i2c support
-  ARM: dts: db600c: add spi support
-  ARM: dts: db600c: add support to magnetometer
-
- arch/arm/boot/dts/Makefile                         |   1 +
- .../boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi   |  52 +++
- arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts    | 349 +++++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064-pins.dtsi           |  39 +++
- arch/arm/boot/dts/qcom-apq8064.dtsi                |  41 ++-
- 5 files changed, 476 insertions(+), 6 deletions(-)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
+index b57c59d..8bb5e5f 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
+@@ -39,6 +39,20 @@
+ 		};
+ 	};
+ 
++	gsbi1_uart_2pins: gsbi1_uart_2pins {
++		mux {
++			pins = "gpio18", "gpio19";
++			function = "gsbi1";
++		};
++	};
++
++	gsbi1_uart_4pins: gsbi1_uart_4pins {
++		mux {
++			pins = "gpio18", "gpio19", "gpio20", "gpio21";
++			function = "gsbi1";
++		};
++	};
++
+ 	i2c2_pins: i2c2 {
+ 		mux {
+ 			pins = "gpio24", "gpio25";
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index c6ff8fc..81b4290 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -225,6 +225,16 @@
+ 
+ 			syscon-tcsr = <&tcsr>;
+ 
++			gsbi1_serial: serial@12450000 {
++				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
++				reg = <0x12450000 0x100>,
++				      <0x12400000 0x03>;
++				interrupts = <0 193 0x0>;
++				clocks = <&gcc GSBI1_UART_CLK>, <&gcc GSBI1_H_CLK>;
++				clock-names = "core", "iface";
++				status = "disabled";
++			};
++
+ 			gsbi1_i2c: i2c@12460000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+ 				pinctrl-0 = <&i2c1_pins>;
 -- 
 2.5.0
