@@ -1,105 +1,86 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 08/13] ARM: dts: db600c: add pcie support
-Date: Tue, 12 Apr 2016 10:33:57 +0100
-Message-ID: <1460453642-5809-9-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 06/16] arm64: dts: add Hi6220 spi configuration nodes
+Date: Tue, 12 Apr 2016 17:40:49 +0800
+Message-ID: <CAFGCpxw_89GBUsMW4HCbeRgH+H_tQy5ZuD1wPmgpLFXNfeHBxA@mail.gmail.com>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+	<1459589383-16914-7-git-send-email-guodong.xu@linaro.org>
+	<20160404051638.GR17806@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, srinivas.kandagatla@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160404051638.GR17806@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pcie and regulators required to get on board ATL1C
-ethernet working.
+On 4 April 2016 at 13:16, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Apr 02, 2016 at 05:29:33PM +0800, Guodong Xu wrote:
+>> From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>
+>> Add Hi6220 spi configuration nodes
+>>
+>> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts   |  1 +
+>>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi        | 15 +++++++++++++++
+>>  arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi | 21 +++++++++++++++++++++
+>>  3 files changed, 37 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+>> index 985a2ad..5c9ee31 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+>> @@ -20,6 +20,7 @@
+>>               serial1 = &uart1; /* BT UART */
+>>               serial2 = &uart2; /* LS Expansion UART0 */
+>>               serial3 = &uart3; /* LS Expansion UART1 */
+>> +             spi0 = &spi_0;
+>
+> You shouldn't really need an alias for SPI.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi   | 12 +++++++++++
- arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts    | 24 ++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
+Will remove it.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-index 7339919..0610f00 100644
---- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-@@ -6,4 +6,16 @@
- 			bias-disable;
- 		};
- 	};
-+
-+	pcie_pins: pcie-pinmux {
-+		mux {
-+			pins = "gpio27";
-+			function = "gpio";
-+		};
-+		conf {
-+			pins = "gpio27";
-+			drive-strength = <12>;
-+			bias-disable;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-index 2c563df..4f2218c 100644
---- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-@@ -21,6 +21,16 @@
- 			regulator-type = "voltage";
- 			regulator-boot-on;
- 		};
-+
-+		/* on board fixed 3.3v supply */
-+		vcc3v3: vcc3v3 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "VCC3V3";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
- 	};
- 
- 	soc {
-@@ -109,6 +119,10 @@
- 					regulator-max-microvolt = <1900000>;
- 					bias-pull-down;
- 				};
-+
-+				lvs6 {
-+					bias-pull-down;
-+				};
- 			};
- 		};
- 
-@@ -135,6 +149,16 @@
- 			};
- 		};
- 
-+		pci@1b500000 {
-+			status = "okay";
-+			vdda-supply = <&pm8921_s3>;
-+			vdda_phy-supply = <&pm8921_lvs6>;
-+			vdda_refclk-supply = <&vcc3v3>;
-+			pinctrl-0 = <&pcie_pins>;
-+			pinctrl-names = "default";
-+			perst-gpio = <&tlmm_pinmux 27 GPIO_ACTIVE_LOW>;
-+		};
-+
- 		/* OTG */
- 		phy@12500000 {
- 			status		= "okay";
--- 
-2.5.0
+>
+>>       };
+>>
+>>       chosen {
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> index e96cc3c..dcca83b 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> @@ -585,5 +585,20 @@
+>>                       clock-names = "apb_pclk";
+>>                       status = "ok";
+>>               };
+>> +
+>> +             spi_0: spi@f7106000 {
+>> +                     compatible = "arm,pl022", "arm,primecell";
+>> +                     reg = <0x0 0xf7106000 0x0 0x1000>;
+>> +                     interrupts = <0 50 4>;
+>> +                     bus-id = <0>;
+>> +                     enable-dma = <0>;
+>> +                     clocks = <&sys_ctrl HI6220_SPI_CLK>;
+>> +                     clock-names = "apb_pclk";
+>> +                     pinctrl-names = "default";
+>> +                     pinctrl-0 = <&spi0_pmx_func &spi0_cfg_func>;
+>> +                     num-cs = <1>;
+>> +                     cs-gpios = <&gpio6 2 0>;
+>> +                     status = "ok";
+>
+> You only need an ok to override a disabled status, so I think you can
+> drop this. Or disable by default and let boards override it if that
+> makes sense.
+
+Thanks. I will modify this to "disabled", and enable it in board dts:
+hi6220-hikey.dts
+
+-Guodong
+
+>
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
