@@ -1,115 +1,131 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dts/ls1043a: add the DTS node for QSPI support
-Date: Tue, 12 Apr 2016 10:49:47 +0800
-Message-ID: <20160412024947.GD15949@tiger>
-References: <1459406701-40993-1-git-send-email-yao.yuan@freescale.com>
- <1459406701-40993-3-git-send-email-yao.yuan@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459406701-40993-3-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+From: tamizhchelvam@codeaurora.org
+Subject: [PATCH] qcom: ipq4019: add wifi nodes to ipq4019 SoC device tree
+Date: Tue, 12 Apr 2016 09:31:46 +0530
+Message-ID: <1460433706-21248-1-git-send-email-tamizhchelvam@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: agross@codeaurora.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, c_traja@qti.qualcomm.com, Raja Mani <rmani@codeaurora.org>, Tamizh chelvam <tamizhchelvam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 02:45:01PM +0800, Yuan Yao wrote:
-> From: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-> 
-> Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+From: Raja Mani <rmani@codeaurora.org>
 
-Please style of 'arm64: dts: ls1043a: ' for subject prefix.
+Include dts support for two wifi block present on ipq4019 SoC.
+Corresponding dt binding documentation has been added in below commit id
+a47aaa69.
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 16 ++++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 14 ++++++++++++++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> index 97e9906..c8303a3 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> @@ -100,6 +100,22 @@
->  	};
->  };
->  
-> +&qspi {
+Signed-off-by: Tamizh chelvam <tamizhchelvam@codeaurora.org>
+---
+ arch/arm/boot/dts/qcom-ipq4019.dtsi |   98 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-Please sort such labeled node alphabetically in label name.  That said,
-it should go after &lpuart0.
-
-> +	num-cs = <2>;
-
-I do not see this property in bindings doc.
-
-> +	bus-num = <0>;
-> +	status = "okay";
-
-Please let 'status' line be the last of property list.
-
-> +	fsl,ddr-sampling-point = <4>;
-
-I do not see this one in bindings definition either.
-
-> +
-> +	qflash0: s25fl128s@0 {
-> +		compatible = "spansion,m25p80";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		spi-max-frequency = <20000000>;
-> +		ddr-quad-read;
-
-Ditto
-
-> +		reg = <0>;
-> +	};
-> +};
-> +
->  &i2c0 {
->  	status = "okay";
->  	pca9547@77 {
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index be72bf5..49b1aeb 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -208,6 +208,20 @@
->  			status = "disabled";
->  		};
->  
-> +		qspi: quadspi@1550000 {
-
-Please sort the node in <soc>.dtsi in order of unit-address.  That said,
-the node should be added between ifc@1530000 and esdhc@1560000.
-
-Shawn
-
-> +			compatible = "fsl,ls1043a-qspi", "fsl,ls1021a-qspi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0 0x1550000 0x0 0x10000>,
-> +				<0x0 0x40000000 0x0 0x4000000>;
-> +			reg-names = "QuadSPI", "QuadSPI-memory";
-> +			interrupts = <0 99 0x4>;
-> +			clock-names = "qspi_en", "qspi";
-> +			clocks = <&clockgen 4 0>, <&clockgen 4 0>;
-> +			big-endian;
-> +			status = "disabled";
-> +		};
-> +
->  		i2c0: i2c@2180000 {
->  			compatible = "fsl,vf610-i2c";
->  			#address-cells = <1>;
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index b486859..80bbe02 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -379,5 +379,103 @@
+ 			compatible = "qcom,pshold";
+ 			reg = <0x4ab000 0x4>;
+ 		};
++
++		wifi0: wifi@a000000 {
++			compatible = "qcom,ipq4019-wifi";
++			reg = <0xa000000 0x200000>;
++			resets = <&gcc WIFI0_CPU_INIT_RESET>,
++				 <&gcc WIFI0_RADIO_SRIF_RESET>,
++				 <&gcc WIFI0_RADIO_WARM_RESET>,
++				 <&gcc WIFI0_RADIO_COLD_RESET>,
++				 <&gcc WIFI0_CORE_WARM_RESET>,
++				 <&gcc WIFI0_CORE_COLD_RESET>;
++			reset-names = "wifi_cpu_init",
++				      "wifi_radio_srif",
++				      "wifi_radio_warm",
++				      "wifi_radio_cold",
++				      "wifi_core_warm",
++				      "wifi_core_cold";
++			clocks = <&gcc GCC_WCSS2G_CLK>,
++				 <&gcc GCC_WCSS2G_REF_CLK>,
++				 <&gcc GCC_WCSS2G_RTC_CLK>;
++			clock-names = "wifi_wcss_cmd",
++				      "wifi_wcss_ref",
++				      "wifi_wcss_rtc";
++			interrupts = <0 0x20 0x1>,
++				     <0 0x21 0x1>,
++				     <0 0x22 0x1>,
++				     <0 0x23 0x1>,
++				     <0 0x24 0x1>,
++				     <0 0x25 0x1>,
++				     <0 0x26 0x1>,
++				     <0 0x27 0x1>,
++				     <0 0x28 0x1>,
++				     <0 0x29 0x1>,
++				     <0 0x2a 0x1>,
++				     <0 0x2b 0x1>,
++				     <0 0x2c 0x1>,
++				     <0 0x2d 0x1>,
++				     <0 0x2e 0x1>,
++				     <0 0x2f 0x1>,
++				     <0 0xa8 0x0>;
++			interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
++					  "msi4",  "msi5",  "msi6",  "msi7",
++					  "msi8",  "msi9",  "msi10", "msi11",
++					  "msi12", "msi13", "msi14", "msi15",
++					  "legacy";
++			status = "disabled";
++			qcom,msi_addr = <0x0b006040>;
++			qcom,msi_base = <0x40>;
++			qcom,ath10k-pre-calibration-data = [00];
++		};
++
++		wifi1: wifi@a800000 {
++			compatible = "qcom,ipq4019-wifi";
++			reg = <0xa800000 0x200000>;
++			resets = <&gcc WIFI1_CPU_INIT_RESET>,
++				 <&gcc WIFI1_RADIO_SRIF_RESET>,
++				 <&gcc WIFI1_RADIO_WARM_RESET>,
++				 <&gcc WIFI1_RADIO_COLD_RESET>,
++				 <&gcc WIFI1_CORE_WARM_RESET>,
++				 <&gcc WIFI1_CORE_COLD_RESET>;
++			reset-names = "wifi_cpu_init",
++				      "wifi_radio_srif",
++				      "wifi_radio_warm",
++				      "wifi_radio_cold",
++				      "wifi_core_warm",
++				      "wifi_core_cold";
++			clocks = <&gcc GCC_WCSS5G_CLK>,
++				 <&gcc GCC_WCSS5G_REF_CLK>,
++				 <&gcc GCC_WCSS5G_RTC_CLK>;
++			clock-names = "wifi_wcss_cmd",
++				      "wifi_wcss_ref",
++				      "wifi_wcss_rtc";
++			interrupts = <0 0x30 0x1>,
++				     <0 0x31 0x1>,
++				     <0 0x32 0x1>,
++				     <0 0x33 0x1>,
++				     <0 0x34 0x1>,
++				     <0 0x35 0x1>,
++				     <0 0x36 0x1>,
++				     <0 0x37 0x1>,
++				     <0 0x38 0x1>,
++				     <0 0x39 0x1>,
++				     <0 0x3a 0x1>,
++				     <0 0x3b 0x1>,
++				     <0 0x3c 0x1>,
++				     <0 0x3d 0x1>,
++				     <0 0x3e 0x1>,
++				     <0 0x3f 0x1>,
++				     <0 0xa9 0x0>;
++			interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
++					  "msi4",  "msi5",  "msi6",  "msi7",
++					  "msi8",  "msi9",  "msi10", "msi11",
++					  "msi12", "msi13", "msi14", "msi15",
++					  "legacy";
++			status = "disabled";
++			qcom,msi_addr = <0x0b006040>;
++			qcom,msi_base = <0x50>;
++			qcom,ath10k-pre-calibration-data = [00];
++		};
+ 	};
+ };
+-- 
+1.7.9.5
