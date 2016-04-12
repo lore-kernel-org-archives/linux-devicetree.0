@@ -1,43 +1,34 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 0/5] Add st-flashss vsense regulator driver
-Date: Tue, 12 Apr 2016 16:16:39 +0100
-Message-ID: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 4/5] ARM: multi_v7_defconfig: Enable flashss regulator driver.
+Date: Tue, 12 Apr 2016 16:16:43 +0100
+Message-ID: <1460474204-5351-5-git-send-email-peter.griffin@linaro.org>
+References: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Enable the flashss regulator driver found in the flash sub system
+on stih407 based silicon.
 
-This series adds a small regulator driver to manage the voltage regulator
-inside the ST flash subsystem found on stih407 based silicon, and it is
-used for configuring the eMMC, NAND and SPI voltages (although only
-currently utilised for eMMC).
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-regards,
-
-Peter.
-
-Peter Griffin (5):
-  regulator: st-flashss: Add DT binding documentation for flashss
-    regulator.
-  regulator: st-flashss: Add a regulator driver for flashss vsense.
-  MAINTAINERS: Add st-flashss driver to STi section.
-  ARM: multi_v7_defconfig: Enable flashss regulator driver.
-  ARM: STi: DT: STiH407: Add the flashss voltage regulator DT node.
-
- .../devicetree/bindings/regulator/st-flashss.txt   |  43 ++++
- MAINTAINERS                                        |   1 +
- arch/arm/boot/dts/stih407-family.dtsi              |  12 +
- arch/arm/boot/dts/stihxxx-b2120.dtsi               |   4 +
- arch/arm/configs/multi_v7_defconfig                |   1 +
- drivers/regulator/Kconfig                          |   7 +
- drivers/regulator/Makefile                         |   2 +-
- drivers/regulator/st-flashss.c                     | 274 +++++++++++++++++++++
- 8 files changed, 343 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/st-flashss.txt
- create mode 100644 drivers/regulator/st-flashss.c
-
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 2823490..088422b 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -503,6 +503,7 @@ CONFIG_REGULATOR_TPS6586X=y
+ CONFIG_REGULATOR_TPS65910=y
+ CONFIG_REGULATOR_TWL4030=y
+ CONFIG_REGULATOR_VEXPRESS=y
++CONFIG_REGULATOR_ST_FLASHSS=y
+ CONFIG_MEDIA_SUPPORT=m
+ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_CONTROLLER=y
 -- 
 1.9.1
