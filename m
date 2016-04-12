@@ -1,40 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
-Date: Tue, 12 Apr 2016 09:03:38 -0500
-Message-ID: <20160412140338.GA19311@rob-hp-laptop>
-References: <1460360506-14692-1-git-send-email-navam@xilinx.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] arm64: dts: Add nodes for pdma0 and pdam1 for exynos7
+Date: Tue, 12 Apr 2016 16:05:58 +0200
+Message-ID: <570D00C6.9000203@samsung.com>
+References: <1460465378-23486-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460360506-14692-1-git-send-email-navam@xilinx.com>
+In-reply-to: <1460465378-23486-1-git-send-email-alim.akhtar@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, linux-arm-kernel@lists.infradead.org
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 01:11:46PM +0530, Nava kishore Manne wrote:
-> This patch updates the driver to support 64-bit DMA
-> addressing.
+On 04/12/2016 02:49 PM, Alim Akhtar wrote:
+> This patch adds device tree nodes for pdma0 and pdma1 controllers
+> found on exynos7 SoCs.
 > 
-> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 > ---
->  .../devicetree/bindings/usb/udc-xilinx.txt         |  3 +-
->  drivers/usb/gadget/udc/udc-xilinx.c                | 38 ++++++++++++++++++++--
->  2 files changed, 37 insertions(+), 4 deletions(-)
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> index 47b4e39..d417872 100644
-> --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> @@ -7,12 +7,13 @@ Required properties:
->  - interrupts		: Should contain single irq line of USB2 device
->  			  controller
->  - xlnx,has-builtin-dma	: if DMA is included
-> -
-> +- xlnx,addrwidth       : Should be the dma addressing size in bits(ex: 40 bits).
 
-Now this property shows up in a 2nd device. Now I'm more convinced this 
-is the wrong approach and should use dma-ranges.
+I would prefer avoid adding all new stuff at the end because it is
+conflict-prone. Alphabetical order or by address... but none of these
+are used currently. How about putting it after 'gic' node?
 
-Rob
+Anyway the code looks fine:
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
