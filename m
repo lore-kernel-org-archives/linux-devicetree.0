@@ -1,86 +1,80 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v4 12/16] arm64: dts: hi6220: add pinctrl for uarts and enable them
-Date: Wed, 13 Apr 2016 07:55:48 +0800
-Message-ID: <1460505352-13157-13-git-send-email-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 13/16] arm64: dts: add LED nodes for hi6220-hikey
+Date: Wed, 13 Apr 2016 07:55:49 +0800
+Message-ID: <1460505352-13157-14-git-send-email-guodong.xu@linaro.org>
 References: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, haojian.zhuang@linaro.org, linus.walleij@linaro.org, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460505352-13157-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl for uart2 uart3 and uart4. Enable uart1 uart2 and uart3.
+Add LED nodes for hi6220-hikey. There are total 6 LEDs on HiKey.
+Four general purposed, one for WiFi activity, and one for Bluetooth
+activity.
 
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 12 ++++++++++++
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  9 +++++++++
- 2 files changed, 21 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 41 ++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 3dbf51b..30c92bd 100644
+index 30c92bd..b7c41f8 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -53,6 +53,18 @@
- 		i2c1: i2c@f7101000 {
+@@ -66,6 +66,47 @@
  			status = "ok";
  		};
-+
-+		uart1: uart@f7111000 {
-+			status = "ok";
-+		};
-+
-+		uart2: uart@f7112000 {
-+			status = "ok";
-+		};
-+
-+		uart3: uart@f7113000 {
-+			status = "ok";
-+		};
  	};
++
++	leds {
++		compatible = "gpio-leds";
++		user_led4 {
++			label = "user_led4";
++			gpios = <&gpio4 0 0>; /* <&gpio_user_led_1>; */
++			linux,default-trigger = "heartbeat";
++		};
++
++		user_led3 {
++			label = "user_led3";
++			gpios = <&gpio4 1 0>; /* <&gpio_user_led_2>; */
++			linux,default-trigger = "mmc0";
++		};
++
++		user_led2 {
++			label = "user_led2";
++			gpios = <&gpio4 2 0>; /* <&gpio_user_led_3>; */
++			linux,default-trigger = "mmc1";
++		};
++
++		user_led1 {
++			label = "user_led1";
++			gpios = <&gpio4 3 0>; /* <&gpio_user_led_4>; */
++			linux,default-trigger = "cpu0";
++		};
++
++		wlan_active_led {
++			label = "wifi_active";
++			gpios = <&gpio3 5 0>; /* <&gpio_wlan_active_led>; */
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		bt_active_led {
++			label = "bt_active";
++			gpios = <&gpio4 7 0>; /* <&gpio_bt_active_led>; */
++			linux,default-trigger = "hci0rx";
++			default-state = "off";
++		};
++	};
  };
  
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 3a665ef..e8bb81f 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -266,6 +266,8 @@
- 			clocks = <&sys_ctrl HI6220_UART1_PCLK>,
- 				 <&sys_ctrl HI6220_UART1_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart1_pmx_func &uart1_cfg_func1 &uart1_cfg_func2>;
- 			status = "disabled";
- 		};
- 
-@@ -276,6 +278,8 @@
- 			clocks = <&sys_ctrl HI6220_UART2_PCLK>,
- 				 <&sys_ctrl HI6220_UART2_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pmx_func &uart2_cfg_func>;
- 			status = "disabled";
- 		};
- 
-@@ -286,6 +290,9 @@
- 			clocks = <&sys_ctrl HI6220_UART3_PCLK>,
- 				 <&sys_ctrl HI6220_UART3_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart3_pmx_func &uart3_cfg_func>;
-+			status = "disabled";
- 		};
- 
- 		uart4: uart@f7114000 {
-@@ -295,6 +302,8 @@
- 			clocks = <&sys_ctrl HI6220_UART4_PCLK>,
- 				 <&sys_ctrl HI6220_UART4_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart4_pmx_func &uart4_cfg_func>;
- 			status = "disabled";
- 		};
- 
+ &uart2 {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
