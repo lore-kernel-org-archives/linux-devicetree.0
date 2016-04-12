@@ -1,84 +1,34 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 1/5] regulator: st-flashss: Add DT binding documentation for
- flashss regulator.
-Date: Tue, 12 Apr 2016 16:16:40 +0100
-Message-ID: <1460474204-5351-2-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 3/5] MAINTAINERS: Add st-flashss driver to STi section.
+Date: Tue, 12 Apr 2016 16:16:42 +0100
+Message-ID: <1460474204-5351-4-git-send-email-peter.griffin@linaro.org>
 References: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT doc for the flashss regulator driver which is
-found in stih407 based silicon.
+This patch adds the st-flashss regulator driver to the STi
+section of the maintainers file.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- .../devicetree/bindings/regulator/st-flashss.txt   | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/st-flashss.txt
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/st-flashss.txt b/Documentation/devicetree/bindings/regulator/st-flashss.txt
-new file mode 100644
-index 0000000..04324d5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st-flashss.txt
-@@ -0,0 +1,43 @@
-+ST Voltage regulator for FlashSS vsense
-+
-+This documents the voltage regulator driver which manages the vsense inside the ST flash
-+sub-system that is used for configuring MMC, NAND, SPI voltages.
-+
-+Required properties:
-+- compatible:		Can be "st,vqmmc", "st,vnand" or "st,vspi" because it is shared
-+			among these devices inside the ST FlashSS.
-+- regulator-name:	Regulator name.
-+- reg:			The vsense top config base address in the flashSS hardware.
-+
-+Any property defined as part of the core regulator binding, in
-+Documentation/devicetree/bindings/regulator/regulator.txt can also be used.
-+
-+Example:
-+
-+vqmmc_reg: voltage-regulator {
-+	compatible = "st,vqmmc";
-+	regulator-name = "vqmmc0";
-+	/* Control register for the VSENSE Module */
-+	reg = <0x9061004 0x4>;
-+	status = "disabled";
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-always-on;
-+};
-+
-+mmc0: sdhci@09060000 {
-+	compatible = "st,sdhci-stih407", "st,sdhci";
-+	status = "disabled";
-+	reg = <0x09060000 0x7ff>, <0x9061008 0x20>;
-+	reg-names = "mmc", "top-mmc-delay";
-+	interrupts = <GIC_SPI 92 IRQ_TYPE_NONE>;
-+	interrupt-names = "mmcirq";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_mmc0>;
-+	clock-names = "mmc";
-+	clocks = <&clk_s_c0_flexgen CLK_MMC_0>;
-+	bus-width = <8>;
-+	non-removable;
-+	vqmmc-supply = <&vqmmc_reg>;
-+};
-+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 61a323a..93ef247 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1647,6 +1647,7 @@ F:	drivers/phy/phy-miphy365x.c
+ F:	drivers/phy/phy-stih407-usb.c
+ F:	drivers/phy/phy-stih41x-usb.c
+ F:	drivers/pinctrl/pinctrl-st.c
++F:	drivers/regulator/st-flashss.c
+ F:	drivers/reset/sti/
+ F:	drivers/rtc/rtc-st-lpc.c
+ F:	drivers/tty/serial/st-asc.c
 -- 
 1.9.1
