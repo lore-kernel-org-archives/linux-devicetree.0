@@ -1,33 +1,52 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 00/13] ARM: dts: OMAP2+: Enable gpio controller for GPMC
- and add NAND ready pin
-Date: Tue, 12 Apr 2016 14:28:56 -0700
-Message-ID: <20160412212856.GJ5995@atomide.com>
-References: <1460024740-19716-1-git-send-email-rogerq@ti.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] i2c: rk3x: add support for rk3228
+Date: Tue, 12 Apr 2016 23:38:48 +0200
+Message-ID: <20160412213848.GE1526@katana>
+References: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="10jrOL3x2xqLmOsH"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1460024740-19716-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160407 03:26]:
-> Hi Tony,
-> 
-> We will be adding gpio controller support to GPMC in [1].
-> The GPIO controller can also be used to provide the Read/Busy#
-> pin status to the OMAP2+ nand driver.
-> 
-> These patches enable the gpio controller in the gpmc nodes
-> and add ready pin information to the NAND nodes.
 
-Thanks applying all into omap-for-v4.7/dt.
+--10jrOL3x2xqLmOsH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Mar 14, 2016 at 11:09:15AM +0800, Yakir Yang wrote:
+> Enable the I2C core for this SoC.
+>=20
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+
+Applied to for-current, thanks!
+
+
+--10jrOL3x2xqLmOsH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXDWroAAoJEBQN5MwUoCm2qCwP/AvgdGt877siyW5Pq4stgJR7
+Qemn0GzpRQdaJxpbcAhijkTWiT5Kv5oupxc6D++o7DsugRw8u0a/kA/vbXmF3B5/
+OyvhvEjfpfO9SO/xROAn2z76+ZVzx+Djcn9wbNcAXDPqW81ronRAWuiHgKFunDUP
+heLrp78jbkWTlo2A+ylvBLc3woI4LzXKrwQPYuwOPCVTXI9IwXX6faNj5Mirw0lF
+aRRN+V3ai468C0B3m5ilLZgo7DKN1Tqaf7jVTfShQHpkpeNu16uPrJidpj0oii+L
+mnSb4VZjcvzhM7jRsb5V9U0FZZm/tJE4R5BahuzsjXz085qNuJPT5AM6QnLDO+km
+88tSHdB2zcjv+Rbrfjhu2pr7ubrKNmZFjKp50Mu4sV9wQbyW7B7k2ibuU12zINbt
+6oerRPQzLbgIsVwB0zPOTgK6n8QezmL3gt6HRvp27uNjnADOOAETYzvKH3b29eqg
+WlkYYXt4o8fKT4SBGUiWZ44mLHz/dztVeUiRE7DqtvsOCSDiDG3BMBo2bQN8X0Og
+ZMO/gVrGsclvbtpQhhELvmug6FHfTradH9ui9W9BDkqPGwmeKrfIya/f9XiRYbDH
+1tvj2BKp9GtslzMYrUDvjIJzC7zFarhWi6lCbUK7a8M5RnX45D3Ld5yGlUmxk5oT
+j1mH99H5B2BCldE72RBt
+=KnBd
+-----END PGP SIGNATURE-----
+
+--10jrOL3x2xqLmOsH--
