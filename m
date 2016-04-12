@@ -1,55 +1,56 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] of/platform: Allow secondary compatible match in
- of_dev_lookup
-Date: Tue, 12 Apr 2016 08:13:27 -0700
-Message-ID: <20160412151326.GL5995@atomide.com>
-References: <1459546504-32668-1-git-send-email-tony@atomide.com>
- <20160401214053.GQ9329@atomide.com>
- <CAL_Jsq+PcTD=duHmWgHyx_ywYbT10vEtcm=79x5o5wYSkgG63g@mail.gmail.com>
- <5706348C.1040709@ti.com>
- <87d1q1r7o3.fsf@intel.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/7] pinctrl: soc/tegra: Add support to configure IO rail voltage and pad power states
+Date: Tue, 12 Apr 2016 20:26:40 +0530
+Message-ID: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87d1q1r7o3.fsf@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Felipe Balbi <felipe.balbi@linux.intel.com> [160407 04:19]:
-> Grygorii Strashko <grygorii.strashko@ti.com> writes:
-> > Most probably this is required to pass some data from parent device to
-> > children when parent dev instantiate children from DT, at least I've experimented with
-> > this in mostly similar way (I've not added second pass and did break in the first
-> > if !phys_addr, but Tony's patch is more correct).
+NVIDIA Tegra210 supports the IO pads which can operate at 1.8V
+or 3.3V I/O voltage levels. Also the IO pads can be configured
+for power down state if it is not used. SW needs to configure the
+voltage level of IO pads based on IO rail voltage and its power
+state based on platform usage.
+    
+The voltage rail configuration and pad power states are done in
+Tegra PMC registers.
 
-OK that's a different use case I have, but good to know it helps
-with that too.
+This series add the required interface in soc/tegra/pmc for required
+configruations.  This series also add the pincontrol driver for tegra210
+IO pads conifguration. This will helps to provide framework for IO pad
+configurations via pincontrol DT support and pincontrol dynamic
+configruations.
 
-> > For example,
-> > - USB dwc3 platform/integration layer dev creates DWC3-core device (of_platform_populate())
-> > - DWC3-core device creates xhci device
-> > - USB dwc3 platform/integration layer dev can dynamically get rev info
-> >   from HW and identify limitation/erratas/quirks which need to be applied to 
-> >   to its children.
-> > - DWC3-core can dynamically get rev info ...
-> >
-> > I was not able to find any other proper way to pass this (platfrom)data to children, except
-> > using Auxdata. And, as per Felipe Balbi, It was the major reason why now
-> > DWC3-core device creates xhci device manually.
-> 
-> doesn't device_property() solve that ? I'm just waiting for some patches
-> from Heikki (in Cc) before we rip pdata from dwc3 completely. At that
-> point, we can look at building xhci from DT.
-> 
-> The only thing that comes to mind is how this will look for PCI-only
-> systems if we rip manual xHCI device creation completely.
+Laxman Dewangan (7):
+  soc/tegra: pmc: Use BIT macro for register field definition
+  soc/tegra: pmc: Add new Tegra210 IO rails
+  soc/tegra: pmc: Add interface to get IO rail power status
+  soc/tegra: pmc: Add interface to set voltage of IO rails
+  soc/tegra: pmc: Register sub-devices of PMC
+  pinctrl: tegra: Add DT binding for io pads control
+  pinctrl: tegra: Add driver to configure voltage and power state of io
+    pads
 
-Sounds like this dwc3 thread is a bit separate from the $subject patch
-except for the legacy usage.
+ .../bindings/pinctrl/nvidia,tegra210-io-pad.txt    | 102 +++++++
+ drivers/pinctrl/tegra/Kconfig                      |  11 +
+ drivers/pinctrl/tegra/Makefile                     |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra210-io-pad.c    | 302 +++++++++++++++++++++
+ drivers/soc/tegra/pmc.c                            | 159 +++++++++--
+ .../dt-bindings/pinctrl/pinctrl-tegra210-io-pad.h  |  24 ++
+ include/soc/tegra/pmc.h                            |  52 ++++
+ 7 files changed, 630 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-io-pad.txt
+ create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra210-io-pad.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra210-io-pad.h
 
-Regards,
+-- 
+2.1.4
 
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
