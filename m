@@ -1,142 +1,82 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v8 00/10] Add DRM Driver for HiSilicon Kirin hi6220 SoC
-Date: Tue, 12 Apr 2016 18:08:59 +0200
-Message-ID: <20160412160859.GK2510@phenom.ffwll.local>
-References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: Remove 0, prefix from unit-addresses
+Date: Tue, 12 Apr 2016 11:18:14 -0500
+Message-ID: <CAL_JsqJohKH3zuLuffs_Ae5_bQe-BF7PP0dtYX0YPEzP0So1eg@mail.gmail.com>
+References: <1460383271-27306-2-git-send-email-thierry.reding@gmail.com>
+ <570BCB41.2030504@wwwdotorg.org> <CAL_JsqLASP+cytYA7rWn-Ox2W47rkf3t+n3KwBexvBQNc4J_RQ@mail.gmail.com>
+ <570BF13B.4060108@wwwdotorg.org> <20160412143946.GB25160@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160412143946.GB25160-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 04:55:33PM +0800, Xinliang Liu wrote:
-> This patch set adds a new drm driver for HiSilicon Kirin hi6220 SoC.
-> Current testing and support board is Hikey board which is one of Linaro
-> 96boards. It is an arm64 open source board. For more information about
-> this board, please access https://www.96boards.org.
-> 
-> Hardware Detail
-> ---------------
->   The display subsystem of Hi6220 SoC is shown as bellow:
->  +-----+       +----------+     +-----+     +-------------+
->  |     |       |          |     |     |     |             |             	
->  | FB  |------>|   ADE    |---->| DSI |---->|   External  |
->  |     |       |          |     |     |     |  HDMI/panel |
->  +-----+       +----------+     +-----+     +-------------+
-> 
-> - ADE(Advanced Display Engine) is the display controller. It contains 7
-> channels, 3 overlay compositors and a LDI.
->   - A channel looks like: DMA-->clip-->scale-->ctrans(or called csc).
->   - Overlay compositor is response to compose planes which come from 7
->   channels and pass composed image to LDI.
->   - LDI is response to generate timings and RGB data stream.
-> - DSI converts the RGB data stream from ADE to DSI packets.
-> - External HDMI/panel module is connected with DSI bus. Now Hikey use a
->   ADI's ADV7533 external HDMI chip.
+On Tue, Apr 12, 2016 at 9:39 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Apr 11, 2016 at 12:47:23PM -0600, Stephen Warren wrote:
+>> On 04/11/2016 12:32 PM, Rob Herring wrote:
+>> > On Mon, Apr 11, 2016 at 11:05 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> > > On 04/11/2016 08:01 AM, Thierry Reding wrote:
+>> > > >
+>> > > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> > > >
+>> > > > When Tegra124 support was first merged the unit-addresses of all devices
+>> > > > were listed with a "0," prefix to encode the reg property's second cell.
+>> > > > It turns out that this notation is not correct, and the "," separator is
+>> > > > only used to separate fields in the unit address (such as the device and
+>> > > > function number in PCI devices), not individual cells for addresses with
+>> > > > more than one cell.
+>> > >
+>> > >
+>> > > > diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+>> > > > b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+>> > >
+>> > >
+>> > > > -       gpu@0,57000000 {
+>> > > > +       gpu@57000000 {
+>> > > >                  /*
+>> > > >                   * Node left disabled on purpose - the bootloader will
+>> > > > enable
+>> > > >                   * it after having set the VPR up
+>> > >
+>> > >
+>> > > So the bootloader doesn't actually do that for the new node name at present.
+>> > > I have written a patch to make it do so, but haven't sent it yet since I
+>> > > wrote it in the middle of a large cleanup of U-Boot. I expect I can shuffle
+>> > > it to the front of the series and send it soon though. Without a new
+>> > > bootloader that contains this change, IIUC all graphics will be
+>> > > non-operative if this change is applied.
+>> >
+>> > Then you should leave this one alone for a while.
+>> >
+>> > I also found this looking at u-boot:
+>> >
+>> > arch/arm/dts/tegra124.dtsi:     gpu@57000000 {
+>>
+>> FWIW, that's because the U-Boot DTs use #address-cells=<1> on this chip so
+>> there was no question of using commas in the unit address or not. That may
+>> have been because U-Boot imported the DTs (or parts of them) from Linux
+>> before Linux switched to #address-cells=<2> on this chip.
+>
+> I thought the reason had been that U-Boot didn't support any more than
+> 32-bits for addresses on 32-bit ARM anyway, hence we never bothered to
+> sync with the kernel DTS files regarding #address-cells.
 
-I haven't looked at the details again, but seems it's all ready. Please
-create a pull request for the entire pile against drm-next and submit it
-to Dave Airlie.
+Ah yes, there are lots of issues with u-boot around that. That's a
+wonderful work-around though.
 
-Thanks, Daniel
+> Technically it would be possible for someone to write a DTS file with a
+> GPU node with yet another name (the binding after all doesn't specify
+> what the node name should be) so I think better matching would be safer
+> in any case.
 
-> 
-> Change History
-> -------------
-> Changes in v8:
-> - Rebase to v4.6-rc3
-> 
-> Changes in v7:
-> - Add config.mutex protection when accessing mode_config.connector_list.
-> - Clean up match data getting of kirin_drm_drv.c.
-> - A few Regs define clean up and typo fixs for ADE crtc and DSI encoder
->   driver.
-> - Fix vblank irq flag "DRIVER_IRQF_SHARED" to "IRQF_SHARED".
-> 
-> Changes in v6:
-> - Cleanup values part of reg and clocks relevant properties.
-> - Change "pclk_dsi" clock name to "pclk".
-> 
-> Changes in v5:
-> - Remove endpoint unit address of dsi output port.
-> - Use syscon to access ADE media NOC QoS registers instread of directly
->   writing registers.
-> - Use reset controller to reset ADE instead of directly writing registers.
-> 
-> Changes in v4:
-> - Describe more specific of clocks and ports of binding docs.
-> - Fix indentation of binding docs.
-> 
-> Changes in v3:
-> - Move and rename all the files to kirin sub-directory.
->   So that we could separate different seires SoCs' driver.
-> - Make ade as the drm master node.
-> - Replace drm_platform_init, load, unload implementation.
-> - Use assigned-clocks to set clock rate.
-> - Use ports to connect display relevant nodes.
-> - Rename hisi_drm_dsi.c to dw_drm_dsi.c
-> - Make encoder type as DRM_MODE_ENCODER_DSI.
-> - A few cleanup on regs and code.
-> 
-> Changes in v2:
-> - Remove abtraction layer of plane/crtc/encoder/connector.
-> - Refactor atomic implementation according to Daniel Vetter's guides:
-> http://blog.ffwll.ch/2014/11/atomic-modeset-support-for-kms-drivers.html
-> http://blog.ffwll.ch/2015/09/xdc-2015-atomic-modesetting-for-drivers.html
-> http://blog.ffwll.ch/2015/08/atomic-modesetting-design-overview.html
-> - Use bridge instead of slave encoder to connect external HDMI.
-> - Move dt binding docs to bindings/display/hisilicon directory.
-> 
-> Xinliang Liu (10):
->   drm/hisilicon: Add device tree binding for hi6220 display subsystem
->   drm/hisilicon: Add hisilicon kirin drm master driver
->   drm/hisilicon: Add crtc driver for ADE
->   drm/hisilicon: Add plane driver for ADE
->   drm/hisilicon: Add vblank driver for ADE
->   drm/hisilicon: Add cma fbdev and hotplug
->   drm/hisilicon: Add designware dsi encoder driver
->   drm/hisilicon: Add designware dsi host driver
->   drm/hisilicon: Add support for external bridge
->   MAINTAINERS: Add maintainer for hisilicon DRM driver
-> 
->  .../bindings/display/hisilicon/dw-dsi.txt          |   72 ++
->  .../bindings/display/hisilicon/hisi-ade.txt        |   64 ++
->  MAINTAINERS                                        |   10 +
->  drivers/gpu/drm/Kconfig                            |    2 +
->  drivers/gpu/drm/Makefile                           |    1 +
->  drivers/gpu/drm/hisilicon/Kconfig                  |    5 +
->  drivers/gpu/drm/hisilicon/Makefile                 |    5 +
->  drivers/gpu/drm/hisilicon/kirin/Kconfig            |   10 +
->  drivers/gpu/drm/hisilicon/kirin/Makefile           |    5 +
->  drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c       |  857 ++++++++++++++++
->  drivers/gpu/drm/hisilicon/kirin/dw_dsi_reg.h       |  103 ++
->  drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h    |  230 +++++
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c    | 1057 ++++++++++++++++++++
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c    |  367 +++++++
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h    |   31 +
->  15 files changed, 2819 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
->  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
->  create mode 100644 drivers/gpu/drm/hisilicon/Kconfig
->  create mode 100644 drivers/gpu/drm/hisilicon/Makefile
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/Kconfig
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/Makefile
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/dw_dsi_reg.h
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
->  create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-> 
-> -- 
-> 2.8.0
-> 
+Strictly speaking, the node name should be part of the binding. We're
+not too good at specifying it.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I've not looked, but I would think the compatible string would be
+unique in this case.
+
+Rob
