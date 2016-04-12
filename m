@@ -1,151 +1,72 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 2/5] dmaengine: mv_xor: use SoC type instead of directly the operation mode
-Date: Tue, 12 Apr 2016 20:19:15 +0200
-Message-ID: <1460485158-32122-3-git-send-email-gregory.clement@free-electrons.com>
-References: <1460485158-32122-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460485158-32122-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] DT: arm,gic-v3: Documment PPI partition support
+Date: Tue, 12 Apr 2016 13:31:23 -0500
+Message-ID: <CAL_Jsq+ddsVLjd_84Sw-ijKESeurVBy4v8vw_vvr5VrrObgqUg@mail.gmail.com>
+References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
+ <1460365075-7316-6-git-send-email-marc.zyngier@arm.com> <20160412162937.GA25932@rob-hp-laptop>
+ <570D2585.5070801@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <570D2585.5070801-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently the main difference between legacy XOR engine and newer one, is
-the way the engine modes are setup (either in the descriptor or through
-the controller registers). In order to be able to take into account new
-generation of the XOR engine for the ARM64 SoC, we need to identify them
-by type, and then depending to the type the engine setup will be
-selected.
+On Tue, Apr 12, 2016 at 11:42 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On 12/04/16 17:29, Rob Herring wrote:
+>> On Mon, Apr 11, 2016 at 09:57:55AM +0100, Marc Zyngier wrote:
+>>> Add a decription of the PPI partitioning support.
+>>>
+>>> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>>> ---
+>>>  .../bindings/interrupt-controller/arm,gic-v3.txt   | 34 ++++++++++++++++++++--
+>>>  1 file changed, 32 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>> index 007a5b4..4c29cda 100644
+>>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>> @@ -11,6 +11,8 @@ Main node required properties:
+>>>  - interrupt-controller : Identifies the node as an interrupt controller
+>>>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>>>    interrupt source. Must be a single cell with a value of at least 3.
+>>> +  If the system requires describing PPI affinity, then the value must
+>>> +  be at least 4.
+>>
+>> You're winning for cell count...
+>
+> Yeah, it feels like we aim at making people's life difficult...
+>
+>> One alternative that would save adding a cell and keep it contained
+>> within would be just list the affinities in the GIC node in the form of
+>> '<PPI#> <count> <cpu phandles>':
+>>
+>> ppi-affinity = <1 2 &cpu2 &cpu3>,
+>>               <5 1 &cpu4>,
+>>               ...
+>
+> But how would that work if you have two sets of CPUs (set-1=[cpu0,
+> cpu1]; set-2=[cpu2, cpu3]), and for the same PPI, device A is connected
+> to set-1 and device-B is connected to set-2?
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/dma/mv_xor.c | 40 ++++++++++++++++++++++++++++------------
- drivers/dma/mv_xor.h |  1 +
- 2 files changed, 29 insertions(+), 12 deletions(-)
+Oh right. Need to take those h/w designers out back...
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index a6ec82776cbc..6d012a56b97b 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -31,6 +31,11 @@
- #include "dmaengine.h"
- #include "mv_xor.h"
- 
-+enum mv_xor_type {
-+	XOR_ORION,
-+	XOR_ARMADA_38X,
-+};
-+
- enum mv_xor_mode {
- 	XOR_MODE_IN_REG,
- 	XOR_MODE_IN_DESC,
-@@ -933,7 +938,7 @@ static int mv_xor_channel_remove(struct mv_xor_chan *mv_chan)
- static struct mv_xor_chan *
- mv_xor_channel_add(struct mv_xor_device *xordev,
- 		   struct platform_device *pdev,
--		   int idx, dma_cap_mask_t cap_mask, int irq, int op_in_desc)
-+		   int idx, dma_cap_mask_t cap_mask, int irq)
- {
- 	int ret = 0;
- 	struct mv_xor_chan *mv_chan;
-@@ -945,7 +950,10 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 
- 	mv_chan->idx = idx;
- 	mv_chan->irq = irq;
--	mv_chan->op_in_desc = op_in_desc;
-+	if (xordev->xor_type == XOR_ORION)
-+		mv_chan->op_in_desc = XOR_MODE_IN_REG;
-+	else
-+		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
- 
- 	dma_dev = &mv_chan->dmadev;
- 
-@@ -1137,8 +1145,8 @@ static int mv_xor_resume(struct platform_device *dev)
- }
- 
- static const struct of_device_id mv_xor_dt_ids[] = {
--	{ .compatible = "marvell,orion-xor", .data = (void *)XOR_MODE_IN_REG },
--	{ .compatible = "marvell,armada-380-xor", .data = (void *)XOR_MODE_IN_DESC },
-+	{ .compatible = "marvell,orion-xor", .data = (void *)XOR_ORION },
-+	{ .compatible = "marvell,armada-380-xor", .data = (void *)XOR_ARMADA_38X },
- 	{},
- };
- 
-@@ -1152,7 +1160,6 @@ static int mv_xor_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	unsigned int max_engines, max_channels;
- 	int i, ret;
--	int op_in_desc;
- 
- 	dev_notice(&pdev->dev, "Marvell shared XOR driver\n");
- 
-@@ -1180,6 +1187,20 @@ static int mv_xor_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, xordev);
- 
-+
-+	/*
-+	 * We need to know which type of XOR device we use before
-+	 * setting up. In non-dt case it can only be the legacy one.
-+	 */
-+	xordev->xor_type = XOR_ORION;
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *of_id =
-+			of_match_device(mv_xor_dt_ids,
-+					&pdev->dev);
-+
-+		xordev->xor_type = (uintptr_t)of_id->data;
-+	}
-+
- 	/*
- 	 * (Re-)program MBUS remapping windows if we are asked to.
- 	 */
-@@ -1212,15 +1233,11 @@ static int mv_xor_probe(struct platform_device *pdev)
- 	if (pdev->dev.of_node) {
- 		struct device_node *np;
- 		int i = 0;
--		const struct of_device_id *of_id =
--			of_match_device(mv_xor_dt_ids,
--					&pdev->dev);
- 
- 		for_each_child_of_node(pdev->dev.of_node, np) {
- 			struct mv_xor_chan *chan;
- 			dma_cap_mask_t cap_mask;
- 			int irq;
--			op_in_desc = (uintptr_t)of_id->data;
- 
- 			if (i >= max_channels)
- 				continue;
-@@ -1237,7 +1254,7 @@ static int mv_xor_probe(struct platform_device *pdev)
- 			}
- 
- 			chan = mv_xor_channel_add(xordev, pdev, i,
--						  cap_mask, irq, op_in_desc);
-+						  cap_mask, irq);
- 			if (IS_ERR(chan)) {
- 				ret = PTR_ERR(chan);
- 				irq_dispose_mapping(irq);
-@@ -1266,8 +1283,7 @@ static int mv_xor_probe(struct platform_device *pdev)
- 			}
- 
- 			chan = mv_xor_channel_add(xordev, pdev, i,
--						  cd->cap_mask, irq,
--						  XOR_MODE_IN_REG);
-+						  cd->cap_mask, irq);
- 			if (IS_ERR(chan)) {
- 				ret = PTR_ERR(chan);
- 				goto err_channel_add;
-diff --git a/drivers/dma/mv_xor.h b/drivers/dma/mv_xor.h
-index c19fe30e5ae9..bf56e082e7cd 100644
---- a/drivers/dma/mv_xor.h
-+++ b/drivers/dma/mv_xor.h
-@@ -85,6 +85,7 @@ struct mv_xor_device {
- 	void __iomem	     *xor_high_base;
- 	struct clk	     *clk;
- 	struct mv_xor_chan   *channels[MV_XOR_MAX_CHANNELS];
-+	int		     xor_type;
- };
- 
- /**
--- 
-2.5.0
+> You need a way to distinguish these two interrupts and so far, the only
+> way I've found is to reference the affinity in the interrupt specifier.
+>
+> That being said, I'm definitely open to suggestions on how to describe
+> this in a better way.
+
+In that case, I think it looks fine.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
