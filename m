@@ -1,41 +1,48 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+From: Tom Rini <trini@konsulko.com>
 Subject: Re: [PATCH] of: Add generic handling for hardware incomplete fail
  state
-Date: Tue, 12 Apr 2016 16:18:52 -0700
-Message-ID: <20160412231852.GM5995@atomide.com>
+Date: Tue, 12 Apr 2016 19:22:35 -0400
+Message-ID: <20160412232235.GW13577@bill-the-cat>
 References: <1460486275-12256-1-git-send-email-tony@atomide.com>
  <570D56FE.2070408@gmail.com>
  <570D7922.5020206@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mEvYxaKTQdy27sIr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <570D7922.5020206-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <570D7922.5020206@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-* Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [160412 15:40]:
+
+--mEvYxaKTQdy27sIr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 12, 2016 at 03:39:30PM -0700, Frank Rowand wrote:
 > On 4/12/2016 1:13 PM, Frank Rowand wrote:
 > > Hi Tony,
-> 
+>=20
 > < snip >
-> 
+>=20
 > > With that change, the bulk of your patch looks good, with
 > > minor changes:
-> > 
+> >=20
 > >   __of_device_is_available() would not need to change.
-> > 
+> >=20
 > >   __of_device_is_incomplete() would change to check the new
 > >   boolean property.  (And I would suggest renaming it to
 > >   something that conveys it is ok to power manage the
 > >   device, but do not do anything else to the device.)
-> > 
+> >=20
 > > -Frank
-> 
+>=20
 > One more thought...
-> 
+>=20
 > Are there multiple drivers that need to follow this
 > pattern, or just one at the moment?  If just one driver,
 > then I would suggest open-coding accessing the property
@@ -43,36 +50,40 @@ List-Id: devicetree@vger.kernel.org
 > functions.  If more drivers appear with the same
 > pattern then the helper functions could be added.
 
-Well we already have several workarounds for devices to reset
-them for idle by accessing the device registers:
+This is a many problem.  I was trying to describe this at the BoF but
+it's something more along the lines of:
 
-omap_dss_reset
-omap_hdq1w_reset
-omap_i2c_reset
+SoC family ABxx supports 20 IP blocks which will always be present on
+the physical chip but depending on the exact 'xx' many of those 20
+blocks will be powered but 100% unusable.  Based on the 'xx' we will
+know this, and know that we must turn them off.
 
-At least the three above are doing access to the device
-registers partially duplicating the driver probe functionality.
+I'm under the impression that it's not just "turn them off for power
+saving" but "turn them off so they don't break PM".
 
-Then the PM init code has some workarounds ti idle device
-wrapper IP on SoCs that don't have the video or modem:
+--=20
+Tom
 
-omap3xxx_prm_iva_idle
-omap3_prm_reset_modem
+--mEvYxaKTQdy27sIr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-And I'm just aware of the ones that we have in the mainline kernel
-for PM to work. I bet Nishanth has more examples in mind where the
-bootloader needs set devices to incomplete state based on
-the SoC revision.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-In general, I would rather see board specific dts files set
-the unused devices to incomplete status rather than set them
-to disabled. If they are set to disabled, from PM point of
-view SoC specific workarounds are needed to idle them.
+iQIcBAEBAgAGBQJXDYM7AAoJEIf59jXTHXZSH2YP/jBAlm55yyT+H2khEA/6RSqz
+bOMuRTwus4fwwCOfYxLY0SCxvv4qNGqj276OllZYTJ8XGKzKWf9boRd42/y7zCrI
+NZ/ghtuKHtf2QH43qP/ugKjKsn6toQ2D3RriPaQKQahJVExPKjesRaWyzz0MeL5S
+h15woYgrMYV/5nNJn6TyPeh0ObWBPhLQer4k9B+Fbf0X3Tk6NFfpcKz65p3s1QQ3
+vHpL1Xo+YJ0v3czrPjw5KIhzQC1u7OuIVL0nOnVLSKh3x0x4iHpA/2cbI3SzCdla
+lugydZ4k+B9/dbIr+KaI0xR/5MSCqRtjb6/eXGu5CBIF77n2w2TAdb7YmqFL2RNE
+nyp8Loa4AmoSwjxCxafw3apwnIPNQ/ug2H3ouPs+JNG9y4gyhgDpTMbybzBEaY1a
+PUXBUya1x56x280WHLSvVR8rAqk5k65QN8L9qfbOa/gq/Peim4jj9VK3JjpBoAFE
+3ETDai+oemjQGgC0+XVnbj1BYKn1HSCAna1XNh6a7qrCIYZkD+s9F7PKi26cdMa3
+sTJjC80cwTeVGU5xp+QUXiE8RNzOJ8M2/qJ109friQjF8OTUUSKpKhL8tjHENBEB
+hUNY6eD/dIuVHhTBjRYTMJgQOfNnvt8eqrWaXD3y0j8eEmDMSvG1xJdC4m5hsrd9
+aEQQQ+wm1RkQ8BIur1U3
+=rxOy
+-----END PGP SIGNATURE-----
 
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--mEvYxaKTQdy27sIr--
