@@ -1,277 +1,110 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v4 04/16] arm64: dts: Add Hi6220 gpio configuration nodes
-Date: Wed, 13 Apr 2016 07:55:40 +0800
-Message-ID: <1460505352-13157-5-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v4 06/16] arm64: dts: add Hi6220 spi configuration nodes
+Date: Wed, 13 Apr 2016 07:55:42 +0800
+Message-ID: <1460505352-13157-7-git-send-email-guodong.xu@linaro.org>
 References: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, haojian.zhuang@linaro.org, linus.walleij@linaro.org, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>, Kong Xinwei <kong.kongxinwei@hisilicon.com>, Guodong Xu <guodong.xu@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>, Guodong Xu <guodong.xu@linaro.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Zhong Kaihua <zhongkaihua@huawei.com>
 
-Add Hi6220 gpio configuration nodes
+Add Hi6220 spi configuration nodes. Disable by default in hi6220.dtsi
+and enable it in board dts for usage of 96boards LS mezzanine board.
 
 Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
-Signed-off-by: Kong Xinwei <kong.kongxinwei@hisilicon.com>
+Signed-off-by: Guodong Xu <guodong.xu@linaro.com>
 Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 239 ++++++++++++++++++++++++++++++
- 1 file changed, 239 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts   |  6 ++++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi        | 15 +++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi | 21 +++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 3d9e8b2..7545e36 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -40,6 +40,12 @@
+ 		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
+ 		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
+ 	};
++
++	soc {
++		spi0: spi@f7106000 {
++			status = "ok";
++		};
++	};
+ };
+ 
+ &uart2 {
 diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index dc7f21a..493bbb0 100644
+index df56571..7bcfffe 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -251,5 +251,244 @@
- 				 <&ao_ctrl HI6220_TIMER0_PCLK>;
- 			clock-names = "timer1", "timer2", "apb_pclk";
+@@ -567,5 +567,20 @@
+ 			clocks = <&ao_ctrl 2>;
+ 			clock-names = "apb_pclk";
  		};
 +
-+		gpio0: gpio@f8011000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf8011000 0x0 0x1000>;
-+			interrupts = <0 52 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
++		spi0: spi@f7106000 {
++			compatible = "arm,pl022", "arm,primecell";
++			reg = <0x0 0xf7106000 0x0 0x1000>;
++			interrupts = <0 50 4>;
++			bus-id = <0>;
++			enable-dma = <0>;
++			clocks = <&sys_ctrl HI6220_SPI_CLK>;
 +			clock-names = "apb_pclk";
-+		};
-+
-+		gpio1: gpio@f8012000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf8012000 0x0 0x1000>;
-+			interrupts = <0 53 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio2: gpio@f8013000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf8013000 0x0 0x1000>;
-+			interrupts = <0 54 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio3: gpio@f8014000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf8014000 0x0 0x1000>;
-+			interrupts = <0 55 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio4: gpio@f7020000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7020000 0x0 0x1000>;
-+			interrupts = <0 56 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio5: gpio@f7021000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7021000 0x0 0x1000>;
-+			interrupts = <0 57 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio6: gpio@f7022000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7022000 0x0 0x1000>;
-+			interrupts = <0 58 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio7: gpio@f7023000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7023000 0x0 0x1000>;
-+			interrupts = <0 59 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio8: gpio@f7024000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7024000 0x0 0x1000>;
-+			interrupts = <0 60 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio9: gpio@f7025000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7025000 0x0 0x1000>;
-+			interrupts = <0 61 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio10: gpio@f7026000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7026000 0x0 0x1000>;
-+			interrupts = <0 62 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio11: gpio@f7027000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7027000 0x0 0x1000>;
-+			interrupts = <0 63 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio12: gpio@f7028000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7028000 0x0 0x1000>;
-+			interrupts = <0 64 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio13: gpio@f7029000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf7029000 0x0 0x1000>;
-+			interrupts = <0 65 0x4>;
-+			gpio-controller;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio14: gpio@f702a000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf702a000 0x0 0x1000>;
-+			interrupts = <0 66 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio15: gpio@f702b000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf702b000 0x0 0x1000>;
-+			interrupts = <0 67 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio16: gpio@f702c000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf702c000 0x0 0x1000>;
-+			interrupts = <0 68 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio17: gpio@f702d000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf702d000 0x0 0x1000>;
-+			interrupts = <0 69 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio18: gpio@f702e000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf702e000 0x0 0x1000>;
-+			interrupts = <0 70 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
-+		};
-+
-+		gpio19: gpio@f702f000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0x0 0xf702f000 0x0 0x1000>;
-+			interrupts = <0 71 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&ao_ctrl 2>;
-+			clock-names = "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&spi0_pmx_func &spi0_cfg_func>;
++			num-cs = <1>;
++			cs-gpios = <&gpio6 2 0>;
++			status = "disabled";
 +		};
  	};
  };
+diff --git a/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
+index 28806df..0916e84 100644
+--- a/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
+@@ -221,6 +221,15 @@
+ 					0xfc   MUX_M0	/* I2C2_SDA     (IOMG063) */
+ 				>;
+ 			};
++
++			spi0_pmx_func: spi0_pmx_func {
++				pinctrl-single,pins = <
++					0x1a0  MUX_M1   /* SPI0_DI      (IOMG104) */
++					0x1a4  MUX_M1	/* SPI0_DO	(IOMG105) */
++					0x1a8  MUX_M1	/* SPI0_CS_N	(IOMG106) */
++					0x1ac  MUX_M1	/* SPI0_CLK	(IOMG107) */
++				>;
++			};
+ 		};
+ 
+ 		pmx1: pinmux@f7010800 {
+@@ -625,6 +634,18 @@
+ 				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS  PULL_UP>;
+ 				pinctrl-single,drive-strength = <DRIVE1_02MA DRIVE_MASK>;
+ 			};
++
++			spi0_cfg_func: spi0_cfg_func {
++				pinctrl-single,pins = <
++					0x1b0  0x0	/* SPI0_DI	(IOCFG108) */
++					0x1b4  0x0	/* SPI0_DO	(IOCFG109) */
++					0x1b8  0x0	/* SPI0_CS_N	(IOCFG110) */
++					0x1bc  0x0	/* SPI0_CLK	(IOCFG111) */
++				>;
++				pinctrl-single,bias-pulldown  = <PULL_DIS  PULL_DOWN PULL_DIS PULL_DOWN>;
++				pinctrl-single,bias-pullup    = <PULL_DIS  PULL_UP   PULL_DIS PULL_UP>;
++				pinctrl-single,drive-strength = <DRIVE1_02MA DRIVE_MASK>;
++			};
+ 		};
+ 
+ 		pmx2: pinmux@f8001800 {
 -- 
 1.9.1
