@@ -1,7 +1,7 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCH 2/6] EDAC, altera: Move IRQ function declaration
-Date: Tue, 12 Apr 2016 17:12:57 -0500
-Message-ID: <1460499181-23080-3-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCH 6/6] ARM: dts: Add Arria10 Ethernet EDAC devicetree entry
+Date: Tue, 12 Apr 2016 17:13:01 -0500
+Message-ID: <1460499181-23080-7-git-send-email-tthayer@opensource.altera.com>
 References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,39 +14,60 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-In preparation for additional memory module ECCs, the
-IRQ declaration is being made available to everyone.
-Move it outside of the OCRAM only area.
+Add the device tree entries needed to support the Altera Ethernet
+FIFO buffer EDAC on the Arria10 chip.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
- drivers/edac/altera_edac.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/socfpga_arria10.dtsi |   36 ++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index c3e040d..226e650 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -848,6 +848,10 @@ static struct platform_driver altr_edac_device_driver = {
- };
- module_platform_driver(altr_edac_device_driver);
- 
-+/********************* Arria10 Function Declarations *********************/
-+static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
-+					 bool sberr);
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 27cc497..6195ade 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -617,6 +617,42 @@
+ 				compatible = "altr,socfpga-a10-ocram-ecc";
+ 				reg = <0xff8c3000 0x400>;
+ 			};
 +
- /*********************** OCRAM EDAC Device Functions *********************/
++			emac0-rx-ecc@ff8c0800 {
++				compatible = "altr,socfpga-a10-emac0-rx-ecc";
++				reg = <0xff8c0800 0x400>;
++				parent = <&gmac0>;
++			};
++
++			emac0-tx-ecc@ff8c0c00 {
++				compatible = "altr,socfpga-a10-emac0-tx-ecc";
++				reg = <0xff8c0c00 0x400>;
++				parent = <&gmac0>;
++			};
++
++			emac1-rx-ecc@ff8c1000 {
++				compatible = "altr,socfpga-a10-emac1-rx-ecc";
++				reg = <0xff8c1000 0x400>;
++				parent = <&gmac1>;
++			};
++
++			emac1-tx-ecc@ff8c1400 {
++				compatible = "altr,socfpga-a10-emac1-tx-ecc";
++				reg = <0xff8c1400 0x400>;
++				parent = <&gmac1>;
++			};
++
++			emac2-rx-ecc@ff8c1800 {
++				compatible = "altr,socfpga-a10-emac2-rx-ecc";
++				reg = <0xff8c1800 0x400>;
++				parent = <&gmac2>;
++			};
++
++			emac2-tx-ecc@ff8c1c00 {
++				compatible = "altr,socfpga-a10-emac2-tx-ecc";
++				reg = <0xff8c1c00 0x400>;
++				parent = <&gmac2>;
++			};
+ 		};
  
- #ifdef CONFIG_EDAC_ALTERA_OCRAM
-@@ -902,9 +906,6 @@ const struct edac_device_prv_data ocramecc_data = {
- 	.inject_fops = &altr_edac_device_inject_fops,
- };
- 
--static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
--					 bool sberr);
--
- const struct edac_device_prv_data a10_ocramecc_data = {
- 	.setup = altr_check_ecc_deps,
- 	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
+ 		rst: rstmgr@ffd05000 {
 -- 
 1.7.9.5
