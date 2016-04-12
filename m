@@ -1,71 +1,132 @@
 From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 13/16] arm64: dts: add LED nodes for hi6220-hikey
-Date: Wed, 13 Apr 2016 07:55:49 +0800
-Message-ID: <1460505352-13157-14-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v4 14/16] arm64: dts: hikey: Add hi655x pmic dts node
+Date: Wed, 13 Apr 2016 07:55:50 +0800
+Message-ID: <1460505352-13157-15-git-send-email-guodong.xu@linaro.org>
 References: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1460505352-13157-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add LED nodes for hi6220-hikey. There are total 6 LEDs on HiKey.
-Four general purposed, one for WiFi activity, and one for Bluetooth
-activity.
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
+Add the mfd hi655x dts node and regulator support on hi6220 platform.
+
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 41 ++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 87 +++++++++++++++++++++++++-
+ 1 file changed, 86 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 30c92bd..b7c41f8 100644
+index b7c41f8..cc1148d 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -66,6 +66,47 @@
- 			status = "ok";
+@@ -6,9 +6,9 @@
+  */
+ 
+ /dts-v1/;
+-
+ #include "hi6220.dtsi"
+ #include "hikey-pinctrl.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	model = "HiKey Development Board";
+@@ -107,6 +107,91 @@
+ 			default-state = "off";
  		};
  	};
 +
-+	leds {
-+		compatible = "gpio-leds";
-+		user_led4 {
-+			label = "user_led4";
-+			gpios = <&gpio4 0 0>; /* <&gpio_user_led_1>; */
-+			linux,default-trigger = "heartbeat";
-+		};
++	pmic: pmic@f8000000 {
++		compatible = "hisilicon,hi655x-pmic";
++		reg = <0x0 0xf8000000 0x0 0x1000>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
 +
-+		user_led3 {
-+			label = "user_led3";
-+			gpios = <&gpio4 1 0>; /* <&gpio_user_led_2>; */
-+			linux,default-trigger = "mmc0";
-+		};
++		regulators {
++			ldo2: LDO2 {
++				regulator-name = "LDO2_2V8";
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <3200000>;
++				regulator-enable-ramp-delay = <120>;
++			};
 +
-+		user_led2 {
-+			label = "user_led2";
-+			gpios = <&gpio4 2 0>; /* <&gpio_user_led_3>; */
-+			linux,default-trigger = "mmc1";
-+		};
++			ldo7: LDO7 {
++				regulator-name = "LDO7_SDIO";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-enable-ramp-delay = <120>;
++			};
 +
-+		user_led1 {
-+			label = "user_led1";
-+			gpios = <&gpio4 3 0>; /* <&gpio_user_led_4>; */
-+			linux,default-trigger = "cpu0";
-+		};
++			ldo10: LDO10 {
++				regulator-name = "LDO10_2V85";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-enable-ramp-delay = <360>;
++			};
 +
-+		wlan_active_led {
-+			label = "wifi_active";
-+			gpios = <&gpio3 5 0>; /* <&gpio_wlan_active_led>; */
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
++			ldo13: LDO13 {
++				regulator-name = "LDO13_1V8";
++				regulator-min-microvolt = <1600000>;
++				regulator-max-microvolt = <1950000>;
++				regulator-enable-ramp-delay = <120>;
++			};
 +
-+		bt_active_led {
-+			label = "bt_active";
-+			gpios = <&gpio4 7 0>; /* <&gpio_bt_active_led>; */
-+			linux,default-trigger = "hci0rx";
-+			default-state = "off";
++			ldo14: LDO14 {
++				regulator-name = "LDO14_2V8";
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <3200000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo15: LDO15 {
++				regulator-name = "LDO15_1V8";
++				regulator-min-microvolt = <1600000>;
++				regulator-max-microvolt = <1950000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo17: LDO17 {
++				regulator-name = "LDO17_2V5";
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <3200000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo19: LDO19 {
++				regulator-name = "LDO19_3V0";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-enable-ramp-delay = <360>;
++			};
++
++			ldo21: LDO21 {
++				regulator-name = "LDO21_1V8";
++				regulator-min-microvolt = <1650000>;
++				regulator-max-microvolt = <2000000>;
++				regulator-always-on;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo22: LDO22 {
++				regulator-name = "LDO22_1V2";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-enable-ramp-delay = <120>;
++			};
 +		};
 +	};
  };
