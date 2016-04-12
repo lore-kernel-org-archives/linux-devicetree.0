@@ -1,202 +1,112 @@
+Return-Path: <guodong.xu@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1460486275-12256-1-git-send-email-tony@atomide.com>
-References: <1460486275-12256-1-git-send-email-tony@atomide.com>
-Date: Tue, 12 Apr 2016 15:24:07 -0500
-Message-ID: <CAL_JsqL95mcL_tHmGa93pyyrwB49z3bRDvzEC3WiUaAVpfnR5w@mail.gmail.com>
-Subject: Re: [PATCH] of: Add generic handling for hardware incomplete fail state
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20160404225453.GD16484@atomide.com>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+	<1459589383-16914-6-git-send-email-guodong.xu@linaro.org>
+	<CACRpkdaQdVL2A=0-8qQLMa0BBpxp4dugyT91DJW2kUm3BcB9aw@mail.gmail.com>
+	<20160404225453.GD16484@atomide.com>
+Date: Tue, 12 Apr 2016 16:28:35 +0800
+Message-ID: <CAFGCpxwmXGFCRvfdus=+uhJTb-tK2fpqgoF3q3QHEzRcWkT+_g@mail.gmail.com>
+Subject: Re: [PATCH v2 05/16] arm64: dts: add Hi6220 pinctrl configuration nodes
+From: Guodong Xu <guodong.xu@linaro.org>
+Content-Type: multipart/alternative; boundary=001a113f962285c47b0530457251
 To: Tony Lindgren <tony@atomide.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Tom Rini <trini@konsulko.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Xu Wei <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd.bergmann@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, XinWei Kong <kong.kongxinwei@hisilicon.com>, Zhong Kaihua <zhongkaihua@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Apr 12, 2016 at 1:37 PM, Tony Lindgren <tony@atomide.com> wrote:
-> We have devices that are in incomplete state, but still need to be
-> probed to allow properly idling them for PM. Some examples are
-> devices that are not pinned out on certain packages, or otherwise
-> not enabled for use on some SoCs.
->
-> Setting status = "disabled" cannot be used for this case. Setting
-> "disabled" makes Linux ignore these devices so they are not probed.
->
-> To proper way deal with the incomplete devices is to probe them,
-> then allow the driver to check the state, and the disable or idle
-> the device using PM runtime. To do this we need to often enable
-> the device and run some device specific code to idle the device.
->
-> Also boards may have needs to disable and idle unused devices.
-> This may be needed for example if all resources are not wired
-> for a certain board variant.
->
-> It seems we can use the ePAPR 1.1 status fail-sss to do this.
-> From "Table 2-4 Values for status property" we have "fail-sss":
->
-> "Indicates that the device is not operational. A serious error was
->  detected in the device and it is unlikely to become operational
->  without repair. The sss portion of the value is specific to the
->  device and indicates the error condition detected."
->
-> At least some of these fail states can be handled in a generic
-> way. So let's introduce a generic status = "fail-hw-incomplete"
-> that describes a situation where a device driver probe should
-> just shut down or idle the device if possible and then bail out.
-> This allows the SoC variant and board specific dts files to set
-> the status "fail-hw-incomplete" as needed.
+--001a113f962285c47b0530457251
+Content-Type: text/plain; charset=UTF-8
 
-As we discussed at ELC, I think this is fine.
+On 5 April 2016 at 06:54, Tony Lindgren <tony@atomide.com> wrote:
 
-> The suggested usage in a device driver probe is:
+> * Linus Walleij <linus.walleij@linaro.org> [160403 12:32]:
+> > On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu@linaro.org>
+> wrote:
+> >
+> > > From: Zhong Kaihua <zhongkaihua@huawei.com>
+> > >
+> > > Add Hi6220 pinctrl configuration nodes
+> > >
+> > > Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
+> > > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Nah. Acked-by is fine, but I didn't write handle or write this
+> > code. :)
+> >
+> > No ACK from Haojian? Tony? Looks allright?
 >
-> static int foo_probe(struct platform_device *pdev)
-> {
->         int err;
->         ...
->
->         pm_runtime_enable(&pdev->dev);
->         pm_runtime_get_sync(&pdev->dev);
->         pm_runtime_use_autosuspend(&pdev->dev);
->         ...
->
->         /* Configure device, load firmware, idle device */
->         ...
->
->         if (of_device_is_incomplete(pdev->dev.of_node)) {
->                 err = -ENODEV;
->                 goto out;
->         }
->
->         /* Continue normal device probe */
->         ...
->
->         return 0;
->
-> out:
->         pm_runtime_dont_use_autosuspend(&pdev->dev);
->         pm_runtime_put_sync(&pdev->dev);
->         pm_runtime_disable(&pdev->dev);
->
->         return err;
-> }
->
-> Then as needed, handling for other generic status = "fail-sss"
-> states can be added if needed as per ePAPR 1.1.
->
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Cc: Tom Rini <trini@konsulko.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/of/base.c  | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++---
->  include/linux/of.h |  6 ++++++
->  2 files changed, 58 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index b299de2..8eb161f 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -518,8 +518,8 @@ EXPORT_SYMBOL(of_machine_is_compatible);
->   *
->   *  @device: Node to check for availability, with locks already held
->   *
-> - *  Returns true if the status property is absent or set to "okay" or "ok",
-> - *  false otherwise
-> + *  Returns true if the status property is absent or set to "okay", "ok",
-> + *  or "fail-hw-incomplete", false otherwise
->   */
->  static bool __of_device_is_available(const struct device_node *device)
->  {
-> @@ -534,7 +534,8 @@ static bool __of_device_is_available(const struct device_node *device)
->                 return true;
->
->         if (statlen > 0) {
-> -               if (!strcmp(status, "okay") || !strcmp(status, "ok"))
-> +               if (!strcmp(status, "okay") || !strcmp(status, "ok") ||
-> +                   !strcmp(status, "fail-hw-incomplete"))
->                         return true;
->         }
->
-> @@ -563,6 +564,54 @@ bool of_device_is_available(const struct device_node *device)
->  EXPORT_SYMBOL(of_device_is_available);
->
->  /**
-> + *  __of_device_is_incomplete - check if a device is incomplete
-> + *
-> + *  @device: Node to check for partial failure with locks already held
-> + *
-> + *  Returns true if the status is "fail-hw-incomplete", false otherwise.
-> + */
-> +static bool __of_device_is_incomplete(const struct device_node *device)
-> +{
-> +       const char *status;
-> +       int statlen;
-> +
-> +       if (!device)
-> +               return false;
-> +
-> +       status = __of_get_property(device, "status", &statlen);
-> +       if (status == NULL)
-> +               return false;
-> +
-> +       if (statlen > 0) {
-> +               if (!strcmp(status, "fail-hw-incomplete"))
 
-You can use of_property_string_match here.
+Linus, Haojian, Tony,
 
-> +                       return true;
-> +       }
-> +
-> +       return false;
-> +}
-> +
-> +/**
-> + *  of_device_is_incomplete - check if a device is incomplete
-> + *
-> + *  @device: Node to check for partial failure
-> + *
-> + *  Returns true if the status property is set to "fail-hw-incomplete",
-> + *  false otherwise. Fore more information, see fail-sss in ePAPR 1.1
-> + *  "Table 2-4 Values for status property".
-> + */
-> +bool of_device_is_incomplete(const struct device_node *device)
-> +{
-> +       unsigned long flags;
-> +       bool res;
-> +
-> +       raw_spin_lock_irqsave(&devtree_lock, flags);
-> +       res = __of_device_is_incomplete(device);
-> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       return res;
-> +}
-> +EXPORT_SYMBOL(of_device_is_incomplete);
-> +
-> +/**
->   *  of_device_is_big_endian - check if a device has BE registers
->   *
->   *  @device: Node to check for endianness
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 7fcb681..1d37db2 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -308,6 +308,7 @@ extern int of_property_read_string_helper(const struct device_node *np,
->  extern int of_device_is_compatible(const struct device_node *device,
->                                    const char *);
->  extern bool of_device_is_available(const struct device_node *device);
-> +extern bool of_device_is_incomplete(const struct device_node *device);
->  extern bool of_device_is_big_endian(const struct device_node *device);
->  extern const void *of_get_property(const struct device_node *node,
->                                 const char *name,
-> @@ -480,6 +481,11 @@ static inline bool of_device_is_available(const struct device_node *device)
->         return false;
->  }
+I will add:
+Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+
+> Looks OK to me, I guess no driver changes needed (again :)?
 >
-> +static inline bool of_device_is_incomplete(const struct device_node *device)
-> +{
-> +       return false;
-> +}
-> +
->  static inline bool of_device_is_big_endian(const struct device_node *device)
->  {
->         return false;
-> --
-> 2.7.0
+
+No driver changes is needed.
+
+I will add:
+Acked-by: Tony Lindgren <tony@atomide.com>
+
+Thank you.
+
+-Guodong
+
+
 >
+> Tony
+>
+
+--001a113f962285c47b0530457251
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On 5 April 2016 at 06:54, Tony Lindgren <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:tony@atomide.com" target=3D"_blank">tony@atomide.com</a>&gt;</sp=
+an> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
+ 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);border-left=
+-style:solid;padding-left:1ex">* Linus Walleij &lt;<a href=3D"mailto:linus.=
+walleij@linaro.org">linus.walleij@linaro.org</a>&gt; [160403 12:32]:<br>
+<span class=3D"">&gt; On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu &lt;<a hr=
+ef=3D"mailto:guodong.xu@linaro.org">guodong.xu@linaro.org</a>&gt; wrote:<br=
+>
+&gt;<br>
+&gt; &gt; From: Zhong Kaihua &lt;<a href=3D"mailto:zhongkaihua@huawei.com">=
+zhongkaihua@huawei.com</a>&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Add Hi6220 pinctrl configuration nodes<br>
+&gt; &gt;<br>
+&gt; &gt; Signed-off-by: Zhong Kaihua &lt;<a href=3D"mailto:zhongkaihua@hua=
+wei.com">zhongkaihua@huawei.com</a>&gt;<br>
+&gt; &gt; Signed-off-by: Linus Walleij &lt;<a href=3D"mailto:linus.walleij@=
+linaro.org">linus.walleij@linaro.org</a>&gt;<br>
+&gt;<br>
+&gt; Nah. Acked-by is fine, but I didn&#39;t write handle or write this<br>
+&gt; code. :)<br>
+&gt;<br>
+&gt; No ACK from Haojian? Tony? Looks allright?<br></span></blockquote><div=
+><br></div><div>Linus, Haojian, Tony,</div><div><br></div><div>I will add:=
+=C2=A0<br></div><div><div>Acked-by: Haojian Zhuang &lt;<a href=3D"mailto:ha=
+ojian.zhuang@linaro.org">haojian.zhuang@linaro.org</a>&gt;=C2=A0</div></div=
+><div>Acked-by: Linus Walleij &lt;<a href=3D"mailto:linus.walleij@linaro.or=
+g">linus.walleij@linaro.org</a>&gt;<br></div><div><br></div><blockquote cla=
+ss=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;=
+border-left-color:rgb(204,204,204);border-left-style:solid;padding-left:1ex=
+"><span class=3D""><br>
+</span>Looks OK to me, I guess no driver changes needed (again :)?<br></blo=
+ckquote><div><br></div><div>No driver changes is needed.</div><div><br></di=
+v><div>I will add:</div><div>Acked-by:=C2=A0Tony Lindgren &lt;<a href=3D"ma=
+ilto:tony@atomide.com">tony@atomide.com</a>&gt;</div><div><br></div><div>Th=
+ank you.</div><div><br></div><div>-Guodong</div><div>=C2=A0</div><blockquot=
+e class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width=
+:1px;border-left-color:rgb(204,204,204);border-left-style:solid;padding-lef=
+t:1ex">
+<span class=3D""><font color=3D"#888888"><br>
+Tony<br>
+</font></span></blockquote></div><br></div></div>
+
+--001a113f962285c47b0530457251--
