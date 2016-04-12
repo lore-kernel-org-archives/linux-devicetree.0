@@ -1,107 +1,67 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 04/16] arm64: dts: Add Hi6220 gpio configuration nodes
-Date: Tue, 12 Apr 2016 17:18:49 +0800
-Message-ID: <CAFGCpxwBJBr3=tQQ5Cj1aGQURyx3qa02s6G2SePeg1B-iSa7FQ@mail.gmail.com>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
-	<1459589383-16914-5-git-send-email-guodong.xu@linaro.org>
-	<CACRpkdb8x1EVMDgrV36+neGk1O+rGnSpj9F0A5stHN_d6B-EAA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFT 2/2] macb: kill PHY reset code
+Date: Tue, 12 Apr 2016 11:23:29 +0200
+Message-ID: <570CBE91.7020406@atmel.com>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <2811962.eGX2i5RJbZ@wasted.cogentembedded.com>
+ <20160411022802.GB4307@lunn.ch> <570BE1C5.70502@cogentembedded.com>
+ <20160411181904.GB29709@lunn.ch> <570BEF46.7060105@cogentembedded.com>
+ <20160411185115.GA30623@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb8x1EVMDgrV36+neGk1O+rGnSpj9F0A5stHN_d6B-EAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160411185115.GA30623-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 April 2016 at 03:28, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->> From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Le 11/04/2016 20:51, Andrew Lunn a =E9crit :
+> On Mon, Apr 11, 2016 at 09:39:02PM +0300, Sergei Shtylyov wrote:
+>> Hello.
 >>
->> Add Hi6220 gpio configuration nodes
+>> On 04/11/2016 09:19 PM, Andrew Lunn wrote:
 >>
->> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Kong Xinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>>>>> The code you are deleting would of ignored the flags in the gpio
+>>>>> property, i.e. active low.
+>>>>
+>>>>    Hm, you're right -- I forgot about that... :-/
+>>>>
+>>>>> The new code in the previous patch does
+>>>>> however take the flags into account. Did you check if there are a=
+ny
+>>>>> device trees which have flags, which were never used, but are now
+>>>>> going to be used and thus break...
+>>>>
+>>>>    Checked this now and found out arch/arm/boot/dts/ar91-vinco.dts=
+=2E
+>>>> Looks like it needs to be fixed indeed...
+>>>>
+>>> And this is where it gets tricky. You are breaking backwards
+>>> compatibility by now respecting the flag. An old DT blob is not goi=
+ng
+>>> to work.
 >>
->
-> Get rid of that blank line.
+>>    Do we care that much about the DT blobs that are just *wrong*?
+>=20
+> Wrong, but currently works.
+>=20
+>>> You potentially need to add a new property and deprecate the old on=
+e.
+>>
+>>    I would like to avoid that...
+>=20
+> You will need the agreement from the at91-vinco maintainer.
 
-Will fix.
+If the at91-vinco has to be modified, you have my agreement that it can
+be modified.
 
-Sorry missed that in v3.
-
->
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->
->> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> @@ -249,5 +249,264 @@
->>                         clocks = <&ao_ctrl 27>;
->>                         clock-names = "apb_pclk";
->>                 };
->> +
->> +               gpio0: gpio@f8011000 {
->> +                       compatible = "arm,pl061", "arm,primecell";
->> +                       reg = <0x0 0xf8011000 0x0 0x1000>;
->> +                       interrupts = <0 52 0x4>;
->> +                       gpio-controller;
->> +                       #gpio-cells = <2>;
->> +                       interrupt-controller;
->> +                       #interrupt-cells = <2>;
->> +                       clocks = <&ao_ctrl 2>;
->> +                       clock-names = "apb_pclk";
->> +                       status = "ok";
->> +               };
->
-> This part with all GPIO controllers looks nice.
->
->> new file mode 100644
->> index 0000000..09242f0
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi
->> @@ -0,0 +1,607 @@
->> +/ {
->> +       gpio_rstout_n:gpio_rstout_n {
->> +               gpios;
->> +       };
->> +       gpio_pmu_peri_en:gpio_pmu_peri_en {
->> +               gpios;
->> +       };
->> +       gpio_sysclk0_en:gpio_sysclk0_en {
->> +               gpios;
->> +       };
->> +       gpio_jtag_tdo:gpio_jtag_tdo {
->> +               gpios;
->> +       };
->> +       /* LCB: PWR_HOLD_GPIO0_0 */
->> +       gpio_pwr_hold:gpio_pwr_hold {
->> +               gpios = <&gpio0 0 0>;
->> +       };
->
-> (...)
->
-> I don't understand any stuff in this hikey-gpio.dtsi file.
->
-> What does all this mean?
->
-> If it has any practical use whatsoever then explain it in the
-> commit message, but right now it just looks like a big list
-> of placeholders with no use, but you can copy-paste them
-> into device nodes the day you need them?
->
-> If they are unused, just drop this file please.
-
-I will drop this.
-
-Sorry missed this in v2. I will fix this in next version.
-
--Guodong
-
->
-> Yours,
-> Linus Walleij
+Bye,
+--=20
+Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
