@@ -1,86 +1,60 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] soc/tegra: pmc: Add new Tegra210 IO rails
-Date: Tue, 12 Apr 2016 17:28:30 +0200
-Message-ID: <20160412152830.GB30211@ulmo.ba.sec>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
- <1460473007-11535-3-git-send-email-ldewangan@nvidia.com>
+From: "Sricharan" <sricharan@codeaurora.org>
+Subject: RE: [PATCH V2 1/5] iommu/msm: Add DT adaptation
+Date: Tue, 12 Apr 2016 21:04:28 +0530
+Message-ID: <00a101d194d0$d22edcd0$768c9670$@codeaurora.org>
+References: <1459952975-1250-1-git-send-email-sricharan@codeaurora.org> <1459952975-1250-2-git-send-email-sricharan@codeaurora.org> <20160411134728.GA21468@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460473007-11535-3-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160411134728.GA21468@rob-hp-laptop>
+Content-Language: en-us
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: 'Rob Herring' <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, robin.murphy@arm.com, robdclark@gmail.com, joro@8bytes.org, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, Will.Deacon@arm.com, stepanm@codeaurora.org, treding@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
+ 
+> On Wed, Apr 06, 2016 at 07:59:31PM +0530, Sricharan R wrote:
+> > The driver currently works based on platform data. Remove this and add
+> > support for DT. A single master can have multiple ports connected to
+> > more than one iommu.
+> >
+> > 	  	      master
+> >         	        |
+> > 	                |
+> > 	                |
+> > 	   ------------------------
+> >            |  			  |
+> > 	IOMMU0			IOMMU1
+> 
+> You've got mixtures of tabs and spaces here. Either fully use leading tabs
+or
+> use spaces everywhere.
+   Ok, will change this properly.
 
---uZ3hkaAS1mZxFaxD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> >            |			  |
+> >       ctx0   ctx1	     ctx0   ctx1
+> >
+> 
+> It is preferred to split bindings to separate patch.
+   Ok, will split it.
 
-On Tue, Apr 12, 2016 at 08:26:42PM +0530, Laxman Dewangan wrote:
-> NVIDIA Tegra210 has extended the IO rails for new IO pads
-> and added some new IO rails on top of its previous SoC.
->=20
-> Add all supported IO rails from Tegra210 to the Tegra PMC header.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  include/soc/tegra/pmc.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/include/soc/tegra/pmc.h b/include/soc/tegra/pmc.h
-> index 07e332d..58fadc5 100644
-> --- a/include/soc/tegra/pmc.h
-> +++ b/include/soc/tegra/pmc.h
-> @@ -90,22 +90,36 @@ int tegra_pmc_cpu_remove_clamping(unsigned int cpuid);
->  #define TEGRA_IO_RAIL_UART	14
->  #define TEGRA_IO_RAIL_BB	15
->  #define TEGRA_IO_RAIL_AUDIO	17
-> +#define TEGRA_IO_RAIL_USB3	18
->  #define TEGRA_IO_RAIL_HSIC	19
->  #define TEGRA_IO_RAIL_COMP	22
-> +#define TEGRA_IO_RAIL_DBG	25
-> +#define TEGRA_IO_RAIL_DBG_NONAO	26
-> +#define TEGRA_IO_RAIL_GPIO	27
->  #define TEGRA_IO_RAIL_HDMI	28
->  #define TEGRA_IO_RAIL_PEX_CNTRL	32
->  #define TEGRA_IO_RAIL_SDMMC1	33
->  #define TEGRA_IO_RAIL_SDMMC3	34
->  #define TEGRA_IO_RAIL_SDMMC4	35
-> +#define TEGRA_IO_RAIL_EMMC	35
->  #define TEGRA_IO_RAIL_CAM	36
->  #define TEGRA_IO_RAIL_RES	37
-> +#define TEGRA_IO_RAIL_EMMC2	37
+> > +The QCOM IOMMU is an implementation compatible with the ARM VMSA
+> > +short descriptor page tables. It provides address translation for bus
+> > +masters outside of the CPU, each connected to the IOMMU through a
+> port called micro-TLB.
+> > +
+> > +Required Properties:
+> > +
+> > +  - compatible: Must contain "qcom,iommu-v0".
+> 
+> You need SoC specific compatible strings in addition.
+> 
+ Ok, will add it.
 
-We have a duplicate entry for 37 now. The _RES might have meant
-"reserved", in which case maybe just replace it with the new symbolic
-name?
-
-Thierry
-
---uZ3hkaAS1mZxFaxD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXDRQeAAoJEN0jrNd/PrOhPyMQAMMhp39ztWiSajjTG/Ni2ZYk
-+qH3EwkqOLwttuhcRW6ZA86ph4qxgvBmFVKOSi6fw6I7/AtDJQNwqygtd1Pw9pTk
-u6RWmLdfs87bEbpE/p4GAQjQpdv0Q2bnQaUfCSM6xCOSYzRpFIQ8HQL/XXzmXTkJ
-uMmIFHY0xBeWJJMQ7NDj9790v8JJHEGSgsEQerSgc7GSH0u2g0CHI0E6lFA/TggF
-yrR40Pg+fT28Bc4D5JCOgIJsCNw+AaOfUXA8YBWIJX2LuSj/QQSzMoRixoGr0OIl
-yYphnMxK3USxQJbSzTlGfrofTqzzsWf/RHb/TCZySd/ES+1wGVmj4YlEoyPMmFEa
-ZLaQIlFejGIbzQj0slfMdminPfTNxcbhaajrTfKZwXtY8w9ZP5FOd/Kko2UxSjQs
-CCCJTFJKMF0wMGkUdz4Cchy2miOUrtOVj9hvnOlG35p19AtQbqEfaCZanJuoAh+l
-aIy4xZ3hBjRrBusPko1nVWNd3YjHDbHe6K/3hazSIqlTi3VM+MMP1qzbIjifmOtw
-eNMLJqA+FXXfeFILW/ff62l4gp4g4DlyxxkWV08ZxO6Aa9nzLjejMGS0srAzQ2d7
-lWF8xPOHnG13rYqpOsUkWk0c+N+0C/37B442cjmi7lv9xuIxO+CNVAfd+AHTfBD5
-v29u9fX4RGu+gPdAROsz
-=2vsL
------END PGP SIGNATURE-----
-
---uZ3hkaAS1mZxFaxD--
+Regards,
+  Sricharan
