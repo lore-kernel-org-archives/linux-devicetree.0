@@ -1,78 +1,50 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 04/13] ARM: dts: db600c: add board support with serial
-Date: Tue, 12 Apr 2016 10:33:53 +0100
-Message-ID: <1460453642-5809-5-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 12/13] ARM: dts: db600c: add spi support
+Date: Tue, 12 Apr 2016 10:34:01 +0100
+Message-ID: <1460453642-5809-13-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to DB600c with basic serial ports.
-DB600c is based on APQ8064.
+This patch adds spi nodes required to provide spi bus support on LS
+expansion.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm/boot/dts/Makefile                      |  1 +
- arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts | 36 +++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
+ arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923..fef61b3 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -539,6 +539,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
- dtb-$(CONFIG_ARCH_PRIMA2) += \
- 	prima2-evb.dtb
- dtb-$(CONFIG_ARCH_QCOM) += \
-+	qcom-apq8064-arrow-db600c.dtb \
- 	qcom-apq8064-cm-qs600.dtb \
- 	qcom-apq8064-ifc6410.dtb \
- 	qcom-apq8064-sony-xperia-yuga.dtb \
 diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-new file mode 100644
-index 0000000..57d4500
---- /dev/null
+index 2f0dfff..34bb415 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
 +++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-@@ -0,0 +1,36 @@
-+#include "qcom-apq8064-v2.0.dtsi"
-+
-+/ {
-+	model = "Arrow Electronics, APQ8064 DB600c";
-+	compatible = "arrow,db600c", "qcom,apq8064";
-+
-+	aliases {
-+		serial0 = &gsbi7_serial;
-+		serial1 = &gsbi1_serial;
-+	};
-+
-+	soc {
-+		gsbi@12440000 {
+@@ -13,6 +13,7 @@
+ 		i2c1 = &gsbi3_i2c;
+ 		i2c2 = &gsbi4_i2c;
+ 		i2c3 = &gsbi7_i2c;
++		spi0 = &gsbi5_spi;
+ 	};
+ 
+ 	regulators {
+@@ -181,6 +182,15 @@
+ 			};
+ 		};
+ 
++		gsbi@1a200000 {
 +			status = "okay";
-+			qcom,mode = <GSBI_PROT_UART_W_FC>;
-+			serial@12450000 {
-+				label = "LS-UART1";
++			spi@1a280000 {
++				/* On Low speed expansion */
++				label = "LS-SPI0";
 +				status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&gsbi1_uart_4pins>;
 +			};
 +		};
 +
-+		/* DEBUG UART  */
-+		gsbi@16600000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C_UART>;
-+			serial@16640000 {
-+				label = "LS-UART0";
-+				status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&gsbi7_uart_2pins>;
-+			};
-+		};
-+	};
-+};
+ 		/* DEBUG UART  */
+ 		gsbi@16600000 {
+ 			status = "okay";
 -- 
 2.5.0
