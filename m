@@ -1,50 +1,57 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 5/5] arm64: dts: marvell: add XOR node for Armada 3700 SoC
-Date: Tue, 12 Apr 2016 20:19:18 +0200
-Message-ID: <1460485158-32122-6-git-send-email-gregory.clement@free-electrons.com>
-References: <1460485158-32122-1-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 0/5] Add XOR engine support to Armada 3700 SoC (ARM64)
+Date: Tue, 12 Apr 2016 20:19:13 +0200
+Message-ID: <1460485158-32122-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460485158-32122-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Hi,
 
-Armada 3700 SoC comprise one dual-channel XOR engine and this
-patch adds its according representation.
+This series adds the support of the Marvell XOR engine to the Armada
+3700 SoC. As this SoC is an ARM64 one, then the code has been fixed to
+support the 64 bits platform.
 
-Signed-off-by: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+The initialization for the Armada 3700 is different from the other
+SoCs, so in order to support it, a new way of handling the different
+family have been added.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index ba9df7ff2a72..932783d82ea9 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -112,6 +112,19 @@
- 				status = "disabled";
- 			};
- 
-+			xor@60900 {
-+				compatible = "marvell,armada-3700-xor";
-+				reg = <0x60900 0x100
-+				       0x60b00 0x100>;
-+
-+				xor10 {
-+					interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+				xor11 {
-+					interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
-+
- 			sata@e0000 {
- 				compatible = "marvell,armada-3700-ahci";
- 				reg = <0xe0000 0x2000>;
+Once the dmaengine part will be approved, I will apply the dts part
+in the mvebu/dt64 tree.
+
+In this second version I took into account the remarks from Rob
+Herring about the patch related to the binding.
+
+Thanks,
+
+Gregory
+
+Changelog:
+v1 ->v2:
+ - Fix typo in commit log of patch 3
+ - Reformatting to 1 compatible string per line in
+   Documentation/devicetree/bindings/dma/mv-xor.txt
+ - Added Acked-by from Rob in patch 3
+
+Gregory CLEMENT (3):
+  dmaengine: mv_xor: make the code 64 bits compliant
+  dmaengine: mv_xor: use SoC type instead of directly the operation mode
+  dmaengine: mv_xor: Allow selecting mv_xor for mvebu only compatible
+    SoC
+
+Marcin Wojtas (2):
+  dmaengine: mv_xor: add support for Armada 3700 SoC
+  arm64: dts: marvell: add XOR node for Armada 3700 SoC
+
+ Documentation/devicetree/bindings/dma/mv-xor.txt |  5 +-
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi     | 13 ++++
+ drivers/dma/Kconfig                              |  2 +-
+ drivers/dma/mv_xor.c                             | 98 +++++++++++++++++++-----
+ drivers/dma/mv_xor.h                             |  1 +
+ 5 files changed, 97 insertions(+), 22 deletions(-)
+
 -- 
 2.5.0
 
