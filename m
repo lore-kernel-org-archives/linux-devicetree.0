@@ -1,66 +1,80 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v7 2/4] power: reset: add reboot mode driver
-Date: Tue, 12 Apr 2016 19:29:27 +0800
-Message-ID: <570CDC17.1090901@rock-chips.com>
-References: <1459304304-9713-1-git-send-email-andy.yan@rock-chips.com>
- <1459304443-9811-1-git-send-email-andy.yan@rock-chips.com>
- <56FB49B3.2040505@samsung.com> <57045D6B.2080907@rock-chips.com>
- <57045F9D.1000502@samsung.com> <570CBF7F.9090300@rock-chips.com>
- <570CD983.9090202@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Tue, 12 Apr 2016 13:15:33 +0100
+Message-ID: <20160412121533.GB14664@sirena.org.uk>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+ <CAE1zotJ4OiQ_tMvCDm-KoF8cTJ9Z-n09FX7KR75j0DyAcsznLA@mail.gmail.com>
+ <20160406103925.GA31110@svinekod>
+ <2161127.3msi2j0Rxi@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <570CD983.9090202@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, sre@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de
-Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, alexandre.belloni@free-electrons.com, f.fainelli@gmail.com, linux@arm.linux.org.uk, dbaryshkov@gmail.com, linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, moritz.fischer@ettus.com, mbrugger@suse.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, olof@lixom.net, jun.nie@linaro.org, dwmw2@infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2161127.3msi2j0Rxi@vostro.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, "Tirdea, Irina" <irina.tirdea@intel.com>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Ciocan, Cristina" <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "charles.garcia-tobin@arm.com" <charles.garcia-tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof:
-     Thanks for you kindly suggestion. I will follow it in next version=
-=2E
 
-On 2016=E5=B9=B404=E6=9C=8812=E6=97=A5 19:18, Krzysztof Kozlowski wrote=
-:
-> On 04/12/2016 11:27 AM, Andy Yan wrote:
->>>>>> +
->>>>>> +static const struct of_device_id syscon_reboot_mode_of_match[] =
-=3D {
->>>>>> +    { .compatible =3D "syscon-reboot-mode" },
->>>>>> +    {}
->>>>>> +};
->>>>>> +
->>>>>> +static struct platform_driver syscon_reboot_mode_driver =3D {
->>>>>> +    .probe =3D syscon_reboot_mode_probe,
->>>>> Cleanup needed. What will happen after device unbind? Memory will=
- be
->>>>> released (devm-*()) but reboot notifier won't thus leading to OOP=
-S on
->>>>> reboot.
->>>>       From the kernel_restart_prepare function, the reboot notifie=
-r will
->>>> be called before device_shutdown. Is there any other case the devi=
-ce
->>>> unbind before reboot notifier
->>>> called?
->>> This is a regular module platform driver so unbind can happen any t=
-ime
->>> initiated by user, either by unbind command or by module removal. U=
-ser
->>> can then re-bind device or not - probably does not matter. Anyway a=
-fter
->>> such first unbind, the restart will kaboom instead of do a restart.
->>      I just need to do clean up in remove?
-> Yes, you need to clean up everything in remove() callback (in a rever=
-sed
-> order).
->
-> Best regards,
-> Krzysztof
->
->
->
+--/NkBOFFp2J2Af1nK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Apr 07, 2016 at 11:24:00PM +0200, Rafael J. Wysocki wrote:
+> On Wednesday, April 06, 2016 11:39:27 AM Mark Rutland wrote:
 
+> > The ACPI model implies FW-driven pinctrl management, so if we're going to put
+> > the OS in direct control of pinctrl, we have to make clear what expectation FW
+> > and OS can have.
+
+> Well, orthodox ACPI people from the Windows camp would definitely agree with you,
+> but I'm not one of them, so let me play a devil's advocate for a while. :-)
+
+> IMO, exposing anything in the ACPI tables without explicitly saying "but you
+> should not touch that", eg by defining an operation region covering it or similar,
+> is equivalent to giving the OS a license to play with that thing as it wishes.
+
+> Therefore I would regard exposing pin control information in cases when the
+> OS is not allowed to use it to its fit as a firmware bug.
+
+This is something where it seems like it would be very easy for people
+to end up relying on current OS behaviour even if that only happened
+through accident rather than design.  You might assume that such
+behaviour is a bug but that may not be obvious to the firmware author if
+the OS behaviour makes sense to them.
+
+There may also be some expectation on the part of firmware that the OS
+will do some management of the pins even for devices that it's not
+actively working with (put them in an idle mode for example).
+
+> Now, the question in this patch series is how to expose things and not when to
+> do that.  It adds support for a specific method of exposing information to the
+> OS, but should it be concerned about the possible consequences of inappropriate
+> use of that method by firmware?
+
+The other issue here is that if (as Octavian mentioned) there are
+ongoing discussions within ASWG on producing an actual spec for this it
+doesn't seem great that we'd just go and do something completely
+different rather than trying to make sure that the spec works well.  Or
+if there isn't any spec work then writing one there for other OSs to
+pick up if they like.  This seems like it'd make us much better
+community players.
+
+--/NkBOFFp2J2Af1nK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXDObkAAoJECTWi3JdVIfQdqwH/32gASzKWbp4mfuKkbeT1UY0
+4fYAHF5sMamIjPt7SXumZKyHULkwNfLgai2C3rNvgbg0pyD4QyEhNih8nviWbXki
++iuQQKu7ARBgG7P4YwbqTdoij1ClwdEytjRvpEpY+q47oE6BZ5B74YqOK5dO1umI
+J8MeYv9ZqOakHXwaKx67gp6Ua+lwRmqKL9pHTweNvxJJc7iNiHSzcfrwV7wK8+jr
+ENNMTFu9a+5bkc2DeLAcbMW6ESQ2dkcqHjlGDtS3q6CnRq5B1MBUnu0+7Iri7iOu
+0XUsZIkz95SNG8SEgqyMLxD1MKEHT0iAeojHRGycOR9lTyOPd2FU8Sv35KoSy48=
+=/hjS
+-----END PGP SIGNATURE-----
+
+--/NkBOFFp2J2Af1nK--
