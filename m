@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 1/5] dmaengine: mv_xor: make the code 64 bits compliant
-Date: Tue, 12 Apr 2016 20:19:14 +0200
-Message-ID: <1460485158-32122-2-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 4/5] dmaengine: mv_xor: Allow selecting mv_xor for mvebu only compatible SoC
+Date: Tue, 12 Apr 2016 20:19:17 +0200
+Message-ID: <1460485158-32122-5-git-send-email-gregory.clement@free-electrons.com>
 References: <1460485158-32122-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460485158-32122-1-git-send-email-gregory.clement@free-electrons.com>
@@ -10,34 +10,28 @@ To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix two warnings which appear when building for 64 bits target.
+Armada 3700 SoC uses the mv_xor driver but don't select anymore the
+PLAT_ORION symbol. This commit extends the dependency of the mv_xor
+driver to the more modern SoCs only compatible with ARCH_MVEBU, which
+allows using it with the Armada 3700 SoC.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/dma/mv_xor.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 3922a5d56806..a6ec82776cbc 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -477,7 +477,7 @@ mv_xor_prep_dma_xor(struct dma_chan *chan, dma_addr_t dest, dma_addr_t *src,
- 	BUG_ON(len > MV_XOR_MAX_BYTE_COUNT);
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index d96d87c56f2e..cdc50c2c172f 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -332,7 +332,7 @@ config MPC512X_DMA
  
- 	dev_dbg(mv_chan_to_devp(mv_chan),
--		"%s src_cnt: %d len: %u dest %pad flags: %ld\n",
-+		"%s src_cnt: %d len: %zu dest %pad flags: %ld\n",
- 		__func__, src_cnt, len, &dest, flags);
- 
- 	sw_desc = mv_chan_alloc_slot(mv_chan);
-@@ -1220,7 +1220,7 @@ static int mv_xor_probe(struct platform_device *pdev)
- 			struct mv_xor_chan *chan;
- 			dma_cap_mask_t cap_mask;
- 			int irq;
--			op_in_desc = (int)of_id->data;
-+			op_in_desc = (uintptr_t)of_id->data;
- 
- 			if (i >= max_channels)
- 				continue;
+ config MV_XOR
+ 	bool "Marvell XOR engine support"
+-	depends on PLAT_ORION
++	depends on PLAT_ORION || ARCH_MVEBU
+ 	select DMA_ENGINE
+ 	select DMA_ENGINE_RAID
+ 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
 -- 
 2.5.0
