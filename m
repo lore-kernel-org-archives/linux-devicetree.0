@@ -1,120 +1,81 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Tue, 12 Apr 2016 09:37:50 -0700
-Message-ID: <20160412163750.GR5995@atomide.com>
-References: <alpine.DEB.2.02.1603191937430.6629@utopia.booyaka.com>
- <56EFB794.5010505@ti.com>
- <alpine.DEB.2.02.1603211743200.31059@utopia.booyaka.com>
- <56FE407E.9030803@ti.com>
- <20160402001753.GR9329@atomide.com>
- <57026205.6020105@ti.com>
- <20160404151200.GA4652@atomide.com>
- <5703BA6B.1080208@ti.com>
- <20160411212845.GJ5995@atomide.com>
- <570CC54E.6020703@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: Remove 0, prefix from unit-addresses
+Date: Tue, 12 Apr 2016 10:39:55 -0600
+Message-ID: <570D24DB.3030405@wwwdotorg.org>
+References: <1460383271-27306-2-git-send-email-thierry.reding@gmail.com>
+ <570BCB41.2030504@wwwdotorg.org>
+ <CAL_JsqLASP+cytYA7rWn-Ox2W47rkf3t+n3KwBexvBQNc4J_RQ@mail.gmail.com>
+ <570BF13B.4060108@wwwdotorg.org> <20160412143946.GB25160@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570CC54E.6020703@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160412143946.GB25160-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [160412 02:53]:
-> Tony,
-> 
-> On 04/12/16 00:28, Tony Lindgren wrote:
-> >>> Then for the long term solution using
-> >>> PM runtime to block gating of the clock while sidetone is active is
-> >>> the way to go it seems.
-> >>
-> >> Hrm, I think one of the main issue is that with pm_runtime we can not block
-> >> the clock gating, this is why legacy code uses enable_st_clock(), which will
-> >> call omap2_clk_deny_idle() or omap2_clk_allow_idle().
-> > 
-> > I see. I think Tero wanted to export omap2_clk_allow_idle() and
-> > omap2_clk_deny_idle() for drivers to use. That should get discussed in
-> > the linux-clk list, probably best to use the pdata callbacks until
-> > the clock idling issue has been discussed.
-> 
-> It is already exported, used by the arch/arm/mach-omap2/mcbsp.c file.
+On 04/12/2016 08:39 AM, Thierry Reding wrote:
+> On Mon, Apr 11, 2016 at 12:47:23PM -0600, Stephen Warren wrote:
+>> On 04/11/2016 12:32 PM, Rob Herring wrote:
+>>> On Mon, Apr 11, 2016 at 11:05 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>> On 04/11/2016 08:01 AM, Thierry Reding wrote:
+>>>>>
+>>>>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>
+>>>>> When Tegra124 support was first merged the unit-addresses of all devices
+>>>>> were listed with a "0," prefix to encode the reg property's second cell.
+>>>>> It turns out that this notation is not correct, and the "," separator is
+>>>>> only used to separate fields in the unit address (such as the device and
+>>>>> function number in PCI devices), not individual cells for addresses with
+>>>>> more than one cell.
+>>>>
+>>>>
+>>>>> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+>>>>> b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+>>>>
+>>>>
+>>>>> -       gpu@0,57000000 {
+>>>>> +       gpu@57000000 {
+>>>>>                   /*
+>>>>>                    * Node left disabled on purpose - the bootloader will
+>>>>> enable
+>>>>>                    * it after having set the VPR up
+>>>>
+>>>>
+>>>> So the bootloader doesn't actually do that for the new node name at present.
+>>>> I have written a patch to make it do so, but haven't sent it yet since I
+>>>> wrote it in the middle of a large cleanup of U-Boot. I expect I can shuffle
+>>>> it to the front of the series and send it soon though. Without a new
+>>>> bootloader that contains this change, IIUC all graphics will be
+>>>> non-operative if this change is applied.
+>>>
+>>> Then you should leave this one alone for a while.
+>>>
+>>> I also found this looking at u-boot:
+>>>
+>>> arch/arm/dts/tegra124.dtsi:     gpu@57000000 {
+>>
+>> FWIW, that's because the U-Boot DTs use #address-cells=<1> on this chip so
+>> there was no question of using commas in the unit address or not. That may
+>> have been because U-Boot imported the DTs (or parts of them) from Linux
+>> before Linux switched to #address-cells=<2> on this chip.
+>
+> I thought the reason had been that U-Boot didn't support any more than
+> 32-bits for addresses on 32-bit ARM anyway, hence we never bothered to
+> sync with the kernel DTS files regarding #address-cells.
 
-Oh but not with EXPORT_SYMBOL so not usable except for built-in code.
-Probably best to keep it that way IMO..
+Ah, that has also been historically true. It isn't true any more 
+(excepting any latent bugs, which do keep cropping up).
 
-> Why not to remove the callback for legacy also and handle it in the driver? It
-> is less ugly in my opinion.
-> Going via the pdata callback is just going to cement the current setup.
+> Technically it would be possible for someone to write a DTS file with a
+> GPU node with yet another name (the binding after all doesn't specify
+> what the node name should be) so I think better matching would be safer
+> in any case.
 
-Sure, maybe you can have a piece of built-in driver code to do that?
-
-> I have drafted out something which would be needed if we separate the McBSP-ST
-> from the McBSP driver. It is not pretty...
-> 
-> In the new omap3-mcbsp-st.h:
-> 
-> struct omap3_mcbspst;
-> 
-> struct omap_st_to_mcbsp_data {
-> 	bool (*is_enabled)(struct omap_st_to_mcbsp_data *st_data);
-> 	bool (*enable)(struct omap_st_to_mcbsp_data *st_data);
-> 	bool (*disable)(struct omap_st_to_mcbsp_data *st_data);
-> 	struct omap3_mcbspst *st_priv;
-> };
-> 
-> In the current omap-mcbsp.h:
-> 
-> #include <omap3-mcbsp-st.h>
-> ...
-> struct omap_mcbsp_to_st_data {
-> 	bool (*is_enabled)(struct omap_mcbsp_to_st_data *mcbsp_data);
-> 	bool (*iclk_idle)(struct omap_mcbsp_to_st_data *mcbsp_data, bool allow);
-> 	bool (*enable)(struct omap_mcbsp_to_st_data *mcbsp_data);
-> 	bool (*disable)(struct omap_mcbsp_to_st_data *mcbsp_data);
-> 	struct omap_mcbsp *mcbsp_priv;
-> };
-> 
-> #ifdef CONFIG_SND_SOC_OMAP3_MCBSPST
-> struct omap_mcbsp_to_st_data *omap_mcbsp_st_register(
-> 						struct platform_device *pdev, /* McBSP pdev! probably? */
-> 						struct omap_st_to_mcbsp_data *st_data);
-> int omap_mcbsp_st_unregister(struct omap_st_to_mcbsp_data *st_data);
-> #else
-> static inline int omap_mcbsp_st_register(struct platform_device *pdev,
-> 					 struct omap_st_to_mcbsp_data *st_data)
-> {
-> 	return -ENODEV;
-> }
-> static inline int omap_mcbsp_st_unregister(struct omap_st_to_mcbsp_data *st_data)
-> {
-> 	return 0;
-> }
-> #endif
-> 
-> Since the ST would be separate driver, it should create the needed ALSA
-> controls as well, probably I need to pass something else here and there.
-> But, in this setup it would be possible to remove the ST driver while the
-> McBSP and the sound card is up, which means we must be able to remove
-> kcontrols runtime, probably there is a way, but not sure about this.
-> 
-> There will be issues like this we have not prepared for I'm sure if we do
-> dramatic change to the simple implementation we have right now.
-
-Best to stick to incremental improvments I think..
-
-> I have reasonably clean patches (6 of them) on top of this three which would
-> remove the arch code for the iclk handling and implements it in the mcbsp
-> driver w/o changing the architecture of the McBSP driver itself. Both DT and
-> legacy boot works. The only part I was not happy about the one where I looked
-> up the mcbsp2/3_ick, but I think I have found much cleaner way to do it
-> (meaning that the code will not look hackish at all).
-> If you want to see, I can make this change and I can send the whole thing as
-> RFC and continue the discussion around that?
-
-Sure, especially if that helps with splitting up the modules too.
-
-Regards,
-
-Tony
+Yes, that does seem better. I'll try and get that one patch out today, 
+assuming I can rebase it to the bottom of the stack easily. FYI, U-Boot 
+is now on a 2-month release cycle, so the next scheduled release is 
+v2016.05 on May 9, and the merge window just closed for that release. 
+It's arguable this is a bug fix though...
