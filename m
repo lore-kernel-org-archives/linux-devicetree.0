@@ -1,74 +1,65 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: tegra: Rename some bindings for
- consistency
-Date: Tue, 12 Apr 2016 09:28:15 +0800
-Message-ID: <570C4F2F.8050407@nvidia.com>
-References: <1460383086-26957-1-git-send-email-thierry.reding@gmail.com>
- <1460383086-26957-2-git-send-email-thierry.reding@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 1/9] ARM: imx: clk-vf610: fix DCU clock tree
+Date: Tue, 12 Apr 2016 09:38:21 +0800
+Message-ID: <20160412013820.GC15949@tiger>
+References: <1459834121-25997-1-git-send-email-stefan@agner.ch>
+ <1459834121-25997-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460383086-26957-2-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1459834121-25997-2-git-send-email-stefan@agner.ch>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: jianwei.wang.chn@gmail.com, meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2016 09:58 PM, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> Device tree binding for NVIDIA Tegra have traditionally carried the
-> "nvidia," vendor prefix in the filename. A couple of odd ones don't, so
-> fix them up for consistency.
->
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->   .../devicetree/bindings/ata/nvidia,tegra-ahci.txt  |  32 ++
->   .../devicetree/bindings/ata/tegra-sata.txt         |  32 --
->   .../bindings/dma/nvidia,tegra20-apbdma.txt         |  44 +++
->   .../devicetree/bindings/dma/tegra20-apbdma.txt     |  44 ---
->   .../memory-controllers/nvidia,tegra-emc.txt        | 374 +++++++++++++++++++++
->   .../bindings/memory-controllers/tegra-emc.txt      | 374 ---------------------
->   .../bindings/thermal/nvidia,tegra-soctherm.txt     |  67 ++++
->   .../devicetree/bindings/thermal/tegra-soctherm.txt |  67 ----
->   8 files changed, 517 insertions(+), 517 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/ata/nvidia,tegra-ahci.txt
->   delete mode 100644 Documentation/devicetree/bindings/ata/tegra-sata.txt
->   create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
->   delete mode 100644 Documentation/devicetree/bindings/dma/tegra20-apbdma.txt
->   create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-emc.txt
->   delete mode 100644 Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
->   create mode 100644 Documentation/devicetree/bindings/thermal/nvidia,tegra-soctherm.txt
->   delete mode 100644 Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
->
-
-Hi,
-
-Could we use the "-M" and "-C" option to detect the difference if this 
-is just rename or copy from the original file? That way we can still 
-remain the connection of the history log that we can still check the 
-file history by "git blame".
-
-If we do this by deleting and recreating the same file content with 
-renamed filename, we will lose the history log.
-
-Something like this, I do the same on my machine.
-
-diff --git a/Documentation/devicetree/bindings/ata/tegra-sata.txt 
-b/Documentation/devicetree/bindings/ata/nvidia,tegra-ahci.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/ata/tegra-sata.txt
-rename to Documentation/devicetree/bindings/ata/nvidia,tegra-ahci.txt
-diff --git a/Documentation/devicetree/bindings/dma/tegra20-apbdma.txt 
-b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/dma/tegra20-apbdma.txt
-rename to Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
-
-Thanks,
-Joseph
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBBcHIgMDQsIDIwMTYgYXQgMTA6Mjg6MzNQTSAtMDcwMCwgU3RlZmFuIEFnbmVyIHdy
+b3RlOgo+IFNpbWlsYXIgdG8gYW4gZWFybGllciBmaXggZm9yIHRoZSBTQUkgY2xvY2tzLCB0aGUg
+RENVIGNsb2NrIGhpZXJhcmNoeQo+IG1peGVzIHRoZSBidXMgY2xvY2sgd2l0aCB0aGUgZGlzcGxh
+eSBjb250cm9sbGVycyBwaXhlbCBjbG9jay4gVGVzdHMKPiBoYXZlIHNob3duIHRoYXQgdGhlIGdh
+dGVzIGluIENDTV9DQ0dSMy85IHJlZ2lzdGVycyBkbyBub3QgY29udHJvbAo+IHRoZSBEQ1UgcGl4
+ZWwgY2xvY2ssIGJ1dCBvbmx5IHRoZSByZWdpc3RlciBhY2Nlc3MgY2xvY2sgKGJ1cyBjbG9jayku
+Cj4gCj4gRml4IHRoaXMgYnkgZGVmaW5pbmcgdGhlIHBhcmVudCBjbG9jayBvZiBWRjYxMF9DTEtf
+RENVeCB0byBiZSB0aGUgYnVzCj4gY2xvY2sgKGlwZ19idXMpLgo+IAo+IFNpbmNlIHRoZSBjbG9j
+ayBoYXMgbm90IGJlZW4gdXNlZCBmYXIsIHRoZXJlIGFyZSBubyBmdXJ0aGVyIGNoYW5nZXMKPiBu
+ZWVkZWQuCj4gCj4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFnbmVyIDxzdGVmYW5AYWduZXIuY2g+
+CgpBcHBsaWVkIDEgYW5kIDIsIHdpdGggdXBkYXRpbmcgc3ViamVjdCBwcmVmaXggdG8gYmUgJ2Ns
+azogaW14OiB2ZjYxMDogJwoKU2hhd24KCj4gLS0tCj4gIGRyaXZlcnMvY2xrL2lteC9jbGstdmY2
+MTAuYyB8IDQgKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xrLXZmNjEwLmMgYi9k
+cml2ZXJzL2Nsay9pbXgvY2xrLXZmNjEwLmMKPiBpbmRleCAwYTk0ZDk2Li40MjZmZGUyIDEwMDY0
+NAo+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstdmY2MTAuYwo+ICsrKyBiL2RyaXZlcnMvY2xr
+L2lteC9jbGstdmY2MTAuYwo+IEBAIC0zMjEsMTEgKzMyMSwxMSBAQCBzdGF0aWMgdm9pZCBfX2lu
+aXQgdmY2MTBfY2xvY2tzX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpjY21fbm9kZSkKPiAgCWNs
+a1tWRjYxMF9DTEtfRENVMF9TRUxdID0gaW14X2Nsa19tdXgoImRjdTBfc2VsIiwgQ0NNX0NTQ01S
+MSwgMjgsIDEsIGRjdV9zZWxzLCAyKTsKPiAgCWNsa1tWRjYxMF9DTEtfRENVMF9FTl0gPSBpbXhf
+Y2xrX2dhdGUoImRjdTBfZW4iLCAiZGN1MF9zZWwiLCBDQ01fQ1NDRFIzLCAxOSk7Cj4gIAljbGtb
+VkY2MTBfQ0xLX0RDVTBfRElWXSA9IGlteF9jbGtfZGl2aWRlcigiZGN1MF9kaXYiLCAiZGN1MF9l
+biIsIENDTV9DU0NEUjMsIDE2LCAzKTsKPiAtCWNsa1tWRjYxMF9DTEtfRENVMF0gPSBpbXhfY2xr
+X2dhdGUyKCJkY3UwIiwgImRjdTBfZGl2IiwgQ0NNX0NDR1IzLCBDQ01fQ0NHUnhfQ0duKDgpKTsK
+PiArCWNsa1tWRjYxMF9DTEtfRENVMF0gPSBpbXhfY2xrX2dhdGUyKCJkY3UwIiwgImlwZ19idXMi
+LCBDQ01fQ0NHUjMsIENDTV9DQ0dSeF9DR24oOCkpOwo+ICAJY2xrW1ZGNjEwX0NMS19EQ1UxX1NF
+TF0gPSBpbXhfY2xrX211eCgiZGN1MV9zZWwiLCBDQ01fQ1NDTVIxLCAyOSwgMSwgZGN1X3NlbHMs
+IDIpOwo+ICAJY2xrW1ZGNjEwX0NMS19EQ1UxX0VOXSA9IGlteF9jbGtfZ2F0ZSgiZGN1MV9lbiIs
+ICJkY3UxX3NlbCIsIENDTV9DU0NEUjMsIDIzKTsKPiAgCWNsa1tWRjYxMF9DTEtfRENVMV9ESVZd
+ID0gaW14X2Nsa19kaXZpZGVyKCJkY3UxX2RpdiIsICJkY3UxX2VuIiwgQ0NNX0NTQ0RSMywgMjAs
+IDMpOwo+IC0JY2xrW1ZGNjEwX0NMS19EQ1UxXSA9IGlteF9jbGtfZ2F0ZTIoImRjdTEiLCAiZGN1
+MV9kaXYiLCBDQ01fQ0NHUjksIENDTV9DQ0dSeF9DR24oOCkpOwo+ICsJY2xrW1ZGNjEwX0NMS19E
+Q1UxXSA9IGlteF9jbGtfZ2F0ZTIoImRjdTEiLCAiaXBnX2J1cyIsIENDTV9DQ0dSOSwgQ0NNX0ND
+R1J4X0NHbig4KSk7Cj4gIAo+ICAJY2xrW1ZGNjEwX0NMS19FU0FJX1NFTF0gPSBpbXhfY2xrX211
+eCgiZXNhaV9zZWwiLCBDQ01fQ1NDTVIxLCAyMCwgMiwgZXNhaV9zZWxzLCA0KTsKPiAgCWNsa1tW
+RjYxMF9DTEtfRVNBSV9FTl0gPSBpbXhfY2xrX2dhdGUoImVzYWlfZW4iLCAiZXNhaV9zZWwiLCBD
+Q01fQ1NDRFIyLCAzMCk7Cj4gLS0gCj4gMi43LjQKPiAKPiAKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
