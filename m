@@ -1,84 +1,40 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 14/16] arm64: dts: hikey: Add hi655x pmic dts node
-Date: Tue, 12 Apr 2016 21:14:07 +0800
-Message-ID: <CAFGCpxyhcQEO_t+K+XSeLLL+qky8YDQbb3ewdfYY5Y=FxRy_sw@mail.gmail.com>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
-	<1459589383-16914-15-git-send-email-guodong.xu@linaro.org>
-	<20160404051653.GU17806@rob-hp-laptop>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Tue, 12 Apr 2016 18:59:06 +0530
+Message-ID: <570CF822.4050002@nvidia.com>
+References: <20160331184553.GS2350@sirena.org.uk> <56FD6ED6.3020507@nvidia.com> <20160331185945.GT2350@sirena.org.uk> <56FD7379.2000307@nvidia.com> <20160331192227.GU2350@sirena.org.uk> <56FD7F07.7010404@nvidia.com> <20160331203942.GV2350@sirena.org.uk> <56FE2009.4020302@nvidia.com> <20160401161121.GZ2350@sirena.org.uk> <570370E5.3070901@nvidia.com> <20160412010226.GO3351@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160404051653.GU17806@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160412010226.GO3351@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4 April 2016 at 13:16, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Apr 02, 2016 at 05:29:41PM +0800, Guodong Xu wrote:
->> From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>
->> Add the mfd hi655x dts node and regulator support on
->> hi6220 platform.
->>
->> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> Signed-off-by: Fei Wang <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> Reviewed-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 87 ++++++++++++++++++++++++++
->>  1 file changed, 87 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
->> index 28bc646..a6dffa8 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
->> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
->> @@ -6,6 +6,7 @@
->>   */
->>
->>  /dts-v1/;
->> +#include <dt-bindings/gpio/gpio.h>
->>
->>  #include "hi6220.dtsi"
->>  #include "hikey-gpio.dtsi"
->> @@ -104,6 +105,92 @@
->>                       default-state = "off";
->>               };
->>       };
->> +
->> +     pmic: pmic@f8000000 {
->> +             compatible = "hisilicon,hi655x-pmic";
->> +             reg = <0x0 0xf8000000 0x0 0x1000>;
->> +             interrupt-controller;
->> +             #interrupt-cells = <2>;
->> +             pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
->> +             status = "okay";
->> +
->> +             regulators {
->> +                     ldo2: LDO2@a21 {
+
+On Tuesday 12 April 2016 06:32 AM, Mark Brown wrote:
+> * PGP Signed by an unknown key
 >
-> @a21 is not a unit address. Please drop these.
-
-Will change these to
- +                     ldo2: LDO2 {
-...
- +                     ldo7: LDO7 {
-...
-
-Thanks for review, Rob.
-
--Guodong
-
+> On Tue, Apr 05, 2016 at 01:31:41PM +0530, Laxman Dewangan wrote:
+>> On Friday 01 April 2016 09:41 PM, Mark Brown wrote:
+>> Now there is not really equation that how it control dV/dt with required
+>> current vs regulator's current limit current limit.
+> I'm having a hard time tying this in with what you're saying.  You're
+> saying we have a predictable limit based on some hard maximum inrush
+> current but we can't tell what that limit is?  What I'd expect is that
+> we'd get the spec limit up to some maximum and then cap out at that.
 >
->> +                             regulator-name = "LDO2_2V8";
->> +                             regulator-min-microvolt = <2500000>;
->> +                             regulator-max-microvolt = <3200000>;
->> +                             regulator-enable-ramp-delay = <120>;
->> +                     };
->> +
->> +                     ldo7: LDO7@a26 {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+I have put my understanding based on datasheet and observation but it 
+seems I am missing some important information which is making difficult 
+to understand further here.
+We are not crossing the maximum limit of the load on the rail per 
+datasheet. We just changed the output capacitor in the platforms and saw 
+deviation.
+
+I think I need to go again to Vendor to find out that why changing of 
+capacitor making the deviation in ramp delay and what is the relation. 
+Probably, that may help here.
