@@ -1,53 +1,70 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/30] ARM: OMAP2+: hwmod module clock type support
-Date: Tue, 12 Apr 2016 09:42:19 -0700
-Message-ID: <20160412164219.GS5995@atomide.com>
-References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
- <20160411173518.GA5995@atomide.com>
- <570CFE50.5010709@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 5/5] DT: arm,gic-v3: Documment PPI partition support
+Date: Tue, 12 Apr 2016 17:42:45 +0100
+Message-ID: <570D2585.5070801@arm.com>
+References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
+ <1460365075-7316-6-git-send-email-marc.zyngier@arm.com>
+ <20160412162937.GA25932@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570CFE50.5010709@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160412162937.GA25932@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [160412 06:56]:
-> On 04/11/2016 08:40 PM, Tony Lindgren wrote:
-> >Hi,
-> >
-> >Nice to see this moving along :)
-> >
-> >* Tero Kristo <t-kristo@ti.com> [160411 01:20]:
-> >>
-> >>The ordering on this set is kind of tricky to avoid any boot issues,
-> >>and it still currently causes a boot breakage between the DTS data
-> >>introduction and removal of hwmod data; this generates duplicate
-> >>entries for clocks which is prone to cause issues (both DT and hwmod
-> >>have the same entries in place under the hwmod data is removed.) I
-> >>didn't quite figure out a good way to avoid this, and could use some
-> >>guidance here. Shall we squash the DT + hwmod data patches together?
-> >>This avoids the boot breakage but creates pretty large patches. Also,
-> >>AMx3xx data needs to be grouped together as part of their data is
-> >>re-used commonly by both SoCs.
-> >
-> >How about use clocks from dts if clocks property is defined? Otherwise
-> >fall back to the old static data. Then drop the static data later on
-> >with follow up patches.
+Hi Rob,
+
+On 12/04/16 17:29, Rob Herring wrote:
+> On Mon, Apr 11, 2016 at 09:57:55AM +0100, Marc Zyngier wrote:
+>> Add a decription of the PPI partitioning support.
+>>
+>> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  .../bindings/interrupt-controller/arm,gic-v3.txt   | 34 ++++++++++++++++++++--
+>>  1 file changed, 32 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>> index 007a5b4..4c29cda 100644
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>> @@ -11,6 +11,8 @@ Main node required properties:
+>>  - interrupt-controller : Identifies the node as an interrupt controller
+>>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>>    interrupt source. Must be a single cell with a value of at least 3.
+>> +  If the system requires describing PPI affinity, then the value must
+>> +  be at least 4.
 > 
-> The underlying issue is the hardcoded names of hwmod clocks within hwmod
-> data. I think I figured out a fix for this, I am adding a few patches to
-> this series to lookup main_clk based on the hwmod name itself. This allows
-> re-directing the main_clk to the DT module clock in case one is available
-> for the hwmod. The bisect issues seem to be gone with this also, I need to
-> cleanup the patches a bit and re-post.
+> You're winning for cell count...
 
-OK yes generated names sounds like a good solution to support the
-old way of doing things.
+Yeah, it feels like we aim at making people's life difficult...
 
-Regards,
+> One alternative that would save adding a cell and keep it contained 
+> within would be just list the affinities in the GIC node in the form of 
+> '<PPI#> <count> <cpu phandles>':
+> 
+> ppi-affinity = <1 2 &cpu2 &cpu3>,
+> 		<5 1 &cpu4>,
+> 		...
 
-Tony
+But how would that work if you have two sets of CPUs (set-1=[cpu0,
+cpu1]; set-2=[cpu2, cpu3]), and for the same PPI, device A is connected
+to set-1 and device-B is connected to set-2?
+
+You need a way to distinguish these two interrupts and so far, the only
+way I've found is to reference the affinity in the interrupt specifier.
+
+That being said, I'm definitely open to suggestions on how to describe
+this in a better way.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
