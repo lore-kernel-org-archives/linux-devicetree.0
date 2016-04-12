@@ -1,45 +1,40 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 3/4] ARM: DT: STiH407: Add node for i2c12 controller
-Date: Tue, 12 Apr 2016 14:57:27 +0100
-Message-ID: <1460469448-9065-4-git-send-email-peter.griffin@linaro.org>
-References: <1460469448-9065-1-git-send-email-peter.griffin@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
+Date: Tue, 12 Apr 2016 09:03:38 -0500
+Message-ID: <20160412140338.GA19311@rob-hp-laptop>
+References: <1460360506-14692-1-git-send-email-navam@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460469448-9065-1-git-send-email-peter.griffin@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1460360506-14692-1-git-send-email-navam@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT support for SSC12.
+On Mon, Apr 11, 2016 at 01:11:46PM +0530, Nava kishore Manne wrote:
+> This patch updates the driver to support 64-bit DMA
+> addressing.
+> 
+> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> ---
+>  .../devicetree/bindings/usb/udc-xilinx.txt         |  3 +-
+>  drivers/usb/gadget/udc/udc-xilinx.c                | 38 ++++++++++++++++++++--
+>  2 files changed, 37 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> index 47b4e39..d417872 100644
+> --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> @@ -7,12 +7,13 @@ Required properties:
+>  - interrupts		: Should contain single irq line of USB2 device
+>  			  controller
+>  - xlnx,has-builtin-dma	: if DMA is included
+> -
+> +- xlnx,addrwidth       : Should be the dma addressing size in bits(ex: 40 bits).
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- arch/arm/boot/dts/stih407-family.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Now this property shows up in a 2nd device. Now I'm more convinced this 
+is the wrong approach and should use dma-ranges.
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 81f8121..7785f31 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -327,6 +327,19 @@
- 			status = "disabled";
- 		};
- 
-+		i2c@9542000 {
-+			compatible = "st,comms-ssc4-i2c";
-+			reg = <0x9542000 0x110>;
-+			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk_sysin>;
-+			clock-names = "ssc";
-+			clock-frequency = <400000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c12_default>;
-+
-+			status = "disabled";
-+		};
-+
- 		usb2_picophy0: phy1 {
- 			compatible = "st,stih407-usb2-phy";
- 			#phy-cells = <0>;
--- 
-1.9.1
+Rob
