@@ -1,54 +1,74 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] DT: arm,gic-v3: Documment PPI partition support
-Date: Tue, 12 Apr 2016 11:29:37 -0500
-Message-ID: <20160412162937.GA25932@rob-hp-laptop>
-References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
- <1460365075-7316-6-git-send-email-marc.zyngier@arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Allow secondary compatible match in
+ of_dev_lookup
+Date: Tue, 12 Apr 2016 09:31:57 -0700
+Message-ID: <20160412163156.GQ5995@atomide.com>
+References: <1459546504-32668-1-git-send-email-tony@atomide.com>
+ <20160401214053.GQ9329@atomide.com>
+ <CAL_Jsq+PcTD=duHmWgHyx_ywYbT10vEtcm=79x5o5wYSkgG63g@mail.gmail.com>
+ <20160407165842.GJ16484@atomide.com>
+ <CAL_Jsq+XrNoqEjCnQ=rLJVdQe9EdHb+MopUtvM2vy12N2veo3A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460365075-7316-6-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAL_Jsq+XrNoqEjCnQ=rLJVdQe9EdHb+MopUtvM2vy12N2veo3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 09:57:55AM +0100, Marc Zyngier wrote:
-> Add a decription of the PPI partitioning support.
+* Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160412 08:57]:
+> On Thu, Apr 7, 2016 at 11:58 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > * Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160406 21:53]:
+> >> On Fri, Apr 1, 2016 at 4:40 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [160401 14:37]:
+> >> >> We currently try to match of_dev_auxdata based on compatible,
+> >> >> IO address, and device name. But in some cases we have multiple
+> >> >> instances of drivers that can use the same auxdata.
+> >> >>
+> >> >> Let's add an additional secondary lookup for generic compatible
+> >> >> match for auxdata if no device specific match is found. This does
+> >> >> not change the existing matching, and still allows adding device
+> >> >> specific auxdata.
+> >> >>
+> >> >> This simplifies things as specifying the IO address and device
+> >> >> name is prone errors as it requires maintaining an in kernel
+> >> >> database for each SoC.
+> >> >
+> >> > And here's what I can apply later on to get rid of some
+> >> > ifdeffery.
+> >> >
+> >> > I'm also planning to move some of the legacy omap hwmod
+> >> > functionality into proper device drivers, so can generic
+> >> > pdata for that too.
+> >>
+> >> Why can't the platform data be moved into the driver given that it
+> >> appears to be only SoC family specific? Auxdata was somewhat intended
+> >> to be temporary. It appears there is already some per compatible match
+> >> data for these OMAP parts in the driver.
+> >
+> > There are just too many dependencies to move legacy code into drivers
+> > directly. Especially when moving the omap hwmod code into drivers,
+> > we still to use hwmod callbacks at least for clockdomain configuration,
+> > wake-up dependencies and clock autogating configuration.
+> >
+> > When we have Linux generic frameworks available for all this we no longer
+> > need the auxdata. But meanwhile, removing the depenencies by using
+> > auxdata already allows moving big chunks of the hwmod code into regular
+> > device drivers.
 > 
-> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> ---
->  .../bindings/interrupt-controller/arm,gic-v3.txt   | 34 ++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
+> Okay. In that case:
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> index 007a5b4..4c29cda 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> @@ -11,6 +11,8 @@ Main node required properties:
->  - interrupt-controller : Identifies the node as an interrupt controller
->  - #interrupt-cells : Specifies the number of cells needed to encode an
->    interrupt source. Must be a single cell with a value of at least 3.
-> +  If the system requires describing PPI affinity, then the value must
-> +  be at least 4.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> Apply it when you have actual users depending on it.
 
-You're winning for cell count...
+OK thanks will do.
 
-One alternative that would save adding a cell and keep it contained 
-within would be just list the affinities in the GIC node in the form of 
-'<PPI#> <count> <cpu phandles>':
+Regards,
 
-ppi-affinity = <1 2 &cpu2 &cpu3>,
-		<5 1 &cpu4>,
-		...
-
-This would be harder to parse though if you have a large number of PPIs 
-with affinities.
-
-That said, I've got no real issue with this as is.
-
-Rob
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
