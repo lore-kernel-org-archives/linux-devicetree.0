@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 1/4] ARM: DT: STiH407: Add UART RTS/CTS pin configuration
-Date: Tue, 12 Apr 2016 14:57:25 +0100
-Message-ID: <1460469448-9065-2-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 3/4] ARM: DT: STiH407: Add node for i2c12 controller
+Date: Tue, 12 Apr 2016 14:57:27 +0100
+Message-ID: <1460469448-9065-4-git-send-email-peter.griffin@linaro.org>
 References: <1460469448-9065-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460469448-9065-1-git-send-email-peter.griffin@linaro.org>
@@ -10,132 +10,36 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl definitions of UART RTS/CTS pins.
+Add DT support for SSC12.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 73 ++++++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index a538ae5..87e75bf 100644
---- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -149,7 +149,20 @@
- 						rx = <&pio3 5 ALT1 IN>;
- 					};
- 				};
-+
-+				pinctrl_sbc_serial0_rts: sbc_serial0_rts {
-+					st,pins {
-+						rts = <&pio3 7 ALT1 OUT>;
-+					};
-+				};
-+
-+				pinctrl_sbc_serial0_cts: sbc_serial0_cts {
-+					st,pins {
-+						cts = <&pio3 6 ALT1 IN>;
-+					};
-+				};
- 			};
-+
- 			/* SBC_ASC1 - UART11 */
- 			sbc_serial1 {
- 				pinctrl_sbc_serial1: sbc_serial1-0 {
-@@ -158,6 +171,18 @@
- 						rx = <&pio2 7 ALT3 IN>;
- 					};
- 				};
-+
-+				pinctrl_sbc_serial1_rts: sbc_serial1_rts {
-+					st,pins {
-+						rts = <&pio3 1 ALT3 OUT>;
-+					};
-+				};
-+
-+				pinctrl_sbc_serial1_cts: sbc_serial1_cts {
-+					st,pins {
-+						cts = <&pio3 0 ALT3 IN>;
-+					};
-+				};
- 			};
- 
- 			i2c10 {
-@@ -478,6 +503,18 @@
- 						rx = <&pio15 1 ALT1 IN>;
- 					};
- 				};
-+
-+				pinctrl_serial0_rts: serial0_rts {
-+					st,pins {
-+						rts = <&pio17 3 ALT1 OUT>;
-+					};
-+				};
-+
-+				pinctrl_serial0_cts: serial0_cts {
-+					st,pins {
-+						cts = <&pio17 2 ALT1 IN>;
-+					};
-+				};
- 			};
- 
- 			mmc1 {
-@@ -495,6 +532,18 @@
- 						sd_wp = <&pio19 1 ALT6 IN>;
- 					};
- 				};
-+
-+				pinctrl_serial1_rts: serial1_rts {
-+					st,pins {
-+						rts = <&pio16 3 ALT1 OUT>;
-+					};
-+				};
-+
-+				pinctrl_serial1_cts: serial1_cts {
-+					st,pins {
-+						cts = <&pio16 2 ALT1 IN>;
-+					};
-+				};
- 			};
- 
- 
-@@ -505,6 +554,18 @@
- 						scl = <&pio10 5 ALT2 BIDIR>;
- 					};
- 				};
-+
-+				pinctrl_serial2_rts: serial2_rts {
-+					st,pins {
-+						rts = <&pio15 3 ALT1 OUT>;
-+					};
-+				};
-+
-+				pinctrl_serial2_cts: serial2_cts {
-+					st,pins {
-+						cts = <&pio15 2 ALT1 IN>;
-+					};
-+				};
- 			};
- 
- 			i2c1 {
-@@ -1074,6 +1135,18 @@
- 						rx = <&pio31 4 ALT1 IN>;
- 					};
- 				};
-+
-+				pinctrl_serial3_rts: serial3_rts {
-+					st,pins {
-+						rts = <&pio31 6 ALT1 OUT>;
-+					};
-+				};
-+
-+				pinctrl_serial3_cts: serial3_cts {
-+					st,pins {
-+						cts = <&pio31 5 ALT1 IN>;
-+					};
-+				};
- 			};
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 81f8121..7785f31 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -327,6 +327,19 @@
+ 			status = "disabled";
  		};
  
++		i2c@9542000 {
++			compatible = "st,comms-ssc4-i2c";
++			reg = <0x9542000 0x110>;
++			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_sysin>;
++			clock-names = "ssc";
++			clock-frequency = <400000>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c12_default>;
++
++			status = "disabled";
++		};
++
+ 		usb2_picophy0: phy1 {
+ 			compatible = "st,stih407-usb2-phy";
+ 			#phy-cells = <0>;
 -- 
 1.9.1
