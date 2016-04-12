@@ -1,86 +1,61 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v4 15/16] arm64: dts: add dwmmc nodes for hi6220
-Date: Wed, 13 Apr 2016 07:55:51 +0800
-Message-ID: <1460505352-13157-16-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v4 16/16] arm64: dts: add wifi nodes support for hi6220-hikey
+Date: Wed, 13 Apr 2016 07:55:52 +0800
+Message-ID: <1460505352-13157-17-git-send-email-guodong.xu@linaro.org>
 References: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, haojian.zhuang@linaro.org, linus.walleij@linaro.org, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Guodong Xu <guodong.xu@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-
-Add all three dwmmc nodes description for hi6220
+Add wifi nodes support for hi6220-hikey
 
 Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 52 +++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 29 ++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index e8bb81f..7b7bbf6 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -720,5 +720,57 @@
- 			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <3>;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index cc1148d..e92a30c 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -65,6 +65,35 @@
+ 		uart3: uart@f7113000 {
+ 			status = "ok";
  		};
 +
-+		dwmmc_0: dwmmc0@f723d000 {
-+			compatible = "hisilicon,hi6220-dw-mshc";
-+			num-slots = <0x1>;
-+			cap-mmc-highspeed;
++		dwmmc_2: dwmmc2@f723f000 {
++			ti,non-removable;
 +			non-removable;
-+			reg = <0x0 0xf723d000 0x0 0x1000>;
-+			interrupts = <0x0 0x48 0x4>;
-+			clocks = <&sys_ctrl 2>, <&sys_ctrl 1>;
-+			clock-names = "ciu", "biu";
-+			bus-width = <0x8>;
-+			vmmc-supply = <&ldo19>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&emmc_pmx_func &emmc_clk_cfg_func
-+				     &emmc_cfg_func &emmc_rst_cfg_func>;
-+		};
++			/* WL_EN */
++			vmmc-supply = <&wlan_en_reg>;
 +
-+		dwmmc_1: dwmmc1@f723e000 {
-+			compatible = "hisilicon,hi6220-dw-mshc";
-+			num-slots = <0x1>;
-+			card-detect-delay = <200>;
-+			hisilicon,peripheral-syscon = <&ao_ctrl>;
-+			cap-sd-highspeed;
-+			reg = <0x0 0xf723e000 0x0 0x1000>;
-+			interrupts = <0x0 0x49 0x4>;
 +			#address-cells = <0x1>;
 +			#size-cells = <0x0>;
-+			clocks = <&sys_ctrl 4>, <&sys_ctrl 3>;
-+			clock-names = "ciu", "biu";
-+			vqmmc-supply = <&ldo7>;
-+			vmmc-supply = <&ldo10>;
-+			bus-width = <0x4>;
-+			disable-wp;
-+			cd-gpios = <&gpio1 0 1>;
-+			pinctrl-names = "default", "idle";
-+			pinctrl-0 = <&sd_pmx_func &sd_clk_cfg_func &sd_cfg_func>;
-+			pinctrl-1 = <&sd_pmx_idle &sd_clk_cfg_idle &sd_cfg_idle>;
++			wlcore: wlcore@2 {
++				compatible = "ti,wl1835";
++				reg = <2>;	/* sdio func num */
++				/* WL_IRQ, WL_HOST_WAKE_GPIO1_3 */
++				interrupt-parent = <&gpio1>;
++				interrupts = <3 IRQ_TYPE_EDGE_RISING>;
++			};
 +		};
 +
-+		dwmmc_2: dwmmc2@f723f000 {
-+			compatible = "hisilicon,hi6220-dw-mshc";
-+			num-slots = <0x1>;
-+			reg = <0x0 0xf723f000 0x0 0x1000>;
-+			interrupts = <0x0 0x4a 0x4>;
-+			clocks = <&sys_ctrl HI6220_MMC2_CIUCLK>, <&sys_ctrl HI6220_MMC2_CLK>;
-+			clock-names = "ciu", "biu";
-+			bus-width = <0x4>;
-+			broken-cd;
-+			pinctrl-names = "default", "idle";
-+			pinctrl-0 = <&sdio_pmx_func &sdio_clk_cfg_func &sdio_cfg_func>;
-+			pinctrl-1 = <&sdio_pmx_idle &sdio_clk_cfg_idle &sdio_cfg_idle>;
++		wlan_en_reg: regulator@1 {
++			compatible = "regulator-fixed";
++			regulator-name = "wlan-en-regulator";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			/* WLAN_EN GPIO */
++			gpio = <&gpio0 5 0>;
++			/* WLAN card specific delay */
++			startup-delay-us = <70000>;
++			enable-active-high;
 +		};
  	};
- };
+ 
+ 	leds {
 -- 
 1.9.1
