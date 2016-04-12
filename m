@@ -1,73 +1,58 @@
-From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt/bindings: Add bindings for hisilicon random
- number generator
-Date: Tue, 12 Apr 2016 09:16:02 +0800
-Message-ID: <570C4C52.4020902@huawei.com>
-References: <1460017397-30996-1-git-send-email-wangkefeng.wang@huawei.com>
- <1460017397-30996-2-git-send-email-wangkefeng.wang@huawei.com>
- <20160411144306.GA24637@rob-hp-laptop>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Tue, 12 Apr 2016 02:25:18 +0100
+Message-ID: <20160412012518.GQ3351@sirena.org.uk>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+ <20160410151237.GD5377@piout.net>
+ <1460301781.17404.171.camel@gmail.com>
+ <20160410153855.GG5377@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="FcSpk3Icpd/Pbul4"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160411144306.GA24637@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20160410153855.GG5377-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--FcSpk3Icpd/Pbul4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2016/4/11 22:43, Rob Herring wrote:
-> On Thu, Apr 07, 2016 at 04:23:16PM +0800, Kefeng Wang wrote:
->> Document the devicetree bindings for the random number generator found
->> on Hisilicon Hip04 and Hip05 soc.
->>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/rng/hisi-rng.txt | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rng/hisi-rng.txt
->>
->> diff --git a/Documentation/devicetree/bindings/rng/hisi-rng.txt b/Documentation/devicetree/bindings/rng/hisi-rng.txt
->> new file mode 100644
->> index 0000000..72efcc1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rng/hisi-rng.txt
->> @@ -0,0 +1,12 @@
->> +Hisilicon Random Number Generator
->> +
->> +Required properties:
->> +- compatible : Should be "hisilicon,rng"
->> +- reg : Offset and length of the register set of this block
->> +
->> +Example:
->> +
->> +rng@d1010000 {
->> +	compatible = "hisilicon,rng";
-> 
-> This still needs SoC specific compatible strings.
+On Sun, Apr 10, 2016 at 05:38:55PM +0200, Alexandre Belloni wrote:
+> On 10/04/2016 at 18:23:01 +0300, Sergei Ianovich wrote :
 
-It is used by Hip04/Hip05 at lease, but for new SoC, like Hip06, it maybe different,
-using single Soc prefix is not proper, how about hisilicon,rng-v1, or add two compatible
-hisilicon,hip04-rng and hisilicon,hip05-rng? What's your option?
+> > No, unfortunately. I've investigated this possibility for my platform.
+> > spi-gpio doesn't support LSB-first and 3-wire options. Adding support
+> > there is a very big change. The best way to add GPIO support is to
+> > create spi-gpio-3wire with LSB-first support.
 
-Thanks.
+> Mark, do you have nay opinion on that?
 
-> 
->> +	reg = <0xd1010000 0x100>;
->> +};
->> -- 
->> 2.6.0.GIT
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+Three wire doesn't seem like it should be invasive, LSB is going to be a
+lot more invasive though it seems reasonable to just do the reversal in
+the driver for whatever device this is and let the SPI controller run
+normally.  Or we could do that in the core with a pass over the data.
 
+--FcSpk3Icpd/Pbul4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXDE59AAoJECTWi3JdVIfQiT4H/jOMfyK1geaFwemu0XwrIyNx
+mU081BmWCFGVjCRTCRbFBLfdWSEjznChfYE3UJhf81ZbTW/eSCSQPWF8u6sxS4+W
+WcLT4EPrpXFX60I6BYLA4FcLpA9VbxVqKKD4nezykYhEwAQuYKMw04viWcjWukpe
+rcC1toWWFAynKCZvsoOJvtYAluL5q9monZH5wkAmaqeeo8QzRJlhndoFAK/q68oA
+5QMBAaZPASJqft7X5CBnoSsvqsuT5Q9jU+J7yPGYTdSOd7VeuPtoqxLzLMW2yW0R
+HStlcj9N9WrwTDMJzCq56Pqakx4wJ8c9ryqe9L0neBHrCbzPenyGRJNx1yxvlg8=
+=xrSK
+-----END PGP SIGNATURE-----
+
+--FcSpk3Icpd/Pbul4--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
