@@ -1,38 +1,27 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v6 0/3] thermal: mediatek: Add cpu dynamic power cooling
- model.
-Date: Tue, 12 Apr 2016 11:09:34 +0530
-Message-ID: <20160412053934.GU16238@vireshk-i7>
-References: <1450272556-29770-1-git-send-email-dawei.chien@mediatek.com>
- <20151217015231.GC3496@ubuntu>
- <1458017620.30412.3.camel@mtksdaap41>
- <20160315061709.GC13831@vireshk-mac-ubuntu>
- <1458623586.674.2.camel@mtksdaap41>
- <1460428370.25776.6.camel@mtksdaap41>
- <20160412051103.GN16238@vireshk-i7>
- <1460438685.14875.3.camel@mtksdaap41>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/3] ARM: dts: vf-colibri: alias the primary FEC as
+ ethernet0
+Date: Tue, 12 Apr 2016 13:55:41 +0800
+Message-ID: <20160412055541.GB23166@tiger>
+References: <1459577621-3160-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1460438685.14875.3.camel@mtksdaap41>
-Sender: linux-pm-owner@vger.kernel.org
-To: dawei chien <dawei.chien@mediatek.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+In-Reply-To: <1459577621-3160-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-04-16, 13:24, dawei chien wrote:
-> Please refer to following for my resending, thank you.
+On Fri, Apr 01, 2016 at 11:13:39PM -0700, Stefan Agner wrote:
+> The Vybrid based Colibri modules provide a on-module PHY which is
+> connected to the second FEC instance FEC1. Since the on-module
+> Ethernet port is considered as primary ethernet interface, alias
+> fec1 as ethernet0. This also makes sure that the first MAC address
+> provided by the boot loader gets assigned to the FEC instance used
+> for the on-module PHY.
 > 
-> https://lkml.org/lkml/2016/3/15/101
-> https://patchwork.kernel.org/patch/8586131/
-> https://patchwork.kernel.org/patch/8586111/
-> https://patchwork.kernel.org/patch/8586081/
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-Oh, you were continuously sending new ping requests on the old thread.
-You should have used the new thread instead :)
-
-Anyway, I have pinged Rafael over the new thread now.
-
--- 
-viresh
+Applied all, thanks.
