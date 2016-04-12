@@ -1,53 +1,120 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add i2c nodes RK3228 SoCs
-Date: Tue, 12 Apr 2016 23:39:12 +0200
-Message-ID: <20160412213912.GF1526@katana>
-References: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
- <1457925102-30476-1-git-send-email-ykk@rock-chips.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Add generic handling for hardware incomplete fail
+ state
+Date: Tue, 12 Apr 2016 14:41:14 -0700
+Message-ID: <570D6B7A.3050203@gmail.com>
+References: <1460486275-12256-1-git-send-email-tony@atomide.com> <570D56FE.2070408@gmail.com> <20160412203431.GU5995@atomide.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Zs/RYxT/hKAHzkfQ"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457925102-30476-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160412203431.GU5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 4/12/2016 1:34 PM, Tony Lindgren wrote:
+> Hi,
+> 
+> * Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [160412 13:15]:
+>> Hi Tony,
+>>
+>> I agree with the need for some way of handling the incomplete
+>> hardware issue.  I like the idea of having a uniform method for
+>> all nodes.
+>>
+>> I am stumbling over what the status property is supposed to convey
+>> and what the "fail-hw-incomplete" is meant to convey.
+>>
+>> The status property is meant to convey the current state of the
+>> node.
+>>
+>> "fail-hw-incomplete" is meant to describe the node implementation,
+>> saying that some portions of hardware that the driver expects to
+>> be present do not exist.  If I understood your explanation at ELC
+>> correctly, an examples of this could be that a uart cell is not
+>> routed to transmit and receive data pins or the interrupt line
+>> from the cell is not routed to an interrupt controller.  So the
+>> node is not useful, but it makes sense to be able to power manage
+>> the node, turning off power so that it is not wasting power.
+> 
+> Yes cases like that are common.
+> 
+>> It seems to me that the info that needs to be conveyed is a
+>> description of the hardware, stating:
+>>   - some portions or features of the node are not present and/or
+>>     are not usable
+>>   - power management of the node is possible
+>>
+>> Status of "fail-sss" is meant to indicate an error was detected in
+>> the device, and that the error might (or might not) be repairable.
+>>
+>> So the difference I see is state vs hardware description.
+> 
+> OK thanks for the clarification. I don't see why "fail-hw-incomplete"
+> could not be set dynamically during the probe in some cases based
+> on the SoC revision detection for example. So from that point of
+> view using status with the "fail-sss" logic would make more sense.
 
---Zs/RYxT/hKAHzkfQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If the probe detects that the device should only be power managed
+based on the SoC revision, then it would simply be one more
+test added at the top of probe.  The patch would change from:
 
-On Mon, Mar 14, 2016 at 11:11:42AM +0800, Yakir Yang wrote:
-> This patch add the i2c dt nodes for rk3228 SoCs.
->=20
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+   if (of_device_is_incomplete(pdev->dev.of_node)) {
 
-This needs to go via arm-soc.
+to:
+
+   if (of_device_is_incomplete(pdev->dev.of_node) || socrev == XXX) {
+
+That code would be the same whether the property involved was
+status or something else.
+
+> 
+>> I would prefer to come up with a new boolean property (with a
+>> standard name that any node binding could choose to implement)
+>> that says something like "only power management is available for
+>> this node, do not attempt to use any other feature of the node".
+> 
+> Heh that's going to be a long property name :) How about
+> unusable-incomplete-idle-only :)
+
+Or even pm-only.  Maybe I got a little carried away with my
+verbosity. :)
 
 
---Zs/RYxT/hKAHzkfQ
-Content-Type: application/pgp-signature; name="signature.asc"
+>> With that change, the bulk of your patch looks good, with
+>> minor changes:
+>>
+>>   __of_device_is_available() would not need to change.
+>>
+>>   __of_device_is_incomplete() would change to check the new
+>>   boolean property.  (And I would suggest renaming it to
+>>   something that conveys it is ok to power manage the
+>>   device, but do not do anything else to the device.)
+> 
+> I'm fine with property too, but the runtime probe fail state
+> changes worry me a bit with that one.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I don't understand what the concern is.  The change I suggested
+would use exactly the same code for probe as the example patch
+you provided, but just with a slight name change for the function.
 
-iQIcBAEBAgAGBQJXDWsAAAoJEBQN5MwUoCm2Q2YP/3pNmoesGQAEc0FvfFdTnMrS
-RajhH8L4LPSlmdNLq4GOUY16FHsWumGJBYtV4SZqdRnNP5hZ9MxFF7UQ4c2rTSmt
-xYny1KjKqr9D9Vje4kFLTT9VzPCniXnG5XwMAZh9yPRA5F1hYygjbYHYIgcuUlaE
-ipvpEDKmwhNXgNPZiDHFdwghD0cS7fjE25xmXYXN3amJ6pmHmz17jTHe2nYwhnH7
-EljgI0aGiiA70QFRMZ85rqtS5/TMoFvkBL/slL3GDkU+j1kDHKhtPgGlETPT/hIu
-Y1qgqUHY5CfBiUc9YM9tJhx2xdVJKWbpHxAqYBVcPhcjjGNKdBlEjL8p5DFUqoZa
-TX+1FOlOvllxiwXCrIP5uVR8Aw8wl/TeM24gKDSPUiqvlk8W3F7u+D3wssVaJ3S2
-0fJHr4ekQTZYnUWZTjkD48NzyaFdWm9QKStvKDhLQyQzff6lIusEEn66rZ09duTP
-hbVskwZekriQ1msvM7hKd6JhHHPMJa2CzlbIHfYpn9VVbHPIkb8qLrrZiuiEcLvs
-AfIMF0L+Dq67zKfWgeY4Tn56uL2K7QcSg6/ePikZ5dtZPcCfDyhZjtO6/lmuLzvY
-tOPfPozVDzXIN//oqXh0SWEH6tEeepvJj2r7CuJebxJj/xT03js06NiF6Ajxjcy/
-3Yr+gvWhg0eYRPNwh97A
-=mLck
------END PGP SIGNATURE-----
 
---Zs/RYxT/hKAHzkfQ--
+> I think Rob also preferred to use the status though while we
+> chatted at ELC?
+
+That is the impression I got too.  We'll have to see if I can
+convince him otherwise.
+
+
+> Regards,
+> 
+> Tony
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
