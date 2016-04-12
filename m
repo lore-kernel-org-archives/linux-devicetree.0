@@ -1,138 +1,47 @@
-From: tamizhchelvam@codeaurora.org
-Subject: [PATCH v2] qcom: ipq4019: add wifi nodes to ipq4019 SoC device tree
-Date: Tue, 12 Apr 2016 09:48:06 +0530
-Message-ID: <1460434686-23010-1-git-send-email-tamizhchelvam@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: agross@codeaurora.org, devicetree@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, c_traja@qti.qualcomm.com, Raja Mani <rmani@codeaurora.org>, Tamizh chelvam <tamizhchelvam@codeaurora.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v6 0/3] thermal: mediatek: Add cpu dynamic power cooling
+ model.
+Date: Tue, 12 Apr 2016 10:41:03 +0530
+Message-ID: <20160412051103.GN16238@vireshk-i7>
+References: <1450272556-29770-1-git-send-email-dawei.chien@mediatek.com>
+ <20151217015231.GC3496@ubuntu>
+ <1458017620.30412.3.camel@mtksdaap41>
+ <20160315061709.GC13831@vireshk-mac-ubuntu>
+ <1458623586.674.2.camel@mtksdaap41>
+ <1460428370.25776.6.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460428370.25776.6.camel@mtksdaap41>
+Sender: linux-pm-owner@vger.kernel.org
+To: dawei chien <dawei.chien@mediatek.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Raja Mani <rmani@codeaurora.org>
+On 12-04-16, 10:32, dawei chien wrote:
+> On Tue, 2016-03-22 at 13:13 +0800, dawei chien wrote:
+> > On Tue, 2016-03-15 at 13:17 +0700, Viresh Kumar wrote:
+> > > Its Rafael, who is going to apply this one.
+> > > 
+> > > Can you please resend it as he may not have it in patchworks?
+> > > 
+> > 
+> > Hi Rafael,
+> > Would you merge this patch to your tree, thank you.
+> > 
+> > BR,
+> > Dawei
+> 
+> Hi Rafael,
+> Would you please merge this patch, or please kindly let me know for any
+> problem, thank you.
 
-Include dts support for two wifi block present on ipq4019 SoC.
-Corresponding dt binding documentation has been added in ath.git as below
-commit id a47aaa69 and the commit message is
-"dt: bindings: add new dt entry for pre calibration in qcom, ath10k.txt".
+Didn't I ask you earlier to resend this patch as Rafael wouldn't have
+it in his queue now ?
 
-Signed-off-by: Raja Mani <rmani@codeaurora.org>
-Signed-off-by: Tamizh chelvam <tamizhchelvam@codeaurora.org>
----
-v2:
+Please resend it and that will make it earlier for Rafael to get it
+applied.
 
-  - Fixed Commit log
-  - Added new Signed off
-
- arch/arm/boot/dts/qcom-ipq4019.dtsi |   98 +++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index b486859..80bbe02 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -379,5 +379,103 @@
- 			compatible = "qcom,pshold";
- 			reg = <0x4ab000 0x4>;
- 		};
-+
-+		wifi0: wifi@a000000 {
-+			compatible = "qcom,ipq4019-wifi";
-+			reg = <0xa000000 0x200000>;
-+			resets = <&gcc WIFI0_CPU_INIT_RESET>,
-+				 <&gcc WIFI0_RADIO_SRIF_RESET>,
-+				 <&gcc WIFI0_RADIO_WARM_RESET>,
-+				 <&gcc WIFI0_RADIO_COLD_RESET>,
-+				 <&gcc WIFI0_CORE_WARM_RESET>,
-+				 <&gcc WIFI0_CORE_COLD_RESET>;
-+			reset-names = "wifi_cpu_init",
-+				      "wifi_radio_srif",
-+				      "wifi_radio_warm",
-+				      "wifi_radio_cold",
-+				      "wifi_core_warm",
-+				      "wifi_core_cold";
-+			clocks = <&gcc GCC_WCSS2G_CLK>,
-+				 <&gcc GCC_WCSS2G_REF_CLK>,
-+				 <&gcc GCC_WCSS2G_RTC_CLK>;
-+			clock-names = "wifi_wcss_cmd",
-+				      "wifi_wcss_ref",
-+				      "wifi_wcss_rtc";
-+			interrupts = <0 0x20 0x1>,
-+				     <0 0x21 0x1>,
-+				     <0 0x22 0x1>,
-+				     <0 0x23 0x1>,
-+				     <0 0x24 0x1>,
-+				     <0 0x25 0x1>,
-+				     <0 0x26 0x1>,
-+				     <0 0x27 0x1>,
-+				     <0 0x28 0x1>,
-+				     <0 0x29 0x1>,
-+				     <0 0x2a 0x1>,
-+				     <0 0x2b 0x1>,
-+				     <0 0x2c 0x1>,
-+				     <0 0x2d 0x1>,
-+				     <0 0x2e 0x1>,
-+				     <0 0x2f 0x1>,
-+				     <0 0xa8 0x0>;
-+			interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
-+					  "msi4",  "msi5",  "msi6",  "msi7",
-+					  "msi8",  "msi9",  "msi10", "msi11",
-+					  "msi12", "msi13", "msi14", "msi15",
-+					  "legacy";
-+			status = "disabled";
-+			qcom,msi_addr = <0x0b006040>;
-+			qcom,msi_base = <0x40>;
-+			qcom,ath10k-pre-calibration-data = [00];
-+		};
-+
-+		wifi1: wifi@a800000 {
-+			compatible = "qcom,ipq4019-wifi";
-+			reg = <0xa800000 0x200000>;
-+			resets = <&gcc WIFI1_CPU_INIT_RESET>,
-+				 <&gcc WIFI1_RADIO_SRIF_RESET>,
-+				 <&gcc WIFI1_RADIO_WARM_RESET>,
-+				 <&gcc WIFI1_RADIO_COLD_RESET>,
-+				 <&gcc WIFI1_CORE_WARM_RESET>,
-+				 <&gcc WIFI1_CORE_COLD_RESET>;
-+			reset-names = "wifi_cpu_init",
-+				      "wifi_radio_srif",
-+				      "wifi_radio_warm",
-+				      "wifi_radio_cold",
-+				      "wifi_core_warm",
-+				      "wifi_core_cold";
-+			clocks = <&gcc GCC_WCSS5G_CLK>,
-+				 <&gcc GCC_WCSS5G_REF_CLK>,
-+				 <&gcc GCC_WCSS5G_RTC_CLK>;
-+			clock-names = "wifi_wcss_cmd",
-+				      "wifi_wcss_ref",
-+				      "wifi_wcss_rtc";
-+			interrupts = <0 0x30 0x1>,
-+				     <0 0x31 0x1>,
-+				     <0 0x32 0x1>,
-+				     <0 0x33 0x1>,
-+				     <0 0x34 0x1>,
-+				     <0 0x35 0x1>,
-+				     <0 0x36 0x1>,
-+				     <0 0x37 0x1>,
-+				     <0 0x38 0x1>,
-+				     <0 0x39 0x1>,
-+				     <0 0x3a 0x1>,
-+				     <0 0x3b 0x1>,
-+				     <0 0x3c 0x1>,
-+				     <0 0x3d 0x1>,
-+				     <0 0x3e 0x1>,
-+				     <0 0x3f 0x1>,
-+				     <0 0xa9 0x0>;
-+			interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
-+					  "msi4",  "msi5",  "msi6",  "msi7",
-+					  "msi8",  "msi9",  "msi10", "msi11",
-+					  "msi12", "msi13", "msi14", "msi15",
-+					  "legacy";
-+			status = "disabled";
-+			qcom,msi_addr = <0x0b006040>;
-+			qcom,msi_base = <0x50>;
-+			qcom,ath10k-pre-calibration-data = [00];
-+		};
- 	};
- };
 -- 
-1.7.9.5
+viresh
