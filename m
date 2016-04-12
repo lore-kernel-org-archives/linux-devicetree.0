@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 01/13] ARM: dts: apq8064: fix the pinctrls for i2c and spi
-Date: Tue, 12 Apr 2016 10:33:50 +0100
-Message-ID: <1460453642-5809-2-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 04/13] ARM: dts: db600c: add board support with serial
+Date: Tue, 12 Apr 2016 10:33:53 +0100
+Message-ID: <1460453642-5809-5-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,80 +10,69 @@ To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes pinctrls for spi and i2c nodes whose default and sleep
-states are together, which is incorrect.
-
-Without this patch i2c/spi would not be functional.
+This patch adds support to DB600c with basic serial ports.
+DB600c is based on APQ8064.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts | 36 +++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 65d0e8d..c6ff8fc 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -227,7 +227,8 @@
- 
- 			gsbi1_i2c: i2c@12460000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c1_pins &i2c1_pins_sleep>;
-+				pinctrl-0 = <&i2c1_pins>;
-+				pinctrl-1 = <&i2c1_pins_sleep>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x12460000 0x1000>;
- 				interrupts = <0 194 IRQ_TYPE_NONE>;
-@@ -255,7 +256,8 @@
- 			gsbi2_i2c: i2c@124a0000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
- 				reg = <0x124a0000 0x1000>;
--				pinctrl-0 = <&i2c2_pins &i2c2_pins_sleep>;
-+				pinctrl-0 = <&i2c2_pins>;
-+				pinctrl-1 = <&i2c2_pins_sleep>;
- 				pinctrl-names = "default", "sleep";
- 				interrupts = <0 196 IRQ_TYPE_NONE>;
- 				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
-@@ -277,7 +279,8 @@
- 			ranges;
- 			gsbi3_i2c: i2c@16280000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c3_pins &i2c3_pins_sleep>;
-+				pinctrl-0 = <&i2c3_pins>;
-+				pinctrl-1 = <&i2c3_pins_sleep>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x16280000 0x1000>;
- 				interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
-@@ -302,7 +305,8 @@
- 
- 			gsbi4_i2c: i2c@16380000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c4_pins &i2c4_pins_sleep>;
-+				pinctrl-0 = <&i2c4_pins>;
-+				pinctrl-1 = <&i2c4_pins_sleep>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x16380000 0x1000>;
- 				interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
-@@ -337,7 +341,8 @@
- 				compatible = "qcom,spi-qup-v1.1.1";
- 				reg = <0x1a280000 0x1000>;
- 				interrupts = <0 155 0>;
--				pinctrl-0 = <&spi5_default &spi5_sleep>;
-+				pinctrl-0 = <&spi5_default>;
-+				pinctrl-1 = <&spi5_sleep>;
- 				pinctrl-names = "default", "sleep";
- 				clocks = <&gcc GSBI5_QUP_CLK>, <&gcc GSBI5_H_CLK>;
- 				clock-names = "core", "iface";
-@@ -370,7 +375,8 @@
- 
- 			gsbi6_i2c: i2c@16580000 {
- 				compatible = "qcom,i2c-qup-v1.1.1";
--				pinctrl-0 = <&i2c6_pins &i2c6_pins_sleep>;
-+				pinctrl-0 = <&i2c6_pins>;
-+				pinctrl-1 = <&i2c6_pins_sleep>;
- 				pinctrl-names = "default", "sleep";
- 				reg = <0x16580000 0x1000>;
- 				interrupts = <GIC_SPI 157 IRQ_TYPE_NONE>;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 95c1923..fef61b3 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -539,6 +539,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+ dtb-$(CONFIG_ARCH_PRIMA2) += \
+ 	prima2-evb.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += \
++	qcom-apq8064-arrow-db600c.dtb \
+ 	qcom-apq8064-cm-qs600.dtb \
+ 	qcom-apq8064-ifc6410.dtb \
+ 	qcom-apq8064-sony-xperia-yuga.dtb \
+diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
+new file mode 100644
+index 0000000..57d4500
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
+@@ -0,0 +1,36 @@
++#include "qcom-apq8064-v2.0.dtsi"
++
++/ {
++	model = "Arrow Electronics, APQ8064 DB600c";
++	compatible = "arrow,db600c", "qcom,apq8064";
++
++	aliases {
++		serial0 = &gsbi7_serial;
++		serial1 = &gsbi1_serial;
++	};
++
++	soc {
++		gsbi@12440000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_UART_W_FC>;
++			serial@12450000 {
++				label = "LS-UART1";
++				status = "okay";
++				pinctrl-names = "default";
++				pinctrl-0 = <&gsbi1_uart_4pins>;
++			};
++		};
++
++		/* DEBUG UART  */
++		gsbi@16600000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_I2C_UART>;
++			serial@16640000 {
++				label = "LS-UART0";
++				status = "okay";
++				pinctrl-names = "default";
++				pinctrl-0 = <&gsbi7_uart_2pins>;
++			};
++		};
++	};
++};
 -- 
 2.5.0
