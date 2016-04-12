@@ -1,93 +1,130 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 11/13] ARM: dts: db600c: add i2c support
-Date: Tue, 12 Apr 2016 10:34:00 +0100
-Message-ID: <1460453642-5809-12-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 07/13] ARM: dts: db600c: add usb support
+Date: Tue, 12 Apr 2016 10:33:56 +0100
+Message-ID: <1460453642-5809-8-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, srinivas.kandagatla@linaro.org
+Cc: devicetree@vger.kernel.org, srinivas.kandagatla@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds nodes required to enable 4 i2c buses on the board which
-are connected to various sensors and eeprom.
+This patch adds usb host and otg support on board with required
+regulators.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts | 46 +++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts | 64 +++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-index 8c18a4b..2f0dfff 100644
+index d921424..2c563df 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
 +++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-@@ -9,6 +9,10 @@
- 	aliases {
- 		serial0 = &gsbi7_serial;
- 		serial1 = &gsbi1_serial;
-+		i2c0 = &gsbi2_i2c;
-+		i2c1 = &gsbi3_i2c;
-+		i2c2 = &gsbi4_i2c;
-+		i2c3 = &gsbi7_i2c;
- 	};
+@@ -58,6 +58,12 @@
+ 					bias-pull-down;
+ 				};
  
- 	regulators {
-@@ -141,6 +145,42 @@
- 			};
- 		};
- 
-+		gsbi@12480000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+			i2c@124a0000 {
-+				/* On Low speed expansion and Sensors */
-+				label = "LS-I2C0";
-+				status = "okay";
-+			};
-+		};
-+
-+		gsbi@16200000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+			i2c@16280000 {
-+			/* On Low speed expansion */
-+				status = "okay";
-+				label = "LS-I2C1";
-+				clock-frequency = <200000>;
-+				eeprom@52 {
-+					compatible = "atmel,24c128";
-+					reg = <0x52>;
-+					pagesize = <64>;
++				s3 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1400000>;
++					qcom,switch-mode-frequency = <4800000>;
 +				};
-+			};
-+		};
 +
-+		gsbi@16300000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+			i2c@16380000 {
-+				/* On High speed expansion */
-+				label = "HS-CAM-I2C3";
-+				status = "okay";
-+			};
-+		};
+ 				s4 {
+ 					regulator-min-microvolt	= <1800000>;
+ 					regulator-max-microvolt	= <1800000>;
+@@ -72,6 +78,18 @@
+ 					qcom,switch-mode-frequency = <3200000>;
+ 				 };
+ 
++				l3 {
++					regulator-min-microvolt = <3050000>;
++					regulator-max-microvolt = <3300000>;
++					bias-pull-down;
++				};
 +
- 		/* DEBUG UART  */
- 		gsbi@16600000 {
- 			status = "okay";
-@@ -151,6 +191,12 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&gsbi7_uart_2pins>;
++				l4 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1800000>;
++					bias-pull-down;
++				};
++
+ 				l5 {
+ 					regulator-min-microvolt = <2750000>;
+ 					regulator-max-microvolt = <3000000>;
+@@ -85,6 +103,12 @@
+ 					regulator-max-microvolt = <2950000>;
+ 					bias-pull-down;
+ 				};
++
++				l23 {
++					regulator-min-microvolt = <1700000>;
++					regulator-max-microvolt = <1900000>;
++					bias-pull-down;
++				};
  			};
-+
-+			i2c@16680000 {
-+				/* On High speed expansion */
-+				status = "okay";
-+				label = "HS-CAM-I2C2";
-+			};
  		};
  
- 		leds {
+@@ -111,6 +135,46 @@
+ 			};
+ 		};
+ 
++		/* OTG */
++		phy@12500000 {
++			status		= "okay";
++			dr_mode		= "peripheral";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l4>;
++		};
++
++		phy@12520000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
++		};
++
++		phy@12530000 {
++			status		= "okay";
++			vddcx-supply	= <&pm8921_s3>;
++			v3p3-supply	= <&pm8921_l3>;
++			v1p8-supply	= <&pm8921_l23>;
++		};
++
++		gadget@12500000 {
++			status = "okay";
++		};
++
++		/* OTG */
++		usb@12500000 {
++			status = "okay";
++		};
++
++		usb@12520000 {
++			status = "okay";
++		};
++
++		usb@12530000 {
++			status = "okay";
++		};
++
+ 		amba {
+ 			/* eMMC */
+ 			sdcc@12400000 {
 -- 
 2.5.0
