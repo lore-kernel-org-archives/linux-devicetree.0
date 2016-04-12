@@ -1,78 +1,129 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 04/15] irqchip/gic: WARN if setting the interrupt type
- fails
-Date: Tue, 12 Apr 2016 11:14:52 +0100
-Message-ID: <570CCA9C.1030907@arm.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-5-git-send-email-jonathanh@nvidia.com>
- <alpine.DEB.2.11.1603171550200.3978@nanos> <56EAC761.1040801@nvidia.com>
- <20160409115854.492090a5@arm.com> <570BC34A.5030806@nvidia.com>
- <570BC528.9050601@arm.com> <570CB6DA.2050909@nvidia.com>
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt/bindings/usb: Add bindings for PIC32 MUSB
+ driver.
+Date: Tue, 12 Apr 2016 15:45:04 +0530
+Message-ID: <570CCAA8.2000102@microchip.com>
+References: <460027775-20729-2-git-send-email-purna.mandal@microchip.com>
+ <1460032381-32677-1-git-send-email-purna.mandal@microchip.com>
+ <20160411151022.GA6187@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <570CB6DA.2050909@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160411151022.GA6187@rob-hp-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/16 09:50, Jon Hunter wrote:
-> 
-> On 11/04/16 16:39, Marc Zyngier wrote:
->> On 11/04/16 16:31, Jon Hunter wrote:
->>> On 09/04/16 11:58, Marc Zyngier wrote:
-> 
-> [snip]
-> 
->>>> I think we need to phase things. Let's start with warning people for a
->>>> few kernel releases. Actively maintained platforms will quickly address
->>>> the issue (fixing their DT). As I see it, this issue seems rather
->>>> widespread (even kvmtool outputs a DT with the wrong triggering
->>>> information).
->>>>
->>>> Once we've fixed the bulk of the platforms and virtual environments, we
->>>> can start thinking about making it fail harder.
->>>
->>> Ok, so are you OK with this patch as-is? If so, can I add your ACK?
->>
->> It depends where you plan to handle the error. Ideally, I'd keep on
->> returning the error (because that's the right thing to do), and move the
->> WARN_ON() into the core code. We'd keep on ignoring the error as we're
->> doing today, but we'd scream about it.
->>
->> After a couple of releases, we'd turn the WARN_ON into a hard fail.
->>
->> Thoughts?
-> 
-> I agree that would be best/ideal, but looking at it, I don't believe it
-> is possible and this is why I have not done that so far.
-> 
-> If we were to add the WARN to the core code, then we would need to add a
-> warning everywhere __irq_set_trigger() is called. One of the places it
-> is called today is from __setup_irq() and today this does the right
-> thing and handle any error returned. The problem is that in
-> irq_create_fwspec_mapping() we have never checked the return code from
-> irq_set_irq_type() (which calls __irq_set_trigger()) or attempted to
-> handle any errors. So the problem is that depending on the path through
-> which the type is programmed, errors may or may not be detected. This is
-> the actual headache :-(
-> 
-> Given that this problem so far only pertains to GIC PPI interrupts and
-> that it is a not a catastrophic error (interrupts still work fine), I
-> was thinking we add the warning to the GIC driver.
-> 
-> May be a less severe change would be to only return an error if
-> configuring an SPI fails and if it is a PPI then simply WARN and
-> carry-on as we assume we cannot change it.
+On 04/11/2016 08:40 PM, Rob Herring wrote:
 
-I'd take that. Limiting it to PPIs would be a minimal change, and the
-warning would hopefully make people realize their DT is wrong. Failing
-to program an SPI is really not expected, and should definitely explode.
+> On Thu, Apr 07, 2016 at 06:02:59PM +0530, Purna Chandra Mandal wrote:
+>> Document devicetree binding for the USB controller
+>> and USB Phy found on Microchip PIC32 class devices.
+>>
+>> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>>
+>> ---
+>>
+>> Changes in v2: None
+>>
+>>  .../bindings/usb/microchip,pic32-musb.txt          | 67 ++++++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+>> new file mode 100644
+>> index 0000000..e1cec9d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+>> @@ -0,0 +1,67 @@
+>> +Microchip PIC32 MUSB DRC/OTG controller
+>> +-------------------------------------------
+>> +
+>> +Required properties:
+>> + - compatible       : should be "microchip,pic32mzda-usb".
+>> + - reg              : offset and length of "MUSB Core Registers" and
+>> +                      "USB Clock & Reset Registers".
+>> + - reg-names        : should be "mc", and "usbcr" in order
+>> + - clocks           : clock specifier for the musb controller clock
+>> + - clock-names      : should be "usb_clk"
+>> + - interrupts       : interrupt number for MUSB Core General interrupt
+>> +                      and DMA interrupt
+>> + - interrupt-names  : must be "mc" and "dma" in order.
+>> + - phys             : phy specifier for the otg phy.
+>> + - dr_mode          : should be one of "host", "peripheral" or "otg".
+>> + - mentor,multipoint: Should be "1" indicating the musb controller supports
+>> +                      multipoint. This is MUSB configuration-specific setting.
+>> + - mentor,num-eps   : Specifies the number of endpoints. This is also a
+>> +                      MUSB configuration-specific setting. Should be set to "8".
+>> + - mentor,ram-bits  : Specifies the ram address size. Should be set to "11".
+>> + - mentor,power     : Should be "500". This signifies the controller can supply
+>> +                      up to 500mA when operating in host mode.
+>> + - phys             : phandle of the USB phy.
+>> + - usb_overcurrent  : phandle to MUSB over-current note. It should have
+>> +                      interrupt number for over-current detection logic.
+> This node is only an interrupt? Then you should use interrupts-extended 
+> and make this interrupt the 3rd one. interrupts-extended will let you 
+> have different interrupt parents for each irq.
 
-Thanks,
+Will use 'interrupts-extended' instead.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+>> +
+>> +Optional properties:
+>> + - microchip,fifo-mode: Specifies layout of internal SRAM for end-point fifos.
+>> +                        Should be 0 (default) or 1.
+> Make this a boolean.
+
+ack.
+
+>> +
+>> +Example:
+>> +	aliases {
+>> +		usb1 = &usb1;
+>> +		phy1 = &usb1_phy;
+>> +	};
+>> +
+>> +	usb1: hsusb1_core@1f8e3000 {
+>> +		compatible = "microchip,pic32mzda-usb";
+>> +		reg = <0x1f8e3000 0x1000>,
+>> +		      <0x1f884000 0x1000>;
+>> +		reg-names = "mc", "usbcr";
+>> +		interrupts = <132 IRQ_TYPE_EDGE_RISING>,
+>> +			     <133 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-names = "mc", "dma";
+>> +		dr_mode = "host";
+>> +		mentor,multipoint = <1>;
+>> +		mentor,num-eps = <8>;
+>> +		mentor,ram-bits = <11>;
+>> +		mentor,power = <500>;
+>> +		phys = <&usb1_phy>;
+>> +		clocks = <&rootclk PB5CLK>;
+>> +		clock-names = "usb_clk";
+>> +		usb_overcurrent = <&usb1_overcurrent>;
+>> +	};
+>> +
+>> +	usb1_phy: hsusb1_phy@1f8e4000 {
+>> +		compatible = "usb-nop-xceiv";
+>> +		reg = <0x1f8e4000 0x1000>;
+>> +		clocks = <&rootclk UPLLCLK>;
+>> +		clock-names = "main_clk";
+>> +		clock-frequency = <24000000>;
+>> +	};
+>> +
+>> +	usb1_overcurrent: hsusb1_oc@0 {
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+>> +	};
+>> -- 
+>> 1.8.3.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
