@@ -1,54 +1,38 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [RFC][PATCH 2/2] drm/arm: Add support for Mali Display Processors
-Date: Tue, 12 Apr 2016 21:31:28 +0200
-Message-ID: <20160412193128.GO2510@phenom.ffwll.local>
-References: <1459527712-9488-1-git-send-email-Liviu.Dudau@arm.com>
- <1459527712-9488-3-git-send-email-Liviu.Dudau@arm.com>
- <20160412155810.GH2510@phenom.ffwll.local>
- <20160412171654.GL16063@e106497-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20160412171654.GL16063@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH/TRIVIAL] devicetree: bindings: designware-pcie: Fix unit address
+Date: Tue, 12 Apr 2016 13:01:34 -0700
+Message-ID: <1460491294-32437-1-git-send-email-stephen.boyd@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMTIsIDIwMTYgYXQgMDY6MTY6NTRQTSArMDEwMCwgTGl2aXUgRHVkYXUgd3Jv
-dGU6Cj4gT24gVHVlLCBBcHIgMTIsIDIwMTYgYXQgMDU6NTg6MTFQTSArMDIwMCwgRGFuaWVsIFZl
-dHRlciB3cm90ZToKPiA+IE9uIEZyaSwgQXByIDAxLCAyMDE2IGF0IDA1OjIxOjUyUE0gKzAxMDAs
-IExpdml1IER1ZGF1IHdyb3RlOgo+ID4gPiBBZGQgc3VwcG9ydCBmb3IgdGhlIG5ldyBmYW1pbHkg
-b2YgRGlzcGxheSBQcm9jZXNzb3JzIGZyb20gQVJNIEx0ZC4KPiA+ID4gVGhpcyBjb21taXQgYWRk
-cyBiYXNpYyBzdXBwb3J0IGZvciBNYWxpIERQNTAwLCBEUDU1MCBhbmQgRFA2NTAKPiA+ID4gcGFy
-dHMsIHdpdGggb25seSB0aGUgZGlzcGxheSBlbmdpbmUgYmVpbmcgc3VwcG9ydGVkIGF0IHRoZSBt
-b21lbnQuCj4gPiA+IAo+ID4gPiBDYzogRGF2aWQgQnJvd24gPERhdmlkLkJyb3duQGFybS5jb20+
-Cj4gPiA+IENjOiBCcmlhbiBTdGFya2V5IDxCcmlhbi5TdGFya2V5QGFybS5jb20+Cj4gPiA+IAo+
-ID4gPiBTaWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4KPiA+
-IAo+ID4gT2ssIG9uIDJuZCBsb29rIHNvbWV0aGluZyBwdXp6bGluZzogV2hlcmUgYXJlIHRoZQo+
-ID4gZHJtX2VuY29kZXIvZHJtX2Nvbm5lY3RvcnMgaW4gdGhpcyBkcml2ZXI/IFNvbWVob3cgSSB0
-aGluayBqdXN0IHRoZXNlCj4gPiBwYXJ0cyBoZXJlIHdvbid0IGxpZ2h0IHVwIGEgbG90IC4uLgo+
-IAo+IFRoZSBtYWdpYyBvZiBjb21wb25lbnQgYmFzZWQgZHJpdmVycywgaGVoIDopCj4gCj4gT24g
-bXkgdGVzdCBzeXN0ZW0gSSdtIHVzaW5nIHRoZSBOWFAgVERBMTk5ODggSERNSSBhbmQgdGhlIGRy
-aXZlciB3b3Jrcwo+IG91dCBvZiBib3ggb25jZSB0aGUgRFQgZGVzY3JpYmVzIHRoZSBwcm9wZXIg
-cG9ydC9lbmRwb2ludCBkYW5jZS4gRm9yCj4gbW9kZWxzL3FlbXUgc3R5bGUgZW52aXJvbm1lbnQg
-SSBoYXZlIGEgZ2VuZXJpYyBEUk0gZW5jb2RlciBkcml2ZXIgdGhhdCBJJ20KPiBnb2luZyB0byBw
-b3N0IGZvciByZXZpZXcgdGhhdCBvbmx5IHJlYWRzIGRpc3BsYXkgdGltaW5ncyBmcm9tIERUIGFu
-ZCBiZWhhdmVzCj4gYXMgaWYgaXQgY29ubmVjdGVkIHRvIGEgcmVhbCBtb25pdG9yLgoKSSBkaWRu
-J3Qga25vdyB0aGF0IG1hZ2ljIHdvcmtlZCBzbyB3ZWxsIGFscmVhZHkuIFNlcmlvdXNseSBpbXBy
-ZXNzZWQsIGFuZApoYXBweSB0aGF0IGl0IGRvZXNuJ3QgdGFrZSBhbnl0aGluZyBpbiBhZGRpdGlv
-biB0byBtYWtlIGl0IGFsbCBqdXN0IHdvcmsuCi1EYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29m
-dHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Remove the 0x in the unit address because it shouldn't be there.
+
+Cc: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+index 64f2fff12128..6c5322c55411 100644
+--- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+@@ -31,7 +31,7 @@ Optional properties:
+ 
+ Example configuration:
+ 
+-	pcie: pcie@0xdffff000 {
++	pcie: pcie@dffff000 {
+ 		compatible = "snps,dw-pcie";
+ 		reg = <0xdffff000 0x1000>, /* Controller registers */
+ 		      <0xd0000000 0x2000>; /* PCI config space */
+-- 
+2.8.0.rc4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
