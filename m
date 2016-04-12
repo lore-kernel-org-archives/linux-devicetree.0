@@ -1,65 +1,115 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/9] ARM: imx: clk-vf610: fix DCU clock tree
-Date: Tue, 12 Apr 2016 09:38:21 +0800
-Message-ID: <20160412013820.GC15949@tiger>
-References: <1459834121-25997-1-git-send-email-stefan@agner.ch>
- <1459834121-25997-2-git-send-email-stefan@agner.ch>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH RFC 1/5] net: phy: sun8i-h3-ephy: Add bindings for
+ Allwinner H3 Ethernet PHY
+Date: Tue, 12 Apr 2016 09:38:46 +0800
+Message-ID: <CAGb2v662vHfYox2Ff9Mm=sXq4UHg92SQe2ihnKY9Aa4X9yss4Q@mail.gmail.com>
+References: <1459786954-12649-1-git-send-email-wens@csie.org>
+ <1459786954-12649-2-git-send-email-wens@csie.org> <570BF9B0.2090602@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1459834121-25997-2-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: jianwei.wang.chn@gmail.com, meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570BF9B0.2090602@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, netdev <netdev@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBcHIgMDQsIDIwMTYgYXQgMTA6Mjg6MzNQTSAtMDcwMCwgU3RlZmFuIEFnbmVyIHdy
-b3RlOgo+IFNpbWlsYXIgdG8gYW4gZWFybGllciBmaXggZm9yIHRoZSBTQUkgY2xvY2tzLCB0aGUg
-RENVIGNsb2NrIGhpZXJhcmNoeQo+IG1peGVzIHRoZSBidXMgY2xvY2sgd2l0aCB0aGUgZGlzcGxh
-eSBjb250cm9sbGVycyBwaXhlbCBjbG9jay4gVGVzdHMKPiBoYXZlIHNob3duIHRoYXQgdGhlIGdh
-dGVzIGluIENDTV9DQ0dSMy85IHJlZ2lzdGVycyBkbyBub3QgY29udHJvbAo+IHRoZSBEQ1UgcGl4
-ZWwgY2xvY2ssIGJ1dCBvbmx5IHRoZSByZWdpc3RlciBhY2Nlc3MgY2xvY2sgKGJ1cyBjbG9jayku
-Cj4gCj4gRml4IHRoaXMgYnkgZGVmaW5pbmcgdGhlIHBhcmVudCBjbG9jayBvZiBWRjYxMF9DTEtf
-RENVeCB0byBiZSB0aGUgYnVzCj4gY2xvY2sgKGlwZ19idXMpLgo+IAo+IFNpbmNlIHRoZSBjbG9j
-ayBoYXMgbm90IGJlZW4gdXNlZCBmYXIsIHRoZXJlIGFyZSBubyBmdXJ0aGVyIGNoYW5nZXMKPiBu
-ZWVkZWQuCj4gCj4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFnbmVyIDxzdGVmYW5AYWduZXIuY2g+
-CgpBcHBsaWVkIDEgYW5kIDIsIHdpdGggdXBkYXRpbmcgc3ViamVjdCBwcmVmaXggdG8gYmUgJ2Ns
-azogaW14OiB2ZjYxMDogJwoKU2hhd24KCj4gLS0tCj4gIGRyaXZlcnMvY2xrL2lteC9jbGstdmY2
-MTAuYyB8IDQgKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0
-aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xrLXZmNjEwLmMgYi9k
-cml2ZXJzL2Nsay9pbXgvY2xrLXZmNjEwLmMKPiBpbmRleCAwYTk0ZDk2Li40MjZmZGUyIDEwMDY0
-NAo+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstdmY2MTAuYwo+ICsrKyBiL2RyaXZlcnMvY2xr
-L2lteC9jbGstdmY2MTAuYwo+IEBAIC0zMjEsMTEgKzMyMSwxMSBAQCBzdGF0aWMgdm9pZCBfX2lu
-aXQgdmY2MTBfY2xvY2tzX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpjY21fbm9kZSkKPiAgCWNs
-a1tWRjYxMF9DTEtfRENVMF9TRUxdID0gaW14X2Nsa19tdXgoImRjdTBfc2VsIiwgQ0NNX0NTQ01S
-MSwgMjgsIDEsIGRjdV9zZWxzLCAyKTsKPiAgCWNsa1tWRjYxMF9DTEtfRENVMF9FTl0gPSBpbXhf
-Y2xrX2dhdGUoImRjdTBfZW4iLCAiZGN1MF9zZWwiLCBDQ01fQ1NDRFIzLCAxOSk7Cj4gIAljbGtb
-VkY2MTBfQ0xLX0RDVTBfRElWXSA9IGlteF9jbGtfZGl2aWRlcigiZGN1MF9kaXYiLCAiZGN1MF9l
-biIsIENDTV9DU0NEUjMsIDE2LCAzKTsKPiAtCWNsa1tWRjYxMF9DTEtfRENVMF0gPSBpbXhfY2xr
-X2dhdGUyKCJkY3UwIiwgImRjdTBfZGl2IiwgQ0NNX0NDR1IzLCBDQ01fQ0NHUnhfQ0duKDgpKTsK
-PiArCWNsa1tWRjYxMF9DTEtfRENVMF0gPSBpbXhfY2xrX2dhdGUyKCJkY3UwIiwgImlwZ19idXMi
-LCBDQ01fQ0NHUjMsIENDTV9DQ0dSeF9DR24oOCkpOwo+ICAJY2xrW1ZGNjEwX0NMS19EQ1UxX1NF
-TF0gPSBpbXhfY2xrX211eCgiZGN1MV9zZWwiLCBDQ01fQ1NDTVIxLCAyOSwgMSwgZGN1X3NlbHMs
-IDIpOwo+ICAJY2xrW1ZGNjEwX0NMS19EQ1UxX0VOXSA9IGlteF9jbGtfZ2F0ZSgiZGN1MV9lbiIs
-ICJkY3UxX3NlbCIsIENDTV9DU0NEUjMsIDIzKTsKPiAgCWNsa1tWRjYxMF9DTEtfRENVMV9ESVZd
-ID0gaW14X2Nsa19kaXZpZGVyKCJkY3UxX2RpdiIsICJkY3UxX2VuIiwgQ0NNX0NTQ0RSMywgMjAs
-IDMpOwo+IC0JY2xrW1ZGNjEwX0NMS19EQ1UxXSA9IGlteF9jbGtfZ2F0ZTIoImRjdTEiLCAiZGN1
-MV9kaXYiLCBDQ01fQ0NHUjksIENDTV9DQ0dSeF9DR24oOCkpOwo+ICsJY2xrW1ZGNjEwX0NMS19E
-Q1UxXSA9IGlteF9jbGtfZ2F0ZTIoImRjdTEiLCAiaXBnX2J1cyIsIENDTV9DQ0dSOSwgQ0NNX0ND
-R1J4X0NHbig4KSk7Cj4gIAo+ICAJY2xrW1ZGNjEwX0NMS19FU0FJX1NFTF0gPSBpbXhfY2xrX211
-eCgiZXNhaV9zZWwiLCBDQ01fQ1NDTVIxLCAyMCwgMiwgZXNhaV9zZWxzLCA0KTsKPiAgCWNsa1tW
-RjYxMF9DTEtfRVNBSV9FTl0gPSBpbXhfY2xrX2dhdGUoImVzYWlfZW4iLCAiZXNhaV9zZWwiLCBD
-Q01fQ1NDRFIyLCAzMCk7Cj4gLS0gCj4gMi43LjQKPiAKPiAKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Apr 12, 2016 at 3:23 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 04/04/16 09:22, Chen-Yu Tsai wrote:
+>> The Allwinner H3 SoC incorporates an Ethernet PHY. This is enabled and
+>> configured through a memory mapped hardware register.
+>>
+>> This same register also configures the MAC interface mode and TX clock
+>> source. Also covered by the register, but not supported in these bindings,
+>> are TX/RX clock delay chains and inverters, and an RMII module.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
+>>  .../bindings/net/allwinner,sun8i-h3-ephy.txt       | 44 ++++++++++++++++++++++
+>>  1 file changed, 44 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt
+>> new file mode 100644
+>> index 000000000000..146f227e6d88
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt
+>> @@ -0,0 +1,44 @@
+>> +* Allwinner H3 E(thernet) PHY
+>> +
+>> +The Allwinner H3 integrates an MII ethernet PHY. As with external PHYs,
+>> +before it can be configured over the MDIO bus and used, certain hardware
+>> +features must be configured, such as the PHY address and LED polarity.
+>
+> Is the internal PHY address really configurable? Not that there is
+> anything wrong with it, this is good.
+
+It is. Things that are configured or provided to a discrete PHY are routed
+to registers in the SoC, things such as PHY address, clocks, resets.
+
+>> +The PHY must also be powered on and brought out of reset.
+>> +
+>> +This is accomplished with regulators and pull-up/downs for external PHYs.
+>> +For this internal PHY, a hardware register is programmed.
+>> +
+>> +The same hardware register also contains clock and interface controls
+>> +for the MAC. This is also present in earlier SoCs, and is covered by
+>> +"allwinner,sun7i-a20-gmac-clk". The controls in the H3 are slightly
+>> +different due to the inclusion of what appears to be an RMII-MII
+>> +bridge.
+>> +
+>> +Required properties:
+>> +- compatible: should be "allwinner,sun8i-h3-ephy"
+>> +- reg: address and length of the register set for the device
+>> +- clocks: A phandle to the reference clock for this device
+>> +- resets: A phandle to the reset control for this device
+>> +
+>> +Ethernet PHY related properties:
+>> +- allwinner,ephy-addr: the MDIO bus address the PHY should respond to.
+>> +                    If this is not set, the external PHY is used, and
+>> +                    everything else in this section is ignored.
+>
+> So we are going to put the same value here, and in the actual Ethernet
+> PHY device tree node that should be hanging off the EMAC/MDIO bus
+> controller, this is confusing and error prone.
+
+Yes, that would be an issue when writing the DTS.
+>
+>> +- allwinner,leds-active-low: LEDs are active low. Without this, LEDs are
+>> +                          active high.
+>> +
+>> +Ethernet MAC clock related properties:
+>> +- #clock-cells: should be 0
+>> +- clock-output-names: "mac_tx"
+>> +
+>> +Example:
+>> +
+>> +ethernet-phy@01c00030 {
+>> +     compatible = "allwinner,sun8i-h3-ephy";
+>> +     reg = <0x01c00030 0x4>;
+>
+> Looking at this register space this looks more like an internal PHY SHIM
+> that is needed to be configured before the internal PHY can be access,
+> not a proper Ethernet PHY per-se, see replies in aptch 2.
+>
+> Should not this block be a second cell associated with the Ethernet MAC
+> block? One or the other are not going to be very useful without
+> knowledge of each other.
+
+True. However the lower half of the same register also controls the
+MAC interface mode and TX clock source and delays. This we had a clock
+driver that was used in conjuction with stmmac on earlier SoCs. I was
+hoping to keep that model with the newer EMAC. At the time it was
+argued that what seemed like a clock should be handled by a clock
+driver, instead of just a "syscon". If this is reaching too far to
+handle this new use case, I will happily just provide patches to merge
+this into the MAC.
+
+I would like to know how to deal with things like a PHY requiring
+some sort of shim driver, be it an internal one, or an external mfd
+chip that happens to have an Ethernet PHY included? How do we tie
+this into the PHY node under the MDIO bus?
+
+
+Regards
+ChenYu
