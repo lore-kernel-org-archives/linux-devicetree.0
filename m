@@ -1,89 +1,116 @@
-From: Tom Rini <trini@konsulko.com>
-Subject: Re: [PATCH] of: Add generic handling for hardware incomplete fail
- state
-Date: Tue, 12 Apr 2016 19:22:35 -0400
-Message-ID: <20160412232235.GW13577@bill-the-cat>
-References: <1460486275-12256-1-git-send-email-tony@atomide.com>
- <570D56FE.2070408@gmail.com>
- <570D7922.5020206@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mEvYxaKTQdy27sIr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570D7922.5020206@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 00/16] DTS for hi6220 and HiKey
+Date: Wed, 13 Apr 2016 07:55:36 +0800
+Message-ID: <1460505352-13157-1-git-send-email-guodong.xu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset include dts changes for hi6220 SoC and HiKey board. These
+patches apply well one by one on top of next-20160401. All tested on HiKey
+and pass.
 
---mEvYxaKTQdy27sIr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To avoid merge conflicts with patches already ack'ed by maintainers,
+I picked all hi6220/hikey dts related patches into this single patchset.
+And they passed the tests on HiKey.
 
-On Tue, Apr 12, 2016 at 03:39:30PM -0700, Frank Rowand wrote:
-> On 4/12/2016 1:13 PM, Frank Rowand wrote:
-> > Hi Tony,
->=20
-> < snip >
->=20
-> > With that change, the bulk of your patch looks good, with
-> > minor changes:
-> >=20
-> >   __of_device_is_available() would not need to change.
-> >=20
-> >   __of_device_is_incomplete() would change to check the new
-> >   boolean property.  (And I would suggest renaming it to
-> >   something that conveys it is ok to power manage the
-> >   device, but do not do anything else to the device.)
-> >=20
-> > -Frank
->=20
-> One more thought...
->=20
-> Are there multiple drivers that need to follow this
-> pattern, or just one at the moment?  If just one driver,
-> then I would suggest open-coding accessing the property
-> in the probe routine instead of adding the helper
-> functions.  If more drivers appear with the same
-> pattern then the helper functions could be added.
+Patch 1~3 are from hi6220 cpuidle support. It has been reviewed and
+ack'ed in maillist.
+[PATCH v2 RESEND 0/4] arm64: Hi6220: enable CPU idle states:
+http://archive.arm.linux.org.uk/lurker/message/20160121.105346.7d3b0470.en.html
 
-This is a many problem.  I was trying to describe this at the BoF but
-it's something more along the lines of:
+Patch 4 is for hi6220 gpio.
 
-SoC family ABxx supports 20 IP blocks which will always be present on
-the physical chip but depending on the exact 'xx' many of those 20
-blocks will be powered but 100% unusable.  Based on the 'xx' we will
-know this, and know that we must turn them off.
+Patch 5 is for pinctl.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I'm under the impression that it's not just "turn them off for power
-saving" but "turn them off so they don't break PM".
+Patch 6 is for spi configuration.
 
---=20
-Tom
+Patch 7 adds hi6220 i2c nodes, and
+patch 8 enables them for hikey board usage.
 
---mEvYxaKTQdy27sIr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Patch 9 adds add hi6220 usb node. It has been sent to maillist.
+[PATCH] arm64: dts: add hi6220 usb node
+http://thread.gmane.org/gmane.linux.drivers.devicetree/146062
+http://thread.gmane.org/gmane.linux.drivers.devicetree/144335/focus=134022
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Patch 10 and 11 are from hi6220 mailbox support. It has been reviewed and
+ack'ed in maillist.
+[PATCH v7 RESEND 0/4] mailbox: hisilicon: add Hi6220 mailbox driver
+http://thread.gmane.org/gmane.linux.kernel/2152759/focus=2152768
+Acked-by: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Patch 13 adds gpio LEDs device nodes.
 
-iQIcBAEBAgAGBQJXDYM7AAoJEIf59jXTHXZSH2YP/jBAlm55yyT+H2khEA/6RSqz
-bOMuRTwus4fwwCOfYxLY0SCxvv4qNGqj276OllZYTJ8XGKzKWf9boRd42/y7zCrI
-NZ/ghtuKHtf2QH43qP/ugKjKsn6toQ2D3RriPaQKQahJVExPKjesRaWyzz0MeL5S
-h15woYgrMYV/5nNJn6TyPeh0ObWBPhLQer4k9B+Fbf0X3Tk6NFfpcKz65p3s1QQ3
-vHpL1Xo+YJ0v3czrPjw5KIhzQC1u7OuIVL0nOnVLSKh3x0x4iHpA/2cbI3SzCdla
-lugydZ4k+B9/dbIr+KaI0xR/5MSCqRtjb6/eXGu5CBIF77n2w2TAdb7YmqFL2RNE
-nyp8Loa4AmoSwjxCxafw3apwnIPNQ/ug2H3ouPs+JNG9y4gyhgDpTMbybzBEaY1a
-PUXBUya1x56x280WHLSvVR8rAqk5k65QN8L9qfbOa/gq/Peim4jj9VK3JjpBoAFE
-3ETDai+oemjQGgC0+XVnbj1BYKn1HSCAna1XNh6a7qrCIYZkD+s9F7PKi26cdMa3
-sTJjC80cwTeVGU5xp+QUXiE8RNzOJ8M2/qJ109friQjF8OTUUSKpKhL8tjHENBEB
-hUNY6eD/dIuVHhTBjRYTMJgQOfNnvt8eqrWaXD3y0j8eEmDMSvG1xJdC4m5hsrd9
-aEQQQ+wm1RkQ8BIur1U3
-=rxOy
------END PGP SIGNATURE-----
+Patch 14 adds hi655x pmic dts node and regulator support.
+[PATCH v8 5/5] arm64: dts: hisilicon: Add hi655x pmic dts node
+http://thread.gmane.org/gmane.linux.kernel/2151688
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
---mEvYxaKTQdy27sIr--
+Patch 15 adds dwmmc nodes description for hi6220. It refers to two LDO's
+which are defined above.
+Patch 16 adds wifi device node (TI's wl1835) for HiKey board.
+
+v4:
+- remove hikey-gpio.dtsi
+- disable spi0 by default and let boards override it
+- remove LDOs unit address
+- fix style problems after review
+
+v3:
+- update patch 2 sp804 clocks and clock-names
+- add Acked-by into commits where applies.
+
+v2:
+- picked hi655x pmic dts node.
+- removed dw_mmc resets property, as it is still under review.
+- add 'non-removable' into dw_mmc2 for wifi
+
+Chen Feng (1):
+  arm64: dts: hikey: Add hi655x pmic dts node
+
+Guodong Xu (4):
+  arm64: dts: hikey: enable i2c0 and i2c1 for working with mezzanine
+    boards
+  arm64: dts: hi6220: add pinctrl for uarts and enable them
+  arm64: dts: add LED nodes for hi6220-hikey
+  arm64: dts: add wifi nodes support for hi6220-hikey
+
+Leo Yan (5):
+  arm64: dts: Reserve memory regions for hi6220
+  arm64: dts: add sp804 timer node for Hi6220
+  arm64: dts: enable idle states for Hi6220
+  arm64: dts: add mailbox node for Hi6220
+  arm64: dts: add Hi6220's stub clock node
+
+Xinwei Kong (2):
+  arm64: dts: add all hi6220 i2c nodes
+  arm64: dts: add dwmmc nodes for hi6220
+
+Zhangfei Gao (1):
+  arm64: dts: Add hi6220 usb node
+
+Zhong Kaihua (3):
+  arm64: dts: Add Hi6220 gpio configuration nodes
+  arm64: dts: add Hi6220 pinctrl configuration nodes
+  arm64: dts: add Hi6220 spi configuration nodes
+
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts   | 200 ++++++-
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi        | 563 ++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi | 705 +++++++++++++++++++++++
+ include/dt-bindings/pinctrl/hisi.h               |  59 ++
+ 4 files changed, 1522 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi
+ create mode 100644 include/dt-bindings/pinctrl/hisi.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
