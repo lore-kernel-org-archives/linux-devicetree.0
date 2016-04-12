@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 10/13] ARM: dts: db600c: Add on board leds support
-Date: Tue, 12 Apr 2016 10:33:59 +0100
-Message-ID: <1460453642-5809-11-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 13/13] ARM: dts: db600c: add support to magnetometer
+Date: Tue, 12 Apr 2016 10:34:02 +0100
+Message-ID: <1460453642-5809-14-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460453642-5809-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,103 +10,56 @@ To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to 4 user leds, wlan and bt led on board.
+This patch adds support to on board LIS3MDLTR magnetometer.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi   | 23 +++++++++++
- arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts    | 47 ++++++++++++++++++++++
- 2 files changed, 70 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi |  8 ++++++++
+ arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts       | 13 +++++++++++++
+ 2 files changed, 21 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-index 0610f00..3b55bb9 100644
+index 3b55bb9..a3efb97 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c-pins.dtsi
-@@ -18,4 +18,27 @@
- 			bias-disable;
+@@ -31,6 +31,14 @@
+ 			output-low;
  		};
  	};
 +
-+	user_leds: user-leds {
++	magneto_pins: magneto-pins {
 +		mux {
-+			pins = "gpio3", "gpio7", "gpio10", "gpio11";
++			pins = "gpio31", "gpio48";
 +			function = "gpio";
-+		};
-+
-+		conf {
-+			pins = "gpio3", "gpio7", "gpio10", "gpio11";
-+			function = "gpio";
-+			output-low;
-+		};
-+	};
-+};
-+
-+&pm8921_mpps {
-+	mpp_leds: mpp-leds {
-+		pinconf {
-+			pins = "mpp7", "mpp8";
-+			function = "digital";
-+			output-low;
++			bias-disable;
 +		};
 +	};
  };
+ 
+ &pm8921_mpps {
 diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-index 6f97ddc..8c18a4b 100644
+index 34bb415..e01b27e 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
 +++ b/arch/arm/boot/dts/qcom-apq8064-arrow-db600c.dts
-@@ -153,6 +153,53 @@
+@@ -153,6 +153,19 @@
+ 				/* On Low speed expansion and Sensors */
+ 				label = "LS-I2C0";
+ 				status = "okay";
++				lis3mdl_mag@1e {
++					compatible = "st,lis3mdl-magn";
++					reg = <0x1e>;
++					vdd-supply = <&vcc3v3>;
++					vddio-supply = <&pm8921_s4>;
++					pinctrl-names = "default";
++					pinctrl-0 = <&magneto_pins>;
++					interrupt-parent = <&tlmm_pinmux>;
++
++					st,drdy-int-pin = <2>;
++					interrupts = <48 IRQ_TYPE_EDGE_RISING>, /* DRDY line */
++						     <31 IRQ_TYPE_EDGE_RISING>; /* INT */
++				};
  			};
  		};
  
-+		leds {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&user_leds>, <&mpp_leds>;
-+
-+			compatible = "gpio-leds";
-+
-+			user-led0 {
-+				label = "user0-led";
-+				gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
-+				linux,default-trigger = "heartbeat";
-+				default-state = "off";
-+			};
-+
-+			user-led1 {
-+				label = "user1-led";
-+				gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
-+				linux,default-trigger = "mmc0";
-+				default-state = "off";
-+			};
-+
-+			user-led2 {
-+				label = "user2-led";
-+				gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
-+				linux,default-trigger = "mmc1";
-+				default-state = "off";
-+			};
-+
-+			user-led3 {
-+				label = "user3-led";
-+				gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
-+				linux,default-trigger = "none";
-+				default-state = "off";
-+			};
-+
-+			wifi-led {
-+				label = "WiFi-led";
-+				gpios = <&pm8921_mpps 7 GPIO_ACTIVE_HIGH>;
-+				default-state = "off";
-+			};
-+
-+			bt-led {
-+				label = "BT-led";
-+				gpios = <&pm8921_mpps 8 GPIO_ACTIVE_HIGH>;
-+				default-state = "off";
-+			};
-+		};
-+
- 		pci@1b500000 {
- 			status = "okay";
- 			vdda-supply = <&pm8921_s3>;
 -- 
 2.5.0
