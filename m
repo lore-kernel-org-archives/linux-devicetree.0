@@ -1,61 +1,42 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH V3] net: mediatek: update the IRQ part of the binding document
-Date: Tue, 12 Apr 2016 08:35:18 +0200
-Message-ID: <1460442918-6070-1-git-send-email-blogic@openwrt.org>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: Felix Fietkau <nbd@openwrt.org>, Matthias Brugger <matthias.bgg@gmail.com>, netdev@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v9 01/20] PM / devfreq: exynos: Add generic exynos bus
+ frequency driver
+Date: Tue, 12 Apr 2016 09:23:33 +0200
+Message-ID: <570CA275.6000903@samsung.com>
+References: <1460347078-15175-1-git-send-email-cw00.choi@samsung.com>
+ <1460347078-15175-2-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1460347078-15175-2-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
+Cc: rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The current binding document only describes a single interrupt. Update the
-document by adding the 2 other interrupts.
+On 04/11/2016 05:57 AM, Chanwoo Choi wrote:
+> This patch adds the generic exynos bus frequency driver for AMBA AXI bus
+> of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exynos SoC
+> have the common architecture for bus between DRAM and sub-blocks in SoC.
+> This driver can support the generic bus frequency driver for Exynos SoCs.
+> 
+> In devicetree, Each bus block has a bus clock, regulator, operation-point
+> and devfreq-event devices which measure the utilization of each bus block.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> [m.reichl and linux.amoon: Tested it on exynos4412-odroidu3 board]
+> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+> Tested-by: Anand Moon <linux.amoon@gmail.com>
+> Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> ---
+>  drivers/devfreq/Kconfig      |  15 ++
+>  drivers/devfreq/Makefile     |   1 +
+>  drivers/devfreq/exynos-bus.c | 443 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 459 insertions(+)
+>  create mode 100644 drivers/devfreq/exynos-bus.c
 
-The driver currently only uses a single interrupt. The HW is however able
-to using IRQ grouping to split TX and RX onto separate GIC irqs.
+Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Cc: devicetree@vger.kernel.org
----
-This binding doc was merged in 4.6-rc1 and there are no users yet. The
-current driver only uses 1 irq but will work fine with all 3 listed in
-the devicetree. This patch should be merged before v4.6 is final such
-that listing all 3 irqs becomes part of the ABI. I have already posted
-a patch that utilizes all 3 irqs for next-next for v4.7 inclusion.
-
-Changes in V3:
-* be verbose about the 3 irqs and their ordering
-
-Changes in V2:
-* split this patch out of the series that fixes tx stalls in the driver
-
- Documentation/devicetree/bindings/net/mediatek-net.txt |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-index 5ca7929..32eaaca 100644
---- a/Documentation/devicetree/bindings/net/mediatek-net.txt
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -9,7 +9,8 @@ have dual GMAC each represented by a child node..
- Required properties:
- - compatible: Should be "mediatek,mt7623-eth"
- - reg: Address and length of the register set for the device
--- interrupts: Should contain the frame engines interrupt
-+- interrupts: Should contain the three frame engines interrupts in numeric
-+	order. These are fe_int0, fe_int1 and fe_int2.
- - clocks: the clock used by the core
- - clock-names: the names of the clock listed in the clocks property. These are
- 	"ethif", "esw", "gp2", "gp1"
-@@ -42,7 +43,9 @@ eth: ethernet@1b100000 {
- 		 <&ethsys CLK_ETHSYS_GP2>,
- 		 <&ethsys CLK_ETHSYS_GP1>;
- 	clock-names = "ethif", "esw", "gp2", "gp1";
--	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
-+	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW
-+		      GIC_SPI 199 IRQ_TYPE_LEVEL_LOW
-+		      GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
- 	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
- 	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
- 	reset-names = "eth";
--- 
-1.7.10.4
+Best regards,
+Krzysztof
