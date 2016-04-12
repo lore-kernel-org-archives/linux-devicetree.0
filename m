@@ -1,70 +1,40 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/5] DT: arm,gic-v3: Documment PPI partition support
-Date: Tue, 12 Apr 2016 17:42:45 +0100
-Message-ID: <570D2585.5070801@arm.com>
-References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
- <1460365075-7316-6-git-send-email-marc.zyngier@arm.com>
- <20160412162937.GA25932@rob-hp-laptop>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/7] soc/tegra: pmc: Use BIT macro for register field
+ definition
+Date: Tue, 12 Apr 2016 22:28:10 +0530
+Message-ID: <570D2922.7050403@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com> <1460473007-11535-2-git-send-email-ldewangan@nvidia.com> <20160412152642.GA30211@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160412162937.GA25932@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160412152642.GA30211@ulmo.ba.sec>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 12/04/16 17:29, Rob Herring wrote:
-> On Mon, Apr 11, 2016 at 09:57:55AM +0100, Marc Zyngier wrote:
->> Add a decription of the PPI partitioning support.
+On Tuesday 12 April 2016 08:56 PM, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+>
+> On Tue, Apr 12, 2016 at 08:26:41PM +0530, Laxman Dewangan wrote:
+>> Use BIT macro for register field definition and make constant as
+>> unsigned when using in shift operator like instead of (3 << 30),
+>> make it to (3U << 30).
 >>
->> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 >> ---
->>  .../bindings/interrupt-controller/arm,gic-v3.txt   | 34 ++++++++++++++++++++--
->>  1 file changed, 32 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->> index 007a5b4..4c29cda 100644
->> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->> @@ -11,6 +11,8 @@ Main node required properties:
->>  - interrupt-controller : Identifies the node as an interrupt controller
->>  - #interrupt-cells : Specifies the number of cells needed to encode an
->>    interrupt source. Must be a single cell with a value of at least 3.
->> +  If the system requires describing PPI affinity, then the value must
->> +  be at least 4.
-> 
-> You're winning for cell count...
+>>   drivers/soc/tegra/pmc.c | 42 +++++++++++++++++++++---------------------
+>>   1 file changed, 21 insertions(+), 21 deletions(-)
+> Does this matter at all? We use the explicit notation in quite a number
+> of places and it works great. I'd like to avoid needless churn unless
+> there is a very good reason to switch.
 
-Yeah, it feels like we aim at making people's life difficult...
+When I run the checkpatch, I got the error and thought that better to 
+fix and cleanup some warning/error from checkpatch.
+This is just part of cleanups and properly defining constant like 3U 
+instead of 3 to avoid any issue.
 
-> One alternative that would save adding a cell and keep it contained 
-> within would be just list the affinities in the GIC node in the form of 
-> '<PPI#> <count> <cpu phandles>':
-> 
-> ppi-affinity = <1 2 &cpu2 &cpu3>,
-> 		<5 1 &cpu4>,
-> 		...
 
-But how would that work if you have two sets of CPUs (set-1=[cpu0,
-cpu1]; set-2=[cpu2, cpu3]), and for the same PPI, device A is connected
-to set-1 and device-B is connected to set-2?
 
-You need a way to distinguish these two interrupts and so far, the only
-way I've found is to reference the affinity in the interrupt specifier.
-
-That being said, I'm definitely open to suggestions on how to describe
-this in a better way.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
