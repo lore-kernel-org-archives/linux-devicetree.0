@@ -1,131 +1,55 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 2/3] dmaengine: tegra-adma: Add support for Tegra210
- ADMA
-Date: Tue, 12 Apr 2016 17:23:32 +0100
-Message-ID: <570D2104.1040607@nvidia.com>
-References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
- <1458057390-20756-3-git-send-email-jonathanh@nvidia.com>
- <20160405213649.GA11586@vkoul-mobl.iind.intel.com>
- <570BB001.3020202@nvidia.com> <20160412141025.GJ2274@localhost>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] DT: arm,gic-v3: Documment PPI partition support
+Date: Tue, 12 Apr 2016 11:29:37 -0500
+Message-ID: <20160412162937.GA25932@rob-hp-laptop>
+References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
+ <1460365075-7316-6-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160412141025.GJ2274@localhost>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460365075-7316-6-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 12/04/16 15:10, Vinod Koul wrote:
-> On Mon, Apr 11, 2016 at 03:09:05PM +0100, Jon Hunter wrote:
->> On 05/04/16 22:36, Vinod Koul wrote:
->>> On Tue, Mar 15, 2016 at 03:56:29PM +0000, Jon Hunter wrote:
-
-[snip]
-
->> So, AFAICT, dma_async_device_register() does not check to see if
->> device_prep_slave_sg() is valid AND none of the functions
->> dmaengine_prep_slave_single(), dmaengine_prep_slave_single() and
->> dmaengine_prep_rio_sg() check to see if the function pointer is valid
->> before calling chan->device->device_prep_slave_sg(). So it seems that we
->> always expect this function pointer to be valid.
->>
->> So should the inline functions ensure the function pointer is valid
->> before attempting to call them? If so I can add a patch for this.
->> Otherwise it seems the driver needs a stub. It would be a massive change
->> to add a new capability, say SLAVE_SG, and populate this for all
->> existing drivers.
+On Mon, Apr 11, 2016 at 09:57:55AM +0100, Marc Zyngier wrote:
+> Add a decription of the PPI partitioning support.
 > 
-> No we should check here, it's indeed a miss, not sure why none complained
-> about this. I was assuming this is due to caps not considering cyclic case,
-> so I fixed that up.
+> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  .../bindings/interrupt-controller/arm,gic-v3.txt   | 34 ++++++++++++++++++++--
+>  1 file changed, 32 insertions(+), 2 deletions(-)
 > 
-> I will fix these cases too, thanks for reporting
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> index 007a5b4..4c29cda 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> @@ -11,6 +11,8 @@ Main node required properties:
+>  - interrupt-controller : Identifies the node as an interrupt controller
+>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>    interrupt source. Must be a single cell with a value of at least 3.
+> +  If the system requires describing PPI affinity, then the value must
+> +  be at least 4.
 
-Ok, great.
+You're winning for cell count...
 
->>>> +static const struct tegra_adma_chip_data tegra210_chip_data = {
->>>> +	.nr_channels = 22,
->>>> +};
->>>
->>> why should this be hard coded in kernel and not queried from something like
->>> DT? This case seems to be hardware property
->>
->> Originally, I did have this in DT, however, the Tegra maintainers prefer
->> this and this is consistent with the other Tegra DMA driver (see
->> driver/dma/tegra20-apb-dma.c) [0].
-> 
-> But this creates a problem when you have next generation of controller with
-> different channel count!
-> How do we solve then?
+One alternative that would save adding a cell and keep it contained 
+within would be just list the affinities in the GIC node in the form of 
+'<PPI#> <count> <cpu phandles>':
 
-Same way we solve this for the tegra20-apb-dma driver by having
-different chip data per SoC in the driver ...
+ppi-affinity = <1 2 &cpu2 &cpu3>,
+		<5 1 &cpu4>,
+		...
 
-1259 /* Tegra20 specific DMA controller information */
-1260 static const struct tegra_dma_chip_data tegra20_dma_chip_data = {
-1261         .nr_channels            = 16,
-1262         .channel_reg_size       = 0x20,
-1263         .max_dma_count          = 1024UL * 64,
-1264         .support_channel_pause  = false,
-1265         .support_separate_wcount_reg = false,
-1266 };
-1267
-1268 /* Tegra30 specific DMA controller information */
-1269 static const struct tegra_dma_chip_data tegra30_dma_chip_data = {
-1270         .nr_channels            = 32,
-1271         .channel_reg_size       = 0x20,
-1272         .max_dma_count          = 1024UL * 64,
-1273         .support_channel_pause  = false,
-1274         .support_separate_wcount_reg = false,
-1275 };
-1276
-1277 /* Tegra114 specific DMA controller information */
-1278 static const struct tegra_dma_chip_data tegra114_dma_chip_data = {
-1279         .nr_channels            = 32,
-1280         .channel_reg_size       = 0x20,
-1281         .max_dma_count          = 1024UL * 64,
-1282         .support_channel_pause  = true,
-1283         .support_separate_wcount_reg = false,
-1284 };
-1285
-1286 /* Tegra148 specific DMA controller information */
-1287 static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
-1288         .nr_channels            = 32,
-1289         .channel_reg_size       = 0x40,
-1290         .max_dma_count          = 1024UL * 64,
-1291         .support_channel_pause  = true,
-1292         .support_separate_wcount_reg = true,
-1293 };
+This would be harder to parse though if you have a large number of PPIs 
+with affinities.
 
-You may still say this should be in the DT, but the Tegra maintainers
-prefer this data in the driver.
+That said, I've got no real issue with this as is.
 
->>>> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
->>>> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
->>>> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
->>>
->>> I think you should not set DMA_SLAVE, do you need caps to be exported. I
->>> think that should be exported for cyclic too, let me know if that was the
->>> issue?
->>>
->>
->> Why should I not be setting DMA_SLAVE? Should I not be calling
->> dma_get_any_slave_channel() in the xlate?
->>
->> I think that I do want to set DMA_CYCLIC as well to ensure that we check
->> that the device->device_prep_dma_cyclic() function pointer is populated
->> when registering the DMA controller.
-> 
-> Only setting DMA_CYCLIC should do, if you see any issues around that please
-> get back, we cna fix those :)
-
-It did not work for me because dma_get_any_slave_channel() wants a DMA
-device with the DMA_SLAVE bit capability set. So if I remove this above,
-then requesting the channel fails via dma_get_any_slave_channel() fails.
-Is there something I don't understand here?
-
-Cheers
-Jon
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
