@@ -1,82 +1,59 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Correct path for ARM GIC documentation
-Date: Wed, 13 Apr 2016 17:36:50 +0200
-Message-ID: <570E6792.6090006@gmail.com>
-References: <1458226077-7179-1-git-send-email-jonathanh@nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 00/30] ARM: OMAP2+: hwmod module clock type support
+Date: Wed, 13 Apr 2016 08:49:29 -0700
+Message-ID: <20160413154928.GS5995@atomide.com>
+References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
+ <20160412145819.GA25032@rob-hp-laptop>
+ <20160412155829.GM5995@atomide.com>
+ <570DEE66.8030706@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458226077-7179-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <570DEE66.8030706@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Rob Herring <robh@kernel.org>, linux-omap@vger.kernel.org, paul@pwsan.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+* Tero Kristo <t-kristo@ti.com> [160413 00:00]:
+> On 04/12/2016 06:58 PM, Tony Lindgren wrote:
+> >
+> >Yes Tero please check those, we need to support the old behavior too.
+> >Sounds like you figured that out how to do that alreadey by generating
+> >the clock name for the built-in data.
+> 
+> Some of the old clock nodes are being dropped by this series, namely the
+> timer ones, and they are getting merged to the new timerX_mod_ck nodes.
+> 
+> The reason for this is the behavior of the clock driver itself; it assumes
+> it gets a clock handle for which it can do clk_set_parent (for setting
+> proper source clock to get correct time-base), but normal _mod_ck nodes do
+> not support this. So, what happens for example for omap4 is following:
 
+OK
 
-On 17/03/16 15:47, Jon Hunter wrote:
-> Commit eb3fcf007fff ("dt-bindings: consolidate interrupt controller
-> bindings") moved the binding documentation for the ARM GIC from
-> arm/gic.txt to interrupt-controller/arm,gic.txt. However, there are
-> still some binding documents referring to the old path. Update these
-> binding documents to use the correct location.
->
-> Fixes: eb3fcf007fff ("dt-bindings: consolidate interrupt controller bindings")
->
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
+> These clocks are then directly referenced by hwmod. The reason for having
+> two registers under the new timer node is that in some hardwares (like
+> AM33xx), the register address for the gate and mux component are different.
+> 
+> Anyway, compatibility will be broken once the hwmod_data changes go in for
+> individual SoCs, as the clkctrl portion is going to be dropped, and the
+> hwmod has no chance to work with old DT data. If this is not acceptable,
+> then the whole exercise becomes moot as we need to move the data someplace
+> else within the kernel, and forget about the transition to DT.
 
-Acked-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Yeah if have hwmod lookup the clkctrl clock based on the generated
+clock name, it can still find the clock. But naturally if the clocks
+are not defined, hwmod won't find them for an old dtb.
 
->   Documentation/devicetree/bindings/arm/omap/crossbar.txt                | 3 ++-
->   Documentation/devicetree/bindings/arm/ux500/boards.txt                 | 2 +-
->   .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt       | 3 +--
->   3 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> index a9b28d74d902..bb5727ae004a 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> @@ -42,7 +42,8 @@ Examples:
->   Consumer:
->   ========
->   See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
-> -Documentation/devicetree/bindings/arm/gic.txt for further details.
-> +Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt for
-> +further details.
->
->   An interrupt consumer on an SoC using crossbar will use:
->   	interrupts = <GIC_SPI request_number interrupt_level>
-> diff --git a/Documentation/devicetree/bindings/arm/ux500/boards.txt b/Documentation/devicetree/bindings/arm/ux500/boards.txt
-> index b8737a8de718..7334c24625fc 100644
-> --- a/Documentation/devicetree/bindings/arm/ux500/boards.txt
-> +++ b/Documentation/devicetree/bindings/arm/ux500/boards.txt
-> @@ -23,7 +23,7 @@ scu:
->   	see binding for arm/scu.txt
->
->   interrupt-controller:
-> -	see binding for arm/gic.txt
-> +	see binding for interrupt-controller/arm,gic.txt
->
->   timer:
->   	see binding for arm/twd.txt
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> index b8e1674c7837..8cf564d083d2 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> @@ -16,8 +16,7 @@ Required properties:
->   	"mediatek,mt6577-sysirq"
->   	"mediatek,mt2701-sysirq"
->   - interrupt-controller : Identifies the node as an interrupt controller
-> -- #interrupt-cells : Use the same format as specified by GIC in
-> -  Documentation/devicetree/bindings/arm/gic.txt
-> +- #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
->   - interrupt-parent: phandle of irq parent for sysirq. The parent must
->     use the same interrupt-cells format as GIC.
->   - reg: Physical base address of the intpol registers and length of memory
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If we want to avoid that, the clkctrl data would have be built in
+for each SoC in the clock driver, and we'd still need to provide the
+DT bindings for them. We do have the TI clock bindings tagged as
+unstable and defining clocks for SoCs is the dts files is pretty much
+the standard.. Probably the best we can do is to things in phases where
+we drop the hwmod data only later on.
+
+Regards,
+
+Tony
