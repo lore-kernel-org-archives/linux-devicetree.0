@@ -1,59 +1,88 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/30] ARM: OMAP2+: hwmod module clock type support
-Date: Wed, 13 Apr 2016 08:49:29 -0700
-Message-ID: <20160413154928.GS5995@atomide.com>
-References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
- <20160412145819.GA25032@rob-hp-laptop>
- <20160412155829.GM5995@atomide.com>
- <570DEE66.8030706@ti.com>
+From: Steve Capper <steve.capper@arm.com>
+Subject: Re: [PATCH v16 6/6] arm64, mm, numa: Add NUMA balancing support for
+ arm64.
+Date: Wed, 13 Apr 2016 16:59:23 +0100
+Message-ID: <20160413155922.GA2144@e103986-lin>
+References: <1460155828-8690-1-git-send-email-ddaney.cavm@gmail.com>
+ <1460155828-8690-7-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <570DEE66.8030706@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Rob Herring <robh@kernel.org>, linux-omap@vger.kernel.org, paul@pwsan.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <1460155828-8690-7-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Matt Fleming <matt@codeblueprint.co.uk>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [160413 00:00]:
-> On 04/12/2016 06:58 PM, Tony Lindgren wrote:
-> >
-> >Yes Tero please check those, we need to support the old behavior too.
-> >Sounds like you figured that out how to do that alreadey by generating
-> >the clock name for the built-in data.
+On Fri, Apr 08, 2016 at 03:50:28PM -0700, David Daney wrote:
+> From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
 > 
-> Some of the old clock nodes are being dropped by this series, namely the
-> timer ones, and they are getting merged to the new timerX_mod_ck nodes.
+> Enable NUMA balancing for arm64 platforms.
+> Add pte, pmd protnone helpers for use by automatic NUMA balancing.
 > 
-> The reason for this is the behavior of the clock driver itself; it assumes
-> it gets a clock handle for which it can do clk_set_parent (for setting
-> proper source clock to get correct time-base), but normal _mod_ck nodes do
-> not support this. So, what happens for example for omap4 is following:
-
-OK
-
-> These clocks are then directly referenced by hwmod. The reason for having
-> two registers under the new timer node is that in some hardwares (like
-> AM33xx), the register address for the gate and mux component are different.
+> Reviewed-by: Robert Richter <rrichter@cavium.com>
+> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  arch/arm64/Kconfig               |  1 +
+>  arch/arm64/include/asm/pgtable.h | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+)
 > 
-> Anyway, compatibility will be broken once the hwmod_data changes go in for
-> individual SoCs, as the clkctrl portion is going to be dropped, and the
-> hwmod has no chance to work with old DT data. If this is not acceptable,
-> then the whole exercise becomes moot as we need to move the data someplace
-> else within the kernel, and forget about the transition to DT.
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 99f9b55..a578080 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -11,6 +11,7 @@ config ARM64
+>  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>  	select ARCH_USE_CMPXCHG_LOCKREF
+>  	select ARCH_SUPPORTS_ATOMIC_RMW
+> +	select ARCH_SUPPORTS_NUMA_BALANCING
+>  	select ARCH_WANT_OPTIONAL_GPIOLIB
+>  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
+>  	select ARCH_WANT_FRAME_POINTERS
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 989fef1..89b8f20 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -272,6 +272,21 @@ static inline pgprot_t mk_sect_prot(pgprot_t prot)
+>  	return __pgprot(pgprot_val(prot) & ~PTE_TABLE_BIT);
+>  }
+>  
+> +#ifdef CONFIG_NUMA_BALANCING
+> +/*
+> + * See the comment in include/asm-generic/pgtable.h
+> + */
+> +static inline int pte_protnone(pte_t pte)
+> +{
+> +	return (pte_val(pte) & (PTE_VALID | PTE_PROT_NONE)) == PTE_PROT_NONE;
+> +}
+> +
+> +static inline int pmd_protnone(pmd_t pmd)
+> +{
+> +	return pte_protnone(pmd_pte(pmd));
+> +}
+> +#endif
+> +
 
-Yeah if have hwmod lookup the clkctrl clock based on the generated
-clock name, it can still find the clock. But naturally if the clocks
-are not defined, hwmod won't find them for an old dtb.
+Okay, this looks good to me. If we have a PROT_NONE VMA then this is
+caught before going into do_numa_page or do_huge_pmd_numa_page (and
+there is a BUG_ON inside these functions to catch stragglers.
 
-If we want to avoid that, the clkctrl data would have be built in
-for each SoC in the clock driver, and we'd still need to provide the
-DT bindings for them. We do have the TI clock bindings tagged as
-unstable and defining clocks for SoCs is the dts files is pretty much
-the standard.. Probably the best we can do is to things in phases where
-we drop the hwmod data only later on.
+I've given this a quick test with a PROT_NONE THP and everything worked
+as expected (i.e. NUMA didn't trip up).
 
-Regards,
+Reviewed-by: Steve Capper <steve.capper@arm.com>
 
-Tony
+>  /*
+>   * THP definitions.
+>   */
+> -- 
+> 1.8.3.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
