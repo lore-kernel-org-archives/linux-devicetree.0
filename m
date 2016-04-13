@@ -1,105 +1,88 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH] iio: mxs-lradc: Move binding document out of staging as
- well
-Date: Wed, 13 Apr 2016 18:50:33 +0200
-Message-ID: <570E78D9.7080902@i2se.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 2/2] PCI: tegra: Support per-lane PHYs
+Date: Wed, 13 Apr 2016 11:01:58 -0600
+Message-ID: <570E7B86.1040909@wwwdotorg.org>
+References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
+ <1457452094-5409-2-git-send-email-thierry.reding@gmail.com>
+ <56E9915F.9040608@wwwdotorg.org> <20160413160112.GA30129@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: 20160411194204.GA17762@rob-hp-laptop
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160413160112.GA30129@ulmo.ba.sec>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 04/13/2016 10:01 AM, Thierry Reding wrote:
+> On Wed, Mar 16, 2016 at 11:01:19AM -0600, Stephen Warren wrote:
+>> On 03/08/2016 08:48 AM, Thierry Reding wrote:
+>>> From: Thierry Reding <treding@nvidia.com>
+>>>
+>>> The current XUSB pad controller bindings are insufficient to describe
+>>> PHY devices attached to USB controllers. New bindings have been created
+>>> to overcome these restrictions. As a side-effect each root port now is
+>>> assigned a set of PHY devices, one for each lane associated with the
+>>> root port. This has the benefit of allowing fine-grained control of the
+>>> power management for each lane.
+>>
+>>> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+>>
+>>> +static int tegra_pcie_port_phy_power_on(struct tegra_pcie_port *port)
+>>> +{
+>>> +	struct device *dev = port->pcie->dev;
+>>> +	unsigned int i;
+>>> +	int err;
+>>> +
+>>> +	for (i = 0; i < port->lanes; i++) {
+>>> +		err = phy_power_on(port->phys[i]);
+>>
+>> This assume the number of array entries is precisely the number of lanes.
+>> That seems to contradict the binding update which said the number might not
+>> match. Perhaps there's an expectation that phy_power_on() is a no-op for
+>> some "invalid" values like NULL or an error-pointer value? But...
+>>
+>>> +static struct phy *devm_of_phy_optional_get_index(struct device *dev,
+>>> +						  struct device_node *np,
+>>> +						  const char *consumer,
+>>> +						  unsigned int index)
+>>> +{
+>>> +	struct phy *phy;
+>>> +	char *name;
+>>> +
+>>> +	name = kasprintf(GFP_KERNEL, "%s-%u", consumer, index);
+>>> +	if (!name)
+>>> +		return ERR_PTR(-ENOMEM);
+>>> +
+>>> +	phy = devm_of_phy_get(dev, np, name);
+>>> +	kfree(name);
+>>> +
+>>> +	if (IS_ERR(phy) && PTR_ERR(phy) == -ENODEV)
+>>> +		phy = NULL;
+>>> +
+>>> +	return phy;
+>>> +}
+>>
+>> The error-handling there looks wrong. The function generally returns either
+>> a valid PHY or an error pointer. However, in the case of -ENODEV, NULL is
+>> returned. Subsystems are supposed to encode their handles as, and functions
+>> are supposed to return, either NULL or an error pointer for error cases, not
+>> both/either. Is the PHY API broken in this regard? If so, then this code is
+>> fine, but if not it might need a fix.
+>
+> This function mimics phy_optional_get() which similarily returns NULL
+> for -ENODEV. The remainder of the PHY API treats NULL pointers as
+> "dummy" PHYs and returns early. I think that's a sensible approach to
+> handling optional resources.
+>
+> It might have been more obvious had I implemented this function within
+> phy-core.c, but I didn't think it universally useful because it uses a
+> rather uncommon lookup pattern. I did keep a generic name in case it's
+> ever deemed useful outside of this driver, at which point it could
+> simply be moved into phy-core.c without requiring this driver to
+> change.
 
-[added Fabio, Marek and linux-arm-kernel]
-
-> On Sun, Apr 10, 2016 at 01:03:18PM +0000, Harald Geyer wrote:
-> > commit f836c45922446df872250a12dd08e48978aceb2f moved mxs-lradc driver
-> > out of staging. However the binding document was left in the old place.
-> 
-> A move out of staging should probably imply a review. Though we don't 
-> have clear rules around that for bindings.
->
-> >  
-> > Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/iio/adc/mxs-lradc.txt      | 47 ++++++++++++++++++++++
-> >  .../bindings/staging/iio/adc/mxs-lradc.txt         | 47 ----------------------
-> >  2 files changed, 47 insertions(+), 47 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
-> > new file mode 100644
-> > index 0000000..555fb11
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
-> > @@ -0,0 +1,47 @@
-> > +* Freescale MXS LRADC device driver
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx23-lradc" for i.MX23 SoC and "fsl,imx28-lradc"
-> > +              for i.MX28 SoC
-> > +- reg: Address and length of the register set for the device
-> > +- interrupts: Should contain the LRADC interrupts
-> > +
-> > +Optional properties:
-> > +- fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
-> > +                               to LRADC. Valid value is either 4 or 5. If this
-> > +                               property is not present, then the touchscreen is
-> > +                               disabled. 5 wires is valid for i.MX28 SoC only.
->
-> Standard touchscreen property?
-
-There is a similiar one in input/touchscreen/ti-tsc-adc.txt with the name ti,wires.
-But i'm not sure about the others.
-
-Stefan
-
-> 
-> > +- fsl,ave-ctrl: number of samples per direction to calculate an average value.
-> > +                Allowed value is 1 ... 32, default is 4
-> > +- fsl,ave-delay: delay between consecutive samples. Allowed value is
-> > +                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
-> > +                 2 kHz and its default is 2 (= 1 ms)
->
-> ditto.
-> 
-> If not, it should have units.
->
-> > +- fsl,settling: delay between plate switch to next sample. Allowed value is
-> > +                1 ... 2047. It counts at 2 kHz and its default is
-> > +                10 (= 5 ms)
->
-> ditto.
->
-> > +
-> > +Example for i.MX23 SoC:
-> > +
-> > +	lradc@80050000 {
-> > +		compatible = "fsl,imx23-lradc";
-> > +		reg = <0x80050000 0x2000>;
-> > +		interrupts = <36 37 38 39 40 41 42 43 44>;
-> > +		status = "okay";
-> > +		fsl,lradc-touchscreen-wires = <4>;
-> > +		fsl,ave-ctrl = <4>;
-> > +		fsl,ave-delay = <2>;
-> > +		fsl,settling = <10>;
-> > +	};
-> > +
-> > +Example for i.MX28 SoC:
-> > +
-> > +	lradc@80050000 {
-> > +		compatible = "fsl,imx28-lradc";
-> > +		reg = <0x80050000 0x2000>;
-> > +		interrupts = <10 14 15 16 17 18 19 20 21 22 23 24 25>;
-> > +		status = "okay";
-> > +		fsl,lradc-touchscreen-wires = <5>;
-> > +		fsl,ave-ctrl = <4>;
-> > +		fsl,ave-delay = <2>;
-> > +		fsl,settling = <10>;
-> > +	};
+Ah OK, so if a caller of this function is expected to only use IS_ERR(), 
+and hence treat NULL as a perfectly valid PHY value, and all the PHY 
+APIs deal with NULL correctly, then this is probably OK.
