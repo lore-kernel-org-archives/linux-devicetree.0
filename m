@@ -1,121 +1,88 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] iio: mxs-lradc: Move binding document out of staging
- as well
-Date: Thu, 14 Apr 2016 00:20:28 +0200
-Message-ID: <570EC62C.7010306@denx.de>
-References: <1460293398-23654-1-git-send-email-harald@ccbib.org> <20160411194204.GA17762@rob-hp-laptop>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv3 2/2] usb: dwc2: Add reset control to dwc2
+Date: Wed, 13 Apr 2016 17:44:02 -0500
+Message-ID: <1460587442-21136-2-git-send-email-dinguyen@opensource.altera.com>
+References: <1460587442-21136-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160411194204.GA17762@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460587442-21136-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2016 09:42 PM, Rob Herring wrote:
-> On Sun, Apr 10, 2016 at 01:03:18PM +0000, Harald Geyer wrote:
->> commit f836c45922446df872250a12dd08e48978aceb2f moved mxs-lradc driver
->> out of staging. However the binding document was left in the old place.
-> 
-> A move out of staging should probably imply a review. Though we don't 
-> have clear rules around that for bindings.
-> 
->>
->> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/adc/mxs-lradc.txt      | 47 ++++++++++++++++++++++
->>  .../bindings/staging/iio/adc/mxs-lradc.txt         | 47 ----------------------
->>  2 files changed, 47 insertions(+), 47 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
->>  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
->> new file mode 100644
->> index 0000000..555fb11
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
->> @@ -0,0 +1,47 @@
->> +* Freescale MXS LRADC device driver
->> +
->> +Required properties:
->> +- compatible: Should be "fsl,imx23-lradc" for i.MX23 SoC and "fsl,imx28-lradc"
->> +              for i.MX28 SoC
->> +- reg: Address and length of the register set for the device
->> +- interrupts: Should contain the LRADC interrupts
->> +
->> +Optional properties:
->> +- fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
->> +                               to LRADC. Valid value is either 4 or 5. If this
->> +                               property is not present, then the touchscreen is
->> +                               disabled. 5 wires is valid for i.MX28 SoC only.
-> 
-> Standard touchscreen property?
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Looks quite standard-ish to me indeed. It is my fault for bringing this
-baggage in back when I wrote the driver, but now that we're moving the
-driver out of staging, it would make sense to deprecate such properties
-and use standard ones (if they got fleshed out during that time).
+Allow for platforms that have a reset controller driver in place to bring
+the USB IP out of reset.
 
-We now have "atmel,adc-ts-wires" , "ti,wires" ,
-"fsl,lradc-touchscreen-wires" , so some sort of pattern is developing here.
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+v4: use dev_dbg() if not a -EPROBE_DEFER
+v3: fix compile error
+v2: move to lowlevel_hw_init()
+---
+ drivers/usb/dwc2/core.h     |  1 +
+ drivers/usb/dwc2/platform.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
->> +- fsl,ave-ctrl: number of samples per direction to calculate an average value.
->> +                Allowed value is 1 ... 32, default is 4
->> +- fsl,ave-delay: delay between consecutive samples. Allowed value is
->> +                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
->> +                 2 kHz and its default is 2 (= 1 ms)
-> 
-> ditto.
-> 
-> If not, it should have units.
-
-Agreed, this is standard ADC sampling frequency I think.
-
->> +- fsl,settling: delay between plate switch to next sample. Allowed value is
->> +                1 ... 2047. It counts at 2 kHz and its default is
->> +                10 (= 5 ms)
-> 
-> ditto.
-> 
->> +
->> +Example for i.MX23 SoC:
->> +
->> +	lradc@80050000 {
->> +		compatible = "fsl,imx23-lradc";
->> +		reg = <0x80050000 0x2000>;
->> +		interrupts = <36 37 38 39 40 41 42 43 44>;
->> +		status = "okay";
->> +		fsl,lradc-touchscreen-wires = <4>;
->> +		fsl,ave-ctrl = <4>;
->> +		fsl,ave-delay = <2>;
->> +		fsl,settling = <10>;
->> +	};
->> +
->> +Example for i.MX28 SoC:
->> +
->> +	lradc@80050000 {
->> +		compatible = "fsl,imx28-lradc";
->> +		reg = <0x80050000 0x2000>;
->> +		interrupts = <10 14 15 16 17 18 19 20 21 22 23 24 25>;
->> +		status = "okay";
->> +		fsl,lradc-touchscreen-wires = <5>;
->> +		fsl,ave-ctrl = <4>;
->> +		fsl,ave-delay = <2>;
->> +		fsl,settling = <10>;
->> +	};
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
-
+diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+index 3c58d63..f748132 100644
+--- a/drivers/usb/dwc2/core.h
++++ b/drivers/usb/dwc2/core.h
+@@ -837,6 +837,7 @@ struct dwc2_hsotg {
+ 	void *priv;
+ 	int     irq;
+ 	struct clk *clk;
++	struct reset_control *reset;
+ 
+ 	unsigned int queuing_high_bandwidth:1;
+ 	unsigned int srp_success:1;
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 88629be..5e89af1 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -45,6 +45,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_data/s3c-hsotg.h>
++#include <linux/reset.h>
+ 
+ #include <linux/usb/of.h>
+ 
+@@ -337,6 +338,17 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+ {
+ 	int i, ret;
+ 
++	hsotg->reset = devm_reset_control_get(hsotg->dev, "dwc2");
++	if (IS_ERR(hsotg->reset)) {
++		if (PTR_ERR(hsotg->reset) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		dev_dbg(hsotg->dev, "Could not get reset control.\n");
++		hsotg->reset = NULL;
++	}
++
++	if(hsotg->reset)
++		reset_control_deassert(hsotg->reset);
++
+ 	/* Set default UTMI width */
+ 	hsotg->phyif = GUSBCFG_PHYIF16;
+ 
+@@ -434,6 +446,9 @@ static int dwc2_driver_remove(struct platform_device *dev)
+ 	if (hsotg->ll_hw_enabled)
+ 		dwc2_lowlevel_hw_disable(hsotg);
+ 
++	if (hsotg->reset)
++		reset_control_assert(hsotg->reset);
++
+ 	return 0;
+ }
+ 
 -- 
-Best regards,
-Marek Vasut
+2.6.2
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
