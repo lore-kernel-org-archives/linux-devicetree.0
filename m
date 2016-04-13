@@ -1,83 +1,44 @@
 From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv3 2/2] usb: dwc2: Add reset control to dwc2
-Date: Wed, 13 Apr 2016 17:44:02 -0500
-Message-ID: <1460587442-21136-2-git-send-email-dinguyen@opensource.altera.com>
-References: <1460587442-21136-1-git-send-email-dinguyen@opensource.altera.com>
+Subject: [PATCH 1/2] Documentation: dt-bindings: dwc2: add the resets and reset-names property
+Date: Wed, 13 Apr 2016 17:44:01 -0500
+Message-ID: <1460587442-21136-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460587442-21136-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Allow for platforms that have a reset controller driver in place to bring
-the USB IP out of reset.
+Document the optional 'resets' and 'reset-names' property for the DWC2 usb
+core.
 
 Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
-v4: use dev_dbg() if not a -EPROBE_DEFER
-v3: fix compile error
-v2: move to lowlevel_hw_init()
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- drivers/usb/dwc2/core.h     |  1 +
- drivers/usb/dwc2/platform.c | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+ Documentation/devicetree/bindings/usb/dwc2.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index 3c58d63..f748132 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -837,6 +837,7 @@ struct dwc2_hsotg {
- 	void *priv;
- 	int     irq;
- 	struct clk *clk;
-+	struct reset_control *reset;
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 20a68bf..c9ccea6 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -27,6 +27,9 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - g-rx-fifo-size: size of rx fifo size in gadget mode.
+ - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+ - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
++- resets: list of phandle and reset specifier pairs. The should be one entry for
++  softreset line of the USB IP.
++- reset-names: Should be "dwc2".
  
- 	unsigned int queuing_high_bandwidth:1;
- 	unsigned int srp_success:1;
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index 88629be..5e89af1 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -45,6 +45,7 @@
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
-+#include <linux/reset.h>
- 
- #include <linux/usb/of.h>
- 
-@@ -337,6 +338,17 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
- {
- 	int i, ret;
- 
-+	hsotg->reset = devm_reset_control_get(hsotg->dev, "dwc2");
-+	if (IS_ERR(hsotg->reset)) {
-+		if (PTR_ERR(hsotg->reset) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_dbg(hsotg->dev, "Could not get reset control.\n");
-+		hsotg->reset = NULL;
-+	}
-+
-+	if(hsotg->reset)
-+		reset_control_deassert(hsotg->reset);
-+
- 	/* Set default UTMI width */
- 	hsotg->phyif = GUSBCFG_PHYIF16;
- 
-@@ -434,6 +446,9 @@ static int dwc2_driver_remove(struct platform_device *dev)
- 	if (hsotg->ll_hw_enabled)
- 		dwc2_lowlevel_hw_disable(hsotg);
- 
-+	if (hsotg->reset)
-+		reset_control_assert(hsotg->reset);
-+
- 	return 0;
- }
+ Example:
  
 -- 
 2.6.2
