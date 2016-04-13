@@ -1,132 +1,106 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 08/45] powerpc/powernv: Fix initial IO and M32 segmap
-Date: Wed, 13 Apr 2016 19:53:16 +1000
-Message-ID: <570E170C.1040301@ozlabs.ru>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-9-git-send-email-gwshan@linux.vnet.ibm.com>
- <570DE553.80708@ozlabs.ru> <20160413075324.GA31320@gwshan>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 4/7] soc/tegra: pmc: Add interface to set voltage of IO
+ rails
+Date: Wed, 13 Apr 2016 10:56:12 +0100
+Message-ID: <570E17BC.7010304@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
+ <1460473007-11535-5-git-send-email-ldewangan@nvidia.com>
+ <570E07B7.1070209@nvidia.com> <570E0AC9.9050701@nvidia.com>
+ <570E109D.6070805@nvidia.com> <570E0F7B.6060006@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160413075324.GA31320@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <570E0F7B.6060006@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/13/2016 05:53 PM, Gavin Shan wrote:
-> On Wed, Apr 13, 2016 at 04:21:07PM +1000, Alexey Kardashevskiy wrote:
->> On 02/17/2016 02:43 PM, Gavin Shan wrote:
->>> There are two arrays for IO and M32 segment maps on every PHB.
->>> The index of the arrays are segment number and the value stored
->>> in the corresponding element is PE number, indicating the segment
->>> is assigned to the PE. Initially, all elements in those two arrays
->>> are zeroes, meaning all segments are assigned to PE#0. It's wrong.
->>>
->>> This fixes the initial values in the elements of those two arrays
->>> to IODA_INVALID_PE, meaning all segments aren't assigned to any
->>> PE.
->>
->> This is ok.
->>
->>> In order to use IODA_INVALID_PE (-1) to represent invalid PE
->>> number, the types of those two arrays are changed from "unsigned int"
->>> to "int".
->>
->> "unsigned" can carry (-1) perfectly fine, just add a type cast to
->> IODA_INVALID_PE:
->>
->> #define IODA_INVALID_PE    (unsigned int)(-1)
->>
->> Using "signed" type for indexes which cannot be negative does not make much
->> sense - instead of checking for the upper boundary, you have to check for "<
->> 0" too.
->>
->> OPAL uses unsigned type for PE (uint64_t or uint32_t or uint16_t - this is
->> quite funny).
->>
->> pnv_ioda_pe::pe_number is "unsigned" and this pe_number is the same thing as
->> I can see in pnv_ioda_setup_dev_PE().
->>
->> Some printk() print the PE number as "%x" (which implies "unsigned").
->>
->
-> Yes, I can simply have something like below when PE number as well as
-> segment index are represented by "unsigned int" values, right?
->
-> #define IODA_INVALID_PE		0xffffffff
 
+On 13/04/16 10:20, Laxman Dewangan wrote:
+> 
+> On Wednesday 13 April 2016 02:55 PM, Jon Hunter wrote:
+>> On 13/04/16 10:00, Laxman Dewangan wrote:
+>>> On Wednesday 13 April 2016 02:17 PM, Jon Hunter wrote:
+>>>> On 12/04/16 15:56, Laxman Dewangan wrote:
+>>>>> NVIDIA Tegra210 supports some of the IO interface which can operate
+>>>>> at 1.8V or 3.3V I/O rail voltage levels. SW needs to configure
+>>>>> Tegra PMC register to set different voltage level of IO interface
+>>>>> based
+>>>>> on IO rail voltage from power supply i.e. power regulators.
+>>>>>
+>>>>> Add APIs to set and get IO rail voltage from the client driver.
+>>>> I think that we need some further explanation about the scenario when
+>>>> this is used. In other words, why this configuration needs to be
+>>>> done in
+>>>> the kernel versus the bootloader. Is this something that can change at
+>>>> runtime? I could see that for SD cards it may.
+>>> Yes, SDIO3.0 support needs dynamic IO rail voltage change and so pad
+>>> voltage change.
+>>>
+>>>>>      #define GPU_RG_CNTRL            0x2d4
+>>>>>    +static DEFINE_SPINLOCK(tegra_pmc_access_lock);
+>>>>> +
+>>>> We already have a mutex for managing concurrent accesses, do we need
+>>>> this?
+>>> Mutex is sleeping calls and we really dont need this. This is sleep for
+>>> small duration and we should do this in spinlock.
+>> Yes but do you need to call it from a interrupt context? It seems that
+>> these are not called very often, may be on boot, or when swapping an SD
+>> card, and so although a spinlock would be faster, the overhead of the
+>> mutex would be negligible in this case. I think that you need to justify
+>> why this needs to be a spinlock with a use-case that requires it.
+>>
+> 
+> This is just based on my OS theory that if critical region is taking
+> less time, in order of us instead of ms then better to use spin lock
+> instead of mutex lock.
 
-This will work too, yes.
+Yes, but you also need to be practical. Furthermore, someone could be
+powering up/down a rail at the same time someone is setting the voltage.
+May be this is not a big deal ...
 
->
+>>>>>    +
+>>>>> +static struct tegra_io_rail_voltage_bit_info
+>>>>> tegra210_io_rail_voltage_info[] = {
+>>>>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC1, 12),
+>>>>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC3, 13),
+>>>>> +    TEGRA_IO_RAIL_VOLTAGE(AUDIO_HV, 18),
+>>>>> +    TEGRA_IO_RAIL_VOLTAGE(DMIC, 20),
+>>>>> +    TEGRA_IO_RAIL_VOLTAGE(GPIO, 21),
+>>>>> +    TEGRA_IO_RAIL_VOLTAGE(SPI_HV, 23),
+>>>>> +};
+>>>>> +
+>>>> You could simply this by having a look-up table similar to what we do
+>>>> for the powergates.
+>>> Revising the power gate code, it needs ID matches with bit location but
+>>> it is not the case here. We need to have lookup from ID to  bit
+>>> position.
+>> I still don't see why you could not have ...
 >>
->> I suggest changing the pci_dn::pe_number type from "int" to "unsigned int" to
->> match pnv_ioda_pe::pe_number, in a separate patch. Or do not touch types for
->> now.
+>> static unsigned int tegra210_io_rail_voltage_bit[] = {
+>>     [TEGRA_IO_RAIL_SDMMC1] = 12,
+>>     ...
+>> }
 >>
->
-> Yes, I will have a separate patch right before this one to address it.
->
->>
->>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>> ---
->>>   arch/powerpc/platforms/powernv/pci-ioda.c | 9 +++++++--
->>>   arch/powerpc/platforms/powernv/pci.h      | 4 ++--
->>>   2 files changed, 9 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> index 1d2514f..44cc5f3 100644
->>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> @@ -3239,7 +3239,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>>   	unsigned long size, m32map_off, pemap_off, iomap_off = 0;
->>>   	const __be64 *prop64;
->>>   	const __be32 *prop32;
->>> -	int len;
->>> +	int i, len;
->>>   	u64 phb_id;
->>>   	void *aux;
->>>   	long rc;
->>> @@ -3334,8 +3334,13 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>>   	aux = memblock_virt_alloc(size, 0);
->>>   	phb->ioda.pe_alloc = aux;
->>>   	phb->ioda.m32_segmap = aux + m32map_off;
->>> -	if (phb->type == PNV_PHB_IODA1)
->>> +	for (i = 0; i < phb->ioda.total_pe_num; i++)
->>> +		phb->ioda.m32_segmap[i] = IODA_INVALID_PE;
->>> +	if (phb->type == PNV_PHB_IODA1) {
->>>   		phb->ioda.io_segmap = aux + iomap_off;
->>> +		for (i = 0; i < phb->ioda.total_pe_num; i++)
->>> +			phb->ioda.io_segmap[i] = IODA_INVALID_PE;
->>> +	}
->>>   	phb->ioda.pe_array = aux + pemap_off;
->>>   	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
->>>
->>> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>> index 784882a..36c4965 100644
->>> --- a/arch/powerpc/platforms/powernv/pci.h
->>> +++ b/arch/powerpc/platforms/powernv/pci.h
->>> @@ -146,8 +146,8 @@ struct pnv_phb {
->>>   		struct pnv_ioda_pe	*pe_array;
->>>
->>>   		/* M32 & IO segment maps */
->>> -		unsigned int		*m32_segmap;
->>> -		unsigned int		*io_segmap;
->>> +		int			*m32_segmap;
->>> +		int			*io_segmap;
->>>
->>>   		/* IRQ chip */
->>>   		int			irq_chip_init;
->>>
->>
->>
->> --
->> Alexey
->>
->
+>> You could avoid the for-loop in the lookup as well as all the extra
+>> definitions. Seems a lot simpler.
+> 
+> This makes the table in larger size, max index is maximum of all the 
+> macros used in LHS.
 
+True. May be there is not a better way to do this ...
 
--- 
-Alexey
+> Also if we have 0 as valid (which is not there now) then it can be trouble.
+>>> The TRM needs to be update. There is no LATCH register in the T210.
+>>> PMC_PWR_DET and PMC_PWR_DET_VAL are registers for this. I have internal
+>>> tracking bug for correcting this.
+>> Why do you need to program both? I think that we should be clear here
+>> about the procedure. If the TRM is wrong, then there should be at least
+>> a comment here describing the correct sequence.
+> OK, will mention the details.
+
+Thanks
+Jon
+
