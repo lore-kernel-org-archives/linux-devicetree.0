@@ -1,30 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RESEND 2/2] ARM: dts: enable pinctrl for Broadcom NS2 SoC
-Date: Wed, 13 Apr 2016 15:24:16 +0200
-Message-ID: <CACRpkdZWeXFENOK-ufrBZxp91Hj0-rfm+rtG0f8_Mb5CnmZG1A@mail.gmail.com>
-References: <1459264932-27884-1-git-send-email-yendapally.reddy@broadcom.com>
-	<1459264932-27884-3-git-send-email-yendapally.reddy@broadcom.com>
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v2 1/2] spi: pic32-sqi: add binding document for PIC32 Quad-SPI driver.
+Date: Wed, 13 Apr 2016 18:52:57 +0530
+Message-ID: <1460553778-1662-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1459264932-27884-3-git-send-email-yendapally.reddy@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 5:22 PM, Yendapally Reddy Dhananjaya Reddy
-<yendapally.reddy@broadcom.com> wrote:
+Document Device tree bindings for the quad SPI peripheral
+found on Microchip PIC32 class devices.
 
-> This enables the pinctrl support for Broadcom NS2 SoC
->
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 
-This looks good.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
-Please merge it separately through the ARM SoC tree.
+Changes in v2: None
 
-Yours,
-Linus Walleij
+ Documentation/devicetree/bindings/spi/sqi-pic32.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/sqi-pic32.txt
+
+diff --git a/Documentation/devicetree/bindings/spi/sqi-pic32.txt b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
+new file mode 100644
+index 0000000..5af9fab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
+@@ -0,0 +1,18 @@
++Microchip PIC32 Quad SPI controller
++-----------------------------------
++Required properties:
++- compatible: Should be "microchip,pic32mzda-sqi".
++- reg: Address and length of SQI controller register space.
++- interrupts: Should contain SQI interrupt.
++- clocks: Should contain phandle of two clocks in sequence, clock that drives
++          clock on SPI bus and clock that drives SQI controller.
++- clock-names: Should be "spi_ck" and "reg_ck" in order.
++
++Example:
++	sqi1: sqi@1f8e2000 {
++		compatible = "microchip,pic32mzda-sqi";
++		reg = <0x1f8e2000 0x200>;
++		clocks = <&rootclk REF2CLK>, <&rootclk PB5CLK>;
++		clock-names = "spi_ck", "reg_ck";
++		interrupts = <169 IRQ_TYPE_LEVEL_HIGH>;
++	};
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
