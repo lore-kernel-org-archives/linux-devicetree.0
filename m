@@ -1,50 +1,55 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings/spi: Add bindings for PIC32 Quad-SPI
- driver.
-Date: Wed, 13 Apr 2016 14:16:39 +0100
-Message-ID: <20160413131639.GS14664@sirena.org.uk>
-References: <1460553125-32649-1-git-send-email-purna.mandal@microchip.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND 1/2] pinctrl: ns2: add pinmux driver support for
+ Broadcom NS2 SoC
+Date: Wed, 13 Apr 2016 15:19:01 +0200
+Message-ID: <CACRpkdY8R91_j4+A_CFzrZdp1zj10SBthL2yyoSxUDJnVBs8NA@mail.gmail.com>
+References: <1459264932-27884-1-git-send-email-yendapally.reddy@broadcom.com>
+	<1459264932-27884-2-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="b2ktwntdbf0dPnbx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460553125-32649-1-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1459264932-27884-2-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 29, 2016 at 5:22 PM, Yendapally Reddy Dhananjaya Reddy
+<yendapally.reddy@broadcom.com> wrote:
 
---b2ktwntdbf0dPnbx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> This adds the initial support of the Broadcom NS2 pinmux driver
+>
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
 
-On Wed, Apr 13, 2016 at 06:42:04PM +0530, Purna Chandra Mandal wrote:
-> Document Device tree bindings for quad SPI peripheral
-> found on Microchip PIC32 class devices.
+Sorry for slow replies. :(
 
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.
+This mostly looks good. Some small things needs fixing:
 
---b2ktwntdbf0dPnbx
-Content-Type: application/pgp-signature; name="signature.asc"
+> +config PINCTRL_NS2_MUX
+> +       bool "Broadcom Northstar2 pinmux driver"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+This is a bool driver, yet it uses MODULE* macros at the end of the file.
+Check the recent commits from Paul Gortmaker cleaning this up.
+Just a git log -p --author=Gortmaker in the main kernel tree will quickly
+give you an idea of what you have to do.
 
-iQEcBAEBCAAGBQJXDka2AAoJECTWi3JdVIfQiSsH/1x61bNmZo3vbnA5MThcRrZq
-i8Y1lThdC+oRtCOVbogb4Yl3pruRSV31f8nhoV2TZc9ITKVNYMv6IJ/J8IMrOVJH
-5TBm+hrDgyXkteklzpOO3wc24wqikvClajxIWY95tKGLlDSFnXBeLy37SN/K8FXt
-MgE2XJ76pxSxxo/xVNQ08sFCEwwvnLxGgywQ8OYCDrUmgKDNtXf8KQGyLj+/Qugz
-ka6VL5lz0OH2U3vMB1WVUCCBdYp/53x63amteBWKQ+aybL+PLKpyXNsIPST0K6Kt
-ui/lTMCx6eeobw+mgwpDLNBDbMpCc6EdzxV18L3ZLKweSxTSE5aaZnCJv1mY/tQ=
-=aAt+
------END PGP SIGNATURE-----
 
---b2ktwntdbf0dPnbx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static const unsigned int gpio_0_1_pins[] = {24, 25};
+> +static const unsigned int pwm_0_pins[] = {24};
+> +static const unsigned int pwm_1_pins[] = {25};
+
+So either the same pins are used for GPIO or PWM.
+And this pattern persists.
+
+Do you have a brewing GPIO driver for this block as well?
+Is it a separate front-end calling to pinctrl using the
+pinctrl_gpio_* calls or do you plan to patch it into this
+driver?
+
+This is more of a question.
+
+Apart from this it looks good.
+
+Yours,
+Linus Walleij
