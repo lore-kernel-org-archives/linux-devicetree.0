@@ -1,146 +1,94 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: ls2080a: fsl-mc dt node updates
-Date: Wed, 13 Apr 2016 13:50:19 +0800
-Message-ID: <20160413055019.GK28903@tiger>
-References: <1459544080-28598-1-git-send-email-stuart.yoder@nxp.com>
+From: Alexey Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v8 03/45] powerpc/pci: Cleanup on struct
+ pci_controller_ops
+Date: Wed, 13 Apr 2016 15:52:25 +1000
+Message-ID: <570DDE99.7070103@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-4-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459544080-28598-1-git-send-email-stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1455680668-23298-4-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, german.rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org
+To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 01, 2016 at 03:54:40PM -0500, Stuart Yoder wrote:
-> From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-> 
-> updates to the fsl-mc node for full functionality:
->    -msi-parent is needed for interrupt support
->    -ranges is needed to enable the bus driver to translate bus addresses
->    -dpmac nodes provide a basis for relating dpmac objects to PHYs
-> 
-> Signed-off-by: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+On 02/17/2016 02:43 PM, Gavin Shan wrote:
+> Each PHB has one instance of "struct pci_controller_ops", which
+> includes various callbacks called by PCI subsystem. In the definition
+> of this struct, some callbacks have explicit names for its arguments,
+> but the left don't have.
+>
+> This adds all explicit names of the arguments to the callbacks in
+> "struct pci_controller_ops" so that the code looks consistent.
+>
+> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Daniel Axtens <dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org>
+
+With tiny nit below,
+
+Reviewed-by: Alexey Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>
+
+
+
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |   87 ++++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index 9d746c6..449c635 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -265,6 +265,93 @@
->  			compatible = "fsl,qoriq-mc";
->  			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
->  			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
-> +			msi-parent = <&its>;
-> +			#address-cells = <3>;
-> +			#size-cells = <1>;
-> +
-> +			/*
-> +			 * Region type 0x0 - MC portals
-> +			 * Region type 0x1 - QBMAN portals
-> +			 */
-> +			ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
-> +				  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
-> +
-> +			/*
-> +			 * Define the maximum number of MACs present on the SoC.
-> +			 * They won't necessarily be all probed, since the
-> +			 * Data Path Layout file and the MC firmware can put
-> +			 * fewer actual DPMAC objects on the MC bus.
-> +			 */
-> +			dpmacs {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				dpmac1: dpmac@1 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
+>   arch/powerpc/include/asm/pci-bridge.h | 13 +++++++------
+>   1 file changed, 7 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+> index b688d04..4dd6ef4 100644
+> --- a/arch/powerpc/include/asm/pci-bridge.h
+> +++ b/arch/powerpc/include/asm/pci-bridge.h
+> @@ -21,18 +21,19 @@ struct pci_controller_ops {
+>   	void		(*dma_dev_setup)(struct pci_dev *dev);
+>   	void		(*dma_bus_setup)(struct pci_bus *bus);
+>
+> -	int		(*probe_mode)(struct pci_bus *);
+> +	int		(*probe_mode)(struct pci_bus *bus);
+>
+>   	/* Called when pci_enable_device() is called. Returns true to
+>   	 * allow assignment/enabling of the device. */
+> -	bool		(*enable_device_hook)(struct pci_dev *);
+> +	bool		(*enable_device_hook)(struct pci_dev *dev);
 
-I did not see how this compatible is used by kernel driver.
 
-> +					reg = <1>;
-> +				};
+"pdev" is slightly better as it is of the "pci_dev" type (4130 occurrences 
+of "pci_dev *pdev" and just 2833 of "pci_dev *dev" in the current kernel), 
+"dev" is for "struct device".
 
-Please have a newline between nodes.
 
-Shawn
 
-> +				dpmac2: dpmac@2 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <2>;
-> +				};
-> +				dpmac3: dpmac@3 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <3>;
-> +				};
-> +				dpmac4: dpmac@4 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <4>;
-> +				};
-> +				dpmac5: dpmac@5 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <5>;
-> +				};
-> +				dpmac6: dpmac@6 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <6>;
-> +				};
-> +				dpmac7: dpmac@7 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <7>;
-> +				};
-> +				dpmac8: dpmac@8 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <8>;
-> +				};
-> +				dpmac9: dpmac@9 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <9>;
-> +				};
-> +				dpmac10: dpmac@10 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <0xa>;
-> +				};
-> +				dpmac11: dpmac@11 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <0xb>;
-> +				};
-> +				dpmac12: dpmac@12 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <0xc>;
-> +				};
-> +				dpmac13: dpmac@13 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <0xd>;
-> +				};
-> +				dpmac14: dpmac@14 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <0xe>;
-> +				};
-> +				dpmac15: dpmac@15 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <0xf>;
-> +				};
-> +				dpmac16: dpmac@16 {
-> +					compatible = "fsl,qoriq-mc-dpmac";
-> +					reg = <0x10>;
-> +				};
-> +			};
-> +
->  		};
->  
->  		smmu: iommu@5000000 {
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+
+>
+> -	void		(*disable_device)(struct pci_dev *);
+> +	void		(*disable_device)(struct pci_dev *dev);
+>
+> -	void		(*release_device)(struct pci_dev *);
+> +	void		(*release_device)(struct pci_dev *dev);
+>
+>   	/* Called during PCI resource reassignment */
+> -	resource_size_t (*window_alignment)(struct pci_bus *, unsigned long type);
+> +	resource_size_t (*window_alignment)(struct pci_bus *bus,
+> +					    unsigned long type);
+>   	void		(*setup_bridge)(struct pci_bus *bus,
+>   					unsigned long type);
+>   	void		(*reset_secondary_bus)(struct pci_dev *dev);
+> @@ -46,7 +47,7 @@ struct pci_controller_ops {
+>   	int             (*dma_set_mask)(struct pci_dev *dev, u64 dma_mask);
+>   	u64		(*dma_get_required_mask)(struct pci_dev *dev);
+>
+> -	void		(*shutdown)(struct pci_controller *);
+> +	void		(*shutdown)(struct pci_controller *hose);
+>   };
+>
+>   /*
+>
+
+
+-- 
+Alexey
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
