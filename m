@@ -1,68 +1,74 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] regulator: st-flashss: Add a regulator driver for
- flashss vsense.
-Date: Wed, 13 Apr 2016 18:23:18 +0100
-Message-ID: <20160413172318.GC29471@sirena.org.uk>
-References: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
- <1460474204-5351-3-git-send-email-peter.griffin@linaro.org>
- <20160413061514.GI14664@sirena.org.uk>
- <570DFC44.8060408@st.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] device-tree: nexus7-flo: Remove power gpio key entry and
+ use pmic8xxx-pwrkey
+Date: Wed, 13 Apr 2016 18:24:26 +0100
+Message-ID: <570E80CA.3080100@arm.com>
+References: <1460567784-28017-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="69pVuxX8awAiJ7fD"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <570DFC44.8060408-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Youssef TRIKI <youssef.triki-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460567784-28017-1-git-send-email-john.stultz@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---69pVuxX8awAiJ7fD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Apr 13, 2016 at 09:59:00AM +0200, Giuseppe CAVALLARO wrote:
-> On 4/13/2016 8:15 AM, Mark Brown wrote:
-> >>>+static void st_get_satinize_powerup_voltage(struct st_vsense *vsense)
-> >>>+{
+On 13/04/16 18:16, John Stultz wrote:
+> Since the pmic8xxx-pwrkey driver is already supported in the
+> qcom-apq8064.dtsi, and the pmic8xxx-pwrkey supports logic to
+> configure proper device shutdown when ps_hold goes low, it is
+> better to use that driver then a generic gpio button.
+>
+> Thus this patch remove the gpio power key entry here, so we
+> don't get double input events from having two drivers enabled.
+>
+> The one gotcha with the pmic8xxx-pwrkey is it has a fairly
+> long debounce delay, which we shorten here to make the button
+> behave as expected.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Andy Gross <agross@codeaurora.org>
+> Cc: Vinay Simha BN <simhavcs@gmail.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Stephen Boyd <stephen.boyd@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>   arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 15 +++++++++------
+>   1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+> index c535b3f..7ac1c65 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+> @@ -29,12 +29,6 @@
+>
+>   	gpio-keys {
+>   		compatible = "gpio-keys";
+> -		power {
+> -			label = "Power";
+> -			gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
+> -			linux,code = <KEY_POWER>;
+> -			gpio-key,wakeup;
 
-> >or am I missing something?  Why do we need to do this anyway, it's very
-> >surprsing?
+You are dropping wakeup with this change. Is that intentional ?
 
-> This functions is to sanitize the vsense voltages when the regulator
-> is probed and in some circumstances the reset value of this register
-> does not reflect the hw status/config. For example, by default, after
-> the reset, the bit 0 is set so the EMMC, inside the flash subsystem,
-> is supposed to operate at 3v3. But the latched bit 24 can be 0 on
-> a platform where it is actually set at 1v8.
-> So the bit 0 must be reset to keep this coherent and to allow MMC
-> framework to properly setup the Vdd when the framework starts.
+If not, while you are at this, replace it with "wakeup-source"
+which is standard binding.
 
-I'm afraid I can't follow that explanation, perhaps because I don't know
-anything about the content of this register except for these three bits.
-I think we do need a comment in the driver explaining what's going on,
-and probably a simplification of the code too if my understanding of the
-effect of all those operations is correct.
+If yes, then it solves the problem :). I had a patch to replace it, but
+was waiting to check if any new files in linux-next before posting. For
+now, this is the only legacy entry.
 
---69pVuxX8awAiJ7fD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXDoCEAAoJECTWi3JdVIfQEz8H/RPhtGRQrOquL5xePbKThd7c
-QvZyD98ASeRzcyX7DqlGVtyVwVErGLJZF9XRanv9z7CuxUqxoNcLbNLypEh+v1ly
-nwhAOITteBH7i2JjbxypVqLGpZMbKViAKKBR0/yXYdbMmqR2U6JunkCom4ooaiuh
-5gij/xURWJkBpIwjMacJwJoDDhlZQU8wSa1HUa43Sj10V9+KA5N9njhTwE0yWZGo
-QdAzzDrdRpWVXzQE86VZuSAD0j3nQ8W1qjb5z5poU/qSW5EtJ1u4b/jbjztLepmj
-3B+WqRvkkx4w+hI8ym3uuMNoyvhP+bMZxpKuwItMua9z7dHFTcr+IpyxSHd9+EM=
-=/N0I
------END PGP SIGNATURE-----
-
---69pVuxX8awAiJ7fD--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Sudeep
