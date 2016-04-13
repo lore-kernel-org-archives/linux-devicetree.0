@@ -1,61 +1,37 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v2] arm64: dts: Add nodes for pdma0 and pdam1 for exynos7
-Date: Wed, 13 Apr 2016 10:12:03 +0530
-Message-ID: <1460522523-7429-1-git-send-email-alim.akhtar@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, thomas.ab@samsung.com
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND][PATCH 1/3] thermal: mediatek: Add cpu dynamic power
+ cooling model.
+Date: Wed, 13 Apr 2016 06:52:51 +0200
+Message-ID: <CAJZ5v0hpkyMCVhvYy4JzR1A5OZKs7dqDOB64aQXmjXiLM0F=BQ@mail.gmail.com>
+References: <1458029437-12846-1-git-send-email-dawei.chien@mediatek.com>
+	<1458029437-12846-2-git-send-email-dawei.chien@mediatek.com>
+	<20160412053807.GT16238@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160412053807.GT16238@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree nodes for pdma0 and pdma1 controllers
-found on exynos7 SoCs.
+On Tue, Apr 12, 2016 at 7:38 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Rafael,
+>
+> On 15-03-16, 16:10, Dawei Chien wrote:
+>> MT8173 cpufreq driver select of_cpufreq_power_cooling_register registering
+>> cooling devices with dynamic power coefficient.
+>>
+>> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Can you please apply this patch from Dawei ?
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos7.dtsi |   29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+I can, but I'm traveling this week, so that's rather going to happen next week.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index 93108f1..a1a3dba 100644
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -95,6 +95,35 @@
- 				<0x11006000 0x2000>;
- 		};
- 
-+		amba {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			pdma0: pdma@10E10000 {
-+				compatible = "arm,pl330", "arm,primecell";
-+				reg = <0x10E10000 0x1000>;
-+				interrupts = <0 225 0>;
-+				clocks = <&clock_fsys0 ACLK_PDMA0>;
-+				clock-names = "apb_pclk";
-+				#dma-cells = <1>;
-+				#dma-channels = <8>;
-+				#dma-requests = <32>;
-+			};
-+
-+			pdma1: pdma@10EB0000 {
-+				compatible = "arm,pl330", "arm,primecell";
-+				reg = <0x10EB0000 0x1000>;
-+				interrupts = <0 226 0>;
-+				clocks = <&clock_fsys0 ACLK_PDMA1>;
-+				clock-names = "apb_pclk";
-+				#dma-cells = <1>;
-+				#dma-channels = <8>;
-+				#dma-requests = <32>;
-+			};
-+		};
-+
- 		clock_topc: clock-controller@10570000 {
- 			compatible = "samsung,exynos7-clock-topc";
- 			reg = <0x10570000 0x10000>;
--- 
-1.7.10.4
+Thanks,
+Rafael
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
