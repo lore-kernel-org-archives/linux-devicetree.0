@@ -1,68 +1,54 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Wed, 13 Apr 2016 11:04:56 -0600
-Message-ID: <570E7C38.3070005@wwwdotorg.org>
-References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
- <56E98F2E.5010307@wwwdotorg.org> <20160413162203.GB30129@ulmo.ba.sec>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: Applied "regulator: max8973: add support for junction thermal
+ warning" to the regulator tree
+Date: Wed, 13 Apr 2016 22:31:03 +0530
+Message-ID: <570E7B4F.8060507@nvidia.com>
+References: <E1aqNXw-00083K-Oj@debutante>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160413162203.GB30129@ulmo.ba.sec>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <E1aqNXw-00083K-Oj@debutante>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: robh+dt@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/13/2016 10:22 AM, Thierry Reding wrote:
-> On Wed, Mar 16, 2016 at 10:51:58AM -0600, Stephen Warren wrote:
->> On 03/08/2016 08:48 AM, Thierry Reding wrote:
->>> From: Thierry Reding <treding@nvidia.com>
->>>
->>> Changes to the pad controller device tree binding have required that
->>> each lane be associated with a separate PHY.
->>
->> I still don't think this has anything to do with DT bindings. Rather, the
->> definition of a PHY (in HW and the Linux PHY subsystem) is a single lane.
->> That fact then requires drivers to support a PHY per lane rather than a
->> single multi-lane PHY, and equally means the DT bindings must be written
->> according to the correct definition of a PHY.
->>
->> Still, I suppose the commit description is fine as is.
->
-> I've reworded the commit message to give a more accurate rationale for
-> the change. I'll be posting a v5 soon.
->
->>> Update the PCI host bridge
->>> device tree binding to allow each root port to define the list of PHYs
->>> required to drive the lanes associated with it.
->>
->>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
->>
->>> +Required properties for Tegra124 and later:
->>> +- phys: Must contain an phandle to a PHY for each entry in phy-names.
->>> +- phy-names: Must include an entry for each active lane. Note that the number
->>> +  of entries does not have to (though usually will) be equal to the specified
->>> +  number of lanes in the nvidia,num-lanes property. Entries are of the form
->>> +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num-lanes.
->>
->> When would the number of PHYs not equal the number of lanes? I thought the
->> whole point of this patch was to switch to per-lane PHYs? Perhaps I'm just
->> misremembering some exception, so there may be no need to change this.
->
-> This is useful to support the case where we want to connect a x1 or x2
-> device to a root port that is configured to drive more lanes. It's a
-> rather unusual configuration, but it would be possible for example to
-> have an onboard x1 ethernet card, but the board layout is such that it
-> runs in x1/x2 mode, with the ethernet card connected to the x2 port.
 
-Does the controller HW actually work correctly in such a mode?
+On Wednesday 13 April 2016 09:51 PM, Mark Brown wrote:
+> The patch
+>
+>     regulator: max8973: add support for junction thermal warning
+>
+> has been applied to the regulator tree at
+>
+>     git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
+>
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+>
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+>
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+>
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+>
+> Thanks,
+> Mark
+>
+>  From d2d5437bdfdde20a75bdf59db1c1a77721613b22 Mon Sep 17 00:00:00 2001
+> From: Laxman Dewangan <ldewangan@nvidia.com>
+> Date: Wed, 13 Apr 2016 15:29:45 +0530
+> Subject: [PATCH] regulator: max8973: add support for junction thermal warning
+>
 
-Obviously a fully initialized x4 controller has to correctly handle 
-being attached solely to a x1 device. However, that's a different case 
-to simply not initializing 3 of the 4 PHYs. It's plausible the 
-controller handles this just fine, or that it hangs up or otherwise 
-misbehaves if some of the PHYs aren't enabled and hence it can't even 
-detect whether something is attached to them or not. Either way, adding 
-your explanation into the binding would be useful to highlight the 
-reason for the special case.
+Thank you very much for accepting patch. Hope at this time, it will pass 
+the build test robot.
+Unfortunately, it was reverted 2 times due to build issue on random config.
