@@ -1,44 +1,45 @@
-From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 0/2] Add Hisilicon Random Number Generator(RNG) support
-Date: Wed, 13 Apr 2016 18:11:26 +0800
-Message-ID: <1460542288-25941-1-git-send-email-wangkefeng.wang@huawei.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3 1/2] regulator: max8973: add DT binding details for junction warn temp
+Date: Wed, 13 Apr 2016 15:29:44 +0530
+Message-ID: <1460541585-28432-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Changes since v3:
-- Compatible name "hisilicon,hip04-rng" and  "hisilicon,hip05-rng" are used,
-  suggested by Robe Herring
-- Add reviewed-by from Mathieu Poirier
+The driver MAX8973 supports the driver for Maxim MAX77621.
+MAX77621 supports the junction temp warning at 120 degC and
+140 degC which is configurable. It generates alert signal when
+junction temperature crosses these threshold.
 
-Changes since v2:
-- Remove unused RNG_RELOAD_ERR.
-- Add comment of seed choice in hisi_rng_init
-- Add head inculde linux/random.h for get_random_bytes()
+Add DT properties and its binding details to make this
+configuration from DT.
 
-Changes since v1:
-- Rename compatible name from "hisilicon,hisi-rng" to "hisilicon,rng"
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ Documentation/devicetree/bindings/regulator/max8973-regulator.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Kefeng Wang (2):
-  dt/bindings: Add bindings for hisilicon random number generator
-  hwrng: hisi: Add support for Hisilicon SoC RNG
-
- Documentation/devicetree/bindings/rng/hisi-rng.txt |  12 ++
- drivers/char/hw_random/Kconfig                     |  13 +++
- drivers/char/hw_random/Makefile                    |   1 +
- drivers/char/hw_random/hisi-rng.c                  | 126 +++++++++++++++++++++
- 4 files changed, 152 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rng/hisi-rng.txt
- create mode 100644 drivers/char/hw_random/hisi-rng.c
-
+diff --git a/Documentation/devicetree/bindings/regulator/max8973-regulator.txt b/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
+index f80ea2f..c2c68fc 100644
+--- a/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
+@@ -32,6 +32,13 @@ Optional properties:
+ 
+ Enhanced transient response (ETR) will affect the configuration of CKADV.
+ 
++-junction-warn-millicelsius: u32, junction warning temperature threshold
++		in millicelsius. If die temperature crosses this level then
++		device generates the warning interrupts.
++
++Please note that thermal functionality is only supported on MAX77621. The
++supported threshold warning temperature for MAX77621 are 120 degC and 140 degC.
++
+ Example:
+ 
+ 	max8973@1b {
 -- 
-1.7.12.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
