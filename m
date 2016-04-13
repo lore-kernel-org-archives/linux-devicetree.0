@@ -1,83 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/2] thermal: generic-adc: Add DT binding for ADC
- based thermal sensor
-Date: Wed, 13 Apr 2016 10:06:35 -0500
-Message-ID: <20160413150635.GA15596@rob-hp-laptop>
-References: <1460382102-27755-1-git-send-email-ldewangan@nvidia.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: dra7xx: Fix compatible string for PCF8575
+ chip
+Date: Wed, 13 Apr 2016 08:17:00 -0700
+Message-ID: <20160413151700.GP5995@atomide.com>
+References: <1458147150.20441.2.camel@codethink.co.uk>
+ <56E9DED9.6020909@ti.com>
+ <20160412210438.GA5995@atomide.com>
+ <570DEE5B.1010001@linutronix.de>
+ <570DF110.3070805@ti.com>
+ <570DF235.6040705@linutronix.de>
+ <570DF38C.8000600@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460382102-27755-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: edubezval@gmail.com, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, jic23@kernel.org
+In-Reply-To: <570DF38C.8000600-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CT kernel <linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 07:11:41PM +0530, Laxman Dewangan wrote:
-> Sometimes, thermal sensors like NCT thermistors are connected to
-> the ADC channel. The temperature is read by reading the voltage
-> across the sensor resistance via ADC and referring the lookup
-> table for ADC value to temperature.
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160413 00:23]:
+> On 13/04/16 10:16, Sebastian Andrzej Siewior wrote:
+> > On 04/13/2016 09:11 AM, Roger Quadros wrote:
+> >> On 13/04/16 09:59, Sebastian Andrzej Siewior wrote:
+> >>> On 04/12/2016 11:04 PM, Tony Lindgren wrote:
+> >>>>> While at it, do you want to fix up (+Seb):
+> >>>>> a) Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt which
+> >>>>> also seems to refer to ti,pcf in example (introduced by df2634f43f51
+> >>>>> x86: dtb: Add a device tree for CE4100 )
+> >>>>> b) arch/x86/platform/ce4100/falconfalls.dts as well?
+> >>>>
+> >>>> Applying this one with Roger's ack, seems like those should be
+> >>>> additional patches.
+> >>>
+> >>> Okay. I looked it up on the board and it says NXP PCF8575 and not TI.
+> >>> TI's was probably the first hit while I was looking for it (I think
+> >>> CE4100 manual mentioned just PCF8575).
+> >>>
+> >>> But if it would have a TI branding on it I would keep the TI prefix in
+> >>> front and add the NXP prefix. As of today we might not know a
+> >>> functional difference between those two but this does not mean we might
+> >>> find one in the future.
+> >>> That said, are you people sure that the DRA7 has a TI or a NXP branding
+> >>> on it?
+> >>
+> >> Board has a Texas Instruments part: PCF8575PWR TSSOP24.
+> >> http://www.ti.com/product/PCF8575
+> > 
+> > So this sounds like
+> > 
+> > 	compatible = "ti,pcf8575", "nxp,pcf8575";
+> > 
+> > then.
 > 
-> Add DT binding doc for the ADC based thermal sensor driver to
-> detail the DT property and provide the example for how to use it.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> 
-> ---
-> Changes from V1:
-> - Make the lookup table to two dimensional instead of single array of linear
->   step of temperature.
-> - Remove detailing of IIO frameowrk and drivers.
-> - Added proper braces, indenting and labels.
-> 
->  .../bindings/thermal/thermal-generic-adc.txt       | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
-> new file mode 100644
-> index 0000000..c5c2e5b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
-> @@ -0,0 +1,86 @@
-> +General Purpose Analog To Digital Converter (ADC) based thermal sensor.
-> +
-> +On some of platforms, thermal sensor like thermistors are connected to
-> +one of ADC channel and sensor resistance is read via voltage across the
-> +sensor resistor. The voltage read across the sensor is mapped to
-> +temperature using voltage-temperature lookup table.
-> +
-> +Required properties:
-> +===================
-> +- compatible:		     Must be "generic-adc-thermal".
-> +- temperature-lookup-table:  Two dimensional array of Integer; lookup table
-> +			     to map the relation between ADC value and
-> +			     temperature. When ADC is read, the value is
-> +			     looked up on the table to get the equivalent
-> +			     temperature.
+> Agree with you.
 
-First value is ?, 2nd value is ? The units are milliCelsius?
+Can you please do an additional patch against omap-for-v4.7/dt
+for this one please? And also update the related binding documentation.
 
-> +- #thermal-sensor-cells:     Should be 1. See ./thermal.txt for a description
-> +			     of this property.
-> +
-> +Example :
-> +#include <dt-bindings/thermal/thermal.h>
-> +
-> +i2c@7000c400 {
-> +	ads1015: ads1015@4a {
-> +		reg = <0x4a>;
-> +		compatible = "ads1015";
-> +		sampling-frequency = <3300>;
-> +		#io-channel-cells = <1>;
-> +	};
-> +};
-> +
-> +tboard_thermistor: thermal-sensor@1 {
+Regards,
 
-Drop the unit address.
-
-> +	compatible = "generic-adc-thermal";
-
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
