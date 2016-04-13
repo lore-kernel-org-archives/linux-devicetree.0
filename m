@@ -1,37 +1,44 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
- driver
-Date: Wed, 13 Apr 2016 14:55:32 -0500
-Message-ID: <570EA434.30007@codeaurora.org>
-References: <201604140340.wQZLwsUk%fengguang.wu@intel.com>
- <570E9E8D.50007@codeaurora.org> <570EA09F.1070000@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <570EA09F.1070000@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Shanker Donthineni <shankerd@codeaurora.org>, kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 10/12] devicetree: Add Trusted Computing Group to vendor-prefix.txt
+Date: Wed, 13 Apr 2016 21:55:49 +0200
+Message-ID: <1460577351-24632-11-git-send-email-christophe-h.ricard@st.com>
+References: <1460577351-24632-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460577351-24632-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Shanker Donthineni wrote:
->>> >>     drivers/net/ethernet/qualcomm/emac/emac-mac.c: In function 'emac_mac_up':
->>>>>>> >>>> >>drivers/net/ethernet/qualcomm/emac/emac-mac.c:1076:9: warning: large integer implicitly truncated to unsigned type [-Woverflow]
->>> >>       writel(~DIS_INT, adpt->base + EMAC_INT_STATUS);
->> >
->> >This doesn't happen on arm64, and I don't know how to fix it.  DIS_INT is defined as:
->> >
->> >     #define DIS_INT          BIT(31)
->> >
-> Try with (1U<<31).
->
+Add missing vendor to vendor-prefix.txt.
 
-Except that Gilad was previously asked to use the BIT() macros:
+Trusted Computing Group design common specifications for
+TPM (Trusted Platform Module) vendors.
+TCG designates a TPM answering to a public specification.
 
-	https://lkml.org/lkml/2015/12/15/797
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 6c3d970..717bae9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -230,6 +230,7 @@ stericsson	ST-Ericsson
+ synology	Synology, Inc.
+ tbs	TBS Technologies
+ tcl	Toby Churchill Ltd.
++tcg	Trusted Computing Group
+ technologic	Technologic Systems
+ thine	THine Electronics, Inc.
+ ti	Texas Instruments
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
