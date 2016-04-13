@@ -1,120 +1,67 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] PCI: tegra: Support per-lane PHYs
-Date: Wed, 13 Apr 2016 18:01:12 +0200
-Message-ID: <20160413160112.GA30129@ulmo.ba.sec>
-References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
- <1457452094-5409-2-git-send-email-thierry.reding@gmail.com>
- <56E9915F.9040608@wwwdotorg.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: arm: add DT binding for Marvell
+ CP110 system controller
+Date: Wed, 13 Apr 2016 18:01:22 +0200
+Message-ID: <20160413180122.4f997a9a@free-electrons.com>
+References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1459070777-18049-5-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160328194756.GA28967@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56E9915F.9040608-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160328194756.GA28967@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, 28 Mar 2016 14:47:56 -0500, Rob Herring wrote:
 
-On Wed, Mar 16, 2016 at 11:01:19AM -0600, Stephen Warren wrote:
-> On 03/08/2016 08:48 AM, Thierry Reding wrote:
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > The current XUSB pad controller bindings are insufficient to describe
-> > PHY devices attached to USB controllers. New bindings have been created
-> > to overcome these restrictions. As a side-effect each root port now is
-> > assigned a set of PHY devices, one for each lane associated with the
-> > root port. This has the benefit of allowing fine-grained control of the
-> > power management for each lane.
->=20
-> > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
->=20
-> > +static int tegra_pcie_port_phy_power_on(struct tegra_pcie_port *port)
-> > +{
-> > +	struct device *dev =3D port->pcie->dev;
-> > +	unsigned int i;
-> > +	int err;
-> > +
-> > +	for (i =3D 0; i < port->lanes; i++) {
-> > +		err =3D phy_power_on(port->phys[i]);
->=20
-> This assume the number of array entries is precisely the number of lanes.
-> That seems to contradict the binding update which said the number might n=
-ot
-> match. Perhaps there's an expectation that phy_power_on() is a no-op for
-> some "invalid" values like NULL or an error-pointer value? But...
->=20
-> > +static struct phy *devm_of_phy_optional_get_index(struct device *dev,
-> > +						  struct device_node *np,
-> > +						  const char *consumer,
-> > +						  unsigned int index)
-> > +{
-> > +	struct phy *phy;
-> > +	char *name;
-> > +
-> > +	name =3D kasprintf(GFP_KERNEL, "%s-%u", consumer, index);
-> > +	if (!name)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	phy =3D devm_of_phy_get(dev, np, name);
-> > +	kfree(name);
-> > +
-> > +	if (IS_ERR(phy) && PTR_ERR(phy) =3D=3D -ENODEV)
-> > +		phy =3D NULL;
-> > +
-> > +	return phy;
-> > +}
->=20
-> The error-handling there looks wrong. The function generally returns eith=
-er
-> a valid PHY or an error pointer. However, in the case of -ENODEV, NULL is
-> returned. Subsystems are supposed to encode their handles as, and functio=
-ns
-> are supposed to return, either NULL or an error pointer for error cases, =
-not
-> both/either. Is the PHY API broken in this regard? If so, then this code =
-is
-> fine, but if not it might need a fix.
+> > + - reg: register area of the CP110 system controller 0
+> > + - #clock-cells: must be set to 2
+> > + - core-clock-output-names must be set to:
+> > +    "cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core"
+> > + - gatable-clock-indices must be set to:
+> > +	<0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>, <8>,
+> > +	<9>, <11>, <12>, <13>, <14>, <15>, <16>, <18>,
+> > +	<22>, <23>, <24>, <25>, <26>
+> 
+> You aren't skipping very many spots. I'd just fill the unused names in 
+> with "none" or something.
+> 
+> > + - gatable-clock-output-names must be set to:
+> > +	"cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
+> > +	"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "cpm-pcie_x10",
+> > +	"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata", "cpm-sata-usb",
+> > +	"cpm-gop-macro", "cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150",
+> > +	"cpm-eip197"
 
-This function mimics phy_optional_get() which similarily returns NULL
-for -ENODEV. The remainder of the PHY API treats NULL pointers as
-"dummy" PHYs and returns early. I think that's a sensible approach to
-handling optional resources.
+In fact, the more I think of it, the less I find encoding the clock
+output names in the DT to be useful for such a driver. For generic
+clock drivers, it makes complete sense, but here the driver is really
+tied to the specific system controller of that SoC, so the clock names
+will not change.
 
-It might have been more obvious had I implemented this function within
-phy-core.c, but I didn't think it universally useful because it uses a
-rather uncommon lookup pattern. I did keep a generic name in case it's
-ever deemed useful outside of this driver, at which point it could
-simply be moved into phy-core.c without requiring this driver to
-change.
+In addition, those gatable clocks are not independent from each other:
+many of them are parent from others (this wasn't encoded into the
+driver until now, because I didn't had this info until now). So the
+driver will anyway have to have a lot of knowledge about which clock is
+child/parent of which one. Which means the driver is anyway really
+tied to that specific system controller.
 
-Thierry
+Does it still make sense to encode the clock names in the DT in such a
+case, or should the driver be providing the clock names?
 
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
+(I don't have a strong opinion either way, I'm just asking what is the
+preference of the DT and clock maintainers on the matter.).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Thanks!
 
-iQIcBAABCAAGBQJXDm1GAAoJEN0jrNd/PrOhsx8P/RdwUR2RReTGjrJTcVD3SbtX
-88/lQrxjc2PIuORz1olJrGsofkkvCxQjVnC2EzclviCsCjqg8A1GCJ8nUdC3LNz7
-narULEukh2hhLdtL1t6GhO6XZmmy2hZSOi1XTGAi8E34y4Qs9EcsYVG3dsDT+d6l
-O/egs1AwwbcS1IJNzTXl/j6159E61nKk7MwBUCMIIueiPLKX5W/EwUtUBnfk7utT
-NPyfisAP2LoCnUo3vsgV1FSfb/84KUofpnCsKv5+/kk9iOsCrbUoJQZ4VKSQ3Vg4
-EOYX4AbUhHjkwdfB47lhLvxdujajVU8yA85+MTXoNlRRe7ltM6txArvcryG9HGE3
-cxl897ztfepVLdPo/e+NUP9tUmsYhNo8JlZUMaoXFCRGx3XspHiLohc98HYGFeZb
-SKwbcbSl99f6VJzDpK4/ftdhjlsDCHjbXlZOcnGoCxJ8o2WtQuxxbach1xeOmkQ3
-dGFiN0Hfume2yuio3Zci3JxbgBtGSM/7zVGk6KS1bTCvDos7QolnWx3CeGqgnpz6
-pYfu/yN8iWTRJNl/4eBh1kgblrrhcRjuv4VpQeMMYmyG5KQmSCoVVj9SWhLTC2Cx
-pOitZ48pT2s+4i0aQ6IO4T1Nd+Vkuyl3MHUWzQDLGyoz/V+A1E1wItMD9QYSoE66
-08cjr1ZxWItFdHxe/DO0
-=kY+V
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
