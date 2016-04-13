@@ -1,110 +1,71 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 2/3] dmaengine: tegra-adma: Add support for Tegra210
- ADMA
-Date: Wed, 13 Apr 2016 19:19:17 +0530
-Message-ID: <20160413134917.GP2274@localhost>
-References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
- <1458057390-20756-3-git-send-email-jonathanh@nvidia.com>
- <20160405213649.GA11586@vkoul-mobl.iind.intel.com>
- <570BB001.3020202@nvidia.com>
- <20160412141025.GJ2274@localhost>
- <570D2104.1040607@nvidia.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [RFC][PATCH 2/2] drm/arm: Add support for Mali Display Processors
+Date: Wed, 13 Apr 2016 14:48:57 +0100
+Message-ID: <20160413134857.GN16063@e106497-lin.cambridge.arm.com>
+References: <1459527712-9488-1-git-send-email-Liviu.Dudau@arm.com>
+ <1459527712-9488-3-git-send-email-Liviu.Dudau@arm.com>
+ <CACvgo51+1MDaDq5=TpFQeSBuKgRM33Pa71apEVHSo90jgKmViw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <570D2104.1040607-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CACvgo51+1MDaDq5=TpFQeSBuKgRM33Pa71apEVHSo90jgKmViw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 12, 2016 at 05:23:32PM +0100, Jon Hunter wrote:
-> >>> why should this be hard coded in kernel and not queried from something like
-> >>> DT? This case seems to be hardware property
-> >>
-> >> Originally, I did have this in DT, however, the Tegra maintainers prefer
-> >> this and this is consistent with the other Tegra DMA driver (see
-> >> driver/dma/tegra20-apb-dma.c) [0].
-> > 
-> > But this creates a problem when you have next generation of controller with
-> > different channel count!
-> > How do we solve then?
-> 
-> Same way we solve this for the tegra20-apb-dma driver by having
-> different chip data per SoC in the driver ...
-> 
-> 1259 /* Tegra20 specific DMA controller information */
-> 1260 static const struct tegra_dma_chip_data tegra20_dma_chip_data = {
-> 1261         .nr_channels            = 16,
-> 1262         .channel_reg_size       = 0x20,
-> 1263         .max_dma_count          = 1024UL * 64,
-> 1264         .support_channel_pause  = false,
-> 1265         .support_separate_wcount_reg = false,
-> 1266 };
-> 1267
-> 1268 /* Tegra30 specific DMA controller information */
-> 1269 static const struct tegra_dma_chip_data tegra30_dma_chip_data = {
-> 1270         .nr_channels            = 32,
-> 1271         .channel_reg_size       = 0x20,
-> 1272         .max_dma_count          = 1024UL * 64,
-> 1273         .support_channel_pause  = false,
-> 1274         .support_separate_wcount_reg = false,
-> 1275 };
-> 1276
-> 1277 /* Tegra114 specific DMA controller information */
-> 1278 static const struct tegra_dma_chip_data tegra114_dma_chip_data = {
-> 1279         .nr_channels            = 32,
-> 1280         .channel_reg_size       = 0x20,
-> 1281         .max_dma_count          = 1024UL * 64,
-> 1282         .support_channel_pause  = true,
-> 1283         .support_separate_wcount_reg = false,
-> 1284 };
-> 1285
-> 1286 /* Tegra148 specific DMA controller information */
-> 1287 static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
-> 1288         .nr_channels            = 32,
-> 1289         .channel_reg_size       = 0x40,
-> 1290         .max_dma_count          = 1024UL * 64,
-> 1291         .support_channel_pause  = true,
-> 1292         .support_separate_wcount_reg = true,
-> 1293 };
-> 
-> You may still say this should be in the DT, but the Tegra maintainers
-> prefer this data in the driver.
-
-Okay I don't see a a rationale behind this not being in DT, Stephan?
-
-> 
-> >>>> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
-> >>>> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
-> >>>> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-> >>>
-> >>> I think you should not set DMA_SLAVE, do you need caps to be exported. I
-> >>> think that should be exported for cyclic too, let me know if that was the
-> >>> issue?
-> >>>
-> >>
-> >> Why should I not be setting DMA_SLAVE? Should I not be calling
-> >> dma_get_any_slave_channel() in the xlate?
-> >>
-> >> I think that I do want to set DMA_CYCLIC as well to ensure that we check
-> >> that the device->device_prep_dma_cyclic() function pointer is populated
-> >> when registering the DMA controller.
-> > 
-> > Only setting DMA_CYCLIC should do, if you see any issues around that please
-> > get back, we cna fix those :)
-> 
-> It did not work for me because dma_get_any_slave_channel() wants a DMA
-> device with the DMA_SLAVE bit capability set. So if I remove this above,
-> then requesting the channel fails via dma_get_any_slave_channel() fails.
-> Is there something I don't understand here?
-
-You should use dma_request_channel() we cleaned up the APIs and recommend to
-use dma_request_channel() for slave usages. See Documentation update in 
-a8135d0d79e9: (dmaengine: core: Introduce new, universal API to request a
-channel)
-
-Thanks
--- 
-~Vinod
+T24gV2VkLCBBcHIgMTMsIDIwMTYgYXQgMTI6NDg6MDVQTSArMDEwMCwgRW1pbCBWZWxpa292IHdy
+b3RlOgo+IEhpIExpdml1LAoKSGkgRW1pbCwKCj4gCj4gT24gMSBBcHJpbCAyMDE2IGF0IDE3OjIx
+LCBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4gd3JvdGU6Cj4gPiBBZGQgc3VwcG9y
+dCBmb3IgdGhlIG5ldyBmYW1pbHkgb2YgRGlzcGxheSBQcm9jZXNzb3JzIGZyb20gQVJNIEx0ZC4K
+PiA+IFRoaXMgY29tbWl0IGFkZHMgYmFzaWMgc3VwcG9ydCBmb3IgTWFsaSBEUDUwMCwgRFA1NTAg
+YW5kIERQNjUwCj4gPiBwYXJ0cywgd2l0aCBvbmx5IHRoZSBkaXNwbGF5IGVuZ2luZSBiZWluZyBz
+dXBwb3J0ZWQgYXQgdGhlIG1vbWVudC4KPiA+Cj4gPiBDYzogRGF2aWQgQnJvd24gPERhdmlkLkJy
+b3duQGFybS5jb20+Cj4gPiBDYzogQnJpYW4gU3RhcmtleSA8QnJpYW4uU3RhcmtleUBhcm0uY29t
+Pgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29t
+Pgo+ID4gLS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL2FybS9LY29uZmlnICAgICAgICAgfCAgMTUg
+Kwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0vTWFrZWZpbGUgICAgICAgIHwgICAyICsKPiA+ICBk
+cml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9jcnRjLmMgICB8IDI3NiArKysrKysrKysrKysrCj4g
+PiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMgICAgfCA0ODYgKysrKysrKysrKysr
+KysrKysrKysrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2Rydi5oICAgIHwgIDQ5
+ICsrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3LmMgICAgIHwgNzc3ICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0v
+bWFsaWRwX2h3LmggICAgIHwgMTkyICsrKysrKysrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0v
+bWFsaWRwX3BsYW5lcy5jIHwgMzQyICsrKysrKysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9k
+cm0vYXJtL21hbGlkcF9yZWdzLmggICB8IDE3MiArKysrKysrKwo+ID4gIDkgZmlsZXMgY2hhbmdl
+ZCwgMjMxMSBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9hcm0vbWFsaWRwX2NydGMuYwo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vYXJtL21hbGlkcF9kcnYuYwo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vYXJtL21hbGlkcF9kcnYuaAo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vYXJtL21hbGlkcF9ody5jCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9hcm0vbWFsaWRwX2h3LmgKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2FybS9tYWxpZHBfcGxhbmVzLmMKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL2FybS9tYWxpZHBfcmVncy5oCj4gPgo+IFNpbmNlIHRoZSBjdXJyZW50IE1BSU5UQUlO
+RVJTIGluY2x1ZGUgdGhlIHdob2xlIGRybS9hcm0gZm9sZGVyLCBvbmUKPiBjb3VsZCBqdXN0IGdl
+bmVyYWxpc2UgdGhlIGhlYWRpbmcgYWxpa2UKPiAKPiBzL0FSTSBIRExDRCBEUk0gRFJJVkVSL0FS
+TSBEUk0gRFJJVkVSUy8KCkZvciB0aGUgTWFsaSBEUCBkcml2ZXJzIHdlIGFyZSBwbGFubmluZyB0
+byBoYXZlIGEgc2hhcmVkIG1haW50YWluZXJzaGlwCmFzIGl0IGlzIGNvdmVyaW5nIHF1aXRlIGEg
+ZmV3IEhXIHZlcnNpb25zIGFuZCBpcyBhIG1vcmUgY29tcGxleCBkcml2ZXIuCkhETENEIGlzIGEg
+dmVyeSBzaW1wbGUgZHJpdmVyIChhbmQgaGFyZHdhcmUgcGFydCkgc28gSSdtIGdvaW5nIHRvIGtl
+ZXAKdGhhdCBtYWludGFpbmVyc2hpcCBvbiBteSBuYW1lLCBidXQgdGhlIHJlc3Qgb2YgTWFsaSBE
+UCB3aWxsIGhhdmUgYSB3aWRlcgpzdXBwb3J0IHRlYW0uCgpJdCBpcyB0aGUgcmVhc29uIHdoeSB0
+aGUgcGF0Y2hzZXQgZG9lcyBub3QgaGF2ZSBhIE1BSU5UQUlORVJTIHVwZGF0ZS4KCkJlc3QgcmVn
+YXJkcywKTGl2aXUKCj4gCj4gLi4uIGFuZCBmb2xkIHRoZSBiaW5kaW5ncyBpbiBhIHNpbWlsYXIg
+ZmFzaGlvbiAob3IganVzdCB1cGRhdGUgdG8KPiBpbmNsdWRlIHRoZSBuZXcgb25lKQo+IAo+IGdp
+dCBtdiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm17XCwsL31m
+b28udHh0Cj4gCj4gLUVtaWwKPiAKCi0tIAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291bGQg
+bGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmlu
+ZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9c
+Xyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
