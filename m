@@ -1,242 +1,847 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Wed, 13 Apr 2016 06:25:36 +0000
-Message-ID: <KL1PR06MB10312B266592335D965823AFC3960@KL1PR06MB1031.apcprd06.prod.outlook.com>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56FD8DC8.4050205@pengutronix.de>
- <SG2PR06MB10389E1E68089FF900746B44C39A0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+From: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] drm/panel: Add JDI LT070ME05000 WUXGA DSI Panel
+Date: Wed, 13 Apr 2016 11:58:04 +0530
+Message-ID: <1460528887-22915-1-git-send-email-simhavcs@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB10389E1E68089FF900746B44C39A0@SG2PR06MB1038.apcprd06.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>, "mkl@pengutronix.de" <mkl@pengutronix.de>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Archit Taneja <archit.taneja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SEkgTWFyYywNCg0KR2VudGxlIHJlbWluZGVyIQ0KQXJlIHlvdSBoYXBweSB3aXRoIHRoZSBvcGVu
-IGNvbW1lbnQncyBkaXNwb3NpdGlvbj8gSSBjYW4gc2VuZCBhIG5leHQgdmVyc2lvbiBvZiBwYXRj
-aCBpZiB3ZSBoYXZlIGEgY2xvc3VyZSBvbiBjdXJyZW50IHNldCBvZiBjb21tZW50cy4NCg0KVGhh
-bmtzLA0KUmFtZXNoDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFt
-ZXNoIFNoYW5tdWdhc3VuZGFyYW0NCj4gU2VudDogMDEgQXByaWwgMjAxNiAxMzo0OQ0KPiBUbzog
-UmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0gPHJhbWVzaC5zaGFubXVnYXN1bmRhcmFtQGJwLnJlbmVz
-YXMuY29tPjsNCj4gd2dAZ3JhbmRlZ2dlci5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwu
-bW9sbEBhcm0uY29tOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVs
-bGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnOw0KPiBjb3JiZXRAbHduLm5ldA0KPiBD
-YzogbGludXgtcmVuZXNhcy1zb2NAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtDQo+IGNhbkB2Z2VyLmtlcm5lbC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGdlZXJ0K3JlbmVzYXNAZ2xpZGVy
-LmJlOyBDaHJpcyBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29tPg0KPiBTdWJq
-ZWN0OiBSRTogW1BBVENIIHYyXSBjYW46IHJjYXJfY2FuZmQ6IEFkZCBSZW5lc2FzIFItQ2FyIENB
-TiBGRCBkcml2ZXINCj4gDQo+IEhpIE1hcmMsDQo+IA0KPiBUaGFua3MgZm9yIHlvdXIgdGltZSAm
-IHJldmlldyBjb21tZW50cy4NCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-KC4uLikNCj4gPiA+ICsjZGVmaW5lIFJDQU5GRF9OQVBJX1dFSUdIVAkJOAkvKiBSeCBwb2xsIHF1
-b3RhICovDQo+ID4gPiArDQo+ID4gPiArI2RlZmluZSBSQ0FORkRfTlVNX0NIQU5ORUxTCQkyDQo+
-ID4gPiArI2RlZmluZSBSQ0FORkRfQ0hBTk5FTFNfTUFTSwkJMHgzCS8qIFR3byBjaGFubmVscyBt
-YXggKi8NCj4gPg0KPiA+IChCSVQoUkNBTkZEX05VTV9DSEFOTkVMUykgLSAxDQo+IA0KPiBPSw0K
-PiANCj4gPg0KPiA+ID4gKw0KPiA+ID4gKy8qIFJ4IEZJRk8gaXMgYSBnbG9iYWwgcmVzb3VyY2Ug
-b2YgdGhlIGNvbnRyb2xsZXIuIFRoZXJlIGFyZSA4IHN1Y2gNCj4gPiBGSUZPcw0KPiA+ID4gKyAq
-IGF2YWlsYWJsZS4gRWFjaCBjaGFubmVsIGdldHMgYSBkZWRpY2F0ZWQgUnggRklGTyAoaS5lLikg
-dGhlDQo+ID4gPiArIGNoYW5uZWwNCj4gKC4uLikNCj4gPiA+ICsjZGVmaW5lIFJDQU5GRF9DTUZJ
-Rk9fQ0ZETEMoeCkJCSgoKHgpICYgMHhmKSA8PCAyOCkNCj4gPiA+ICsjZGVmaW5lIFJDQU5GRF9D
-TUZJRk9fQ0ZQVFIoeCkJCSgoKHgpICYgMHhmZmYpIDw8IDE2KQ0KPiA+ID4gKyNkZWZpbmUgUkNB
-TkZEX0NNRklGT19DRlRTKHgpCQkoKCh4KSAmIDB4ZmYpIDw8IDApDQo+ID4gPiArDQo+ID4gPiAr
-LyogR2xvYmFsIFRlc3QgQ29uZmlnIHJlZ2lzdGVyICovDQo+ID4gPiArI2RlZmluZSBSQ0FORkRf
-R1RTVENGR19DMENCQ0UJCUJJVCgwKQ0KPiA+ID4gKyNkZWZpbmUgUkNBTkZEX0dUU1RDRkdfQzFD
-QkNFCQlCSVQoMSkNCj4gPiA+ICsNCj4gPiA+ICsjZGVmaW5lIFJDQU5GRF9HVFNUQ1RSX0lDQkNU
-TUUJCUJJVCgwKQ0KPiA+ID4gKw0KPiA+ID4gKy8qIEFGTCBSeCBydWxlcyByZWdpc3RlcnMgKi8N
-Cj4gPiA+ICsjZGVmaW5lIFJDQU5GRF9BRkxDRkdfU0VUUk5DMCh4KQkoKCh4KSAmIDB4ZmYpIDw8
-IDI0KQ0KPiA+ID4gKyNkZWZpbmUgUkNBTkZEX0FGTENGR19TRVRSTkMxKHgpCSgoKHgpICYgMHhm
-ZikgPDwgMTYpDQo+ID4NCj4gPiBXaGF0IGFib3V0IHNvbWV0aGluZyBsaWtlOg0KPiA+DQo+ID4g
-I2RlZmluZSBSQ0FORkRfQUZMQ0ZHX1NFVFJOQyhuLCB4KQkoKCh4KSAmIDB4ZmYpIDw8ICgyNCAt
-IG4gKiA4KSkNCj4gPg0KPiA+IFRoaXMgd2lsbCBzYXZlIHNvbWUgaWYoKXMgaW4gdGhlIGNvZGUN
-Cj4gDQo+IE5pY2UgOi0pLiBXaWxsIHVwZGF0ZS4NCj4gDQo+ID4NCj4gPiA+ICsjZGVmaW5lIFJD
-QU5GRF9BRkxDRkdfR0VUUk5DMCh4KQkoKCh4KSA+PiAyNCkgJiAweGZmKQ0KPiA+ID4gKyNkZWZp
-bmUgUkNBTkZEX0FGTENGR19HRVRSTkMxKHgpCSgoKHgpID4+IDE2KSAmIDB4ZmYpDQo+ID4gPiAr
-DQo+ID4gPiArI2RlZmluZSBSQ0FORkRfQUZMX1BBR0VOVU0oZW50cnkpCSgoZW50cnkpIC8gMTYp
-DQo+ICguLi4pDQo+ID4gPiArI2RlZmluZSByY2FyX2NhbmZkX3JlYWQocHJpdiwgb2Zmc2V0KQkJ
-CVwNCj4gPiA+ICsJcmVhZGwocHJpdi0+YmFzZSArIChvZmZzZXQpKQ0KPiA+ID4gKyNkZWZpbmUg
-cmNhcl9jYW5mZF93cml0ZShwcml2LCBvZmZzZXQsIHZhbCkJCVwNCj4gPiA+ICsJd3JpdGVsKHZh
-bCwgcHJpdi0+YmFzZSArIChvZmZzZXQpKQ0KPiA+ID4gKyNkZWZpbmUgcmNhcl9jYW5mZF9zZXRf
-Yml0KHByaXYsIHJlZywgdmFsKQkJXA0KPiA+ID4gKwlyY2FyX2NhbmZkX3VwZGF0ZSh2YWwsIHZh
-bCwgcHJpdi0+YmFzZSArIChyZWcpKQ0KPiA+ID4gKyNkZWZpbmUgcmNhcl9jYW5mZF9jbGVhcl9i
-aXQocHJpdiwgcmVnLCB2YWwpCQlcDQo+ID4gPiArCXJjYXJfY2FuZmRfdXBkYXRlKHZhbCwgMCwg
-cHJpdi0+YmFzZSArIChyZWcpKQ0KPiA+ID4gKyNkZWZpbmUgcmNhcl9jYW5mZF91cGRhdGVfYml0
-KHByaXYsIHJlZywgbWFzaywgdmFsKQlcDQo+ID4gPiArCXJjYXJfY2FuZmRfdXBkYXRlKG1hc2ss
-IHZhbCwgcHJpdi0+YmFzZSArIChyZWcpKQ0KPiA+DQo+ID4gcGxlYXNlIHVzZSBzdGF0aWMgaW5s
-aW5lIGZ1bmN0aW9ucyBpbnN0ZWFkIG9mIGRlZmluZXMuDQo+IA0KPiBPSy4NCj4gDQo+ID4NCj4g
-PiA+ICsNCj4gPiA+ICtzdGF0aWMgdm9pZCByY2FyX2NhbmZkX2dldF9kYXRhKHN0cnVjdCBjYW5m
-ZF9mcmFtZSAqY2YsDQo+ID4gPiArCQkJCXN0cnVjdCByY2FyX2NhbmZkX2NoYW5uZWwgKnByaXYs
-IHUzMiBvZmYpDQo+ID4NCj4gPiBQbGVhc2UgdXNlICJzdHJ1Y3QgcmNhcl9jYW5mZF9jaGFubmVs
-ICpwcml2IiBhcyBmaXJzdCBhcmd1bWVudCwgc3RydWN0DQo+ID4gY2FuZmRfZnJhbWUgKmNmIGFz
-IHNlY29uZC4gUmVtb3ZlIG9mZiwgYXMgdGhlIG9mZnNldCBpcyBhbHJlYWR5DQo+ID4gZGVmaW5l
-ZCBieSB0aGUgY2hhbm5lbC4NCj4gDQo+IEknbGwgcmUtb3JkZXIgcHJpdiwgY2YgYXMgeW91IG1l
-bnRpb25lZC4gSSdsbCBsZWF2ZSAib2ZmIiBhcmcgYXMgaXQgaXMNCj4gYmVjYXVzZSBpdCBpcyBi
-YXNlZCBvbiBGSUZPIG51bWJlciBvZiBjaGFubmVsICsgbW9kZSAoQ0FOIG9ubHkgb3IgQ0FORkQN
-Cj4gb25seSkuIE90aGVyd2lzZSwgSSB3aWxsIGhhdmUgdG8gYWRkIGFub3RoZXIgY2hlY2sgaW5z
-aWRlIHRoaXMgZnVuY3Rpb24NCj4gZm9yIG1vZGUuDQo+IA0KPiA+ID4gK3sNCj4gPiA+ICsJdTMy
-IGksIGx3b3JkczsNCj4gPiA+ICsNCj4gPiA+ICsJbHdvcmRzID0gY2YtPmxlbiAvIHNpemVvZih1
-MzIpOw0KPiA+ID4gKwlpZiAoY2YtPmxlbiAlIHNpemVvZih1MzIpKQ0KPiA+ID4gKwkJbHdvcmRz
-Kys7DQo+ID4NCj4gPiBVc2UgRElWX1JPVU5EX1VQKCkgaW5zdGVhZCBvZiBvcGVuIGNvZGluZyBp
-dC4NCj4gDQo+IEFncmVlZC4gVGhhbmtzLg0KPiANCj4gPg0KPiA+ID4gKwlmb3IgKGkgPSAwOyBp
-IDwgbHdvcmRzOyBpKyspDQo+ID4gPiArCQkqKCh1MzIgKiljZi0+ZGF0YSArIGkpID0NCj4gPiA+
-ICsJCQlyY2FyX2NhbmZkX3JlYWQocHJpdiwgb2ZmICsgKGkgKiBzaXplb2YodTMyKSkpOyB9DQo+
-ID4gPiArDQo+ID4gPiArc3RhdGljIHZvaWQgcmNhcl9jYW5mZF9wdXRfZGF0YShzdHJ1Y3QgY2Fu
-ZmRfZnJhbWUgKmNmLA0KPiA+ID4gKwkJCQlzdHJ1Y3QgcmNhcl9jYW5mZF9jaGFubmVsICpwcml2
-LCB1MzIgb2ZmKQ0KPiA+DQo+ID4gc2FtZSBoZXJlDQo+IA0KPiBZZXMgKHNhbWUgYXMgX2dldF9k
-YXRhKQ0KPiANCj4gPg0KPiA+ID4gK3sNCj4gPiA+ICsJdTMyIGksIGosIGx3b3JkcywgbGVmdG92
-ZXI7DQo+ID4gPiArCXUzMiBkYXRhID0gMDsNCj4gPiA+ICsNCj4gPiA+ICsJbHdvcmRzID0gY2Yt
-PmxlbiAvIHNpemVvZih1MzIpOw0KPiA+ID4gKwlsZWZ0b3ZlciA9IGNmLT5sZW4gJSBzaXplb2Yo
-dTMyKTsNCj4gPiA+ICsJZm9yIChpID0gMDsgaSA8IGx3b3JkczsgaSsrKQ0KPiA+ID4gKwkJcmNh
-cl9jYW5mZF93cml0ZShwcml2LCBvZmYgKyAoaSAqIHNpemVvZih1MzIpKSwNCj4gPiA+ICsJCQkJ
-ICooKHUzMiAqKWNmLT5kYXRhICsgaSkpOw0KPiA+DQo+ID4gSGVyZSB5b3UgZG9uJ3QgY29udmVy
-dCB0aGUgZW5kaWFuZXNzLi4uDQo+IA0KPiBZZXMNCj4gDQo+ID4gPiArDQo+ID4gPiArCWlmIChs
-ZWZ0b3Zlcikgew0KPiA+ID4gKwkJdTggKnAgPSAodTggKikoKHUzMiAqKWNmLT5kYXRhICsgaSk7
-DQo+ID4gPiArDQo+ID4gPiArCQlmb3IgKGogPSAwOyBqIDwgbGVmdG92ZXI7IGorKykNCj4gPiA+
-ICsJCQlkYXRhIHw9IHBbal0gPDwgKGogKiA4KTsNCj4gPg0KPiA+IC4uLmhlcmUgeW91IGRvIGFu
-IGltcGxpY2l0IGVuZGlhbmVzcyBjb252ZXJzaW9uLiAiZGF0YSIgaXMgbGl0dGxlDQo+ID4gZW5k
-aWFuLCB3aGlsZSBwW2pdIGlzIGJpZyBlbmRpYW4uDQo+IA0KPiBOb3Qgc3VyZSBJIGdvdCB0aGUg
-cXVlc3Rpb24gY29ycmVjdGx5Lg0KPiBDb250cm9sbGVyIGV4cGVjdGF0aW9uIG9mIGRhdGEgYnl0
-ZXMgaW4gMzJiaXQgcmVnaXN0ZXIgaXMgYml0c1s3OjBdID0NCj4gYnl0ZTAsIGJpdHNbMTU6OF0g
-PSBieXRlMSBhbmQgc28gb24gLSBsaXR0bGUgZW5kaWFuLg0KPiBGb3IgZS5nLiBpZiBjZi0+ZGF0
-YSBwb2ludHMgdG8gYnl0ZSBzdHJlYW0gSCcxMTIyMzM0NDU1NjYgKGNmLT5kYXRhWzBdID0NCj4g
-MHgxMSksIGZpcnN0IHJjYXJfY2FuZmRfd3JpdGUgd2lsbCB3cml0ZSAweDQ0MzMyMjExIHZhbHVl
-IHRvIHJlZ2lzdGVyLiBZZXMNCj4gdGhlIGhvc3QgY3B1IGlzIGFzc3VtZWQgbGl0dGxlIGVuZGlh
-bi4gSW4gbGVmdG92ZXIgY2FzZSwgZGF0YSB3aWxsIGJlDQo+IDB4MDAwMDY2NTUgLSBhZ2FpbiBs
-aXR0bGUgZW5kaWFuLg0KPiBJIHRoaW5rIEkgc2hvdWxkIHJlbW92ZSB0aGlzIGxlZnRvdmVyIGxv
-Z2ljIGFuZCBqdXN0IG1hc2sgdGhlIHVudXNlZCBiaXRzDQo+IHRvIHplcm8gYXMgY2YtPmRhdGEg
-aXMgcHJlLWFsbG9jYXRlZCBmb3IgbWF4IGxlbmd0aCBhbnl3YXkuDQo+IA0KPiBwW2pdIGlzIGEg
-Ynl0ZT8/IEFtIEkgbWlzc2luZyBzb21ldGhpbmc/DQo+IA0KPiA+DQo+ID4gPiArCQlyY2FyX2Nh
-bmZkX3dyaXRlKHByaXYsIG9mZiArIChpICogc2l6ZW9mKHUzMikpLCBkYXRhKTsNCj4gPiA+ICsJ
-fQ0KPiA+DQo+ID4gSGF2ZSB5b3UgdGVzdGVkIHRvIHNlbmQgQ0FOIGZyYW1lcyB3aXRoIGxlbiAh
-PSBuKjQgYWdhaW5zdCBhIGRpZmZlcmVudA0KPiA+IGNvbnRyb2xsZXI/DQo+IA0KPiBZZXMsIHdp
-dGggVmVjdG9yIFZOMTYzMEEuDQo+IA0KPiA+ID4gK30NCj4gPiA+ICsNCj4gPiA+ICtzdGF0aWMg
-dm9pZCByY2FyX2NhbmZkX3R4X2ZhaWx1cmVfY2xlYW51cChzdHJ1Y3QgbmV0X2RldmljZSAqbmRl
-dikNCj4gPiA+ICt7DQo+ID4gPiArCXUzMiBpOw0KPiA+ID4gKw0KPiA+ID4gKwlmb3IgKGkgPSAw
-OyBpIDwgUkNBTkZEX0ZJRk9fREVQVEg7IGkrKykNCj4gPiA+ICsJCWNhbl9mcmVlX2VjaG9fc2ti
-KG5kZXYsIGkpOw0KPiA+ID4gK30NCj4gPiA+ICsNCj4gKC4uLikNCj4gPiA+ICtzdGF0aWMgdm9p
-ZCByY2FyX2NhbmZkX3R4X2RvbmUoc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYpIHsNCj4gPiA+ICsJ
-c3RydWN0IHJjYXJfY2FuZmRfY2hhbm5lbCAqcHJpdiA9IG5ldGRldl9wcml2KG5kZXYpOw0KPiA+
-ID4gKwlzdHJ1Y3QgbmV0X2RldmljZV9zdGF0cyAqc3RhdHMgPSAmbmRldi0+c3RhdHM7DQo+ID4g
-PiArCXUzMiBzdHM7DQo+ID4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiArCXUzMiBj
-aCA9IHByaXYtPmNoYW5uZWw7DQo+ID4gPiArDQo+ID4gPiArCWRvIHsNCj4gPg0KPiA+IFlvdSBz
-aG91bGQgaXRlcmFyZSBvdmVyIGFsbCBwZW5kaW5nIENBTiBmcmFtZXM6DQo+ID4NCj4gPiA+IAlm
-b3IgKC8qIG5peCAqLzsgKHByaXYtPnR4X2hlYWQgLSBwcml2LT50eF90YWlsKSA+IDA7IHByaXYt
-DQo+ID4gPnR4X3RhaWwrKykgew0KPiA+DQo+IA0KPiBZZXMsIGN1cnJlbnQgY29kZSBkb2VzIGl0
-ZXJhdGUgb3ZlciBwZW5kaW5nIHR4J2VkIGZyYW1lcy4gSWYgd2UgdXNlIHRoaXMNCj4gZm9yIGxv
-b3Agc2VtYW50aWNzLCB3ZSBtYXkgaGF2ZSB0byBwcm90ZWN0IHRoZSB3aG9sZSBsb29wIHdpdGgg
-bm8gcmVhbA0KPiBiZW5lZml0Lg0KPiANCj4gPg0KPiA+ID4gKwkJdTggdW5zZW50LCBzZW50Ow0K
-PiA+ID4gKw0KPiA+ID4gKwkJc2VudCA9IHByaXYtPnR4X3RhaWwgJSBSQ0FORkRfRklGT19ERVBU
-SDsNCj4gPg0KPiA+IGFuZCBjaGVjayBoZXJlLCBpZiB0aGF0IHBhY2tldCBoYXMgcmVhbGx5IGJl
-ZW4gdHJhbXNpdHRlZC4gRXhpdCB0aGUNCj4gPiBsb29wIG90aGVyd2Vpc2UuDQo+IA0KPiBXZSBh
-cmUgaGVyZSBiZWNhdXNlIG9mIHR4X2RvbmUgYW5kIGhlbmNlIG5vIG5lZWQgdG8gY2hlY2sgdHgg
-ZG9uZSBhZ2Fpbg0KPiBmb3IgdGhlIGZpcnN0IGl0ZXJhdGlvbi4gSGVuY2UgdGhlIGRvLXdoaWxl
-IGxvb3AuIENoZWNrcyBmdXJ0aGVyIGRvd24NCj4gdGFrZXMgY2FyZSBvZiB0aGUgbmVlZCBmb3Ig
-bW9yZSBpdGVyYXRpb25zL3BlbmRpbmcgdHgnZWQgZnJhbWVzLg0KPiANCj4gPg0KPiA+ID4gKwkJ
-c3RhdHMtPnR4X3BhY2tldHMrKzsNCj4gPiA+ICsJCXN0YXRzLT50eF9ieXRlcyArPSBwcml2LT50
-eF9sZW5bc2VudF07DQo+ID4gPiArCQlwcml2LT50eF9sZW5bc2VudF0gPSAwOw0KPiA+ID4gKwkJ
-Y2FuX2dldF9lY2hvX3NrYihuZGV2LCBzZW50KTsNCj4gPiA+ICsNCj4gPiA+ICsJCXNwaW5fbG9j
-a19pcnFzYXZlKCZwcml2LT50eF9sb2NrLCBmbGFncyk7DQo+ID4NCj4gPiBXaGF0IGRvZXMgdGhl
-IHR4X2xvY2sgcHJvdGVjdD8gVGhlIHR4IHBhdGggaXMgcGVyIGNoYW5uZWwsIGlzbid0IGl0Pw0K
-PiANCj4gWW91IGFyZSByaWdodCAtIHR4IHBhdGggaXMgcGVyIGNoYW5uZWwuIEluIHR4IHBhdGgs
-IGhlYWQgJiB0YWlsIGFyZSBhbHNvDQo+IHVzZWQgdG8gZGV0ZXJtaW5lIHdoZW4gdG8gc3RvcC93
-YWtldXAgbmV0aWYgcXVldWUuIFRoZXkgYXJlIGluY3JlbWVudGVkICYNCj4gY29tcGFyZWQgaW4g
-ZGlmZmVyZW50IGNvbnRleHRzIHRvIG1ha2UgdGhpcyBkZWNpc2lvbi4gUGVyIGNoYW5uZWwgdHhf
-bG9jaw0KPiBwcm90ZWN0cyB0aGlzIGNyaXRpY2FsIHNlY3Rpb24uDQo+IA0KPiA+DQo+ID4gPiAr
-CQlwcml2LT50eF90YWlsKys7DQo+ID4gPiArCQlzdHMgPSByY2FyX2NhbmZkX3JlYWQocHJpdiwN
-Cj4gPiA+ICsJCQkJICAgICAgUkNBTkZEX0NGU1RTKGNoLCBSQ0FORkRfQ0ZGSUZPX0lEWCkpOw0K
-PiA+ID4gKwkJdW5zZW50ID0gUkNBTkZEX0NNRklGT19DRk1DKHN0cyk7DQo+ID4gPiArDQo+ID4g
-PiArCQkvKiBXYWtlIHByb2R1Y2VyIG9ubHkgd2hlbiB0aGVyZSBpcyByb29tICovDQo+ID4gPiAr
-CQlpZiAodW5zZW50ICE9IFJDQU5GRF9GSUZPX0RFUFRIKQ0KPiA+ID4gKwkJCW5ldGlmX3dha2Vf
-cXVldWUobmRldik7DQo+ID4NCj4gPiBNb3ZlIHRoZSBuZXRpZl93YWtlX3F1ZXVlKCkgb3V0IG9m
-IHRoZSBsb29wLg0KPiANCj4gV2l0aCB0aGUgdHggbG9naWMgbWVudGlvbmVkIGFib3ZlLCBJIHRo
-aW5rIGtlZXBpbmcgaXQgaW4gdGhlIGxvb3Agc2VlbXMNCj4gYmV0dGVyLiBGb3IgZS5nLiBzYXkg
-Y3B1MSBwdW1wcyA4IGZyYW1lcyBmcm9tIGFuIGFwcCBsb29wIGFuZCBjcHUwIGhhbmRsZXMNCj4g
-dHhfZG9uZSBpbnRlcnJ1cHQgaGFuZGxpbmc6IGNwdTEgd291bGQgaGF2ZSBzdG9wcGVkIHRoZSBx
-dWV1ZSBiZWNhdXNlIEZJRk8NCj4gaXMgZnVsbCAtPiBjcHUwIGdldHMgdHhfZG9uZSBpbnRlcnJ1
-cHQgYW5kIGJ5IHRoZSB0aW1lIGl0IGNoZWNrcyAidW5zZW50Ig0KPiB0aGVyZSBjb3VsZCBiZSBv
-bmUgb3IgbW9yZSBmcmFtZXMgdHJhbnNtaXR0ZWQgYnkgZGV2aWNlIChpLmUuKSB0aGVyZSB3b3Vs
-ZA0KPiBiZSBtb3JlIHNwYWNlIGluIGZpZm8uIEl0IGlzIGJldHRlciB0byB3YWtldXAgdGhlIG5l
-dGlmIHF1ZXVlIHRoZW4gYW5kDQo+IHRoZXJlIHNvIHRoYXQgYXBwIHJ1bm5pbmcgb24gY3B1MSBj
-YW4gcHVtcCBtb3JlLiBJZiB3ZSBtb3ZlIGl0IG91dCBvZiB0aGUNCj4gbG9vcCB3ZSB3YWtlIHVw
-IHRoZSBxdWV1ZSBvbmx5IGluIHRoZSBlbmQuIEhhdmUgSSBtaXNzZWQgYW55dGhpbmc/DQo+IA0K
-PiA+DQo+ID4gPiArDQo+ID4gPiArCQlpZiAocHJpdi0+dHhfaGVhZCAtIHByaXYtPnR4X3RhaWwg
-PD0gdW5zZW50KSB7DQo+ID4gPiArCQkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmcHJpdi0+dHhf
-bG9jaywgZmxhZ3MpOw0KPiA+ID4gKwkJCWJyZWFrOw0KPiA+ID4gKwkJfQ0KPiA+ID4gKwkJc3Bp
-bl91bmxvY2tfaXJxcmVzdG9yZSgmcHJpdi0+dHhfbG9jaywgZmxhZ3MpOw0KPiA+ID4gKw0KPiA+
-ID4gKwl9IHdoaWxlICgxKTsNCj4gPiA+ICsNCj4gPiA+ICsJLyogQ2xlYXIgaW50ZXJydXB0ICov
-DQo+ID4gPiArCXJjYXJfY2FuZmRfd3JpdGUocHJpdiwgUkNBTkZEX0NGU1RTKGNoLCBSQ0FORkRf
-Q0ZGSUZPX0lEWCksDQo+ID4gPiArCQkJIHN0cyAmIH5SQ0FORkRfQ01GSUZPX0NGVFhJRik7DQo+
-ID4gPiArCWNhbl9sZWRfZXZlbnQobmRldiwgQ0FOX0xFRF9FVkVOVF9UWCk7IH0NCj4gPiA+ICsN
-Cj4gPiA+ICsJaWYgKGNmLT5jYW5faWQgJiBDQU5fUlRSX0ZMQUcpDQo+ID4gPiArCQlpZCB8PSBS
-Q0FORkRfQ01GSUZPX0NGUlRSOw0KPiA+ID4gKw0KPiA+ID4gKwlyY2FyX2NhbmZkX3dyaXRlKHBy
-aXYsIFJDQU5GRF9GX0NGSUQoY2gsIFJDQU5GRF9DRkZJRk9fSURYKSwNCj4gPiA+ICsJCQkgaWQp
-Ow0KPiA+ID4gKwlwdHIgPSBSQ0FORkRfQ01GSUZPX0NGRExDKGNhbl9sZW4yZGxjKGNmLT5sZW4p
-KTsNCj4gPg0KPiA+IHB0ciB1c3VhbGx5IG1lYW5zIHBvaW50ZXIsIGJldHRlciBjYWxsIGl0IGRs
-Yy4NCj4gDQo+IEkgdXNlZCB0aGUgcmVnaXN0ZXIgbmFtZSAicHRyIi4gT0ssIHdpbGwgY2hhbmdl
-IGl0IGRvIGRsYy4NCj4gDQo+ID4NCj4gPiA+ICsJcmNhcl9jYW5mZF93cml0ZShwcml2LCBSQ0FO
-RkRfRl9DRlBUUihjaCwgUkNBTkZEX0NGRklGT19JRFgpLA0KPiA+ID4gKwkJCSBwdHIpOw0KPiA+
-ID4gKw0KPiAoLi4uKQ0KPiA+ID4gKwljYW5fcHV0X2VjaG9fc2tiKHNrYiwgbmRldiwgcHJpdi0+
-dHhfaGVhZCAlIFJDQU5GRF9GSUZPX0RFUFRIKTsNCj4gPiA+ICsNCj4gPiA+ICsJc3Bpbl9sb2Nr
-X2lycXNhdmUoJnByaXYtPnR4X2xvY2ssIGZsYWdzKTsNCj4gPiA+ICsJcHJpdi0+dHhfaGVhZCsr
-Ow0KPiA+ID4gKw0KPiA+ID4gKwkvKiBTdGFydCBUeDogV3JpdGUgMHhmZiB0byBDRlBDIHRvIGlu
-Y3JlbWVudCB0aGUgQ1BVLXNpZGUNCj4gPiA+ICsJICogcG9pbnRlciBmb3IgdGhlIENvbW1vbiBG
-SUZPDQo+ID4gPiArCSAqLw0KPiA+ID4gKwlyY2FyX2NhbmZkX3dyaXRlKHByaXYsIFJDQU5GRF9D
-RlBDVFIoY2gsIFJDQU5GRF9DRkZJRk9fSURYKSwNCj4gPiA+ICsweGZmKTsNCj4gPiA+ICsNCj4g
-PiA+ICsJLyogU3RvcCB0aGUgcXVldWUgaWYgd2UndmUgZmlsbGVkIGFsbCBGSUZPIGVudHJpZXMg
-Ki8NCj4gPiA+ICsJaWYgKHByaXYtPnR4X2hlYWQgLSBwcml2LT50eF90YWlsID49IFJDQU5GRF9G
-SUZPX0RFUFRIKQ0KPiA+ID4gKwkJbmV0aWZfc3RvcF9xdWV1ZShuZGV2KTsNCj4gPg0KPiA+IFBs
-ZWFzZSBtb3ZlIHRoZSBjaGVjayBvZiBzdG9wX3F1ZXVlLCBiZWZvcmUgc3RhcnRpbmcgdGhlIHNl
-bmQuDQo+IA0KPiBPSy4NCj4gDQo+ID4NCj4gPiA+ICsNCj4gPiA+ICsJc3Bpbl91bmxvY2tfaXJx
-cmVzdG9yZSgmcHJpdi0+dHhfbG9jaywgZmxhZ3MpOw0KPiA+ID4gKwlyZXR1cm4gTkVUREVWX1RY
-X09LOw0KPiA+ID4gK30NCj4gPiA+ICsNCj4gKC4uLikNCj4gPiA+ICt7DQo+ID4gPiArCXN0cnVj
-dCByY2FyX2NhbmZkX2NoYW5uZWwgKnByaXYgPQ0KPiA+ID4gKwkJY29udGFpbmVyX29mKG5hcGks
-IHN0cnVjdCByY2FyX2NhbmZkX2NoYW5uZWwsIG5hcGkpOw0KPiA+ID4gKwlpbnQgbnVtX3BrdHM7
-DQo+ID4gPiArCXUzMiBzdHM7DQo+ID4gPiArCXUzMiBjaCA9IHByaXYtPmNoYW5uZWw7DQo+ID4g
-PiArCXUzMiByaWR4ID0gY2ggKyBSQ0FORkRfUkZGSUZPX0lEWDsNCj4gPiA+ICsNCj4gPiA+ICsJ
-Zm9yIChudW1fcGt0cyA9IDA7IG51bV9wa3RzIDwgcXVvdGE7IG51bV9wa3RzKyspIHsNCj4gPiA+
-ICsJCXN0cyA9IHJjYXJfY2FuZmRfcmVhZChwcml2LCBSQ0FORkRfUkZTVFMocmlkeCkpOw0KPiA+
-ID4gKwkJLyogQ2xlYXIgaW50ZXJydXB0IGJpdCAqLw0KPiA+ID4gKwkJaWYgKHN0cyAmIFJDQU5G
-RF9SRkZJRk9fUkZJRikNCj4gPiA+ICsJCQlyY2FyX2NhbmZkX3dyaXRlKHByaXYsIFJDQU5GRF9S
-RlNUUyhyaWR4KSwNCj4gPiA+ICsJCQkJCSBzdHMgJiB+UkNBTkZEX1JGRklGT19SRklGKTsNCj4g
-PiA+ICsNCj4gPiA+ICsJCS8qIENoZWNrIEZJRk8gZW1wdHkgY29uZGl0aW9uICovDQo+ID4gPiAr
-CQlpZiAoc3RzICYgUkNBTkZEX1JGRklGT19SRkVNUCkNCj4gPiA+ICsJCQlicmVhazsNCj4gPiA+
-ICsNCj4gPiA+ICsJCXJjYXJfY2FuZmRfcnhfcGt0KHByaXYpOw0KPiA+DQo+ID4gVGhpcyBzZXF1
-ZW5jZSBsb29rcyBzdHJhbmdlLiBZb3UgZmlyc3QgY29uZGl0aW9uYWxseSBhY2sgdGhlIGludGVy
-cnVwdA0KPiA+IHRoZW4geW91IGNoZWNrIGZvciBlbXB0eSBmaWZvLCB0aGVuIHJlYWQgdGhlIENB
-TiBmcmFtZS4gSSB3b3VsZCBhc3N1bWUNCj4gPiB0aGF0IHlvdSBmaXJzdCBjaGVjayBpZiB0aGVy
-ZSdzIGEgQ0FOIGZyYW1lLCByZWFkIGl0IGFuZCB0aGVuIGNsZWFyDQo+ID4gdGhlIGludGVycnVw
-dC4NCj4gDQo+IFllcywgSSBzaGFsbCByZS1hcnJhbmdlIHRoZSBzZXF1ZW5jZSBhcyB5b3UgbWVu
-dGlvbmVkLg0KPiANCj4gPg0KPiA+ID4gKwl9DQo+ID4gPiArDQo+ID4gPiArCS8qIEFsbCBwYWNr
-ZXRzIHByb2Nlc3NlZCAqLw0KPiA+ID4gKwlpZiAobnVtX3BrdHMgPCBxdW90YSkgew0KPiA+ID4g
-KwkJbmFwaV9jb21wbGV0ZShuYXBpKTsNCj4gPiA+ICsJCS8qIEVuYWJsZSBSeCBGSUZPIGludGVy
-cnVwdHMgKi8NCj4gPiA+ICsJCXJjYXJfY2FuZmRfc2V0X2JpdChwcml2LCBSQ0FORkRfUkZDQyhy
-aWR4KSwNCj4gPiBSQ0FORkRfUkZGSUZPX1JGSUUpOw0KPiAoLi4uKQ0KPiA+ID4gKwlmb3JfZWFj
-aF9zZXRfYml0KGNoLCAmZ3ByaXYtPmNoYW5uZWxzX21hc2ssIFJDQU5GRF9OVU1fQ0hBTk5FTFMp
-IHsNCj4gPiA+ICsJCWVyciA9IHJjYXJfY2FuZmRfY2hhbm5lbF9wcm9iZShncHJpdiwgY2gpOw0K
-PiA+ID4gKwkJaWYgKGVycikNCj4gPiA+ICsJCQlnb3RvIGZhaWxfY2hhbm5lbDsNCj4gPiA+ICsJ
-fQ0KPiA+DQo+ID4gU2hvdWxkIHRoZSBDQU4gSVAgY29yZSBiZSBjbG9ja2VkIHRoZSB3aG9sZSB0
-aW1lPyBXaGF0IGFib3V0IHNodXRpbmcNCj4gPiBkb3duIHRoZSBjbG9jayBhbmQgZW5hYmxpbmcg
-aXQgb24gaWZ1cD8NCj4gDQo+IFRoZSBmQ0FOIGNsb2NrIGlzIGVuYWJsZWQgb25seSBvbiBpZnVw
-IG9mIG9uZSBvZiB0aGUgY2hhbm5lbHMuIEhvd2V2ZXIsDQo+IHRoZSBwZXJpcGhlcmFsIGNsb2Nr
-IGlzIGVuYWJsZWQgZHVyaW5nIHByb2JlIHRvIGJyaW5nIHRoZSBjb250cm9sbGVyIHRvDQo+IEds
-b2JhbCBPcGVyYXRpb25hbCBtb2RlLiBUaGlzIGNsb2NrIGNhbm5vdCBiZSB0dXJuZWQgb2ZmIHdp
-dGggdGhlIHJlZ2lzdGVyDQo+IHZhbHVlcyAmIG1vZGUgcmV0YWluZWQuDQo+IA0KPiA+ID4gKw0K
-PiA+ID4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBncHJpdik7DQo+ID4gPiArCWRldl9p
-bmZvKCZwZGV2LT5kZXYsICJnbG9iYWwgb3BlcmF0aW9uYWwgc3RhdGUgKGNsayAlZClcbiIsDQo+
-ID4gPiArCQkgZ3ByaXYtPmNsb2NrX3NlbGVjdCk7DQo+ICguLi4pDQo+ID4gPiArCXJjYXJfY2Fu
-ZmRfcmVzZXRfY29udHJvbGxlcihncHJpdik7DQo+ID4gPiArCXJjYXJfY2FuZmRfZGlzYWJsZV9n
-bG9iYWxfaW50ZXJydXB0cyhncHJpdik7DQo+ID4gPiArDQo+ID4gPiArCWZvcl9lYWNoX3NldF9i
-aXQoY2gsICZncHJpdi0+Y2hhbm5lbHNfbWFzaywgUkNBTkZEX05VTV9DSEFOTkVMUykgew0KPiA+
-ID4gKwkJcHJpdiA9IGdwcml2LT5jaFtjaF07DQo+ID4gPiArCQlpZiAocHJpdikgew0KPiA+DQo+
-ID4gVGhpcyBzaG91bGQgYWx3YXlzIGJlIHRydWUuDQo+IA0KPiBJIGFncmVlLiBJIHRob3VnaHQg
-SSBjbGVhbmVkIHRoaXMgdXAgYnV0IGl0J3MgaW4gbXkgbG9jYWwgY29tbWl0cyA6LSgNCj4gDQo+
-ID4NCj4gPiA+ICsJCQlyY2FyX2NhbmZkX2Rpc2FibGVfY2hhbm5lbF9pbnRlcnJ1cHRzKHByaXYp
-Ow0KPiA+ID4gKwkJCXVucmVnaXN0ZXJfY2FuZGV2KHByaXYtPm5kZXYpOw0KPiA+ID4gKwkJCW5l
-dGlmX25hcGlfZGVsKCZwcml2LT5uYXBpKTsNCj4gPiA+ICsJCQlmcmVlX2NhbmRldihwcml2LT5u
-ZGV2KTsNCj4gPg0KPiA+IFBsZWFzZSBtYWtlIHVzZSBvZiByY2FyX2NhbmZkX2NoYW5uZWxfcmVt
-b3ZlKCksIGFzIHlvdSBhbHJlYWR5IGhhdmUNCj4gPiB0aGUgZnVuY3Rpb24uDQo+IA0KPiBZZXMu
-DQo+IA0KPiBUaGFua3MsDQo+IFJhbWVzaA0K
+Add support for the JDI lt070me05000 WUXGA DSI panel used in
+Nexus 7 2013 devices.
+
+Programming sequence for the panel is was originally found in the
+android-msm-flo-3.4-lollipop-release branch from:
+    https://android.googlesource.com/kernel/msm.git
+
+And video mode setting is from dsi-panel-jdi-dualmipi1-video.dtsi
+file in:
+    git://codeaurora.org/kernel/msm-3.10.git  LNX.LA.3.6_rb1.27
+
+Other fixes folded in were provided
+by Archit Taneja <archit.taneja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+[sumit.semwal: Ported to the drm/panel framework]
+Signed-off-by: Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+[jstultz: Cherry-picked to mainline, folded down other fixes
+ from Vinay and Archit]
+Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/display/panel/jdi,lt070me05000.txt    |  27 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/gpu/drm/panel/Kconfig                      |  11 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-jdi-lt070me05000.c     | 685 +++++++++++++=
+++++++++
+ 5 files changed, 725 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/jdi=
+,lt070me05000.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-jdi-lt070me05000.c
+
+diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070m=
+e05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070m=
+e05000.txt
+new file mode 100644
+index 0000000..35c5ac7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.=
+txt
+@@ -0,0 +1,27 @@
++JDI model LT070ME05000 1920x1200 7" DSI Panel
++
++Basic data sheet is at:
++	http://panelone.net/en/7-0-inch/JDI_LT070ME05000_7.0_inch-datasheet
++
++This panel has video mode implemented currently in the driver.
++
++Required properties:
++- compatible: should be "jdi,lt070me05000"
++
++Optional properties:
++- power-supply: phandle of the regulator that provides the supply volt=
+age
++- reset-gpio: phandle of gpio for reset line
++- backlight: phandle of the backlight device attached to the panel
++
++Example:
++
++	dsi@54300000 {
++		panel: panel@0 {
++			compatible =3D "jdi,lt070me05000";
++			reg =3D <0>;
++
++			power-supply =3D <...>;
++			reset-gpio =3D <...>;
++			backlight =3D <...>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
+cumentation/devicetree/bindings/vendor-prefixes.txt
+index a580f3e..ec42bb4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -130,6 +130,7 @@ invensense	InvenSense Inc.
+ isee	ISEE 2007 S.L.
+ isil	Intersil
+ issi	Integrated Silicon Solutions Inc.
++jdi	Japan Display Inc.
+ jedec	JEDEC Solid State Technology Association
+ karo	Ka-Ro electronics GmbH
+ keymile	Keymile GmbH
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kcon=
+fig
+index 1500ab9..f41690e 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -61,6 +61,17 @@ config DRM_PANEL_SHARP_LQ101R1SX01
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called panel-sharp-lq101r1sx01.
+=20
++config DRM_PANEL_JDI_LT070ME05000
++	tristate "JDI LT070ME05000 WUXGA DSI panel"
++	depends on OF
++	depends on DRM_MIPI_DSI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y here if you want to enable support for JDI WUXGA DSI video/
++	  command mode panel as found in Google Nexus 7 (2013) devices.
++	  The panel has a 1200(RGB)=C3=971920 (WUXGA) resolution and uses
++	  24 bit RGB per pixel.
++
+ config DRM_PANEL_SHARP_LS043T1LE01
+ 	tristate "Sharp LS043T1LE01 qHD video mode panel"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Mak=
+efile
+index f277eed..e6c6fc8 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -5,3 +5,4 @@ obj-$(CONFIG_DRM_PANEL_SAMSUNG_LD9040) +=3D panel-samsu=
+ng-ld9040.o
+ obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0) +=3D panel-samsung-s6e8aa0.o
+ obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) +=3D panel-sharp-lq101r1sx01=
+=2Eo
+ obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) +=3D panel-sharp-ls043t1le01=
+=2Eo
++obj-$(CONFIG_DRM_PANEL_JDI_LT070ME05000) +=3D panel-jdi-lt070me05000.o
+diff --git a/drivers/gpu/drm/panel/panel-jdi-lt070me05000.c b/drivers/g=
+pu/drm/panel/panel-jdi-lt070me05000.c
+new file mode 100644
+index 0000000..051aa1b
+--- /dev/null
++++ b/drivers/gpu/drm/panel/panel-jdi-lt070me05000.c
+@@ -0,0 +1,685 @@
++/*
++ * Copyright (C) 2015 InforceComputing
++ * Author: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * Copyright (C) 2015 Linaro Ltd
++ * Author: Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y it
++ * under the terms of the GNU General Public License version 2 as publ=
+ished by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but=
+ WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY =
+or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Licen=
+se for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License a=
+long with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/backlight.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regulator/consumer.h>
++
++#include <drm/drmP.h>
++#include <drm/drm_crtc.h>
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_panel.h>
++
++#include <video/mipi_display.h>
++
++/*
++ * From internet archives, the panel for Nexus 7 2nd Gen, 2013 model i=
+s a
++ * JDI model LT070ME05000, and its data sheet is at:
++ *  http://panelone.net/en/7-0-inch/JDI_LT070ME05000_7.0_inch-datashee=
+t
++ */
++struct jdi_panel {
++	struct drm_panel base;
++	struct mipi_dsi_device *dsi;
++
++	/* TODO: Add backilght support */
++	struct backlight_device *backlight;
++	struct regulator *supply;
++	struct gpio_desc *reset_gpio;
++	struct gpio_desc *enable_gpio;
++	struct gpio_desc *vcc_gpio;
++
++	struct regulator *backlit;
++	struct regulator *lvs7;
++	struct regulator *avdd;
++	struct regulator *iovdd;
++	struct gpio_desc *pwm_gpio;
++
++	bool prepared;
++	bool enabled;
++
++	const struct drm_display_mode *mode;
++};
++
++static inline struct jdi_panel *to_jdi_panel(struct drm_panel *panel)
++{
++	return container_of(panel, struct jdi_panel, base);
++}
++
++static char MCAP[2] =3D {0xB0, 0x00};
++static char interface_setting_cmd[6] =3D {0xB3, 0x04, 0x08, 0x00, 0x22=
+, 0x00};
++static char interface_setting[6] =3D {0xB3, 0x26, 0x08, 0x00, 0x20, 0x=
+00};
++
++static char interface_ID_setting[2] =3D {0xB4, 0x0C};
++static char DSI_control[3] =3D {0xB6, 0x3A, 0xD3};
++
++static char tear_scan_line[3] =3D {0x44, 0x03, 0x00};
++
++/* for fps control, set fps to 60.32Hz */
++static char LTPS_timing_setting[2] =3D {0xC6, 0x78};
++static char sequencer_timing_control[2] =3D {0xD6, 0x01};
++
++/* set brightness */
++static char write_display_brightness[] =3D {0x51, 0xFF};
++/* enable LEDPWM pin output, turn on LEDPWM output, turn off pwm dimmi=
+ng */
++static char write_control_display[] =3D {0x53, 0x24};
++/*
++ * choose cabc mode, 0x00(-0%), 0x01(-15%), 0x02(-40%), 0x03(-54%),
++ * disable SRE(sunlight readability enhancement)
++ */
++static char write_cabc[] =3D {0x55, 0x00};
++/* for cabc mode 0x1(-15%) */
++static char backlight_control1[] =3D {0xB8, 0x07, 0x87, 0x26, 0x18, 0x=
+00, 0x32};
++/* for cabc mode 0x2(-40%) */
++static char backlight_control2[] =3D {0xB9, 0x07, 0x75, 0x61, 0x20, 0x=
+16, 0x87};
++/* for cabc mode 0x3(-54%) */
++static char backlight_control3[] =3D {0xBA, 0x07, 0x70, 0x81, 0x20, 0x=
+45, 0xB4};
++/* for pwm frequency and dimming control */
++static char backlight_control4[] =3D {0xCE, 0x7D, 0x40, 0x48, 0x56, 0x=
+67, 0x78,
++		0x88, 0x98, 0xA7, 0xB5, 0xC3, 0xD1, 0xDE, 0xE9, 0xF2, 0xFA,
++		0xFF, 0x37, 0xF5, 0x0F, 0x0F, 0x42, 0x00};
++
++static int jdi_panel_init(struct jdi_panel *jdi)
++{
++	struct mipi_dsi_device *dsi =3D jdi->dsi;
++	int ret;
++
++	dsi->mode_flags |=3D MIPI_DSI_MODE_LPM;
++
++	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO) {
++		ret =3D mipi_dsi_dcs_soft_reset(dsi);
++		if (ret < 0)
++			return ret;
++
++		mdelay(10);
++
++		ret =3D mipi_dsi_dcs_set_pixel_format(dsi, 0x70);
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_set_column_address(dsi, 0x0000, 0x04AF);
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_set_page_address(dsi, 0x0000, 0x077F);
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_set_tear_on(dsi,
++					       MIPI_DSI_DCS_TEAR_MODE_VBLANK);
++		if (ret < 0)
++			return ret;
++		mdelay(5);
++
++		ret =3D mipi_dsi_generic_write(dsi, tear_scan_line,
++					     sizeof(tear_scan_line));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_write_buffer(dsi, write_display_brightness,
++						sizeof(write_display_brightness)
++						);
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_write_buffer(dsi, write_control_display,
++						sizeof(write_control_display));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_write_buffer(dsi, write_cabc,
++						sizeof(write_cabc));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_exit_sleep_mode(dsi);
++		if (ret < 0)
++			return ret;
++		mdelay(120);
++
++		ret =3D mipi_dsi_generic_write(dsi, MCAP, sizeof(MCAP));
++		if (ret < 0)
++			return ret;
++		mdelay(10);
++
++		ret =3D mipi_dsi_generic_write(dsi, interface_setting,
++					     sizeof(interface_setting));
++		if (ret < 0)
++			return ret;
++		mdelay(20);
++
++		backlight_control4[18] =3D 0x04;
++		backlight_control4[19] =3D 0x00;
++
++		ret =3D mipi_dsi_generic_write(dsi, backlight_control4,
++					     sizeof(backlight_control4));
++		if (ret < 0)
++			return ret;
++		mdelay(20);
++
++		MCAP[1] =3D 0x03;
++		ret =3D mipi_dsi_generic_write(dsi, MCAP, sizeof(MCAP));
++		if (ret < 0)
++			return ret;
++	} else {
++		/*
++		 * TODO : need to verify panel settings when
++		 * dsi cmd mode supported for apq8064 - simhavcs
++		 */
++		ret =3D mipi_dsi_dcs_soft_reset(dsi);
++		if (ret < 0)
++			return ret;
++
++		mdelay(5);
++
++		ret =3D mipi_dsi_generic_write(dsi, MCAP, sizeof(MCAP));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, interface_setting_cmd,
++					     sizeof(interface_setting_cmd));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, interface_ID_setting,
++					     sizeof(interface_ID_setting));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, DSI_control,
++					     sizeof(DSI_control));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, LTPS_timing_setting,
++					     sizeof(LTPS_timing_setting));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, sequencer_timing_control,
++					     sizeof(sequencer_timing_control));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_write_buffer(dsi, write_display_brightness,
++						sizeof(write_display_brightness)
++						);
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_write_buffer(dsi, write_control_display,
++						sizeof(write_control_display));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_write_buffer(dsi, write_cabc,
++						sizeof(write_cabc));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, backlight_control1,
++					     sizeof(backlight_control1));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, backlight_control2,
++					     sizeof(backlight_control2));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, backlight_control3,
++					     sizeof(backlight_control3));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_generic_write(dsi, backlight_control4,
++					     sizeof(backlight_control4));
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_set_pixel_format(dsi, 0x77);
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_set_column_address(dsi, 0x0000, 0x04AF);
++		if (ret < 0)
++			return ret;
++
++		ret =3D mipi_dsi_dcs_set_page_address(dsi, 0x0000, 0x077F);
++		if (ret < 0)
++			return ret;
++		mdelay(120);
++
++		ret =3D mipi_dsi_dcs_exit_sleep_mode(dsi);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int jdi_panel_on(struct jdi_panel *jdi)
++{
++	struct mipi_dsi_device *dsi =3D jdi->dsi;
++	int ret;
++
++	dsi->mode_flags |=3D MIPI_DSI_MODE_LPM;
++
++	ret =3D mipi_dsi_dcs_set_display_on(dsi);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int jdi_panel_off(struct jdi_panel *jdi)
++{
++	struct mipi_dsi_device *dsi =3D jdi->dsi;
++	int ret;
++
++	dsi->mode_flags &=3D ~MIPI_DSI_MODE_LPM;
++
++	ret =3D mipi_dsi_dcs_set_display_off(dsi);
++	if (ret < 0)
++		return ret;
++
++	ret =3D mipi_dsi_dcs_enter_sleep_mode(dsi);
++	if (ret < 0)
++		return ret;
++
++	ret =3D mipi_dsi_dcs_set_tear_off(dsi);
++	if (ret < 0)
++		return ret;
++
++	msleep(100);
++
++	return 0;
++}
++
++static int jdi_panel_disable(struct drm_panel *panel)
++{
++	struct jdi_panel *jdi =3D to_jdi_panel(panel);
++
++	if (!jdi->enabled)
++		return 0;
++
++	DRM_DEBUG("disable\n");
++
++	if (jdi->backlight) {
++		jdi->backlight->props.power =3D FB_BLANK_POWERDOWN;
++		backlight_update_status(jdi->backlight);
++	}
++
++	jdi->enabled =3D false;
++
++	return 0;
++}
++
++static int jdi_panel_unprepare(struct drm_panel *panel)
++{
++	struct jdi_panel *jdi =3D to_jdi_panel(panel);
++	int ret;
++
++	if (!jdi->prepared)
++		return 0;
++
++	DRM_DEBUG("unprepare\n");
++
++	ret =3D jdi_panel_off(jdi);
++	if (ret) {
++		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
++		return ret;
++	}
++
++	regulator_disable(jdi->supply);
++
++	if (jdi->vcc_gpio)
++		gpiod_set_value(jdi->vcc_gpio, 0);
++
++	if (jdi->reset_gpio)
++		gpiod_set_value(jdi->reset_gpio, 0);
++
++	if (jdi->enable_gpio)
++		gpiod_set_value(jdi->enable_gpio, 0);
++
++	jdi->prepared =3D false;
++
++	return 0;
++}
++
++static int jdi_panel_prepare(struct drm_panel *panel)
++{
++	struct jdi_panel *jdi =3D to_jdi_panel(panel);
++	int ret;
++
++	if (jdi->prepared)
++		return 0;
++
++	DRM_DEBUG("prepare\n");
++
++	ret =3D regulator_enable(jdi->iovdd);
++	if (ret < 0)
++		return ret;
++
++	ret =3D regulator_enable(jdi->avdd);
++	if (ret < 0)
++		return ret;
++
++	ret =3D regulator_enable(jdi->backlit);
++	if (ret < 0)
++		return ret;
++
++	ret =3D regulator_enable(jdi->lvs7);
++	if (ret < 0)
++		return ret;
++
++	ret =3D regulator_enable(jdi->supply);
++	if (ret < 0)
++		return ret;
++
++	msleep(20);
++
++	if (jdi->vcc_gpio) {
++		gpiod_set_value(jdi->vcc_gpio, 1);
++		usleep_range(10, 20);
++	}
++
++	if (jdi->reset_gpio) {
++		gpiod_set_value(jdi->reset_gpio, 1);
++		usleep_range(10, 20);
++	}
++
++	if (jdi->pwm_gpio) {
++		gpiod_set_value(jdi->pwm_gpio, 1);
++		usleep_range(10, 20);
++	}
++
++	if (jdi->enable_gpio) {
++		gpiod_set_value(jdi->enable_gpio, 1);
++		usleep_range(10, 20);
++	}
++
++	ret =3D jdi_panel_init(jdi);
++	if (ret) {
++		dev_err(panel->dev, "failed to init panel: %d\n", ret);
++		goto poweroff;
++	}
++
++	ret =3D jdi_panel_on(jdi);
++	if (ret) {
++		dev_err(panel->dev, "failed to set panel on: %d\n", ret);
++		goto poweroff;
++	}
++
++	jdi->prepared =3D true;
++
++	return 0;
++
++poweroff:
++	regulator_disable(jdi->supply);
++	if (jdi->reset_gpio)
++		gpiod_set_value(jdi->reset_gpio, 0);
++	if (jdi->enable_gpio)
++		gpiod_set_value(jdi->enable_gpio, 0);
++	if (jdi->vcc_gpio)
++		gpiod_set_value(jdi->vcc_gpio, 0);
++
++	return ret;
++}
++
++static int jdi_panel_enable(struct drm_panel *panel)
++{
++	struct jdi_panel *jdi =3D to_jdi_panel(panel);
++
++	if (jdi->enabled)
++		return 0;
++
++	DRM_DEBUG("enable\n");
++
++	if (jdi->backlight) {
++		jdi->backlight->props.power =3D FB_BLANK_UNBLANK;
++		backlight_update_status(jdi->backlight);
++	}
++
++	jdi->enabled =3D true;
++
++	return 0;
++}
++
++static const struct drm_display_mode default_mode =3D {
++		.clock =3D 155000,
++		.hdisplay =3D 1200,
++		.hsync_start =3D 1200 + 48,
++		.hsync_end =3D 1200 + 48 + 32,
++		.htotal =3D 1200 + 48 + 32 + 60,
++		.vdisplay =3D 1920,
++		.vsync_start =3D 1920 + 3,
++		.vsync_end =3D 1920 + 3 + 5,
++		.vtotal =3D 1920 + 3 + 5 + 6,
++		.vrefresh =3D 60,
++		.flags =3D 0,
++};
++
++static int jdi_panel_get_modes(struct drm_panel *panel)
++{
++	struct drm_display_mode *mode;
++
++	mode =3D drm_mode_duplicate(panel->drm, &default_mode);
++	if (!mode) {
++		dev_err(panel->drm->dev, "failed to add mode %ux%ux@%u\n",
++			default_mode.hdisplay, default_mode.vdisplay,
++			default_mode.vrefresh);
++		return -ENOMEM;
++	}
++
++	drm_mode_set_name(mode);
++
++	drm_mode_probed_add(panel->connector, mode);
++
++	return 1;
++}
++
++static const struct drm_panel_funcs jdi_panel_funcs =3D {
++		.disable =3D jdi_panel_disable,
++		.unprepare =3D jdi_panel_unprepare,
++		.prepare =3D jdi_panel_prepare,
++		.enable =3D jdi_panel_enable,
++		.get_modes =3D jdi_panel_get_modes,
++};
++
++static const struct of_device_id jdi_of_match[] =3D {
++		{ .compatible =3D "jdi,lt070me05000", },
++		{ }
++};
++MODULE_DEVICE_TABLE(of, jdi_of_match);
++
++static int jdi_panel_add(struct jdi_panel *jdi)
++{
++	struct device *dev =3D &jdi->dsi->dev;
++	int ret;
++
++	jdi->mode =3D &default_mode;
++
++	/* lvs5 */
++	jdi->supply =3D devm_regulator_get(dev, "power");
++	if (IS_ERR(jdi->supply))
++		return PTR_ERR(jdi->supply);
++
++	/* l17 */
++	jdi->backlit =3D devm_regulator_get(dev, "backlit");
++	if (IS_ERR(jdi->supply))
++		return PTR_ERR(jdi->supply);
++
++	jdi->lvs7 =3D devm_regulator_get(dev, "lvs7");
++	if (IS_ERR(jdi->lvs7))
++		return PTR_ERR(jdi->lvs7);
++
++	jdi->avdd =3D devm_regulator_get(dev, "avdd");
++	if (IS_ERR(jdi->avdd))
++		return PTR_ERR(jdi->avdd);
++
++	jdi->iovdd =3D devm_regulator_get(dev, "iovdd");
++	if (IS_ERR(jdi->iovdd))
++		return PTR_ERR(jdi->iovdd);
++
++	jdi->vcc_gpio =3D devm_gpiod_get(dev, "vcc", GPIOD_OUT_LOW);
++	if (IS_ERR(jdi->vcc_gpio)) {
++		dev_err(dev, "cannot get vcc-gpio %ld\n",
++			PTR_ERR(jdi->vcc_gpio));
++		jdi->vcc_gpio =3D NULL;
++	} else {
++		gpiod_direction_output(jdi->vcc_gpio, 0);
++	}
++
++	jdi->reset_gpio =3D devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(jdi->reset_gpio)) {
++		dev_err(dev, "cannot get reset-gpios %ld\n",
++			PTR_ERR(jdi->reset_gpio));
++		jdi->reset_gpio =3D NULL;
++	} else {
++		gpiod_direction_output(jdi->reset_gpio, 0);
++	}
++
++	jdi->enable_gpio =3D devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
++	if (IS_ERR(jdi->enable_gpio)) {
++		dev_err(dev, "cannot get enable-gpio %ld\n",
++			PTR_ERR(jdi->enable_gpio));
++		jdi->enable_gpio =3D NULL;
++	} else {
++		gpiod_direction_output(jdi->enable_gpio, 0);
++	}
++
++	jdi->pwm_gpio =3D devm_gpiod_get(dev, "pwm", GPIOD_OUT_LOW);
++	if (IS_ERR(jdi->pwm_gpio)) {
++		dev_err(dev, "cannot get pwm-gpio %ld\n",
++			PTR_ERR(jdi->pwm_gpio));
++		jdi->pwm_gpio =3D NULL;
++	} else {
++		gpiod_direction_output(jdi->pwm_gpio, 0);
++	}
++
++	/* we don't have backlight right now, proceed further */
++#ifdef BACKLIGHT
++	np =3D of_parse_phandle(dev->of_node, "backlight", 0);
++	if (np) {
++		jdi->backlight =3D of_find_backlight_by_node(np);
++		of_node_put(np);
++
++		if (!jdi->backlight)
++			return -EPROBE_DEFER;
++	}
++#endif
++
++	drm_panel_init(&jdi->base);
++	jdi->base.funcs =3D &jdi_panel_funcs;
++	jdi->base.dev =3D &jdi->dsi->dev;
++
++	ret =3D drm_panel_add(&jdi->base);
++	if (ret < 0)
++		goto put_backlight;
++
++	return 0;
++
++put_backlight:
++	if (jdi->backlight)
++		put_device(&jdi->backlight->dev);
++
++	return ret;
++}
++
++static void jdi_panel_del(struct jdi_panel *jdi)
++{
++	if (jdi->base.dev)
++		drm_panel_remove(&jdi->base);
++
++	if (jdi->backlight)
++		put_device(&jdi->backlight->dev);
++}
++
++static int jdi_panel_probe(struct mipi_dsi_device *dsi)
++{
++	struct jdi_panel *jdi;
++	int ret;
++
++	dsi->lanes =3D 4;
++	dsi->format =3D MIPI_DSI_FMT_RGB888;
++	dsi->mode_flags =3D  MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO |
++			MIPI_DSI_MODE_VIDEO_HFP | MIPI_DSI_MODE_VIDEO_HBP |
++			MIPI_DSI_MODE_VIDEO_HSA |
++			MIPI_DSI_CLOCK_NON_CONTINUOUS;
++
++	jdi =3D devm_kzalloc(&dsi->dev, sizeof(*jdi), GFP_KERNEL);
++	if (!jdi)
++		return -ENOMEM;
++
++	mipi_dsi_set_drvdata(dsi, jdi);
++
++	jdi->dsi =3D dsi;
++
++	ret =3D jdi_panel_add(jdi);
++	if (ret < 0)
++		return ret;
++
++	return mipi_dsi_attach(dsi);
++}
++
++static int jdi_panel_remove(struct mipi_dsi_device *dsi)
++{
++	struct jdi_panel *jdi =3D mipi_dsi_get_drvdata(dsi);
++	int ret;
++
++	ret =3D jdi_panel_disable(&jdi->base);
++	if (ret < 0)
++		dev_err(&dsi->dev, "failed to disable panel: %d\n", ret);
++
++	ret =3D mipi_dsi_detach(dsi);
++	if (ret < 0)
++		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n",
++			ret);
++
++	drm_panel_detach(&jdi->base);
++	jdi_panel_del(jdi);
++
++	return 0;
++}
++
++static void jdi_panel_shutdown(struct mipi_dsi_device *dsi)
++{
++	struct jdi_panel *jdi =3D mipi_dsi_get_drvdata(dsi);
++
++	jdi_panel_disable(&jdi->base);
++}
++
++static struct mipi_dsi_driver jdi_panel_driver =3D {
++	.driver =3D {
++		.name =3D "panel-jdi-lt070me05000",
++		.of_match_table =3D jdi_of_match,
++	},
++	.probe =3D jdi_panel_probe,
++	.remove =3D jdi_panel_remove,
++	.shutdown =3D jdi_panel_shutdown,
++};
++module_mipi_dsi_driver(jdi_panel_driver);
++
++MODULE_AUTHOR("Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
++MODULE_AUTHOR("Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("JDI WUXGA LT070ME05000 DSI video/command mode pane=
+l driver");
++MODULE_LICENSE("GPL v2");
+--=20
+2.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
