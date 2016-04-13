@@ -1,194 +1,43 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 13/45] powerpc/powernv/ioda1: M64 support on P7IOC
-Date: Wed, 13 Apr 2016 17:47:59 +1000
-Message-ID: <570DF9AF.6020104@ozlabs.ru>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-14-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] [media] atmel-isc: add driver for Atmel ISC
+Date: Wed, 13 Apr 2016 15:44:18 +0800
+Message-ID: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-14-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, =?UTF-8?q?Richard=20R=C3=B6jfors?= <richard-hy+oXTTr619xRVliYXHCzg@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2016 02:43 PM, Gavin Shan wrote:
-> This enables M64 window on P7IOC, which has been enabled on PHB3.
-> Different from PHB3 where 16 M64 BARs are supported and each of
-> them can be owned by one particular PE# exclusively or divided
-> evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
-> of them are divided to 8 segments. So every P7IOC PHB supports
-> 128 M64 segments in total. P7IOC has M64DT, which helps mapping
-> one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
-> M64DT, indicating that one M64 segment can only be pinned to the
-> fixed PE#. In order to have same code to support M64 on P7IOC and
-> PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
-> of them is pinned to the fixed PE# by bypassing the function of
-> M64DT. In turn, we just need different phb->init_m64() for P7IOC
-> and PHB3 to support M64.
-
-The comment is not quite correct - in addition to pnv_ioda1_init_m64(), you 
-also need to hack pnv_ioda_pick_m64_pe().
+The Image Sensor Controller driver includes two parts.
+1) Driver code to implement the ISC function.
+2) Device tree binding documentation, it describes how
+   to add the ISC in device tree.
 
 
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
->   arch/powerpc/platforms/powernv/pci.h      |  3 ++
->   2 files changed, 86 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 1dc663a..8488238 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -246,6 +246,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
->   	}
->   }
->
-> +static int pnv_ioda1_init_m64(struct pnv_phb *phb)
-> +{
-> +	struct resource *r;
-> +	int index;
-> +
-> +	/*
-> +	 * There are 16 M64 BARs, each of which has 8 segments. So
-> +	 * there are as many M64 segments as the maximum number of
-> +	 * PEs, which is 128.
-> +	 */
-> +	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
-> +		unsigned long base, segsz = phb->ioda.m64_segsize;
-> +		int64_t rc;
-> +
-> +		base = phb->ioda.m64_base +
-> +		       index * PNV_IODA1_M64_SEGS * segsz;
-> +		rc = opal_pci_set_phb_mem_window(phb->opal_id,
-> +				OPAL_M64_WINDOW_TYPE, index, base, 0,
-> +				PNV_IODA1_M64_SEGS * segsz);
-> +		if (rc != OPAL_SUCCESS) {
-> +			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
-> +				rc, phb->hose->global_number, index);
-> +			goto fail;
-> +		}
-> +
-> +		rc = opal_pci_phb_mmio_enable(phb->opal_id,
-> +				OPAL_M64_WINDOW_TYPE, index,
-> +				OPAL_ENABLE_M64_SPLIT);
-> +		if (rc != OPAL_SUCCESS) {
-> +			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
-> +				rc, phb->hose->global_number, index);
-> +			goto fail;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Exclude the segment used by the reserved PE, which
-> +	 * is expected to be 0 or last supported PE#.
-> +	 */
-> +	r = &phb->hose->mem_resources[1];
-> +	if (phb->ioda.reserved_pe_idx == 0)
-> +		r->start += phb->ioda.m64_segsize;
-> +	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
-> +		r->end -= phb->ioda.m64_segsize;
-> +	else
-> +		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
-> +			phb->ioda.reserved_pe_idx);
-> +
-> +	return 0;
-> +
-> +fail:
-> +	for ( ; index >= 0; index--)
-> +		opal_pci_phb_mmio_enable(phb->opal_id,
-> +			OPAL_M64_WINDOW_TYPE, index, OPAL_DISABLE_M64);
-> +
-> +	return -EIO;
-> +}
-> +
->   static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
->   				    unsigned long *pe_bitmap,
->   				    bool all)
-> @@ -315,6 +373,26 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->   			pe->master = master_pe;
->   			list_add_tail(&pe->list, &master_pe->slaves);
->   		}
-> +
-> +		/*
-> +		 * P7IOC supports M64DT, which helps mapping M64 segment
-> +		 * to one particular PE#. However, PHB3 has fixed mapping
-> +		 * between M64 segment and PE#. In order to have same logic
-> +		 * for P7IOC and PHB3, we enforce fixed mapping between M64
-> +		 * segment and PE# on P7IOC.
-> +		 */
-> +		if (phb->type == PNV_PHB_IODA1) {
-> +			int64_t rc;
-> +
-> +			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
-> +					pe->pe_number, OPAL_M64_WINDOW_TYPE,
-> +					pe->pe_number / PNV_IODA1_M64_SEGS,
-> +					pe->pe_number % PNV_IODA1_M64_SEGS);
-> +			if (rc != OPAL_SUCCESS)
-> +				pr_warn("%s: Error %lld mapping M64 for PHB#%d-PE#%d\n",
-> +					__func__, rc, phb->hose->global_number,
-> +					pe->pe_number);
-> +		}
+Songjun Wu (2):
+  [media] atmel-isc: add the Image Sensor Controller code
+  [media] atmel-isc: DT binding for Image Sensor Controller driver
 
-
-Cannot this go to pnv_ioda1_init_m64()? From the commit log I understood 
-that this setup is supposed to be static so it can be done once. Or it is 
-sort of enable/disable PE? Then make is a helper and call it 
-ioda1_pe_enable() or something.
-
-
->   	}
->
->   	kfree(pe_alloc);
-> @@ -329,8 +407,7 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
->   	const u32 *r;
->   	u64 pci_addr;
->
-> -	/* FIXME: Support M64 for P7IOC */
-> -	if (phb->type != PNV_PHB_IODA2) {
-> +	if (phb->type != PNV_PHB_IODA1 && phb->type != PNV_PHB_IODA2) {
->   		pr_info("  Not support M64 window\n");
->   		return;
->   	}
-> @@ -364,7 +441,10 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
->
->   	/* Use last M64 BAR to cover M64 window */
->   	phb->ioda.m64_bar_idx = 15;
-> -	phb->init_m64 = pnv_ioda2_init_m64;
-> +	if (phb->type == PNV_PHB_IODA1)
-> +		phb->init_m64 = pnv_ioda1_init_m64;
-> +	else
-> +		phb->init_m64 = pnv_ioda2_init_m64;
->   	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
->   	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
->   }
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index 866a5ea..00539ff 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -82,6 +82,9 @@ struct pnv_ioda_pe {
->   	struct list_head	list;
->   };
->
-> +#define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
-> +#define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
-> +
-
-Why here, not in the beginning of arch/powerpc/platforms/powernv/pci-ioda.c 
-? It exposes symbols but nothing is using them (except pci-ioda.c) and code 
-browsing gets bit more inconvenient.
-
-
-
->   #define PNV_PHB_FLAG_EEH	(1 << 0)
->
->   struct pnv_phb {
->
-
+ .../devicetree/bindings/media/atmel-isc.txt        |   84 ++
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/atmel/Kconfig               |    9 +
+ drivers/media/platform/atmel/Makefile              |    3 +
+ drivers/media/platform/atmel/atmel-isc-regs.h      |  280 ++++
+ drivers/media/platform/atmel/atmel-isc.c           | 1537 ++++++++++++++++++++
+ 7 files changed, 1916 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+ create mode 100644 drivers/media/platform/atmel/Kconfig
+ create mode 100644 drivers/media/platform/atmel/Makefile
+ create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
+ create mode 100644 drivers/media/platform/atmel/atmel-isc.c
 
 -- 
-Alexey
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
