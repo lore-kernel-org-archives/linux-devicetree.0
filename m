@@ -1,138 +1,136 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 4/7] soc/tegra: pmc: Add interface to set voltage of IO
- rails
-Date: Wed, 13 Apr 2016 10:25:49 +0100
-Message-ID: <570E109D.6070805@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
- <1460473007-11535-5-git-send-email-ldewangan@nvidia.com>
- <570E07B7.1070209@nvidia.com> <570E0AC9.9050701@nvidia.com>
+From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RESEND PATCH v9] mtd: spi-nor: add hisilicon spi-nor flash
+ controller driver
+Date: Wed, 13 Apr 2016 17:24:39 +0800
+Message-ID: <570E1057.3090604@huawei.com>
+References: <1458979861-3619-1-git-send-email-xuejiancheng@huawei.com>
+ <56F73BC9.5000300@gmail.com> <56F8F630.5050008@huawei.com>
+ <20160404064418.GC13995@localhost> <5705C17F.9030904@huawei.com>
+ <5705C5E2.6070206@denx.de> <57076B26.7030700@huawei.com>
+ <5707821F.4020300@denx.de> <570AFDAF.9050607@huawei.com>
+ <570BF933.2000607@denx.de> <570CC098.9070606@huawei.com>
+ <20160412114433.069b388e@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <570E0AC9.9050701@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160412114433.069b388e@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, furquan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
-On 13/04/16 10:00, Laxman Dewangan wrote:
+On 2016/4/12 17:44, Boris Brezillon wrote:
+> +Russell
 > 
-> On Wednesday 13 April 2016 02:17 PM, Jon Hunter wrote:
->> On 12/04/16 15:56, Laxman Dewangan wrote:
->>> NVIDIA Tegra210 supports some of the IO interface which can operate
->>> at 1.8V or 3.3V I/O rail voltage levels. SW needs to configure
->>> Tegra PMC register to set different voltage level of IO interface based
->>> on IO rail voltage from power supply i.e. power regulators.
+> Hi Jiancheng,
+> 
+> On Tue, 12 Apr 2016 17:32:08 +0800
+> Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> 
+>> Hi Marek,
+>>
+>> On 2016/4/12 3:21, Marek Vasut wrote:
+>>> On 04/11/2016 03:28 AM, Jiancheng Xue wrote:
+>>>> Hi,
+>>>>
+>>>> On 2016/4/8 18:04, Marek Vasut wrote:
+>>>>> On 04/08/2016 10:26 AM, Jiancheng Xue wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 2016/4/7 10:28, Marek Vasut wrote:
+>>>>>>> On 04/07/2016 04:10 AM, Jiancheng Xue wrote:
+>>>>>>>> Hi Brian,
+>>>>>>>>    Thank you very much for your comments. I'll fix these issues in next version.
+>>>>>>>> In addition, for easy understanding I'd like to rewrite hisi_spi_nor_write and
+>>>>>>>> hisi_spi_nor_read. Your comments on these modifications will be highly appreciated.
+>>>>>>>
+>>>>>>> Would you please stop top-posting ? It rubs some people the wrong way.
+>>>>>>>
+>>>>>> I feel very sorry about that. I have read the etiquette and won't make the same mistake again.
+>>>>>>
+>>>>>>>> static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
+>>>>>>>> 		size_t *retlen, u_char *read_buf)
+>>>>>>>> {
+>>>>>>>> 	struct hifmc_priv *priv = nor->priv;
+>>>>>>>> 	struct hifmc_host *host = priv->host;
+>>>>>>>> 	int i;
+>>>>>>>>
+>>>>>>>> 	/* read all bytes in only one time */
+>>>>>>>> 	if (len <= HIFMC_DMA_MAX_LEN) {
+>>>>>>>> 		hisi_spi_nor_dma_transfer(nor, from, host->dma_buffer,
+>>>>>>>> 				len, FMC_OP_READ);
+>>>>>>>> 		memcpy(read_buf, host->buffer, len);
+>>>>>>>
+>>>>>>> Is all the ad-hoc memcpying necessary? I think you can use
+>>>>>>> dma_map_single() and co to obtain DMAble memory for your
+>>>>>>> controller's use and then you can probably get rid of most
+>>>>>>> of this stuff.
+>>>>>>>
+>>>>>> Considering read_buf >= high_mem case, I think it is also complicated to use dma_map_*
+>>>>>> and the DMA buffer allocated by the driver is still needed. But I am not sure about
+>>>>>> this. Please let me know if I am wrong. Thank you!
+>>>>>
+>>>>> Does your controller/DMA have a limitation where it's buffers must be in
+>>>>> the bottom 4GiB range ? The DMA framework should be able to take care of
+>>>>> such platform limitations.
+>>>>>
+>>>> When read_buf is allocated by vmalloc, the underlying physical memory may be not contiguous.
+>>>> In this case, dma_map_single can't be used directly. I think inner DMA buffer and memcpy are still
+>>>> needed. Am I right?
 >>>
->>> Add APIs to set and get IO rail voltage from the client driver.
->> I think that we need some further explanation about the scenario when
->> this is used. In other words, why this configuration needs to be done in
->> the kernel versus the bootloader. Is this something that can change at
->> runtime? I could see that for SD cards it may.
-> 
-> Yes, SDIO3.0 support needs dynamic IO rail voltage change and so pad
-> voltage change.
-> 
->>>     #define GPU_RG_CNTRL            0x2d4
->>>   +static DEFINE_SPINLOCK(tegra_pmc_access_lock);
->>> +
->> We already have a mutex for managing concurrent accesses, do we need
->> this?
-> Mutex is sleeping calls and we really dont need this. This is sleep for
-> small duration and we should do this in spinlock.
-
-Yes but do you need to call it from a interrupt context? It seems that
-these are not called very often, may be on boot, or when swapping an SD
-card, and so although a spinlock would be faster, the overhead of the
-mutex would be negligible in this case. I think that you need to justify
-why this needs to be a spinlock with a use-case that requires it.
-
->>>   +
->>> +static struct tegra_io_rail_voltage_bit_info
->>> tegra210_io_rail_voltage_info[] = {
->>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC1, 12),
->>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC3, 13),
->>> +    TEGRA_IO_RAIL_VOLTAGE(AUDIO_HV, 18),
->>> +    TEGRA_IO_RAIL_VOLTAGE(DMIC, 20),
->>> +    TEGRA_IO_RAIL_VOLTAGE(GPIO, 21),
->>> +    TEGRA_IO_RAIL_VOLTAGE(SPI_HV, 23),
->>> +};
->>> +
->> You could simply this by having a look-up table similar to what we do
->> for the powergates.
-> Revising the power gate code, it needs ID matches with bit location but
-> it is not the case here. We need to have lookup from ID to  bit position.
-
-I still don't see why you could not have ...
-
-static unsigned int tegra210_io_rail_voltage_bit[] = {
-	[TEGRA_IO_RAIL_SDMMC1] = 12,
-	...
-}
-
-You could avoid the for-loop in the lookup as well as all the extra
-definitions. Seems a lot simpler.
-
-> 
+>>> Take a look at drivers/spi/spi-mxs.c , look for "vmalloc" , does that
+>>> solution help you in any way ?
+>>>
+>> No. I think this solution just processes the buffer within only one page.
+>> I had referred to drivers/mtd/onenand/samsung.c and other files.
+>> The corresponding code segment is as follows:
+>> static int s5pc110_read_bufferram(struct mtd_info *mtd, int area,
+>>                 unsigned char *buffer, int offset, size_t count)
+>> {
+>> 	void *buf = (void *) buffer;
+>>         dma_addr_t dma_src, dma_dst;
+>> 	...
+>> 	/* Handle vmalloc address */
+>>         if (buf >= high_memory) {
+>>                 struct page *page;
 >>
->>>   static u32 tegra_pmc_readl(unsigned long offset)
->>>   {
->>>       return readl(pmc->base + offset);
->>> @@ -175,6 +202,16 @@ static void tegra_pmc_writel(u32 value, unsigned
->>> long offset)
->>>       writel(value, pmc->base + offset);
->>>   }
->>>   +static void _tegra_pmc_register_update(unsigned long addr,
->>> unsigned long mask,
->>> +                       unsigned long val)
->> u32 for mask and val. May be consider renaming to tegra_pmc_rmw().
-> 
-> update is common from the other framework like regmap so it is here.
-> 
-> 
+>>                 if (((size_t) buf & PAGE_MASK) !=
+>>                     ((size_t) (buf + count - 1) & PAGE_MASK))
+>>                         goto normal;
+>>                 page = vmalloc_to_page(buf);
+>>                 if (!page)
+>>                         goto normal;
 >>
->>>   +static int tegra_io_rail_voltage_get_bit_pos(int io_rail_id)
->> All the tegra_io_rail_xxx() APIs just use "id" and it is an unsigned
->> int. Any reason this needs to be an int? We should keep the naming and
->> type consistent.
-> 
-> OK, will do.
-> 
->>> +
->>> +int tegra_io_rail_voltage_set(int io_rail, int val)
->> Same here w.r.t "io_rail".
+>>                 ...
+>>         } else {
+>> 		...
+>> 	}
 >>
->> Also it appears that "val" should only be 0 or 1 but we don't check for
->> this. I see that you treat all non-zero values as '1' but that seems a
->> bit funny. You may consider having the user pass uV and then you could
->> check for either 3300000 or 1800000.
-> 
-> What about enums then?
-> May be we can use the DT binding header here.
-
-Seems better just to specify the voltage in uV in the DT and pass it to
-this function.
-
+>> normal:
+>>         ...
+>>         memcpy(buffer, p, count);
 >>
->>> +
->>> +    spin_lock_irqsave(&tegra_pmc_access_lock, flags);
->>> +    _tegra_pmc_register_update(PMC_PWR_DET, mask, mask);
->>> +    _tegra_pmc_register_update(PMC_PWR_DET_VAL, mask, bval);
->> Hmmm ... this does not appear to be consistent with the TRM. It says to
->> write to the PMC_PWR_DET register and then the PMC_PWR_LATCH register. I
->> see in the Tegra210 TRM it says to only write the to ONLY the
->> PMC_PWR_DET_VAL register in other places. The TRM appears to be quite
->> confusing here, can you explain this?
+>> 	return 0;
+>> }
+>> I think memcpy in "normal" clause can't be removed. So I'd like to keep my original
+>> implementation if it is also OK. What's your opinion?
 > 
-> The TRM needs to be update. There is no LATCH register in the T210.
-> PMC_PWR_DET and PMC_PWR_DET_VAL are registers for this. I have internal
-> tracking bug for correcting this.
+> You might want to have a look at this series [1], and particularly at
+> Russell's answers regarding DMA operations on non-lowmem memory.
+> 
+Thank you very much for your supplied reference. Besides safety reasons described by Russell,
+the dmaengine embeded in this controller doesn't support scatter-list type buffer directly.
+So for this controller, I think now it's better to obtain buffer through dma_alloc_coherent
+for dma operation, and then copy data to buffers supplied by mtd user. May I keep using this
+implementation now?
 
-Why do you need to program both? I think that we should be clear here
-about the procedure. If the TRM is wrong, then there should be at least
-a comment here describing the correct sequence.
+Regards,
+Jiancheng
 
-Cheers
-Jon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
