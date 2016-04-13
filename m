@@ -1,53 +1,133 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add i2c nodes RK3228 SoCs
-Date: Wed, 13 Apr 2016 04:37:53 +0200
-Message-ID: <20160413023752.GA1556@katana>
-References: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
- <1457925102-30476-1-git-send-email-ykk@rock-chips.com>
- <20160412213912.GF1526@katana>
- <570D9F9D.6000109@rock-chips.com>
+From: Yao Yuan <yao.yuan@nxp.com>
+Subject: RE: [PATCH 2/2] dts/ls1043a: add the DTS node for QSPI support
+Date: Wed, 13 Apr 2016 02:41:27 +0000
+Message-ID: <AM2PR04MB07221B6FDAD72A6DAB8E1E0889960@AM2PR04MB0722.eurprd04.prod.outlook.com>
+References: <1459406701-40993-1-git-send-email-yao.yuan@freescale.com>
+ <1459406701-40993-3-git-send-email-yao.yuan@freescale.com>
+ <20160412024947.GD15949@tiger>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570D9F9D.6000109@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160412024947.GD15949@tiger>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Yuan Yao <yao.yuan@freescale.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Han Xu <han.xu@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 12, 2016 at 10:50:01AM +0800, Shawn Guo wrote:
+> On Thu, Mar 31, 2016 at 02:45:01PM +0800, Yuan Yao wrote:
+> > From: Yuan Yao <yao.yuan@nxp.com>
+> >
+> > Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+> 
+> Please style of 'arm64: dts: ls1043a: ' for subject prefix.
+> 
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 16 ++++++++++++++++
+> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 14 ++++++++++++++
+> >  2 files changed, 30 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > index 97e9906..c8303a3 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> > @@ -100,6 +100,22 @@
+> >  	};
+> >  };
+> >
+> > +&qspi {
+> 
+> Please sort such labeled node alphabetically in label name.  That said, it should
+> go after &lpuart0.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, Thanks.
+
+> > +	num-cs = <2>;
+> 
+> I do not see this property in bindings doc.
+
+We can find this property in ./Documentation/devicetree/bindings/spi/spi-bus.txt
+ 
+> 
+> > +	bus-num = <0>;
+> > +	status = "okay";
+> 
+> Please let 'status' line be the last of property list.
 
 
-> Could you pick up this patch, it's helpful to add rk3228 HDMI support  :-)
+Ok, Thanks.
 
-I undestand that it is needed, but why not via arm-soc? dts files are
-their realm.
+> > +	fsl,ddr-sampling-point = <4>;
+> 
+> I do not see this one in bindings definition either.
 
+It's used for DDR mode; The DDR mode will send to upstream late.
+So I will remove this, once the DDR mode patch is merged, I will send patch to add the property.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> > +
+> > +	qflash0: s25fl128s@0 {
+> > +		compatible = "spansion,m25p80";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		spi-max-frequency = <20000000>;
+> > +		ddr-quad-read;
+> 
+> Ditto
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Ditto, Thanks.
 
-iQIcBAEBAgAGBQJXDbEAAAoJEBQN5MwUoCm2UyAP/A/OyucibnnuEb1k8Vx7VKCE
-rw+Sg0e5rO60FNeQoL4m1JrvXKTpr/X97DLZoqTVdXwy+4dT+LqJHvcHy/tx+/L0
-g4SpM1WwGBvYBwSAMOpvIH1pV75H7WKxgTkCWj6nyXvi/V/O8/laFtkvruwaOOcN
-O4+jCZgZCUq/dzgpYSnzZv9ANXdE4AgFdMAdnAAEFMFw3/7jmb2q8yrorfSSL4xL
-hSiCnqwnwRblWaYlmtNboHjCkvdKzVb55rZTX/ux+dxqOTu2zupdNRA+o1mrqWuD
-Jj8wMvwRLij8/SPzQJaXgmLbj2QXP09z6Ryp8SIWgChYHbntLgNXEK6gAUcLN1nr
-57G7mq8+/7dyYqD53IptQSrN9TqUVC2ROoL9x+BlpTXeolNKI3KF3rOTmC4oX39g
-UWIZc/Ke4/J1raIKYYoTn5qqEc9cu5nITfFPXujWhRZ7lPKAV/YuqgDpgY+E0Sja
-sgAXYi08SlojD/lV9XsAumYGREAdYMMgTrJQ9oTOgJzn8GFZfd5EBedP31eYfkrD
-Rh2JLsrYfiexBaOJVL5sJY16F98CLaJWst8sDrpHvJyLozTytB4OM9xaQQTn1Xb8
-31TYk6Shbe1P4hdlpK3IrYDxgdkwX5BfD4YUn5/MnM8Q+br1xiNYeoTdWoNilC4s
-dEJa72l3nrdUKhCSk0uT
-=rsnG
------END PGP SIGNATURE-----
+> 
+> > +		reg = <0>;
+> > +	};
+> > +};
+> > +
+> >  &i2c0 {
+> >  	status = "okay";
+> >  	pca9547@77 {
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> > index be72bf5..49b1aeb 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> > @@ -208,6 +208,20 @@
+> >  			status = "disabled";
+> >  		};
+> >
+> > +		qspi: quadspi@1550000 {
+> 
+> Please sort the node in <soc>.dtsi in order of unit-address.  That said, the node
+> should be added between ifc@1530000 and esdhc@1560000.
 
---r5Pyd7+fXNt84Ff3--
+Thanks. I will update it and resend it soon.
+
+> Shawn
+> 
+> > +			compatible = "fsl,ls1043a-qspi", "fsl,ls1021a-qspi";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +			reg = <0x0 0x1550000 0x0 0x10000>,
+> > +				<0x0 0x40000000 0x0 0x4000000>;
+> > +			reg-names = "QuadSPI", "QuadSPI-memory";
+> > +			interrupts = <0 99 0x4>;
+> > +			clock-names = "qspi_en", "qspi";
+> > +			clocks = <&clockgen 4 0>, <&clockgen 4 0>;
+> > +			big-endian;
+> > +			status = "disabled";
+> > +		};
+> > +
+> >  		i2c0: i2c@2180000 {
+> >  			compatible = "fsl,vf610-i2c";
+> >  			#address-cells = <1>;
+> > --
+> > 2.1.0.27.g96db324
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >
