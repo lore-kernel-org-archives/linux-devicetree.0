@@ -1,140 +1,74 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 00/30] ARM: OMAP2+: hwmod module clock type support
-Date: Wed, 13 Apr 2016 09:59:50 +0300
-Message-ID: <570DEE66.8030706@ti.com>
-References: <1460362761-4842-1-git-send-email-t-kristo@ti.com>
- <20160412145819.GA25032@rob-hp-laptop> <20160412155829.GM5995@atomide.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 0/7] Implement generic ASoC HDMI codec and use it in
+ tda998x
+Date: Wed, 13 Apr 2016 08:02:19 +0100
+Message-ID: <20160413070219.GN14664@sirena.org.uk>
+References: <cover.1459431292.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160412155829.GM5995@atomide.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1836060557=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1459431292.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2016 06:58 PM, Tony Lindgren wrote:
-> Hi,
->
-> * Rob Herring <robh@kernel.org> [160412 07:59]:
->> On Mon, Apr 11, 2016 at 11:18:51AM +0300, Tero Kristo wrote:
->>> Hi,
->>>
->>> This series transfers the hwmod clkctrl handling from the hwmod core
->>> under clock driver, the data is also transferred from hwmod data to
->>> devicetree. Done for most of the OMAP2+ platforms, except OMAP2 / OMAP3,
->>> where work is still under progress.
->>
->> Some high level questions.
->>
->> Why a DT node per clock? We've pretty much decided that is a bad idea
->> in the complex cases. TI chips certainly fall in the complex case.
->
-> Well the clkctrl instances are separate independent devices under each
-> clockdomain, so having a proper DT node for them makes sense to me.
->
-> It's not like the clkctrl registers are just outputs of a single clock.
-> A clockdomain typically has multiple inputs that are then routed in
-> some combination to the clkctrl modules.
->
-> I think we can group them though, here's how I'd like to set these up.
-> This from dts point of view modelling omap4 TRM "3.11.16.1 WKUP_CM
-> Register Summary":
->
-> cm_wkup: clock@1800 {	/* offset from prm_clocks at 0x4a306000 */
-> 	...
-> 	reg = <0x1800 0x100>;
-> 	ranges = <...>;
-> 	...
->
-> 	gpio1_mod_ck: clock@38 {
-> 		compatible = "ti,clock-abc";
-> 		reg = <0x38 0x10>;
-> 		clocks = <...>;
-> 		ranges = <...>;
-> 		...
-> 		gpio1_dbclk: clock@8 {
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			ranges = <...>;
-> 			compatible = "ti,clock-db";
-> 			reg = <8>;	/* bit offset */
-> 			...
-> 		};
-> 	};
->
-> 	counter_32k_mod_ck: clock@50 {
-> 		compatible = "ti,clock-xyz";
-> 		reg = <0x50 0x10>;
-> 		clocks = <...>;
-> 		...
-> 	};
-> 	...
-> };
->
-> This then allows adding support for the clockdomain CLKSTCTRL and
-> DYNAMICKDEP registers later on.
->
-> Then I'd like to also have consumers be able to reference these using
-> one of the two methods:
->
-> 1.	clocks = <&counter_32k_mod_ck>;
-> 2.	clocks = <&cm_wkup 0x50>;
->
-> And the gpio1 debounce clock could be addressed with one of:
->
-> 1.	clocks = <&gpio1_dbclk>;
-> 2.	clocks = <&gpio1_mod_ck 8>;
->
->> You are changing compatible strings and possibly breaking compatibility.
->> Don't do that or justify why.
->
-> Yes Tero please check those, we need to support the old behavior too.
-> Sounds like you figured that out how to do that alreadey by generating
-> the clock name for the built-in data.
 
-Some of the old clock nodes are being dropped by this series, namely the 
-timer ones, and they are getting merged to the new timerX_mod_ck nodes.
+--===============1836060557==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ztcJpsdPpsnnlAp8"
+Content-Disposition: inline
 
-The reason for this is the behavior of the clock driver itself; it 
-assumes it gets a clock handle for which it can do clk_set_parent (for 
-setting proper source clock to get correct time-base), but normal 
-_mod_ck nodes do not support this. So, what happens for example for 
-omap4 is following:
 
-old:
-	dmt1_clk_mux: dmt1_clk_mux@1840 {
-		#clock-cells = <0>;
-		compatible = "ti,mux-clock";
-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
-		ti,bit-shift = <24>;
-		reg = <0x1840>;
-	};
+--ztcJpsdPpsnnlAp8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	=> becomes a mux clock
+On Thu, Mar 31, 2016 at 04:35:57PM +0300, Jyri Sarha wrote:
+> Couple of minor changes since v8 to ALSA/ASoC side patches. The series
+> is based on top of drm-next. However, it does not look like there is
+> enough attention to the DRM side so that the tda998x patches would get
+> in any time soon. So I am happy to rebase the first ALSA-side patches
+> on top of Mark Brown's for-next tree, for instance, if they would have
+> a change to go in on their own. The first two IEC958 helper patches
+> should apply as such.
 
-new:
-	timer1_mod_ck: timer1_mod_ck@1840 {
-		#clock-cells = <0>;
-		compatible = "ti,omap4-sw-mux-mod-clock";
-		reg = <0x1840>, <0x1840>;
-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
-		ti,bit-shift = <24>;
-	};
+None of the ASoC specific patches here have had any review from other
+HDMI users?
 
-	=> becomes a composite clock with gate and mux components
+--ztcJpsdPpsnnlAp8
+Content-Type: application/pgp-signature; name="signature.asc"
 
-These clocks are then directly referenced by hwmod. The reason for 
-having two registers under the new timer node is that in some hardwares 
-(like AM33xx), the register address for the gate and mux component are 
-different.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Anyway, compatibility will be broken once the hwmod_data changes go in 
-for individual SoCs, as the clkctrl portion is going to be dropped, and 
-the hwmod has no chance to work with old DT data. If this is not 
-acceptable, then the whole exercise becomes moot as we need to move the 
-data someplace else within the kernel, and forget about the transition 
-to DT.
+iQEcBAEBCAAGBQJXDe76AAoJECTWi3JdVIfQPmkH/2/oOmnlDUI14ubV5N1ZZXf4
+M877A3pLYCM5KZJa2WRjqx8rEx/1Spj+KAjl8Ey8uRmB7Xx+U6xQlZ0gbULzCSau
+lNJ4mS+JmMAv/74Q1xn8BHsdMS1OcBIYiSksoL32FoVdICKGoQ4M0VfmNsAAbn4v
+rbA4s8d7zxUk9Uyon4yWrJc+Me1jX6WHUaLgoaDLgkNLcIz2sqGid2bebnpzP4lO
+69zlipQ8LaD6zbmyMb7CEp+H4u8ZD+InHpDSeI4MfE4WDCzRsiwiIEv54buMnD8q
+zYj6Rc1RUgrSL/hp7ZbjSRyQ+VnuQhwrdp99S5gCdy8L3mtas4Jv7+KCy2XzOrw=
+=OYk6
+-----END PGP SIGNATURE-----
 
--Tero
+--ztcJpsdPpsnnlAp8--
+
+--===============1836060557==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1836060557==--
