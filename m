@@ -1,154 +1,69 @@
-From: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
-Subject: Re: [PATCH v6 01/24] i2c-mux: add common data for every i2c-mux
- instance
-Date: Wed, 13 Apr 2016 15:37:50 +0200
-Message-ID: <570E4BAE.7060108@lysator.liu.se>
-References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
- <1459673574-11440-2-git-send-email-peda@lysator.liu.se>
- <20160411204630.GA10401@katana>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Add Oxford Semiconductor OXNAS pinctrl
+ and gpio bindings
+Date: Wed, 13 Apr 2016 15:44:40 +0200
+Message-ID: <CACRpkdYYy2qObQDOP-FTPtwOgEqg6zgJOAwkSsYJaam6jqjSaQ@mail.gmail.com>
+References: <1459689969-5326-1-git-send-email-narmstrong@baylibre.com>
+	<1459689969-5326-3-git-send-email-narmstrong@baylibre.com>
+	<20160404051621.GM17806@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160411204630.GA10401@katana>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160404051621.GM17806@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On 2016-04-11 22:46, Wolfram Sang wrote:
-> Hi Peter,
-> 
-> first high-level review:
-> 
->> +int i2c_mux_reserve_adapters(struct i2c_mux_core *muxc, int adapters)
-> 
-> I'd suggest to rename 'adapters' into 'num_adapters' throughout this
-> patch. I think it makes the code a lot easier to understand.
-
-Hmm, you mean just the variable names, right? And not function names
-such as i2c_mux_reserve_(num_)adapters?
-
->> +{
->> +	struct i2c_adapter **adapter;
+On Mon, Apr 4, 2016 at 7:16 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Apr 03, 2016 at 03:26:09PM +0200, Neil Armstrong wrote:
+>> Add pinctrl and gpio DT bindings for Oxford Semiconductor OXNAS SoC Family.
+>> This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio_oxnas.txt        | 43 ++++++++++++++++
+>>  .../devicetree/bindings/pinctrl/oxnas,pinctrl.txt  | 57 ++++++++++++++++++++++
+>>  2 files changed, 100 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+>> new file mode 100644
+>> index 0000000..ddd3de9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+>> @@ -0,0 +1,43 @@
+>> +* Oxford Semiconductor OXNAS SoC GPIO Controller
 >> +
->> +	if (adapters <= muxc->max_adapters)
->> +		return 0;
->> +
->> +	adapter = devm_kmalloc_array(muxc->dev,
->> +				     adapters, sizeof(*adapter),
->> +				     GFP_KERNEL);
->> +	if (!adapter)
->> +		return -ENOMEM;
->> +
->> +	if (muxc->adapter) {
->> +		memcpy(adapter, muxc->adapter,
->> +		       muxc->max_adapters * sizeof(*adapter));
->> +		devm_kfree(muxc->dev, muxc->adapter);
->> +	}
->> +
->> +	muxc->adapter = adapter;
->> +	muxc->max_adapters = adapters;
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(i2c_mux_reserve_adapters);
-> 
-> Despite that I wonder why not using some of the realloc functions, I
+>> +Required properties:
+>> + - compatible: "oxsemi,ox810se-gpio"
+>> + - reg: Base address and length for the device.
+>> + - interrupts: The port interrupt shared by all pins.
+>> + - gpio-controller: Marks the port as GPIO controller.
+>> + - #gpio-cells: Two. The first cell is the pin number and
+>> +   the second cell is used to specify the gpio polarity as defined in
+>> +   defined in <dt-bindings/gpio/gpio.h>:
+>> +      0 = GPIO_ACTIVE_HIGH
+>> +      1 = GPIO_ACTIVE_LOW
+>> + - interrupt-controller: Marks the device node as an interrupt controller.
+>> + - #interrupt-cells: Two. The first cell is the GPIO number and second cell
+>> +   is used to specify the trigger type as defined in
+>> +   <dt-bindings/interrupt-controller/irq.h>:
+>> +      IRQ_TYPE_EDGE_RISING
+>> +      IRQ_TYPE_EDGE_FALLING
+>> +      IRQ_TYPE_EDGE_BOTH
+>> + - gpio-ranges: Interaction with the PINCTRL subsystem.
+>
+> This should say something about what is a valid value. Think how do you
+> validate the example?
 
-When I wrote it, I found no devm_ version of realloc. I'm not finding
-anything now either...
+It should just reference gpio/gpio.txt I think. The binding
+is described there. (Partly in BNF, which noone understands.)
 
-> wonder even more if we couldn't supply num_adapters to i2c_mux_alloc()
-> and reserve the memory statically. i2c busses are not
-> dynamic/hot-pluggable so that should be good enough?
-
-Yes, that would work, but it would take some restructuring in some of
-the drivers that currently don't know how many child adapters they
-are going to need when they call i2c_mux_alloc.
-
-Because you thought about removing i2c_mux_reserve_adapters completely,
-and not provide any means of adding more adapters than specified in
-the i2c_mux_alloc call, right?
-
->> -	WARN(sysfs_create_link(&priv->adap.dev.kobj, &mux_dev->kobj, "mux_device"),
->> -			       "can't create symlink to mux device\n");
->> +	WARN(sysfs_create_link(&priv->adap.dev.kobj, &muxc->dev->kobj,
->> +			       "mux_device"),
-> 
-> Ignoring the 80 char limit here makes the code more readable.
-
-That is only true if you actually have more than 80 characters, so I don't
-agree. Are you adamant about it? (I'm not)
-
->> +	     "can't create symlink to mux device\n");
->>  
->>  	snprintf(symlink_name, sizeof(symlink_name), "channel-%u", chan_id);
->> -	WARN(sysfs_create_link(&mux_dev->kobj, &priv->adap.dev.kobj, symlink_name),
->> -			       "can't create symlink for channel %u\n", chan_id);
->> +	WARN(sysfs_create_link(&muxc->dev->kobj, &priv->adap.dev.kobj,
->> +			       symlink_name),
-> 
-> ditto.
-> 
->> +	     "can't create symlink for channel %u\n", chan_id);
->>  	dev_info(&parent->dev, "Added multiplexed i2c bus %d\n",
->>  		 i2c_adapter_id(&priv->adap));
->>  
->> -	return &priv->adap;
->> +	muxc->adapter[muxc->adapters++] = &priv->adap;
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(i2c_mux_add_adapter);
->> +
->> +struct i2c_mux_core *i2c_mux_one_adapter(struct i2c_adapter *parent,
->> +					 struct device *dev, int sizeof_priv,
->> +					 u32 flags, u32 force_nr,
->> +					 u32 chan_id, unsigned int class,
->> +					 int (*select)(struct i2c_mux_core *,
->> +						       u32),
-> 
-> ditto
-> 
->> +					 int (*deselect)(struct i2c_mux_core *,
->> +							 u32))
-> 
-> ditto
-> 
->> +{
->> +	struct i2c_mux_core *muxc;
->> +	int ret;
->> +
->> +	muxc = i2c_mux_alloc(parent, dev, sizeof_priv, flags, select, deselect);
->> +	if (!muxc)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	ret = i2c_mux_add_adapter(muxc, force_nr, chan_id, class);
->> +	if (ret) {
->> +		devm_kfree(dev, muxc);
->> +		return ERR_PTR(ret);
->> +	}
->> +
->> +	return muxc;
->> +}
->> +EXPORT_SYMBOL_GPL(i2c_mux_one_adapter);
-> 
-> Are you sure the above function pays off? Its argument list is very
-> complex and it doesn't save a lot of code. Having seperate calls is
-> probably more understandable in drivers? Then again, I assume it makes
-> the conversion of existing drivers easier.
-
-I added it in v4, you can check earlier versions if you like. Without
-it most gate-muxes (i.e. typically the muxes in drivers/media) grew
-since the i2c_add_mux_adapter call got replaced by two calls, i.e.
-i2c_mux_alloc followed by i2c_max_add_adapter, and coupled with
-error checks made it look more complex than before. So, this wasn't
-much of a cleanup from the point of those drivers.
-
-> So much for now. Thanks!
-
-Yeah, thanks!
-
-Cheers,
-Peter
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
