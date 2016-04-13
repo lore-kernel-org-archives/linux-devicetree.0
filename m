@@ -1,69 +1,105 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Wed, 13 Apr 2016 18:23:45 +0200
-Message-ID: <20160413162345.GC30129@ulmo.ba.sec>
-References: <1460131994-24493-1-git-send-email-thierry.reding@gmail.com>
- <570BE129.40907@wwwdotorg.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH] iio: mxs-lradc: Move binding document out of staging as
+ well
+Date: Wed, 13 Apr 2016 18:50:33 +0200
+Message-ID: <570E78D9.7080902@i2se.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mvpLiMfbWzRoNl4x"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <570BE129.40907-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: 20160411194204.GA17762@rob-hp-laptop
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---mvpLiMfbWzRoNl4x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[added Fabio, Marek and linux-arm-kernel]
 
-On Mon, Apr 11, 2016 at 11:38:49AM -0600, Stephen Warren wrote:
-> On 04/08/2016 10:13 AM, Thierry Reding wrote:
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > Changes to the pad controller device tree binding have required that
-> > each lane be associated with a separate PHY. Update the PCI host bridge
-> > device tree binding to allow each root port to define the list of PHYs
-> > required to drive the lanes associated with it.
->=20
-> I think the feedback I gave on v3 still applies here (I'm talking about t=
-he
-> comments on the patch, not the commit description).
->=20
-> http://www.spinics.net/lists/linux-pci/msg49718.html
+> On Sun, Apr 10, 2016 at 01:03:18PM +0000, Harald Geyer wrote:
+> > commit f836c45922446df872250a12dd08e48978aceb2f moved mxs-lradc driver
+> > out of staging. However the binding document was left in the old place.
+> 
+> A move out of staging should probably imply a review. Though we don't 
+> have clear rules around that for bindings.
+>
+> >  
+> > Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/iio/adc/mxs-lradc.txt      | 47 ++++++++++++++++++++++
+> >  .../bindings/staging/iio/adc/mxs-lradc.txt         | 47 ----------------------
+> >  2 files changed, 47 insertions(+), 47 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
+> > new file mode 100644
+> > index 0000000..555fb11
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/mxs-lradc.txt
+> > @@ -0,0 +1,47 @@
+> > +* Freescale MXS LRADC device driver
+> > +
+> > +Required properties:
+> > +- compatible: Should be "fsl,imx23-lradc" for i.MX23 SoC and "fsl,imx28-lradc"
+> > +              for i.MX28 SoC
+> > +- reg: Address and length of the register set for the device
+> > +- interrupts: Should contain the LRADC interrupts
+> > +
+> > +Optional properties:
+> > +- fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
+> > +                               to LRADC. Valid value is either 4 or 5. If this
+> > +                               property is not present, then the touchscreen is
+> > +                               disabled. 5 wires is valid for i.MX28 SoC only.
+>
+> Standard touchscreen property?
 
-Apologies, I had missed those when going over review comments. I think
-I've addressed all of them now, or provided rationale for why the code
-and binding are the way they are.
+There is a similiar one in input/touchscreen/ti-tsc-adc.txt with the name ti,wires.
+But i'm not sure about the others.
 
-I'll be sending out a v5 soon, hopefully that will have addressed any
-outstanding concerns.
+Stefan
 
-Thierry
-
---mvpLiMfbWzRoNl4x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXDnKRAAoJEN0jrNd/PrOhCKUQALhHG7ZwR4O8o40CFexq1sKx
-Oit9kQaM9s5922COpyFYEQp26URX7iBUSj9UjIx34JLGXcy6n2O+HPoOljQiNCc1
-kLqnWDNMUwIXL6TRZBheRStKzJlbiQqCP8PfhaL1putSGecTBJ7fPAN7lCviDfcQ
-keKh6ryelZy3FEAzl5O7iVzU8mkcdewdKzuBnIkwWSZUOHw0N9g3Itux198FRy6C
-kTxuTsrBAOLcxhaG8Oh7zQkl7p2SIhnY48djkRrfiUurydW2lA7S2PNf88uJUe5C
-xzaCTQTqBspks2N0CeSYVG78j1oKpiyMjQV0w5iOT6d3g7tMQB6V0SefHDMEZlNh
-sNP0pEWhgBy25vV11H5K4od7O1B5rKG6KcVk6RCGUQ03Z1BfYHchTQMW3UG90c6z
-2CRydCJZxeaXdEnuwvY9yifHRIxAtb6hjvefDahYR1eA4/R8BBN0czrmrh0A0fAH
-0QQdERZSBJmFM7CalGm8gI3pJR0fgJtN+4dbIOUIhdULNzVBpxs7xjazuOkiVO83
-eM0qguohR0IJMli13NEWGJL16MAtylX/3lORiNC/3D2RhmWisf8/x/Y+m/E5/nsG
-3Zy6Gh3O6ZOidgiw9iJEk5loQbOwaa45uRBdLk+yXLaHI9YGHDq0FL+1IhFW5V3J
-sDwsGIWXVfc9BddYAXXo
-=f4aV
------END PGP SIGNATURE-----
-
---mvpLiMfbWzRoNl4x--
+> 
+> > +- fsl,ave-ctrl: number of samples per direction to calculate an average value.
+> > +                Allowed value is 1 ... 32, default is 4
+> > +- fsl,ave-delay: delay between consecutive samples. Allowed value is
+> > +                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
+> > +                 2 kHz and its default is 2 (= 1 ms)
+>
+> ditto.
+> 
+> If not, it should have units.
+>
+> > +- fsl,settling: delay between plate switch to next sample. Allowed value is
+> > +                1 ... 2047. It counts at 2 kHz and its default is
+> > +                10 (= 5 ms)
+>
+> ditto.
+>
+> > +
+> > +Example for i.MX23 SoC:
+> > +
+> > +	lradc@80050000 {
+> > +		compatible = "fsl,imx23-lradc";
+> > +		reg = <0x80050000 0x2000>;
+> > +		interrupts = <36 37 38 39 40 41 42 43 44>;
+> > +		status = "okay";
+> > +		fsl,lradc-touchscreen-wires = <4>;
+> > +		fsl,ave-ctrl = <4>;
+> > +		fsl,ave-delay = <2>;
+> > +		fsl,settling = <10>;
+> > +	};
+> > +
+> > +Example for i.MX28 SoC:
+> > +
+> > +	lradc@80050000 {
+> > +		compatible = "fsl,imx28-lradc";
+> > +		reg = <0x80050000 0x2000>;
+> > +		interrupts = <10 14 15 16 17 18 19 20 21 22 23 24 25>;
+> > +		status = "okay";
+> > +		fsl,lradc-touchscreen-wires = <5>;
+> > +		fsl,ave-ctrl = <4>;
+> > +		fsl,ave-delay = <2>;
+> > +		fsl,settling = <10>;
+> > +	};
