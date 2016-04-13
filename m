@@ -1,84 +1,92 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 6/7] mtd: nand: omap2: Fix high memory dma prefetch
- transfer
-Date: Wed, 13 Apr 2016 22:24:51 +0200
-Message-ID: <20160413222451.704376b5@bbrezillon>
-References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
-	<1457654203-20856-7-git-send-email-fcooper@ti.com>
-	<20160321160443.0a4165d1@bbrezillon>
-	<570EA72C.7000806@ti.com>
+From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/2] arm64: dts: ls2080a: fsl-mc dt node updates
+Date: Wed, 13 Apr 2016 20:39:32 +0000
+Message-ID: <HE1PR04MB1641EB3DD445D3AF3F524C3D8D960@HE1PR04MB1641.eurprd04.prod.outlook.com>
+References: <1459544080-28598-1-git-send-email-stuart.yoder@nxp.com>
+ <20160413055019.GK28903@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <570EA72C.7000806-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20160413055019.GK28903@tiger>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "german.rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <german.rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Franklin,
 
-On Wed, 13 Apr 2016 15:08:12 -0500
-"Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org> wrote:
 
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Wednesday, April 13, 2016 12:50 AM
+> To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> german.rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Yang-Leo Li
+> <leoyang.li-3arQi8VN3Tc@public.gmane.org>
+> Subject: Re: [PATCH 2/2] arm64: dts: ls2080a: fsl-mc dt node updates
 > 
+> On Fri, Apr 01, 2016 at 03:54:40PM -0500, Stuart Yoder wrote:
+> > From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> >
+> > updates to the fsl-mc node for full functionality:
+> >    -msi-parent is needed for interrupt support
+> >    -ranges is needed to enable the bus driver to translate bus addresses
+> >    -dpmac nodes provide a basis for relating dpmac objects to PHYs
+> >
+> > Signed-off-by: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |   87 ++++++++++++++++++++++++
+> >  1 file changed, 87 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-
+> ls2080a.dtsi
+> > index 9d746c6..449c635 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > @@ -265,6 +265,93 @@
+> >  			compatible = "fsl,qoriq-mc";
+> >  			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+> >  			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+> > +			msi-parent = <&its>;
+> > +			#address-cells = <3>;
+> > +			#size-cells = <1>;
+> > +
+> > +			/*
+> > +			 * Region type 0x0 - MC portals
+> > +			 * Region type 0x1 - QBMAN portals
+> > +			 */
+> > +			ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
+> > +				  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
+> > +
+> > +			/*
+> > +			 * Define the maximum number of MACs present on the SoC.
+> > +			 * They won't necessarily be all probed, since the
+> > +			 * Data Path Layout file and the MC firmware can put
+> > +			 * fewer actual DPMAC objects on the MC bus.
+> > +			 */
+> > +			dpmacs {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +
+> > +				dpmac1: dpmac@1 {
+> > +					compatible = "fsl,qoriq-mc-dpmac";
 > 
-> On 03/21/2016 10:04 AM, Boris Brezillon wrote:
-> > Hi Franklin,
-> > 
-> > On Thu, 10 Mar 2016 17:56:42 -0600
-> > Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org> wrote:
-> > 
-> >> Based on DMA documentation and testing using high memory buffer when
-> >> doing dma transfers can lead to various issues including kernel
-> >> panics.
-> > 
-> > I guess it all comes from the vmalloced buffer case, which are not
-> > guaranteed to be physically contiguous (one of the DMA requirement,
-> > unless you have an iommu).
-> > 
-> >>
-> >> To workaround this simply use cpu copy. The amount of high memory
-> >> buffers used are very uncommon so no noticeable performance hit should
-> >> be seen.
-> > 
-> > Hm, that's not necessarily true. UBI and UBIFS allocate their buffers
-> > using vmalloc (vmalloced buffers fall in the high_memory region), and
-> > those are likely to be dis-contiguous if you have NANDs with pages > 4k.
-> > 
-> > I recently posted patches to ease sg_table creation from any kind of
-> > virtual address [1][2]. Can you try them and let me know if it fixes
-> > your problem?
+> I did not see how this compatible is used by kernel driver.
+
+There is no driver yet, but it will be coming soon.  But, does
+it matter?  Device trees should be describing hardware
+without regards to some specific kernel use of a node or 
+property.
+
+> > +					reg = <1>;
+> > +				};
 > 
-> It looks like you won't be going forward with your patchset based on
-> this thread [1].
+> Please have a newline between nodes.
 
-Nope. According to Russell it's unsafe to do that.
+Ok, will do.
 
-> I can probably reword the patch description to avoid
-> implying that it is uncommon to run into high mem buffers. Also DMA with
-> NAND prefetch suffers from a reduction of performance compared to CPU
-> polling with prefetch. This is largely due to the significant over head
-> required to read such a small amount of data at a time. The
-> optimizations I've worked on all revolved around reducing the cycles
-> spent before executing the DMA request. Trying to make a high memory
-> buffer able to be used by the DMA adds significant amount of cycles and
-> your better off just using the cpu for performance reasons.
-
-Okay.
-One comment though, why not using virt_addr_valid() instead of
-addr >= high_memory here?
-
-Best Regards,
-
-Boris
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Stuart
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
