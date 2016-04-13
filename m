@@ -1,15 +1,15 @@
 From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v2 3/3] phy: rockchip-emmc: adapt binding to specifiy
  register offset and length
-Date: Wed, 13 Apr 2016 18:31:28 +0530
-Message-ID: <570E4328.4050501@ti.com>
+Date: Wed, 13 Apr 2016 18:32:50 +0530
+Message-ID: <570E437A.1010900@ti.com>
 References: <1458854943-17388-1-git-send-email-heiko@sntech.de>
- <1458854943-17388-3-git-send-email-heiko@sntech.de>
+ <1458854943-17388-3-git-send-email-heiko@sntech.de> <570E4328.4050501@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1458854943-17388-3-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <570E4328.4050501-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -25,46 +25,51 @@ List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Friday 25 March 2016 02:59 AM, Heiko Stuebner wrote:
-> The emmc-phy occupies a contiguous set of 8 registers inside the general
-> register files, so the reg property should specify this.
+On Wednesday 13 April 2016 06:31 PM, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
-> This is essential a counter argument for Shawn's move from reg to reg_offset
-> in "phy: rockchip-emmc: fix compile issue on arm64 platform" [0].
-> With the move under the grf we now also are able to specify this stuff
-> cleanly using already present mechanisms.
+> On Friday 25 March 2016 02:59 AM, Heiko Stuebner wrote:
+>> The emmc-phy occupies a contiguous set of 8 registers inside the general
+>> register files, so the reg property should specify this.
+>>
+>> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>> ---
+>> This is essential a counter argument for Shawn's move from reg to reg_offset
+>> in "phy: rockchip-emmc: fix compile issue on arm64 platform" [0].
+>> With the move under the grf we now also are able to specify this stuff
+>> cleanly using already present mechanisms.
+>>
+>> Also meant to v4.6-rc before the binding solidifies.
+>>
+>>
+>> [0] https://lkml.org/lkml/2016/3/8/114
+>>
+>>  Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+>> index 461e958..555cb0f 100644
+>> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+>> @@ -4,7 +4,7 @@ Rockchip EMMC PHY
+>>  Required properties:
+>>   - compatible: rockchip,rk3399-emmc-phy
+>>   - #phy-cells: must be 0
+>> - - reg: PHY configure reg address offset in "general
+>> + - reg: PHY register address offset and length in "general
+>>     register files"
+>>  
+>>  Example:
+>> @@ -12,12 +12,14 @@ Example:
+>>  
+>>  grf: syscon@ff770000 {
+>>  	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
 > 
-> Also meant to v4.6-rc before the binding solidifies.
-> 
-> 
-> [0] https://lkml.org/lkml/2016/3/8/114
-> 
->  Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> index 461e958..555cb0f 100644
-> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> @@ -4,7 +4,7 @@ Rockchip EMMC PHY
->  Required properties:
->   - compatible: rockchip,rk3399-emmc-phy
->   - #phy-cells: must be 0
-> - - reg: PHY configure reg address offset in "general
-> + - reg: PHY register address offset and length in "general
->     register files"
->  
->  Example:
-> @@ -12,12 +12,14 @@ Example:
->  
->  grf: syscon@ff770000 {
->  	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
+> This patch is not applying. Care to resend based on linux-phy fixes?
 
-This patch is not applying. Care to resend based on linux-phy fixes?
+sorry for the noise. I have applied this to linux-phy fixes now.
 
 Thanks
 Kishon
