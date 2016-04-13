@@ -1,47 +1,46 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: Add support for dra72-evm rev C (ES2.0)
-Date: Wed, 13 Apr 2016 16:54:14 -0500
-Message-ID: <570EC006.7050900@ti.com>
-References: <1458859969-14298-1-git-send-email-nm@ti.com>
- <1458859969-14298-2-git-send-email-nm@ti.com>
- <20160412211322.GE5995@atomide.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v5 6/7] ARM: STiH407: Add nodes for RemoteProc
+Date: Wed, 13 Apr 2016 15:04:13 -0700
+Message-ID: <CAOesGMj1zAgr+urvJHUu9=-P5RR5d9Ko6bUpXKTUcwkXMeYydg@mail.gmail.com>
+References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
+	<1452602781-22424-7-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160412211322.GE5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452602781-22424-7-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Maxime Coquelin <maxime.coquelin@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, Florian Fainelli <f.fainelli@gmail.com>, ludovic.barre@st.com, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2016 04:13 PM, Tony Lindgren wrote:
-> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [160324 15:53]:
->> DRA72-EVM now has an upgrade to Rev C with ES2.0 silicon. As part of
->> this change, a few updates were factored in that were software
->> incompatible with previous board in few areas:
->> - We now use DP83867 ethernet phy instead of older DP838865 which fails
->>   in certain usecases.
->> - Two ethernet ports now instead of the single one in rev B.
->> - polarities changed for certain pcf gpios
->> - Due to SoC phy current requirements, VDDA supplies are split between
->>  ldo5 and ldo2 (ldo2 was previously unused). NOTE: DSS (VDDA_VIDEO) is
->>  still supplied by ldo5.
->>
->> NOTE: It does not make much sense to spin off a new board compatible
->> flag since there is no real benefit for the same.
-> 
-> I guess that can always be added later on if needed.
-> 
-> Can you please repost this against current omap-for-v4.7/dt as it
-> no longer applies?
+Hi,
 
-Will do. thanks.
--- 
-Regards,
-Nishanth Menon
+On Tue, Jan 12, 2016 at 4:46 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  arch/arm/boot/dts/stih407-family.dtsi | 40 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index 1e4e01925..15c20b6 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -650,5 +650,45 @@
+>                         mbox-name       = "st231_audio_video";
+>                         status          = "okay";
+>                 };
+> +
+> +               st231_gp0: st231-gp0@40000000 {
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These node names seem odd. Should probably be more generic
+"remoteproc@40000000".
+
+> +                       compatible      = "st,st231-rproc";
+> +                       reg             = <0x40000000 0x01000000>;
+
+This isn't what the binding says, it uses a memory region instead.
+
+
+
+-Olof
