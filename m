@@ -1,105 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] ASoC: davinci-mcbsp: add binding for McBSP
-Date: Wed, 13 Apr 2016 09:30:14 -0500
-Message-ID: <20160413143014.GA12136@rob-hp-laptop>
-References: <1460375117-4311-1-git-send-email-petr@barix.com>
- <1460375117-4311-2-git-send-email-petr@barix.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] clk: mvebu: new driver for Armada AP806 system
+ controller
+Date: Wed, 13 Apr 2016 16:32:49 +0200
+Message-ID: <20160413163249.157e3a77@free-electrons.com>
+References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1459070777-18049-4-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160402012731.GE18567@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460375117-4311-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160402012731.GE18567-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 01:45:12PM +0200, Petr Kulhavy wrote:
-> Add devicetree binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx
-> MultiChannel Buffered Serial Port (McBSP)
-> 
-> The optional register range "dat" is not implemented at the moment.
-> The current driver supports only DMA into RX/TX registers but no FIFO.
-> Once the FIFO is implemented in the driver the "dat" range will be used.
-> 
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-> ---
-> v1: initial
-> v2: add missing TC channel in dmas properties (for compatibility with the new EDMA3 binding)
->     remove "-audio" postfix from the compatible string
->     remove "channel-combine" property
-> 
->  .../devicetree/bindings/sound/davinci-mcbsp.txt    | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
-> new file mode 100644
-> index 000000000000..de45865c3863
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
-> @@ -0,0 +1,51 @@
-> +Texas Instruments DaVinci McBSP module
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +This binding describes the "Multi-channel Buffered Serial Port" (McBSP)
-> +audio interface found in some TI DaVinci processors like the OMAP-L138 or AM180x.
-> +
-> +
-> +Required properties:
-> +~~~~~~~~~~~~~~~~~~~~
-> +- compatible : "ti,da850-mcbsp"
+Hello,
 
-You list several SoCs above, but only one compatible string here. A 
-specific compatible string per SoC please.
+On Fri, 1 Apr 2016 18:27:31 -0700, Stephen Boyd wrote:
 
-> +
-> +- reg : physical base address and length of the controller memory mapped
-> +        region(s).
-> +- reg-names : Should contain:
-> +        * "mpu" for the main registers (required). For compatibility with
-> +          existing software, it is recommended this is the first entry.
-
-s/recommended/required/
-
-> +        * "dat" for the data FIFO (optional).
-> +
-> +- dmas: three element list of DMA controller phandles, DMA request line and
-> +	TC channel ordered triplets.
-> +- dma-names: identifier string for each DMA request line in the dmas property.
-> +	These strings correspond 1:1 with the ordered pairs in dmas. The dma
-> +	identifiers must be "rx" and "tx".
-> +
-> +Optional properties:
-> +~~~~~~~~~~~~~~~~~~~~
-> +- interrupts : Interrupt numbers for McBSP
-> +- interrupt-names : Known interrupt names are "rx" and "tx"
-> +
-> +- pinctrl-0: Should specify pin control group used for this controller.
-> +- pinctrl-names: Should contain only one value - "default", for more details
-> +        please refer to pinctrl-bindings.txt
-> +
-> +Example (AM1808):
-> +~~~~~~~~~~~~~~~~~
-> +
-> +mcbsp0: mcbsp@1d10000 {
-> +	compatible = "ti,da850-mcbsp";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mcbsp0_pins>;
-> +
-> +	reg = 	<0x00110000 0x1000>,
-> +		<0x00310000 0x1000>;
-> +	reg-names = "mpu", "dat";
-> +	interrupts = <97 98>;
-> +	interrupts-names = "rx", "tx";
-> +	dmas = <&edma0 3 1
-> +		&edma0 2 1>;
-> +	dma-names = "tx", "rx";
-> +	status = "okay";
-> +};
-> -- 
-> 1.9.1
+> > +#include <linux/kernel.h>
+> > +#include <linux/clk.h>
 > 
+> Is this used?
+
+No, fixed!
+
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/io.h>
+> 
+> Is this used?
+
+Ditto!
+
+> > +static void __init ap806_syscon_clk_init(struct device_node *np)
+> 
+> Can this be a platform driver instead?
+
+I've moved to a platform driver, and it seems to work fine. Will be in
+v5. Thanks for the review!
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
