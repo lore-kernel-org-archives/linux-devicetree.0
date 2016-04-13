@@ -1,101 +1,53 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] dts/ls2080a: update the DTS for QSPI and DSPI
- support
-Date: Wed, 13 Apr 2016 10:29:40 +0800
-Message-ID: <20160413022939.GE28903@tiger>
-References: <1457518926-18518-1-git-send-email-yao.yuan@freescale.com>
- <1457518926-18518-3-git-send-email-yao.yuan@freescale.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add i2c nodes RK3228 SoCs
+Date: Wed, 13 Apr 2016 04:37:53 +0200
+Message-ID: <20160413023752.GA1556@katana>
+References: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
+ <1457925102-30476-1-git-send-email-ykk@rock-chips.com>
+ <20160412213912.GF1526@katana>
+ <570D9F9D.6000109@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1457518926-18518-3-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <570D9F9D.6000109@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 06:22:06PM +0800, Yuan Yao wrote:
-> Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-> Acked-by: Han xu <han.xu-3arQi8VN3Tc@public.gmane.org>
 
-Changed subject prefix to 'arm64: dts: ls2080a: ', and then applied the
-patch.
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Shawn
 
-> ---
-> Changed in v6:
-> No changes.
-> 
-> Changed in v5:
-> Resend base on arm-soc.
-> 
-> Changed in v4:
-> No changes.
-> 
-> Changed in v3:
-> No changes.
-> 
-> Changed in v2:
-> Update my email to <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 9 ++++++++-
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi    | 4 ++--
->  2 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> index 4cb996d..e8801fa 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> @@ -178,7 +178,14 @@
->  
->  &qspi {
->  	status = "okay";
-> -	qflash0: s25fl008k {
-> +	flash0: s25fl256s1@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "st,m25p80";
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +	};
-> +	flash2: s25fl256s1@2 {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		compatible = "st,m25p80";
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index 2b23d03..65e612a 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -318,7 +318,7 @@
->  
->  		dspi: dspi@2100000 {
->  			status = "disabled";
-> -			compatible = "fsl,vf610-dspi";
-> +			compatible = "fsl,ls2080a-dspi", "fsl,ls2085a-dspi";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <0x0 0x2100000 0x0 0x10000>;
-> @@ -444,7 +444,7 @@
->  
->  		qspi: quadspi@20c0000 {
->  			status = "disabled";
-> -			compatible = "fsl,vf610-qspi";
-> +			compatible = "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <0x0 0x20c0000 0x0 0x10000>,
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Could you pick up this patch, it's helpful to add rk3228 HDMI support  :-)
+
+I undestand that it is needed, but why not via arm-soc? dts files are
+their realm.
+
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXDbEAAAoJEBQN5MwUoCm2UyAP/A/OyucibnnuEb1k8Vx7VKCE
+rw+Sg0e5rO60FNeQoL4m1JrvXKTpr/X97DLZoqTVdXwy+4dT+LqJHvcHy/tx+/L0
+g4SpM1WwGBvYBwSAMOpvIH1pV75H7WKxgTkCWj6nyXvi/V/O8/laFtkvruwaOOcN
+O4+jCZgZCUq/dzgpYSnzZv9ANXdE4AgFdMAdnAAEFMFw3/7jmb2q8yrorfSSL4xL
+hSiCnqwnwRblWaYlmtNboHjCkvdKzVb55rZTX/ux+dxqOTu2zupdNRA+o1mrqWuD
+Jj8wMvwRLij8/SPzQJaXgmLbj2QXP09z6Ryp8SIWgChYHbntLgNXEK6gAUcLN1nr
+57G7mq8+/7dyYqD53IptQSrN9TqUVC2ROoL9x+BlpTXeolNKI3KF3rOTmC4oX39g
+UWIZc/Ke4/J1raIKYYoTn5qqEc9cu5nITfFPXujWhRZ7lPKAV/YuqgDpgY+E0Sja
+sgAXYi08SlojD/lV9XsAumYGREAdYMMgTrJQ9oTOgJzn8GFZfd5EBedP31eYfkrD
+Rh2JLsrYfiexBaOJVL5sJY16F98CLaJWst8sDrpHvJyLozTytB4OM9xaQQTn1Xb8
+31TYk6Shbe1P4hdlpK3IrYDxgdkwX5BfD4YUn5/MnM8Q+br1xiNYeoTdWoNilC4s
+dEJa72l3nrdUKhCSk0uT
+=rsnG
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
