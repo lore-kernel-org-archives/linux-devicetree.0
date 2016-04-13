@@ -1,115 +1,91 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v4 5/5] clk: mvebu: new driver for Armada CP110 system
- controller
-Date: Wed, 13 Apr 2016 17:30:04 +0200
-Message-ID: <20160413173004.026e587e@free-electrons.com>
-References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1459070777-18049-6-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160402012541.GB18567@codeaurora.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: Correct path for ARM GIC documentation
+Date: Wed, 13 Apr 2016 16:30:12 +0100
+Message-ID: <570E6604.1070707@nvidia.com>
+References: <1458226077-7179-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160402012541.GB18567@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458226077-7179-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Rob,
 
-On Fri, 1 Apr 2016 18:25:41 -0700, Stephen Boyd wrote:
+Are you ok to pick this up? Or are you still waiting for ACK's from Tony
+and Matthias?
 
-> > +#include <linux/kernel.h>
-> > +#include <linux/clk.h>
+Jon
+
+On 17/03/16 14:47, Jon Hunter wrote:
+> Commit eb3fcf007fff ("dt-bindings: consolidate interrupt controller
+> bindings") moved the binding documentation for the ARM GIC from
+> arm/gic.txt to interrupt-controller/arm,gic.txt. However, there are
+> still some binding documents referring to the old path. Update these
+> binding documents to use the correct location.
 > 
-> What's this for?
+> Fixes: eb3fcf007fff ("dt-bindings: consolidate interrupt controller bindings")
 > 
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/io.h>
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/omap/crossbar.txt                | 3 ++-
+>  Documentation/devicetree/bindings/arm/ux500/boards.txt                 | 2 +-
+>  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt       | 3 +--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> What's this for?
-
-Both removed.
-
-> > +static int cp110_gate_enable(struct clk_hw *hw)
-> > +{
-> > +	struct cp110_gate_clk *gate =
-> > +		container_of(hw, struct cp110_gate_clk, hw);
+> diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> index a9b28d74d902..bb5727ae004a 100644
+> --- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> @@ -42,7 +42,8 @@ Examples:
+>  Consumer:
+>  ========
+>  See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
+> -Documentation/devicetree/bindings/arm/gic.txt for further details.
+> +Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt for
+> +further details.
+>  
+>  An interrupt consumer on an SoC using crossbar will use:
+>  	interrupts = <GIC_SPI request_number interrupt_level>
+> diff --git a/Documentation/devicetree/bindings/arm/ux500/boards.txt b/Documentation/devicetree/bindings/arm/ux500/boards.txt
+> index b8737a8de718..7334c24625fc 100644
+> --- a/Documentation/devicetree/bindings/arm/ux500/boards.txt
+> +++ b/Documentation/devicetree/bindings/arm/ux500/boards.txt
+> @@ -23,7 +23,7 @@ scu:
+>  	see binding for arm/scu.txt
+>  
+>  interrupt-controller:
+> -	see binding for arm/gic.txt
+> +	see binding for interrupt-controller/arm,gic.txt
+>  
+>  timer:
+>  	see binding for arm/twd.txt
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> index b8e1674c7837..8cf564d083d2 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> @@ -16,8 +16,7 @@ Required properties:
+>  	"mediatek,mt6577-sysirq"
+>  	"mediatek,mt2701-sysirq"
+>  - interrupt-controller : Identifies the node as an interrupt controller
+> -- #interrupt-cells : Use the same format as specified by GIC in
+> -  Documentation/devicetree/bindings/arm/gic.txt
+> +- #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+>  - interrupt-parent: phandle of irq parent for sysirq. The parent must
+>    use the same interrupt-cells format as GIC.
+>  - reg: Physical base address of the intpol registers and length of memory
 > 
-> Consider a macro to make this fit on one line.
 
-Done!
-
-> > +	init.name = name;
-> > +	init.ops = &cp110_gate_ops;
-> > +	init.flags = CLK_IS_BASIC;
-> 
-> No basic please.
-
-Fixed!
-
-
-> > +static void __init cp110_syscon_clk_init(struct device_node *np)
-> 
-> Any reason this can't be a platform driver?
-
-Changed to be a platform driver.
-
-> > +{
-> > +	struct regmap *regmap;
-> > +	const char *name, *apll_name, *core_name, *eip_name, *nand_name;
-> > +	u32 nand_clk_ctrl;
-> > +	int clkidx = 0, i;
-> > +
-> > +	regmap = syscon_node_to_regmap(np);
-> 
-> Isn't this the only driver for the node? Why not just make the
-> regmap ourselves in the driver here?
-
-It is for now. However, I expect that we will probably have sub-nodes
-for various other devices whose registers belong to this system
-controller. More specifically, there are some pin-muxing registers in
-there. Using the syscon facility entirely automates the creation of the
-regmap, and makes it easily accessible to other devices who might want
-to poke into some of the system controller registers.
-
-> > +	/*
-> > +	 * Register core clocks
-> > +	 */
-> 
-> Ok. Not really useful comment.
-
-Removed!
-
-
-> > +        /* NAND can be either APLL/2.5 or core clock */
-> > +	of_property_read_string_index(np, "core-clock-output-names",
-> > +				      4, &nand_name);
-> > +        if (nand_clk_ctrl & NF_CLOCK_SEL_400_MASK)
-> > +                cp110_clks[4] =
-> 
-> Weird indentation here. Please use tabs throughout.
-
-Yeah, seems like I copy/pasted or something. Fixed to use tabs.
-
-> > +	of_clk_add_provider(np, cp110_of_clk_get, &cp110_clk_data);
-> 
-> What if this fails?
-
-Error checking added everywhere. There are numerous other clk drivers
-that don't do error checking, so I did the same, especially since a
-failure to register a clock is most likely going to be fatal to the
-system booting. No clock -> no UART, no UART -> the system doesn't boot
-up to userspace.
-
-But fair enough, I've added error checking in the ->probe() function
-(of both the AP806 and CP110 clk drivers).
-
-Thanks again for the review!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+-----------------------------------------------------------------------------------
+This email message is for the sole use of the intended recipient(s) and may contain
+confidential information.  Any unauthorized review, use, disclosure or distribution
+is prohibited.  If you are not the intended recipient, please contact the sender by
+reply email and destroy all copies of the original message.
+-----------------------------------------------------------------------------------
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
