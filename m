@@ -1,38 +1,58 @@
-From: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
-Subject: [PATCH 3/6] genirq/msi: Export msi_get_domain_info
-Date: Wed, 13 Apr 2016 12:30:53 +0200
-Message-ID: <1460543456-11345-4-git-send-email-mbrugger@suse.com>
-References: <1460543456-11345-1-git-send-email-mbrugger@suse.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller.
+Date: Wed, 13 Apr 2016 12:27:55 +0200
+Message-ID: <570E1F2B.2080003@denx.de>
+References: <1452486886-8049-1-git-send-email-marex@denx.de> <1452486886-8049-2-git-send-email-marex@denx.de> <57053F81.70204@ti.com> <570563D3.9080704@denx.de> <5705E858.3050700@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460543456-11345-1-git-send-email-mbrugger-IBi9RG/b67k@public.gmane.org>
+In-Reply-To: <5705E858.3050700-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, jroedel-l3A5Bk7waGM@public.gmane.org, agraf-l3A5Bk7waGM@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhaktipriya96-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 04/07/2016 06:55 AM, Vignesh R wrote:
+> 
+> 
+> On 04/07/2016 01:00 AM, Marek Vasut wrote:
+>> On 04/06/2016 06:55 PM, R, Vignesh wrote:
+>>> Hi Marek,
+>>
+>> Hi!
+>>
+>>> I encountered a issue with this driver while testing.
+>>
+>> Try with the attached patches, I am planning to use them for V11
+>> submission. I think you're hitting the problem with missing buslock.
+>>
+> 
+> Thanks for the patches.
+> But I am pretty sure that's not the problem at my end, because I have
+> only one flash device on QSPI bus.
 
-Allow modules to call msi_get_domain_info.
+OK, sorry for the delayed reply. I will go through the rest of the QSPI
+mail later, probably this week.
 
-Signed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
----
- kernel/irq/msi.c | 1 +
- 1 file changed, 1 insertion(+)
+> The problem is cqspi_switch_cs() is called only once ie when JEDEC ID is
+> being read(during autodetect of chip), but at that instance,
+> nor->page_size and nor->mtd.erasesize are not yet initialized (They are
+> initialized only after JEDEC ID is looked up in the table and page_size
+> and erasesize are known).
+> Therefore if nor->page_size is printed during cqspi_switch_cs() then its
+> zero. But nor->page_size reports 256 when printed in cqspi_flash_setup()
+> after spi_nor_scan(). Therefore CQSPI_REG_SIZE register has to be
+> configured only after spi_nor struct is fully populated (i.e after
+> spi_nor_scan() has recognized the slave after JEDEC ID read).
+> 
+> 
 
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 38e89ce..9b0ba4a 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -400,5 +400,6 @@ struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain)
- {
- 	return (struct msi_domain_info *)domain->host_data;
- }
-+EXPORT_SYMBOL_GPL(msi_get_domain_info);
- 
- #endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
+
 -- 
-2.6.6
-
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
