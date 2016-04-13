@@ -1,28 +1,42 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] of/irq: Export of_msi_get_domain
-Date: Wed, 13 Apr 2016 07:32:15 -0500
-Message-ID: <CAL_JsqJ9fc8SOG9Gb_gcuSH0NT6HEy8P1O2kSSxV1y3+3a3N1g@mail.gmail.com>
-References: <1460543456-11345-1-git-send-email-mbrugger@suse.com> <1460543456-11345-2-git-send-email-mbrugger@suse.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 3/5] gpio: of: Return error if gpio hog configuration failed
+Date: Wed, 13 Apr 2016 14:43:08 +0200
+Message-ID: <CACRpkdbLKWDGvhqtwoogNNgQjG86g9HmpceLLVwKW+94dJk63A@mail.gmail.com>
+References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
+	<1457703804-3016-4-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460543456-11345-2-git-send-email-mbrugger-IBi9RG/b67k@public.gmane.org>
+In-Reply-To: <1457703804-3016-4-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, German.Rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, bp-l3A5Bk7waGM@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bhaktipriya96-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 5:30 AM, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org> wrote:
-> From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Export of_mis_get_domain to enable it for users from outside.
->
-> Signed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
-> ---
->  drivers/of/irq.c | 1 +
->  1 file changed, 1 insertion(+)
+On Fri, Mar 11, 2016 at 2:43 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> If GPIO hog configuration failed while adding OF based
+> gpiochip() then return the error instead of ignoring it.
+>
+> This helps of properly handling the gpio driver dependency.
+>
+> When adding the gpio hog nodes for NVIDIA's Tegra210 platforms,
+> the gpio_hogd() fails with EPROBE_DEFER because pinctrl is not
+> ready at this time and gpio_request() for Tegra GPIO driver
+> returns error. The error was not causing the Tegra GPIO driver
+> to fail as the error was getting ignored.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Cc: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+> Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Rebased and applied this patch FWIW.
+This is a fair and square bug fix so need to go in
+no matter what happens with the hog patches.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
