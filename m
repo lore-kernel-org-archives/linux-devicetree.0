@@ -1,43 +1,115 @@
-From: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/2] [media] atmel-isc: add driver for Atmel ISC
-Date: Wed, 13 Apr 2016 15:44:18 +0800
-Message-ID: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
+From: Songjun Wu <songjun.wu@atmel.com>
+Subject: [PATCH 2/2] [media] atmel-isc: DT binding for Image Sensor Controller driver
+Date: Wed, 13 Apr 2016 15:44:20 +0800
+Message-ID: <1460533460-32336-3-git-send-email-songjun.wu@atmel.com>
+References: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, =?UTF-8?q?Richard=20R=C3=B6jfors?= <richard-hy+oXTTr619xRVliYXHCzg@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: g.liakhovetski@gmx.de, nicolas.ferre@atmel.com
+Cc: linux-arm-kernel@lists.infradead.org, Songjun Wu <songjun.wu@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Image Sensor Controller driver includes two parts.
-1) Driver code to implement the ISC function.
-2) Device tree binding documentation, it describes how
-   to add the ISC in device tree.
+DT binding documentation for ISC driver.
 
+Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+---
 
-Songjun Wu (2):
-  [media] atmel-isc: add the Image Sensor Controller code
-  [media] atmel-isc: DT binding for Image Sensor Controller driver
-
- .../devicetree/bindings/media/atmel-isc.txt        |   84 ++
- drivers/media/platform/Kconfig                     |    1 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/atmel/Kconfig               |    9 +
- drivers/media/platform/atmel/Makefile              |    3 +
- drivers/media/platform/atmel/atmel-isc-regs.h      |  280 ++++
- drivers/media/platform/atmel/atmel-isc.c           | 1537 ++++++++++++++++++++
- 7 files changed, 1916 insertions(+)
+ .../devicetree/bindings/media/atmel-isc.txt        | 84 ++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
- create mode 100644 drivers/media/platform/atmel/Kconfig
- create mode 100644 drivers/media/platform/atmel/Makefile
- create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
- create mode 100644 drivers/media/platform/atmel/atmel-isc.c
 
+diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+new file mode 100644
+index 0000000..449f05f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+@@ -0,0 +1,84 @@
++Atmel Image Sensor Controller (ISC)
++----------------------------------------------
++
++Required properties:
++- compatible
++	Must be "atmel,sama5d2-isc"
++- reg
++	Physical base address and length of the registers set for the device;
++- interrupts
++  Should contain IRQ line for the ISI;
++- clocks
++	List of clock specifiers, corresponding to entries in
++	the clock-names property;
++	Please refer to clock-bindings.txt.
++- clock-names
++	Required elements: "hclock", "ispck".
++- pinctrl-names, pinctrl-0
++	Please refer to pinctrl-bindings.txt.
++- clk_in_isc
++	ISC internal clock node, it includes the isc_ispck and isc_mck.
++	Please refer to clock-bindings.txt.
++- atmel,sensor-preferred
++	Sensor is preferred to process image (1-preferred, 0-not).
++	The default value is 1.
++
++ISC supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++isc: isc@f0008000 {
++	compatible = "atmel,sama5d2-isc";
++	reg = <0xf0008000 0x4000>;
++	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
++	clocks = <&isc_clk>, <&isc_ispck>;
++	clock-names = "hclock", "ispck";
++	atmel,sensor-preferred = <1>;
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		isc_0: endpoint@0 {
++			remote-endpoint = <&ov7740_0>;
++			hsync-active = <1>;
++			vsync-active = <0>;
++			pclk-sample = <1>;
++		};
++	};
++
++	clk_in_isc {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		isc_ispck: isc_ispck {
++			#clock-cells = <0>;
++			reg = <0>;
++			clocks = <&isc_clk>, <&iscck>;
++		};
++
++		isc_mck: isc_mck {
++			#clock-cells = <0>;
++			reg = <1>;
++			clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
++		};
++	};
++};
++
++i2c1: i2c@fc028000 {
++	ov7740: camera@0x21 {
++	compatible = "ovti,ov7740";
++	reg = <0x21>;
++
++	clocks = <&isc_mck>;
++	clock-names = "xvclk";
++	assigned-clocks = <&isc_mck>;
++	assigned-clock-rates = <24000000>;
++
++	port {
++		ov7740_0: endpoint {
++			remote-endpoint = <&isc_0>;
++		};
++	};
++};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
