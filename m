@@ -1,27 +1,43 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add i2c nodes RK3228 SoCs
-Date: Wed, 13 Apr 2016 11:12:17 +0800
-Message-ID: <570DB911.7080502@rock-chips.com>
-References: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
- <1457925102-30476-1-git-send-email-ykk@rock-chips.com>
- <20160412213912.GF1526@katana> <570D9F9D.6000109@rock-chips.com>
- <20160413023752.GA1556@katana>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH] arm64: dts: Add nodes for pdma0 and pdam1 for exynos7
+Date: Wed, 13 Apr 2016 10:09:34 +0530
+Message-ID: <570DCD86.40208@samsung.com>
+References: <1460465378-23486-1-git-send-email-alim.akhtar@samsung.com>
+ <570D00C6.9000203@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160413023752.GA1556@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <570D00C6.9000203@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
-
-On 04/13/2016 10:37 AM, Wolfram Sang wrote:
->> Could you pick up this patch, it's helpful to add rk3228 HDMI support  :-)
-> I undestand that it is needed, but why not via arm-soc? dts files are
-> their realm.
+On 04/12/2016 07:35 PM, Krzysztof Kozlowski wrote:
+> On 04/12/2016 02:49 PM, Alim Akhtar wrote:
+>> This patch adds device tree nodes for pdma0 and pdma1 controllers
+>> found on exynos7 SoCs.
+>>
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> ---
+>>   arch/arm64/boot/dts/exynos/exynos7.dtsi |   29 +++++++++++++++++++++++++++++
+>>   1 file changed, 29 insertions(+)
+>>
 >
-Yep, for previous email, I'm replying to Heiko, but forget to add him to 
-the "TO" list   ;)
+> I would prefer avoid adding all new stuff at the end because it is
+> conflict-prone. Alphabetical order or by address... but none of these
+> are used currently. How about putting it after 'gic' node?
+>
+hmm....ok will send v2 with suggested changes.
+Looks like other platforms also put it below 'gic'.
+
+> Anyway the code looks fine:
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>
+> Best regards,
+> Krzysztof
+>
+>
