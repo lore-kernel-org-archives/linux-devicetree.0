@@ -1,74 +1,82 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] device-tree: nexus7-flo: Remove power gpio key entry and
- use pmic8xxx-pwrkey
-Date: Wed, 13 Apr 2016 18:24:26 +0100
-Message-ID: <570E80CA.3080100@arm.com>
-References: <1460567784-28017-1-git-send-email-john.stultz@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 0/7] Implement generic ASoC HDMI codec and use it in
+ tda998x
+Date: Wed, 13 Apr 2016 18:26:00 +0100
+Message-ID: <20160413172600.GD29471@sirena.org.uk>
+References: <cover.1459431292.git.jsarha@ti.com>
+ <20160413070219.GN14664@sirena.org.uk> <570DFADD.60608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460567784-28017-1-git-send-email-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1680884356=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <570DFADD.60608@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--===============1680884356==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5gxpn/Q6ypwruk0T"
+Content-Disposition: inline
 
-On 13/04/16 18:16, John Stultz wrote:
-> Since the pmic8xxx-pwrkey driver is already supported in the
-> qcom-apq8064.dtsi, and the pmic8xxx-pwrkey supports logic to
-> configure proper device shutdown when ps_hold goes low, it is
-> better to use that driver then a generic gpio button.
->
-> Thus this patch remove the gpio power key entry here, so we
-> don't get double input events from having two drivers enabled.
->
-> The one gotcha with the pmic8xxx-pwrkey is it has a fairly
-> long debounce delay, which we shorten here to make the button
-> behave as expected.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Andy Gross <agross@codeaurora.org>
-> Cc: Vinay Simha BN <simhavcs@gmail.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Stephen Boyd <stephen.boyd@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->   arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 15 +++++++++------
->   1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> index c535b3f..7ac1c65 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> @@ -29,12 +29,6 @@
->
->   	gpio-keys {
->   		compatible = "gpio-keys";
-> -		power {
-> -			label = "Power";
-> -			gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
-> -			linux,code = <KEY_POWER>;
-> -			gpio-key,wakeup;
 
-You are dropping wakeup with this change. Is that intentional ?
+--5gxpn/Q6ypwruk0T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If not, while you are at this, replace it with "wakeup-source"
-which is standard binding.
+On Wed, Apr 13, 2016 at 10:53:01AM +0300, Jyri Sarha wrote:
+> On 04/13/16 10:02, Mark Brown wrote:
 
-If yes, then it solves the problem :). I had a patch to replace it, but
-was waiting to check if any new files in linux-next before posting. For
-now, this is the only legacy entry.
+> > None of the ASoC specific patches here have had any review from other
+> > HDMI users?
 
--- 
-Regards,
-Sudeep
+> I got ack from Arnaud Pouliquen and tested-by from Philipp Zabel for
+> "ASoC: hdmi-codec: Add hdmi-codec for external HDMI-encoders" in
+> previous version of the series. Since then there is one minimal change,
+> but because I touched the patch I removed the ack and tested-by tags.
+
+Yes, I remember but if you think the change is big enough to warrant
+removing the tags I'm hoping to see some interest in review!
+
+> The change is setting hw_params->msbits to 24 in hw_params() callback if
+> sample width is greater than 24 bits.
+
+That is reasonably small though...
+
+--5gxpn/Q6ypwruk0T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXDoEnAAoJECTWi3JdVIfQKBAH/3nT5ILYMCNU/RBT6s9lDrtl
+asnYbCY2Yx8DgXcQFn0XFnMzS+st0kSi376LOqpi5uDicBZySORXHY4luTNUofm1
+LEOVNOT3eyiCLw+qJM9jndZJn+KAfHJ5NysdLeAW3hfKDHt573MWz6NJ5O7ZpZ9n
+oIL+VgqKlOlf1ooHgnUrvJRL+rhfrQtaKp+4hDrCtKGJevfkmxaZAiTe1Sl8Ao4s
+8ty9CUY1N4DGSzzgg59D5CepH604KsqGayF7s7aTJPurZYtD+mWGFCVzrlQMOa5T
+ACBfqvadAAGof6xG0C+Kk82T8vZ95g8p1TVCCr1vx/lTT4gtBQELnW7VsDYrfIc=
+=qa4K
+-----END PGP SIGNATURE-----
+
+--5gxpn/Q6ypwruk0T--
+
+--===============1680884356==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1680884356==--
