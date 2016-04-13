@@ -1,57 +1,39 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: dts: silk: add DU pins
-Date: Wed, 13 Apr 2016 22:36:21 +0300
-Message-ID: <2415333.mtLdVEoB2G@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: Shanker Donthineni <shankerd@codeaurora.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Wed, 13 Apr 2016 14:40:15 -0500
+Message-ID: <570EA09F.1070000@codeaurora.org>
+References: <201604140340.wQZLwsUk%fengguang.wu@intel.com>
+ <570E9E8D.50007@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570E9E8D.50007@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Add the (previously omitted) DU pin data to the SILK board's device tree.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
----
-This patch is against the 'renesas-devel-20160411-v4.6-rc3' tag of Simon
-Horman's 'renesas.git' repo. It depends on the R8A7794 DU PFC driver patch
-just posted for the pins to be configured...
+On 04/13/2016 02:31 PM, Timur Tabi wrote:
+> kbuild test robot wrote:
+>>
+>>     drivers/net/ethernet/qualcomm/emac/emac-mac.c: In function 'emac_mac_up':
+>>>> >>drivers/net/ethernet/qualcomm/emac/emac-mac.c:1076:9: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+>>       writel(~DIS_INT, adpt->base + EMAC_INT_STATUS);
+>
+> This doesn't happen on arm64, and I don't know how to fix it.  DIS_INT is defined as:
+>
+>     #define DIS_INT          BIT(31)
+>
+Try with (1U<<31).
 
- arch/arm/boot/dts/r8a7794-silk.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> It seems silly to add a typecast to DIS_INT.
+>
 
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -183,6 +183,16 @@
- 		groups = "usb1";
- 		function = "usb1";
- 	};
-+
-+	du0_pins: du0 {
-+		groups = "du0_rgb888", "du0_sync", "du0_disp", "du0_clk0_out";
-+		function = "du0";
-+	};
-+
-+	du1_pins: du1 {
-+		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_clk0_out";
-+		function = "du1";
-+	};
- };
- 
- &scif2 {
-@@ -360,6 +370,8 @@
- };
- 
- &du {
-+	pinctrl-0 = <&du0_pins &du1_pins>;
-+	pinctrl-names = "default";
- 	status = "okay";
- 
- 	clocks = <&mstp7_clks R8A7794_CLK_DU0>,
+-- 
+Shanker Donthineni
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
