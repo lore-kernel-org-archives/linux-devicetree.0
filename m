@@ -1,117 +1,95 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v9 0/7] Implement generic ASoC HDMI codec and use it in
- tda998x
-Date: Wed, 13 Apr 2016 10:53:01 +0300
-Message-ID: <570DFADD.60608@ti.com>
-References: <cover.1459431292.git.jsarha@ti.com>
- <20160413070219.GN14664@sirena.org.uk>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v8 08/45] powerpc/powernv: Fix initial IO and M32 segmap
+Date: Wed, 13 Apr 2016 17:53:24 +1000
+Message-ID: <20160413075324.GA31320@gwshan>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-9-git-send-email-gwshan@linux.vnet.ibm.com>
+ <570DE553.80708@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2106630239=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160413070219.GN14664@sirena.org.uk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <570DE553.80708@ozlabs.ru>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: devicetree@vger.kernel.org, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org, dja@axtens.net
 List-Id: devicetree@vger.kernel.org
 
---===============2106630239==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="lspUvVoqKA9xFKtHNLWxqhakbxkRE7QM8"
-
---lspUvVoqKA9xFKtHNLWxqhakbxkRE7QM8
-Content-Type: multipart/mixed; boundary="DwObJmeSxdijMPFaNPLDKA7txXpUwWrHP"
-From: Jyri Sarha <jsarha@ti.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie,
- linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- bcousson@baylibre.com, alsa-devel@alsa-project.org, tony@atomide.com,
- liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com,
- tomi.valkeinen@ti.com, tiwai@suse.de, rmk+kernel@arm.linux.org.uk,
- p.zabel@pengutronix.de, arnaud.pouliquen@st.com
-Message-ID: <570DFADD.60608@ti.com>
-Subject: Re: [PATCH v9 0/7] Implement generic ASoC HDMI codec and use it in
- tda998x
-References: <cover.1459431292.git.jsarha@ti.com>
- <20160413070219.GN14664@sirena.org.uk>
-In-Reply-To: <20160413070219.GN14664@sirena.org.uk>
-
---DwObJmeSxdijMPFaNPLDKA7txXpUwWrHP
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 04/13/16 10:02, Mark Brown wrote:
-> On Thu, Mar 31, 2016 at 04:35:57PM +0300, Jyri Sarha wrote:
->> Couple of minor changes since v8 to ALSA/ASoC side patches. The series=
-
->> is based on top of drm-next. However, it does not look like there is
->> enough attention to the DRM side so that the tda998x patches would get=
-
->> in any time soon. So I am happy to rebase the first ALSA-side patches
->> on top of Mark Brown's for-next tree, for instance, if they would have=
-
->> a change to go in on their own. The first two IEC958 helper patches
->> should apply as such.
->=20
-> None of the ASoC specific patches here have had any review from other
-> HDMI users?
->=20
-
-I got ack from Arnaud Pouliquen and tested-by from Philipp Zabel for
-"ASoC: hdmi-codec: Add hdmi-codec for external HDMI-encoders" in
-previous version of the series. Since then there is one minimal change,
-but because I touched the patch I removed the ack and tested-by tags.
-
-The change is setting hw_params->msbits to 24 in hw_params() callback if
-sample width is greater than 24 bits.
-
-Best regards,
-Jyri
-
-
---DwObJmeSxdijMPFaNPLDKA7txXpUwWrHP--
-
---lspUvVoqKA9xFKtHNLWxqhakbxkRE7QM8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJXDfrnAAoJEJA2s1DX1hlB2AQQAIykJU5yYLod+RJfQ2omJ00n
-1Dfkb/W5P8f8iHq2bSsTHCFInqF2s7VSy0Nxg+Ue771f3vYMD6aId6Ja8t/fODwM
-RlCf7DVhQ9ZFpbiCKUo759kslurDnmtHhUYEfAwCD9lxCXKc3nZXGLQmBz7MZyCi
-Ix9Mm/K0BDC9Rxkr5lSyyFNAtrX8fN+6KQcbWBU8Ks473lHtjq88e7l3OyfwUp6R
-4A4QXrTHMQA1cYQrfgrlIMdp0na/7kLnuteGhNS/J9bTWw9CTyHMGkf0B3ZdLD2Z
-8+XPnDO/rRgJC+Azx9Qv7heEYCFnvgoMUbdgyWkpt96LP7AkFrnn486SWjyVfbuG
-LvQMXq+3s5OEQzIoIJBzMDJCMTxl5ZcLtR0dN8aVN1Uu9nXs4EgnnbxDh4VqJWPd
-es9/kxGlrzAImy50AILyHe3DWemuEGgCYoxQ4w+g2bxYypxmwpUyM2LijvtmkJh7
-wHf8yLgBb01jra6mHV5Ho6ur4CeWSs49PP8oxr5CBPOZUHPYuXo1wnj+ecb1sQW4
-rey28hxqNrvUbnambnUVhpT0mbbE3OplZ9ny95RCw2S5NEVfdBWat1ldcN39JEIQ
-2xfyqGQz0kailEx7UJ3suZE/Mx5WoMdjAFBbBxvnM9TqXSlxruVLz+5ehUpo6ePD
-EJkcEZJidiIs1JRELP7d
-=jAHr
------END PGP SIGNATURE-----
-
---lspUvVoqKA9xFKtHNLWxqhakbxkRE7QM8--
-
---===============2106630239==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2106630239==--
+T24gV2VkLCBBcHIgMTMsIDIwMTYgYXQgMDQ6MjE6MDdQTSArMTAwMCwgQWxleGV5IEthcmRhc2hl
+dnNraXkgd3JvdGU6Cj5PbiAwMi8xNy8yMDE2IDAyOjQzIFBNLCBHYXZpbiBTaGFuIHdyb3RlOgo+
+PlRoZXJlIGFyZSB0d28gYXJyYXlzIGZvciBJTyBhbmQgTTMyIHNlZ21lbnQgbWFwcyBvbiBldmVy
+eSBQSEIuCj4+VGhlIGluZGV4IG9mIHRoZSBhcnJheXMgYXJlIHNlZ21lbnQgbnVtYmVyIGFuZCB0
+aGUgdmFsdWUgc3RvcmVkCj4+aW4gdGhlIGNvcnJlc3BvbmRpbmcgZWxlbWVudCBpcyBQRSBudW1i
+ZXIsIGluZGljYXRpbmcgdGhlIHNlZ21lbnQKPj5pcyBhc3NpZ25lZCB0byB0aGUgUEUuIEluaXRp
+YWxseSwgYWxsIGVsZW1lbnRzIGluIHRob3NlIHR3byBhcnJheXMKPj5hcmUgemVyb2VzLCBtZWFu
+aW5nIGFsbCBzZWdtZW50cyBhcmUgYXNzaWduZWQgdG8gUEUjMC4gSXQncyB3cm9uZy4KPj4KPj5U
+aGlzIGZpeGVzIHRoZSBpbml0aWFsIHZhbHVlcyBpbiB0aGUgZWxlbWVudHMgb2YgdGhvc2UgdHdv
+IGFycmF5cwo+PnRvIElPREFfSU5WQUxJRF9QRSwgbWVhbmluZyBhbGwgc2VnbWVudHMgYXJlbid0
+IGFzc2lnbmVkIHRvIGFueQo+PlBFLgo+Cj5UaGlzIGlzIG9rLgo+Cj4+SW4gb3JkZXIgdG8gdXNl
+IElPREFfSU5WQUxJRF9QRSAoLTEpIHRvIHJlcHJlc2VudCBpbnZhbGlkIFBFCj4+bnVtYmVyLCB0
+aGUgdHlwZXMgb2YgdGhvc2UgdHdvIGFycmF5cyBhcmUgY2hhbmdlZCBmcm9tICJ1bnNpZ25lZCBp
+bnQiCj4+dG8gImludCIuCj4KPiJ1bnNpZ25lZCIgY2FuIGNhcnJ5ICgtMSkgcGVyZmVjdGx5IGZp
+bmUsIGp1c3QgYWRkIGEgdHlwZSBjYXN0IHRvCj5JT0RBX0lOVkFMSURfUEU6Cj4KPiNkZWZpbmUg
+SU9EQV9JTlZBTElEX1BFICAgICh1bnNpZ25lZCBpbnQpKC0xKQo+Cj5Vc2luZyAic2lnbmVkIiB0
+eXBlIGZvciBpbmRleGVzIHdoaWNoIGNhbm5vdCBiZSBuZWdhdGl2ZSBkb2VzIG5vdCBtYWtlIG11
+Y2gKPnNlbnNlIC0gaW5zdGVhZCBvZiBjaGVja2luZyBmb3IgdGhlIHVwcGVyIGJvdW5kYXJ5LCB5
+b3UgaGF2ZSB0byBjaGVjayBmb3IgIjwKPjAiIHRvby4KPgo+T1BBTCB1c2VzIHVuc2lnbmVkIHR5
+cGUgZm9yIFBFICh1aW50NjRfdCBvciB1aW50MzJfdCBvciB1aW50MTZfdCAtIHRoaXMgaXMKPnF1
+aXRlIGZ1bm55KS4KPgo+cG52X2lvZGFfcGU6OnBlX251bWJlciBpcyAidW5zaWduZWQiIGFuZCB0
+aGlzIHBlX251bWJlciBpcyB0aGUgc2FtZSB0aGluZyBhcwo+SSBjYW4gc2VlIGluIHBudl9pb2Rh
+X3NldHVwX2Rldl9QRSgpLgo+Cj5Tb21lIHByaW50aygpIHByaW50IHRoZSBQRSBudW1iZXIgYXMg
+IiV4IiAod2hpY2ggaW1wbGllcyAidW5zaWduZWQiKS4KPgoKWWVzLCBJIGNhbiBzaW1wbHkgaGF2
+ZSBzb21ldGhpbmcgbGlrZSBiZWxvdyB3aGVuIFBFIG51bWJlciBhcyB3ZWxsIGFzCnNlZ21lbnQg
+aW5kZXggYXJlIHJlcHJlc2VudGVkIGJ5ICJ1bnNpZ25lZCBpbnQiIHZhbHVlcywgcmlnaHQ/Cgoj
+ZGVmaW5lIElPREFfSU5WQUxJRF9QRQkJMHhmZmZmZmZmZgoKPgo+SSBzdWdnZXN0IGNoYW5naW5n
+IHRoZSBwY2lfZG46OnBlX251bWJlciB0eXBlIGZyb20gImludCIgdG8gInVuc2lnbmVkIGludCIg
+dG8KPm1hdGNoIHBudl9pb2RhX3BlOjpwZV9udW1iZXIsIGluIGEgc2VwYXJhdGUgcGF0Y2guIE9y
+IGRvIG5vdCB0b3VjaCB0eXBlcyBmb3IKPm5vdy4KPgoKWWVzLCBJIHdpbGwgaGF2ZSBhIHNlcGFy
+YXRlIHBhdGNoIHJpZ2h0IGJlZm9yZSB0aGlzIG9uZSB0byBhZGRyZXNzIGl0LgoKPgo+PlNpZ25l
+ZC1vZmYtYnk6IEdhdmluIFNoYW4gPGd3c2hhbkBsaW51eC52bmV0LmlibS5jb20+Cj4+LS0tCj4+
+ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLWlvZGEuYyB8IDkgKysrKysrKy0t
+Cj4+ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLmggICAgICB8IDQgKystLQo+
+PiAgMiBmaWxlcyBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+Cj4+
+ZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2ktaW9kYS5jIGIv
+YXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wb3dlcm52L3BjaS1pb2RhLmMKPj5pbmRleCAxZDI1MTRm
+Li40NGNjNWYzIDEwMDY0NAo+Pi0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9w
+Y2ktaW9kYS5jCj4+KysrIGIvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wb3dlcm52L3BjaS1pb2Rh
+LmMKPj5AQCAtMzIzOSw3ICszMjM5LDcgQEAgc3RhdGljIHZvaWQgX19pbml0IHBudl9wY2lfaW5p
+dF9pb2RhX3BoYihzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLAo+PiAgCXVuc2lnbmVkIGxvbmcgc2l6
+ZSwgbTMybWFwX29mZiwgcGVtYXBfb2ZmLCBpb21hcF9vZmYgPSAwOwo+PiAgCWNvbnN0IF9fYmU2
+NCAqcHJvcDY0Owo+PiAgCWNvbnN0IF9fYmUzMiAqcHJvcDMyOwo+Pi0JaW50IGxlbjsKPj4rCWlu
+dCBpLCBsZW47Cj4+ICAJdTY0IHBoYl9pZDsKPj4gIAl2b2lkICphdXg7Cj4+ICAJbG9uZyByYzsK
+Pj5AQCAtMzMzNCw4ICszMzM0LDEzIEBAIHN0YXRpYyB2b2lkIF9faW5pdCBwbnZfcGNpX2luaXRf
+aW9kYV9waGIoc3RydWN0IGRldmljZV9ub2RlICpucCwKPj4gIAlhdXggPSBtZW1ibG9ja192aXJ0
+X2FsbG9jKHNpemUsIDApOwo+PiAgCXBoYi0+aW9kYS5wZV9hbGxvYyA9IGF1eDsKPj4gIAlwaGIt
+PmlvZGEubTMyX3NlZ21hcCA9IGF1eCArIG0zMm1hcF9vZmY7Cj4+LQlpZiAocGhiLT50eXBlID09
+IFBOVl9QSEJfSU9EQTEpCj4+Kwlmb3IgKGkgPSAwOyBpIDwgcGhiLT5pb2RhLnRvdGFsX3BlX251
+bTsgaSsrKQo+PisJCXBoYi0+aW9kYS5tMzJfc2VnbWFwW2ldID0gSU9EQV9JTlZBTElEX1BFOwo+
+PisJaWYgKHBoYi0+dHlwZSA9PSBQTlZfUEhCX0lPREExKSB7Cj4+ICAJCXBoYi0+aW9kYS5pb19z
+ZWdtYXAgPSBhdXggKyBpb21hcF9vZmY7Cj4+KwkJZm9yIChpID0gMDsgaSA8IHBoYi0+aW9kYS50
+b3RhbF9wZV9udW07IGkrKykKPj4rCQkJcGhiLT5pb2RhLmlvX3NlZ21hcFtpXSA9IElPREFfSU5W
+QUxJRF9QRTsKPj4rCX0KPj4gIAlwaGItPmlvZGEucGVfYXJyYXkgPSBhdXggKyBwZW1hcF9vZmY7
+Cj4+ICAJc2V0X2JpdChwaGItPmlvZGEucmVzZXJ2ZWRfcGVfaWR4LCBwaGItPmlvZGEucGVfYWxs
+b2MpOwo+Pgo+PmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNp
+LmggYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLmgKPj5pbmRleCA3ODQ4ODJh
+Li4zNmM0OTY1IDEwMDY0NAo+Pi0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9w
+Y2kuaAo+PisrKyBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2kuaAo+PkBAIC0x
+NDYsOCArMTQ2LDggQEAgc3RydWN0IHBudl9waGIgewo+PiAgCQlzdHJ1Y3QgcG52X2lvZGFfcGUJ
+KnBlX2FycmF5Owo+Pgo+PiAgCQkvKiBNMzIgJiBJTyBzZWdtZW50IG1hcHMgKi8KPj4tCQl1bnNp
+Z25lZCBpbnQJCSptMzJfc2VnbWFwOwo+Pi0JCXVuc2lnbmVkIGludAkJKmlvX3NlZ21hcDsKPj4r
+CQlpbnQJCQkqbTMyX3NlZ21hcDsKPj4rCQlpbnQJCQkqaW9fc2VnbWFwOwo+Pgo+PiAgCQkvKiBJ
+UlEgY2hpcCAqLwo+PiAgCQlpbnQJCQlpcnFfY2hpcF9pbml0Owo+Pgo+Cj4KPi0tIAo+QWxleGV5
+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
+cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6
+Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
