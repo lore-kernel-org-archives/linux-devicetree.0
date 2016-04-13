@@ -1,52 +1,56 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 3/5] gpio: of: Return error if gpio hog configuration
- failed
-Date: Wed, 13 Apr 2016 18:24:06 +0530
-Message-ID: <570E416E.1000608@nvidia.com>
-References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>	<1457703804-3016-4-git-send-email-ldewangan@nvidia.com> <CACRpkdbLKWDGvhqtwoogNNgQjG86g9HmpceLLVwKW+94dJk63A@mail.gmail.com>
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH 1/2] dt/bindings/spi: Add bindings for PIC32 Quad-SPI driver.
+Date: Wed, 13 Apr 2016 18:42:04 +0530
+Message-ID: <1460553125-32649-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbLKWDGvhqtwoogNNgQjG86g9HmpceLLVwKW+94dJk63A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Document Device tree bindings for quad SPI peripheral
+found on Microchip PIC32 class devices.
 
-On Wednesday 13 April 2016 06:13 PM, Linus Walleij wrote:
-> On Fri, Mar 11, 2016 at 2:43 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->
->> If GPIO hog configuration failed while adding OF based
->> gpiochip() then return the error instead of ignoring it.
->>
->> This helps of properly handling the gpio driver dependency.
->>
->> When adding the gpio hog nodes for NVIDIA's Tegra210 platforms,
->> the gpio_hogd() fails with EPROBE_DEFER because pinctrl is not
->> ready at this time and gpio_request() for Tegra GPIO driver
->> returns error. The error was not causing the Tegra GPIO driver
->> to fail as the error was getting ignored.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> Cc: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
->> Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Rebased and applied this patch FWIW.
-> This is a fair and square bug fix so need to go in
-> no matter what happens with the hog patches.
->
+Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 
-Thank you very much for accepting the patch.
-I think 1/5 and 2/5 is also fine as there is no more comment on this.
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
+ Documentation/devicetree/bindings/spi/sqi-pic32.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/sqi-pic32.txt
 
-However, 4/5 and 5/5 needs further discussion.
-
-Please let me know if I need to send 1/5 and 2/5 here.
+diff --git a/Documentation/devicetree/bindings/spi/sqi-pic32.txt b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
+new file mode 100644
+index 0000000..5af9fab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
+@@ -0,0 +1,18 @@
++Microchip PIC32 Quad SPI controller
++-----------------------------------
++Required properties:
++- compatible: Should be "microchip,pic32mzda-sqi".
++- reg: Address and length of SQI controller register space.
++- interrupts: Should contain SQI interrupt.
++- clocks: Should contain phandle of two clocks in sequence, clock that drives
++          clock on SPI bus and clock that drives SQI controller.
++- clock-names: Should be "spi_ck" and "reg_ck" in order.
++
++Example:
++	sqi1: sqi@1f8e2000 {
++		compatible = "microchip,pic32mzda-sqi";
++		reg = <0x1f8e2000 0x200>;
++		clocks = <&rootclk REF2CLK>, <&rootclk PB5CLK>;
++		clock-names = "spi_ck", "reg_ck";
++		interrupts = <169 IRQ_TYPE_LEVEL_HIGH>;
++	};
+-- 
+1.8.3.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
