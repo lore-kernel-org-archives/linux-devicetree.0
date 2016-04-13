@@ -1,49 +1,90 @@
 From: Tai Nguyen <ttnguyen@apm.com>
-Subject: [PATCH v2 0/4] perf: Add APM X-Gene SoC Performance Monitoring Unit driver
-Date: Tue, 12 Apr 2016 18:22:23 -0700
-Message-ID: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
+Subject: [PATCH v2 4/4] arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+Date: Tue, 12 Apr 2016 18:22:27 -0700
+Message-ID: <1460510547-17611-5-git-send-email-ttnguyen@apm.com>
+References: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
-are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
-memory controller bridges and memory. These PMU devices are loosely
-architected to follow the same model as the PMU for ARM cores.
-
 Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
-
-v2:
- * Use bitmask for event asignned counter mask pmu_dev->cntr_assign_mask
- * Remove unnecessary spinlocks in perf add/del operations
- * Remove unnecessary condition checks
- * Enforce CPU assignment to one CPU for perf operarations
- * Set the task_ctx_nr to perf_invalid_context for perf driver
- * Remove irrelevant pt_rregs
- * Change perf sysfs attributes to be fixed instead of dynamic
- * Fix checking for an ACPI companion device instead of EFI enable
- * Add documentation for config/config1 fields format and perf tool example
-
 ---
-Tai Nguyen (4):
-  MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
-  Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
-  perf: xgene: Add APM X-Gene SoC Performance Monitoring Unit driver
-  arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+ arch/arm64/boot/dts/apm/apm-storm.dtsi | 60 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
- .../devicetree/bindings/perf/apm-xgene-pmu.txt     |  116 ++
- Documentation/perf/xgene-pmu.txt                   |   48 +
- MAINTAINERS                                        |    7 +
- arch/arm64/boot/dts/apm/apm-storm.dtsi             |   60 +
- drivers/perf/Kconfig                               |    7 +
- drivers/perf/Makefile                              |    1 +
- drivers/perf/xgene_pmu.c                           | 1414 ++++++++++++++++++++
- 7 files changed, 1653 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
- create mode 100644 Documentation/perf/xgene-pmu.txt
- create mode 100644 drivers/perf/xgene_pmu.c
-
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index fe30f76..975948d 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -566,6 +566,66 @@
+ 			};
+ 		};
+ 
++		pmu: pmu@78810000 {
++			compatible = "apm,xgene-pmu-v2";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			regmap-csw = <&csw>;
++			regmap-mcba = <&mcba>;
++			regmap-mcbb = <&mcbb>;
++			reg = <0x0 0x78810000 0x0 0x1000>;
++			interrupts = <0x0 0x22 0x4>;
++
++			pmul3c@7e610000 {
++				compatible = "apm,xgene-pmu-l3c";
++				reg = <0x0 0x7e610000 0x0 0x1000>;
++				index = <0>;
++			};
++
++			pmuiob@7e940000 {
++				compatible = "apm,xgene-pmu-iob";
++				reg = <0x0 0x7e940000 0x0 0x1000>;
++				index = <0>;
++			};
++
++			pmucmcb@7e710000 {
++				compatible = "apm,xgene-pmu-mcb";
++				reg = <0x0 0x7e710000 0x0 0x1000>;
++				index = <0>;
++			};
++
++			pmucmcb@7e730000 {
++				compatible = "apm,xgene-pmu-mcb";
++				reg = <0x0 0x7e730000 0x0 0x1000>;
++				index = <1>;
++			};
++
++			pmucmc@7e810000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e810000 0x0 0x1000>;
++				index = <0>;
++			};
++
++			pmucmc@7e850000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e850000 0x0 0x1000>;
++				index = <1>;
++			};
++
++			pmucmc@7e890000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e890000 0x0 0x1000>;
++				index = <2>;
++			};
++
++			pmucmc@7e8d0000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e8d0000 0x0 0x1000>;
++				index = <3>;
++			};
++		};
++
+ 		pcie0: pcie@1f2b0000 {
+ 			status = "disabled";
+ 			device_type = "pci";
 -- 
 1.9.1
