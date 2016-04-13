@@ -1,110 +1,55 @@
-From: Andrea Merello <andrea.merello@gmail.com>
-Subject: [PATCH RFC] I2C: i2c-smbus: add device tree support
-Date: Wed, 13 Apr 2016 10:36:31 +0200
-Message-ID: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.de
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>
+From: Tema williams <temawilliams22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: WE NEED YOUR HELP URGENTLY.
+Date: Wed, 13 Apr 2016 10:39:13 +0200
+Message-ID: <CA+hOsCtLwG02uzCEn_1i4BgAAQ3dz6Y9Hv3JxmxijL_tJkyvzw@mail.gmail.com>
+Reply-To: temawilliams18-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-According to Documentation/i2c/smbus-protocol, a smbus controller driver
-that wants to hook-in smbus extensions support, can call
-i2c_setup_smbus_alert(). There are very few drivers that are currently
-doing this.
+Dear Sir/madam,
 
-However the i2c-smbus module can also work with any
-smbus-extensions-unaware I2C controller, as long as we provide an extra
-IRQ line connected to the I2C bus ALARM signal.
+With due respect and to the glory of Almighty God whom we worship I
+call upon you to assist my family. Please Permit me to inform you of
+my desire of going into business relationship with you.
 
-This patch makes it possible to go this way via DT. Note that the DT node
-will indeed describe a (little) piece of HW, that is the routing of the
-ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
+My name is Tema Williams,The only Son of late Chief PATRICK WILLIAMS.
+My father was a very wealthy cocoa merchant in Abidjan but we are from
+Sierra Leone
+After my Father death I and my Family move to South Africa as refugee.
 
-Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
-with address 0x0C (that is the alarm response address), and IMHO this is
-quite consistent with usage in the DT as a I2C child node.
+My father was poisoned to death by his business associates on one of
+their outings on a business trip. Before his death in a private
+hospital in Abidjan he secretly called me on his bed side and told me
+that he has the sum of ($12.000,000 MILLION US DOLLAR) kept with a
+security and finance company in South Africa.
 
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+He also explained to me that it was because of this wealth that he was
+poisoned by his business associates,that I should seek for a
+beneficiary in any country of my choice where I will transfer this
+money and use it for investment.I am honorably seeking for your
+assistance to transfer our fund out of South Africa.Upon the
+successful transfer of this fund,we shall make arrangement for me,my
+mother and younger sister to come over to your country to further our
+Education and invest in a profitable business that you may suggest.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-smbus.txt b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
-new file mode 100644
-index 0000000..da83127
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
-@@ -0,0 +1,20 @@
-+* i2c-smbus extensions
-+
-+Required Properties:
-+  - compatible: Must contain "smbus_alert"
-+  - interrupts: The irq line for smbus ALERT signal
-+  - reg: I2C slave address. Set to 0x0C (alert response address).
-+
-+Note: The i2c-smbus module registers itself as a slave I2C device. Whenever
-+a smbus controller directly support smbus extensions (and its driver supports
-+this), there is no need to add anything special to the DT. Otherwise, for using
-+i2c-smbus with any smbus-extensions-unaware I2C controllers, you need to
-+route the smbus ALARM signal to an extra IRQ line, thus you need to describe
-+this in the DT.
-+
-+Example:
-+	alert@0x0C {
-+		reg = <0x0C>;
-+		compatible = "smbus_alert";
-+		interrupts = <0 36 IRQ_TYPE_LEVEL_LOW>;
-+	};
-diff --git a/drivers/i2c/i2c-smbus.c b/drivers/i2c/i2c-smbus.c
-index abb55d3..7f0a566 100644
---- a/drivers/i2c/i2c-smbus.c
-+++ b/drivers/i2c/i2c-smbus.c
-@@ -23,6 +23,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-+#include <linux/of_irq.h>
+More over,I am willing to offer you 20% of the total sum as
+compensation for your effort/input after the successful transfer of
+this fund into your nominated bank account overseas.
 
- struct i2c_smbus_alert {
- 	unsigned int		alert_edge_triggered:1;
-@@ -137,20 +138,29 @@ static int smbalert_probe(struct i2c_client *ara,
- 	struct i2c_smbus_alert_setup *setup = dev_get_platdata(&ara->dev);
- 	struct i2c_smbus_alert *alert;
- 	struct i2c_adapter *adapter = ara->adapter;
-+	struct device_node *of_node = ara->dev.of_node;
- 	int res;
-+	int irq_type;
+As we depend on God, and with God all things are possible.
+Anticipating to hear from you today.
 
- 	alert = devm_kzalloc(&ara->dev, sizeof(struct i2c_smbus_alert),
- 			     GFP_KERNEL);
- 	if (!alert)
- 		return -ENOMEM;
+Thanks and God bless.
+PLEASE CALL ME +27787597591
 
--	alert->alert_edge_triggered = setup->alert_edge_triggered;
--	alert->irq = setup->irq;
-+	if (setup) {
-+		alert->alert_edge_triggered = setup->alert_edge_triggered;
-+		alert->irq = setup->irq;
-+	} else if (of_node) {
-+		alert->irq = irq_of_parse_and_map(of_node, 0);
-+		irq_type = irq_get_trigger_type(alert->irq);
-+		alert->alert_edge_triggered = (irq_type & IRQ_TYPE_EDGE_BOTH);
-+	}
-+
- 	INIT_WORK(&alert->alert, smbus_alert);
- 	alert->ara = ara;
+Best regards,
 
--	if (setup->irq > 0) {
--		res = devm_request_irq(&ara->dev, setup->irq, smbalert_irq,
-+	if (alert->irq > 0) {
-+		res = devm_request_irq(&ara->dev, alert->irq, smbalert_irq,
- 				       0, "smbus_alert", alert);
- 		if (res)
- 			return res;
-@@ -158,7 +168,7 @@ static int smbalert_probe(struct i2c_client *ara,
-
- 	i2c_set_clientdata(ara, alert);
- 	dev_info(&adapter->dev, "supports SMBALERT#, %s trigger\n",
--		 setup->alert_edge_triggered ? "edge" : "level");
-+		 alert->alert_edge_triggered ? "edge" : "level");
-
- 	return 0;
- }
+Tema Williams
+(for the family)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
