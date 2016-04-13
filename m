@@ -1,141 +1,89 @@
-From: Stuart Yoder <stuart.yoder@nxp.com>
-Subject: [PATCH 1/2 v2] Documentation: fsl-mc: binding updates for MSIs, ranges,
- PHYs
-Date: Wed, 13 Apr 2016 16:05:17 -0500
-Message-ID: <1460581517-32107-1-git-send-email-stuart.yoder@nxp.com>
+From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] mtd: nand: omap2: Fix high memory dma prefetch
+ transfer
+Date: Wed, 13 Apr 2016 16:11:08 -0500
+Message-ID: <570EB5EC.3000206@ti.com>
+References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
+ <1457654203-20856-7-git-send-email-fcooper@ti.com>
+ <20160321160443.0a4165d1@bbrezillon> <570EA72C.7000806@ti.com>
+ <20160413222451.704376b5@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: german.rivera@freescale.com, Stuart Yoder <stuart.yoder@freescale.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leoyang.li@nxp.com, shawnguo@kernel.org, Stuart Yoder <stuart.yoder@nxp.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160413222451.704376b5@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stuart Yoder <stuart.yoder@freescale.com>
 
--The Freescale Management Complex and all associated objects
- use message interrupts, and thus an msi-parent is required.
 
--Define a ranges property to specify the mapping between
- the MC address space and the system address space.
+On 04/13/2016 03:24 PM, Boris Brezillon wrote:
+> Hi Franklin,
+> 
+> On Wed, 13 Apr 2016 15:08:12 -0500
+> "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org> wrote:
+> 
+>>
+>>
+>> On 03/21/2016 10:04 AM, Boris Brezillon wrote:
+>>> Hi Franklin,
+>>>
+>>> On Thu, 10 Mar 2016 17:56:42 -0600
+>>> Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org> wrote:
+>>>
+>>>> Based on DMA documentation and testing using high memory buffer when
+>>>> doing dma transfers can lead to various issues including kernel
+>>>> panics.
+>>>
+>>> I guess it all comes from the vmalloced buffer case, which are not
+>>> guaranteed to be physically contiguous (one of the DMA requirement,
+>>> unless you have an iommu).
+>>>
+>>>>
+>>>> To workaround this simply use cpu copy. The amount of high memory
+>>>> buffers used are very uncommon so no noticeable performance hit should
+>>>> be seen.
+>>>
+>>> Hm, that's not necessarily true. UBI and UBIFS allocate their buffers
+>>> using vmalloc (vmalloced buffers fall in the high_memory region), and
+>>> those are likely to be dis-contiguous if you have NANDs with pages > 4k.
+>>>
+>>> I recently posted patches to ease sg_table creation from any kind of
+>>> virtual address [1][2]. Can you try them and let me know if it fixes
+>>> your problem?
+>>
+>> It looks like you won't be going forward with your patchset based on
+>> this thread [1].
+> 
+> Nope. According to Russell it's unsafe to do that.
+> 
+>> I can probably reword the patch description to avoid
+>> implying that it is uncommon to run into high mem buffers. Also DMA with
+>> NAND prefetch suffers from a reduction of performance compared to CPU
+>> polling with prefetch. This is largely due to the significant over head
+>> required to read such a small amount of data at a time. The
+>> optimizations I've worked on all revolved around reducing the cycles
+>> spent before executing the DMA request. Trying to make a high memory
+>> buffer able to be used by the DMA adds significant amount of cycles and
+>> your better off just using the cpu for performance reasons.
+> 
+> Okay.
+> One comment though, why not using virt_addr_valid() instead of
+> addr >= high_memory here?
 
--The fsl-mc node may optionally have dpmac sub-nodes that describe
- the relationship between the Ethernet MACs which belong to the MC
- and the Ethernet PHYs on the system board.
 
-Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
-Acked-by: J. German Rivera <German.Rivera@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
--v2: added Rob's ack
-
- .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 81 +++++++++++++++++++++-
- 1 file changed, 80 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-index c7a26ca..6611a7c 100644
---- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-+++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-@@ -30,11 +30,90 @@ Required properties:
-                         region may not be present in some scenarios, such
-                         as in the device tree presented to a virtual machine.
- 
-+    - msi-parent
-+        Value type: <phandle>
-+        Definition: Must be present and point to the MSI controller node
-+                    handling message interrupts for the MC.
-+
-+    - ranges
-+        Value type: <prop-encoded-array>
-+        Definition: A standard property.  Defines the mapping between the child
-+                    MC address space and the parent system address space.
-+
-+                    The MC address space is defined by 3 components:
-+                       <region type> <offset hi> <offset lo>
-+
-+                    Valid values for region type are
-+                       0x0 - MC portals
-+                       0x1 - QBMAN portals
-+
-+    - #address-cells
-+        Value type: <u32>
-+        Definition: Must be 3.  (see definition in 'ranges' property)
-+
-+    - #size-cells
-+        Value type: <u32>
-+        Definition: Must be 1.
-+
-+Sub-nodes:
-+
-+        The fsl-mc node may optionally have dpmac sub-nodes that describe
-+        the relationship between the Ethernet MACs which belong to the MC
-+        and the Ethernet PHYs on the system board.
-+
-+        The dpmac nodes must be under a node named "dpmacs" which contains
-+        the following properties:
-+
-+            - #address-cells
-+              Value type: <u32>
-+              Definition: Must be present if dpmac sub-nodes are defined and must
-+                          have a value of 1.
-+
-+            - #size-cells
-+              Value type: <u32>
-+              Definition: Must be present if dpmac sub-nodes are defined and must
-+                          have a value of 0.
-+
-+        These nodes must have the following properties:
-+
-+            - compatible
-+              Value type: <string>
-+              Definition: Must be "fsl,qoriq-mc-dpmac".
-+
-+            - reg
-+              Value type: <prop-encoded-array>
-+              Definition: Specifies the id of the dpmac.
-+
-+            - phy-handle
-+              Value type: <phandle>
-+              Definition: Specifies the phandle to the PHY device node associated
-+                          with the this dpmac.
-+
- Example:
- 
-         fsl_mc: fsl-mc@80c000000 {
-                 compatible = "fsl,qoriq-mc";
-                 reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
-                       <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
--        };
-+                msi-parent = <&its>;
-+                #address-cells = <3>;
-+                #size-cells = <1>;
-+
-+                /*
-+                 * Region type 0x0 - MC portals
-+                 * Region type 0x1 - QBMAN portals
-+                 */
-+                ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
-+                          0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
- 
-+                dpmacs {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    dpmac@1 {
-+                        compatible = "fsl,qoriq-mc-dpmac";
-+                        reg = <1>;
-+                        phy-handle = <&mdio0_phy0>;
-+                    }
-+                }
-+        };
--- 
-1.9.0
+I had no reason other than simply using the approach used in the driver
+already. Virt_addr_valid looks like it will work so I'll make the switch
+after testing it.
+> 
+> Best Regards,
+> 
+> Boris
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
