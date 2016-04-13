@@ -1,163 +1,68 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Wed, 13 Apr 2016 08:28:30 -0700
-Message-ID: <20160413152829.GQ5995@atomide.com>
-References: <alpine.DEB.2.02.1603211743200.31059@utopia.booyaka.com>
- <56FE407E.9030803@ti.com>
- <20160402001753.GR9329@atomide.com>
- <57026205.6020105@ti.com>
- <20160404151200.GA4652@atomide.com>
- <5703BA6B.1080208@ti.com>
- <20160411212845.GJ5995@atomide.com>
- <570CC54E.6020703@ti.com>
- <20160412163750.GR5995@atomide.com>
- <570E3428.5020804@ti.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [RFC][PATCH 2/2] drm/arm: Add support for Mali Display Processors
+Date: Wed, 13 Apr 2016 16:29:15 +0100
+Message-ID: <CACvgo506CVQka6nD+Y-coVmc+nE3XcMeE=MjszRLVG2Ct421RQ@mail.gmail.com>
+References: <1459527712-9488-1-git-send-email-Liviu.Dudau@arm.com>
+ <1459527712-9488-3-git-send-email-Liviu.Dudau@arm.com>
+ <CACvgo51+1MDaDq5=TpFQeSBuKgRM33Pa71apEVHSo90jgKmViw@mail.gmail.com>
+ <20160413134857.GN16063@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570E3428.5020804@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160413134857.GN16063@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [160413 04:59]:
-> On 04/12/16 19:37, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi@ti.com> [160412 02:53]:
-> >> Tony,
-> >>
-> >> On 04/12/16 00:28, Tony Lindgren wrote:
-> >>>>> Then for the long term solution using
-> >>>>> PM runtime to block gating of the clock while sidetone is active is
-> >>>>> the way to go it seems.
-> >>>>
-> >>>> Hrm, I think one of the main issue is that with pm_runtime we can not block
-> >>>> the clock gating, this is why legacy code uses enable_st_clock(), which will
-> >>>> call omap2_clk_deny_idle() or omap2_clk_allow_idle().
-> >>>
-> >>> I see. I think Tero wanted to export omap2_clk_allow_idle() and
-> >>> omap2_clk_deny_idle() for drivers to use. That should get discussed in
-> >>> the linux-clk list, probably best to use the pdata callbacks until
-> >>> the clock idling issue has been discussed.
-> >>
-> >> It is already exported, used by the arch/arm/mach-omap2/mcbsp.c file.
-> > 
-> > Oh but not with EXPORT_SYMBOL so not usable except for built-in code.
-> > Probably best to keep it that way IMO..
-> 
-> It is up to Tero if he want to keep omap2_clk_allow/deny_idle() only be usable
-> for built in code. It is there just because of OMAP3 McBSP2/3 sidetone support
-> on the other hand. It is a fair assumption that it could be used by the driver.
-
-The problem with EXPORT_SYMBOL is that it tends to then suddenly then get
-used all over the drivers. And we've seen what that means..
-
-> >> Why not to remove the callback for legacy also and handle it in the driver? It
-> >> is less ugly in my opinion.
-> >> Going via the pdata callback is just going to cement the current setup.
-> > 
-> > Sure, maybe you can have a piece of built-in driver code to do that?
-> 
-> You mean something like:
-> int omap3_mcbsp23_ick_for_sidetone_force(struct clk *clk, bool force_on)
-> {
-> 	if (!clk)
-> 		return 0;
-> 
-> 	if (force_on)
-> 		return omap2_clk_deny_idle(clk);
-> 	else
-> 		return omap2_clk_allow_idle(clk);
-> }
-> EXPORT_SYMBOL(omap3_mcbsp23_ick_for_sidetone_force);
-
-Yeah that's something I was thinking.
-
-> Looks similarly hackish as with the pdata callback, but if I were to choose,
-> the pdata callback might be a bit more polite hack if we do not look at how we
-> will have the pdata crafted for DT boot.
-
-Well the pdata solution avoids exporting custom functions to all the
-drivers.
-
-> If we were to split the McBSP driver into half - not literally as the ST
-> support has small amount of code right now, we would consider all possibility
-> to not introduce regression and keep things working along the way. There will
-> be a point were the code need to be shuffled..
-
-You could just create the sidetone child device manually on probe in the
-driver as needed. That way you'd have two devices to do the PM runtime
-on. I think that was Paul's main concern as they are separate modules.
-
-It still leaves the chance of bugs with flush of posted writes. But might
-make things easier to deal with in small steps?
-
-> >> I have reasonably clean patches (6 of them) on top of this three which would
-> >> remove the arch code for the iclk handling and implements it in the mcbsp
-> >> driver w/o changing the architecture of the McBSP driver itself. Both DT and
-> >> legacy boot works. The only part I was not happy about the one where I looked
-> >> up the mcbsp2/3_ick, but I think I have found much cleaner way to do it
-> >> (meaning that the code will not look hackish at all).
-> >> If you want to see, I can make this change and I can send the whole thing as
-> >> RFC and continue the discussion around that?
-> > 
-> > Sure, especially if that helps with splitting up the modules too.
-> 
-> To start with the hwmod data is wrong for mcbsp2/3 mcbsp2/3_sidetone:
-> static struct omap_hwmod omap3xxx_mcbsp2_hwmod = {
-> 	.name		= "mcbsp2",
-> 	.class		= &omap3xxx_mcbsp_hwmod_class,
-> 	.mpu_irqs	= omap3xxx_mcbsp2_irqs,
-> 	.sdma_reqs	= omap2_mcbsp2_sdma_reqs,
-> 	.main_clk	= "mcbsp2_fck",
-> 	.prcm		= {
-> 		.omap2 = {
-> 			.prcm_reg_id = 1,
-> 			.module_bit = OMAP3430_EN_MCBSP2_SHIFT,
-> 			.module_offs = OMAP3430_PER_MOD,
-> 			.idlest_reg_id = 1,
-> 			.idlest_idle_bit = OMAP3430_ST_MCBSP2_SHIFT,
-> 		},
-> 	},
-> 	.opt_clks	= mcbsp234_opt_clks,
-> 	.opt_clks_cnt	= ARRAY_SIZE(mcbsp234_opt_clks),
-> 	.dev_attr	= &omap34xx_mcbsp2_dev_attr,
-> };
-> 
-> static struct omap_hwmod omap3xxx_mcbsp2_sidetone_hwmod = {
-> 	.name		= "mcbsp2_sidetone",
-> 	.class		= &omap3xxx_mcbsp_sidetone_hwmod_class,
-> 	.mpu_irqs	= omap3xxx_mcbsp2_sidetone_irqs,
-> 	.main_clk	= "mcbsp2_fck",
-> 	.prcm		= {
-> 		.omap2 = {
-> 			.prcm_reg_id = 1,
-> 			 .module_bit = OMAP3430_EN_MCBSP2_SHIFT,
-> 			.module_offs = OMAP3430_PER_MOD,
-> 			.idlest_reg_id = 1,
-> 			.idlest_idle_bit = OMAP3430_ST_MCBSP2_SHIFT,
-> 		},
-> 	},
-> };
-> 
-> The McBSP2_ST main_clk is mcbsp2_ick, not mcbsp2_fck (ch 21.3.2.2.6 in
-> OMAP36xx TRM).
-> The sidetone should not have prcm section at all as it does not have control
-> over it's clocks in that level. Giving the same PRCM registers and bits for
-> both McBSP and it's sidetone is wrong. What should be expected if McBSP is
-> enabled and we disable the ST via pm_runtime? Will the hwmod toggle bits in
-> PRCM? If it does, the McBSP will looses it's clocks...
-
-I think for omap3 we're just using the clk_get/set. For omap4, the issue
-is different as the clkctrl registers are used directly.
-
-> While the McBSP and ST regions are different, the ST is part of the McBSP from
-> PRCM point of view so not sure how this could be worked around with separated
-> drivers.
-
-Just create the struct device as a child for ST as needed from McBSP?
-
-Regards,
-
-Tony
+T24gMTMgQXByaWwgMjAxNiBhdCAxNDo0OCwgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5j
+b20+IHdyb3RlOgo+IE9uIFdlZCwgQXByIDEzLCAyMDE2IGF0IDEyOjQ4OjA1UE0gKzAxMDAsIEVt
+aWwgVmVsaWtvdiB3cm90ZToKPj4gSGkgTGl2aXUsCj4KPiBIaSBFbWlsLAo+Cj4+Cj4+IE9uIDEg
+QXByaWwgMjAxNiBhdCAxNzoyMSwgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+IHdy
+b3RlOgo+PiA+IEFkZCBzdXBwb3J0IGZvciB0aGUgbmV3IGZhbWlseSBvZiBEaXNwbGF5IFByb2Nl
+c3NvcnMgZnJvbSBBUk0gTHRkLgo+PiA+IFRoaXMgY29tbWl0IGFkZHMgYmFzaWMgc3VwcG9ydCBm
+b3IgTWFsaSBEUDUwMCwgRFA1NTAgYW5kIERQNjUwCj4+ID4gcGFydHMsIHdpdGggb25seSB0aGUg
+ZGlzcGxheSBlbmdpbmUgYmVpbmcgc3VwcG9ydGVkIGF0IHRoZSBtb21lbnQuCj4+ID4KPj4gPiBD
+YzogRGF2aWQgQnJvd24gPERhdmlkLkJyb3duQGFybS5jb20+Cj4+ID4gQ2M6IEJyaWFuIFN0YXJr
+ZXkgPEJyaWFuLlN0YXJrZXlAYXJtLmNvbT4KPj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IExpdml1
+IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+PiA+IC0tLQo+PiA+ICBkcml2ZXJzL2dwdS9k
+cm0vYXJtL0tjb25maWcgICAgICAgICB8ICAxNSArCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0v
+TWFrZWZpbGUgICAgICAgIHwgICAyICsKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBf
+Y3J0Yy5jICAgfCAyNzYgKysrKysrKysrKysrKwo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL21h
+bGlkcF9kcnYuYyAgICB8IDQ4NiArKysrKysrKysrKysrKysrKysrKysrCj4+ID4gIGRyaXZlcnMv
+Z3B1L2RybS9hcm0vbWFsaWRwX2Rydi5oICAgIHwgIDQ5ICsrKwo+PiA+ICBkcml2ZXJzL2dwdS9k
+cm0vYXJtL21hbGlkcF9ody5jICAgICB8IDc3NyArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuaCAgICAgfCAxOTIg
+KysrKysrKysrCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3BsYW5lcy5jIHwgMzQy
+ICsrKysrKysrKysrKysrKysKPj4gPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfcmVncy5o
+ICAgfCAxNzIgKysrKysrKysKPj4gPiAgOSBmaWxlcyBjaGFuZ2VkLCAyMzExIGluc2VydGlvbnMo
+KykKPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2Ny
+dGMuYwo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBf
+ZHJ2LmMKPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRw
+X2Rydi5oCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlk
+cF9ody5jCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlk
+cF9ody5oCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlk
+cF9wbGFuZXMuYwo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FybS9t
+YWxpZHBfcmVncy5oCj4+ID4KPj4gU2luY2UgdGhlIGN1cnJlbnQgTUFJTlRBSU5FUlMgaW5jbHVk
+ZSB0aGUgd2hvbGUgZHJtL2FybSBmb2xkZXIsIG9uZQo+PiBjb3VsZCBqdXN0IGdlbmVyYWxpc2Ug
+dGhlIGhlYWRpbmcgYWxpa2UKPj4KPj4gcy9BUk0gSERMQ0QgRFJNIERSSVZFUi9BUk0gRFJNIERS
+SVZFUlMvCj4KPiBGb3IgdGhlIE1hbGkgRFAgZHJpdmVycyB3ZSBhcmUgcGxhbm5pbmcgdG8gaGF2
+ZSBhIHNoYXJlZCBtYWludGFpbmVyc2hpcAo+IGFzIGl0IGlzIGNvdmVyaW5nIHF1aXRlIGEgZmV3
+IEhXIHZlcnNpb25zIGFuZCBpcyBhIG1vcmUgY29tcGxleCBkcml2ZXIuCj4gSERMQ0QgaXMgYSB2
+ZXJ5IHNpbXBsZSBkcml2ZXIgKGFuZCBoYXJkd2FyZSBwYXJ0KSBzbyBJJ20gZ29pbmcgdG8ga2Vl
+cAo+IHRoYXQgbWFpbnRhaW5lcnNoaXAgb24gbXkgbmFtZSwgYnV0IHRoZSByZXN0IG9mIE1hbGkg
+RFAgd2lsbCBoYXZlIGEgd2lkZXIKPiBzdXBwb3J0IHRlYW0uCj4KPiBJdCBpcyB0aGUgcmVhc29u
+IHdoeSB0aGUgcGF0Y2hzZXQgZG9lcyBub3QgaGF2ZSBhIE1BSU5UQUlORVJTIHVwZGF0ZS4KPgpT
+b3VuZHMgZ3JlYXQuIFRoYW5rIHlvdSAhCgotRW1pbApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
