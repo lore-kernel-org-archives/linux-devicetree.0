@@ -1,133 +1,43 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 06/11] phy: da8xx-usb: new driver for DA8XX SoC USB PHY
-Date: Wed, 13 Apr 2016 15:51:15 -0500
-Message-ID: <570EB143.4060309@lechnology.com>
-References: <1458181615-27782-1-git-send-email-david@lechnology.com>
- <1458181615-27782-7-git-send-email-david@lechnology.com>
- <56FE74AC.6080303@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4 v4] iio: st_sensors: support open drain mode
+Date: Wed, 13 Apr 2016 15:52:22 -0500
+Message-ID: <CAL_JsqKudTxbK9goinYCQhGLK=Gd_+PHgQ+mnpkU=cz4pB0k2w@mail.gmail.com>
+References: <1460466079-15392-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56FE74AC.6080303@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Petr Kulhavy <petr@barix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bin Liu <b-liu@ti.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Tony Lindgren <tony@atomide.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460466079-15392-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/01/2016 08:16 AM, Kishon Vijay Abraham I wrote:
-
->> +EXPORT_SYMBOL_GPL(da8xx_usb20_phy_set_mode);
+On Tue, Apr 12, 2016 at 8:01 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Some types of ST Sensors can be connected to the same IRQ line
+> as other peripherals using open drain. Add a device tree binding
+> and a sensor data property to flip the right bit in the interrupt
+> control register to enable open drain mode on the INT line.
 >
-> Don't prefer export symbols from PHY driver. That'll create unnecessary
-> dependencies between the controller and the PHY.
+> If the line is set to be open drain, also tag on IRQF_SHARED
+> to the IRQ flags when requesting the interrupt, as the whole
+> point of using open drain interrupt lines is to share them with
+> more than one peripheral (wire-or).
 >
-> I think it'll be better to create a new attribute and use it?
->
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>
+> Cc: Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v3->v4:
+> - Rename DT bool property st,int-pin-open-drain to int-pin-open-drain
+> - Rob Herring ACKed st,int-pin-open-drain but not including his ACK
+>   on this even though it's close
 
-Just having an attribute that keeps track of state does not work. I need 
-a callback to poke registers. Would this be acceptable instead?
+We already have st,irq-open-drain, gpio-open-drain, linux,open-drain
+and drive-open-drain (from pinctrl).
 
------8<------
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index e7e574d..a13c7e4 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -342,6 +342,36 @@ int phy_power_off(struct phy *phy)
-  }
-  EXPORT_SYMBOL_GPL(phy_power_off);
+If we want something common, then it should probably be part of
+interrupt bindings, not something common to IIO.
 
-+int phy_get_mode(struct phy *phy, enum phy_mode *mode)
-+{
-+       int ret;
-+
-+       if (!phy || !phy->ops->get_mode)
-+               return 0;
-+
-+       mutex_lock(&phy->mutex);
-+       ret = phy->ops->get_mode(phy, mode);
-+       mutex_unlock(&phy->mutex);
-+
-+       return ret;
-+}
-+EXPORT_SYMBOL_GPL(phy_get_mode);
-+
-+int phy_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+       int ret;
-+
-+       if (!phy || !phy->ops->set_mode)
-+               return 0;
-+
-+       mutex_lock(&phy->mutex);
-+       ret = phy->ops->set_mode(phy, mode);
-+       mutex_unlock(&phy->mutex);
-+
-+       return ret;
-+}
-+EXPORT_SYMBOL_GPL(phy_set_mode);
-+
-  /**
-   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
-   * @np: device_node for which to get the phy
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 8cf05e3..12c1986 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -22,12 +22,21 @@
-
-  struct phy;
-
-+enum phy_mode {
-+       PHY_MODE_INVALID,
-+       PHY_MODE_USB_HOST,
-+       PHY_MODE_USB_DEVICE,
-+       PHY_MODE_USB_OTG,
-+};
-+
-  /**
-   * struct phy_ops - set of function pointers for performing phy operations
-   * @init: operation to be performed for initializing phy
-   * @exit: operation to be performed while exiting
-   * @power_on: powering on the phy
-   * @power_off: powering off the phy
-+ * @get_mode: get the current mode of the phy
-+ * @set_mode: set the mode of the phy
-   * @owner: the module owner containing the ops
-   */
-  struct phy_ops {
-@@ -35,6 +44,8 @@ struct phy_ops {
-         int     (*exit)(struct phy *phy);
-         int     (*power_on)(struct phy *phy);
-         int     (*power_off)(struct phy *phy);
-+       int     (*get_mode)(struct phy *phy, enum phy_mode *mode);
-+       int     (*set_mode)(struct phy *phy, enum phy_mode mode);
-         struct module *owner;
-  };
-
-@@ -119,6 +130,8 @@ int phy_init(struct phy *phy);
-  int phy_exit(struct phy *phy);
-  int phy_power_on(struct phy *phy);
-  int phy_power_off(struct phy *phy);
-+int phy_get_mode(struct phy *phy, enum phy_mode *mode);
-+int phy_set_mode(struct phy *phy, enum phy_mode mode);
-  static inline int phy_get_bus_width(struct phy *phy)
-  {
-         return phy->attrs.bus_width;
-@@ -224,6 +237,16 @@ static inline int phy_power_off(struct phy *phy)
-         return -ENOSYS;
-  }
-
-+static inline int phy_get_mode(struct phy *phy, enum phy_mode *mode)
-+{
-+       return 0;
-+}
-+
-+static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+       return 0;
-+}
-+
-  static inline int phy_get_bus_width(struct phy *phy)
-  {
-         return -ENOSYS;
+Rob
