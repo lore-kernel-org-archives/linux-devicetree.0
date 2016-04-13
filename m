@@ -1,142 +1,141 @@
-From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 2/2 v2] arm64: dts: ls2080a: fsl-mc dt node updates
-Date: Wed, 13 Apr 2016 16:05:23 -0500
-Message-ID: <1460581523-32146-1-git-send-email-stuart.yoder@nxp.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: [PATCH 1/2 v2] Documentation: fsl-mc: binding updates for MSIs, ranges,
+ PHYs
+Date: Wed, 13 Apr 2016 16:05:17 -0500
+Message-ID: <1460581517-32107-1-git-send-email-stuart.yoder@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: leoyang.li-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, german.rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: german.rivera@freescale.com, Stuart Yoder <stuart.yoder@freescale.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leoyang.li@nxp.com, shawnguo@kernel.org, Stuart Yoder <stuart.yoder@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-updates to the fsl-mc node for full functionality:
-   -msi-parent is needed for interrupt support
-   -ranges is needed to enable the bus driver to translate bus addresses
-   -dpmac nodes provide a basis for relating dpmac objects to PHYs
+From: Stuart Yoder <stuart.yoder@freescale.com>
 
-Signed-off-by: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+-The Freescale Management Complex and all associated objects
+ use message interrupts, and thus an msi-parent is required.
+
+-Define a ranges property to specify the mapping between
+ the MC address space and the system address space.
+
+-The fsl-mc node may optionally have dpmac sub-nodes that describe
+ the relationship between the Ethernet MACs which belong to the MC
+ and the Ethernet PHYs on the system board.
+
+Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
+Acked-by: J. German Rivera <German.Rivera@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
+-v2: added Rob's ack
 
--v2: updated comment to remove some extraneous info, added
-     carriage returns after dpmac nodes
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 81 +++++++++++++++++++++-
+ 1 file changed, 80 insertions(+), 1 deletion(-)
 
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 98 ++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 9d746c6..15498eb 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -265,6 +265,104 @@
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
- 			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
-+			msi-parent = <&its>;
-+			#address-cells = <3>;
-+			#size-cells = <1>;
-+
-+			/*
-+			 * Region type 0x0 - MC portals
-+			 * Region type 0x1 - QBMAN portals
-+			 */
-+			ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
-+				  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
-+
-+			/*
-+			 * Define the maximum number of MACs present on the SoC.
-+			 */
-+			dpmacs {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				dpmac1: dpmac@1 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <1>;
-+				};
-+
-+				dpmac2: dpmac@2 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <2>;
-+				};
-+
-+				dpmac3: dpmac@3 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <3>;
-+				};
-+
-+				dpmac4: dpmac@4 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <4>;
-+				};
-+
-+				dpmac5: dpmac@5 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <5>;
-+				};
-+
-+				dpmac6: dpmac@6 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <6>;
-+				};
-+
-+				dpmac7: dpmac@7 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <7>;
-+				};
-+
-+				dpmac8: dpmac@8 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <8>;
-+				};
-+
-+				dpmac9: dpmac@9 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <9>;
-+				};
-+
-+				dpmac10: dpmac@10 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <0xa>;
-+				};
-+
-+				dpmac11: dpmac@11 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <0xb>;
-+				};
-+
-+				dpmac12: dpmac@12 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <0xc>;
-+				};
-+
-+				dpmac13: dpmac@13 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <0xd>;
-+				};
-+
-+				dpmac14: dpmac@14 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <0xe>;
-+				};
-+
-+				dpmac15: dpmac@15 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <0xf>;
-+				};
-+
-+				dpmac16: dpmac@16 {
-+					compatible = "fsl,qoriq-mc-dpmac";
-+					reg = <0x10>;
-+				};
-+			};
- 		};
+diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+index c7a26ca..6611a7c 100644
+--- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
++++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+@@ -30,11 +30,90 @@ Required properties:
+                         region may not be present in some scenarios, such
+                         as in the device tree presented to a virtual machine.
  
- 		smmu: iommu@5000000 {
++    - msi-parent
++        Value type: <phandle>
++        Definition: Must be present and point to the MSI controller node
++                    handling message interrupts for the MC.
++
++    - ranges
++        Value type: <prop-encoded-array>
++        Definition: A standard property.  Defines the mapping between the child
++                    MC address space and the parent system address space.
++
++                    The MC address space is defined by 3 components:
++                       <region type> <offset hi> <offset lo>
++
++                    Valid values for region type are
++                       0x0 - MC portals
++                       0x1 - QBMAN portals
++
++    - #address-cells
++        Value type: <u32>
++        Definition: Must be 3.  (see definition in 'ranges' property)
++
++    - #size-cells
++        Value type: <u32>
++        Definition: Must be 1.
++
++Sub-nodes:
++
++        The fsl-mc node may optionally have dpmac sub-nodes that describe
++        the relationship between the Ethernet MACs which belong to the MC
++        and the Ethernet PHYs on the system board.
++
++        The dpmac nodes must be under a node named "dpmacs" which contains
++        the following properties:
++
++            - #address-cells
++              Value type: <u32>
++              Definition: Must be present if dpmac sub-nodes are defined and must
++                          have a value of 1.
++
++            - #size-cells
++              Value type: <u32>
++              Definition: Must be present if dpmac sub-nodes are defined and must
++                          have a value of 0.
++
++        These nodes must have the following properties:
++
++            - compatible
++              Value type: <string>
++              Definition: Must be "fsl,qoriq-mc-dpmac".
++
++            - reg
++              Value type: <prop-encoded-array>
++              Definition: Specifies the id of the dpmac.
++
++            - phy-handle
++              Value type: <phandle>
++              Definition: Specifies the phandle to the PHY device node associated
++                          with the this dpmac.
++
+ Example:
+ 
+         fsl_mc: fsl-mc@80c000000 {
+                 compatible = "fsl,qoriq-mc";
+                 reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
+                       <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+-        };
++                msi-parent = <&its>;
++                #address-cells = <3>;
++                #size-cells = <1>;
++
++                /*
++                 * Region type 0x0 - MC portals
++                 * Region type 0x1 - QBMAN portals
++                 */
++                ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
++                          0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
+ 
++                dpmacs {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++
++                    dpmac@1 {
++                        compatible = "fsl,qoriq-mc-dpmac";
++                        reg = <1>;
++                        phy-handle = <&mdio0_phy0>;
++                    }
++                }
++        };
 -- 
 1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
