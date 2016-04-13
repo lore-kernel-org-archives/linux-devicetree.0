@@ -1,353 +1,194 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 00/45] powerpc/powernv: PCI hotplug support
-Date: Wed, 13 Apr 2016 17:42:36 +1000
-Message-ID: <20160413074236.GA28853@gwshan>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v8 13/45] powerpc/powernv/ioda1: M64 support on P7IOC
+Date: Wed, 13 Apr 2016 17:47:59 +1000
+Message-ID: <570DF9AF.6020104@ozlabs.ru>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <570DF50F.6010805@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-14-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570DF50F.6010805@ozlabs.ru>
+In-Reply-To: <1455680668-23298-14-git-send-email-gwshan@linux.vnet.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 05:28:15PM +1000, Alexey Kardashevskiy wrote:
->On 02/17/2016 02:43 PM, Gavin Shan wrote:
->>This series of patches rebases on powerpc/next branch, plus below additional
->>patches:
->>
->>    <This series of patches>
->>    <Followup 3 patches from Gavin on SRIOV EEH, which aren't posted>
->>    https://patchwork.ozlabs.org/patch/581315/	(PATCH[1/9] Richard's SRIOV EEH)
->>    https://patchwork.ozlabs.org/patch/582639/	(PATCH[1/1] Gavin's EEH fix)
->>    https://patchwork.ozlabs.org/patch/582093/	(PATCH[1/1] Gavin's EEH fix)
->>    https://patchwork.ozlabs.org/patch/580626/	(PATCH[1/4] Gavin's PCI fix)
->>    https://patchwork.ozlabs.org/patch/580153/	(PATCH[1/1] Andrew's EEH minor fix)
->>    https://patchwork.ozlabs.org/patch/566827/	(PATCH[1/1] Russell's P5IOC2 removal)
->>    https://patchwork.ozlabs.org/patch/534154/	(PATCH[1/7] Richard's SRIOV rework)
->>    commit 388f7b1 ("Linux 4.5-rc3")
->>
->>The series of patches intend to support PCI slot for PowerPC PowerNV platform,
->>which is running on top of skiboot firmware. The patchset requires corresponding
->>changes from skiboot firmware, which is sent to skiboot@lists.ozlabs.org
->>for review. The PCI slots are exposed by skiboot with device node properties,
->>and kernel utilizes those properties to populated PCI slots accordingly.
->>
->>The original PCI infrastructure on PowerNV platform can't support hotplug
->>because the PE is assigned during PHB fixup time, which is called for once
->>during system boot time. For this, the PCI infrastructure on PowerNV platform
->>has been reworked for a lot. After that, the PE and its corresponding resources
->>(IODT, M32DT, M64 segments, DMA32 and bypass window) are assigned upon updating
->>PCI bridge's resources, which might decide PE# assigned to the PE (e.g. M64
->>resources, on P8 strictly speaking). Each PE will maintain a reference count,
->>which is (number of child PCI devices + 1). That indicates when last child PCI
->>device leaves the PE, the PE and its included resources will be relased and put
->>back into free pool again. With this design, the PE will be released when EEH PE
->>is released. PATCH[1 - 23] are related to this part.
->>
->> From skiboot perspective, PCI slot is providing (hot/fundamental/complete)
->>resets to EEH. The kernel gets to know if skiboot supports various reset on one
->>particular PCI slot through device-tree node. If it does, EEH will utilize the
->>functionality provided by skiboot. Besides, the device-tree nodes have to change
->>in order to support PCI hotplug. For example, when one PCI adapter inserted to
->>one slot, its device-tree node should be added to the system dynamically. Conversely,
->>the device-tree node should be removed from the system when the PCI adapter is going
->>to be offline. Since pci_dn and eeh_dev have same life cyle as PCI device nodes,
->>they should be added/removed accordingly during PCI hotplug. PATCH[24 - 39] are
->>doing the related work.
->>
->>The OF driver is changed to support unflattening FDT blob for sub-stree, which
->>is covered by PATCH[40 - 44].
->>
->>The last one, PATCH[45], is the standalone PCI hotplug driver for PowerPC PowerNV
->>platform.
->>
->>=======
->>Testing
->>=======
->>1. Unplug adapters behind non-empty slot, then plug them.
->>
->>    1.1 Check status
->>    # cat /sys/bus/pci/slots/C10/address
->>    0003:09:00
->>    # cat /sys/bus/pci/slots/C10/adapter
->>    1
->>    # cat /sys/bus/pci/slots/C10/power
->>    1
->>    # lspci
->>    0003:09:00.0 Ethernet controller: \
->>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>    0003:09:00.1 Ethernet controller: \
->>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>    0003:09:00.2 Ethernet controller: \
->>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>    0003:09:00.3 Ethernet controller: \
->>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>    # lspci -t
->>    # lspci -t
->>    -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
->>     |                                           +-08.0-[04-08]--
->>     |                                           +-09.0-[09]--+-00.0
->>     |                                           |            +-00.1
->>     |                                           |            +-00.2
->>     |                                           |            \-00.3
->>     |                                           +-10.0-[0a-0e]--
->>     |                                           \-11.0-[0f-13]--
->>
->>    1.2 Unplug adapter 0003:09.00.x
->>    # echo 0 > /sys/bus/pci/slots/C10/power
->>    # lspci -t
->>    -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
->>     |                                           +-08.0-[04-08]--
->>     |                                           +-09.0-[09]--
->>     |                                           +-10.0-[0a-0e]--
->>     |                                           \-11.0-[0f-13]--
->>
->>    1.3 Plug adapter 0003:09.00.x
->>    # echo 1 > /sys/bus/pci/slots/C10/power
->
->
->Do I understand correctly that the adapter was not physically moved in/out of
->the slot between 1.2 and 1.3?
->
+On 02/17/2016 02:43 PM, Gavin Shan wrote:
+> This enables M64 window on P7IOC, which has been enabled on PHB3.
+> Different from PHB3 where 16 M64 BARs are supported and each of
+> them can be owned by one particular PE# exclusively or divided
+> evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
+> of them are divided to 8 segments. So every P7IOC PHB supports
+> 128 M64 segments in total. P7IOC has M64DT, which helps mapping
+> one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
+> M64DT, indicating that one M64 segment can only be pinned to the
+> fixed PE#. In order to have same code to support M64 on P7IOC and
+> PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
+> of them is pinned to the fixed PE# by bypassing the function of
+> M64DT. In turn, we just need different phb->init_m64() for P7IOC
+> and PHB3 to support M64.
 
-Correct.
+The comment is not quite correct - in addition to pnv_ioda1_init_m64(), you 
+also need to hack pnv_ioda_pick_m64_pe().
+
 
 >
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
+>   arch/powerpc/platforms/powernv/pci.h      |  3 ++
+>   2 files changed, 86 insertions(+), 3 deletions(-)
 >
->>    # lspci -t
->>    -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
->>     |                                           +-08.0-[04-08]--
->>     |                                           +-09.0-[09]--+-00.0
->>     |                                           |            +-00.1
->>     |                                           |            +-00.2
->>     |                                           |            \-00.3
->>     |                                           +-10.0-[0a-0e]--
->>     |                                           \-11.0-[0f-13]--
->>
->>
->>    1.4 Inject EEH error to adapter 0003:09:00.x, which is recovered.
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 1dc663a..8488238 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -246,6 +246,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
+>   	}
+>   }
 >
->I am confused - why is this needed to test hotplug?
+> +static int pnv_ioda1_init_m64(struct pnv_phb *phb)
+> +{
+> +	struct resource *r;
+> +	int index;
+> +
+> +	/*
+> +	 * There are 16 M64 BARs, each of which has 8 segments. So
+> +	 * there are as many M64 segments as the maximum number of
+> +	 * PEs, which is 128.
+> +	 */
+> +	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
+> +		unsigned long base, segsz = phb->ioda.m64_segsize;
+> +		int64_t rc;
+> +
+> +		base = phb->ioda.m64_base +
+> +		       index * PNV_IODA1_M64_SEGS * segsz;
+> +		rc = opal_pci_set_phb_mem_window(phb->opal_id,
+> +				OPAL_M64_WINDOW_TYPE, index, base, 0,
+> +				PNV_IODA1_M64_SEGS * segsz);
+> +		if (rc != OPAL_SUCCESS) {
+> +			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
+> +				rc, phb->hose->global_number, index);
+> +			goto fail;
+> +		}
+> +
+> +		rc = opal_pci_phb_mmio_enable(phb->opal_id,
+> +				OPAL_M64_WINDOW_TYPE, index,
+> +				OPAL_ENABLE_M64_SPLIT);
+> +		if (rc != OPAL_SUCCESS) {
+> +			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
+> +				rc, phb->hose->global_number, index);
+> +			goto fail;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * Exclude the segment used by the reserved PE, which
+> +	 * is expected to be 0 or last supported PE#.
+> +	 */
+> +	r = &phb->hose->mem_resources[1];
+> +	if (phb->ioda.reserved_pe_idx == 0)
+> +		r->start += phb->ioda.m64_segsize;
+> +	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+> +		r->end -= phb->ioda.m64_segsize;
+> +	else
+> +		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
+> +			phb->ioda.reserved_pe_idx);
+> +
+> +	return 0;
+> +
+> +fail:
+> +	for ( ; index >= 0; index--)
+> +		opal_pci_phb_mmio_enable(phb->opal_id,
+> +			OPAL_M64_WINDOW_TYPE, index, OPAL_DISABLE_M64);
+> +
+> +	return -EIO;
+> +}
+> +
+>   static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
+>   				    unsigned long *pe_bitmap,
+>   				    bool all)
+> @@ -315,6 +373,26 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>   			pe->master = master_pe;
+>   			list_add_tail(&pe->list, &master_pe->slaves);
+>   		}
+> +
+> +		/*
+> +		 * P7IOC supports M64DT, which helps mapping M64 segment
+> +		 * to one particular PE#. However, PHB3 has fixed mapping
+> +		 * between M64 segment and PE#. In order to have same logic
+> +		 * for P7IOC and PHB3, we enforce fixed mapping between M64
+> +		 * segment and PE# on P7IOC.
+> +		 */
+> +		if (phb->type == PNV_PHB_IODA1) {
+> +			int64_t rc;
+> +
+> +			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+> +					pe->pe_number, OPAL_M64_WINDOW_TYPE,
+> +					pe->pe_number / PNV_IODA1_M64_SEGS,
+> +					pe->pe_number % PNV_IODA1_M64_SEGS);
+> +			if (rc != OPAL_SUCCESS)
+> +				pr_warn("%s: Error %lld mapping M64 for PHB#%d-PE#%d\n",
+> +					__func__, rc, phb->hose->global_number,
+> +					pe->pe_number);
+> +		}
+
+
+Cannot this go to pnv_ioda1_init_m64()? From the commit log I understood 
+that this setup is supposed to be static so it can be done once. Or it is 
+sort of enable/disable PE? Then make is a helper and call it 
+ioda1_pe_enable() or something.
+
+
+>   	}
+>
+>   	kfree(pe_alloc);
+> @@ -329,8 +407,7 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+>   	const u32 *r;
+>   	u64 pci_addr;
+>
+> -	/* FIXME: Support M64 for P7IOC */
+> -	if (phb->type != PNV_PHB_IODA2) {
+> +	if (phb->type != PNV_PHB_IODA1 && phb->type != PNV_PHB_IODA2) {
+>   		pr_info("  Not support M64 window\n");
+>   		return;
+>   	}
+> @@ -364,7 +441,10 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+>
+>   	/* Use last M64 BAR to cover M64 window */
+>   	phb->ioda.m64_bar_idx = 15;
+> -	phb->init_m64 = pnv_ioda2_init_m64;
+> +	if (phb->type == PNV_PHB_IODA1)
+> +		phb->init_m64 = pnv_ioda1_init_m64;
+> +	else
+> +		phb->init_m64 = pnv_ioda2_init_m64;
+>   	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
+>   	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
+>   }
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index 866a5ea..00539ff 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -82,6 +82,9 @@ struct pnv_ioda_pe {
+>   	struct list_head	list;
+>   };
+>
+> +#define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
+> +#define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
+> +
+
+Why here, not in the beginning of arch/powerpc/platforms/powernv/pci-ioda.c 
+? It exposes symbols but nothing is using them (except pci-ioda.c) and code 
+browsing gets bit more inconvenient.
+
+
+
+>   #define PNV_PHB_FLAG_EEH	(1 << 0)
+>
+>   struct pnv_phb {
 >
 
-Without the series, the EEH reset is always done by kenrel. With the
-series applied, the EEH reset could be done in skiboot. That's the
-major change introduced by the series from EEH's perspective. Also,
-the EEH code was touched.
 
->>    # cat /sys/bus/pci/devices/0003:09:00.0/eeh_pe_config_addr
->>    0x1
->>    # echo 1:0:4:0:0 > /sys/kernel/debug/powerpc/PCI0003/err_injct
->>    # lspci -ns 0003:09:00.0
->>    # dmesg | grep EEH
->>    EEH: Frozen PHB#3-PE#1 detected
->>    EEH: PE location: U78C9.001.WZS00CF-P1-C10, PHB location: N/A
->>    EEH: Detected PCI bus error on PHB#3-PE#1
->>    EEH: This PCI device has failed 1 times in the last hour
->>    EEH: Notify device drivers to shutdown
->>    EEH: Collect temporary log
->>    EEH: Reset without hotplug activity
->>    EEH: Notify device drivers the completion of reset
->>    EEH: Notify device driver to resume
->>
->>2. Plug adapter and then unplug it. This requires hack in skiboot
->>    to skip probing the adapters behind the target (C12 in the
->>    testing) for once.
->>
->>    2.1 Check status
->>    # cat /sys/bus/pci/slots/C12/address
->>    0001:06
->>    # cat /sys/bus/pci/slots/C12/power
->>    0
->>    # cat /sys/bus/pci/slots/C12/adapter
->>    1
->>    # lspci -t
->>    +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
->>                                                +-08.0-[05]----00.0
->>                                                \-09.0-[06-0a]--
->>
->>    2.2 Plug adapter 0001:06:00.x
->>    # echo 1 > /sys/bus/pci/slots/C12/power
->>    # lspci -t
->>    +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
->>                                                +-08.0-[05]----00.0
->>                                                \-09.0-[06-0a]--+-00.0
->>                                                                \-00.1
->>    # lspci
->>    0001:06:00.0 Ethernet controller: \
->>    Broadcom Corporation NetXtreme II BCM57810 10 Gigabit Ethernet (rev 10)
->>    0001:06:00.1 Ethernet controller: \
->>    Broadcom Corporation NetXtreme II BCM57810 10 Gigabit Ethernet (rev 10)
->>
->>    2.3 Inject EEH error to adapter 0001:06:00.x, which is recovered
->>    # cat /sys/bus/pci/devices/0001:06:00.0/eeh_pe_config_addr
->>    0x2
->>    # echo 2:0:4:0:0 > /sys/kernel/debug/powerpc/PCI0001/err_injct
->>    # dmesg | grep EEH
->>    EEH: Frozen PHB#1-PE#2 detected
->>    EEH: PE location: U78C9.001.WZS00CF-P1-C12, PHB location: N/A
->>    EEH: Detected PCI bus error on PHB#1-PE#2
->>    EEH: This PCI device has failed 1 times in the last hour
->>    EEH: Notify device drivers to shutdown
->>    EEH: Collect temporary log
->>    EEH: Reset without hotplug activity
->>    EEH: Notify device drivers the completion of reset
->>    EEH: Notify device driver to resume
->>
->>    2.4 Unplug adapter 0001:06:00.x
->>    # echo 0 > /sys/bus/pci/slots/C12/power
->>    # lspci -t
->>    +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
->>                                                +-08.0-[05]----00.0
->>                                                \-09.0-[06-0a]--
->>
->>=========
->>Changelog
->>=========
->>v8:
->>    * Rebased to linux-powerpc next branch.
->>    * Resolve comments from Alexey and Daniel on PCI part
->>    * Resolve comments from Rob on fdt.c
->>    * Retested (refer to the "Testing section")
->>v7:
->>    * Reworked revision to some extent.
->>    * Rebased to powerpc/next repository.
->>    * Reorder/split/merge/drop according - Alexey.
->>    * Defined macros and use array to track IO/M32/M64/DMA32 segments - Alexey.
->>    * Merged 3 files to one for the hotplug driver - Alexey.
->>    * As part of OPAL API, defined macros for PCI slot power state, hotplug
->>      message type. Defined macros for PCI slot power confirmed state in
->>      hotplug driver.
->>    * Misc comments from Alexey.
->>    * Reworked unflatten_dt_node() to avoid recursive function calls.
->>    * Use EXPORT_SYMBOL_GPL() and document function's input/output - Rob/Frank.
->>v6:
->>    * Patch reorder, split, squash - Alexey.
->>    * Minor coding style - Alexey.
->>    * Better function names for pcibios_{add,remove}_pci_devices - Bjorn
->>    * Replace pr_warn() with dev_warn() in PowerNV hotplug driver - Bjorn
->>    * Concurrent depth as parameter passed to __unflatten_dt_node() - Grant / Alexey
->>    * Replace overlay with of_changeset - Grant
->>v5:
->>    * Rebased to 4.1.rc6 and some unmerged patches as below:
->>      Alexey's DDW patchset (v11);
->>      Gavin's EEH error injection support (in mpe's next branch);
->>      Richard's EEH cleanup patches (in mpe's next branch);
->>      Richard's EEH support for VF (v7);
->>      Gavin's misc EEH fixes for 4.2;
->>    * The revision bases on skiboot corresponding patches (v7):
->>      https://patchwork.ozlabs.org/patch/480437/
->>    * Utilize OF overlay to update device-tree with help of newly introduced
->>      OPAL API opal_get_overlay_dt().
->>    * Split patches for easy review according to aik's comments.
->>    * Fix coding style from checkpatchc.pl as pointed by aik.
->>    * Code cleanup and misc fixup according to aik's input.
->>v4:
->>    * Rebased to 4.1.RC1
->>    * Added API to unflatten FDT blob to device node sub-tree, which is attached
->>      the indicated parent device node. The original mechanism based on formatted
->>      string stream has been dropped.
->>    * The PATCH[v3 09/21] ("powerpc/eeh: Delay probing EEH device during hotplug")
->>      was picked up sent to linux-ppc@ separately for review as Richard's "VF EEH
->>      Support" depends on that.
->>v3:
->>    * Rebased to 4.1.RC0
->>    * PowerNV PCI infrasturcture is total refactored in order to support PCI
->>      hotplug. The PowerNV hotplug driver is also reworked a lot because of
->>      the changes in skiboot in order to support PCI hotplug.
->>
->>Gavin Shan (45):
->>   PCI: Add pcibios_setup_bridge()
->>   powerpc/pci: Override pcibios_setup_bridge()
->>   powerpc/pci: Cleanup on struct pci_controller_ops
->>   powerpc/powernv: Cleanup on pci_controller_ops instances
->>   powerpc/powernv: Drop phb->bdfn_to_pe()
->>   powerpc/powernv: Reorder fields in struct pnv_phb
->>   powerpc/powernv: Rename PE# fields in struct pnv_phb
->>   powerpc/powernv: Fix initial IO and M32 segmap
->>   powerpc/powernv: Simplify pnv_ioda_setup_pe_seg()
->>   powerpc/powernv: IO and M32 mapping based on PCI device resources
->>   powerpc/powernv: Track M64 segment consumption
->>   powerpc/powernv: Rename M64 related functions
->>   powerpc/powernv/ioda1: M64 support on P7IOC
->>   powerpc/powernv/ioda1: Rename pnv_pci_ioda_setup_dma_pe()
->>   powerpc/powernv/ioda1: Introduce PNV_IODA1_DMA32_SEGSIZE
->>   powerpc/powernv: Remove DMA32 PE list
->>   powerpc/powernv/ioda1: Improve DMA32 segment track
->>   powerpc/powernv: Increase PE# capacity
->>   powerpc/powernv: Use PE instead of number during setup and release
->>   powerpc/powernv: Allocate PE# in reverse order
->>   powerpc/powernv: Create PEs at PCI hot plugging time
->>   powerpc/powernv/ioda1: Support releasing IODA1 TCE table
->>   powerpc/powernv: Dynamically release PEs
->>   powerpc/pci: Rename pcibios_{add,remove}_pci_devices()
->>   powerpc/pci: Rename pcibios_find_pci_bus()
->>   powerpc/pci: Move pci_find_bus_by_node() around
->>   powerpc/pci: Export pci_add_device_node_info()
->>   powerpc/pci: Introduce pci_remove_device_node_info()
->>   powerpc/pci: Export pci_traverse_device_nodes()
->>   powerpc/pci: Delay populating pdn
->>   powerpc/pci: Don't scan empty slot
->>   powerpc/pci: Update bridge windows on PCI plug
->>   powerpc/powernv: Simplify pnv_eeh_reset()
->>   powerpc/powernv: Exclude root bus in pnv_pci_reset_secondary_bus()
->>   powerpc/powernv: Fundamental reset in pnv_pci_reset_secondary_bus()
->>   powerpc/powernv: Support PCI slot ID
->>   powerpc/powernv: Use firmware PCI slot reset infrastructure
->>   powerpc/powernv: Functions to get/set PCI slot status
->>   powerpc/powernv: Select OF_DYNAMIC
->>   drivers/of: Split unflatten_dt_node()
->>   drivers/of: Avoid recursively calling unflatten_dt_node()
->>   drivers/of: Rename unflatten_dt_node()
->>   drivers/of: Specify parent node in of_fdt_unflatten_tree()
->>   drivers/of: Return allocated memory from of_fdt_unflatten_tree()
->>   PCI/hotplug: PowerPC PowerNV PCI hotplug driver
->>
->>  arch/powerpc/include/asm/eeh.h                 |    2 +-
->>  arch/powerpc/include/asm/opal-api.h            |   17 +-
->>  arch/powerpc/include/asm/opal.h                |    8 +-
->>  arch/powerpc/include/asm/pci-bridge.h          |   25 +-
->>  arch/powerpc/include/asm/pnv-pci.h             |    7 +
->>  arch/powerpc/include/asm/ppc-pci.h             |    8 +-
->>  arch/powerpc/kernel/eeh_dev.c                  |   17 +-
->>  arch/powerpc/kernel/eeh_driver.c               |   12 +-
->>  arch/powerpc/kernel/pci-common.c               |   16 +-
->>  arch/powerpc/kernel/pci-hotplug.c              |   47 +-
->>  arch/powerpc/kernel/pci_dn.c                   |   89 +-
->>  arch/powerpc/platforms/maple/pci.c             |   34 +-
->>  arch/powerpc/platforms/pasemi/pci.c            |    3 -
->>  arch/powerpc/platforms/powermac/pci.c          |   38 +-
->>  arch/powerpc/platforms/powernv/Kconfig         |    1 +
->>  arch/powerpc/platforms/powernv/eeh-powernv.c   |  179 ++--
->>  arch/powerpc/platforms/powernv/opal-wrappers.S |    4 +
->>  arch/powerpc/platforms/powernv/pci-ioda.c      | 1243 +++++++++++++++---------
->>  arch/powerpc/platforms/powernv/pci.c           |   92 +-
->>  arch/powerpc/platforms/powernv/pci.h           |   60 +-
->>  arch/powerpc/platforms/pseries/msi.c           |    4 +-
->>  arch/powerpc/platforms/pseries/pci_dlpar.c     |   32 -
->>  arch/powerpc/platforms/pseries/setup.c         |    8 +-
->>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c   |    2 +-
->>  drivers/of/fdt.c                               |  372 ++++---
->>  drivers/of/unittest.c                          |    2 +-
->>  drivers/pci/hotplug/Kconfig                    |   12 +
->>  drivers/pci/hotplug/Makefile                   |    3 +
->>  drivers/pci/hotplug/pnv_php.c                  |  870 +++++++++++++++++
->>  drivers/pci/hotplug/rpadlpar_core.c            |    8 +-
->>  drivers/pci/hotplug/rpaphp_core.c              |    4 +-
->>  drivers/pci/hotplug/rpaphp_pci.c               |    4 +-
->>  drivers/pci/setup-bus.c                        |    5 +
->>  include/linux/of_fdt.h                         |    5 +-
->>  include/linux/pci.h                            |    1 +
->>  35 files changed, 2360 insertions(+), 874 deletions(-)
->>  create mode 100644 drivers/pci/hotplug/pnv_php.c
->>
->
->
->-- 
->Alexey
->
+-- 
+Alexey
