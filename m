@@ -1,90 +1,89 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 4/6] staging: fsl-mc: Use platform_msi_* infrastructure
-Date: Wed, 13 Apr 2016 13:08:17 +0100
-Message-ID: <570E36B1.40204@arm.com>
-References: <1460543456-11345-1-git-send-email-mbrugger@suse.com>
- <1460543456-11345-5-git-send-email-mbrugger@suse.com>
- <570E25DD.9070106@arm.com> <570E2C2C.6090900@suse.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v8 02/10] drm/hisilicon: Add hisilicon kirin drm master driver
+Date: Wed, 13 Apr 2016 13:15:00 +0100
+Message-ID: <CACvgo50dggEbwzEZLUvtErzrxOr3B1gECyyehLQZkoE5oXfNmA@mail.gmail.com>
+References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+	<1460364943-76135-3-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <570E2C2C.6090900@suse.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Matthias Brugger <mbrugger@suse.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, German.Rivera@freescale.com, jiang.liu@linux.intel.com, tglx@linutronix.de
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, bp@suse.de, bhaktipriya96@gmail.com, stuart.yoder@nxp.com, agraf@suse.de, jroedel@suse.de, linux-arm-kernel@lists.infradead.org, matthias.bgg@gmail.com, treding@nvidia.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1460364943-76135-3-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: ML dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, linuxarm@huawei.com, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, Benjamin Gaignard <benjamin.gaignard@linaro.org>, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, Rongrong Zou <zourongrong@huawei.com>, lijianhua@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On 13/04/16 12:23, Matthias Brugger wrote:
-> 
-> 
-> On 13/04/16 12:56, Marc Zyngier wrote:
->> On 13/04/16 11:30, Matthias Brugger wrote:
->>> From: Matthias Brugger <matthias.bgg@gmail.com>
->>>
->>> The fsl-mc driver can't be build as a module because it uses msi_*
->>> functions directly. Port the driver to use the platform_msi_*
->>> infrastructure instead, to allow it to be build as a module.
->>>
->>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->>> ---
->>>   .../staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c |   5 +-
->>>   drivers/staging/fsl-mc/bus/mc-allocator.c          |   9 +-
->>>   drivers/staging/fsl-mc/bus/mc-msi.c                | 169 +--------------------
->>>   drivers/staging/fsl-mc/include/mc-sys.h            |   3 +
->>>   4 files changed, 14 insertions(+), 172 deletions(-)
->>>
->>> diff --git a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c b/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
->>> index 720e2b0..0eecb7e 100644
->>> --- a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
->>> +++ b/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
->>> @@ -25,7 +25,6 @@ static struct irq_chip its_msi_irq_chip = {
->>>   	.irq_mask = irq_chip_mask_parent,
->>>   	.irq_unmask = irq_chip_unmask_parent,
->>>   	.irq_eoi = irq_chip_eoi_parent,
->>> -	.irq_set_affinity = msi_domain_set_affinity
->>>   };
->>>
->>>   static int its_fsl_mc_msi_prepare(struct irq_domain *msi_domain,
->>> @@ -86,7 +85,7 @@ int __init its_fsl_mc_msi_init(void)
->>>   			continue;
->>>   		}
->>>
->>> -		mc_msi_domain = fsl_mc_msi_create_irq_domain(
->>> +		mc_msi_domain = platform_msi_create_irq_domain(
->>>   						 of_node_to_fwnode(np),
->>>   						 &its_fsl_mc_msi_domain_info,
->>>   						 parent);
->>
->> What? We are already creating a platform MSI domain for the ITS. How is
->> that going to work? If you want to convert this set of drivers to
->> platform ITS, fine. But you can't randomly hack in the ITS code and pray
->> for things not to fall apart.
->>
-> 
->  From what I see, the difference between irq-gic-v3-its-fsl-mc-msi and 
-> the irq-gic-v3-its-platform-msi is the way ITS specific DeviceID is 
-> created in msi_prepare.
+Hi Xinliang,
 
-It is not "created". It is extracted from the HW, either by looking at
-the RequesterID (PCI), at the DT (platform MSI), or a bus-specific method.
+On 11 April 2016 at 09:55, Xinliang Liu <xinliang.liu@linaro.org> wrote:
 
-> German, is there a reason why you use the ICID read from the DPRC as dev_id?
+> +static int kirin_drm_connectors_register(struct drm_device *dev)
+> +{
+> +       struct drm_connector *connector;
+> +       struct drm_connector *failed_connector;
+> +       int ret;
+> +
+> +       mutex_lock(&dev->mode_config.mutex);
+> +       drm_for_each_connector(connector, dev) {
+> +               ret = drm_connector_register(connector);
+> +               if (ret) {
+> +                       failed_connector = connector;
+> +                       goto err;
+> +               }
+> +       }
+> +       mutex_unlock(&dev->mode_config.mutex);
+> +
+> +       return 0;
+> +
+> +err:
+> +       drm_for_each_connector(connector, dev) {
+> +               if (failed_connector == connector)
+> +                       break;
+> +               drm_connector_unregister(connector);
+> +       }
+> +       mutex_unlock(&dev->mode_config.mutex);
+> +
+> +       return ret;
+> +}
+> +
+Iirc we have new drm_connector_{un,}register_all() helpers.You might
+want to use it once they are in (i.e. not sure what your base is and
+if they have landed yet).
 
-Because that's what is presented to the ITS as a DevID. This is a HW
-constraint, and you can't just change it.
 
-If you want to use platform MSI for that, you also need to describe the
-DevID in the DT (breaking the existing platforms in the process).
+> +static struct device_node *kirin_get_remote_node(struct device_node *np)
+> +{
+> +       struct device_node *endpoint, *remote;
+> +
+> +       /* get the first endpoint, in our case only one remote node
+> +        * is connected to display controller.
+> +        */
+> +       endpoint = of_graph_get_next_endpoint(np, NULL);
+> +       if (!endpoint) {
+> +               DRM_ERROR("no valid endpoint node\n");
+> +               return ERR_PTR(-ENODEV);
+> +       }
+> +       of_node_put(endpoint);
+> +
+> +       remote = of_graph_get_remote_port_parent(endpoint);
+> +       if (!remote) {
+> +               DRM_ERROR("no valid remote node\n");
+> +               return ERR_PTR(-ENODEV);
+> +       }
+> +       of_node_put(remote);
+> +
+> +       if (!of_device_is_available(remote)) {
+> +               DRM_ERROR("not available for remote node\n");
+> +               return ERR_PTR(-ENODEV);
+> +       }
+> +
+This seems like a common pattern in many platform DRM drivers. Yet
+some tend to differ in subtle ways - I'm leaning that they might be
+bugs, but one cannot be too sure.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+A friendly request:
+Can you please follow up by adding a helper and removing the
+duplication thoughout ?
+
+Thanks
+Emil
