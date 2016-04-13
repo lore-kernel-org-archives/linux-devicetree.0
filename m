@@ -1,90 +1,68 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v5 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma device tree binding documentation
-Date: Wed, 13 Apr 2016 10:46:48 +0530
-Message-ID: <1460524609-8722-1-git-send-email-appanad@xilinx.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 1/9] ARM: imx: clk-vf610: fix DCU clock tree
+Date: Tue, 12 Apr 2016 22:21:29 -0700
+Message-ID: <17d56bd14159ec73dc1c07af15587de9@agner.ch>
+References: <1459834121-25997-1-git-send-email-stefan@agner.ch>
+ <1459834121-25997-2-git-send-email-stefan@agner.ch>
+ <20160412013820.GC15949@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, anirudh@xilinx.com, punnaia@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160412013820.GC15949@tiger>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: jianwei.wang.chn@gmail.com, meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
 List-Id: devicetree@vger.kernel.org
 
-Device-tree binding documentation for Xilinx zynqmp dma engine used in
-Zynq UltraScale+ MPSoC.
-
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes in v5:
-- Use dma-coherent flag for coherent transfers as suggested by rob.
-- Removed unnecessary properties from binding doc as suggested by Rob.
-Changes in v4:
-- None
-Changes in v3:
-- None
-Changes in v2:
-- None.
-
- .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-new file mode 100644
-index 0000000..4ad0aea40
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-@@ -0,0 +1,50 @@
-+Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
-+memory to device and device to memory transfers. It also has flow
-+control and rate control support for slave/peripheral dma access.
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynqmp-dma-1.0"
-+- reg			: Memory map for gdma/adma module access.
-+- interrupt-parent	: Interrupt controller the interrupt is routed through
-+- interrupts		: Should contain DMA channel interrupt.
-+- xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
-+- clock-names		: List of input clocks "clk_main", "clk_apb"
-+			  (see clock bindings for details)
-+
-+Optional properties:
-+- xlnx,include-sg	: Indicates the controller to operate in simple or
-+			  scatter gather dma mode
-+- xlnx,ratectrl		: Scheduling interval in terms of clock cycles for
-+			  source AXI transaction
-+- xlnx,overfetch	: Tells whether the channel is allowed to over
-+			  fetch the data
-+- xlnx,src-issue	: Number of AXI outstanding transactions on source side
-+- xlnx,desc-axi-cache	: AXI cache bits to be used for descriptor fetch
-+- xlnx,src-axi-cache	: AXI cache bits to be used for data read
-+- xlnx,dst-axi-cache	: AXI cache bits to be used for data write
-+- xlnx,src-burst-len	: AXI length for data read. Support only power of
-+			  2 values.
-+- xlnx,dst-burst-len	: AXI length for data write. Support only power of
-+			  2 values.
-+- dma-coherent		: Present if dma operations are coherent.
-+
-+Example:
-+++++++++
-+fpd_dma_chan1: dma@FD500000 {
-+	compatible = "xlnx,zynqmp-dma-1.0";
-+	reg = <0x0 0xFD500000 0x1000>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 117 4>;
-+	clock-names = "clk_main", "clk_apb";
-+	xlnx,bus-width = <128>;
-+	xlnx,include-sg;
-+	xlnx,overfetch;
-+	dma-coherent;
-+	xlnx,ratectrl = <0>;
-+	xlnx,src-issue = <16>;
-+	xlnx,desc-axi-cache = <0xFF>;
-+	xlnx,src-axi-cache = <0xFF>;
-+	xlnx,dst-axi-cache = <0xFF>;
-+	xlnx,src-burst-len = <4>;
-+	xlnx,dst-burst-len = <4>;
-+};
--- 
-2.1.2
+T24gMjAxNi0wNC0xMSAxODozOCwgU2hhd24gR3VvIHdyb3RlOgo+IE9uIE1vbiwgQXByIDA0LCAy
+MDE2IGF0IDEwOjI4OjMzUE0gLTA3MDAsIFN0ZWZhbiBBZ25lciB3cm90ZToKPj4gU2ltaWxhciB0
+byBhbiBlYXJsaWVyIGZpeCBmb3IgdGhlIFNBSSBjbG9ja3MsIHRoZSBEQ1UgY2xvY2sgaGllcmFy
+Y2h5Cj4+IG1peGVzIHRoZSBidXMgY2xvY2sgd2l0aCB0aGUgZGlzcGxheSBjb250cm9sbGVycyBw
+aXhlbCBjbG9jay4gVGVzdHMKPj4gaGF2ZSBzaG93biB0aGF0IHRoZSBnYXRlcyBpbiBDQ01fQ0NH
+UjMvOSByZWdpc3RlcnMgZG8gbm90IGNvbnRyb2wKPj4gdGhlIERDVSBwaXhlbCBjbG9jaywgYnV0
+IG9ubHkgdGhlIHJlZ2lzdGVyIGFjY2VzcyBjbG9jayAoYnVzIGNsb2NrKS4KPj4KPj4gRml4IHRo
+aXMgYnkgZGVmaW5pbmcgdGhlIHBhcmVudCBjbG9jayBvZiBWRjYxMF9DTEtfRENVeCB0byBiZSB0
+aGUgYnVzCj4+IGNsb2NrIChpcGdfYnVzKS4KPj4KPj4gU2luY2UgdGhlIGNsb2NrIGhhcyBub3Qg
+YmVlbiB1c2VkIGZhciwgdGhlcmUgYXJlIG5vIGZ1cnRoZXIgY2hhbmdlcwo+PiBuZWVkZWQuCj4+
+Cj4+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPgo+IAo+IEFw
+cGxpZWQgMSBhbmQgMiwgd2l0aCB1cGRhdGluZyBzdWJqZWN0IHByZWZpeCB0byBiZSAnY2xrOiBp
+bXg6IHZmNjEwOiAnCgpUaGFua3MgU2hhd24uIEFwcGxpZWQgM342IGluIG15IEZTTCBEQ1UgdHJl
+ZS4gSSBndWVzcyA3fjkgc2hvdWxkIGdvCnRocm91Z2ggeW91ciB0cmVlIGFzIHdlbGw/CgotLQpT
+dGVmYW4KCgo+PiAtLS0KPj4gIGRyaXZlcnMvY2xrL2lteC9jbGstdmY2MTAuYyB8IDQgKystLQo+
+PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstdmY2MTAuYyBiL2RyaXZlcnMvY2xrL2lt
+eC9jbGstdmY2MTAuYwo+PiBpbmRleCAwYTk0ZDk2Li40MjZmZGUyIDEwMDY0NAo+PiAtLS0gYS9k
+cml2ZXJzL2Nsay9pbXgvY2xrLXZmNjEwLmMKPj4gKysrIGIvZHJpdmVycy9jbGsvaW14L2Nsay12
+ZjYxMC5jCj4+IEBAIC0zMjEsMTEgKzMyMSwxMSBAQCBzdGF0aWMgdm9pZCBfX2luaXQgdmY2MTBf
+Y2xvY2tzX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpjY21fbm9kZSkKPj4gIAljbGtbVkY2MTBf
+Q0xLX0RDVTBfU0VMXSA9IGlteF9jbGtfbXV4KCJkY3UwX3NlbCIsIENDTV9DU0NNUjEsIDI4LCAx
+LCBkY3Vfc2VscywgMik7Cj4+ICAJY2xrW1ZGNjEwX0NMS19EQ1UwX0VOXSA9IGlteF9jbGtfZ2F0
+ZSgiZGN1MF9lbiIsICJkY3UwX3NlbCIsIENDTV9DU0NEUjMsIDE5KTsKPj4gIAljbGtbVkY2MTBf
+Q0xLX0RDVTBfRElWXSA9IGlteF9jbGtfZGl2aWRlcigiZGN1MF9kaXYiLCAiZGN1MF9lbiIsIEND
+TV9DU0NEUjMsIDE2LCAzKTsKPj4gLQljbGtbVkY2MTBfQ0xLX0RDVTBdID0gaW14X2Nsa19nYXRl
+MigiZGN1MCIsICJkY3UwX2RpdiIsIENDTV9DQ0dSMywgQ0NNX0NDR1J4X0NHbig4KSk7Cj4+ICsJ
+Y2xrW1ZGNjEwX0NMS19EQ1UwXSA9IGlteF9jbGtfZ2F0ZTIoImRjdTAiLCAiaXBnX2J1cyIsIEND
+TV9DQ0dSMywgQ0NNX0NDR1J4X0NHbig4KSk7Cj4+ICAJY2xrW1ZGNjEwX0NMS19EQ1UxX1NFTF0g
+PSBpbXhfY2xrX211eCgiZGN1MV9zZWwiLCBDQ01fQ1NDTVIxLCAyOSwgMSwgZGN1X3NlbHMsIDIp
+Owo+PiAgCWNsa1tWRjYxMF9DTEtfRENVMV9FTl0gPSBpbXhfY2xrX2dhdGUoImRjdTFfZW4iLCAi
+ZGN1MV9zZWwiLCBDQ01fQ1NDRFIzLCAyMyk7Cj4+ICAJY2xrW1ZGNjEwX0NMS19EQ1UxX0RJVl0g
+PSBpbXhfY2xrX2RpdmlkZXIoImRjdTFfZGl2IiwgImRjdTFfZW4iLCBDQ01fQ1NDRFIzLCAyMCwg
+Myk7Cj4+IC0JY2xrW1ZGNjEwX0NMS19EQ1UxXSA9IGlteF9jbGtfZ2F0ZTIoImRjdTEiLCAiZGN1
+MV9kaXYiLCBDQ01fQ0NHUjksIENDTV9DQ0dSeF9DR24oOCkpOwo+PiArCWNsa1tWRjYxMF9DTEtf
+RENVMV0gPSBpbXhfY2xrX2dhdGUyKCJkY3UxIiwgImlwZ19idXMiLCBDQ01fQ0NHUjksIENDTV9D
+Q0dSeF9DR24oOCkpOwo+Pgo+PiAgCWNsa1tWRjYxMF9DTEtfRVNBSV9TRUxdID0gaW14X2Nsa19t
+dXgoImVzYWlfc2VsIiwgQ0NNX0NTQ01SMSwgMjAsIDIsIGVzYWlfc2VscywgNCk7Cj4+ICAJY2xr
+W1ZGNjEwX0NMS19FU0FJX0VOXSA9IGlteF9jbGtfZ2F0ZSgiZXNhaV9lbiIsICJlc2FpX3NlbCIs
+IENDTV9DU0NEUjIsIDMwKTsKPj4gLS0KPj4gMi43LjQKPj4KPj4KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
