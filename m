@@ -1,65 +1,96 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 2/7] soc: renesas: Add r8a7779 SYSC PM Domain Binding Definitions
-Date: Wed, 13 Apr 2016 16:44:18 +0200
-Message-ID: <1460558663-10197-3-git-send-email-geert+renesas@glider.be>
-References: <1460558663-10197-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1460558663-10197-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: RE: [PATCH 4/6] staging: fsl-mc: Use platform_msi_* infrastructure
+Date: Wed, 13 Apr 2016 14:57:17 +0000
+Message-ID: <HE1PR04MB1641695115F9C31A4A620CBB8D960@HE1PR04MB1641.eurprd04.prod.outlook.com>
+References: <1460543456-11345-1-git-send-email-mbrugger@suse.com>
+ <1460543456-11345-5-git-send-email-mbrugger@suse.com>
+ <570E25DD.9070106@arm.com> <570E2C2C.6090900@suse.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <570E2C2C.6090900@suse.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Matthias Brugger <mbrugger@suse.com>, Marc Zyngier <marc.zyngier@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "German.Rivera@freescale.com" <German.Rivera@freescale.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bp@suse.de" <bp@suse.de>, "bhaktipriya96@gmail.com" <bhaktipriya96@gmail.com>, "agraf@suse.de" <agraf@suse.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jroedel@suse.de" <jroedel@suse.de>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "treding@nvidia.com" <treding@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-v5:
-  - No changes,
 
-v4:
-  - Add Reviewed-by,
-  - Drop R8A7779_PD_SH, as it's not documented in the datasheet,
-  - Add always-on power area,
 
-v3:
-  - New.
----
- include/dt-bindings/power/r8a7779-sysc.h | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a7779-sysc.h
+> -----Original Message-----
+> From: Matthias Brugger [mailto:mbrugger@suse.com]
+> Sent: Wednesday, April 13, 2016 6:23 AM
+> To: Marc Zyngier <marc.zyngier@arm.com>; gregkh@linuxfoundation.org; robh+dt@kernel.org;
+> frowand.list@gmail.com; grant.likely@linaro.org; German.Rivera@freescale.com;
+> jiang.liu@linux.intel.com; tglx@linutronix.de
+> Cc: treding@nvidia.com; Stuart Yoder <stuart.yoder@nxp.com>; jroedel@suse.de; agraf@suse.de;
+> bp@suse.de; matthias.bgg@gmail.com; bhaktipriya96@gmail.com; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; devel@driverdev.osuosl.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH 4/6] staging: fsl-mc: Use platform_msi_* infrastructure
+> 
+> 
+> 
+> On 13/04/16 12:56, Marc Zyngier wrote:
+> > On 13/04/16 11:30, Matthias Brugger wrote:
+> >> From: Matthias Brugger <matthias.bgg@gmail.com>
+> >>
+> >> The fsl-mc driver can't be build as a module because it uses msi_*
+> >> functions directly. Port the driver to use the platform_msi_*
+> >> infrastructure instead, to allow it to be build as a module.
+> >>
+> >> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> >> ---
+> >>   .../staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c |   5 +-
+> >>   drivers/staging/fsl-mc/bus/mc-allocator.c          |   9 +-
+> >>   drivers/staging/fsl-mc/bus/mc-msi.c                | 169 +--------------------
+> >>   drivers/staging/fsl-mc/include/mc-sys.h            |   3 +
+> >>   4 files changed, 14 insertions(+), 172 deletions(-)
+> >>
+> >> diff --git a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c b/drivers/staging/fsl-
+> mc/bus/irq-gic-v3-its-fsl-mc-msi.c
+> >> index 720e2b0..0eecb7e 100644
+> >> --- a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
+> >> +++ b/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
+> >> @@ -25,7 +25,6 @@ static struct irq_chip its_msi_irq_chip = {
+> >>   	.irq_mask = irq_chip_mask_parent,
+> >>   	.irq_unmask = irq_chip_unmask_parent,
+> >>   	.irq_eoi = irq_chip_eoi_parent,
+> >> -	.irq_set_affinity = msi_domain_set_affinity
+> >>   };
+> >>
+> >>   static int its_fsl_mc_msi_prepare(struct irq_domain *msi_domain,
+> >> @@ -86,7 +85,7 @@ int __init its_fsl_mc_msi_init(void)
+> >>   			continue;
+> >>   		}
+> >>
+> >> -		mc_msi_domain = fsl_mc_msi_create_irq_domain(
+> >> +		mc_msi_domain = platform_msi_create_irq_domain(
+> >>   						 of_node_to_fwnode(np),
+> >>   						 &its_fsl_mc_msi_domain_info,
+> >>   						 parent);
+> >
+> > What? We are already creating a platform MSI domain for the ITS. How is
+> > that going to work? If you want to convert this set of drivers to
+> > platform ITS, fine. But you can't randomly hack in the ITS code and pray
+> > for things not to fall apart.
+> >
+> 
+>  From what I see, the difference between irq-gic-v3-its-fsl-mc-msi and
+> the irq-gic-v3-its-platform-msi is the way ITS specific DeviceID is
+> created in msi_prepare.
+> 
+> German, is there a reason why you use the ICID read from the DPRC as dev_id?
 
-diff --git a/include/dt-bindings/power/r8a7779-sysc.h b/include/dt-bindings/power/r8a7779-sysc.h
-new file mode 100644
-index 0000000000000000..183571da507e5c45
---- /dev/null
-+++ b/include/dt-bindings/power/r8a7779-sysc.h
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright (C) 2016 Glider bvba
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A7779_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A7779_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A7779_PD_ARM1			 1
-+#define R8A7779_PD_ARM2			 2
-+#define R8A7779_PD_ARM3			 3
-+#define R8A7779_PD_SGX			20
-+#define R8A7779_PD_VDP			21
-+#define R8A7779_PD_IMP			24
-+
-+/* Always-on power area */
-+#define R8A7779_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A7779_SYSC_H__ */
--- 
-1.9.1
+Because it _is_ the dev_id at the hardware level.  There is an fsl-mc bus
+specific mechanism to get that id...it's not in the device tree.
+
+Stuart
