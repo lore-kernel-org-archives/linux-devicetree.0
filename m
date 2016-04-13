@@ -1,54 +1,35 @@
-From: Tema williams <temawilliams22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: WE NEED YOUR HELP URGENTLY.
-Date: Wed, 13 Apr 2016 10:39:13 +0200
-Message-ID: <CA+hOsCtLwG02uzCEn_1i4BgAAQ3dz6Y9Hv3JxmxijL_tJkyvzw@mail.gmail.com>
-Reply-To: temawilliams18-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: am335x-chili*: Move nodes to proper place and add poweroff
+Date: Wed, 13 Apr 2016 10:44:14 +0200
+Message-ID: <1460537057-23513-1-git-send-email-m.niestroj@grinn-global.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Sir/madam,
+Hi,
 
-With due respect and to the glory of Almighty God whom we worship I
-call upon you to assist my family. Please Permit me to inform you of
-my desire of going into business relationship with you.
+These patches move board-specific device-tree nodes from ChiliSOM to
+ChiliBoard dts files. These include uart and ethernet configuration.
+Additionally add poweroff support for all ChiliSOM devices.
 
-My name is Tema Williams,The only Son of late Chief PATRICK WILLIAMS.
-My father was a very wealthy cocoa merchant in Abidjan but we are from
-Sierra Leone
-After my Father death I and my Family move to South Africa as refugee.
+Developed and tested on ChiliBoard using v4.6-rc3.
 
-My father was poisoned to death by his business associates on one of
-their outings on a business trip. Before his death in a private
-hospital in Abidjan he secretly called me on his bed side and told me
-that he has the sum of ($12.000,000 MILLION US DOLLAR) kept with a
-security and finance company in South Africa.
+Marcin Niestroj (3):
+  ARM: dts: am335x-chili*: Move uart0 description from SOM to board
+  ARM: dts: am335x-chili*: Move Ethernet MAC description from SOM to
+    board
+  ARM: dts: am335x-chilisom: Enable poweroff PMIC sequence using RTC
+    signal
 
-He also explained to me that it was because of this wealth that he was
-poisoned by his business associates,that I should seek for a
-beneficiary in any country of my choice where I will transfer this
-money and use it for investment.I am honorably seeking for your
-assistance to transfer our fund out of South Africa.Upon the
-successful transfer of this fund,we shall make arrangement for me,my
-mother and younger sister to come over to your country to further our
-Education and invest in a profitable business that you may suggest.
+ arch/arm/boot/dts/am335x-chiliboard.dts | 75 ++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/am335x-chilisom.dtsi  | 76 +--------------------------------
+ 2 files changed, 77 insertions(+), 74 deletions(-)
 
-More over,I am willing to offer you 20% of the total sum as
-compensation for your effort/input after the successful transfer of
-this fund into your nominated bank account overseas.
+-- 
+2.8.0
 
-As we depend on God, and with God all things are possible.
-Anticipating to hear from you today.
-
-Thanks and God bless.
-PLEASE CALL ME +27787597591
-
-Best regards,
-
-Tema Williams
-(for the family)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
