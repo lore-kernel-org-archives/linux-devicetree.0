@@ -1,79 +1,88 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 7/7] soc: renesas: Add r8a7795 SYSC PM Domain Binding Definitions
-Date: Wed, 13 Apr 2016 16:44:23 +0200
-Message-ID: <1460558663-10197-8-git-send-email-geert+renesas@glider.be>
-References: <1460558663-10197-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1460558663-10197-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
+Subject: [PATCH v5 05/12] ARM: dts: r8a7794: Add SYSC PM Domains
+Date: Wed, 13 Apr 2016 16:44:45 +0200
+Message-ID: <1460558692-10414-6-git-send-email-geert+renesas@glider.be>
+References: <1460558692-10414-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1460558692-10414-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+Add a device node for the System Controller.
+Hook up the Cortex-A7 CPU cores and the Cortex-A7 L2 cache/SCU to their
+respective PM Domains.
+
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
 v5:
-  - No changes,
+  - Remove "power-domains" property again from the sysc node, as the
+    System Controller itself is not part of the Clock Domain,
 
 v4:
-  - Add Reviewed-by,
+  - Add "power-domains" property to the sysc node, to refer to the SoC's
+    Clock Domain,
 
 v3:
-  - New.
----
- include/dt-bindings/power/r8a7795-sysc.h | 42 ++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a7795-sysc.h
+  - Drop power area hiearchy from DT,
+  - Switch to "#power-domain-cells = <1>",
+  - Drop fallback compatibility strings,
 
-diff --git a/include/dt-bindings/power/r8a7795-sysc.h b/include/dt-bindings/power/r8a7795-sysc.h
-new file mode 100644
-index 0000000000000000..ee2e26ba605ef9a3
---- /dev/null
-+++ b/include/dt-bindings/power/r8a7795-sysc.h
-@@ -0,0 +1,42 @@
-+/*
-+ * Copyright (C) 2016 Glider bvba
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A7795_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A7795_SYSC_H__
+v2:
+  - Change one-line summary prefix to match current arm-soc practices,
+  - Update compatible values.
+---
+ arch/arm/boot/dts/r8a7794.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index 29a0a001f1b21a9e..99c41c9099b0c233 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -12,6 +12,7 @@
+ #include <dt-bindings/clock/r8a7794-clock.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/power/r8a7794-sysc.h>
+ 
+ / {
+ 	compatible = "renesas,r8a7794";
+@@ -42,6 +43,7 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0>;
+ 			clock-frequency = <1000000000>;
++			power-domains = <&sysc R8A7794_PD_CA7_CPU0>;
+ 			next-level-cache = <&L2_CA7>;
+ 		};
+ 
+@@ -50,12 +52,14 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <1>;
+ 			clock-frequency = <1000000000>;
++			power-domains = <&sysc R8A7794_PD_CA7_CPU1>;
+ 			next-level-cache = <&L2_CA7>;
+ 		};
+ 	};
+ 
+ 	L2_CA7: cache-controller@1 {
+ 		compatible = "cache";
++		power-domains = <&sysc R8A7794_PD_CA7_SCU>;
+ 		cache-unified;
+ 		cache-level = <2>;
+ 	};
+@@ -1244,6 +1248,12 @@
+ 		};
+ 	};
+ 
++	sysc: system-controller@e6180000 {
++		compatible = "renesas,r8a7794-sysc";
++		reg = <0 0xe6180000 0 0x0200>;
++		#power-domain-cells = <1>;
++	};
 +
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A7795_PD_CA57_CPU0		 0
-+#define R8A7795_PD_CA57_CPU1		 1
-+#define R8A7795_PD_CA57_CPU2		 2
-+#define R8A7795_PD_CA57_CPU3		 3
-+#define R8A7795_PD_CA53_CPU0		 5
-+#define R8A7795_PD_CA53_CPU1		 6
-+#define R8A7795_PD_CA53_CPU2		 7
-+#define R8A7795_PD_CA53_CPU3		 8
-+#define R8A7795_PD_A3VP			 9
-+#define R8A7795_PD_CA57_SCU		12
-+#define R8A7795_PD_CR7			13
-+#define R8A7795_PD_A3VC			14
-+#define R8A7795_PD_3DG_A		17
-+#define R8A7795_PD_3DG_B		18
-+#define R8A7795_PD_3DG_C		19
-+#define R8A7795_PD_3DG_D		20
-+#define R8A7795_PD_CA53_SCU		21
-+#define R8A7795_PD_3DG_E		22
-+#define R8A7795_PD_A3IR			24
-+#define R8A7795_PD_A2VC0		25
-+#define R8A7795_PD_A2VC1		26
-+
-+/* Always-on power area */
-+#define R8A7795_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A7795_SYSC_H__ */
+ 	ipmmu_sy0: mmu@e6280000 {
+ 		compatible = "renesas,ipmmu-r8a7794", "renesas,ipmmu-vmsa";
+ 		reg = <0 0xe6280000 0 0x1000>;
 -- 
 1.9.1
-
