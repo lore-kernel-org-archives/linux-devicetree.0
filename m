@@ -1,381 +1,180 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 00/45] powerpc/powernv: PCI hotplug support
-Date: Thu, 14 Apr 2016 09:42:46 +1000
-Message-ID: <20160413234246.GA5330@gwshan>
+Subject: Re: [PATCH v8 15/45] powerpc/powernv/ioda1: Introduce
+ PNV_IODA1_DMA32_SEGSIZE
+Date: Thu, 14 Apr 2016 09:54:29 +1000
+Message-ID: <20160413235429.GB5330@gwshan>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <570DF50F.6010805@ozlabs.ru>
- <20160413074236.GA28853@gwshan>
- <570E0E13.6080409@ozlabs.ru>
+ <1455680668-23298-16-git-send-email-gwshan@linux.vnet.ibm.com>
+ <570E0376.3030704@ozlabs.ru>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <570E0E13.6080409@ozlabs.ru>
+In-Reply-To: <570E0376.3030704@ozlabs.ru>
 Sender: linux-pci-owner@vger.kernel.org
 To: Alexey Kardashevskiy <aik@ozlabs.ru>
 Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 07:14:59PM +1000, Alexey Kardashevskiy wrote:
->On 04/13/2016 05:42 PM, Gavin Shan wrote:
->>On Wed, Apr 13, 2016 at 05:28:15PM +1000, Alexey Kardashevskiy wrote:
->>>On 02/17/2016 02:43 PM, Gavin Shan wrote:
->>>>This series of patches rebases on powerpc/next branch, plus below additional
->>>>patches:
->>>>
->>>>    <This series of patches>
->>>>    <Followup 3 patches from Gavin on SRIOV EEH, which aren't posted>
->>>>    https://patchwork.ozlabs.org/patch/581315/	(PATCH[1/9] Richard's SRIOV EEH)
->>>>    https://patchwork.ozlabs.org/patch/582639/	(PATCH[1/1] Gavin's EEH fix)
->>>>    https://patchwork.ozlabs.org/patch/582093/	(PATCH[1/1] Gavin's EEH fix)
->>>>    https://patchwork.ozlabs.org/patch/580626/	(PATCH[1/4] Gavin's PCI fix)
->>>>    https://patchwork.ozlabs.org/patch/580153/	(PATCH[1/1] Andrew's EEH minor fix)
->>>>    https://patchwork.ozlabs.org/patch/566827/	(PATCH[1/1] Russell's P5IOC2 removal)
->>>>    https://patchwork.ozlabs.org/patch/534154/	(PATCH[1/7] Richard's SRIOV rework)
->>>>    commit 388f7b1 ("Linux 4.5-rc3")
->>>>
->>>>The series of patches intend to support PCI slot for PowerPC PowerNV platform,
->>>>which is running on top of skiboot firmware. The patchset requires corresponding
->>>>changes from skiboot firmware, which is sent to skiboot@lists.ozlabs.org
->>>>for review. The PCI slots are exposed by skiboot with device node properties,
->>>>and kernel utilizes those properties to populated PCI slots accordingly.
->>>>
->>>>The original PCI infrastructure on PowerNV platform can't support hotplug
->>>>because the PE is assigned during PHB fixup time, which is called for once
->>>>during system boot time. For this, the PCI infrastructure on PowerNV platform
->>>>has been reworked for a lot. After that, the PE and its corresponding resources
->>>>(IODT, M32DT, M64 segments, DMA32 and bypass window) are assigned upon updating
->>>>PCI bridge's resources, which might decide PE# assigned to the PE (e.g. M64
->>>>resources, on P8 strictly speaking). Each PE will maintain a reference count,
->>>>which is (number of child PCI devices + 1). That indicates when last child PCI
->>>>device leaves the PE, the PE and its included resources will be relased and put
->>>>back into free pool again. With this design, the PE will be released when EEH PE
->>>>is released. PATCH[1 - 23] are related to this part.
->>>>
->>>> From skiboot perspective, PCI slot is providing (hot/fundamental/complete)
->>>>resets to EEH. The kernel gets to know if skiboot supports various reset on one
->>>>particular PCI slot through device-tree node. If it does, EEH will utilize the
->>>>functionality provided by skiboot. Besides, the device-tree nodes have to change
->>>>in order to support PCI hotplug. For example, when one PCI adapter inserted to
->>>>one slot, its device-tree node should be added to the system dynamically. Conversely,
->>>>the device-tree node should be removed from the system when the PCI adapter is going
->>>>to be offline. Since pci_dn and eeh_dev have same life cyle as PCI device nodes,
->>>>they should be added/removed accordingly during PCI hotplug. PATCH[24 - 39] are
->>>>doing the related work.
->>>>
->>>>The OF driver is changed to support unflattening FDT blob for sub-stree, which
->>>>is covered by PATCH[40 - 44].
->>>>
->>>>The last one, PATCH[45], is the standalone PCI hotplug driver for PowerPC PowerNV
->>>>platform.
->>>>
->>>>=======
->>>>Testing
->>>>=======
->>>>1. Unplug adapters behind non-empty slot, then plug them.
->>>>
->>>>    1.1 Check status
->>>>    # cat /sys/bus/pci/slots/C10/address
->>>>    0003:09:00
->>>>    # cat /sys/bus/pci/slots/C10/adapter
->>>>    1
->>>>    # cat /sys/bus/pci/slots/C10/power
->>>>    1
->>>>    # lspci
->>>>    0003:09:00.0 Ethernet controller: \
->>>>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>>>    0003:09:00.1 Ethernet controller: \
->>>>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>>>    0003:09:00.2 Ethernet controller: \
->>>>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>>>    0003:09:00.3 Ethernet controller: \
->>>>    Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
->>>>    # lspci -t
->>>>    # lspci -t
->>>>    -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
->>>>     |                                           +-08.0-[04-08]--
->>>>     |                                           +-09.0-[09]--+-00.0
->>>>     |                                           |            +-00.1
->>>>     |                                           |            +-00.2
->>>>     |                                           |            \-00.3
->>>>     |                                           +-10.0-[0a-0e]--
->>>>     |                                           \-11.0-[0f-13]--
->>>>
->>>>    1.2 Unplug adapter 0003:09.00.x
->>>>    # echo 0 > /sys/bus/pci/slots/C10/power
->>>>    # lspci -t
->>>>    -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
->>>>     |                                           +-08.0-[04-08]--
->>>>     |                                           +-09.0-[09]--
->>>>     |                                           +-10.0-[0a-0e]--
->>>>     |                                           \-11.0-[0f-13]--
->>>>
->>>>    1.3 Plug adapter 0003:09.00.x
->>>>    # echo 1 > /sys/bus/pci/slots/C10/power
->>>
->>>
->>>Do I understand correctly that the adapter was not physically moved in/out of
->>>the slot between 1.2 and 1.3?
->>>
+On Wed, Apr 13, 2016 at 06:29:42PM +1000, Alexey Kardashevskiy wrote:
+>On 02/17/2016 02:43 PM, Gavin Shan wrote:
+>>Currently, there is one macro (TCE32_TABLE_SIZE) representing the
+>>TCE table size for one DMA32 segment. The constant representing
+>>the DMA32 segment size (1 << 28) is still used in the code.
 >>
->>Correct.
+>>This defines PNV_IODA1_DMA32_SEGSIZE representing one DMA32
+>>segment size. the TCE table size can be calcualted when the page
+>
+>s/calcualted/calculated/
 >
 >
->This is not right then... Someone should try it, on both P7 and P8.
+>>has fixed 4KB size. So all the related calculation depends on one
+>>macro (PNV_IODA1_DMA32_SEGSIZE). No logical changes introduced.
 >
-
-Do you mean physically pull the adapter out and insert the same
-adapter back? What's the point for the test case?
-
+>Please move PNV_IODA1_DMA32_SEGSIZE where TCE32_TABLE_SIZE was.
+>
+>
 >>
->>>
->>>
->>>>    # lspci -t
->>>>    -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
->>>>     |                                           +-08.0-[04-08]--
->>>>     |                                           +-09.0-[09]--+-00.0
->>>>     |                                           |            +-00.1
->>>>     |                                           |            +-00.2
->>>>     |                                           |            \-00.3
->>>>     |                                           +-10.0-[0a-0e]--
->>>>     |                                           \-11.0-[0f-13]--
->>>>
->>>>
->>>>    1.4 Inject EEH error to adapter 0003:09:00.x, which is recovered.
->>>
->>>I am confused - why is this needed to test hotplug?
->>>
+>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>---
+>>  arch/powerpc/platforms/powernv/pci-ioda.c | 30 +++++++++++++++++-------------
+>>  arch/powerpc/platforms/powernv/pci.h      |  1 +
+>>  2 files changed, 18 insertions(+), 13 deletions(-)
 >>
->>Without the series, the EEH reset is always done by kenrel. With the
->>series applied, the EEH reset could be done in skiboot.
->
->
->Why exactly cannot EEH reset changes go to a smaller separate patchset
->(before hotplug)?
->
-
-As I explained before, the patchset's order is: PCI generic part,
-PowerNV PCI related, EEH related, device-tree part and hotplug driver.
-
-The EEH reset change is included in PATCH[37/45]. There is no point
-to reorder the patches.
-
->>That's the
->>major change introduced by the series from EEH's perspective. Also,
->>the EEH code was touched.
+>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>index d18b95e..e60cff6 100644
+>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>@@ -48,9 +48,6 @@
+>>  #include "powernv.h"
+>>  #include "pci.h"
 >>
->>>>    # cat /sys/bus/pci/devices/0003:09:00.0/eeh_pe_config_addr
->>>>    0x1
->>>>    # echo 1:0:4:0:0 > /sys/kernel/debug/powerpc/PCI0003/err_injct
->>>>    # lspci -ns 0003:09:00.0
->>>>    # dmesg | grep EEH
->>>>    EEH: Frozen PHB#3-PE#1 detected
->>>>    EEH: PE location: U78C9.001.WZS00CF-P1-C10, PHB location: N/A
->>>>    EEH: Detected PCI bus error on PHB#3-PE#1
->>>>    EEH: This PCI device has failed 1 times in the last hour
->>>>    EEH: Notify device drivers to shutdown
->>>>    EEH: Collect temporary log
->>>>    EEH: Reset without hotplug activity
->>>>    EEH: Notify device drivers the completion of reset
->>>>    EEH: Notify device driver to resume
->>>>
->>>>2. Plug adapter and then unplug it. This requires hack in skiboot
->>>>    to skip probing the adapters behind the target (C12 in the
->>>>    testing) for once.
->>>>
->>>>    2.1 Check status
->>>>    # cat /sys/bus/pci/slots/C12/address
->>>>    0001:06
->>>>    # cat /sys/bus/pci/slots/C12/power
->>>>    0
->>>>    # cat /sys/bus/pci/slots/C12/adapter
->>>>    1
->>>>    # lspci -t
->>>>    +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
->>>>                                                +-08.0-[05]----00.0
->>>>                                                \-09.0-[06-0a]--
->>>>
->>>>    2.2 Plug adapter 0001:06:00.x
->>>>    # echo 1 > /sys/bus/pci/slots/C12/power
->>>>    # lspci -t
->>>>    +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
->>>>                                                +-08.0-[05]----00.0
->>>>                                                \-09.0-[06-0a]--+-00.0
->>>>                                                                \-00.1
->>>>    # lspci
->>>>    0001:06:00.0 Ethernet controller: \
->>>>    Broadcom Corporation NetXtreme II BCM57810 10 Gigabit Ethernet (rev 10)
->>>>    0001:06:00.1 Ethernet controller: \
->>>>    Broadcom Corporation NetXtreme II BCM57810 10 Gigabit Ethernet (rev 10)
->>>>
->>>>    2.3 Inject EEH error to adapter 0001:06:00.x, which is recovered
->>>>    # cat /sys/bus/pci/devices/0001:06:00.0/eeh_pe_config_addr
->>>>    0x2
->>>>    # echo 2:0:4:0:0 > /sys/kernel/debug/powerpc/PCI0001/err_injct
->>>>    # dmesg | grep EEH
->>>>    EEH: Frozen PHB#1-PE#2 detected
->>>>    EEH: PE location: U78C9.001.WZS00CF-P1-C12, PHB location: N/A
->>>>    EEH: Detected PCI bus error on PHB#1-PE#2
->>>>    EEH: This PCI device has failed 1 times in the last hour
->>>>    EEH: Notify device drivers to shutdown
->>>>    EEH: Collect temporary log
->>>>    EEH: Reset without hotplug activity
->>>>    EEH: Notify device drivers the completion of reset
->>>>    EEH: Notify device driver to resume
->>>>
->>>>    2.4 Unplug adapter 0001:06:00.x
->>>>    # echo 0 > /sys/bus/pci/slots/C12/power
->>>>    # lspci -t
->>>>    +-[0001:00]---00.0-[01-0a]----00.0-[02-0a]--+-01.0-[03-04]----00.0-[04]----00.0
->>>>                                                +-08.0-[05]----00.0
->>>>                                                \-09.0-[06-0a]--
->>>>
->>>>=========
->>>>Changelog
->>>>=========
->>>>v8:
->>>>    * Rebased to linux-powerpc next branch.
->>>>    * Resolve comments from Alexey and Daniel on PCI part
->>>>    * Resolve comments from Rob on fdt.c
->>>>    * Retested (refer to the "Testing section")
->>>>v7:
->>>>    * Reworked revision to some extent.
->>>>    * Rebased to powerpc/next repository.
->>>>    * Reorder/split/merge/drop according - Alexey.
->>>>    * Defined macros and use array to track IO/M32/M64/DMA32 segments - Alexey.
->>>>    * Merged 3 files to one for the hotplug driver - Alexey.
->>>>    * As part of OPAL API, defined macros for PCI slot power state, hotplug
->>>>      message type. Defined macros for PCI slot power confirmed state in
->>>>      hotplug driver.
->>>>    * Misc comments from Alexey.
->>>>    * Reworked unflatten_dt_node() to avoid recursive function calls.
->>>>    * Use EXPORT_SYMBOL_GPL() and document function's input/output - Rob/Frank.
->>>>v6:
->>>>    * Patch reorder, split, squash - Alexey.
->>>>    * Minor coding style - Alexey.
->>>>    * Better function names for pcibios_{add,remove}_pci_devices - Bjorn
->>>>    * Replace pr_warn() with dev_warn() in PowerNV hotplug driver - Bjorn
->>>>    * Concurrent depth as parameter passed to __unflatten_dt_node() - Grant / Alexey
->>>>    * Replace overlay with of_changeset - Grant
->>>>v5:
->>>>    * Rebased to 4.1.rc6 and some unmerged patches as below:
->>>>      Alexey's DDW patchset (v11);
->>>>      Gavin's EEH error injection support (in mpe's next branch);
->>>>      Richard's EEH cleanup patches (in mpe's next branch);
->>>>      Richard's EEH support for VF (v7);
->>>>      Gavin's misc EEH fixes for 4.2;
->>>>    * The revision bases on skiboot corresponding patches (v7):
->>>>      https://patchwork.ozlabs.org/patch/480437/
->>>>    * Utilize OF overlay to update device-tree with help of newly introduced
->>>>      OPAL API opal_get_overlay_dt().
->>>>    * Split patches for easy review according to aik's comments.
->>>>    * Fix coding style from checkpatchc.pl as pointed by aik.
->>>>    * Code cleanup and misc fixup according to aik's input.
->>>>v4:
->>>>    * Rebased to 4.1.RC1
->>>>    * Added API to unflatten FDT blob to device node sub-tree, which is attached
->>>>      the indicated parent device node. The original mechanism based on formatted
->>>>      string stream has been dropped.
->>>>    * The PATCH[v3 09/21] ("powerpc/eeh: Delay probing EEH device during hotplug")
->>>>      was picked up sent to linux-ppc@ separately for review as Richard's "VF EEH
->>>>      Support" depends on that.
->>>>v3:
->>>>    * Rebased to 4.1.RC0
->>>>    * PowerNV PCI infrasturcture is total refactored in order to support PCI
->>>>      hotplug. The PowerNV hotplug driver is also reworked a lot because of
->>>>      the changes in skiboot in order to support PCI hotplug.
->>>>
->>>>Gavin Shan (45):
->>>>   PCI: Add pcibios_setup_bridge()
->>>>   powerpc/pci: Override pcibios_setup_bridge()
->>>>   powerpc/pci: Cleanup on struct pci_controller_ops
->>>>   powerpc/powernv: Cleanup on pci_controller_ops instances
->>>>   powerpc/powernv: Drop phb->bdfn_to_pe()
->>>>   powerpc/powernv: Reorder fields in struct pnv_phb
->>>>   powerpc/powernv: Rename PE# fields in struct pnv_phb
->>>>   powerpc/powernv: Fix initial IO and M32 segmap
->>>>   powerpc/powernv: Simplify pnv_ioda_setup_pe_seg()
->>>>   powerpc/powernv: IO and M32 mapping based on PCI device resources
->>>>   powerpc/powernv: Track M64 segment consumption
->>>>   powerpc/powernv: Rename M64 related functions
->>>>   powerpc/powernv/ioda1: M64 support on P7IOC
->>>>   powerpc/powernv/ioda1: Rename pnv_pci_ioda_setup_dma_pe()
->>>>   powerpc/powernv/ioda1: Introduce PNV_IODA1_DMA32_SEGSIZE
->>>>   powerpc/powernv: Remove DMA32 PE list
->>>>   powerpc/powernv/ioda1: Improve DMA32 segment track
->>>>   powerpc/powernv: Increase PE# capacity
->>>>   powerpc/powernv: Use PE instead of number during setup and release
->>>>   powerpc/powernv: Allocate PE# in reverse order
->>>>   powerpc/powernv: Create PEs at PCI hot plugging time
->>>>   powerpc/powernv/ioda1: Support releasing IODA1 TCE table
->>>>   powerpc/powernv: Dynamically release PEs
->>>>   powerpc/pci: Rename pcibios_{add,remove}_pci_devices()
->>>>   powerpc/pci: Rename pcibios_find_pci_bus()
->>>>   powerpc/pci: Move pci_find_bus_by_node() around
->>>>   powerpc/pci: Export pci_add_device_node_info()
->>>>   powerpc/pci: Introduce pci_remove_device_node_info()
->>>>   powerpc/pci: Export pci_traverse_device_nodes()
->>>>   powerpc/pci: Delay populating pdn
->>>>   powerpc/pci: Don't scan empty slot
->>>>   powerpc/pci: Update bridge windows on PCI plug
->>>>   powerpc/powernv: Simplify pnv_eeh_reset()
->>>>   powerpc/powernv: Exclude root bus in pnv_pci_reset_secondary_bus()
->>>>   powerpc/powernv: Fundamental reset in pnv_pci_reset_secondary_bus()
->>>>   powerpc/powernv: Support PCI slot ID
->>>>   powerpc/powernv: Use firmware PCI slot reset infrastructure
->>>>   powerpc/powernv: Functions to get/set PCI slot status
->>>>   powerpc/powernv: Select OF_DYNAMIC
->>>>   drivers/of: Split unflatten_dt_node()
->>>>   drivers/of: Avoid recursively calling unflatten_dt_node()
->>>>   drivers/of: Rename unflatten_dt_node()
->>>>   drivers/of: Specify parent node in of_fdt_unflatten_tree()
->>>>   drivers/of: Return allocated memory from of_fdt_unflatten_tree()
->>>>   PCI/hotplug: PowerPC PowerNV PCI hotplug driver
->>>>
->>>>  arch/powerpc/include/asm/eeh.h                 |    2 +-
->>>>  arch/powerpc/include/asm/opal-api.h            |   17 +-
->>>>  arch/powerpc/include/asm/opal.h                |    8 +-
->>>>  arch/powerpc/include/asm/pci-bridge.h          |   25 +-
->>>>  arch/powerpc/include/asm/pnv-pci.h             |    7 +
->>>>  arch/powerpc/include/asm/ppc-pci.h             |    8 +-
->>>>  arch/powerpc/kernel/eeh_dev.c                  |   17 +-
->>>>  arch/powerpc/kernel/eeh_driver.c               |   12 +-
->>>>  arch/powerpc/kernel/pci-common.c               |   16 +-
->>>>  arch/powerpc/kernel/pci-hotplug.c              |   47 +-
->>>>  arch/powerpc/kernel/pci_dn.c                   |   89 +-
->>>>  arch/powerpc/platforms/maple/pci.c             |   34 +-
->>>>  arch/powerpc/platforms/pasemi/pci.c            |    3 -
->>>>  arch/powerpc/platforms/powermac/pci.c          |   38 +-
->>>>  arch/powerpc/platforms/powernv/Kconfig         |    1 +
->>>>  arch/powerpc/platforms/powernv/eeh-powernv.c   |  179 ++--
->>>>  arch/powerpc/platforms/powernv/opal-wrappers.S |    4 +
->>>>  arch/powerpc/platforms/powernv/pci-ioda.c      | 1243 +++++++++++++++---------
->>>>  arch/powerpc/platforms/powernv/pci.c           |   92 +-
->>>>  arch/powerpc/platforms/powernv/pci.h           |   60 +-
->>>>  arch/powerpc/platforms/pseries/msi.c           |    4 +-
->>>>  arch/powerpc/platforms/pseries/pci_dlpar.c     |   32 -
->>>>  arch/powerpc/platforms/pseries/setup.c         |    8 +-
->>>>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c   |    2 +-
->>>>  drivers/of/fdt.c                               |  372 ++++---
->>>>  drivers/of/unittest.c                          |    2 +-
->>>>  drivers/pci/hotplug/Kconfig                    |   12 +
->>>>  drivers/pci/hotplug/Makefile                   |    3 +
->>>>  drivers/pci/hotplug/pnv_php.c                  |  870 +++++++++++++++++
->>>>  drivers/pci/hotplug/rpadlpar_core.c            |    8 +-
->>>>  drivers/pci/hotplug/rpaphp_core.c              |    4 +-
->>>>  drivers/pci/hotplug/rpaphp_pci.c               |    4 +-
->>>>  drivers/pci/setup-bus.c                        |    5 +
->>>>  include/linux/of_fdt.h                         |    5 +-
->>>>  include/linux/pci.h                            |    1 +
->>>>  35 files changed, 2360 insertions(+), 874 deletions(-)
->>>>  create mode 100644 drivers/pci/hotplug/pnv_php.c
->>>>
->>>
->>>
->>>--
->>>Alexey
->>>
+>>-/* 256M DMA window, 4K TCE pages, 8 bytes TCE */
+>>-#define TCE32_TABLE_SIZE	((0x10000000 / 0x1000) * 8)
+>>-
+>>  #define POWERNV_IOMMU_DEFAULT_LEVELS	1
+>>  #define POWERNV_IOMMU_MAX_LEVELS	5
+>>
+>>@@ -2034,7 +2031,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>
+>>  	struct page *tce_mem = NULL;
+>>  	struct iommu_table *tbl;
+>>-	unsigned int i;
+>>+	unsigned int tce32_segsz, i;
+>
+>
+>PNV_IODA1_DMA32_SEGSIZE is a segment size in bytes. The name @tce32_segsz
+>also suggests that it is a segment size in bytes (otherwise it would be
+>tce32_seg_entries or something like this) but it is not, it is a number of
+>TCE entries (arch/powerpc/kernel/iommu.c uses "entry" for these). And
+>tce32_segsz never changes. So:
+>
+>const unsigned int entries = PNV_IODA1_DMA32_SEGSIZE >> (IOMMU_PAGE_SHIFT_4K
+>- 3);
+>
+
+Are you sure @tce32_segsz and equation you gave are for number of TCE entries,
+not the size of meory required for the DMA32 segment TCE table?
+
+>>  	int64_t rc;
+>>  	void *addr;
+>>
+>>@@ -2054,29 +2051,34 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>  	/* Grab a 32-bit TCE table */
+>>  	pe->tce32_seg = base;
+>>  	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
+>>-		(base << 28), ((base + segs) << 28) - 1);
+>>+		base * PNV_IODA1_DMA32_SEGSIZE,
+>>+		(base + segs) * PNV_IODA1_DMA32_SEGSIZE - 1);
+>>
+>>  	/* XXX Currently, we allocate one big contiguous table for the
+>>  	 * TCEs. We only really need one chunk per 256M of TCE space
+>>  	 * (ie per segment) but that's an optimization for later, it
+>>  	 * requires some added smarts with our get/put_tce implementation
+>>+	 *
+>>+	 * Each TCE page is 4KB in size and each TCE entry occupies 8
+>>+	 * bytes
+>>  	 */
+>>+	tce32_segsz = PNV_IODA1_DMA32_SEGSIZE >> (IOMMU_PAGE_SHIFT_4K - 3);
+>
+>>  	tce_mem = alloc_pages_node(phb->hose->node, GFP_KERNEL,
+>>-				   get_order(TCE32_TABLE_SIZE * segs));
+>>+				   get_order(tce32_segsz * segs));
+>>  	if (!tce_mem) {
+>>  		pe_err(pe, " Failed to allocate a 32-bit TCE memory\n");
+>>  		goto fail;
+>>  	}
+>>  	addr = page_address(tce_mem);
+>>-	memset(addr, 0, TCE32_TABLE_SIZE * segs);
+>>+	memset(addr, 0, tce32_segsz * segs);
+>>
+>>  	/* Configure HW */
+>>  	for (i = 0; i < segs; i++) {
+>>  		rc = opal_pci_map_pe_dma_window(phb->opal_id,
+>>  					      pe->pe_number,
+>>  					      base + i, 1,
+>>-					      __pa(addr) + TCE32_TABLE_SIZE * i,
+>>-					      TCE32_TABLE_SIZE, 0x1000);
+>>+					      __pa(addr) + tce32_segsz * i,
+>>+					      tce32_segsz, 0x1000);
+>
+>
+>As you started using IOMMU_PAGE_SHIFT_4K and you are also touching this piece
+>of code -
+>
+>s/0x1000/IOMMU_PAGE_SHIFT_4K/
+>
+
+Does 0x1000 is equal to IOMMU_PAGE_SHIFT_4K? I guess you probably suggested
+to use IOMMU_PAGE_SIZE_4K instead?
+
+>>  		if (rc) {
+>>  			pe_err(pe, " Failed to configure 32-bit TCE table,"
+>>  			       " err %ld\n", rc);
+>>@@ -2085,8 +2087,9 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>  	}
+>>
+>>  	/* Setup linux iommu table */
+>>-	pnv_pci_setup_iommu_table(tbl, addr, TCE32_TABLE_SIZE * segs,
+>>-				  base << 28, IOMMU_PAGE_SHIFT_4K);
+>>+	pnv_pci_setup_iommu_table(tbl, addr, tce32_segsz * segs,
+>>+				  base * PNV_IODA1_DMA32_SEGSIZE,
+>>+				  IOMMU_PAGE_SHIFT_4K);
+>>
+>>  	/* OPAL variant of P7IOC SW invalidated TCEs */
+>>  	if (phb->ioda.tce_inval_reg)
+>>@@ -2116,7 +2119,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>  	if (pe->tce32_seg >= 0)
+>>  		pe->tce32_seg = -1;
+>>  	if (tce_mem)
+>>-		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
+>>+		__free_pages(tce_mem, get_order(tce32_segsz * segs));
+>>  	if (tbl) {
+>>  		pnv_pci_unlink_table_and_group(tbl, &pe->table_group);
+>>  		iommu_free_table(tbl, "pnv");
+>>@@ -3445,7 +3448,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>>  	mutex_init(&phb->ioda.pe_list_mutex);
+>>
+>>  	/* Calculate how many 32-bit TCE segments we have */
+>>-	phb->ioda.tce32_count = phb->ioda.m32_pci_base >> 28;
+>>+	phb->ioda.tce32_count = phb->ioda.m32_pci_base /
+>>+				PNV_IODA1_DMA32_SEGSIZE;
+>>
+>>  #if 0 /* We should really do that ... */
+>>  	rc = opal_pci_set_phb_mem_window(opal->phb_id,
+>>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>index 00539ff..1d8e775 100644
+>>--- a/arch/powerpc/platforms/powernv/pci.h
+>>+++ b/arch/powerpc/platforms/powernv/pci.h
+>>@@ -84,6 +84,7 @@ struct pnv_ioda_pe {
+>>
+>>  #define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
+>>  #define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
+>>+#define PNV_IODA1_DMA32_SEGSIZE	0x10000000
+>>
+>>  #define PNV_PHB_FLAG_EEH	(1 << 0)
+>>
 >>
 >
 >
