@@ -1,99 +1,50 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 11/45] powerpc/powernv: Track M64 segment consumption
-Date: Wed, 13 Apr 2016 17:09:45 +1000
-Message-ID: <570DF0B9.5030102@ozlabs.ru>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-12-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: dra7xx: Fix compatible string for PCF8575
+ chip
+Date: Wed, 13 Apr 2016 10:11:12 +0300
+Message-ID: <570DF110.3070805@ti.com>
+References: <1458147150.20441.2.camel@codethink.co.uk>
+ <56E9DED9.6020909@ti.com> <20160412210438.GA5995@atomide.com>
+ <570DEE5B.1010001@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-12-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <570DEE5B.1010001-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CT kernel <linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2016 02:43 PM, Gavin Shan wrote:
-> When unplugging PCI devices, their parent PEs might be offline.
-> The consumed M64 resource by the PEs should be released at that
-> time. As we track M32 segment consumption, this introduces an
-> array to the PHB to track the mapping between M64 segment and
-> PE number.
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+On 13/04/16 09:59, Sebastian Andrzej Siewior wrote:
+> On 04/12/2016 11:04 PM, Tony Lindgren wrote:
+>>> While at it, do you want to fix up (+Seb):
+>>> a) Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt which
+>>> also seems to refer to ti,pcf in example (introduced by df2634f43f51
+>>> x86: dtb: Add a device tree for CE4100 )
+>>> b) arch/x86/platform/ce4100/falconfalls.dts as well?
+>>
+>> Applying this one with Roger's ack, seems like those should be
+>> additional patches.
+> 
+> Okay. I looked it up on the board and it says NXP PCF8575 and not TI.
+> TI's was probably the first hit while I was looking for it (I think
+> CE4100 manual mentioned just PCF8575).
+> 
+> But if it would have a TI branding on it I would keep the TI prefix in
+> front and add the NXP prefix. As of today we might not know a
+> functional difference between those two but this does not mean we might
+> find one in the future.
+> That said, are you people sure that the DRA7 has a TI or a NXP branding
+> on it?
 
+Board has a Texas Instruments part: PCF8575PWR TSSOP24.
+http://www.ti.com/product/PCF8575
 
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-
-but it would not hurt to mention in the commit log why M64 segment is not 
-tracked/setup by the existing (at this point, at least) 
-pnv_ioda_setup_one_res().
-
-
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 10 ++++++++--
->   arch/powerpc/platforms/powernv/pci.h      |  1 +
->   2 files changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 7330a73..fc0374a 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -305,6 +305,7 @@ static int pnv_ioda2_pick_m64_pe(struct pci_bus *bus, bool all)
->   		phb->ioda.total_pe_num) {
->   		pe = &phb->ioda.pe_array[i];
->
-> +		phb->ioda.m64_segmap[pe->pe_number] = pe->pe_number;
->   		if (!master_pe) {
->   			pe->flags |= PNV_IODA_PE_MASTER;
->   			INIT_LIST_HEAD(&pe->slaves);
-> @@ -3245,7 +3246,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->   {
->   	struct pci_controller *hose;
->   	struct pnv_phb *phb;
-> -	unsigned long size, m32map_off, pemap_off, iomap_off = 0;
-> +	unsigned long size, m64map_off, m32map_off, pemap_off, iomap_off = 0;
->   	const __be64 *prop64;
->   	const __be32 *prop32;
->   	int i, len;
-> @@ -3332,6 +3333,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->
->   	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
->   	size = _ALIGN_UP(phb->ioda.total_pe_num / 8, sizeof(unsigned long));
-> +	m64map_off = size;
-> +	size += phb->ioda.total_pe_num * sizeof(phb->ioda.m64_segmap[0]);
->   	m32map_off = size;
->   	size += phb->ioda.total_pe_num * sizeof(phb->ioda.m32_segmap[0]);
->   	if (phb->type == PNV_PHB_IODA1) {
-> @@ -3342,9 +3345,12 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->   	size += phb->ioda.total_pe_num * sizeof(struct pnv_ioda_pe);
->   	aux = memblock_virt_alloc(size, 0);
->   	phb->ioda.pe_alloc = aux;
-> +	phb->ioda.m64_segmap = aux + m64map_off;
->   	phb->ioda.m32_segmap = aux + m32map_off;
-> -	for (i = 0; i < phb->ioda.total_pe_num; i++)
-> +	for (i = 0; i < phb->ioda.total_pe_num; i++) {
-> +		phb->ioda.m64_segmap[i] = IODA_INVALID_PE;
->   		phb->ioda.m32_segmap[i] = IODA_INVALID_PE;
-> +	}
->   	if (phb->type == PNV_PHB_IODA1) {
->   		phb->ioda.io_segmap = aux + iomap_off;
->   		for (i = 0; i < phb->ioda.total_pe_num; i++)
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index 36c4965..866a5ea 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -146,6 +146,7 @@ struct pnv_phb {
->   		struct pnv_ioda_pe	*pe_array;
->
->   		/* M32 & IO segment maps */
-> +		int			*m64_segmap;
->   		int			*m32_segmap;
->   		int			*io_segmap;
->
->
-
-
--- 
-Alexey
+--
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
