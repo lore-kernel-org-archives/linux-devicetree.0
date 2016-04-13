@@ -1,133 +1,121 @@
-From: Yao Yuan <yao.yuan@nxp.com>
-Subject: RE: [PATCH 2/2] dts/ls1043a: add the DTS node for QSPI support
-Date: Wed, 13 Apr 2016 02:41:27 +0000
-Message-ID: <AM2PR04MB07221B6FDAD72A6DAB8E1E0889960@AM2PR04MB0722.eurprd04.prod.outlook.com>
-References: <1459406701-40993-1-git-send-email-yao.yuan@freescale.com>
- <1459406701-40993-3-git-send-email-yao.yuan@freescale.com>
- <20160412024947.GD15949@tiger>
+From: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v6 2/2] dts/ls2080a: update the DTS for QSPI and DSPI
+ support
+Date: Wed, 13 Apr 2016 02:42:40 +0000
+Message-ID: <AM2PR04MB0722F1D9C594CB50DC117D1D89960@AM2PR04MB0722.eurprd04.prod.outlook.com>
+References: <1457518926-18518-1-git-send-email-yao.yuan@freescale.com>
+ <1457518926-18518-3-git-send-email-yao.yuan@freescale.com>
+ <20160413022939.GE28903@tiger>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160412024947.GD15949@tiger>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160413022939.GE28903@tiger>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Yuan Yao <yao.yuan@freescale.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Han Xu <han.xu@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 12, 2016 at 10:50:01AM +0800, Shawn Guo wrote:
-> On Thu, Mar 31, 2016 at 02:45:01PM +0800, Yuan Yao wrote:
-> > From: Yuan Yao <yao.yuan@nxp.com>
-> >
-> > Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+Thanks for your review and work.
+
+Best Regards,
+Yuan Yao
+
+
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Wednesday, April 13, 2016 10:30 AM
+> To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; Han
+> Xu <han.xu-3arQi8VN3Tc@public.gmane.org>; Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+> Subject: Re: [PATCH v6 2/2] dts/ls2080a: update the DTS for QSPI and DSPI
+> support
 > 
-> Please style of 'arm64: dts: ls1043a: ' for subject prefix.
+> On Wed, Mar 09, 2016 at 06:22:06PM +0800, Yuan Yao wrote:
+> > Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+> > Acked-by: Han xu <han.xu-3arQi8VN3Tc@public.gmane.org>
 > 
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 16 ++++++++++++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi    | 14 ++++++++++++++
-> >  2 files changed, 30 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > index 97e9906..c8303a3 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> > @@ -100,6 +100,22 @@
-> >  	};
-> >  };
-> >
-> > +&qspi {
+> Changed subject prefix to 'arm64: dts: ls2080a: ', and then applied the patch.
 > 
-> Please sort such labeled node alphabetically in label name.  That said, it should
-> go after &lpuart0.
-
-Ok, Thanks.
-
-> > +	num-cs = <2>;
-> 
-> I do not see this property in bindings doc.
-
-We can find this property in ./Documentation/devicetree/bindings/spi/spi-bus.txt
- 
-> 
-> > +	bus-num = <0>;
-> > +	status = "okay";
-> 
-> Please let 'status' line be the last of property list.
-
-
-Ok, Thanks.
-
-> > +	fsl,ddr-sampling-point = <4>;
-> 
-> I do not see this one in bindings definition either.
-
-It's used for DDR mode; The DDR mode will send to upstream late.
-So I will remove this, once the DDR mode patch is merged, I will send patch to add the property.
-
-> 
-> > +
-> > +	qflash0: s25fl128s@0 {
-> > +		compatible = "spansion,m25p80";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		spi-max-frequency = <20000000>;
-> > +		ddr-quad-read;
-> 
-> Ditto
-
-Ditto, Thanks.
-
-> 
-> > +		reg = <0>;
-> > +	};
-> > +};
-> > +
-> >  &i2c0 {
-> >  	status = "okay";
-> >  	pca9547@77 {
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> > index be72bf5..49b1aeb 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> > @@ -208,6 +208,20 @@
-> >  			status = "disabled";
-> >  		};
-> >
-> > +		qspi: quadspi@1550000 {
-> 
-> Please sort the node in <soc>.dtsi in order of unit-address.  That said, the node
-> should be added between ifc@1530000 and esdhc@1560000.
-
-Thanks. I will update it and resend it soon.
-
 > Shawn
 > 
-> > +			compatible = "fsl,ls1043a-qspi", "fsl,ls1021a-qspi";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			reg = <0x0 0x1550000 0x0 0x10000>,
-> > +				<0x0 0x40000000 0x0 0x4000000>;
-> > +			reg-names = "QuadSPI", "QuadSPI-memory";
-> > +			interrupts = <0 99 0x4>;
-> > +			clock-names = "qspi_en", "qspi";
-> > +			clocks = <&clockgen 4 0>, <&clockgen 4 0>;
-> > +			big-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> >  		i2c0: i2c@2180000 {
-> >  			compatible = "fsl,vf610-i2c";
+> > ---
+> > Changed in v6:
+> > No changes.
+> >
+> > Changed in v5:
+> > Resend base on arm-soc.
+> >
+> > Changed in v4:
+> > No changes.
+> >
+> > Changed in v3:
+> > No changes.
+> >
+> > Changed in v2:
+> > Update my email to <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 9 ++++++++-
+> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi    | 4 ++--
+> >  2 files changed, 10 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
+> > b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
+> > index 4cb996d..e8801fa 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
+> > @@ -178,7 +178,14 @@
+> >
+> >  &qspi {
+> >  	status = "okay";
+> > -	qflash0: s25fl008k {
+> > +	flash0: s25fl256s1@0 {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		compatible = "st,m25p80";
+> > +		spi-max-frequency = <20000000>;
+> > +		reg = <0>;
+> > +	};
+> > +	flash2: s25fl256s1@2 {
+> >  		#address-cells = <1>;
+> >  		#size-cells = <1>;
+> >  		compatible = "st,m25p80";
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > index 2b23d03..65e612a 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > @@ -318,7 +318,7 @@
+> >
+> >  		dspi: dspi@2100000 {
+> >  			status = "disabled";
+> > -			compatible = "fsl,vf610-dspi";
+> > +			compatible = "fsl,ls2080a-dspi", "fsl,ls2085a-dspi";
 > >  			#address-cells = <1>;
+> >  			#size-cells = <0>;
+> >  			reg = <0x0 0x2100000 0x0 0x10000>; @@ -444,7 +444,7
+> @@
+> >
+> >  		qspi: quadspi@20c0000 {
+> >  			status = "disabled";
+> > -			compatible = "fsl,vf610-qspi";
+> > +			compatible = "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
+> >  			#address-cells = <1>;
+> >  			#size-cells = <0>;
+> >  			reg = <0x0 0x20c0000 0x0 0x10000>,
 > > --
 > > 2.1.0.27.g96db324
 > >
 > >
 > > _______________________________________________
 > > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
