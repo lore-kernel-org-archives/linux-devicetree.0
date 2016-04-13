@@ -1,82 +1,61 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] device-tree: nexus7-flo: Remove power gpio key entry and
- use pmic8xxx-pwrkey
-Date: Wed, 13 Apr 2016 10:34:48 -0700
-Message-ID: <CALAqxLU79bGTGUZbB+yu=k4Pf2d8KaEyNkaWJ8SRewXu+7SQ4Q@mail.gmail.com>
-References: <1460567784-28017-1-git-send-email-john.stultz@linaro.org>
-	<570E80CA.3080100@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2 v5] clk/axs10x: Add I2S PLL clock driver
+Date: Wed, 13 Apr 2016 12:35:38 -0500
+Message-ID: <20160413173538.GA21769@rob-hp-laptop>
+References: <cover.1460451903.git.joabreu@synopsys.com>
+ <faab7d0fa8f93a815fc1114c7b752eddcdc2cfca.1460451903.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <570E80CA.3080100-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <faab7d0fa8f93a815fc1114c7b752eddcdc2cfca.1460451903.git.joabreu@synopsys.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, CARLOS.PALMINHA@synopsys.com, Vineet.Gupta1@synopsys.com, Alexey.Brodkin@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 10:24 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
->
-> On 13/04/16 18:16, John Stultz wrote:
->>
->> Since the pmic8xxx-pwrkey driver is already supported in the
->> qcom-apq8064.dtsi, and the pmic8xxx-pwrkey supports logic to
->> configure proper device shutdown when ps_hold goes low, it is
->> better to use that driver then a generic gpio button.
->>
->> Thus this patch remove the gpio power key entry here, so we
->> don't get double input events from having two drivers enabled.
->>
->> The one gotcha with the pmic8xxx-pwrkey is it has a fairly
->> long debounce delay, which we shorten here to make the button
->> behave as expected.
->>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Cc: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 15 +++++++++------
->>   1 file changed, 9 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
->> b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
->> index c535b3f..7ac1c65 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
->> +++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
->> @@ -29,12 +29,6 @@
->>
->>         gpio-keys {
->>                 compatible = "gpio-keys";
->> -               power {
->> -                       label = "Power";
->> -                       gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
->> -                       linux,code = <KEY_POWER>;
->> -                       gpio-key,wakeup;
->
->
-> You are dropping wakeup with this change. Is that intentional ?
->
-> If not, while you are at this, replace it with "wakeup-source"
-> which is standard binding.
+On Tue, Apr 12, 2016 at 10:14:22AM +0100, Jose Abreu wrote:
+> The ARC SDP I2S clock can be programmed using a
+> specific PLL.
+> 
+> This patch has the goal of adding a clock driver
+> that programs this PLL.
+> 
+> At this moment the rate values are hardcoded in
+> a table but in the future it would be ideal to
+> use a function which determines the PLL values
+> given the desired rate.
+> 
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> ---
+> 
+> Changes v4 -> v5:
+> * Documentation update (as suggested by Alexey Brodkin)
+> * Changed compatible string to "snps,axs10x-i2s-pll-clock" (as suggested by Alexey Brodkin)
+> 
+> Changes v3 -> v4:
+> * Added binding document (as suggested by Stephen Boyd)
+> * Minor code style fixes (as suggested by Stephen Boyd)
+> * Use ioremap (as suggested by Stephen Boyd)
+> * Implement round_rate (as suggested by Stephen Boyd)
+> * Change to platform driver (as suggested by Stephen Boyd)
+> * Use {readl/writel}_relaxed (as suggested by Vineet Gupta)
+> 
+> Changes v2 -> v3:
+> * Implemented recalc_rate
+> 
+> Changes v1 -> v2:
+> * Renamed folder to axs10x (as suggested by Alexey Brodkin)
+> * Added more supported rates
+> 
+>  .../bindings/clock/axs10x-i2s-pll-clock.txt        |  17 ++
 
-Thanks for catching this. Its not intentional, but I don't have
-suspend/resume working yet on the n7 so I've never really tested it.
+Acked-by: Rob Herring <robh@kernel.org>
 
-I'll add wakeup-source to the pwrkey entry for the next version.
-
-thanks
--john
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/axs10x/Makefile                        |   1 +
+>  drivers/clk/axs10x/i2s_pll_clock.c                 | 217 +++++++++++++++++++++
+>  4 files changed, 236 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/axs10x-i2s-pll-clock.txt
+>  create mode 100644 drivers/clk/axs10x/Makefile
+>  create mode 100644 drivers/clk/axs10x/i2s_pll_clock.c
