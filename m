@@ -1,95 +1,66 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 08/45] powerpc/powernv: Fix initial IO and M32 segmap
-Date: Wed, 13 Apr 2016 17:53:24 +1000
-Message-ID: <20160413075324.GA31320@gwshan>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-9-git-send-email-gwshan@linux.vnet.ibm.com>
- <570DE553.80708@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/5] regulator: st-flashss: Add a regulator driver for
+ flashss vsense.
+Date: Wed, 13 Apr 2016 09:59:00 +0200
+Message-ID: <570DFC44.8060408@st.com>
+References: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org> <1460474204-5351-3-git-send-email-peter.griffin@linaro.org> <20160413061514.GI14664@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <570DE553.80708@ozlabs.ru>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: devicetree@vger.kernel.org, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org, dja@axtens.net
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160413061514.GI14664-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Youssef TRIKI <youssef.triki-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBcHIgMTMsIDIwMTYgYXQgMDQ6MjE6MDdQTSArMTAwMCwgQWxleGV5IEthcmRhc2hl
-dnNraXkgd3JvdGU6Cj5PbiAwMi8xNy8yMDE2IDAyOjQzIFBNLCBHYXZpbiBTaGFuIHdyb3RlOgo+
-PlRoZXJlIGFyZSB0d28gYXJyYXlzIGZvciBJTyBhbmQgTTMyIHNlZ21lbnQgbWFwcyBvbiBldmVy
-eSBQSEIuCj4+VGhlIGluZGV4IG9mIHRoZSBhcnJheXMgYXJlIHNlZ21lbnQgbnVtYmVyIGFuZCB0
-aGUgdmFsdWUgc3RvcmVkCj4+aW4gdGhlIGNvcnJlc3BvbmRpbmcgZWxlbWVudCBpcyBQRSBudW1i
-ZXIsIGluZGljYXRpbmcgdGhlIHNlZ21lbnQKPj5pcyBhc3NpZ25lZCB0byB0aGUgUEUuIEluaXRp
-YWxseSwgYWxsIGVsZW1lbnRzIGluIHRob3NlIHR3byBhcnJheXMKPj5hcmUgemVyb2VzLCBtZWFu
-aW5nIGFsbCBzZWdtZW50cyBhcmUgYXNzaWduZWQgdG8gUEUjMC4gSXQncyB3cm9uZy4KPj4KPj5U
-aGlzIGZpeGVzIHRoZSBpbml0aWFsIHZhbHVlcyBpbiB0aGUgZWxlbWVudHMgb2YgdGhvc2UgdHdv
-IGFycmF5cwo+PnRvIElPREFfSU5WQUxJRF9QRSwgbWVhbmluZyBhbGwgc2VnbWVudHMgYXJlbid0
-IGFzc2lnbmVkIHRvIGFueQo+PlBFLgo+Cj5UaGlzIGlzIG9rLgo+Cj4+SW4gb3JkZXIgdG8gdXNl
-IElPREFfSU5WQUxJRF9QRSAoLTEpIHRvIHJlcHJlc2VudCBpbnZhbGlkIFBFCj4+bnVtYmVyLCB0
-aGUgdHlwZXMgb2YgdGhvc2UgdHdvIGFycmF5cyBhcmUgY2hhbmdlZCBmcm9tICJ1bnNpZ25lZCBp
-bnQiCj4+dG8gImludCIuCj4KPiJ1bnNpZ25lZCIgY2FuIGNhcnJ5ICgtMSkgcGVyZmVjdGx5IGZp
-bmUsIGp1c3QgYWRkIGEgdHlwZSBjYXN0IHRvCj5JT0RBX0lOVkFMSURfUEU6Cj4KPiNkZWZpbmUg
-SU9EQV9JTlZBTElEX1BFICAgICh1bnNpZ25lZCBpbnQpKC0xKQo+Cj5Vc2luZyAic2lnbmVkIiB0
-eXBlIGZvciBpbmRleGVzIHdoaWNoIGNhbm5vdCBiZSBuZWdhdGl2ZSBkb2VzIG5vdCBtYWtlIG11
-Y2gKPnNlbnNlIC0gaW5zdGVhZCBvZiBjaGVja2luZyBmb3IgdGhlIHVwcGVyIGJvdW5kYXJ5LCB5
-b3UgaGF2ZSB0byBjaGVjayBmb3IgIjwKPjAiIHRvby4KPgo+T1BBTCB1c2VzIHVuc2lnbmVkIHR5
-cGUgZm9yIFBFICh1aW50NjRfdCBvciB1aW50MzJfdCBvciB1aW50MTZfdCAtIHRoaXMgaXMKPnF1
-aXRlIGZ1bm55KS4KPgo+cG52X2lvZGFfcGU6OnBlX251bWJlciBpcyAidW5zaWduZWQiIGFuZCB0
-aGlzIHBlX251bWJlciBpcyB0aGUgc2FtZSB0aGluZyBhcwo+SSBjYW4gc2VlIGluIHBudl9pb2Rh
-X3NldHVwX2Rldl9QRSgpLgo+Cj5Tb21lIHByaW50aygpIHByaW50IHRoZSBQRSBudW1iZXIgYXMg
-IiV4IiAod2hpY2ggaW1wbGllcyAidW5zaWduZWQiKS4KPgoKWWVzLCBJIGNhbiBzaW1wbHkgaGF2
-ZSBzb21ldGhpbmcgbGlrZSBiZWxvdyB3aGVuIFBFIG51bWJlciBhcyB3ZWxsIGFzCnNlZ21lbnQg
-aW5kZXggYXJlIHJlcHJlc2VudGVkIGJ5ICJ1bnNpZ25lZCBpbnQiIHZhbHVlcywgcmlnaHQ/Cgoj
-ZGVmaW5lIElPREFfSU5WQUxJRF9QRQkJMHhmZmZmZmZmZgoKPgo+SSBzdWdnZXN0IGNoYW5naW5n
-IHRoZSBwY2lfZG46OnBlX251bWJlciB0eXBlIGZyb20gImludCIgdG8gInVuc2lnbmVkIGludCIg
-dG8KPm1hdGNoIHBudl9pb2RhX3BlOjpwZV9udW1iZXIsIGluIGEgc2VwYXJhdGUgcGF0Y2guIE9y
-IGRvIG5vdCB0b3VjaCB0eXBlcyBmb3IKPm5vdy4KPgoKWWVzLCBJIHdpbGwgaGF2ZSBhIHNlcGFy
-YXRlIHBhdGNoIHJpZ2h0IGJlZm9yZSB0aGlzIG9uZSB0byBhZGRyZXNzIGl0LgoKPgo+PlNpZ25l
-ZC1vZmYtYnk6IEdhdmluIFNoYW4gPGd3c2hhbkBsaW51eC52bmV0LmlibS5jb20+Cj4+LS0tCj4+
-ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLWlvZGEuYyB8IDkgKysrKysrKy0t
-Cj4+ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLmggICAgICB8IDQgKystLQo+
-PiAgMiBmaWxlcyBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+Cj4+
-ZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2ktaW9kYS5jIGIv
-YXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wb3dlcm52L3BjaS1pb2RhLmMKPj5pbmRleCAxZDI1MTRm
-Li40NGNjNWYzIDEwMDY0NAo+Pi0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9w
-Y2ktaW9kYS5jCj4+KysrIGIvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wb3dlcm52L3BjaS1pb2Rh
-LmMKPj5AQCAtMzIzOSw3ICszMjM5LDcgQEAgc3RhdGljIHZvaWQgX19pbml0IHBudl9wY2lfaW5p
-dF9pb2RhX3BoYihzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLAo+PiAgCXVuc2lnbmVkIGxvbmcgc2l6
-ZSwgbTMybWFwX29mZiwgcGVtYXBfb2ZmLCBpb21hcF9vZmYgPSAwOwo+PiAgCWNvbnN0IF9fYmU2
-NCAqcHJvcDY0Owo+PiAgCWNvbnN0IF9fYmUzMiAqcHJvcDMyOwo+Pi0JaW50IGxlbjsKPj4rCWlu
-dCBpLCBsZW47Cj4+ICAJdTY0IHBoYl9pZDsKPj4gIAl2b2lkICphdXg7Cj4+ICAJbG9uZyByYzsK
-Pj5AQCAtMzMzNCw4ICszMzM0LDEzIEBAIHN0YXRpYyB2b2lkIF9faW5pdCBwbnZfcGNpX2luaXRf
-aW9kYV9waGIoc3RydWN0IGRldmljZV9ub2RlICpucCwKPj4gIAlhdXggPSBtZW1ibG9ja192aXJ0
-X2FsbG9jKHNpemUsIDApOwo+PiAgCXBoYi0+aW9kYS5wZV9hbGxvYyA9IGF1eDsKPj4gIAlwaGIt
-PmlvZGEubTMyX3NlZ21hcCA9IGF1eCArIG0zMm1hcF9vZmY7Cj4+LQlpZiAocGhiLT50eXBlID09
-IFBOVl9QSEJfSU9EQTEpCj4+Kwlmb3IgKGkgPSAwOyBpIDwgcGhiLT5pb2RhLnRvdGFsX3BlX251
-bTsgaSsrKQo+PisJCXBoYi0+aW9kYS5tMzJfc2VnbWFwW2ldID0gSU9EQV9JTlZBTElEX1BFOwo+
-PisJaWYgKHBoYi0+dHlwZSA9PSBQTlZfUEhCX0lPREExKSB7Cj4+ICAJCXBoYi0+aW9kYS5pb19z
-ZWdtYXAgPSBhdXggKyBpb21hcF9vZmY7Cj4+KwkJZm9yIChpID0gMDsgaSA8IHBoYi0+aW9kYS50
-b3RhbF9wZV9udW07IGkrKykKPj4rCQkJcGhiLT5pb2RhLmlvX3NlZ21hcFtpXSA9IElPREFfSU5W
-QUxJRF9QRTsKPj4rCX0KPj4gIAlwaGItPmlvZGEucGVfYXJyYXkgPSBhdXggKyBwZW1hcF9vZmY7
-Cj4+ICAJc2V0X2JpdChwaGItPmlvZGEucmVzZXJ2ZWRfcGVfaWR4LCBwaGItPmlvZGEucGVfYWxs
-b2MpOwo+Pgo+PmRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNp
-LmggYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLmgKPj5pbmRleCA3ODQ4ODJh
-Li4zNmM0OTY1IDEwMDY0NAo+Pi0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9w
-Y2kuaAo+PisrKyBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2kuaAo+PkBAIC0x
-NDYsOCArMTQ2LDggQEAgc3RydWN0IHBudl9waGIgewo+PiAgCQlzdHJ1Y3QgcG52X2lvZGFfcGUJ
-KnBlX2FycmF5Owo+Pgo+PiAgCQkvKiBNMzIgJiBJTyBzZWdtZW50IG1hcHMgKi8KPj4tCQl1bnNp
-Z25lZCBpbnQJCSptMzJfc2VnbWFwOwo+Pi0JCXVuc2lnbmVkIGludAkJKmlvX3NlZ21hcDsKPj4r
-CQlpbnQJCQkqbTMyX3NlZ21hcDsKPj4rCQlpbnQJCQkqaW9fc2VnbWFwOwo+Pgo+PiAgCQkvKiBJ
-UlEgY2hpcCAqLwo+PiAgCQlpbnQJCQlpcnFfY2hpcF9pbml0Owo+Pgo+Cj4KPi0tIAo+QWxleGV5
-Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
-cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6
-Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On 4/13/2016 8:15 AM, Mark Brown wrote:
+>> >+static void st_get_satinize_powerup_voltage(struct st_vsense *vsense)
+>> >+{
+>> >+	void __iomem *ioaddr = vsense->ioaddr;
+>> >+	u32 value = readl_relaxed(ioaddr);
+>> >+
+>> >+	dev_dbg(vsense->dev, "Initial start-up value: (0x%08x)\n", value);
+>> >+
+>> >+	/* Sanitize voltage values forcing what is provided from start-up */
+>> >+	if (value & TOP_VSENSE_CONFIG_LATCHED_PSW_EMMC)
+>> >+		value |= TOP_VSENSE_CONFIG_REG_PSW_EMMC;
+>> >+	else
+>> >+		value &= ~TOP_VSENSE_CONFIG_REG_PSW_EMMC;
+>> >+
+>> >+	if (value & TOP_VSENSE_CONFIG_LATCHED_PSW_NAND)
+>> >+		value |= TOP_VSENSE_CONFIG_REG_PSW_NAND;
+>> >+	else
+>> >+		value &= ~TOP_VSENSE_CONFIG_REG_PSW_NAND;
+>> >+
+>> >+	if (value & TOP_VSENSE_CONFIG_LATCHED_PSW_SPI)
+>> >+		value |= TOP_VSENSE_CONFIG_REG_PSW_SPI;
+>> >+	else
+>> >+		value &= ~TOP_VSENSE_CONFIG_REG_PSW_SPI;
+> This looks like a very complicated way of writing
+>
+> 	value &= TOP_VSENSE_CONFIG_LATCHED_PSW_SPI |
+> 		TOP_VSENSE_CONFIG_LATCHED_PSW_NAND |
+> 		TOP_VSENSE_CONFIG_REG_PSW_EMMC
+>
+> or am I missing something?  Why do we need to do this anyway, it's very
+> surprsing?
+>
+
+This functions is to sanitize the vsense voltages when the regulator
+is probed and in some circumstances the reset value of this register
+does not reflect the hw status/config. For example, by default, after
+the reset, the bit 0 is set so the EMMC, inside the flash subsystem,
+is supposed to operate at 3v3. But the latched bit 24 can be 0 on
+a platform where it is actually set at 1v8.
+So the bit 0 must be reset to keep this coherent and to allow MMC
+framework to properly setup the Vdd when the framework starts.
+
+Hoping this can help.
+
+Regards
+peppe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
