@@ -1,84 +1,118 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: max8973: add DT binding details for junction warn temp" to the regulator tree
-Date: Wed, 13 Apr 2016 17:21:43 +0100
-Message-ID: <E1aqNXz-00083y-M2@debutante>
-References: <1457087274-15785-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457087274-15785-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Wed, 13 Apr 2016 18:22:03 +0200
+Message-ID: <20160413162203.GB30129@ulmo.ba.sec>
+References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
+ <56E98F2E.5010307@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56E98F2E.5010307@wwwdotorg.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   regulator: max8973: add DT binding details for junction warn temp
+--uQr8t48UFsdbeI+V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regulator tree at
+On Wed, Mar 16, 2016 at 10:51:58AM -0600, Stephen Warren wrote:
+> On 03/08/2016 08:48 AM, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > Changes to the pad controller device tree binding have required that
+> > each lane be associated with a separate PHY.
+>=20
+> I still don't think this has anything to do with DT bindings. Rather, the
+> definition of a PHY (in HW and the Linux PHY subsystem) is a single lane.
+> That fact then requires drivers to support a PHY per lane rather than a
+> single multi-lane PHY, and equally means the DT bindings must be written
+> according to the correct definition of a PHY.
+>=20
+> Still, I suppose the commit description is fine as is.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+I've reworded the commit message to give a more accurate rationale for
+the change. I'll be posting a v5 soon.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> > Update the PCI host bridge
+> > device tree binding to allow each root port to define the list of PHYs
+> > required to drive the lanes associated with it.
+>=20
+> > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.=
+txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+>=20
+> > +Required properties for Tegra124 and later:
+> > +- phys: Must contain an phandle to a PHY for each entry in phy-names.
+> > +- phy-names: Must include an entry for each active lane. Note that the=
+ number
+> > +  of entries does not have to (though usually will) be equal to the sp=
+ecified
+> > +  number of lanes in the nvidia,num-lanes property. Entries are of the=
+ form
+> > +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num=
+-lanes.
+>=20
+> When would the number of PHYs not equal the number of lanes? I thought the
+> whole point of this patch was to switch to per-lane PHYs? Perhaps I'm just
+> misremembering some exception, so there may be no need to change this.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+This is useful to support the case where we want to connect a x1 or x2
+device to a root port that is configured to drive more lanes. It's a
+rather unusual configuration, but it would be possible for example to
+have an onboard x1 ethernet card, but the board layout is such that it
+runs in x1/x2 mode, with the ethernet card connected to the x2 port.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> >   Example:
+> >=20
+> >   SoC DTSI:
+> > @@ -169,6 +179,9 @@ SoC DTSI:
+> >   			ranges;
+> >=20
+> >   			nvidia,num-lanes =3D <2>;
+> > +
+> > +			phys =3D <&{/padctl@0,7009f000/pads/pcie/pcie-4}>;
+> > +			phy-names =3D "pcie-0";
+> >   		};
+>=20
+> The example shows a Tegra20 PCIe controller, yet includes
+> Tegra124-or-greater properties. That seems a bit odd. Should the changes =
+to
+> the example be dropped, or does "Required properties for Tegra124 and lat=
+er"
+> mean "Required for T124+, optional for earlier chips"?
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+I've annotated these properties with "for Tegra124 and later", hopefully
+that clarifies that these properties are only valid on Tegra124 and
+later chips. The reason is that earlier (Tegra114 didn't support PCIe,
+Tegra30 and Tegra20 did but had PHY registers within the PCI host bridge
+I/O memory).
 
-Thanks,
-Mark
+Thierry
 
->From 19dd159ce8086293b70bd8e1aeebe06aff8d7df8 Mon Sep 17 00:00:00 2001
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Date: Wed, 13 Apr 2016 15:29:44 +0530
-Subject: [PATCH] regulator: max8973: add DT binding details for junction warn
- temp
+--uQr8t48UFsdbeI+V
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The driver MAX8973 supports the driver for Maxim MAX77621.
-MAX77621 supports the junction temp warning at 120 degC and
-140 degC which is configurable. It generates alert signal when
-junction temperature crosses these threshold.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Add DT properties and its binding details to make this
-configuration from DT.
+iQIcBAABCAAGBQJXDnIpAAoJEN0jrNd/PrOh3DkP/0FrpZYpnWHkE13hyrqEdfsr
+HXbORfUCZVDdVjwgco3bhCzdW6lbJCk+mWECYtkqXG2mB1jvvQzSU/cpLVu75yyl
+n2sCLEI2a+8SM6NpAOfzbDArvJU/BKUj+g7oPpFuzgkBti7vrRvYX0cf7Nj5ew3j
+egFCZ96dyB56IZ7Xov+ztSBU00+rFsyvKydUvPpEQqebzXDJzTI68xEs3EcQe5iw
++vx3CHBGKPAN0Erz20lBlR2RuWqZFaDZpxVmrMU/3dA0Ef9V1vLtKAcdH+FOEfbU
+EPkykV6fI3WcjShkZaQtRj+i/jpU3+Sgx4GShAaz+cadEavagVeBXeiZ80l5KkHz
+t5rSaWZvofvB9Lnb9V5sM+AnOWWSiA48qyTm68MJzQ6w+EoXETLZtAw8CiF/3UhS
+Fl1jptCOE5lqxJy1EKoVeHn+5LQ5LgKD84bSaBb9mm7gCs66FZzzHMTJprNkMhO6
+ZZ62FImCzJdj2O2tuXqUc1qdUd6rXJ3C4GRFIRrX5svhrddBB8CAAV4a8cHoBUK4
+XIfwKjZJwNm7uuCdlJOJ/zN4S2+7O9gBY4vPzJ/fza8bVHZ8QGYYgGlTqfcK0/IS
+WbuTBdDw5b3xLQ1o1D19fMmySvUDjbsPd1r372MoXIuiPW8qM8Xwkp77DNkTpqKo
+LPu3z6ajLousVnVNw4m2
+=X1Xj
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/regulator/max8973-regulator.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/max8973-regulator.txt b/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
-index f80ea2fe27e6..c2c68fcc1b41 100644
---- a/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
-@@ -32,6 +32,13 @@ Optional properties:
- 
- Enhanced transient response (ETR) will affect the configuration of CKADV.
- 
-+-junction-warn-millicelsius: u32, junction warning temperature threshold
-+		in millicelsius. If die temperature crosses this level then
-+		device generates the warning interrupts.
-+
-+Please note that thermal functionality is only supported on MAX77621. The
-+supported threshold warning temperature for MAX77621 are 120 degC and 140 degC.
-+
- Example:
- 
- 	max8973@1b {
--- 
-2.8.0.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--uQr8t48UFsdbeI+V--
