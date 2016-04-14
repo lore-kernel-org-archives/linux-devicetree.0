@@ -1,59 +1,75 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH RFC 2/5] net: phy: sun8i-h3-ephy: Add driver for Allwinner
- H3 Ethernet PHY
-Date: Thu, 14 Apr 2016 10:04:50 +0800
-Message-ID: <CAGb2v65-V3Mt_aPJNdfEH6VFySGc_cBhqgbE_VR5tsBtPvVjfA@mail.gmail.com>
-References: <1459786954-12649-1-git-send-email-wens@csie.org>
- <1459786954-12649-3-git-send-email-wens@csie.org> <570BF9A6.2040109@gmail.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH v2 1/5] phy: Rename phy-brcmstb-sata driver to
+ phy-brcm-sata driver
+Date: Thu, 14 Apr 2016 08:43:55 +0530
+Message-ID: <CAALAos_4MVsc0A9fCTgqCgBBU4p4rCqzhJ3zPJs=jzJMqtekGA@mail.gmail.com>
+References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
+	<1459140510-5317-2-git-send-email-anup.patel@broadcom.com>
+	<570E507C.4040306@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <570BF9A6.2040109@gmail.com>
+In-Reply-To: <570E507C.4040306@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, netdev <netdev@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Hans De Goede <hdegoede@redhat.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 12, 2016 at 3:23 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 04/04/16 09:22, Chen-Yu Tsai wrote:
->> The Allwinner H3 SoC incorporates an Ethernet PHY. This is enabled and
->> configured through a memory mapped hardware register.
+Hi Kishon,
+
+On Wed, Apr 13, 2016 at 7:28 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi,
+>
+> On Monday 28 March 2016 10:18 AM, Anup Patel wrote:
+>> Currently, we have a common SATA3 PHY driver for all Broadcom
+>> STB SoCs. This driver can be extended and re-used for Broadcom
+>> iProc SoCs having same SATA3 PHY.
 >>
->> This same register also configures the MAC interface mode and TX clock
->> source. Also covered by the register, but not supported in this driver,
->> are TX/RX clock delay chains and inverters, and an RMII module.
+>> This patch renames existing Broadcom STB SATA3 PHY driver to
+>> common Broadcom SATA3 PHY driver to share this PHY driver across
+>> Broadcom SoCs.
+>>
+>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+>> ---
+>>  drivers/phy/Kconfig                                 | 18 +++++++++---------
+>>  drivers/phy/Makefile                                |  2 +-
+>>  drivers/phy/{phy-brcmstb-sata.c => phy-brcm-sata.c} |  8 ++++----
+>>  3 files changed, 14 insertions(+), 14 deletions(-)
+>>  rename drivers/phy/{phy-brcmstb-sata.c => phy-brcm-sata.c} (97%)
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 26566db..c0187a7 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -403,15 +403,6 @@ config PHY_TUSB1210
+>>       help
+>>         Support for TI TUSB1210 USB ULPI PHY.
+>>
+>> -config PHY_BRCMSTB_SATA
+>> -     tristate "Broadcom STB SATA PHY driver"
+>> -     depends on ARCH_BRCMSTB || BMIPS_GENERIC
+>> -     depends on OF
+>> -     select GENERIC_PHY
+>> -     help
+>> -       Enable this to support the SATA3 PHY on 28nm or 40nm Broadcom STB SoCs.
+>> -       Likely useful only with CONFIG_SATA_BRCMSTB enabled.
+>> -
+>>  config PHY_CYGNUS_PCIE
+>>       tristate "Broadcom Cygnus PCIe PHY driver"
+>>       depends on OF && (ARCH_BCM_CYGNUS || COMPILE_TEST)
+>> @@ -421,4 +412,13 @@ config PHY_CYGNUS_PCIE
+>>         Enable this to support the Broadcom Cygnus PCIe PHY.
+>>         If unsure, say N.
+>>
+>> +config PHY_BRCM_SATA
 >
-> This is not really a PHY driver, more a driver for a special piece of
-> hardware responsible for properly configuring a more standard integrated
-> PHY which is then driven via standard MDIO accesses, right?
->
-> The intention to make this driver re-usable is fine, but still makes me
-> wonder if it should not be put in a file which is linked into the
-> Ethernet MAC driver, and utilized by this one in a way that may be more
-> "ad-hoc" than what you are proposing here.
->
-> One thing that is not obvious here, is how is the device parenting done?
-> Are we able to associate a phy_device to this SUN8I_H3_EPHY platform
-> device here?
+> changing config name should be done with utmost care as it might break
+> oldconfig users.
+> Has this been fixed in all the defconfigs where it is included?
 
-AFAIK you can't tie a platform device to an MDIO bus and phy_device.
-I looked around for any examples and found none.
+None of the existing defconfigs have PHY_BRCMSTB_SATA enabled. In fact,
+no other Kconfig option currently selects PHY_BRCMSTB_SATA. I think we
+are safe here.
 
-We're going to run into a similar issue with an MFD device later on.
-The X-Powers AC200 is a I2C based combo chip which includes an Ethernet
-PHY.
-
-> Another thing is that the Ethernet MAC driver is fully aware of when
-> putting an Ethernet PHY into suspend, shutdown, or fully functional
-> power state should occur, if you have a separate platform driver here
-> which does not listen for such kinds of events (hint: none are generated
-> right now), then you cannot implement a working power state interface
-> between the MAC, SHIM and PHY here, even though you would want that.
-
-For this particular piece of hardware it would be possible to move the
-code into the MAC driver itself. For the AC200, not so much. Using the
-generic PHY framework to do power up / down would be a possibility.
-
-
-Regards
-ChenYu
+Regards,
+Anup
