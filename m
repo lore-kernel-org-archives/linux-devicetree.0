@@ -1,232 +1,60 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v5 3/5] clk: mvebu: new driver for Armada AP806 system controller
-Date: Thu, 14 Apr 2016 17:33:31 +0200
-Message-ID: <1460648013-31320-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v5 0/5] clk: mvebu: clock drivers for Marvell Armada 7K/8K
+Date: Thu, 14 Apr 2016 17:33:28 +0200
+Message-ID: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
 Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The Armada AP806 system controller, amongst other things, provides a
-number of clocks for the platform: the CPU cluster clocks, whose
-frequencies are found by reading the Sample At Reset register, one
-fixed clock, and another clock derived from the fixed clock, which is
-the one used by most peripherals in AP806.
+Hello,
 
-The AP806 is one of the two core HW blocks used in the Marvell 7K/8K
-SoCs.
+Here is the fifth version of the clock drivers for Armada 7K/8K. The
+first two patches have already been applied by Stephen Boyd, but I'm
+still including them for completeness.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- drivers/clk/mvebu/Kconfig                   |   3 +
- drivers/clk/mvebu/Makefile                  |   1 +
- drivers/clk/mvebu/ap806-system-controller.c | 168 ++++++++++++++++++++++++++++
- 3 files changed, 172 insertions(+)
+Changes since v4:
+
+ - Remove the gatable-clock-indices from the CP110 driver, use "none"
+   when a given bit does not provide a clock. Suggested by Rob
+   Herring.
+
+ - Update the gatable clock tree with the latest technical information
+   received.
+
+ - Turn the clock drivers into proper platform drivers. Suggested by
+   Stephen Boyd.
+
+ - Remove useless headers include from the clock drivers. Suggested by
+   Stephen Boyd.
+
+ - Add proper handling in the clock driver ->probe() function.
+
+Thanks!
+
+Thomas
+
+Thomas Petazzoni (5):
+  clk: unconditionally recurse into clk/mvebu/
+  dt-bindings: arm: add DT binding for Marvell AP806 system controller
+  clk: mvebu: new driver for Armada AP806 system controller
+  dt-bindings: arm: add DT binding for Marvell CP110 system controller
+  clk: mvebu: new driver for Armada CP110 system controller
+
+ .../arm/marvell/ap806-system-controller.txt        |  35 ++
+ .../arm/marvell/cp110-system-controller0.txt       |  83 +++++
+ drivers/clk/Makefile                               |   2 +-
+ drivers/clk/mvebu/Kconfig                          |   6 +
+ drivers/clk/mvebu/Makefile                         |   2 +
+ drivers/clk/mvebu/ap806-system-controller.c        | 168 +++++++++
+ drivers/clk/mvebu/cp110-system-controller.c        | 399 +++++++++++++++++++++
+ 7 files changed, 694 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
  create mode 100644 drivers/clk/mvebu/ap806-system-controller.c
+ create mode 100644 drivers/clk/mvebu/cp110-system-controller.c
 
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index eaee8f0..bf7ae00 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -29,6 +29,9 @@ config ARMADA_XP_CLK
- 	select MVEBU_CLK_COMMON
- 	select MVEBU_CLK_CPU
- 
-+config ARMADA_AP806_SYSCON
-+	bool
-+
- config DOVE_CLK
- 	bool
- 	select MVEBU_CLK_COMMON
-diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index 8866115..f4aa481 100644
---- a/drivers/clk/mvebu/Makefile
-+++ b/drivers/clk/mvebu/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
- obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
- obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
- obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
-+obj-$(CONFIG_ARMADA_AP806_SYSCON) += ap806-system-controller.o
- obj-$(CONFIG_DOVE_CLK)		+= dove.o dove-divider.o
- obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
- obj-$(CONFIG_ORION_CLK)		+= orion.o
-diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
-new file mode 100644
-index 0000000..ac9201c
---- /dev/null
-+++ b/drivers/clk/mvebu/ap806-system-controller.c
-@@ -0,0 +1,168 @@
-+/*
-+ * Marvell Armada AP806 System Controller
-+ *
-+ * Copyright (C) 2016 Marvell
-+ *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#define pr_fmt(fmt) "ap806-system-controller: " fmt
-+
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define AP806_SAR_REG			0x400
-+#define AP806_SAR_CLKFREQ_MODE_MASK	0x1f
-+
-+#define AP806_CLK_NUM 			4
-+
-+static struct clk *ap806_clks[AP806_CLK_NUM];
-+
-+static struct clk_onecell_data ap806_clk_data = {
-+	.clks = ap806_clks,
-+	.clk_num = AP806_CLK_NUM,
-+};
-+
-+static int ap806_syscon_clk_probe(struct platform_device *pdev)
-+{
-+	unsigned int freq_mode, cpuclk_freq;
-+	const char *name, *fixedclk_name;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct regmap *regmap;
-+	u32 reg;
-+	int ret;
-+
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&pdev->dev, "cannot get regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	ret = regmap_read(regmap, AP806_SAR_REG, &reg);
-+	if (ret) {
-+		dev_err(&pdev->dev, "cannot read from regmap\n");
-+		return ret;
-+	}
-+
-+	freq_mode = reg & AP806_SAR_CLKFREQ_MODE_MASK;
-+	switch(freq_mode) {
-+	case 0x0 ... 0x5:
-+		cpuclk_freq = 2000;
-+		break;
-+	case 0x6 ... 0xB:
-+		cpuclk_freq = 1800;
-+		break;
-+	case 0xC ... 0x11:
-+		cpuclk_freq = 1600;
-+		break;
-+	case 0x12 ... 0x16:
-+		cpuclk_freq = 1400;
-+		break;
-+	case 0x17 ... 0x19:
-+		cpuclk_freq = 1300;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "invalid SAR value\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Convert to hertz */
-+	cpuclk_freq *= 1000 * 1000;
-+
-+	/* CPU clocks depend on the Sample At Reset configuration */
-+	of_property_read_string_index(np, "clock-output-names",
-+				      0, &name);
-+	ap806_clks[0] = clk_register_fixed_rate(&pdev->dev, name, NULL,
-+						0, cpuclk_freq);
-+	if (IS_ERR(ap806_clks[0])) {
-+		ret = PTR_ERR(ap806_clks[0]);
-+		goto fail0;
-+	}
-+
-+	of_property_read_string_index(np, "clock-output-names",
-+				      1, &name);
-+	ap806_clks[1] = clk_register_fixed_rate(&pdev->dev, name, NULL, 0,
-+						cpuclk_freq);
-+	if (IS_ERR(ap806_clks[1])) {
-+		ret = PTR_ERR(ap806_clks[1]);
-+		goto fail1;
-+	}
-+
-+	/* Fixed clock is always 1200 Mhz */
-+	of_property_read_string_index(np, "clock-output-names",
-+				      2, &fixedclk_name);
-+	ap806_clks[2] = clk_register_fixed_rate(&pdev->dev, fixedclk_name, NULL, 0,
-+						1200 * 1000 * 1000);
-+	if (IS_ERR(ap806_clks[2])) {
-+		ret = PTR_ERR(ap806_clks[2]);
-+		goto fail2;
-+	}
-+
-+	/* MSS Clock is fixed clock divided by 6 */
-+	of_property_read_string_index(np, "clock-output-names",
-+				      3, &name);
-+	ap806_clks[3] = clk_register_fixed_factor(NULL, name, fixedclk_name,
-+						  0, 1, 6);
-+	if (IS_ERR(ap806_clks[3])) {
-+		ret = PTR_ERR(ap806_clks[3]);
-+		goto fail3;
-+	}
-+
-+	ret = of_clk_add_provider(np, of_clk_src_onecell_get, &ap806_clk_data);
-+	if (ret)
-+		goto fail_clk_add;
-+
-+	return 0;
-+
-+fail_clk_add:
-+	clk_unregister_fixed_factor(ap806_clks[3]);
-+fail3:
-+	clk_unregister_fixed_rate(ap806_clks[2]);
-+fail2:
-+	clk_unregister_fixed_rate(ap806_clks[1]);
-+fail1:
-+	clk_unregister_fixed_rate(ap806_clks[0]);
-+fail0:
-+	return ret;
-+}
-+
-+static int ap806_syscon_clk_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+	clk_unregister_fixed_factor(ap806_clks[3]);
-+	clk_unregister_fixed_rate(ap806_clks[2]);
-+	clk_unregister_fixed_rate(ap806_clks[1]);
-+	clk_unregister_fixed_rate(ap806_clks[0]);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ap806_syscon_of_match[] = {
-+        { .compatible = "marvell,ap806-system-controller", },
-+        {},
-+};
-+MODULE_DEVICE_TABLE(of, armada8k_pcie_of_match);
-+
-+static struct platform_driver ap806_syscon_driver = {
-+	.probe = ap806_syscon_clk_probe,
-+	.remove = ap806_syscon_clk_remove,
-+	.driver		= {
-+		.name	= "marvell-ap806-system-controller",
-+		.of_match_table = ap806_syscon_of_match,
-+	},
-+};
-+
-+module_platform_driver(ap806_syscon_driver);
-+
-+MODULE_DESCRIPTION("Marvell AP806 System Controller driver");
-+MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni@free-electrons.com>");
-+MODULE_LICENSE("GPL");
 -- 
 2.6.4
 
