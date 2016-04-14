@@ -1,57 +1,57 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/2] [media] atmel-isc: add driver for Atmel ISC
-Date: Thu, 14 Apr 2016 17:17:37 +0300
-Message-ID: <3857132.BKDS7IHZFq@avalon>
-References: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 2/2] pci: host: new driver for Marvell Armada 7K/8K PCIe
+ controller
+Date: Thu, 14 Apr 2016 16:25:28 +0200
+Message-ID: <20160414162528.678be5b7@free-electrons.com>
+References: <1459071058-18328-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1459071058-18328-3-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160327140348.GA19498@lunn.ch>
+	<20160411175651.5f32a990@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Songjun Wu <songjun.wu@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Benoit Parrot <bparrot@ti.com>, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Hans Verkuil <hverkuil@xs4all.nl>, Kumar Gala <galak@codeaurora.org>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Richard =?ISO-8859-1?Q?R=F6jfors?= <richard@puffinpack.se>, g.liakhovetski@gmx.de, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160411175651.5f32a990@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Songjun,
+Hello,
 
-On Wednesday 13 Apr 2016 15:44:18 Songjun Wu wrote:
-> The Image Sensor Controller driver includes two parts.
-> 1) Driver code to implement the ISC function.
-> 2) Device tree binding documentation, it describes how
->    to add the ISC in device tree.
+On Mon, 11 Apr 2016 17:56:51 +0200, Thomas Petazzoni wrote:
+
+> > > +	struct pcie_port *pp = arg;
+> > > +	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
+> > > +	void __iomem *base = pcie->base;
+> > > +	u32 val;
+> > > +
+> > > +	val = readl(base + PCIE_GLOBAL_INT_CAUSE1_REG);
+> > > +	writel(val, base + PCIE_GLOBAL_INT_CAUSE1_REG);
+> > > +
+> > > +	return IRQ_HANDLED;
+> > 
+> > Maybe a comment as to why you are just throwing them away.
 > 
-> 
-> Songjun Wu (2):
->   [media] atmel-isc: add the Image Sensor Controller code
->   [media] atmel-isc: DT binding for Image Sensor Controller driver
+> I'll have a look into this.
 
-I can't see the second patch in the linux-media mailing list archives, could 
-you please resend it ?
+Enabling the INT A-D interrupts is needed for the PCI device drivers to
+receive interrupts from their respective PCI devices. But then, once
+you enable the INT A-D interrupts, they are also latched into the PCIe
+controller, so if you don't acknowledge them in the PCIe controller
+level, at the first interrupt coming from a PCI device, the system
+hangs. I've added a comment in the driver about this.
 
->  .../devicetree/bindings/media/atmel-isc.txt        |   84 ++
->  drivers/media/platform/Kconfig                     |    1 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/atmel/Kconfig               |    9 +
->  drivers/media/platform/atmel/Makefile              |    3 +
->  drivers/media/platform/atmel/atmel-isc-regs.h      |  280 ++++
->  drivers/media/platform/atmel/atmel-isc.c           | 1537 ++++++++++++++++
->  7 files changed, 1916 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
->  create mode 100644 drivers/media/platform/atmel/Kconfig
->  create mode 100644 drivers/media/platform/atmel/Makefile
->  create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
->  create mode 100644 drivers/media/platform/atmel/atmel-isc.c
+> Is this needed? The clocks are registered in of_clk_init(), i.e at
+> time_init() time. This is way before the device drivers get probed, no?
 
+The clock drivers are now regular platform drivers, so I'll add the
+EPROBE_DEFER handling logic.
+
+Thanks!
+
+Thomas
 -- 
-Regards,
-
-Laurent Pinchart
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
