@@ -1,84 +1,64 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
- driver
-Date: Thu, 14 Apr 2016 11:47:03 -0500
-Message-ID: <570FC987.80304@codeaurora.org>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <20160414163240.GB15303@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160414163240.GB15303@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/5] Add XOR engine support to Armada 3700 SoC (ARM64)
+Date: Thu, 14 Apr 2016 18:53:33 +0200
+Message-ID: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote:
+Hi,
 
->> @@ -0,0 +1,65 @@
->> +Qualcomm EMAC Gigabit Ethernet Controller
->> +
->> +Required properties:
->> +- compatible : Should be "qcom,emac".
->
-> Come on... Can you guess what I'm going to say here.
+This series adds the support of the Marvell XOR engine to the Armada
+3700 SoC. As this SoC is an ARM64 one, then the code has been fixed to
+support the 64 bits platform.
 
-Ooops, I missed that one.
+The initialization for the Armada 3700 is different from the other
+SoCs, so in order to support it, a new way of handling the different
+family have been added.
 
->
->> +- reg : Offset and length of the register regions for the device
->> +- reg-names : Register region names referenced in 'reg' above.
->> +	Required register resource entries are:
->> +	"base"   : EMAC controller base register block.
->> +	"csr"    : EMAC wrapper register block.
->> +	Optional register resource entries are:
->> +	"ptp"    : EMAC PTP (1588) register block.
->> +		   Required if 'qcom,emac-tstamp-en' is present.
->> +	"sgmii"  : EMAC SGMII PHY register block.
->> +- interrupts : Interrupt numbers used by this controller
->> +- interrupt-names : Interrupt resource names referenced in 'interrupts' above.
->> +	Required interrupt resource entries are:
->> +	"emac_core0"   : EMAC core0 interrupt.
->> +	"sgmii_irq"   : EMAC SGMII interrupt.
->> +- phy-addr            : Specifies phy address on MDIO bus.
->> +			Required if the optional property "qcom,no-external-phy"
->> +			is not specified.
->
-> As I mentioned in the last version, you should still describe this with
-> a standard MDIO bus binding even if you can't use the generic code.
+Once the dmaengine part will be approved, I will apply the dts part
+in the mvebu/dt64 tree.
 
-You mean like this?
+In this third series I took into account the remark from Jason Cooper
+about adding the COMPILE_TEST dependency.
 
-	phy0: ethernet-phy@0 {
-		compatible = "qcom,fsm9900-emac-phy";
-		reg = <4>;
-	};
+Thanks,
 
->> +Optional properties:
->> +- qcom,emac-tstamp-en       : Enables the PTP (1588) timestamping feature.
->> +			      Include this only if PTP (1588) timestamping
->> +			      feature is needed. If included, "ptp" register
->> +			      base should be specified.
->> +- mac-address               : The 6-byte MAC address. If present, it is the
->> +			      default MAC address.
->> +- qcom,no-external-phy      : Indicates there is no external PHY connected to
->> +			      EMAC. Include this only if the EMAC is directly
->> +			      connected to the peer end without EPHY.
->> +Example:
->> +	emac0: qcom,emac@feb20000 {
->
-> ethernet@
->
->> +		compatible = "qcom,fsm9900-emac";
->
-> Ah, I see you fixed it here...
+Gregory
 
-and in the code, I just missed it in the top of the file.  I'll fix it 
-everywhere in v5.
+Changelog:
+v2 -> v3:
+ - Add COMPILE_TEST dependency
+
+v1 ->v2:
+ - Fix typo in commit log of patch 3
+ - Reformatting to 1 compatible string per line in
+   Documentation/devicetree/bindings/dma/mv-xor.txt
+ - Added Acked-by from Rob in patch 3
+
+Gregory CLEMENT (3):
+  dmaengine: mv_xor: make the code 64 bits compliant
+  dmaengine: mv_xor: use SoC type instead of directly the operation mode
+  dmaengine: mv_xor: Allow selecting mv_xor for mvebu only compatible
+    SoC
+
+Marcin Wojtas (2):
+  dmaengine: mv_xor: add support for Armada 3700 SoC
+  arm64: dts: marvell: add XOR node for Armada 3700 SoC
+
+ Documentation/devicetree/bindings/dma/mv-xor.txt |  5 +-
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi     | 13 ++++
+ drivers/dma/Kconfig                              |  2 +-
+ drivers/dma/mv_xor.c                             | 98 +++++++++++++++++++-----
+ drivers/dma/mv_xor.h                             |  1 +
+ 5 files changed, 97 insertions(+), 22 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
