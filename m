@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 1/5] dmaengine: mv_xor: make the code 64 bits compliant
-Date: Thu, 14 Apr 2016 18:53:34 +0200
-Message-ID: <1460652818-14647-2-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v3 5/5] arm64: dts: marvell: add XOR node for Armada 3700 SoC
+Date: Thu, 14 Apr 2016 18:53:38 +0200
+Message-ID: <1460652818-14647-6-git-send-email-gregory.clement@free-electrons.com>
 References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
@@ -10,34 +10,40 @@ To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix two warnings which appear when building for 64 bits target.
+From: Marcin Wojtas <mw@semihalf.com>
 
+Armada 3700 SoC comprise one dual-channel XOR engine and this
+patch adds its according representation.
+
+Signed-off-by: Marcin Wojtas <mw@semihalf.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/dma/mv_xor.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 3922a5d56806..a6ec82776cbc 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -477,7 +477,7 @@ mv_xor_prep_dma_xor(struct dma_chan *chan, dma_addr_t dest, dma_addr_t *src,
- 	BUG_ON(len > MV_XOR_MAX_BYTE_COUNT);
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index ba9df7ff2a72..932783d82ea9 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -112,6 +112,19 @@
+ 				status = "disabled";
+ 			};
  
- 	dev_dbg(mv_chan_to_devp(mv_chan),
--		"%s src_cnt: %d len: %u dest %pad flags: %ld\n",
-+		"%s src_cnt: %d len: %zu dest %pad flags: %ld\n",
- 		__func__, src_cnt, len, &dest, flags);
- 
- 	sw_desc = mv_chan_alloc_slot(mv_chan);
-@@ -1220,7 +1220,7 @@ static int mv_xor_probe(struct platform_device *pdev)
- 			struct mv_xor_chan *chan;
- 			dma_cap_mask_t cap_mask;
- 			int irq;
--			op_in_desc = (int)of_id->data;
-+			op_in_desc = (uintptr_t)of_id->data;
- 
- 			if (i >= max_channels)
- 				continue;
++			xor@60900 {
++				compatible = "marvell,armada-3700-xor";
++				reg = <0x60900 0x100
++				       0x60b00 0x100>;
++
++				xor10 {
++					interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++				};
++				xor11 {
++					interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			sata@e0000 {
+ 				compatible = "marvell,armada-3700-ahci";
+ 				reg = <0xe0000 0x2000>;
 -- 
 2.5.0
