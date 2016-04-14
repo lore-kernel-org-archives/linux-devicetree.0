@@ -1,79 +1,142 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 0/9] Aspeed AST2400 BMC support
-Date: Thu, 14 Apr 2016 19:17:40 +0930
-Message-ID: <1460627269-21721-1-git-send-email-joel@jms.id.au>
+From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2] ARM: arm64: dts: Add expansion bus to VExpress and Juno
+Date: Thu, 14 Apr 2016 10:52:26 +0100
+Message-ID: <1460627546-24230-1-git-send-email-brian.starkey@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The VExpress and Juno development platforms have an external expansion
+bus which can be used for additional hardware (e.g. LogicTile Express
+daughterboards).
+Add this bus to all VExpress CoreTile and Juno device-trees.
 
-Hello!
+On VExpress, the bus is described for a CoreTile occupying site 1.
 
-These patches add basic support for the Aspeed AST2400 SoC, a popular BMC
-device that is also the target for our OpenBMC[1] efforts.
+Signed-off-by: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+---
 
-This series have been boot tested on a Palmetto; an OpenPower dev board that
-uses the ast2400 as it's BMC, as well as Qemu (-M palmetto-bmc on 2.6-rc1).
+Only change from v1 is rewording of the commit message as suggested
+by Liviu.
 
-Cheers,
+ arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts  |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts     |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts      |   13 +++++++++++++
+ arch/arm64/boot/dts/arm/juno-base.dtsi      |   10 ++++++++++
+ 5 files changed, 62 insertions(+)
 
-Joel
-
-[1] https://lwn.net/Articles/683320/
-
-
-Benjamin Herrenschmidt (1):
-  irqchip: Add irq controller for Aspeed
-
-Joel Stanley (8):
-  doc/devicetree: Add Aspeed and Tyan to vendor-prefixes
-  doc/devicetree: Add Aspeed VIC bindings
-  doc/devicetree: Add Aspeed clock bindings
-  clocksource/moxart: Generalise timer for use on other socs
-  drivers/clk: Add Aspeed clock driver
-  arm/dts: Add aspeed device trees
-  arm: Add Aspeed AST2400 machine
-  arm/configs: Add aspeed defconfig
-
- .../devicetree/bindings/clock/aspeed-clock.txt     |  44 ++++
- .../interrupt-controller/aspeed,ast2400-vic.txt    |  24 +++
- .../bindings/timer/moxa,moxart-timer.txt           |   4 +-
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- MAINTAINERS                                        |   8 +
- arch/arm/Kconfig                                   |   2 +
- arch/arm/Makefile                                  |   1 +
- arch/arm/boot/dts/Makefile                         |   3 +
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts      |  21 ++
- arch/arm/boot/dts/ast2400.dtsi                     | 152 +++++++++++++
- arch/arm/configs/aspeed_defconfig                  |  86 ++++++++
- arch/arm/mach-aspeed/Kconfig                       |  19 ++
- arch/arm/mach-aspeed/Makefile                      |   3 +
- arch/arm/mach-aspeed/aspeed.c                      |  80 +++++++
- arch/arm/mach-aspeed/ast2400.h                     | 117 ++++++++++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-aspeed.c                           | 106 +++++++++
- drivers/clocksource/Kconfig                        |   6 +
- drivers/clocksource/Makefile                       |   2 +-
- drivers/clocksource/moxart_timer.c                 |  90 ++++++--
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-aspeed-vic.c                   | 238 +++++++++++++++++++++
- 22 files changed, 987 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/aspeed-clock.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
- create mode 100644 arch/arm/boot/dts/ast2400.dtsi
- create mode 100644 arch/arm/configs/aspeed_defconfig
- create mode 100644 arch/arm/mach-aspeed/Kconfig
- create mode 100644 arch/arm/mach-aspeed/Makefile
- create mode 100644 arch/arm/mach-aspeed/aspeed.c
- create mode 100644 arch/arm/mach-aspeed/ast2400.h
- create mode 100644 drivers/clk/clk-aspeed.c
- create mode 100644 drivers/irqchip/irq-aspeed-vic.c
-
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+index 9420053..ec7539b 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+@@ -280,4 +280,17 @@
+ 
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
++
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x40000000 0x3fef0000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+index 17f63f7..a339b0c 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+@@ -638,4 +638,17 @@
+ 
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
++
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x40000000 0x3fef0000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+index d2709b7..76a9ccb 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+@@ -250,4 +250,17 @@
+ 
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
++
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x40000000 0x40000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index d949fac..edac212 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -359,4 +359,17 @@
+ 
+ 		/include/ "vexpress-v2m.dtsi"
+ 	};
++
++	site2: hsb@e0000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xe0000000 0x20000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 68ccc39..dee2386 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -272,3 +272,13 @@
+ 
+ 		/include/ "juno-motherboard.dtsi"
+ 	};
++
++	site2: tlx@60000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x60000000 0x10000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0>;
++		interrupt-map = <0 0 &gic 0 0 0 168 IRQ_TYPE_LEVEL_HIGH>;
++	};
 -- 
-2.7.4
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
