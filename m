@@ -1,75 +1,100 @@
 From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v6 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
-Date: Thu, 14 Apr 2016 16:16:57 +0800
-Message-ID: <1460621819-695-3-git-send-email-jamesjj.liao@mediatek.com>
-References: <1460621819-695-1-git-send-email-jamesjj.liao@mediatek.com>
+Subject: [PATCH v7 9/9] arm: dts: mt2701: Add clock controller device nodes
+Date: Thu, 14 Apr 2016 16:11:54 +0800
+Message-ID: <1460621514-65191-10-git-send-email-jamesjj.liao@mediatek.com>
+References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1460621819-695-1-git-send-email-jamesjj.liao@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Some power domain comsumers may init before module_init.
-So the power domain provider (scpsys) need to be initialized
-earlier too.
-
-Take an example for our IOMMU (M4U) and SMI. SMI is a bridge
-between IOMMU and multimedia HW. SMI is responsible to
-enable/disable iommu and help transfer data for each multimedia
-HW. Both of them have to wait until the power and clocks are
-enabled.
-
-So scpsys driver should be initialized before SMI, and SMI should
-be initialized before IOMMU, and then init IOMMU consumers
-(display/vdec/venc/camera etc.).
-
-IOMMU is subsys_init by default. So we need to init scpsys driver
-before subsys_init.
+Add clock controller nodes for MT2701, include topckgen, infracfg,
+pericfg, apmixedsys, mmsys, imgsys, vdecsys, hifsys, ethsys and
+bdpsys. This patch also add two oscillators that provide clocks for
+MT2701.
 
 Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 ---
- drivers/soc/mediatek/mtk-scpsys.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/mt2701.dtsi | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index 5870a24..00c0adb 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -617,4 +617,21 @@ static struct platform_driver scpsys_drv = {
- 		.of_match_table = of_match_ptr(of_scpsys_match_tbl),
- 	},
- };
--builtin_platform_driver(scpsys_drv);
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 8343768..171d4da 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -12,6 +12,7 @@
+  * GNU General Public License for more details.
+  */
+ 
++#include <dt-bindings/clock/mt2701-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include "skeleton64.dtsi"
+@@ -76,6 +77,20 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	clk26m: oscillator@0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <26000000>;
++		clock-output-names = "clk26m";
++	};
 +
-+static int __init scpsys_drv_init(void)
-+{
-+	return platform_driver_register(&scpsys_drv);
-+}
++	rtc32k: oscillator@1 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32000>;
++		clock-output-names = "rtc32k";
++	};
 +
-+/*
-+ * There are some Mediatek drivers which depend on the power domain driver need
-+ * to probe in earlier initcall levels. So scpsys driver also need to probe
-+ * earlier.
-+ *
-+ * IOMMU(M4U) and SMI drivers for example. SMI is a bridge between IOMMU and
-+ * multimedia HW. IOMMU depends on SMI, and SMI is a power domain consumer,
-+ * so the proper probe sequence should be scpsys -> SMI -> IOMMU driver.
-+ * IOMMU drivers are initialized during subsys_init by default, so we need to
-+ * move SMI and scpsys drivers to subsys_init or earlier init levels.
-+ */
-+subsys_initcall(scpsys_drv_init);
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupt-parent = <&gic>;
+@@ -85,6 +100,26 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
++	topckgen: syscon@10000000 {
++		compatible = "mediatek,mt2701-topckgen", "syscon";
++		reg = <0 0x10000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	infracfg: syscon@10001000 {
++		compatible = "mediatek,mt2701-infracfg", "syscon";
++		reg = <0 0x10001000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	pericfg: syscon@10003000 {
++		compatible = "mediatek,mt2701-pericfg", "syscon";
++		reg = <0 0x10003000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
+ 	watchdog: watchdog@10007000 {
+ 		compatible = "mediatek,mt2701-wdt",
+ 			     "mediatek,mt6589-wdt";
+@@ -109,6 +144,13 @@
+ 		reg = <0 0x10200100 0 0x1c>;
+ 	};
+ 
++	apmixedsys: syscon@10209000 {
++		compatible = "mediatek,mt2701-apmixedsys", "syscon";
++		reg = <0 0x10209000 0 0x1000>;
++		mediatek,hdmi-ibias = <0xa>;
++		#clock-cells = <1>;
++	};
++
+ 	gic: interrupt-controller@10211000 {
+ 		compatible = "arm,cortex-a7-gic";
+ 		interrupt-controller;
 -- 
 1.9.1
