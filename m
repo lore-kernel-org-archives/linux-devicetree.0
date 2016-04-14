@@ -1,127 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RESEND 1/2] pinctrl: ns2: add pinmux driver support for
- Broadcom NS2 SoC
-Date: Thu, 14 Apr 2016 11:42:13 +0200
-Message-ID: <CACRpkdYxE4UMB+AwHhUJ4cYAOget94zos_u4Z-j9obemPGewWQ@mail.gmail.com>
-References: <CAL2FKYmAoaK=E8wrKc+sHPfM3cZ5O8GnZB2yfMx-GvUH3g1pKQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL2FKYmAoaK=E8wrKc+sHPfM3cZ5O8GnZB2yfMx-GvUH3g1pKQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH 0/9] Aspeed AST2400 BMC support
+Date: Thu, 14 Apr 2016 19:17:40 +0930
+Message-ID: <1460627269-21721-1-git-send-email-joel@jms.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 9:53 AM, Yendapally Reddy Dhananjaya Reddy
-<yendapally.reddy@broadcom.com> wrote:
-> On Wed, Apr 13, 2016 at 6:49 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Tue, Mar 29, 2016 at 5:22 PM, Yendapally Reddy Dhananjaya Reddy
->> <yendapally.reddy@broadcom.com> wrote:
 
->>> +static const unsigned int gpio_0_1_pins[] = {24, 25};
->>> +static const unsigned int pwm_0_pins[] = {24};
->>> +static const unsigned int pwm_1_pins[] = {25};
->>
->> So either the same pins are used for GPIO or PWM.
->> And this pattern persists.
->>
->> Do you have a brewing GPIO driver for this block as well?
->> Is it a separate front-end calling to pinctrl using the
->> pinctrl_gpio_* calls or do you plan to patch it into this
->> driver?
->>
->> This is more of a question.
->>
->
-> This SoC supports group based configuration and there is a top level register
-> to select groups. Once the gpio_0_1_pins group is selected, there is one more
-> register to select between gpio_0_1 and pwm (only four pins). The pins
-> 24 and 25 are shared between nor pins and gpio at the top group level. Once
-> gpio group is selected, then we can select to be either gpio or pwm. I missed
-> these two pins to be added to nor_data_pins and will add in the next version.
->
-> static const unsigned nor_data_pins[] =  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
->         10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
->
-> NS2_PIN_GROUP(nand, 0, 0, 31, 1, 0),
-> NS2_PIN_GROUP(nor_data, 0, 0, 31, 1, 1),
-> NS2_PIN_GROUP(gpio_0_1, 0, 0, 31, 1, 0),
->
-> To select PWM, we need to select gpio and pwm as well.
->
-> gpio: gpio {
-> function = "gpio";
-> groups = "gpio_0_1_grp";
->
-> pwm: pwm {
-> function = "pwm";
-> groups = "pwm0_grp", "pwm1_grp";
-> };
->
-> Already available gpio driver "pinctrl-iproc-gpio.c" will be the gpio driver
-> for this soc as well without pin request.
+Hello!
 
-Then you are doing something wrong. Look in pinctrl-iproc-gpio.c:
+These patches add basic support for the Aspeed AST2400 SoC, a popular BMC
+device that is also the target for our OpenBMC[1] efforts.
 
-/*
- * Request the Iproc IOMUX pinmux controller to mux individual pins to GPIO
- */
-static int iproc_gpio_request(struct gpio_chip *gc, unsigned offset)
-{
-        struct iproc_gpio *chip = gpiochip_get_data(gc);
-        unsigned gpio = gc->base + offset;
+This series have been boot tested on a Palmetto; an OpenPower dev board that
+uses the ast2400 as it's BMC, as well as Qemu (-M palmetto-bmc on 2.6-rc1).
 
-        /* not all Iproc GPIO pins can be muxed individually */
-        if (!chip->pinmux_is_supported)
-                return 0;
+Cheers,
 
-        return pinctrl_request_gpio(gpio);
-}
+Joel
 
-static void iproc_gpio_free(struct gpio_chip *gc, unsigned offset)
-{
-        struct iproc_gpio *chip = gpiochip_get_data(gc);
-        unsigned gpio = gc->base + offset;
+[1] https://lwn.net/Articles/683320/
 
-        if (!chip->pinmux_is_supported)
-                return;
 
-        pinctrl_free_gpio(gpio);
-}
+Benjamin Herrenschmidt (1):
+  irqchip: Add irq controller for Aspeed
 
-So as you see pinctrl_request_gpio() and pinctrl_free_gpio()
-are being called.
+Joel Stanley (8):
+  doc/devicetree: Add Aspeed and Tyan to vendor-prefixes
+  doc/devicetree: Add Aspeed VIC bindings
+  doc/devicetree: Add Aspeed clock bindings
+  clocksource/moxart: Generalise timer for use on other socs
+  drivers/clk: Add Aspeed clock driver
+  arm/dts: Add aspeed device trees
+  arm: Add Aspeed AST2400 machine
+  arm/configs: Add aspeed defconfig
 
-These will in turn call pinmux_request_gpio() and
-pinmux_free_gpio() to make the backing pin controller
-mux in the pin as GPIO.
+ .../devicetree/bindings/clock/aspeed-clock.txt     |  44 ++++
+ .../interrupt-controller/aspeed,ast2400-vic.txt    |  24 +++
+ .../bindings/timer/moxa,moxart-timer.txt           |   4 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   2 +
+ MAINTAINERS                                        |   8 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +
+ arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts      |  21 ++
+ arch/arm/boot/dts/ast2400.dtsi                     | 152 +++++++++++++
+ arch/arm/configs/aspeed_defconfig                  |  86 ++++++++
+ arch/arm/mach-aspeed/Kconfig                       |  19 ++
+ arch/arm/mach-aspeed/Makefile                      |   3 +
+ arch/arm/mach-aspeed/aspeed.c                      |  80 +++++++
+ arch/arm/mach-aspeed/ast2400.h                     | 117 ++++++++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-aspeed.c                           | 106 +++++++++
+ drivers/clocksource/Kconfig                        |   6 +
+ drivers/clocksource/Makefile                       |   2 +-
+ drivers/clocksource/moxart_timer.c                 |  90 ++++++--
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-aspeed-vic.c                   | 238 +++++++++++++++++++++
+ 22 files changed, 987 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/aspeed-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+ create mode 100644 arch/arm/boot/dts/ast2400.dtsi
+ create mode 100644 arch/arm/configs/aspeed_defconfig
+ create mode 100644 arch/arm/mach-aspeed/Kconfig
+ create mode 100644 arch/arm/mach-aspeed/Makefile
+ create mode 100644 arch/arm/mach-aspeed/aspeed.c
+ create mode 100644 arch/arm/mach-aspeed/ast2400.h
+ create mode 100644 drivers/clk/clk-aspeed.c
+ create mode 100644 drivers/irqchip/irq-aspeed-vic.c
 
-pinmux_request_gpio() will end up in pin_request()
-and at this point:
+-- 
+2.7.4
 
-if (gpio_range && ops->gpio_request_enable)
-                /* This requests and enables a single GPIO pin */
-                status = ops->gpio_request_enable(pctldev, gpio_range, pin);
-
-As you can see: it will attempt to call the .gpio_request_enable()
-method of your struct pinmux_ops.
-
-But your pinmux ops look like this:
-
-+static struct pinmux_ops ns2_pinmux_ops = {
-+       .get_functions_count = ns2_get_functions_count,
-+       .get_function_name = ns2_get_function_name,
-+       .get_function_groups = ns2_get_function_groups,
-+       .set_mux = ns2_pinmux_enable,
-+};
-
-I.e. there is no way that GPIO can be set up as a GPIO line,
-and you're relying on some other pin control entries in the
-device tree to do that, which is unnecessarily complicated.
-
-Please consider implementing the .gpio_request_enable callback
-for this pin multiplexer.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
