@@ -1,72 +1,78 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 5/5] serial: sirf: Use generic uart-has-rtscts DT property
-Date: Thu, 14 Apr 2016 14:13:23 +0200
-Message-ID: <1460636003-3011-6-git-send-email-geert+renesas@glider.be>
-References: <1460636003-3011-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460636003-3011-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Qipan Li <Qipan.Li-kQvG35nSl+M@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 06/11] phy: da8xx-usb: new driver for DA8XX SoC USB PHY
+Date: Thu, 14 Apr 2016 18:02:15 +0530
+Message-ID: <570F8DCF.2000402@ti.com>
+References: <1458181615-27782-1-git-send-email-david@lechnology.com>
+ <1458181615-27782-7-git-send-email-david@lechnology.com>
+ <56FE74AC.6080303@ti.com> <570EB143.4060309@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570EB143.4060309@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: Petr Kulhavy <petr@barix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bin Liu <b-liu@ti.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Tony Lindgren <tony@atomide.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert the SiRF UART driver from using the vendor-specific
-"sirf,uart-has-rtscts" to the generic "uart-has-rtscts" DT property, as
-documented by the Generic Serial DT Bindings.
+Hi,
 
-The old vendor-specific property is still recognized by the driver for
-backwards compatibility, but deprecated.
+On Thursday 14 April 2016 02:21 AM, David Lechner wrote:
+> On 04/01/2016 08:16 AM, Kishon Vijay Abraham I wrote:
+> 
+>>> +EXPORT_SYMBOL_GPL(da8xx_usb20_phy_set_mode);
+>>
+>> Don't prefer export symbols from PHY driver. That'll create unnecessary
+>> dependencies between the controller and the PHY.
+>>
+>> I think it'll be better to create a new attribute and use it?
+>>
+> 
+> Just having an attribute that keeps track of state does not work. I need a
+> callback to poke registers. Would this be acceptable instead?
+> 
+> -----8<------
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index e7e574d..a13c7e4 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -342,6 +342,36 @@ int phy_power_off(struct phy *phy)
+>  }
+>  EXPORT_SYMBOL_GPL(phy_power_off);
+> 
+> +int phy_get_mode(struct phy *phy, enum phy_mode *mode)
+> +{
+> +       int ret;
+> +
+> +       if (!phy || !phy->ops->get_mode)
+> +               return 0;
+> +
+> +       mutex_lock(&phy->mutex);
+> +       ret = phy->ops->get_mode(phy, mode);
+> +       mutex_unlock(&phy->mutex);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(phy_get_mode);
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/serial/sirf-uart.txt | 8 ++++----
- drivers/tty/serial/sirfsoc_uart.c                      | 3 ++-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+'ops' for get_mode doesn't make much sense.
+> +
+> +int phy_set_mode(struct phy *phy, enum phy_mode mode)
+> +{
+> +       int ret;
+> +
+> +       if (!phy || !phy->ops->set_mode)
+> +               return 0;
+> +
+> +       mutex_lock(&phy->mutex);
+> +       ret = phy->ops->set_mode(phy, mode);
+> +       mutex_unlock(&phy->mutex);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(phy_set_mode);
 
-diff --git a/Documentation/devicetree/bindings/serial/sirf-uart.txt b/Documentation/devicetree/bindings/serial/sirf-uart.txt
-index 67e2a0aeb0429572..1e48bbbeecc6dd27 100644
---- a/Documentation/devicetree/bindings/serial/sirf-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/sirf-uart.txt
-@@ -9,9 +9,9 @@ Required properties:
- - clocks : Should contain uart clock number
- 
- Optional properties:
--- sirf,uart-has-rtscts: we have hardware flow controller pins in hardware
--- rts-gpios: RTS pin for USP-based UART if sirf,uart-has-rtscts is true
--- cts-gpios: CTS pin for USP-based UART if sirf,uart-has-rtscts is true
-+- uart-has-rtscts: we have hardware flow controller pins in hardware
-+- rts-gpios: RTS pin for USP-based UART if uart-has-rtscts is true
-+- cts-gpios: CTS pin for USP-based UART if uart-has-rtscts is true
- 
- Example:
- 
-@@ -28,7 +28,7 @@ On the board-specific dts, we can put rts-gpios and cts-gpios like
- 
- usp@b0090000 {
- 	compatible = "sirf,prima2-usp-uart";
--	sirf,uart-has-rtscts;
-+	uart-has-rtscts;
- 	rts-gpios = <&gpio 15 0>;
- 	cts-gpios = <&gpio 46 0>;
- };
-diff --git a/drivers/tty/serial/sirfsoc_uart.c b/drivers/tty/serial/sirfsoc_uart.c
-index 1d1c0b9857ff6900..b186c9c4f850cc16 100644
---- a/drivers/tty/serial/sirfsoc_uart.c
-+++ b/drivers/tty/serial/sirfsoc_uart.c
-@@ -1293,7 +1293,8 @@ static int sirfsoc_uart_probe(struct platform_device *pdev)
- 	sirfport->uart_reg = (struct sirfsoc_uart_register *)match->data;
- 
- 	sirfport->hw_flow_ctrl =
--		of_property_read_bool(np, "sirf,uart-has-rtscts");
-+		of_property_read_bool(np, "uart-has-rtscts") ||
-+		of_property_read_bool(np, "sirf,uart-has-rtscts") /* deprecated */;
- 	if (of_device_is_compatible(np, "sirf,prima2-uart") ||
- 		of_device_is_compatible(np, "sirf,atlas7-uart"))
- 		sirfport->uart_reg->uart_type = SIRF_REAL_UART;
--- 
-1.9.1
+this should be fine.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
