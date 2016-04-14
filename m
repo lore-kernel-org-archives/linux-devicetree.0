@@ -1,80 +1,75 @@
-From: =?big5?B?SmVmZnJleSBMaW4gKKpMuHGzuSk=?= <Jeffrey.Lin@rad-ic.com>
-Subject: RE: [PATCH] driver: input :touchscreen : add Raydium I2C touch
- driver
-Date: Thu, 14 Apr 2016 09:28:58 +0000
-Message-ID: <9BE4B49389AB2F41A64A32DFC844F1DF73F1D907@RADHCMS5.corp.rad-ic.com>
-References: <1458883269-3218-1-git-send-email-jeffrey.lin@rad-ic.com>
- <20160411082428.GA26066@dtor-ws>
+From: Andrea Merello <andrea.merello@gmail.com>
+Subject: Re: [PATCH RFC] I2C: i2c-smbus: add device tree support
+Date: Thu, 14 Apr 2016 11:37:25 +0200
+Message-ID: <CAN8YU5OqmjDdbY6Op1tH=ggQgYA4CDxizwFzGSgsZgb=DMrq5Q@mail.gmail.com>
+References: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com> <CAHp75VepT0ztJ3sLoM_Yw+yo9E3QLJaKNae_AQ3TMH=LbNeRfQ@mail.gmail.com>
+Reply-To: andrea.merello@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Language: zh-TW
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "jeffrey.lin" <yajohn@gmail.com>
-Cc: "rydberg@euromail.se" <rydberg@euromail.se>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jeesw@melfas.com" <jeesw@melfas.com>, "bleung@chromium.org" <bleung@chromium.org>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, =?big5?B?Um9nZXIgWWFuZyAot6jC7d6zKQ==?= <Roger.Yang@rad-ic.com>, =?big5?B?S1AgTGkgKKf1qfitvyk=?= <KP.Li@rad-ic.com>, =?big5?B?QWxiZXJ0IFNoaWVoICjBwqpZ3rMp?= <Albert.Shieh@rad-ic.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VepT0ztJ3sLoM_Yw+yo9E3QLJaKNae_AQ3TMH=LbNeRfQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: jdelvare@suse.de, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRG1pdHJ5Og0KT3VyIG5ldyBzdWJtaXNzaW9uIG5vdyBpcyBpbiBwcm9ncmVzcy4gRG8geW91
-IGhhdmUgYW55IGZ1cnRoZXIgc3VnZ2VzdGlvbnMgZm9yIG15IHN1Ym1pc3Npb24gYW5kIHdoZW4g
-Y2FuIEkgc3VibWl0IG15IG5ldyB1cGRhdGU/DQoNClRoYW5rIHlvdS4NCg0KQmVzdCBSZWdhcmRz
-DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQpKZWZmcmV5IExpbiyqTLhxs7kNCrfnuams7KfeDQpSYXlkaXVtIFNl
-bWljb25kdWN0b3IgQ29ycG9yYXRpb24NClRlbDooMDMpNjY2LTE4MTggRXh0LjQxNjMNCkZheDoo
-MDMpNjY2LTE5MTkNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEplZmZyZXkg
-TGluICiqTLhxs7kpIA0KU2VudDogTW9uZGF5LCBBcHJpbCAxMSwgMjAxNiA1OjU3IFBNDQpUbzog
-J0RtaXRyeSBUb3Jva2hvdic7IGplZmZyZXkubGluDQpDYzogcnlkYmVyZ0BldXJvbWFpbC5zZTsg
-Z3JhbnQubGlrZWx5QGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgamVlc3dAbWVsZmFz
-LmNvbTsgYmxldW5nQGNocm9taXVtLm9yZzsgc2NvdHQubGl1QGVtYy5jb20udHc7IFJvZ2VyIFlh
-bmcgKLeowu3esyk7IEtQIExpICin9an4rb8pOyBBbGJlcnQgU2hpZWggKMHCqlnesyk7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJFOiBbUEFUQ0hdIGRyaXZlcjogaW5w
-dXQgOnRvdWNoc2NyZWVuIDogYWRkIFJheWRpdW0gSTJDIHRvdWNoIGRyaXZlcg0KDQpIaSBEbWl0
-cnk6DQpUaGFuayB5b3UgZm9yIHlvdXIgcmVzcG9uc2UuDQoJQWN0dWFsbHksIHdlIGRpZG4ndCBp
-bXBsZW1lbnQgRlcgdXBkYXRlIGZ1bmN0aW9uIG9uIHRoZSBjaHJvbWVvcyBkZXZpY2UsIHdlIGp1
-c3QgY29weSBmdW5jdGlvbiBmcm9tIG91ciBwcmV2aW91cyBhbmRyb2lkIGRldmljZS4gSSdsbCBm
-aXggdGhhdCBvbiB0aGUgbmV4dCB2ZXJzaW9uLiBSYXlkaXVtIGNvbnRyb2xsZXIgZG9lc24ndCBo
-YXZlIGFjY2VzcyBieXRlcyBsaW1pdCwgYnV0IG15IHByZXZpb3VzIGFuZHJvaWQgZXhwZXJpbWVu
-dGFsIGRldmljZSBoYWQgNjAgYnl0ZXMgbGltaXQuDQoJDQpBYm91dCByZWZvcm1hdHRpbmcgY29t
-bWFuZCBzdHJ1Y3R1cmUsIGRvIHlvdSB3YW50IG1lIHRvIHJlZm9ybSBhbGwgbXkgY29tbWFuZHMg
-YXMgeW91IHNhaWQgaW4gdGhlIG1haWwgb3IganVzdCBpbiBjYXNlIG9mIGZ3IHVwZGF0ZSBmdW5j
-dGlvbj8gSWYgbm90IGp1c3QgaW4gY2FzZSBvZiBGVyB1cGRhdGUsIGl0J3MgYmV0dGVyIHRvIG1l
-ZXQgbWF4aW11bSBidWZmZXIgc2l6ZSwgbGlrZSAiTUFYX1BBQ0tFVF9TSVpFIi4NCg0KDQpCZXN0
-IFJlZ2FyZHMNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkplZmZyZXkgTGluLKpMuHGzuQ0Kt+e5qazsp94NClJh
-eWRpdW0gU2VtaWNvbmR1Y3RvciBDb3Jwb3JhdGlvbg0KVGVsOigwMyk2NjYtMTgxOCBFeHQuNDE2
-Mw0KRmF4OigwMyk2NjYtMTkxOQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTog
-RG1pdHJ5IFRvcm9raG92IFttYWlsdG86ZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbV0gDQpTZW50
-OiBNb25kYXksIEFwcmlsIDExLCAyMDE2IDQ6MjQgUE0NClRvOiBqZWZmcmV5Lmxpbg0KQ2M6IHJ5
-ZGJlcmdAZXVyb21haWwuc2U7IGdyYW50Lmxpa2VseUBsaW5hcm8ub3JnOyByb2JoK2R0QGtlcm5l
-bC5vcmc7IGplZXN3QG1lbGZhcy5jb207IGJsZXVuZ0BjaHJvbWl1bS5vcmc7IHNjb3R0LmxpdUBl
-bWMuY29tLnR3OyBKZWZmcmV5IExpbiAoqky4cbO5KTsgUm9nZXIgWWFuZyAot6jC7d6zKTsgS1Ag
-TGkgKKf1qfitvyk7IEFsYmVydCBTaGllaCAowcKqWd6zKTsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSF0gZHJpdmVyOiBpbnB1dCA6dG91Y2hzY3JlZW4g
-OiBhZGQgUmF5ZGl1bSBJMkMgdG91Y2ggZHJpdmVyDQoNCkhpIEplZmZyZXksDQoNCk9uIEZyaSwg
-TWFyIDI1LCAyMDE2IGF0IDAxOjIxOjA5UE0gKzA4MDAsIGplZmZyZXkubGluIHdyb3RlOg0KPiAr
-I2RlZmluZSBNQVhfUEFDS0VUX1NJWkUJCTYwDQouLi4NCj4gKyNkZWZpbmUgUkFZRElVTV9GV19Q
-QUdFU0laRQkxMjgNCi4uLg0KPiArDQo+ICtzdGF0aWMgaW50IHJheWRpdW1faTJjX3NlbmQoc3Ry
-dWN0IGkyY19jbGllbnQgKmNsaWVudCwNCj4gKwl1OCBhZGRyLCB1OCAqZGF0YSwgc2l6ZV90IGxl
-bikNCj4gK3sNCj4gKwl1OCBidWZbTUFYX1BBQ0tFVF9TSVpFICsgMV07DQo+ICsJaW50IHRyaWVz
-ID0gMDsNCj4gKw0KPiArCWlmIChsZW4gPiBNQVhfUEFDS0VUX1NJWkUpDQo+ICsJCXJldHVybiAt
-RUlOVkFMOw0KLi4uDQo+ICtzdGF0aWMgaW50IHJheWRpdW1faTJjX2Z3X3dyaXRlX3BhZ2Uoc3Ry
-dWN0IGkyY19jbGllbnQgKmNsaWVudCwNCj4gKwkJCQljb25zdCB2b2lkICpwYWdlKQ0KPiArew0K
-PiArCXN0YXRpYyBjb25zdCB1OCBhY2tfb2tbXSA9IHsgMHg1NSwgMHhBQSB9Ow0KPiArCXU4IGJ1
-ZlsyXTsNCj4gKwlpbnQgcmV0cnk7DQo+ICsJaW50IGVycm9yOw0KPiArDQo+ICsJZm9yIChyZXRy
-eSA9IDA7IHJldHJ5IDwgTUFYX0ZXX1VQREFURV9SRVRSSUVTOyByZXRyeSsrKSB7DQo+ICsJCWVy
-cm9yID0gcmF5ZGl1bV9pMmNfc2VuZChjbGllbnQsIENNRF9CT09UX1dSVCwNCj4gKwkJCSh1OCAq
-KXBhZ2UsIFJBWURJVU1fRldfUEFHRVNJWkUpOw0KPiArCQlpZiAoZXJyb3IpIHsNCj4gKwkJCWRl
-dl9lcnIoJmNsaWVudC0+ZGV2LA0KPiArCQkJCSJCTERSIFdyaXRlIFBhZ2UgZmFpbGVkOiAlZFxu
-IiwgZXJyb3IpOw0KPiArCQkJY29udGludWU7DQo+ICsJCX0NCg0KR2l2ZW4gdGhlIGFib3ZlIGRl
-ZmluaXRpb25zIG9mIE1BWF9QQUNLRVRfU0laRSBhbmQgUkFZRElVTV9GV19QQUdFU0laRSBJIGRv
-IG5vdCBiZWxpZXZlIHRoYXQgZmlybXdhcmUgdXBkYXRlIGlzIHdvcmtpbmcuDQpXaGF0IGlzIHRo
-ZSBiaWdnZXN0IGJ1ZmZlciB0aGF0IGNhbiBiZSBzZW50IHRvIHRoZSBkZXZpY2U/IE1heWJlIHdl
-IHNob3VsZCBhbGxvY2F0ZSBpdCBkeW5hbWljYWxseT8NCg0KSSBhbSBhbHNvIHdvbmRlcmluZyBh
-Ym91dCBmb3JtYXR0aW5nIGNvbW1hbmQgc3RydWN0dXJlIGFzIGJ5dGUgc2VxdWVuY2UuDQpXb3Vs
-ZCBpdCBiZSBiZXR0ZXIgdG8gZGVmaW5lIGl0IGFzOg0KDQpzdHJ1Y3QgcmFpZGl1bV9jbWQgew0K
-CXUzMiBiYW5rOw0KCWludCBsZW47DQoJdTggY21kW1JBSURJVU1fTUFYX0NNRF9MRU5dOw0KfQ0K
-DQpXaGF0IGlzIHRoZSBsb25nZXN0IGNvbW1hbmQgdGhhdCB0aGUgY29udHJvbGxlciBzdXBwb3J0
-cz8NCg0KKERvIG5vdCByZXN1Ym1pdCB0aGUgZHJpdmVyIHlldCwgbGV0J3MgZGlzY3VzcyBmaXJz
-dCkuDQoNClRoYW5rcy4NCg0KLS0NCkRtaXRyeQ0K
+On Wed, Apr 13, 2016 at 7:58 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Apr 13, 2016 at 11:36 AM, Andrea Merello
+> <andrea.merello@gmail.com> wrote:
+>> According to Documentation/i2c/smbus-protocol, a smbus controller driver
+>> that wants to hook-in smbus extensions support, can call
+>> i2c_setup_smbus_alert(). There are very few drivers that are currently
+>> doing this.
+>>
+>> However the i2c-smbus module can also work with any
+>> smbus-extensions-unaware I2C controller, as long as we provide an extra
+>> IRQ line connected to the I2C bus ALARM signal.
+>>
+>> This patch makes it possible to go this way via DT. Note that the DT node
+>> will indeed describe a (little) piece of HW, that is the routing of the
+>> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
+>>
+>> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
+>> with address 0x0C (that is the alarm response address), and IMHO this is
+>> quite consistent with usage in the DT as a I2C child node.
+>
+>> --- a/drivers/i2c/i2c-smbus.c
+>> +++ b/drivers/i2c/i2c-smbus.c
+>
+>> @@ -137,20 +138,29 @@ static int smbalert_probe(struct i2c_client *ara,
+>>         struct i2c_smbus_alert_setup *setup = dev_get_platdata(&ara->dev);
+>>         struct i2c_smbus_alert *alert;
+>>         struct i2c_adapter *adapter = ara->adapter;
+>> +       struct device_node *of_node = ara->dev.of_node;
+>
+> Perhaps fwnode_handle ?
+
+Browsing the kernel tree it looks like using of_node is how almost all
+drivers do. Any specific reason to go for fwnode_handle here?
+
+Wouldn't this end up to just an extra is_of_node() and to_of_node() ?
+
+>
+>>         int res;
+>> +       int irq_type;
+>>
+>>         alert = devm_kzalloc(&ara->dev, sizeof(struct i2c_smbus_alert),
+>>                              GFP_KERNEL);
+>>         if (!alert)
+>>                 return -ENOMEM;
+>>
+>> -       alert->alert_edge_triggered = setup->alert_edge_triggered;
+>> -       alert->irq = setup->irq;
+>> +       if (setup) {
+>> +               alert->alert_edge_triggered = setup->alert_edge_triggered;
+>> +               alert->irq = setup->irq;
+>> +       } else if (of_node) {
+>> +               alert->irq = irq_of_parse_and_map(of_node, 0);
+>> +               irq_type = irq_get_trigger_type(alert->irq);
+>> +               alert->alert_edge_triggered = (irq_type & IRQ_TYPE_EDGE_BOTH);
+>> +       }
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
