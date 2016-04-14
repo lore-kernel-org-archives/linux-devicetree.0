@@ -1,73 +1,59 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v4 2/7] dt-bindings: Add bindings for phy-da8xx-usb
-Date: Thu, 14 Apr 2016 13:35:13 -0500
-Message-ID: <1460658919-4965-3-git-send-email-david@lechnology.com>
-References: <1460658919-4965-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460658919-4965-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, khilman@kernel.org, nsekhar@ti.com, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [Question] refcount of DT node
+Date: Thu, 14 Apr 2016 19:38:55 +0100
+Message-ID: <20160414183855.GU19428@n2100.arm.linux.org.uk>
+References: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com>
+ <20160414084849.GT19428@n2100.arm.linux.org.uk>
+ <20160414095957.GB10273@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160414095957.GB10273@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: rank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device tree binding for new phy-da8xx-usb driver.
+On Thu, Apr 14, 2016 at 10:59:57AM +0100, Mark Rutland wrote:
+> On Thu, Apr 14, 2016 at 09:48:49AM +0100, Russell King - ARM Linux wrote:
+> > On Thu, Apr 14, 2016 at 04:47:57PM +0900, Masahiro Yamada wrote:
+> > > Hi experts.
+> > > 
+> > > My understanding of refcount of DT node is poor.
+> > 
+> > The message from DT people is... don't worry about DT node refcounting.
+> > Do whatever you want with it, they don't care whether you have correct
+> > refcounting or not.
+> > 
+> > The background behind that is that I've tried to fix the refcounting,
+> > and even had the coccinelle people generate some stuff to work on this
+> > issue, but DT people's attitude towards it is "don't bother".
+> > 
+> > So yes, people may get it wrong, but it seems it's something that DT
+> > people want ignored.
+> 
+> I'm not sure that's quite fair; the last discussion I recall about this
+> ended up concluding that we need a better API, rather than papering over
+> problems.
 
-Signed-off-by: David Lechner <david@lechnology.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+Sorry, but I started out trying to get the of_node_put() stuff
+correct, and sparked Julia into doing coccinelle patches, and I
+was told by Rob that we shouldn't care about of_node_put() being
+wrong, and the feeling is as I stated it: DT folk don't care
+enough to fix the existing places, even though a great many can
+be sorted via the coccinelle approach.
 
-v4 changes:
+Their stance is not something I agree with - if we have something,
+it should be correct, even if it's not what we would ultimately
+desire, _or_ it should be removed.  This half-way house that we
+have today is total madness to me.
 
-* swapped order of usb20 and usb11 to be in logical order of reg address.
-
- .../devicetree/bindings/phy/phy-da8xx-usb.txt      | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
-new file mode 100644
-index 0000000..bead185
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
-@@ -0,0 +1,40 @@
-+TI DaVinci DA8xx USB PHY
-+
-+Required properties:
-+ - compatible: must be "ti,da830-usbphy".
-+ - #phy-cells: must be 1.
-+
-+This device controls the PHY for both the USB 1.1 OHCI and USB 2.0 OTG
-+controllers on DA8xx SoCs. Consumers of this device should use index 0 for
-+the USB 2.0 phy device and index 1 for the USB 1.1 phy device.
-+
-+It also requires a "syscon" node with compatible = "ti,da830-cfgchip", "syscon"
-+to access the CFGCHIP2 register.
-+
-+Example:
-+
-+	cfgchip: cfgchip@1417c {
-+		compatible = "ti,da830-cfgchip", "syscon";
-+		reg = <0x1417c 0x14>;
-+	};
-+
-+	usbphy: usbphy {
-+		compatible = "ti,da830-usbphy";
-+		#phy-cells = <1>;
-+	};
-+
-+	usb20: usb@200000 {
-+		compatible = "ti,da830-musb";
-+		reg = <0x200000 0x1000>;
-+		interrupts = <58>;
-+		phys = <&usbphy 0>;
-+		phy-names = "usbphy";
-+	};
-+
-+	usb11: usb@225000 {
-+		compatible = "ti,da830-ohci";
-+		reg = <0x225000 0x1000>;
-+		interrupts = <59>;
-+		phys = <&usbphy 1>;
-+		phy-names = "usbphy";
-+	};
 -- 
-1.9.1
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
