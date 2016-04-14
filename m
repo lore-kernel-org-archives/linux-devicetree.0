@@ -1,77 +1,32 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Thu, 14 Apr 2016 13:34:58 -0700
-Message-ID: <20160414203457.GM5995@atomide.com>
-References: <20160404151200.GA4652@atomide.com>
- <5703BA6B.1080208@ti.com>
- <20160411212845.GJ5995@atomide.com>
- <570CC54E.6020703@ti.com>
- <20160412163750.GR5995@atomide.com>
- <570E3428.5020804@ti.com>
- <20160413152829.GQ5995@atomide.com>
- <570F4804.4050006@ti.com>
- <20160414165514.GL5995@atomide.com>
- <570FF163.1050603@ti.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: am335x-chili*: Move nodes to proper place
+ and add poweroff
+Date: Thu, 14 Apr 2016 13:41:23 -0700
+Message-ID: <20160414204122.GN5995@atomide.com>
+References: <1460537057-23513-1-git-send-email-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <570FF163.1050603@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1460537057-23513-1-git-send-email-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [160414 12:38]:
+* Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> [160413 01:45]:
+> Hi,
 > 
-> Yes it has registers, but it has no prcm level existence, it is part of McBSP
-> module. I guess when the OMAP3 was designed the HW people did not wanted to
-> create new version of the McBSP core for McBSP2/3 so they attached a new core
-> to the McBSP cores with different targets, etc, but w/o external dependency.
-
-Yeah well we do have a bunch of modules that don't need any separate
-functional clock and are clocked only by the interface clock. So in this
-case McBSP and sidetone are both consumers for the clock we just happen
-to call McBSP interface clock. They should be able to share that no
-problem.
-
-> >> OK. I will go with the assumption that the sidetone hwmod can be removed (as
-> >> it is not correct) and rework my current series to use pdata callback for the
-> >> iclk autogate allow/deny. With this set the ST will be operational in legacy
-> >> and DT boot.
-> > 
-> > Sorry, no I did not want to drop the sidetone hwmod, I was just trying to
-> > come up with ideas on how to make the driver changes easier. It sounds like
-> > you already figured out the driver changes part though with two drivers.
+> These patches move board-specific device-tree nodes from ChiliSOM to
+> ChiliBoard dts files. These include uart and ethernet configuration.
+> Additionally add poweroff support for all ChiliSOM devices.
 > 
-> If I need to keep the sidetone hwmod around I don't see how it can be done in
-> a safe and clean way. It is part of McBSP module, it is accessible only if the
-> McBSP module is enabled, you can not enable the Sidetone alone you need to go
-> and enable the McBSP module. I don't think it is a good idea to let two
-> separate hwmods to poke around the same PRCM bits. Have not checked, but I
-> don't think we have refcounting for the PRCM register bits.
+> Developed and tested on ChiliBoard using v4.6-rc3.
 
-Yeah there's no refcounting on the PRCM, but the clock framework has it
-for the share McBSP interface clock. Then there are two separate sets of
-sysconfig registers that PM runtime should manage. And then there's the
-clock autogating issue.
-
-Note that we do have an issue with the omap4 and later clkctrl registers
-that don't have refcounting. Tero's clkctrl work will sort out that
-issue. I don't think we have a similar issue with omap3.
-
-So from that point of view the two separate hwmod modules should work
-just fine sharing the clock.
-
-> I have things working w/o the two drivers with pdata callback both in legacy
-> and DT case and it is pretty neat looking, thanks for the suggestion! I'm
-> still figuring out the needed amount of callbacks from McBSP to ST and from ST
-> to McBSP. We for sure going to need enable_stage1,2 probably three as well.
-> But this crossing driver boundaries needs a bit more time to figure out.
-
-Yeah I still think we need to struct device instances, one to manage
-McBSP and the other to manage sidetone :)
-
-Regards,
+Applying into omap-for-v4.7/dt thanks.
 
 Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
