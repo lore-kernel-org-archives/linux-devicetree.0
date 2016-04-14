@@ -1,142 +1,160 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Thu, 14 Apr 2016 22:37:07 +0300
-Message-ID: <570FF163.1050603@ti.com>
-References: <20160402001753.GR9329@atomide.com> <57026205.6020105@ti.com>
- <20160404151200.GA4652@atomide.com> <5703BA6B.1080208@ti.com>
- <20160411212845.GJ5995@atomide.com> <570CC54E.6020703@ti.com>
- <20160412163750.GR5995@atomide.com> <570E3428.5020804@ti.com>
- <20160413152829.GQ5995@atomide.com> <570F4804.4050006@ti.com>
- <20160414165514.GL5995@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160414165514.GL5995@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v4 2/5] ARM: davinci: da8xx: Add CFGCHIP syscon platform declaration.
+Date: Thu, 14 Apr 2016 14:44:15 -0500
+Message-ID: <1460663058-9462-3-git-send-email-david@lechnology.com>
+References: <1460663058-9462-1-git-send-email-david@lechnology.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460663058-9462-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/14/2016 07:55 PM, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [160414 00:35]:
->> On 04/13/16 18:28, Tony Lindgren wrote:
->>>
->>> You could just create the sidetone child device manually on probe i=
-n the
->>> driver as needed. That way you'd have two devices to do the PM runt=
-ime
->>> on. I think that was Paul's main concern as they are separate modul=
-es.
->>
->> You mean that not to have separate compatible for the McBSP module's=
- Sidetone
->> core?
->> If yes, then it is a valid thing to remove the hwmod data for the si=
-detone,
->> like I did in this series.
->=20
-> No, I meant keep the sidetone hwmod, it really is there in the hardwa=
-re.
+The CFGCHIP registers are used by a number of devices, so using a syscon
+device to share them. The first consumer of this will by the phy-da8xx-usb
+driver.
 
-Hrm, the Sidetone is there, yes. It is part of the McBSP module and the=
- hwmod
-for the sidetone is not correct. From hwmod (or PRCM) point of view the=
-re is
-no sidetone module, there is only McBSP module which consist of McBSP c=
-ore and
-Sidetone core.
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+---
 
-> I meant only probe the sidetone in the McBSP probe so you have two
-> struct dev and two hwmod entries in the McBSP driver. I don't know if
-> this actually makes things easier or not though.
+v4 changes: none
 
-But the hwmod for the sidetone is wrong, there should not have been hwm=
-od for
-the sidetone to start with.
 
->>> It still leaves the chance of bugs with flush of posted writes. But=
- might
->>> make things easier to deal with in small steps?
->>
->> The only 'benefit' I see with separated driver for McBSP core and Si=
-detone
->> core is that the register writes will happen to the cores in separat=
-e drivers.
->>
->> If the McBSP driver creates the device for the sidetone driver, then=
- passing
->> the needed callbacks and data to it is going to be cleaner. Register=
-ing back
->> the callbacks to McBSP is what need to be figured out, so it is simp=
-le and
->> clean. Either with a callback to McBSP to set the ST callbacks or ha=
-ve the
->> callback struct used by ST via pdata to have places for the ST to Mc=
-BSP
->> callbacks and when the driver loads it is going to set up those.
->=20
-> OK yeah makes sense to me.
->=20
->> If I remove the prcm section for the ST hwmod:
->> [   87.784820] omap_hwmod: mcbsp2_sidetone: _wait_target_ready faile=
-d: -22
->> [   87.784851] omap-mcbsp 49022000.mcbsp: use pm_runtime_put_sync_su=
-spend() in
->> driver?
->>
->> When first try to use the audio.
->> So the hwmod code at least was checking the idlest bit.
->=20
-> Yes the module is really there for sidetone, and it really has hardwa=
-re
-> registers :)
+ arch/arm/mach-davinci/board-da830-evm.c     |  4 ++++
+ arch/arm/mach-davinci/board-da850-evm.c     |  4 ++++
+ arch/arm/mach-davinci/board-mityomapl138.c  |  4 ++++
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  4 ++++
+ arch/arm/mach-davinci/devices-da8xx.c       | 28 ++++++++++++++++++++++++++++
+ arch/arm/mach-davinci/include/mach/da8xx.h  |  2 ++
+ 6 files changed, 46 insertions(+)
 
-Yes it has registers, but it has no prcm level existence, it is part of=
- McBSP
-module. I guess when the OMAP3 was designed the HW people did not wante=
-d to
-create new version of the McBSP core for McBSP2/3 so they attached a ne=
-w core
-to the McBSP cores with different targets, etc, but w/o external depend=
-ency.
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index 605d444..3051cb6 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -586,6 +586,10 @@ static __init void da830_evm_init(void)
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 	int ret;
+ 
++	ret = da8xx_register_cfgchip();
++	if (ret)
++		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
++
+ 	ret = da830_register_gpio();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 8e4539f..ec5cb10 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1345,6 +1345,10 @@ static __init void da850_evm_init(void)
+ {
+ 	int ret;
+ 
++	ret = da8xx_register_cfgchip();
++	if (ret)
++		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
++
+ 	ret = da850_register_gpio();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
+index bc4e63f..1a6d430 100644
+--- a/arch/arm/mach-davinci/board-mityomapl138.c
++++ b/arch/arm/mach-davinci/board-mityomapl138.c
+@@ -514,6 +514,10 @@ static void __init mityomapl138_init(void)
+ {
+ 	int ret;
+ 
++	ret = da8xx_register_cfgchip();
++	if (ret)
++		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
++
+ 	/* for now, no special EDMA channels are reserved */
+ 	ret = da850_register_edma(NULL);
+ 	if (ret)
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index d4930b6..8691a25 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -294,6 +294,10 @@ static __init void omapl138_hawk_init(void)
+ {
+ 	int ret;
+ 
++	ret = da8xx_register_cfgchip();
++	if (ret)
++		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
++
+ 	ret = da850_register_gpio();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 725e693..69d11a1 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -11,6 +11,7 @@
+  * (at your option) any later version.
+  */
+ #include <linux/init.h>
++#include <linux/platform_data/syscon.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-contiguous.h>
+ #include <linux/serial_8250.h>
+@@ -1109,3 +1110,30 @@ int __init da850_register_sata(unsigned long refclkpn)
+ 	return platform_device_register(&da850_sata_device);
+ }
+ #endif
++
++static struct syscon_platform_data da8xx_cfgchip_platform_data = {
++	.label	= "cfgchip",
++};
++
++static struct resource da8xx_cfgchip_resources[] = {
++	{
++		.start	= DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP0_REG,
++		.end	= DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP4_REG + 3,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device da8xx_cfgchip_device = {
++	.name	= "syscon",
++	.id	= 0,
++	.dev	= {
++		.platform_data	= &da8xx_cfgchip_platform_data,
++	},
++	.num_resources	= ARRAY_SIZE(da8xx_cfgchip_resources),
++	.resource	= da8xx_cfgchip_resources,
++};
++
++int __init da8xx_register_cfgchip(void)
++{
++	return platform_device_register(&da8xx_cfgchip_device);
++}
+diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+index c367530..c32444b 100644
+--- a/arch/arm/mach-davinci/include/mach/da8xx.h
++++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+@@ -61,6 +61,7 @@ extern unsigned int da850_max_speed;
+ #define DA8XX_CFGCHIP1_REG	0x180
+ #define DA8XX_CFGCHIP2_REG	0x184
+ #define DA8XX_CFGCHIP3_REG	0x188
++#define DA8XX_CFGCHIP4_REG	0x18c
+ 
+ #define DA8XX_SYSCFG1_BASE	(IO_PHYS + 0x22C000)
+ #define DA8XX_SYSCFG1_VIRT(x)	(da8xx_syscfg1_base + (x))
+@@ -116,6 +117,7 @@ void da8xx_rproc_reserve_cma(void);
+ int da8xx_register_rproc(void);
+ int da850_register_gpio(void);
+ int da830_register_gpio(void);
++int da8xx_register_cfgchip(void);
+ 
+ extern struct platform_device da8xx_serial_device[];
+ extern struct emac_platform_data da8xx_emac_pdata;
+-- 
+1.9.1
 
->> OK. I will go with the assumption that the sidetone hwmod can be rem=
-oved (as
->> it is not correct) and rework my current series to use pdata callbac=
-k for the
->> iclk autogate allow/deny. With this set the ST will be operational i=
-n legacy
->> and DT boot.
->=20
-> Sorry, no I did not want to drop the sidetone hwmod, I was just tryin=
-g to
-> come up with ideas on how to make the driver changes easier. It sound=
-s like
-> you already figured out the driver changes part though with two drive=
-rs.
-
-If I need to keep the sidetone hwmod around I don't see how it can be d=
-one in
-a safe and clean way. It is part of McBSP module, it is accessible only=
- if the
-McBSP module is enabled, you can not enable the Sidetone alone you need=
- to go
-and enable the McBSP module. I don't think it is a good idea to let two
-separate hwmods to poke around the same PRCM bits. Have not checked, bu=
-t I
-don't think we have refcounting for the PRCM register bits.
-
-I have things working w/o the two drivers with pdata callback both in l=
-egacy
-and DT case and it is pretty neat looking, thanks for the suggestion! I=
-'m
-still figuring out the needed amount of callbacks from McBSP to ST and =
-from ST
-to McBSP. We for sure going to need enable_stage1,2 probably three as w=
-ell.
-But this crossing driver boundaries needs a bit more time to figure out=
-=2E
-
---=20
-P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
