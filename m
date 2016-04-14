@@ -1,52 +1,174 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] drm: bridge: anx78xx: Add anx78xx driver support.
-Date: Thu, 14 Apr 2016 16:08:43 +0200
-Message-ID: <570FA46B.2080706@collabora.com>
-References: <1460119972-8658-1-git-send-email-enric.balletbo@collabora.com>	<1460119972-8658-4-git-send-email-enric.balletbo@collabora.com>	<20160414131013.GA32237@ulmo.ba.sec>	<570F9E4D.7040401@collabora.com> <CACvgo50ku9FZJU4YqdFsa6_=FqeDsq2UiCZkSVTLuTKsPRf7qw@mail.gmail.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH] i2c: designware-platdrv: implement bus recovery
+Date: Thu, 14 Apr 2016 22:04:56 +0800
+Message-ID: <1460642696-1858-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACvgo50ku9FZJU4YqdFsa6_=FqeDsq2UiCZkSVTLuTKsPRf7qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Emil,
+Implement bus recovery methods for i2c designware so we can recover
+from situations where SCL/SDA are stuck low.
 
-On 14/04/16 16:06, Emil Velikov wrote:
-> Hi Enric,
->
-> On 14 April 2016 at 14:42, Enric Balletbo i Serra
-> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->> The patch was implemented first without OR'ing error codes. The reason why I
->> changed this is because I received the comments that checking the error on
->> every regmap_* didn't help the readability of the driver and is likely to
->> not fail if the first call doesn't fail.
->>
->> For example, originally the code was like this:
->>    http://pastebin.com/rPgyji8k
->> but I changed to this
->>    http://pastebin.com/rPgyji8k
->>
-> Both links are the same ;-) But I believe we all get what you meant.
->
+The recovery method is similar as i2c-imx: "config the i2c pinctrl to
+gpio mode by calling pinctrl sleep set function, and then use GPIO to
+emulate the i2c protocol to send nine dummy clock to recover i2c
+device. After recovery, set i2c pinctrl to default group setting.
 
-Ooops, sorry. This is the other link
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+depends on runtime pm patches
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/422202.html
+ .../devicetree/bindings/i2c/i2c-designware.txt     | 12 ++++++
+ drivers/i2c/busses/i2c-designware-core.c           |  6 ++-
+ drivers/i2c/busses/i2c-designware-core.h           |  4 ++
+ drivers/i2c/busses/i2c-designware-platdrv.c        | 50 ++++++++++++++++++++++
+ 4 files changed, 71 insertions(+), 1 deletion(-)
 
-http://pastebin.com/e2KpGxHy
-
-> Just a side note: many other drivers in DRM subsystem, inconsistently
-> check the return value of the regmap API. Note sure how likely is any
-> of it [regmap_foo] to fail and/or how determined people are to handle
-> every possible error case.
->
-> -Emil
->
-
-Enric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+index fee26dc..51a55c6 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+@@ -20,6 +20,13 @@ Optional properties :
+  - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
+    This value which is by default 300ns is used to compute the tHIGH period.
+ 
++ - scl-gpios: specify the gpio related to SCL pin
++
++ - sda-gpios: specify the gpio related to SDA pin
++
++ - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
++   bus recovery, call it "gpio" state
++
+ Example :
+ 
+ 	i2c@f0000 {
+@@ -42,4 +49,9 @@ Example :
+ 		i2c-sda-hold-time-ns = <300>;
+ 		i2c-sda-falling-time-ns = <300>;
+ 		i2c-scl-falling-time-ns = <300>;
++		pinctrl-names = "default", "gpio";
++		pinctrl-0 = <&pinctrl_i2c1_default>;
++		pinctrl-1 = <&pinctrl_i2c1_gpio>;
++		scl-gpios = <&porta 26 GPIO_ACTIVE_HIGH>;
++		sda-gpios = <&porta 27 GPIO_ACTIVE_HIGH>;
+ 	};
+diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
+index 4255eaa..be40de1 100644
+--- a/drivers/i2c/busses/i2c-designware-core.c
++++ b/drivers/i2c/busses/i2c-designware-core.c
+@@ -399,7 +399,10 @@ static int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
+ 	while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
+ 		if (timeout <= 0) {
+ 			dev_warn(dev->dev, "timeout waiting for bus ready\n");
+-			return -ETIMEDOUT;
++			i2c_recover_bus(&dev->adapter);
++			if (dw_readl(dev, DW_IC_STATUS)
++					& DW_IC_STATUS_ACTIVITY)
++				return -ETIMEDOUT;
+ 		}
+ 		timeout--;
+ 		usleep_range(1000, 1100);
+@@ -665,6 +668,7 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+ 	/* wait for tx to complete */
+ 	if (!wait_for_completion_timeout(&dev->cmd_complete, HZ)) {
+ 		dev_err(dev->dev, "controller timed out\n");
++		i2c_recover_bus(&dev->adapter);
+ 		/* i2c_dw_init implicitly disables the adapter */
+ 		i2c_dw_init(dev);
+ 		ret = -ETIMEDOUT;
+diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+index cd409e7..26c84ee 100644
+--- a/drivers/i2c/busses/i2c-designware-core.h
++++ b/drivers/i2c/busses/i2c-designware-core.h
+@@ -104,6 +104,10 @@ struct dw_i2c_dev {
+ 	u16			fs_lcnt;
+ 	int			(*acquire_lock)(struct dw_i2c_dev *dev);
+ 	void			(*release_lock)(struct dw_i2c_dev *dev);
++	struct i2c_bus_recovery_info rinfo;
++	struct pinctrl		*pinctrl;
++	struct pinctrl_state	*pinctrl_pins_default;
++	struct pinctrl_state	*pinctrl_pins_gpio;
+ 	bool			pm_runtime_disabled;
+ };
+ 
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 1488cea..62bded9 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -33,6 +33,7 @@
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ #include <linux/pm_runtime.h>
+@@ -148,6 +149,49 @@ static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
+ 	return 0;
+ }
+ 
++static void i2c_dw_plat_prepare_recovery(struct i2c_adapter *adap)
++{
++	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
++
++	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
++}
++
++static void i2c_dw_plat_unprepare_recovery(struct i2c_adapter *adap)
++{
++	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
++
++	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
++}
++
++static void i2c_dw_plat_init_recovery_info(struct dw_i2c_dev *dev,
++					   struct platform_device *pdev)
++{
++	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
++
++	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
++			PINCTRL_STATE_DEFAULT);
++	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
++			"gpio");
++	rinfo->sda_gpio = of_get_named_gpio(pdev->dev.of_node, "sda-gpios", 0);
++	rinfo->scl_gpio = of_get_named_gpio(pdev->dev.of_node, "scl-gpios", 0);
++
++	if (!gpio_is_valid(rinfo->sda_gpio) ||
++	    !gpio_is_valid(rinfo->scl_gpio) ||
++	    IS_ERR(dev->pinctrl_pins_default) ||
++	    IS_ERR(dev->pinctrl_pins_gpio)) {
++		dev_dbg(&pdev->dev, "recovery information incomplete\n");
++		return;
++	}
++
++	dev_dbg(&pdev->dev, "using scl-gpio %d and sda-gpio %d for recovery\n",
++		rinfo->sda_gpio, rinfo->scl_gpio);
++
++	rinfo->prepare_recovery = i2c_dw_plat_prepare_recovery;
++	rinfo->unprepare_recovery = i2c_dw_plat_unprepare_recovery;
++	rinfo->recover_bus = i2c_generic_gpio_recovery;
++	dev->adapter.bus_recovery_info = rinfo;
++}
++
+ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ {
+ 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+@@ -165,6 +209,12 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	if (!dev)
+ 		return -ENOMEM;
+ 
++	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
++	if (IS_ERR(dev->pinctrl))
++		return PTR_ERR(dev->pinctrl);
++
++	i2c_dw_plat_init_recovery_info(dev, pdev);
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	dev->base = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(dev->base))
+-- 
+2.8.0.rc3
