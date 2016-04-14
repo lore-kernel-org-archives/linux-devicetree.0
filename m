@@ -1,59 +1,84 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [Question] refcount of DT node
-Date: Thu, 14 Apr 2016 19:38:55 +0100
-Message-ID: <20160414183855.GU19428@n2100.arm.linux.org.uk>
-References: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com>
- <20160414084849.GT19428@n2100.arm.linux.org.uk>
- <20160414095957.GB10273@leverpostej>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
+ addresses
+Date: Thu, 14 Apr 2016 21:10:33 +0200
+Message-ID: <20160414191033.GC2338@katana>
+References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ABTtc+pdwF7KHXCz"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160414095957.GB10273@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: rank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jean-Michel Hautbois <jhautbois@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, lars@metafoo.de, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 10:59:57AM +0100, Mark Rutland wrote:
-> On Thu, Apr 14, 2016 at 09:48:49AM +0100, Russell King - ARM Linux wrote:
-> > On Thu, Apr 14, 2016 at 04:47:57PM +0900, Masahiro Yamada wrote:
-> > > Hi experts.
-> > > 
-> > > My understanding of refcount of DT node is poor.
-> > 
-> > The message from DT people is... don't worry about DT node refcounting.
-> > Do whatever you want with it, they don't care whether you have correct
-> > refcounting or not.
-> > 
-> > The background behind that is that I've tried to fix the refcounting,
-> > and even had the coccinelle people generate some stuff to work on this
-> > issue, but DT people's attitude towards it is "don't bother".
-> > 
-> > So yes, people may get it wrong, but it seems it's something that DT
-> > people want ignored.
-> 
-> I'm not sure that's quite fair; the last discussion I recall about this
-> ended up concluding that we need a better API, rather than papering over
-> problems.
 
-Sorry, but I started out trying to get the of_node_put() stuff
-correct, and sparked Julia into doing coccinelle patches, and I
-was told by Rob that we shouldn't care about of_node_put() being
-wrong, and the feeling is as I stated it: DT folk don't care
-enough to fix the existing places, even though a great many can
-be sorted via the coccinelle approach.
+--ABTtc+pdwF7KHXCz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Their stance is not something I agree with - if we have something,
-it should be correct, even if it's not what we would ultimately
-desire, _or_ it should be removed.  This half-way house that we
-have today is total madness to me.
+On Sun, Jan 31, 2016 at 04:33:00PM +0100, Jean-Michel Hautbois wrote:
+> Some I2C devices have multiple addresses assigned, for example each addre=
+ss
+> corresponding to a different internal register map page of the device.
+> So far drivers which need support for this have handled this with a driver
+> specific and non-generic implementation, e.g. passing the additional addr=
+ess
+> via platform data.
+>=20
+> This patch provides a new helper function called i2c_new_secondary_device=
+()
+> which is intended to provide a generic way to get the secondary address
+> as well as instantiate a struct i2c_client for the secondary address.
+>=20
+> The function expects a pointer to the primary i2c_client, a name
+> for the secondary address and an optional default address. The name is us=
+ed
+> as a handle to specify which secondary address to get.
+>=20
+> The default address is used as a fallback in case no secondary address
+> was explicitly specified. In case no secondary address and no default
+> address were specified the function returns NULL.
 
--- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With "no default address" you mean the function parameter is 0? Yeah,
+you get a NULL pointer from i2c_new_device then, but also a dev_err
+message, or?
+
+> For now the function only supports look-up of the secondary address
+> from devicetree, but it can be extended in the future
+> to for example support board files and/or ACPI.
+
+Ccing Mika. I think it can be 1:1 converted to device_property_*
+functions already giving ACPI support for free?
+
+Thanks,
+
+   Wolfram
+
+
+--ABTtc+pdwF7KHXCz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXD+spAAoJEBQN5MwUoCm2TiwP/0iUg3o9bE3B8ZisIBQNn22P
+T6N8o3hLBkp33dd+XC+FXRUBzAao+dp8Vk24zWvs+G404KDXjRo+7p8V+q7Y/oZx
+DQxG3AzCqlYMZS+Awi06P/sWy8ByHZMh/tc7MNXhBcNe3CdoNTLVwrJ3+lyfWDlK
+kaMlpjYyAwMlmTb2eBzF19F9npD/dIN9ozRRtrIyGMm8Ai9+1Df/lY223S/1yHSp
+hlgMAuklmjuwJulKDi+khXioIUgUWkmYJiDzptPkc4aVkSs3zRBjcVh2EH+vOD2U
+QKUmFQLSrajOPplJABtp9jwme8Htkd6BP/1q9RJvTd/5JDNckbfSE5qdRUQezs5i
+MNWdTAJXTlQGax3u+el1esm+AmBoxVGKyZg4BR5+ACFvBYpnpvJjFKkLRSJ+x+HC
+3LiG0tkSlHXJN3xNtijA1goGly56Jncs3gs8j5ywvQzyZ+bzW4MTizs7sqDhpoUK
+Vr/rqSba0Dovh/hWazPnNqsuJOBgtXBAOtvtO2t6tbiwE4RkXO8/CXeQJjCmxZrp
+Y5/UWrNW3yxmkqNGQjB8HH5N06Ak1xVq4L8M5t8uvgzPgBxMzJOO2AeWSlvPYKtH
+fa6Fokb4Z0f5xfaiEEaoPEdzl+I95kIUSE9cApRmuRT3C72Zta4caOA0GhLumOni
++m12WnfdgfyEzREl5mRZ
+=4ehH
+-----END PGP SIGNATURE-----
+
+--ABTtc+pdwF7KHXCz--
