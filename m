@@ -1,147 +1,93 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] phy: Add a driver for simple phy
-Date: Thu, 14 Apr 2016 11:22:58 +0530
-Message-ID: <570F303A.6030605@ti.com>
-References: <1447708924-15076-1-git-send-email-albeu@free.fr>
- <1447708924-15076-2-git-send-email-albeu@free.fr>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/7] [media]: v4l: add Mediatek MT21 video block format
+Date: Thu, 14 Apr 2016 14:13:41 +0800
+Message-ID: <1460614421.30214.2.camel@mtksdaap41>
+References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
+	 <1460557416.18956.3.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447708924-15076-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
+In-Reply-To: <1460557416.18956.3.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi=20
+On Wed, 2016-04-13 at 10:23 -0400, Nicolas Dufresne wrote:
+> Le mercredi 13 avril 2016 =C3=A0 20:01 +0800, Tiffany Lin a =C3=A9cri=
+t :
+> > From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >=20
+> > Mediatek video format is YVU8_420_2PLANE_PACK8_PROGRESSIVE.
+> >=20
+> > Create V4L2_PIX_FMT_MT21 and DRM_FORMAT_MT21 to be consistent with
+> > V4L2_PIX_FMT_NV12 notation.
+> >=20
+> > Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  include/uapi/drm/drm_fourcc.h  |    1 +
+> >  include/uapi/linux/videodev2.h |    2 ++
+>=20
+> Might be better to split this patch.
+Got it, will split to two patch in next version.
 
-On Tuesday 17 November 2015 02:52 AM, Alban Bedel wrote:
-> This driver is meant to take care of all trivial phys that don't need
-> any special configuration, it just enable a regulator, a clock and
-> deassert a reset. A public API is also included to allow re-using the
-> code in other drivers.
-> 
-> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> ---
->  drivers/phy/Kconfig        |  12 +++
->  drivers/phy/Makefile       |   1 +
->  drivers/phy/phy-simple.c   | 204 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/phy/simple.h |  39 +++++++++
->  4 files changed, 256 insertions(+)
->  create mode 100644 drivers/phy/phy-simple.c
->  create mode 100644 include/linux/phy/simple.h
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 7eb5859d..028fb16 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -118,6 +118,18 @@ config PHY_RCAR_GEN2
->  	help
->  	  Support for USB PHY found on Renesas R-Car generation 2 SoCs.
->  
-> +config PHY_SIMPLE
-> +	tristate
-> +	select GENERIC_PHY
-> +	help
-> +
-> +config PHY_SIMPLE_PDEV
+>=20
+> >  2 files changed, 3 insertions(+)
+> >=20
+> > diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_f=
+ourcc.h
+> > index 0b69a77..a193905 100644
+> > --- a/include/uapi/drm/drm_fourcc.h
+> > +++ b/include/uapi/drm/drm_fourcc.h
+> > @@ -116,6 +116,7 @@
+> >  #define DRM_FORMAT_NV24		fourcc_code('N', 'V', '2', '4') /* non-su=
+bsampled Cr:Cb plane */
+> >  #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-su=
+bsampled Cb:Cr plane */
+> > =20
+> > +#define DRM_FORMAT_MT21		fourcc_code('M', 'T', '2', '1') /* Mediat=
+ek Block Mode */
+>=20
+> Please document the tiling format, don't just add a define here.
+Got it, will add documentation in next version.
 
-Where will this config be used? Why do we need two configs for a single driver?
-> +	tristate "Simple PHY driver"
-> +	select PHY_SIMPLE
-> +	help
-> +	  A PHY driver for simple devices that only need a regulator, clock
-> +	  and reset for power up and shutdown.
-> +
->  config OMAP_CONTROL_PHY
->  	tristate "OMAP CONTROL PHY Driver"
->  	depends on ARCH_OMAP2PLUS || COMPILE_TEST
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 075db1a..1a44362 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -24,6 +24,7 @@ obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
->  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
->  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
->  obj-$(CONFIG_PHY_MT65XX_USB3)		+= phy-mt65xx-usb3.o
-> +obj-$(CONFIG_PHY_SIMPLE)		+= phy-simple.o
->  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
->  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
->  obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
-> diff --git a/drivers/phy/phy-simple.c b/drivers/phy/phy-simple.c
-> new file mode 100644
-> index 0000000..013f846
-> --- /dev/null
-> +++ b/drivers/phy/phy-simple.c
-> @@ -0,0 +1,204 @@
-> +/*
-> + * Copyright (C) 2015 Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/phy/simple.h>
-> +#include <linux/clk.h>
-> +#include <linux/reset.h>
-> +
-> +int simple_phy_power_on(struct phy *phy)
-> +{
-> +	struct simple_phy *sphy = phy_get_drvdata(phy);
-> +	int err;
-> +
-> +	if (sphy->regulator) {
-> +		err = regulator_enable(sphy->regulator);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	if (sphy->clk) {
-> +		err = clk_prepare_enable(sphy->clk);
-> +		if (err)
-> +			goto regulator_disable;
-> +	}
-> +
-> +	if (sphy->reset) {
-> +		err = reset_control_deassert(sphy->reset);
-> +		if (err)
-> +			goto clock_disable;
-> +	}
-> +
-> +	return 0;
-> +
-> +clock_disable:
-> +	if (sphy->clk)
-> +		clk_disable_unprepare(sphy->clk);
-> +regulator_disable:
-> +	if (sphy->regulator)
-> +		WARN_ON(regulator_disable(sphy->regulator));
-> +
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(simple_phy_power_on);
+>=20
+> >  /*
+> >   * 3 plane YCbCr
+> >   * index 0: Y plane, [7:0] Y
+> > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/vi=
+deodev2.h
+> > index d0acd26..e9e3276 100644
+> > --- a/include/uapi/linux/videodev2.h
+> > +++ b/include/uapi/linux/videodev2.h
+> > @@ -527,6 +527,8 @@ struct v4l2_pix_format {
+> >  #define V4L2_PIX_FMT_HM12    v4l2_fourcc('H', 'M', '1', '2') /*  8=
+  YUV 4:2:0 16x16 macroblocks */
+> >  #define V4L2_PIX_FMT_M420    v4l2_fourcc('M', '4', '2', '0') /* 12=
+  YUV 4:2:0 2 lines y, 1 line uv interleaved */
+> > =20
+> > +#define V4L2_PIX_FMT_MT21    v4l2_fourcc('M', 'T', '2', '1') /* Me=
+diatek Block Mode  */
+> > +
+>=20
+> Same. On Linux Media side, there is docbook documentation where you c=
+an
+> explain in detail.
+Got it, will add documentation in next version.
 
-IMO simple-phy driver should be an independent driver and shouldn't export
-symbols. The dt binding for the simple phy device should be something like
-below where all the properties of the simple phy device should be in the
-binding documentation.
-usbphy {
-	compatible = "simple-phy";
-	phy-supply = <&supply>;
-	clocks = <&clock>;
-	reset = <&reset>;
-};
+>=20
+> >  /* two planes -- one Y, one Cr + Cb interleaved  */
+> >  #define V4L2_PIX_FMT_NV12    v4l2_fourcc('N', 'V', '1', '2') /* 12=
+  Y/CbCr 4:2:0  */
+> >  #define V4L2_PIX_FMT_NV21    v4l2_fourcc('N', 'V', '2', '1') /* 12=
+  Y/CrCb 4:2:0  */
 
-Anything that needs more than this shouldn't be a simple phy.
 
-Thanks
-Kishon
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
