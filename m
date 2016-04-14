@@ -1,94 +1,55 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v9 4/7] ASoC: hdmi-codec: Add audio abort() callback for
- video side to use
-Date: Thu, 14 Apr 2016 09:21:35 +0300
-Message-ID: <570F36EF.4090902@ti.com>
-References: <cover.1459431292.git.jsarha@ti.com>
- <36a4881da9400908b2e033cb2d931daf0d59bac9.1459431292.git.jsarha@ti.com>
- <570E03DC.6030707@st.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 5/7] clk: samsung: exynos542x: Add the clock id for ACLK
+Date: Thu, 14 Apr 2016 15:28:17 +0900
+Message-ID: <570F3881.9000100@samsung.com>
+References: <1460091646-28701-1-git-send-email-cw00.choi@samsung.com>
+ <1460091646-28701-6-git-send-email-cw00.choi@samsung.com>
+ <570CDB16.2050001@samsung.com>
+ <CA+Ln22EFdspBdHwWar65UZ-uFxq4c9+RPhNCJjgKp9idvDvM5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <570E03DC.6030707@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc: "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CA+Ln22EFdspBdHwWar65UZ-uFxq4c9+RPhNCJjgKp9idvDvM5A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux.amoon@gmail.com, m.reichl@fivetechno.de, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, InKi Dae <inki.dae@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMTMvMTYgMTE6MzEsIEFybmF1ZCBQb3VsaXF1ZW4gd3JvdGU6Cj4gCj4gCj4gT24gMDMv
-MzEvMjAxNiAwMzozNiBQTSwgSnlyaSBTYXJoYSB3cm90ZToKPj4gQWRkIGF1ZGlvIGFib3J0KCkg
-Y2FsbGJhY2ssIHRoYXQgaXMgcHJvdmlkZWQgYXQgYXVkaW8gc3RyZWFtIHN0YXJ0LAo+PiBmb3Ig
-dmlkZW8gc2lkZS4gVGhpcyBpcyBmb3IgdmlkZW8gc2lkZSB0byB1c2UgaW4gY2FzZSB0aGVyZSBp
-cyBhCj4+IHByZXNzaW5nIG5lZWQgdG8gdGVhciBkb3duIHRoZSBhdWRpbyBwbGF5YmFjayBmb3Ig
-c29tZSByZWFzb24uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5j
-b20+Cj4+IC0tLQo+PiAgaW5jbHVkZS9zb3VuZC9oZG1pLWNvZGVjLmggICAgfCAgOCArKysrKyst
-LQo+PiAgc291bmQvc29jL2NvZGVjcy9oZG1pLWNvZGVjLmMgfCAyMCArKysrKysrKysrKysrKysr
-KysrLQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygt
-KQo+Pgo+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9zb3VuZC9oZG1pLWNvZGVjLmggYi9pbmNsdWRl
-L3NvdW5kL2hkbWktY29kZWMuaAo+PiBpbmRleCBmYzNhNDgxLi4xNWZlNzBmIDEwMDY0NAo+PiAt
-LS0gYS9pbmNsdWRlL3NvdW5kL2hkbWktY29kZWMuaAo+PiArKysgYi9pbmNsdWRlL3NvdW5kL2hk
-bWktY29kZWMuaAo+PiBAQCAtNTUsMTAgKzU1LDE0IEBAIHN0cnVjdCBoZG1pX2NvZGVjX3BhcmFt
-cyB7Cj4+ICAKPj4gIHN0cnVjdCBoZG1pX2NvZGVjX29wcyB7Cj4+ICAJLyoKPj4gLQkgKiBDYWxs
-ZWQgd2hlbiBBU29DIHN0YXJ0cyBhbiBhdWRpbyBzdHJlYW0gc2V0dXAuCj4+ICsJICogQ2FsbGVk
-IHdoZW4gQVNvQyBzdGFydHMgYW4gYXVkaW8gc3RyZWFtIHNldHVwLiBUaGUgY2FsbAo+PiArCSAq
-IHByb3ZpZGVzIGFuIGF1ZGlvIGFib3J0IGNhbGxiYWNrIGZvciBzdG9waW5nIGFuIG9uZ29pbmcK
-PiBzdG9wcGluZwo+PiArCSAqIHN0cmVhbSBmcm9tIHZpZGVvIHNpZGUgZHJpdmVyIGlmIHRoZSBI
-RE1JIGF1ZGlvIGJlY29tZXMKPj4gKwkgKiB1bmF2YWlsYWJsZS4KPj4gIAkgKiBPcHRpb25hbAo+
-PiAgCSAqLwo+PiAtCWludCAoKmF1ZGlvX3N0YXJ0dXApKHN0cnVjdCBkZXZpY2UgKmRldik7Cj4+
-ICsJaW50ICgqYXVkaW9fc3RhcnR1cCkoc3RydWN0IGRldmljZSAqZGV2LAo+PiArCQkJICAgICB2
-b2lkICgqYWJvcnRfY2IpKHN0cnVjdCBkZXZpY2UgKmRldikpOwo+PiAgCj4+ICAJLyoKPj4gIAkg
-KiBDb25maWd1cmVzIEhETUktZW5jb2RlciBmb3IgYXVkaW8gc3RyZWFtLgo+PiBkaWZmIC0tZ2l0
-IGEvc291bmQvc29jL2NvZGVjcy9oZG1pLWNvZGVjLmMgYi9zb3VuZC9zb2MvY29kZWNzL2hkbWkt
-Y29kZWMuYwo+PiBpbmRleCBiNDZiOGVkLi4zNTE1MWE0IDEwMDY0NAo+PiAtLS0gYS9zb3VuZC9z
-b2MvY29kZWNzL2hkbWktY29kZWMuYwo+PiArKysgYi9zb3VuZC9zb2MvY29kZWNzL2hkbWktY29k
-ZWMuYwo+PiBAQCAtNDcsNiArNDcsMjMgQEAgZW51bSB7Cj4+ICAJREFJX0lEX1NQRElGLAo+PiAg
-fTsKPj4gIAo+PiArc3RhdGljIHZvaWQgaGRtaV9jb2RlY19hYm9ydChzdHJ1Y3QgZGV2aWNlICpk
-ZXYpCj4+ICt7Cj4+ICsJc3RydWN0IGhkbWlfY29kZWNfcHJpdiAqaGNwID0gZGV2X2dldF9kcnZk
-YXRhKGRldik7Cj4+ICsKPj4gKwlkZXZfZGJnKGRldiwgIiVzKClcbiIsIF9fZnVuY19fKTsKPj4g
-Kwo+PiArCW11dGV4X2xvY2soJmhjcC0+Y3VycmVudF9zdHJlYW1fbG9jayk7Cj4+ICsJaWYgKGhj
-cC0+Y3VycmVudF9zdHJlYW0gJiYgaGNwLT5jdXJyZW50X3N0cmVhbS0+cnVudGltZSAmJgo+PiAr
-CSAgICBzbmRfcGNtX3J1bm5pbmcoaGNwLT5jdXJyZW50X3N0cmVhbSkpIHsKPj4gKwkJZGV2X2lu
-Zm8oZGV2LCAiSERNSSBhdWRpbyBwbGF5YmFjayBhYm9ydGVkXG4iKTsKPj4gKwkJc25kX3BjbV9z
-dHJlYW1fbG9ja19pcnEoaGNwLT5jdXJyZW50X3N0cmVhbSk7Cj4+ICsJCXNuZF9wY21fc3RvcCho
-Y3AtPmN1cnJlbnRfc3RyZWFtLCBTTkRSVl9QQ01fU1RBVEVfRElTQ09OTkVDVEVEKTsKPj4gKwkJ
-c25kX3BjbV9zdHJlYW1fdW5sb2NrX2lycShoY3AtPmN1cnJlbnRfc3RyZWFtKTsKPj4gKwl9Cj4+
-ICsJbXV0ZXhfdW5sb2NrKCZoY3AtPmN1cnJlbnRfc3RyZWFtX2xvY2spOwo+PiArfQo+PiArCj4g
-c3RpbGwgbm90IHVuZGVyc3RhbmQgdGhlIG5lZWQuLi4gaSBjYW4gbm90IGZpbmQgYSB1c2UgY2Fz
-ZSB0aGF0Cj4ganVzdGlmaWVzIGl0Lgo+IEFzIGV4YW1wbGUsIGluIGNhc2Ugb2YgSERNSSBwbHVn
-L3VucGx1ZyBpIHdvdWxkIG5vdCB3YW50IHRoYXQgYXVkaW8KPiBzdHJlYW0gaXMgc3RvcHBlZCAo
-bGl2ZSBwbGF5YmFjaykuIEZyb20gbXkgcG9pbnQgb2YgdmlldyB0aGlzIHNob3VsZCBiZQo+IGEg
-ZGVjaXNpb24gZnJvbSB1c2VyLgo+IEJ1dCBhcyBpdCBpcyBvcHRpb25hbCwgSSdtIG9rIGlmIG5l
-ZWQgaXMganVzdGlmaWVkLgo+IAoKV2VsbCwgSSB0aGluayB3ZSBjYW4gZHJvcCB0aGlzIGFzIHRo
-ZXJlIGlzIG5vIHVzZSBmb3IgaXQgQVRNLgoKSSBjb3BpZWQgdGhpcyBmZWF0dXJlIGZyb20gbXkg
-b21hcC1oZG1pLWF1ZGlvIGRyaXZlciwgd2hlcmUgdGhlIGRpc3BsYXkKbW9kdWxlIG9uIHRoZSBT
-b0MgaW1wbGVtZW50cyBBU29DIENQVS1EQUkgaXRzZWxmLiBJbiB0aGF0IHNldHVwIHRoZSBETUEK
-c2ltcGx5IHN0b3BzIGlmIHRoZSBkaXNwbGF5IGlzIHR1cm5lZCBvZmYsIHdoaWNoIGV2ZW50dWFs
-bHkgY2F1c2VzIHRoZQphdWRpbyBzdHJlYW0gdG8gdGltZSBvdXQuIEhvd2V2ZXIsIGl0IGlzIHVu
-bGlrZWx5IHRvIGhhdmUgYSBzaW1pbGFyCnNpdHVhdGlvbiBoZXJlLCBzaW5jZSB0aGUgcHVycG9z
-ZSBpcyB0byBpbXBsZW1lbnQgQVNvQyBjb2RlYyBEQUkgZm9yIGFuCmV4dGVybmFsIEhETUkgZW5j
-b2RlciBzaXR0aW5nIGJlaGluZCBpMnMgYW5kL29yIHNwZGlmIHdpcmVzIGFuZCB0aGUKQ1BVLURB
-SSBjYW4ga2VlcCBvbiBwbGF5aW5nIHRoZSBhdWRpbyBldmVuIGlmIHRoZSB3aG9sZSBlbmNvZGVy
-IHBvd2VyZWQKZG93bi4gVGhhdCBpcyBpZiB0aGUgSERNSSBlbmNvZGVyIGRvZXMgbm90IHByb3Zp
-ZGUgdGhlIGNsb2NrcyBmb3IgdGhlCkRBSSBsaW5rLiBBbnl3YXksIHdlIGNhbiBhZGQgdGhpcyBm
-ZWF0dXJlIGxhdGVyIGlmIHRoZXJlIGV2ZXIgaXMgYSBuZWVkCmZvciBpdC4KCj4+ICBzdGF0aWMg
-aW50IGhkbWlfY29kZWNfbmV3X3N0cmVhbShzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0
-cmVhbSwKPj4gIAkJCQkgc3RydWN0IHNuZF9zb2NfZGFpICpkYWkpCj4+ICB7Cj4+IEBAIC03OCw3
-ICs5NSw4IEBAIHN0YXRpYyBpbnQgaGRtaV9jb2RlY19zdGFydHVwKHN0cnVjdCBzbmRfcGNtX3N1
-YnN0cmVhbSAqc3Vic3RyZWFtLAo+PiAgCQlyZXR1cm4gcmV0Owo+PiAgCj4+ICAJaWYgKGhjcC0+
-aGNkLm9wcy0+YXVkaW9fc3RhcnR1cCkgewo+PiAtCQlyZXQgPSBoY3AtPmhjZC5vcHMtPmF1ZGlv
-X3N0YXJ0dXAoZGFpLT5kZXYtPnBhcmVudCk7Cj4+ICsJCXJldCA9IGhjcC0+aGNkLm9wcy0+YXVk
-aW9fc3RhcnR1cChkYWktPmRldi0+cGFyZW50LAo+PiArCQkJCQkJICBoZG1pX2NvZGVjX2Fib3J0
-KTsKPj4gIAkJaWYgKHJldCkgewo+PiAgCQkJbXV0ZXhfbG9jaygmaGNwLT5jdXJyZW50X3N0cmVh
-bV9sb2NrKTsKPj4gIAkJCWhjcC0+Y3VycmVudF9zdHJlYW0gPSBOVUxMOwo+PgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Tomasz and Krzysztof,
+
+On 2016=EB=85=84 04=EC=9B=94 13=EC=9D=BC 15:20, Tomasz Figa wrote:
+> 2016-04-12 14:25 GMT+03:00 Krzysztof Kozlowski <k.kozlowski@samsung.c=
+om>:
+>> On 04/08/2016 07:00 AM, Chanwoo Choi wrote:
+>>> This patch adds the clock id for ACLK clock which is source clock o=
+f AMBA AXI
+>>> Bus. This clock should be handled in Bus frequency scaling driver.
+>>>
+>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> ---
+>>>  drivers/clk/samsung/clk-exynos5420.c | 85 +++++++++++++++++++++++-=
+------------
+>>>  1 file changed, 55 insertions(+), 30 deletions(-)
+>>
+>> The IDs itself look good but you are not adding only clock ID. You a=
+re
+>> changing all of them from NULL-flags to CLK_SET_RATE_PARENT. This sh=
+ould
+>> be explained in the commit message why you need it. Probably it shou=
+ld
+>> be also in separate commit.
+>=20
+> +1. And CLK_SET_RATE_PARENT for a clock which has a mux as its parent
+> is a bit suspicious, so I'd like to know the rationale for each singl=
+e
+> clock with CLK_SET_RATE_PARENT being added.
+
+This patch don't need the CLK_SET_RATE_PARENT flag. As Tomasz's comment=
+,
+the mux of divider's parent don't need this flag. Sorry for confusion.
+
+I'll drop the CLK_SET_RATE_PARENT flag.
+
+Best Regards,
+Chanwoo Choi
