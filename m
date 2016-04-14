@@ -1,45 +1,39 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 00/45] powerpc/powernv: PCI hotplug support
-Date: Thu, 14 Apr 2016 15:25:56 +1000
-Message-ID: <20160414052556.GA7402@gwshan>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <570DF50F.6010805@ozlabs.ru>
- <20160413074236.GA28853@gwshan>
- <570E0E13.6080409@ozlabs.ru>
- <20160413234246.GA5330@gwshan>
- <570F0DFB.9090509@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: PC Liao <pc.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v9 3/7] ASoC: hdmi-codec: Add hdmi-codec
+ for external HDMI-encoders
+Date: Thu, 14 Apr 2016 13:31:21 +0800
+Message-ID: <1460611881.22320.6.camel@mtksdaap41>
+References: <cover.1459431292.git.jsarha@ti.com>
+	 <636486b25db48fa13ae640516cdebe7bcfea0d23.1459431292.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570F0DFB.9090509@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <636486b25db48fa13ae640516cdebe7bcfea0d23.1459431292.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 01:26:51PM +1000, Alexey Kardashevskiy wrote:
+Hi Jyri,
 
-.../...
+On Thu, 2016-03-31 at 16:36 +0300, Jyri Sarha wrote:
+> The hdmi-codec is a platform device driver to be registered from
+> drivers of external HDMI encoders with I2S and/or spdif interface. The
+> driver in turn registers an ASoC codec for the HDMI encoder's audio
+> functionality.
+> 
+> The structures and definitions in the API header are mostly redundant
+> copies of similar structures in ASoC headers. This is on purpose to
+> avoid direct dependencies to ASoC structures in video side driver.
+> 
+> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 
->>
->>Do you mean physically pull the adapter out and insert the same
->>adapter back? What's the point for the test case?
->
->
->Because this is what the patchset is for - to replace a physical device on a
->physical machine. Powering on/off the slots via sysfs is just an
->approximation (which is fine when you are debugging), something can go wrong
->and require some work but you do not know it for sure.
->
+I successfully tested new version on mt8173. 
+Acked-by: PC Liao <pc.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Yes, It's absolutely worthy to be covered by the test cases though case (2)
-covers part of that. Anyway, I'll test it through in next revision. Thanks
-for your review.
 
->
->
->-- 
->Alexey
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
