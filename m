@@ -1,271 +1,195 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3 2/2] thermal: generic-adc: Add ADC based thermal sensor driver
-Date: Thu, 14 Apr 2016 20:11:18 +0530
-Message-ID: <1460644878-19943-2-git-send-email-ldewangan@nvidia.com>
-References: <1460644878-19943-1-git-send-email-ldewangan@nvidia.com>
+From: Martinez Kristofer <kristofer.s.martinez@gmail.com>
+Subject: Re: [PATCH] i2c: designware-platdrv: implement bus recovery
+Date: Thu, 14 Apr 2016 22:58:51 +0800
+Message-ID: <CABtop_EHQrw06avD+VSHfyi7jON=A9UKcpQi_0p1V=jTF1QGPA@mail.gmail.com>
+References: <1460642696-1858-1-git-send-email-jszhang@marvell.com> <20160414143916.GY1714@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460644878-19943-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, edubezval@gmail.com, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, jic23@kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160414143916.GY1714@lahna.fi.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, wsa@the-dreams.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org, galak@codeaurora.org, andriy.shevchenko@linux.intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In some of platform, thermal sensors like NCT thermistors are
-connected to the one of ADC channel. The temperature is read by
-reading the voltage across the sensor resistance via ADC. Lookup
-table for ADC read value to temperature is referred to get
-temperature. ADC is read via IIO framework.
+On Thu, Apr 14, 2016 at 10:39 PM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Thu, Apr 14, 2016 at 10:04:56PM +0800, Jisheng Zhang wrote:
+>> Implement bus recovery methods for i2c designware so we can recover
+>> from situations where SCL/SDA are stuck low.
+>>
+>> The recovery method is similar as i2c-imx: "config the i2c pinctrl to
+>> gpio mode by calling pinctrl sleep set function, and then use GPIO to
+>> emulate the i2c protocol to send nine dummy clock to recover i2c
+>> device. After recovery, set i2c pinctrl to default group setting.
+>>
+>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+>> ---
+>> depends on runtime pm patches
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/422202.html
+>>  .../devicetree/bindings/i2c/i2c-designware.txt     | 12 ++++++
+>>  drivers/i2c/busses/i2c-designware-core.c           |  6 ++-
+>>  drivers/i2c/busses/i2c-designware-core.h           |  4 ++
+>>  drivers/i2c/busses/i2c-designware-platdrv.c        | 50 ++++++++++++++++++++++
+>>  4 files changed, 71 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> index fee26dc..51a55c6 100644
+>> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> @@ -20,6 +20,13 @@ Optional properties :
+>>   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
+>>     This value which is by default 300ns is used to compute the tHIGH period.
+>>
+>> + - scl-gpios: specify the gpio related to SCL pin
+>> +
+>> + - sda-gpios: specify the gpio related to SDA pin
+>> +
+>> + - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
+>> +   bus recovery, call it "gpio" state
+>> +
+>>  Example :
+>>
+>>       i2c@f0000 {
+>> @@ -42,4 +49,9 @@ Example :
+>>               i2c-sda-hold-time-ns = <300>;
+>>               i2c-sda-falling-time-ns = <300>;
+>>               i2c-scl-falling-time-ns = <300>;
+>> +             pinctrl-names = "default", "gpio";
+>> +             pinctrl-0 = <&pinctrl_i2c1_default>;
+>> +             pinctrl-1 = <&pinctrl_i2c1_gpio>;
+>> +             scl-gpios = <&porta 26 GPIO_ACTIVE_HIGH>;
+>> +             sda-gpios = <&porta 27 GPIO_ACTIVE_HIGH>;
+>>       };
+>> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
+>> index 4255eaa..be40de1 100644
+>> --- a/drivers/i2c/busses/i2c-designware-core.c
+>> +++ b/drivers/i2c/busses/i2c-designware-core.c
+>> @@ -399,7 +399,10 @@ static int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
+>>       while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
+>>               if (timeout <= 0) {
+>>                       dev_warn(dev->dev, "timeout waiting for bus ready\n");
+>> -                     return -ETIMEDOUT;
+>> +                     i2c_recover_bus(&dev->adapter);
+>> +                     if (dw_readl(dev, DW_IC_STATUS)
+>> +                                     & DW_IC_STATUS_ACTIVITY)
+>> +                             return -ETIMEDOUT;
+>>               }
+>>               timeout--;
+>>               usleep_range(1000, 1100);
+>> @@ -665,6 +668,7 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+>>       /* wait for tx to complete */
+>>       if (!wait_for_completion_timeout(&dev->cmd_complete, HZ)) {
+>>               dev_err(dev->dev, "controller timed out\n");
+>> +             i2c_recover_bus(&dev->adapter);
+>>               /* i2c_dw_init implicitly disables the adapter */
+>>               i2c_dw_init(dev);
+>>               ret = -ETIMEDOUT;
+>> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+>> index cd409e7..26c84ee 100644
+>> --- a/drivers/i2c/busses/i2c-designware-core.h
+>> +++ b/drivers/i2c/busses/i2c-designware-core.h
+>> @@ -104,6 +104,10 @@ struct dw_i2c_dev {
+>>       u16                     fs_lcnt;
+>>       int                     (*acquire_lock)(struct dw_i2c_dev *dev);
+>>       void                    (*release_lock)(struct dw_i2c_dev *dev);
+>> +     struct i2c_bus_recovery_info rinfo;
+>> +     struct pinctrl          *pinctrl;
+>> +     struct pinctrl_state    *pinctrl_pins_default;
+>> +     struct pinctrl_state    *pinctrl_pins_gpio;
+>>       bool                    pm_runtime_disabled;
+>>  };
+>>
+>> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+>> index 1488cea..62bded9 100644
+>> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+>> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+>> @@ -33,6 +33,7 @@
+>>  #include <linux/err.h>
+>>  #include <linux/interrupt.h>
+>>  #include <linux/of.h>
+>> +#include <linux/of_gpio.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/pm.h>
+>>  #include <linux/pm_runtime.h>
+>> @@ -148,6 +149,49 @@ static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
+>>       return 0;
+>>  }
+>>
+>> +static void i2c_dw_plat_prepare_recovery(struct i2c_adapter *adap)
+>> +{
+>> +     struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
+>> +
+>> +     pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
+>> +}
+>> +
+>> +static void i2c_dw_plat_unprepare_recovery(struct i2c_adapter *adap)
+>> +{
+>> +     struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
+>> +
+>> +     pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
+>> +}
+>> +
+>> +static void i2c_dw_plat_init_recovery_info(struct dw_i2c_dev *dev,
+>> +                                        struct platform_device *pdev)
+>> +{
+>> +     struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
+>> +
+>> +     dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
+>> +                     PINCTRL_STATE_DEFAULT);
+>> +     dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
+>> +                     "gpio");
+>> +     rinfo->sda_gpio = of_get_named_gpio(pdev->dev.of_node, "sda-gpios", 0);
+>> +     rinfo->scl_gpio = of_get_named_gpio(pdev->dev.of_node, "scl-gpios", 0);
+>> +
+>> +     if (!gpio_is_valid(rinfo->sda_gpio) ||
+>> +         !gpio_is_valid(rinfo->scl_gpio) ||
+>> +         IS_ERR(dev->pinctrl_pins_default) ||
+>> +         IS_ERR(dev->pinctrl_pins_gpio)) {
+>> +             dev_dbg(&pdev->dev, "recovery information incomplete\n");
+>> +             return;
+>> +     }
+>> +
+>> +     dev_dbg(&pdev->dev, "using scl-gpio %d and sda-gpio %d for recovery\n",
+>> +             rinfo->sda_gpio, rinfo->scl_gpio);
+>> +
+>> +     rinfo->prepare_recovery = i2c_dw_plat_prepare_recovery;
+>> +     rinfo->unprepare_recovery = i2c_dw_plat_unprepare_recovery;
+>> +     rinfo->recover_bus = i2c_generic_gpio_recovery;
+>
+> This whole thing is DT specific and I don't see how we can do the same
+> for ACPI. Should it be enabled only when the controller was enumerated
+> from DT?
+>
+For ACPI, probably result in the panic-alike function calling chain at
+i2c_dw_init --> dev->get_clk_rate_khz(dev).
+Mika, I think you need to take ACPI into account while not focus on DT only
 
-Add support for thermal sensor driver which read the voltage across
-sensor resistance from ADC through IIO framework.
+KM
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-
----
-Changes from V1:
-- Use the two dimensional lookup table for temperature vs ADC value.
-- Use non devm_ for thermal zone sensor registration as there may be
-  race between IIO channel release and temperature read.
-
-Changes from V2:
-- None.
-
- drivers/thermal/Kconfig               |  10 ++
- drivers/thermal/Makefile              |   1 +
- drivers/thermal/thermal-generic-adc.c | 195 ++++++++++++++++++++++++++++++++++
- 3 files changed, 206 insertions(+)
- create mode 100644 drivers/thermal/thermal-generic-adc.c
-
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 594748e..d7d0136 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -400,4 +400,14 @@ config QCOM_SPMI_TEMP_ALARM
- 	  real time die temperature if an ADC is present or an estimate of the
- 	  temperature based upon the over temperature stage value.
- 
-+config GENERIC_ADC_THERMAL
-+	tristate "Generic ADC based thermal sensor"
-+	depends on IIO
-+	help
-+	  This enabled a thermal sysfs driver for the temperature sensor
-+	  which is connected to the General Purpose ADC. The ADC channel
-+	  is read via IIO framework and the channel information is provided
-+	  to this driver. This driver reports the temperature by reading ADC
-+	  channel and converts it to temperature based on lookup table.
-+
- endif
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index d64f7f7..904593a 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -49,3 +49,4 @@ obj-$(CONFIG_ST_THERMAL)	+= st/
- obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra/
- obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
- obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
-+obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
-diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/thermal-generic-adc.c
-new file mode 100644
-index 0000000..902cf12
---- /dev/null
-+++ b/drivers/thermal/thermal-generic-adc.c
-@@ -0,0 +1,195 @@
-+/*
-+ * Generic ADC thermal driver
-+ *
-+ * Copyright (C) 2016 NVIDIA CORPORATION. All rights reserved.
-+ *
-+ * Author: Laxman Dewangan <ldewangan@nvidia.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/iio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/thermal.h>
-+
-+struct gadc_thermal_info {
-+	struct device *dev;
-+	struct thermal_zone_device *tz_dev;
-+	struct iio_channel *channel;
-+	s32 *lookup_table;
-+	int nlookup_table;
-+};
-+
-+static int gadc_thermal_read_channel(struct gadc_thermal_info *gti, int *val)
-+{
-+	int ret;
-+
-+	ret = iio_read_channel_processed(gti->channel, val);
-+	if (ret < 0)
-+		ret = iio_read_channel_raw(gti->channel, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return ret;
-+}
-+
-+static int gadc_thermal_adc_to_temp(struct gadc_thermal_info *gti, int val)
-+{
-+	int temp, adc_hi, adc_lo;
-+	int i;
-+
-+	for (i = 0; i < gti->nlookup_table; i++) {
-+		if (val >= gti->lookup_table[2 * i + 1])
-+			break;
-+	}
-+
-+	if (i == 0) {
-+		temp = gti->lookup_table[0];
-+	} else if (i >= (gti->nlookup_table - 1)) {
-+		temp = gti->lookup_table[2 * (gti->nlookup_table - 1)];
-+	} else {
-+		adc_hi = gti->lookup_table[2 * i - 1];
-+		adc_lo = gti->lookup_table[2 * i + 1];
-+		temp = gti->lookup_table[2 * i];
-+		temp -= ((val - adc_lo) * 1000) / (adc_hi - adc_lo);
-+	}
-+
-+	return temp;
-+}
-+
-+static int gadc_thermal_get_temp(void *data, int *temp)
-+{
-+	struct gadc_thermal_info *gti = data;
-+	int val;
-+	int ret;
-+
-+	ret = gadc_thermal_read_channel(gti, &val);
-+	if (ret < 0) {
-+		dev_err(gti->dev, "IIO channel read failed %d\n", ret);
-+		return ret;
-+	}
-+	*temp = gadc_thermal_adc_to_temp(gti, val);
-+
-+	return 0;
-+}
-+
-+static const struct thermal_zone_of_device_ops gadc_thermal_ops = {
-+	.get_temp = gadc_thermal_get_temp,
-+};
-+
-+static int gadc_thermal_read_linear_lookup_table(struct device *dev,
-+						 struct gadc_thermal_info *gti)
-+{
-+	struct device_node *np = dev->of_node;
-+	int ntable;
-+	int ret;
-+
-+	ntable = of_property_count_elems_of_size(np, "temperature-lookup-table",
-+						 sizeof(u32));
-+	if (ntable < 0) {
-+		dev_err(dev, "Lookup table is not provided\n");
-+		return ntable;
-+	}
-+
-+	if (ntable % 2) {
-+		dev_err(dev, "Pair of temperature vs ADC read value missing\n");
-+		return -EINVAL;
-+	}
-+
-+	gti->lookup_table = devm_kzalloc(dev, sizeof(*gti->lookup_table) *
-+					 ntable, GFP_KERNEL);
-+	if (!gti->lookup_table)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_u32_array(np, "temperature-lookup-table",
-+					 (u32 *)gti->lookup_table, ntable);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to read temperature lookup table: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	gti->nlookup_table = ntable / 2;
-+
-+	return 0;
-+}
-+
-+static int gadc_thermal_probe(struct platform_device *pdev)
-+{
-+	struct gadc_thermal_info *gti;
-+	int ret;
-+
-+	if (!pdev->dev.of_node) {
-+		dev_err(&pdev->dev, "Only DT based supported\n");
-+		return -ENODEV;
-+	}
-+
-+	gti = devm_kzalloc(&pdev->dev, sizeof(*gti), GFP_KERNEL);
-+	if (!gti)
-+		return -ENOMEM;
-+
-+	ret = gadc_thermal_read_linear_lookup_table(&pdev->dev, gti);
-+	if (ret < 0)
-+		return ret;
-+
-+	gti->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, gti);
-+
-+	gti->channel = iio_channel_get(&pdev->dev, "sensor-channel");
-+	if (IS_ERR(gti->channel)) {
-+		ret = PTR_ERR(gti->channel);
-+		dev_err(&pdev->dev, "IIO channel not found: %d\n", ret);
-+		return ret;
-+	}
-+
-+	gti->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0,
-+						      gti, &gadc_thermal_ops);
-+	if (IS_ERR(gti->tz_dev)) {
-+		ret = PTR_ERR(gti->tz_dev);
-+		dev_err(&pdev->dev, "Thermal zone sensor register failed: %d\n",
-+			ret);
-+		goto sensor_fail;
-+	}
-+
-+	return 0;
-+
-+sensor_fail:
-+	iio_channel_release(gti->channel);
-+
-+	return ret;
-+}
-+
-+static int gadc_thermal_remove(struct platform_device *pdev)
-+{
-+	struct gadc_thermal_info *gti = platform_get_drvdata(pdev);
-+
-+	thermal_zone_of_sensor_unregister(&pdev->dev, gti->tz_dev);
-+	iio_channel_release(gti->channel);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_adc_thermal_match[] = {
-+	{ .compatible = "generic-adc-thermal", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_adc_thermal_match);
-+
-+static struct platform_driver gadc_thermal_driver = {
-+	.driver = {
-+		.name = "generic-adc-thermal",
-+		.of_match_table = of_adc_thermal_match,
-+	},
-+	.probe = gadc_thermal_probe,
-+	.remove = gadc_thermal_remove,
-+};
-+
-+module_platform_driver(gadc_thermal_driver);
-+
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_DESCRIPTION("Generic ADC thermal driver using IIO framework with DT");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+>> +     dev->adapter.bus_recovery_info = rinfo;
+>> +}
+>> +
+>>  static int dw_i2c_plat_probe(struct platform_device *pdev)
+>>  {
+>>       struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+>> @@ -165,6 +209,12 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+>>       if (!dev)
+>>               return -ENOMEM;
+>>
+>> +     dev->pinctrl = devm_pinctrl_get(&pdev->dev);
+>> +     if (IS_ERR(dev->pinctrl))
+>> +             return PTR_ERR(dev->pinctrl);
+>> +
+>> +     i2c_dw_plat_init_recovery_info(dev, pdev);
+>> +
+>>       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>       dev->base = devm_ioremap_resource(&pdev->dev, mem);
+>>       if (IS_ERR(dev->base))
+>> --
+>> 2.8.0.rc3
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
