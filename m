@@ -1,90 +1,96 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: Re: [PATCH RESEND 1/2] pinctrl: ns2: add pinmux driver support for
- Broadcom NS2 SoC
-Date: Thu, 14 Apr 2016 13:23:33 +0530
-Message-ID: <CAL2FKYmAoaK=E8wrKc+sHPfM3cZ5O8GnZB2yfMx-GvUH3g1pKQ@mail.gmail.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v7 0/9] Add clock support for Mediatek MT2701
+Date: Thu, 14 Apr 2016 16:11:45 +0800
+Message-ID: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+This series is based on 4.6-rc1, add clock and reset controller support
+for Mediatek MT2701.
 
-On Wed, Apr 13, 2016 at 6:49 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Mar 29, 2016 at 5:22 PM, Yendapally Reddy Dhananjaya Reddy
-> <yendapally.reddy@broadcom.com> wrote:
->
->> This adds the initial support of the Broadcom NS2 pinmux driver
->>
->> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->
-> Sorry for slow replies. :(
->
-> This mostly looks good. Some small things needs fixing:
->
->> +config PINCTRL_NS2_MUX
->> +       bool "Broadcom Northstar2 pinmux driver"
->
-> This is a bool driver, yet it uses MODULE* macros at the end of the file.
-> Check the recent commits from Paul Gortmaker cleaning this up.
-> Just a git log -p --author=Gortmaker in the main kernel tree will quickly
-> give you an idea of what you have to do.
->
+This series also refined makefile and Kconfig to support configurable
+multiple SoC clock support.
 
-Sure. I will address this in the v2 patch set.
+changes since v6:
+- Rebase to v4.6-rc1.
+- Register subsystem clocks in probe() instead of CLK_OF_DECLARE().
+- Add clocks that referred by subsystem clocks.
+- Fix clk_data size of apmixedsys.
+- Add config options for each subsystem clock provider.
 
->
->> +static const unsigned int gpio_0_1_pins[] = {24, 25};
->> +static const unsigned int pwm_0_pins[] = {24};
->> +static const unsigned int pwm_1_pins[] = {25};
->
-> So either the same pins are used for GPIO or PWM.
-> And this pattern persists.
->
-> Do you have a brewing GPIO driver for this block as well?
-> Is it a separate front-end calling to pinctrl using the
-> pinctrl_gpio_* calls or do you plan to patch it into this
-> driver?
->
-> This is more of a question.
->
+changes since v5:
+- Rebase to v4.5-rc1 and [1].
+- Enable critical clocks for MT2701
+- Refine dt-binding documents, add reset controller support for hifsys.
 
-This SoC supports group based configuration and there is a top level register
-to select groups. Once the gpio_0_1_pins group is selected, there is one more
-register to select between gpio_0_1 and pwm (only four pins). The pins
-24 and 25 are shared between nor pins and gpio at the top group level. Once
-gpio group is selected, then we can select to be either gpio or pwm. I missed
-these two pins to be added to nor_data_pins and will add in the next version.
+changes since v4:
+- Rebase to v4.5-rc1.
+- Remove CLK_SET_RATE_PARENT from divider flags.
+- Add img_jpgdec_smi clock.
+- Move clk/mediatek/Kconfig into menu section in clk/Kconfig.
 
-static const unsigned nor_data_pins[] =  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-        10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
+changes since v3:
+- Change the parent of mm_mdp_bls_26m from clk26m to pwm_sel.
 
-NS2_PIN_GROUP(nand, 0, 0, 31, 1, 0),
-NS2_PIN_GROUP(nor_data, 0, 0, 31, 1, 1),
-NS2_PIN_GROUP(gpio_0_1, 0, 0, 31, 1, 0),
+changes since v2:
+- Fix ethsys definition.
+- Replace read-modify-write with regmap_update_bits() in clock operations.
+- Move mt2701-resets.h to include/dt-bindings/reset/.
+- Add hifsys reset patch from John Crispin.
 
-To select PWM, we need to select gpio and pwm as well.
+changes since v1:
+- Document MT2701 compatible strings.
 
-gpio: gpio {
-function = "gpio";
-groups = "gpio_0_1_grp";
+[1] https://patchwork.kernel.org/patch/8147901/
 
-pwm: pwm {
-function = "pwm";
-groups = "pwm0_grp", "pwm1_grp";
-};
+James Liao (5):
+  clk: mediatek: Refine the makefile to support multiple clock drivers
+  dt-bindings: ARM: Mediatek: Document bindings for MT2701
+  clk: mediatek: Enable critical clocks for MT2701
+  clk: mediatek: Add config options for MT2701 subsystem clocks
+  arm: dts: mt2701: Add clock controller device nodes
 
-Already available gpio driver "pinctrl-iproc-gpio.c" will be the gpio driver
-for this soc as well without pin request.
+Shunli Wang (4):
+  clk: mediatek: Add dt-bindings for MT2701 clocks
+  clk: mediatek: Add MT2701 clock support
+  reset: mediatek: Add MT2701 reset controller dt-binding file
+  reset: mediatek: Add MT2701 reset driver
 
-> Apart from this it looks good.
->
-> Yours,
-> Linus Walleij
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    3 +-
+ .../bindings/arm/mediatek/mediatek,bdpsys.txt      |   22 +
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      |   22 +
+ .../bindings/arm/mediatek/mediatek,hifsys.txt      |   24 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |    3 +-
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |    3 +-
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |    3 +-
+ .../bindings/arm/mediatek/mediatek,pericfg.txt     |    3 +-
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |    3 +-
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    3 +-
+ arch/arm/boot/dts/mt2701.dtsi                      |   42 +
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/mediatek/Kconfig                       |   73 +
+ drivers/clk/mediatek/Makefile                      |    7 +-
+ drivers/clk/mediatek/clk-gate.c                    |   52 +
+ drivers/clk/mediatek/clk-gate.h                    |    2 +
+ drivers/clk/mediatek/clk-mt2701.c                  | 1417 ++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.c                     |   25 +
+ drivers/clk/mediatek/clk-mtk.h                     |   34 +-
+ include/dt-bindings/clock/mt2701-clk.h             |  486 +++++++
+ include/dt-bindings/reset/mt2701-resets.h          |   83 ++
+ 21 files changed, 2298 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+ create mode 100644 drivers/clk/mediatek/Kconfig
+ create mode 100644 drivers/clk/mediatek/clk-mt2701.c
+ create mode 100644 include/dt-bindings/clock/mt2701-clk.h
+ create mode 100644 include/dt-bindings/reset/mt2701-resets.h
 
-Thanks & Regards
-Dhananjay
+--
+1.9.1
+
