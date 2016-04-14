@@ -1,118 +1,138 @@
-From: Steve Capper <steve.capper-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v16 1/6] efi: ARM/arm64: ignore DT memory nodes instead
- of removing them
-Date: Thu, 14 Apr 2016 12:02:11 +0100
-Message-ID: <20160414110210.GA11788@e103986-lin>
-References: <1460155828-8690-1-git-send-email-ddaney.cavm@gmail.com>
- <1460155828-8690-2-git-send-email-ddaney.cavm@gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 2/3] dmaengine: tegra-adma: Add support for Tegra210
+ ADMA
+Date: Thu, 14 Apr 2016 12:04:50 +0100
+Message-ID: <570F7952.2030606@nvidia.com>
+References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
+ <1458057390-20756-3-git-send-email-jonathanh@nvidia.com>
+ <20160405213649.GA11586@vkoul-mobl.iind.intel.com>
+ <570BB001.3020202@nvidia.com> <20160412141025.GJ2274@localhost>
+ <570D2104.1040607@nvidia.com> <20160413134917.GP2274@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460155828-8690-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160413134917.GP2274@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 08, 2016 at 03:50:23PM -0700, David Daney wrote:
-> From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> There are two problems with the UEFI stub DT memory node removal
-> routine:
-> - it deletes nodes as it traverses the tree, which happens to work
->   but is not supported, as deletion invalidates the node iterator;
-> - deleting memory nodes entirely may discard annotations in the form
->   of additional properties on the nodes.
-> 
-> Since the discovery of DT memory nodes occurs strictly before the
-> UEFI init sequence, we can simply clear the memblock memory table
-> before parsing the UEFI memory map. This way, it is no longer
-> necessary to remove the nodes, so we can remove that logic from the
-> stub as well.
-> 
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/firmware/efi/arm-init.c    |  8 ++++++++
->  drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
->  2 files changed, 9 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-> index aa1f743..5d6945b 100644
-> --- a/drivers/firmware/efi/arm-init.c
-> +++ b/drivers/firmware/efi/arm-init.c
-> @@ -143,6 +143,14 @@ static __init void reserve_regions(void)
->  	if (efi_enabled(EFI_DBG))
->  		pr_info("Processing EFI memory map:\n");
->  
-> +	/*
-> +	 * Discard memblocks discovered so far: if there are any at this
-> +	 * point, they originate from memory nodes in the DT, and UEFI
-> +	 * uses its own memory map instead.
-> +	 */
-> +	memblock_dump_all();
-> +	memblock_remove(0, ULLONG_MAX);
-> +
 
-Does this change need to be applied to any other architectures given
-that deletion code has been removed from libstub below?
+On 13/04/16 14:49, Vinod Koul wrote:
+> On Tue, Apr 12, 2016 at 05:23:32PM +0100, Jon Hunter wrote:
+>>>>> why should this be hard coded in kernel and not queried from something like
+>>>>> DT? This case seems to be hardware property
+>>>>
+>>>> Originally, I did have this in DT, however, the Tegra maintainers prefer
+>>>> this and this is consistent with the other Tegra DMA driver (see
+>>>> driver/dma/tegra20-apb-dma.c) [0].
+>>>
+>>> But this creates a problem when you have next generation of controller with
+>>> different channel count!
+>>> How do we solve then?
+>>
+>> Same way we solve this for the tegra20-apb-dma driver by having
+>> different chip data per SoC in the driver ...
+>>
+>> 1259 /* Tegra20 specific DMA controller information */
+>> 1260 static const struct tegra_dma_chip_data tegra20_dma_chip_data = {
+>> 1261         .nr_channels            = 16,
+>> 1262         .channel_reg_size       = 0x20,
+>> 1263         .max_dma_count          = 1024UL * 64,
+>> 1264         .support_channel_pause  = false,
+>> 1265         .support_separate_wcount_reg = false,
+>> 1266 };
+>> 1267
+>> 1268 /* Tegra30 specific DMA controller information */
+>> 1269 static const struct tegra_dma_chip_data tegra30_dma_chip_data = {
+>> 1270         .nr_channels            = 32,
+>> 1271         .channel_reg_size       = 0x20,
+>> 1272         .max_dma_count          = 1024UL * 64,
+>> 1273         .support_channel_pause  = false,
+>> 1274         .support_separate_wcount_reg = false,
+>> 1275 };
+>> 1276
+>> 1277 /* Tegra114 specific DMA controller information */
+>> 1278 static const struct tegra_dma_chip_data tegra114_dma_chip_data = {
+>> 1279         .nr_channels            = 32,
+>> 1280         .channel_reg_size       = 0x20,
+>> 1281         .max_dma_count          = 1024UL * 64,
+>> 1282         .support_channel_pause  = true,
+>> 1283         .support_separate_wcount_reg = false,
+>> 1284 };
+>> 1285
+>> 1286 /* Tegra148 specific DMA controller information */
+>> 1287 static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
+>> 1288         .nr_channels            = 32,
+>> 1289         .channel_reg_size       = 0x40,
+>> 1290         .max_dma_count          = 1024UL * 64,
+>> 1291         .support_channel_pause  = true,
+>> 1292         .support_separate_wcount_reg = true,
+>> 1293 };
+>>
+>> You may still say this should be in the DT, but the Tegra maintainers
+>> prefer this data in the driver.
+> 
+> Okay I don't see a a rationale behind this not being in DT, Stephan?
 
-Cheers,
--- 
-Steve
+Let me know what you think of Stephen's feedback and if you are OK with
+this.
 
->  	for_each_efi_memory_desc(&memmap, md) {
->  		paddr = md->phys_addr;
->  		npages = md->num_pages;
-> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-> index 6dba78a..e58abfa 100644
-> --- a/drivers/firmware/efi/libstub/fdt.c
-> +++ b/drivers/firmware/efi/libstub/fdt.c
-> @@ -24,7 +24,7 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
->  			unsigned long map_size, unsigned long desc_size,
->  			u32 desc_ver)
->  {
-> -	int node, prev, num_rsv;
-> +	int node, num_rsv;
->  	int status;
->  	u32 fdt_val32;
->  	u64 fdt_val64;
-> @@ -54,28 +54,6 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
->  		goto fdt_set_fail;
->  
->  	/*
-> -	 * Delete any memory nodes present. We must delete nodes which
-> -	 * early_init_dt_scan_memory may try to use.
-> -	 */
-> -	prev = 0;
-> -	for (;;) {
-> -		const char *type;
-> -		int len;
-> -
-> -		node = fdt_next_node(fdt, prev, NULL);
-> -		if (node < 0)
-> -			break;
-> -
-> -		type = fdt_getprop(fdt, node, "device_type", &len);
-> -		if (type && strncmp(type, "memory", len) == 0) {
-> -			fdt_del_node(fdt, node);
-> -			continue;
-> -		}
-> -
-> -		prev = node;
-> -	}
-> -
-> -	/*
->  	 * Delete all memory reserve map entries. When booting via UEFI,
->  	 * kernel will use the UEFI memory map to find reserved regions.
->  	 */
-> -- 
-> 1.8.3.1
+>>>>>> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+>>>>>> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+>>>>>> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
+>>>>>
+>>>>> I think you should not set DMA_SLAVE, do you need caps to be exported. I
+>>>>> think that should be exported for cyclic too, let me know if that was the
+>>>>> issue?
+>>>>>
+>>>>
+>>>> Why should I not be setting DMA_SLAVE? Should I not be calling
+>>>> dma_get_any_slave_channel() in the xlate?
+>>>>
+>>>> I think that I do want to set DMA_CYCLIC as well to ensure that we check
+>>>> that the device->device_prep_dma_cyclic() function pointer is populated
+>>>> when registering the DMA controller.
+>>>
+>>> Only setting DMA_CYCLIC should do, if you see any issues around that please
+>>> get back, we cna fix those :)
+>>
+>> It did not work for me because dma_get_any_slave_channel() wants a DMA
+>> device with the DMA_SLAVE bit capability set. So if I remove this above,
+>> then requesting the channel fails via dma_get_any_slave_channel() fails.
+>> Is there something I don't understand here?
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> You should use dma_request_channel() we cleaned up the APIs and recommend to
+> use dma_request_channel() for slave usages. See Documentation update in 
+> a8135d0d79e9: (dmaengine: core: Introduce new, universal API to request a
+> channel)
+
+I had a look at this, but actually, I don't think this is going to work.
+
+Looking at dma_request_channel(), it is going to get a DMA channel that
+matches the mask for any DMA controller. In the xlate I already know
+which DMA controller I am and I just want one of the channels. The flow
+here is ...
+
+dma_request_chan()
+  --> of_dma_request_slave_channel()
+    --> xlate()
+      --> dma_get_any_slave_channel()
+
+There are several other DMA drivers that are calling
+dma_get_any_slave_channel() from their xlate function which makes sense
+because they are requesting one of their own channels.
+
+I can understand that you wish to consolidate the APIs for requesting a
+channel, but it seems to me that you still need to have an API that DMA
+controller drivers can call where they can pass their dma_device
+structure to ensure you get a channel for the appropriate DMA controller.
+
+Cheers
+Jon
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
