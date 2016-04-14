@@ -1,195 +1,115 @@
-From: Martinez Kristofer <kristofer.s.martinez@gmail.com>
-Subject: Re: [PATCH] i2c: designware-platdrv: implement bus recovery
-Date: Thu, 14 Apr 2016 22:58:51 +0800
-Message-ID: <CABtop_EHQrw06avD+VSHfyi7jON=A9UKcpQi_0p1V=jTF1QGPA@mail.gmail.com>
-References: <1460642696-1858-1-git-send-email-jszhang@marvell.com> <20160414143916.GY1714@lahna.fi.intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+ device tree binding documentation
+Date: Thu, 14 Apr 2016 10:04:13 -0500
+Message-ID: <20160414150413.GA24644@rob-hp-laptop>
+References: <1460524609-8722-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160414143916.GY1714@lahna.fi.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Jisheng Zhang <jszhang@marvell.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, wsa@the-dreams.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org, galak@codeaurora.org, andriy.shevchenko@linux.intel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460524609-8722-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 10:39 PM, Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Thu, Apr 14, 2016 at 10:04:56PM +0800, Jisheng Zhang wrote:
->> Implement bus recovery methods for i2c designware so we can recover
->> from situations where SCL/SDA are stuck low.
->>
->> The recovery method is similar as i2c-imx: "config the i2c pinctrl to
->> gpio mode by calling pinctrl sleep set function, and then use GPIO to
->> emulate the i2c protocol to send nine dummy clock to recover i2c
->> device. After recovery, set i2c pinctrl to default group setting.
->>
->> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
->> ---
->> depends on runtime pm patches
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/422202.html
->>  .../devicetree/bindings/i2c/i2c-designware.txt     | 12 ++++++
->>  drivers/i2c/busses/i2c-designware-core.c           |  6 ++-
->>  drivers/i2c/busses/i2c-designware-core.h           |  4 ++
->>  drivers/i2c/busses/i2c-designware-platdrv.c        | 50 ++++++++++++++++++++++
->>  4 files changed, 71 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
->> index fee26dc..51a55c6 100644
->> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
->> @@ -20,6 +20,13 @@ Optional properties :
->>   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
->>     This value which is by default 300ns is used to compute the tHIGH period.
->>
->> + - scl-gpios: specify the gpio related to SCL pin
->> +
->> + - sda-gpios: specify the gpio related to SDA pin
->> +
->> + - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
->> +   bus recovery, call it "gpio" state
->> +
->>  Example :
->>
->>       i2c@f0000 {
->> @@ -42,4 +49,9 @@ Example :
->>               i2c-sda-hold-time-ns = <300>;
->>               i2c-sda-falling-time-ns = <300>;
->>               i2c-scl-falling-time-ns = <300>;
->> +             pinctrl-names = "default", "gpio";
->> +             pinctrl-0 = <&pinctrl_i2c1_default>;
->> +             pinctrl-1 = <&pinctrl_i2c1_gpio>;
->> +             scl-gpios = <&porta 26 GPIO_ACTIVE_HIGH>;
->> +             sda-gpios = <&porta 27 GPIO_ACTIVE_HIGH>;
->>       };
->> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
->> index 4255eaa..be40de1 100644
->> --- a/drivers/i2c/busses/i2c-designware-core.c
->> +++ b/drivers/i2c/busses/i2c-designware-core.c
->> @@ -399,7 +399,10 @@ static int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
->>       while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
->>               if (timeout <= 0) {
->>                       dev_warn(dev->dev, "timeout waiting for bus ready\n");
->> -                     return -ETIMEDOUT;
->> +                     i2c_recover_bus(&dev->adapter);
->> +                     if (dw_readl(dev, DW_IC_STATUS)
->> +                                     & DW_IC_STATUS_ACTIVITY)
->> +                             return -ETIMEDOUT;
->>               }
->>               timeout--;
->>               usleep_range(1000, 1100);
->> @@ -665,6 +668,7 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
->>       /* wait for tx to complete */
->>       if (!wait_for_completion_timeout(&dev->cmd_complete, HZ)) {
->>               dev_err(dev->dev, "controller timed out\n");
->> +             i2c_recover_bus(&dev->adapter);
->>               /* i2c_dw_init implicitly disables the adapter */
->>               i2c_dw_init(dev);
->>               ret = -ETIMEDOUT;
->> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
->> index cd409e7..26c84ee 100644
->> --- a/drivers/i2c/busses/i2c-designware-core.h
->> +++ b/drivers/i2c/busses/i2c-designware-core.h
->> @@ -104,6 +104,10 @@ struct dw_i2c_dev {
->>       u16                     fs_lcnt;
->>       int                     (*acquire_lock)(struct dw_i2c_dev *dev);
->>       void                    (*release_lock)(struct dw_i2c_dev *dev);
->> +     struct i2c_bus_recovery_info rinfo;
->> +     struct pinctrl          *pinctrl;
->> +     struct pinctrl_state    *pinctrl_pins_default;
->> +     struct pinctrl_state    *pinctrl_pins_gpio;
->>       bool                    pm_runtime_disabled;
->>  };
->>
->> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
->> index 1488cea..62bded9 100644
->> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
->> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
->> @@ -33,6 +33,7 @@
->>  #include <linux/err.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/of.h>
->> +#include <linux/of_gpio.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/pm.h>
->>  #include <linux/pm_runtime.h>
->> @@ -148,6 +149,49 @@ static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
->>       return 0;
->>  }
->>
->> +static void i2c_dw_plat_prepare_recovery(struct i2c_adapter *adap)
->> +{
->> +     struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
->> +
->> +     pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
->> +}
->> +
->> +static void i2c_dw_plat_unprepare_recovery(struct i2c_adapter *adap)
->> +{
->> +     struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
->> +
->> +     pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
->> +}
->> +
->> +static void i2c_dw_plat_init_recovery_info(struct dw_i2c_dev *dev,
->> +                                        struct platform_device *pdev)
->> +{
->> +     struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
->> +
->> +     dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
->> +                     PINCTRL_STATE_DEFAULT);
->> +     dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
->> +                     "gpio");
->> +     rinfo->sda_gpio = of_get_named_gpio(pdev->dev.of_node, "sda-gpios", 0);
->> +     rinfo->scl_gpio = of_get_named_gpio(pdev->dev.of_node, "scl-gpios", 0);
->> +
->> +     if (!gpio_is_valid(rinfo->sda_gpio) ||
->> +         !gpio_is_valid(rinfo->scl_gpio) ||
->> +         IS_ERR(dev->pinctrl_pins_default) ||
->> +         IS_ERR(dev->pinctrl_pins_gpio)) {
->> +             dev_dbg(&pdev->dev, "recovery information incomplete\n");
->> +             return;
->> +     }
->> +
->> +     dev_dbg(&pdev->dev, "using scl-gpio %d and sda-gpio %d for recovery\n",
->> +             rinfo->sda_gpio, rinfo->scl_gpio);
->> +
->> +     rinfo->prepare_recovery = i2c_dw_plat_prepare_recovery;
->> +     rinfo->unprepare_recovery = i2c_dw_plat_unprepare_recovery;
->> +     rinfo->recover_bus = i2c_generic_gpio_recovery;
->
-> This whole thing is DT specific and I don't see how we can do the same
-> for ACPI. Should it be enabled only when the controller was enumerated
-> from DT?
->
-For ACPI, probably result in the panic-alike function calling chain at
-i2c_dw_init --> dev->get_clk_rate_khz(dev).
-Mika, I think you need to take ACPI into account while not focus on DT only
+On Wed, Apr 13, 2016 at 10:46:48AM +0530, Kedareswara rao Appana wrote:
+> Device-tree binding documentation for Xilinx zynqmp dma engine used in
+> Zynq UltraScale+ MPSoC.
+> 
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v5:
+> - Use dma-coherent flag for coherent transfers as suggested by rob.
+> - Removed unnecessary properties from binding doc as suggested by Rob.
+> Changes in v4:
+> - None
+> Changes in v3:
+> - None
+> Changes in v2:
+> - None.
+> 
+>  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> new file mode 100644
+> index 0000000..4ad0aea40
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> @@ -0,0 +1,50 @@
+> +Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
+> +memory to device and device to memory transfers. It also has flow
+> +control and rate control support for slave/peripheral dma access.
+> +
+> +Required properties:
+> +- compatible		: Should be "xlnx,zynqmp-dma-1.0"
+> +- reg			: Memory map for gdma/adma module access.
+> +- interrupt-parent	: Interrupt controller the interrupt is routed through
+> +- interrupts		: Should contain DMA channel interrupt.
+> +- xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
+> +- clock-names		: List of input clocks "clk_main", "clk_apb"
+> +			  (see clock bindings for details)
+> +
+> +Optional properties:
+> +- xlnx,include-sg	: Indicates the controller to operate in simple or
+> +			  scatter gather dma mode
+> +- xlnx,ratectrl		: Scheduling interval in terms of clock cycles for
+> +			  source AXI transaction
+> +- xlnx,overfetch	: Tells whether the channel is allowed to over
+> +			  fetch the data
+> +- xlnx,src-issue	: Number of AXI outstanding transactions on source side
+> +- xlnx,desc-axi-cache	: AXI cache bits to be used for descriptor fetch
+> +- xlnx,src-axi-cache	: AXI cache bits to be used for data read
+> +- xlnx,dst-axi-cache	: AXI cache bits to be used for data write
 
-KM
+Shouldn't you be able to derive these values from whether dma-coherent 
+is set. To put it another way, allowing setting both allows for lots of 
+broken combinations.
 
->> +     dev->adapter.bus_recovery_info = rinfo;
->> +}
->> +
->>  static int dw_i2c_plat_probe(struct platform_device *pdev)
->>  {
->>       struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
->> @@ -165,6 +209,12 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->>       if (!dev)
->>               return -ENOMEM;
->>
->> +     dev->pinctrl = devm_pinctrl_get(&pdev->dev);
->> +     if (IS_ERR(dev->pinctrl))
->> +             return PTR_ERR(dev->pinctrl);
->> +
->> +     i2c_dw_plat_init_recovery_info(dev, pdev);
->> +
->>       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>       dev->base = devm_ioremap_resource(&pdev->dev, mem);
->>       if (IS_ERR(dev->base))
->> --
->> 2.8.0.rc3
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +- xlnx,src-burst-len	: AXI length for data read. Support only power of
+> +			  2 values.
+> +- xlnx,dst-burst-len	: AXI length for data write. Support only power of
+> +			  2 values.
+
+What unit? Seems to be beats from the example. I would suggest bytes 
+instead.
+
+> +- dma-coherent		: Present if dma operations are coherent.
+> +
+> +Example:
+> +++++++++
+> +fpd_dma_chan1: dma@FD500000 {
+
+lowercase address.
+
+> +	compatible = "xlnx,zynqmp-dma-1.0";
+> +	reg = <0x0 0xFD500000 0x1000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <0 117 4>;
+> +	clock-names = "clk_main", "clk_apb";
+> +	xlnx,bus-width = <128>;
+> +	xlnx,include-sg;
+> +	xlnx,overfetch;
+> +	dma-coherent;
+> +	xlnx,ratectrl = <0>;
+> +	xlnx,src-issue = <16>;
+> +	xlnx,desc-axi-cache = <0xFF>;
+> +	xlnx,src-axi-cache = <0xFF>;
+> +	xlnx,dst-axi-cache = <0xFF>;
+
+Last I checked, AXI only has 4 cache bits.
+
+> +	xlnx,src-burst-len = <4>;
+> +	xlnx,dst-burst-len = <4>;
+> +};
+> -- 
+> 2.1.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
