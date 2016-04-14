@@ -1,61 +1,67 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] ARM64: Enable SP805 WDT support for FSL LS2080A
-Date: Thu, 14 Apr 2016 16:48:40 +0100
-Message-ID: <570FBBD8.4030704@arm.com>
-References: <1451296884-7932-1-git-send-email-bhupesh.sharma@freescale.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC] I2C: i2c-smbus: add device tree support
+Date: Thu, 14 Apr 2016 11:10:12 -0500
+Message-ID: <20160414161012.GA20532@rob-hp-laptop>
+References: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451296884-7932-1-git-send-email-bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andrea Merello <andrea.merello@gmail.com>
+Cc: jdelvare@suse.de, wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bhupesh,
-
-On 28/12/15 10:01, Bhupesh Sharma wrote:
-> Hi Arnd, Kevin, Olof
+On Wed, Apr 13, 2016 at 10:36:31AM +0200, Andrea Merello wrote:
+> According to Documentation/i2c/smbus-protocol, a smbus controller driver
+> that wants to hook-in smbus extensions support, can call
+> i2c_setup_smbus_alert(). There are very few drivers that are currently
+> doing this.
 > 
-> This is the v4 of patchset which adds the support for SP805 WDT on FSL LS2080A
-> and also adds the missing documentation of SP805 WDT device-tree bindings.
+> However the i2c-smbus module can also work with any
+> smbus-extensions-unaware I2C controller, as long as we provide an extra
+> IRQ line connected to the I2C bus ALARM signal.
 > 
-> Rebased against arm-soc/next/dt
+> This patch makes it possible to go this way via DT. Note that the DT node
+> will indeed describe a (little) piece of HW, that is the routing of the
+> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
 > 
-> Changes since v3:
-> (v3 can be viewed here: https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg97249.html)
-> - Added Rob's Acked-by for patch 1/2.
-> - Sending to 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org' list and also cc'ed Shawn Guo
+> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
+> with address 0x0C (that is the alarm response address), and IMHO this is
+> quite consistent with usage in the DT as a I2C child node.
 > 
-> Changes since v2:
-> (v2 can be viewed here: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/463141)
-> - Addressed Rob's comments regarding the second mandatory CLK source's
->   (WDOGCLK) name in the bindings.
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
 > 
-> Changes since v1:
-> (v1 can be viewed here: http://www.spinics.net/lists/devicetree/msg102487.html)
-> 
-> - Addressed Rob and Mark's comments regarding the mandatory CLK sources
-> - Removed interrupt property from the bindings for now (as discussed
->   with Mark on IRC) till Will's patch proceeds further and enables
->   handling the WDOG interrupts for each core connected to the same PPI
->   line (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/391616.html)
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-smbus.txt b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
+> new file mode 100644
+> index 0000000..da83127
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
+> @@ -0,0 +1,20 @@
+> +* i2c-smbus extensions
+> +
+> +Required Properties:
+> +  - compatible: Must contain "smbus_alert"
+> +  - interrupts: The irq line for smbus ALERT signal
+> +  - reg: I2C slave address. Set to 0x0C (alert response address).
+> +
+> +Note: The i2c-smbus module registers itself as a slave I2C device. Whenever
+> +a smbus controller directly support smbus extensions (and its driver supports
+> +this), there is no need to add anything special to the DT. Otherwise, for using
+> +i2c-smbus with any smbus-extensions-unaware I2C controllers, you need to
+> +route the smbus ALARM signal to an extra IRQ line, thus you need to describe
+> +this in the DT.
 
-Will just pointed me to this series. I've recently posted a set of
-patches that should be able to deal with the quirkiness of your HW with
-regards to PPIs:
+Seems like you are designing the binding around how the module is 
+currently designed and creating a virtual device that doesn't exist.
 
-http://thread.gmane.org/gmane.linux.drivers.devicetree/163464
+A "smbalert-gpios" property in the controller node would be sufficient 
+here. Alternatively, an interrupt and standardized interrupt-names value 
+could be used.
 
-Could you please let me know if this works for you?
+Another option would be add a boolean property to each child node 
+smbalert capable and the childrens' interrupt properties would all be 
+the shared interrupt.
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
