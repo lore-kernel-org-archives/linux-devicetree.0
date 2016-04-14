@@ -1,62 +1,142 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] regulator: st-flashss: Add a regulator driver for
- flashss vsense.
-Date: Thu, 14 Apr 2016 16:25:30 +0100
-Message-ID: <20160414152530.GH18024@sirena.org.uk>
-References: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
- <1460474204-5351-3-git-send-email-peter.griffin@linaro.org>
- <20160413061514.GI14664@sirena.org.uk>
- <570DFC44.8060408@st.com>
- <20160413172318.GC29471@sirena.org.uk>
- <570FA606.4070908@st.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 2/2] PCI: tegra: Support per-lane PHYs
+Date: Thu, 14 Apr 2016 17:26:52 +0200
+Message-ID: <20160414152652.GA3366@ulmo.ba.sec>
+References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
+ <1457452094-5409-2-git-send-email-thierry.reding@gmail.com>
+ <56E9915F.9040608@wwwdotorg.org>
+ <20160413160112.GA30129@ulmo.ba.sec>
+ <570E7B86.1040909@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TKYYegg/GYAC5JIZ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <570FA606.4070908-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Youssef TRIKI <youssef.triki-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <570E7B86.1040909@wwwdotorg.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---TKYYegg/GYAC5JIZ
+--ReaqsoxgOBHFXBhH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 14, 2016 at 04:15:34PM +0200, Giuseppe CAVALLARO wrote:
-> On 4/13/2016 7:23 PM, Mark Brown wrote:
+On Wed, Apr 13, 2016 at 11:01:58AM -0600, Stephen Warren wrote:
+> On 04/13/2016 10:01 AM, Thierry Reding wrote:
+> > On Wed, Mar 16, 2016 at 11:01:19AM -0600, Stephen Warren wrote:
+> > > On 03/08/2016 08:48 AM, Thierry Reding wrote:
+> > > > From: Thierry Reding <treding@nvidia.com>
+> > > >=20
+> > > > The current XUSB pad controller bindings are insufficient to descri=
+be
+> > > > PHY devices attached to USB controllers. New bindings have been cre=
+ated
+> > > > to overcome these restrictions. As a side-effect each root port now=
+ is
+> > > > assigned a set of PHY devices, one for each lane associated with the
+> > > > root port. This has the benefit of allowing fine-grained control of=
+ the
+> > > > power management for each lane.
+> > >=20
+> > > > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-te=
+gra.c
+> > >=20
+> > > > +static int tegra_pcie_port_phy_power_on(struct tegra_pcie_port *po=
+rt)
+> > > > +{
+> > > > +	struct device *dev =3D port->pcie->dev;
+> > > > +	unsigned int i;
+> > > > +	int err;
+> > > > +
+> > > > +	for (i =3D 0; i < port->lanes; i++) {
+> > > > +		err =3D phy_power_on(port->phys[i]);
+> > >=20
+> > > This assume the number of array entries is precisely the number of la=
+nes.
+> > > That seems to contradict the binding update which said the number mig=
+ht not
+> > > match. Perhaps there's an expectation that phy_power_on() is a no-op =
+for
+> > > some "invalid" values like NULL or an error-pointer value? But...
+> > >=20
+> > > > +static struct phy *devm_of_phy_optional_get_index(struct device *d=
+ev,
+> > > > +						  struct device_node *np,
+> > > > +						  const char *consumer,
+> > > > +						  unsigned int index)
+> > > > +{
+> > > > +	struct phy *phy;
+> > > > +	char *name;
+> > > > +
+> > > > +	name =3D kasprintf(GFP_KERNEL, "%s-%u", consumer, index);
+> > > > +	if (!name)
+> > > > +		return ERR_PTR(-ENOMEM);
+> > > > +
+> > > > +	phy =3D devm_of_phy_get(dev, np, name);
+> > > > +	kfree(name);
+> > > > +
+> > > > +	if (IS_ERR(phy) && PTR_ERR(phy) =3D=3D -ENODEV)
+> > > > +		phy =3D NULL;
+> > > > +
+> > > > +	return phy;
+> > > > +}
+> > >=20
+> > > The error-handling there looks wrong. The function generally returns =
+either
+> > > a valid PHY or an error pointer. However, in the case of -ENODEV, NUL=
+L is
+> > > returned. Subsystems are supposed to encode their handles as, and fun=
+ctions
+> > > are supposed to return, either NULL or an error pointer for error cas=
+es, not
+> > > both/either. Is the PHY API broken in this regard? If so, then this c=
+ode is
+> > > fine, but if not it might need a fix.
+> >=20
+> > This function mimics phy_optional_get() which similarily returns NULL
+> > for -ENODEV. The remainder of the PHY API treats NULL pointers as
+> > "dummy" PHYs and returns early. I think that's a sensible approach to
+> > handling optional resources.
+> >=20
+> > It might have been more obvious had I implemented this function within
+> > phy-core.c, but I didn't think it universally useful because it uses a
+> > rather uncommon lookup pattern. I did keep a generic name in case it's
+> > ever deemed useful outside of this driver, at which point it could
+> > simply be moved into phy-core.c without requiring this driver to
+> > change.
+>=20
+> Ah OK, so if a caller of this function is expected to only use IS_ERR(), =
+and
+> hence treat NULL as a perfectly valid PHY value, and all the PHY APIs deal
+> with NULL correctly, then this is probably OK.
 
-> 	/*
-> 	 * After resetting, the CONFIG_REG_PSW_<xxx> are set, this
-> 	 * means 3v3 operating voltage.
-> 	 * The CONFIG_LATCHED_PSW_<xxx> must be used to fix the previous
-> 	 * bits so operating at 1v8 if this is the real HW configuration
-> 	 * at boot time.
-> 	 */
-> 	if (!(value & TOP_VSENSE_CONFIG_LATCHED_PSW_EMMC))
-> 		value &= ~TOP_VSENSE_CONFIG_REG_PSW_EMMC;
+I think it's not completely consistently used, but at least the public
+API that we do use has the necessary guards, so we should be fine.
 
-That's definitely better.
+Thierry
 
---TKYYegg/GYAC5JIZ
+--ReaqsoxgOBHFXBhH
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXD7ZgAAoJECTWi3JdVIfQte0IAIHDo79a4T9y2CWCDA8zsJtq
-MB++ioZhvDEzRPfh1esHIEDEsVyfB7sYtJzTk5L0e4v38gvpHc8him/sMkUtjbNN
-S1ouxHYhJ2XfH5AaukRvDajabexm+DOFV5UQ5MqrxYTowJ5a/uZ4O2gJJOBarZvo
-fSc160M36/U1LbTuGXD9Y0oo7WPt1bPDeBHYfs/mwMRii1uIKY2MNenW/XDU18sm
-X7rVgWE44vG4/6X/RerDdLGj2D4asn1GrMuFeDbHRLZ9ZOSd8dEmURn8nJiS2A+C
-w8EoqwSDgpcmUyVNPflijyfuqzGGnSFmb9IwlL06Uldt9oyUr/BQg/AzDZRMDTQ=
-=/IO5
+iQIcBAABCAAGBQJXD7a4AAoJEN0jrNd/PrOhGrwP/A9qDrlbO+2Bll2adS3SGlsa
+w1AXkVIMZ/ei9Rzdol2m8nsQza4Hd3ez6InBbU+G49HrjrmDhz+4E9hAQWaPykgv
+yzHr9g1p6FmMtbWf45eTAvAurkIcOSIEm7KgV2tgUpzfxzsbwVEOx+y2kvzcpKqy
+1ML3H0COa4NbbuH031UB1TLIGXG+GacrxPpgG0uiU6Mo4ioz+1BNv6PYjtzPiLSc
+X6nk8julCUcwHMXHKEWFytsA6zaLVJyYd5TbtGUEZxV+tJSHfobXnTyyjqcJpSKK
+Q66WFhDVXktyM+WD59gEeUqHgCfgMmBaHySPXecEcKOTr3VbEninazjzDXiEAKaw
+JfleVggQXaX0LMP+uD8AK3iF9Eh2RNvRYd+CjenPxW/IXuQdPWR3w/Rwpj/XDTyu
+xFD61wxzsqj7XeQ3MIcR8ix2vFaaXfyy6pXdB0AAz/AWl1bYv0txSo2CW0Y0NAMC
+llPgpeHxsu5wUCjldb6NRBVGviTrtboaA2/+YjzR7+65tTNWy7td/R5JBqGbwAQr
++TpT5HBp7LR4uhklW5GRccdK35KlUjZ3AdOee6pjeFlPP/43eMRm8d+fTAUStiJ0
+W6ePZjnHE73vTn00fCnPIUS+ogJAK2coMc/AyTIBUouXywewPvVw4YdAZRZlKEZ8
+Y45LBdN4t/Z6vnfKDJhX
+=43Ah
 -----END PGP SIGNATURE-----
 
---TKYYegg/GYAC5JIZ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ReaqsoxgOBHFXBhH--
