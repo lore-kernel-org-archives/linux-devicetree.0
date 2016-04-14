@@ -1,507 +1,737 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
- driver
-Date: Thu, 14 Apr 2016 14:19:30 -0700
-Message-ID: <57100962.40404@gmail.com>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
+From: Alexander Kurz <akurz@blala.de>
+Subject: [PATCH 2/2] ARM: i.MX35 clk: Introduce DT include for clock provider
+Date: Thu, 14 Apr 2016 23:30:50 +0200
+Message-ID: <1460669450-11729-2-git-send-email-akurz@blala.de>
+References: <1460669450-11729-1-git-send-email-akurz@blala.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <570FFB6B.5060305@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1460669450-11729-1-git-send-email-akurz@blala.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Alexander Kurz <akurz@blala.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, Philippe Reynes <tremyfr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14/04/16 13:19, Timur Tabi wrote:
-> Florian Fainelli wrote:
->> On 13/04/16 10:59, Timur Tabi wrote:
->>> From: Gilad Avidov <gavidov@codeaurora.org>
->>>
->>> Add supports for ethernet controller HW on Qualcomm Technologies,
->>> Inc. SoC.
->>> This driver supports the following features:
->>> 1) Checksum offload.
->>> 2) Runtime power management support.
->>> 3) Interrupt coalescing support.
->>> 4) SGMII phy.
->>> 5) SGMII direct connection without external phy.
->>
->> I think you should shoot for more simple for an initial submission:
->>
->> - no offload
->> - no timestamping
->>
->> get that accepted, and then add features one by one, it sure is more
->> work, but it helps with the review, and makes you work off a solid base.
-> 
-> Unfortunately, I didn't write this driver initially, so I'm not sure how
-> to remove these features from it.  Variants of this driver have been
-> bouncing around Qualcomm for years, and even the author of this patch
-> (Gilad) is no longer around.
+Use clock defines in order to make devicetrees more human readable
 
-Well, good luck :)
+Signed-off-by: Alexander Kurz <akurz@blala.de>
+---
+ .../devicetree/bindings/clock/imx35-clock.txt      |  93 +----
+ drivers/clk/imx/clk-imx35.c                        | 429 ++++++++++++---------
+ include/dt-bindings/clock/imx35-clock.h            |  98 +++++
+ 3 files changed, 349 insertions(+), 271 deletions(-)
+ create mode 100644 include/dt-bindings/clock/imx35-clock.h
 
-> 
-> So although I have a lot of experience upstreaming code, I have little
-> experience and knowledge with network drivers.  I'm going to need a lot
-> of hand-holding.  I hope you will be patient with me.
-> 
-> Timestamping support seems to be just a few lines of code, so I can
-> probably remove that.  I don't know where offloading is in the driver,
-> however.  I don't know how offloading in netdev drivers works.
-
-Based on what the driver seems to do right now, it would be located in
-the transmit and receive paths, and would have to access
-mac/network/transport offsets and deal with checksums, so anything that
-deals with checksums, provided that the HW does not require that to
-transmit/receive packets, could be eliminated entirely for now and be
-added later.
-
-It is not the biggest part that needs to be slightly re-architected
-though, the SGMII/PHY/MDIO stuff is more important as it impacts the
-Device Tree binding, see below.
-
-> 
->> You will see below, but a pet peeve of mine is authors reimplementing
->> code that exists in PHYLIB.
-> 
-> I can understand that, but the PHYs on these SOCs are non-standard.  The
-> "internal PHY" (for lack of a better name) is part of the EMAC itself,
-> and it acts as a middle-man for the external PHY.  There is an MDIO bus,
-> but it's hard-wired to the EMAC, and most of the time you don't touch it
-> directly.  Instead you let the EMAC and/or the internal PHY send/receive
-> commands/data to the external PHY on your behalf.  The internal phy
-> talks to the external phy via SGMII only.  Only the EMAC uses the mdio bus.
-
-Humm OK, this PHY proxy, provided that this is really how it works,
-seems a bit unusual, but, is not necessarily a roadblock to having a
-proper MDIO implementation here which is standard and will allow you to
-utilize re-usable drivers and facilities that are already there.
-
-> 
-> I will look at PHYLIB, but I can't tell you whether it will work with
-> this hardware (Gilad previously claim that it wouldn't work well).
-
-Well, PHYLIB does prefer using MDIO accesses to "speak" to PHYs,
-built-in or external, but there is always the option of investing into
-some custom development with the subsystem to make it play nicely with
-your HW.
-
-> 
->>> diff --git a/Documentation/devicetree/bindings/net/qcom-emac.txt
->>> b/Documentation/devicetree/bindings/net/qcom-emac.txt
->>> new file mode 100644
->>> index 0000000..df5e7c0
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/qcom-emac.txt
->>> @@ -0,0 +1,65 @@
->>> +Qualcomm EMAC Gigabit Ethernet Controller
->>> +
->>> +Required properties:
->>> +- compatible : Should be "qcom,emac".
->>> +- reg : Offset and length of the register regions for the device
->>> +- reg-names : Register region names referenced in 'reg' above.
->>> +    Required register resource entries are:
->>> +    "base"   : EMAC controller base register block.
->>> +    "csr"    : EMAC wrapper register block.
->>> +    Optional register resource entries are:
->>> +    "ptp"    : EMAC PTP (1588) register block.
->>> +           Required if 'qcom,emac-tstamp-en' is present.
->>> +    "sgmii"  : EMAC SGMII PHY register block.
->>> +- interrupts : Interrupt numbers used by this controller
->>> +- interrupt-names : Interrupt resource names referenced in
->>> 'interrupts' above.
->>> +    Required interrupt resource entries are:
->>> +    "emac_core0"   : EMAC core0 interrupt.
->>> +    "sgmii_irq"   : EMAC SGMII interrupt.
->>> +- phy-addr            : Specifies phy address on MDIO bus.
->>> +            Required if the optional property "qcom,no-external-phy"
->>> +            is not specified.
->>
->> This is not the standard way to represent an Ethernet PHY hanging off a
->> MDIO bus see ethernet.txt and phy.txt in D/dt/bindings/net/
-> 
-> The MDIO bus on these chips is not accessible as a separate entity.  It
-> is melded (for lack of a better word) into the EMAC itself.  That's why
-> there is a "qcom,no-external-phy" property.  You could, in theory, wire
-> the internal phy of one SOC directly to the internal phy of another SOC,
-> and use that as in interconnect between SOCs.  I don't know of any such
-> use-cases however.
-
-The fact the MDIO bus is built-into the MAC is really not a problem
-here, there are tons of drivers that deal with that just fine, yet, the
-DT binding needs to reflect that properly by having a sub-node of the
-Ethernet MAC which is a MDIO bus controller node. If external or
-internal PHYs are accessible through that MDIO bus, they also need to
-appear as child-nodes of that MDIO bus controller node.
-
-BTW, wiring two PHYs internally is a waste of HW resource at best, if
-not just asking for trouble, you can do an Ethernet MAC to MAC
-connection, tons of HW do that too.
-
-[snip]
-
->>> +- qcom,no-external-phy      : Indicates there is no external PHY
->>> connected to
->>> +                  EMAC. Include this only if the EMAC is directly
->>> +                  connected to the peer end without EPHY.
->>
->> How is the internal PHY accessed, is it responding on the MDIO bus at a
->> particular address?
-> 
-> There is a set of memory-mapped registers.  It's not connected via MDIO
-> at all.  It's mapped via the "sgmii" addresses in the device tree (see
-> function emac_sgmii_config).
-> 
->> If so, standard MDIO scanning/probing works, and you
->> can have your PHY driver flag this device has internal. Worst case, you
->> can do what BCMGENET does, and have a special "phy-mode" value set to
->> "internal" when this knowledge needs to exist prior to MDIO bus scanning
->> (e.g: to power on the PHY).
-> 
-> So the internal phy is not a real phy.  It's not capable of driving an
-> RJ45 port (there's no analog part).  It's an SGMII-like device that is
-> hard-wired to the EMAC itself.
-
-OK, that explains things a bit, thanks, this is quite a bit of important
-detail actually.
-
-> 
-> In theory, the internal PHY is optional.  You could design an SOC that
-> has just the EMAC connected via normal MDIO to an external phy.  I
-> really wish our hardware designers has done that.  But unfortunately,
-> there are no SOCs like that, and so we have to treat the internal phy as
-> an extension of the EMAC.
-> 
-> My preference would be to get rid of the "qcom,no-external-phy" property
-> and have an external phy be required, at least until Qualcomm creates an
-> SOC without the internal phy (which may never happen, for all I know).
-> 
-
-Can we just say that, an absence of PHY specified in the Device Tree (no
-phy-handle property and PHY not a child node of the MDIO bus), means
-that there is no external PHY?
-
-[snip]
-
->> Do you need to maintain these flags when most, if not all of them
->> already exist in dev->flags or dev->features?
-> 
-> So you're saying that, for example, in emac_set_features() I should
-> remove this:
-> 
->     if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX)
->         set_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
->     else
->         clear_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
-> 
-> and then in emac_mac_mode_config(), I should do this instead:
-> 
-> void emac_mac_mode_config(struct emac_adapter *adpt)
-> {
->     struct net_device *netdev = adpt->netdev;
-> 
->     if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX)
->         mac |= VLAN_STRIP;
->     else
->         mac &= ~VLAN_STRIP;
-> 
-> 
-> If so, then what do I do in emac_rx_mode_set()?  Should I delete this
-> entire block:
-> 
->     /* Check for Promiscuous and All Multicast modes */
->     if (netdev->flags & IFF_PROMISC) {
->         set_bit(EMAC_STATUS_PROMISC_EN, &adpt->status);
->     } else if (netdev->flags & IFF_ALLMULTI) {
->         set_bit(EMAC_STATUS_MULTIALL_EN, &adpt->status);
->         clear_bit(EMAC_STATUS_PROMISC_EN, &adpt->status);
->     } else {
->         clear_bit(EMAC_STATUS_MULTIALL_EN, &adpt->status);
->         clear_bit(EMAC_STATUS_PROMISC_EN, &adpt->status);
->     }
-> 
-> It does look like Gilad is just mirroring the flags/features variable
-> into adpt->status.  What I can't figure out is why.  It seems completely
-> redundant, but I have a nagging feeling that there is a good reason.
-
-Yes, I think your set_features and set_rx_mode functions would be
-greatly simplified, if each of them did take care of programming the HW
-immediately based on function arguments/flags. Unless absolutely
-required (e.g: suspend/resume, outside of the scope of the function
-etc..) having bookeeping variables is always something that can be out
-of sync, so better avoid them as much as possible.
-
-[snip]
-
->>> +    napi_enable(&adpt->rx_q.napi);
->>> +
->>> +    /* enable mac irq */
->>> +    writel(~DIS_INT, adpt->base + EMAC_INT_STATUS);
->>> +    writel(adpt->irq.mask, adpt->base + EMAC_INT_MASK);
->>> +
->>> +    netif_start_queue(netdev);
->>
->> Starting the TX queue is typically the last ting you want to do, to
->> avoid a transient state where the TX queue is enabled, and the link is
->> not (which is okay if your driver is properly implemented and reflects
->> carrier changes anyway).
-> 
-> So I should move the netif_start_queue() to the end of this function?
-> Sorry if that's a stupid question, but I know little about the MAC side
-> of network drivers.
-
-That's fine, yes moving netif_start_queue() at the far end of the
-function is a good change.
-
-[snip]
-
->>
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +/* Bring down the interface/HW */
->>> +void emac_mac_down(struct emac_adapter *adpt, bool reset)
->>> +{
->>> +    struct net_device *netdev = adpt->netdev;
->>> +    struct emac_phy *phy = &adpt->phy;
->>> +    unsigned long flags;
->>> +
->>> +    set_bit(EMAC_STATUS_DOWN, &adpt->status);
->>
->> Do you need to maintain that? Would not netif_running() tell you what
->> you want if you reflect the carrier state properly?
-> 
-> I think that emac_work_thread_link_check() handles this.  It's a timer
-> thread that polls the link state and calls netif_carrier_off() if the
-> link is down.  Is that sufficient?
-> 
-
-Probably, then again, with PHYLIB you have the option of either
-switching the PHY to interrupt mode (thsus saving the polling_), or it
-polls the PHY for link statuses every HZ.
-
-[snip]
-
->>> +    if (skb_network_offset(skb) != ETH_HLEN)
->>> +        TPD_TYP_SET(&tpd, 1);
->>> +
->>> +    emac_tx_fill_tpd(adpt, tx_q, skb, &tpd);
->>> +
->>> +    netdev_sent_queue(adpt->netdev, skb->len);
->>> +
->>> +    /* update produce idx */
->>> +    prod_idx = (tx_q->tpd.produce_idx << tx_q->produce_shift) &
->>> +            tx_q->produce_mask;
->>> +    emac_reg_update32(adpt->base + tx_q->produce_reg,
->>> +              tx_q->produce_mask, prod_idx);
->>
->> Since you have a producer index, you should consider checking
->> skb->xmit_more to know whether you can update the register now, or
->> later, which could save some expensive operation and batch TX.
-> 
-> I'll have to figure out what means and get back to you.  When would
-> "later" be?
-
-After the driver gets accepted mainline for instance would seem fine.
-Considering how this seems to work, something like this is usally all
-that is needed:
-
-if (!skb->xmit_more || netif_xmit_stopped(txq)
-	/* write producer index to get HW to transmit */
-
-[snip]
-
->>> +static int debug = -1;
->>> +module_param(debug, int, S_IRUGO | S_IWUSR | S_IWGRP);
->>
->> ethtool -s <iface> msglvl provides you with that already.
-> 
-> I'll remove it.  There's no ethtool support in this driver anyway, but
-> there's no code that uses this parameter.
-
-Adding support for changing message levels is really trivial, and will
-probably help you while developing this driver.
-
-[snip]
-
->>
->>> +}
->>> +
->>> +irqreturn_t emac_isr(int _irq, void *data)
->>> +{
->>> +    struct emac_irq *irq = data;
->>> +    struct emac_adapter *adpt = container_of(irq, struct
->>> emac_adapter, irq);
->>> +    struct emac_rx_queue *rx_q = &adpt->rx_q;
->>> +
->>> +    int max_ints = 1;
->>> +    u32 isr, status;
->>> +
->>> +    /* disable the interrupt */
->>> +    writel(0, adpt->base + EMAC_INT_MASK);
->>> +
->>> +    do {
->>
->> With max_ints = 1, this is essentially the same as no loop, so just
->> inline it to reduce the indentation.
-> 
-> In another internal version of this driver, max_ints is set to 5.  Could
-> this be some way of processing multiple packets in one interrupt?  Isn't
-> that something that NAPI already takes care of, anyway?
-
-Yes, NAPI is going to mitigate the cost of taking an interrupt and
-scheduling your bottom-half/soft IRQ for actual packet processing, it is
-the recommended way to mitigate the number of interrupts in the receive
-path (and transmit for that matter).
-
-> 
->>> +        isr = readl_relaxed(adpt->base + EMAC_INT_STATUS);
->>> +        status = isr & irq->mask;
->>> +
->>> +        if (status == 0)
->>> +            break;
->>> +
->>> +        if (status & ISR_ERROR) {
->>> +            netif_warn(adpt,  intr, adpt->netdev,
->>> +                   "warning: error irq status 0x%lx\n",
->>> +                   status & ISR_ERROR);
->>> +            /* reset MAC */
->>> +            set_bit(EMAC_STATUS_TASK_REINIT_REQ, &adpt->status);
->>> +            emac_work_thread_reschedule(adpt);
->>> +        }
->>> +
->>> +        /* Schedule the napi for receive queue with interrupt
->>> +         * status bit set
->>> +         */
->>> +        if ((status & rx_q->intr)) {
->>> +            if (napi_schedule_prep(&rx_q->napi)) {
->>> +                irq->mask &= ~rx_q->intr;
->>> +                __napi_schedule(&rx_q->napi);
->>> +            }
->>> +        }
->>> +
->>> +        if (status & TX_PKT_INT)
->>> +            emac_mac_tx_process(adpt, &adpt->tx_q);
->>
->> You should consider using a NAPI instance for reclaiming TX buffers as
->> well.
-> 
-> I'll have to figure out what means and get back to you.
-
-drivers/net/ethernet/broadcom/bcmsysport.c is an example driver that
-reclaims transmitted buffers in NAPI. What that means is, take the TX
-completion interrupt, schedule a NAPI instance to run, and this NAPI
-instance cleans up the entire TX queue (it is not bounded, like the RX
-NAPI instance). It is really just moving the freeing of SKBs into
-softIRQ context vs. hardIRQ.
-
-[snip]
-
->>> +/* Configure VLAN tag strip/insert feature */
->>> +static int emac_set_features(struct net_device *netdev,
->>> +                 netdev_features_t features)
->>> +{
->>> +    struct emac_adapter *adpt = netdev_priv(netdev);
->>> +
->>> +    netdev_features_t changed = features ^ netdev->features;
->>> +
->>> +    if (!(changed & (NETIF_F_HW_VLAN_CTAG_TX |
->>> NETIF_F_HW_VLAN_CTAG_RX)))
->>> +        return 0;
->>> +
->>> +    netdev->features = features;
->>> +    if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX)
->>> +        set_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
->>> +    else
->>> +        clear_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
->>
->> What about TX vlan offload?
-> 
-> I don't know what that is.
-
-TX VLAN offload would be that you can specify the VLAN id somewhere in a
-packet's descriptor and have the HW automatically build an Ethernet
-frame with the correct VLAN id, and all the Ethernet frame payload
-appropriately placed at the correct offsets, with no cost for the CPU
-but indicating that information (and not having to do a memmove() to
-insert the 802.1Q tag).
-
-[snip]
-
->>> +/* Probe function */
->>> +static int emac_probe(struct platform_device *pdev)
->>> +{
->>> +    struct net_device *netdev;
->>> +    struct emac_adapter *adpt;
->>> +    struct emac_phy *phy;
->>> +    int ret = 0;
->>> +    u32 hw_ver;
->>> +    u32 extended_irq_mask = emac_irq_use_extended ? IMR_EXTENDED_MASK :
->>> +                            IMR_NORMAL_MASK;
->>> +
->>> +    netdev = alloc_etherdev(sizeof(struct emac_adapter));
->>> +    if (!netdev)
->>> +        return -ENOMEM;
->>
->> There are references to multiple queues in the code, so why not
->> alloc_etherdev_mq() here with the correct number of queues?
-> 
-> That support was removed from the driver, and on our SOC, we hard-code
-> the number of queues to 1 anyway.  I'm planning on adding multiple queue
-> support (much) later.
-
-Sounds like a good thing to do later, yes.
-
-> 
->>> +    dev_set_drvdata(&pdev->dev, netdev);
->>> +    SET_NETDEV_DEV(netdev, &pdev->dev);
->>> +
->>> +    adpt = netdev_priv(netdev);
->>> +    adpt->netdev = netdev;
->>> +    phy = &adpt->phy;
->>> +    adpt->msg_enable = netif_msg_init(debug, EMAC_MSG_DEFAULT);
->>> +
->>> +    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->>
->> Really, is not that supposed to run on ARM64 servers?
-> 
-> Well, this version of the driver isn't, which is why it supports DT and
-> not ACPI.  I'm planning on adding that support in a later patch.
-> However, I'll add support for 64-bit masks in the next version of this
-> patch.
-> 
-> Would this be okay:
-> 
->     retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
->     if (retval) {
->         dev_err(&pdev->dev, "failed to set DMA mask err %d\n", retval);
->         goto err_res;
->     }
-> 
-> I've seen code like this in other drivers:
-> 
->         ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
->         if (ret) {
->                 ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->                 if (ret) {
->                         dev_err(dev, "failed to set dma mask\n");
->                         return ret;
->                 }
->         }
-> 
-> and I've never understood why it's necessary to fall back to 32-bits if
-> 64 bits fails.  Isn't 64 bits a superset of 32 bits?  The driver is
-> saying that the hardware supports all of DDR.  How could fail, and how
-> could 32-bit succeed if 64-bits fails?
-
-I believe there could be cases where the HW is capable of addressing
-more physical memory than the CPU itself (usually unlikely, but it
-could), there could be cases where the HW is behind an IOMMMU which only
-has a window into the DDR, and that could prevent a higher DMA_BIT_MASK
-from being successfully configured.
+diff --git a/Documentation/devicetree/bindings/clock/imx35-clock.txt b/Documentation/devicetree/bindings/clock/imx35-clock.txt
+index f497832..2e88d25 100644
+--- a/Documentation/devicetree/bindings/clock/imx35-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx35-clock.txt
+@@ -7,94 +7,8 @@ Required properties:
+ - #clock-cells: Should be <1>
+ 
+ The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  The following is a full list of i.MX35
+-clocks and IDs.
+-
+-	Clock			ID
+-	---------------------------
+-	ckih			0
+-	mpll			1
+-	ppll			2
+-	mpll_075		3
+-	arm			4
+-	hsp			5
+-	hsp_div			6
+-	hsp_sel			7
+-	ahb			8
+-	ipg			9
+-	arm_per_div		10
+-	ahb_per_div		11
+-	ipg_per			12
+-	uart_sel		13
+-	uart_div		14
+-	esdhc_sel		15
+-	esdhc1_div		16
+-	esdhc2_div		17
+-	esdhc3_div		18
+-	spdif_sel		19
+-	spdif_div_pre		20
+-	spdif_div_post		21
+-	ssi_sel			22
+-	ssi1_div_pre		23
+-	ssi1_div_post		24
+-	ssi2_div_pre		25
+-	ssi2_div_post		26
+-	usb_sel			27
+-	usb_div			28
+-	nfc_div			29
+-	asrc_gate		30
+-	pata_gate		31
+-	audmux_gate		32
+-	can1_gate		33
+-	can2_gate		34
+-	cspi1_gate		35
+-	cspi2_gate		36
+-	ect_gate		37
+-	edio_gate		38
+-	emi_gate		39
+-	epit1_gate		40
+-	epit2_gate		41
+-	esai_gate		42
+-	esdhc1_gate		43
+-	esdhc2_gate		44
+-	esdhc3_gate		45
+-	fec_gate		46
+-	gpio1_gate		47
+-	gpio2_gate		48
+-	gpio3_gate		49
+-	gpt_gate		50
+-	i2c1_gate		51
+-	i2c2_gate		52
+-	i2c3_gate		53
+-	iomuxc_gate		54
+-	ipu_gate		55
+-	kpp_gate		56
+-	mlb_gate		57
+-	mshc_gate		58
+-	owire_gate		59
+-	pwm_gate		60
+-	rngc_gate		61
+-	rtc_gate		62
+-	rtic_gate		63
+-	scc_gate		64
+-	sdma_gate		65
+-	spba_gate		66
+-	spdif_gate		67
+-	ssi1_gate		68
+-	ssi2_gate		69
+-	uart1_gate		70
+-	uart2_gate		71
+-	uart3_gate		72
+-	usbotg_gate		73
+-	wdog_gate		74
+-	max_gate		75
+-	admux_gate		76
+-	csi_gate		77
+-	csi_div			78
+-	csi_sel			79
+-	iim_gate		80
+-	gpu2d_gate		81
+-	ckli_gate		82
++ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx35-clock.h
++for the full list of i.MXi35 clock IDs.
+ 
+ Examples:
+ 
+@@ -109,6 +23,7 @@ esdhc1: esdhc@53fb4000 {
+ 	compatible = "fsl,imx35-esdhc";
+ 	reg = <0x53fb4000 0x4000>;
+ 	interrupts = <7>;
+-	clocks = <&clks 9>, <&clks 8>, <&clks 43>;
++	clocks = <&clks IMX35_CLK_IPG>, <&clks IMX35_CLK_AHB>,
++		 <&clks IMX35_CLK_ESDHC1_GATE>;
+ 	clock-names = "ipg", "ahb", "per";
+ };
+diff --git a/drivers/clk/imx/clk-imx35.c b/drivers/clk/imx/clk-imx35.c
+index b0978d3..656bab7 100644
+--- a/drivers/clk/imx/clk-imx35.c
++++ b/drivers/clk/imx/clk-imx35.c
+@@ -13,6 +13,7 @@
+ #include <linux/clkdev.h>
+ #include <linux/of.h>
+ #include <linux/err.h>
++#include <dt-bindings/clock/imx35-clock.h>
+ #include <soc/imx/revision.h>
+ #include <soc/imx/timer.h>
+ #include <asm/irq.h>
+@@ -65,30 +66,13 @@ static struct clk_onecell_data clk_data;
+ static const char *std_sel[] = {"ppll", "arm"};
+ static const char *ipg_per_sel[] = {"ahb_per_div", "arm_per_div"};
+ 
+-enum mx35_clks {
+-	ckih, mpll, ppll, mpll_075, arm, hsp, hsp_div, hsp_sel, ahb, ipg,
+-	arm_per_div, ahb_per_div, ipg_per, uart_sel, uart_div, esdhc_sel,
+-	esdhc1_div, esdhc2_div, esdhc3_div, spdif_sel, spdif_div_pre,
+-	spdif_div_post, ssi_sel, ssi1_div_pre, ssi1_div_post, ssi2_div_pre,
+-	ssi2_div_post, usb_sel, usb_div, nfc_div, asrc_gate, pata_gate,
+-	audmux_gate, can1_gate, can2_gate, cspi1_gate, cspi2_gate, ect_gate,
+-	edio_gate, emi_gate, epit1_gate, epit2_gate, esai_gate, esdhc1_gate,
+-	esdhc2_gate, esdhc3_gate, fec_gate, gpio1_gate, gpio2_gate, gpio3_gate,
+-	gpt_gate, i2c1_gate, i2c2_gate, i2c3_gate, iomuxc_gate, ipu_gate,
+-	kpp_gate, mlb_gate, mshc_gate, owire_gate, pwm_gate, rngc_gate,
+-	rtc_gate, rtic_gate, scc_gate, sdma_gate, spba_gate, spdif_gate,
+-	ssi1_gate, ssi2_gate, uart1_gate, uart2_gate, uart3_gate, usbotg_gate,
+-	wdog_gate, max_gate, admux_gate, csi_gate, csi_div, csi_sel, iim_gate,
+-	gpu2d_gate, ckil, clk_max
+-};
+-
+-static struct clk *clk[clk_max];
++static struct clk *clk[IMX35_CLK_MAX];
+ 
+ static struct clk ** const uart_clks[] __initconst = {
+-	&clk[ipg],
+-	&clk[uart1_gate],
+-	&clk[uart2_gate],
+-	&clk[uart3_gate],
++	&clk[IMX35_CLK_IPG],
++	&clk[IMX35_CLK_UART1_GATE],
++	&clk[IMX35_CLK_UART2_GATE],
++	&clk[IMX35_CLK_UART3_GATE],
+ 	NULL
+ };
+ 
+@@ -114,19 +98,23 @@ static void __init _mx35_clocks_init(void)
+ 		aad = &clk_consumer[0];
+ 	}
+ 
+-	clk[ckih] = imx_clk_fixed("ckih", 24000000);
+-	clk[ckil] = imx_clk_fixed("ckih", 32768);
+-	clk[mpll] = imx_clk_pllv1(IMX_PLLV1_IMX35, "mpll", "ckih", base + MX35_CCM_MPCTL);
+-	clk[ppll] = imx_clk_pllv1(IMX_PLLV1_IMX35, "ppll", "ckih", base + MX35_CCM_PPCTL);
++	clk[IMX35_CLK_CKIH] = imx_clk_fixed("ckih", 24000000);
++	clk[IMX35_CLK_CKIL] = imx_clk_fixed("ckih", 32768);
++	clk[IMX35_CLK_MPLL] = imx_clk_pllv1(IMX_PLLV1_IMX35, "mpll", "ckih",
++		base + MX35_CCM_MPCTL);
++	clk[IMX35_CLK_PPLL] = imx_clk_pllv1(IMX_PLLV1_IMX35, "ppll", "ckih",
++		base + MX35_CCM_PPCTL);
+ 
+-	clk[mpll] = imx_clk_fixed_factor("mpll_075", "mpll", 3, 4);
++	clk[IMX35_CLK_MPLL] = imx_clk_fixed_factor("mpll_075", "mpll", 3, 4);
+ 
+ 	if (aad->sel)
+-		clk[arm] = imx_clk_fixed_factor("arm", "mpll_075", 1, aad->arm);
++		clk[IMX35_CLK_ARM] = imx_clk_fixed_factor("arm", "mpll_075",
++			1, aad->arm);
+ 	else
+-		clk[arm] = imx_clk_fixed_factor("arm", "mpll", 1, aad->arm);
++		clk[IMX35_CLK_ARM] = imx_clk_fixed_factor("arm", "mpll",
++			1, aad->arm);
+ 
+-	if (clk_get_rate(clk[arm]) > 400000000)
++	if (clk_get_rate(clk[IMX35_CLK_ARM]) > 400000000)
+ 		hsp_div = hsp_div_532;
+ 	else
+ 		hsp_div = hsp_div_400;
+@@ -137,105 +125,179 @@ static void __init _mx35_clocks_init(void)
+ 		hsp_sel = 0;
+ 	}
+ 
+-	clk[hsp] = imx_clk_fixed_factor("hsp", "arm", 1, hsp_div[hsp_sel]);
+-
+-	clk[ahb] = imx_clk_fixed_factor("ahb", "arm", 1, aad->ahb);
+-	clk[ipg] = imx_clk_fixed_factor("ipg", "ahb", 1, 2);
+-
+-	clk[arm_per_div] = imx_clk_divider("arm_per_div", "arm", base + MX35_CCM_PDR4, 16, 6);
+-	clk[ahb_per_div] = imx_clk_divider("ahb_per_div", "ahb", base + MXC_CCM_PDR0, 12, 3);
+-	clk[ipg_per] = imx_clk_mux("ipg_per", base + MXC_CCM_PDR0, 26, 1, ipg_per_sel, ARRAY_SIZE(ipg_per_sel));
+-
+-	clk[uart_sel] = imx_clk_mux("uart_sel", base + MX35_CCM_PDR3, 14, 1, std_sel, ARRAY_SIZE(std_sel));
+-	clk[uart_div] = imx_clk_divider("uart_div", "uart_sel", base + MX35_CCM_PDR4, 10, 6);
+-
+-	clk[esdhc_sel] = imx_clk_mux("esdhc_sel", base + MX35_CCM_PDR4, 9, 1, std_sel, ARRAY_SIZE(std_sel));
+-	clk[esdhc1_div] = imx_clk_divider("esdhc1_div", "esdhc_sel", base + MX35_CCM_PDR3, 0, 6);
+-	clk[esdhc2_div] = imx_clk_divider("esdhc2_div", "esdhc_sel", base + MX35_CCM_PDR3, 8, 6);
+-	clk[esdhc3_div] = imx_clk_divider("esdhc3_div", "esdhc_sel", base + MX35_CCM_PDR3, 16, 6);
+-
+-	clk[spdif_sel] = imx_clk_mux("spdif_sel", base + MX35_CCM_PDR3, 22, 1, std_sel, ARRAY_SIZE(std_sel));
+-	clk[spdif_div_pre] = imx_clk_divider("spdif_div_pre", "spdif_sel", base + MX35_CCM_PDR3, 29, 3); /* divide by 1 not allowed */ 
+-	clk[spdif_div_post] = imx_clk_divider("spdif_div_post", "spdif_div_pre", base + MX35_CCM_PDR3, 23, 6);
+-
+-	clk[ssi_sel] = imx_clk_mux("ssi_sel", base + MX35_CCM_PDR2, 6, 1, std_sel, ARRAY_SIZE(std_sel));
+-	clk[ssi1_div_pre] = imx_clk_divider("ssi1_div_pre", "ssi_sel", base + MX35_CCM_PDR2, 24, 3);
+-	clk[ssi1_div_post] = imx_clk_divider("ssi1_div_post", "ssi1_div_pre", base + MX35_CCM_PDR2, 0, 6);
+-	clk[ssi2_div_pre] = imx_clk_divider("ssi2_div_pre", "ssi_sel", base + MX35_CCM_PDR2, 27, 3);
+-	clk[ssi2_div_post] = imx_clk_divider("ssi2_div_post", "ssi2_div_pre", base + MX35_CCM_PDR2, 8, 6);
+-
+-	clk[usb_sel] = imx_clk_mux("usb_sel", base + MX35_CCM_PDR4, 9, 1, std_sel, ARRAY_SIZE(std_sel));
+-	clk[usb_div] = imx_clk_divider("usb_div", "usb_sel", base + MX35_CCM_PDR4, 22, 6);
+-
+-	clk[nfc_div] = imx_clk_divider("nfc_div", "ahb", base + MX35_CCM_PDR4, 28, 4);
+-
+-	clk[csi_sel] = imx_clk_mux("csi_sel", base + MX35_CCM_PDR2, 7, 1, std_sel, ARRAY_SIZE(std_sel));
+-	clk[csi_div] = imx_clk_divider("csi_div", "csi_sel", base + MX35_CCM_PDR2, 16, 6);
+-
+-	clk[asrc_gate] = imx_clk_gate2("asrc_gate", "ipg", base + MX35_CCM_CGR0,  0);
+-	clk[pata_gate] = imx_clk_gate2("pata_gate", "ipg", base + MX35_CCM_CGR0,  2);
+-	clk[audmux_gate] = imx_clk_gate2("audmux_gate", "ipg", base + MX35_CCM_CGR0,  4);
+-	clk[can1_gate] = imx_clk_gate2("can1_gate", "ipg", base + MX35_CCM_CGR0,  6);
+-	clk[can2_gate] = imx_clk_gate2("can2_gate", "ipg", base + MX35_CCM_CGR0,  8);
+-	clk[cspi1_gate] = imx_clk_gate2("cspi1_gate", "ipg", base + MX35_CCM_CGR0, 10);
+-	clk[cspi2_gate] = imx_clk_gate2("cspi2_gate", "ipg", base + MX35_CCM_CGR0, 12);
+-	clk[ect_gate] = imx_clk_gate2("ect_gate", "ipg", base + MX35_CCM_CGR0, 14);
+-	clk[edio_gate] = imx_clk_gate2("edio_gate",   "ipg", base + MX35_CCM_CGR0, 16);
+-	clk[emi_gate] = imx_clk_gate2("emi_gate", "ipg", base + MX35_CCM_CGR0, 18);
+-	clk[epit1_gate] = imx_clk_gate2("epit1_gate", "ipg", base + MX35_CCM_CGR0, 20);
+-	clk[epit2_gate] = imx_clk_gate2("epit2_gate", "ipg", base + MX35_CCM_CGR0, 22);
+-	clk[esai_gate] = imx_clk_gate2("esai_gate",   "ipg", base + MX35_CCM_CGR0, 24);
+-	clk[esdhc1_gate] = imx_clk_gate2("esdhc1_gate", "esdhc1_div", base + MX35_CCM_CGR0, 26);
+-	clk[esdhc2_gate] = imx_clk_gate2("esdhc2_gate", "esdhc2_div", base + MX35_CCM_CGR0, 28);
+-	clk[esdhc3_gate] = imx_clk_gate2("esdhc3_gate", "esdhc3_div", base + MX35_CCM_CGR0, 30);
+-
+-	clk[fec_gate] = imx_clk_gate2("fec_gate", "ipg", base + MX35_CCM_CGR1,  0);
+-	clk[gpio1_gate] = imx_clk_gate2("gpio1_gate", "ipg", base + MX35_CCM_CGR1,  2);
+-	clk[gpio2_gate] = imx_clk_gate2("gpio2_gate", "ipg", base + MX35_CCM_CGR1,  4);
+-	clk[gpio3_gate] = imx_clk_gate2("gpio3_gate", "ipg", base + MX35_CCM_CGR1,  6);
+-	clk[gpt_gate] = imx_clk_gate2("gpt_gate", "ipg", base + MX35_CCM_CGR1,  8);
+-	clk[i2c1_gate] = imx_clk_gate2("i2c1_gate", "ipg_per", base + MX35_CCM_CGR1, 10);
+-	clk[i2c2_gate] = imx_clk_gate2("i2c2_gate", "ipg_per", base + MX35_CCM_CGR1, 12);
+-	clk[i2c3_gate] = imx_clk_gate2("i2c3_gate", "ipg_per", base + MX35_CCM_CGR1, 14);
+-	clk[iomuxc_gate] = imx_clk_gate2("iomuxc_gate", "ipg", base + MX35_CCM_CGR1, 16);
+-	clk[ipu_gate] = imx_clk_gate2("ipu_gate", "hsp", base + MX35_CCM_CGR1, 18);
+-	clk[kpp_gate] = imx_clk_gate2("kpp_gate", "ipg", base + MX35_CCM_CGR1, 20);
+-	clk[mlb_gate] = imx_clk_gate2("mlb_gate", "ahb", base + MX35_CCM_CGR1, 22);
+-	clk[mshc_gate] = imx_clk_gate2("mshc_gate", "dummy", base + MX35_CCM_CGR1, 24);
+-	clk[owire_gate] = imx_clk_gate2("owire_gate", "ipg_per", base + MX35_CCM_CGR1, 26);
+-	clk[pwm_gate] = imx_clk_gate2("pwm_gate", "ipg_per", base + MX35_CCM_CGR1, 28);
+-	clk[rngc_gate] = imx_clk_gate2("rngc_gate", "ipg", base + MX35_CCM_CGR1, 30);
+-
+-	clk[rtc_gate] = imx_clk_gate2("rtc_gate", "ipg", base + MX35_CCM_CGR2,  0);
+-	clk[rtic_gate] = imx_clk_gate2("rtic_gate", "ahb", base + MX35_CCM_CGR2,  2);
+-	clk[scc_gate] = imx_clk_gate2("scc_gate", "ipg", base + MX35_CCM_CGR2,  4);
+-	clk[sdma_gate] = imx_clk_gate2("sdma_gate", "ahb", base + MX35_CCM_CGR2,  6);
+-	clk[spba_gate] = imx_clk_gate2("spba_gate", "ipg", base + MX35_CCM_CGR2,  8);
+-	clk[spdif_gate] = imx_clk_gate2("spdif_gate", "spdif_div_post", base + MX35_CCM_CGR2, 10);
+-	clk[ssi1_gate] = imx_clk_gate2("ssi1_gate", "ssi1_div_post", base + MX35_CCM_CGR2, 12);
+-	clk[ssi2_gate] = imx_clk_gate2("ssi2_gate", "ssi2_div_post", base + MX35_CCM_CGR2, 14);
+-	clk[uart1_gate] = imx_clk_gate2("uart1_gate", "uart_div", base + MX35_CCM_CGR2, 16);
+-	clk[uart2_gate] = imx_clk_gate2("uart2_gate", "uart_div", base + MX35_CCM_CGR2, 18);
+-	clk[uart3_gate] = imx_clk_gate2("uart3_gate", "uart_div", base + MX35_CCM_CGR2, 20);
+-	clk[usbotg_gate] = imx_clk_gate2("usbotg_gate", "ahb", base + MX35_CCM_CGR2, 22);
+-	clk[wdog_gate] = imx_clk_gate2("wdog_gate", "ipg", base + MX35_CCM_CGR2, 24);
+-	clk[max_gate] = imx_clk_gate2("max_gate", "dummy", base + MX35_CCM_CGR2, 26);
+-	clk[admux_gate] = imx_clk_gate2("admux_gate", "ipg", base + MX35_CCM_CGR2, 30);
+-
+-	clk[csi_gate] = imx_clk_gate2("csi_gate", "csi_div", base + MX35_CCM_CGR3,  0);
+-	clk[iim_gate] = imx_clk_gate2("iim_gate", "ipg", base + MX35_CCM_CGR3,  2);
+-	clk[gpu2d_gate] = imx_clk_gate2("gpu2d_gate", "ahb", base + MX35_CCM_CGR3,  4);
++	clk[IMX35_CLK_HSP] = imx_clk_fixed_factor("hsp", "arm",
++		1, hsp_div[hsp_sel]);
++
++	clk[IMX35_CLK_AHB] = imx_clk_fixed_factor("ahb", "arm", 1, aad->ahb);
++	clk[IMX35_CLK_IPG] = imx_clk_fixed_factor("ipg", "ahb", 1, 2);
++
++	clk[IMX35_CLK_ARM_PER_DIV] = imx_clk_divider("arm_per_div", "arm",
++		base + MX35_CCM_PDR4, 16, 6);
++	clk[IMX35_CLK_AHB_PER_DIV] = imx_clk_divider("ahb_per_div", "ahb",
++		base + MXC_CCM_PDR0, 12, 3);
++	clk[IMX35_CLK_IPG_PER] = imx_clk_mux("ipg_per", base + MXC_CCM_PDR0,
++		26, 1, ipg_per_sel, ARRAY_SIZE(ipg_per_sel));
++
++	clk[IMX35_CLK_UART_SEL] = imx_clk_mux("uart_sel", base + MX35_CCM_PDR3,
++		14, 1, std_sel, ARRAY_SIZE(std_sel));
++	clk[IMX35_CLK_UART_DIV] = imx_clk_divider("uart_div", "uart_sel",
++		base + MX35_CCM_PDR4, 10, 6);
++
++	clk[IMX35_CLK_ESDHC_SEL] = imx_clk_mux("esdhc_sel",
++		base + MX35_CCM_PDR4, 9, 1, std_sel, ARRAY_SIZE(std_sel));
++	clk[IMX35_CLK_ESDHC1_DIV] = imx_clk_divider("esdhc1_div", "esdhc_sel",
++		base + MX35_CCM_PDR3, 0, 6);
++	clk[IMX35_CLK_ESDHC2_DIV] = imx_clk_divider("esdhc2_div", "esdhc_sel",
++		base + MX35_CCM_PDR3, 8, 6);
++	clk[IMX35_CLK_ESDHC3_DIV] = imx_clk_divider("esdhc3_div", "esdhc_sel",
++		base + MX35_CCM_PDR3, 16, 6);
++
++	clk[IMX35_CLK_SPDIF_SEL] = imx_clk_mux("spdif_sel",
++		base + MX35_CCM_PDR3, 22, 1, std_sel, ARRAY_SIZE(std_sel));
++	clk[IMX35_CLK_SPDIF_DIV_PRE] = imx_clk_divider("spdif_div_pre",
++		"spdif_sel", base + MX35_CCM_PDR3, 29, 3);
++		/* divide by 1 not allowed */
++	clk[IMX35_CLK_SPDIF_DIV_POST] = imx_clk_divider("spdif_div_post",
++		"spdif_div_pre", base + MX35_CCM_PDR3, 23, 6);
++
++	clk[IMX35_CLK_SSI_SEL] = imx_clk_mux("ssi_sel", base + MX35_CCM_PDR2,
++		6, 1, std_sel, ARRAY_SIZE(std_sel));
++	clk[IMX35_CLK_SSI1_DIV_PRE] = imx_clk_divider("ssi1_div_pre",
++		"ssi_sel", base + MX35_CCM_PDR2, 24, 3);
++	clk[IMX35_CLK_SSI1_DIV_POST] = imx_clk_divider("ssi1_div_post",
++		"ssi1_div_pre", base + MX35_CCM_PDR2, 0, 6);
++	clk[IMX35_CLK_SSI2_DIV_PRE] = imx_clk_divider("ssi2_div_pre",
++		"ssi_sel", base + MX35_CCM_PDR2, 27, 3);
++	clk[IMX35_CLK_SSI2_DIV_POST] = imx_clk_divider("ssi2_div_post",
++		"ssi2_div_pre", base + MX35_CCM_PDR2, 8, 6);
++
++	clk[IMX35_CLK_USB_SEL] = imx_clk_mux("usb_sel", base + MX35_CCM_PDR4,
++		9, 1, std_sel, ARRAY_SIZE(std_sel));
++	clk[IMX35_CLK_USB_DIV] = imx_clk_divider("usb_div", "usb_sel",
++		base + MX35_CCM_PDR4, 22, 6);
++
++	clk[IMX35_CLK_NFC_DIV] = imx_clk_divider("nfc_div", "ahb",
++		 base + MX35_CCM_PDR4, 28, 4);
++
++	clk[IMX35_CLK_CSI_SEL] = imx_clk_mux("csi_sel", base + MX35_CCM_PDR2,
++		7, 1, std_sel, ARRAY_SIZE(std_sel));
++	clk[IMX35_CLK_CSI_DIV] = imx_clk_divider("csi_div", "csi_sel",
++		 base + MX35_CCM_PDR2, 16, 6);
++
++	clk[IMX35_CLK_ASRC_GATE] = imx_clk_gate2("asrc_gate", "ipg",
++		base + MX35_CCM_CGR0,  0);
++	clk[IMX35_CLK_PATA_GATE] = imx_clk_gate2("pata_gate", "ipg",
++		base + MX35_CCM_CGR0,  2);
++	clk[IMX35_CLK_AUDMUX_GATE] = imx_clk_gate2("audmux_gate", "ipg",
++		base + MX35_CCM_CGR0,  4);
++	clk[IMX35_CLK_CAN1_GATE] = imx_clk_gate2("can1_gate", "ipg",
++		base + MX35_CCM_CGR0,  6);
++	clk[IMX35_CLK_CAN2_GATE] = imx_clk_gate2("can2_gate", "ipg",
++		base + MX35_CCM_CGR0,  8);
++	clk[IMX35_CLK_CSPI1_GATE] = imx_clk_gate2("cspi1_gate", "ipg",
++		base + MX35_CCM_CGR0, 10);
++	clk[IMX35_CLK_CSPI2_GATE] = imx_clk_gate2("cspi2_gate", "ipg",
++		base + MX35_CCM_CGR0, 12);
++	clk[IMX35_CLK_ECT_GATE] = imx_clk_gate2("ect_gate", "ipg",
++		base + MX35_CCM_CGR0, 14);
++	clk[IMX35_CLK_EDIO_GATE] = imx_clk_gate2("edio_gate", "ipg",
++		base + MX35_CCM_CGR0, 16);
++	clk[IMX35_CLK_EMI_GATE] = imx_clk_gate2("emi_gate", "ipg",
++		base + MX35_CCM_CGR0, 18);
++	clk[IMX35_CLK_EPIT1_GATE] = imx_clk_gate2("epit1_gate", "ipg",
++		base + MX35_CCM_CGR0, 20);
++	clk[IMX35_CLK_EPIT2_GATE] = imx_clk_gate2("epit2_gate", "ipg",
++		base + MX35_CCM_CGR0, 22);
++	clk[IMX35_CLK_ESAI_GATE] = imx_clk_gate2("esai_gate", "ipg",
++		base + MX35_CCM_CGR0, 24);
++	clk[IMX35_CLK_ESDHC1_GATE] = imx_clk_gate2("esdhc1_gate", "esdhc1_div",
++		base + MX35_CCM_CGR0, 26);
++	clk[IMX35_CLK_ESDHC2_GATE] = imx_clk_gate2("esdhc2_gate", "esdhc2_div",
++		base + MX35_CCM_CGR0, 28);
++	clk[IMX35_CLK_ESDHC3_GATE] = imx_clk_gate2("esdhc3_gate", "esdhc3_div",
++		base + MX35_CCM_CGR0, 30);
++
++	clk[IMX35_CLK_FEC_GATE] = imx_clk_gate2("fec_gate", "ipg",
++		base + MX35_CCM_CGR1,  0);
++	clk[IMX35_CLK_GPIO1_GATE] = imx_clk_gate2("gpio1_gate", "ipg",
++		base + MX35_CCM_CGR1,  2);
++	clk[IMX35_CLK_GPIO2_GATE] = imx_clk_gate2("gpio2_gate", "ipg",
++		base + MX35_CCM_CGR1,  4);
++	clk[IMX35_CLK_GPIO3_GATE] = imx_clk_gate2("gpio3_gate", "ipg",
++		base + MX35_CCM_CGR1,  6);
++	clk[IMX35_CLK_GPT_GATE] = imx_clk_gate2("gpt_gate", "ipg",
++		base + MX35_CCM_CGR1,  8);
++	clk[IMX35_CLK_I2C1_GATE] = imx_clk_gate2("i2c1_gate", "ipg_per",
++		base + MX35_CCM_CGR1, 10);
++	clk[IMX35_CLK_I2C2_GATE] = imx_clk_gate2("i2c2_gate", "ipg_per",
++		base + MX35_CCM_CGR1, 12);
++	clk[IMX35_CLK_I2C3_GATE] = imx_clk_gate2("i2c3_gate", "ipg_per",
++		base + MX35_CCM_CGR1, 14);
++	clk[IMX35_CLK_IOMUXC_GATE] = imx_clk_gate2("iomuxc_gate", "ipg",
++		base + MX35_CCM_CGR1, 16);
++	clk[IMX35_CLK_IPU_GATE] = imx_clk_gate2("ipu_gate", "hsp",
++		base + MX35_CCM_CGR1, 18);
++	clk[IMX35_CLK_KPP_GATE] = imx_clk_gate2("kpp_gate", "ipg",
++		base + MX35_CCM_CGR1, 20);
++	clk[IMX35_CLK_MLB_GATE] = imx_clk_gate2("mlb_gate", "ahb",
++		base + MX35_CCM_CGR1, 22);
++	clk[IMX35_CLK_MSHC_GATE] = imx_clk_gate2("mshc_gate", "dummy",
++		base + MX35_CCM_CGR1, 24);
++	clk[IMX35_CLK_OWIRE_GATE] = imx_clk_gate2("owire_gate", "ipg_per",
++		base + MX35_CCM_CGR1, 26);
++	clk[IMX35_CLK_PWM_GATE] = imx_clk_gate2("pwm_gate", "ipg_per",
++		base + MX35_CCM_CGR1, 28);
++	clk[IMX35_CLK_RNGC_GATE] = imx_clk_gate2("rngc_gate", "ipg",
++		base + MX35_CCM_CGR1, 30);
++
++	clk[IMX35_CLK_RTC_GATE] = imx_clk_gate2("rtc_gate", "ipg",
++		base + MX35_CCM_CGR2,  0);
++	clk[IMX35_CLK_RTIC_GATE] = imx_clk_gate2("rtic_gate", "ahb",
++		base + MX35_CCM_CGR2,  2);
++	clk[IMX35_CLK_SCC_GATE] = imx_clk_gate2("scc_gate", "ipg",
++		base + MX35_CCM_CGR2,  4);
++	clk[IMX35_CLK_SDMA_GATE] = imx_clk_gate2("sdma_gate", "ahb",
++		base + MX35_CCM_CGR2,  6);
++	clk[IMX35_CLK_SPBA_GATE] = imx_clk_gate2("spba_gate", "ipg",
++		base + MX35_CCM_CGR2,  8);
++	clk[IMX35_CLK_SPDIF_GATE] = imx_clk_gate2("spdif_gate",
++		"spdif_div_post", base + MX35_CCM_CGR2, 10);
++	clk[IMX35_CLK_SSI1_GATE] = imx_clk_gate2("ssi1_gate", "ssi1_div_post",
++		 base + MX35_CCM_CGR2, 12);
++	clk[IMX35_CLK_SSI2_GATE] = imx_clk_gate2("ssi2_gate", "ssi2_div_post",
++		 base + MX35_CCM_CGR2, 14);
++	clk[IMX35_CLK_UART1_GATE] = imx_clk_gate2("uart1_gate", "uart_div",
++		 base + MX35_CCM_CGR2, 16);
++	clk[IMX35_CLK_UART2_GATE] = imx_clk_gate2("uart2_gate", "uart_div",
++		 base + MX35_CCM_CGR2, 18);
++	clk[IMX35_CLK_UART3_GATE] = imx_clk_gate2("uart3_gate", "uart_div",
++		 base + MX35_CCM_CGR2, 20);
++	clk[IMX35_CLK_USBOTG_GATE] = imx_clk_gate2("usbotg_gate", "ahb",
++		 base + MX35_CCM_CGR2, 22);
++	clk[IMX35_CLK_WDOG_GATE] = imx_clk_gate2("wdog_gate", "ipg",
++		 base + MX35_CCM_CGR2, 24);
++	clk[IMX35_CLK_MAX_GATE] = imx_clk_gate2("max_gate", "dummy",
++		 base + MX35_CCM_CGR2, 26);
++	clk[IMX35_CLK_ADMUX_GATE] = imx_clk_gate2("admux_gate", "ipg",
++		 base + MX35_CCM_CGR2, 30);
++
++	clk[IMX35_CLK_CSI_GATE] = imx_clk_gate2("csi_gate", "csi_div",
++		 base + MX35_CCM_CGR3,  0);
++	clk[IMX35_CLK_IIM_GATE] = imx_clk_gate2("iim_gate", "ipg",
++		 base + MX35_CCM_CGR3,  2);
++	clk[IMX35_CLK_GPU2D_GATE] = imx_clk_gate2("gpu2d_gate", "ahb",
++		 base + MX35_CCM_CGR3,  4);
+ 
+ 	imx_check_clocks(clk, ARRAY_SIZE(clk));
+ 
+-	clk_prepare_enable(clk[spba_gate]);
+-	clk_prepare_enable(clk[gpio1_gate]);
+-	clk_prepare_enable(clk[gpio2_gate]);
+-	clk_prepare_enable(clk[gpio3_gate]);
+-	clk_prepare_enable(clk[iim_gate]);
+-	clk_prepare_enable(clk[emi_gate]);
+-	clk_prepare_enable(clk[max_gate]);
+-	clk_prepare_enable(clk[iomuxc_gate]);
++	clk_prepare_enable(clk[IMX35_CLK_SPBA_GATE]);
++	clk_prepare_enable(clk[IMX35_CLK_GPIO1_GATE]);
++	clk_prepare_enable(clk[IMX35_CLK_GPIO2_GATE]);
++	clk_prepare_enable(clk[IMX35_CLK_GPIO3_GATE]);
++	clk_prepare_enable(clk[IMX35_CLK_IIM_GATE]);
++	clk_prepare_enable(clk[IMX35_CLK_EMI_GATE]);
++	clk_prepare_enable(clk[IMX35_CLK_MAX_GATE]);
++	clk_prepare_enable(clk[IMX35_CLK_IOMUXC_GATE]);
+ 
+ 	/*
+ 	 * SCC is needed to boot via mmc after a watchdog reset. The clock code
+@@ -243,7 +305,7 @@ static void __init _mx35_clocks_init(void)
+ 	 * handled here and not needed for mmc) and IIM (which is enabled
+ 	 * unconditionally above).
+ 	 */
+-	clk_prepare_enable(clk[scc_gate]);
++	clk_prepare_enable(clk[IMX35_CLK_SCC_GATE]);
+ 
+ 	imx_register_uart_clocks(uart_clks);
+ 
+@@ -254,64 +316,67 @@ int __init mx35_clocks_init(void)
+ {
+ 	_mx35_clocks_init();
+ 
+-	clk_register_clkdev(clk[pata_gate], NULL, "pata_imx");
+-	clk_register_clkdev(clk[can1_gate], NULL, "flexcan.0");
+-	clk_register_clkdev(clk[can2_gate], NULL, "flexcan.1");
+-	clk_register_clkdev(clk[cspi1_gate], "per", "imx35-cspi.0");
+-	clk_register_clkdev(clk[cspi1_gate], "ipg", "imx35-cspi.0");
+-	clk_register_clkdev(clk[cspi2_gate], "per", "imx35-cspi.1");
+-	clk_register_clkdev(clk[cspi2_gate], "ipg", "imx35-cspi.1");
+-	clk_register_clkdev(clk[epit1_gate], NULL, "imx-epit.0");
+-	clk_register_clkdev(clk[epit2_gate], NULL, "imx-epit.1");
+-	clk_register_clkdev(clk[esdhc1_gate], "per", "sdhci-esdhc-imx35.0");
+-	clk_register_clkdev(clk[ipg], "ipg", "sdhci-esdhc-imx35.0");
+-	clk_register_clkdev(clk[ahb], "ahb", "sdhci-esdhc-imx35.0");
+-	clk_register_clkdev(clk[esdhc2_gate], "per", "sdhci-esdhc-imx35.1");
+-	clk_register_clkdev(clk[ipg], "ipg", "sdhci-esdhc-imx35.1");
+-	clk_register_clkdev(clk[ahb], "ahb", "sdhci-esdhc-imx35.1");
+-	clk_register_clkdev(clk[esdhc3_gate], "per", "sdhci-esdhc-imx35.2");
+-	clk_register_clkdev(clk[ipg], "ipg", "sdhci-esdhc-imx35.2");
+-	clk_register_clkdev(clk[ahb], "ahb", "sdhci-esdhc-imx35.2");
++	clk_register_clkdev(clk[IMX35_CLK_PATA_GATE], NULL, "pata_imx");
++	clk_register_clkdev(clk[IMX35_CLK_CAN1_GATE], NULL, "flexcan.0");
++	clk_register_clkdev(clk[IMX35_CLK_CAN2_GATE], NULL, "flexcan.1");
++	clk_register_clkdev(clk[IMX35_CLK_CSPI1_GATE], "per", "imx35-cspi.0");
++	clk_register_clkdev(clk[IMX35_CLK_CSPI1_GATE], "ipg", "imx35-cspi.0");
++	clk_register_clkdev(clk[IMX35_CLK_CSPI2_GATE], "per", "imx35-cspi.1");
++	clk_register_clkdev(clk[IMX35_CLK_CSPI2_GATE], "ipg", "imx35-cspi.1");
++	clk_register_clkdev(clk[IMX35_CLK_EPIT1_GATE], NULL, "imx-epit.0");
++	clk_register_clkdev(clk[IMX35_CLK_EPIT2_GATE], NULL, "imx-epit.1");
++	clk_register_clkdev(clk[IMX35_CLK_ESDHC1_GATE], "per",
++		"sdhci-esdhc-imx35.0");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "sdhci-esdhc-imx35.0");
++	clk_register_clkdev(clk[IMX35_CLK_AHB], "ahb", "sdhci-esdhc-imx35.0");
++	clk_register_clkdev(clk[IMX35_CLK_ESDHC2_GATE], "per",
++		"sdhci-esdhc-imx35.1");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "sdhci-esdhc-imx35.1");
++	clk_register_clkdev(clk[IMX35_CLK_AHB], "ahb", "sdhci-esdhc-imx35.1");
++	clk_register_clkdev(clk[IMX35_CLK_ESDHC3_GATE], "per",
++		"sdhci-esdhc-imx35.2");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "sdhci-esdhc-imx35.2");
++	clk_register_clkdev(clk[IMX35_CLK_AHB], "ahb", "sdhci-esdhc-imx35.2");
+ 	/* i.mx35 has the i.mx27 type fec */
+-	clk_register_clkdev(clk[fec_gate], NULL, "imx27-fec.0");
+-	clk_register_clkdev(clk[gpt_gate], "per", "imx-gpt.0");
+-	clk_register_clkdev(clk[ipg], "ipg", "imx-gpt.0");
+-	clk_register_clkdev(clk[i2c1_gate], NULL, "imx21-i2c.0");
+-	clk_register_clkdev(clk[i2c2_gate], NULL, "imx21-i2c.1");
+-	clk_register_clkdev(clk[i2c3_gate], NULL, "imx21-i2c.2");
+-	clk_register_clkdev(clk[ipu_gate], NULL, "ipu-core");
+-	clk_register_clkdev(clk[ipu_gate], NULL, "mx3_sdc_fb");
+-	clk_register_clkdev(clk[kpp_gate], NULL, "imx-keypad");
+-	clk_register_clkdev(clk[owire_gate], NULL, "mxc_w1");
+-	clk_register_clkdev(clk[sdma_gate], NULL, "imx35-sdma");
+-	clk_register_clkdev(clk[ssi1_gate], NULL, "imx-ssi.0");
+-	clk_register_clkdev(clk[ssi2_gate], NULL, "imx-ssi.1");
++	clk_register_clkdev(clk[IMX35_CLK_FEC_GATE], NULL, "imx27-fec.0");
++	clk_register_clkdev(clk[IMX35_CLK_GPT_GATE], "per", "imx-gpt.0");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "imx-gpt.0");
++	clk_register_clkdev(clk[IMX35_CLK_I2C1_GATE], NULL, "imx21-i2c.0");
++	clk_register_clkdev(clk[IMX35_CLK_I2C2_GATE], NULL, "imx21-i2c.1");
++	clk_register_clkdev(clk[IMX35_CLK_I2C3_GATE], NULL, "imx21-i2c.2");
++	clk_register_clkdev(clk[IMX35_CLK_IPU_GATE], NULL, "ipu-core");
++	clk_register_clkdev(clk[IMX35_CLK_IPU_GATE], NULL, "mx3_sdc_fb");
++	clk_register_clkdev(clk[IMX35_CLK_KPP_GATE], NULL, "imx-keypad");
++	clk_register_clkdev(clk[IMX35_CLK_OWIRE_GATE], NULL, "mxc_w1");
++	clk_register_clkdev(clk[IMX35_CLK_SDMA_GATE], NULL, "imx35-sdma");
++	clk_register_clkdev(clk[IMX35_CLK_SSI1_GATE], NULL, "imx-ssi.0");
++	clk_register_clkdev(clk[IMX35_CLK_SSI2_GATE], NULL, "imx-ssi.1");
+ 	/* i.mx35 has the i.mx21 type uart */
+-	clk_register_clkdev(clk[uart1_gate], "per", "imx21-uart.0");
+-	clk_register_clkdev(clk[ipg], "ipg", "imx21-uart.0");
+-	clk_register_clkdev(clk[uart2_gate], "per", "imx21-uart.1");
+-	clk_register_clkdev(clk[ipg], "ipg", "imx21-uart.1");
+-	clk_register_clkdev(clk[uart3_gate], "per", "imx21-uart.2");
+-	clk_register_clkdev(clk[ipg], "ipg", "imx21-uart.2");
++	clk_register_clkdev(clk[IMX35_CLK_UART1_GATE], "per", "imx21-uart.0");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "imx21-uart.0");
++	clk_register_clkdev(clk[IMX35_CLK_UART2_GATE], "per", "imx21-uart.1");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "imx21-uart.1");
++	clk_register_clkdev(clk[IMX35_CLK_UART3_GATE], "per", "imx21-uart.2");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "imx21-uart.2");
+ 	/* i.mx35 has the i.mx21 type rtc */
+-	clk_register_clkdev(clk[ckil], "ref", "imx21-rtc");
+-	clk_register_clkdev(clk[rtc_gate], "ipg", "imx21-rtc");
+-	clk_register_clkdev(clk[usb_div], "per", "mxc-ehci.0");
+-	clk_register_clkdev(clk[ipg], "ipg", "mxc-ehci.0");
+-	clk_register_clkdev(clk[usbotg_gate], "ahb", "mxc-ehci.0");
+-	clk_register_clkdev(clk[usb_div], "per", "mxc-ehci.1");
+-	clk_register_clkdev(clk[ipg], "ipg", "mxc-ehci.1");
+-	clk_register_clkdev(clk[usbotg_gate], "ahb", "mxc-ehci.1");
+-	clk_register_clkdev(clk[usb_div], "per", "mxc-ehci.2");
+-	clk_register_clkdev(clk[ipg], "ipg", "mxc-ehci.2");
+-	clk_register_clkdev(clk[usbotg_gate], "ahb", "mxc-ehci.2");
+-	clk_register_clkdev(clk[usb_div], "per", "imx-udc-mx27");
+-	clk_register_clkdev(clk[ipg], "ipg", "imx-udc-mx27");
+-	clk_register_clkdev(clk[usbotg_gate], "ahb", "imx-udc-mx27");
+-	clk_register_clkdev(clk[wdog_gate], NULL, "imx2-wdt.0");
+-	clk_register_clkdev(clk[nfc_div], NULL, "imx25-nand.0");
+-	clk_register_clkdev(clk[csi_gate], NULL, "mx3-camera.0");
+-	clk_register_clkdev(clk[admux_gate], "audmux", NULL);
++	clk_register_clkdev(clk[IMX35_CLK_CKIL], "ref", "imx21-rtc");
++	clk_register_clkdev(clk[IMX35_CLK_RTC_GATE], "ipg", "imx21-rtc");
++	clk_register_clkdev(clk[IMX35_CLK_USB_DIV], "per", "mxc-ehci.0");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "mxc-ehci.0");
++	clk_register_clkdev(clk[IMX35_CLK_USBOTG_GATE], "ahb", "mxc-ehci.0");
++	clk_register_clkdev(clk[IMX35_CLK_USB_DIV], "per", "mxc-ehci.1");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "mxc-ehci.1");
++	clk_register_clkdev(clk[IMX35_CLK_USBOTG_GATE], "ahb", "mxc-ehci.1");
++	clk_register_clkdev(clk[IMX35_CLK_USB_DIV], "per", "mxc-ehci.2");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "mxc-ehci.2");
++	clk_register_clkdev(clk[IMX35_CLK_USBOTG_GATE], "ahb", "mxc-ehci.2");
++	clk_register_clkdev(clk[IMX35_CLK_USB_DIV], "per", "imx-udc-mx27");
++	clk_register_clkdev(clk[IMX35_CLK_IPG], "ipg", "imx-udc-mx27");
++	clk_register_clkdev(clk[IMX35_CLK_USBOTG_GATE], "ahb", "imx-udc-mx27");
++	clk_register_clkdev(clk[IMX35_CLK_WDOG_GATE], NULL, "imx2-wdt.0");
++	clk_register_clkdev(clk[IMX35_CLK_NFC_DIV], NULL, "imx25-nand.0");
++	clk_register_clkdev(clk[IMX35_CLK_CSI_GATE], NULL, "mx3-camera.0");
++	clk_register_clkdev(clk[IMX35_CLK_ADMUX_GATE], "audmux", NULL);
+ 
+ 	mxc_timer_init(MX35_GPT1_BASE_ADDR, MX35_INT_GPT, GPT_TYPE_IMX31);
+ 
+diff --git a/include/dt-bindings/clock/imx35-clock.h b/include/dt-bindings/clock/imx35-clock.h
+new file mode 100644
+index 0000000..6d748ae
+--- /dev/null
++++ b/include/dt-bindings/clock/imx35-clock.h
+@@ -0,0 +1,98 @@
++/*
++ * Copyright (C) 2016 Alexander Kurz <akurz@blala.de>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_IMX35_H
++#define __DT_BINDINGS_CLOCK_IMX35_H
++
++#define IMX35_CLK_CKIH	0
++#define IMX35_CLK_MPLL	1
++#define IMX35_CLK_PPLL	2
++#define IMX35_CLK_MPLL_075	3
++#define IMX35_CLK_ARM	4
++#define IMX35_CLK_HSP	5
++#define IMX35_CLK_HSP_DIV	6
++#define IMX35_CLK_HSP_SEL	7
++#define IMX35_CLK_AHB	8
++#define IMX35_CLK_IPG	9
++#define IMX35_CLK_ARM_PER_DIV	10
++#define IMX35_CLK_AHB_PER_DIV	11
++#define IMX35_CLK_IPG_PER	12
++#define IMX35_CLK_UART_SEL	13
++#define IMX35_CLK_UART_DIV	14
++#define IMX35_CLK_ESDHC_SEL	15
++#define IMX35_CLK_ESDHC1_DIV	16
++#define IMX35_CLK_ESDHC2_DIV	17
++#define IMX35_CLK_ESDHC3_DIV	18
++#define IMX35_CLK_SPDIF_SEL	19
++#define IMX35_CLK_SPDIF_DIV_PRE	20
++#define IMX35_CLK_SPDIF_DIV_POST	21
++#define IMX35_CLK_SSI_SEL	22
++#define IMX35_CLK_SSI1_DIV_PRE	23
++#define IMX35_CLK_SSI1_DIV_POST	24
++#define IMX35_CLK_SSI2_DIV_PRE	25
++#define IMX35_CLK_SSI2_DIV_POST	26
++#define IMX35_CLK_USB_SEL	27
++#define IMX35_CLK_USB_DIV	28
++#define IMX35_CLK_NFC_DIV	29
++#define IMX35_CLK_ASRC_GATE	30
++#define IMX35_CLK_PATA_GATE	31
++#define IMX35_CLK_AUDMUX_GATE	32
++#define IMX35_CLK_CAN1_GATE	33
++#define IMX35_CLK_CAN2_GATE	34
++#define IMX35_CLK_CSPI1_GATE	35
++#define IMX35_CLK_CSPI2_GATE	36
++#define IMX35_CLK_ECT_GATE	37
++#define IMX35_CLK_EDIO_GATE	38
++#define IMX35_CLK_EMI_GATE	39
++#define IMX35_CLK_EPIT1_GATE	40
++#define IMX35_CLK_EPIT2_GATE	41
++#define IMX35_CLK_ESAI_GATE	42
++#define IMX35_CLK_ESDHC1_GATE	43
++#define IMX35_CLK_ESDHC2_GATE	44
++#define IMX35_CLK_ESDHC3_GATE	45
++#define IMX35_CLK_FEC_GATE	46
++#define IMX35_CLK_GPIO1_GATE	47
++#define IMX35_CLK_GPIO2_GATE	48
++#define IMX35_CLK_GPIO3_GATE	49
++#define IMX35_CLK_GPT_GATE	50
++#define IMX35_CLK_I2C1_GATE	51
++#define IMX35_CLK_I2C2_GATE	52
++#define IMX35_CLK_I2C3_GATE	53
++#define IMX35_CLK_IOMUXC_GATE	54
++#define IMX35_CLK_IPU_GATE	55
++#define IMX35_CLK_KPP_GATE	56
++#define IMX35_CLK_MLB_GATE	57
++#define IMX35_CLK_MSHC_GATE	58
++#define IMX35_CLK_OWIRE_GATE	59
++#define IMX35_CLK_PWM_GATE	60
++#define IMX35_CLK_RNGC_GATE	61
++#define IMX35_CLK_RTC_GATE	62
++#define IMX35_CLK_RTIC_GATE	63
++#define IMX35_CLK_SCC_GATE	64
++#define IMX35_CLK_SDMA_GATE	65
++#define IMX35_CLK_SPBA_GATE	66
++#define IMX35_CLK_SPDIF_GATE	67
++#define IMX35_CLK_SSI1_GATE	68
++#define IMX35_CLK_SSI2_GATE	69
++#define IMX35_CLK_UART1_GATE	70
++#define IMX35_CLK_UART2_GATE	71
++#define IMX35_CLK_UART3_GATE	72
++#define IMX35_CLK_USBOTG_GATE	73
++#define IMX35_CLK_WDOG_GATE	74
++#define IMX35_CLK_MAX_GATE	75
++#define IMX35_CLK_ADMUX_GATE	76
++#define IMX35_CLK_CSI_GATE	77
++#define IMX35_CLK_CSI_DIV	78
++#define IMX35_CLK_CSI_SEL	79
++#define IMX35_CLK_IIM_GATE	80
++#define IMX35_CLK_GPU2D_GATE	81
++#define IMX35_CLK_CKIL	82
++#define IMX35_CLK_MAX	83
++
++#endif
 -- 
-Florian
+2.1.4
