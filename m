@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v4 7/7] usb: musb: da8xx: Remove mach code
-Date: Thu, 14 Apr 2016 13:35:18 -0500
-Message-ID: <1460658919-4965-8-git-send-email-david@lechnology.com>
+Subject: [PATCH v4 1/7] mfd: da8xx-cfgchip: New header file for CFGCHIP registers.
+Date: Thu, 14 Apr 2016 13:35:12 -0500
+Message-ID: <1460658919-4965-2-git-send-email-david@lechnology.com>
 References: <1460658919-4965-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1460658919-4965-1-git-send-email-david@lechnology.com>
@@ -9,283 +9,217 @@ Sender: linux-kernel-owner@vger.kernel.org
 Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, khilman@kernel.org, nsekhar@ti.com, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use the new phy-da8xx-usb driver to take the place of the mach code that
-pokes CFGCHIP2 in the da8xx musb glue driver. This unbreaks the driver.
+We will be using a generic syscon device for the TI DA8XX SoC CFGCHIPx
+retisters. This will be used by a number of planned drivers including a
+new USB PHY driver and common clock framework drivers.
+
+The same defines are removed from the platform_data header file since they
+are now redundant and they didn't really belong there anyway.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v4 changes:
 
-* using new phy->ops->get_mode()
+* dropped individual CFGCHIPn_REG defines in favor of CFGCHIP(n)
 
 
- drivers/usb/musb/Kconfig |   2 +-
- drivers/usb/musb/da8xx.c | 141 ++++++++++++++++++-----------------------------
- 2 files changed, 54 insertions(+), 89 deletions(-)
+ include/linux/mfd/da8xx-cfgchip.h         | 153 ++++++++++++++++++++++++++++++
+ include/linux/platform_data/usb-davinci.h |  22 -----
+ 2 files changed, 153 insertions(+), 22 deletions(-)
+ create mode 100644 include/linux/mfd/da8xx-cfgchip.h
 
-diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
-index 886526b..c73221a 100644
---- a/drivers/usb/musb/Kconfig
-+++ b/drivers/usb/musb/Kconfig
-@@ -82,7 +82,7 @@ config USB_MUSB_DA8XX
- 	tristate "DA8xx/OMAP-L1x"
- 	depends on ARCH_DAVINCI_DA8XX
- 	depends on NOP_USB_XCEIV
--	depends on BROKEN
-+	select PHY_DA8XX_USB
- 
- config USB_MUSB_TUSB6010
- 	tristate "TUSB6010"
-diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-index 0c1997c..cea2216 100644
---- a/drivers/usb/musb/da8xx.c
-+++ b/drivers/usb/musb/da8xx.c
-@@ -30,13 +30,11 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/dma-mapping.h>
- #include <linux/usb/usb_phy_generic.h>
- 
--#include <mach/da8xx.h>
--#include <linux/platform_data/usb-davinci.h>
--
- #include "musb_core.h"
- 
- /*
-@@ -80,61 +78,15 @@
- 
- #define DA8XX_MENTOR_CORE_OFFSET 0x400
- 
--#define CFGCHIP2	IO_ADDRESS(DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP2_REG)
--
- struct da8xx_glue {
- 	struct device		*dev;
- 	struct platform_device	*musb;
--	struct platform_device	*phy;
-+	struct platform_device	*usb_phy;
- 	struct clk		*clk;
-+	struct phy		*phy;
- };
- 
- /*
-- * REVISIT (PM): we should be able to keep the PHY in low power mode most
-- * of the time (24 MHz oscillator and PLL off, etc.) by setting POWER.D0
-- * and, when in host mode, autosuspending idle root ports... PHY_PLLON
-- * (overriding SUSPENDM?) then likely needs to stay off.
-- */
--
--static inline void phy_on(void)
--{
--	u32 cfgchip2 = __raw_readl(CFGCHIP2);
--
--	/*
--	 * Start the on-chip PHY and its PLL.
--	 */
--	cfgchip2 &= ~(CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN | CFGCHIP2_OTGPWRDN);
--	cfgchip2 |= CFGCHIP2_PHY_PLLON;
--	__raw_writel(cfgchip2, CFGCHIP2);
--
--	pr_info("Waiting for USB PHY clock good...\n");
--	while (!(__raw_readl(CFGCHIP2) & CFGCHIP2_PHYCLKGD))
--		cpu_relax();
--}
--
--static inline void phy_off(void)
--{
--	u32 cfgchip2 = __raw_readl(CFGCHIP2);
--
--	/*
--	 * Ensure that USB 1.1 reference clock is not being sourced from
--	 * USB 2.0 PHY.  Otherwise do not power down the PHY.
--	 */
--	if (!(cfgchip2 & CFGCHIP2_USB1PHYCLKMUX) &&
--	     (cfgchip2 & CFGCHIP2_USB1SUSPENDM)) {
--		pr_warning("USB 1.1 clocked from USB 2.0 PHY -- "
--			   "can't power it down\n");
--		return;
--	}
--
--	/*
--	 * Power down the on-chip PHY.
--	 */
--	cfgchip2 |= CFGCHIP2_PHYPWRDN | CFGCHIP2_OTGPWRDN;
--	__raw_writel(cfgchip2, CFGCHIP2);
--}
--
--/*
-  * Because we don't set CTRL.UINT, it's "important" to:
-  *	- not read/write INTRUSB/INTRUSBE (except during
-  *	  initial setup, as a workaround);
-@@ -385,29 +337,29 @@ static irqreturn_t da8xx_musb_interrupt(int irq, void *hci)
- 
- static int da8xx_musb_set_mode(struct musb *musb, u8 musb_mode)
- {
--	u32 cfgchip2 = __raw_readl(CFGCHIP2);
-+	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
-+	enum phy_mode phy_mode;
- 
--	cfgchip2 &= ~CFGCHIP2_OTGMODE;
- 	switch (musb_mode) {
--	case MUSB_HOST:		/* Force VBUS valid, ID = 0 */
--		cfgchip2 |= CFGCHIP2_FORCE_HOST;
-+	case MUSB_HOST:
-+		phy_mode = PHY_MODE_USB_HOST;
- 		break;
--	case MUSB_PERIPHERAL:	/* Force VBUS valid, ID = 1 */
--		cfgchip2 |= CFGCHIP2_FORCE_DEVICE;
-+	case MUSB_PERIPHERAL:
-+		phy_mode = PHY_MODE_USB_DEVICE;
- 		break;
--	case MUSB_OTG:		/* Don't override the VBUS/ID comparators */
--		cfgchip2 |= CFGCHIP2_NO_OVERRIDE;
-+	case MUSB_OTG:
-+		phy_mode = PHY_MODE_USB_OTG;
- 		break;
- 	default:
--		dev_dbg(musb->controller, "Trying to set unsupported mode %u\n", musb_mode);
-+		return -EINVAL;
- 	}
- 
--	__raw_writel(cfgchip2, CFGCHIP2);
--	return 0;
-+	return phy_set_mode(glue->phy, phy_mode);
- }
- 
- static int da8xx_musb_init(struct musb *musb)
- {
-+	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
- 	void __iomem *reg_base = musb->ctrl_base;
- 	u32 rev;
- 	int ret = -ENODEV;
-@@ -425,32 +377,56 @@ static int da8xx_musb_init(struct musb *musb)
- 		goto fail;
- 	}
- 
-+	ret = clk_prepare_enable(glue->clk);
-+	if (ret) {
-+		dev_err(glue->dev, "failed to enable clock\n");
-+		goto fail;
-+	}
+diff --git a/include/linux/mfd/da8xx-cfgchip.h b/include/linux/mfd/da8xx-cfgchip.h
+new file mode 100644
+index 0000000..799e575
+--- /dev/null
++++ b/include/linux/mfd/da8xx-cfgchip.h
+@@ -0,0 +1,153 @@
++/*
++ * TI DaVinci DA8xx CHIPCFGx registers for syscon consumers.
++ *
++ * Copyright (C) 2016 David Lechner <david@lechnology.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
 +
- 	setup_timer(&otg_workaround, otg_timer, (unsigned long)musb);
- 
- 	/* Reset the controller */
- 	musb_writel(reg_base, DA8XX_USB_CTRL_REG, DA8XX_SOFT_RESET_MASK);
- 
- 	/* Start the on-chip PHY and its PLL. */
--	phy_on();
-+	ret = phy_init(glue->phy);
-+	if (ret) {
-+		dev_err(glue->dev, "Failed to init phy.\n");
-+		goto err_phy_init;
-+	}
++#ifndef __LINUX_MFD_DA8XX_CFGCHIP_H
++#define __LINUX_MFD_DA8XX_CFGCHIP_H
 +
-+	ret = phy_power_on(glue->phy);
-+	if (ret) {
-+		dev_err(glue->dev, "Failed to power on phy.\n");
-+		goto err_phy_power_on;
-+	}
- 
- 	msleep(5);
- 
- 	/* NOTE: IRQs are in mixed mode, not bypass to pure MUSB */
--	pr_debug("DA8xx OTG revision %08x, PHY %03x, control %02x\n",
--		 rev, __raw_readl(CFGCHIP2),
-+	pr_debug("DA8xx OTG revision %08x, control %02x\n", rev,
- 		 musb_readb(reg_base, DA8XX_USB_CTRL_REG));
- 
- 	musb->isr = da8xx_musb_interrupt;
- 	return 0;
++#include <linux/bitops.h>
 +
-+err_phy_power_on:
-+	phy_exit(glue->phy);
-+err_phy_init:
-+	clk_disable_unprepare(glue->clk);
- fail:
- 	return ret;
- }
- 
- static int da8xx_musb_exit(struct musb *musb)
- {
-+	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
++/* register offset (32-bit registers) */
++#define CFGCHIP(n)				(n * 4)
 +
- 	del_timer_sync(&otg_workaround);
++/* CFGCHIP0 (PLL0/EDMA3_0) register bits */
++#define CFGCHIP0_PLL_MASTER_LOCK		BIT(4)
++#define CFGCHIP0_EDMA30TC1DBS(n)		(n << 2)
++#define CFGCHIP0_EDMA30TC1DBS_MASK		CFGCHIP0_EDMA30TC1DBS(0x3)
++#define CFGCHIP0_EDMA30TC1DBS_16		CFGCHIP0_EDMA30TC1DBS(0x0)
++#define CFGCHIP0_EDMA30TC1DBS_32		CFGCHIP0_EDMA30TC1DBS(0x1)
++#define CFGCHIP0_EDMA30TC1DBS_64		CFGCHIP0_EDMA30TC1DBS(0x2)
++#define CFGCHIP0_EDMA30TC0DBS(n)		(n << 0)
++#define CFGCHIP0_EDMA30TC0DBS_MASK		CFGCHIP0_EDMA30TC0DBS(0x3)
++#define CFGCHIP0_EDMA30TC0DBS_16		CFGCHIP0_EDMA30TC0DBS(0x0)
++#define CFGCHIP0_EDMA30TC0DBS_32		CFGCHIP0_EDMA30TC0DBS(0x1)
++#define CFGCHIP0_EDMA30TC0DBS_64		CFGCHIP0_EDMA30TC0DBS(0x2)
++
++/* CFGCHIP1 (eCAP/HPI/EDMA3_1/eHRPWM TBCLK/McASP0 AMUTEIN) register bits */
++#define CFGCHIP1_CAP2SRC(n)			(n << 27)
++#define CFGCHIP1_CAP2SRC_MASK			CFGCHIP1_CAP2SRC(0x1f)
++#define CFGCHIP1_CAP2SRC_ECAP_PIN		CFGCHIP1_CAP2SRC(0x0)
++#define CFGCHIP1_CAP2SRC_MCASP0_TX		CFGCHIP1_CAP2SRC(0x1)
++#define CFGCHIP1_CAP2SRC_MCASP0_RX		CFGCHIP1_CAP2SRC(0x2)
++#define CFGCHIP1_CAP2SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0x7)
++#define CFGCHIP1_CAP2SRC_EMAC_C0_RX		CFGCHIP1_CAP2SRC(0x8)
++#define CFGCHIP1_CAP2SRC_EMAC_C0_TX		CFGCHIP1_CAP2SRC(0x9)
++#define CFGCHIP1_CAP2SRC_EMAC_C0_MISC		CFGCHIP1_CAP2SRC(0xa)
++#define CFGCHIP1_CAP2SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0xb)
++#define CFGCHIP1_CAP2SRC_EMAC_C1_RX		CFGCHIP1_CAP2SRC(0xc)
++#define CFGCHIP1_CAP2SRC_EMAC_C1_TX		CFGCHIP1_CAP2SRC(0xd)
++#define CFGCHIP1_CAP2SRC_EMAC_C1_MISC		CFGCHIP1_CAP2SRC(0xe)
++#define CFGCHIP1_CAP2SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0xf)
++#define CFGCHIP1_CAP2SRC_EMAC_C2_RX		CFGCHIP1_CAP2SRC(0x10)
++#define CFGCHIP1_CAP2SRC_EMAC_C2_TX		CFGCHIP1_CAP2SRC(0x11)
++#define CFGCHIP1_CAP2SRC_EMAC_C2_MISC		CFGCHIP1_CAP2SRC(0x12)
++#define CFGCHIP1_CAP1SRC(n)			(n << 22)
++#define CFGCHIP1_CAP1SRC_MASK			CFGCHIP1_CAP1SRC(0x1f)
++#define CFGCHIP1_CAP1SRC_ECAP_PIN		CFGCHIP1_CAP1SRC(0x0)
++#define CFGCHIP1_CAP1SRC_MCASP0_TX		CFGCHIP1_CAP1SRC(0x1)
++#define CFGCHIP1_CAP1SRC_MCASP0_RX		CFGCHIP1_CAP1SRC(0x2)
++#define CFGCHIP1_CAP1SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0x7)
++#define CFGCHIP1_CAP1SRC_EMAC_C0_RX		CFGCHIP1_CAP1SRC(0x8)
++#define CFGCHIP1_CAP1SRC_EMAC_C0_TX		CFGCHIP1_CAP1SRC(0x9)
++#define CFGCHIP1_CAP1SRC_EMAC_C0_MISC		CFGCHIP1_CAP1SRC(0xa)
++#define CFGCHIP1_CAP1SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0xb)
++#define CFGCHIP1_CAP1SRC_EMAC_C1_RX		CFGCHIP1_CAP1SRC(0xc)
++#define CFGCHIP1_CAP1SRC_EMAC_C1_TX		CFGCHIP1_CAP1SRC(0xd)
++#define CFGCHIP1_CAP1SRC_EMAC_C1_MISC		CFGCHIP1_CAP1SRC(0xe)
++#define CFGCHIP1_CAP1SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0xf)
++#define CFGCHIP1_CAP1SRC_EMAC_C2_RX		CFGCHIP1_CAP1SRC(0x10)
++#define CFGCHIP1_CAP1SRC_EMAC_C2_TX		CFGCHIP1_CAP1SRC(0x11)
++#define CFGCHIP1_CAP1SRC_EMAC_C2_MISC		CFGCHIP1_CAP1SRC(0x12)
++#define CFGCHIP1_CAP0SRC(n)			(n << 17)
++#define CFGCHIP1_CAP0SRC_MASK			CFGCHIP1_CAP0SRC(0x1f)
++#define CFGCHIP1_CAP0SRC_ECAP_PIN		CFGCHIP1_CAP0SRC(0x0)
++#define CFGCHIP1_CAP0SRC_MCASP0_TX		CFGCHIP1_CAP0SRC(0x1)
++#define CFGCHIP1_CAP0SRC_MCASP0_RX		CFGCHIP1_CAP0SRC(0x2)
++#define CFGCHIP1_CAP0SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0x7)
++#define CFGCHIP1_CAP0SRC_EMAC_C0_RX		CFGCHIP1_CAP0SRC(0x8)
++#define CFGCHIP1_CAP0SRC_EMAC_C0_TX		CFGCHIP1_CAP0SRC(0x9)
++#define CFGCHIP1_CAP0SRC_EMAC_C0_MISC		CFGCHIP1_CAP0SRC(0xa)
++#define CFGCHIP1_CAP0SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0xb)
++#define CFGCHIP1_CAP0SRC_EMAC_C1_RX		CFGCHIP1_CAP0SRC(0xc)
++#define CFGCHIP1_CAP0SRC_EMAC_C1_TX		CFGCHIP1_CAP0SRC(0xd)
++#define CFGCHIP1_CAP0SRC_EMAC_C1_MISC		CFGCHIP1_CAP0SRC(0xe)
++#define CFGCHIP1_CAP0SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0xf)
++#define CFGCHIP1_CAP0SRC_EMAC_C2_RX		CFGCHIP1_CAP0SRC(0x10)
++#define CFGCHIP1_CAP0SRC_EMAC_C2_TX		CFGCHIP1_CAP0SRC(0x11)
++#define CFGCHIP1_CAP0SRC_EMAC_C2_MISC		CFGCHIP1_CAP0SRC(0x12)
++#define CFGCHIP1_HPIBYTEAD			BIT(16)
++#define CFGCHIP1_HPIENA				BIT(15)
++#define CFGCHIP0_EDMA31TC0DBS(n)		(n << 13)
++#define CFGCHIP0_EDMA31TC0DBS_MASK		CFGCHIP0_EDMA31TC0DBS(0x3)
++#define CFGCHIP0_EDMA31TC0DBS_16		CFGCHIP0_EDMA31TC0DBS(0x0)
++#define CFGCHIP0_EDMA31TC0DBS_32		CFGCHIP0_EDMA31TC0DBS(0x1)
++#define CFGCHIP0_EDMA31TC0DBS_64		CFGCHIP0_EDMA31TC0DBS(0x2)
++#define CFGCHIP1_TBCLKSYNC			BIT(12)
++#define CFGCHIP1_AMUTESEL0(n)			(n << 0)
++#define CFGCHIP1_AMUTESEL0_MASK			CFGCHIP1_AMUTESEL0(0xf)
++#define CFGCHIP1_AMUTESEL0_LOW			CFGCHIP1_AMUTESEL0(0x0)
++#define CFGCHIP1_AMUTESEL0_BANK_0		CFGCHIP1_AMUTESEL0(0x1)
++#define CFGCHIP1_AMUTESEL0_BANK_1		CFGCHIP1_AMUTESEL0(0x2)
++#define CFGCHIP1_AMUTESEL0_BANK_2		CFGCHIP1_AMUTESEL0(0x3)
++#define CFGCHIP1_AMUTESEL0_BANK_3		CFGCHIP1_AMUTESEL0(0x4)
++#define CFGCHIP1_AMUTESEL0_BANK_4		CFGCHIP1_AMUTESEL0(0x5)
++#define CFGCHIP1_AMUTESEL0_BANK_5		CFGCHIP1_AMUTESEL0(0x6)
++#define CFGCHIP1_AMUTESEL0_BANK_6		CFGCHIP1_AMUTESEL0(0x7)
++#define CFGCHIP1_AMUTESEL0_BANK_7		CFGCHIP1_AMUTESEL0(0x8)
++
++/* CFGCHIP2 (USB PHY) register bits */
++#define CFGCHIP2_PHYCLKGD			BIT(17)
++#define CFGCHIP2_VBUSSENSE			BIT(16)
++#define CFGCHIP2_RESET				BIT(15)
++#define CFGCHIP2_OTGMODE(n)			(n << 13)
++#define CFGCHIP2_OTGMODE_MASK			CFGCHIP2_OTGMODE(0x3)
++#define CFGCHIP2_OTGMODE_NO_OVERRIDE		CFGCHIP2_OTGMODE(0x0)
++#define CFGCHIP2_OTGMODE_FORCE_HOST		CFGCHIP2_OTGMODE(0x1)
++#define CFGCHIP2_OTGMODE_FORCE_DEVICE		CFGCHIP2_OTGMODE(0x2)
++#define CFGCHIP2_OTGMODE_FORCE_HOST_VBUS_LOW	CFGCHIP2_OTGMODE(0x3)
++#define CFGCHIP2_USB1PHYCLKMUX			BIT(12)
++#define CFGCHIP2_USB2PHYCLKMUX			BIT(11)
++#define CFGCHIP2_PHYPWRDN			BIT(10)
++#define CFGCHIP2_OTGPWRDN			BIT(9)
++#define CFGCHIP2_DATPOL				BIT(8)
++#define CFGCHIP2_USB1SUSPENDM			BIT(7)
++#define CFGCHIP2_PHY_PLLON			BIT(6)
++#define CFGCHIP2_SESENDEN			BIT(5)
++#define CFGCHIP2_VBDTCTEN			BIT(4)
++#define CFGCHIP2_REFFREQ(n)			(n << 0)
++#define CFGCHIP2_REFFREQ_MASK			CFGCHIP2_REFFREQ(0xf)
++#define CFGCHIP2_REFFREQ_12MHZ			CFGCHIP2_REFFREQ(0x1)
++#define CFGCHIP2_REFFREQ_24MHZ			CFGCHIP2_REFFREQ(0x2)
++#define CFGCHIP2_REFFREQ_48MHZ			CFGCHIP2_REFFREQ(0x3)
++#define CFGCHIP2_REFFREQ_19_2MHZ		CFGCHIP2_REFFREQ(0x4)
++#define CFGCHIP2_REFFREQ_38_4MHZ		CFGCHIP2_REFFREQ(0x5)
++#define CFGCHIP2_REFFREQ_13MHZ			CFGCHIP2_REFFREQ(0x6)
++#define CFGCHIP2_REFFREQ_26MHZ			CFGCHIP2_REFFREQ(0x7)
++#define CFGCHIP2_REFFREQ_20MHZ			CFGCHIP2_REFFREQ(0x8)
++#define CFGCHIP2_REFFREQ_40MHZ			CFGCHIP2_REFFREQ(0x9)
++
++/* CFGCHIP3 (EMAC/uPP/PLL1/ASYNC3/PRU/DIV4.5/EMIFA) register bits */
++#define CFGCHIP3_RMII_SEL			BIT(8)
++#define CFGCHIP3_UPP_TX_CLKSRC			BIT(6)
++#define CFGCHIP3_PLL1_MASTER_LOCK		BIT(5)
++#define CFGCHIP3_ASYNC3_CLKSRC			BIT(4)
++#define CFGCHIP3_PRUEVTSEL			BIT(3)
++#define CFGCHIP3_DIV45PENA			BIT(2)
++#define CFGCHIP3_EMA_CLKSRC			BIT(1)
++
++/* CFGCHIP4 (McASP0 AMUNTEIN) register bits */
++#define CFGCHIP4_AMUTECLR0			BIT(0)
++
++#endif /* __LINUX_MFD_DA8XX_CFGCHIP_H */
+diff --git a/include/linux/platform_data/usb-davinci.h b/include/linux/platform_data/usb-davinci.h
+index e0bc4ab..629b703 100644
+--- a/include/linux/platform_data/usb-davinci.h
++++ b/include/linux/platform_data/usb-davinci.h
+@@ -11,28 +11,6 @@
+ #ifndef __ASM_ARCH_USB_H
+ #define __ASM_ARCH_USB_H
  
--	phy_off();
-+	phy_power_off(glue->phy);
-+	phy_exit(glue->phy);
-+	clk_disable_unprepare(glue->clk);
+-/* DA8xx CFGCHIP2 (USB 2.0 PHY Control) register bits */
+-#define CFGCHIP2_PHYCLKGD	(1 << 17)
+-#define CFGCHIP2_VBUSSENSE	(1 << 16)
+-#define CFGCHIP2_RESET		(1 << 15)
+-#define CFGCHIP2_OTGMODE	(3 << 13)
+-#define CFGCHIP2_NO_OVERRIDE	(0 << 13)
+-#define CFGCHIP2_FORCE_HOST	(1 << 13)
+-#define CFGCHIP2_FORCE_DEVICE 	(2 << 13)
+-#define CFGCHIP2_FORCE_HOST_VBUS_LOW (3 << 13)
+-#define CFGCHIP2_USB1PHYCLKMUX	(1 << 12)
+-#define CFGCHIP2_USB2PHYCLKMUX	(1 << 11)
+-#define CFGCHIP2_PHYPWRDN	(1 << 10)
+-#define CFGCHIP2_OTGPWRDN	(1 << 9)
+-#define CFGCHIP2_DATPOL 	(1 << 8)
+-#define CFGCHIP2_USB1SUSPENDM	(1 << 7)
+-#define CFGCHIP2_PHY_PLLON	(1 << 6)	/* override PLL suspend */
+-#define CFGCHIP2_SESENDEN	(1 << 5)	/* Vsess_end comparator */
+-#define CFGCHIP2_VBDTCTEN	(1 << 4)	/* Vbus comparator */
+-#define CFGCHIP2_REFFREQ	(0xf << 0)
+-#define CFGCHIP2_REFFREQ_12MHZ	(1 << 0)
+-#define CFGCHIP2_REFFREQ_24MHZ	(2 << 0)
+-#define CFGCHIP2_REFFREQ_48MHZ	(3 << 0)
  
- 	usb_put_phy(musb->xceiv);
+ struct	da8xx_ohci_root_hub;
  
-@@ -504,10 +480,10 @@ static int da8xx_probe(struct platform_device *pdev)
- 		return PTR_ERR(clk);
- 	}
- 
--	ret = clk_enable(clk);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to enable clock\n");
--		goto err4;
-+	glue->phy = devm_phy_get(&pdev->dev, "usbphy");
-+	if (IS_ERR(glue->phy)) {
-+		dev_err(&pdev->dev, "failed to get phy\n");
-+		return PTR_ERR(glue->phy);
- 	}
- 
- 	glue->dev			= &pdev->dev;
-@@ -515,10 +491,10 @@ static int da8xx_probe(struct platform_device *pdev)
- 
- 	pdata->platform_ops		= &da8xx_ops;
- 
--	glue->phy = usb_phy_generic_register();
--	if (IS_ERR(glue->phy)) {
--		ret = PTR_ERR(glue->phy);
--		goto err5;
-+	glue->usb_phy = usb_phy_generic_register();
-+	if (IS_ERR(glue->usb_phy)) {
-+		dev_err(&pdev->dev, "failed to register usb_phy\n");
-+		return PTR_ERR(glue->usb_phy);
- 	}
- 	platform_set_drvdata(pdev, glue);
- 
-@@ -544,22 +520,12 @@ static int da8xx_probe(struct platform_device *pdev)
- 
- 	glue->musb = musb = platform_device_register_full(&pinfo);
- 	if (IS_ERR(musb)) {
--		ret = PTR_ERR(musb);
- 		dev_err(&pdev->dev, "failed to register musb device: %d\n", ret);
--		goto err6;
-+		usb_phy_generic_unregister(glue->usb_phy);
-+		return PTR_ERR(musb);
- 	}
- 
- 	return 0;
--
--err6:
--	usb_phy_generic_unregister(glue->phy);
--
--err5:
--	clk_disable(clk);
--
--err4:
--
--	return ret;
- }
- 
- static int da8xx_remove(struct platform_device *pdev)
-@@ -567,8 +533,7 @@ static int da8xx_remove(struct platform_device *pdev)
- 	struct da8xx_glue		*glue = platform_get_drvdata(pdev);
- 
- 	platform_device_unregister(glue->musb);
--	usb_phy_generic_unregister(glue->phy);
--	clk_disable(glue->clk);
-+	usb_phy_generic_unregister(glue->usb_phy);
- 
- 	return 0;
- }
 -- 
 1.9.1
