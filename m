@@ -1,96 +1,63 @@
 From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v7 0/9] Add clock support for Mediatek MT2701
-Date: Thu, 14 Apr 2016 16:11:45 +0800
-Message-ID: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
+Subject: [PATCH v6 0/4] Mediatek MT2701 SCPSYS power domain support
+Date: Thu, 14 Apr 2016 16:16:55 +0800
+Message-ID: <1460621819-695-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This series is based on 4.6-rc1, add clock and reset controller support
+This series is based on v4.6-rc1 and adds scpsys power domain support
 for Mediatek MT2701.
 
-This series also refined makefile and Kconfig to support configurable
-multiple SoC clock support.
+To share the code between MT2701 and MT8173, this patchset also refined
+original mtk-scpsys.c to separate common codes and platform codes, so
+that mtk-scpsys.c can support new SoCs more easily.
 
-changes since v6:
-- Rebase to v4.6-rc1.
-- Register subsystem clocks in probe() instead of CLK_OF_DECLARE().
-- Add clocks that referred by subsystem clocks.
-- Fix clk_data size of apmixedsys.
-- Add config options for each subsystem clock provider.
+MT8173 and MT2701 scpsys init level are now subsys_init. Please refer to [1]
+to see discussion details.
 
 changes since v5:
-- Rebase to v4.5-rc1 and [1].
-- Enable critical clocks for MT2701
-- Refine dt-binding documents, add reset controller support for hifsys.
+- Rebase to v4.6-rc1.
+- Add dependent clocks for MFG, ISP, ETH and HIF power domains.
+- Add "ethif" as a dependent clock in scpsys dt-binding document.
 
 changes since v4:
-- Rebase to v4.5-rc1.
-- Remove CLK_SET_RATE_PARENT from divider flags.
-- Add img_jpgdec_smi clock.
-- Move clk/mediatek/Kconfig into menu section in clk/Kconfig.
+- Rebase to v4.5-rc4.
+- Remove mtk-scpsys.h and Merge its code into mtk-scpsys.c.
+- Add names for every controlling registers and bits.
+- Include dt-bindings headers at the beginning of mtk-scpsys.c.
+- Sort compatible string in dt-binding documents.
 
 changes since v3:
-- Change the parent of mm_mdp_bls_26m from clk26m to pwm_sel.
+- Implement MT8173 and MT2701 scpsys drivers in a signle file.
+- Remove naming of registers that can't be shared among SoCs.
 
 changes since v2:
-- Fix ethsys definition.
-- Replace read-modify-write with regmap_update_bits() in clock operations.
-- Move mt2701-resets.h to include/dt-bindings/reset/.
-- Add hifsys reset patch from John Crispin.
+- Rebase to mbgg/linux-mediatek v4.4-next/soc [1].
+- Remove MTK_SCPSYS_MT8173 and MTK_SCPSYS_MT2701.
+- Modify scpsys dt-binding document to support MT2701.
 
 changes since v1:
-- Document MT2701 compatible strings.
+- Make MTK_SCPSYS in Kconfig invisible from users.
+- Add comments for changing scpsys init level to subsys_init.
 
-[1] https://patchwork.kernel.org/patch/8147901/
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2015-December/003416.html
 
-James Liao (5):
-  clk: mediatek: Refine the makefile to support multiple clock drivers
-  dt-bindings: ARM: Mediatek: Document bindings for MT2701
-  clk: mediatek: Enable critical clocks for MT2701
-  clk: mediatek: Add config options for MT2701 subsystem clocks
-  arm: dts: mt2701: Add clock controller device nodes
+James Liao (2):
+  soc: mediatek: Refine scpsys to support multiple platform
+  soc: mediatek: Init MT8173 scpsys driver earlier
 
-Shunli Wang (4):
-  clk: mediatek: Add dt-bindings for MT2701 clocks
-  clk: mediatek: Add MT2701 clock support
-  reset: mediatek: Add MT2701 reset controller dt-binding file
-  reset: mediatek: Add MT2701 reset driver
+Shunli Wang (2):
+  soc: mediatek: Add MT2701 power dt-bindings
+  soc: mediatek: Add MT2701 scpsys driver
 
- .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    3 +-
- .../bindings/arm/mediatek/mediatek,bdpsys.txt      |   22 +
- .../bindings/arm/mediatek/mediatek,ethsys.txt      |   22 +
- .../bindings/arm/mediatek/mediatek,hifsys.txt      |   24 +
- .../bindings/arm/mediatek/mediatek,imgsys.txt      |    3 +-
- .../bindings/arm/mediatek/mediatek,infracfg.txt    |    3 +-
- .../bindings/arm/mediatek/mediatek,mmsys.txt       |    3 +-
- .../bindings/arm/mediatek/mediatek,pericfg.txt     |    3 +-
- .../bindings/arm/mediatek/mediatek,topckgen.txt    |    3 +-
- .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    3 +-
- arch/arm/boot/dts/mt2701.dtsi                      |   42 +
- drivers/clk/Kconfig                                |    1 +
- drivers/clk/mediatek/Kconfig                       |   73 +
- drivers/clk/mediatek/Makefile                      |    7 +-
- drivers/clk/mediatek/clk-gate.c                    |   52 +
- drivers/clk/mediatek/clk-gate.h                    |    2 +
- drivers/clk/mediatek/clk-mt2701.c                  | 1417 ++++++++++++++++++++
- drivers/clk/mediatek/clk-mtk.c                     |   25 +
- drivers/clk/mediatek/clk-mtk.h                     |   34 +-
- include/dt-bindings/clock/mt2701-clk.h             |  486 +++++++
- include/dt-bindings/reset/mt2701-resets.h          |   83 ++
- 21 files changed, 2298 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
- create mode 100644 drivers/clk/mediatek/Kconfig
- create mode 100644 drivers/clk/mediatek/clk-mt2701.c
- create mode 100644 include/dt-bindings/clock/mt2701-clk.h
- create mode 100644 include/dt-bindings/reset/mt2701-resets.h
-
---
-1.9.1
-
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    |  12 +-
+ drivers/soc/mediatek/Kconfig                       |   2 +-
+ drivers/soc/mediatek/mtk-scpsys.c                  | 497 +++++++++++++++------
+ include/dt-bindings/power/mt2701-power.h           |  27 ++
+ 4 files changed, 387 insertions(+), 151 deletions(-)
+ create mode 100644 include/dt-bindings/power/mt2701-power.h
