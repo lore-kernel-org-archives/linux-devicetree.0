@@ -1,64 +1,162 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 0/5] Add XOR engine support to Armada 3700 SoC (ARM64)
-Date: Thu, 14 Apr 2016 18:53:33 +0200
-Message-ID: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 3/5] dmaengine: mv_xor: add support for Armada 3700 SoC
+Date: Thu, 14 Apr 2016 18:53:36 +0200
+Message-ID: <1460652818-14647-4-git-send-email-gregory.clement@free-electrons.com>
+References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Marcin Wojtas <mw@semihalf.com>
 
-This series adds the support of the Marvell XOR engine to the Armada
-3700 SoC. As this SoC is an ARM64 one, then the code has been fixed to
-support the 64 bits platform.
+Armada 3700 SoC comprise a single XOR engine compliant with the ones used
+in older Marvell SoC's like Armada XP or 38x. The only thing that needs
+modification is the Mbus configuration, which has to be done on two
+levels: global and in device. The first one is inherited from the
+bootlader.  The latter can be opened in a default way, leaving
+arbitration to the bus controller. Hence filled mbus_dram_target_info
+structure is not needed.
 
-The initialization for the Armada 3700 is different from the other
-SoCs, so in order to support it, a new way of handling the different
-family have been added.
+Patch "dmaengine: mv_xor: optimize performance by using a subset
+of the XOR channels" introduced limitation for using XOR engines and
+channels vs number of available CPU's. Those contstraints do not however
+fit Armada 3700 architecture with two possible CPU's and single,
+dual-channel engine. Hence in this commit an adjustment for setting
+maximum available channels is added.
 
-Once the dmaengine part will be approved, I will apply the dts part
-in the mvebu/dt64 tree.
+This patch enables XOR access to DRAM by opening default window to 4GB
+space with specific attribute.
 
-In this third series I took into account the remark from Jason Cooper
-about adding the COMPILE_TEST dependency.
+Signed-off-by: Marcin Wojtas <mw@semihalf.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/dma/mv-xor.txt |  5 ++-
+ drivers/dma/mv_xor.c                             | 56 +++++++++++++++++++++---
+ 2 files changed, 53 insertions(+), 8 deletions(-)
 
-Thanks,
-
-Gregory
-
-Changelog:
-v2 -> v3:
- - Add COMPILE_TEST dependency
-
-v1 ->v2:
- - Fix typo in commit log of patch 3
- - Reformatting to 1 compatible string per line in
-   Documentation/devicetree/bindings/dma/mv-xor.txt
- - Added Acked-by from Rob in patch 3
-
-Gregory CLEMENT (3):
-  dmaengine: mv_xor: make the code 64 bits compliant
-  dmaengine: mv_xor: use SoC type instead of directly the operation mode
-  dmaengine: mv_xor: Allow selecting mv_xor for mvebu only compatible
-    SoC
-
-Marcin Wojtas (2):
-  dmaengine: mv_xor: add support for Armada 3700 SoC
-  arm64: dts: marvell: add XOR node for Armada 3700 SoC
-
- Documentation/devicetree/bindings/dma/mv-xor.txt |  5 +-
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi     | 13 ++++
- drivers/dma/Kconfig                              |  2 +-
- drivers/dma/mv_xor.c                             | 98 +++++++++++++++++++-----
- drivers/dma/mv_xor.h                             |  1 +
- 5 files changed, 97 insertions(+), 22 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/dma/mv-xor.txt b/Documentation/devicetree/bindings/dma/mv-xor.txt
+index 276ef815ef32..c075f5988135 100644
+--- a/Documentation/devicetree/bindings/dma/mv-xor.txt
++++ b/Documentation/devicetree/bindings/dma/mv-xor.txt
+@@ -1,7 +1,10 @@
+ * Marvell XOR engines
+ 
+ Required properties:
+-- compatible: Should be "marvell,orion-xor" or "marvell,armada-380-xor"
++- compatible: Should be one of the following:
++  - "marvell,orion-xor"
++  - "marvell,armada-380-xor"
++  - "marvell,armada-3700-xor".
+ - reg: Should contain registers location and length (two sets)
+     the first set is the low registers, the second set the high
+     registers for the XOR engine.
+diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
+index 6d012a56b97b..25d1dadcddd1 100644
+--- a/drivers/dma/mv_xor.c
++++ b/drivers/dma/mv_xor.c
+@@ -34,6 +34,7 @@
+ enum mv_xor_type {
+ 	XOR_ORION,
+ 	XOR_ARMADA_38X,
++	XOR_ARMADA_37XX,
+ };
+ 
+ enum mv_xor_mode {
+@@ -1093,6 +1094,33 @@ mv_xor_conf_mbus_windows(struct mv_xor_device *xordev,
+ 	writel(0, base + WINDOW_OVERRIDE_CTRL(1));
+ }
+ 
++static void
++mv_xor_conf_mbus_windows_a3700(struct mv_xor_device *xordev)
++{
++	void __iomem *base = xordev->xor_high_base;
++	u32 win_enable = 0;
++	int i;
++
++	for (i = 0; i < 8; i++) {
++		writel(0, base + WINDOW_BASE(i));
++		writel(0, base + WINDOW_SIZE(i));
++		if (i < 4)
++			writel(0, base + WINDOW_REMAP_HIGH(i));
++	}
++	/*
++	 * For Armada3700 open default 4GB Mbus window. The dram
++	 * related configuration are done at AXIS level.
++	 */
++	writel(0xffff0000, base + WINDOW_SIZE(0));
++	win_enable |= 1;
++	win_enable |= 3 << 16;
++
++	writel(win_enable, base + WINDOW_BAR_ENABLE(0));
++	writel(win_enable, base + WINDOW_BAR_ENABLE(1));
++	writel(0, base + WINDOW_OVERRIDE_CTRL(0));
++	writel(0, base + WINDOW_OVERRIDE_CTRL(1));
++}
++
+ /*
+  * Since this XOR driver is basically used only for RAID5, we don't
+  * need to care about synchronizing ->suspend with DMA activity,
+@@ -1137,6 +1165,11 @@ static int mv_xor_resume(struct platform_device *dev)
+ 			       XOR_INTR_MASK(mv_chan));
+ 	}
+ 
++	if (xordev->xor_type == XOR_ARMADA_37XX) {
++		mv_xor_conf_mbus_windows_a3700(xordev);
++		return 0;
++	}
++
+ 	dram = mv_mbus_dram_info();
+ 	if (dram)
+ 		mv_xor_conf_mbus_windows(xordev, dram);
+@@ -1147,6 +1180,7 @@ static int mv_xor_resume(struct platform_device *dev)
+ static const struct of_device_id mv_xor_dt_ids[] = {
+ 	{ .compatible = "marvell,orion-xor", .data = (void *)XOR_ORION },
+ 	{ .compatible = "marvell,armada-380-xor", .data = (void *)XOR_ARMADA_38X },
++	{ .compatible = "marvell,armada-3700-xor", .data = (void *)XOR_ARMADA_37XX },
+ 	{},
+ };
+ 
+@@ -1204,9 +1238,13 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 	/*
+ 	 * (Re-)program MBUS remapping windows if we are asked to.
+ 	 */
+-	dram = mv_mbus_dram_info();
+-	if (dram)
+-		mv_xor_conf_mbus_windows(xordev, dram);
++	if (xordev->xor_type == XOR_ARMADA_37XX) {
++		mv_xor_conf_mbus_windows_a3700(xordev);
++	} else {
++		dram = mv_mbus_dram_info();
++		if (dram)
++			mv_xor_conf_mbus_windows(xordev, dram);
++	}
+ 
+ 	/* Not all platforms can gate the clock, so it is not
+ 	 * an error if the clock does not exists.
+@@ -1220,12 +1258,16 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 	 * order for async_tx to perform well. So we limit the number
+ 	 * of engines and channels so that we take into account this
+ 	 * constraint. Note that we also want to use channels from
+-	 * separate engines when possible.
++	 * separate engines when possible.  For dual-CPU Armada 3700
++	 * SoC with single XOR engine allow using its both channels.
+ 	 */
+ 	max_engines = num_present_cpus();
+-	max_channels = min_t(unsigned int,
+-			     MV_XOR_MAX_CHANNELS,
+-			     DIV_ROUND_UP(num_present_cpus(), 2));
++	if (xordev->xor_type == XOR_ARMADA_37XX)
++		max_channels =	num_present_cpus();
++	else
++		max_channels = min_t(unsigned int,
++				     MV_XOR_MAX_CHANNELS,
++				     DIV_ROUND_UP(num_present_cpus(), 2));
+ 
+ 	if (mv_xor_engine_count >= max_engines)
+ 		return 0;
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
