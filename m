@@ -1,80 +1,161 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/5] serial: imx: Use generic uart-has-rtscts DT property
-Date: Thu, 14 Apr 2016 12:22:59 -0500
-Message-ID: <20160414172259.GA16348@rob-hp-laptop>
-References: <1460636003-3011-1-git-send-email-geert+renesas@glider.be>
- <1460636003-3011-3-git-send-email-geert+renesas@glider.be>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 02/13] clk: sunxi: add ahb1 clock for A83T
+Date: Thu, 14 Apr 2016 19:28:38 +0200
+Message-ID: <20160414172838.GS4005@lukather>
+References: <1458144276-31108-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1458144276-31108-3-git-send-email-vishnupatekar0510@gmail.com>
+ <20160317104042.GK30977@lukather>
+ <CAEzqOZvoMrvf-3=Tfi7MK9ZTm1EtJre5gsBdz=2wZ+D+hj056A@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z+AhoeLdLI498vdY"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUVGX64AKGQEY5OSKXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1460636003-3011-3-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, Qipan Li <Qipan.Li@csr.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAEzqOZvoMrvf-3=Tfi7MK9ZTm1EtJre5gsBdz=2wZ+D+hj056A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Reinde
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 02:13:20PM +0200, Geert Uytterhoeven wrote:
-> Convert the Freescale IMX UART driver from using the vendor-specific
-> "fsl,uart-has-rtscts" to the generic "uart-has-rtscts" DT property, as
-> documented by the Generic Serial DT Bindings.
-> 
-> The old vendor-specific property is still recognized by the driver for
-> backwards compatibility, but deprecated.
+--z+AhoeLdLI498vdY
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-You should update the dts files as well.
+On Mon, Apr 04, 2016 at 11:07:29AM +0800, Vishnu Patekar wrote:
+> Hello Maxime,
+> 
+> On Thu, Mar 17, 2016 at 6:40 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Thu, Mar 17, 2016 at 12:04:25AM +0800, Vishnu Patekar wrote:
+> >> AHB1 on A83T is similar to ahb1 on A31, except parents are different.
+> >> clock index 0b1x is PLL6.
+> >>
+> >> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+> >>  drivers/clk/sunxi/clk-sunxi.c                     | 76 +++++++++++++++++++++++
+> >>  2 files changed, 77 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> >> index 834436f..cba9fe55 100644
+> >> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> >> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> >> @@ -30,6 +30,7 @@ Required properties:
+> >>       "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
+> >>       "allwinner,sun9i-a80-cpus-clk" - for the CPUS on A80
+> >>       "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
+> >> +     "allwinner,sun8i-a83t-ahb1-clk" - for the AHB1 clock on A83T
+> >>       "allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
+> >>       "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
+> >>       "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+> >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> >> index 91de0a0..a7aab65 100644
+> >> --- a/drivers/clk/sunxi/clk-sunxi.c
+> >> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> >> @@ -344,6 +344,67 @@ static void sun6i_ahb1_recalc(struct factors_request *req)
+> >>       req->rate >>= req->p;
+> >>  }
+> >>
+> >> +#define SUN8I_A83T_AHB1_PARENT_PLL6  2
+> >> +/**
+> >> + * sun8i_a83t_get_ahb_factors() - calculates m, p factors for AHB
+> >> + * AHB rate is calculated as follows
+> >> + * rate = parent_rate >> p
+> >> + *
+> >> + * if parent is pll6, then
+> >> + * parent_rate = pll6 rate / (m + 1)
+> >> + */
+> >> +
+> >> +static void sun8i_a83t_get_ahb1_factors(struct factors_request *req)
+> >> +{
+> >> +     u8 div, calcp, calcm = 1;
+> >> +
+> >> +     /*
+> >> +      * clock can only divide, so we will never be able to achieve
+> >> +      * frequencies higher than the parent frequency
+> >> +      */
+> >> +     if (req->parent_rate && req->rate > req->parent_rate)
+> >> +             req->rate = req->parent_rate;
+> >> +
+> >> +     div = DIV_ROUND_UP(req->parent_rate, req->rate);
+> >> +
+> >> +     /* calculate pre-divider if parent is pll6 */
+> >> +     if (req->parent_index >= SUN8I_A83T_AHB1_PARENT_PLL6) {
+> >> +             if (div < 4)
+> >> +                     calcp = 0;
+> >> +             else if (div / 2 < 4)
+> >> +                     calcp = 1;
+> >> +             else if (div / 4 < 4)
+> >> +                     calcp = 2;
+> >> +             else
+> >> +                     calcp = 3;
+> >> +
+> >> +             calcm = DIV_ROUND_UP(div, 1 << calcp);
+> >> +     } else {
+> >> +             calcp = __roundup_pow_of_two(div);
+> >> +             calcp = calcp > 3 ? 3 : calcp;
+> >> +     }
+> >> +
+> >> +     req->rate = (req->parent_rate / calcm) >> calcp;
+> >> +     req->p = calcp;
+> >> +     req->m = calcm - 1;
+> >> +}
+> >> +
+> >> +/**
+> >> +* sun8i_a83t_ahb1_recalc() - calculates AHB clock rate from m, p factors and
+> >> +*                     parent index
+> >> +*/
+> >> +static void sun8i_a83t_ahb1_recalc(struct factors_request *req)
+> >> +{
+> >> +     req->rate = req->parent_rate;
+> >> +
+> >> +/* apply pre-divider first if parent is pll6 */
+> >
+> > The comment indentation is wrong
+> >
+> >> +     if (req->parent_index >= SUN6I_AHB1_PARENT_PLL6)
+> >
+> > And this is not the right define you're using.
+> >
+> > I still believe that duplicating the same logic just because of
+> > different dividers is not the way to go.
+> >
+> > You could solve that easily by adding a table for the muxes, and
+> > associate it with parents and dividers, that you could store in
+> > clk_factors.
+> 
+> I've similar solution (please ignore a83 specific functions those will
+> be common for a31 and a83t).
+> https://github.com/vishnupatekar/linux/commit/f7de5b48d886a672b1f6db112fbfd5d2c9849afa
+> 
+> is it aligned to what you're saying?
 
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 4 ++--
->  drivers/tty/serial/imx.c                                  | 3 ++-
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> index ed94c217c98d18a6..1e82802d8e322db5 100644
-> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> @@ -6,7 +6,7 @@ Required properties:
->  - interrupts : Should contain uart interrupt
->  
->  Optional properties:
-> -- fsl,uart-has-rtscts : Indicate the uart has rts and cts
-> +- uart-has-rtscts : Indicate the uart has rts and cts
->  - fsl,irda-mode : Indicate the uart supports irda mode
->  - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
->                    in DCE mode by default.
-> @@ -24,6 +24,6 @@ uart1: serial@73fbc000 {
->  	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
->  	reg = <0x73fbc000 0x4000>;
->  	interrupts = <31>;
-> -	fsl,uart-has-rtscts;
-> +	uart-has-rtscts;
->  	fsl,dte-mode;
->  };
-> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-> index 231e7d5caf6c1845..9fc09d3de1e2428b 100644
-> --- a/drivers/tty/serial/imx.c
-> +++ b/drivers/tty/serial/imx.c
-> @@ -1927,7 +1927,8 @@ static int serial_imx_probe_dt(struct imx_port *sport,
->  	}
->  	sport->port.line = ret;
->  
-> -	if (of_get_property(np, "fsl,uart-has-rtscts", NULL))
-> +	if (of_get_property(np, "uart-has-rtscts", NULL) ||
-> +	    of_get_property(np, "fsl,uart-has-rtscts", NULL) /* deprecated */)
->  		sport->have_rtscts = 1;
->  
->  	if (of_get_property(np, "fsl,dte-mode", NULL))
-> -- 
-> 1.9.1
-> 
+Yep. I'd even go a step further, and allow to have directly the core
+deal with the pre-divider.
+
+I guess in your prediv table you could have the index, and either the
+offset and width of the divider (if it's a variable one), or its fixed
+value.
+
+The generic function would then be able to deal with the rate
+adjustments, and you wouldn't need to be able to have anything related
+to the parent index in the clock specific functions anymore.
+
+Does that make sense?
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--z+AhoeLdLI498vdY--
