@@ -1,54 +1,291 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v4 0/7] da8xx USB PHY (was da8xx USB clocks)
-Date: Thu, 14 Apr 2016 13:35:11 -0500
-Message-ID: <1460658919-4965-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v4 7/7] usb: musb: da8xx: Remove mach code
+Date: Thu, 14 Apr 2016 13:35:18 -0500
+Message-ID: <1460658919-4965-8-git-send-email-david@lechnology.com>
+References: <1460658919-4965-1-git-send-email-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460658919-4965-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, khilman@kernel.org, nsekhar@ti.com, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The "da8xx USB clocks" patch series was growing a bit too big, so on the advice
-of Sekhar Nori, I am splitting it into two parts. This part contains everything
-in drivers/ and the other part will contain everything in arch/arm/mach-davinci.
+Use the new phy-da8xx-usb driver to take the place of the mach code that
+pokes CFGCHIP2 in the da8xx musb glue driver. This unbreaks the driver.
 
-This patch series will apply and build on its own. It just won't work at runtime
-without the corresponding mach-davinci changes to provide clocks, etc.
+Signed-off-by: David Lechner <david@lechnology.com>
+---
 
-This round just contains changes from feedback. See individual patches for
-details.
+v4 changes:
 
-Tested working on LEGO MINDSTORMS EV3 using linux-davinci/master branch.
+* using new phy->ops->get_mode()
 
-David Lechner (7):
-  mfd: da8xx-cfgchip: New header file for CFGCHIP registers.
-  dt-bindings: Add bindings for phy-da8xx-usb
-  phy: Add set_mode callback
-  phy: da8xx-usb: new driver for DA8xx SoC USB PHY
-  usb: ohci-da8xx: Remove code that references mach
-  usb: musb: da8xx: Use devm in probe
-  usb: musb: da8xx: Remove mach code
 
- .../devicetree/bindings/phy/phy-da8xx-usb.txt      |  40 ++++
- drivers/phy/Kconfig                                |  10 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-core.c                             |  15 ++
- drivers/phy/phy-da8xx-usb.c                        | 245 +++++++++++++++++++++
- drivers/usb/host/Kconfig                           |   1 +
- drivers/usb/host/ohci-da8xx.c                      | 102 +++++----
- drivers/usb/musb/Kconfig                           |   2 +-
- drivers/usb/musb/da8xx.c                           | 160 +++++---------
- include/linux/mfd/da8xx-cfgchip.h                  | 153 +++++++++++++
- include/linux/phy/phy.h                            |  15 ++
- include/linux/platform_data/usb-davinci.h          |  22 --
- 12 files changed, 594 insertions(+), 172 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
- create mode 100644 drivers/phy/phy-da8xx-usb.c
- create mode 100644 include/linux/mfd/da8xx-cfgchip.h
+ drivers/usb/musb/Kconfig |   2 +-
+ drivers/usb/musb/da8xx.c | 141 ++++++++++++++++++-----------------------------
+ 2 files changed, 54 insertions(+), 89 deletions(-)
 
+diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+index 886526b..c73221a 100644
+--- a/drivers/usb/musb/Kconfig
++++ b/drivers/usb/musb/Kconfig
+@@ -82,7 +82,7 @@ config USB_MUSB_DA8XX
+ 	tristate "DA8xx/OMAP-L1x"
+ 	depends on ARCH_DAVINCI_DA8XX
+ 	depends on NOP_USB_XCEIV
+-	depends on BROKEN
++	select PHY_DA8XX_USB
+ 
+ config USB_MUSB_TUSB6010
+ 	tristate "TUSB6010"
+diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+index 0c1997c..cea2216 100644
+--- a/drivers/usb/musb/da8xx.c
++++ b/drivers/usb/musb/da8xx.c
+@@ -30,13 +30,11 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
++#include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/usb/usb_phy_generic.h>
+ 
+-#include <mach/da8xx.h>
+-#include <linux/platform_data/usb-davinci.h>
+-
+ #include "musb_core.h"
+ 
+ /*
+@@ -80,61 +78,15 @@
+ 
+ #define DA8XX_MENTOR_CORE_OFFSET 0x400
+ 
+-#define CFGCHIP2	IO_ADDRESS(DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP2_REG)
+-
+ struct da8xx_glue {
+ 	struct device		*dev;
+ 	struct platform_device	*musb;
+-	struct platform_device	*phy;
++	struct platform_device	*usb_phy;
+ 	struct clk		*clk;
++	struct phy		*phy;
+ };
+ 
+ /*
+- * REVISIT (PM): we should be able to keep the PHY in low power mode most
+- * of the time (24 MHz oscillator and PLL off, etc.) by setting POWER.D0
+- * and, when in host mode, autosuspending idle root ports... PHY_PLLON
+- * (overriding SUSPENDM?) then likely needs to stay off.
+- */
+-
+-static inline void phy_on(void)
+-{
+-	u32 cfgchip2 = __raw_readl(CFGCHIP2);
+-
+-	/*
+-	 * Start the on-chip PHY and its PLL.
+-	 */
+-	cfgchip2 &= ~(CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN | CFGCHIP2_OTGPWRDN);
+-	cfgchip2 |= CFGCHIP2_PHY_PLLON;
+-	__raw_writel(cfgchip2, CFGCHIP2);
+-
+-	pr_info("Waiting for USB PHY clock good...\n");
+-	while (!(__raw_readl(CFGCHIP2) & CFGCHIP2_PHYCLKGD))
+-		cpu_relax();
+-}
+-
+-static inline void phy_off(void)
+-{
+-	u32 cfgchip2 = __raw_readl(CFGCHIP2);
+-
+-	/*
+-	 * Ensure that USB 1.1 reference clock is not being sourced from
+-	 * USB 2.0 PHY.  Otherwise do not power down the PHY.
+-	 */
+-	if (!(cfgchip2 & CFGCHIP2_USB1PHYCLKMUX) &&
+-	     (cfgchip2 & CFGCHIP2_USB1SUSPENDM)) {
+-		pr_warning("USB 1.1 clocked from USB 2.0 PHY -- "
+-			   "can't power it down\n");
+-		return;
+-	}
+-
+-	/*
+-	 * Power down the on-chip PHY.
+-	 */
+-	cfgchip2 |= CFGCHIP2_PHYPWRDN | CFGCHIP2_OTGPWRDN;
+-	__raw_writel(cfgchip2, CFGCHIP2);
+-}
+-
+-/*
+  * Because we don't set CTRL.UINT, it's "important" to:
+  *	- not read/write INTRUSB/INTRUSBE (except during
+  *	  initial setup, as a workaround);
+@@ -385,29 +337,29 @@ static irqreturn_t da8xx_musb_interrupt(int irq, void *hci)
+ 
+ static int da8xx_musb_set_mode(struct musb *musb, u8 musb_mode)
+ {
+-	u32 cfgchip2 = __raw_readl(CFGCHIP2);
++	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
++	enum phy_mode phy_mode;
+ 
+-	cfgchip2 &= ~CFGCHIP2_OTGMODE;
+ 	switch (musb_mode) {
+-	case MUSB_HOST:		/* Force VBUS valid, ID = 0 */
+-		cfgchip2 |= CFGCHIP2_FORCE_HOST;
++	case MUSB_HOST:
++		phy_mode = PHY_MODE_USB_HOST;
+ 		break;
+-	case MUSB_PERIPHERAL:	/* Force VBUS valid, ID = 1 */
+-		cfgchip2 |= CFGCHIP2_FORCE_DEVICE;
++	case MUSB_PERIPHERAL:
++		phy_mode = PHY_MODE_USB_DEVICE;
+ 		break;
+-	case MUSB_OTG:		/* Don't override the VBUS/ID comparators */
+-		cfgchip2 |= CFGCHIP2_NO_OVERRIDE;
++	case MUSB_OTG:
++		phy_mode = PHY_MODE_USB_OTG;
+ 		break;
+ 	default:
+-		dev_dbg(musb->controller, "Trying to set unsupported mode %u\n", musb_mode);
++		return -EINVAL;
+ 	}
+ 
+-	__raw_writel(cfgchip2, CFGCHIP2);
+-	return 0;
++	return phy_set_mode(glue->phy, phy_mode);
+ }
+ 
+ static int da8xx_musb_init(struct musb *musb)
+ {
++	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
+ 	void __iomem *reg_base = musb->ctrl_base;
+ 	u32 rev;
+ 	int ret = -ENODEV;
+@@ -425,32 +377,56 @@ static int da8xx_musb_init(struct musb *musb)
+ 		goto fail;
+ 	}
+ 
++	ret = clk_prepare_enable(glue->clk);
++	if (ret) {
++		dev_err(glue->dev, "failed to enable clock\n");
++		goto fail;
++	}
++
+ 	setup_timer(&otg_workaround, otg_timer, (unsigned long)musb);
+ 
+ 	/* Reset the controller */
+ 	musb_writel(reg_base, DA8XX_USB_CTRL_REG, DA8XX_SOFT_RESET_MASK);
+ 
+ 	/* Start the on-chip PHY and its PLL. */
+-	phy_on();
++	ret = phy_init(glue->phy);
++	if (ret) {
++		dev_err(glue->dev, "Failed to init phy.\n");
++		goto err_phy_init;
++	}
++
++	ret = phy_power_on(glue->phy);
++	if (ret) {
++		dev_err(glue->dev, "Failed to power on phy.\n");
++		goto err_phy_power_on;
++	}
+ 
+ 	msleep(5);
+ 
+ 	/* NOTE: IRQs are in mixed mode, not bypass to pure MUSB */
+-	pr_debug("DA8xx OTG revision %08x, PHY %03x, control %02x\n",
+-		 rev, __raw_readl(CFGCHIP2),
++	pr_debug("DA8xx OTG revision %08x, control %02x\n", rev,
+ 		 musb_readb(reg_base, DA8XX_USB_CTRL_REG));
+ 
+ 	musb->isr = da8xx_musb_interrupt;
+ 	return 0;
++
++err_phy_power_on:
++	phy_exit(glue->phy);
++err_phy_init:
++	clk_disable_unprepare(glue->clk);
+ fail:
+ 	return ret;
+ }
+ 
+ static int da8xx_musb_exit(struct musb *musb)
+ {
++	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
++
+ 	del_timer_sync(&otg_workaround);
+ 
+-	phy_off();
++	phy_power_off(glue->phy);
++	phy_exit(glue->phy);
++	clk_disable_unprepare(glue->clk);
+ 
+ 	usb_put_phy(musb->xceiv);
+ 
+@@ -504,10 +480,10 @@ static int da8xx_probe(struct platform_device *pdev)
+ 		return PTR_ERR(clk);
+ 	}
+ 
+-	ret = clk_enable(clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to enable clock\n");
+-		goto err4;
++	glue->phy = devm_phy_get(&pdev->dev, "usbphy");
++	if (IS_ERR(glue->phy)) {
++		dev_err(&pdev->dev, "failed to get phy\n");
++		return PTR_ERR(glue->phy);
+ 	}
+ 
+ 	glue->dev			= &pdev->dev;
+@@ -515,10 +491,10 @@ static int da8xx_probe(struct platform_device *pdev)
+ 
+ 	pdata->platform_ops		= &da8xx_ops;
+ 
+-	glue->phy = usb_phy_generic_register();
+-	if (IS_ERR(glue->phy)) {
+-		ret = PTR_ERR(glue->phy);
+-		goto err5;
++	glue->usb_phy = usb_phy_generic_register();
++	if (IS_ERR(glue->usb_phy)) {
++		dev_err(&pdev->dev, "failed to register usb_phy\n");
++		return PTR_ERR(glue->usb_phy);
+ 	}
+ 	platform_set_drvdata(pdev, glue);
+ 
+@@ -544,22 +520,12 @@ static int da8xx_probe(struct platform_device *pdev)
+ 
+ 	glue->musb = musb = platform_device_register_full(&pinfo);
+ 	if (IS_ERR(musb)) {
+-		ret = PTR_ERR(musb);
+ 		dev_err(&pdev->dev, "failed to register musb device: %d\n", ret);
+-		goto err6;
++		usb_phy_generic_unregister(glue->usb_phy);
++		return PTR_ERR(musb);
+ 	}
+ 
+ 	return 0;
+-
+-err6:
+-	usb_phy_generic_unregister(glue->phy);
+-
+-err5:
+-	clk_disable(clk);
+-
+-err4:
+-
+-	return ret;
+ }
+ 
+ static int da8xx_remove(struct platform_device *pdev)
+@@ -567,8 +533,7 @@ static int da8xx_remove(struct platform_device *pdev)
+ 	struct da8xx_glue		*glue = platform_get_drvdata(pdev);
+ 
+ 	platform_device_unregister(glue->musb);
+-	usb_phy_generic_unregister(glue->phy);
+-	clk_disable(glue->clk);
++	usb_phy_generic_unregister(glue->usb_phy);
+ 
+ 	return 0;
+ }
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
