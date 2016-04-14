@@ -1,55 +1,128 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v2 0/2] pci: host: new driver for Marvell Armada 7K/8K PCIe controller
-Date: Thu, 14 Apr 2016 17:36:15 +0200
-Message-ID: <1460648177-31473-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 1/2] ARM: dts: Add expansion bus to VExpress
+Date: Thu, 14 Apr 2016 16:39:18 +0100
+Message-ID: <1460648359-7310-1-git-send-email-brian.starkey@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The VExpress development platform has an external expansion bus which
+can be used for additional hardware (e.g. LogicTile Express
+daughterboards).
+Add this bus to the VExpress CoreTile device-trees.
 
-This set of two patches add support for the PCIe controller found in
-the Marvell Armada 7K/8K ARM processors. The first patch adds the
-Device Tree binding documentation, the second patch the driver itself.
+The bus is described for a CoreTile occupying site 1.
 
-The driver is really simple, since the PCIe controller is based on the
-Designware design, and only a little bit of vendor-specific glue is
-needed.
+Signed-off-by: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+---
+
+Changes since v2:
+ - Split into ARM and arm64 patches (Sudeep)
 
 Changes since v1:
+ - Reword commit message (Liviu)
 
- - Change the DT binding to take only one clock, since in fact all
-   PCIe lane clocks are child of the PCIe main clock, so there is no
-   need for the PCIe controllers to take a reference to both.
+ arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts  |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts     |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts      |   13 +++++++++++++
+ 4 files changed, 52 insertions(+)
 
- - Use msleep(1) instead of udelay(1), as suggested by Arnd Bergmann.
-
- - Add a comment to explain why we simply discard the interrupt, as
-   requested by Andrew Lunn.
-
- - Properly handle EPROBE_DEFER for devm_clk_get(), as suggested by
-   Andrew Lunn.
-
-Rob: due to the change to the DT binding (even though minimal), I have
-not kept your Acked-by. So if it still stands despite the DT binding
-change, could you send it again? Thanks!
-
-Thomas
-
-Thomas Petazzoni (2):
-  dt-bindings: pci: add DT binding for Marvell Armada 7K/8K PCIe
-    controller
-  pci: host: new driver for Marvell Armada 7K/8K PCIe controller
-
- .../devicetree/bindings/pci/pci-armada8k.txt       |  38 +++
- drivers/pci/host/Kconfig                           |  11 +
- drivers/pci/host/Makefile                          |   1 +
- drivers/pci/host/pcie-armada8k.c                   | 261 +++++++++++++++++++++
- 4 files changed, 311 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
- create mode 100644 drivers/pci/host/pcie-armada8k.c
-
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+index 9420053..ec7539b 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+@@ -280,4 +280,17 @@
+ 
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
++
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x40000000 0x3fef0000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+index 17f63f7..a339b0c 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+@@ -638,4 +638,17 @@
+ 
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
++
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x40000000 0x3fef0000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+index d2709b7..76a9ccb 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+@@ -250,4 +250,17 @@
+ 
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
++
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x40000000 0x40000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index d949fac..edac212 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -359,4 +359,17 @@
+ 
+ 		/include/ "vexpress-v2m.dtsi"
+ 	};
++
++	site2: hsb@e0000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xe0000000 0x20000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
 -- 
-2.6.4
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
