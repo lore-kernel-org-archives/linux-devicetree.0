@@ -1,33 +1,31 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: fsl-quadspi: Add fsl, ls1043a-qspi
- compatible string
-Date: Thu, 14 Apr 2016 11:12:06 -0500
-Message-ID: <20160414161206.GA9978@rob-hp-laptop>
-References: <1460542107-45807-1-git-send-email-yao.yuan@freescale.com>
- <1460542107-45807-2-git-send-email-yao.yuan@freescale.com>
+Subject: Re: [PATCH v4 1/2] dt/bindings: Add bindings for hisilicon random
+ number generator
+Date: Thu, 14 Apr 2016 11:13:11 -0500
+Message-ID: <20160414161311.GA10817@rob-hp-laptop>
+References: <1460542288-25941-1-git-send-email-wangkefeng.wang@huawei.com>
+ <1460542288-25941-2-git-send-email-wangkefeng.wang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460542107-45807-2-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1460542288-25941-2-git-send-email-wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+To: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 06:08:26PM +0800, Yuan Yao wrote:
-> From: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+On Wed, Apr 13, 2016 at 06:11:27PM +0800, Kefeng Wang wrote:
+> Document the devicetree bindings for the random number generator found
+> on Hisilicon Hip04 and Hip05 soc.
 > 
-> new compatible string: "fsl,ls1043a-qspi".
-> 
-> Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/rng/hisi-rng.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/hisi-rng.txt
 
-There's a typo in the compatible string in the subject. Otherwise,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <rob-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
