@@ -1,75 +1,44 @@
-From: Andrea Merello <andrea.merello@gmail.com>
-Subject: Re: [PATCH RFC] I2C: i2c-smbus: add device tree support
-Date: Thu, 14 Apr 2016 11:37:25 +0200
-Message-ID: <CAN8YU5OqmjDdbY6Op1tH=ggQgYA4CDxizwFzGSgsZgb=DMrq5Q@mail.gmail.com>
-References: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com> <CAHp75VepT0ztJ3sLoM_Yw+yo9E3QLJaKNae_AQ3TMH=LbNeRfQ@mail.gmail.com>
-Reply-To: andrea.merello@gmail.com
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
+Date: Thu, 14 Apr 2016 11:39:45 +0200
+Message-ID: <20160414093945.GA15250@linaro.org>
+References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
+ <570F593D.6040809@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VepT0ztJ3sLoM_Yw+yo9E3QLJaKNae_AQ3TMH=LbNeRfQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <570F593D.6040809@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: jdelvare@suse.de, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Vladimir Murzin <vladimir.murzin@arm.com>
+Cc: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, tglx@linutronix.de, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mark.rutland@arm.com, gnomes@lxorguk.ukuu.org.uk, peter@hurleysoftware.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 7:58 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Apr 13, 2016 at 11:36 AM, Andrea Merello
-> <andrea.merello@gmail.com> wrote:
->> According to Documentation/i2c/smbus-protocol, a smbus controller driver
->> that wants to hook-in smbus extensions support, can call
->> i2c_setup_smbus_alert(). There are very few drivers that are currently
->> doing this.
->>
->> However the i2c-smbus module can also work with any
->> smbus-extensions-unaware I2C controller, as long as we provide an extra
->> IRQ line connected to the I2C bus ALARM signal.
->>
->> This patch makes it possible to go this way via DT. Note that the DT node
->> will indeed describe a (little) piece of HW, that is the routing of the
->> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
->>
->> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
->> with address 0x0C (that is the alarm response address), and IMHO this is
->> quite consistent with usage in the DT as a I2C child node.
->
->> --- a/drivers/i2c/i2c-smbus.c
->> +++ b/drivers/i2c/i2c-smbus.c
->
->> @@ -137,20 +138,29 @@ static int smbalert_probe(struct i2c_client *ara,
->>         struct i2c_smbus_alert_setup *setup = dev_get_platdata(&ara->dev);
->>         struct i2c_smbus_alert *alert;
->>         struct i2c_adapter *adapter = ara->adapter;
->> +       struct device_node *of_node = ara->dev.of_node;
->
-> Perhaps fwnode_handle ?
+On Thu, Apr 14, 2016 at 09:47:57AM +0100, Vladimir Murzin wrote:
+> Hi,
+> 
+> On 01/04/16 15:02, Vladimir Murzin wrote:
+> > Hi,
+> > 
+> > This patch series provides the basic support for running ucLinux on V2M-MPS2
+> > platform.
+> > 
+> > With these patches applied ucLinux can be run on both HW and FVP models
+> > with Cortex-M3/M4/M7 configurations.
+> 
+> Any objection to get it merged?
+> 
+> Sudeep Holla noticed that there is merge conflict against linux-next
+> with PIC32 uart (Makefile and serial_core.h), so should I provide
+> conflict resolution or do rebase on someone's branch?
+> 
+> Anyway, I'd be glad to know how it should be processed further?
 
-Browsing the kernel tree it looks like using of_node is how almost all
-drivers do. Any specific reason to go for fwnode_handle here?
+This patchset should go through the arm-soc tree. Any conflicts resulting
+from a merge *after* your patchset is in the arm-soc tree is no longer your
+problem.
 
-Wouldn't this end up to just an extra is_of_node() and to_of_node() ?
+So IOW, if your patchset applies to arm-soc and Arnd is ok to pick it, then
+everything is fine.
 
->
->>         int res;
->> +       int irq_type;
->>
->>         alert = devm_kzalloc(&ara->dev, sizeof(struct i2c_smbus_alert),
->>                              GFP_KERNEL);
->>         if (!alert)
->>                 return -ENOMEM;
->>
->> -       alert->alert_edge_triggered = setup->alert_edge_triggered;
->> -       alert->irq = setup->irq;
->> +       if (setup) {
->> +               alert->alert_edge_triggered = setup->alert_edge_triggered;
->> +               alert->irq = setup->irq;
->> +       } else if (of_node) {
->> +               alert->irq = irq_of_parse_and_map(of_node, 0);
->> +               irq_type = irq_get_trigger_type(alert->irq);
->> +               alert->alert_edge_triggered = (irq_type & IRQ_TYPE_EDGE_BOTH);
->> +       }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+  -- Daniel
