@@ -1,124 +1,34 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2] ARM: tegra: add DT binding for Tegra186 GPIO controllers
-Date: Thu, 14 Apr 2016 14:42:28 +0200
-Message-ID: <CACRpkdYmcEQBN5QwjLa-Wyorv-otPdJh5C1KgKwUjUBWXvnb_w@mail.gmail.com>
-References: <1460483197-5130-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 3/5] gpio: of: Return error if gpio hog configuration failed
+Date: Thu, 14 Apr 2016 14:52:16 +0200
+Message-ID: <CACRpkdaQra43TxaW4wSTHMQDVNxi+8C5+wWFNy9wi0KktqrU2w@mail.gmail.com>
+References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
+	<1457703804-3016-4-git-send-email-ldewangan@nvidia.com>
+	<CACRpkdbLKWDGvhqtwoogNNgQjG86g9HmpceLLVwKW+94dJk63A@mail.gmail.com>
+	<570E416E.1000608@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1460483197-5130-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570E416E.1000608@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Markus Pargmann <mpa@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <treding@nvidia.com>, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 12, 2016 at 7:46 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+On Wed, Apr 13, 2016 at 2:54 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> On Wednesday 13 April 2016 06:13 PM, Linus Walleij wrote:
 
-> From: Stephen Warren <swarren@nvidia.com>
->
-> Tegra186 contains two separate but mostly similar GPIO controllers.
-> Register layout differs significantly from previous Tegra generations, and
-> so a new binding is required to describe them in device tree. This patch
-> adds that binding.
->
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> v2: Increase indentation to make lists more readable.
+> Thank you very much for accepting the patch.
+> I think 1/5 and 2/5 is also fine as there is no more comment on this.
 
-Very interesting patch!
+I have applied them now.
 
-> +a) Security registers, which allow configuration of allowed access to the GPIO
-> +register set. These registers exist in a single contguous block of physical
+I had a comment on 1/5, I wanted a confirmation that
+it was done to be able to set status = "disabled" in the
+device node.
 
-^ speling: contiguous?
-
-> +Tegra HW documentation describes a unified naming convention for all GPIOs
-> +implemented by the SoC. Each GPIO is assigned to a port, and a port may control
-> +a number of GPIOs. Thus, each GPIO is named according to an alphabetical port
-> +name and an integer GPIO name within the port. For example, GPIO_PA0, GPIO_PN6,
-> +or GPIO_PCC3.
-
-I suspect that the Tegra definition of a "port" is close to what other people
-call a "bank" like I try to define in this patch?
-http://marc.info/?l=linux-gpio&m=145941547420164&w=2
-
-> +The mapping from port name to the GPIO controller that implements that port, and
-> +the mapping from port name to register offset within a controller, are both
-> +extremely non-linear.
-
-That actually warrants the concept of gpio-bank = <n>;
-
-> + The header file <dt-bindings/gpio/tegra186-gpio.h>
-> +describes the port-level mapping. In that file, the naming convention for ports
-> +matches the HW documentation. The values chosen for the names are alphabetically
-> +sorted within a particular controller. Drivers need to map between the DT GPIO
-> +IDs and HW register offsets using a lookup table.
-
-Again that use case. Can you please enter the mentioned thread
-and provide some input on how you see this working?
-
-Neil Armstrong provided a driver using the GPIO ranges for
-cross-reference to the pin controller as the basis for finding
-what is here the port ID. I don't know if that is such a great
-idea.
-
-I noticed that the #defines in that tegra186-gpio.h file are not used
-in the example below. Something seems wrong: this mapping must
-be important. I don't see which of the required properties it should go
-into either.
-
-> +Each GPIO controller in fact generates multiple interrupts signals for each set
-> +of ports. Each GPIO may be configured to feed into a specific one of the
-> +interrupt signals generated by a set-of-ports. The intent is for each generated
-> +signal to be routed to a different CPU, thus allowing different CPUs to each
-> +handle subsets of the interrupts within a port.
-
-Clever. Seems like something other hardware engineers should pick
-up on.
-
-> +/* GPIOs implemented by main GPIO controller */
-> +#define TEGRA_MAIN_GPIO_PORT_A 0
-> +#define TEGRA_MAIN_GPIO_PORT_B 1
-> +#define TEGRA_MAIN_GPIO_PORT_C 2
-> +#define TEGRA_MAIN_GPIO_PORT_D 3
-> +#define TEGRA_MAIN_GPIO_PORT_E 4
-> +#define TEGRA_MAIN_GPIO_PORT_F 5
-> +#define TEGRA_MAIN_GPIO_PORT_G 6
-> +#define TEGRA_MAIN_GPIO_PORT_H 7
-> +#define TEGRA_MAIN_GPIO_PORT_I 8
-> +#define TEGRA_MAIN_GPIO_PORT_J 9
-> +#define TEGRA_MAIN_GPIO_PORT_K 10
-> +#define TEGRA_MAIN_GPIO_PORT_L 11
-> +#define TEGRA_MAIN_GPIO_PORT_M 12
-> +#define TEGRA_MAIN_GPIO_PORT_N 13
-> +#define TEGRA_MAIN_GPIO_PORT_O 14
-> +#define TEGRA_MAIN_GPIO_PORT_P 15
-> +#define TEGRA_MAIN_GPIO_PORT_Q 16
-> +#define TEGRA_MAIN_GPIO_PORT_R 17
-> +#define TEGRA_MAIN_GPIO_PORT_T 18
-> +#define TEGRA_MAIN_GPIO_PORT_X 19
-> +#define TEGRA_MAIN_GPIO_PORT_Y 20
-> +#define TEGRA_MAIN_GPIO_PORT_BB 21
-> +#define TEGRA_MAIN_GPIO_PORT_CC 22
-> +
-> +#define TEGRA_MAIN_GPIO(port, offset) \
-> +       ((TEGRA_MAIN_GPIO_PORT_##port * 8) + offset)
-> +
-> +/* GPIOs implemented by AON GPIO controller */
-> +#define TEGRA_AON_GPIO_PORT_S 0
-> +#define TEGRA_AON_GPIO_PORT_U 1
-> +#define TEGRA_AON_GPIO_PORT_V 2
-> +#define TEGRA_AON_GPIO_PORT_W 3
-> +#define TEGRA_AON_GPIO_PORT_Z 4
-> +#define TEGRA_AON_GPIO_PORT_AA 5
-> +#define TEGRA_AON_GPIO_PORT_EE 6
-> +#define TEGRA_AON_GPIO_PORT_FF 7
-> +
-> +#define TEGRA_AON_GPIO(port, offset) \
-> +       ((TEGRA_AON_GPIO_PORT_##port * 8) + offset)
-
-So we definately need this stuff used in the example.
+I assume this is true so now I added that to the commit
+blurb.
 
 Yours,
 Linus Walleij
