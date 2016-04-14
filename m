@@ -1,30 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Add EDAC peripheral init functions & Ethernet EDAC.
-Date: Thu, 14 Apr 2016 09:35:01 -0500
-Message-ID: <20160414143501.GA25212@rob-hp-laptop>
-References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
+Subject: Re: [PATCH 3/4] dt-bindings: Update iProc GPIO bindings
+Date: Thu, 14 Apr 2016 09:38:12 -0500
+Message-ID: <20160414143812.GA20964@rob-hp-laptop>
+References: <1460506523-6249-1-git-send-email-ray.jui@broadcom.com>
+ <1460506523-6249-4-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
+In-Reply-To: <1460506523-6249-4-git-send-email-ray.jui@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 12, 2016 at 05:12:55PM -0500, tthayer@opensource.altera.com wrote:
-> This patch set adds the memory initialization functions for Altera's
-> Arria10 peripherals, the first of which is the Ethernet EDAC. The
-> first 3 patches add the memory initialization functionality. The
-> last 3 patches add Ethernet EDAC support.
+On Tue, Apr 12, 2016 at 05:15:22PM -0700, Ray Jui wrote:
+> Update the iProc GPIO binding document to introduce a new compatible
+> string "brcm,iproc-gpio-only", that allows the generic pinconf function
+> to be disabled completely
+> 
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Jon Mason <jon.mason@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> index ddaa1b0..75a4370 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> @@ -3,8 +3,11 @@ Broadcom iProc GPIO/PINCONF Controller
+>  Required properties:
+>  
+>  - compatible:
+> -    Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
+> -    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
+> +    For Cygnus, it must be brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio", or
+> +"brcm,cygnus-crmu-gpio"
+> +    For non-Cygnus iProc SoCs, it must be either "brcm,iproc-gpio-only" (if
+> +only GPIO is supported) or "brcm,iproc-gpio" (if both generic pinconf and GPIO
+> +are supported)
 
-The ethernet part seems a bit strange to me to put under EDAC as EDAC 
-is primarily memory controller ECC (and caches to some extent). Also you 
-would not halt the system in case of an UC, but rather just drop the 
-frame. This would need to be part of the ethernet driver in that case.
- 
-Of course, given that ethernet frames already have a CRC, ECC of the 
-FIFO seems a bit redundant.
+No. That's not how compatible strings work. Use SoC specific compatible 
+strings if you need to distinguish this.
 
 Rob
