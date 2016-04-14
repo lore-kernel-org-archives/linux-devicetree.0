@@ -1,13 +1,14 @@
 From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 3/4] soc: mediatek: Add MT2701 power dt-bindings
-Date: Thu, 14 Apr 2016 16:16:58 +0800
-Message-ID: <1460621819-695-4-git-send-email-jamesjj.liao@mediatek.com>
-References: <1460621819-695-1-git-send-email-jamesjj.liao@mediatek.com>
+Subject: [PATCH v7 2/9] dt-bindings: ARM: Mediatek: Document bindings for
+ MT2701
+Date: Thu, 14 Apr 2016 16:11:47 +0800
+Message-ID: <1460621514-65191-3-git-send-email-jamesjj.liao@mediatek.com>
+References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1460621819-695-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1460621514-65191-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
  <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
@@ -17,85 +18,216 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
  <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patch adds the binding documentation for apmixedsys, bdpsys,
+ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
+vdecsys for Mediatek MT2701.
 
-Add power dt-bindings for MT2701.
-
-Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Tested-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/soc/mediatek/scpsys.txt    | 12 ++++++----
- include/dt-bindings/power/mt2701-power.h           | 27 ++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 5 deletions(-)
- create mode 100644 include/dt-bindings/power/mt2701-power.h
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  3 ++-
+ .../bindings/arm/mediatek/mediatek,bdpsys.txt      | 22 ++++++++++++++++++++
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      | 22 ++++++++++++++++++++
+ .../bindings/arm/mediatek/mediatek,hifsys.txt      | 24 ++++++++++++++++++++++
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |  3 ++-
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |  3 ++-
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |  3 ++-
+ .../bindings/arm/mediatek/mediatek,pericfg.txt     |  3 ++-
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |  3 ++-
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  3 ++-
+ 10 files changed, 82 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-index e8f15e3..ebb3144 100644
---- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-+++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-@@ -9,17 +9,19 @@ domain control.
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+index 936166f..cb0054a 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+@@ -5,7 +5,8 @@ The Mediatek apmixedsys controller provides the PLLs to the system.
  
- The driver implements the Generic PM domain bindings described in
- power/power_domain.txt. It provides the power domains defined in
--include/dt-bindings/power/mt8173-power.h.
-+include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
+ Required Properties:
  
- Required properties:
--- compatible: Must be "mediatek,mt8173-scpsys"
+-- compatible: Should be:
 +- compatible: Should be one of:
-+	- "mediatek,mt2701-scpsys"
-+	- "mediatek,mt8173-scpsys"
- - #power-domain-cells: Must be 1
- - reg: Address range of the SCPSYS unit
- - infracfg: must contain a phandle to the infracfg controller
- - clock, clock-names: clocks according to the common clock binding.
--                      The clocks needed "mm", "mfg", "venc" and "venc_lt".
--		      These are the clocks which hardware needs to be enabled
--		      before enabling certain power domains.
-+                      The clocks needed "mm", "mfg", "venc", "venc_lt" and
-+                      "ethif". These are the clocks which hardware needs to be
-+                      enabled before enabling certain power domains.
- 
- Optional properties:
- - vdec-supply: Power supply for the vdec power domain
-diff --git a/include/dt-bindings/power/mt2701-power.h b/include/dt-bindings/power/mt2701-power.h
++	- "mediatek,mt2701-apmixedsys"
+ 	- "mediatek,mt8135-apmixedsys"
+ 	- "mediatek,mt8173-apmixedsys"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
 new file mode 100644
-index 0000000..64cc826
+index 0000000..4137196
 --- /dev/null
-+++ b/include/dt-bindings/power/mt2701-power.h
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright (C) 2015 MediaTek Inc.
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+@@ -0,0 +1,22 @@
++Mediatek bdpsys controller
++============================
 +
-+#ifndef _DT_BINDINGS_POWER_MT2701_POWER_H
-+#define _DT_BINDINGS_POWER_MT2701_POWER_H
++The Mediatek bdpsys controller provides various clocks to the system.
 +
-+#define MT2701_POWER_DOMAIN_CONN	0
-+#define MT2701_POWER_DOMAIN_DISP	1
-+#define MT2701_POWER_DOMAIN_MFG		2
-+#define MT2701_POWER_DOMAIN_VDEC	3
-+#define MT2701_POWER_DOMAIN_ISP		4
-+#define MT2701_POWER_DOMAIN_BDP		5
-+#define MT2701_POWER_DOMAIN_ETH		6
-+#define MT2701_POWER_DOMAIN_HIF		7
-+#define MT2701_POWER_DOMAIN_IFR_MSC	8
++Required Properties:
 +
-+#endif /* _DT_BINDINGS_POWER_MT2701_POWER_H */
++- compatible: Should be:
++	- "mediatek,mt2701-bdpsys", "syscon"
++- #clock-cells: Must be 1
++
++The bdpsys controller uses the common clk binding from
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++The available clocks are defined in dt-bindings/clock/mt*-clk.h.
++
++Example:
++
++bdpsys: clock-controller@1c000000 {
++	compatible = "mediatek,mt2701-bdpsys", "syscon";
++	reg = <0 0x1c000000 0 0x1000>;
++	#clock-cells = <1>;
++};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+new file mode 100644
+index 0000000..768f3a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+@@ -0,0 +1,22 @@
++Mediatek ethsys controller
++============================
++
++The Mediatek ethsys controller provides various clocks to the system.
++
++Required Properties:
++
++- compatible: Should be:
++	- "mediatek,mt2701-ethsys", "syscon"
++- #clock-cells: Must be 1
++
++The ethsys controller uses the common clk binding from
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++The available clocks are defined in dt-bindings/clock/mt*-clk.h.
++
++Example:
++
++ethsys: clock-controller@1b000000 {
++	compatible = "mediatek,mt2701-ethsys", "syscon";
++	reg = <0 0x1b000000 0 0x1000>;
++	#clock-cells = <1>;
++};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+new file mode 100644
+index 0000000..beed7b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
+@@ -0,0 +1,24 @@
++Mediatek hifsys controller
++============================
++
++The Mediatek hifsys controller provides various clocks and reset
++outputs to the system.
++
++Required Properties:
++
++- compatible: Should be:
++	- "mediatek,mt2701-hifsys", "syscon"
++- #clock-cells: Must be 1
++
++The hifsys controller uses the common clk binding from
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++The available clocks are defined in dt-bindings/clock/mt*-clk.h.
++
++Example:
++
++hifsys: clock-controller@1a000000 {
++	compatible = "mediatek,mt2701-hifsys", "syscon";
++	reg = <0 0x1a000000 0 0x1000>;
++	#clock-cells = <1>;
++	#reset-cells = <1>;
++};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+index b1f2ce1..f6a9166 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+@@ -5,7 +5,8 @@ The Mediatek imgsys controller provides various clocks to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt2701-imgsys", "syscon"
+ 	- "mediatek,mt8173-imgsys", "syscon"
+ - #clock-cells: Must be 1
+ 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+index aaf8d14..1620ec2 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+@@ -6,7 +6,8 @@ outputs to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt2701-infracfg", "syscon"
+ 	- "mediatek,mt8135-infracfg", "syscon"
+ 	- "mediatek,mt8173-infracfg", "syscon"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+index 4385946..67dd2e4 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+@@ -5,7 +5,8 @@ The Mediatek mmsys controller provides various clocks to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt2701-mmsys", "syscon"
+ 	- "mediatek,mt8173-mmsys", "syscon"
+ - #clock-cells: Must be 1
+ 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+index 2f6ff86..e494366 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
+@@ -6,7 +6,8 @@ outputs to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt2701-pericfg", "syscon"
+ 	- "mediatek,mt8135-pericfg", "syscon"
+ 	- "mediatek,mt8173-pericfg", "syscon"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+index f9e9179..9f2fe78 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+@@ -5,7 +5,8 @@ The Mediatek topckgen controller provides various clocks to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt2701-topckgen"
+ 	- "mediatek,mt8135-topckgen"
+ 	- "mediatek,mt8173-topckgen"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+index 1faacf1..2440f73 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+@@ -5,7 +5,8 @@ The Mediatek vdecsys controller provides various clocks to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt2701-vdecsys", "syscon"
+ 	- "mediatek,mt8173-vdecsys", "syscon"
+ - #clock-cells: Must be 1
+ 
 -- 
 1.9.1
