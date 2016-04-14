@@ -1,69 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings/spi: Add bindings for PIC32 Quad-SPI
- driver.
-Date: Thu, 14 Apr 2016 11:18:26 -0500
-Message-ID: <20160414161826.GA12444@rob-hp-laptop>
-References: <1460553125-32649-1-git-send-email-purna.mandal@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Thu, 14 Apr 2016 11:24:07 -0500
+Message-ID: <20160414162407.GA15303@rob-hp-laptop>
+References: <201604140340.wQZLwsUk%fengguang.wu@intel.com>
+ <570E9E8D.50007@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1460553125-32649-1-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <570E9E8D.50007@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 06:42:04PM +0530, Purna Chandra Mandal wrote:
-> Document Device tree bindings for quad SPI peripheral
-> found on Microchip PIC32 class devices.
+On Wed, Apr 13, 2016 at 02:31:25PM -0500, Timur Tabi wrote:
+> kbuild test robot wrote:
+> >
+> >    drivers/net/ethernet/qualcomm/emac/emac-mac.c: In function 'emac_mac_up':
+> >>>>>drivers/net/ethernet/qualcomm/emac/emac-mac.c:1076:9: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+> >      writel(~DIS_INT, adpt->base + EMAC_INT_STATUS);
 > 
-> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> 
->  Documentation/devicetree/bindings/spi/sqi-pic32.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/sqi-pic32.txt
+> This doesn't happen on arm64, and I don't know how to fix it.  DIS_INT is
+> defined as:
 
-One nit below, otherwise:
-
-Acked-by: Rob Herring <rob-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Probably depends on the compiler version. BTW, clang seems to throw 
+errors for this type of thing.
 
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/sqi-pic32.txt b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
-> new file mode 100644
-> index 0000000..5af9fab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
-> @@ -0,0 +1,18 @@
-> +Microchip PIC32 Quad SPI controller
-> +-----------------------------------
-> +Required properties:
-> +- compatible: Should be "microchip,pic32mzda-sqi".
-> +- reg: Address and length of SQI controller register space.
-> +- interrupts: Should contain SQI interrupt.
-> +- clocks: Should contain phandle of two clocks in sequence, clock that drives
-> +          clock on SPI bus and clock that drives SQI controller.
-> +- clock-names: Should be "spi_ck" and "reg_ck" in order.
-> +
-> +Example:
-> +	sqi1: sqi@1f8e2000 {
-
-spi@...
-
-> +		compatible = "microchip,pic32mzda-sqi";
-> +		reg = <0x1f8e2000 0x200>;
-> +		clocks = <&rootclk REF2CLK>, <&rootclk PB5CLK>;
-> +		clock-names = "spi_ck", "reg_ck";
-> +		interrupts = <169 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> -- 
-> 1.8.3.1
+> 	#define DIS_INT          BIT(31)
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> It seems silly to add a typecast to DIS_INT.
+
+BIT() should use 1U instead of 1.
+
+Rob
