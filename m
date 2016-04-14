@@ -1,43 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv3 2/2] usb: dwc2: Add reset control to dwc2
-Date: Thu, 14 Apr 2016 04:04:31 +0200
-Message-ID: <201604140404.32087.arnd@arndb.de>
-References: <1460587442-21136-1-git-send-email-dinguyen@opensource.altera.com> <1460587442-21136-2-git-send-email-dinguyen@opensource.altera.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH RFC 2/5] net: phy: sun8i-h3-ephy: Add driver for Allwinner
+ H3 Ethernet PHY
+Date: Thu, 14 Apr 2016 10:04:50 +0800
+Message-ID: <CAGb2v65-V3Mt_aPJNdfEH6VFySGc_cBhqgbE_VR5tsBtPvVjfA@mail.gmail.com>
+References: <1459786954-12649-1-git-send-email-wens@csie.org>
+ <1459786954-12649-3-git-send-email-wens@csie.org> <570BF9A6.2040109@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460587442-21136-2-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <570BF9A6.2040109@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, netdev <netdev@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Hans De Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 April 2016, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> @@ -337,6 +338,17 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->  {
->         int i, ret;
->  
-> +       hsotg->reset = devm_reset_control_get(hsotg->dev, "dwc2");
-> +       if (IS_ERR(hsotg->reset)) {
-> +               if (PTR_ERR(hsotg->reset) == -EPROBE_DEFER)
-> +                       return -EPROBE_DEFER;
-> +               dev_dbg(hsotg->dev, "Could not get reset control.\n");
-> +               hsotg->reset = NULL;
-> +       }
-> +
-> +       if(hsotg->reset)
-> +               reset_control_deassert(hsotg->reset);
+On Tue, Apr 12, 2016 at 3:23 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 04/04/16 09:22, Chen-Yu Tsai wrote:
+>> The Allwinner H3 SoC incorporates an Ethernet PHY. This is enabled and
+>> configured through a memory mapped hardware register.
+>>
+>> This same register also configures the MAC interface mode and TX clock
+>> source. Also covered by the register, but not supported in this driver,
+>> are TX/RX clock delay chains and inverters, and an RMII module.
+>
+> This is not really a PHY driver, more a driver for a special piece of
+> hardware responsible for properly configuring a more standard integrated
+> PHY which is then driven via standard MDIO accesses, right?
+>
+> The intention to make this driver re-usable is fine, but still makes me
+> wonder if it should not be put in a file which is linked into the
+> Ethernet MAC driver, and utilized by this one in a way that may be more
+> "ad-hoc" than what you are proposing here.
+>
+> One thing that is not obvious here, is how is the device parenting done?
+> Are we able to associate a phy_device to this SUN8I_H3_EPHY platform
+> device here?
+
+AFAIK you can't tie a platform device to an MDIO bus and phy_device.
+I looked around for any examples and found none.
+
+We're going to run into a similar issue with an MFD device later on.
+The X-Powers AC200 is a I2C based combo chip which includes an Ethernet
+PHY.
+
+> Another thing is that the Ethernet MAC driver is fully aware of when
+> putting an Ethernet PHY into suspend, shutdown, or fully functional
+> power state should occur, if you have a separate platform driver here
+> which does not listen for such kinds of events (hint: none are generated
+> right now), then you cannot implement a working power state interface
+> between the MAC, SHIM and PHY here, even though you would want that.
+
+For this particular piece of hardware it would be possible to move the
+code into the MAC driver itself. For the AC200, not so much. Using the
+generic PHY framework to do power up / down would be a possibility.
 
 
-The error handling seems a bit odd here. If there is a failure to get the
-reset control and it's actually needed, I would argue the init function should
-not continue. Conversely, if there was no reset line specified in the
-device, why even print a message about it?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+ChenYu
