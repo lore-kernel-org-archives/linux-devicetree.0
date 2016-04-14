@@ -1,463 +1,325 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v5 5/5] clk: mvebu: new driver for Armada CP110 system controller
-Date: Thu, 14 Apr 2016 17:33:33 +0200
-Message-ID: <1460648013-31320-6-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v2 2/2] pci: host: new driver for Marvell Armada 7K/8K PCIe controller
+Date: Thu, 14 Apr 2016 17:36:17 +0200
+Message-ID: <1460648177-31473-3-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1460648177-31473-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1460648177-31473-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The Armada CP110 system controller provides, amongst other things, a
-number of clocks for the platform: a small number of core clocks, and
-then a number of gatable clocks, derived from some of the core
-clocks. Those clocks are configured via registers of the CP110 System
-Controller.
+The Marvell Armada 7K/8K SoCs integrate a PCIe controller from
+Synopsys. This commit adds a new driver that provides the small glue
+needed to use the existing Designware driver to make it work on
+Marvell Armada 7K/8K SoCs.
 
-The CP110 is the other core HW block (next to the AP806) used in the
-Marvel Armada 7K and 8K SoCs.
+The MSI support will be enabled at a later point.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- drivers/clk/mvebu/Kconfig                   |   3 +
- drivers/clk/mvebu/Makefile                  |   1 +
- drivers/clk/mvebu/cp110-system-controller.c | 399 ++++++++++++++++++++++++++++
- 3 files changed, 403 insertions(+)
- create mode 100644 drivers/clk/mvebu/cp110-system-controller.c
+ drivers/pci/host/Kconfig         |  11 ++
+ drivers/pci/host/Makefile        |   1 +
+ drivers/pci/host/pcie-armada8k.c | 261 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 273 insertions(+)
+ create mode 100644 drivers/pci/host/pcie-armada8k.c
 
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index bf7ae00..3165da7 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -32,6 +32,9 @@ config ARMADA_XP_CLK
- config ARMADA_AP806_SYSCON
- 	bool
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index 7a0780d..a3b6f24 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -231,4 +231,15 @@ config PCI_HOST_THUNDER_ECAM
+ 	help
+ 	  Say Y here if you want ECAM support for CN88XX-Pass-1.x Cavium Thunder SoCs.
  
-+config ARMADA_CP110_SYSCON
-+	bool
++config PCIE_ARMADA_8K
++	bool "Marvell Armada-8K PCIe controller"
++	depends on ARCH_MVEBU
++	select PCIE_DW
++	select PCIEPORTBUS
++	help
++	  Say Y here if you want to enable PCIe controller support on
++	  Armada-8K SoCs. The PCIe controller on Armada-8K is based on
++	  Designware hardware and therefore the driver re-uses the
++	  Designware core functions to implement the driver.
 +
- config DOVE_CLK
- 	bool
- 	select MVEBU_CLK_COMMON
-diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index f4aa481..7172ef6 100644
---- a/drivers/clk/mvebu/Makefile
-+++ b/drivers/clk/mvebu/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
- obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
- obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
- obj-$(CONFIG_ARMADA_AP806_SYSCON) += ap806-system-controller.o
-+obj-$(CONFIG_ARMADA_CP110_SYSCON) += cp110-system-controller.o
- obj-$(CONFIG_DOVE_CLK)		+= dove.o dove-divider.o
- obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
- obj-$(CONFIG_ORION_CLK)		+= orion.o
-diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
+ endmenu
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index d85b5fa..a6f85e3 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -28,3 +28,4 @@ obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
+ obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+ obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
+ obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
++obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+diff --git a/drivers/pci/host/pcie-armada8k.c b/drivers/pci/host/pcie-armada8k.c
 new file mode 100644
-index 0000000..f45e7ca
+index 0000000..7569302
 --- /dev/null
-+++ b/drivers/clk/mvebu/cp110-system-controller.c
-@@ -0,0 +1,399 @@
++++ b/drivers/pci/host/pcie-armada8k.c
+@@ -0,0 +1,261 @@
 +/*
-+ * Marvell Armada CP110 System Controller
++ * PCIe host controller driver for Marvell Armada-8K SoCs
 + *
-+ * Copyright (C) 2016 Marvell
++ * Armada-8K PCIe Glue Layer Source Code
 + *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
++ * Copyright (C) 2016 Marvell Technology Group Ltd.
 + *
 + * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
++ * License version 2. This program is licensed "as is" without any
 + * warranty of any kind, whether express or implied.
 + */
 +
-+/*
-+ * CP110 has 5 core clocks:
-+ *
-+ *  - APLL		(1 Ghz)
-+ *    - PPv2 core	(1/3 APLL)
-+ *    - EIP		(1/2 APLL)
-+ *      - Core		(1/2 EIP)
-+ *
-+ *  - NAND clock, which is either:
-+ *    - Equal to the core clock
-+ *    - 2/5 APLL
-+ *
-+ * CP110 has 32 gatable clocks, for the various peripherals in the
-+ * IP. They have fairly complicated parent/child relationships.
-+ */
++#define pr_fmt(fmt) "armada-8k-pcie: " fmt
 +
-+#define pr_fmt(fmt) "cp110-system-controller: " fmt
-+
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/syscon.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/of_address.h>
++#include <linux/pci.h>
++#include <linux/phy/phy.h>
 +#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
++#include <linux/resource.h>
++#include <linux/of_pci.h>
++#include <linux/of_irq.h>
 +
-+#define CP110_PM_CLOCK_GATING_REG	0x220
-+#define CP110_NAND_FLASH_CLK_CTRL_REG	0x700
-+#define    NF_CLOCK_SEL_400_MASK	BIT(0)
++#include "pcie-designware.h"
 +
-+enum {
-+	CP110_CLK_TYPE_CORE,
-+	CP110_CLK_TYPE_GATABLE,
++struct armada8k_pcie {
++	void __iomem *base;
++	struct clk *clk;
++	struct pcie_port pp;
 +};
 +
-+#define CP110_MAX_CORE_CLOCKS		5
-+#define CP110_MAX_GATABLE_CLOCKS	32
++#define PCIE_VENDOR_REGS_OFFSET		0x8000
 +
-+#define CP110_CLK_NUM \
-+	(CP110_MAX_CORE_CLOCKS + CP110_MAX_GATABLE_CLOCKS)
++#define PCIE_GLOBAL_CONTROL_REG		0x0
++#define PCIE_APP_LTSSM_EN		BIT(2)
++#define PCIE_DEVICE_TYPE_SHIFT		4
++#define PCIE_DEVICE_TYPE_MASK		0xF
++#define PCIE_DEVICE_TYPE_EP		0x0 /* Endpoint */
++#define PCIE_DEVICE_TYPE_LEP		0x1 /* Legacy endpoint */
++#define PCIE_DEVICE_TYPE_RC		0x4 /* Root complex */
 +
-+#define CP110_CORE_APLL			0
-+#define CP110_CORE_PPV2			1
-+#define CP110_CORE_EIP			2
-+#define CP110_CORE_CORE			3
-+#define CP110_CORE_NAND			4
++#define PCIE_GLOBAL_STATUS_REG		0x8
++#define PCIE_GLB_STS_RDLH_LINK_UP	BIT(1)
++#define PCIE_GLB_STS_PHY_LINK_UP	BIT(9)
 +
-+/* A number of gatable clocks need special handling */
-+#define CP110_GATE_AUDIO		0
-+#define CP110_GATE_COMM_UNIT		1
-+#define CP110_GATE_NAND			2
-+#define CP110_GATE_PPV2			3
-+#define CP110_GATE_SDIO			4
-+#define CP110_GATE_XOR1			7
-+#define CP110_GATE_XOR0			8
-+#define CP110_GATE_PCIE_X1_0		11
-+#define CP110_GATE_PCIE_X1_1		12
-+#define CP110_GATE_PCIE_X4		13
-+#define CP110_GATE_PCIE_XOR		14
-+#define CP110_GATE_SATA			15
-+#define CP110_GATE_SATA_USB		16
-+#define CP110_GATE_MAIN			17
-+#define CP110_GATE_SDMMC		18
-+#define CP110_GATE_SLOW_IO		21
-+#define CP110_GATE_USB3H0		22
-+#define CP110_GATE_USB3H1		23
-+#define CP110_GATE_USB3DEV		24
-+#define CP110_GATE_EIP150		25
-+#define CP110_GATE_EIP197		26
++#define PCIE_GLOBAL_INT_CAUSE1_REG	0x1C
++#define PCIE_GLOBAL_INT_MASK1_REG	0x20
++#define PCIE_INT_A_ASSERT_MASK		BIT(9)
++#define PCIE_INT_B_ASSERT_MASK		BIT(10)
++#define PCIE_INT_C_ASSERT_MASK		BIT(11)
++#define PCIE_INT_D_ASSERT_MASK		BIT(12)
 +
-+static struct clk *cp110_clks[CP110_CLK_NUM];
++#define PCIE_ARCACHE_TRC_REG		0x50
++#define PCIE_AWCACHE_TRC_REG		0x54
++#define PCIE_ARUSER_REG			0x5C
++#define PCIE_AWUSER_REG			0x60
++/*
++ * AR/AW Cache defauls: Normal memory, Write-Back, Read / Write
++ * allocate
++ */
++#define ARCACHE_DEFAULT_VALUE		0x3511
++#define AWCACHE_DEFAULT_VALUE		0x5311
 +
-+static struct clk_onecell_data cp110_clk_data = {
-+	.clks = cp110_clks,
-+	.clk_num = CP110_CLK_NUM,
-+};
++#define DOMAIN_OUTER_SHAREABLE		0x2
++#define AX_USER_DOMAIN_MASK		0x3
++#define AX_USER_DOMAIN_SHIFT		4
 +
-+struct cp110_gate_clk {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+	u8 bit_idx;
-+};
 +
-+#define to_cp110_gate_clk(clk) container_of(clk, struct cp110_gate_clk, hw)
 +
-+static int cp110_gate_enable(struct clk_hw *hw)
++#define to_armada8k_pcie(x)	container_of(x, struct armada8k_pcie, pp)
++
++static int armada8k_pcie_link_up(struct pcie_port *pp)
 +{
-+	struct cp110_gate_clk *gate = to_cp110_gate_clk(hw);
++	u32 reg;
++	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
++	u32 mask = PCIE_GLB_STS_RDLH_LINK_UP | PCIE_GLB_STS_PHY_LINK_UP;
 +
-+	regmap_update_bits(gate->regmap, CP110_PM_CLOCK_GATING_REG,
-+			   BIT(gate->bit_idx), BIT(gate->bit_idx));
++	reg = readl(pcie->base + PCIE_GLOBAL_STATUS_REG);
 +
++	if ((reg & mask) == mask)
++		return 1;
++
++	pr_debug("No link detected (Global-Status: 0x%08x).\n", reg);
 +	return 0;
 +}
 +
-+static void cp110_gate_disable(struct clk_hw *hw)
++static void armada8k_pcie_host_init(struct pcie_port *pp)
 +{
-+	struct cp110_gate_clk *gate = to_cp110_gate_clk(hw);
-+	regmap_update_bits(gate->regmap, CP110_PM_CLOCK_GATING_REG,
-+			   BIT(gate->bit_idx), 0);
++	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
++	void __iomem *base = pcie->base;
++	int timeout = 1000;
++	u32 reg;
++
++	if (!armada8k_pcie_link_up(pp)) {
++		/* Disable LTSSM state machine to enable configuration */
++		reg = readl(base + PCIE_GLOBAL_CONTROL_REG);
++		reg &= ~(PCIE_APP_LTSSM_EN);
++		writel(reg, base + PCIE_GLOBAL_CONTROL_REG);
++	}
++
++	/* Set the device to root complex mode */
++	reg = readl(base + PCIE_GLOBAL_CONTROL_REG);
++	reg &= ~(PCIE_DEVICE_TYPE_MASK << PCIE_DEVICE_TYPE_SHIFT);
++	reg |= PCIE_DEVICE_TYPE_RC << PCIE_DEVICE_TYPE_SHIFT;
++	writel(reg, base + PCIE_GLOBAL_CONTROL_REG);
++
++	/* Set the PCIe master AxCache attributes */
++	writel(ARCACHE_DEFAULT_VALUE, base + PCIE_ARCACHE_TRC_REG);
++	writel(AWCACHE_DEFAULT_VALUE, base + PCIE_AWCACHE_TRC_REG);
++
++	/* Set the PCIe master AxDomain attributes */
++	reg = readl(base + PCIE_ARUSER_REG);
++	reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
++	reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
++	writel(reg, base + PCIE_ARUSER_REG);
++
++	reg = readl(base + PCIE_AWUSER_REG);
++	reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
++	reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
++	writel(reg, base + PCIE_AWUSER_REG);
++
++	dw_pcie_setup_rc(pp);
++
++	/* Enable INT A-D interrupts */
++	reg = readl(base + PCIE_GLOBAL_INT_MASK1_REG);
++	reg |= PCIE_INT_A_ASSERT_MASK | PCIE_INT_B_ASSERT_MASK |
++	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
++	writel(reg, base + PCIE_GLOBAL_INT_MASK1_REG);
++
++	if (!armada8k_pcie_link_up(pp)) {
++		/* Configuration done. Start LTSSM */
++		reg = readl(base + PCIE_GLOBAL_CONTROL_REG);
++		reg |= PCIE_APP_LTSSM_EN;
++		writel(reg, base + PCIE_GLOBAL_CONTROL_REG);
++	}
++
++	/* Wait until the link becomes active again */
++	while (timeout) {
++		if (armada8k_pcie_link_up(pp))
++			break;
++		msleep(1);
++		timeout--;
++	}
++
++	if (timeout == 0)
++		dev_err(pp->dev, "Link not up after reconfiguration\n");
 +}
 +
-+static int cp110_gate_is_enabled(struct clk_hw *hw)
++static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
 +{
-+	struct cp110_gate_clk *gate = to_cp110_gate_clk(hw);
++	struct pcie_port *pp = arg;
++	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
++	void __iomem *base = pcie->base;
 +	u32 val;
 +
-+	regmap_read(gate->regmap, CP110_PM_CLOCK_GATING_REG, &val);
++	/*
++	 * Interrupts are directly handled by the device driver of the
++	 * PCI device. However, there are also latched into the PCIe
++	 * controller, so we simply discard them.
++	 */
++	val = readl(base + PCIE_GLOBAL_INT_CAUSE1_REG);
++	writel(val, base + PCIE_GLOBAL_INT_CAUSE1_REG);
 +
-+	return val & BIT(gate->bit_idx);
++	return IRQ_HANDLED;
 +}
 +
-+static const struct clk_ops cp110_gate_ops = {
-+	.enable = cp110_gate_enable,
-+	.disable = cp110_gate_disable,
-+	.is_enabled = cp110_gate_is_enabled,
++static struct pcie_host_ops armada8k_pcie_host_ops = {
++	.link_up = armada8k_pcie_link_up,
++	.host_init = armada8k_pcie_host_init,
 +};
 +
-+static struct clk *cp110_register_gate(const char *name, const char *parent_name,
-+				       struct regmap *regmap, u8 bit_idx)
++static int armada8k_pcie_probe(struct platform_device *pdev)
 +{
-+	struct cp110_gate_clk *gate;
-+	struct clk *clk;
-+	struct clk_init_data init;
++	struct armada8k_pcie *pcie;
++	struct pcie_port *pp;
++	struct device *dev = &pdev->dev;
++	struct resource *base;
++	int ret;
 +
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
++	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
 +
-+	init.name = name;
-+	init.ops = &cp110_gate_ops;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
++	pcie->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(pcie->clk))
++		return PTR_ERR(pcie->clk);
 +
-+	gate->regmap = regmap;
-+	gate->bit_idx = bit_idx;
-+	gate->hw.init = &init;
++	clk_prepare_enable(pcie->clk);
 +
-+	clk = clk_register(NULL, &gate->hw);
-+	if (IS_ERR(clk))
-+		kfree(gate);
++	pp = &pcie->pp;
 +
-+	return clk;
-+}
++	platform_set_drvdata(pdev, pcie);
 +
-+static void cp110_unregister_gate(struct clk *clk)
-+{
-+	struct clk_hw *hw;
-+
-+	hw = __clk_get_hw(clk);
-+	if (!hw)
-+		return;
-+
-+	clk_unregister(clk);
-+	kfree(to_cp110_gate_clk(hw));
-+}
-+
-+static struct clk *cp110_of_clk_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct clk_onecell_data *clk_data = data;
-+	unsigned int type = clkspec->args[0];
-+	unsigned int idx = clkspec->args[1];
-+
-+	if (type == CP110_CLK_TYPE_CORE) {
-+		if (idx > CP110_MAX_CORE_CLOCKS)
-+			return ERR_PTR(-EINVAL);
-+		return clk_data->clks[idx];
-+	} else if (type == CP110_CLK_TYPE_GATABLE) {
-+		if (idx > CP110_MAX_GATABLE_CLOCKS)
-+			return ERR_PTR(-EINVAL);
-+		return clk_data->clks[CP110_MAX_CORE_CLOCKS + idx];
++	/* Get the dw-pcie unit configuration/control registers base. */
++	base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
++	pp->dbi_base = devm_ioremap_resource(dev, base);
++	if (IS_ERR(pp->dbi_base)) {
++		dev_err(dev, "couldn't remap regs base %p\n", base);
++		ret = PTR_ERR(pp->dbi_base);
++		goto fail;
 +	}
 +
-+	return ERR_PTR(-EINVAL);
-+}
++	pcie->base = pp->dbi_base + PCIE_VENDOR_REGS_OFFSET;
 +
-+static int cp110_syscon_clk_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+	struct device_node *np = pdev->dev.of_node;
-+	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name;
-+	struct clk *clk;
-+	u32 nand_clk_ctrl;
-+	int i, ret;
++	pp->dev = dev;
++	pp->root_bus_nr = -1;
++	pp->ops = &armada8k_pcie_host_ops;
 +
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	ret = regmap_read(regmap, CP110_NAND_FLASH_CLK_CTRL_REG,
-+			  &nand_clk_ctrl);
-+	if (ret)
-+		return ret;
-+
-+        /* Register the APLL which is the root of the clk tree */
-+	of_property_read_string_index(np, "core-clock-output-names",
-+                                      CP110_CORE_APLL, &apll_name);
-+        clk = clk_register_fixed_rate(NULL, apll_name, NULL, 0,
-+				      1000 * 1000 * 1000);
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		goto fail0;
++	pp->irq = platform_get_irq(pdev, 0);
++	if (!pp->irq) {
++		dev_err(dev, "failed to get irq for port\n");
++		ret = -ENODEV;
++		goto fail;
 +	}
 +
-+	cp110_clks[CP110_CORE_APLL] = clk;
-+
-+        /* PPv2 is APLL/3 */
-+	of_property_read_string_index(np, "core-clock-output-names",
-+				      CP110_CORE_PPV2, &ppv2_name);
-+	clk = clk_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		goto fail1;
++	ret = devm_request_irq(dev, pp->irq, armada8k_pcie_irq_handler,
++				IRQF_SHARED, "armada8k-pcie", pp);
++	if (ret) {
++		dev_err(dev, "failed to request irq %d\n", pp->irq);
++		goto fail;
 +	}
 +
-+	cp110_clks[CP110_CORE_PPV2] = clk;
-+
-+        /* EIP clock is APLL/2 */
-+	of_property_read_string_index(np, "core-clock-output-names",
-+				      CP110_CORE_EIP, &eip_name);
-+	clk = clk_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		goto fail2;
++	ret = dw_pcie_host_init(pp);
++	if (ret) {
++		dev_err(dev, "failed to initialize host: %d\n", ret);
++		goto fail;
 +	}
-+
-+	cp110_clks[CP110_CORE_EIP] = clk;
-+
-+        /* Core clock is EIP/2 */
-+	of_property_read_string_index(np, "core-clock-output-names",
-+				      CP110_CORE_CORE, &core_name);
-+	clk = clk_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		goto fail3;
-+	}
-+
-+	cp110_clks[CP110_CORE_CORE] = clk;
-+
-+	/* NAND can be either APLL/2.5 or core clock */
-+	of_property_read_string_index(np, "core-clock-output-names",
-+				      CP110_CORE_NAND, &nand_name);
-+	if (nand_clk_ctrl & NF_CLOCK_SEL_400_MASK)
-+		clk = clk_register_fixed_factor(NULL, nand_name,
-+						apll_name, 0, 2, 5);
-+	else
-+		clk = clk_register_fixed_factor(NULL, nand_name,
-+						core_name, 0, 1, 1);
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		goto fail4;
-+	}
-+
-+	cp110_clks[CP110_CORE_NAND] = clk;
-+
-+	for (i = 0; i < CP110_MAX_GATABLE_CLOCKS; i++) {
-+		const char *parent, *name;
-+		int ret;
-+
-+		ret = of_property_read_string_index(np, "gate-clock-output-names",
-+						    i, &name);
-+		/* Reached the end of the list? */
-+		if (ret < 0)
-+			break;
-+
-+		if (!strcmp(name, "none"))
-+			continue;
-+
-+		switch(i) {
-+		case CP110_GATE_AUDIO:
-+		case CP110_GATE_COMM_UNIT:
-+		case CP110_GATE_EIP150:
-+		case CP110_GATE_EIP197:
-+		case CP110_GATE_SLOW_IO:
-+			of_property_read_string_index(np, "gate-clock-output-names",
-+						      CP110_GATE_MAIN, &parent);
-+			break;
-+		case CP110_GATE_NAND:
-+			parent = nand_name;
-+			break;
-+		case CP110_GATE_PPV2:
-+			parent = ppv2_name;
-+			break;
-+		case CP110_GATE_SDIO:
-+			of_property_read_string_index(np, "gate-clock-output-names",
-+						      CP110_GATE_SDMMC, &parent);
-+			break;
-+		case CP110_GATE_XOR1:
-+		case CP110_GATE_XOR0:
-+		case CP110_GATE_PCIE_X1_0:
-+		case CP110_GATE_PCIE_X1_1:
-+		case CP110_GATE_PCIE_X4:
-+			of_property_read_string_index(np, "gate-clock-output-names",
-+						      CP110_GATE_PCIE_XOR, &parent);
-+			break;
-+		case CP110_GATE_SATA:
-+		case CP110_GATE_USB3H0:
-+		case CP110_GATE_USB3H1:
-+		case CP110_GATE_USB3DEV:
-+			of_property_read_string_index(np, "gate-clock-output-names",
-+						      CP110_GATE_SATA_USB, &parent);
-+			break;
-+		default:
-+			parent = core_name;
-+			break;
-+		}
-+
-+		clk = cp110_register_gate(name, parent, regmap, i);
-+		if (IS_ERR(clk)) {
-+			ret = PTR_ERR(clk);
-+			goto fail_gate;
-+		}
-+
-+		cp110_clks[CP110_MAX_CORE_CLOCKS + i] = clk;
-+	}
-+
-+	ret = of_clk_add_provider(np, cp110_of_clk_get, &cp110_clk_data);
-+	if (ret)
-+		goto fail_clk_add;
 +
 +	return 0;
 +
-+fail_clk_add:
-+fail_gate:
-+	for (i = 0; i < CP110_MAX_GATABLE_CLOCKS; i++) {
-+		clk = cp110_clks[CP110_MAX_CORE_CLOCKS + i];
++fail:
++	if (!IS_ERR(pcie->clk))
++		clk_disable_unprepare(pcie->clk);
 +
-+		if (clk)
-+			cp110_unregister_gate(clk);
-+	}
-+
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_NAND]);
-+fail4:
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_CORE]);
-+fail3:
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_EIP]);
-+fail2:
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_PPV2]);
-+fail1:
-+	clk_unregister_fixed_rate(cp110_clks[CP110_CORE_APLL]);
-+fail0:
 +	return ret;
 +}
 +
-+static int cp110_syscon_clk_remove(struct platform_device *pdev)
-+{
-+	int i;
-+
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	for (i = 0; i < CP110_MAX_GATABLE_CLOCKS; i++) {
-+		struct clk *clk = cp110_clks[CP110_MAX_CORE_CLOCKS + i];
-+
-+		if (clk)
-+			cp110_unregister_gate(clk);
-+	}
-+
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_NAND]);
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_CORE]);
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_EIP]);
-+	clk_unregister_fixed_factor(cp110_clks[CP110_CORE_PPV2]);
-+	clk_unregister_fixed_rate(cp110_clks[CP110_CORE_APLL]);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cp110_syscon_of_match[] = {
-+        { .compatible = "marvell,cp110-system-controller0", },
-+        {},
++static const struct of_device_id armada8k_pcie_of_match[] = {
++	{ .compatible = "marvell,armada8k-pcie", },
++	{},
 +};
 +MODULE_DEVICE_TABLE(of, armada8k_pcie_of_match);
 +
-+static struct platform_driver cp110_syscon_driver = {
-+	.probe = cp110_syscon_clk_probe,
-+	.remove = cp110_syscon_clk_remove,
-+	.driver		= {
-+		.name	= "marvell-cp110-system-controller0",
-+		.of_match_table = cp110_syscon_of_match,
++static struct platform_driver armada8k_pcie_driver = {
++	.probe		= armada8k_pcie_probe,
++	.driver = {
++		.name	= "armada8k-pcie",
++		.of_match_table = of_match_ptr(armada8k_pcie_of_match),
 +	},
 +};
 +
-+module_platform_driver(cp110_syscon_driver);
++module_platform_driver(armada8k_pcie_driver);
 +
-+MODULE_DESCRIPTION("Marvell CP110 System Controller 0 driver");
-+MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni@free-electrons.com>");
-+MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Armada 8k PCIe host controller driver");
++MODULE_AUTHOR("Yehuda Yitshak <yehuday@marvell.com>");
++MODULE_AUTHOR("Shadi Ammouri <shadi@marvell.com>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.6.4
-
