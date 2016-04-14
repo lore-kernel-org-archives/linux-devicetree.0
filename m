@@ -1,67 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC] I2C: i2c-smbus: add device tree support
-Date: Thu, 14 Apr 2016 11:10:12 -0500
-Message-ID: <20160414161012.GA20532@rob-hp-laptop>
-References: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Question] refcount of DT node
+Date: Thu, 14 Apr 2016 09:10:44 -0700
+Message-ID: <570FC104.80808@gmail.com>
+References: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com> <20160414084849.GT19428@n2100.arm.linux.org.uk> <20160414095957.GB10273@leverpostej> <06E9E2D3-4627-4970-ABBB-34B5ED620709@konsulko.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: jdelvare@suse.de, wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <06E9E2D3-4627-4970-ABBB-34B5ED620709-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 10:36:31AM +0200, Andrea Merello wrote:
-> According to Documentation/i2c/smbus-protocol, a smbus controller driver
-> that wants to hook-in smbus extensions support, can call
-> i2c_setup_smbus_alert(). There are very few drivers that are currently
-> doing this.
-> 
-> However the i2c-smbus module can also work with any
-> smbus-extensions-unaware I2C controller, as long as we provide an extra
-> IRQ line connected to the I2C bus ALARM signal.
-> 
-> This patch makes it possible to go this way via DT. Note that the DT node
-> will indeed describe a (little) piece of HW, that is the routing of the
-> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
-> 
-> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
-> with address 0x0C (that is the alarm response address), and IMHO this is
-> quite consistent with usage in the DT as a I2C child node.
-> 
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-smbus.txt b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
-> new file mode 100644
-> index 0000000..da83127
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
-> @@ -0,0 +1,20 @@
-> +* i2c-smbus extensions
-> +
-> +Required Properties:
-> +  - compatible: Must contain "smbus_alert"
-> +  - interrupts: The irq line for smbus ALERT signal
-> +  - reg: I2C slave address. Set to 0x0C (alert response address).
-> +
-> +Note: The i2c-smbus module registers itself as a slave I2C device. Whenever
-> +a smbus controller directly support smbus extensions (and its driver supports
-> +this), there is no need to add anything special to the DT. Otherwise, for using
-> +i2c-smbus with any smbus-extensions-unaware I2C controllers, you need to
-> +route the smbus ALARM signal to an extra IRQ line, thus you need to describe
-> +this in the DT.
+On 4/14/2016 3:02 AM, Pantelis Antoniou wrote:
+> Hi Mark,
+>=20
+>> On Apr 14, 2016, at 12:59 , Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrot=
+e:
+>>
+>> On Thu, Apr 14, 2016 at 09:48:49AM +0100, Russell King - ARM Linux w=
+rote:
+>>> On Thu, Apr 14, 2016 at 04:47:57PM +0900, Masahiro Yamada wrote:
+>>>> Hi experts.
+>>>>
+>>>> My understanding of refcount of DT node is poor.
+>>>
+>>> The message from DT people is... don't worry about DT node refcount=
+ing.
+>>> Do whatever you want with it, they don't care whether you have corr=
+ect
+>>> refcounting or not.
+>>>
+>>> The background behind that is that I've tried to fix the refcountin=
+g,
+>>> and even had the coccinelle people generate some stuff to work on t=
+his
+>>> issue, but DT people's attitude towards it is "don't bother".
+>>>
+>>> So yes, people may get it wrong, but it seems it's something that D=
+T
+>>> people want ignored.
+>>
+>> I'm not sure that's quite fair; the last discussion I recall about t=
+his
+>> ended up concluding that we need a better API, rather than papering =
+over
+>> problems.
+>>
+>> That said, there isn't much obvious progress on that front.
+>>
+>> Frank, Pantelis, Rob, were there any conclusions on this from ELC, o=
+r is
+>> this something that needs someone to propose something?
+>>
+>=20
+> Frank mentioned that he wants a new API. I have some ideas about it t=
+oo.
+>=20
+> My take is that drivers should never do reference counting, we have t=
+o figure
+> out a way for DT access using copy semantics or locks.
+>=20
+> References would still be required for core DT code, but that=E2=80=99=
+s a sane subset.
 
-Seems like you are designing the binding around how the module is 
-currently designed and creating a virtual device that doesn't exist.
+Yes.  Nothing concrete about implementation was decided at ELC, but thi=
+s issue
+is on my todo list.
 
-A "smbalert-gpios" property in the controller node would be sufficient 
-here. Alternatively, an interrupt and standardized interrupt-names value 
-could be used.
+-Frank
 
-Another option would be add a boolean property to each child node 
-smbalert capable and the childrens' interrupt properties would all be 
-the shared interrupt.
+>=20
+>> Mark.
+>>
+>> [1] http://permalink.gmane.org/gmane.linux.drivers.devicetree/153777
+>=20
+> Regards
+>=20
+> =E2=80=94 Pantelis
+>=20
+> .
+>=20
 
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
