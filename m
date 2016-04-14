@@ -1,30 +1,68 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] dt-bindings: Add a binding for Mediatek Video Decoder
-Date: Thu, 14 Apr 2016 11:15:03 -0500
-Message-ID: <20160414161503.GA11394@rob-hp-laptop>
-References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
- <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
- <1460548915-17536-3-git-send-email-tiffany.lin@mediatek.com>
+Subject: Re: [PATCH 1/2] dt/bindings/spi: Add bindings for PIC32 Quad-SPI
+ driver.
+Date: Thu, 14 Apr 2016 11:18:26 -0500
+Message-ID: <20160414161826.GA12444@rob-hp-laptop>
+References: <1460553125-32649-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460548915-17536-3-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1460553125-32649-1-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 08:01:50PM +0800, Tiffany Lin wrote:
-> Add a DT binding documentation of Video Decoder for the
-> MT8173 SoC from Mediatek.
+On Wed, Apr 13, 2016 at 06:42:04PM +0530, Purna Chandra Mandal wrote:
+> Document Device tree bindings for quad SPI peripheral
+> found on Microchip PIC32 class devices.
 > 
-> Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> 
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/mediatek-vcodec.txt  |   50 ++++++++++++++++++--
->  1 file changed, 46 insertions(+), 4 deletions(-)
+> 
+>  Documentation/devicetree/bindings/spi/sqi-pic32.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/sqi-pic32.txt
+
+One nit below, otherwise:
 
 Acked-by: Rob Herring <rob-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/sqi-pic32.txt b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
+> new file mode 100644
+> index 0000000..5af9fab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/sqi-pic32.txt
+> @@ -0,0 +1,18 @@
+> +Microchip PIC32 Quad SPI controller
+> +-----------------------------------
+> +Required properties:
+> +- compatible: Should be "microchip,pic32mzda-sqi".
+> +- reg: Address and length of SQI controller register space.
+> +- interrupts: Should contain SQI interrupt.
+> +- clocks: Should contain phandle of two clocks in sequence, clock that drives
+> +          clock on SPI bus and clock that drives SQI controller.
+> +- clock-names: Should be "spi_ck" and "reg_ck" in order.
+> +
+> +Example:
+> +	sqi1: sqi@1f8e2000 {
+
+spi@...
+
+> +		compatible = "microchip,pic32mzda-sqi";
+> +		reg = <0x1f8e2000 0x200>;
+> +		clocks = <&rootclk REF2CLK>, <&rootclk PB5CLK>;
+> +		clock-names = "spi_ck", "reg_ck";
+> +		interrupts = <169 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> -- 
+> 1.8.3.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
