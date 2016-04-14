@@ -1,268 +1,138 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/4 v5] iio: st_sensors: support open drain mode
-Date: Thu, 14 Apr 2016 10:45:21 +0200
-Message-ID: <1460623521-8755-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
+Date: Thu, 14 Apr 2016 09:47:57 +0100
+Message-ID: <570F593D.6040809@arm.com>
+References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459519381-34441-1-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some types of ST Sensors can be connected to the same IRQ line
-as other peripherals using open drain. Add a device tree binding
-and a sensor data property to flip the right bit in the interrupt
-control register to enable open drain mode on the INT line.
+Hi,
 
-If the line is set to be open drain, also tag on IRQF_SHARED
-to the IRQ flags when requesting the interrupt, as the whole
-point of using open drain interrupt lines is to share them with
-more than one peripheral (wire-or).
+On 01/04/16 15:02, Vladimir Murzin wrote:
+> Hi,
+> 
+> This patch series provides the basic support for running ucLinux on V2M-MPS2
+> platform.
+> 
+> With these patches applied ucLinux can be run on both HW and FVP models
+> with Cortex-M3/M4/M7 configurations.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>
-Cc: Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v4->v5:
-- Rename DT bool property int-pin-open-drain to drive-mode-open-drain
-  reusing the pin control subsystem binding.
-ChangeLog v3->v4:
-- Rename DT bool property st,int-pin-open-drain to int-pin-open-drain
-- Rob Herring ACKed st,int-pin-open-drain but not including his ACK
-  on this even though it's close
-ChangeLog v2->v3:
-- Rebase on top of the patches fixing the other issues (handling
-  IRQ status check and channel reading bug).
-ChangeLog v1->v2:
-- Rebased to fit the new patch order.
----
- Documentation/devicetree/bindings/iio/st-sensors.txt |  4 ++++
- drivers/iio/accel/st_accel_core.c                    |  8 ++++++++
- drivers/iio/common/st_sensors/st_sensors_core.c      | 20 ++++++++++++++++++++
- drivers/iio/common/st_sensors/st_sensors_trigger.c   | 13 +++++++++++++
- drivers/iio/pressure/st_pressure_core.c              |  8 ++++++++
- include/linux/iio/common/st_sensors.h                |  6 ++++++
- include/linux/platform_data/st_sensors_pdata.h       |  2 ++
- 7 files changed, 61 insertions(+)
+Any objection to get it merged?
 
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-index d4b87cc1e446..a9cf11bb8be7 100644
---- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -16,6 +16,10 @@ Optional properties:
- - st,drdy-int-pin: the pin on the package that will be used to signal
-   "data ready" (valid values: 1 or 2). This property is not configurable
-   on all sensors.
-+- drive-open-drain: the interrupt/data ready line will be configured
-+  as open drain, which is useful if several sensors share the same
-+  interrupt line. (This binding is taken from pinctrl/pinctrl-bindings.txt)
-+  This is a boolean property.
- 
- Sensors may also have applicable pin control settings, those use the
- standard bindings from pinctrl/pinctrl-bindings.txt.
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index 4df4c278af23..f06f4329db5b 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -96,6 +96,8 @@
- #define ST_ACCEL_2_DRDY_IRQ_INT2_MASK		0x10
- #define ST_ACCEL_2_IHL_IRQ_ADDR			0x22
- #define ST_ACCEL_2_IHL_IRQ_MASK			0x80
-+#define ST_ACCEL_2_OD_IRQ_ADDR			0x22
-+#define ST_ACCEL_2_OD_IRQ_MASK			0x40
- #define ST_ACCEL_2_MULTIREAD_BIT		true
- 
- /* CUSTOM VALUES FOR SENSOR 3 */
-@@ -177,6 +179,8 @@
- #define ST_ACCEL_5_DRDY_IRQ_INT2_MASK		0x20
- #define ST_ACCEL_5_IHL_IRQ_ADDR			0x22
- #define ST_ACCEL_5_IHL_IRQ_MASK			0x80
-+#define ST_ACCEL_5_OD_IRQ_ADDR			0x22
-+#define ST_ACCEL_5_OD_IRQ_MASK			0x40
- #define ST_ACCEL_5_IG1_EN_ADDR			0x21
- #define ST_ACCEL_5_IG1_EN_MASK			0x08
- #define ST_ACCEL_5_MULTIREAD_BIT		false
-@@ -368,6 +372,8 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask_int2 = ST_ACCEL_2_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_ACCEL_2_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_ACCEL_2_IHL_IRQ_MASK,
-+			.addr_od = ST_ACCEL_2_OD_IRQ_ADDR,
-+			.mask_od = ST_ACCEL_2_OD_IRQ_MASK,
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
- 		.multi_read_bit = ST_ACCEL_2_MULTIREAD_BIT,
-@@ -557,6 +563,8 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 			.mask_int2 = ST_ACCEL_5_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_ACCEL_5_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_ACCEL_5_IHL_IRQ_MASK,
-+			.addr_od = ST_ACCEL_5_OD_IRQ_ADDR,
-+			.mask_od = ST_ACCEL_5_OD_IRQ_MASK,
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
- 		.multi_read_bit = ST_ACCEL_5_MULTIREAD_BIT,
-diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
-index f5a2d445d0c0..dffe00692169 100644
---- a/drivers/iio/common/st_sensors/st_sensors_core.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_core.c
-@@ -301,6 +301,14 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
- 		return -EINVAL;
- 	}
- 
-+	if (pdata->open_drain) {
-+		if (!sdata->sensor_settings->drdy_irq.addr_od)
-+			dev_err(&indio_dev->dev,
-+				"open drain requested but unsupported.\n");
-+		else
-+			sdata->int_pin_open_drain = true;
-+	}
-+
- 	return 0;
- }
- 
-@@ -321,6 +329,8 @@ static struct st_sensors_platform_data *st_sensors_of_probe(struct device *dev,
- 	else
- 		pdata->drdy_int_pin = defdata ? defdata->drdy_int_pin : 0;
- 
-+	pdata->open_drain = of_property_read_bool(np, "drive-open-drain");
-+
- 	return pdata;
- }
- #else
-@@ -374,6 +384,16 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
- 			return err;
- 	}
- 
-+	if (sdata->int_pin_open_drain) {
-+		dev_info(&indio_dev->dev,
-+			 "set interrupt line to open drain mode\n");
-+		err = st_sensors_write_data_with_mask(indio_dev,
-+				sdata->sensor_settings->drdy_irq.addr_od,
-+				sdata->sensor_settings->drdy_irq.mask_od, 1);
-+		if (err < 0)
-+			return err;
-+	}
-+
- 	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
- 
- 	return err;
-diff --git a/drivers/iio/common/st_sensors/st_sensors_trigger.c b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-index 6a8c98327945..da72279fcf99 100644
---- a/drivers/iio/common/st_sensors/st_sensors_trigger.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-@@ -64,6 +64,19 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
- 			"rising edge\n", irq_trig);
- 		irq_trig = IRQF_TRIGGER_RISING;
- 	}
-+
-+	/*
-+	 * If the interrupt pin is Open Drain, by definition this
-+	 * means that the interrupt line may be shared with other
-+	 * peripherals. But to do this we also need to have a status
-+	 * register and mask to figure out if this sensor was firing
-+	 * the IRQ or not, so we can tell the interrupt handle that
-+	 * it was "our" interrupt.
-+	 */
-+	if (sdata->int_pin_open_drain &&
-+	    sdata->sensor_settings->drdy_irq.addr_stat_drdy)
-+		irq_trig |= IRQF_SHARED;
-+
- 	err = request_threaded_irq(irq,
- 			iio_trigger_generic_data_rdy_poll,
- 			NULL,
-diff --git a/drivers/iio/pressure/st_pressure_core.c b/drivers/iio/pressure/st_pressure_core.c
-index 1cd37eaa4a57..9e9b72a8f18f 100644
---- a/drivers/iio/pressure/st_pressure_core.c
-+++ b/drivers/iio/pressure/st_pressure_core.c
-@@ -64,6 +64,8 @@
- #define ST_PRESS_LPS331AP_DRDY_IRQ_INT2_MASK	0x20
- #define ST_PRESS_LPS331AP_IHL_IRQ_ADDR		0x22
- #define ST_PRESS_LPS331AP_IHL_IRQ_MASK		0x80
-+#define ST_PRESS_LPS331AP_OD_IRQ_ADDR		0x22
-+#define ST_PRESS_LPS331AP_OD_IRQ_MASK		0x40
- #define ST_PRESS_LPS331AP_MULTIREAD_BIT		true
- #define ST_PRESS_LPS331AP_TEMP_OFFSET		42500
- 
-@@ -104,6 +106,8 @@
- #define ST_PRESS_LPS25H_DRDY_IRQ_INT2_MASK	0x10
- #define ST_PRESS_LPS25H_IHL_IRQ_ADDR		0x22
- #define ST_PRESS_LPS25H_IHL_IRQ_MASK		0x80
-+#define ST_PRESS_LPS25H_OD_IRQ_ADDR		0x22
-+#define ST_PRESS_LPS25H_OD_IRQ_MASK		0x40
- #define ST_PRESS_LPS25H_MULTIREAD_BIT		true
- #define ST_PRESS_LPS25H_TEMP_OFFSET		42500
- #define ST_PRESS_LPS25H_OUT_XL_ADDR		0x28
-@@ -226,6 +230,8 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask_int2 = ST_PRESS_LPS331AP_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_PRESS_LPS331AP_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_PRESS_LPS331AP_IHL_IRQ_MASK,
-+			.addr_od = ST_PRESS_LPS331AP_OD_IRQ_ADDR,
-+			.mask_od = ST_PRESS_LPS331AP_OD_IRQ_MASK,
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
- 		.multi_read_bit = ST_PRESS_LPS331AP_MULTIREAD_BIT,
-@@ -313,6 +319,8 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
- 			.mask_int2 = ST_PRESS_LPS25H_DRDY_IRQ_INT2_MASK,
- 			.addr_ihl = ST_PRESS_LPS25H_IHL_IRQ_ADDR,
- 			.mask_ihl = ST_PRESS_LPS25H_IHL_IRQ_MASK,
-+			.addr_od = ST_PRESS_LPS25H_OD_IRQ_ADDR,
-+			.mask_od = ST_PRESS_LPS25H_OD_IRQ_MASK,
- 			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
- 		},
- 		.multi_read_bit = ST_PRESS_LPS25H_MULTIREAD_BIT,
-diff --git a/include/linux/iio/common/st_sensors.h b/include/linux/iio/common/st_sensors.h
-index d8da075bfda0..d029ffac0d69 100644
---- a/include/linux/iio/common/st_sensors.h
-+++ b/include/linux/iio/common/st_sensors.h
-@@ -122,6 +122,8 @@ struct st_sensor_bdu {
-  * @mask_int2: mask to enable/disable IRQ on INT2 pin.
-  * @addr_ihl: address to enable/disable active low on the INT lines.
-  * @mask_ihl: mask to enable/disable active low on the INT lines.
-+ * @addr_od: address to enable/disable Open Drain on the INT lines.
-+ * @mask_od: mask to enable/disable Open Drain on the INT lines.
-  * @addr_stat_drdy: address to read status of DRDY (data ready) interrupt
-  * struct ig1 - represents the Interrupt Generator 1 of sensors.
-  * @en_addr: address of the enable ig1 register.
-@@ -133,6 +135,8 @@ struct st_sensor_data_ready_irq {
- 	u8 mask_int2;
- 	u8 addr_ihl;
- 	u8 mask_ihl;
-+	u8 addr_od;
-+	u8 mask_od;
- 	u8 addr_stat_drdy;
- 	struct {
- 		u8 en_addr;
-@@ -215,6 +219,7 @@ struct st_sensor_settings {
-  * @odr: Output data rate of the sensor [Hz].
-  * num_data_channels: Number of data channels used in buffer.
-  * @drdy_int_pin: Redirect DRDY on pin 1 (1) or pin 2 (2).
-+ * @int_pin_open_drain: Set the interrupt/DRDY to open drain.
-  * @get_irq_data_ready: Function to get the IRQ used for data ready signal.
-  * @tf: Transfer function structure used by I/O operations.
-  * @tb: Transfer buffers and mutex used by I/O operations.
-@@ -236,6 +241,7 @@ struct st_sensor_data {
- 	unsigned int num_data_channels;
- 
- 	u8 drdy_int_pin;
-+	bool int_pin_open_drain;
- 
- 	unsigned int (*get_irq_data_ready) (struct iio_dev *indio_dev);
- 
-diff --git a/include/linux/platform_data/st_sensors_pdata.h b/include/linux/platform_data/st_sensors_pdata.h
-index 753839187ba0..79b0e4cdb814 100644
---- a/include/linux/platform_data/st_sensors_pdata.h
-+++ b/include/linux/platform_data/st_sensors_pdata.h
-@@ -16,9 +16,11 @@
-  * @drdy_int_pin: Redirect DRDY on pin 1 (1) or pin 2 (2).
-  *	Available only for accelerometer and pressure sensors.
-  *	Accelerometer DRDY on LSM330 available only on pin 1 (see datasheet).
-+ * @open_drain: set the interrupt line to be open drain if possible.
-  */
- struct st_sensors_platform_data {
- 	u8 drdy_int_pin;
-+	bool open_drain;
- };
- 
- #endif /* ST_SENSORS_PDATA_H */
--- 
-2.4.3
+Sudeep Holla noticed that there is merge conflict against linux-next
+with PIC32 uart (Makefile and serial_core.h), so should I provide
+conflict resolution or do rebase on someone's branch?
+
+Anyway, I'd be glad to know how it should be processed further?
+
+Thanks
+Vladimir
+
+> 
+> Board description:
+> 
+> http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_versatile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_manual_100112_0100_03_en.pdf
+> 
+> Application notes (cover Cortex-M3/M4/M7):
+> 
+> http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m3_on_v2m_mps2.pdf
+> http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m4_on_v2m_mps2.pdf
+> http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m7_on_v2m_mps2.pdf
+> http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m7_on_v2m_mps2.pdf
+> 
+> Cortex-M System Design Kit (referenced as CMDK from documents above):
+> 
+> http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf
+> 
+> I'd be happy to hear any feedback/comments on this series!
+> 
+> Changelog:
+> 
+>   v4  -> v5:
+>       - rebased on 4.6-rc1
+>       - updated mps2-uart per Peter
+>       - s/COFIG_ARCH_MPS2/CONFIG_ARCH_MPS under arm/mach-vexpress
+> 
+>   v3  -> v4:
+>       - rebased on 4.5-rc5
+>       - updated mps2-uart per Andy, Alan and Peter
+>       - dropped "zombie" EMBEDDED from defconfg per Arnd
+>       - moved mps2 under vexpress umbrella per Arnd
+>       - updated device-tree sources per Arnd
+>       - dropped low-level debug support, seems earlycon works well for that
+> 
+>   v2  -> v3:
+>       - rebased on 4.5-rc4
+>       - fixes for mps2-timer per Thomas
+>       - swicthed back to ttyMPS naming per Greg
+> 
+>   v1  -> v2:
+>       - rebased on 4.5-rc2
+>       - fixes for mps2-timer per Daniel and Rob (added Ack from Daniel)
+>       - fixes for mps2-uart per Greg and Andy
+> 
+>   RFC -> v1:
+>       - dropped RFC tag
+>       - rebased on 4.4-rc3
+>       - added Acks from Rob
+>       - updated mps2-timer per Daniel
+>       - fixed build failures reported by 0-DAY kernel test infrastructure
+> 
+> Thanks!
+> 
+> Vladimir Murzin (10):
+>   dt-bindings: document the MPS2 timer bindings
+>   clockevents/drivers: add MPS2 Timer driver
+>   dt-bindings: document the MPS2 UART bindings
+>   serial: mps2-uart: add MPS2 UART driver
+>   serial: mps2-uart: add support for early console
+>   ARM: vexpress/mps2: introduce MPS2 platform
+>   ARM: configs: add MPS2 defconfig
+>   ARM: dts: introduce MPS2 AN385/AN386
+>   ARM: dts: introduce MPS2 AN399/AN400
+>   MAINTAINERS: Update ARM Versatile Express platform entry
+> 
+>  .../devicetree/bindings/serial/arm,mps2-uart.txt   |   19 +
+>  .../devicetree/bindings/timer/arm,mps2-timer.txt   |   28 +
+>  MAINTAINERS                                        |    1 +
+>  arch/arm/Kconfig                                   |    8 +
+>  arch/arm/Makefile                                  |    1 +
+>  arch/arm/boot/dts/Makefile                         |    3 +
+>  arch/arm/boot/dts/mps2-an385.dts                   |   92 +++
+>  arch/arm/boot/dts/mps2-an399.dts                   |   92 +++
+>  arch/arm/boot/dts/mps2.dtsi                        |  242 ++++++++
+>  arch/arm/configs/mps2_defconfig                    |  109 ++++
+>  arch/arm/mach-vexpress/Makefile                    |    4 +-
+>  arch/arm/mach-vexpress/Makefile.boot               |    3 +
+>  arch/arm/mach-vexpress/v2m-mps2.c                  |   21 +
+>  drivers/clocksource/Kconfig                        |    6 +
+>  drivers/clocksource/Makefile                       |    1 +
+>  drivers/clocksource/mps2-timer.c                   |  275 +++++++++
+>  drivers/tty/serial/Kconfig                         |   13 +
+>  drivers/tty/serial/Makefile                        |    1 +
+>  drivers/tty/serial/mps2-uart.c                     |  626 ++++++++++++++++++++
+>  include/uapi/linux/serial_core.h                   |    3 +
+>  20 files changed, 1547 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/arm,mps2-uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/arm,mps2-timer.txt
+>  create mode 100644 arch/arm/boot/dts/mps2-an385.dts
+>  create mode 100644 arch/arm/boot/dts/mps2-an399.dts
+>  create mode 100644 arch/arm/boot/dts/mps2.dtsi
+>  create mode 100644 arch/arm/configs/mps2_defconfig
+>  create mode 100644 arch/arm/mach-vexpress/Makefile.boot
+>  create mode 100644 arch/arm/mach-vexpress/v2m-mps2.c
+>  create mode 100644 drivers/clocksource/mps2-timer.c
+>  create mode 100644 drivers/tty/serial/mps2-uart.c
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
