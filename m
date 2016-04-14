@@ -1,80 +1,45 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Thu, 14 Apr 2016 09:55:15 -0700
-Message-ID: <20160414165514.GL5995@atomide.com>
-References: <20160402001753.GR9329@atomide.com>
- <57026205.6020105@ti.com>
- <20160404151200.GA4652@atomide.com>
- <5703BA6B.1080208@ti.com>
- <20160411212845.GJ5995@atomide.com>
- <570CC54E.6020703@ti.com>
- <20160412163750.GR5995@atomide.com>
- <570E3428.5020804@ti.com>
- <20160413152829.GQ5995@atomide.com>
- <570F4804.4050006@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <570F4804.4050006@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 4/5] dmaengine: mv_xor: Allow selecting mv_xor for mvebu only compatible SoC
+Date: Thu, 14 Apr 2016 18:53:37 +0200
+Message-ID: <1460652818-14647-5-git-send-email-gregory.clement@free-electrons.com>
+References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460652818-14647-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [160414 00:35]:
-> On 04/13/16 18:28, Tony Lindgren wrote:
-> > 
-> > You could just create the sidetone child device manually on probe in the
-> > driver as needed. That way you'd have two devices to do the PM runtime
-> > on. I think that was Paul's main concern as they are separate modules.
-> 
-> You mean that not to have separate compatible for the McBSP module's Sidetone
-> core?
-> If yes, then it is a valid thing to remove the hwmod data for the sidetone,
-> like I did in this series.
+Armada 3700 SoC uses the mv_xor driver but don't select anymore the
+PLAT_ORION symbol. This commit extends the dependency of the mv_xor
+driver to the more modern SoCs only compatible with ARCH_MVEBU, which
+allows using it with the Armada 3700 SoC.
 
-No, I meant keep the sidetone hwmod, it really is there in the hardware.
+In the same time it also add the COMPILE_TEST dependency allowing a wider
+test coverage.
 
-I meant only probe the sidetone in the McBSP probe so you have two
-struct dev and two hwmod entries in the McBSP driver. I don't know if
-this actually makes things easier or not though.
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > It still leaves the chance of bugs with flush of posted writes. But might
-> > make things easier to deal with in small steps?
-> 
-> The only 'benefit' I see with separated driver for McBSP core and Sidetone
-> core is that the register writes will happen to the cores in separate drivers.
-> 
-> If the McBSP driver creates the device for the sidetone driver, then passing
-> the needed callbacks and data to it is going to be cleaner. Registering back
-> the callbacks to McBSP is what need to be figured out, so it is simple and
-> clean. Either with a callback to McBSP to set the ST callbacks or have the
-> callback struct used by ST via pdata to have places for the ST to McBSP
-> callbacks and when the driver loads it is going to set up those.
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index d96d87c56f2e..67b37ce94143 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -332,7 +332,7 @@ config MPC512X_DMA
+ 
+ config MV_XOR
+ 	bool "Marvell XOR engine support"
+-	depends on PLAT_ORION
++	depends on PLAT_ORION || ARCH_MVEBU || COMPILE_TEST
+ 	select DMA_ENGINE
+ 	select DMA_ENGINE_RAID
+ 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+-- 
+2.5.0
 
-OK yeah makes sense to me.
-
-> If I remove the prcm section for the ST hwmod:
-> [   87.784820] omap_hwmod: mcbsp2_sidetone: _wait_target_ready failed: -22
-> [   87.784851] omap-mcbsp 49022000.mcbsp: use pm_runtime_put_sync_suspend() in
-> driver?
-> 
-> When first try to use the audio.
-> So the hwmod code at least was checking the idlest bit.
-
-Yes the module is really there for sidetone, and it really has hardware
-registers :)
-
-> OK. I will go with the assumption that the sidetone hwmod can be removed (as
-> it is not correct) and rework my current series to use pdata callback for the
-> iclk autogate allow/deny. With this set the ST will be operational in legacy
-> and DT boot.
-
-Sorry, no I did not want to drop the sidetone hwmod, I was just trying to
-come up with ideas on how to make the driver changes easier. It sounds like
-you already figured out the driver changes part though with two drivers.
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
