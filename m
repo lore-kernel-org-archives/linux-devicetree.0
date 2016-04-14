@@ -1,164 +1,126 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v3 2/2] PCI: imx6: Add reset-gpio-active-high boolean
- property to DT
-Date: Thu, 14 Apr 2016 08:28:06 -0700
-Message-ID: <CAJ+vNU1y1owta3e-Th4sbBDV_n2y85dKM2acxJWrCiJnc3vQ9A@mail.gmail.com>
-References: <1459936100.2256.30.camel@pengutronix.de>
-	<1459946207-11923-1-git-send-email-ynezz@true.cz>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Thu, 14 Apr 2016 17:29:05 +0200
+Message-ID: <20160414152905.GB3366@ulmo.ba.sec>
+References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
+ <56E98F2E.5010307@wwwdotorg.org>
+ <20160413162203.GB30129@ulmo.ba.sec>
+ <570E7C38.3070005@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1459946207-11923-1-git-send-email-ynezz@true.cz>
+Content-Disposition: inline
+In-Reply-To: <570E7C38.3070005@wwwdotorg.org>
 Sender: linux-pci-owner@vger.kernel.org
-To: =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Richard Zhu <Richard.Zhu@freescale.com>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>, Fabio Estevam <festevam@gmail.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, stefan@agner.ch
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 6, 2016 at 5:36 AM, Petr =C5=A0tetiar <ynezz@true.cz> wrote=
-:
-> Currently the reset-gpio DT property which controls the PCI bus devic=
-e
-> reset signal defaults to active-low reset sequence (L=3Dreset state,
-> H=3Doperation state) plus the code in reset function isn't GPIO polar=
-ity
-> aware - it doesn't matter if the defined reset-gpio is active-low or
-> active-high, it will always result into active-low reset sequence.
->
-> I've tried to fix it properly and changed the reset-gpio reset sequen=
-ce
-> to be polarity aware, but this patch has been accepted and then rever=
-ted
-> as it has introduced few backward incompatible issues:
->
-> 1. Some of the DTBs as for example imx6qdl-sabresd, doesn't define
-> reset-gpio polarity correctly:
->
->   reset-gpio =3D <&gpio7 12 0>;
->
-> which means, that it's defined as active-high, but in reality it's
-> active-low, thus it wouldn't work without DTS fix.
->
-> 2. The logic in reset function is inverted:
->
->         gpio_set_value_cansleep(imx6_pcie->reset_gpio, 0)
->         msleep(100);
->         gpio_set_value_cansleep(imx6_pcie->reset_gpio, 1);
->
-> so even if some of the i.MX6 boards had reset-gpio polarity defined
-> correctly in their DTSes, they would stop working.
->
-> As we can't break old DTBs, we can't fix them and that's why we need =
-to
-> introduce this new DT reset-gpio-active-high boolean property, so we =
-can
-> support boards with active-high reset sequence.
->
-> This active-high reset sequence is for example needed on Apalis SoMs,
-> where GPIO1_IO28, used to PCIe reset is not connected directly to PER=
-ST#
-> PCIe signal, but it's ORed with RESETBMCU coming off the PMIC, and th=
-us
-> is inverted, active-high.
->
-> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
-> ---
->  Changes since v1:
->
->   * Added documentation of reset-gpio and reset-gpio-active-high DT p=
-roperties
->   * Removed unnecessary double negation of GPIO value
->
->  Changes since v2:
->
->   * Changed commit message so it explains in more detail why we need =
-new DT
->     property
->   * Changed PHY to 'bus device' in binding's documentation
->
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt |  6 ++++++
->  drivers/pci/host/pci-imx6.c                              | 14 ++++++=
-+++++---
->  2 files changed, 17 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt=
- b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 3be80c6..072efbf 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -19,6 +19,12 @@ Optional properties:
->  - fsl,tx-deemph-gen2-6db: Gen2 (6db) De-emphasis value. Default: 20
->  - fsl,tx-swing-full: Gen2 TX SWING FULL value. Default: 127
->  - fsl,tx-swing-low: TX launch amplitude swing_low value. Default: 12=
-7
-> +- reset-gpio: Should specify the GPIO for controlling the PCI bus de=
-vice reset
-> +  signal. Its not polarity aware and defaults to active-low reset se=
-quence
-> +  (L=3Dreset state, H=3Doperation state).
-> +- reset-gpio-active-high: If present then the reset sequence using t=
-he GPIO
-> +  specified in the "reset-gpio" property is reversed (H=3Dreset stat=
-e,
-> +  L=3Doperation state).
->
->  Example:
->
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.=
-c
-> index 2f817fa..17f4cc3 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
-> @@ -33,6 +33,7 @@
->
->  struct imx6_pcie {
->         int                     reset_gpio;
-> +       bool                    gpio_active_high;
->         struct clk              *pcie_bus;
->         struct clk              *pcie_phy;
->         struct clk              *pcie;
-> @@ -310,9 +311,11 @@ static int imx6_pcie_deassert_core_reset(struct =
-pcie_port *pp)
->
->         /* Some boards don't have PCIe reset GPIO. */
->         if (gpio_is_valid(imx6_pcie->reset_gpio)) {
-> -               gpio_set_value_cansleep(imx6_pcie->reset_gpio, 0);
-> +               gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> +                                       imx6_pcie->gpio_active_high);
->                 msleep(100);
-> -               gpio_set_value_cansleep(imx6_pcie->reset_gpio, 1);
-> +               gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> +                                       !imx6_pcie->gpio_active_high)=
-;
->         }
->         return 0;
->
-> @@ -546,9 +549,14 @@ static int __init imx6_pcie_probe(struct platfor=
-m_device *pdev)
->
->         /* Fetch GPIOs */
->         imx6_pcie->reset_gpio =3D of_get_named_gpio(np, "reset-gpio",=
- 0);
-> +       imx6_pcie->gpio_active_high =3D of_property_read_bool(np,
-> +                                               "reset-gpio-active-hi=
-gh");
->         if (gpio_is_valid(imx6_pcie->reset_gpio)) {
->                 ret =3D devm_gpio_request_one(&pdev->dev, imx6_pcie->=
-reset_gpio,
-> -                                           GPIOF_OUT_INIT_LOW, "PCIe=
- reset");
-> +                               imx6_pcie->gpio_active_high ?
-> +                                       GPIOF_OUT_INIT_HIGH :
-> +                                       GPIOF_OUT_INIT_LOW,
-> +                               "PCIe reset");
->                 if (ret) {
->                         dev_err(&pdev->dev, "unable to get reset gpio=
-\n");
->                         return ret;
-> --
-> 1.9.1
->
 
-Tested on Gateworks Ventana boards (which have active-low PERST#)
+--H+4ONPRPur6+Ovig
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Tim Harvey <tharvey@gateworks.com>
+On Wed, Apr 13, 2016 at 11:04:56AM -0600, Stephen Warren wrote:
+> On 04/13/2016 10:22 AM, Thierry Reding wrote:
+> > On Wed, Mar 16, 2016 at 10:51:58AM -0600, Stephen Warren wrote:
+> > > On 03/08/2016 08:48 AM, Thierry Reding wrote:
+> > > > From: Thierry Reding <treding@nvidia.com>
+> > > >=20
+> > > > Changes to the pad controller device tree binding have required that
+> > > > each lane be associated with a separate PHY.
+> > >=20
+> > > I still don't think this has anything to do with DT bindings. Rather,=
+ the
+> > > definition of a PHY (in HW and the Linux PHY subsystem) is a single l=
+ane.
+> > > That fact then requires drivers to support a PHY per lane rather than=
+ a
+> > > single multi-lane PHY, and equally means the DT bindings must be writ=
+ten
+> > > according to the correct definition of a PHY.
+> > >=20
+> > > Still, I suppose the commit description is fine as is.
+> >=20
+> > I've reworded the commit message to give a more accurate rationale for
+> > the change. I'll be posting a v5 soon.
+> >=20
+> > > > Update the PCI host bridge
+> > > > device tree binding to allow each root port to define the list of P=
+HYs
+> > > > required to drive the lanes associated with it.
+> > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-p=
+cie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > >=20
+> > > > +Required properties for Tegra124 and later:
+> > > > +- phys: Must contain an phandle to a PHY for each entry in phy-nam=
+es.
+> > > > +- phy-names: Must include an entry for each active lane. Note that=
+ the number
+> > > > +  of entries does not have to (though usually will) be equal to th=
+e specified
+> > > > +  number of lanes in the nvidia,num-lanes property. Entries are of=
+ the form
+> > > > +  "pcie-N": where N ranges from 0 to the value specified in nvidia=
+,num-lanes.
+> > >=20
+> > > When would the number of PHYs not equal the number of lanes? I though=
+t the
+> > > whole point of this patch was to switch to per-lane PHYs? Perhaps I'm=
+ just
+> > > misremembering some exception, so there may be no need to change this.
+> >=20
+> > This is useful to support the case where we want to connect a x1 or x2
+> > device to a root port that is configured to drive more lanes. It's a
+> > rather unusual configuration, but it would be possible for example to
+> > have an onboard x1 ethernet card, but the board layout is such that it
+> > runs in x1/x2 mode, with the ethernet card connected to the x2 port.
+>=20
+> Does the controller HW actually work correctly in such a mode?
+
+I think it does, and up until a few minutes ago I was even sure that I
+had tested it once. But looking at the various boards that I have I
+don't think I actually have test equipment that's wired the proper way
+to test this.
+
+> Obviously a fully initialized x4 controller has to correctly handle being
+> attached solely to a x1 device. However, that's a different case to simply
+> not initializing 3 of the 4 PHYs. It's plausible the controller handles t=
+his
+> just fine, or that it hangs up or otherwise misbehaves if some of the PHYs
+> aren't enabled and hence it can't even detect whether something is attach=
+ed
+> to them or not. Either way, adding your explanation into the binding would
+> be useful to highlight the reason for the special case.
+
+Perhaps for now it would be better to make the binding stricter. The
+wording could be relaxed if we ever determine that it still works
+correctly with a number of PHYs smaller than the number of lanes.
+
+Thierry
+
+--H+4ONPRPur6+Ovig
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXD7dAAAoJEN0jrNd/PrOhUt0QAKGglDYSP4eAtVBraPIjawy1
+8/5SaSs925dpZvYDI5dpBR90ScHDi3g8L7CFU2S5LYqxnIailE368CT0PJXzwl63
+mfbRX0msqO4obxKw3JVoAtfjYw6vRQn9FOH1IcBCY+IMVMjqcH65qkOpjvlgz6nX
+zBqShtJvyUgRb7y31dZ6a4adRQ+y9mSd+aDbUDVc+OFrY5Cvz4hy2AtyTFwZMXwp
+Lon2+oFBSohz1+UZvd5tndAZ8A5c15cU+2/eTEsWEcy0ASj9Sy9nsj58/hHpDz1t
+cM7yHtK9rOdldlQlnb7Zyea3JQZmvMX2Yc6OdYY4vEvuH6SoA1AzLtQcRKRWOBwA
+Vqo+EhpB9BpZVACweauDx7f+/GLifHyFQdoAl4DBL2fMA0zvgmwqvoZQtBfWqRZ8
+m7WtUI3nbXBt7qokao7vBVdcPeOErqKXHD1YBtKYPB19mdYuO2NvIKJl5QyQmSU6
+8X4X1grnaFPcNBuVJQ7igcsi5QUt7G/4wCw/qeGQrZtYotOV3fTQr3WHwFnDRswP
+yOwXNigMJwyvl/k4yaL3hhcJ6BmSOBZwlPTgmcK7VVmzkp0fgIlovTZCHJmltkWE
+hKfRrUYNWSvW3R6rj+89/3/rLHLKF2qcCqt7aN1dAqiQeNlXZaHKbKkDAQzole6N
+umcOmzQHGfJhrhqRoY38
+=ETlq
+-----END PGP SIGNATURE-----
+
+--H+4ONPRPur6+Ovig--
