@@ -1,75 +1,122 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v2 3/3] leds: gpio: Support the "panic-indicator" firmware
- property
-Date: Thu, 14 Apr 2016 10:57:15 +0200
-Message-ID: <570F5B6B.3000702@samsung.com>
-References: <1460570899-24642-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <1460570899-24642-4-git-send-email-ezequiel@vanguardiasur.com.ar>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 0/4] ASoC: add graph base connection on
+ simple-card
+Date: Thu, 14 Apr 2016 11:01:28 +0200
+Message-ID: <20160414110128.56a0da97d526cdcb8d5f1ddf@free.fr>
+References: <871t68wxxe.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1460570899-24642-4-git-send-email-ezequiel@vanguardiasur.com.ar>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <871t68wxxe.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
+On Thu, 14 Apr 2016 05:45:41 +0000
+Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
 
-It would be good to update also leds-gpio bindings,
-of course in a separate patch:
+> Current simple-card is using "sound-dai" base connection on DT,
+> but V4L2 is using graph base connection.
+> For example HDMI case, we would like to use both connection.
+> To above confusable connection method, and to reuse current resource,
+> this patch adds new function, and detect both "sound-dai" and "remote=
+-endpoint"
+> on simple-card. like this
+>=20
+> 	sound {
+> 		compatible =3D "simple-audio-card";
+> 		...
+> 		sndcpu: simple-audio-card,cpu {
+> 			sound-dai =3D <&xxx>;
+> 		};
+> 		sndcodec: simple-audio-card,codec {
+> =3D>			remote-endpoint =3D <&out_hdmi>;
+> 		};
+> 	};
+>=20
+> 	xxx {
+> 		...
+> 		ports {
+> 			...
+> 			port@0 {
+> 				reg =3D <0>;
+> 				out_rgb: endpoint {
+> 				};
+> 			};
+> 			port@1 {
+> 				reg =3D <1>;
+> =3D>				out_hdmi: endpoint {
+> 				};
+> 			};
+> 			...
+> 		};
+> 	};
+	[snip]
 
-Documentation/devicetree/bindings/leds/leds-gpio.txt
+Hi Kuninori,
 
-Thanks,
-Jacek Anaszewski
+Thanks for this first step towards the graph of ports in audio,
+but I don't see exactly the use of this remote-endpoint.
 
-On 04/13/2016 08:08 PM, Ezequiel Garcia wrote:
-> Calling a GPIO LEDs is quite likely to work even if the kernel
-> has paniced, so they are ideal to blink in this situation.
-> This commit adds support for the new "panic-indicator"
-> firmware property, allowing to mark a given LED to blink on
-> a kernel panic.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-> ---
->   drivers/leds/leds-gpio.c | 4 ++++
->   include/linux/leds.h     | 1 +
->   2 files changed, 5 insertions(+)
->
-> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> index 61143f55597e..8229f063b483 100644
-> --- a/drivers/leds/leds-gpio.c
-> +++ b/drivers/leds/leds-gpio.c
-> @@ -127,6 +127,8 @@ static int create_gpio_led(const struct gpio_led *template,
->   	led_dat->cdev.brightness = state ? LED_FULL : LED_OFF;
->   	if (!template->retain_state_suspended)
->   		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
-> +	if (template->panic_indicator)
-> +		led_dat->cdev.flags |= LED_PANIC_INDICATOR;
->
->   	ret = gpiod_direction_output(led_dat->gpiod, state);
->   	if (ret < 0)
-> @@ -200,6 +202,8 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
->
->   		if (fwnode_property_present(child, "retain-state-suspended"))
->   			led.retain_state_suspended = 1;
-> +		if (fwnode_property_present(child, "panic-indicator"))
-> +			led.panic_indicator = 1;
->
->   		ret = create_gpio_led(&led, &priv->leds[priv->num_leds],
->   				      dev, NULL);
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 49adf9c6e326..1067fb5f9296 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -359,6 +359,7 @@ struct gpio_led {
->   	unsigned 	gpio;
->   	unsigned	active_low : 1;
->   	unsigned	retain_state_suspended : 1;
-> +	unsigned	panic_indicator : 1;
->   	unsigned	default_state : 2;
->   	/* default_state should be one of LEDS_GPIO_DEFSTATE_(ON|OFF|KEEP) */
->   	struct gpio_desc *gpiod;
->
+According to Documentation/devicetree/bindings/graph.txt section
+"Links between endpoints", the endpoint/remote-endpoint links are
+bi-directional and describe the physical links: the audio port of the
+codec is connected to the audio controller and reverse.
+There is no reverse link from the codec to the 'simple-card'.
+
+If the codec has only one DAI, using the remote-port just complexifies
+the access to the codec (remote-port -> endpoint -> parent [->parent]).
+
+If the codec has more than one audio input, a DT may look like:
+
+	hdmi_transmitter {
+		...
+		port@1 {			/* audio from I2S */
+			reg =3D <1>;
+			...
+			i2s: endpoint {
+				remote-endpoint =3D <&audio_i2s>;
+			};
+		};
+		port@2 {			 /* audio from S/PDIF */
+			reg =3D <2>;
+			...
+			spdif: endpoint {
+				remote-endpoint =3D <&audio_spdif>;
+			};
+		};
+	};
+(the video port is not shown and may be declared before, between or
+after the audio ports)
+
+The codec associated to the HDMI transmitter declares 2 DAIs.
+It may choose to define the DAI numbers either in a fixed order
+(say 0 is always S/PDIF and 1 is always I2S), or dynamically, following
+the declaration of the ports (in the example, 0 is I2S and 1 is S/PDIF)=
+=2E
+
+As the DAI numbers are used by the simple card to get the DAI names,
+their values must be know.
+
+With the standard declaration of the codec DAIs in the simple card
+(phandle to the codec - hdmi -  plus DAI number), either numbering
+scheme works (the documentation of the hdmi transmitter tells which
+scheme is used and the DAI number in the DT is set accordingly).
+
+When using a phandle to the remote-endpoint (without DAI number), the
+simple card has no direct way to find the DAI number:
+- with a fixed order, some more information must be set in the DT
+  (audio port type),
+- with a dynamic order, a loop on all ports must be done, counting the
+  audio ports and skipping the video port(s).
+
+--=20
+Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
