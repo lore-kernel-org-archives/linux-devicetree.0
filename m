@@ -1,153 +1,232 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Thu, 14 Apr 2016 10:29:33 -0500
-Message-ID: <20160414152933.GA14073@rob-hp-laptop>
-References: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
- <1460533460-32336-3-git-send-email-songjun.wu@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460533460-32336-3-git-send-email-songjun.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@atmel.com>
-Cc: g.liakhovetski@gmx.de, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v5 3/5] clk: mvebu: new driver for Armada AP806 system controller
+Date: Thu, 14 Apr 2016 17:33:31 +0200
+Message-ID: <1460648013-31320-4-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 03:44:20PM +0800, Songjun Wu wrote:
-> DT binding documentation for ISC driver.
-> 
-> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
-> ---
-> 
->  .../devicetree/bindings/media/atmel-isc.txt        | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> new file mode 100644
-> index 0000000..449f05f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> @@ -0,0 +1,84 @@
-> +Atmel Image Sensor Controller (ISC)
-> +----------------------------------------------
-> +
-> +Required properties:
-> +- compatible
-> +	Must be "atmel,sama5d2-isc"
-> +- reg
-> +	Physical base address and length of the registers set for the device;
-> +- interrupts
-> +  Should contain IRQ line for the ISI;
-> +- clocks
-> +	List of clock specifiers, corresponding to entries in
-> +	the clock-names property;
-> +	Please refer to clock-bindings.txt.
-> +- clock-names
-> +	Required elements: "hclock", "ispck".
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
-> +- clk_in_isc
+The Armada AP806 system controller, amongst other things, provides a
+number of clocks for the platform: the CPU cluster clocks, whose
+frequencies are found by reading the Sample At Reset register, one
+fixed clock, and another clock derived from the fixed clock, which is
+the one used by most peripherals in AP806.
 
-No underscores and this needs a better explanation.
+The AP806 is one of the two core HW blocks used in the Marvell 7K/8K
+SoCs.
 
-> +	ISC internal clock node, it includes the isc_ispck and isc_mck.
-> +	Please refer to clock-bindings.txt.
-> +- atmel,sensor-preferred
-> +	Sensor is preferred to process image (1-preferred, 0-not).
-> +	The default value is 1.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+ drivers/clk/mvebu/Kconfig                   |   3 +
+ drivers/clk/mvebu/Makefile                  |   1 +
+ drivers/clk/mvebu/ap806-system-controller.c | 168 ++++++++++++++++++++++++++++
+ 3 files changed, 172 insertions(+)
+ create mode 100644 drivers/clk/mvebu/ap806-system-controller.c
 
-This seems a bit questionable.
+diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
+index eaee8f0..bf7ae00 100644
+--- a/drivers/clk/mvebu/Kconfig
++++ b/drivers/clk/mvebu/Kconfig
+@@ -29,6 +29,9 @@ config ARMADA_XP_CLK
+ 	select MVEBU_CLK_COMMON
+ 	select MVEBU_CLK_CPU
+ 
++config ARMADA_AP806_SYSCON
++	bool
++
+ config DOVE_CLK
+ 	bool
+ 	select MVEBU_CLK_COMMON
+diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
+index 8866115..f4aa481 100644
+--- a/drivers/clk/mvebu/Makefile
++++ b/drivers/clk/mvebu/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
+ obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
+ obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
+ obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
++obj-$(CONFIG_ARMADA_AP806_SYSCON) += ap806-system-controller.o
+ obj-$(CONFIG_DOVE_CLK)		+= dove.o dove-divider.o
+ obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
+ obj-$(CONFIG_ORION_CLK)		+= orion.o
+diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
+new file mode 100644
+index 0000000..ac9201c
+--- /dev/null
++++ b/drivers/clk/mvebu/ap806-system-controller.c
+@@ -0,0 +1,168 @@
++/*
++ * Marvell Armada AP806 System Controller
++ *
++ * Copyright (C) 2016 Marvell
++ *
++ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#define pr_fmt(fmt) "ap806-system-controller: " fmt
++
++#include <linux/clk-provider.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define AP806_SAR_REG			0x400
++#define AP806_SAR_CLKFREQ_MODE_MASK	0x1f
++
++#define AP806_CLK_NUM 			4
++
++static struct clk *ap806_clks[AP806_CLK_NUM];
++
++static struct clk_onecell_data ap806_clk_data = {
++	.clks = ap806_clks,
++	.clk_num = AP806_CLK_NUM,
++};
++
++static int ap806_syscon_clk_probe(struct platform_device *pdev)
++{
++	unsigned int freq_mode, cpuclk_freq;
++	const char *name, *fixedclk_name;
++	struct device_node *np = pdev->dev.of_node;
++	struct regmap *regmap;
++	u32 reg;
++	int ret;
++
++	regmap = syscon_node_to_regmap(np);
++	if (IS_ERR(regmap)) {
++		dev_err(&pdev->dev, "cannot get regmap\n");
++		return PTR_ERR(regmap);
++	}
++
++	ret = regmap_read(regmap, AP806_SAR_REG, &reg);
++	if (ret) {
++		dev_err(&pdev->dev, "cannot read from regmap\n");
++		return ret;
++	}
++
++	freq_mode = reg & AP806_SAR_CLKFREQ_MODE_MASK;
++	switch(freq_mode) {
++	case 0x0 ... 0x5:
++		cpuclk_freq = 2000;
++		break;
++	case 0x6 ... 0xB:
++		cpuclk_freq = 1800;
++		break;
++	case 0xC ... 0x11:
++		cpuclk_freq = 1600;
++		break;
++	case 0x12 ... 0x16:
++		cpuclk_freq = 1400;
++		break;
++	case 0x17 ... 0x19:
++		cpuclk_freq = 1300;
++		break;
++	default:
++		dev_err(&pdev->dev, "invalid SAR value\n");
++		return -EINVAL;
++	}
++
++	/* Convert to hertz */
++	cpuclk_freq *= 1000 * 1000;
++
++	/* CPU clocks depend on the Sample At Reset configuration */
++	of_property_read_string_index(np, "clock-output-names",
++				      0, &name);
++	ap806_clks[0] = clk_register_fixed_rate(&pdev->dev, name, NULL,
++						0, cpuclk_freq);
++	if (IS_ERR(ap806_clks[0])) {
++		ret = PTR_ERR(ap806_clks[0]);
++		goto fail0;
++	}
++
++	of_property_read_string_index(np, "clock-output-names",
++				      1, &name);
++	ap806_clks[1] = clk_register_fixed_rate(&pdev->dev, name, NULL, 0,
++						cpuclk_freq);
++	if (IS_ERR(ap806_clks[1])) {
++		ret = PTR_ERR(ap806_clks[1]);
++		goto fail1;
++	}
++
++	/* Fixed clock is always 1200 Mhz */
++	of_property_read_string_index(np, "clock-output-names",
++				      2, &fixedclk_name);
++	ap806_clks[2] = clk_register_fixed_rate(&pdev->dev, fixedclk_name, NULL, 0,
++						1200 * 1000 * 1000);
++	if (IS_ERR(ap806_clks[2])) {
++		ret = PTR_ERR(ap806_clks[2]);
++		goto fail2;
++	}
++
++	/* MSS Clock is fixed clock divided by 6 */
++	of_property_read_string_index(np, "clock-output-names",
++				      3, &name);
++	ap806_clks[3] = clk_register_fixed_factor(NULL, name, fixedclk_name,
++						  0, 1, 6);
++	if (IS_ERR(ap806_clks[3])) {
++		ret = PTR_ERR(ap806_clks[3]);
++		goto fail3;
++	}
++
++	ret = of_clk_add_provider(np, of_clk_src_onecell_get, &ap806_clk_data);
++	if (ret)
++		goto fail_clk_add;
++
++	return 0;
++
++fail_clk_add:
++	clk_unregister_fixed_factor(ap806_clks[3]);
++fail3:
++	clk_unregister_fixed_rate(ap806_clks[2]);
++fail2:
++	clk_unregister_fixed_rate(ap806_clks[1]);
++fail1:
++	clk_unregister_fixed_rate(ap806_clks[0]);
++fail0:
++	return ret;
++}
++
++static int ap806_syscon_clk_remove(struct platform_device *pdev)
++{
++	of_clk_del_provider(pdev->dev.of_node);
++	clk_unregister_fixed_factor(ap806_clks[3]);
++	clk_unregister_fixed_rate(ap806_clks[2]);
++	clk_unregister_fixed_rate(ap806_clks[1]);
++	clk_unregister_fixed_rate(ap806_clks[0]);
++
++	return 0;
++}
++
++static const struct of_device_id ap806_syscon_of_match[] = {
++        { .compatible = "marvell,ap806-system-controller", },
++        {},
++};
++MODULE_DEVICE_TABLE(of, armada8k_pcie_of_match);
++
++static struct platform_driver ap806_syscon_driver = {
++	.probe = ap806_syscon_clk_probe,
++	.remove = ap806_syscon_clk_remove,
++	.driver		= {
++		.name	= "marvell-ap806-system-controller",
++		.of_match_table = ap806_syscon_of_match,
++	},
++};
++
++module_platform_driver(ap806_syscon_driver);
++
++MODULE_DESCRIPTION("Marvell AP806 System Controller driver");
++MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni@free-electrons.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.6.4
 
-> +
-> +ISC supports a single port node with parallel bus. It should contain one
-> +'port' child node with child 'endpoint' node. Please refer to the bindings
-> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +isc: isc@f0008000 {
-> +	compatible = "atmel,sama5d2-isc";
-> +	reg = <0xf0008000 0x4000>;
-> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-> +	clocks = <&isc_clk>, <&isc_ispck>;
-> +	clock-names = "hclock", "ispck";
-> +	atmel,sensor-preferred = <1>;
-> +
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		isc_0: endpoint@0 {
-
-Don't need a unit address for a single endpoint.
-
-> +			remote-endpoint = <&ov7740_0>;
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +			pclk-sample = <1>;
-
-Are these documented? They are really properties of the sensor and 
-should be part of the sensor node.
-
-> +		};
-> +	};
-> +
-> +	clk_in_isc {
-
-Completely missed this is a node from the above description. I should be 
-able to write or validate the example from the description.
-
-I think perhaps you should just drop all this from the DT, just list the 
-input clocks, and make the ISC node the clock controller.
-
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		isc_ispck: isc_ispck {
-
-No underscores in node names.
-
-> +			#clock-cells = <0>;
-> +			reg = <0>;
-
-Drop or you need a unit address.
-
-> +			clocks = <&isc_clk>, <&iscck>;
-> +		};
-> +
-> +		isc_mck: isc_mck {
-> +			#clock-cells = <0>;
-> +			reg = <1>;
-> +			clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-> +		};
-> +	};
-> +};
-> +
-> +i2c1: i2c@fc028000 {
-> +	ov7740: camera@0x21 {
-
-Drop "0x"
-
-> +	compatible = "ovti,ov7740";
-> +	reg = <0x21>;
-> +
-> +	clocks = <&isc_mck>;
-> +	clock-names = "xvclk";
-> +	assigned-clocks = <&isc_mck>;
-> +	assigned-clock-rates = <24000000>;
-> +
-> +	port {
-> +		ov7740_0: endpoint {
-> +			remote-endpoint = <&isc_0>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
