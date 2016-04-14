@@ -1,55 +1,54 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 5/7] clk: samsung: exynos542x: Add the clock id for ACLK
-Date: Thu, 14 Apr 2016 15:28:17 +0900
-Message-ID: <570F3881.9000100@samsung.com>
-References: <1460091646-28701-1-git-send-email-cw00.choi@samsung.com>
- <1460091646-28701-6-git-send-email-cw00.choi@samsung.com>
- <570CDB16.2050001@samsung.com>
- <CA+Ln22EFdspBdHwWar65UZ-uFxq4c9+RPhNCJjgKp9idvDvM5A@mail.gmail.com>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v8 10/10] MAINTAINERS: Add maintainer for hisilicon DRM
+ driver
+Date: Thu, 14 Apr 2016 14:46:03 +0800
+Message-ID: <CAGd==07vOOQpusTXVDDaw5=7CTguiw4kCFqbWU9pKUQn+gF9Bg@mail.gmail.com>
+References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
+ <1460364943-76135-11-git-send-email-xinliang.liu@linaro.org>
+ <CACvgo53zwoid+dWNRAX=iwAvO50Eg3k13+1mJtQcTjKVQJebQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CA+Ln22EFdspBdHwWar65UZ-uFxq4c9+RPhNCJjgKp9idvDvM5A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux.amoon@gmail.com, m.reichl@fivetechno.de, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, InKi Dae <inki.dae@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACvgo53zwoid+dWNRAX=iwAvO50Eg3k13+1mJtQcTjKVQJebQA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Rongrong Zou <zourongrong@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Jonathan Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree <devicetree@vger.kernel.org>, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz and Krzysztof,
-
-On 2016=EB=85=84 04=EC=9B=94 13=EC=9D=BC 15:20, Tomasz Figa wrote:
-> 2016-04-12 14:25 GMT+03:00 Krzysztof Kozlowski <k.kozlowski@samsung.c=
-om>:
->> On 04/08/2016 07:00 AM, Chanwoo Choi wrote:
->>> This patch adds the clock id for ACLK clock which is source clock o=
-f AMBA AXI
->>> Bus. This clock should be handled in Bus frequency scaling driver.
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> ---
->>>  drivers/clk/samsung/clk-exynos5420.c | 85 +++++++++++++++++++++++-=
-------------
->>>  1 file changed, 55 insertions(+), 30 deletions(-)
->>
->> The IDs itself look good but you are not adding only clock ID. You a=
-re
->> changing all of them from NULL-flags to CLK_SET_RATE_PARENT. This sh=
-ould
->> be explained in the commit message why you need it. Probably it shou=
-ld
->> be also in separate commit.
->=20
-> +1. And CLK_SET_RATE_PARENT for a clock which has a mux as its parent
-> is a bit suspicious, so I'd like to know the rationale for each singl=
-e
-> clock with CLK_SET_RATE_PARENT being added.
-
-This patch don't need the CLK_SET_RATE_PARENT flag. As Tomasz's comment=
-,
-the mux of divider's parent don't need this flag. Sorry for confusion.
-
-I'll drop the CLK_SET_RATE_PARENT flag.
-
-Best Regards,
-Chanwoo Choi
+T24gMTMgQXByaWwgMjAxNiBhdCAxOTo1NCwgRW1pbCBWZWxpa292IDxlbWlsLmwudmVsaWtvdkBn
+bWFpbC5jb20+IHdyb3RlOgo+IEhpIFhpbmxpYW5nLAo+Cj4gT24gMTEgQXByaWwgMjAxNiBhdCAw
+OTo1NSwgWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4gd3JvdGU6Cj4+IEFk
+ZCBtYWludGFpbmVyIGFuZCByZXZpZXdlciBmb3IgaGlzaWxpY29uIERSTSBkcml2ZXIuCj4+Cj4+
+IHY4OiBOb25lLgo+PiB2NzogTm9uZS4KPj4gdjY6IE5vbmUuCj4+IHY1OiBOb25lLgo+PiB2NDoK
+Pj4gLSBBZGQgQ2hlbiBGZW5nIDxwdWNrLmNoZW5AaGlzaWxpY29uLmNvbT4gYXMgRGVzaWduYXRl
+ZCByZXZpZXdlci4KPj4gdjM6IEZpcnN0IHZlcnNpb24uCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFhp
+bmxpYW5nIExpdSA8eGlubGlhbmcubGl1QGxpbmFyby5vcmc+Cj4+IC0tLQo+PiAgTUFJTlRBSU5F
+UlMgfCAxMCArKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQo+
+Pgo+PiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwo+PiBpbmRleCA2MWEz
+MjNhNmIyY2YuLmEyZWY1ODg2MDY4OSAxMDA2NDQKPj4gLS0tIGEvTUFJTlRBSU5FUlMKPj4gKysr
+IGIvTUFJTlRBSU5FUlMKPj4gQEAgLTM4NDAsNiArMzg0MCwxNiBAQCBTOiAgICAgICBNYWludGFp
+bmVkCj4+ICBGOiAgICAgZHJpdmVycy9ncHUvZHJtL2dtYTUwMAo+PiAgRjogICAgIGluY2x1ZGUv
+ZHJtL2dtYTUwMCoKPj4KPj4gK0RSTSBEUklWRVJTIEZPUiBISVNJTElDT04KPj4gK006ICAgICBY
+aW5saWFuZyBMaXUgPHoubGl1eGlubGlhbmdAaGlzaWxpY29uLmNvbT4KPj4gK1I6ICAgICBYaW53
+ZWkgS29uZyA8a29uZy5rb25neGlud2VpQGhpc2lsaWNvbi5jb20+Cj4+ICtSOiAgICAgQ2hlbiBG
+ZW5nIDxwdWNrLmNoZW5AaGlzaWxpY29uLmNvbT4KPj4gK0w6ICAgICBkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCj4+ICtUOiAgICAgZ2l0IGdpdDovL2dpdGh1Yi5jb20veGluM2xpYW5n
+L2xpbnV4LmdpdAo+PiArUzogICAgIE1haW50YWluZWQKPj4gK0Y6ICAgICBkcml2ZXJzL2dwdS9k
+cm0vaGlzaWxpY29uCj4+ICtGOiAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvaGlzaWxpY29uCj4gTml0OiBDYW4geW91IGFkZCBhcHBlbmQgJy8nIG9uIHRoZXNl
+IHR3byBsaW5lcy4KPgo+IEFzIG1lbnRpb25lZCBpbiBjb21taXQgMTQ0MzA4MTM5Y2RjZTk1ZTlj
+NmNmZjNjYzBlZjEyMjQyMTgxNjY1Zgo+Cj4gIkl0J3MgY2xlYXJlciB0byBoYXZlIHBhdHRlcm5z
+IG1hcmtlZCBhcyBkaXJlY3Rvcmllcy4iCgpTdXJlIEVtaWwsIEkgd2lsbCBmaXggdGhpcy4gVGhh
+bmtzIHRvIG5vdGljZSBtZSB0aGlzLgoKVGhhbmtzLAoteGlubGlhbmcKCj4KPiBUaGFua3MKPiBF
+bWlsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
