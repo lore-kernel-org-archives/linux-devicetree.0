@@ -1,35 +1,75 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [Question] refcount of DT node
-Date: Thu, 14 Apr 2016 09:48:49 +0100
-Message-ID: <20160414084849.GT19428@n2100.arm.linux.org.uk>
-References: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 3/3] leds: gpio: Support the "panic-indicator" firmware
+ property
+Date: Thu, 14 Apr 2016 10:57:15 +0200
+Message-ID: <570F5B6B.3000702@samsung.com>
+References: <1460570899-24642-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+ <1460570899-24642-4-git-send-email-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com>
+In-reply-to: <1460570899-24642-4-git-send-email-ezequiel@vanguardiasur.com.ar>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 04:47:57PM +0900, Masahiro Yamada wrote:
-> Hi experts.
-> 
-> My understanding of refcount of DT node is poor.
+Hi Ezequiel,
 
-The message from DT people is... don't worry about DT node refcounting.
-Do whatever you want with it, they don't care whether you have correct
-refcounting or not.
+It would be good to update also leds-gpio bindings,
+of course in a separate patch:
 
-The background behind that is that I've tried to fix the refcounting,
-and even had the coccinelle people generate some stuff to work on this
-issue, but DT people's attitude towards it is "don't bother".
+Documentation/devicetree/bindings/leds/leds-gpio.txt
 
-So yes, people may get it wrong, but it seems it's something that DT
-people want ignored.
+Thanks,
+Jacek Anaszewski
 
--- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+On 04/13/2016 08:08 PM, Ezequiel Garcia wrote:
+> Calling a GPIO LEDs is quite likely to work even if the kernel
+> has paniced, so they are ideal to blink in this situation.
+> This commit adds support for the new "panic-indicator"
+> firmware property, allowing to mark a given LED to blink on
+> a kernel panic.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+> ---
+>   drivers/leds/leds-gpio.c | 4 ++++
+>   include/linux/leds.h     | 1 +
+>   2 files changed, 5 insertions(+)
+>
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index 61143f55597e..8229f063b483 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -127,6 +127,8 @@ static int create_gpio_led(const struct gpio_led *template,
+>   	led_dat->cdev.brightness = state ? LED_FULL : LED_OFF;
+>   	if (!template->retain_state_suspended)
+>   		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
+> +	if (template->panic_indicator)
+> +		led_dat->cdev.flags |= LED_PANIC_INDICATOR;
+>
+>   	ret = gpiod_direction_output(led_dat->gpiod, state);
+>   	if (ret < 0)
+> @@ -200,6 +202,8 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
+>
+>   		if (fwnode_property_present(child, "retain-state-suspended"))
+>   			led.retain_state_suspended = 1;
+> +		if (fwnode_property_present(child, "panic-indicator"))
+> +			led.panic_indicator = 1;
+>
+>   		ret = create_gpio_led(&led, &priv->leds[priv->num_leds],
+>   				      dev, NULL);
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 49adf9c6e326..1067fb5f9296 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -359,6 +359,7 @@ struct gpio_led {
+>   	unsigned 	gpio;
+>   	unsigned	active_low : 1;
+>   	unsigned	retain_state_suspended : 1;
+> +	unsigned	panic_indicator : 1;
+>   	unsigned	default_state : 2;
+>   	/* default_state should be one of LEDS_GPIO_DEFSTATE_(ON|OFF|KEEP) */
+>   	struct gpio_desc *gpiod;
+>
