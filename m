@@ -1,75 +1,139 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v2 1/5] phy: Rename phy-brcmstb-sata driver to
- phy-brcm-sata driver
-Date: Thu, 14 Apr 2016 08:43:55 +0530
-Message-ID: <CAALAos_4MVsc0A9fCTgqCgBBU4p4rCqzhJ3zPJs=jzJMqtekGA@mail.gmail.com>
-References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
-	<1459140510-5317-2-git-send-email-anup.patel@broadcom.com>
-	<570E507C.4040306@ti.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v8 00/45] powerpc/powernv: PCI hotplug support
+Date: Thu, 14 Apr 2016 13:26:51 +1000
+Message-ID: <570F0DFB.9090509@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <570DF50F.6010805@ozlabs.ru> <20160413074236.GA28853@gwshan>
+ <570E0E13.6080409@ozlabs.ru> <20160413234246.GA5330@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <570E507C.4040306@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160413234246.GA5330@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-On Wed, Apr 13, 2016 at 7:28 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
+On 04/14/2016 09:42 AM, Gavin Shan wrote:
+> On Wed, Apr 13, 2016 at 07:14:59PM +1000, Alexey Kardashevskiy wrote:
+>> On 04/13/2016 05:42 PM, Gavin Shan wrote:
+>>> On Wed, Apr 13, 2016 at 05:28:15PM +1000, Alexey Kardashevskiy wrote:
+>>>> On 02/17/2016 02:43 PM, Gavin Shan wrote:
+>>>>> This series of patches rebases on powerpc/next branch, plus below additional
+>>>>> patches:
+>>>>>
+>>>>>     <This series of patches>
+>>>>>     <Followup 3 patches from Gavin on SRIOV EEH, which aren't posted>
+>>>>>     https://patchwork.ozlabs.org/patch/581315/	(PATCH[1/9] Richard's SRIOV EEH)
+>>>>>     https://patchwork.ozlabs.org/patch/582639/	(PATCH[1/1] Gavin's EEH fix)
+>>>>>     https://patchwork.ozlabs.org/patch/582093/	(PATCH[1/1] Gavin's EEH fix)
+>>>>>     https://patchwork.ozlabs.org/patch/580626/	(PATCH[1/4] Gavin's PCI fix)
+>>>>>     https://patchwork.ozlabs.org/patch/580153/	(PATCH[1/1] Andrew's EEH minor fix)
+>>>>>     https://patchwork.ozlabs.org/patch/566827/	(PATCH[1/1] Russell's P5IOC2 removal)
+>>>>>     https://patchwork.ozlabs.org/patch/534154/	(PATCH[1/7] Richard's SRIOV rework)
+>>>>>     commit 388f7b1 ("Linux 4.5-rc3")
+>>>>>
+>>>>> The series of patches intend to support PCI slot for PowerPC PowerNV platform,
+>>>>> which is running on top of skiboot firmware. The patchset requires corresponding
+>>>>> changes from skiboot firmware, which is sent to skiboot@lists.ozlabs.org
+>>>>> for review. The PCI slots are exposed by skiboot with device node properties,
+>>>>> and kernel utilizes those properties to populated PCI slots accordingly.
+>>>>>
+>>>>> The original PCI infrastructure on PowerNV platform can't support hotplug
+>>>>> because the PE is assigned during PHB fixup time, which is called for once
+>>>>> during system boot time. For this, the PCI infrastructure on PowerNV platform
+>>>>> has been reworked for a lot. After that, the PE and its corresponding resources
+>>>>> (IODT, M32DT, M64 segments, DMA32 and bypass window) are assigned upon updating
+>>>>> PCI bridge's resources, which might decide PE# assigned to the PE (e.g. M64
+>>>>> resources, on P8 strictly speaking). Each PE will maintain a reference count,
+>>>>> which is (number of child PCI devices + 1). That indicates when last child PCI
+>>>>> device leaves the PE, the PE and its included resources will be relased and put
+>>>>> back into free pool again. With this design, the PE will be released when EEH PE
+>>>>> is released. PATCH[1 - 23] are related to this part.
+>>>>>
+>>>>>  From skiboot perspective, PCI slot is providing (hot/fundamental/complete)
+>>>>> resets to EEH. The kernel gets to know if skiboot supports various reset on one
+>>>>> particular PCI slot through device-tree node. If it does, EEH will utilize the
+>>>>> functionality provided by skiboot. Besides, the device-tree nodes have to change
+>>>>> in order to support PCI hotplug. For example, when one PCI adapter inserted to
+>>>>> one slot, its device-tree node should be added to the system dynamically. Conversely,
+>>>>> the device-tree node should be removed from the system when the PCI adapter is going
+>>>>> to be offline. Since pci_dn and eeh_dev have same life cyle as PCI device nodes,
+>>>>> they should be added/removed accordingly during PCI hotplug. PATCH[24 - 39] are
+>>>>> doing the related work.
+>>>>>
+>>>>> The OF driver is changed to support unflattening FDT blob for sub-stree, which
+>>>>> is covered by PATCH[40 - 44].
+>>>>>
+>>>>> The last one, PATCH[45], is the standalone PCI hotplug driver for PowerPC PowerNV
+>>>>> platform.
+>>>>>
+>>>>> =======
+>>>>> Testing
+>>>>> =======
+>>>>> 1. Unplug adapters behind non-empty slot, then plug them.
+>>>>>
+>>>>>     1.1 Check status
+>>>>>     # cat /sys/bus/pci/slots/C10/address
+>>>>>     0003:09:00
+>>>>>     # cat /sys/bus/pci/slots/C10/adapter
+>>>>>     1
+>>>>>     # cat /sys/bus/pci/slots/C10/power
+>>>>>     1
+>>>>>     # lspci
+>>>>>     0003:09:00.0 Ethernet controller: \
+>>>>>     Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+>>>>>     0003:09:00.1 Ethernet controller: \
+>>>>>     Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+>>>>>     0003:09:00.2 Ethernet controller: \
+>>>>>     Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+>>>>>     0003:09:00.3 Ethernet controller: \
+>>>>>     Broadcom Corporation NetXtreme BCM5719 Gigabit Ethernet PCIe (rev 01)
+>>>>>     # lspci -t
+>>>>>     # lspci -t
+>>>>>     -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
+>>>>>      |                                           +-08.0-[04-08]--
+>>>>>      |                                           +-09.0-[09]--+-00.0
+>>>>>      |                                           |            +-00.1
+>>>>>      |                                           |            +-00.2
+>>>>>      |                                           |            \-00.3
+>>>>>      |                                           +-10.0-[0a-0e]--
+>>>>>      |                                           \-11.0-[0f-13]--
+>>>>>
+>>>>>     1.2 Unplug adapter 0003:09.00.x
+>>>>>     # echo 0 > /sys/bus/pci/slots/C10/power
+>>>>>     # lspci -t
+>>>>>     -+-[0003:00]---00.0-[01-13]----00.0-[02-13]--+-01.0-[03]----00.0
+>>>>>      |                                           +-08.0-[04-08]--
+>>>>>      |                                           +-09.0-[09]--
+>>>>>      |                                           +-10.0-[0a-0e]--
+>>>>>      |                                           \-11.0-[0f-13]--
+>>>>>
+>>>>>     1.3 Plug adapter 0003:09.00.x
+>>>>>     # echo 1 > /sys/bus/pci/slots/C10/power
+>>>>
+>>>>
+>>>> Do I understand correctly that the adapter was not physically moved in/out of
+>>>> the slot between 1.2 and 1.3?
+>>>>
+>>>
+>>> Correct.
+>>
+>>
+>> This is not right then... Someone should try it, on both P7 and P8.
+>>
 >
-> On Monday 28 March 2016 10:18 AM, Anup Patel wrote:
->> Currently, we have a common SATA3 PHY driver for all Broadcom
->> STB SoCs. This driver can be extended and re-used for Broadcom
->> iProc SoCs having same SATA3 PHY.
->>
->> This patch renames existing Broadcom STB SATA3 PHY driver to
->> common Broadcom SATA3 PHY driver to share this PHY driver across
->> Broadcom SoCs.
->>
->> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->> ---
->>  drivers/phy/Kconfig                                 | 18 +++++++++---------
->>  drivers/phy/Makefile                                |  2 +-
->>  drivers/phy/{phy-brcmstb-sata.c => phy-brcm-sata.c} |  8 ++++----
->>  3 files changed, 14 insertions(+), 14 deletions(-)
->>  rename drivers/phy/{phy-brcmstb-sata.c => phy-brcm-sata.c} (97%)
->>
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index 26566db..c0187a7 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -403,15 +403,6 @@ config PHY_TUSB1210
->>       help
->>         Support for TI TUSB1210 USB ULPI PHY.
->>
->> -config PHY_BRCMSTB_SATA
->> -     tristate "Broadcom STB SATA PHY driver"
->> -     depends on ARCH_BRCMSTB || BMIPS_GENERIC
->> -     depends on OF
->> -     select GENERIC_PHY
->> -     help
->> -       Enable this to support the SATA3 PHY on 28nm or 40nm Broadcom STB SoCs.
->> -       Likely useful only with CONFIG_SATA_BRCMSTB enabled.
->> -
->>  config PHY_CYGNUS_PCIE
->>       tristate "Broadcom Cygnus PCIe PHY driver"
->>       depends on OF && (ARCH_BCM_CYGNUS || COMPILE_TEST)
->> @@ -421,4 +412,13 @@ config PHY_CYGNUS_PCIE
->>         Enable this to support the Broadcom Cygnus PCIe PHY.
->>         If unsure, say N.
->>
->> +config PHY_BRCM_SATA
->
-> changing config name should be done with utmost care as it might break
-> oldconfig users.
-> Has this been fixed in all the defconfigs where it is included?
+> Do you mean physically pull the adapter out and insert the same
+> adapter back? What's the point for the test case?
 
-None of the existing defconfigs have PHY_BRCMSTB_SATA enabled. In fact,
-no other Kconfig option currently selects PHY_BRCMSTB_SATA. I think we
-are safe here.
 
-Regards,
-Anup
+Because this is what the patchset is for - to replace a physical device on 
+a physical machine. Powering on/off the slots via sysfs is just an 
+approximation (which is fine when you are debugging), something can go 
+wrong and require some work but you do not know it for sure.
+
+
+
+-- 
+Alexey
