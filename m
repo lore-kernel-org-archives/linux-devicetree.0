@@ -1,87 +1,71 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v7 7/9] clk: mediatek: Enable critical clocks for MT2701
-Date: Thu, 14 Apr 2016 16:11:52 +0800
-Message-ID: <1460621514-65191-8-git-send-email-jamesjj.liao@mediatek.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 6/9] reset: mediatek: Add MT2701 reset driver
+Date: Thu, 14 Apr 2016 16:11:51 +0800
+Message-ID: <1460621514-65191-7-git-send-email-jamesjj.liao@mediatek.com>
 References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1460621514-65191-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some system clocks should be turned on by default on MT2701.
-This patch enable these clocks when related clocks have
-been registered.
+From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+In infrasys and perifsys, there are many reset
+control bits for kinds of modules. These bits are
+used as actual reset controllers to be registered
+into kernel's generic reset controller framework.
+
+Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Tested-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/clk/mediatek/clk-mt2701.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ drivers/clk/mediatek/clk-mt2701.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/clk/mediatek/clk-mt2701.c b/drivers/clk/mediatek/clk-mt2701.c
-index 9542e47..90294e7 100644
+index b4db141..9542e47 100644
 --- a/drivers/clk/mediatek/clk-mt2701.c
 +++ b/drivers/clk/mediatek/clk-mt2701.c
-@@ -671,6 +671,21 @@ static const struct mtk_gate top_clks[] __initconst = {
- 		28),
- };
- 
-+static struct clk_onecell_data *top_clk_data __initdata;
-+static struct clk_onecell_data *pll_clk_data __initdata;
-+
-+static void __init mtk_clk_enable_critical(void)
-+{
-+	if (!top_clk_data || !pll_clk_data)
-+		return;
-+
-+	clk_prepare_enable(pll_clk_data->clks[CLK_APMIXED_ARMPLL]);
-+	clk_prepare_enable(top_clk_data->clks[CLK_TOP_AXI_SEL]);
-+	clk_prepare_enable(top_clk_data->clks[CLK_TOP_MEM_SEL]);
-+	clk_prepare_enable(top_clk_data->clks[CLK_TOP_DDRPHYCFG_SEL]);
-+	clk_prepare_enable(top_clk_data->clks[CLK_TOP_RTC_SEL]);
-+}
-+
- static void __init mtk_topckgen_init(struct device_node *node)
- {
- 	struct clk_onecell_data *clk_data;
-@@ -683,7 +698,7 @@ static void __init mtk_topckgen_init(struct device_node *node)
- 		return;
- 	}
- 
--	clk_data = mtk_alloc_clk_data(CLK_TOP_NR);
-+	top_clk_data = clk_data = mtk_alloc_clk_data(CLK_TOP_NR);
- 
- 	mtk_clk_register_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks),
- 								clk_data);
-@@ -704,6 +719,8 @@ static void __init mtk_topckgen_init(struct device_node *node)
+@@ -763,6 +763,8 @@ static void __init mtk_infrasys_init(struct device_node *node)
  	if (r)
  		pr_err("%s(): could not register clock provider: %d\n",
  			__func__, r);
 +
-+	mtk_clk_enable_critical();
++	mtk_register_reset_controller(node, 2, 0x30);
  }
- CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt2701-topckgen", mtk_topckgen_init);
+ CLK_OF_DECLARE(mtk_infrasys, "mediatek,mt2701-infracfg", mtk_infrasys_init);
  
-@@ -1297,7 +1314,7 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
- 	struct clk_onecell_data *clk_data;
- 	int r;
- 
--	clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR);
-+	pll_clk_data = clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR);
- 	if (!clk_data)
- 		return;
- 
-@@ -1308,6 +1325,8 @@ static void __init mtk_apmixedsys_init(struct device_node *node)
+@@ -884,6 +886,8 @@ static void __init mtk_pericfg_init(struct device_node *node)
  	if (r)
  		pr_err("%s(): could not register clock provider: %d\n",
  			__func__, r);
 +
-+	mtk_clk_enable_critical();
++	mtk_register_reset_controller(node, 2, 0x0);
  }
- CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt2701-apmixedsys",
- 							mtk_apmixedsys_init);
+ CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt2701-pericfg", mtk_pericfg_init);
+ 
+@@ -1096,6 +1100,8 @@ static void __init mtk_hifsys_init(struct device_node *node)
+ 	if (r)
+ 		pr_err("%s(): could not register clock provider: %d\n",
+ 			__func__, r);
++
++	mtk_register_reset_controller(node, 1, 0x34);
+ }
+ 
+ static const struct mtk_gate_regs eth_cg_regs __initconst = {
 -- 
 1.9.1
