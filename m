@@ -1,174 +1,78 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH] i2c: designware-platdrv: implement bus recovery
-Date: Thu, 14 Apr 2016 22:04:56 +0800
-Message-ID: <1460642696-1858-1-git-send-email-jszhang@marvell.com>
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/5] regulator: st-flashss: Add a regulator driver for
+ flashss vsense.
+Date: Thu, 14 Apr 2016 16:15:34 +0200
+Message-ID: <570FA606.4070908@st.com>
+References: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org> <1460474204-5351-3-git-send-email-peter.griffin@linaro.org> <20160413061514.GI14664@sirena.org.uk> <570DFC44.8060408@st.com> <20160413172318.GC29471@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jisheng Zhang <jszhang@marvell.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160413172318.GC29471-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Youssef TRIKI <youssef.triki-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement bus recovery methods for i2c designware so we can recover
-from situations where SCL/SDA are stuck low.
+Hello Mark
 
-The recovery method is similar as i2c-imx: "config the i2c pinctrl to
-gpio mode by calling pinctrl sleep set function, and then use GPIO to
-emulate the i2c protocol to send nine dummy clock to recover i2c
-device. After recovery, set i2c pinctrl to default group setting.
+On 4/13/2016 7:23 PM, Mark Brown wrote:
+> On Wed, Apr 13, 2016 at 09:59:00AM +0200, Giuseppe CAVALLARO wrote:
+>> On 4/13/2016 8:15 AM, Mark Brown wrote:
+>>>>> +static void st_get_satinize_powerup_voltage(struct st_vsense *vsense)
+>>>>> +{
+>
+>>> or am I missing something?  Why do we need to do this anyway, it's very
+>>> surprsing?
+>
+>> This functions is to sanitize the vsense voltages when the regulator
+>> is probed and in some circumstances the reset value of this register
+>> does not reflect the hw status/config. For example, by default, after
+>> the reset, the bit 0 is set so the EMMC, inside the flash subsystem,
+>> is supposed to operate at 3v3. But the latched bit 24 can be 0 on
+>> a platform where it is actually set at 1v8.
+>> So the bit 0 must be reset to keep this coherent and to allow MMC
+>> framework to properly setup the Vdd when the framework starts.
+>
+> I'm afraid I can't follow that explanation, perhaps because I don't know
+> anything about the content of this register except for these three bits.
+> I think we do need a comment in the driver explaining what's going on,
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
-depends on runtime pm patches
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/422202.html
- .../devicetree/bindings/i2c/i2c-designware.txt     | 12 ++++++
- drivers/i2c/busses/i2c-designware-core.c           |  6 ++-
- drivers/i2c/busses/i2c-designware-core.h           |  4 ++
- drivers/i2c/busses/i2c-designware-platdrv.c        | 50 ++++++++++++++++++++++
- 4 files changed, 71 insertions(+), 1 deletion(-)
+yes you are right
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-index fee26dc..51a55c6 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-@@ -20,6 +20,13 @@ Optional properties :
-  - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
-    This value which is by default 300ns is used to compute the tHIGH period.
- 
-+ - scl-gpios: specify the gpio related to SCL pin
-+
-+ - sda-gpios: specify the gpio related to SDA pin
-+
-+ - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
-+   bus recovery, call it "gpio" state
-+
- Example :
- 
- 	i2c@f0000 {
-@@ -42,4 +49,9 @@ Example :
- 		i2c-sda-hold-time-ns = <300>;
- 		i2c-sda-falling-time-ns = <300>;
- 		i2c-scl-falling-time-ns = <300>;
-+		pinctrl-names = "default", "gpio";
-+		pinctrl-0 = <&pinctrl_i2c1_default>;
-+		pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+		scl-gpios = <&porta 26 GPIO_ACTIVE_HIGH>;
-+		sda-gpios = <&porta 27 GPIO_ACTIVE_HIGH>;
- 	};
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index 4255eaa..be40de1 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -399,7 +399,10 @@ static int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
- 	while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
- 		if (timeout <= 0) {
- 			dev_warn(dev->dev, "timeout waiting for bus ready\n");
--			return -ETIMEDOUT;
-+			i2c_recover_bus(&dev->adapter);
-+			if (dw_readl(dev, DW_IC_STATUS)
-+					& DW_IC_STATUS_ACTIVITY)
-+				return -ETIMEDOUT;
- 		}
- 		timeout--;
- 		usleep_range(1000, 1100);
-@@ -665,6 +668,7 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
- 	/* wait for tx to complete */
- 	if (!wait_for_completion_timeout(&dev->cmd_complete, HZ)) {
- 		dev_err(dev->dev, "controller timed out\n");
-+		i2c_recover_bus(&dev->adapter);
- 		/* i2c_dw_init implicitly disables the adapter */
- 		i2c_dw_init(dev);
- 		ret = -ETIMEDOUT;
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index cd409e7..26c84ee 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -104,6 +104,10 @@ struct dw_i2c_dev {
- 	u16			fs_lcnt;
- 	int			(*acquire_lock)(struct dw_i2c_dev *dev);
- 	void			(*release_lock)(struct dw_i2c_dev *dev);
-+	struct i2c_bus_recovery_info rinfo;
-+	struct pinctrl		*pinctrl;
-+	struct pinctrl_state	*pinctrl_pins_default;
-+	struct pinctrl_state	*pinctrl_pins_gpio;
- 	bool			pm_runtime_disabled;
- };
- 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 1488cea..62bded9 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -33,6 +33,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
-@@ -148,6 +149,49 @@ static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
- 	return 0;
- }
- 
-+static void i2c_dw_plat_prepare_recovery(struct i2c_adapter *adap)
-+{
-+	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
-+}
-+
-+static void i2c_dw_plat_unprepare_recovery(struct i2c_adapter *adap)
-+{
-+	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
-+}
-+
-+static void i2c_dw_plat_init_recovery_info(struct dw_i2c_dev *dev,
-+					   struct platform_device *pdev)
-+{
-+	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-+
-+	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
-+			PINCTRL_STATE_DEFAULT);
-+	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
-+			"gpio");
-+	rinfo->sda_gpio = of_get_named_gpio(pdev->dev.of_node, "sda-gpios", 0);
-+	rinfo->scl_gpio = of_get_named_gpio(pdev->dev.of_node, "scl-gpios", 0);
-+
-+	if (!gpio_is_valid(rinfo->sda_gpio) ||
-+	    !gpio_is_valid(rinfo->scl_gpio) ||
-+	    IS_ERR(dev->pinctrl_pins_default) ||
-+	    IS_ERR(dev->pinctrl_pins_gpio)) {
-+		dev_dbg(&pdev->dev, "recovery information incomplete\n");
-+		return;
-+	}
-+
-+	dev_dbg(&pdev->dev, "using scl-gpio %d and sda-gpio %d for recovery\n",
-+		rinfo->sda_gpio, rinfo->scl_gpio);
-+
-+	rinfo->prepare_recovery = i2c_dw_plat_prepare_recovery;
-+	rinfo->unprepare_recovery = i2c_dw_plat_unprepare_recovery;
-+	rinfo->recover_bus = i2c_generic_gpio_recovery;
-+	dev->adapter.bus_recovery_info = rinfo;
-+}
-+
- static int dw_i2c_plat_probe(struct platform_device *pdev)
- {
- 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
-@@ -165,6 +209,12 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 	if (!dev)
- 		return -ENOMEM;
- 
-+	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (IS_ERR(dev->pinctrl))
-+		return PTR_ERR(dev->pinctrl);
-+
-+	i2c_dw_plat_init_recovery_info(dev, pdev);
-+
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	dev->base = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(dev->base))
--- 
-2.8.0.rc3
+> and probably a simplification of the code too if my understanding of the
+> effect of all those operations is correct.
+
+Maybe we can simplify the function as:
+
+static void st_get_satinize_powerup_voltage(struct st_vsense *vsense)
+{
+	void __iomem *ioaddr = vsense->ioaddr;
+	u32 value = readl_relaxed(ioaddr);
+
+	/*
+	 * After resetting, the CONFIG_REG_PSW_<xxx> are set, this
+	 * means 3v3 operating voltage.
+	 * The CONFIG_LATCHED_PSW_<xxx> must be used to fix the previous
+	 * bits so operating at 1v8 if this is the real HW configuration
+	 * at boot time.
+	 */
+	if (!(value & TOP_VSENSE_CONFIG_LATCHED_PSW_EMMC))
+		value &= ~TOP_VSENSE_CONFIG_REG_PSW_EMMC;
+
+	if (!(value & TOP_VSENSE_CONFIG_LATCHED_PSW_NAND))
+		value &= ~TOP_VSENSE_CONFIG_REG_PSW_NAND;
+
+	if (!(value & TOP_VSENSE_CONFIG_LATCHED_PSW_SPI))
+		value &= ~TOP_VSENSE_CONFIG_REG_PSW_SPI;
+
+	writel_relaxed(value, ioaddr);
+}
+
+Le me know if this looks a bit more clear.
+
+Peppe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
