@@ -1,44 +1,69 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 4/5] dmaengine: mv_xor: Allow selecting mv_xor for mvebu only compatible SoC
-Date: Thu, 14 Apr 2016 18:53:37 +0200
-Message-ID: <1460652818-14647-5-git-send-email-gregory.clement@free-electrons.com>
-References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Question] refcount of DT node
+Date: Thu, 14 Apr 2016 12:02:55 -0500
+Message-ID: <20160414170255.GA26137@rob-hp-laptop>
+References: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com>
+ <20160414084849.GT19428@n2100.arm.linux.org.uk>
+ <20160414095957.GB10273@leverpostej>
+ <06E9E2D3-4627-4970-ABBB-34B5ED620709@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460652818-14647-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <06E9E2D3-4627-4970-ABBB-34B5ED620709-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, rank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Armada 3700 SoC uses the mv_xor driver but don't select anymore the
-PLAT_ORION symbol. This commit extends the dependency of the mv_xor
-driver to the more modern SoCs only compatible with ARCH_MVEBU, which
-allows using it with the Armada 3700 SoC.
+On Thu, Apr 14, 2016 at 01:02:56PM +0300, Pantelis Antoniou wrote:
+> Hi Mark,
+> 
+> > On Apr 14, 2016, at 12:59 , Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > 
+> > On Thu, Apr 14, 2016 at 09:48:49AM +0100, Russell King - ARM Linux wrote:
+> >> On Thu, Apr 14, 2016 at 04:47:57PM +0900, Masahiro Yamada wrote:
+> >>> Hi experts.
+> >>> 
+> >>> My understanding of refcount of DT node is poor.
+> >> 
+> >> The message from DT people is... don't worry about DT node refcounting.
+> >> Do whatever you want with it, they don't care whether you have correct
+> >> refcounting or not.
+> >> 
+> >> The background behind that is that I've tried to fix the refcounting,
+> >> and even had the coccinelle people generate some stuff to work on this
+> >> issue, but DT people's attitude towards it is "don't bother".
+> >> 
+> >> So yes, people may get it wrong, but it seems it's something that DT
+> >> people want ignored.
+> > 
+> > I'm not sure that's quite fair; the last discussion I recall about this
+> > ended up concluding that we need a better API, rather than papering over
+> > problems.
+> > 
+> > That said, there isn't much obvious progress on that front.
+> > 
+> > Frank, Pantelis, Rob, were there any conclusions on this from ELC, or is
+> > this something that needs someone to propose something?
+> > 
+> 
+> Frank mentioned that he wants a new API. I have some ideas about it too.
+> 
+> My take is that drivers should never do reference counting, we have to figure
+> out a way for DT access using copy semantics or locks.
 
-In the same time it also add the COMPILE_TEST dependency allowing a wider
-test coverage.
+Generally yes, but I think there may be exceptions. I think the locking 
+is too fine grained for what we need. For almost all users, I think we 
+only need locking at the overlay or changeset level. The only other user 
+I am aware of is PSeries (IIRC) and they only need reference counting 
+for a few things like memory and cpu. I would handle those cases 
+explicitly. But that is going to require someone familar with PSeries to 
+work on. I suppose we could separate overlays from the OF_DYNAMIC 
+dependency (or just the ref counting part of it) and then OF_DYNAMIC 
+goes back to PPC only.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index d96d87c56f2e..67b37ce94143 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -332,7 +332,7 @@ config MPC512X_DMA
- 
- config MV_XOR
- 	bool "Marvell XOR engine support"
--	depends on PLAT_ORION
-+	depends on PLAT_ORION || ARCH_MVEBU || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_ENGINE_RAID
- 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
--- 
-2.5.0
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
