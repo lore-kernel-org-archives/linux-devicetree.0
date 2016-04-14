@@ -1,34 +1,35 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2 3/5] gpio: of: Return error if gpio hog configuration failed
-Date: Thu, 14 Apr 2016 14:52:16 +0200
-Message-ID: <CACRpkdaQra43TxaW4wSTHMQDVNxi+8C5+wWFNy9wi0KktqrU2w@mail.gmail.com>
-References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
-	<1457703804-3016-4-git-send-email-ldewangan@nvidia.com>
-	<CACRpkdbLKWDGvhqtwoogNNgQjG86g9HmpceLLVwKW+94dJk63A@mail.gmail.com>
-	<570E416E.1000608@nvidia.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: arm64: dts: Add expansion bus to VExpress and
+ Juno
+Date: Thu, 14 Apr 2016 14:07:52 +0100
+Message-ID: <570F9628.70106@arm.com>
+References: <1460627546-24230-1-git-send-email-brian.starkey@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <570E416E.1000608@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Markus Pargmann <mpa@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <treding@nvidia.com>, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460627546-24230-1-git-send-email-brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 2:54 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> On Wednesday 13 April 2016 06:13 PM, Linus Walleij wrote:
 
-> Thank you very much for accepting the patch.
-> I think 1/5 and 2/5 is also fine as there is no more comment on this.
 
-I have applied them now.
+On 14/04/16 10:52, Brian Starkey wrote:
+> The VExpress and Juno development platforms have an external expansion
+> bus which can be used for additional hardware (e.g. LogicTile Express
+> daughterboards).
+> Add this bus to all VExpress CoreTile and Juno device-trees.
+>
 
-I had a comment on 1/5, I wanted a confirmation that
-it was done to be able to set status = "disabled" in the
-device node.
+Sorry for missing it earlier, ARM-SoC guys like to keep arm{32,64}
+changes separate. So please move Juno DT changes to separate patch.
 
-I assume this is true so now I added that to the commit
-blurb.
-
-Yours,
-Linus Walleij
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
