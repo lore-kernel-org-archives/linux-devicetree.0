@@ -1,133 +1,66 @@
-From: Steve Capper <steve.capper-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v16 1/6] efi: ARM/arm64: ignore DT memory nodes instead
- of removing them
-Date: Thu, 14 Apr 2016 13:09:30 +0100
-Message-ID: <20160414120929.GA15967@e103986-lin>
-References: <1460155828-8690-1-git-send-email-ddaney.cavm@gmail.com>
- <1460155828-8690-2-git-send-email-ddaney.cavm@gmail.com>
- <20160414110210.GA11788@e103986-lin>
- <CAKv+Gu_aed0N9hiopY_=9P_y1rZ8ou6ofuHKdkXJnY=v1Gzh_w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_aed0N9hiopY_=9P_y1rZ8ou6ofuHKdkXJnY=v1Gzh_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Steve Capper <steve.capper-5wv7dgnIgG8@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/5] serial: Add Generic Serial Device Tree Bindings
+Date: Thu, 14 Apr 2016 14:13:18 +0200
+Message-ID: <1460636003-3011-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Qipan Li <Qipan.Li-kQvG35nSl+M@public.gmane.org>
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 01:10:35PM +0200, Ard Biesheuvel wrote:
-> On 14 April 2016 at 13:02, Steve Capper <steve.capper-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Fri, Apr 08, 2016 at 03:50:23PM -0700, David Daney wrote:
-> >> From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>
-> >> There are two problems with the UEFI stub DT memory node removal
-> >> routine:
-> >> - it deletes nodes as it traverses the tree, which happens to work
-> >>   but is not supported, as deletion invalidates the node iterator;
-> >> - deleting memory nodes entirely may discard annotations in the form
-> >>   of additional properties on the nodes.
-> >>
-> >> Since the discovery of DT memory nodes occurs strictly before the
-> >> UEFI init sequence, we can simply clear the memblock memory table
-> >> before parsing the UEFI memory map. This way, it is no longer
-> >> necessary to remove the nodes, so we can remove that logic from the
-> >> stub as well.
-> >>
-> >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>  drivers/firmware/efi/arm-init.c    |  8 ++++++++
-> >>  drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
-> >>  2 files changed, 9 insertions(+), 23 deletions(-)
-> >>
-> >> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-> >> index aa1f743..5d6945b 100644
-> >> --- a/drivers/firmware/efi/arm-init.c
-> >> +++ b/drivers/firmware/efi/arm-init.c
-> >> @@ -143,6 +143,14 @@ static __init void reserve_regions(void)
-> >>       if (efi_enabled(EFI_DBG))
-> >>               pr_info("Processing EFI memory map:\n");
-> >>
-> >> +     /*
-> >> +      * Discard memblocks discovered so far: if there are any at this
-> >> +      * point, they originate from memory nodes in the DT, and UEFI
-> >> +      * uses its own memory map instead.
-> >> +      */
-> >> +     memblock_dump_all();
-> >> +     memblock_remove(0, ULLONG_MAX);
-> >> +
-> >
-> > Does this change need to be applied to any other architectures given
-> > that deletion code has been removed from libstub below?
-> >
-> 
-> The 'generic' libstub code below is only used by ARM, so we're safe
-> here in that regard.
+	Hi all,
 
-Thanks Ard,
-In that case, FWIW:
-Acked-by: Steve Capper <steve.capper-5wv7dgnIgG8@public.gmane.org>
+This patch series, against next-20160414, introduces Generic Serial
+Device Tree Bindings, and converts drivers using vendor-specific DT
+properties to the generic properies where appropriate.
 
-Cheers,
+The Generic Serial Device Tree Bindings document a set of generic
+properties for describing UARTs in a device tree:
+  1. The GPIO modem control properties are currently duplicated across
+     hardware-specific binding documentation,
+  2. The property for dedicated RTS/CTS hardware flow control lines is
+     already supported by several drivers, albeit with a vendor-specific
+     prefix, hence make it generic.
+Whether these generic properties apply to a particular device still
+depends on the DT bindings of the actual device.
+
+The old (deprecated) vendor-specific properties are still supported by
+the drivers for backwards compatibility.  Actual DTS files are to be
+updated later, after this series has been integrated into mainline.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (5):
+  doc: DT: Add Generic Serial Device Tree Bindings
+  serial: imx: Use generic uart-has-rtscts DT property
+  serial: mxs-auart: Use generic uart-has-rtscts DT property
+  serial: sirf: Introduce helper variable struct device_node *np
+  serial: sirf: Use generic uart-has-rtscts DT property
+
+ .../devicetree/bindings/serial/fsl-imx-uart.txt    |  4 +-
+ .../devicetree/bindings/serial/fsl-mxs-auart.txt   |  2 +-
+ .../devicetree/bindings/serial/serial.txt          | 61 ++++++++++++++++++++++
+ .../devicetree/bindings/serial/sirf-uart.txt       |  8 +--
+ drivers/tty/serial/imx.c                           |  3 +-
+ drivers/tty/serial/mxs-auart.c                     |  3 +-
+ drivers/tty/serial/sirfsoc_uart.c                  | 39 +++++++-------
+ 7 files changed, 91 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/serial.txt
+
 -- 
-Steve
+1.9.1
 
-> 
-> 
-> >>       for_each_efi_memory_desc(&memmap, md) {
-> >>               paddr = md->phys_addr;
-> >>               npages = md->num_pages;
-> >> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-> >> index 6dba78a..e58abfa 100644
-> >> --- a/drivers/firmware/efi/libstub/fdt.c
-> >> +++ b/drivers/firmware/efi/libstub/fdt.c
-> >> @@ -24,7 +24,7 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
-> >>                       unsigned long map_size, unsigned long desc_size,
-> >>                       u32 desc_ver)
-> >>  {
-> >> -     int node, prev, num_rsv;
-> >> +     int node, num_rsv;
-> >>       int status;
-> >>       u32 fdt_val32;
-> >>       u64 fdt_val64;
-> >> @@ -54,28 +54,6 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
-> >>               goto fdt_set_fail;
-> >>
-> >>       /*
-> >> -      * Delete any memory nodes present. We must delete nodes which
-> >> -      * early_init_dt_scan_memory may try to use.
-> >> -      */
-> >> -     prev = 0;
-> >> -     for (;;) {
-> >> -             const char *type;
-> >> -             int len;
-> >> -
-> >> -             node = fdt_next_node(fdt, prev, NULL);
-> >> -             if (node < 0)
-> >> -                     break;
-> >> -
-> >> -             type = fdt_getprop(fdt, node, "device_type", &len);
-> >> -             if (type && strncmp(type, "memory", len) == 0) {
-> >> -                     fdt_del_node(fdt, node);
-> >> -                     continue;
-> >> -             }
-> >> -
-> >> -             prev = node;
-> >> -     }
-> >> -
-> >> -     /*
-> >>        * Delete all memory reserve map entries. When booting via UEFI,
-> >>        * kernel will use the UEFI memory map to find reserved regions.
-> >>        */
-> >> --
-> >> 1.8.3.1
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >>
-> 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
