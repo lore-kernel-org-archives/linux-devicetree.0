@@ -1,68 +1,81 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] Documentation: power: reset: move
- gpio-{poweroff|restart} to proper place
-Date: Fri, 15 Apr 2016 15:27:12 +0200
-Message-ID: <20160415132712.GA15986@earth>
-References: <1460476853-3306-1-git-send-email-wsa@the-dreams.de>
- <CACRpkdaUj5w3zkjWVf1GML3reeDnRpT8avOPkRB6_qFXB6EGjw@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: tegra: Remove 0, prefix from
+ unit-addresses
+Date: Fri, 15 Apr 2016 15:41:02 +0200
+Message-ID: <20160415134102.GB3472@ulmo.ba.sec>
+References: <1460473656-27209-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaUj5w3zkjWVf1GML3reeDnRpT8avOPkRB6_qFXB6EGjw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1460473656-27209-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---r5Pyd7+fXNt84Ff3
+--cvVnyQ+4j833TQvp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Fri, Apr 15, 2016 at 09:48:17AM +0200, Linus Walleij wrote:
-> On Tue, Apr 12, 2016 at 6:00 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> > From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >
-> > I did only find them after a fuzzy search, so let them be where one
-> > would expect them.
-> >
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Tue, Apr 12, 2016 at 05:07:35PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >=20
-> I saw this the other day too I agree.
+> When Tegra124 support was first merged the unit-addresses of all devices
+> were listed with a "0," prefix to encode the reg property's second cell.
+> It turns out that this notation is not correct, and the "," separator is
+> only used to separate fields in the unit address (such as the device and
+> function number in PCI devices), not individual cells for addresses
+> with more than one cell.
+>=20
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt    | 2 =
++-
+>  Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt              | 2 =
++-
+>  .../devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt      | 6 =
++++---
+>  Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt  | 4 =
+++--
+>  .../devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt     | 6 =
++++---
+>  Documentation/devicetree/bindings/sound/nvidia,tegra30-hda.txt      | 2 =
++-
+>  Documentation/devicetree/bindings/thermal/tegra-soctherm.txt        | 2 =
++-
+>  7 files changed, 12 insertions(+), 12 deletions(-)
 
-> Sebastian: are you OK that I move this by committing the patch to
-> the GPIO tree?
+Hi Rob,
 
-Yes.
+Is this (and patch 2/2) something that you could pick up into the DT
+tree, or would you rather have me take it through the Tegra tree?
 
-Acked-By: Sebastian Reichel <sre@kernel.org>
+Thierry
 
--- Sebastian
-
---r5Pyd7+fXNt84Ff3
+--cvVnyQ+4j833TQvp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBCgAGBQJXEOwtAAoJENju1/PIO/qaQ7kP/3wMKdLY+J2WaUftByGm5+Jm
-i8OXjtfLP6vCbcmq5NNINkOgqmvvlkR0WZg9+DG2b0+KiSYTXmhtPdDmBq5WpAec
-Z/z4gtv0P/rsFzWc/eCoyauVsRyfgs3akexIAxluvWnmtpY9Ed5a+JP6JAkoX3z4
-6xVTnJ0nvSKBk2/bcx5lH8frqkDt+jjY/MpV4wIX7oKKG06Ayg00/jx7iIjL6N6z
-iIuWgSmo6a0Qj6otl9e+64Y54MRdsCxFVWSb5TrwSQr8YWXE26uHBqeoVrY3bNxH
-MNLjH5qdGCOT0ncR+MGR8+5ruxZSVswue6uV3QeAXRsLgELv7K//nGJmJahZzFdB
-GBzCG2NnFHzS5AYDquNStMh3Xh5OhOh87vQesZ7tq4Weg3vFIzvtKKBUkzyGN/UT
-9tqV2Sy93/pZL0kG6iJmuN7k5oRvhZXSKmppznsacdRYyiVfwkeZ2MUhqzutGVxa
-8l0MJAkO3OU/bYoVlYKdwB4ccPkL0WVe3TzX2GvxO7EPGSp0AL3atjAWIg05cNuS
-G4DmaVlFhDQwXYCYHEGSPEfx6ZkNaI34fCL/vMDFcsjG/XXWNWz+1Gj2l9W5cJyA
-lrPpX1c0BWpsp46DXjgNooDfbPjPnY/K4KXAXXWwTCs/1BLNmbT+WuEpavYcbLY0
-+AQn7HZ4HkzFJYskFAVb
-=q+cu
+iQIcBAABCAAGBQJXEO9uAAoJEN0jrNd/PrOhSRAP/0cm7E0E2Mwj8NLMf9I6n96A
+wbhN1BhSZ3y3CGpykY9enQoeRZsVaAhONQwP8bdkgOYdB6R8rcUsPeFun3CNRNTZ
+UtLfj86x82V0yQqF/Ca+UrLJYM6OLbKimMYII3NLbOOZH6XrnHrJQsiWWR9Q1Pww
+39C02pPQ9NNC7NwK/OYJyqMiRbdi88ytd2xeCYytoVNW8vCbgXlgCfoEW2TJcMGm
+7tHDLFh2xIcn4NTYXD86MfozMX6F3Q309gvYt9ZwJQSk6Mir6sJnanTxe/Nqkihq
+4ztC+cSeaJUUN/0JGKxubf2gim5ybj4WAHoTJdBPeT0ttX6pmgJ1aN9366yY1a4S
+7vp6/8NkiZTrwfoJcn0ngZOf3wae2r4vX0eKc50Ze0+BrBdQy2RjrEAvDMvhewpo
+WhssgY7M2bkBuLPth+tbqt3fgQAdV6mGfeYYnBzEzdsMEnSxcaRErDq9+c7NjfOv
+342Nu8zVGCEDwXrac1hNNT/3JF2nF9xcNPdW/QbqzyO7kUON0l0gp+ffQOQFttd/
+WquNJQenrw7Cd3uDnZg94G/AnEy1vE0Iurh6I4L2GCDm3YwhCujJY5P/BIFsgi78
+9vrtfLWKyLVkpObeeHwpycxrosrdEn1yb/lPydndA3oI23cbp1VZcFCtHw862Nnt
+hGpH5AfgjFx1ROq2jktP
+=Iemu
 -----END PGP SIGNATURE-----
 
---r5Pyd7+fXNt84Ff3--
+--cvVnyQ+4j833TQvp--
