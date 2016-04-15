@@ -1,172 +1,76 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Fri, 15 Apr 2016 13:23:06 +0300
-Message-ID: <5710C10A.6040908@ti.com>
-References: <20160404151200.GA4652@atomide.com> <5703BA6B.1080208@ti.com>
- <20160411212845.GJ5995@atomide.com> <570CC54E.6020703@ti.com>
- <20160412163750.GR5995@atomide.com> <570E3428.5020804@ti.com>
- <20160413152829.GQ5995@atomide.com> <570F4804.4050006@ti.com>
- <20160414165514.GL5995@atomide.com> <570FF163.1050603@ti.com>
- <20160414203457.GM5995@atomide.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: DTS: da850: add node for spi0
+Date: Fri, 15 Apr 2016 15:54:54 +0530
+Message-ID: <5710C176.3040304@ti.com>
+References: <1460586628-25152-1-git-send-email-david@lechnology.com>
+ <1460586628-25152-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160414203457.GM5995@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460586628-25152-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/14/16 23:34, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [160414 12:38]:
->>
->> Yes it has registers, but it has no prcm level existence, it is part=
- of McBSP
->> module. I guess when the OMAP3 was designed the HW people did not wa=
-nted to
->> create new version of the McBSP core for McBSP2/3 so they attached a=
- new core
->> to the McBSP cores with different targets, etc, but w/o external dep=
-endency.
->=20
-> Yeah well we do have a bunch of modules that don't need any separate
-> functional clock and are clocked only by the interface clock. So in t=
-his
-> case McBSP and sidetone are both consumers for the clock we just happ=
-en
-> to call McBSP interface clock. They should be able to share that no
-> problem.
->=20
->>>> OK. I will go with the assumption that the sidetone hwmod can be r=
-emoved (as
->>>> it is not correct) and rework my current series to use pdata callb=
-ack for the
->>>> iclk autogate allow/deny. With this set the ST will be operational=
- in legacy
->>>> and DT boot.
->>>
->>> Sorry, no I did not want to drop the sidetone hwmod, I was just try=
-ing to
->>> come up with ideas on how to make the driver changes easier. It sou=
-nds like
->>> you already figured out the driver changes part though with two dri=
-vers.
->>
->> If I need to keep the sidetone hwmod around I don't see how it can b=
-e done in
->> a safe and clean way. It is part of McBSP module, it is accessible o=
-nly if the
->> McBSP module is enabled, you can not enable the Sidetone alone you n=
-eed to go
->> and enable the McBSP module. I don't think it is a good idea to let =
-two
->> separate hwmods to poke around the same PRCM bits. Have not checked,=
- but I
->> don't think we have refcounting for the PRCM register bits.
->=20
-> Yeah there's no refcounting on the PRCM, but the clock framework has =
-it
-> for the share McBSP interface clock.
+On Thursday 14 April 2016 04:00 AM, David Lechner wrote:
+> Adds device definition for soc spi0 and also a aux data that is needed
+> for clock matching.
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/da850.dtsi     | 10 ++++++++++
+>  arch/arm/mach-davinci/da8xx-dt.c |  1 +
+>  2 files changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index bbe7dd6..92b5f3c 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -295,6 +295,16 @@
+>  			reg = <0x308000 0x80>;
+>  			status = "disabled";
+>  		};
+> +		spi0: spi@41000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "ti,da830-spi";
+> +			reg = <0x41000 0x1000>;
+> +			num-cs = <6>;
 
-The hwmod checks the bits described by prcm.omap2. If two hwmods are se=
-t up to
-manage/monitor the same bits in PRCM, what will happen when the two dri=
-ver
-does pm_runtime?
+This made me notice that num-cs is populated wrongly for spi1. It
+actually has 8 chip selects. This is fine though.
 
-CM_ICLKEN_PER[0] =3D 1
-McBSP2: runtime_get_sync()
-CM_ICLKEN_PER[0] =3D 0
-=2E..
-CM_ICLKEN_PER[0] =3D 0
-McBSP2.ST: runtime_get_sync() // hwmod might complain as the idlest was=
- not 1?
-CM_ICLKEN_PER[0] =3D 0
-=2E..
-CM_ICLKEN_PER[0] =3D 0
-McBSP2.ST: runtime_put_sync()
-CM_ICLKEN_PER[0] =3D 0 // hwmod might warn that the module did not went=
- idle?
-=2E..
-CM_ICLKEN_PER[0] =3D 0
-McBSP2: runtime_put_sync()
-CM_ICLKEN_PER[0] =3D 1
+Also, it will be nice to add pinctrl entries for spi0 like it is done
+for spi1. You will need those anyway for using the interface.
 
+> +			ti,davinci-spi-intr-line = <1>;
+> +			interrupts = <20>;
+> +			status = "disabled";
+> +		};
+>  		spi1: spi@30e000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+> index 64f3887..754f478 100644
+> --- a/arch/arm/mach-davinci/da8xx-dt.c
+> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+> @@ -28,6 +28,7 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
+>  	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f06000, "ecap", NULL),
+>  	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f07000, "ecap", NULL),
+>  	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f08000, "ecap", NULL),
+> +	OF_DEV_AUXDATA("ti,da830-spi", 0x01c41000, "spi_davinci.0", NULL),
+>  	OF_DEV_AUXDATA("ti,da830-spi", 0x01f0e000, "spi_davinci.1", NULL),
+>  	OF_DEV_AUXDATA("ns16550a", 0x01c42000, "serial8250.0", NULL),
+>  	OF_DEV_AUXDATA("ns16550a", 0x01d0c000, "serial8250.1", NULL),
 
-We can hack this around by adding HWMOD_NO_IDLEST to the sidetone hwmod=
- I
-guess. As the sidetone does not have PRCM level control - it is part of=
- McBSP.
+I prefer DT updates are patches of their own and not combined with code
+updates like this. Can you please split this up?
 
-> Then there are two separate sets of sysconfig registers that PM runti=
-me should manage.
-
-The sidetone core's sysconfig register is internal to McBSP module. Thi=
-s is
-what the TRM has to say about McBSPi.ST_SYSCONFIG_REG[0] AUTOIDLE bit:
-- When this bit is asserted (set to 1), the McBSPi_ICLK clock auto-gati=
-ng is
-enabled and this clock is disabled internally to the SIDETONE feature, =
-thus
-reducing power consumption, but not to the McBSP module that contains t=
-his
-feature.
-After reset, the automatic clock gating is enabled; thus, this bit must=
- be
-disabled by software for activated SIDETONE feature.
-- When this bit is set to 0, the McBSPi_ICLK clock auto-gating is disab=
-led and
-this clock is enabled. The SIDETONE feature can be used normally.
-
-The ST_SYSCONFIG_REG is internal to the McBSP module the ST is integrat=
-ed into.
-
-> And then there's the clock autogating issue.
->=20
-> Note that we do have an issue with the omap4 and later clkctrl regist=
-ers
-> that don't have refcounting. Tero's clkctrl work will sort out that
-> issue. I don't think we have a similar issue with omap3.
->=20
-> So from that point of view the two separate hwmod modules should work
-> just fine sharing the clock.
->=20
->> I have things working w/o the two drivers with pdata callback both i=
-n legacy
->> and DT case and it is pretty neat looking, thanks for the suggestion=
-! I'm
->> still figuring out the needed amount of callbacks from McBSP to ST a=
-nd from ST
->> to McBSP. We for sure going to need enable_stage1,2 probably three a=
-s well.
->> But this crossing driver boundaries needs a bit more time to figure =
-out.
->=20
-> Yeah I still think we need to struct device instances, one to manage
-> McBSP and the other to manage sidetone :)
-
-I'm still not convinced about the benefits of creating separate device =
-for the
-ST core of McBSP.
-=46rom my point of view:
-McBSP2 module consist of:
-- McBSP core
- - clock generator subcore
- - tx subcore
- - rx subcore
-- Sidetone core
-
-it is one piece of IP.
-I don't know why the hw guys decided to not extend the McBSP IP itself =
-with
-the sidetone feature, I'm sure they had their reasons to not touch the =
-McBSP
-core, but to add another core to the McBSP module.
-
-The documentation also treats the Sidetone as an additional feature to =
-the
-McBSP core functionality.
-
---=20
-P=E9ter
+Regards,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
