@@ -1,30 +1,79 @@
-From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] Add Hisilicon Random Number Generator(RNG) support
-Date: Fri, 15 Apr 2016 22:36:01 +0800
-Message-ID: <20160415143600.GG733@gondor.apana.org.au>
-References: <1460542288-25941-1-git-send-email-wangkefeng.wang@huawei.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v6 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Fri, 15 Apr 2016 22:42:09 +0800
+Message-ID: <1460731329.19786.4.camel@mtksdaap41>
+References: <1460621819-695-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1460621819-695-4-git-send-email-jamesjj.liao@mediatek.com>
+	 <1460631381.13240.3.camel@mtksdaap41> <1460685753.7028.5.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460542288-25941-1-git-send-email-wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460685753.7028.5.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Shunli Wang <shunli.wang@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 06:11:26PM +0800, Kefeng Wang wrote:
-> Changes since v3:
-> - Compatible name "hisilicon,hip04-rng" and  "hisilicon,hip05-rng" are used,
->   suggested by Robe Herring
-> - Add reviewed-by from Mathieu Poirier
+On Fri, 2016-04-15 at 10:02 +0800, James Liao wrote:
+> Hi Yingjoe,
+> 
+> On Thu, 2016-04-14 at 18:56 +0800, Yingjoe Chen wrote:
+> > On Thu, 2016-04-14 at 16:16 +0800, James Liao wrote:
+> > > From: Shunli Wang <shunli.wang@mediatek.com>
+> > > 
+> > > Add power dt-bindings for MT2701.
+> > > 
+> > > Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+> > > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > > Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> > > ---
+> > >  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 12 ++++++----
+> > >  include/dt-bindings/power/mt2701-power.h           | 27 ++++++++++++++++++++++
+> > >  2 files changed, 34 insertions(+), 5 deletions(-)
+> > >  create mode 100644 include/dt-bindings/power/mt2701-power.h
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > > index e8f15e3..ebb3144 100644
+> > > --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > > +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > > @@ -9,17 +9,19 @@ domain control.
+> > >  
+> > >  The driver implements the Generic PM domain bindings described in
+> > >  power/power_domain.txt. It provides the power domains defined in
+> > > -include/dt-bindings/power/mt8173-power.h.
+> > > +include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
+> > >  
+> > >  Required properties:
+> > > -- compatible: Must be "mediatek,mt8173-scpsys"
+> > > +- compatible: Should be one of:
+> > > +	- "mediatek,mt2701-scpsys"
+> > > +	- "mediatek,mt8173-scpsys"
+> > >  - #power-domain-cells: Must be 1
+> > >  - reg: Address range of the SCPSYS unit
+> > >  - infracfg: must contain a phandle to the infracfg controller
+> > >  - clock, clock-names: clocks according to the common clock binding.
+> > > -                      The clocks needed "mm", "mfg", "venc" and "venc_lt".
+> > > -		      These are the clocks which hardware needs to be enabled
+> > > -		      before enabling certain power domains.
+> > > +                      The clocks needed "mm", "mfg", "venc", "venc_lt" and
+> > > +                      "ethif". These are the clocks which hardware needs to be
+> > > +                      enabled before enabling certain power domains.
+> > 
+> > 
+> > Clock ethif only exist on mt2701 so it is not required on mt8173.
+> 
+> You are right. Each SoC needs different clock for each power domain.
+> Here list all subsystems of available SoCs.
 
-All applied.
--- 
-Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Binding should list required clocks for each specific platform. How
+about this:
+
+- clock, clock-names: clocks according to the common clock binding.
+		      These are the clocks which hardware needs to be
+                      enabled before enabling certain power domains.
+  	Required clocks for mt2701: "mm", "mfg", "ethif"
+	Required clocks for mt8173: "mm", "mfg", "venc", "venc_lt"
+
+Joe.C
