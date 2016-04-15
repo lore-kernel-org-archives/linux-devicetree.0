@@ -1,76 +1,56 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v4 2/7] dt-bindings: Add bindings for phy-da8xx-usb
-Date: Fri, 15 Apr 2016 11:13:38 -0500
-Message-ID: <57111332.5050808@lechnology.com>
-References: <1460658919-4965-1-git-send-email-david@lechnology.com>
- <1460658919-4965-3-git-send-email-david@lechnology.com>
- <5710C6E1.8010401@cogentembedded.com>
+From: Sagar Dharia <sdharia@codeaurora.org>
+Subject: Re: [PATCH V4 4/6] slim: qcom: Add Qualcomm Slimbus controller driver
+Date: Fri, 15 Apr 2016 10:17:36 -0600
+Message-ID: <57111420.8060208@codeaurora.org>
+References: <1454784265-5194-1-git-send-email-sdharia@codeaurora.org>
+ <1454784265-5194-5-git-send-email-sdharia@codeaurora.org>
+ <20160305052315.GE18327@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5710C6E1.8010401-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160305052315.GE18327@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, robh@kernel.org
+Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2016 05:48 AM, Sergei Shtylyov wrote:
-> On 4/14/2016 9:35 PM, David Lechner wrote:
->
->> Device tree binding for new phy-da8xx-usb driver.
->>
->> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>
->> v4 changes:
->>
->> * swapped order of usb20 and usb11 to be in logical order of reg address.
->>
->>   .../devicetree/bindings/phy/phy-da8xx-usb.txt      | 40
->> ++++++++++++++++++++++
->>   1 file changed, 40 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
->> b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
->> new file mode 100644
->> index 0000000..bead185
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
->> @@ -0,0 +1,40 @@
->> +TI DaVinci DA8xx USB PHY
->
->     DA8xx is not DaVinci, please omit this.
+Hello Mark
+Apologies for a late reply. I will incorporate most of your comments.
+Please see inline response for 2 comments:
+>> +	ret = devm_request_irq(&pdev->dev, dev->irq, msm_slim_interrupt,
+>> +				IRQF_TRIGGER_HIGH, "msm_slim_irq", dev);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "request IRQ failed\n");
+>> +		goto err_request_irq_failed;
+>> +	}
+> Are you sure this is safe and we don't deallocate things the interrupt
+> handler uses before we disable the interrupt?
 
-Just to be sure, you mean omit "DaVinci"?
+Since clock is not enabled before this step, we won't be getting any 
+interrupts from HW at this stage.
 
->
->> +
->> +Required properties:
->> + - compatible: must be "ti,da830-usbphy".
->> + - #phy-cells: must be 1.
->> +
->> +This device controls the PHY for both the USB 1.1 OHCI and USB 2.0 OTG
->> +controllers on DA8xx SoCs. Consumers of this device should use index
->> 0 for
->> +the USB 2.0 phy device and index 1 for the USB 1.1 phy device.
->
->     Not indices 2 and 1 already?
+>> +	/* Register with framework before enabling frame, clock */
+>> +	ret = slim_register_controller(&dev->ctrl);
+>> +	if (ret) {
+>> +		dev_err(dev->dev, "error adding controller\n");
+>> +		goto err_ctrl_failed;
+>> +	}
+> Should we have a devm_ version of slim_register_controller()?  I'd also
+> expect this to be the last thing we do in probe, things may start using
+> the device before we've finished initializing it.
+register_controller also allocates controller's TX/RX ring buffers. 
+These rings are needed when devices start
+reporting present on the bus once they are enabled.
+So register_controller needs to be done before enabling any devices.
+All steps after register_controller in this function are related to 
+enabling various internal component devices
+(e.g. framer, interface, manager devices) of this slimbus controller.
 
-I changed this to reflect the TRM. USB0PHY = USB 2.0 and USB1PHY = USB 1.1
+Thank you for your comments
+Sagar
 
->
->> +    usbphy: usbphy {
->
->     Name it "usb-phy" please, consistent to what ePAPR has mandated for
-> Ethernet PHYs.
 
-Ack.
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
