@@ -1,81 +1,187 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2 v2] device-tree: nexus7-flo: Remove power gpio key
- entry and use pmic8xxx-pwrkey
-Date: Fri, 15 Apr 2016 15:01:06 -0700
-Message-ID: <20160415220106.GZ391@tuxbot>
-References: <1460668031-12384-1-git-send-email-john.stultz@linaro.org>
- <20160415172212.GW391@tuxbot>
- <20160415185927.GN14441@codeaurora.org>
+From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: imx6qdl-udoo: add 7 inch LCD touchscreen panel
+ support
+Date: Sat, 16 Apr 2016 00:27:23 +0200
+Message-ID: <57116ACB.8030309@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160415185927.GN14441@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, John Stultz <john.stultz@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 15 Apr 11:59 PDT 2016, Stephen Boyd wrote:
+The official UDOO board kit has 7 and 15.6 inch touchscreen LCD panels
+as options.
 
-[..]
+This patch adds support for 7 inch panel only, but the 15.6 inch one
+should be easy to add using the same regulator, backlight device and
+LVDS channel.
 
-> ----8<-----
-> From: Stephen Boyd <sboyd@codeaurora.org>
-> Subject: [PATCH] Input: pmic8xxx-pwrkey: Fix algorithm for converting trigger
->  delay
-> 
-> The trigger delay algorithm that converts from microseconds to
-> the register value looks incorrect. According to most of the PMIC
-> documentation, the equation is
-> 
-> 	delay (Seconds) = (1 / 1024) * 2 ^ (x + 4)
-> 
-> except for one case where the documentation looks to have a
-> formatting issue and the equation looks like
-> 
-> 	delay (Seconds) = (1 / 1024) * 2 x + 4
-> 
-> Most likely this driver was written with the improper
-> documentation to begin with. According to the downstream sources
-> the valid delays are from 2 seconds to 1/64 second, and the
-> latter equation just doesn't make sense for that. Let's fix the
-> algorithm and the range check to match the documentation and the
-> downstream sources.
-> 
-> Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Since this panel is an option for UDOO board it is disabled by default
+and can be enabled (for example) by the following U-Boot commands:
+fdt set backlight status okay
+fdt set panelchan status okay
+fdt set panel7 status okay
+fdt set touchscreenp7 status okay
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The LVDS channels is also disabled by default to avoid warning from its
+driver.
 
-> Cc: John Stultz <john.stultz@linaro.org>
-> Fixes: 92d57a73e410 ("input: Add support for Qualcomm PMIC8XXX power key")
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  drivers/input/misc/pmic8xxx-pwrkey.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/input/misc/pmic8xxx-pwrkey.c b/drivers/input/misc/pmic8xxx-pwrkey.c
-> index 3f02e0e03d12..67aab86048ad 100644
-> --- a/drivers/input/misc/pmic8xxx-pwrkey.c
-> +++ b/drivers/input/misc/pmic8xxx-pwrkey.c
-> @@ -353,7 +353,8 @@ static int pmic8xxx_pwrkey_probe(struct platform_device *pdev)
->  	if (of_property_read_u32(pdev->dev.of_node, "debounce", &kpd_delay))
->  		kpd_delay = 15625;
->  
-> -	if (kpd_delay > 62500 || kpd_delay == 0) {
-> +	/* Valid range of pwr key trigger delay is 1/64 sec to 2 seconds. */
-> +	if (kpd_delay > USEC_PER_SEC * 2 || kpd_delay < USEC_PER_SEC / 64) {
->  		dev_err(&pdev->dev, "invalid power key trigger delay\n");
->  		return -EINVAL;
->  	}
-> @@ -385,8 +386,8 @@ static int pmic8xxx_pwrkey_probe(struct platform_device *pdev)
->  	pwr->name = "pmic8xxx_pwrkey";
->  	pwr->phys = "pmic8xxx_pwrkey/input0";
->  
-> -	delay = (kpd_delay << 10) / USEC_PER_SEC;
-> -	delay = 1 + ilog2(delay);
-> +	delay = (kpd_delay << 6) / USEC_PER_SEC;
-> +	delay = ilog2(delay);
+Signed-off-by: Maciej S. Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+---
+Changes from v1: make "compatible" property the first one where it exists,
+order new labels and pinctrl entries alphabetically.
 
-Regards,
-Bjorn
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 96 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index d3e54e40a017..0dd5aa1b45e0 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -10,14 +10,49 @@
+  */
+ 
+ / {
++	aliases {
++		backlight = &backlight;
++		panelchan = &panelchan;
++		panel7 = &panel7;
++		touchscreenp7 = &touchscreenp7;
++	};
++
+ 	chosen {
+ 		stdout-path = &uart2;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "gpio-backlight";
++		gpios = <&gpio1 4 0>;
++		default-on;
++		status = "disabled";
++	};
++
+ 	memory {
+ 		reg = <0x10000000 0x40000000>;
+ 	};
+ 
++	panel7: panel7 {
++		/*
++		 * in reality it is a -20t (parallel) model,
++		 * but with LVDS bridge chip attached,
++		 * so it is equivalent to -19t model in drive
++		 * characteristics
++		 */
++		compatible = "urt,umsh-8596md-19t";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_panel>;
++		power-supply = <&reg_panel>;
++		backlight = <&backlight>;
++		status = "disabled";
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -33,6 +68,14 @@
+ 			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
+ 			gpio = <&gpio7 12 0>;
+ 		};
++
++		reg_panel: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "lcd_panel";
++			enable-active-high;
++			gpio = <&gpio1 2 0>;
++		};
+ 	};
+ 
+ 	sound {
+@@ -67,6 +110,24 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	touchscreenp7: touchscreenp7@55 {
++		compatible = "sitronix,st1232";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_touchscreenp7>;
++		reg = <0x55>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <13 8>;
++		gpios = <&gpio1 15 0>;
++		status = "disabled";
++	};
++};
++
+ &iomuxc {
+ 	imx6q-udoo {
+ 		pinctrl_enet: enetgrp {
+@@ -97,6 +158,27 @@
+ 			>;
+ 		};
+ 
++		pinctrl_i2c3: i2c3grp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_5__I2C3_SCL		0x4001f8b1
++				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001f8b1
++			>;
++		};
++
++		pinctrl_panel: panelgrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x70
++				MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x70
++			>;
++		};
++
++		pinctrl_touchscreenp7: touchscreenp7grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD2_DAT0__GPIO1_IO15		0x70
++				MX6QDL_PAD_SD2_DAT2__GPIO1_IO13		0x1b0b0
++			>;
++		};
++
+ 		pinctrl_uart2: uart2grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_EIM_D26__UART2_TX_DATA	0x1b0b1
+@@ -154,6 +236,20 @@
+ 	};
+ };
+ 
++&ldb {
++	status = "okay";
++
++	panelchan: lvds-channel@0 {
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
++
+ &uart2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart2>;
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
