@@ -1,128 +1,157 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
-Date: Fri, 15 Apr 2016 16:14:40 +0100
-Message-ID: <57110560.80004@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
- <1460473007-11535-7-git-send-email-ldewangan@nvidia.com>
- <5710F7A4.5070902@nvidia.com> <5710F6CA.6060700@nvidia.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
+Date: Fri, 15 Apr 2016 08:16:51 -0700
+Message-ID: <20160415151651.GP5995@atomide.com>
+References: <20160411212845.GJ5995@atomide.com>
+ <570CC54E.6020703@ti.com>
+ <20160412163750.GR5995@atomide.com>
+ <570E3428.5020804@ti.com>
+ <20160413152829.GQ5995@atomide.com>
+ <570F4804.4050006@ti.com>
+ <20160414165514.GL5995@atomide.com>
+ <570FF163.1050603@ti.com>
+ <20160414203457.GM5995@atomide.com>
+ <5710C10A.6040908@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5710F6CA.6060700-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5710C10A.6040908-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 15/04/16 15:12, Laxman Dewangan wrote:
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160415 03:24]:
+> On 04/14/16 23:34, Tony Lindgren wrote:
+> > * Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160414 12:38]:
+> >>
+> >> Yes it has registers, but it has no prcm level existence, it is part of McBSP
+> >> module. I guess when the OMAP3 was designed the HW people did not wanted to
+> >> create new version of the McBSP core for McBSP2/3 so they attached a new core
+> >> to the McBSP cores with different targets, etc, but w/o external dependency.
+> > 
+> > Yeah well we do have a bunch of modules that don't need any separate
+> > functional clock and are clocked only by the interface clock. So in this
+> > case McBSP and sidetone are both consumers for the clock we just happen
+> > to call McBSP interface clock. They should be able to share that no
+> > problem.
+> > 
+> >>>> OK. I will go with the assumption that the sidetone hwmod can be removed (as
+> >>>> it is not correct) and rework my current series to use pdata callback for the
+> >>>> iclk autogate allow/deny. With this set the ST will be operational in legacy
+> >>>> and DT boot.
+> >>>
+> >>> Sorry, no I did not want to drop the sidetone hwmod, I was just trying to
+> >>> come up with ideas on how to make the driver changes easier. It sounds like
+> >>> you already figured out the driver changes part though with two drivers.
+> >>
+> >> If I need to keep the sidetone hwmod around I don't see how it can be done in
+> >> a safe and clean way. It is part of McBSP module, it is accessible only if the
+> >> McBSP module is enabled, you can not enable the Sidetone alone you need to go
+> >> and enable the McBSP module. I don't think it is a good idea to let two
+> >> separate hwmods to poke around the same PRCM bits. Have not checked, but I
+> >> don't think we have refcounting for the PRCM register bits.
+> > 
+> > Yeah there's no refcounting on the PRCM, but the clock framework has it
+> > for the share McBSP interface clock.
 > 
-> On Friday 15 April 2016 07:46 PM, Jon Hunter wrote:
->> On 12/04/16 15:56, Laxman Dewangan wrote:
->>> NVIDIA Tegra210 supports the IO pads which can operate at 1.8V
->>> or 3.3V I/O voltage levels. Also IO pads can be configured for
->>> power down state if it is not in used. SW needs to configure the
->>> voltage level of IO pads based on IO rail voltage and its power
->>> state based on platform usage.
->>>
->>> Add DT binding document for detailing the DT properties for
->>> configuring IO pads voltage levels and its power state.
->>>
->>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> [snip]
->>
->>> +Required subnode-properties:
->>> +==========================
->>> +- pins : An array of strings. Each string contains the name of an IO
->>> pads. Valid
->>> +     values for these names are listed below.
->>> +
->>> +Optional subnode-properties:
->>> +==========================
->>> +-nvidia,io-rail-voltage:    Integer. The voltage level of IO pads. The
->>> +                valid values are 1.8V and 3.3V. Macros are
->>> +                defined for these voltage levels in
->>> +                <dt-bindings/pinctrl/pinctrl-tegra210-io-pad.h>
->>> +                    Use TEGRA210_IO_RAIL_1800000UV for 1.8V
->>> +                    Use TEGRA210_IO_RAIL_3300000UV for 3.3V
->>> +
->>> +-nvidia,io-pad-deep-power-down: Integer, representing the deep power
->>> down state
->>> +                of the IO pads. If this is enable then IO pads
->>> +                will be in power down state and interface is not
->>> +                enabled for any transaction. This is power
->>> +                saving mode of the IO pads. The macros are
->>> +                defined for enable/disable in
->>> +                <dt-bindings/pinctrl/pinctrl-tegra210-io-pad.h>
->>> +                  TEGRA210_IO_PAD_DEEP_POWER_DOWN_DISABLE for
->>> +                    disable.
->>> +                  TEGRA210_IO_PAD_DEEP_POWER_DOWN_ENABLE for
->>> +                    enable.
->>> +Valid values for pin are:
->>> +    audio, audio-hv, cam, csia, csib, csic, csid, csie, csif,
->>> +    dbg, debug-nonao, dmic, dp, dsi, dsib, dsic, dsid, emmc, emmc2,
->>> +    gpio, hdmi, hsic, lvds, mipi-bias, pex-bias, pex-clk1, pex-clk2,
->>> +    pex-ctrl, sdmmc1, sdmmc3, spi, spi-hv, uart, usb-bias, usb0,
->>> +    usb1, usb2, usb3.
->> Thinking about this some more, the above are not IO pads but supply
->> pads, AFAICT. And these supply pads, are supplying the voltage to
->> various IO pads. I am not sure if these should be named vddio_xxx. The
->> 'pins' properties says these are IO pads, but this does not seem correct.
+> The hwmod checks the bits described by prcm.omap2. If two hwmods are set up to
+> manage/monitor the same bits in PRCM, what will happen when the two driver
+> does pm_runtime?
 > 
-> These are IO pads. One IO rail  have multiple sub pads to power down
-> some of interface when not used. Like if CSIA is active, we can power
-> down CSIB, CSIC etc.
+> CM_ICLKEN_PER[0] = 1
+> McBSP2: runtime_get_sync()
+> CM_ICLKEN_PER[0] = 0
+> ...
+> CM_ICLKEN_PER[0] = 0
+> McBSP2.ST: runtime_get_sync() // hwmod might complain as the idlest was not 1?
+> CM_ICLKEN_PER[0] = 0
+> ...
+> CM_ICLKEN_PER[0] = 0
+> McBSP2.ST: runtime_put_sync()
+> CM_ICLKEN_PER[0] = 0 // hwmod might warn that the module did not went idle?
+> ...
+> CM_ICLKEN_PER[0] = 0
+> McBSP2: runtime_put_sync()
+> CM_ICLKEN_PER[0] = 1
+>
+> We can hack this around by adding HWMOD_NO_IDLEST to the sidetone hwmod I
+> guess. As the sidetone does not have PRCM level control - it is part of McBSP.
 
-To me, 'IO rail' implies a supply rail, but this is not the same as an
-IO pad (or pin/ball). And hence, I think the terminology here is confusing.
+Heh if they are using the same register bits for two separate modules,
+then that's a bug for sure :) I think the sidetone module only has the
+clock gating bit in the ST_SYSCONFIG.
 
-For example, audio_hv powers the following IO pads ...
+> > Then there are two separate sets of sysconfig registers that PM runtime should manage.
+> 
+> The sidetone core's sysconfig register is internal to McBSP module. This is
+> what the TRM has to say about McBSPi.ST_SYSCONFIG_REG[0] AUTOIDLE bit:
+> - When this bit is asserted (set to 1), the McBSPi_ICLK clock auto-gating is
+> enabled and this clock is disabled internally to the SIDETONE feature, thus
+> reducing power consumption, but not to the McBSP module that contains this
+> feature.
 
-DAP1_DIN
-DAP1_DOUT
-DAP1_FS
-DAP1_SCLK
-SPI2_MOSI
-SPI2_MISO
-SPI2_SCK
-SPI2_CS0
-SPI2_CS1
+Some confusion here.. The McBSPi_ICLK is external, it's just shared
+between the McBSP and sidetone modules. So the ST_SYSCONFIG gates
+internally separately to the sidetone.
 
-And sdmmc1 powers the following IO pads ...
+> After reset, the automatic clock gating is enabled; thus, this bit must be
+> disabled by software for activated SIDETONE feature.
+> - When this bit is set to 0, the McBSPi_ICLK clock auto-gating is disabled and
+> this clock is enabled. The SIDETONE feature can be used normally.
+> 
+> The ST_SYSCONFIG_REG is internal to the McBSP module the ST is integrated into.
 
-SDMMC1_CLK
-SDMMC1_CMD
-SDMMC1_DAT0
-SDMMC1_DAT1
-SDMMC1_DAT2
-SDMMC1_DAT3
-SDMMC1_COMP
+The ST_SYSCONFIG is internal to the sidetone module only. Then the
+McBSP module has it's own SYSCONFIG register that's internal to the
+McBSP module only.
 
-As for CSIA, I don't think this is a pin/pad at all, but a software
-means to control the power down for the CSI_A_xxx pads. If CSIA is an IO
-pad then what is the ball number for Tegra210? In the datasheet I only
-see ...
+I think the confusion comes from the McBSPi_ICLK naming, that's not
+internal to the module(s) in question, it comes from an external
+shared source that the SYSCONFIG registers control.
 
-CSI_A_CLK_N Y6
-CSI_A_CLK_P Y7
-CSI_A_D0_N Y4
-CSI_A_D0_P Y5
-CSI_A_D1_N Y1
-CSI_A_D1_P AA1
+Some SYSCONFIG registers have autoidle features that signal the
+source clockdomain too.
 
-> All CSI pads are lined to single IO rail.
+> I'm still not convinced about the benefits of creating separate device for the
+> ST core of McBSP.
+> From my point of view:
+> McBSP2 module consist of:
+> - McBSP core
+>  - clock generator subcore
+>  - tx subcore
+>  - rx subcore
+> - Sidetone core
 
-I agree with this and from the data-sheet I see the rail that powers the
-CSI (and DSI) interfaces is called AVDD_DSI_CSI. But again, in the DT
-document you are referring to csia, csib, csic, csid, csie, csif as
-pins, but these don't appear to be physical pins, and this appears to be
-more of a software means to control power to the various csi_x pins.
+I think it's more like this for the clocking and
+intermodule lines:
 
-It seems to me that each of the existing CSI_A_xxx pins/pads should be
-mapped to or register with the appropriate power-down control and when
-all pads are set to inactive this then triggers the power-down of all
-the CSI_A_xxx pads.
+clockdomain
+clock generarator ---+
+subcore              |
+                     +- McBSP
+                     |  internal gating
+                     |  and signaling to
+                     |  clockdomain via
+                     |  SYSCONFIG register
+                     |        | |
+                     |        | | intermodule lines
+                     |        | | not on the interconnect
+                     |        | |
+                     +- sidetone
+                     |  internal gating
+                     |  (and signaling to
+                     |  clockdomain via
+                     |  SYSCONFIG register?)
 
-Cheers
-Jon
+Then all these modules just sit on the L4 interconnet at
+separate targets, including the clockdomain.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
