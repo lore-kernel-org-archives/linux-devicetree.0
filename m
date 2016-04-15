@@ -1,37 +1,57 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
-Date: Fri, 15 Apr 2016 22:01:52 +0530
-Message-ID: <57111778.5030500@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com> <1460473007-11535-7-git-send-email-ldewangan@nvidia.com> <5711183F.1090003@wwwdotorg.org>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Fri, 15 Apr 2016 09:44:33 -0700
+Message-ID: <20160415164433.GV391@tuxbot>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com>
+ <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com>
+ <571012E6.6050303@codeaurora.org>
+ <57102920.7000104@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5711183F.1090003@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57102920.7000104-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Vikram Sethi <vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andrew-g2DYL2Zd6BY@public.gmane.org, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu 14 Apr 16:34 PDT 2016, Timur Tabi wrote:
 
-On Friday 15 April 2016 10:05 PM, Stephen Warren wrote:
-> On 04/12/2016 08:56 AM, Laxman Dewangan wrote:
->> NVIDIA Tegra210 supports the IO pads which can operate at 1.8V
->> or 3.3V I/O voltage levels. Also IO pads can be configured for
->> power down state if it is not in used. SW needs to configure the
->> voltage level of IO pads based on IO rail voltage and its power
->> state based on platform usage.
->>
->> Add DT binding document for detailing the DT properties for
->> configuring IO pads voltage levels and its power state.
->
-> I hope that we only intend to use this in the case where Linux must 
-> make dynamic changes to the IO voltage (e.g. SD cards switching 
-> between speeds).
->
-> All static settings, and good boot defaults, should be set up by 
-> system FW. Perhaps not all FW does this on Tegra210 platforms:-( I 
-> hope that on future chips, the same FW that sets up the static pinmux 
-> sets up the static IO voltage configuration, in exactly the same way.
+[..]
+> So I think the solution is to create a device tree (and ACPI) property that
+> holds the mask.
+> 
+> 	dma-mask = <0 0xffffffff>;
+> 
+> or
+> 
+> 	dma-mask = <0xffffffff 0xffffffff>;
+> 
+> The driver will then do this:
+> 
+> 	u64 dma_mask;
+> 	device_property_read_u64(&pdev->dev, "dma-mask", &dma_mask);
+> 	dma_coerce_mask_and_coherent(&pdev->dev, dma_mask);
+> 
+> What I'm not sure yet is whether I should call
+> dma_coerce_mask_and_coherent() or dma_set_coherent_mask().
+> 
 
-Exactly yes.
+For platform devices being populated via from DT you will pass:
+of_platform_bus_create()
+  of_platform_device_create_pdata()
+    of_dma_configure()
+
+Which calls of_dma_get_range() to acquire this information from the
+dma-ranges property and set up the dma ops and properties.
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
