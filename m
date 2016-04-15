@@ -1,76 +1,128 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2] ARM: tegra: add DT binding for Tegra186 GPIO
- controllers
-Date: Fri, 15 Apr 2016 10:04:23 -0600
-Message-ID: <57111107.8060309@wwwdotorg.org>
-References: <1460483197-5130-1-git-send-email-swarren@wwwdotorg.org>
- <CACRpkdYmcEQBN5QwjLa-Wyorv-otPdJh5C1KgKwUjUBWXvnb_w@mail.gmail.com>
- <570FB459.8090802@wwwdotorg.org>
- <CACRpkdbazmBE6rMO0EKmK6qxqL7uaWNQmf=SNEDBJPCTVteFiA@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC
+ NAND on non-OMAP platforms
+Date: Fri, 15 Apr 2016 18:05:31 +0200
+Message-ID: <20160415180531.15d790d2@bbrezillon>
+References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
+	<20160413212500.GD5995@atomide.com>
+	<5710B58C.7050108@ti.com>
+	<20160415120942.3131eac1@bbrezillon>
+	<5710C86A.9060108@ti.com>
+	<20160415135108.63716f06@bbrezillon>
+	<20160415154139.GS5995@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbazmBE6rMO0EKmK6qxqL7uaWNQmf=SNEDBJPCTVteFiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160415154139.GS5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2016 03:17 AM, Linus Walleij wrote:
-> On Thu, Apr 14, 2016 at 5:16 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 04/14/2016 06:42 AM, Linus Walleij wrote:
->>> On Tue, Apr 12, 2016 at 7:46 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>> wrote:
->
->>> I suspect that the Tegra definition of a "port" is close to what other
->>> people
->>> call a "bank" like I try to define in this patch?
->>> http://marc.info/?l=linux-gpio&m=145941547420164&w=2
->>
->> There are similarities, but the concepts are quite different. In that
->> thread, the term "bank" actually refers to an instance of a standalone HW IP
->> block. Here, "port" is definitely something internal to a single HW block.
->
-> OK I get it. I wonder if we can make that common terminology as well.
->
-> GPIO bank := unique instance of a common IP block
-> GPIO port := unique line range inside an IP block
+Hi Tony,
 
-I think this would be hard, and in some places potentially confusing.
+On Fri, 15 Apr 2016 08:41:40 -0700
+Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
 
-Various HW documentation likely uses the terms bank and port, without 
-regard to how those terms are used in documentation for other chips. I'd 
-like the binding for any particular chip to use the same terminology as 
-the HW documentation for that chip, even if it's inconsistent with other 
-bindings (or at least contain an explicit terminology translation 
-table). That's because the binding is intended as HW documentation.
+> * Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> [160415 04:52]:
+> > Roger, Tony,
+> > 
+> > On Fri, 15 Apr 2016 13:54:34 +0300
+> > Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> > 
+> > > On 15/04/16 13:09, Boris Brezillon wrote:
+> > > > Hi Roger,
+> > > > 
+> > > > On Fri, 15 Apr 2016 12:34:04 +0300
+> > > > Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> > > > 
+> > > >> Tony & Boris,
+> > > >>
+> > > >> On 14/04/16 00:25, Tony Lindgren wrote:
+> > > >>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160407 03:10]:
+> > > >>>> Hi,
+> > > >>>>
+> > > >>>> As this series has cross dependency between omap and mtd subsystems,
+> > > >>>> I'll set up a immutable branch which omap-soc and l2-mtd must
+> > > >>>> merge in together to avoid any conflicts/breakage during integration.
+> > > >>>>
+> > > >>>> Brian has acked all mtd patches. Tony needs to give his Ack for the
+> > > >>>> gpmc driver part and then I can provide the immutable branch.
+> > > >>>
+> > > >>> Looks good to me, please feel free to add:
+> > > >>>
+> > > >>> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > > >>>
+> > > >>
+> > > >> I've added Tony and Rob's Acked-by tags and pushed the patches at the
+> > > >> below PULL request.
+> > > >>
+> > > >> Please take this into omap-soc and l2-mtd trees. Thanks.
+> > > > 
+> > > > I Pulled this branch into nand/next and had to resolve a few conflicts
+> > > > (as you may have noticed, a few other reworks in the NAND and MTD layer
+> > > > have been merged in the meantime).
+> > > 
+> > > OK. I'm not sure how well this will play when this merges into liunx-next
+> > > via the omap-soc tree.
+> > > 
+> > > Instead, can you please create a non-mutable nand/base for me (which could be
+> > > today's nand/next) and I can base my branch on that and Tony can use my
+> > > branch without causing any merge-conflict in linux-next?
+> > 
+> > I just created a branch called nand/for-gpmc-rework based on today's
+> > nand/next, but I'm still unsure how to proceed once you've rebased your
+> > work on this branch?
+> > 
+> > Tony will first have to pull my immutable branch, then pull yours, and
+> > then I'll have to pull an immutable branch from the the omap-soc tree
+> > to get your changes into my nand/next branch (in case other patches
+> > modify the same files before I send my PR). Am I missing something?
+> > If I'm not, then this option looks over-complicated to me.
+> 
+> Well why don't you merge it all via NAND then? I'm not seeing
+> any merge conflicts with the arch/arm/mach-omap* code.
 
-Within the Linux code, we could certainly attempt to use consistent 
-terminology. If so, I suggest we use terms that are quite unlikely to be 
-used by any HW documentation, or could only realistically be used to 
-mean the same thing. If we decided to use "GPIO bank" and "GPIO port" as 
-you defined above, yet some HW documentation already used "GPIO bank" to 
-mean a subset of GPIOs within a single IP block, and "GPIO port" to mean 
-a single GPIO (both of which I think are quite likely/possible), then 
-that's going to make matters worse not better.
+I'm perfectly fine with that. Actually, that's what I first did (see the
+nand/next-with-gpmc-rework I asked Roger to validate).
+Roger, since you don't have any dependencies on omap stuff added after
+4.6-rc1, I could even rebase your patches on top of nand/next to avoid
+this merge commit (and the associated conflict resolution).
 
-Perhaps "HW module"m "IP block" or perhaps "device" would be a 
-reasonable term for "GPIO bank" as you defined that above. Of course, 
-bikeshedding:-)
+> 
+> > ITOH, if we decide to let your patches go through the nand or omap-soc
+> > tree, only one immutable branch will be created, and either the nand or
+> > omap-soc maintainer (depending on who takes the patches) will have to
+> > pull it into its -next branch.
+> > 
+> > I'm quite new to all this merging process, so don't hesitate to correct
+> > me if I'm wrong.
+> 
+> Well the rules are that if something agreed to be immutable, then
+> it will never get redone. And the immutable branch should be based
+> on the absolute minimal set of patches against some earlier tag,
+> usually -rc1 is a good one. This avoids other tree to need to pull
+> in a huge amount of changes from other trees just to avoid merge
+> conflicts.
 
-I'm not sure of a reasonable term for "GPIO port" as you defined it.
+How would you do it in this particular case. Say I have to provide you
+with an immutable branch, it should only contain Roger's patches, right?
 
-...
-> It's cool.
-> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> I assume you want to merge this through the Tegra tree, or
-> should I apply it to the GPIO tree?
+But this also means this immutable branch has to be pulled into my
+nand/next branch before all other changes touching the same set of
+files, which in turn means that I'll have to rebase and push -f my
+nand/next branch (which I'd like to avoid).
+Or should I just pull this immutable branch in my current nand/next and
+let you pull the same immutable branch in omap-soc. I mean, would this
+prevent conflicts when our branches are merged into linux-next, no
+matter the order.
 
-I'm happy either way. If through the Tegra tree, Thierry would be 
-applying it so I'll let him make the call.
-
-I suspect that both this patch and my earlier "ARM: tegra: fix naming in 
-GPIO DT binding header" should be applied through the same tree for 
-consistency.
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
