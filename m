@@ -1,84 +1,98 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] ASoC: davinci-mcbsp: add binding for McBSP
-Date: Fri, 15 Apr 2016 10:48:15 +0200
-Message-ID: <5710AACF.9070402@barix.com>
-References: <1460375117-4311-1-git-send-email-petr@barix.com>
- <1460375117-4311-2-git-send-email-petr@barix.com>
- <20160413143014.GA12136@rob-hp-laptop>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 7/7] pinctrl: tegra: Add driver to configure voltage and
+ power state of io pads
+Date: Fri, 15 Apr 2016 14:09:00 +0530
+Message-ID: <5710A8A4.90309@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>	<1460473007-11535-8-git-send-email-ldewangan@nvidia.com> <CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160413143014.GA12136@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 13.04.2016 16:30, Rob Herring wrote:
-> On Mon, Apr 11, 2016 at 01:45:12PM +0200, Petr Kulhavy wrote:
->> Add devicetree binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx
->> MultiChannel Buffered Serial Port (McBSP)
->>
->> The optional register range "dat" is not implemented at the moment.
->> The current driver supports only DMA into RX/TX registers but no FIFO.
->> Once the FIFO is implemented in the driver the "dat" range will be used.
->>
->> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
->> ---
->> v1: initial
->> v2: add missing TC channel in dmas properties (for compatibility with the new EDMA3 binding)
->>      remove "-audio" postfix from the compatible string
->>      remove "channel-combine" property
->>
->>   .../devicetree/bindings/sound/davinci-mcbsp.txt    | 51 ++++++++++++++++++++++
->>   1 file changed, 51 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
->> new file mode 100644
->> index 000000000000..de45865c3863
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
->> @@ -0,0 +1,51 @@
->> +Texas Instruments DaVinci McBSP module
->> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> +
->> +This binding describes the "Multi-channel Buffered Serial Port" (McBSP)
->> +audio interface found in some TI DaVinci processors like the OMAP-L138 or AM180x.
->> +
->> +
->> +Required properties:
->> +~~~~~~~~~~~~~~~~~~~~
->> +- compatible : "ti,da850-mcbsp"
-> You list several SoCs above, but only one compatible string here. A
-> specific compatible string per SoC please.
+On Friday 15 April 2016 01:38 PM, Linus Walleij wrote:
+> On Tue, Apr 12, 2016 at 4:56 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 >
-Hi Rob,
+>> NVIDIA Tegra210 supports the IO pads which can operate at 1.8V
+>> or 3.3V I/O voltage levels. Also the IO pads can be configured
+>> for power down state if it is not used. SW needs to configure the
+>> voltage level of IO pads based on IO rail voltage and its power
+>> state based on platform usage.
+>>
+>> The voltage and power state configurations of pads are provided
+>> through pin control frameworks. Add pin control driver for Tegra's
+>> IO pads' voltage and power state configurations.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> (...)
+>> +config PINCTRL_TEGRA210_IO_PAD
+> Why does this need its own Kconfig option?
+> Can't you just unconditionally compile it in if
+> PINCTRL_TEGRA210 is selected, you seem to say
+> it is there on all these platforms anyway.
 
-thank you for your feedback. I can test only on the AM1808 platform, 
-however as far as I understand the OMAP L138 and AM1808 use the same 
-McBSP hardware. The TI guys can give more insight here... Isn't it then 
-redundant to define more compatible strings? Sorry for my ignorance, I 
-just don't know the policy of defining the compatible strings.
+Yes, it can be done. The reason I kept is that this driver needed T210 
+onwards and not for older generation of SoC.
 
->> +
->> +- reg : physical base address and length of the controller memory mapped
->> +        region(s).
->> +- reg-names : Should contain:
->> +        * "mpu" for the main registers (required). For compatibility with
->> +          existing software, it is recommended this is the first entry.
-> s/recommended/required/
-Recommended is correct, but I think it make sense to drop the sentence.
-If the reg-names are provided then the probe() finds the resource 
-regardless of the index.
-If not provided it expects it at index 0.
-But since we declare that the reg-names is mandatory this sentence is 
-just confusing and should be removed.
+May be we can select from T210 pincontrol.
 
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>
+>> +static const struct pinconf_generic_params tegra_io_pads_cfg_params[] = {
+>> +       {
+>> +               .property = "nvidia,io-rail-voltage",
+>> +               .param = TEGRA_IO_RAIL_VOLTAGE,
+>> +       }, {
+> What's so nvidia-specific about this?
+> We have power-source in
+> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> which takes a custom argument. This is obviously what you
+> are doing (selecting one of two rails), so use that binding.
+
+Yes, I looked for the common property but did not found anything near to 
+this.
+My understating for power-source is that selecting the source of supply, 
+not the voltages.
+I am looking something  power-source-voltage-level.
+Should we add this?
+
+
+
+
+>
+>> +               .property = "nvidia,io-pad-deep-power-down",
+>> +               .param = TEGRA_IO_PAD_DEEP_POWER_DOWN,
+>> +       },
+> Likewise the generic bindings have low-power-enable and
+> low-power-disable, this seems like a copy of low-power-enable;
+When writing, I considered this property but was not able to fully 
+convinced myself to use this but I think now I am fine to use this as 
+you suggested.
+
+
+
+>
+> Even if Tegra is not using the generic code for handling the
+> standard bindings (GENERIC_PINCONF) it doesn't stop
+> you from using the generic bindings and contributing to them.
+>
+> Historically you have a few custom bindings like these:
+>
+> nvidia,pins
+> nvidia,function
+> nvidia,pull
+> nvidia,tristate
+>
+> etc etc, but that is just unfortunate and due to preceding the
+> generic bindings. I would appreciate if you started to support
+> the generic bindings in parallel, but I'm not gonna push that issue.
+
+Yaah, these are in my plate to cleanup. Let me work with Stephen, what 
+he think here.
+
+
