@@ -1,101 +1,76 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v6 01/24] i2c-mux: add common data for every i2c-mux
- instance
-Date: Fri, 15 Apr 2016 15:52:55 +0000
-Message-ID: <AM4PR02MB1299030956B02941183DF239BC680@AM4PR02MB1299.eurprd02.prod.outlook.com>
+From: "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Subject: Re: [RESEND PATCH v4] clk/axs10x: Add I2S PLL clock driver
+Date: Fri, 15 Apr 2016 16:38:58 -0700
+Message-ID: <20160415233858.GA4690@codeaurora.org>
+References: <50c75be8ecab225a1dd49628a173d211a02755b2.1459791946.git.joabreu@synopsys.com>
+ <1460393270.5119.20.camel@synopsys.com>
+ <20160411220320.GB14441@codeaurora.org>
+ <1460722116.3025.40.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: sv-SE
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@lysator.liu.se>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.co>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460722116.3025.40.camel@synopsys.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Wolfram Sang wrote:
-> > > wonder even more if we couldn't supply num_adapters to i2c_mux_alloc()
-> > > and reserve the memory statically. i2c busses are not
-> > > dynamic/hot-pluggable so that should be good enough?
-> > 
-> > Yes, that would work, but it would take some restructuring in some of
-> > the drivers that currently don't know how many child adapters they
-> > are going to need when they call i2c_mux_alloc.
-> 
-> Which ones?
+On 04/15, Alexey Brodkin wrote:
+> Hi=A0Stephen,
+>=20
+> On Mon, 2016-04-11 at 15:03 -0700, sboyd@codeaurora.org wrote:
+> > On 04/11, Alexey Brodkin wrote:
+> > >=20
+> > > On Mon, 2016-04-11 at 11:41 +0100, Jose Abreu wrote:
+> > > >=20
+> > > > + * warranty of any kind, whether express or implied.
+> > > > + */
+> > > > +
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/clk-provider.h>
+> > > > +#include <linux/err.h>
+> > > > +#include <linux/device.h>
+> > > "linux/platform_device.h" includes "linux/device.h" so you may ma=
+ke this list of headers
+> > > a little bit shorter.
+> > >=20
+> > > >=20
+> > > > +#include <linux/of_address.h>
+> > > > +#include <linux/slab.h>
+> > > > +#include <linux/of.h>
+> > > "linux/of_address.h" already includes "linux/of.h".
+> > It's ok to include things twice. In fact, its better to avoid any
+> > implicit includes so that if we ever want to remove includes from
+> > other headers we can do so without disturbing this driver.
+>=20
+> IMHO approach with minimal amount of headers is nice just because
+> it's easier to check if everything is in place. I mean attempt to com=
+pile
+> will immediately reveal a missing header.
+>=20
+> So that's what I do - I remove as many inclusions as I may until stuf=
+f compiles.
 
-If you look at i2c-mux-reg.c, it currently allocates its private
-struct regmux, then fills it with various platform things and then
-when it knows how many children it needs it allocates them. After
-v6 it first allocates a mux core and private struct regmux in one go
-using i2c_mux_alloc, then continues in much the same way as before.
+Please don't. People try to break header includes cycles by
+moving things in one header to another header, and then those
+changes may need to fix random drivers because they are now
+missing an implicit include they were relying on, etc.
 
-If the number of children is needed for the i2c_mux_alloc call, then
-this is certainly doable, and it would probably not be all that bad,
-but the simplest approach would probably be to allocate the private
-struct regmux first, then dig through the platform data, then allocate
-the mux core when the number of children is known. Which would still
-be two allocations separated by the platform data dig.
+>=20
+> But with approach of explicit inclusion it's much easier to include
+> much more headers than really needed. The only way to figure out if h=
+eader is really
+> required is to manually check all used functions in the current sourc=
+e
+> which is way too unreliable and probably nobody will do it ever anywa=
+ys.
+> And that's how we'll get more stale and pointless inclusions.
 
-So, your suggestion would basically move the mux core allocation
-from generally being done early together with other private data to
-later when the driver has figured out how many children it's going
-to create.
+Sounds like a job for a script!
 
-The restructuring I thought about is needed if the intention of this
-was to reduce number of allocations, but maybe you just wanted
-what I described above? Because what I did in v6 and what you are
-suggesting is quite similar in complexity, but your version has the
-advantage of not having the need for realloc.
-
-So, I have made this change locally (and the adapters->num_adapters
-change) and I like it. I haven't even compile-tested it yet though,
-but I'll get back when I have done some testing.
-
-> > Because you thought about removing i2c_mux_reserve_adapters completely,
-> > and not provide any means of adding more adapters than specified in
-> > the i2c_mux_alloc call, right?
-> 
-> Yes. I assumed I2C to be static enough that such information is known in
-> advance.
-> 
-> > > Ignoring the 80 char limit here makes the code more readable.
-> > 
-> > That is only true if you actually have more than 80 characters, so I don't
-> > agree. Are you adamant about it? (I'm not)
-> 
-> No. Keep it if you prefer it.
-> 
-> > >> +EXPORT_SYMBOL_GPL(i2c_mux_one_adapter);
-> > > 
-> > > Are you sure the above function pays off? Its argument list is very
-> > > complex and it doesn't save a lot of code. Having seperate calls is
-> > > probably more understandable in drivers? Then again, I assume it makes
-> > > the conversion of existing drivers easier.
-> > 
-> > I added it in v4, you can check earlier versions if you like. Without
-> > it most gate-muxes (i.e. typically the muxes in drivers/media) grew
-> > since the i2c_add_mux_adapter call got replaced by two calls, i.e.
-> > i2c_mux_alloc followed by i2c_max_add_adapter, and coupled with
-> > error checks made it look more complex than before. So, this wasn't
-> > much of a cleanup from the point of those drivers.
-> 
-> Hmm, v3 didn't have the driver patches posted with it. Can you push it
-> to your branch? I am also not too strong with this one, but having a
-> look how it looks without would be nice.
-
-Although I'm not sure what you meant by "driver patches", I have pushed
-mux-core-and-locking-2 and mux-core-and-locking-3 to
-https://github.com/peda-r/i2c-mux/ (note that these are the branches as
-they where when I posted v2 and v3 to the list, i.e. w/o fixups)
-
-Those early versions updated all drivers with each change, making each
-patch big, so if that was what you meant by missing "driver patches" then
-there simply were no driver patches.
-
-If you meant the follow-up patches to relax locking in the media drivers
-etc, I only compile-tested them using throwaway branches back then (if I
-even had branches). So, I don't have anything ready to push, sorry.
-
-Cheers,
-Peter
+--=20
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
