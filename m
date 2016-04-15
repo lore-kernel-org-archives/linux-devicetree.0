@@ -1,44 +1,84 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 1/8] PM / devfreq: event: Add new Exynos NoC probe driver
-Date: Fri, 15 Apr 2016 10:37:26 +0200
-Message-ID: <5710A846.1020304@samsung.com>
-References: <1460701975-24178-1-git-send-email-cw00.choi@samsung.com>
- <1460701975-24178-2-git-send-email-cw00.choi@samsung.com>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] ASoC: davinci-mcbsp: add binding for McBSP
+Date: Fri, 15 Apr 2016 10:48:15 +0200
+Message-ID: <5710AACF.9070402@barix.com>
+References: <1460375117-4311-1-git-send-email-petr@barix.com>
+ <1460375117-4311-2-git-send-email-petr@barix.com>
+ <20160413143014.GA12136@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1460701975-24178-2-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene@kernel.org
-Cc: robh@kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160413143014.GA12136@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2016 08:32 AM, Chanwoo Choi wrote:
-> This patch adds NoC (Network on Chip) Probe driver which provides
-> the primitive values to get the performance data. The packets that the Network
-> on Chip (NoC) probes detects are transported over the network infrastructure.
-> Exynos542x bus has multiple NoC probes to provide bandwidth information about
-> behavior of the SoC that you can use while analyzing system performance.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
-> Tested-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  .../bindings/devfreq/event/exynos-nocp.txt         |  26 ++
->  drivers/devfreq/event/Kconfig                      |   8 +
->  drivers/devfreq/event/Makefile                     |   2 +
->  drivers/devfreq/event/exynos-nocp.c                | 304 +++++++++++++++++++++
->  drivers/devfreq/event/exynos-nocp.h                |  78 ++++++
->  5 files changed, 418 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/event/exynos-nocp.txt
->  create mode 100644 drivers/devfreq/event/exynos-nocp.c
->  create mode 100644 drivers/devfreq/event/exynos-nocp.h
-> 
 
-Looks good now.
+On 13.04.2016 16:30, Rob Herring wrote:
+> On Mon, Apr 11, 2016 at 01:45:12PM +0200, Petr Kulhavy wrote:
+>> Add devicetree binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx
+>> MultiChannel Buffered Serial Port (McBSP)
+>>
+>> The optional register range "dat" is not implemented at the moment.
+>> The current driver supports only DMA into RX/TX registers but no FIFO.
+>> Once the FIFO is implemented in the driver the "dat" range will be used.
+>>
+>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>> ---
+>> v1: initial
+>> v2: add missing TC channel in dmas properties (for compatibility with the new EDMA3 binding)
+>>      remove "-audio" postfix from the compatible string
+>>      remove "channel-combine" property
+>>
+>>   .../devicetree/bindings/sound/davinci-mcbsp.txt    | 51 ++++++++++++++++++++++
+>>   1 file changed, 51 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>> new file mode 100644
+>> index 000000000000..de45865c3863
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>> @@ -0,0 +1,51 @@
+>> +Texas Instruments DaVinci McBSP module
+>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +This binding describes the "Multi-channel Buffered Serial Port" (McBSP)
+>> +audio interface found in some TI DaVinci processors like the OMAP-L138 or AM180x.
+>> +
+>> +
+>> +Required properties:
+>> +~~~~~~~~~~~~~~~~~~~~
+>> +- compatible : "ti,da850-mcbsp"
+> You list several SoCs above, but only one compatible string here. A
+> specific compatible string per SoC please.
+>
+Hi Rob,
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+thank you for your feedback. I can test only on the AM1808 platform, 
+however as far as I understand the OMAP L138 and AM1808 use the same 
+McBSP hardware. The TI guys can give more insight here... Isn't it then 
+redundant to define more compatible strings? Sorry for my ignorance, I 
+just don't know the policy of defining the compatible strings.
 
-Best regards,
-Krzysztof
+>> +
+>> +- reg : physical base address and length of the controller memory mapped
+>> +        region(s).
+>> +- reg-names : Should contain:
+>> +        * "mpu" for the main registers (required). For compatibility with
+>> +          existing software, it is recommended this is the first entry.
+> s/recommended/required/
+Recommended is correct, but I think it make sense to drop the sentence.
+If the reg-names are provided then the probe() finds the resource 
+regardless of the index.
+If not provided it expects it at index 0.
+But since we declare that the reg-names is mandatory this sentence is 
+just confusing and should be removed.
+
+Petr
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
