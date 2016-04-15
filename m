@@ -1,80 +1,76 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 7/7] pinctrl: tegra: Add driver to configure voltage and
- power state of io pads
-Date: Fri, 15 Apr 2016 10:08:53 +0200
-Message-ID: <CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
-	<1460473007-11535-8-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/4] pinctrl: iproc: Allow certain PINCONF functions to be disabled
+Date: Fri, 15 Apr 2016 10:20:47 +0200
+Message-ID: <CACRpkdbgpPZrJ-HWF32CEuMT7Ua=Du6KrfZ5ya__Zw-Lf-XM+Q@mail.gmail.com>
+References: <1460506523-6249-1-git-send-email-ray.jui@broadcom.com>
+	<1460506523-6249-3-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1460473007-11535-8-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1460506523-6249-3-git-send-email-ray.jui@broadcom.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pramod Kumar <pramodku@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 12, 2016 at 4:56 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+On Wed, Apr 13, 2016 at 2:15 AM, Ray Jui <ray.jui@broadcom.com> wrote:
 
-> NVIDIA Tegra210 supports the IO pads which can operate at 1.8V
-> or 3.3V I/O voltage levels. Also the IO pads can be configured
-> for power down state if it is not used. SW needs to configure the
-> voltage level of IO pads based on IO rail voltage and its power
-> state based on platform usage.
+> The iProc GPIO controller is shared among multiple iProc based SoCs. In
+> some of these SoCs, certain PINCONF functions are disabled and registers
+> associated with these functions are reserved. This patch adds support to
+> the iProc GPIO/PINCOF driver to allow these unsupported functions to be
+
+^PINCONF
+
+> disabled through device tree property 'brcm,pinconf-func-off'. Without
+> disabling these unsupported PINCONF functions, user can potentially
+> access these functions through sysfs debug entries; as a result, these
+> reserved registers can be accessed
 >
-> The voltage and power state configurations of pads are provided
-> through pin control frameworks. Add pin control driver for Tegra's
-> IO pads' voltage and power state configurations.
+> This patch is developed based on the initial work from Yendapally Reddy
+> Dhananjaya <yrdreddy@broadcom.com> who attempted to disable drive
+> strength configuration for the iProc based NSP chip. In addition,
+> Pramod Kumar <pramodku@broadcom.com> also contributed to make the
+> support more generic across all currently supported PINCONF functions in
+> the iProc GPIO/PINCONF driver
 >
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Pramod Kumar <pramodku@broadcom.com>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Jon Mason <jon.mason@broadcom.com>
+> Reviewed-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 
-(...)
-> +config PINCTRL_TEGRA210_IO_PAD
+OK I see. Hm I think it is better to use a per-soc compatible string
+like Rob Herring indicates to determine if we should loose these
+pin config parameters. Does it seem reasonable to you?
 
-Why does this need its own Kconfig option?
-Can't you just unconditionally compile it in if
-PINCTRL_TEGRA210 is selected, you seem to say
-it is there on all these platforms anyway.
+I'm thinking that it is a property of how the hardware was synthesized
+in that SoC so since it is a different version of the hardware it should
+have a unique compatible string.
 
-> +static const struct pinconf_generic_params tegra_io_pads_cfg_params[] = {
-> +       {
-> +               .property = "nvidia,io-rail-voltage",
-> +               .param = TEGRA_IO_RAIL_VOLTAGE,
-> +       }, {
+> +/*
+> + * Bit position for PINCONF functions to be disabled for a given iProc SoC
+> + */
+> +#define IPROC_PIN_DRIVE_STRENGTH        0
+> +#define IPROC_PIN_BIAS_DISABLE          1
+> +#define IPROC_PIN_BIAS_PULL_UP          2
+> +#define IPROC_PIN_BIAS_PULL_DOWN        3
+> +
+> +/*
+> + * Bit mask for DT property "brcm,pinconf-func-off"
+> + */
+> +#define IPROC_PIN_OFF_DRIVE_STRENGTH    (1 << IPROC_PIN_DRIVE_STRENGTH)
+> +#define IPROC_PIN_OFF_BIAS_DISABLE      (1 << IPROC_PIN_BIAS_DISABLE)
+> +#define IPROC_PIN_OFF_BIAS_PULL_UP      (1 << IPROC_PIN_BIAS_PULL_UP)
+> +#define IPROC_PIN_OFF_BIAS_PULL_DOWN    (1 << IPROC_PIN_BIAS_PULL_DOWN)
+> +
+> +#endif
 
-What's so nvidia-specific about this?
-We have power-source in
-Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-which takes a custom argument. This is obviously what you
-are doing (selecting one of two rails), so use that binding.
+So this stuff should not be in the device tree, the driver should know,
+from the compatible string, what config options that are unavailable.
 
-> +               .property = "nvidia,io-pad-deep-power-down",
-> +               .param = TEGRA_IO_PAD_DEEP_POWER_DOWN,
-> +       },
-
-Likewise the generic bindings have low-power-enable and
-low-power-disable, this seems like a copy of low-power-enable;
-Even if it needs a new binding, it doesn't seem very nVidia-specific
-so then propose something to the generic bindings.
-
-Even if Tegra is not using the generic code for handling the
-standard bindings (GENERIC_PINCONF) it doesn't stop
-you from using the generic bindings and contributing to them.
-
-Historically you have a few custom bindings like these:
-
-nvidia,pins
-nvidia,function
-nvidia,pull
-nvidia,tristate
-
-etc etc, but that is just unfortunate and due to preceding the
-generic bindings. I would appreciate if you started to support
-the generic bindings in parallel, but I'm not gonna push that issue.
-However for *new* stuff, I don't want the custom bindings
-to proliferate. Use the generic stuff, I'm trying to keep the weirdness
-in one place, and the generic stuff is needed for standardization
-across platforms going forward.
+Then if someone tries to use that in the DT, they should get an
+error code -ENOTSUPP, but AFAICT that is what the patch achieves.
 
 Yours,
 Linus Walleij
