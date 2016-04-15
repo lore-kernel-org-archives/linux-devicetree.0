@@ -1,98 +1,57 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 7/7] pinctrl: tegra: Add driver to configure voltage and
- power state of io pads
-Date: Fri, 15 Apr 2016 14:09:00 +0530
-Message-ID: <5710A8A4.90309@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>	<1460473007-11535-8-git-send-email-ldewangan@nvidia.com> <CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
+Date: Fri, 15 Apr 2016 09:52:20 +0100
+Message-ID: <5710ABC4.5070505@arm.com>
+References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
+ <570F593D.6040809@arm.com> <20160414192540.GD20512@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160414192540.GD20512-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Friday 15 April 2016 01:38 PM, Linus Walleij wrote:
-> On Tue, Apr 12, 2016 at 4:56 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->
->> NVIDIA Tegra210 supports the IO pads which can operate at 1.8V
->> or 3.3V I/O voltage levels. Also the IO pads can be configured
->> for power down state if it is not used. SW needs to configure the
->> voltage level of IO pads based on IO rail voltage and its power
->> state based on platform usage.
+
+On 14/04/16 20:25, Greg KH wrote:
+> On Thu, Apr 14, 2016 at 09:47:57AM +0100, Vladimir Murzin wrote:
+>> Hi,
 >>
->> The voltage and power state configurations of pads are provided
->> through pin control frameworks. Add pin control driver for Tegra's
->> IO pads' voltage and power state configurations.
+>> On 01/04/16 15:02, Vladimir Murzin wrote:
+>>> Hi,
+>>>
+>>> This patch series provides the basic support for running ucLinux on V2M-MPS2
+>>> platform.
+>>>
+>>> With these patches applied ucLinux can be run on both HW and FVP models
+>>> with Cortex-M3/M4/M7 configurations.
 >>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> (...)
->> +config PINCTRL_TEGRA210_IO_PAD
-> Why does this need its own Kconfig option?
-> Can't you just unconditionally compile it in if
-> PINCTRL_TEGRA210 is selected, you seem to say
-> it is there on all these platforms anyway.
-
-Yes, it can be done. The reason I kept is that this driver needed T210 
-onwards and not for older generation of SoC.
-
-May be we can select from T210 pincontrol.
-
-
+>> Any objection to get it merged?
+>>
+>> Sudeep Holla noticed that there is merge conflict against linux-next
+>> with PIC32 uart (Makefile and serial_core.h), so should I provide
+>> conflict resolution or do rebase on someone's branch?
+>>
+>> Anyway, I'd be glad to know how it should be processed further?
 >
->> +static const struct pinconf_generic_params tegra_io_pads_cfg_params[] = {
->> +       {
->> +               .property = "nvidia,io-rail-voltage",
->> +               .param = TEGRA_IO_RAIL_VOLTAGE,
->> +       }, {
-> What's so nvidia-specific about this?
-> We have power-source in
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> which takes a custom argument. This is obviously what you
-> are doing (selecting one of two rails), so use that binding.
-
-Yes, I looked for the common property but did not found anything near to 
-this.
-My understating for power-source is that selecting the source of supply, 
-not the voltages.
-I am looking something  power-source-voltage-level.
-Should we add this?
-
-
-
-
+> I have no objection to the tty/serial changes, so if this all goes
+> through the arm-soc tree, that's fine with me.
 >
->> +               .property = "nvidia,io-pad-deep-power-down",
->> +               .param = TEGRA_IO_PAD_DEEP_POWER_DOWN,
->> +       },
-> Likewise the generic bindings have low-power-enable and
-> low-power-disable, this seems like a copy of low-power-enable;
-When writing, I considered this property but was not able to fully 
-convinced myself to use this but I think now I am fine to use this as 
-you suggested.
 
+Thanks Greg, can I take this as Ack ? arm-soc guys might expect to see
+that tag :)
 
+Hi Vladimir,
 
->
-> Even if Tegra is not using the generic code for handling the
-> standard bindings (GENERIC_PINCONF) it doesn't stop
-> you from using the generic bindings and contributing to them.
->
-> Historically you have a few custom bindings like these:
->
-> nvidia,pins
-> nvidia,function
-> nvidia,pull
-> nvidia,tristate
->
-> etc etc, but that is just unfortunate and due to preceding the
-> generic bindings. I would appreciate if you started to support
-> the generic bindings in parallel, but I'm not gonna push that issue.
+I have pulled this series into
+git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git 
+for-next/armv7-vexpress-updates
 
-Yaah, these are in my plate to cleanup. Let me work with Stephen, what 
-he think here.
+I will stick Greg's tag when it comes.
 
-
+-- 
+Regards,
+Sudeep
