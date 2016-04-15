@@ -1,52 +1,46 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
-Date: Fri, 15 Apr 2016 09:23:42 -0700
-Message-ID: <20160415162342.GC25094@kroah.com>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
- <570F593D.6040809@arm.com>
- <20160414192540.GD20512@kroah.com>
- <5710ABC4.5070505@arm.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 4/7] soc/tegra: pmc: Add interface to set voltage of IO
+ rails
+Date: Fri, 15 Apr 2016 10:24:46 -0600
+Message-ID: <571115CE.50906@wwwdotorg.org>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
+ <1460473007-11535-5-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5710ABC4.5070505@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Vladimir Murzin <vladimir.murzin@arm.com>, arnd@arndb.de, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, liviu.dudau@arm.com, lorenzo.pieralisi@arm.com, mark.rutland@arm.com, gnomes@lxorguk.ukuu.org.uk, peter@hurleysoftware.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1460473007-11535-5-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 15, 2016 at 09:52:20AM +0100, Sudeep Holla wrote:
-> 
-> 
-> On 14/04/16 20:25, Greg KH wrote:
-> > On Thu, Apr 14, 2016 at 09:47:57AM +0100, Vladimir Murzin wrote:
-> > > Hi,
-> > > 
-> > > On 01/04/16 15:02, Vladimir Murzin wrote:
-> > > > Hi,
-> > > > 
-> > > > This patch series provides the basic support for running ucLinux on V2M-MPS2
-> > > > platform.
-> > > > 
-> > > > With these patches applied ucLinux can be run on both HW and FVP models
-> > > > with Cortex-M3/M4/M7 configurations.
-> > > 
-> > > Any objection to get it merged?
-> > > 
-> > > Sudeep Holla noticed that there is merge conflict against linux-next
-> > > with PIC32 uart (Makefile and serial_core.h), so should I provide
-> > > conflict resolution or do rebase on someone's branch?
-> > > 
-> > > Anyway, I'd be glad to know how it should be processed further?
-> > 
-> > I have no objection to the tty/serial changes, so if this all goes
-> > through the arm-soc tree, that's fine with me.
-> > 
-> 
-> Thanks Greg, can I take this as Ack ? arm-soc guys might expect to see
-> that tag :)
+On 04/12/2016 08:56 AM, Laxman Dewangan wrote:
+> NVIDIA Tegra210 supports some of the IO interface which can operate
+> at 1.8V or 3.3V I/O rail voltage levels. SW needs to configure
+> Tegra PMC register to set different voltage level of IO interface based
+> on IO rail voltage from power supply i.e. power regulators.
+>
+> Add APIs to set and get IO rail voltage from the client driver.
 
-Sorry, yes:
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
 
-	Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> +static struct tegra_io_rail_voltage_bit_info tegra210_io_rail_voltage_info[] = {
+> +	TEGRA_IO_RAIL_VOLTAGE(SDMMC1, 12),
+> +	TEGRA_IO_RAIL_VOLTAGE(SDMMC3, 13),
+> +	TEGRA_IO_RAIL_VOLTAGE(AUDIO_HV, 18),
+> +	TEGRA_IO_RAIL_VOLTAGE(DMIC, 20),
+> +	TEGRA_IO_RAIL_VOLTAGE(GPIO, 21),
+> +	TEGRA_IO_RAIL_VOLTAGE(SPI_HV, 23),
+> +};
+
+That table is likely specific to Tegra210, yet ...
+
+> +static int tegra_io_rail_voltage_get_bit_pos(int io_rail_id)
+> +int tegra_io_rail_voltage_set(int io_rail, int val)
+> +int tegra_io_rail_voltage_get(int io_rail)
+
+... these functions are all named as if they are generic. Presumably 
+they will indeed be needed for the next chip too? How will you prevent 
+their use, or turn these functions into no-ops, or return errors, on 
+other SoCs?
