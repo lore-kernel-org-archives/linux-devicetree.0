@@ -1,57 +1,75 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
- driver
-Date: Fri, 15 Apr 2016 09:44:33 -0700
-Message-ID: <20160415164433.GV391@tuxbot>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <570EC541.6080603@gmail.com>
- <570FFB6B.5060305@codeaurora.org>
- <57100962.40404@gmail.com>
- <571012E6.6050303@codeaurora.org>
- <57102920.7000104@codeaurora.org>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/7] soc/tegra: pmc: Add interface to set voltage of IO
+ rails
+Date: Fri, 15 Apr 2016 22:03:57 +0530
+Message-ID: <571117F5.2090504@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com> <1460473007-11535-5-git-send-email-ldewangan@nvidia.com> <571115CE.50906@wwwdotorg.org> <57111524.60708@nvidia.com> <571119D5.3040309@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57102920.7000104-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Vikram Sethi <vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andrew-g2DYL2Zd6BY@public.gmane.org, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <571119D5.3040309-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 14 Apr 16:34 PDT 2016, Timur Tabi wrote:
 
-[..]
-> So I think the solution is to create a device tree (and ACPI) property that
-> holds the mask.
-> 
-> 	dma-mask = <0 0xffffffff>;
-> 
-> or
-> 
-> 	dma-mask = <0xffffffff 0xffffffff>;
-> 
-> The driver will then do this:
-> 
-> 	u64 dma_mask;
-> 	device_property_read_u64(&pdev->dev, "dma-mask", &dma_mask);
-> 	dma_coerce_mask_and_coherent(&pdev->dev, dma_mask);
-> 
-> What I'm not sure yet is whether I should call
-> dma_coerce_mask_and_coherent() or dma_set_coherent_mask().
-> 
+On Friday 15 April 2016 10:11 PM, Stephen Warren wrote:
+> On 04/15/2016 10:21 AM, Laxman Dewangan wrote:
+>>
+>> On Friday 15 April 2016 09:54 PM, Stephen Warren wrote:
+>>> On 04/12/2016 08:56 AM, Laxman Dewangan wrote:
+>>>> NVIDIA Tegra210 supports some of the IO interface which can operate
+>>>> at 1.8V or 3.3V I/O rail voltage levels. SW needs to configure
+>>>> Tegra PMC register to set different voltage level of IO interface 
+>>>> based
+>>>> on IO rail voltage from power supply i.e. power regulators.
+>>>>
+>>>> Add APIs to set and get IO rail voltage from the client driver.
+>>>
+>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>
+>>>> +static struct tegra_io_rail_voltage_bit_info
+>>>> tegra210_io_rail_voltage_info[] = {
+>>>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC1, 12),
+>>>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC3, 13),
+>>>> +    TEGRA_IO_RAIL_VOLTAGE(AUDIO_HV, 18),
+>>>> +    TEGRA_IO_RAIL_VOLTAGE(DMIC, 20),
+>>>> +    TEGRA_IO_RAIL_VOLTAGE(GPIO, 21),
+>>>> +    TEGRA_IO_RAIL_VOLTAGE(SPI_HV, 23),
+>>>> +};
+>>>
+>>> That table is likely specific to Tegra210, yet ...
+>>>
+>>>> +static int tegra_io_rail_voltage_get_bit_pos(int io_rail_id)
+>>>> +int tegra_io_rail_voltage_set(int io_rail, int val)
+>>>> +int tegra_io_rail_voltage_get(int io_rail)
+>>>
+>>> ... these functions are all named as if they are generic. Presumably
+>>> they will indeed be needed for the next chip too? How will you prevent
+>>> their use, or turn these functions into no-ops, or return errors, on
+>>> other SoCs?
+>>
+>> It will return error for the Soc which does to support or the parameter
+>> to the apis which are not applicable.
+>
+> Are you saying that will happen in the current code? I don't see where 
+> there's anything that validates that.
+>
+> Or does "will" mean "I will do that in the next patch revision"?
 
-For platform devices being populated via from DT you will pass:
-of_platform_bus_create()
-  of_platform_device_create_pdata()
-    of_dma_configure()
+I have code like this in this patch
 
-Which calls of_dma_get_range() to acquire this information from the
-dma-ranges property and set up the dma ops and properties.
 
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++int tegra_pmc_pad_voltage_update(unsigned long offset, unsigned long mask,
++                                unsigned long val)
++{
++       unsigned long flags;
++
++       if (!pmc->soc->has_pad_voltage_config)
++               return -ENODEV;
++
+
+
+So this flag is try only for T210 and all previous chip has false setting.
