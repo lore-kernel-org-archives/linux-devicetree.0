@@ -1,16 +1,17 @@
 From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 01/19] clk: composite: Add unregister function
-Date: Fri, 15 Apr 2016 15:28:56 -0700
-Message-ID: <20160415222856.GQ14441@codeaurora.org>
+Subject: Re: [PATCH v3 05/19] dt-bindings: clk: sun5i: add DRAM
+ gates compatible
+Date: Fri, 15 Apr 2016 15:29:11 -0700
+Message-ID: <20160415222911.GR14441@codeaurora.org>
 References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-2-git-send-email-maxime.ripard@free-electrons.com>
+ <1458751122-23976-6-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDHZXHXDRAMBBK6WYW4AKGQE6WURC5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDHZXHXDRAMBBOOWYW4AKGQENTQINHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1458751122-23976-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1458751122-23976-6-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,55 +23,18 @@ Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David A
 List-Id: devicetree@vger.kernel.org
 
 On 03/23, Maxime Ripard wrote:
-> The composite clock didn't have any unregistration function, which forced
-> us to use clk_unregister directly on it.
+> The Allwinner SoCs have a gate controller to gate the access to the DRAM
+> clock to the some devices that need to access the DRAM directly (mostly
+> display / image related IPs).
 > 
-> While it was already not great from an API point of view, it also meant
-> that we were leaking the clk_composite structure allocated in
-> clk_register_composite.
-> 
-> Add a clk_unregister_composite function to fix this.
+> Use a simple gates driver to support the one found in the A13 / R8 SoCs.
 > 
 > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
 
-I'm currently attempting to change the way clks are registered so
-that we don't return clk pointers from clk_register and have
-users add OF clk providers that return clk_hw pointers instead of
-clk pointers. Just a note, that this whole thing should be
-deleted in the next cycle if I can convert everything!
-
->  drivers/clk/clk-composite.c  | 15 +++++++++++++++
->  include/linux/clk-provider.h |  1 +
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
-> index 1f903e1f86a2..b0f3b84ebd13 100644
-> --- a/drivers/clk/clk-composite.c
-> +++ b/drivers/clk/clk-composite.c
-> @@ -286,3 +286,18 @@ err:
->  	kfree(composite);
->  	return clk;
->  }
-> +
-> +void clk_unregister_composite(struct clk *clk)
-> +{
-> +	struct clk_composite *composite;
-> +	struct clk_hw *hw;
-> +
-> +	hw = __clk_get_hw(clk);
-> +	if (!hw)
-> +		return;
-> +
-> +	composite = to_clk_composite(hw);
-> +
-> +	clk_unregister(clk);
-> +	kfree(composite);
-> +}
-
-EXPORT_SYMBOL_GPL?
-
-Do I need to pick this up?
+Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
