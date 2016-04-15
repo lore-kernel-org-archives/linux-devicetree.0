@@ -1,49 +1,76 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller driver
-Date: Fri, 15 Apr 2016 10:59:07 -0500
-Message-ID: <CAL_Jsq+1ssgBHERNyBNhz=SDC5j20xjE8PWM5JCgWSvHCnGQyw@mail.gmail.com>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
- <57100962.40404@gmail.com> <571012E6.6050303@codeaurora.org>
- <57102920.7000104@codeaurora.org> <CAL_JsqLJffKzvMZTSLf+OESufDjrcMBd27fP5yh1R61=irXxcg@mail.gmail.com>
- <57110C70.9090007@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2] ARM: tegra: add DT binding for Tegra186 GPIO
+ controllers
+Date: Fri, 15 Apr 2016 10:04:23 -0600
+Message-ID: <57111107.8060309@wwwdotorg.org>
+References: <1460483197-5130-1-git-send-email-swarren@wwwdotorg.org>
+ <CACRpkdYmcEQBN5QwjLa-Wyorv-otPdJh5C1KgKwUjUBWXvnb_w@mail.gmail.com>
+ <570FB459.8090802@wwwdotorg.org>
+ <CACRpkdbazmBE6rMO0EKmK6qxqL7uaWNQmf=SNEDBJPCTVteFiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <57110C70.9090007@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbazmBE6rMO0EKmK6qxqL7uaWNQmf=SNEDBJPCTVteFiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 15, 2016 at 10:44 AM, Timur Tabi <timur@codeaurora.org> wrote:
-> Rob Herring wrote:
->>>
->>> >
->>> >         dma-mask = <0 0xffffffff>;
->>> >
->>> >or
->>> >
->>> >         dma-mask = <0xffffffff 0xffffffff>;
+On 04/15/2016 03:17 AM, Linus Walleij wrote:
+> On Thu, Apr 14, 2016 at 5:16 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 04/14/2016 06:42 AM, Linus Walleij wrote:
+>>> On Tue, Apr 12, 2016 at 7:46 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>> wrote:
+>
+>>> I suspect that the Tegra definition of a "port" is close to what other
+>>> people
+>>> call a "bank" like I try to define in this patch?
+>>> http://marc.info/?l=linux-gpio&m=145941547420164&w=2
 >>
->> No. See dma-ranges.
+>> There are similarities, but the concepts are quite different. In that
+>> thread, the term "bank" actually refers to an instance of a standalone HW IP
+>> block. Here, "port" is definitely something internal to a single HW block.
 >
+> OK I get it. I wonder if we can make that common terminology as well.
 >
-> How exactly should I use dma-ranges?  I can't find any other drivers that
-> queries that property and uses the result to call dma_set_mask.  I thought
-> the dma-ranges property is intended to specify address translation.  I don't
-> need to translate any address, I just need to know a single number.
+> GPIO bank := unique instance of a common IP block
+> GPIO port := unique line range inside an IP block
 
-You may only care about the size, but the binding has to handle the
-more complex case. Here's an example
+I think this would be hard, and in some places potentially confusing.
 
-<0x0 0x2 0x0 0x1 0x0>
+Various HW documentation likely uses the terms bank and port, without 
+regard to how those terms are used in documentation for other chips. I'd 
+like the binding for any particular chip to use the same terminology as 
+the HW documentation for that chip, even if it's inconsistent with other 
+bindings (or at least contain an explicit terminology translation 
+table). That's because the binding is intended as HW documentation.
 
-dma address 0 (cell 0) maps to cpu (parent) address 0x2_00000000 (cell
-1-2) and the range/size is 4G (cell 3-4).
+Within the Linux code, we could certainly attempt to use consistent 
+terminology. If so, I suggest we use terms that are quite unlikely to be 
+used by any HW documentation, or could only realistically be used to 
+mean the same thing. If we decided to use "GPIO bank" and "GPIO port" as 
+you defined above, yet some HW documentation already used "GPIO bank" to 
+mean a subset of GPIOs within a single IP block, and "GPIO port" to mean 
+a single GPIO (both of which I think are quite likely/possible), then 
+that's going to make matters worse not better.
 
-If you have the same base address, then use the same address. The core
-will calculate the mask based on the size. IIRC, we also handle ~0 as
-a special case to support 4G for #size-cell=1.
+Perhaps "HW module"m "IP block" or perhaps "device" would be a 
+reasonable term for "GPIO bank" as you defined that above. Of course, 
+bikeshedding:-)
 
-Rob
+I'm not sure of a reasonable term for "GPIO port" as you defined it.
+
+...
+> It's cool.
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> I assume you want to merge this through the Tegra tree, or
+> should I apply it to the GPIO tree?
+
+I'm happy either way. If through the Tegra tree, Thierry would be 
+applying it so I'll let him make the call.
+
+I suspect that both this patch and my earlier "ARM: tegra: fix naming in 
+GPIO DT binding header" should be applied through the same tree for 
+consistency.
