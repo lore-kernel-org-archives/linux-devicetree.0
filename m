@@ -1,127 +1,92 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Fri, 15 Apr 2016 11:22:46 +0200
-Message-ID: <20160415092246.GC3544@odux.rfo.atmel.com>
-References: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
- <1460533460-32336-3-git-send-email-songjun.wu@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 7/7] pinctrl: tegra: Add driver to configure voltage and
+ power state of io pads
+Date: Fri, 15 Apr 2016 11:25:06 +0200
+Message-ID: <CACRpkdZLEozAmv6REcb7ubCNSLxGsYj1whZEKUkdiodZoS=vzg@mail.gmail.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
+	<1460473007-11535-8-git-send-email-ldewangan@nvidia.com>
+	<CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>
+	<5710A8A4.90309@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460533460-32336-3-git-send-email-songjun.wu@atmel.com>
+In-Reply-To: <5710A8A4.90309@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@atmel.com>
-Cc: g.liakhovetski@gmx.de, nicolas.ferre@atmel.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-+ linux-media@vger.kernel.org
+On Fri, Apr 15, 2016 at 10:39 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> On Friday 15 April 2016 01:38 PM, Linus Walleij wrote:
+>> On Tue, Apr 12, 2016 at 4:56 PM, Laxman Dewangan <ldewangan@nvidia.com>
+>> wrote:
 
-On Wed, Apr 13, 2016 at 03:44:20PM +0800, Songjun Wu wrote:
-> DT binding documentation for ISC driver.
-> 
-> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
-> ---
-> 
->  .../devicetree/bindings/media/atmel-isc.txt        | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> new file mode 100644
-> index 0000000..449f05f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> @@ -0,0 +1,84 @@
-> +Atmel Image Sensor Controller (ISC)
-> +----------------------------------------------
-> +
-> +Required properties:
-> +- compatible
-> +	Must be "atmel,sama5d2-isc"
-> +- reg
-> +	Physical base address and length of the registers set for the device;
-> +- interrupts
-> +  Should contain IRQ line for the ISI;
-> +- clocks
-> +	List of clock specifiers, corresponding to entries in
-> +	the clock-names property;
-> +	Please refer to clock-bindings.txt.
-> +- clock-names
-> +	Required elements: "hclock", "ispck".
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
-> +- clk_in_isc
-> +	ISC internal clock node, it includes the isc_ispck and isc_mck.
-> +	Please refer to clock-bindings.txt.
-> +- atmel,sensor-preferred
-> +	Sensor is preferred to process image (1-preferred, 0-not).
-> +	The default value is 1.
-> +
-> +ISC supports a single port node with parallel bus. It should contain one
-> +'port' child node with child 'endpoint' node. Please refer to the bindings
-> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +isc: isc@f0008000 {
-> +	compatible = "atmel,sama5d2-isc";
-> +	reg = <0xf0008000 0x4000>;
-> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-> +	clocks = <&isc_clk>, <&isc_ispck>;
-> +	clock-names = "hclock", "ispck";
-> +	atmel,sensor-preferred = <1>;
-> +
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		isc_0: endpoint@0 {
-> +			remote-endpoint = <&ov7740_0>;
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +			pclk-sample = <1>;
-> +		};
-> +	};
-> +
-> +	clk_in_isc {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		isc_ispck: isc_ispck {
-> +			#clock-cells = <0>;
-> +			reg = <0>;
-> +			clocks = <&isc_clk>, <&iscck>;
-> +		};
-> +
-> +		isc_mck: isc_mck {
-> +			#clock-cells = <0>;
-> +			reg = <1>;
-> +			clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-> +		};
-> +	};
-> +};
-> +
-> +i2c1: i2c@fc028000 {
-> +	ov7740: camera@0x21 {
-> +	compatible = "ovti,ov7740";
-> +	reg = <0x21>;
-> +
-> +	clocks = <&isc_mck>;
-> +	clock-names = "xvclk";
-> +	assigned-clocks = <&isc_mck>;
-> +	assigned-clock-rates = <24000000>;
-> +
-> +	port {
-> +		ov7740_0: endpoint {
-> +			remote-endpoint = <&isc_0>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>> +static const struct pinconf_generic_params tegra_io_pads_cfg_params[] =
+>>> {
+>>> +       {
+>>> +               .property = "nvidia,io-rail-voltage",
+>>> +               .param = TEGRA_IO_RAIL_VOLTAGE,
+>>> +       }, {
+>>
+>> What's so nvidia-specific about this?
+>> We have power-source in
+>> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>> which takes a custom argument. This is obviously what you
+>> are doing (selecting one of two rails), so use that binding.
+>
+> Yes, I looked for the common property but did not found anything near to
+> this.
+> My understating for power-source is that selecting the source of supply, not
+> the voltages.
+
+Well in a comment to the previous patch you just said that the
+hardware actually does not regulate voltages. Isn't the actual case
+that there are two rails with two different voltages, and you select one
+of the rails for the pin?
+
+That is not really selecting a voltage, that is selecting a power
+rail.
+
+> I am looking something  power-source-voltage-level.
+> Should we add this?
+
+If the pin could actually set a voltage level it would have a regulator.
+I don't believe that. I think it is selecting one of two rails which
+could theoretically hold two totally different voltages.
+
+And that is what power-source is about.
+
+>>> +               .property = "nvidia,io-pad-deep-power-down",
+>>> +               .param = TEGRA_IO_PAD_DEEP_POWER_DOWN,
+>>> +       },
+>>
+>> Likewise the generic bindings have low-power-enable and
+>> low-power-disable, this seems like a copy of low-power-enable;
+>
+> When writing, I considered this property but was not able to fully convinced
+> myself to use this but I think now I am fine to use this as you suggested.
+
+Thanks.
+
+>> Even if Tegra is not using the generic code for handling the
+>> standard bindings (GENERIC_PINCONF) it doesn't stop
+>> you from using the generic bindings and contributing to them.
+>>
+>> Historically you have a few custom bindings like these:
+>>
+>> nvidia,pins
+>> nvidia,function
+>> nvidia,pull
+>> nvidia,tristate
+>>
+>> etc etc, but that is just unfortunate and due to preceding the
+>> generic bindings. I would appreciate if you started to support
+>> the generic bindings in parallel, but I'm not gonna push that issue.
+>
+> Yaah, these are in my plate to cleanup. Let me work with Stephen, what he
+> think here.
+
+Much appreciated, thanks!
+
+Yours,
+Linus Walleij
