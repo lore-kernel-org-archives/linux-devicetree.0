@@ -1,64 +1,58 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 11/12] of: mtd: drop support for NAND_ECC_SOFT_BCH as "soft_bch" mapping
-Date: Fri, 15 Apr 2016 21:54:11 +0200
-Message-ID: <1460750052-16285-12-git-send-email-zajec5@gmail.com>
-References: <1460750052-16285-1-git-send-email-zajec5@gmail.com>
+From: Valdis.Kletnieks-PjAqaU27lzQ@public.gmane.org
+Subject: Re: [PATCH 1/3] ARM: DTS: da850: add node for spi0
+Date: Fri, 15 Apr 2016 16:16:29 -0400
+Message-ID: <31522.1460751389@turing-police.cc.vt.edu>
+References: <1460586628-25152-1-git-send-email-david@lechnology.com> <1460586628-25152-2-git-send-email-david@lechnology.com> <5710C176.3040304@ti.com>
+ <57111433.6080402@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; boundary="==_Exmh_1460751389_2686P";
+	 micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460750052-16285-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <57111433.6080402-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There isn't any difference between handling NAND_ECC_SOFT and
-NAND_ECC_SOFT_BCH now. What matters is the new field called "algo".
-Please note we're keeping backward DT compatibility. We are still
-treating "soft_bch" value as the one setting Hamming algorithm, it's
-just handled in of_get_nand_ecc_algo now.
+--==_Exmh_1460751389_2686P
+Content-Type: text/plain; charset=us-ascii
 
-Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/of_mtd.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+On Fri, 15 Apr 2016 11:17:55 -0500, David Lechner said:
 
-diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
-index 15d056e..a70a38c 100644
---- a/drivers/of/of_mtd.c
-+++ b/drivers/of/of_mtd.c
-@@ -22,7 +22,6 @@ static const char *nand_ecc_modes[] =3D {
- 	[NAND_ECC_HW]		=3D "hw",
- 	[NAND_ECC_HW_SYNDROME]	=3D "hw_syndrome",
- 	[NAND_ECC_HW_OOB_FIRST]	=3D "hw_oob_first",
--	[NAND_ECC_SOFT_BCH]	=3D "soft_bch",
- };
-=20
- /**
-@@ -45,6 +44,14 @@ int of_get_nand_ecc_mode(struct device_node *np)
- 		if (!strcasecmp(pm, nand_ecc_modes[i]))
- 			return i;
-=20
-+	/*
-+	 * For backward compatibility we support few obsoleted values that do=
-n't
-+	 * have their mappings into nand_ecc_modes_t anymore (they were merge=
-d
-+	 * with other enums).
-+	 */
-+	if (!strcasecmp(pm, "soft_bch"))
-+		return NAND_ECC_SOFT;
-+
- 	return -ENODEV;
- }
- EXPORT_SYMBOL_GPL(of_get_nand_ecc_mode);
---=20
-1.8.4.5
+> I omitted this on purpose. For my use case, I am using the SPI as
+> write-only,
 
+So your SPI accesses are fire-and-forget, and nothing ever comes back?
+Seems a very dangerous way to design the use case, with no feedback if
+something suddenly goes pear-shaped...
+
+Or do you have ways to verify the status via some method other than SPI?
+
+--==_Exmh_1460751389_2686P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Exmh version 2.5 07/13/2001
+
+iQIVAwUBVxFMHAdmEQWDXROgAQKN0A//TCwy2X6XInQdItHM1Ayx4OYlsWgvdsaQ
+j4nsIHJmuTtdsC7EL25Al+YbhaZC6Y+JEuBiKvSx8E3FKA0i438FEMwJLLY+llKz
+XFG6Pz9gl0qUiEaBsYXjFHVXK3x6G0+gr5SCP6wGKuXuRrZx8lLI0vXS6mK27sBa
+1YV+9izE7Lcz8qdCviNAqyJxHHePnI8Q7CNUITcHpiQa5gDAyUfOxpO794mj+WgD
+QumPKtYdPk3OxEkBzG2FE0qGWjgqFiS1YiJkq2+fI7eOVs94dTHNi7etYzbc7qxV
+86Hhu/qcgX/CKI7HwbCh2cJGo5WwJn5ZSiVtOqp3dFNcWSqkCsthuqvbMZXgEeHR
+nmkvgotHCHcqLVCx6I2UqJGWufQwHipIu8qwmXcyTIQAaGBR3jGZx/IAIAmPVoY2
+5rjOWu0lDlTMDeOWp9oykJtr60damivqik6UOVhchCJW02Y1jeVfW1k/mw2OC6ye
+Eqw6gsxGAKKeiyG7X2LCdCzCLS0HLLq3uuHqmLkfv4x7GA/xTZzbv1DFv7Thti+v
+NpQRUaz650P4Xi04s9u/My683PO5zWComkYIGLxTqNYLNeu4/v6xCkeCBz6Uypat
+DnL0q4lli/IqzB3caDyO3Ugkh2QLN+wkFHQxfMZv6k/xjhX+EpqhFNYRAV5HPWLr
+zwZYWMjPQdM=
+=n/NK
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1460751389_2686P--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
