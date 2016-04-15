@@ -1,67 +1,31 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 1/6] ASoC: davinci-mcbsp: add binding
-	for McBSP
-Date: Fri, 15 Apr 2016 14:28:40 +0530
-Message-ID: <5710AD40.8000209@ti.com>
-References: <1460375117-4311-1-git-send-email-petr@barix.com>
- <1460375117-4311-2-git-send-email-petr@barix.com>
- <20160413143014.GA12136@rob-hp-laptop> <5710AACF.9070402@barix.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 4/8] ARM: dts: Add NoC Probe dt node for Exynos542x SoC
+Date: Fri, 15 Apr 2016 11:04:52 +0200
+Message-ID: <5710AEB4.3050008@samsung.com>
+References: <1460701975-24178-1-git-send-email-cw00.choi@samsung.com>
+ <1460701975-24178-5-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5710AACF.9070402@barix.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Petr Kulhavy <petr@barix.com>, Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, khilman@kernel.org, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, broonie@kernel.org, galak@codeaurora.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1460701975-24178-5-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene@kernel.org
+Cc: robh@kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 April 2016 02:18 PM, Petr Kulhavy wrote:
-
-> On 13.04.2016 16:30, Rob Herring wrote:
-
->> On Mon, Apr 11, 2016 at 01:45:12PM +0200, Petr Kulhavy wrote:
-
->>> a/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
->>> b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
->>> new file mode 100644
->>> index 000000000000..de45865c3863
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
->>> @@ -0,0 +1,51 @@
->>> +Texas Instruments DaVinci McBSP module
->>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>> +
->>> +This binding describes the "Multi-channel Buffered Serial Port" (McBSP)
->>> +audio interface found in some TI DaVinci processors like the
->>> OMAP-L138 or AM180x.
->>> +
->>> +
->>> +Required properties:
->>> +~~~~~~~~~~~~~~~~~~~~
->>> +- compatible : "ti,da850-mcbsp"
->> You list several SoCs above, but only one compatible string here. A
->> specific compatible string per SoC please.
->>
-> Hi Rob,
+On 04/15/2016 08:32 AM, Chanwoo Choi wrote:
+> This patch adds the NoCP (Network on Chip Probe) Device Tree node
+> to measure the bandwidth of memory and g3d in Exynos542x SoC.
 > 
-> thank you for your feedback. I can test only on the AM1808 platform,
-> however as far as I understand the OMAP L138 and AM1808 use the same
-> McBSP hardware. The TI guys can give more insight here... Isn't it then
-> redundant to define more compatible strings? Sorry for my ignorance, I
-> just don't know the policy of defining the compatible strings.
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+> Tested-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 
-DA850, OMAP-L138 and AM18x are pin-for-pin compatible devices meant for
-different markets/applications. IP-wise, silicon-integration-wise or
-pin-wise, there is no difference in way McASP behaves between the parts.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Thanks,
-Sekhar
+Best regards,
+Krzysztof
