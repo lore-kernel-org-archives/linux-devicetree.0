@@ -1,62 +1,271 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
-Date: Fri, 15 Apr 2016 10:30:54 +0100
-Message-ID: <5710B4CE.4060405@arm.com>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
- <570F593D.6040809@arm.com> <20160414192540.GD20512@kroah.com>
- <5710ABC4.5070505@arm.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 2/6] ASoC: Davinci: McBSP: add device
+ tree support for McBSP
+Date: Fri, 15 Apr 2016 12:32:06 +0300
+Message-ID: <5710B516.2000006@ti.com>
+References: <1460375117-4311-1-git-send-email-petr@barix.com>
+ <1460375117-4311-3-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5710ABC4.5070505-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1460375117-4311-3-git-send-email-petr@barix.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Petr Kulhavy <petr@barix.com>, nsekhar@ti.com, khilman@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/04/16 09:52, Sudeep Holla wrote:
-> 
-> 
-> On 14/04/16 20:25, Greg KH wrote:
->> On Thu, Apr 14, 2016 at 09:47:57AM +0100, Vladimir Murzin wrote:
->>> Hi,
->>>
->>> On 01/04/16 15:02, Vladimir Murzin wrote:
->>>> Hi,
->>>>
->>>> This patch series provides the basic support for running ucLinux on
->>>> V2M-MPS2
->>>> platform.
->>>>
->>>> With these patches applied ucLinux can be run on both HW and FVP models
->>>> with Cortex-M3/M4/M7 configurations.
->>>
->>> Any objection to get it merged?
->>>
->>> Sudeep Holla noticed that there is merge conflict against linux-next
->>> with PIC32 uart (Makefile and serial_core.h), so should I provide
->>> conflict resolution or do rebase on someone's branch?
->>>
->>> Anyway, I'd be glad to know how it should be processed further?
->>
->> I have no objection to the tty/serial changes, so if this all goes
->> through the arm-soc tree, that's fine with me.
->>
-> 
-> Thanks Greg, can I take this as Ack ? arm-soc guys might expect to see
-> that tag :)
-> 
-> Hi Vladimir,
-> 
-> I have pulled this series into
-> git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
-> for-next/armv7-vexpress-updates
-> 
-> I will stick Greg's tag when it comes.
-> 
+On 04/11/16 14:45, Petr Kulhavy wrote:
+> This adds DT support for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx McBSP driver.
+> =
 
-Everything looks fine! Thanks everyone for making it happen!
+> Signed-off-by: Petr Kulhavy <petr@barix.com>
+> ---
+> v1: initial
+> v2: remove "-audio" postfix from the compatible string
+>     of_match_table renamed consistently with the rest of the file (davinc=
+i_i2s_match)
+>     "channel-combine" property removed
+>     devicetree DMA configuration in probe simplified
+> =
 
-Cheers
-Vladimir
+>  sound/soc/davinci/Kconfig       |   6 ++-
+>  sound/soc/davinci/davinci-i2s.c | 116 +++++++++++++++++++++++++++++++---=
+------
+>  2 files changed, 95 insertions(+), 27 deletions(-)
+> =
+
+> diff --git a/sound/soc/davinci/Kconfig b/sound/soc/davinci/Kconfig
+> index 50ca291cc225..6b732d8e5896 100644
+> --- a/sound/soc/davinci/Kconfig
+> +++ b/sound/soc/davinci/Kconfig
+> @@ -16,7 +16,11 @@ config SND_EDMA_SOC
+>  	  - DRA7xx family
+>  =
+
+>  config SND_DAVINCI_SOC_I2S
+> -	tristate
+> +	tristate "DaVinci Multichannel Buffered Serial Port (McBSP) support"
+> +	depends on SND_EDMA_SOC
+> +	help
+> +	  Say Y or M here if you want to have support for McBSP IP found in
+> +	  Texas Instruments DaVinci DA850 SoCs.
+>  =
+
+>  config SND_DAVINCI_SOC_MCASP
+>  	tristate "Multichannel Audio Serial Port (McASP) support"
+> diff --git a/sound/soc/davinci/davinci-i2s.c b/sound/soc/davinci/davinci-=
+i2s.c
+> index ec98548a5fc9..a3f82d1a73dc 100644
+> --- a/sound/soc/davinci/davinci-i2s.c
+> +++ b/sound/soc/davinci/davinci-i2s.c
+> @@ -4,9 +4,15 @@
+>   * Author:      Vladimir Barinov, <vbarinov@embeddedalley.com>
+>   * Copyright:   (C) 2007 MontaVista Software, Inc., <source@mvista.com>
+>   *
+> + * DT support	(c) 2016 Petr Kulhavy, Barix AG <petr@barix.com>
+> + *		based on davinci-mcasp.c DT support
+> + *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+>   * published by the Free Software Foundation.
+> + *
+> + * TODO:
+> + * on DA850 implement HW FIFOs instead of DMA into DXR and DRR registers
+>   */
+>  =
+
+>  #include <linux/init.h>
+> @@ -648,15 +654,62 @@ static const struct snd_soc_component_driver davinc=
+i_i2s_component =3D {
+>  	.name		=3D "davinci-i2s",
+>  };
+>  =
+
+> +static struct snd_platform_data*
+> +davinci_i2s_set_pdata_from_of(struct platform_device *pdev)
+
+It is a bit misleading function name, would be better to name it as
+davinci_i2s_get_pdata()
+
+as it will fetch the legacy pdata or craft one when booting with DT.
+
+> +{
+> +	struct snd_platform_data *pdata =3D NULL;
+> +	struct device_node *np;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
+> +		return dev_get_platdata(&pdev->dev);
+> +
+> +	pdata =3D devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	np =3D pdev->dev.of_node;
+
+???
+
+> +
+> +	/* parse properties here */
+> +
+> +	/*
+> +	 * pdata->clk_input_pin is deliberately not exported to DT
+> +	 * and the default value of the clk_input_pin is MCBSP_CLKR.
+> +	 * The value MCBSP_CLKS makes no sense as it turns the CPU
+> +	 * to a bit clock master in the SND_SOC_DAIFMT_CBM_CFS mode
+> +	 * where it should be bit clock slave!
+> +	 */
+> +
+> +	return pdata;
+> +}
+> +
+>  static int davinci_i2s_probe(struct platform_device *pdev)
+>  {
+> +	struct snd_dmaengine_dai_dma_data *dma_data;
+> +	struct snd_platform_data *pdata;
+>  	struct davinci_mcbsp_dev *dev;
+>  	struct resource *mem, *res;
+>  	void __iomem *io_base;
+>  	int *dma;
+>  	int ret;
+>  =
+
+> -	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pdata =3D davinci_i2s_set_pdata_from_of(pdev);
+> +	if (IS_ERR(pdata)) {
+> +		dev_err(&pdev->dev, "Error populating platform data, err %ld\n",
+> +			PTR_ERR(pdata));
+> +		return PTR_ERR(pdata);
+> +	}
+
+The current driver does not use the pdata as far as I can see. Kind of
+strange. So now in DT boot you will allocate memory for the pdata, which is
+not used by the driver at all.
+I think we should implement the pdata handling in the driver first for the
+legacy mode, then probably having pdata allocated for DT case might make se=
+nse.
+
+> +
+> +	mem =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "mpu");
+> +	if (!mem) {
+> +		dev_warn(&pdev->dev,
+> +			 "\"mpu\" mem resource not found, using index 0\n");
+> +		mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (!mem) {
+> +			dev_err(&pdev->dev, "no mem resource?\n");
+> +			return -ENODEV;
+> +		}
+> +	}
+> +
+>  	io_base =3D devm_ioremap_resource(&pdev->dev, mem);
+>  	if (IS_ERR(io_base))
+>  		return PTR_ERR(io_base);
+> @@ -666,39 +719,43 @@ static int davinci_i2s_probe(struct platform_device=
+ *pdev)
+>  	if (!dev)
+>  		return -ENOMEM;
+>  =
+
+> -	dev->clk =3D clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(dev->clk))
+> -		return -ENODEV;
+> -	clk_enable(dev->clk);
+> -
+>  	dev->base =3D io_base;
+>  =
+
+> -	dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK].addr =3D
+> -	    (dma_addr_t)(mem->start + DAVINCI_MCBSP_DXR_REG);
+> -
+> -	dev->dma_data[SNDRV_PCM_STREAM_CAPTURE].addr =3D
+> -	    (dma_addr_t)(mem->start + DAVINCI_MCBSP_DRR_REG);
+> +	/* setup DMA, first TX, then RX */
+> +	dma_data =3D &dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK];
+> +	dma_data->addr =3D (dma_addr_t)(mem->start + DAVINCI_MCBSP_DXR_REG);
+>  =
+
+> -	/* first TX, then RX */
+>  	res =3D platform_get_resource(pdev, IORESOURCE_DMA, 0);
+> -	if (!res) {
+> -		dev_err(&pdev->dev, "no DMA resource\n");
+> -		ret =3D -ENXIO;
+> -		goto err_release_clk;
+> +	if (res) {
+> +		dma =3D &dev->dma_request[SNDRV_PCM_STREAM_PLAYBACK];
+> +		*dma =3D res->start;
+> +		dma_data->filter_data =3D dma;
+> +	} else if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) {
+> +		dma_data->filter_data =3D "tx";
+> +	} else {
+> +		dev_err(&pdev->dev, "Missing DMA tx resource\n");
+> +		return -ENODEV;
+>  	}
+> -	dma =3D &dev->dma_request[SNDRV_PCM_STREAM_PLAYBACK];
+> -	*dma =3D res->start;
+> -	dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data =3D dma;
+> +
+> +	dma_data =3D &dev->dma_data[SNDRV_PCM_STREAM_CAPTURE];
+> +	dma_data->addr =3D (dma_addr_t)(mem->start + DAVINCI_MCBSP_DRR_REG);
+>  =
+
+>  	res =3D platform_get_resource(pdev, IORESOURCE_DMA, 1);
+> -	if (!res) {
+> -		dev_err(&pdev->dev, "no DMA resource\n");
+> -		ret =3D -ENXIO;
+> -		goto err_release_clk;
+> +	if (res) {
+> +		dma =3D &dev->dma_request[SNDRV_PCM_STREAM_CAPTURE];
+> +		*dma =3D res->start;
+> +		dma_data->filter_data =3D dma;
+> +	} else if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) {
+> +		dma_data->filter_data =3D "rx";
+> +	} else {
+> +		dev_err(&pdev->dev, "Missing DMA rx resource\n");
+> +		return -ENODEV;
+>  	}
+> -	dma =3D &dev->dma_request[SNDRV_PCM_STREAM_CAPTURE];
+> -	*dma =3D res->start;
+> -	dev->dma_data[SNDRV_PCM_STREAM_CAPTURE].filter_data =3D dma;
+> +
+> +	dev->clk =3D clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(dev->clk))
+> +		return -ENODEV;
+> +	clk_enable(dev->clk);
+>  =
+
+>  	dev->dev =3D &pdev->dev;
+>  	dev_set_drvdata(&pdev->dev, dev);
+> @@ -737,11 +794,18 @@ static int davinci_i2s_remove(struct platform_devic=
+e *pdev)
+>  	return 0;
+>  }
+>  =
+
+> +static const struct of_device_id davinci_i2s_match[] =3D {
+> +	{ .compatible =3D "ti,da850-mcbsp" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, davinci_i2s_match);
+> +
+>  static struct platform_driver davinci_mcbsp_driver =3D {
+>  	.probe		=3D davinci_i2s_probe,
+>  	.remove		=3D davinci_i2s_remove,
+>  	.driver		=3D {
+>  		.name	=3D "davinci-mcbsp",
+> +		.of_match_table =3D of_match_ptr(davinci_i2s_match),
+>  	},
+>  };
+
+The rest looks good to me.
+
+-- =
+
+P=E9ter
