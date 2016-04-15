@@ -1,221 +1,36 @@
-From: Martin Ayotte <martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 1/1] add missing UARTs pins for AllWinner H3 DTS + add new
- I2C entries for AllWinner H3 DTS
-Date: Fri, 15 Apr 2016 14:20:06 -0400
-Message-ID: <CAKQ8Bth3tAe4SNiRENUPjjLKUU3cfs+1Y16Qas_QYm9JYYeyoQ@mail.gmail.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Fri, 15 Apr 2016 13:22:23 -0500
+Message-ID: <5711315F.3000302@codeaurora.org>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com> <571012E6.6050303@codeaurora.org>
+ <57102920.7000104@codeaurora.org> <20160415164433.GV391@tuxbot>
+ <57111E33.606@codeaurora.org> <20160415173529.GY391@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: Hans De Goede <jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Jean=2DFran=C3=A7ois_Moine?= <moinejf-GANU6spQydw@public.gmane.org>, Martin Ayotte <martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160415173529.GY391@tuxbot>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Bjorn Andersson wrote:
+> Your driver is a platform driver and it's being probed from DT. As such
+> all this is already taken care of for you, by the core.
+>
+> The listing is for your reference to know why the dma-ranges property
+> would affect your device.
 
-This patch is submit to provide endusers access to additional UARTs on
-AllWinner H3 SoC along with I2C ports.
+Ah, sorry. I misunderstood what you meant by "you will pass".
 
-Regards,
-Martin.
----
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts  | 36 ++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 36 ++++++++++++++
- arch/arm/boot/dts/sun8i-h3.dtsi            | 75 ++++++++++++++++++++++++++++++
- 3 files changed, 147 insertions(+)
+Coincidentally, it looks like Lorenzo Pieralisi has posted patches the 
+ACPI equivalent just yesterday: https://lkml.org/lkml/2016/4/14/694
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index f93f5d1..f0b9823 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -176,6 +176,42 @@
-     status = "okay";
- };
-
-+&uart1 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart1_pins_a>;
-+    status = "okay";
-+};
-+
-+&uart2 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart2_pins_a>;
-+    status = "okay";
-+};
-+
-+&uart3 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart3_pins_a>;
-+    status = "okay";
-+};
-+
-+&i2c0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c0_pins_a>;
-+    status = "okay";
-+};
-+
-+&i2c1 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c1_pins_a>;
-+    status = "okay";
-+};
-+
-+&i2c2 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c2_pins_a>;
-+    status = "okay";
-+};
-+
- &usb1_vbus_pin_a {
-     allwinner,pins = "PG13";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index daf50b9a6..6994349 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -161,6 +161,42 @@
-     status = "okay";
- };
-
-+&uart1 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart1_pins_a>;
-+    status = "okay";
-+};
-+
-+&uart2 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart2_pins_a>;
-+    status = "okay";
-+};
-+
-+&uart3 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&uart3_pins_a>;
-+    status = "okay";
-+};
-+
-+&i2c0 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c0_pins_a>;
-+    status = "okay";
-+};
-+
-+&i2c1 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c1_pins_a>;
-+    status = "okay";
-+};
-+
-+&i2c2 {
-+    pinctrl-names = "default";
-+    pinctrl-0 = <&i2c2_pins_a>;
-+    status = "okay";
-+};
-+
- &usbphy {
-     /* USB VBUS is always on */
-     status = "okay";
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 4a4926b..c947360d 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -508,6 +508,48 @@
-                 allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-             };
-
-+            uart1_pins_a: uart1@0 {
-+                allwinner,pins = "PG6", "PG7";
-+                allwinner,function = "uart1";
-+                allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+                allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+            };
-+
-+            uart2_pins_a: uart2@0 {
-+                allwinner,pins = "PA0", "PA1";
-+                allwinner,function = "uart2";
-+                allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+                allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+            };
-+
-+            uart3_pins_a: uart3@0 {
-+                allwinner,pins = "PA13", "PA14";
-+                allwinner,function = "uart3";
-+                allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+                allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+            };
-+
-+            i2c0_pins_a: i2c0@0 {
-+                allwinner,pins = "PA11", "PA12";
-+                allwinner,function = "i2c0";
-+                allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+                allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+            };
-+
-+            i2c1_pins_a: i2c1@0 {
-+                allwinner,pins = "PA18", "PA19";
-+                allwinner,function = "i2c1";
-+                allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+                allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+            };
-+
-+            i2c2_pins_a: i2c2@0 {
-+                allwinner,pins = "PE12", "PE13";
-+                allwinner,function = "i2c2";
-+                allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+                allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+            };
-+
-             mmc0_pins_a: mmc0@0 {
-                 allwinner,pins = "PF0", "PF1", "PF2", "PF3",
-                          "PF4", "PF5";
-@@ -626,6 +668,39 @@
-             status = "disabled";
-         };
-
-+        i2c0: i2c@01c2ac00 {
-+            compatible = "allwinner,sun6i-a31-i2c";
-+            reg = <0x01c2ac00 0x400>;
-+            interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&bus_gates 96>;
-+            resets = <&apb2_rst 0>;
-+            status = "disabled";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+        };
-+
-+        i2c1: i2c@01c2b000 {
-+            compatible = "allwinner,sun6i-a31-i2c";
-+            reg = <0x01c2b000 0x400>;
-+            interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&bus_gates 97>;
-+            resets = <&apb2_rst 1>;
-+            status = "disabled";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+        };
-+
-+        i2c2: i2c@01c2b400 {
-+            compatible = "allwinner,sun6i-a31-i2c";
-+            reg = <0x01c2b400 0x400>;
-+            interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&bus_gates 98>;
-+            resets = <&apb2_rst 2>;
-+            status = "disabled";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+        };
-+
-         gic: interrupt-controller@01c81000 {
-             compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
-             reg = <0x01c81000 0x1000>,
 -- 
-2.7.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
