@@ -1,149 +1,79 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 45/45] PCI/hotplug: PowerPC PowerNV PCI hotplug driver
-Date: Fri, 15 Apr 2016 11:39:10 +1000
-Message-ID: <20160415013909.GA22105@gwshan>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-46-git-send-email-gwshan@linux.vnet.ibm.com>
- <1907698.219Ro8drPf@new-mexico>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Fri, 15 Apr 2016 10:02:33 +0800
+Message-ID: <1460685753.7028.5.camel@mtksdaap41>
+References: <1460621819-695-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1460621819-695-4-git-send-email-jamesjj.liao@mediatek.com>
+	 <1460631381.13240.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1907698.219Ro8drPf@new-mexico>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alistair Popple <alistair@popple.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org, Gavin Shan <gwshan@linux.vnet.ibm.com>, devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460631381.13240.3.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 15, 2016 at 10:47:52AM +1000, Alistair Popple wrote:
->Hi Gavin,
->
->I was reading through this to understand how it all works and noticed a couple
->of things, comments below.
->
+Hi Yingjoe,
 
-Alistair, thanks for your time on review.
+On Thu, 2016-04-14 at 18:56 +0800, Yingjoe Chen wrote:
+> On Thu, 2016-04-14 at 16:16 +0800, James Liao wrote:
+> > From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add power dt-bindings for MT2701.
+> > 
+> > Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 12 ++++++----
+> >  include/dt-bindings/power/mt2701-power.h           | 27 ++++++++++++++++++++++
+> >  2 files changed, 34 insertions(+), 5 deletions(-)
+> >  create mode 100644 include/dt-bindings/power/mt2701-power.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > index e8f15e3..ebb3144 100644
+> > --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> > @@ -9,17 +9,19 @@ domain control.
+> >  
+> >  The driver implements the Generic PM domain bindings described in
+> >  power/power_domain.txt. It provides the power domains defined in
+> > -include/dt-bindings/power/mt8173-power.h.
+> > +include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
+> >  
+> >  Required properties:
+> > -- compatible: Must be "mediatek,mt8173-scpsys"
+> > +- compatible: Should be one of:
+> > +	- "mediatek,mt2701-scpsys"
+> > +	- "mediatek,mt8173-scpsys"
+> >  - #power-domain-cells: Must be 1
+> >  - reg: Address range of the SCPSYS unit
+> >  - infracfg: must contain a phandle to the infracfg controller
+> >  - clock, clock-names: clocks according to the common clock binding.
+> > -                      The clocks needed "mm", "mfg", "venc" and "venc_lt".
+> > -		      These are the clocks which hardware needs to be enabled
+> > -		      before enabling certain power domains.
+> > +                      The clocks needed "mm", "mfg", "venc", "venc_lt" and
+> > +                      "ethif". These are the clocks which hardware needs to be
+> > +                      enabled before enabling certain power domains.
+> 
+> 
+> Clock ethif only exist on mt2701 so it is not required on mt8173.
 
->
->On Wed, 17 Feb 2016 14:44:28 Gavin Shan wrote:
->
-><snip>
->
->> +
->> +static void pnv_php_handle_poweron(struct pnv_php_slot *php_slot)
->> +{
->> +	void *fdt, *fdt1, *dt;
->> +	int confirm = PNV_PHP_POWER_CONFIRMED_SUCCESS;
->> +	int ret;
->> +
->> +	/* We don't know the FDT blob size. We try to get it through
->> +	 * maximal memory chunk and then copy it to another chunk that
->> +	 * fits the real size.
->> +	 */
->> +	fdt1 = kzalloc(0x10000, GFP_KERNEL);
->> +	if (!fdt1)
->> +		goto error;
->> +
->> +	ret = pnv_pci_get_device_tree(php_slot->dn->phandle, fdt1, 0x10000);
->> +	if (ret)
->> +		goto free_fdt1;
->> +
->> +	fdt = kzalloc(fdt_totalsize(fdt1), GFP_KERNEL);
->> +	if (!fdt)
->> +		goto free_fdt1;
->> +
->> +	/* Unflatten device tree blob */
->> +	memcpy(fdt, fdt1, fdt_totalsize(fdt1));
->> +	dt = of_fdt_unflatten_tree(fdt, php_slot->dn, NULL);
->> +	if (!dt) {
->> +		dev_warn(&php_slot->pdev->dev, "Cannot unflatten FDT\n");
->> +		goto free_fdt;
->> +	}
->> +
->> +	/* Initialize and apply the changeset */
->> +	of_changeset_init(&php_slot->ocs);
->> +	ret = pnv_php_populate_changeset(&php_slot->ocs, php_slot->dn);
->> +	if (ret) {
->> +		dev_warn(&php_slot->pdev->dev, "Error %d populating changeset\n",
->> +			 ret);
->> +		goto free_dt;
->> +	}
->> +
->> +	php_slot->dn->child = NULL;
->> +	ret = of_changeset_apply(&php_slot->ocs);
->> +	if (ret) {
->> +		dev_warn(&php_slot->pdev->dev, "Error %d applying changeset\n",
->> +			 ret);
->> +		goto destroy_changeset;
->> +	}
->> +
->> +	/* Add device node firmware data */
->> +	pnv_php_add_pdns(php_slot);
->> +	php_slot->fdt = fdt;
->> +	php_slot->dt  = dt;
->> +	goto out;
->
->Doesn't this leak memory from fdt1? I can't see where it gets freed in this
->case.
->
+You are right. Each SoC needs different clock for each power domain.
+Here list all subsystems of available SoCs.
 
-You're right that @fdt1 should be released here. I'll fix it in
-next revision.
 
->> +destroy_changeset:
->> +	of_changeset_destroy(&php_slot->ocs);
->> +free_dt:
->> +	kfree(dt);
->> +	php_slot->dn->child = NULL;
->> +free_fdt:
->> +	kfree(fdt);
->> +free_fdt1:
->> +	kfree(fdt1);
->> +error:
->> +	confirm = PNV_PHP_POWER_CONFIRMED_FAIL;
->> +out:
->> +	/* Confirm status change */
->> +	php_slot->power_state_confirmed = confirm;
->> +	wake_up_interruptible(&php_slot->queue);
->> +}
->> +
->
-><snip>
->
->> +
->> +static void __exit pnv_php_exit(void)
->> +{
->> +	struct device_node *dn;
->> +
->> +	for_each_compatible_node(dn, NULL, "ibm,ioda-phb")
->> +		pnv_php_unregister(dn);
->> +	for_each_compatible_node(dn, NULL, "ibm,ioda2-phb")
->> +		pnv_php_unregister(dn);
->> +
->> +	pnv_pci_hotplug_notifier_unregister(&php_msg_nb);
->
->Do you flush the workqueues anywhere? Usually you would stop work being queued 
->and call something like flush_workqueue() to ensure no work is still
->running/queued before unloading the module.
->
 
-Good question. Yeah, I'll flush the workqueue before the module is going
-to be unloaded.
+Best regards,
 
-Thanks,
-Gavin
+James
 
->- Alistair
->
->> +}
->> +
->> +module_init(pnv_php_init);
->> +module_exit(pnv_php_exit);
->> +
->> +MODULE_VERSION(DRIVER_VERSION);
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR(DRIVER_AUTHOR);
->> +MODULE_DESCRIPTION(DRIVER_DESC);
->> 
->
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
