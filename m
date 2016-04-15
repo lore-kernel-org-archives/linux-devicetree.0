@@ -1,52 +1,202 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/7] PM / devfreq: exynos: Add the detailed correlation for
- Exynos5422 bus
-Date: Fri, 15 Apr 2016 15:08:25 +0900
-Message-ID: <57108559.5010102@samsung.com>
-References: <1460091646-28701-1-git-send-email-cw00.choi@samsung.com>
- <1460091646-28701-3-git-send-email-cw00.choi@samsung.com>
- <20160411154514.GA29936@rob-hp-laptop>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] i2c: designware-platdrv: implement bus recovery
+Date: Fri, 15 Apr 2016 14:08:43 +0800
+Message-ID: <20160415140843.4a1e5d0f@xhacker>
+References: <1460642696-1858-1-git-send-email-jszhang@marvell.com>
+	<20160414143916.GY1714@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20160411154514.GA29936@rob-hp-laptop>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com, rjw@rjwysocki.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160414143916.GY1714-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Dear Mika,
 
-On 2016=EB=85=84 04=EC=9B=94 12=EC=9D=BC 00:45, Rob Herring wrote:
-> On Fri, Apr 08, 2016 at 02:00:41PM +0900, Chanwoo Choi wrote:
->> This patch adds the detailed corrleation between sub-blocks and powe=
-r line
->> for Exynos5422.
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  .../devicetree/bindings/devfreq/exynos-bus.txt        | 19 ++++++++=
-+++++++++++
->>  1 file changed, 19 insertions(+)
->=20
-> This belongs with your previous series. Probably, all of this should =
-be=20
-> 1 DT patch rather than piecemeal. Any division should be by h/w block=
-,=20
-> not as a driver is using features.
+On Thu, 14 Apr 2016 17:39:16 +0300 Mika Westerberg wrote:
 
-On previous patch-set[1] didn't support the Exynos5420 and include any =
-information
-about Exynos542x SoC because Exynos5420 must need the specific device d=
-river
-which is NoC (Network On Chip) Probe device. Only this patch-set suppor=
-t
-the NoC Probe device. So, I make this separate patch on this patch-set.
+> On Thu, Apr 14, 2016 at 10:04:56PM +0800, Jisheng Zhang wrote:
+> > Implement bus recovery methods for i2c designware so we can recover
+> > from situations where SCL/SDA are stuck low.
+> > 
+> > The recovery method is similar as i2c-imx: "config the i2c pinctrl to
+> > gpio mode by calling pinctrl sleep set function, and then use GPIO to
+> > emulate the i2c protocol to send nine dummy clock to recover i2c
+> > device. After recovery, set i2c pinctrl to default group setting.
+> > 
+> > Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> > depends on runtime pm patches
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/422202.html
+> >  .../devicetree/bindings/i2c/i2c-designware.txt     | 12 ++++++
+> >  drivers/i2c/busses/i2c-designware-core.c           |  6 ++-
+> >  drivers/i2c/busses/i2c-designware-core.h           |  4 ++
+> >  drivers/i2c/busses/i2c-designware-platdrv.c        | 50 ++++++++++++++++++++++
+> >  4 files changed, 71 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> > index fee26dc..51a55c6 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> > @@ -20,6 +20,13 @@ Optional properties :
+> >   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
+> >     This value which is by default 300ns is used to compute the tHIGH period.
+> >  
+> > + - scl-gpios: specify the gpio related to SCL pin
+> > +
+> > + - sda-gpios: specify the gpio related to SDA pin
+> > +
+> > + - pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
+> > +   bus recovery, call it "gpio" state
+> > +
+> >  Example :
+> >  
+> >  	i2c@f0000 {
+> > @@ -42,4 +49,9 @@ Example :
+> >  		i2c-sda-hold-time-ns = <300>;
+> >  		i2c-sda-falling-time-ns = <300>;
+> >  		i2c-scl-falling-time-ns = <300>;
+> > +		pinctrl-names = "default", "gpio";
+> > +		pinctrl-0 = <&pinctrl_i2c1_default>;
+> > +		pinctrl-1 = <&pinctrl_i2c1_gpio>;
+> > +		scl-gpios = <&porta 26 GPIO_ACTIVE_HIGH>;
+> > +		sda-gpios = <&porta 27 GPIO_ACTIVE_HIGH>;
+> >  	};
+> > diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
+> > index 4255eaa..be40de1 100644
+> > --- a/drivers/i2c/busses/i2c-designware-core.c
+> > +++ b/drivers/i2c/busses/i2c-designware-core.c
+> > @@ -399,7 +399,10 @@ static int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
+> >  	while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
+> >  		if (timeout <= 0) {
+> >  			dev_warn(dev->dev, "timeout waiting for bus ready\n");
+> > -			return -ETIMEDOUT;
+> > +			i2c_recover_bus(&dev->adapter);
+> > +			if (dw_readl(dev, DW_IC_STATUS)
+> > +					& DW_IC_STATUS_ACTIVITY)
+> > +				return -ETIMEDOUT;
+> >  		}
+> >  		timeout--;
+> >  		usleep_range(1000, 1100);
+> > @@ -665,6 +668,7 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+> >  	/* wait for tx to complete */
+> >  	if (!wait_for_completion_timeout(&dev->cmd_complete, HZ)) {
+> >  		dev_err(dev->dev, "controller timed out\n");
+> > +		i2c_recover_bus(&dev->adapter);
+> >  		/* i2c_dw_init implicitly disables the adapter */
+> >  		i2c_dw_init(dev);
+> >  		ret = -ETIMEDOUT;
+> > diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> > index cd409e7..26c84ee 100644
+> > --- a/drivers/i2c/busses/i2c-designware-core.h
+> > +++ b/drivers/i2c/busses/i2c-designware-core.h
+> > @@ -104,6 +104,10 @@ struct dw_i2c_dev {
+> >  	u16			fs_lcnt;
+> >  	int			(*acquire_lock)(struct dw_i2c_dev *dev);
+> >  	void			(*release_lock)(struct dw_i2c_dev *dev);
+> > +	struct i2c_bus_recovery_info rinfo;
+> > +	struct pinctrl		*pinctrl;
+> > +	struct pinctrl_state	*pinctrl_pins_default;
+> > +	struct pinctrl_state	*pinctrl_pins_gpio;
+> >  	bool			pm_runtime_disabled;
+> >  };
+> >  
+> > diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> > index 1488cea..62bded9 100644
+> > --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> > +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> > @@ -33,6 +33,7 @@
+> >  #include <linux/err.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/of.h>
+> > +#include <linux/of_gpio.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm.h>
+> >  #include <linux/pm_runtime.h>
+> > @@ -148,6 +149,49 @@ static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
+> >  	return 0;
+> >  }
+> >  
+> > +static void i2c_dw_plat_prepare_recovery(struct i2c_adapter *adap)
+> > +{
+> > +	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
+> > +
+> > +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
+> > +}
+> > +
+> > +static void i2c_dw_plat_unprepare_recovery(struct i2c_adapter *adap)
+> > +{
+> > +	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
+> > +
+> > +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
+> > +}
+> > +
+> > +static void i2c_dw_plat_init_recovery_info(struct dw_i2c_dev *dev,
+> > +					   struct platform_device *pdev)
+> > +{
+> > +	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
+> > +
+> > +	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
+> > +			PINCTRL_STATE_DEFAULT);
+> > +	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
+> > +			"gpio");
+> > +	rinfo->sda_gpio = of_get_named_gpio(pdev->dev.of_node, "sda-gpios", 0);
+> > +	rinfo->scl_gpio = of_get_named_gpio(pdev->dev.of_node, "scl-gpios", 0);
+> > +
+> > +	if (!gpio_is_valid(rinfo->sda_gpio) ||
+> > +	    !gpio_is_valid(rinfo->scl_gpio) ||
+> > +	    IS_ERR(dev->pinctrl_pins_default) ||
+> > +	    IS_ERR(dev->pinctrl_pins_gpio)) {
+> > +		dev_dbg(&pdev->dev, "recovery information incomplete\n");
+> > +		return;
 
-[1] http://www.spinics.net/lists/arm-kernel/msg495976.html
-- [PATCH v9 00/20] PM / devferq: Add generic exynos bus frequency drive=
-r and new passive governor
+For ACPI, we should return here, right?
 
-Best Regards,
-Chanwoo Choi
+> > +	}
+> > +
+> > +	dev_dbg(&pdev->dev, "using scl-gpio %d and sda-gpio %d for recovery\n",
+> > +		rinfo->sda_gpio, rinfo->scl_gpio);
+> > +
+> > +	rinfo->prepare_recovery = i2c_dw_plat_prepare_recovery;
+> > +	rinfo->unprepare_recovery = i2c_dw_plat_unprepare_recovery;
+> > +	rinfo->recover_bus = i2c_generic_gpio_recovery;  
+> 
+> This whole thing is DT specific and I don't see how we can do the same
+> for ACPI. Should it be enabled only when the controller was enumerated
+> from DT?
+
+Per my understanding, for ACPI, the pinctrl_pins_default, pinctrl_pins_gpio,
+sda_gpio and scl_gpio will be invalid or err, so we won't setup rinfo
+at all. However, I have no acpi platform which have i2c designware to double
+confirm.
+
+> 
+> > +	dev->adapter.bus_recovery_info = rinfo;
+> > +}
+> > +
+> >  static int dw_i2c_plat_probe(struct platform_device *pdev)
+> >  {
+> >  	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> > @@ -165,6 +209,12 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+> >  	if (!dev)
+> >  		return -ENOMEM;
+> >  
+> > +	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
+> > +	if (IS_ERR(dev->pinctrl))
+> > +		return PTR_ERR(dev->pinctrl);
+> > +
+> > +	i2c_dw_plat_init_recovery_info(dev, pdev);
+> > +
+> >  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >  	dev->base = devm_ioremap_resource(&pdev->dev, mem);
+> >  	if (IS_ERR(dev->base))
+> > -- 
+> > 2.8.0.rc3  
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
