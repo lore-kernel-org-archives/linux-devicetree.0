@@ -1,39 +1,56 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
- driver
-Date: Fri, 15 Apr 2016 10:44:48 -0500
-Message-ID: <57110C70.9090007@codeaurora.org>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
- <57100962.40404@gmail.com> <571012E6.6050303@codeaurora.org>
- <57102920.7000104@codeaurora.org>
- <CAL_JsqLJffKzvMZTSLf+OESufDjrcMBd27fP5yh1R61=irXxcg@mail.gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
+Date: Fri, 15 Apr 2016 16:45:40 +0100
+Message-ID: <57110CA4.6050903@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
+ <1460473007-11535-7-git-send-email-ldewangan@nvidia.com>
+ <5710F7A4.5070902@nvidia.com> <5710F6CA.6060700@nvidia.com>
+ <57110560.80004@nvidia.com> <57110558.8010209@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLJffKzvMZTSLf+OESufDjrcMBd27fP5yh1R61=irXxcg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <57110558.8010209@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote:
->> >
->> >         dma-mask = <0 0xffffffff>;
->> >
->> >or
->> >
->> >         dma-mask = <0xffffffff 0xffffffff>;
-> No. See dma-ranges.
 
-How exactly should I use dma-ranges?  I can't find any other drivers 
-that queries that property and uses the result to call dma_set_mask.  I 
-thought the dma-ranges property is intended to specify address 
-translation.  I don't need to translate any address, I just need to know 
-a single number.
+On 15/04/16 16:14, Laxman Dewangan wrote:
+> On Friday 15 April 2016 08:44 PM, Jon Hunter wrote:
+>> On 15/04/16 15:12, Laxman Dewangan wrote:
+>>>
+>>>
+>>> All CSI pads are lined to single IO rail.
+>> I agree with this and from the data-sheet I see the rail that powers the
+>> CSI (and DSI) interfaces is called AVDD_DSI_CSI. But again, in the DT
+>> document you are referring to csia, csib, csic, csid, csie, csif as
+>> pins, but these don't appear to be physical pins, and this appears to be
+>> more of a software means to control power to the various csi_x pins.
+>>
+>> It seems to me that each of the existing CSI_A_xxx pins/pads should be
+>> mapped to or register with the appropriate power-down control and when
+>> all pads are set to inactive this then triggers the power-down of all
+>> the CSI_A_xxx pads.
+>
+> I used pins as this is the property from pincon generic so that I can
+> use the generic implementation.
+> 
+> Here, I will not go to the pin level control as HW does not support pin
+> level control.
+> 
+> I will say the unit should be interface level. Should we say
+> IO_GROUP_CSIA, IO_GROUP_CSIB etc?
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+So we need to reflect the hardware in device-tree and although yes the
+power-down for the CSI_x_xxx pads are all controlled together as a
+single group, it does not feel right that we add a pseudo pin called
+csix to represent these.
+
+The CSI_x_xxx pads are already in device-tree and so why not add a
+property to each of these pads which has the IO rail information for
+power-down and voltage-select?
+
+Cheers
+Jon
