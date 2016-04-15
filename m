@@ -1,75 +1,69 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 7/7] pinctrl: tegra: Add driver to configure voltage and
- power state of io pads
-Date: Fri, 15 Apr 2016 15:25:01 +0530
-Message-ID: <5710BA75.2010503@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>	<1460473007-11535-8-git-send-email-ldewangan@nvidia.com>	<CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>	<5710A8A4.90309@nvidia.com> <CACRpkdZLEozAmv6REcb7ubCNSLxGsYj1whZEKUkdiodZoS=vzg@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC
+ NAND on non-OMAP platforms
+Date: Fri, 15 Apr 2016 12:09:42 +0200
+Message-ID: <20160415120942.3131eac1@bbrezillon>
+References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
+	<20160413212500.GD5995@atomide.com>
+	<5710B58C.7050108@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZLEozAmv6REcb7ubCNSLxGsYj1whZEKUkdiodZoS=vzg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5710B58C.7050108-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Roger,
 
-On Friday 15 April 2016 02:55 PM, Linus Walleij wrote:
-> On Fri, Apr 15, 2016 at 10:39 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->> On Friday 15 April 2016 01:38 PM, Linus Walleij wrote:
->>> On Tue, Apr 12, 2016 at 4:56 PM, Laxman Dewangan <ldewangan@nvidia.com>
->>> wrote:
->>>> +static const struct pinconf_generic_params tegra_io_pads_cfg_params[] =
->>>> {
->>>> +       {
->>>> +               .property = "nvidia,io-rail-voltage",
->>>> +               .param = TEGRA_IO_RAIL_VOLTAGE,
->>>> +       }, {
->>> What's so nvidia-specific about this?
->>> We have power-source in
->>> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>> which takes a custom argument. This is obviously what you
->>> are doing (selecting one of two rails), so use that binding.
->> Yes, I looked for the common property but did not found anything near to
->> this.
->> My understating for power-source is that selecting the source of supply, not
->> the voltages.
-> Well in a comment to the previous patch you just said that the
-> hardware actually does not regulate voltages. Isn't the actual case
-> that there are two rails with two different voltages, and you select one
-> of the rails for the pin?
->
-> That is not really selecting a voltage, that is selecting a power
-> rail.
->
->> I am looking something  power-source-voltage-level.
->> Should we add this?
-> If the pin could actually set a voltage level it would have a regulator.
-> I don't believe that. I think it is selecting one of two rails which
-> could theoretically hold two totally different voltages.
->
-> And that is what power-source is about.
->
->
+On Fri, 15 Apr 2016 12:34:04 +0300
+Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
 
+> Tony & Boris,
+> 
+> On 14/04/16 00:25, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160407 03:10]:
+> >> Hi,
+> >>
+> >> As this series has cross dependency between omap and mtd subsystems,
+> >> I'll set up a immutable branch which omap-soc and l2-mtd must
+> >> merge in together to avoid any conflicts/breakage during integration.
+> >>
+> >> Brian has acked all mtd patches. Tony needs to give his Ack for the
+> >> gpmc driver part and then I can provide the immutable branch.
+> > 
+> > Looks good to me, please feel free to add:
+> > 
+> > Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > 
+> 
+> I've added Tony and Rob's Acked-by tags and pushed the patches at the
+> below PULL request.
+> 
+> Please take this into omap-soc and l2-mtd trees. Thanks.
 
-The IO rails connected to PMIC rail and connection does not get change.
-We change the voltage of PMIC rails via regulator calls. And then 
-configure pads for the new voltage.
-We really do not witch the supply connection here. power-source is about 
-the power supply connection, not about the voltage change on same supply.
+I Pulled this branch into nand/next and had to resolve a few conflicts
+(as you may have noticed, a few other reworks in the NAND and MTD layer
+have been merged in the meantime).
 
-Like in MMC driver for SDIO3.0:
+It compiles, but I'm not sure it works correctly (I pushed the result
+to nand/next-with-gpmc-rework [1]). Could you test it before I push this
+to nand/next?
 
-regulator_set_voltage(sdmmc_rail, 3300000, 3300000);
-tegra_io_pad_voltage_configure(SDMMC, 3300000)
+Thanks,
+
+Boris
+
+[1]https://github.com/linux-nand/linux/tree/nand/next-with-gpmc-rework
 
 
-For 1.8V
-
-regulator_set_voltage(sdmmc_rail, 1800000, 1800000);
-tegra_io_pad_voltage_configure(SDMMC, 1800000)
-
-
-
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
