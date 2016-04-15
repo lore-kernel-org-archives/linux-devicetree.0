@@ -1,16 +1,16 @@
 From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 03/19] clk: sunxi: Add PLL3 clock
-Date: Fri, 15 Apr 2016 15:34:41 -0700
-Message-ID: <20160415223441.GT14441@codeaurora.org>
+Subject: Re: [PATCH v3 04/19] clk: sunxi: Add TCON channel1 clock
+Date: Fri, 15 Apr 2016 15:39:36 -0700
+Message-ID: <20160415223936.GU14441@codeaurora.org>
 References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-4-git-send-email-maxime.ripard@free-electrons.com>
+ <1458751122-23976-5-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDHZXHXDRAMBBAWZYW4AKGQE4CBRFWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDHZXHXDRAMBBKW3YW4AKGQEE3HWHSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1458751122-23976-4-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1458751122-23976-5-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,15 +22,16 @@ Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David A
 List-Id: devicetree@vger.kernel.org
 
 On 03/23, Maxime Ripard wrote:
-> The A10 SoCs and relatives have a PLL controller to drive the PLL3 and
-> PLL7, clocked from a 3MHz oscillator, that drives the display related
-> clocks (GPU, display engine, TCON, etc.)
+> The TCON is a controller generating the timings to output videos signals,
+> acting like both a CRTC and an encoder.
 > 
-> Add a driver for it.
+> It has two channels depending on the output, each channel being driven by
+> its own clock (and own clock controller).
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Add a driver for the channel 1 clock.
+> 
 > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
 
 Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
