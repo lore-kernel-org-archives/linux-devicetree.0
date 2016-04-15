@@ -1,41 +1,35 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
-Date: Fri, 15 Apr 2016 22:11:42 +0530
-Message-ID: <571119C6.6000107@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com> <1460473007-11535-7-git-send-email-ldewangan@nvidia.com> <5710F7A4.5070902@nvidia.com> <5710F6CA.6060700@nvidia.com> <57110560.80004@nvidia.com> <57110558.8010209@nvidia.com> <57110CA4.6050903@nvidia.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] rtc: omap: Support ext_wakeup configuration
+Date: Fri, 15 Apr 2016 11:52:42 -0500
+Message-ID: <57111C5A.7070606@ti.com>
+References: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
+ <20160404224046.GA17042@atomide.com> <57078A89.3080809@ti.com>
+ <20160408151408.GS16484@atomide.com> <5707E764.7050204@ti.com>
+ <570D2F79.9040202@grinn-global.com> <57111AF4.6070505@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <57110CA4.6050903@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57111AF4.6070505-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 04/15/2016 11:46 AM, Grygorii Strashko wrote:
+[...]
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 13ac882..9580c82 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
 
-On Friday 15 April 2016 09:15 PM, Jon Hunter wrote:
-> On 15/04/16 16:14, Laxman Dewangan wrote:
->>
->> I used pins as this is the property from pincon generic so that I can
->> use the generic implementation.
->>
->> Here, I will not go to the pin level control as HW does not support pin
->> level control.
->>
->> I will say the unit should be interface level. Should we say
->> IO_GROUP_CSIA, IO_GROUP_CSIB etc?
-> So we need to reflect the hardware in device-tree and although yes the
-> power-down for the CSI_x_xxx pads are all controlled together as a
-> single group, it does not feel right that we add a pseudo pin called
-> csix to represent these.
->
-> The CSI_x_xxx pads are already in device-tree and so why not add a
-> property to each of these pads which has the IO rail information for
-> power-down and voltage-select?
+I see this is an example of what could be done on am335x - but lets
+not do this on dra7/am57xx please?
 
-Which dt binding docs have these?
-I looked for nvidia,tegra210-pinmux.txt and not able to find csi_xxx.
 
-Here I dont want to refer the individual pins as control should be as group.
-
+-- 
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
