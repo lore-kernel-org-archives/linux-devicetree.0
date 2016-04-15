@@ -1,52 +1,63 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
- driver
-Date: Fri, 15 Apr 2016 10:35:29 -0700
-Message-ID: <20160415173529.GY391@tuxbot>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <570EC541.6080603@gmail.com>
- <570FFB6B.5060305@codeaurora.org>
- <57100962.40404@gmail.com>
- <571012E6.6050303@codeaurora.org>
- <57102920.7000104@codeaurora.org>
- <20160415164433.GV391@tuxbot>
- <57111E33.606@codeaurora.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
+Date: Fri, 15 Apr 2016 18:44:45 +0100
+Message-ID: <5711288D.7060701@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
+ <1460473007-11535-7-git-send-email-ldewangan@nvidia.com>
+ <5710F7A4.5070902@nvidia.com> <5710F6CA.6060700@nvidia.com>
+ <57110560.80004@nvidia.com> <57110558.8010209@nvidia.com>
+ <57110CA4.6050903@nvidia.com> <571119C6.6000107@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57111E33.606@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <571119C6.6000107@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 15 Apr 10:00 PDT 2016, Timur Tabi wrote:
 
-> Bjorn Andersson wrote:
-> >For platform devices being populated via from DT you will pass:
-> >of_platform_bus_create()
-> >   of_platform_device_create_pdata()
-> >     of_dma_configure()
-> >
-> >Which calls of_dma_get_range() to acquire this information from the
-> >dma-ranges property and set up the dma ops and properties.
+On 15/04/16 17:41, Laxman Dewangan wrote:
 > 
-> This seems excessive.  I have to create a platform bus just to configure the
-> DMA mask?  Most drivers just call dma_set_mask and give it a number, and
-> that's not device-tree specific.  I also need to come up with a way to get
-> this to work on ACPI.
+> On Friday 15 April 2016 09:15 PM, Jon Hunter wrote:
+>> On 15/04/16 16:14, Laxman Dewangan wrote:
+>>>
+>>> I used pins as this is the property from pincon generic so that I can
+>>> use the generic implementation.
+>>>
+>>> Here, I will not go to the pin level control as HW does not support pin
+>>> level control.
+>>>
+>>> I will say the unit should be interface level. Should we say
+>>> IO_GROUP_CSIA, IO_GROUP_CSIB etc?
+>> So we need to reflect the hardware in device-tree and although yes the
+>> power-down for the CSI_x_xxx pads are all controlled together as a
+>> single group, it does not feel right that we add a pseudo pin called
+>> csix to represent these.
+>>
+>> The CSI_x_xxx pads are already in device-tree and so why not add a
+>> property to each of these pads which has the IO rail information for
+>> power-down and voltage-select?
 > 
-> I just seems like a lot of work only because I need to determine at runtime
-> what my DMA mask is.  I also don't see any drivers that call
-> of_dma_configure().
-> 
+> Which dt binding docs have these?
+> I looked for nvidia,tegra210-pinmux.txt and not able to find csi_xxx.
 
-Your driver is a platform driver and it's being probed from DT. As such
-all this is already taken care of for you, by the core.
+For CSI you are right they are not included by the current DT binding
+docs, however, the sdmmc1/3 pads are. So that makes things a bit more
+messy as some are and some are not.
 
-The listing is for your reference to know why the dma-ranges property
-would affect your device.
+> Here I dont want to refer the individual pins as control should be as
+> group.
 
-Regards,
-Bjorn
+I understand, however, at least for power-down control I don't see why
+we cannot refer to the individual pins and once all are inactive then
+the rail can be powered down.
+
+For switching the voltage it is a bit more complex, but may be we could
+still look-up the IO rail based upon the pads the device uses.
+
+Cheers
+Jon
+
+
