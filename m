@@ -1,58 +1,39 @@
-From: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Subject: Re: [PATCH] Add EDAC peripheral init functions & Ethernet EDAC.
-Date: Fri, 15 Apr 2016 06:40:42 -0300
-Message-ID: <20160415064042.330406ab.m.chehab@samsung.com>
-References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
- <20160414143501.GA25212@rob-hp-laptop>
+From: Brian Starkey <brian.starkey@arm.com>
+Subject: Re: [PATCH v3 1/2] ARM: dts: Add expansion bus to VExpress
+Date: Fri, 15 Apr 2016 10:53:28 +0100
+Message-ID: <20160415095327.GA21668@e106950-lin.cambridge.arm.com>
+References: <1460648359-7310-1-git-send-email-brian.starkey@arm.com>
+ <5710AC96.2020108@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20160414143501.GA25212@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, bp@alien8.de, tthayer@opensource.altera.com, dougthompson@xmission.com, grant.likely@linaro.org, dinguyen@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5710AC96.2020108@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Em Thu, 14 Apr 2016 09:35:01 -0500
-Rob Herring <robh@kernel.org> escreveu:
+On Fri, Apr 15, 2016 at 09:55:50AM +0100, Sudeep Holla wrote:
+>
+>
+>On 14/04/16 16:39, Brian Starkey wrote:
+>>The VExpress development platform has an external expansion bus which
+>>can be used for additional hardware (e.g. LogicTile Express
+>>daughterboards).
+>>Add this bus to the VExpress CoreTile device-trees.
+>>
+>>The bus is described for a CoreTile occupying site 1.
+>>
+>
+>Pulled both, thanks for splitting.
 
-> On Tue, Apr 12, 2016 at 05:12:55PM -0500, tthayer@opensource.altera.com wrote:
-> > This patch set adds the memory initialization functions for Altera's
-> > Arria10 peripherals, the first of which is the Ethernet EDAC. The
-> > first 3 patches add the memory initialization functionality. The
-> > last 3 patches add Ethernet EDAC support.  
-> 
-> The ethernet part seems a bit strange to me to put under EDAC as EDAC 
-> is primarily memory controller ECC (and caches to some extent). Also you 
-> would not halt the system in case of an UC, but rather just drop the 
-> frame. This would need to be part of the ethernet driver in that case.
->  
-> Of course, given that ethernet frames already have a CRC, ECC of the 
-> FIFO seems a bit redundant.
+Great, thanks very much.
 
-Actually, EDAC was conceived to be a way to report hardware errors, and,
-although the main use case is for memory and CPU errors, there are a few
-drivers that report errors at PCI bus. So, I don't see much problems using
-it to report other hardware errors, like the ones associated with the
-Ethernet hardware.
+-Brian
 
-That's said, things like Ethernet frame errors are better handled via the
-network drivers. I would report via EDAC only errors associated with the
-Ethernet hardware that would cause the hardware to malfunction.
-
-Btw, an UC error won't cause the system to halt, except if a UC memory
-error happens and the EDAC core is loaded with an special modprobe
-parameter (edac_mc_panic_on_ue = 1).
-
--- 
-Thanks,
-Mauro
+>
+>-- 
+>Regards,
+>Sudeep
+>
