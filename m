@@ -1,76 +1,86 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller driver
-Date: Fri, 15 Apr 2016 07:35:52 -0500
-Message-ID: <CAL_JsqLJffKzvMZTSLf+OESufDjrcMBd27fP5yh1R61=irXxcg@mail.gmail.com>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
- <57100962.40404@gmail.com> <571012E6.6050303@codeaurora.org> <57102920.7000104@codeaurora.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: uniphier: change release address of
+ spin-table
+Date: Fri, 15 Apr 2016 14:05:49 +0100
+Message-ID: <20160415130549.GB8021@leverpostej>
+References: <1460716247-28049-1-git-send-email-yamada.masahiro@socionext.com>
+ <1460716247-28049-3-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <57102920.7000104@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460716247-28049-3-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 6:34 PM, Timur Tabi <timur@codeaurora.org> wrote:
-> Vikram Sethi wrote:
->>>>
->>>> >>     retval = dma_coerce_mask_and_coherent(&pdev->dev,
->>>> >> DMA_BIT_MASK(64));
->>>> >>     if (retval) {
->>>> >>         dev_err(&pdev->dev, "failed to set DMA mask err %d\n",
->>>> >> retval);
->>>> >>         goto err_res;
->>>> >>     }
->>
->> How can you set the mask to 64 bits when the EMAC IP on FSM9900 and
->> QDF2432 can only do 32 bit DMA?
->> The mask in that API is a bit mask describing which bits of an address
->> your device supports.
->
->
-> Vikram, Shanker, and I discussed this offline, and came to a consensus.
->
-> The FSM9900 is a 32-bit platform, so the kernel will never create a DMA
-> address above 4GB. Even if the driver sets the mask to 64 bits, it will
-> technically work.  However, the mask should be set to 32 because all address
-> buses are 32 bits.
->
-> The QDF2432 is different.  Although it's an ARM64 platform, we have the
-> unfortunate situation that only 32 bits of that address is wired to the rest
-> of the chip.  So even though the Emac can handle 64-bit bus addresses, if it
-> actually attempts to DMA above 4GB, the address will get truncated and
-> corrupt memory.  The mask needs to be set to 32.
->
-> There may or may not be other ARM64 chips from us that won't have this
-> problem in the future, so these hypothetical chips would have a mask of 64.
->
-> So I think the solution is to create a device tree (and ACPI) property that
-> holds the mask.
->
->         dma-mask = <0 0xffffffff>;
->
-> or
->
->         dma-mask = <0xffffffff 0xffffffff>;
+On Fri, Apr 15, 2016 at 07:30:47PM +0900, Masahiro Yamada wrote:
+> The 8-byte register located at 0x59801200 on this SoC is dedicated
+> for waking up secondary CPUs.  We can use it and save normal memory.
 
-No. See dma-ranges.
+Generally, it is not safe to use MMIO registers to back spin-table. The
+kernel maps the spin table location with cacheable attributes, so there
+may be speculative accesses to any registes in the same (64K) page, and
+a writeback may be larger than the 8-byte register width (which the
+device might not accept, triggering an SError).
 
-Rob
+Given that, I do not think this is a good idea.
 
->
-> The driver will then do this:
->
->         u64 dma_mask;
->         device_property_read_u64(&pdev->dev, "dma-mask", &dma_mask);
->         dma_coerce_mask_and_coherent(&pdev->dev, dma_mask);
->
-> What I'm not sure yet is whether I should call
-> dma_coerce_mask_and_coherent() or dma_set_coherent_mask().
->
-> --
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-> Forum, a Linux Foundation collaborative project.
+Thanks,
+Mark.
+
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+> 
+>  arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+> index 651c9d9..f73b09e 100644
+> --- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+> @@ -77,7 +77,7 @@
+>  			compatible = "arm,cortex-a72", "arm,armv8";
+>  			reg = <0 0x000>;
+>  			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x80000100>;
+> +			cpu-release-addr = <0 0x59801200>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -85,7 +85,7 @@
+>  			compatible = "arm,cortex-a72", "arm,armv8";
+>  			reg = <0 0x001>;
+>  			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x80000100>;
+> +			cpu-release-addr = <0 0x59801200>;
+>  		};
+>  
+>  		cpu2: cpu@100 {
+> @@ -93,7 +93,7 @@
+>  			compatible = "arm,cortex-a53", "arm,armv8";
+>  			reg = <0 0x100>;
+>  			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x80000100>;
+> +			cpu-release-addr = <0 0x59801200>;
+>  		};
+>  
+>  		cpu3: cpu@101 {
+> @@ -101,7 +101,7 @@
+>  			compatible = "arm,cortex-a53", "arm,armv8";
+>  			reg = <0 0x101>;
+>  			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x80000100>;
+> +			cpu-release-addr = <0 0x59801200>;
+>  		};
+>  	};
+>  
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
