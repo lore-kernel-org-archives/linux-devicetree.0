@@ -1,48 +1,33 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: DTS: da850: add node for spi0
-Date: Fri, 15 Apr 2016 16:20:51 -0500
-Message-ID: <57115B33.90509@lechnology.com>
-References: <1460586628-25152-1-git-send-email-david@lechnology.com>
- <1460586628-25152-2-git-send-email-david@lechnology.com>
- <5710C176.3040304@ti.com> <57111433.6080402@lechnology.com>
- <31522.1460751389@turing-police.cc.vt.edu>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] Add EDAC peripheral init functions & Ethernet EDAC.
+Date: Fri, 15 Apr 2016 23:46:18 +0200
+Message-ID: <20160415214618.GB4545@cz.tnic>
+References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
+ <20160414143501.GA25212@rob-hp-laptop>
+ <20160415064042.330406ab.m.chehab@samsung.com>
+ <5711087A.8050501@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <31522.1460751389-+bZmOdGhbsPr6rcHtW+onFJE71vCis6O@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valdis.Kletnieks-PjAqaU27lzQ@public.gmane.org
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5711087A.8050501@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh@kernel.org>, dougthompson@xmission.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2016 03:16 PM, Valdis.Kletnieks-PjAqaU27lzQ@public.gmane.org wrote:
-> On Fri, 15 Apr 2016 11:17:55 -0500, David Lechner said:
->
->> I omitted this on purpose. For my use case, I am using the SPI as
->> write-only,
->
-> So your SPI accesses are fire-and-forget, and nothing ever comes back?
+On Fri, Apr 15, 2016 at 10:27:54AM -0500, Thor Thayer wrote:
+> I'll update this patch to only count errors.
 
-Yes.
+... and also think about what that counting is going to bring. If it is
+only going to be there to show how many network errors happened and we
+can't do anything about it except stare at that number, then adding all
+that code is probably waste of time an electrons...
 
-> Seems a very dangerous way to design the use case, with no feedback if
-> something suddenly goes pear-shaped...
+I'm just sayin'.
 
-You should tell Sitronix. This is how their display controllers work.
+-- 
+Regards/Gruss,
+    Boris.
 
->
-> Or do you have ways to verify the status via some method other than SPI?
->
-
-Nope.
-
-
-
-I'm working with LEGO MINDSTORMS EV3, a mass-produced robotics system. 
-It is what it is. And I have a logic analyzer for when things go 
-pear-shaped. ;-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ECO tip #101: Trim your mails when you reply. Srsly.
