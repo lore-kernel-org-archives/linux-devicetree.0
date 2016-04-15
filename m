@@ -1,77 +1,158 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
-Date: Sat, 16 Apr 2016 00:13:27 +0530
-Message-ID: <5711364F.6070009@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com> <1460473007-11535-7-git-send-email-ldewangan@nvidia.com> <5710F7A4.5070902@nvidia.com> <5710F6CA.6060700@nvidia.com> <57110560.80004@nvidia.com> <57110558.8010209@nvidia.com> <57110CA4.6050903@nvidia.com> <571119C6.6000107@nvidia.com> <5711288D.7060701@nvidia.com> <571129B9.7050602@nvidia.com> <57113340.6090701@nvidia.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/2 v2] device-tree: nexus7-flo: Remove power gpio key
+ entry and use pmic8xxx-pwrkey
+Date: Fri, 15 Apr 2016 11:59:27 -0700
+Message-ID: <20160415185927.GN14441@codeaurora.org>
+References: <1460668031-12384-1-git-send-email-john.stultz@linaro.org>
+ <20160415172212.GW391@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57113340.6090701-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160415172212.GW391@tuxbot>
+Sender: linux-input-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: John Stultz <john.stultz@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/15, Bjorn Andersson wrote:
+> On Thu 14 Apr 14:07 PDT 2016, John Stultz wrote:
+> 
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> > v2:
+> >  - Add wakeup-source entry as suggested by
+> >    Sudeep Holla <sudeep.holla@arm.com>
+> > 
+> >  arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+> [..]
+> > @@ -190,6 +184,16 @@
+> >  			};
+> >  		};
+> >  
+> > +		/* override default debounce for power-key */
+> > +		qcom,ssbi@500000 {
+> > +			pmic@0 {
+> > +				pwrkey@1c {
+> > +					debounce = <1>;
+> 
+> The debounce is specified in microseconds, so if the 15625us that's
+> specified in the dtsi is too much for you we have a bug in the driver.
+> 
+> Further, comparing the math with downstream indicates that we're quite
+> off.
+> 
+> Could you please try the downstream calculation of "delay", by changing
+> pmic8xxx_pwrkey_probe() to include:
+> 
+> 	delay = (kpb_delay << 6) / USEC_PER_SEC;
+> 	delay = ilog2(delay);
+> 
+> Unfortunately I don't have the register documentation for this pmic.
+> 
+> Stephen, can you shed some light on the trig-delay (what I presume is
+> the bark timer in later versions) bits in PON_CNTRL_1 (0x1c) on PM8921.
 
-On Saturday 16 April 2016 12:00 AM, Jon Hunter wrote:
-> On 15/04/16 18:49, Laxman Dewangan wrote:
->> On Friday 15 April 2016 11:14 PM, Jon Hunter wrote:
->>> On 15/04/16 17:41, Laxman Dewangan wrote:
->>>> On Friday 15 April 2016 09:15 PM, Jon Hunter wrote:
->>>>> On 15/04/16 16:14, Laxman Dewangan wrote:
->>>>>> I used pins as this is the property from pincon generic so that I can
->>>>>> use the generic implementation.
->>>>>>
->>>>>> Here, I will not go to the pin level control as HW does not support
->>>>>> pin
->>>>>> level control.
->>>>>>
->>>>>> I will say the unit should be interface level. Should we say
->>>>>> IO_GROUP_CSIA, IO_GROUP_CSIB etc?
->>>>> So we need to reflect the hardware in device-tree and although yes the
->>>>> power-down for the CSI_x_xxx pads are all controlled together as a
->>>>> single group, it does not feel right that we add a pseudo pin called
->>>>> csix to represent these.
->>>>>
->>>>> The CSI_x_xxx pads are already in device-tree and so why not add a
->>>>> property to each of these pads which has the IO rail information for
->>>>> power-down and voltage-select?
->>>> Which dt binding docs have these?
->>>> I looked for nvidia,tegra210-pinmux.txt and not able to find csi_xxx.
->>> For CSI you are right they are not included by the current DT binding
->>> docs, however, the sdmmc1/3 pads are. So that makes things a bit more
->>> messy as some are and some are not.
->> Yaah and so lets have the names in new dt files. Names may be same but
->> define all possible names f groups in dt binding and need not to refer
->> from other file which does not have all.
-> I still do not like that. In the case of sdmmc we now have two pinctrl
-> drivers to deal with for a single set of pins. That does not seem
-> correct IMO.
+It looks like this driver needs some love! qcom has layered these
+patches on top of the upstream submission (hashes from msm-3.10
+branch):
 
-We are ending two drivers because of the HW blocks. Pins interface and 
-pad control are seen two different blocks.
+0fba556b7b95 input: pmic8xxx-pwrkey: Support sysfs interface for
+debounce
+f042aa6efec6 input: pm8xxx-pwrkey: Update key press status during
+probe
+0b58468eb5ca input: pwrkey: Handle out-of-order press and release
+interrupts
+2099d2368cb5 input: pmic8xxx-pwrkey: Keep pdata after probe
+4ecfcdf235de input: pm8xxx-pwrkey: Move from threaded irq to
+any-context irq
+dfed28404288 input: pmic8xxx-pwrkey: Change algorithm on
+converting trigger delay
 
-Do you want to add the IO group names also in existing pin control 
-driver and the new property, power-enable/disable and 
-power-source-voltage belongs to these new io group names.
+That last one is the one you want here, although f042aa6efec6
+looks interesting too.
 
-In this way we will have single driver. We need to see how we can 
-support group/pins together.
+Anyway, the equation for the lower 3 bits for the trigger delay
+is:
+	
+	delay (Seconds) = (1 / 1024) * 2 ^ (x + 4)
 
+where x is the 3 bits. With so few bits we only have 8 delays,
+ranging from 2 seconds to 1/64 seconds (16/1024 == 1/64).
 
->
->
->> But interfaces are complex. As a client, it is easy to say power down
->> SDMMC1 IO interface rather than saying power down 10 pins (names) of
->> that group.
-> Right and like I said, we could always look up the IO rail from the pins
-> associated once at probe time and then control it from there.
+Funny thing, I looked back on some older PMICs and the
+documentation usually has the same equation. Except for this one
+document that seems to have messed up the formatting for the
+power of 2 part so the equation looks like:
 
-I did not get it fully. Can you please help on this using some psuedo 
-code and dt property.
+	delay (Seconds) = (1 / 1024) * 2 x + 4
 
-For  init, we can pass the regulator handle of the supply to this driver 
-and during probe, it can get the voltage from regulator call and then 
-set 1.8V or 3.3V. So we need to provide regulator handle from DT instead 
-of voltage for probe configuration. Is this what you mean?
+Maybe the driver was written to this equation, but I'm willing to
+bet that the documentation is wrong here. I seriously doubt the
+power key would change like this!
+
+Alright, here's the patch which should make the debounce actually
+work.
+
+----8<-----
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH] Input: pmic8xxx-pwrkey: Fix algorithm for converting trigger
+ delay
+
+The trigger delay algorithm that converts from microseconds to
+the register value looks incorrect. According to most of the PMIC
+documentation, the equation is
+
+	delay (Seconds) = (1 / 1024) * 2 ^ (x + 4)
+
+except for one case where the documentation looks to have a
+formatting issue and the equation looks like
+
+	delay (Seconds) = (1 / 1024) * 2 x + 4
+
+Most likely this driver was written with the improper
+documentation to begin with. According to the downstream sources
+the valid delays are from 2 seconds to 1/64 second, and the
+latter equation just doesn't make sense for that. Let's fix the
+algorithm and the range check to match the documentation and the
+downstream sources.
+
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: John Stultz <john.stultz@linaro.org>
+Fixes: 92d57a73e410 ("input: Add support for Qualcomm PMIC8XXX power key")
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ drivers/input/misc/pmic8xxx-pwrkey.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/input/misc/pmic8xxx-pwrkey.c b/drivers/input/misc/pmic8xxx-pwrkey.c
+index 3f02e0e03d12..67aab86048ad 100644
+--- a/drivers/input/misc/pmic8xxx-pwrkey.c
++++ b/drivers/input/misc/pmic8xxx-pwrkey.c
+@@ -353,7 +353,8 @@ static int pmic8xxx_pwrkey_probe(struct platform_device *pdev)
+ 	if (of_property_read_u32(pdev->dev.of_node, "debounce", &kpd_delay))
+ 		kpd_delay = 15625;
+ 
+-	if (kpd_delay > 62500 || kpd_delay == 0) {
++	/* Valid range of pwr key trigger delay is 1/64 sec to 2 seconds. */
++	if (kpd_delay > USEC_PER_SEC * 2 || kpd_delay < USEC_PER_SEC / 64) {
+ 		dev_err(&pdev->dev, "invalid power key trigger delay\n");
+ 		return -EINVAL;
+ 	}
+@@ -385,8 +386,8 @@ static int pmic8xxx_pwrkey_probe(struct platform_device *pdev)
+ 	pwr->name = "pmic8xxx_pwrkey";
+ 	pwr->phys = "pmic8xxx_pwrkey/input0";
+ 
+-	delay = (kpd_delay << 10) / USEC_PER_SEC;
+-	delay = 1 + ilog2(delay);
++	delay = (kpd_delay << 6) / USEC_PER_SEC;
++	delay = ilog2(delay);
+ 
+ 	err = regmap_read(regmap, PON_CNTL_1, &pon_cntl);
+ 	if (err < 0) {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
