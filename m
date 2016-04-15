@@ -1,221 +1,46 @@
-From: "Martin Ayotte" <martinayotte@gmail.com>
-Subject: [PATCH v1 1/1] add missing UARTs pins for AllWinner H3 DTS + add new I2C entries for AllWinner H3 DTS
-Date: Fri, 15 Apr 2016 13:11:08 -0400
-Message-ID: <8673D89D449742EAB9F6EBD05655A295@GirolesWin7>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] rtc: omap: Support ext_wakeup configuration
+Date: Fri, 15 Apr 2016 20:18:03 +0300
+Message-ID: <5711224B.5030902@ti.com>
+References: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
+ <20160404224046.GA17042@atomide.com> <57078A89.3080809@ti.com>
+ <20160408151408.GS16484@atomide.com> <5707E764.7050204@ti.com>
+ <570D2F79.9040202@grinn-global.com> <57111AF4.6070505@ti.com>
+ <57111C5A.7070606@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="US-ASCII"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, maxime.ripard@free-electrons.com
-Cc: jwrdegoede@fedoraproject.org, wens@csie.org, jenskuske@gmail.com, moinejf@free.fr, martinayotte@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57111C5A.7070606-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
 
-This patch is submit to provide endusers access to additional UARTs on
-AllWinner H3 SoC along with I2C ports.
+Hi Nishanth,
 
-Regards,
-Martin.
----
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts  | 36 ++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 36 ++++++++++++++
- arch/arm/boot/dts/sun8i-h3.dtsi            | 75
-++++++++++++++++++++++++++++++
- 3 files changed, 147 insertions(+)
+On 04/15/2016 07:52 PM, Nishanth Menon wrote:
+> On 04/15/2016 11:46 AM, Grygorii Strashko wrote:
+> [...]
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index 13ac882..9580c82 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>
+> I see this is an example of what could be done on am335x - but lets
+> not do this on dra7/am57xx please?
+>
+>
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index f93f5d1..f0b9823 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -176,6 +176,42 @@
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
- &usb1_vbus_pin_a {
- 	allwinner,pins = "PG13";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index daf50b9a6..6994349 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -161,6 +161,42 @@
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
- &usbphy {
- 	/* USB VBUS is always on */
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi
-b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 4a4926b..c947360d 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -508,6 +508,48 @@
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
- 
-+			uart1_pins_a: uart1@0 {
-+				allwinner,pins = "PG6", "PG7";
-+				allwinner,function = "uart1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart2_pins_a: uart2@0 {
-+				allwinner,pins = "PA0", "PA1";
-+				allwinner,function = "uart2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart3_pins_a: uart3@0 {
-+				allwinner,pins = "PA13", "PA14";
-+				allwinner,function = "uart3";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			i2c0_pins_a: i2c0@0 {
-+				allwinner,pins = "PA11", "PA12";
-+				allwinner,function = "i2c0";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			i2c1_pins_a: i2c1@0 {
-+				allwinner,pins = "PA18", "PA19";
-+				allwinner,function = "i2c1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			i2c2_pins_a: i2c2@0 {
-+				allwinner,pins = "PE12", "PE13";
-+				allwinner,function = "i2c2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
- 			mmc0_pins_a: mmc0@0 {
- 				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
- 						 "PF4", "PF5";
-@@ -626,6 +668,39 @@
- 			status = "disabled";
- 		};
- 
-+		i2c0: i2c@01c2ac00 {
-+			compatible = "allwinner,sun6i-a31-i2c";
-+			reg = <0x01c2ac00 0x400>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 96>;
-+			resets = <&apb2_rst 0>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c1: i2c@01c2b000 {
-+			compatible = "allwinner,sun6i-a31-i2c";
-+			reg = <0x01c2b000 0x400>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 97>;
-+			resets = <&apb2_rst 1>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c2: i2c@01c2b400 {
-+			compatible = "allwinner,sun6i-a31-i2c";
-+			reg = <0x01c2b400 0x400>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 98>;
-+			resets = <&apb2_rst 2>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		gic: interrupt-controller@01c81000 {
- 			compatible = "arm,cortex-a7-gic",
-"arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
+Don't panic. It's just an example ;)
+Late Friday is here, and it was the first available board.
+
+Sry, that I made you worry. ;)
+
 -- 
-2.7.4
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
