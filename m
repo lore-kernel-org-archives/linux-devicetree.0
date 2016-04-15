@@ -1,82 +1,41 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 4/7] soc/tegra: pmc: Add interface to set voltage of IO
- rails
-Date: Fri, 15 Apr 2016 10:59:13 -0600
-Message-ID: <57111DE1.5040908@wwwdotorg.org>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
- <1460473007-11535-5-git-send-email-ldewangan@nvidia.com>
- <571115CE.50906@wwwdotorg.org> <57111524.60708@nvidia.com>
- <571119D5.3040309@wwwdotorg.org> <571117F5.2090504@nvidia.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Fri, 15 Apr 2016 12:00:35 -0500
+Message-ID: <57111E33.606@codeaurora.org>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com> <571012E6.6050303@codeaurora.org>
+ <57102920.7000104@codeaurora.org> <20160415164433.GV391@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <571117F5.2090504@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160415164433.GV391@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2016 10:33 AM, Laxman Dewangan wrote:
+Bjorn Andersson wrote:
+> For platform devices being populated via from DT you will pass:
+> of_platform_bus_create()
+>    of_platform_device_create_pdata()
+>      of_dma_configure()
 >
-> On Friday 15 April 2016 10:11 PM, Stephen Warren wrote:
->> On 04/15/2016 10:21 AM, Laxman Dewangan wrote:
->>>
->>> On Friday 15 April 2016 09:54 PM, Stephen Warren wrote:
->>>> On 04/12/2016 08:56 AM, Laxman Dewangan wrote:
->>>>> NVIDIA Tegra210 supports some of the IO interface which can operate
->>>>> at 1.8V or 3.3V I/O rail voltage levels. SW needs to configure
->>>>> Tegra PMC register to set different voltage level of IO interface
->>>>> based
->>>>> on IO rail voltage from power supply i.e. power regulators.
->>>>>
->>>>> Add APIs to set and get IO rail voltage from the client driver.
->>>>
->>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>
->>>>> +static struct tegra_io_rail_voltage_bit_info
->>>>> tegra210_io_rail_voltage_info[] = {
->>>>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC1, 12),
->>>>> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC3, 13),
->>>>> +    TEGRA_IO_RAIL_VOLTAGE(AUDIO_HV, 18),
->>>>> +    TEGRA_IO_RAIL_VOLTAGE(DMIC, 20),
->>>>> +    TEGRA_IO_RAIL_VOLTAGE(GPIO, 21),
->>>>> +    TEGRA_IO_RAIL_VOLTAGE(SPI_HV, 23),
->>>>> +};
->>>>
->>>> That table is likely specific to Tegra210, yet ...
->>>>
->>>>> +static int tegra_io_rail_voltage_get_bit_pos(int io_rail_id)
->>>>> +int tegra_io_rail_voltage_set(int io_rail, int val)
->>>>> +int tegra_io_rail_voltage_get(int io_rail)
->>>>
->>>> ... these functions are all named as if they are generic. Presumably
->>>> they will indeed be needed for the next chip too? How will you prevent
->>>> their use, or turn these functions into no-ops, or return errors, on
->>>> other SoCs?
->>>
->>> It will return error for the Soc which does to support or the parameter
->>> to the apis which are not applicable.
->>
->> Are you saying that will happen in the current code? I don't see where
->> there's anything that validates that.
->>
->> Or does "will" mean "I will do that in the next patch revision"?
->
-> I have code like this in this patch
->
->
-> +int tegra_pmc_pad_voltage_update(unsigned long offset, unsigned long mask,
-> +                                unsigned long val)
-> +{
-> +       unsigned long flags;
-> +
-> +       if (!pmc->soc->has_pad_voltage_config)
-> +               return -ENODEV;
-> +
->
->
-> So this flag is try only for T210 and all previous chip has false setting.
+> Which calls of_dma_get_range() to acquire this information from the
+> dma-ranges property and set up the dma ops and properties.
 
-I assume that's in the next patch revision? I don't see it in the 
-patches you posted.
+This seems excessive.  I have to create a platform bus just to configure 
+the DMA mask?  Most drivers just call dma_set_mask and give it a number, 
+and that's not device-tree specific.  I also need to come up with a way 
+to get this to work on ACPI.
+
+I just seems like a lot of work only because I need to determine at 
+runtime what my DMA mask is.  I also don't see any drivers that call 
+of_dma_configure().
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
