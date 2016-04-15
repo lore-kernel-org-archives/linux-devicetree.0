@@ -1,57 +1,154 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
-Date: Fri, 15 Apr 2016 09:52:20 +0100
-Message-ID: <5710ABC4.5070505@arm.com>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
- <570F593D.6040809@arm.com> <20160414192540.GD20512@kroah.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v5 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+ device tree binding documentation
+Date: Fri, 15 Apr 2016 08:52:33 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57739E@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1460524609-8722-1-git-send-email-appanad@xilinx.com>
+ <20160414150413.GA24644@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160414192540.GD20512-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160414150413.GA24644@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmae>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
+
+	Thanks for the review...
+
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Thursday, April 14, 2016 8:34 PM
+> To: Appana Durga Kedareswara Rao <appanad@xilinx.com>
+> Cc: pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> vinod.koul@intel.com; dan.j.williams@intel.com; Appana Durga Kedareswara
+> Rao <appanad@xilinx.com>; moritz.fischer@ettus.com;
+> laurent.pinchart@ideasonboard.com; luis@debethencourt.com; Anirudha
+> Sarangi <anirudh@xilinx.com>; Punnaiah Choudary Kalluri
+> <punnaia@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> dmaengine@vger.kernel.org
+> Subject: Re: [PATCH v5 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+> device tree binding documentation
+> 
+> On Wed, Apr 13, 2016 at 10:46:48AM +0530, Kedareswara rao Appana wrote:
+> > Device-tree binding documentation for Xilinx zynqmp dma engine used in
+> > Zynq UltraScale+ MPSoC.
+> >
+> > Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> > ---
+> > Changes in v5:
+> > - Use dma-coherent flag for coherent transfers as suggested by rob.
+> > - Removed unnecessary properties from binding doc as suggested by Rob.
+> > Changes in v4:
+> > - None
+> > Changes in v3:
+> > - None
+> > Changes in v2:
+> > - None.
+> >
+> >  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  | 50
+> ++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> > new file mode 100644
+> > index 0000000..4ad0aea40
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> > @@ -0,0 +1,50 @@
+> > +Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
+> > +memory to device and device to memory transfers. It also has flow
+> > +control and rate control support for slave/peripheral dma access.
+> > +
+> > +Required properties:
+> > +- compatible		: Should be "xlnx,zynqmp-dma-1.0"
+> > +- reg			: Memory map for gdma/adma module access.
+> > +- interrupt-parent	: Interrupt controller the interrupt is routed through
+> > +- interrupts		: Should contain DMA channel interrupt.
+> > +- xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
+> > +- clock-names		: List of input clocks "clk_main", "clk_apb"
+> > +			  (see clock bindings for details)
+> > +
+> > +Optional properties:
+> > +- xlnx,include-sg	: Indicates the controller to operate in simple or
+> > +			  scatter gather dma mode
+> > +- xlnx,ratectrl		: Scheduling interval in terms of clock cycles for
+> > +			  source AXI transaction
+> > +- xlnx,overfetch	: Tells whether the channel is allowed to over
+> > +			  fetch the data
+> > +- xlnx,src-issue	: Number of AXI outstanding transactions on source
+> side
+> > +- xlnx,desc-axi-cache	: AXI cache bits to be used for descriptor fetch
+> > +- xlnx,src-axi-cache	: AXI cache bits to be used for data read
+> > +- xlnx,dst-axi-cache	: AXI cache bits to be used for data write
+> 
+> Shouldn't you be able to derive these values from whether dma-coherent
+> is set. To put it another way, allowing setting both allows for lots of
+> broken combinations.
+
+Ok will remove these properties and will set these cache bits only 
+When dma-coherent is present in the driver.
+
+> 
+> > +- xlnx,src-burst-len	: AXI length for data read. Support only power of
+> > +			  2 values.
+> > +- xlnx,dst-burst-len	: AXI length for data write. Support only power of
+> > +			  2 values.
+> 
+> What unit? Seems to be beats from the example. I would suggest bytes
+> instead.
+
+Bytes only will fix in next version...
 
 
-On 14/04/16 20:25, Greg KH wrote:
-> On Thu, Apr 14, 2016 at 09:47:57AM +0100, Vladimir Murzin wrote:
->> Hi,
->>
->> On 01/04/16 15:02, Vladimir Murzin wrote:
->>> Hi,
->>>
->>> This patch series provides the basic support for running ucLinux on V2M-MPS2
->>> platform.
->>>
->>> With these patches applied ucLinux can be run on both HW and FVP models
->>> with Cortex-M3/M4/M7 configurations.
->>
->> Any objection to get it merged?
->>
->> Sudeep Holla noticed that there is merge conflict against linux-next
->> with PIC32 uart (Makefile and serial_core.h), so should I provide
->> conflict resolution or do rebase on someone's branch?
->>
->> Anyway, I'd be glad to know how it should be processed further?
->
-> I have no objection to the tty/serial changes, so if this all goes
-> through the arm-soc tree, that's fine with me.
->
+> 
+> > +- dma-coherent		: Present if dma operations are coherent.
+> > +
+> > +Example:
+> > +++++++++
+> > +fpd_dma_chan1: dma@FD500000 {
+> 
+> lowercase address.
 
-Thanks Greg, can I take this as Ack ? arm-soc guys might expect to see
-that tag :)
+Will fix in next version.
+> 
+> > +	compatible = "xlnx,zynqmp-dma-1.0";
+> > +	reg = <0x0 0xFD500000 0x1000>;
+> > +	interrupt-parent = <&gic>;
+> > +	interrupts = <0 117 4>;
+> > +	clock-names = "clk_main", "clk_apb";
+> > +	xlnx,bus-width = <128>;
+> > +	xlnx,include-sg;
+> > +	xlnx,overfetch;
+> > +	dma-coherent;
+> > +	xlnx,ratectrl = <0>;
+> > +	xlnx,src-issue = <16>;
+> > +	xlnx,desc-axi-cache = <0xFF>;
+> > +	xlnx,src-axi-cache = <0xFF>;
+> > +	xlnx,dst-axi-cache = <0xFF>;
+> 
+> Last I checked, AXI only has 4 cache bits.
 
-Hi Vladimir,
+Hmm wrong example anyway will remove these properties in the next version...
 
-I have pulled this series into
-git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git 
-for-next/armv7-vexpress-updates
-
-I will stick Greg's tag when it comes.
-
--- 
 Regards,
-Sudeep
+Kedar.
+
+> 
+> > +	xlnx,src-burst-len = <4>;
+> > +	xlnx,dst-burst-len = <4>;
+> > +};
+> > --
+> > 2.1.2
+> >
