@@ -1,33 +1,53 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] Add EDAC peripheral init functions & Ethernet EDAC.
-Date: Fri, 15 Apr 2016 23:46:18 +0200
-Message-ID: <20160415214618.GB4545@cz.tnic>
-References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
- <20160414143501.GA25212@rob-hp-laptop>
- <20160415064042.330406ab.m.chehab@samsung.com>
- <5711087A.8050501@opensource.altera.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 1/2 v2] device-tree: nexus7-flo: Remove power gpio key
+ entry and use pmic8xxx-pwrkey
+Date: Fri, 15 Apr 2016 14:58:26 -0700
+Message-ID: <CALAqxLVjULOD8SyhJkV7zREFqJA0w6LyU4udXEsXKqtXqbHPUg@mail.gmail.com>
+References: <1460668031-12384-1-git-send-email-john.stultz@linaro.org>
+	<20160415172212.GW391@tuxbot>
+	<20160415185927.GN14441@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5711087A.8050501@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh@kernel.org>, dougthompson@xmission.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160415185927.GN14441@codeaurora.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Stephen Boyd <stephen.boyd@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 15, 2016 at 10:27:54AM -0500, Thor Thayer wrote:
-> I'll update this patch to only count errors.
+On Fri, Apr 15, 2016 at 11:59 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> From: Stephen Boyd <sboyd@codeaurora.org>
+> Subject: [PATCH] Input: pmic8xxx-pwrkey: Fix algorithm for converting trigger
+>  delay
+>
+> The trigger delay algorithm that converts from microseconds to
+> the register value looks incorrect. According to most of the PMIC
+> documentation, the equation is
+>
+>         delay (Seconds) = (1 / 1024) * 2 ^ (x + 4)
+>
+> except for one case where the documentation looks to have a
+> formatting issue and the equation looks like
+>
+>         delay (Seconds) = (1 / 1024) * 2 x + 4
+>
+> Most likely this driver was written with the improper
+> documentation to begin with. According to the downstream sources
+> the valid delays are from 2 seconds to 1/64 second, and the
+> latter equation just doesn't make sense for that. Let's fix the
+> algorithm and the range check to match the documentation and the
+> downstream sources.
+>
+> Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Fixes: 92d57a73e410 ("input: Add support for Qualcomm PMIC8XXX power key")
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 
-... and also think about what that counting is going to bring. If it is
-only going to be there to show how many network errors happened and we
-can't do anything about it except stare at that number, then adding all
-that code is probably waste of time an electrons...
+This works great for me, and lets me zap the pwrkey node in my dts.
 
-I'm just sayin'.
+Tested-by: John Stultz <john.stultz@linaro.org>
 
--- 
-Regards/Gruss,
-    Boris.
+I'll also send an updated variant of my patch that only removes the gpio key.
 
-ECO tip #101: Trim your mails when you reply. Srsly.
+thanks!
+-john
