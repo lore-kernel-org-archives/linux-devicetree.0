@@ -1,31 +1,221 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V10 0/6] Add support for MAXIM MAX77620/MAX20024 PMIC
-Date: Fri, 15 Apr 2016 22:27:23 +0530
-Message-ID: <57111D73.6070609@nvidia.com>
-References: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
+From: "Martin Ayotte" <martinayotte@gmail.com>
+Subject: [PATCH v1 1/1] add missing UARTs pins for AllWinner H3 DTS + add new I2C entries for AllWinner H3 DTS
+Date: Fri, 15 Apr 2016 13:11:08 -0400
+Message-ID: <8673D89D449742EAB9F6EBD05655A295@GirolesWin7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain;
+	charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, treding@nvidia.com
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, maxime.ripard@free-electrons.com
+Cc: jwrdegoede@fedoraproject.org, wens@csie.org, jenskuske@gmail.com, moinejf@free.fr, martinayotte@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi everyone,
 
-On Wednesday 30 March 2016 07:59 PM, Laxman Dewangan wrote:
-> Add SW support for MAXIM Semiconductor's Power Management
-> IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
-> RTC, watchdog, clocks etc.
->
-> This series add respective driver for each of sub-modules.
->
+This patch is submit to provide endusers access to additional UARTs on
+AllWinner H3 SoC along with I2C ports.
 
+Regards,
+Martin.
+---
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts  | 36 ++++++++++++++
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 36 ++++++++++++++
+ arch/arm/boot/dts/sun8i-h3.dtsi            | 75
+++++++++++++++++++++++++++++++
+ 3 files changed, 147 insertions(+)
 
-Can you please review this series?
-Let me know if I need to send it again?
-
-Thanks,
-Laxman
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+index f93f5d1..f0b9823 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+@@ -176,6 +176,42 @@
+ 	status = "okay";
+ };
+ 
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins_a>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins_a>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins_a>;
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
+ &usb1_vbus_pin_a {
+ 	allwinner,pins = "PG13";
+ };
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+index daf50b9a6..6994349 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+@@ -161,6 +161,42 @@
+ 	status = "okay";
+ };
+ 
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins_a>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins_a>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins_a>;
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
+ &usbphy {
+ 	/* USB VBUS is always on */
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi
+b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 4a4926b..c947360d 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -508,6 +508,48 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
++			uart1_pins_a: uart1@0 {
++				allwinner,pins = "PG6", "PG7";
++				allwinner,function = "uart1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart2_pins_a: uart2@0 {
++				allwinner,pins = "PA0", "PA1";
++				allwinner,function = "uart2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_pins_a: uart3@0 {
++				allwinner,pins = "PA13", "PA14";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c0_pins_a: i2c0@0 {
++				allwinner,pins = "PA11", "PA12";
++				allwinner,function = "i2c0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c1_pins_a: i2c1@0 {
++				allwinner,pins = "PA18", "PA19";
++				allwinner,function = "i2c1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c2_pins_a: i2c2@0 {
++				allwinner,pins = "PE12", "PE13";
++				allwinner,function = "i2c2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			mmc0_pins_a: mmc0@0 {
+ 				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
+ 						 "PF4", "PF5";
+@@ -626,6 +668,39 @@
+ 			status = "disabled";
+ 		};
+ 
++		i2c0: i2c@01c2ac00 {
++			compatible = "allwinner,sun6i-a31-i2c";
++			reg = <0x01c2ac00 0x400>;
++			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 96>;
++			resets = <&apb2_rst 0>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c1: i2c@01c2b000 {
++			compatible = "allwinner,sun6i-a31-i2c";
++			reg = <0x01c2b000 0x400>;
++			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 97>;
++			resets = <&apb2_rst 1>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2: i2c@01c2b400 {
++			compatible = "allwinner,sun6i-a31-i2c";
++			reg = <0x01c2b400 0x400>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&bus_gates 98>;
++			resets = <&apb2_rst 2>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		gic: interrupt-controller@01c81000 {
+ 			compatible = "arm,cortex-a7-gic",
+"arm,cortex-a15-gic";
+ 			reg = <0x01c81000 0x1000>,
+-- 
+2.7.4
