@@ -1,46 +1,102 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] rtc: omap: Support ext_wakeup configuration
-Date: Fri, 15 Apr 2016 20:18:03 +0300
-Message-ID: <5711224B.5030902@ti.com>
-References: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
- <20160404224046.GA17042@atomide.com> <57078A89.3080809@ti.com>
- <20160408151408.GS16484@atomide.com> <5707E764.7050204@ti.com>
- <570D2F79.9040202@grinn-global.com> <57111AF4.6070505@ti.com>
- <57111C5A.7070606@ti.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2 v2] device-tree: nexus7-flo: Remove power gpio key
+ entry and use pmic8xxx-pwrkey
+Date: Fri, 15 Apr 2016 10:22:12 -0700
+Message-ID: <20160415172212.GW391@tuxbot>
+References: <1460668031-12384-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57111C5A.7070606-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460668031-12384-1-git-send-email-john.stultz@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu 14 Apr 14:07 PDT 2016, John Stultz wrote:
 
-Hi Nishanth,
+> Since the pmic8xxx-pwrkey driver is already supported in the
+> qcom-apq8064.dtsi, and the pmic8xxx-pwrkey supports logic to
+> configure proper device shutdown when ps_hold goes low, it is
+> better to use that driver then a generic gpio button.
+> 
+> Thus this patch remove the gpio power key entry here, so we
+> don't get double input events from having two drivers enabled.
+> 
 
-On 04/15/2016 07:52 PM, Nishanth Menon wrote:
-> On 04/15/2016 11:46 AM, Grygorii Strashko wrote:
-> [...]
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index 13ac882..9580c82 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->
-> I see this is an example of what could be done on am335x - but lets
-> not do this on dra7/am57xx please?
->
->
+This part has my ack.
 
-Don't panic. It's just an example ;)
-Late Friday is here, and it was the first available board.
+> The one gotcha with the pmic8xxx-pwrkey is it has a fairly
+> long debounce delay, which we shorten here to make the button
+> behave as expected.
+> 
 
-Sry, that I made you worry. ;)
+It's set to 15ms, so this sounds like a bug.
 
--- 
-regards,
--grygorii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd.bergmann@linaro.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Andy Gross <agross@codeaurora.org>
+> Cc: Vinay Simha BN <simhavcs@gmail.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Stephen Boyd <stephen.boyd@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+
+You don't have to mention everyone here...
+
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v2:
+>  - Add wakeup-source entry as suggested by
+>    Sudeep Holla <sudeep.holla@arm.com>
+> 
+>  arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+[..]
+> @@ -190,6 +184,16 @@
+>  			};
+>  		};
+>  
+> +		/* override default debounce for power-key */
+> +		qcom,ssbi@500000 {
+> +			pmic@0 {
+> +				pwrkey@1c {
+> +					debounce = <1>;
+
+The debounce is specified in microseconds, so if the 15625us that's
+specified in the dtsi is too much for you we have a bug in the driver.
+
+Further, comparing the math with downstream indicates that we're quite
+off.
+
+Could you please try the downstream calculation of "delay", by changing
+pmic8xxx_pwrkey_probe() to include:
+
+	delay = (kpb_delay << 6) / USEC_PER_SEC;
+	delay = ilog2(delay);
+
+Unfortunately I don't have the register documentation for this pmic.
+
+Stephen, can you shed some light on the trig-delay (what I presume is
+the bark timer in later versions) bits in PON_CNTRL_1 (0x1c) on PM8921.
+
+> +					wakeup-source;
+
+The driver already enables wakeup on itself, so I don't think this
+should be necessary (i.e. you should be able to drop this entire node
+from the dts).
+
+> +				};
+> +			};
+> +		};
+> +
+
+Regards,
+Bjorn
