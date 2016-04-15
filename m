@@ -1,59 +1,76 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [RESEND PATCH v4] clk/axs10x: Add I2S PLL clock driver
-Date: Fri, 15 Apr 2016 12:08:37 +0000
-Message-ID: <1460722116.3025.40.camel@synopsys.com>
-References: <50c75be8ecab225a1dd49628a173d211a02755b2.1459791946.git.joabreu@synopsys.com>
-	 <1460393270.5119.20.camel@synopsys.com>
-	 <20160411220320.GB14441@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller driver
+Date: Fri, 15 Apr 2016 07:35:52 -0500
+Message-ID: <CAL_JsqLJffKzvMZTSLf+OESufDjrcMBd27fP5yh1R61=irXxcg@mail.gmail.com>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com> <571012E6.6050303@codeaurora.org> <57102920.7000104@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-7"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160411220320.GB14441@codeaurora.org>
-Content-Language: en-US
-Content-ID: <115F197246EB1747B3250B2A13232C99@internal.synopsys.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: "sboyd@codeaurora.org" <sboyd@codeaurora.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57102920.7000104@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi+AKA-Stephen,
+On Thu, Apr 14, 2016 at 6:34 PM, Timur Tabi <timur@codeaurora.org> wrote:
+> Vikram Sethi wrote:
+>>>>
+>>>> >>     retval = dma_coerce_mask_and_coherent(&pdev->dev,
+>>>> >> DMA_BIT_MASK(64));
+>>>> >>     if (retval) {
+>>>> >>         dev_err(&pdev->dev, "failed to set DMA mask err %d\n",
+>>>> >> retval);
+>>>> >>         goto err_res;
+>>>> >>     }
+>>
+>> How can you set the mask to 64 bits when the EMAC IP on FSM9900 and
+>> QDF2432 can only do 32 bit DMA?
+>> The mask in that API is a bit mask describing which bits of an address
+>> your device supports.
+>
+>
+> Vikram, Shanker, and I discussed this offline, and came to a consensus.
+>
+> The FSM9900 is a 32-bit platform, so the kernel will never create a DMA
+> address above 4GB. Even if the driver sets the mask to 64 bits, it will
+> technically work.  However, the mask should be set to 32 because all address
+> buses are 32 bits.
+>
+> The QDF2432 is different.  Although it's an ARM64 platform, we have the
+> unfortunate situation that only 32 bits of that address is wired to the rest
+> of the chip.  So even though the Emac can handle 64-bit bus addresses, if it
+> actually attempts to DMA above 4GB, the address will get truncated and
+> corrupt memory.  The mask needs to be set to 32.
+>
+> There may or may not be other ARM64 chips from us that won't have this
+> problem in the future, so these hypothetical chips would have a mask of 64.
+>
+> So I think the solution is to create a device tree (and ACPI) property that
+> holds the mask.
+>
+>         dma-mask = <0 0xffffffff>;
+>
+> or
+>
+>         dma-mask = <0xffffffff 0xffffffff>;
 
-On Mon, 2016-04-11 at 15:03 -0700, sboyd+AEA-codeaurora.org wrote:
-+AD4- On 04/11, Alexey Brodkin wrote:
-+AD4- +AD4- 
-+AD4- +AD4- On Mon, 2016-04-11 at 11:41 +-0100, Jose Abreu wrote:
-+AD4- +AD4- +AD4- 
-+AD4- +AD4- +AD4- +- +ACo- warranty of any kind, whether express or implied.
-+AD4- +AD4- +AD4- +- +ACo-/
-+AD4- +AD4- +AD4- +-
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/platform+AF8-device.h+AD4-
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/module.h+AD4-
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/clk-provider.h+AD4-
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/err.h+AD4-
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/device.h+AD4-
-+AD4- +AD4- +ACI-linux/platform+AF8-device.h+ACI- includes +ACI-linux/device.h+ACI- so you may make this list of headers
-+AD4- +AD4- a little bit shorter.
-+AD4- +AD4- 
-+AD4- +AD4- +AD4- 
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/of+AF8-address.h+AD4-
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/slab.h+AD4-
-+AD4- +AD4- +AD4- +-+ACM-include +ADw-linux/of.h+AD4-
-+AD4- +AD4- +ACI-linux/of+AF8-address.h+ACI- already includes +ACI-linux/of.h+ACI-.
-+AD4- It's ok to include things twice. In fact, its better to avoid any
-+AD4- implicit includes so that if we ever want to remove includes from
-+AD4- other headers we can do so without disturbing this driver.
+No. See dma-ranges.
 
-IMHO approach with minimal amount of headers is nice just because
-it's easier to check if everything is in place. I mean attempt to compile
-will immediately reveal a missing header.
+Rob
 
-So that's what I do - I remove as many inclusions as I may until stuff compiles.
-
-But with approach of explicit inclusion it's much easier to include
-much more headers than really needed. The only way to figure out if header is really
-required is to manually check all used functions in the current source
-which is way too unreliable and probably nobody will do it ever anyways.
-And that's how we'll get more stale and pointless inclusions.
-
--Alexey
+>
+> The driver will then do this:
+>
+>         u64 dma_mask;
+>         device_property_read_u64(&pdev->dev, "dma-mask", &dma_mask);
+>         dma_coerce_mask_and_coherent(&pdev->dev, dma_mask);
+>
+> What I'm not sure yet is whether I should call
+> dma_coerce_mask_and_coherent() or dma_set_coherent_mask().
+>
+> --
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+> Forum, a Linux Foundation collaborative project.
