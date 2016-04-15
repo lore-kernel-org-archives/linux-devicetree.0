@@ -1,52 +1,65 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 4/7] soc/tegra: pmc: Add interface to set voltage of IO
- rails
-Date: Fri, 15 Apr 2016 21:51:56 +0530
-Message-ID: <57111524.60708@nvidia.com>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com> <1460473007-11535-5-git-send-email-ldewangan@nvidia.com> <571115CE.50906@wwwdotorg.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 6/8] clk: samsung: exynos542x: Add the clock id for ACLK
+Date: Fri, 15 Apr 2016 18:34:30 +0200
+Message-ID: <57111816.8080808@samsung.com>
+References: <1460701975-24178-1-git-send-email-cw00.choi@samsung.com>
+ <1460701975-24178-7-git-send-email-cw00.choi@samsung.com>
+ <5710AEF2.3040800@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <571115CE.50906@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <5710AEF2.3040800@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, tomasz.figa@gmail.com, kgene@kernel.org, robh@kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Friday 15 April 2016 09:54 PM, Stephen Warren wrote:
-> On 04/12/2016 08:56 AM, Laxman Dewangan wrote:
->> NVIDIA Tegra210 supports some of the IO interface which can operate
->> at 1.8V or 3.3V I/O rail voltage levels. SW needs to configure
->> Tegra PMC register to set different voltage level of IO interface based
->> on IO rail voltage from power supply i.e. power regulators.
+On 04/15/2016 11:05 AM, Krzysztof Kozlowski wrote:
+> On 04/15/2016 08:32 AM, Chanwoo Choi wrote:
+>> This patch adds the clock id for ACLK clock which is source clock of AMBA AXI
+>> Bus. This clock should be handled in Bus frequency scaling driver.
 >>
->> Add APIs to set and get IO rail voltage from the client driver.
->
->> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->
->> +static struct tegra_io_rail_voltage_bit_info 
->> tegra210_io_rail_voltage_info[] = {
->> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC1, 12),
->> +    TEGRA_IO_RAIL_VOLTAGE(SDMMC3, 13),
->> +    TEGRA_IO_RAIL_VOLTAGE(AUDIO_HV, 18),
->> +    TEGRA_IO_RAIL_VOLTAGE(DMIC, 20),
->> +    TEGRA_IO_RAIL_VOLTAGE(GPIO, 21),
->> +    TEGRA_IO_RAIL_VOLTAGE(SPI_HV, 23),
->> +};
->
-> That table is likely specific to Tegra210, yet ...
->
->> +static int tegra_io_rail_voltage_get_bit_pos(int io_rail_id)
->> +int tegra_io_rail_voltage_set(int io_rail, int val)
->> +int tegra_io_rail_voltage_get(int io_rail)
->
-> ... these functions are all named as if they are generic. Presumably 
-> they will indeed be needed for the next chip too? How will you prevent 
-> their use, or turn these functions into no-ops, or return errors, on 
-> other SoCs?
+>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+>> Tested-by: Anand Moon <linux.amoon@gmail.com>
+>> ---
+>>  drivers/clk/samsung/clk-exynos5420.c | 77 ++++++++++++++++++++++--------------
+>>  1 file changed, 47 insertions(+), 30 deletions(-)
+> 
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-It will return error for the Soc which does to support or the parameter 
-to the apis which are not applicable.
+I applied patches 5/8 and 6/8 onto a stable topic branch. Below are
+details if they need to be pulled into any other subsystem tree.
 
+
+The following changes since commit f55532a0c0b8bb6148f4e07853b876ef73bc69ca:
+
+  Linux 4.6-rc1 (2016-03-26 16:03:24 -0700)
+
+are available in the git repository at:
+
+  git://linuxtv.org/snawrocki/samsung.git tags/clk-v4.7-exynos542x
+
+for you to fetch changes up to 81fed6e342c04a4ecb0650c914d24bd57c6c168f:
+
+  clk: samsung: exynos542x: Add the clock id for ACLK (2016-04-15 18:13:45 +0200)
+
+----------------------------------------------------------------
+Addition of IDs for Exynos542x SoC AMBA AXI bus clocks.
+
+----------------------------------------------------------------
+Chanwoo Choi (2):
+      dt-bindings: clock: Add the clock id for ACLK clock of Exynos542x SoC
+      clk: samsung: exynos542x: Add the clock id for ACLK
+
+ drivers/clk/samsung/clk-exynos5420.c   | 77
++++++++++++++++++++++++++++++++++++++++++++++++------------------------------
+ include/dt-bindings/clock/exynos5420.h | 24 +++++++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 31 deletions(-)
+
+-- 
+Regards,
+Sylwester
