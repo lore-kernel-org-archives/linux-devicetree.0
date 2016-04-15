@@ -1,62 +1,48 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH] Add EDAC peripheral init functions & Ethernet EDAC.
-Date: Fri, 15 Apr 2016 10:27:54 -0500
-Message-ID: <5711087A.8050501@opensource.altera.com>
-References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
- <20160414143501.GA25212@rob-hp-laptop>
- <20160415064042.330406ab.m.chehab@samsung.com>
-Reply-To: <tthayer@opensource.altera.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
+Date: Fri, 15 Apr 2016 20:44:32 +0530
+Message-ID: <57110558.8010209@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com> <1460473007-11535-7-git-send-email-ldewangan@nvidia.com> <5710F7A4.5070902@nvidia.com> <5710F6CA.6060700@nvidia.com> <57110560.80004@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160415064042.330406ab.m.chehab@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh@kernel.org>
-Cc: bp@alien8.de, dougthompson@xmission.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57110560.80004-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 04/15/2016 04:40 AM, Mauro Carvalho Chehab wrote:
-> Em Thu, 14 Apr 2016 09:35:01 -0500
-> Rob Herring <robh@kernel.org> escreveu:
->
->> On Tue, Apr 12, 2016 at 05:12:55PM -0500, tthayer@opensource.altera.com wrote:
->>> This patch set adds the memory initialization functions for Altera's
->>> Arria10 peripherals, the first of which is the Ethernet EDAC. The
->>> first 3 patches add the memory initialization functionality. The
->>> last 3 patches add Ethernet EDAC support.
+On Friday 15 April 2016 08:44 PM, Jon Hunter wrote:
+> On 15/04/16 15:12, Laxman Dewangan wrote:
 >>
->> The ethernet part seems a bit strange to me to put under EDAC as EDAC
->> is primarily memory controller ECC (and caches to some extent). Also you
->> would not halt the system in case of an UC, but rather just drop the
->> frame. This would need to be part of the ethernet driver in that case.
 >>
->> Of course, given that ethernet frames already have a CRC, ECC of the
->> FIFO seems a bit redundant.
+>> All CSI pads are lined to single IO rail.
+> I agree with this and from the data-sheet I see the rail that powers the
+> CSI (and DSI) interfaces is called AVDD_DSI_CSI. But again, in the DT
+> document you are referring to csia, csib, csic, csid, csie, csif as
+> pins, but these don't appear to be physical pins, and this appears to be
+> more of a software means to control power to the various csi_x pins.
 >
-> Actually, EDAC was conceived to be a way to report hardware errors, and,
-> although the main use case is for memory and CPU errors, there are a few
-> drivers that report errors at PCI bus. So, I don't see much problems using
-> it to report other hardware errors, like the ones associated with the
-> Ethernet hardware.
->
-> That's said, things like Ethernet frame errors are better handled via the
-> network drivers. I would report via EDAC only errors associated with the
-> Ethernet hardware that would cause the hardware to malfunction.
->
-> Btw, an UC error won't cause the system to halt, except if a UC memory
-> error happens and the EDAC core is loaded with an special modprobe
-> parameter (edac_mc_panic_on_ue = 1).
->
-Thank you for the clarification. Rob's comment was logical and made me 
-re-think this. He pointed out that I was causing a kernel panic in the 
-case of Uncorrectable errors which is not the desired response and will 
-need to change.
+> It seems to me that each of the existing CSI_A_xxx pins/pads should be
+> mapped to or register with the appropriate power-down control and when
+> all pads are set to inactive this then triggers the power-down of all
+> the CSI_A_xxx pads.
 
-I'll update this patch to only count errors. I'll need to re-think how 
-the network driver can be alerted that there was an uncorrectable error 
-but that could be a later patch.
+I used pins as this is the property from pincon generic so that I can 
+use the generic implementation.
 
-Great feedback. Thank you Mauro and Rob for reviewing and commenting!
+Here, I will not go to the pin level control as HW does not support pin 
+level control.
+
+I will say the unit should be interface level. Should we say 
+IO_GROUP_CSIA, IO_GROUP_CSIB etc?
+
+
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
