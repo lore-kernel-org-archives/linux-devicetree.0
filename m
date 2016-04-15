@@ -1,36 +1,81 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
- driver
-Date: Fri, 15 Apr 2016 13:22:23 -0500
-Message-ID: <5711315F.3000302@codeaurora.org>
-References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
- <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
- <57100962.40404@gmail.com> <571012E6.6050303@codeaurora.org>
- <57102920.7000104@codeaurora.org> <20160415164433.GV391@tuxbot>
- <57111E33.606@codeaurora.org> <20160415173529.GY391@tuxbot>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 6/7] pinctrl: tegra: Add DT binding for io pads control
+Date: Fri, 15 Apr 2016 19:30:24 +0100
+Message-ID: <57113340.6090701@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
+ <1460473007-11535-7-git-send-email-ldewangan@nvidia.com>
+ <5710F7A4.5070902@nvidia.com> <5710F6CA.6060700@nvidia.com>
+ <57110560.80004@nvidia.com> <57110558.8010209@nvidia.com>
+ <57110CA4.6050903@nvidia.com> <571119C6.6000107@nvidia.com>
+ <5711288D.7060701@nvidia.com> <571129B9.7050602@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160415173529.GY391@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Vikram Sethi <vikrams@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <571129B9.7050602@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Bjorn Andersson wrote:
-> Your driver is a platform driver and it's being probed from DT. As such
-> all this is already taken care of for you, by the core.
->
-> The listing is for your reference to know why the dma-ranges property
-> would affect your device.
 
-Ah, sorry. I misunderstood what you meant by "you will pass".
+On 15/04/16 18:49, Laxman Dewangan wrote:
+> 
+> On Friday 15 April 2016 11:14 PM, Jon Hunter wrote:
+>> On 15/04/16 17:41, Laxman Dewangan wrote:
+>>> On Friday 15 April 2016 09:15 PM, Jon Hunter wrote:
+>>>> On 15/04/16 16:14, Laxman Dewangan wrote:
+>>>>> I used pins as this is the property from pincon generic so that I can
+>>>>> use the generic implementation.
+>>>>>
+>>>>> Here, I will not go to the pin level control as HW does not support
+>>>>> pin
+>>>>> level control.
+>>>>>
+>>>>> I will say the unit should be interface level. Should we say
+>>>>> IO_GROUP_CSIA, IO_GROUP_CSIB etc?
+>>>> So we need to reflect the hardware in device-tree and although yes the
+>>>> power-down for the CSI_x_xxx pads are all controlled together as a
+>>>> single group, it does not feel right that we add a pseudo pin called
+>>>> csix to represent these.
+>>>>
+>>>> The CSI_x_xxx pads are already in device-tree and so why not add a
+>>>> property to each of these pads which has the IO rail information for
+>>>> power-down and voltage-select?
+>>> Which dt binding docs have these?
+>>> I looked for nvidia,tegra210-pinmux.txt and not able to find csi_xxx.
+>> For CSI you are right they are not included by the current DT binding
+>> docs, however, the sdmmc1/3 pads are. So that makes things a bit more
+>> messy as some are and some are not.
+> 
+> Yaah and so lets have the names in new dt files. Names may be same but
+> define all possible names f groups in dt binding and need not to refer
+> from other file which does not have all.
 
-Coincidentally, it looks like Lorenzo Pieralisi has posted patches the 
-ACPI equivalent just yesterday: https://lkml.org/lkml/2016/4/14/694
+I still do not like that. In the case of sdmmc we now have two pinctrl
+drivers to deal with for a single set of pins. That does not seem
+correct IMO.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+>>> Here I dont want to refer the individual pins as control should be as
+>>> group.
+>> I understand, however, at least for power-down control I don't see why
+>> we cannot refer to the individual pins and once all are inactive then
+>> the rail can be powered down.
+>>
+>> For switching the voltage it is a bit more complex, but may be we could
+>> still look-up the IO rail based upon the pads the device uses.
+>>
+> 
+> Yes, it can be done with ref count also for power down.
+
+Exactly.
+
+> But interfaces are complex. As a client, it is easy to say power down
+> SDMMC1 IO interface rather than saying power down 10 pins (names) of
+> that group.
+
+Right and like I said, we could always look up the IO rail from the pins
+associated once at probe time and then control it from there.
+
+Cheers
+Jon
