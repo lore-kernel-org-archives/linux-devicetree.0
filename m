@@ -1,128 +1,49 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC
- NAND on non-OMAP platforms
-Date: Fri, 15 Apr 2016 18:05:31 +0200
-Message-ID: <20160415180531.15d790d2@bbrezillon>
-References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
-	<20160413212500.GD5995@atomide.com>
-	<5710B58C.7050108@ti.com>
-	<20160415120942.3131eac1@bbrezillon>
-	<5710C86A.9060108@ti.com>
-	<20160415135108.63716f06@bbrezillon>
-	<20160415154139.GS5995@atomide.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v8 00/45] powerpc/powernv: PCI hotplug support
+Date: Fri, 15 Apr 2016 11:10:21 -0500
+Message-ID: <CAL_JsqKc2i6rDGYXvEzQRJ4fxi=xqXTG4ngtNkFR+XkEaWDU1Q@mail.gmail.com>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <570E0E13.6080409@ozlabs.ru> <20160413234246.GA5330@gwshan>
+ <8771729.bnzLL9sLJY@new-mexico> <20160414013052.GA23214@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160415154139.GS5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160414013052.GA23214@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: Alistair Popple <alistair@popple.id.au>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Alexey Kardashevskiy <aik@ozlabs.ru>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, dja@axtens.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Wed, Apr 13, 2016 at 8:30 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+> On Thu, Apr 14, 2016 at 09:57:32AM +1000, Alistair Popple wrote:
+>>Hi Gavin,
+>>
+>><snip>
+>>
+>>> >Why exactly cannot EEH reset changes go to a smaller separate patchset
+>>> >(before hotplug)?
+>>> >
+>>>
+>>> As I explained before, the patchset's order is: PCI generic part,
+>>> PowerNV PCI related, EEH related, device-tree part and hotplug driver.
+>>>
+>>> The EEH reset change is included in PATCH[37/45]. There is no point
+>>> to reorder the patches.
+>>
+>>I don't understand all of the dependencies but if possible splitting the
+>>series up into a set of smaller self-contained patch series makes things
+>>easier to review and may make it easier for you to get this functionality
+>>reviewed and accepted into upstream.
+>>
+>
+> Thanks, Alistair. I will move those cleanup/refactor related patches
+> to form a separate series which is expected to be merged first. That
+> will helps the reviewers to focus on the patches with complicated
+> changes as you suggested. Alexey, please let me know if that way is
+> you like to see or not.
 
-On Fri, 15 Apr 2016 08:41:40 -0700
-Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+As I said last cycle, I'll happily take the DT refactoring patches
+separately, but you have to tell me if you want me to apply them and
+it has to be well before the merge window.
 
-> * Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> [160415 04:52]:
-> > Roger, Tony,
-> > 
-> > On Fri, 15 Apr 2016 13:54:34 +0300
-> > Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
-> > 
-> > > On 15/04/16 13:09, Boris Brezillon wrote:
-> > > > Hi Roger,
-> > > > 
-> > > > On Fri, 15 Apr 2016 12:34:04 +0300
-> > > > Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
-> > > > 
-> > > >> Tony & Boris,
-> > > >>
-> > > >> On 14/04/16 00:25, Tony Lindgren wrote:
-> > > >>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160407 03:10]:
-> > > >>>> Hi,
-> > > >>>>
-> > > >>>> As this series has cross dependency between omap and mtd subsystems,
-> > > >>>> I'll set up a immutable branch which omap-soc and l2-mtd must
-> > > >>>> merge in together to avoid any conflicts/breakage during integration.
-> > > >>>>
-> > > >>>> Brian has acked all mtd patches. Tony needs to give his Ack for the
-> > > >>>> gpmc driver part and then I can provide the immutable branch.
-> > > >>>
-> > > >>> Looks good to me, please feel free to add:
-> > > >>>
-> > > >>> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> > > >>>
-> > > >>
-> > > >> I've added Tony and Rob's Acked-by tags and pushed the patches at the
-> > > >> below PULL request.
-> > > >>
-> > > >> Please take this into omap-soc and l2-mtd trees. Thanks.
-> > > > 
-> > > > I Pulled this branch into nand/next and had to resolve a few conflicts
-> > > > (as you may have noticed, a few other reworks in the NAND and MTD layer
-> > > > have been merged in the meantime).
-> > > 
-> > > OK. I'm not sure how well this will play when this merges into liunx-next
-> > > via the omap-soc tree.
-> > > 
-> > > Instead, can you please create a non-mutable nand/base for me (which could be
-> > > today's nand/next) and I can base my branch on that and Tony can use my
-> > > branch without causing any merge-conflict in linux-next?
-> > 
-> > I just created a branch called nand/for-gpmc-rework based on today's
-> > nand/next, but I'm still unsure how to proceed once you've rebased your
-> > work on this branch?
-> > 
-> > Tony will first have to pull my immutable branch, then pull yours, and
-> > then I'll have to pull an immutable branch from the the omap-soc tree
-> > to get your changes into my nand/next branch (in case other patches
-> > modify the same files before I send my PR). Am I missing something?
-> > If I'm not, then this option looks over-complicated to me.
-> 
-> Well why don't you merge it all via NAND then? I'm not seeing
-> any merge conflicts with the arch/arm/mach-omap* code.
-
-I'm perfectly fine with that. Actually, that's what I first did (see the
-nand/next-with-gpmc-rework I asked Roger to validate).
-Roger, since you don't have any dependencies on omap stuff added after
-4.6-rc1, I could even rebase your patches on top of nand/next to avoid
-this merge commit (and the associated conflict resolution).
-
-> 
-> > ITOH, if we decide to let your patches go through the nand or omap-soc
-> > tree, only one immutable branch will be created, and either the nand or
-> > omap-soc maintainer (depending on who takes the patches) will have to
-> > pull it into its -next branch.
-> > 
-> > I'm quite new to all this merging process, so don't hesitate to correct
-> > me if I'm wrong.
-> 
-> Well the rules are that if something agreed to be immutable, then
-> it will never get redone. And the immutable branch should be based
-> on the absolute minimal set of patches against some earlier tag,
-> usually -rc1 is a good one. This avoids other tree to need to pull
-> in a huge amount of changes from other trees just to avoid merge
-> conflicts.
-
-How would you do it in this particular case. Say I have to provide you
-with an immutable branch, it should only contain Roger's patches, right?
-
-But this also means this immutable branch has to be pulled into my
-nand/next branch before all other changes touching the same set of
-files, which in turn means that I'll have to rebase and push -f my
-nand/next branch (which I'd like to avoid).
-Or should I just pull this immutable branch in my current nand/next and
-let you pull the same immutable branch in omap-soc. I mean, would this
-prevent conflicts when our branches are merged into linux-next, no
-matter the order.
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
