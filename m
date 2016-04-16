@@ -1,45 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] phy: Add a driver for simple phy
-Date: Sat, 16 Apr 2016 21:50:26 +0200
-Message-ID: <4848615.OezLJod6Cv@wuerfel>
-References: <1447708924-15076-1-git-send-email-albeu@free.fr> <1447708924-15076-2-git-send-email-albeu@free.fr> <570F303A.6030605@ti.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: Allocation of frame buffer at a specific memory range or address
+Date: Sat, 16 Apr 2016 17:48:04 -0400
+Message-ID: <CAF6AEGv5p_t_dWhE0J67Jx0pg=jB07E95j5nq=N3VfvEi+YHhQ@mail.gmail.com>
+References: <1460735338.3248.21.camel@synopsys.com>
+ <5711D698.4030606@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <570F303A.6030605-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5711D698.4030606@synopsys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 April 2016 11:22:58 Kishon Vijay Abraham I wrote:
-> 
-> IMO simple-phy driver should be an independent driver and shouldn't export
-> symbols. The dt binding for the simple phy device should be something like
-> below where all the properties of the simple phy device should be in the
-> binding documentation.
-> usbphy {
->         compatible = "simple-phy";
->         phy-supply = <&supply>;
->         clocks = <&clock>;
->         reset = <&reset>;
-> };
-> 
-> Anything that needs more than this shouldn't be a simple phy.
-
-I think there are two aspects here:
-
-a) I agree that a driver that matches "simple-phy" should only call
-   the generic functions and not use any other properties.
-
-b) Independent of that, I think that it makes a lot of sense to export
-   those functions from the generic PHY subsystems so they can be
-   called from drivers that are a little less generic, or that already
-   have an established binding but need no other code.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCBBcHIgMTYsIDIwMTYgYXQgMjowNyBBTSwgVmluZWV0IEd1cHRhCjxWaW5lZXQuR3Vw
+dGExQHN5bm9wc3lzLmNvbT4gd3JvdGU6Cj4gT24gRnJpZGF5IDE1IEFwcmlsIDIwMTYgMDk6MTgg
+UE0sIEFsZXhleSBCcm9ka2luIHdyb3RlOgo+Cj4+IEFuZCBub3cgdGhlIHF1ZXN0aW9uIGlzIGhv
+dyB0byBmb3JjZSBEUk0gc3Vic3lzdGVtIG9yIGp1c3QgdGhhdCBkcml2ZXIKPj4gdG8gdXNlIHdo
+YXRldmVyIHByZWRlZmluZWQgKHNheSB2aWEgZGV2aWNlIHRyZWUpIGxvY2F0aW9uIGluIG1lbW9y
+eQo+PiBmb3IgZGF0YSBidWZmZXIgYWxsb2NhdGlvbi4KPgo+IEl0IHNlZW1zIHRoaXMgaXMgcHJl
+dHR5IGVhc3kgdG8gZG8gd2l0aCBEVCByZXNlcnZlZC1tZW1vcnkgYmluZGluZy4KPgo+IFlvdSBu
+ZWVkIHRvIHBhcnRpdGlvbiBtZW1vcnkgaW50byBAbWVtb3J5IGFuZCBAcmVzZXJ2ZWQtbWVtb3J5
+Lgo+IExhdGVyIGNhbiBiZSBzdWJkaXZpZGVkIGludG8gbW9yZSBncmFudWxhciByZWdpb25zIGFu
+ZCB5b3VyIGRyaXZlciBjYW4gcmVmZXIgdG8KPiBvbmUgb2YgdGhlIHJlZ2lvbnMuCgpqZnlpLCBp
+dCBtaWdodCBiZSB1c2VmdWwgdG8gbG9vayBhdCBtc21faW5pdF92cmFtKCkgd2hpY2ggaGFzIHN1
+cHBvcnQKdG8gd3JhcCB2cmFtIGNhcnZlb3V0IGFzIGdlbSBidWZmZXIsIGZvciBleGFjdCBzYW1l
+IHB1cnBvc2UuLgoKQlIsCi1SCgoKPiBTb21ldGhpbmcgbGlrZSBiZWxvdyAodW50ZXN0ZWQpCj4K
+PiArICAgICAgIG1lbW9yeSB7Cj4gKyAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1lbW9y
+eSI7Cj4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHg4MDAwMDAwMCAweDAgMHhBMDAwMDAw
+MD47Cj4gKyAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAg
+ICAgICAjc2l6ZS1jZWxscyA9IDwyPjsKPiArICAgICAgIH07Cj4gKwo+ICsgICAgICAgcmVzZXJ2
+ZWQtbWVtb3J5IHsKPiArICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4gKyAg
+ICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAgICAgICByYW5nZXM7
+Cj4gKyAgICAgICAgICAgICAgIC8qIFRoaXMgbWVtb3J5IGJ5cGFzc2VzIElPQyBwb3J0ICovCj4g
+KyAgICAgICAgICAgICAgIGZiX3Jlc2VydmVkQEEwMDAwMDAwIHsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICByZWcgPSA8MHgwIDB4QTAwMDAwMDAgMHgwIDB4QUYwMDAwMDA+Owo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIC8qIG5v
+LW1hcDsgICAqLwo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgfTsKPiArCj4gKwo+ICsg
+ICAgICAgZmIwOiB2aWRlb0AxMjMwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgIG1lbW9yeS1yZWdp
+b24gPSA8JmZiX3Jlc2VydmVkPjsKPiArICAgICAgICAgICAgICAgLyogLi4uICovCj4gKyAgICAg
+ICB9Owo+Cj4gVGhpcyBtaWdodCBhbHNvIG5lZWQgYSBEVCBoZWxwZXIgaW4gQVJDIG1tIGluaXQg
+Y29kZS4KPgo+ICsgICAgICAgZWFybHlfaW5pdF9mZHRfc2Nhbl9yZXNlcnZlZF9tZW0oKTsKPgo+
+IEhUSCwKPiAtVmluZWV0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
