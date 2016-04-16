@@ -1,93 +1,77 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [PATCH] ARM: dts: omap3-n900: Specify peripherals LDO regulators initial mode
-Date: Sat, 16 Apr 2016 09:37:23 +0300
-Message-ID: <1460788643-18590-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, bcousson@baylibre.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 11/12] of: mtd: drop support for NAND_ECC_SOFT_BCH as
+ "soft_bch" mapping
+Date: Sat, 16 Apr 2016 10:00:43 +0200
+Message-ID: <20160416100043.4b89e2a9@bbrezillon>
+References: <1460750052-16285-1-git-send-email-zajec5@gmail.com>
+	<1460750052-16285-12-git-send-email-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460750052-16285-12-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Without that, regulators are left in the mode last set by the bootloader or
-by the kernel the device was rebooted from. This leads to various problems
-like non-working peripherals.
+On Fri, 15 Apr 2016 21:54:11 +0200
+Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
----
- arch/arm/boot/dts/omap3-n900.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> There isn't any difference between handling NAND_ECC_SOFT and
+> NAND_ECC_SOFT_BCH now. What matters is the new field called "algo".
+> Please note we're keeping backward DT compatibility. We are still
+> treating "soft_bch" value as the one setting Hamming algorithm, it's
+> just handled in of_get_nand_ecc_algo now.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/of_mtd.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index b3c26a9..1bb36e2 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -329,6 +329,7 @@
- 	regulator-name = "V28";
- 	regulator-min-microvolt = <2800000>;
- 	regulator-max-microvolt = <2800000>;
-+	regulator-initial-mode = <0x0e>;
- 	regulator-always-on; /* due to battery cover sensor */
- };
- 
-@@ -336,30 +337,35 @@
- 	regulator-name = "VCSI";
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <1800000>;
-+	regulator-initial-mode = <0x0e>;
- };
- 
- &vaux3 {
- 	regulator-name = "VMMC2_30";
- 	regulator-min-microvolt = <2800000>;
- 	regulator-max-microvolt = <3000000>;
-+	regulator-initial-mode = <0x0e>;
- };
- 
- &vaux4 {
- 	regulator-name = "VCAM_ANA_28";
- 	regulator-min-microvolt = <2800000>;
- 	regulator-max-microvolt = <2800000>;
-+	regulator-initial-mode = <0x0e>;
- };
- 
- &vmmc1 {
- 	regulator-name = "VMMC1";
- 	regulator-min-microvolt = <1850000>;
- 	regulator-max-microvolt = <3150000>;
-+	regulator-initial-mode = <0x0e>;
- };
- 
- &vmmc2 {
- 	regulator-name = "V28_A";
- 	regulator-min-microvolt = <2800000>;
- 	regulator-max-microvolt = <3000000>;
-+	regulator-initial-mode = <0x0e>;
- 	regulator-always-on; /* due VIO leak to AIC34 VDDs */
- };
- 
-@@ -367,6 +373,7 @@
- 	regulator-name = "VPLL";
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <1800000>;
-+	regulator-initial-mode = <0x0e>;
- 	regulator-always-on;
- };
- 
-@@ -374,6 +381,7 @@
- 	regulator-name = "VSDI_CSI";
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <1800000>;
-+	regulator-initial-mode = <0x0e>;
- 	regulator-always-on;
- };
- 
-@@ -381,6 +389,7 @@
- 	regulator-name = "VMMC2_IO_18";
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <1800000>;
-+	regulator-initial-mode = <0x0e>;
- };
- 
- &vio {
--- 
-1.9.1
+This series is getting rid of of_mtd{.c,.h}, so I'll move those changes
+directly into nand_base.c when applying.
+
+> index 15d056e..a70a38c 100644
+> --- a/drivers/of/of_mtd.c
+> +++ b/drivers/of/of_mtd.c
+> @@ -22,7 +22,6 @@ static const char *nand_ecc_modes[] =3D {
+>  	[NAND_ECC_HW]		=3D "hw",
+>  	[NAND_ECC_HW_SYNDROME]	=3D "hw_syndrome",
+>  	[NAND_ECC_HW_OOB_FIRST]	=3D "hw_oob_first",
+> -	[NAND_ECC_SOFT_BCH]	=3D "soft_bch",
+>  };
+> =20
+>  /**
+> @@ -45,6 +44,14 @@ int of_get_nand_ecc_mode(struct device_node *np)
+>  		if (!strcasecmp(pm, nand_ecc_modes[i]))
+>  			return i;
+> =20
+> +	/*
+> +	 * For backward compatibility we support few obsoleted values that =
+don't
+> +	 * have their mappings into nand_ecc_modes_t anymore (they were mer=
+ged
+> +	 * with other enums).
+> +	 */
+> +	if (!strcasecmp(pm, "soft_bch"))
+> +		return NAND_ECC_SOFT;
+> +
+>  	return -ENODEV;
+>  }
+>  EXPORT_SYMBOL_GPL(of_get_nand_ecc_mode);
+
+
+
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
