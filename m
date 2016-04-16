@@ -1,58 +1,93 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 10/12] devicetree: Add Trusted Computing
-	Group to vendor-prefix.txt
-Date: Sat, 16 Apr 2016 08:35:40 +0200
-Message-ID: <1460788542-2455-11-git-send-email-christophe-h.ricard@st.com>
-References: <1460788542-2455-1-git-send-email-christophe-h.ricard@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1460788542-2455-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org
+From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Subject: [PATCH] ARM: dts: omap3-n900: Specify peripherals LDO regulators initial mode
+Date: Sat, 16 Apr 2016 09:37:23 +0300
+Message-ID: <1460788643-18590-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, bcousson@baylibre.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add missing vendor to vendor-prefix.txt.
+Without that, regulators are left in the mode last set by the bootloader or
+by the kernel the device was rebooted from. This leads to various problems
+like non-working peripherals.
 
-Trusted Computing Group design common specifications for
-TPM (Trusted Platform Module) vendors.
-TCG designates a TPM answering to a public specification.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap3-n900.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 6c3d970..717bae9 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -230,6 +230,7 @@ stericsson	ST-Ericsson
- synology	Synology, Inc.
- tbs	TBS Technologies
- tcl	Toby Churchill Ltd.
-+tcg	Trusted Computing Group
- technologic	Technologic Systems
- thine	THine Electronics, Inc.
- ti	Texas Instruments
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index b3c26a9..1bb36e2 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -329,6 +329,7 @@
+ 	regulator-name = "V28";
+ 	regulator-min-microvolt = <2800000>;
+ 	regulator-max-microvolt = <2800000>;
++	regulator-initial-mode = <0x0e>;
+ 	regulator-always-on; /* due to battery cover sensor */
+ };
+ 
+@@ -336,30 +337,35 @@
+ 	regulator-name = "VCSI";
+ 	regulator-min-microvolt = <1800000>;
+ 	regulator-max-microvolt = <1800000>;
++	regulator-initial-mode = <0x0e>;
+ };
+ 
+ &vaux3 {
+ 	regulator-name = "VMMC2_30";
+ 	regulator-min-microvolt = <2800000>;
+ 	regulator-max-microvolt = <3000000>;
++	regulator-initial-mode = <0x0e>;
+ };
+ 
+ &vaux4 {
+ 	regulator-name = "VCAM_ANA_28";
+ 	regulator-min-microvolt = <2800000>;
+ 	regulator-max-microvolt = <2800000>;
++	regulator-initial-mode = <0x0e>;
+ };
+ 
+ &vmmc1 {
+ 	regulator-name = "VMMC1";
+ 	regulator-min-microvolt = <1850000>;
+ 	regulator-max-microvolt = <3150000>;
++	regulator-initial-mode = <0x0e>;
+ };
+ 
+ &vmmc2 {
+ 	regulator-name = "V28_A";
+ 	regulator-min-microvolt = <2800000>;
+ 	regulator-max-microvolt = <3000000>;
++	regulator-initial-mode = <0x0e>;
+ 	regulator-always-on; /* due VIO leak to AIC34 VDDs */
+ };
+ 
+@@ -367,6 +373,7 @@
+ 	regulator-name = "VPLL";
+ 	regulator-min-microvolt = <1800000>;
+ 	regulator-max-microvolt = <1800000>;
++	regulator-initial-mode = <0x0e>;
+ 	regulator-always-on;
+ };
+ 
+@@ -374,6 +381,7 @@
+ 	regulator-name = "VSDI_CSI";
+ 	regulator-min-microvolt = <1800000>;
+ 	regulator-max-microvolt = <1800000>;
++	regulator-initial-mode = <0x0e>;
+ 	regulator-always-on;
+ };
+ 
+@@ -381,6 +389,7 @@
+ 	regulator-name = "VMMC2_IO_18";
+ 	regulator-min-microvolt = <1800000>;
+ 	regulator-max-microvolt = <1800000>;
++	regulator-initial-mode = <0x0e>;
+ };
+ 
+ &vio {
 -- 
-2.1.4
-
-
-------------------------------------------------------------------------------
-Find and fix application performance issues faster with Applications Manager
-Applications Manager provides deep performance insights into multiple tiers of
-your business applications. It resolves application problems quickly and
-reduces your MTTR. Get your free trial!
-https://ad.doubleclick.net/ddm/clk/302982198;130105516;z
+1.9.1
