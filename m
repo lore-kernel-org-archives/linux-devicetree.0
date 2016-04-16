@@ -1,45 +1,172 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v2 2/4] ARM: davinci: Add spi0 lookup to da8xx-dt for clock matching
-Date: Sat, 16 Apr 2016 12:00:18 -0500
-Message-ID: <1460826020-1256-3-git-send-email-david@lechnology.com>
-References: <1460826020-1256-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460826020-1256-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [Question] reset controlling
+Date: Sun, 17 Apr 2016 02:49:40 +0900
+Message-ID: <CAK7LNATcVwx1q0Nb2WMSpqW3LcoRkZx3RgpMjmbt2EmffJnFvg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is needed to match the device-tree node for spi0 to the
-non-device-tree clock.
+Hi.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
 
-code portion of previous "ARM: davinci: add spi0 to da850 device tree" patch.
+I have wondered how to handle reset signals for my SoCs.
 
-no change.
 
- arch/arm/mach-davinci/da8xx-dt.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index 64f3887..754f478 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -28,6 +28,7 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f06000, "ecap", NULL),
- 	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f07000, "ecap", NULL),
- 	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f08000, "ecap", NULL),
-+	OF_DEV_AUXDATA("ti,da830-spi", 0x01c41000, "spi_davinci.0", NULL),
- 	OF_DEV_AUXDATA("ti,da830-spi", 0x01f0e000, "spi_davinci.1", NULL),
- 	OF_DEV_AUXDATA("ns16550a", 0x01c42000, "serial8250.0", NULL),
- 	OF_DEV_AUXDATA("ns16550a", 0x01d0c000, "serial8250.1", NULL),
+I notice reset controllers are less supported in Linux than clock controllers.
+
+
+
+I grepped "clk_register" and "reset_controller_register".
+
+I know this does not give us the precise number of
+clk/reset providers, but I think it is enough for a rough estimate.
+
+masahiro@grover:~/workspace/linux$ git grep clk_register | wc
+   3520   18014  308516
+masahiro@grover:~/workspace/linux$ git grep reset_controller_register | wc
+     31     107    2462
+
+
+Looks like we support 100 times as many clock providers as
+reset providers.
+
+In other words, 99% of SoCs support clock controllers,
+but not reset controllers.
+
+But, I think most of hardware blocks
+have reset signals as well as clocks.
+At least, it is true on my SoCs.
+
+
+Similar tendency for consumers.
+
+I grepped "clk_get" and "reset_control_get".
+
+
+masahiro@grover:~/workspace/linux$ git grep clk_get | wc
+   3362   16486  256820
+masahiro@grover:~/workspace/linux$ git grep reset_control_get | wc
+    142     732   12481
+
+
+Most of drivers support controlling clock signals,
+but do not care about reset signals.
+
+
+
+So, how can we explain this fact?
+
+What are recommended strategies for reset signals?
+
+I came up with some options as follows:
+
+
+[1] Reset signals should be de-asserted in a firmware (boot-loader)
+    for all the hardware blocks.  Linux kernel need not touch them at all.
+
+[2] We should really make effort to support more reset drivers,
+    like we do for clock drivers.
+
+[3] We can (ab)use clock-gate drivers for controlling reset signals.
+
+
+
+At first, I chose [3] for my SoCs
+with the analogy clk_enable/clk_disable to
+reset_control_deassert/reset_control_assert.
+(and also because the reset sub-system does not support tree-topology
+or enable-count.)
+
+Reset signals are sometimes cascaded.
+For example, the UART blocks on my SoCs have a reset for the whole of
+UART blocks
+besides per-channel reset signals.
+
+                     |---(UART ch0 reset)---> UART0
+                     |
+----(UART reset)-----|---(UART ch1 reset)---> UART1
+                     |
+                     |---(UART ch2 reset)---> UART2
+
+I found this works well with clk-gate drivers.
+Even reset_control_reset() can be implemented
+with clk_disable() followed by clk_enable().
+
+
+
+Having said that, I hesitate to distort my device trees.
+
+In order to make a reset signal look like a clock,
+we need to describe DT as follows
+
+clkrstctrl: clkrstctrl {
+        compatible = "foo-clock-and-reset-controller";
+        #clock-cells = <1>;
+}
+
+uart {
+         clock-names = "clock", "reset";
+         clocks = <&clkctrl 0>, <&rstctrl 0>;
+}
+
+
+instead of
+
+
+clkctrl: clkctrl {
+        compatible = "foo-clock-controller";
+        #clock-cells = <1>;
+}
+
+rstctrl: rstctrl {
+        compatible = "foo-reset-controller";
+        #reset-cells = <1>;
+}
+
+uart {
+         clocks = <&clkctrl 0>;
+         resets = <&rstctrl 0>;
+}
+
+
+
+The first DT fragment seems weird if we consider the concept of device tree;
+as a hardware description language, DT should reflect the hardware
+representation.  Clocks and resets are different things.
+So, DT should not be compromised by the fact that reset driver support
+is poor in Linux.
+
+
+
+
+Next, I thought about [2].
+It should not be so hard to implement a reset provider.
+
+But, as I mentioned above, most of drivers handle clocks,
+but not resets.
+
+Is it worthwhile to patch drivers around
+with reset_control_get_optional()?
+Hmm...
+
+
+
+
+[1] would be the easiest and I think makes sense to some extent
+because controlling clock signals seems enough from the
+power-management perspective.
+
+
+
+Any idea?
+
+
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Masahiro Yamada
