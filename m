@@ -1,128 +1,440 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [Question] reset controlling
-Date: Sat, 16 Apr 2016 21:23:23 +0200
-Message-ID: <5910310.IeFB0QAt6Q@wuerfel>
-References: <CAK7LNATcVwx1q0Nb2WMSpqW3LcoRkZx3RgpMjmbt2EmffJnFvg@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3] iio: pressure: hp03: Add Hope RF HP03 sensor support
+Date: Sat, 16 Apr 2016 20:40:40 +0100
+Message-ID: <57129538.6010300@kernel.org>
+References: <1460321544-8619-1-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNATcVwx1q0Nb2WMSpqW3LcoRkZx3RgpMjmbt2EmffJnFvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460321544-8619-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 17 April 2016 02:49:40 Masahiro Yamada wrote:
+On 10/04/16 21:52, Marek Vasut wrote:
+> Add support for HopeRF pressure and temperature sensor.
 > 
-> I grepped "clk_register" and "reset_controller_register".
+> This device uses two fixed I2C addresses, one for storing
+> calibration coefficients and another for accessing the ADC.
 > 
-> I know this does not give us the precise number of
-> clk/reset providers, but I think it is enough for a rough estimate.
-> 
-> masahiro@grover:~/workspace/linux$ git grep clk_register | wc
->    3520   18014  308516
-> masahiro@grover:~/workspace/linux$ git grep reset_controller_register | wc
->      31     107    2462
->
-> 
-> Looks like we support 100 times as many clock providers as
-> reset providers.
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sorry I didn't get to this earlier in the week.
 
-Better count the files:
+Unfortunately the resulting scales don't match the standard ABI for these
+two channel types.
 
-$ git grep -wl clk_register | wc -l
-179
+Otherwise, looks good. I've cc'd the devicetree list and maintainers.
+The binding is trivial I think, but always good to give people a
+opportunity to comment.
 
-$ git grep -wl reset_controller_register | wc -l
-25
+Jonathan
+> ---
+> V2: - Expand the binding document with more details on the XCLR pin
+>     - Switch from IIO_CHAN_INFO_PROCESSED to RAW + SCALE
+>     - Add failpath into hp03_update_temp_pressure() for the case
+>       when ADC readout fails. This correctly sets the XCLR pin back
+>       to LO now.
+>     - Add comment explaining the need for allocation of child device
+>       in hp03_probe().
+> V3: - Fix indent in the DT binding documentation
+>     - Report raw pressure and temperature unmodified
+Good
+>     - Report pressure scale to be 1 , since pressure is in Pa
+Standard units for pressure (see Documentation/ABI/testing/sysfs-bus-iio
+are KPa so it wants to report 0.001)
+>     - Report temperature scale to be 0.01 , since temp is in 0.01C steps
+Unfortunately the documented base unit for temp (originally from hwmon before
+we started going for SI units every time) are milli Celcius.  Thus the value
+reported * scale should end up in milli degrees Celcius. Hence if it is in 0.01
+steps the scale should be 0.1
 
-This is more like seven times as many, which seems about right.
 
-> In other words, 99% of SoCs support clock controllers,
-> but not reset controllers.
+> ---
+>  .../devicetree/bindings/iio/pressure/hp03.txt      |  17 ++
+>  drivers/iio/pressure/Kconfig                       |  11 +
+>  drivers/iio/pressure/Makefile                      |   1 +
+>  drivers/iio/pressure/hp03.c                        | 307 +++++++++++++++++++++
+>  4 files changed, 336 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/pressure/hp03.txt
+>  create mode 100644 drivers/iio/pressure/hp03.c
 > 
-> But, I think most of hardware blocks
-> have reset signals as well as clocks.
-> At least, it is true on my SoCs.
-
-I think a lot of SoCs don't expose the reset signals to software,
-but it also has something to with the history: the reset subsystem
-is relatively new, so even on older chips that do require them,
-the code to drive the resets may be either in the bootloader or
-using local hacks in the device driver rather than going through
-a proper subsystem.
-
-> What are recommended strategies for reset signals?
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/hp03.txt b/Documentation/devicetree/bindings/iio/pressure/hp03.txt
+> new file mode 100644
+> index 0000000..54e7e70
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/pressure/hp03.txt
+> @@ -0,0 +1,17 @@
+> +HopeRF HP03 digital pressure/temperature sensors
+> +
+> +Required properties:
+> +- compatible: must be "hoperf,hp03"
+> +- xclr-gpio: must be device tree identifier of the XCLR pin.
+> +             The XCLR pin is a reset of the ADC in the chip,
+> +             it must be pulled HI before the conversion and
+> +             readout of the value from the ADC registers and
+> +             pulled LO afterward.
+> +
+> +Example:
+> +
+> +hp03@0x77 {
+> +	compatible = "hoperf,hp03";
+> +	reg = <0x77>;
+> +	xclr-gpio = <&portc 0 0x0>;
+> +};
+Whilst it is simple enough I doubt anyone cares, all bindings should be
+cc'd to devicetree list and maintainers (I'll add them).
+> diff --git a/drivers/iio/pressure/Kconfig b/drivers/iio/pressure/Kconfig
+> index 8de0192..54c6165 100644
+> --- a/drivers/iio/pressure/Kconfig
+> +++ b/drivers/iio/pressure/Kconfig
+> @@ -30,6 +30,17 @@ config HID_SENSOR_PRESS
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called hid-sensor-press.
+>  
+> +config HP03
+> +	tristate "Hope RF HP03 temperature and pressure sensor driver"
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	help
+> +	  Say yes here to build support for Hope RF HP03 pressure and
+> +	  temperature sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called hp03.
+> +
+>  config MPL115
+>  	tristate
+>  
+> diff --git a/drivers/iio/pressure/Makefile b/drivers/iio/pressure/Makefile
+> index 6e60863..17d6e7a 100644
+> --- a/drivers/iio/pressure/Makefile
+> +++ b/drivers/iio/pressure/Makefile
+> @@ -5,6 +5,7 @@
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_BMP280) += bmp280.o
+>  obj-$(CONFIG_HID_SENSOR_PRESS)   += hid-sensor-press.o
+> +obj-$(CONFIG_HP03) += hp03.o
+>  obj-$(CONFIG_MPL115) += mpl115.o
+>  obj-$(CONFIG_MPL115_I2C) += mpl115_i2c.o
+>  obj-$(CONFIG_MPL115_SPI) += mpl115_spi.o
+> diff --git a/drivers/iio/pressure/hp03.c b/drivers/iio/pressure/hp03.c
+> new file mode 100644
+> index 0000000..202a028
+> --- /dev/null
+> +++ b/drivers/iio/pressure/hp03.c
+> @@ -0,0 +1,307 @@
+> +/*
+> + * Copyright (c) 2016 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> + *
+> + * Driver for Hope RF HP03 digital temperature and pressure sensor.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#define pr_fmt(fmt) "hp03: " fmt
+> +
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +/*
+> + * The HP03 sensor occupies two fixed I2C addresses:
+> + *  0x50 ... read-only EEPROM with calibration data
+> + *  0x77 ... read-write ADC for pressure and temperature
+> + */
+> +#define HP03_EEPROM_ADDR		0x50
+> +#define HP03_ADC_ADDR			0x77
+> +
+> +#define HP03_EEPROM_CX_OFFSET		0x10
+> +#define HP03_EEPROM_AB_OFFSET		0x1e
+> +#define HP03_EEPROM_CD_OFFSET		0x20
+> +
+> +#define HP03_ADC_WRITE_REG		0xff
+> +#define HP03_ADC_READ_REG		0xfd
+> +#define HP03_ADC_READ_PRESSURE		0xf0	/* D1 in datasheet */
+> +#define HP03_ADC_READ_TEMP		0xe8	/* D2 in datasheet */
+> +
+> +struct hp03_priv {
+> +	struct i2c_client	*client;
+> +	struct mutex		lock;
+> +	struct gpio_desc	*xclr_gpio;
+> +
+> +	struct i2c_client	*eeprom_client;
+> +	struct regmap		*eeprom_regmap;
+> +
+> +	s32			pressure;	/* kPa */
+> +	s32			temp;		/* Deg. C */
+> +};
+> +
+> +static const struct iio_chan_spec hp03_channels[] = {
+> +	{
+> +		.type = IIO_PRESSURE,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +	{
+> +		.type = IIO_TEMP,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +};
+> +
+> +static bool hp03_is_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	return false;
+> +}
+> +
+> +static bool hp03_is_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	return false;
+> +}
+> +
+> +static const struct regmap_config hp03_regmap_config = {
+> +	.reg_bits	= 8,
+> +	.val_bits	= 8,
+> +
+> +	.max_register	= HP03_EEPROM_CD_OFFSET + 1,
+> +	.cache_type	= REGCACHE_RBTREE,
+> +
+> +	.writeable_reg	= hp03_is_writeable_reg,
+> +	.volatile_reg	= hp03_is_volatile_reg,
+> +};
+> +
+> +static int hp03_get_temp_pressure(struct hp03_priv *priv, const u8 reg)
+> +{
+> +	int ret;
+> +
+> +	ret = i2c_smbus_write_byte_data(priv->client, HP03_ADC_WRITE_REG, reg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	msleep(50);	/* Wait for conversion to finish */
+> +
+> +	return i2c_smbus_read_word_data(priv->client, HP03_ADC_READ_REG);
+> +}
+> +
+> +static int hp03_update_temp_pressure(struct hp03_priv *priv)
+> +{
+> +	struct device *dev = &priv->client->dev;
+> +	u8 coefs[18];
+> +	u16 cx_val[7];
+> +	int ab_val, d1_val, d2_val, diff_val, dut, off, sens, x;
+> +	int i, ret;
+> +
+> +	/* Sample coefficients from EEPROM */
+> +	ret = regmap_bulk_read(priv->eeprom_regmap, HP03_EEPROM_CX_OFFSET,
+> +			       coefs, sizeof(coefs));
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to read EEPROM (reg=%02x)\n",
+> +			HP03_EEPROM_CX_OFFSET);
+> +		return ret;
+> +	}
+> +
+> +	/* Sample Temperature and Pressure */
+> +	gpiod_set_value_cansleep(priv->xclr_gpio, 1);
+> +
+> +	ret = hp03_get_temp_pressure(priv, HP03_ADC_READ_PRESSURE);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to read pressure\n");
+> +		goto err_adc;
+> +	}
+> +	d1_val = ret;
+> +
+> +	ret = hp03_get_temp_pressure(priv, HP03_ADC_READ_TEMP);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to read temperature\n");
+> +		goto err_adc;
+> +	}
+> +	d2_val = ret;
+> +
+> +	gpiod_set_value_cansleep(priv->xclr_gpio, 0);
+> +
+> +	/* The Cx coefficients and Temp/Pressure values are MSB first. */
+> +	for (i = 0; i < 7; i++)
+> +		cx_val[i] = (coefs[2 * i] << 8) | (coefs[(2 * i) + 1] << 0);
+> +	d1_val = ((d1_val >> 8) & 0xff) | ((d1_val & 0xff) << 8);
+> +	d2_val = ((d2_val >> 8) & 0xff) | ((d2_val & 0xff) << 8);
+> +
+> +	/* Coefficient voodoo from the HP03 datasheet. */
+> +	if (d2_val >= cx_val[4])
+> +		ab_val = coefs[14];	/* A-value */
+> +	else
+> +		ab_val = coefs[15];	/* B-value */
+> +
+> +	diff_val = d2_val - cx_val[4];
+> +	dut = (ab_val * (diff_val >> 7) * (diff_val >> 7)) >> coefs[16];
+> +	dut = diff_val - dut;
+> +
+> +	off = (cx_val[1] + (((cx_val[3] - 1024) * dut) >> 14)) * 4;
+> +	sens = cx_val[0] + ((cx_val[2] * dut) >> 10);
+> +	x = ((sens * (d1_val - 7168)) >> 14) - off;
+> +
+> +	priv->pressure = ((x * 100) >> 5) + (cx_val[6] * 10);
+> +	priv->temp = 250 + ((dut * cx_val[5]) >> 16) - (dut >> coefs[17]);
+> +
+> +	return 0;
+> +
+> +err_adc:
+> +	gpiod_set_value_cansleep(priv->xclr_gpio, 0);
+> +	return ret;
+> +}
+> +
+> +static int hp03_read_raw(struct iio_dev *indio_dev,
+> +			 struct iio_chan_spec const *chan,
+> +			 int *val, int *val2, long mask)
+> +{
+> +	struct hp03_priv *priv = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	mutex_lock(&priv->lock);
+> +	ret = hp03_update_temp_pressure(priv);
+> +	mutex_unlock(&priv->lock);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		switch (chan->type) {
+> +		case IIO_PRESSURE:
+> +			*val = priv->pressure;
+> +			return IIO_VAL_INT;
+> +		case IIO_TEMP:
+> +			*val = priv->temp;
+> +			return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->type) {
+> +		case IIO_PRESSURE:
+> +			*val = 1;
+> +			return IIO_VAL_INT;
+*val = 0, *val2 = 1000;
+return IIO_VAL_INT_PLUS_MICRO;
+> +		case IIO_TEMP:
+> +			*val = 0;
+> +			*val2 = 10000;
+Val2 should I think be 100000 giving scale * lsb of 0.001 degrees.
+> +			return IIO_VAL_INT_PLUS_MICRO;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info hp03_info = {
+> +	.driver_module	= THIS_MODULE,
+> +	.read_raw	= &hp03_read_raw,
+> +};
+> +
+> +static int hp03_probe(struct i2c_client *client,
+> +		      const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct hp03_priv *priv;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*priv));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	priv = iio_priv(indio_dev);
+> +	priv->client = client;
+> +	mutex_init(&priv->lock);
+> +
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->name = id->name;
+> +	indio_dev->channels = hp03_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(hp03_channels);
+> +	indio_dev->info = &hp03_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	/*
+> +	 * Allocate another device for the on-sensor EEPROM,
+> +	 * which has it's dedicated I2C address and contains
+> +	 * the calibration constants for the sensor.
+> +	 */
+> +	priv->eeprom_client = i2c_new_dummy(client->adapter, HP03_EEPROM_ADDR);
+> +	if (!priv->eeprom_client) {
+> +		dev_err(dev, "New EEPROM I2C device failed\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv->eeprom_regmap = devm_regmap_init_i2c(priv->eeprom_client,
+> +						   &hp03_regmap_config);
+> +	if (IS_ERR(priv->eeprom_regmap)) {
+> +		dev_err(dev, "Failed to allocate EEPROM regmap\n");
+> +		ret = PTR_ERR(priv->eeprom_regmap);
+> +		goto err;
+> +	}
+> +
+> +	priv->xclr_gpio = devm_gpiod_get_index(dev, "xclr", 0, GPIOD_OUT_HIGH);
+> +	if (IS_ERR(priv->xclr_gpio)) {
+> +		dev_err(dev, "Failed to claim XCLR GPIO\n");
+> +		ret = PTR_ERR(priv->xclr_gpio);
+> +		goto err;
+> +	}
+> +
+> +	ret = devm_iio_device_register(dev, indio_dev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register IIO device\n");
+> +		goto err;
+> +	}
+> +
+> +	i2c_set_clientdata(client, indio_dev);
+> +
+> +	return 0;
+> +
+> +err:
+> +	i2c_unregister_device(priv->eeprom_client);
+> +	return ret;
+> +}
+> +
+> +static int hp03_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct hp03_priv *priv = iio_priv(indio_dev);
+> +
+> +	i2c_unregister_device(priv->eeprom_client);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id hp03_id[] = {
+> +	{ "hp03", 0 },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(i2c, hp03_id);
+> +
+> +static struct i2c_driver hp03_driver = {
+> +	.driver = {
+> +		.name	= "hp03",
+> +	},
+> +	.probe		= hp03_probe,
+> +	.remove		= hp03_remove,
+> +	.id_table	= hp03_id,
+> +};
+> +module_i2c_driver(hp03_driver);
+> +
+> +MODULE_AUTHOR("Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>");
+> +MODULE_DESCRIPTION("Driver for Hope RF HP03 pressure and temperature sensor");
+> +MODULE_LICENSE("GPL v2");
 > 
-> I came up with some options as follows:
-> 
-> 
-> [1] Reset signals should be de-asserted in a firmware (boot-loader)
->     for all the hardware blocks.  Linux kernel need not touch them at all.
-> 
-> [2] We should really make effort to support more reset drivers,
->     like we do for clock drivers.
-> 
-> [3] We can (ab)use clock-gate drivers for controlling reset signals.
-
-I don't see it as a serious problem: new chips that have reset controllers
-should generally use them, but for older chips there is not as much to
-gain by converting the existing code.
-
-[1] is generally ok if you can trust the bootloader to get it right
-and there is no difference to power management. In many cases the folks
-that work on the kernel however have no control over the bootloader,
-and the loaders that ship with devices often get this wrong.
-
-[2] is probably the normal way to do it, and I'd recommend against [3].
-
-> At first, I chose [3] for my SoCs
-> with the analogy clk_enable/clk_disable to
-> reset_control_deassert/reset_control_assert.
-> (and also because the reset sub-system does not support tree-topology
-> or enable-count.)
-> 
-> Reset signals are sometimes cascaded.
-> For example, the UART blocks on my SoCs have a reset for the whole of
-> UART blocks
-> besides per-channel reset signals.
-> 
->                      |---(UART ch0 reset)---> UART0
->                      |
-> ----(UART reset)-----|---(UART ch1 reset)---> UART1
->                      |
->                      |---(UART ch2 reset)---> UART2
-> 
-> I found this works well with clk-gate drivers.
-> Even reset_control_reset() can be implemented
-> with clk_disable() followed by clk_enable().
-> 
-
-Interesting. My feeling from your description is that this is something
-that should be added to the reset controller subsystem. It has probably
-not been a serious issue for anyone else, but it's also likely that you
-are not the only one that would benefit from having support for nested
-resets in the API.
-> 
-> Next, I thought about [2].
-> It should not be so hard to implement a reset provider.
-> 
-> But, as I mentioned above, most of drivers handle clocks,
-> but not resets.
-> 
-> Is it worthwhile to patch drivers around
-> with reset_control_get_optional()?
-> Hmm...
-
-I think it is. All of the 'generic' drivers for devices that are
-licensed from e.g. designware or ARM will sooner or later get it,
-and devices that are vendor specific are even easier to change
-as needed.
-
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
