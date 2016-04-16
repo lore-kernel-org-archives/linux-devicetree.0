@@ -1,42 +1,167 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [Question] refcount of DT node
-Date: Sun, 17 Apr 2016 00:02:54 +0900
-Message-ID: <CAK7LNAQiw4VT5Cs1KzXg_K6r8QjiPd8o9xo_oaix0DOXYosK=g@mail.gmail.com>
-References: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com>
-	<20160414084849.GT19428@n2100.arm.linux.org.uk>
-	<20160414095957.GB10273@leverpostej>
-	<20160414183855.GU19428@n2100.arm.linux.org.uk>
+From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 02/13] clk: sunxi: add ahb1 clock for A83T
+Date: Sat, 16 Apr 2016 23:59:40 +0800
+Message-ID: <CAEzqOZs44zZiu9e2Uae7ovT0=-o2rOCX+g2pJ6D0Rej2J2D3Ww@mail.gmail.com>
+References: <1458144276-31108-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1458144276-31108-3-git-send-email-vishnupatekar0510@gmail.com>
+ <20160317104042.GK30977@lukather> <CAEzqOZvoMrvf-3=Tfi7MK9ZTm1EtJre5gsBdz=2wZ+D+hj056A@mail.gmail.com>
+ <20160414172838.GS4005@lukather>
+Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160414183855.GU19428@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, rank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBAGDZG4AKGQERRVJR2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160414172838.GS4005@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rein
 List-Id: devicetree@vger.kernel.org
 
-Hi experts.
+Hello Maxime,
 
-
-2016-04-15 3:38 GMT+09:00 Russell King - ARM Linux <linux@arm.linux.org.uk>:
-
+On Fri, Apr 15, 2016 at 1:28 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Apr 04, 2016 at 11:07:29AM +0800, Vishnu Patekar wrote:
+>> Hello Maxime,
+>>
+>> On Thu, Mar 17, 2016 at 6:40 PM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On Thu, Mar 17, 2016 at 12:04:25AM +0800, Vishnu Patekar wrote:
+>> >> AHB1 on A83T is similar to ahb1 on A31, except parents are different.
+>> >> clock index 0b1x is PLL6.
+>> >>
+>> >> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+>> >>  drivers/clk/sunxi/clk-sunxi.c                     | 76 +++++++++++++++++++++++
+>> >>  2 files changed, 77 insertions(+)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> >> index 834436f..cba9fe55 100644
+>> >> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+>> >> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> >> @@ -30,6 +30,7 @@ Required properties:
+>> >>       "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
+>> >>       "allwinner,sun9i-a80-cpus-clk" - for the CPUS on A80
+>> >>       "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
+>> >> +     "allwinner,sun8i-a83t-ahb1-clk" - for the AHB1 clock on A83T
+>> >>       "allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
+>> >>       "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
+>> >>       "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+>> >> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+>> >> index 91de0a0..a7aab65 100644
+>> >> --- a/drivers/clk/sunxi/clk-sunxi.c
+>> >> +++ b/drivers/clk/sunxi/clk-sunxi.c
+>> >> @@ -344,6 +344,67 @@ static void sun6i_ahb1_recalc(struct factors_request *req)
+>> >>       req->rate >>= req->p;
+>> >>  }
+>> >>
+>> >> +#define SUN8I_A83T_AHB1_PARENT_PLL6  2
+>> >> +/**
+>> >> + * sun8i_a83t_get_ahb_factors() - calculates m, p factors for AHB
+>> >> + * AHB rate is calculated as follows
+>> >> + * rate = parent_rate >> p
+>> >> + *
+>> >> + * if parent is pll6, then
+>> >> + * parent_rate = pll6 rate / (m + 1)
+>> >> + */
+>> >> +
+>> >> +static void sun8i_a83t_get_ahb1_factors(struct factors_request *req)
+>> >> +{
+>> >> +     u8 div, calcp, calcm = 1;
+>> >> +
+>> >> +     /*
+>> >> +      * clock can only divide, so we will never be able to achieve
+>> >> +      * frequencies higher than the parent frequency
+>> >> +      */
+>> >> +     if (req->parent_rate && req->rate > req->parent_rate)
+>> >> +             req->rate = req->parent_rate;
+>> >> +
+>> >> +     div = DIV_ROUND_UP(req->parent_rate, req->rate);
+>> >> +
+>> >> +     /* calculate pre-divider if parent is pll6 */
+>> >> +     if (req->parent_index >= SUN8I_A83T_AHB1_PARENT_PLL6) {
+>> >> +             if (div < 4)
+>> >> +                     calcp = 0;
+>> >> +             else if (div / 2 < 4)
+>> >> +                     calcp = 1;
+>> >> +             else if (div / 4 < 4)
+>> >> +                     calcp = 2;
+>> >> +             else
+>> >> +                     calcp = 3;
+>> >> +
+>> >> +             calcm = DIV_ROUND_UP(div, 1 << calcp);
+>> >> +     } else {
+>> >> +             calcp = __roundup_pow_of_two(div);
+>> >> +             calcp = calcp > 3 ? 3 : calcp;
+>> >> +     }
+>> >> +
+>> >> +     req->rate = (req->parent_rate / calcm) >> calcp;
+>> >> +     req->p = calcp;
+>> >> +     req->m = calcm - 1;
+>> >> +}
+>> >> +
+>> >> +/**
+>> >> +* sun8i_a83t_ahb1_recalc() - calculates AHB clock rate from m, p factors and
+>> >> +*                     parent index
+>> >> +*/
+>> >> +static void sun8i_a83t_ahb1_recalc(struct factors_request *req)
+>> >> +{
+>> >> +     req->rate = req->parent_rate;
+>> >> +
+>> >> +/* apply pre-divider first if parent is pll6 */
+>> >
+>> > The comment indentation is wrong
+>> >
+>> >> +     if (req->parent_index >= SUN6I_AHB1_PARENT_PLL6)
+>> >
+>> > And this is not the right define you're using.
+>> >
+>> > I still believe that duplicating the same logic just because of
+>> > different dividers is not the way to go.
+>> >
+>> > You could solve that easily by adding a table for the muxes, and
+>> > associate it with parents and dividers, that you could store in
+>> > clk_factors.
+>>
+>> I've similar solution (please ignore a83 specific functions those will
+>> be common for a31 and a83t).
+>> https://github.com/vishnupatekar/linux/commit/f7de5b48d886a672b1f6db112fbfd5d2c9849afa
+>>
+>> is it aligned to what you're saying?
 >
-> Their stance is not something I agree with - if we have something,
-> it should be correct, even if it's not what we would ultimately
-> desire, _or_ it should be removed.  This half-way house that we
-> have today is total madness to me.
+> Yep. I'd even go a step further, and allow to have directly the core
+> deal with the pre-divider.
+>
+> I guess in your prediv table you could have the index, and either the
+> offset and width of the divider (if it's a variable one), or its fixed
+> value.
+That's good idea, index with shift and width will do as prediv can be variable.
+>
+> The generic function would then be able to deal with the rate
+> adjustments, and you wouldn't need to be able to have anything related
+> to the parent index in the clock specific functions anymore.
+>
+> Does that make sense?
+Adjusting rate in generic clk_factors_recalc_rate, with prediv shift
+and width is straight forward, and we can remove recalc function
+itself, currently it's used only for a31 ahb1.
 
-I agree with Russell here.
+I'm doubtful about getter, In sun6i_get_ahb1_factors we still need to
+pass req->prediv_width instead of req->parent_index.
 
-I am comfortable to do my best in the given API at this point
-(and also happy to adjust my drivers when a new API is supported in the future).
-
-So, the answers from DT people are really helpful for me to write correct code.
-
-Thank you everyone!
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+I'll send separate patch for this prediv handling.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
