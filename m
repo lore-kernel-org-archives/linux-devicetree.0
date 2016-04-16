@@ -1,51 +1,40 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 2/2] arm64: dts: uniphier: change release address of spin-table
-Date: Sat, 16 Apr 2016 23:47:28 +0900
-Message-ID: <CAK7LNAQJNiSxPgj8-ayaoaQ226Ub+gucu2OT6eLuyrLOS4Mutw@mail.gmail.com>
-References: <1460716247-28049-1-git-send-email-yamada.masahiro@socionext.com>
-	<20160415130549.GB8021@leverpostej>
-	<CAK7LNARNUMkD79h-uG_EhRFr4gE2pDM8w57EddOMbt-mO0xc8A@mail.gmail.com>
-	<5180506.o95UYGsKfz@wuerfel>
+Subject: Re: [Question] refcount of DT node
+Date: Sun, 17 Apr 2016 00:02:54 +0900
+Message-ID: <CAK7LNAQiw4VT5Cs1KzXg_K6r8QjiPd8o9xo_oaix0DOXYosK=g@mail.gmail.com>
+References: <CAK7LNATFUW2KXUpFas6C_SJ0C7Qb1DWU0njLg-FCYciK2U6Oag@mail.gmail.com>
+	<20160414084849.GT19428@n2100.arm.linux.org.uk>
+	<20160414095957.GB10273@leverpostej>
+	<20160414183855.GU19428@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5180506.o95UYGsKfz@wuerfel>
+In-Reply-To: <20160414183855.GU19428@n2100.arm.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, rank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi experts.
 
 
-2016-04-16 3:48 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
-> On Friday 15 April 2016 22:13:55 Masahiro Yamada wrote:
->> 2016-04-15 22:05 GMT+09:00 Mark Rutland <mark.rutland@arm.com>:
->> > On Fri, Apr 15, 2016 at 07:30:47PM +0900, Masahiro Yamada wrote:
->> >> The 8-byte register located at 0x59801200 on this SoC is dedicated
->> >> for waking up secondary CPUs.  We can use it and save normal memory.
->> >
->> > Generally, it is not safe to use MMIO registers to back spin-table. The
->> > kernel maps the spin table location with cacheable attributes, so there
->> > may be speculative accesses to any registes in the same (64K) page, and
->> > a writeback may be larger than the 8-byte register width (which the
->> > device might not accept, triggering an SError).
->> >
->> > Given that, I do not think this is a good idea.
->>
->> I did not know this.  Thanks for your advice!
->>
->>
->> Arnd, Olof
->>
->> Please drop this patch.
->> (I think 1/2 is still OK.)
->>
+2016-04-15 3:38 GMT+09:00 Russell King - ARM Linux <linux@arm.linux.org.uk>:
+
 >
-> Should patch 1 be applied as a bugfix for 4.6 instead?
->
+> Their stance is not something I agree with - if we have something,
+> it should be correct, even if it's not what we would ultimately
+> desire, _or_ it should be removed.  This half-way house that we
+> have today is total madness to me.
 
-Yes, please!
+I agree with Russell here.
+
+I am comfortable to do my best in the given API at this point
+(and also happy to adjust my drivers when a new API is supported in the future).
+
+So, the answers from DT people are really helpful for me to write correct code.
+
+Thank you everyone!
+
 
 
 -- 
