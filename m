@@ -1,57 +1,92 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: Allocation of frame buffer at a specific memory range or address
-Date: Sat, 16 Apr 2016 17:48:04 -0400
-Message-ID: <CAF6AEGv5p_t_dWhE0J67Jx0pg=jB07E95j5nq=N3VfvEi+YHhQ@mail.gmail.com>
-References: <1460735338.3248.21.camel@synopsys.com>
- <5711D698.4030606@synopsys.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] of_mdio: make of_mdiobus_register_{device|phy}() *void*
+Date: Sun, 17 Apr 2016 01:05:19 +0300
+Message-ID: <1834436.v0N3sgcLOX@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5711D698.4030606@synopsys.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBBcHIgMTYsIDIwMTYgYXQgMjowNyBBTSwgVmluZWV0IEd1cHRhCjxWaW5lZXQuR3Vw
-dGExQHN5bm9wc3lzLmNvbT4gd3JvdGU6Cj4gT24gRnJpZGF5IDE1IEFwcmlsIDIwMTYgMDk6MTgg
-UE0sIEFsZXhleSBCcm9ka2luIHdyb3RlOgo+Cj4+IEFuZCBub3cgdGhlIHF1ZXN0aW9uIGlzIGhv
-dyB0byBmb3JjZSBEUk0gc3Vic3lzdGVtIG9yIGp1c3QgdGhhdCBkcml2ZXIKPj4gdG8gdXNlIHdo
-YXRldmVyIHByZWRlZmluZWQgKHNheSB2aWEgZGV2aWNlIHRyZWUpIGxvY2F0aW9uIGluIG1lbW9y
-eQo+PiBmb3IgZGF0YSBidWZmZXIgYWxsb2NhdGlvbi4KPgo+IEl0IHNlZW1zIHRoaXMgaXMgcHJl
-dHR5IGVhc3kgdG8gZG8gd2l0aCBEVCByZXNlcnZlZC1tZW1vcnkgYmluZGluZy4KPgo+IFlvdSBu
-ZWVkIHRvIHBhcnRpdGlvbiBtZW1vcnkgaW50byBAbWVtb3J5IGFuZCBAcmVzZXJ2ZWQtbWVtb3J5
-Lgo+IExhdGVyIGNhbiBiZSBzdWJkaXZpZGVkIGludG8gbW9yZSBncmFudWxhciByZWdpb25zIGFu
-ZCB5b3VyIGRyaXZlciBjYW4gcmVmZXIgdG8KPiBvbmUgb2YgdGhlIHJlZ2lvbnMuCgpqZnlpLCBp
-dCBtaWdodCBiZSB1c2VmdWwgdG8gbG9vayBhdCBtc21faW5pdF92cmFtKCkgd2hpY2ggaGFzIHN1
-cHBvcnQKdG8gd3JhcCB2cmFtIGNhcnZlb3V0IGFzIGdlbSBidWZmZXIsIGZvciBleGFjdCBzYW1l
-IHB1cnBvc2UuLgoKQlIsCi1SCgoKPiBTb21ldGhpbmcgbGlrZSBiZWxvdyAodW50ZXN0ZWQpCj4K
-PiArICAgICAgIG1lbW9yeSB7Cj4gKyAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1lbW9y
-eSI7Cj4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHg4MDAwMDAwMCAweDAgMHhBMDAwMDAw
-MD47Cj4gKyAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAg
-ICAgICAjc2l6ZS1jZWxscyA9IDwyPjsKPiArICAgICAgIH07Cj4gKwo+ICsgICAgICAgcmVzZXJ2
-ZWQtbWVtb3J5IHsKPiArICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mj47Cj4gKyAg
-ICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAgICAgICByYW5nZXM7
-Cj4gKyAgICAgICAgICAgICAgIC8qIFRoaXMgbWVtb3J5IGJ5cGFzc2VzIElPQyBwb3J0ICovCj4g
-KyAgICAgICAgICAgICAgIGZiX3Jlc2VydmVkQEEwMDAwMDAwIHsKPiArICAgICAgICAgICAgICAg
-ICAgICAgICByZWcgPSA8MHgwIDB4QTAwMDAwMDAgMHgwIDB4QUYwMDAwMDA+Owo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIC8qIG5v
-LW1hcDsgICAqLwo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgfTsKPiArCj4gKwo+ICsg
-ICAgICAgZmIwOiB2aWRlb0AxMjMwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgIG1lbW9yeS1yZWdp
-b24gPSA8JmZiX3Jlc2VydmVkPjsKPiArICAgICAgICAgICAgICAgLyogLi4uICovCj4gKyAgICAg
-ICB9Owo+Cj4gVGhpcyBtaWdodCBhbHNvIG5lZWQgYSBEVCBoZWxwZXIgaW4gQVJDIG1tIGluaXQg
-Y29kZS4KPgo+ICsgICAgICAgZWFybHlfaW5pdF9mZHRfc2Nhbl9yZXNlcnZlZF9tZW0oKTsKPgo+
-IEhUSCwKPiAtVmluZWV0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+The results of of_mdiobus_register_{device|phy}() are never checked, so we
+can make  both these functions *void*...
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+The patch is against DaveM's 'net-next.git' repo.
+
+ drivers/of/of_mdio.c |   21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
+
+Index: net-next/drivers/of/of_mdio.c
+===================================================================
+--- net-next.orig/drivers/of/of_mdio.c
++++ net-next/drivers/of/of_mdio.c
+@@ -41,8 +41,8 @@ static int of_get_phy_id(struct device_n
+ 	return -EINVAL;
+ }
+ 
+-static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *child,
+-				   u32 addr)
++static void of_mdiobus_register_phy(struct mii_bus *mdio,
++				    struct device_node *child, u32 addr)
+ {
+ 	struct phy_device *phy;
+ 	bool is_c45;
+@@ -57,7 +57,7 @@ static int of_mdiobus_register_phy(struc
+ 	else
+ 		phy = get_phy_device(mdio, addr, is_c45);
+ 	if (IS_ERR_OR_NULL(phy))
+-		return 1;
++		return;
+ 
+ 	rc = irq_of_parse_and_map(child, 0);
+ 	if (rc > 0) {
+@@ -81,25 +81,22 @@ static int of_mdiobus_register_phy(struc
+ 	if (rc) {
+ 		phy_device_free(phy);
+ 		of_node_put(child);
+-		return 1;
++		return;
+ 	}
+ 
+ 	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
+ 		child->name, addr);
+-
+-	return 0;
+ }
+ 
+-static int of_mdiobus_register_device(struct mii_bus *mdio,
+-				      struct device_node *child,
+-				      u32 addr)
++static void of_mdiobus_register_device(struct mii_bus *mdio,
++				       struct device_node *child, u32 addr)
+ {
+ 	struct mdio_device *mdiodev;
+ 	int rc;
+ 
+ 	mdiodev = mdio_device_create(mdio, addr);
+ 	if (IS_ERR(mdiodev))
+-		return 1;
++		return;
+ 
+ 	/* Associate the OF node with the device structure so it
+ 	 * can be looked up later.
+@@ -112,13 +109,11 @@ static int of_mdiobus_register_device(st
+ 	if (rc) {
+ 		mdio_device_free(mdiodev);
+ 		of_node_put(child);
+-		return 1;
++		return;
+ 	}
+ 
+ 	dev_dbg(&mdio->dev, "registered mdio device %s at address %i\n",
+ 		child->name, addr);
+-
+-	return 0;
+ }
+ 
+ int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
