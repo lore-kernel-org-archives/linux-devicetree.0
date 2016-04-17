@@ -1,105 +1,62 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap3-n900: Specify peripherals LDO regulators
- initial mode
-Date: Sun, 17 Apr 2016 14:29:33 +0200
-Message-ID: <20160417122933.GA8093@earth>
-References: <1460788643-18590-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160417000536.GA1124@earth>
- <571329B0.9060503@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
+Date: Sun, 17 Apr 2016 15:14:34 +0200
+Message-ID: <4542055.HvdgVkDRYK@wuerfel>
+References: <1460360506-14692-1-git-send-email-navam@xilinx.com> <20160412140338.GA19311@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <571329B0.9060503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160412140338.GA19311@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, Nava kishore Manne <nava.manne@xilinx.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, navam@xilinx.com, hyun.kwon@xilinx.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, radhey.shyam.pandey@xilinx.com, michal.simek@xilinx.com, balbi@ti.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 12 April 2016 09:03:38 Rob Herring wrote:
+> On Mon, Apr 11, 2016 at 01:11:46PM +0530, Nava kishore Manne wrote:
+> > This patch updates the driver to support 64-bit DMA
+> > addressing.
+> > 
+> > Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> > ---
+> >  .../devicetree/bindings/usb/udc-xilinx.txt         |  3 +-
+> >  drivers/usb/gadget/udc/udc-xilinx.c                | 38 ++++++++++++++++++++--
+> >  2 files changed, 37 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > index 47b4e39..d417872 100644
+> > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> > @@ -7,12 +7,13 @@ Required properties:
+> >  - interrupts         : Should contain single irq line of USB2 device
+> >                         controller
+> >  - xlnx,has-builtin-dma       : if DMA is included
+> > -
+> > +- xlnx,addrwidth       : Should be the dma addressing size in bits(ex: 40 bits).
+> 
+> Now this property shows up in a 2nd device. Now I'm more convinced this 
+> is the wrong approach and should use dma-ranges.
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not necessarily: We need to be careful not to mix up two different things here:
 
-Hi,
+* dma-ranges describes the address width of a bus, along with possible offsets.
+  In order to do wider than 32-bit addressing, all upstream busses must be
+  capable of supporting this, and AXI can have either 64-bit or 32-bit addressing.
 
-On Sun, Apr 17, 2016 at 09:14:08AM +0300, Ivaylo Dimitrov wrote:
-> On 17.04.2016 03:05, Sebastian Reichel wrote:
-> >On Sat, Apr 16, 2016 at 09:37:23AM +0300, Ivaylo Dimitrov wrote:
-> >>Without that, regulators are left in the mode last set by the bootloade=
-r or
-> >>by the kernel the device was rebooted from. This leads to various probl=
-ems
-> >>like non-working peripherals.
-> >>
-> >>Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>---
-> >>  arch/arm/boot/dts/omap3-n900.dts | 9 +++++++++
-> >>  1 file changed, 9 insertions(+)
-> >>
-> >>diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3=
--n900.dts
-> >>index b3c26a9..1bb36e2 100644
-> >>--- a/arch/arm/boot/dts/omap3-n900.dts
-> >>+++ b/arch/arm/boot/dts/omap3-n900.dts
-> >>@@ -329,6 +329,7 @@
-> >>  	regulator-name =3D "V28";
-> >>  	regulator-min-microvolt =3D <2800000>;
-> >>  	regulator-max-microvolt =3D <2800000>;
-> >>+	regulator-initial-mode =3D <0x0e>;
-> >>  	regulator-always-on; /* due to battery cover sensor */
-> >>  };
-> >
-> >I think this should either get an additional
-> >comment like /* MODE_NORMAL */ or implemented
->=20
-> According to the TRM, this is 'ACTIVE state', but that does not fit in the
-> regulator framework terminology.
+* A device may have a register set that allows wider DMA. This is normally
+  identified through the 'compatible' property, and you can have all
+  combinations with bus addressing: a device with 32-bit DMA can be connected
+  to a 64-bit AXI bus, and a device with 64-bit DMA can have an upstream parent
+  or grandparent that is limited to 32 bits (or any other width really).
 
-No problem with using STATE_ACTIVE or any other fitting description. IMHO
-that "active" is misleading for regulators without "always-on/boot-on" tag,
-but that was TI's decision.
+The patch here is almost certainly wrong. For one thing, it never sets the
+DMA mask to the correct value, and it also infers the presence of the
+0x308..0x317 register range from an arbitrary DT property that describes
+something else (the supported width of the DMA).
 
-> >using a define and a TWL4030_REGULATOR_MODE_NORMAL
-> >constant to keep the *.dts easily readable.
->=20
-> We already have RES_STATE_ACTIVE defined in linux/i2c/twl.h, is there a w=
-ay
-> to include that in a dts?
+Someone with access to the data sheet of the hardware should look up
+what the device capabilities actually are, and add the necessary properties
+accordingly.
 
-Not in its current state. During kernel build the C preprocessor is
-applied on the *.dts files. So the header may only contain
-preprocessor macros (e.g. #define). For that solution something like
-~/src/linux/include/dt-bindings/regulator/maxim,max77802.h should
-be created for the twl regulator.
-
--- Sebastian
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXE4GqAAoJENju1/PIO/qac/0QAJjwkTcJ+wdkaq+lUQVZtJo9
-i5mwA2DcOFiGwt8/VpUyFYloDUyJjY2bx84FYKfJQaoQBKuOuPqpyYB/nl/RoMwb
-PCOKS/JL7Q5707vOKWPgkYFLGOHxdVc4YUa2GN6TaTbklOZXp4t6VoX6mHoDXkRT
-URlC2imytAMJVWzxvpVBwZjKPxhmmVntuzcr88p6+5qei8ogLFUS0IsKguLkVZ8z
-PM2RXT5kSE/Q88KUEyjtdmJC6WSdbgIyWfTYRQwSoLg054L94soTCMXZuwESDqkM
-AAyNXlfZfD6gJ/pamWR4rJm3AKen81UaUvc2gw257Rq91JK/NyXA9Xbd+htpEM3x
-tMf4RSnc3ERYHAe7q0l38j57kJZyTNWi0/NaJ1LPVfIj6dg0IJHX01q8W7m9B7D7
-2Q40FY/NncbqjL423OXbaZybnP8rLpMQ9GpUFctsH+oLvQoIt5Y/EL7xHplG4QVH
-JW19oPB1OITiSXSSSqGub6Cb3UlP2itllEz0l6Ucs0w1q4V4SWCS0gNCtg7mZGXJ
-GRMz8LcviiDhA6wdad9NVSVIkX4nRQSk13H59vnTpHeb3FIIsw10K1FzUkPDJWy1
-wTnx0DU+gJatGw3LozeEme6uYZs7NhiUVtsWgK1xlTWT7qylhiMKs/yZHm0QjX/M
-BAPogWHFL49MK5rPXZnP
-=nOs9
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
