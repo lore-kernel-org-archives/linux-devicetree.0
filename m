@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 10/11] of: mtd: drop support for NAND_ECC_SOFT_BCH as "soft_bch" mapping
-Date: Sun, 17 Apr 2016 19:11:43 +0200
-Message-ID: <1460913104-27388-11-git-send-email-zajec5@gmail.com>
-References: <1460750052-16285-1-git-send-email-zajec5@gmail.com>
- <1460913104-27388-1-git-send-email-zajec5@gmail.com>
+Subject: [PATCH V3 10/11] of: mtd: drop support for NAND_ECC_SOFT_BCH as "soft_bch" mapping
+Date: Sun, 17 Apr 2016 22:53:06 +0200
+Message-ID: <1460926387-9563-11-git-send-email-zajec5@gmail.com>
+References: <1460913104-27388-1-git-send-email-zajec5@gmail.com>
+ <1460926387-9563-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460913104-27388-1-git-send-email-zajec5@gmail.com>
+In-Reply-To: <1460926387-9563-1-git-send-email-zajec5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Boris Brezillon <boris.brezillon@free-electrons.com>
 Cc: linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
