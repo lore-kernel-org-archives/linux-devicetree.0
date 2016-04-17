@@ -1,57 +1,144 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH] ARM: dts: omap3-n900: Specify peripherals LDO regulators
- initial mode
-Date: Sun, 17 Apr 2016 09:14:08 +0300
-Message-ID: <571329B0.9060503@gmail.com>
-References: <1460788643-18590-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160417000536.GA1124@earth>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [Question] reset controlling
+Date: Sun, 17 Apr 2016 17:16:58 +0900
+Message-ID: <CAK7LNARJo-xDkkwZ0qA+DaKmQ0SixxGytNSKWBZMZ_N_6eWWow@mail.gmail.com>
+References: <CAK7LNATcVwx1q0Nb2WMSpqW3LcoRkZx3RgpMjmbt2EmffJnFvg@mail.gmail.com>
+	<5910310.IeFB0QAt6Q@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160417000536.GA1124@earth>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: tony@atomide.com, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <5910310.IeFB0QAt6Q@wuerfel>
+Sender: linux-clk-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Philipp Zabel <p.zabel@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd.
 
+2016-04-17 4:23 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
 
-On 17.04.2016 03:05, Sebastian Reichel wrote:
-> Hi Ivo,
+> Better count the files:
 >
-> On Sat, Apr 16, 2016 at 09:37:23AM +0300, Ivaylo Dimitrov wrote:
->> Without that, regulators are left in the mode last set by the bootloader or
->> by the kernel the device was rebooted from. This leads to various problems
->> like non-working peripherals.
->>
->> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
->> ---
->>   arch/arm/boot/dts/omap3-n900.dts | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
->> index b3c26a9..1bb36e2 100644
->> --- a/arch/arm/boot/dts/omap3-n900.dts
->> +++ b/arch/arm/boot/dts/omap3-n900.dts
->> @@ -329,6 +329,7 @@
->>   	regulator-name = "V28";
->>   	regulator-min-microvolt = <2800000>;
->>   	regulator-max-microvolt = <2800000>;
->> +	regulator-initial-mode = <0x0e>;
->>   	regulator-always-on; /* due to battery cover sensor */
->>   };
+> $ git grep -wl clk_register | wc -l
+> 179
 >
-> I think this should either get an additional
-> comment like /* MODE_NORMAL */ or implemented
+> $ git grep -wl reset_controller_register | wc -l
+> 25
+>
+> This is more like seven times as many, which seems about right.
 
-According to the TRM, this is 'ACTIVE state', but that does not fit in 
-the regulator framework terminology.
+Ah, right.  I exaggerated too much.
 
-> using a define and a TWL4030_REGULATOR_MODE_NORMAL
-> constant to keep the *.dts easily readable.
 
-We already have RES_STATE_ACTIVE defined in linux/i2c/twl.h, is there a 
-way to include that in a dts?
 
-Ivo
+>> Reset signals are sometimes cascaded.
+>> For example, the UART blocks on my SoCs have a reset for the whole of
+>> UART blocks
+>> besides per-channel reset signals.
+>>
+>>                      |---(UART ch0 reset)---> UART0
+>>                      |
+>> ----(UART reset)-----|---(UART ch1 reset)---> UART1
+>>                      |
+>>                      |---(UART ch2 reset)---> UART2
+>>
+>> I found this works well with clk-gate drivers.
+>> Even reset_control_reset() can be implemented
+>> with clk_disable() followed by clk_enable().
+>>
+>
+> Interesting. My feeling from your description is that this is something
+> that should be added to the reset controller subsystem. It has probably
+> not been a serious issue for anyone else, but it's also likely that you
+> are not the only one that would benefit from having support for nested
+> resets in the API.
+
+I want reset sub-system to support (1) nesting,  (2) enable_count.
+
+To get these two features supported, the reset frame-work
+would be similar implementation to the clock subsystem.
+(In other words, we would duplicate effort
+between clock and reset.)
+
+Moreover, it is very common to control resets and clocks
+from one hardware block.
+
+So, I am looking for some idea that perhaps can unify the clock
+and reset subsystems.
+
+
+I found some SoCs implement reset drivers in drivers/clk.
+
+
+masahiro@grover:~/workspace/linux/drivers/clk$ git grep
+reset_controller_register
+mediatek/reset.c:       ret = reset_controller_register(&data->rcdev);
+mmp/reset.c:    reset_controller_register(&unit->rcdev);
+qcom/common.c:  ret = reset_controller_register(&reset->rcdev);
+rockchip/softrst.c:     ret = reset_controller_register(&softrst->rcdev);
+sirf/clk-atlas7.c:      reset_controller_register(&atlas7_rst_ctlr);
+sunxi/clk-a10-ve.c:     err = reset_controller_register(&reset_data->rcdev);
+sunxi/clk-sun9i-mmc.c:  ret = reset_controller_register(&data->rcdev);
+sunxi/clk-usb.c:        reset_controller_register(&reset_data->rcdev);
+tegra/clk.c:    reset_controller_register(&rst_ctlr);
+
+
+I asked about this in the following thread.
+https://lkml.org/lkml/2015/11/10/724
+
+
+
+>> Next, I thought about [2].
+>> It should not be so hard to implement a reset provider.
+>>
+>> But, as I mentioned above, most of drivers handle clocks,
+>> but not resets.
+>>
+>> Is it worthwhile to patch drivers around
+>> with reset_control_get_optional()?
+>> Hmm...
+>
+> I think it is. All of the 'generic' drivers for devices that are
+> licensed from e.g. designware or ARM will sooner or later get it,
+> and devices that are vendor specific are even easier to change
+> as needed.
+
+We can do that if needed.
+
+I guess most of drivers would do similar things;
+call devm_reset_control_get() && reset_control_deassert() in their
+probe methods,
+and reset_control_assert() in their remove methods.
+
+I am wondering if we can do that somewhat automatically,
+like the driver model framework automatically sets the pinctrl state
+to "default"
+(and low-level drivers are still able to change pinctrl state for the case
+where multiple pinctrl states are supported.)
+
+
+Another idea might be,
+we can support "hogging" in DT just for de-asserting reset signals,
+
+
+reset_ctrl: reset_ctrl {
+        .compatible = "foo-reset-controller";
+         #reset-cells = <1>;
+
+         uart_deassert {   /* deassert UART reset automatically */
+                reset-hog;
+                resets = <0>;   /* index for UART reset line */
+                deassert;
+         };
+
+         i2c_deassert {   /* deassert I2C reset automatically */
+                reset-hog;
+                resets = <1>;   /* index for I2C reset line */
+                deassert;
+         };
+};
+
+
+-- 
+Best Regards
+Masahiro Yamada
