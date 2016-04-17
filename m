@@ -1,92 +1,78 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] of_mdio: make of_mdiobus_register_{device|phy}() *void*
-Date: Sun, 17 Apr 2016 01:05:19 +0300
-Message-ID: <1834436.v0N3sgcLOX@wasted.cogentembedded.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] ARM: dts: omap3-n900: Specify peripherals LDO regulators
+ initial mode
+Date: Sun, 17 Apr 2016 02:05:36 +0200
+Message-ID: <20160417000536.GA1124@earth>
+References: <1460788643-18590-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460788643-18590-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: tony@atomide.com, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The results of of_mdiobus_register_{device|phy}() are never checked, so we
-can make  both these functions *void*...
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-The patch is against DaveM's 'net-next.git' repo.
+Hi Ivo,
 
- drivers/of/of_mdio.c |   21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+On Sat, Apr 16, 2016 at 09:37:23AM +0300, Ivaylo Dimitrov wrote:
+> Without that, regulators are left in the mode last set by the bootloader =
+or
+> by the kernel the device was rebooted from. This leads to various problems
+> like non-working peripherals.
+>=20
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> ---
+>  arch/arm/boot/dts/omap3-n900.dts | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n=
+900.dts
+> index b3c26a9..1bb36e2 100644
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -329,6 +329,7 @@
+>  	regulator-name =3D "V28";
+>  	regulator-min-microvolt =3D <2800000>;
+>  	regulator-max-microvolt =3D <2800000>;
+> +	regulator-initial-mode =3D <0x0e>;
+>  	regulator-always-on; /* due to battery cover sensor */
+>  };
 
-Index: net-next/drivers/of/of_mdio.c
-===================================================================
---- net-next.orig/drivers/of/of_mdio.c
-+++ net-next/drivers/of/of_mdio.c
-@@ -41,8 +41,8 @@ static int of_get_phy_id(struct device_n
- 	return -EINVAL;
- }
- 
--static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *child,
--				   u32 addr)
-+static void of_mdiobus_register_phy(struct mii_bus *mdio,
-+				    struct device_node *child, u32 addr)
- {
- 	struct phy_device *phy;
- 	bool is_c45;
-@@ -57,7 +57,7 @@ static int of_mdiobus_register_phy(struc
- 	else
- 		phy = get_phy_device(mdio, addr, is_c45);
- 	if (IS_ERR_OR_NULL(phy))
--		return 1;
-+		return;
- 
- 	rc = irq_of_parse_and_map(child, 0);
- 	if (rc > 0) {
-@@ -81,25 +81,22 @@ static int of_mdiobus_register_phy(struc
- 	if (rc) {
- 		phy_device_free(phy);
- 		of_node_put(child);
--		return 1;
-+		return;
- 	}
- 
- 	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
- 		child->name, addr);
--
--	return 0;
- }
- 
--static int of_mdiobus_register_device(struct mii_bus *mdio,
--				      struct device_node *child,
--				      u32 addr)
-+static void of_mdiobus_register_device(struct mii_bus *mdio,
-+				       struct device_node *child, u32 addr)
- {
- 	struct mdio_device *mdiodev;
- 	int rc;
- 
- 	mdiodev = mdio_device_create(mdio, addr);
- 	if (IS_ERR(mdiodev))
--		return 1;
-+		return;
- 
- 	/* Associate the OF node with the device structure so it
- 	 * can be looked up later.
-@@ -112,13 +109,11 @@ static int of_mdiobus_register_device(st
- 	if (rc) {
- 		mdio_device_free(mdiodev);
- 		of_node_put(child);
--		return 1;
-+		return;
- 	}
- 
- 	dev_dbg(&mdio->dev, "registered mdio device %s at address %i\n",
- 		child->name, addr);
--
--	return 0;
- }
- 
- int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+I think this should either get an additional
+comment like /* MODE_NORMAL */ or implemented
+using a define and a TWL4030_REGULATOR_MODE_NORMAL
+constant to keep the *.dts easily readable.
+
+-- Sebastian
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXEtNNAAoJENju1/PIO/qav14P/3YU8bUUoUJc/9BbFqoCFnoZ
+xZRtqQx79+UlZi5yGp8AGBXWfQXoHkOePs53NfitbuJhdhhS08NcfbroVbYpq/wo
+BAcG5Hxp22cW+1vPQGMUd4zFSpyC760dMKemuQN/YEDYruBdY8pusnGKdMAkgdyj
+kA9v2oPXAoVdw9ckvnRUPq6Bf68LAFdur/j0pRaMtyfvnaOliQTw9eCghyhGqUT5
+EqVTKzJK2re8cpsK64tACtaa9PspQDVJ81O0b6b8GWQTww+H5eWj+/wRvPDPhWPa
+p8NdeIBS4dm23DyiR0Ey/xD5JUVxhc0EPVNMkO6erZDrLKh5EuWJz+zBPISPu04l
+cCElSB++ppP5Zhy6Fth4FHRRC4yYugDdeWgA4ihdR6OGTT/yTZh5648GE+k+L0ei
+9GwE8vI/C2LPnlaKYflLXS0RSdGOcASdJuUkt3P7tGYGlde9A7Mf8KR0cuMF502P
+I/bEgburnX5BMHs/fJHyRJLevwoAP22lCy6QEa0ApgjjIXlqTRRcwkQeklcTJhu8
+p2bBK9eX2boL6kb7YPYzoFr8377/xfmn32s0oHuuCJMz2Pe328UoEcyRfk6V3D/L
+K/ELEc9873QNlWD1yXD59sGLVyVYnxKKUwXak2o4w7cF9/ktVHm3ljCQvirgJ0NN
+xnH0DXWeAY61Oyrnv4w0
+=JRX3
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
