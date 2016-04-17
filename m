@@ -1,62 +1,31 @@
 From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
-Date: Sun, 17 Apr 2016 15:14:34 +0200
-Message-ID: <4542055.HvdgVkDRYK@wuerfel>
-References: <1460360506-14692-1-git-send-email-navam@xilinx.com> <20160412140338.GA19311@rob-hp-laptop>
+Date: Sun, 17 Apr 2016 16:09:30 +0200
+Message-ID: <5220051.FEUC6vJBCk@wuerfel>
+References: <201604111626.g2x2SCHX%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160412140338.GA19311@rob-hp-laptop>
+In-Reply-To: <201604111626.g2x2SCHX%fengguang.wu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>, Nava kishore Manne <nava.manne@xilinx.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, navam@xilinx.com, hyun.kwon@xilinx.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, radhey.shyam.pandey@xilinx.com, michal.simek@xilinx.com, balbi@ti.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, soren.brinkmann@xilinx.com
+To: kbuild test robot <lkp@intel.com>
+Cc: Nava kishore Manne <nava.manne@xilinx.com>, kbuild-all@01.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, balbi@ti.com, gregkh@linuxfoundation.org, hyun.kwon@xilinx.com, navam@xilinx.com, radhey.shyam.pandey@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 April 2016 09:03:38 Rob Herring wrote:
-> On Mon, Apr 11, 2016 at 01:11:46PM +0530, Nava kishore Manne wrote:
-> > This patch updates the driver to support 64-bit DMA
-> > addressing.
-> > 
-> > Signed-off-by: Nava kishore Manne <navam@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/usb/udc-xilinx.txt         |  3 +-
-> >  drivers/usb/gadget/udc/udc-xilinx.c                | 38 ++++++++++++++++++++--
-> >  2 files changed, 37 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > index 47b4e39..d417872 100644
-> > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > @@ -7,12 +7,13 @@ Required properties:
-> >  - interrupts         : Should contain single irq line of USB2 device
-> >                         controller
-> >  - xlnx,has-builtin-dma       : if DMA is included
-> > -
-> > +- xlnx,addrwidth       : Should be the dma addressing size in bits(ex: 40 bits).
+On Monday 11 April 2016 16:08:14 kbuild test robot wrote:
 > 
-> Now this property shows up in a 2nd device. Now I'm more convinced this 
-> is the wrong approach and should use dma-ranges.
+>    230   * @offset: register offset
+>    231   * @val: data to be written
+>    232   **/
+>    233  static void xudc_write64(void __iomem *addr, u32 offset, u64 val)
+>    234  {
+>    235  #if defined(CONFIG_PHYS_ADDR_T_64BIT)
+>  > 236          writeq(val, addr + offset);
+>    237  #endif
+>    238  }
+> 
 
-Not necessarily: We need to be careful not to mix up two different things here:
-
-* dma-ranges describes the address width of a bus, along with possible offsets.
-  In order to do wider than 32-bit addressing, all upstream busses must be
-  capable of supporting this, and AXI can have either 64-bit or 32-bit addressing.
-
-* A device may have a register set that allows wider DMA. This is normally
-  identified through the 'compatible' property, and you can have all
-  combinations with bus addressing: a device with 32-bit DMA can be connected
-  to a 64-bit AXI bus, and a device with 64-bit DMA can have an upstream parent
-  or grandparent that is limited to 32 bits (or any other width really).
-
-The patch here is almost certainly wrong. For one thing, it never sets the
-DMA mask to the correct value, and it also infers the presence of the
-0x308..0x317 register range from an arbitrary DT property that describes
-something else (the supported width of the DMA).
-
-Someone with access to the data sheet of the hardware should look up
-what the device capabilities actually are, and add the necessary properties
-accordingly.
+I think you want lo_hi_writeq() rather than writeq().
 
 	Arnd
