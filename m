@@ -1,47 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv2] wlcore: spi: add wl18xx support
-Date: Mon, 18 Apr 2016 00:19:41 +0200
-Message-ID: <14313437.cDJIgY3kzo@wuerfel>
-References: <1460273570-12298-1-git-send-email-eyalr@ti.com> <8665E2433BC68541A24DFFCA87B70F5B360B6C90@DFRE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B360B6C90@DFRE01.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Reizer, Eyal" <eyalr@ti.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalreizer@gmail.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-spi@vger.kernel.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: add vendor-prefix for mqmaker
+Date: Mon, 18 Apr 2016 00:49:34 +0200
+Message-ID: <1460933375-6718-1-git-send-email-heiko@sntech.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 10 April 2016 07:37:23 Reizer, Eyal wrote:
-> Add support for using with both wl12xx and wl18xx.
-> 
-> - all wilink family needs special init command for entering wspi mode.
->   extra clock cycles should be sent after the spi init command while the
->   cs pin is high.
-> - switch to controling the cs pin from the spi driver for achieveing the
->   above.
-> - the selected cs gpio is read from the spi device-tree node using the
->   cs-gpios field and setup as a gpio.
-> - See the example below for specifying the cs gpio using the cs-gpios entry
-> &spi0   {
->         ...
->         cs-gpios = <&gpio0 5 0>;
->         ...
->         wlcore: wlcore@0 {
->                 compatible = "ti,wl1835";
->         ...
->         ...
->         };
-> };
-> 
-> Signed-off-by: Eyal Reizer <eyalr@ti.com>
+Add vendor-prefix for Shenzen-based mqmaker Inc.
 
-I don't think this can work in general: not all SPI hosts uses GPIOs
-for controlling CS, so the logic can't work, and it's also a layering
-violation for the driver to look at the parent.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I would suggest fixing this using a new API function from the SPI
-core, if we don't already have a generic way to do it.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2988be9..556cdbd 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -153,6 +153,7 @@ mitsubishi	Mitsubishi Electric Corporation
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+ mpl	MPL AG
++mqmaker	mqmaker Inc.
+ msi	Micro-Star International Co. Ltd.
+ mti	Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
+ mundoreader	Mundo Reader S.L.
+-- 
+2.8.0.rc3
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
