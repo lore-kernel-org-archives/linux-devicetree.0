@@ -1,91 +1,57 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] soc: mediatek: Add MT2701 power dt-bindings
-Date: Mon, 18 Apr 2016 09:56:54 +0800
-Message-ID: <1460944614.26713.1.camel@mtksdaap41>
-References: <1460621819-695-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1460621819-695-4-git-send-email-jamesjj.liao@mediatek.com>
-	 <1460631381.13240.3.camel@mtksdaap41> <1460685753.7028.5.camel@mtksdaap41>
-	 <1460731329.19786.4.camel@mtksdaap41>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/2] arm64: dts: ls2080a: fsl-mc dt node updates
+Date: Mon, 18 Apr 2016 10:02:52 +0800
+Message-ID: <20160418020252.GS28903@tiger>
+References: <1459544080-28598-1-git-send-email-stuart.yoder@nxp.com>
+ <20160413055019.GK28903@tiger>
+ <HE1PR04MB1641EB3DD445D3AF3F524C3D8D960@HE1PR04MB1641.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460731329.19786.4.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <HE1PR04MB1641EB3DD445D3AF3F524C3D8D960@HE1PR04MB1641.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stuart Yoder <stuart.yoder@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "german.rivera@freescale.com" <german.rivera@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yingjoe,
-
-On Fri, 2016-04-15 at 22:42 +0800, Yingjoe Chen wrote:
-> On Fri, 2016-04-15 at 10:02 +0800, James Liao wrote:
-> > On Thu, 2016-04-14 at 18:56 +0800, Yingjoe Chen wrote:
-> > > On Thu, 2016-04-14 at 16:16 +0800, James Liao wrote:
-> > > > From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > 
-> > > > Add power dt-bindings for MT2701.
-> > > > 
-> > > > Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > > Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > > > ---
-> > > >  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 12 ++++++----
-> > > >  include/dt-bindings/power/mt2701-power.h           | 27 ++++++++++++++++++++++
-> > > >  2 files changed, 34 insertions(+), 5 deletions(-)
-> > > >  create mode 100644 include/dt-bindings/power/mt2701-power.h
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > > > index e8f15e3..ebb3144 100644
-> > > > --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > > > +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > > > @@ -9,17 +9,19 @@ domain control.
-> > > >  
-> > > >  The driver implements the Generic PM domain bindings described in
-> > > >  power/power_domain.txt. It provides the power domains defined in
-> > > > -include/dt-bindings/power/mt8173-power.h.
-> > > > +include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
-> > > >  
-> > > >  Required properties:
-> > > > -- compatible: Must be "mediatek,mt8173-scpsys"
-> > > > +- compatible: Should be one of:
-> > > > +	- "mediatek,mt2701-scpsys"
-> > > > +	- "mediatek,mt8173-scpsys"
-> > > >  - #power-domain-cells: Must be 1
-> > > >  - reg: Address range of the SCPSYS unit
-> > > >  - infracfg: must contain a phandle to the infracfg controller
-> > > >  - clock, clock-names: clocks according to the common clock binding.
-> > > > -                      The clocks needed "mm", "mfg", "venc" and "venc_lt".
-> > > > -		      These are the clocks which hardware needs to be enabled
-> > > > -		      before enabling certain power domains.
-> > > > +                      The clocks needed "mm", "mfg", "venc", "venc_lt" and
-> > > > +                      "ethif". These are the clocks which hardware needs to be
-> > > > +                      enabled before enabling certain power domains.
-> > > 
-> > > 
-> > > Clock ethif only exist on mt2701 so it is not required on mt8173.
+On Wed, Apr 13, 2016 at 08:39:32PM +0000, Stuart Yoder wrote:
+> > > @@ -265,6 +265,93 @@
+> > >  			compatible = "fsl,qoriq-mc";
+> > >  			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+> > >  			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+> > > +			msi-parent = <&its>;
+> > > +			#address-cells = <3>;
+> > > +			#size-cells = <1>;
+> > > +
+> > > +			/*
+> > > +			 * Region type 0x0 - MC portals
+> > > +			 * Region type 0x1 - QBMAN portals
+> > > +			 */
+> > > +			ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
+> > > +				  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
+> > > +
+> > > +			/*
+> > > +			 * Define the maximum number of MACs present on the SoC.
+> > > +			 * They won't necessarily be all probed, since the
+> > > +			 * Data Path Layout file and the MC firmware can put
+> > > +			 * fewer actual DPMAC objects on the MC bus.
+> > > +			 */
+> > > +			dpmacs {
+> > > +				#address-cells = <1>;
+> > > +				#size-cells = <0>;
+> > > +
+> > > +				dpmac1: dpmac@1 {
+> > > +					compatible = "fsl,qoriq-mc-dpmac";
 > > 
-> > You are right. Each SoC needs different clock for each power domain.
-> > Here list all subsystems of available SoCs.
+> > I did not see how this compatible is used by kernel driver.
 > 
-> Binding should list required clocks for each specific platform. How
-> about this:
-> 
-> - clock, clock-names: clocks according to the common clock binding.
-> 		      These are the clocks which hardware needs to be
->                       enabled before enabling certain power domains.
->   	Required clocks for mt2701: "mm", "mfg", "ethif"
-> 	Required clocks for mt8173: "mm", "mfg", "venc", "venc_lt"
+> There is no driver yet, but it will be coming soon.  But, does
+> it matter?  Device trees should be describing hardware
+> without regards to some specific kernel use of a node or 
+> property.
 
-OK. I'll follow your suggestion in next patch.
+We need to at least have the bindings documented before we can accept it
+in dts files.
 
-
-Best regards,
-
-James
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
