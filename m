@@ -1,164 +1,117 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/7] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
- Decoder Driver
-Date: Mon, 18 Apr 2016 13:40:46 +0800
-Message-ID: <1460958046.7861.48.camel@mtksdaap41>
-References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-3-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-4-git-send-email-tiffany.lin@mediatek.com>
-	 <5710FA3A.2030603@xs4all.nl>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RESEND PATCH 1/3] power: charger-manager: Replace deprecatd API
+ of extcon
+Date: Mon, 18 Apr 2016 14:42:12 +0900
+Message-ID: <571473B4.6010406@samsung.com>
+References: <1460681016-2770-1-git-send-email-cw00.choi@samsung.com>
+ <1460681016-2770-2-git-send-email-cw00.choi@samsung.com>
+ <20160415141318.GA24087@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5710FA3A.2030603-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20160415141318.GA24087@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sebastian,
 
-snipped.
+On 2016=EB=85=84 04=EC=9B=94 15=EC=9D=BC 23:13, Sebastian Reichel wrote=
+:
+> Hi,
+>=20
+> On Fri, Apr 15, 2016 at 09:43:34AM +0900, Chanwoo Choi wrote:
+>> This patch removes the deprecated notifier API of extcon framework a=
+nd then use
+>> the new extcon API[2] with the unique id[1] to indicate the each ext=
+ernal
+>> connector. Alter deprecated API as following:
+>> - extcon_register_interest() -> extcon_register_notifier()
+>> - extcon_unregister_interest() -> extcon_unregister_notifier()
+>>
+>> And, extcon alters the name of USB charger connector in patch[3] as =
+following:
+>> - EXTCON_CHG_USB_SDP /* Standard Downstream Port */
+>> - EXTCON_CHG_USB_DCP /* Dedicated Charging Port */
+>> - EXTCON_CHG_USB_CDP /* Charging Downstream Port */
+>> - EXTCON_CHG_USB_ACA /* Accessory Charger Adapter */
+>>
+>> So, the name of external charger connector are changed as following:
+>> - "USB" -> "SDP"
+>> - "TA" -> "DCP"
+>>
+>> [1] Commit 2a9de9c0f08d61
+>> - ("extcon: Use the unique id for external connector instead of stri=
+ng)
+>> [2] Commit 046050f6e623e4
+>> - ("extcon: Update the prototype of extcon_register_notifier() with =
+enum extcon
+>> [3] Commit 11eecf910bd81d
+>> - ("extcon: Modify the id and name of external connector")
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  .../bindings/power_supply/charger-manager.txt      |  4 +--
+>>  drivers/power/charger-manager.c                    | 31 +++++++++++=
++++--------
+>>  include/linux/power/charger-manager.h              |  4 +--
+>>  3 files changed, 24 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power_supply/charger-=
+manager.txt b/Documentation/devicetree/bindings/power_supply/charger-ma=
+nager.txt
+>> index ec4fe9de3137..73193e380dc2 100644
+>> --- a/Documentation/devicetree/bindings/power_supply/charger-manager=
+=2Etxt
+>> +++ b/Documentation/devicetree/bindings/power_supply/charger-manager=
+=2Etxt
+>> @@ -65,13 +65,13 @@ Example :
+>>  		regulator@0 {
+>>  			cm-regulator-name =3D "chg-reg";
+>>  			cable@0 {
+>> -				cm-cable-name =3D "USB";
+>> +				cm-cable-id =3D 5; /* EXTCON_CHG_USB_SDP */
+>>  				cm-cable-extcon =3D "extcon-dev.0";
+>>  				cm-cable-min =3D <475000>;
+>>  				cm-cable-max =3D <500000>;
+>>  			};
+>>  			cable@1 {
+>> -				cm-cable-name =3D "TA";
+>> +				cm-cable-id =3D 6; /* EXTCON_CHG_USB_DCP */
+>>  				cm-cable-extcon =3D "extcon-dev.0";
+>>  				cm-cable-min =3D <650000>;
+>>  				cm-cable-max =3D <675000>;
+>=20
+> This breaks DT ABI. Looks like charger-manager is not used in
+> mainline,but I guess ther should be an explicit Acked-By from
+> a DT binding maintainer.
 
-> > +
-> > +void mtk_vcodec_dec_set_default_params(struct mtk_vcodec_ctx *ctx)
-> > +{
-> > +	struct mtk_q_data *q_data;
-> > +
-> > +	ctx->m2m_ctx->q_lock = &ctx->dev->dev_mutex;
-> > +	ctx->fh.m2m_ctx = ctx->m2m_ctx;
-> > +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
-> > +	INIT_WORK(&ctx->decode_work, mtk_vdec_worker);
-> > +
-> > +	q_data = &ctx->q_data[MTK_Q_DATA_SRC];
-> > +	memset(q_data, 0, sizeof(struct mtk_q_data));
-> > +	q_data->visible_width = DFT_CFG_WIDTH;
-> > +	q_data->visible_height = DFT_CFG_HEIGHT;
-> > +	q_data->fmt = &mtk_video_formats[OUT_FMT_IDX];
-> > +	q_data->colorspace = V4L2_COLORSPACE_REC709;
-> > +	q_data->field = V4L2_FIELD_NONE;
-> > +	ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
-> > +		DFT_CFG_WIDTH * DFT_CFG_HEIGHT;
-> > +	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] = 0;
-> > +
-> > +
-> > +	q_data = &ctx->q_data[MTK_Q_DATA_DST];
-> > +	memset(q_data, 0, sizeof(struct mtk_q_data));
-> > +	q_data->visible_width = DFT_CFG_WIDTH;
-> > +	q_data->visible_height = DFT_CFG_HEIGHT;
-> > +	q_data->coded_width = DFT_CFG_WIDTH;
-> > +	q_data->coded_height = DFT_CFG_HEIGHT;
-> > +	q_data->colorspace = V4L2_COLORSPACE_REC709;
-> > +	q_data->field = V4L2_FIELD_NONE;
-> > +
-> > +	q_data->fmt = &mtk_video_formats[CAP_FMT_IDX];
-> > +
-> > +	v4l_bound_align_image(&q_data->coded_width,
-> > +					MTK_VDEC_MIN_W,
-> > +					MTK_VDEC_MAX_W, 4,
-> > +					&q_data->coded_height,
-> > +					MTK_VDEC_MIN_H,
-> > +					MTK_VDEC_MAX_H, 5, 6);
-> > +
-> > +	q_data->sizeimage[0] = q_data->coded_width * q_data->coded_height;
-> > +	q_data->bytesperline[0] = q_data->coded_width;
-> > +	q_data->sizeimage[1] = q_data->sizeimage[0] / 2;
-> > +	q_data->bytesperline[1] = q_data->coded_width;
-> > +
-> > +}
-> > +
-> > +static int vidioc_vdec_streamon(struct file *file, void *priv,
-> > +				enum v4l2_buf_type type)
-> > +{
-> > +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
-> > +
-> > +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
-> > +
-> > +	return v4l2_m2m_streamon(file, ctx->m2m_ctx, type);
-> > +}
-> > +
-> > +static int vidioc_vdec_streamoff(struct file *file, void *priv,
-> > +				 enum v4l2_buf_type type)
-> > +{
-> > +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
-> > +
-> > +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
-> > +	return v4l2_m2m_streamoff(file, ctx->m2m_ctx, type);
-> > +}
-> > +
-> > +static int vidioc_vdec_reqbufs(struct file *file, void *priv,
-> > +			       struct v4l2_requestbuffers *reqbufs)
-> > +{
-> > +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
-> > +	int ret;
-> > +
-> > +	mtk_v4l2_debug(3, "[%d] (%d) count=%d", ctx->idx,
-> > +			 reqbufs->type, reqbufs->count);
-> > +	ret = v4l2_m2m_reqbufs(file, ctx->m2m_ctx, reqbufs);
-> > +
-> > +	return ret;
-> > +}
-> 
-> Please use the v4l2_m2m_ioctl_* helper functions were applicable.
-> 
+As I mentioned on other mail to Rob, the purpose of this patch
+removes the deprecated the EXTCON APIs. So, I touched the DT binding.
 
+About DT ABI about charger-manager, we should handle it on separate pat=
+ches.
+
+Also I think the defines should be in
+> some header includable from DTS, so that something like this
+> can be done:
+>=20
+> cm-cable-id =3D <CHARGER_USB_DCP>;
 
 
-snipped.
-> > +static unsigned int fops_vcodec_poll(struct file *file,
-> > +				     struct poll_table_struct *wait)
-> > +{
-> > +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
-> > +	struct mtk_vcodec_dev *dev = ctx->dev;
-> > +	int ret;
-> > +
-> > +	mutex_lock(&dev->dev_mutex);
-> > +	ret = v4l2_m2m_poll(file, ctx->m2m_ctx, wait);
-> > +	mutex_unlock(&dev->dev_mutex);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int fops_vcodec_mmap(struct file *file, struct vm_area_struct *vma)
-> > +{
-> > +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
-> > +
-> > +	return v4l2_m2m_mmap(file, ctx->m2m_ctx, vma);
-> > +}
-> > +
-> > +static const struct v4l2_file_operations mtk_vcodec_fops = {
-> > +	.owner				= THIS_MODULE,
-> > +	.open				= fops_vcodec_open,
-> > +	.release			= fops_vcodec_release,
-> > +	.poll				= fops_vcodec_poll,
-> > +	.unlocked_ioctl			= video_ioctl2,
-> > +	.mmap				= fops_vcodec_mmap,
-> 
-> You should be able to use the v4l2_m2m_fop helper functions for poll and mmap.
-> 
+I agree to use some definition for the kind of charger cable.
+But, Not yet. I'm preparing the EXTCON update to use the definitions
+on Device Tree file. I'll send some separate patches in the near future=
+=2E
+>=20
+> Apart from that:
+>=20
+> Acked-By: Sebastian Reichel <sre@kernel.org>
 
-Hi Hans,
+Thanks for review.
 
-We are plaining to remove m2m framework in th feature, although we think
-it is easy to use and could save a lot of code similar to what m2m
-framework implemented and reduce code size.
-The main reason is that in v4l2_m2m_try_schedule, it required that at
-least one output buffer and one capture buffer to run device_run.
-We want to start device_run without capture buffer queued.
-Is there any suggestion that we could use m2m framework but trigger
-device_run with only output buffer.
-Or we need to remove m2m and write our own implementation.
+Best Regards,
+Chanwoo Choi
 
-
-
-snipped.
-
-
-best regards,
-Tiffany
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
