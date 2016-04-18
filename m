@@ -1,155 +1,55 @@
-From: jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org
-Subject: Re: [PATCH V3] iio: pressure: hp03: Add Hope RF HP03 sensor support
-Date: Mon, 18 Apr 2016 14:44:41 +0100
-Message-ID: <1a6d907d4f0229c80eae5075139febbb@jic23.retrosnub.co.uk>
-References: <1460321544-8619-1-git-send-email-marex@denx.de>
- <57129538.6010300@kernel.org> <5714E07B.4090902@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5714E07B.4090902-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lars Persson <lars.persson@axis.com>
+Subject: [PATCH v2 2/3] mmc: usdhi6rol0: add support for UHS modes
+Date: Mon, 18 Apr 2016 15:44:54 +0200
+Message-ID: <9f0fad850e6f0b01f7803f401a5393df06ee98e5.1460986983.git.larper@axis.com>
+References: <cover.1460986983.git.larper@axis.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <cover.1460986983.git.larper@axis.com>
+In-Reply-To: <cover.1460986983.git.larper@axis.com>
+References: <cover.1460986983.git.larper@axis.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: g.liakhovetski@gmx.de, ulf.hansson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18.04.2016 14:26, Marek Vasut wrote:
-> On 04/16/2016 09:40 PM, Jonathan Cameron wrote:
->> On 10/04/16 21:52, Marek Vasut wrote:
->>> Add support for HopeRF pressure and temperature sensor.
->>> 
->>> This device uses two fixed I2C addresses, one for storing
->>> calibration coefficients and another for accessing the ADC.
->>> 
->>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>> Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Sorry I didn't get to this earlier in the week.
->> 
->> Unfortunately the resulting scales don't match the standard ABI for 
->> these
->> two channel types.
-> 
-> Ah, sorry for the inconvenience.
-> 
->> Otherwise, looks good. I've cc'd the devicetree list and maintainers.
->> The binding is trivial I think, but always good to give people a
->> opportunity to comment.
->> 
->> Jonathan
->>> ---
->>> V2: - Expand the binding document with more details on the XCLR pin
->>>     - Switch from IIO_CHAN_INFO_PROCESSED to RAW + SCALE
->>>     - Add failpath into hp03_update_temp_pressure() for the case
->>>       when ADC readout fails. This correctly sets the XCLR pin back
->>>       to LO now.
->>>     - Add comment explaining the need for allocation of child device
->>>       in hp03_probe().
->>> V3: - Fix indent in the DT binding documentation
->>>     - Report raw pressure and temperature unmodified
->> Good
->>>     - Report pressure scale to be 1 , since pressure is in Pa
->> Standard units for pressure (see 
->> Documentation/ABI/testing/sysfs-bus-iio
->> are KPa so it wants to report 0.001)
-> 
-> OK, got it.
-> 
->>>     - Report temperature scale to be 0.01 , since temp is in 0.01C 
->>> steps
->> Unfortunately the documented base unit for temp (originally from hwmon 
->> before
->> we started going for SI units every time) are milli Celcius.  Thus the 
->> value
->> reported * scale should end up in milli degrees Celcius. Hence if it 
->> is in 0.01
->> steps the scale should be 0.1
-> 
-> Shouldn't this be 10 ? The value is in 0.01C steps , so the value has 
-> to
-> be multiplied by 10 to convert it into mC units.
-err. yes I'm clearly wrong :)
+Add a start_signal_voltage_switch() operation to support enabling of
+UHS modes.
 
-> 
->>> ---
->>>  .../devicetree/bindings/iio/pressure/hp03.txt      |  17 ++
->>>  drivers/iio/pressure/Kconfig                       |  11 +
->>>  drivers/iio/pressure/Makefile                      |   1 +
->>>  drivers/iio/pressure/hp03.c                        | 307 
->>> +++++++++++++++++++++
->>>  4 files changed, 336 insertions(+)
->>>  create mode 100644 
->>> Documentation/devicetree/bindings/iio/pressure/hp03.txt
->>>  create mode 100644 drivers/iio/pressure/hp03.c
-> 
-> 
-> [...]
-> 
->>> +static int hp03_read_raw(struct iio_dev *indio_dev,
->>> +			 struct iio_chan_spec const *chan,
->>> +			 int *val, int *val2, long mask)
->>> +{
->>> +	struct hp03_priv *priv = iio_priv(indio_dev);
->>> +	int ret;
->>> +
->>> +	mutex_lock(&priv->lock);
->>> +	ret = hp03_update_temp_pressure(priv);
->>> +	mutex_unlock(&priv->lock);
->>> +
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	switch (mask) {
->>> +	case IIO_CHAN_INFO_RAW:
->>> +		switch (chan->type) {
->>> +		case IIO_PRESSURE:
->>> +			*val = priv->pressure;
->>> +			return IIO_VAL_INT;
->>> +		case IIO_TEMP:
->>> +			*val = priv->temp;
->>> +			return IIO_VAL_INT;
->>> +		default:
->>> +			return -EINVAL;
->>> +		}
->>> +		break;
->>> +	case IIO_CHAN_INFO_SCALE:
->>> +		switch (chan->type) {
->>> +		case IIO_PRESSURE:
->>> +			*val = 1;
->>> +			return IIO_VAL_INT;
->> *val = 0, *val2 = 1000;
->> return IIO_VAL_INT_PLUS_MICRO;
->>> +		case IIO_TEMP:
->>> +			*val = 0;
->>> +			*val2 = 10000;
->> Val2 should I think be 100000 giving scale * lsb of 0.001 degrees.
-> 
-> I think this should be:
-> 
-> val = 10;
-> return IIO_VAL_INT;
-> 
-> Since the temp value is in 10mC steps.
-> 
->>> +			return IIO_VAL_INT_PLUS_MICRO;
->>> +		default:
->>> +			return -EINVAL;
->>> +		}
->>> +		break;
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	return -EINVAL;
->>> +}
-> 
-> [...]
-> 
-> Best regards,
-> Marek Vasut
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Lars Persson <larper@axis.com>
+---
+ drivers/mmc/host/usdhi6rol0.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
+index 807c06e..2585ea4 100644
+--- a/drivers/mmc/host/usdhi6rol0.c
++++ b/drivers/mmc/host/usdhi6rol0.c
+@@ -1147,12 +1147,25 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
+ 	}
+ }
+ 
++static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
++{
++	int ret;
++
++	ret = mmc_regulator_set_vqmmc(mmc, ios);
++
++	if (ret < 0)
++		dev_warn(mmc_dev(mmc), "Voltage switch failed: %d\n", ret);
++
++	return ret;
++}
++
+ static struct mmc_host_ops usdhi6_ops = {
+ 	.request	= usdhi6_request,
+ 	.set_ios	= usdhi6_set_ios,
+ 	.get_cd		= usdhi6_get_cd,
+ 	.get_ro		= usdhi6_get_ro,
+ 	.enable_sdio_irq = usdhi6_enable_sdio_irq,
++	.start_signal_voltage_switch = usdhi6_sig_volt_switch,
+ };
+ 
+ /*			State machine handlers				*/
+-- 
+2.1.4
+
