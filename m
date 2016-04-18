@@ -1,44 +1,61 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Remove unsupported s2mps11 regulator
- bindings from Exynos5420 boards
-Date: Mon, 18 Apr 2016 12:52:37 -0400
-Message-ID: <571510D5.3090406@osg.samsung.com>
-References: <1460965453-5337-1-git-send-email-k.kozlowski@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/5] regulator: st-flashss: Add DT binding documentation
+ for flashss regulator.
+Date: Mon, 18 Apr 2016 11:53:29 -0500
+Message-ID: <20160418165329.GA8367@rob-hp-laptop>
+References: <1460474204-5351-1-git-send-email-peter.griffin@linaro.org>
+ <1460474204-5351-2-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1460965453-5337-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460474204-5351-2-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, lgirdwood@gmail.com, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 04/18/2016 03:44 AM, Krzysztof Kozlowski wrote:
-> The bindings like s2mps11,buck6-ramp-enable or s2mps11,buck2-ramp-delay
-> where ignored. They were never parse by s2mps11 regulator driver. Also
-> the values used in these bindings were equal to default reset values of
-> S2MPS11 device. It is safe to remove them.
+On Tue, Apr 12, 2016 at 04:16:40PM +0100, Peter Griffin wrote:
+> This patch adds the DT doc for the flashss regulator driver which is
+> found in stih407 based silicon.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
+>  .../devicetree/bindings/regulator/st-flashss.txt   | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/st-flashss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/st-flashss.txt b/Documentation/devicetree/bindings/regulator/st-flashss.txt
+> new file mode 100644
+> index 0000000..04324d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/st-flashss.txt
+> @@ -0,0 +1,43 @@
+> +ST Voltage regulator for FlashSS vsense
+> +
+> +This documents the voltage regulator driver which manages the vsense inside the ST flash
 
-The patch looks good to me.
+Bindings document h/w, not drivers.
+> +sub-system that is used for configuring MMC, NAND, SPI voltages.
+> +
+> +Required properties:
+> +- compatible:		Can be "st,vqmmc", "st,vnand" or "st,vspi" because it is shared
+> +			among these devices inside the ST FlashSS.
+> +- regulator-name:	Regulator name.
+> +- reg:			The vsense top config base address in the flashSS hardware.
+> +
+> +Any property defined as part of the core regulator binding, in
+> +Documentation/devicetree/bindings/regulator/regulator.txt can also be used.
+> +
+> +Example:
+> +
+> +vqmmc_reg: voltage-regulator {
+> +	compatible = "st,vqmmc";
+> +	regulator-name = "vqmmc0";
+> +	/* Control register for the VSENSE Module */
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+I'm having a hard time understanding the relationship of FlashSS, VSENSE 
+and the compatible strings. The binding looks suspect to me though. If 
+VSENSE is a module, then I'd expect a compatible string for it.
 
-On a related note, the s5m8767 regulator driver parses similar DT properties
-("s5m8767,pmic-buck-ramp-delay", "s5m8767,pmic-buck2-ramp-enable", etc) that
-are not in Documentation/devicetree/bindings/regulator/samsung,s5m8767.txt.
-
-So those should either be added to the binding doc or removed from the driver
-if are not correct (I don't have documentation for the s5m8767 PMIC but the
-DT properties are not use by any DTS in mainline using the s5m8767 PMIC).
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Rob
