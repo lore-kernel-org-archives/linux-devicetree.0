@@ -1,68 +1,167 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv2] wlcore: spi: add wl18xx support
-Date: Mon, 18 Apr 2016 16:57:03 +0200
-Message-ID: <1463330011.BhWEcYYuGD@wuerfel>
-References: <1460273570-12298-1-git-send-email-eyalr@ti.com> <14313437.cDJIgY3kzo@wuerfel> <8665E2433BC68541A24DFFCA87B70F5B360BF614@DFRE01.ent.ti.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC
+ NAND on non-OMAP platforms
+Date: Mon, 18 Apr 2016 16:57:55 +0200
+Message-ID: <20160418165755.77d1d661@bbrezillon>
+References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
+	<20160413212500.GD5995@atomide.com>
+	<5710B58C.7050108@ti.com>
+	<20160415120942.3131eac1@bbrezillon>
+	<5710C86A.9060108@ti.com>
+	<20160415135108.63716f06@bbrezillon>
+	<20160415154139.GS5995@atomide.com>
+	<20160415180531.15d790d2@bbrezillon>
+	<20160415161950.GT5995@atomide.com>
+	<20160416105711.5310d2d0@bbrezillon>
+	<5714D3A4.2050405@ti.com>
+	<5714D8AA.9040304@ti.com>
+	<20160418151305.17a42437@bbrezillon>
+	<5714E5AA.5050200@ti.com>
+	<20160418161001.2a1c0bed@bbrezillon>
+	<5714F185.5080103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B360BF614@DFRE01.ent.ti.com>
+In-Reply-To: <5714F185.5080103@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Reizer, Eyal" <eyalr@ti.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalreizer@gmail.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+To: Roger Quadros <rogerq@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 April 2016 05:55:51 Reizer, Eyal wrote:
-> > >
-> > > - all wilink family needs special init command for entering wspi mode.
-> > >   extra clock cycles should be sent after the spi init command while the
-> > >   cs pin is high.
-> > > - switch to controling the cs pin from the spi driver for achieveing the
-> > >   above.
-> > > - the selected cs gpio is read from the spi device-tree node using the
-> > >   cs-gpios field and setup as a gpio.
-> > > - See the example below for specifying the cs gpio using the cs-gpios entry
-> > > &spi0   {
-> > >         ...
-> > >         cs-gpios = <&gpio0 5 0>;
-> > >         ...
-> > >         wlcore: wlcore@0 {
-> > >                 compatible = "ti,wl1835";
-> > >         ...
-> > >         ...
-> > >         };
-> > > };
-> > >
-> > > Signed-off-by: Eyal Reizer <eyalr@ti.com>
+On Mon, 18 Apr 2016 17:39:01 +0300
+Roger Quadros <rogerq@ti.com> wrote:
+
+> On 18/04/16 17:10, Boris Brezillon wrote:
+> > On Mon, 18 Apr 2016 16:48:26 +0300
+> > Roger Quadros <rogerq@ti.com> wrote:
 > > 
-> > I don't think this can work in general: not all SPI hosts uses GPIOs for
-> > controlling CS, so the logic can't work, and it's also a layering violation for the
-> > driver to look at the parent.
+> >> Boris,
+> >>
+> >> On 18/04/16 16:13, Boris Brezillon wrote:
+> >>> Hi Roger,
+> >>>
+> >>> On Mon, 18 Apr 2016 15:52:58 +0300
+> >>> Roger Quadros <rogerq@ti.com> wrote:
+> >>>
+> >>>> On 18/04/16 15:31, Roger Quadros wrote:
+> >>>>> On 16/04/16 11:57, Boris Brezillon wrote:
+> >>>>>> On Fri, 15 Apr 2016 09:19:51 -0700
+> >>>>>> Tony Lindgren <tony@atomide.com> wrote:
+> >>>>>>
+> >>>>>>>
+> >>>>>>>> Or should I just pull this immutable branch in my current nand/next and
+> >>>>>>>> let you pull the same immutable branch in omap-soc. I mean, would this
+> >>>>>>>> prevent conflicts when our branches are merged into linux-next, no
+> >>>>>>>> matter the order.
+> >>>>>>>
+> >>>>>>> Ideally just one or more branches with just minimal changes in
+> >>>>>>> them against -rc1. But you may have other dependencies in
+> >>>>>>> your NAND tree so that may no longer be doable :) Usually if
+> >>>>>>> I merge something that may need to get merged into other
+> >>>>>>> branches, I just apply them into a separate branch against -rc1
+> >>>>>>> to start with, then merge that branch in.
+> >>>>>>
+> >>>>>> Okay, in this case, that's pretty much what I did from the beginning,
+> >>>>>> except the immutable branch was provided by Roger (based on 4.6-rc1).
+> >>>>>> Thanks for this detailed explanation, I'll try to remember that when
+> >>>>>> I'll need to provide an immutable branch for another subsystem.
+> >>>>>>
+> >>>>>> Roger, my request remains, could you check/test my conflict resolution
+> >>>>>> (branch nand/next-with-gpmc-rework)?
+> >>>>>
+> >>>>> I couldn't test that branch yet as nand/next is broken on omap platforms
+> >>>>> (at least on dra7-evm).
+> >>>>>
+> >>>>> The commit where it breaks is:
+> >>>>> a662ef4 mtd: nand: omap2: use mtd_ooblayout_xxx() helpers where appropriate
+> >>>>>
+> >>>>> I'm trying to figure out what went wrong there. Failure log below.
+> >>>>
+> >>>> OK. I was able to fix it when at commit a662ef4 with the below patch.
+> >>>
+> >>> Thanks for debugging that.
+> >>>
+> >>>>
+> >>>> Looks like we need to read exactly the ECC bytes through the ECC engine and not
+> >>>> the entire OOB region.
+> >>>
+> >>> Hm, it looks like there's a bug somewhere else, because I don't see any
+> >>> reason why the controller wouldn't be able to read the full OOB region.
+> >>
+> >> The controller can read the full OOB region but we only want it to read just
+> >> the ECC bytes because that is the way the ELM ECC engine works.
 > > 
-> > I would suggest fixing this using a new API function from the SPI core, if we
-> > don't already have a generic way to do it.
-> >
-> Originally this is what I have done until I was pointed to the generic cs-gpio mechanism 
-> in the SPI core. 
-> It is a generic mechanism already in the SPI core driver.
-> See: Documentation/devicetree/bindings/spi/spi-bus.txt
+> > Ok, I think I got it: the ECC correction is pipelined with data read,
+> > and the controller expect to have ECC bytes right after the in-band
+> > data, is that correct?
+> 
+> That is correct.
+> 
+> > 
+> >>
+> >>>>
+> >>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> >>>> index e622a1b..46b61d2 100644
+> >>>> --- a/drivers/mtd/nand/omap2.c
+> >>>> +++ b/drivers/mtd/nand/omap2.c
+> >>>> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
+> >>>>  	chip->read_buf(mtd, buf, mtd->writesize);
+> >>>>  
+> >>>>  	/* Read oob bytes */
+> >>>> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
+> >>>> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+> >>>> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + chip->ecc.layout->eccpos[0], -1);
+> >>>
+> >>> The whole point of this series is to get rid of chip->ecc.layout, so
+> >>> we'd rather use the mtd_ooblayout_find_eccregion() instead of
+> >>> chip->ecc.layout->eccpos[0].
+> >>
+> >> We just need the position of the first ECC byte offset.
+> >> Is that the most optimal way to get it?
+> > 
+> > For the BCH case, it seems that ECC bytes always start at offset
+> > BADBLOCK_MARKER_LENGTH, so you can just pass
+> > mtd->writesize + BADBLOCK_MARKER_LENGTH.
+> > 
+> > Let me know if this works, and I'll squash those changes into the
+> > faulty commit (I know this implies a rebase + push -f, but IMO that's
+> > better than breaking bisectability).
+> > 
+> > 
+> 
+> So, the below patch works as well. Please feel free to fold it with your patch.
 
-The cs-gpios property is documented as optional, it defines how you should
-list the gpios if CS is implemented using gpio, but not all hardware does
-it like this.
+Will do.
 
-> It is also part of the generic spi.h (include/Linux/spi/spi.h), already part of 
-> " struct spi_device" So it seemed redundant adding another mechanism for 
-> implementing the same.
-> Platform that interact with a wilink need to use it, and platforms that don't  
-> have this capability will probably not interact with a wilink device using SPI.
+Thanks,
 
-The cs_gpio field in spi_device belongs to the spi host controller, no other
-slave driver uses it.
+Boris
 
-I wasn't asking for a duplication of this mechanism, but an interface to
-use it properly. Internally, the spi core uses the spi_set_cs() function to
-pick a CS. Find a way to use that rather than reimplementing it incorrectly.
+> 
+> --
+> cheers,
+> -roger
+> 
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index e622a1b..eb85d6b 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
+>  	chip->read_buf(mtd, buf, mtd->writesize);
+>  
+>  	/* Read oob bytes */
+> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
+> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + BADBLOCK_MARKER_LENGTH, -1);
+> +	chip->read_buf(mtd, chip->oob_poi, chip->ecc.total);
+>  
+>  	/* Calculate ecc bytes */
+>  	chip->ecc.calculate(mtd, buf, ecc_calc);
 
-	Arnd
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
