@@ -1,37 +1,103 @@
-From: Nicolas Dufresne <nicolas.dufresne@gmail.com>
-Subject: Re: [PATCH 3/7] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
- Decoder Driver
-Date: Mon, 18 Apr 2016 13:48:17 -0400
-Message-ID: <1461001697.2719.7.camel@gmail.com>
-References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-3-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-4-git-send-email-tiffany.lin@mediatek.com>
-	 <5710FA3A.2030603@xs4all.nl> <1460958046.7861.48.camel@mtksdaap41>
-	 <57148D8E.9060601@xs4all.nl> <1460967754.7861.61.camel@mtksdaap41>
-Reply-To: nicolas@ndufresne.ca
+From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ASoC: cs35l33: Add device tree bindings file for cs35l33
+Date: Mon, 18 Apr 2016 12:49:37 -0500
+Message-ID: <1461001777-17252-1-git-send-email-Paul.Handrigan@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460967754.7861.61.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tiffany lin <tiffany.lin@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Pawel Osciak <pawel@osciak.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le lundi 18 avril 2016 =C3=A0 16:22 +0800, tiffany lin a =C3=A9crit=C2=A0=
-:
-> > > We are plaining to remove m2m framework in th feature, although
-> we think
-> >=C2=A0
-> > Remove it for just the decoder driver or both encoder and decoder?
-> >=C2=A0
-> Remove it from decoder driver.
+Add device tree bindings file for the cs35l33 8V boosted
+class D amplifier.
 
-Did you look at how CODA handle it (drivers/media/platform/coda/coda-
-common.c) ? I don't know any detail, but they do have the same issue
-and use both=C2=A0v4l2_m2m_fop_poll and=C2=A0v4l2_m2m_fop_mmap.
+Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/sound/cs35l33.txt          | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
 
-cheers,
-Nicolas
+diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt b/Documentation/devicetree/bindings/sound/cs35l33.txt
+new file mode 100644
+index 0000000..434250c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
+@@ -0,0 +1,69 @@
++CS35L33 Speaker Amplifier
++
++Required properties:
++
++  - compatible : "cirrus,cs35l33"
++
++  - reg : the I2C address of the device for I2C
++
++  - VA-supply, VP-supply : power supplies for the device,
++    as covered in
++    Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Optional properties:
++
++  - cirrus,reset-gpios : gpio used to reset the amplifier
++
++  - interrupt-parent : Specifies the phandle of the interrupt controller to
++    which the IRQs from CS35L33 are delivered to.
++ -  interrupts : IRQ line info CS35L33.
++    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++    for further information relating to interrupt properties)
++
++  - cirrus,boost-ctl : Booster voltage use to supply the amp, if this is not
++    set then the internal 1.0V LDO will supply the amp.
++
++  - cirrus,ramp-rate : On power up, it affects the time from when the power
++    up sequence begins to the time the audio reaches a full-scale output.
++    On power down, it affects the time from when the power-down sequence
++    begins to when the amplifier disables the PWM outputs. If this property
++    is not set then soft ramping will be disabled and ramp time would be
++    20ms. If this property is set to 0,1,2,3 then ramp times would be 40ms,
++    60ms,100ms,175ms respectively for 48KHz sample rate.
++
++  - cirrus,boost-ipk : Booster peak current
++
++  - cirrus,hg-algo : parameters for internal h/g algorithm that controls
++    the amplifier supplies
++
++Example:
++
++cs35l33: cs35l33@40 {
++	compatible = "cirrus,cs35l33";
++	reg = <0x40>;
++
++	VA-supply = <&ldo5_reg>;
++	VP-supply = <&ldo5_reg>;
++
++	interrupt-parent = <&gpio8>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++	reset-gpios = <&cs47l91 34 0>;
++
++	ramp-rate = <0x0>;
++	boost-ctl = <0x0>;
++	boost-ipk = <0xE0>;
++
++	hg-algo {
++		mem-depth = <0x3>;
++		release-rate = <0x3>;
++		hd-rm = <0xA>;
++		ldo-thld = <0x1>;
++		ldo-path-disable = <0x0>;
++		ldo-entry-delay=<0x4>;
++		vp-hg-auto;
++		vp-hg=<0xF>;
++		vp-hg-rate=<0x2>;
++		vp-hg-va=<0x0>;
++	};
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
