@@ -1,155 +1,75 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: Re: [PATCH RESEND 1/2] pinctrl: ns2: add pinmux driver support for
- Broadcom NS2 SoC
-Date: Mon, 18 Apr 2016 09:04:38 +0530
-Message-ID: <CAL2FKYnJNVOcB7aYwkwRAGSq5ufg+CJowJCnzpBEYiTMev0B9A@mail.gmail.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/9] thermal: rockchip: Support rk3366/rk3399 SoCS and fixes
+ the driver
+Date: Mon, 18 Apr 2016 11:35:52 +0800
+Message-ID: <1460950562-20652-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, smbarber-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hello Eduardo, Heiko
+This series pacthes to support the rk3366/rk3399 SoCs thermal, and fixes the driver.
 
-On Thu, Apr 14, 2016 at 3:12 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Apr 14, 2016 at 9:53 AM, Yendapally Reddy Dhananjaya Reddy
-> <yendapally.reddy@broadcom.com> wrote:
->> On Wed, Apr 13, 2016 at 6:49 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->>> On Tue, Mar 29, 2016 at 5:22 PM, Yendapally Reddy Dhananjaya Reddy
->>> <yendapally.reddy@broadcom.com> wrote:
->
->>>> +static const unsigned int gpio_0_1_pins[] = {24, 25};
->>>> +static const unsigned int pwm_0_pins[] = {24};
->>>> +static const unsigned int pwm_1_pins[] = {25};
->>>
->>> So either the same pins are used for GPIO or PWM.
->>> And this pattern persists.
->>>
->>> Do you have a brewing GPIO driver for this block as well?
->>> Is it a separate front-end calling to pinctrl using the
->>> pinctrl_gpio_* calls or do you plan to patch it into this
->>> driver?
->>>
->>> This is more of a question.
->>>
->>
->> This SoC supports group based configuration and there is a top level register
->> to select groups. Once the gpio_0_1_pins group is selected, there is one more
->> register to select between gpio_0_1 and pwm (only four pins). The pins
->> 24 and 25 are shared between nor pins and gpio at the top group level. Once
->> gpio group is selected, then we can select to be either gpio or pwm. I missed
->> these two pins to be added to nor_data_pins and will add in the next version.
->>
->> static const unsigned nor_data_pins[] =  {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
->>         10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
->>
->> NS2_PIN_GROUP(nand, 0, 0, 31, 1, 0),
->> NS2_PIN_GROUP(nor_data, 0, 0, 31, 1, 1),
->> NS2_PIN_GROUP(gpio_0_1, 0, 0, 31, 1, 0),
->>
->> To select PWM, we need to select gpio and pwm as well.
->>
->> gpio: gpio {
->> function = "gpio";
->> groups = "gpio_0_1_grp";
->>
->> pwm: pwm {
->> function = "pwm";
->> groups = "pwm0_grp", "pwm1_grp";
->> };
->>
->> Already available gpio driver "pinctrl-iproc-gpio.c" will be the gpio driver
->> for this soc as well without pin request.
->
-> Then you are doing something wrong. Look in pinctrl-iproc-gpio.c:
->
-> /*
->  * Request the Iproc IOMUX pinmux controller to mux individual pins to GPIO
->  */
-> static int iproc_gpio_request(struct gpio_chip *gc, unsigned offset)
-> {
->         struct iproc_gpio *chip = gpiochip_get_data(gc);
->         unsigned gpio = gc->base + offset;
->
->         /* not all Iproc GPIO pins can be muxed individually */
->         if (!chip->pinmux_is_supported)
->                 return 0;
->
->         return pinctrl_request_gpio(gpio);
-> }
->
-> static void iproc_gpio_free(struct gpio_chip *gc, unsigned offset)
-> {
->         struct iproc_gpio *chip = gpiochip_get_data(gc);
->         unsigned gpio = gc->base + offset;
->
->         if (!chip->pinmux_is_supported)
->                 return;
->
->         pinctrl_free_gpio(gpio);
-> }
->
-> So as you see pinctrl_request_gpio() and pinctrl_free_gpio()
-> are being called.
->
-> These will in turn call pinmux_request_gpio() and
-> pinmux_free_gpio() to make the backing pin controller
-> mux in the pin as GPIO.
->
-> pinmux_request_gpio() will end up in pin_request()
-> and at this point:
->
-> if (gpio_range && ops->gpio_request_enable)
->                 /* This requests and enables a single GPIO pin */
->                 status = ops->gpio_request_enable(pctldev, gpio_range, pin);
->
-> As you can see: it will attempt to call the .gpio_request_enable()
-> method of your struct pinmux_ops.
->
-> But your pinmux ops look like this:
->
-> +static struct pinmux_ops ns2_pinmux_ops = {
-> +       .get_functions_count = ns2_get_functions_count,
-> +       .get_function_name = ns2_get_function_name,
-> +       .get_function_groups = ns2_get_function_groups,
-> +       .set_mux = ns2_pinmux_enable,
-> +};
->
-> I.e. there is no way that GPIO can be set up as a GPIO line,
-> and you're relying on some other pin control entries in the
-> device tree to do that, which is unnecessarily complicated.
->
-> Please consider implementing the .gpio_request_enable callback
-> for this pin multiplexer.
+65ae684 thermal: rockchip: disable thermal->clk in err case
+31e6d69 thermal: rockchip: fixes the code_to_temp for tsadc driver
+6e2d6fb thermal: rockchip: update the tsadc table for rk3399
+49f6ccf thermal: rockchip: handle the power sequence for tsadc controller
+9f8bd52 thermal: rockchip: Support RK3366 SoCs in the thermal driver
+a959e42 thermal: rockchip: add the notes for better reading
+e5cbc6a thermal: of: Add support for hardware-tracked trip points
+7f613e4 thermal: rockchip: add the set_trips function
+94cc571 arm64: dts: rockchip: move the rk3368 thermal data into rk3368.dtsi
 
-Only 4 GPIO pins are pin configurable. The other GPIO pins are group
-controlled as mentioned in the NS2_PIN_GROUP. A single gpio request will affect
-the other pins in that particular group as the control is available
-to select either "gpio group" or the other. As shown below
+Verified on url =
+https://github.com/Caesar-github/rockchip/commits/wip/fixes-rockchip-thermal-20160418
+Based on linux-next kernel for 20160415
 
-0x00 selects "gpio_6_7_pins" together
-0x01 selects "pcie_a3_clk_wak_pins"
-0x02 selects "nor_addr_4_5_pins"
+Verified on rk3288/rk3366/rk3399 SoCs with rockchip inside kernel(develop4.4).
 
-static const unsigned gpio_6_7_pins[] = {31, 32};
-static const unsigned pcie_a3_clk_wak_pins[] = {31, 32};
-static const unsigned nor_addr_4_5_pins[] = {31, 32};
+The rk3399 dtsi has benn sent on https://patchwork.kernel.org/patch/8462441/.
+The dts thermal will be updated in later.
 
-I tested with not providing the "ranges" property in the gpio node. The
-"iproc_gpio_request" and "iproc_gpio_free" functions returned back as
-"rages" property is not defined.
+---
 
-        if (!chip->pinmux_is_supported)
-                return 0;
 
-We can support the "iproc_gpio_request" and "iproc_gpio_free" functions for the
-4 gpios that share the pwm pins only. Please suggest me here.
 
-Thanks,
-Dhananjay
+Caesar Wang (6):
+  thermal: rockchip: fixes the code_to_temp for tsadc driver
+  thermal: rockchip: update the tsadc table for rk3399
+  thermal: rockchip: handle the power sequence for tsadc controller
+  thermal: rockchip: add the notes for better reading
+  thermal: rockchip: add the set_trips function
+  arm64: dts: rockchip: move the rk3368 thermal data into rk3368.dtsi
 
->
-> Yours,
-> Linus Walleij
+Elaine Zhang (1):
+  thermal: rockchip: Support RK3366 SoCs in the thermal driver
+
+Mikko Perttunen (1):
+  thermal: of: Add support for hardware-tracked trip points
+
+Shawn Lin (1):
+  thermal: rockchip: disable thermal->clk in err case
+
+ arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi | 112 ---------
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi         |  66 ++++-
+ drivers/thermal/of-thermal.c                     |  82 +++++-
+ drivers/thermal/rockchip_thermal.c               | 302 ++++++++++++++++++-----
+ include/linux/thermal.h                          |   2 +
+ 5 files changed, 388 insertions(+), 176 deletions(-)
+ delete mode 100644 arch/arm64/boot/dts/rockchip/rk3368-thermal.dtsi
+
+-- 
+1.9.1
