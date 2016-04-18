@@ -1,122 +1,67 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Mon, 18 Apr 2016 17:39:01 +0300
-Message-ID: <5714F185.5080103@ti.com>
-References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
- <20160413212500.GD5995@atomide.com> <5710B58C.7050108@ti.com>
- <20160415120942.3131eac1@bbrezillon> <5710C86A.9060108@ti.com>
- <20160415135108.63716f06@bbrezillon> <20160415154139.GS5995@atomide.com>
- <20160415180531.15d790d2@bbrezillon> <20160415161950.GT5995@atomide.com>
- <20160416105711.5310d2d0@bbrezillon> <5714D3A4.2050405@ti.com>
- <5714D8AA.9040304@ti.com> <20160418151305.17a42437@bbrezillon>
- <5714E5AA.5050200@ti.com> <20160418161001.2a1c0bed@bbrezillon>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] phy: Add a driver for simple phy
+Date: Mon, 18 Apr 2016 16:40:58 +0200
+Message-ID: <10235833.eh3J2kCBDh@wuerfel>
+References: <1447708924-15076-1-git-send-email-albeu@free.fr> <4848615.OezLJod6Cv@wuerfel> <5714D35B.8000208@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160418161001.2a1c0bed@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Tony Lindgren <tony@atomide.com>, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5714D35B.8000208-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/04/16 17:10, Boris Brezillon wrote:
-> On Mon, 18 Apr 2016 16:48:26 +0300
-> Roger Quadros <rogerq@ti.com> wrote:
+On Monday 18 April 2016 18:00:19 Kishon Vijay Abraham I wrote:
+> Hi Arnd,
 > 
->> Boris,
->>
->> On 18/04/16 16:13, Boris Brezillon wrote:
->>> Hi Roger,
->>>
->>> On Mon, 18 Apr 2016 15:52:58 +0300
->>> Roger Quadros <rogerq@ti.com> wrote:
->>>
->>>> On 18/04/16 15:31, Roger Quadros wrote:
->>>>> On 16/04/16 11:57, Boris Brezillon wrote:
->>>>>> On Fri, 15 Apr 2016 09:19:51 -0700
->>>>>> Tony Lindgren <tony@atomide.com> wrote:
->>>>>>
->>>>>>>
->>>>>>>> Or should I just pull this immutable branch in my current nand/next and
->>>>>>>> let you pull the same immutable branch in omap-soc. I mean, would this
->>>>>>>> prevent conflicts when our branches are merged into linux-next, no
->>>>>>>> matter the order.
->>>>>>>
->>>>>>> Ideally just one or more branches with just minimal changes in
->>>>>>> them against -rc1. But you may have other dependencies in
->>>>>>> your NAND tree so that may no longer be doable :) Usually if
->>>>>>> I merge something that may need to get merged into other
->>>>>>> branches, I just apply them into a separate branch against -rc1
->>>>>>> to start with, then merge that branch in.
->>>>>>
->>>>>> Okay, in this case, that's pretty much what I did from the beginning,
->>>>>> except the immutable branch was provided by Roger (based on 4.6-rc1).
->>>>>> Thanks for this detailed explanation, I'll try to remember that when
->>>>>> I'll need to provide an immutable branch for another subsystem.
->>>>>>
->>>>>> Roger, my request remains, could you check/test my conflict resolution
->>>>>> (branch nand/next-with-gpmc-rework)?
->>>>>
->>>>> I couldn't test that branch yet as nand/next is broken on omap platforms
->>>>> (at least on dra7-evm).
->>>>>
->>>>> The commit where it breaks is:
->>>>> a662ef4 mtd: nand: omap2: use mtd_ooblayout_xxx() helpers where appropriate
->>>>>
->>>>> I'm trying to figure out what went wrong there. Failure log below.
->>>>
->>>> OK. I was able to fix it when at commit a662ef4 with the below patch.
->>>
->>> Thanks for debugging that.
->>>
->>>>
->>>> Looks like we need to read exactly the ECC bytes through the ECC engine and not
->>>> the entire OOB region.
->>>
->>> Hm, it looks like there's a bug somewhere else, because I don't see any
->>> reason why the controller wouldn't be able to read the full OOB region.
->>
->> The controller can read the full OOB region but we only want it to read just
->> the ECC bytes because that is the way the ELM ECC engine works.
+> On Sunday 17 April 2016 01:20 AM, Arnd Bergmann wrote:
+> > On Thursday 14 April 2016 11:22:58 Kishon Vijay Abraham I wrote:
+> >>
+> >> IMO simple-phy driver should be an independent driver and shouldn't export
+> >> symbols. The dt binding for the simple phy device should be something like
+> >> below where all the properties of the simple phy device should be in the
+> >> binding documentation.
+> >> usbphy {
+> >>         compatible = "simple-phy";
+> >>         phy-supply = <&supply>;
+> >>         clocks = <&clock>;
+> >>         reset = <&reset>;
+> >> };
+> >>
+> >> Anything that needs more than this shouldn't be a simple phy.
+> > 
+> > I think there are two aspects here:
+> > 
+> > a) I agree that a driver that matches "simple-phy" should only call
+> >    the generic functions and not use any other properties.
+> > 
+> > b) Independent of that, I think that it makes a lot of sense to export
+> >    those functions from the generic PHY subsystems so they can be
+> >    called from drivers that are a little less generic, or that already
+> >    have an established binding but need no other code.
 > 
-> Ok, I think I got it: the ECC correction is pipelined with data read,
-> and the controller expect to have ECC bytes right after the in-band
-> data, is that correct?
+> These export functions can be abused and called directly from the controller
+> driver bypassing the phy core.
+> 
+> Actually lot of generic PHY programming are done in the phy-core itself. (For
+> example, the generic PHY regulator binding "phy-supply" can be used for the phy
+> core to enable the regulator during power on and disable during power off, phy
+> core also invokes pm_runtime API's during power_on and power_off which can be
+> used to enable/disable clocks). So drivers which are less generic can just
+> populate their specific handling part in their phy ops and leave the rest to be
+> done in phy core.
+> "simple-phy" should be used to avoid adding new PHY drivers that does simple
+> PHY ops.
 
-That is correct.
+Having the phy core do everything automatically indeed sounds superior here,
+the simple-phy driver can then become a trivial stub without any calls
+into the regulator/clk/reset subsystems. If that works (or can be made to
+work), that's great.
 
-> 
->>
->>>>
->>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
->>>> index e622a1b..46b61d2 100644
->>>> --- a/drivers/mtd/nand/omap2.c
->>>> +++ b/drivers/mtd/nand/omap2.c
->>>> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
->>>>  	chip->read_buf(mtd, buf, mtd->writesize);
->>>>  
->>>>  	/* Read oob bytes */
->>>> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
->>>> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
->>>> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + chip->ecc.layout->eccpos[0], -1);
->>>
->>> The whole point of this series is to get rid of chip->ecc.layout, so
->>> we'd rather use the mtd_ooblayout_find_eccregion() instead of
->>> chip->ecc.layout->eccpos[0].
->>
->> We just need the position of the first ECC byte offset.
->> Is that the most optimal way to get it?
-> 
-> For the BCH case, it seems that ECC bytes always start at offset
-> BADBLOCK_MARKER_LENGTH, so you can just pass
-> mtd->writesize + BADBLOCK_MARKER_LENGTH.
-> 
-> Let me know if this works, and I'll squash those changes into the
-> faulty commit (I know this implies a rebase + push -f, but IMO that's
-> better than breaking bisectability).
-> 
-> 
-
-So, the below patch works as well. Please feel free to fold it with your patch.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
