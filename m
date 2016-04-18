@@ -1,79 +1,79 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] ARM: dts: exynos: Remove unsupported s2mps11 regulator
- bindings from Exynos5420 boards
-Date: Mon, 18 Apr 2016 09:44:13 +0200
-Message-ID: <1460965453-5337-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Mon, 18 Apr 2016 08:45:40 +0100
+Message-ID: <20160418074540.GB3346@x1>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1>
+ <57111E8B.1040503@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57111E8B.1040503@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The bindings like s2mps11,buck6-ramp-enable or s2mps11,buck2-ramp-delay
-where ignored. They were never parse by s2mps11 regulator driver. Also
-the values used in these bindings were equal to default reset values of
-S2MPS11 device. It is safe to remove them.
+On Fri, 15 Apr 2016, Thor Thayer wrote:
+> On 03/30/2016 06:35 AM, Lee Jones wrote:
+> >On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+> >
+> >>From: Thor Thayer <tthayer@opensource.altera.com>
+> >>
+> >>The Altera Arria10 Devkit System Resource chip is a Multi-Function
+> >>Device, it has two subdevices:
+> >>      - GPIO
+> >>      - HWMON
+> >>
+> >>This patch adds documentation for the Altera A10-SR DT bindings.
+> >>
+> >>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> >>---
+> >>  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 +++++++=
++++++++++++++
+> >>  1 file changed, 35 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a=
+10sr.txt
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt=
+ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> >>new file mode 100644
+> >>index 0000000..564c761
+> >>--- /dev/null
+> >>+++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> >>@@ -0,0 +1,35 @@
+> >>+* Altera Arria10 Development Kit System Resource Chip
+> >>+
+> >>+Required parent device properties:
+> >>+- compatible : "altr,altr_a10sr"
+> >>+- spi-max-frequency : Maximum SPI frequency.
+> >>+- reg : the SPI Chip Select address for the Arria10 System Resourc=
+e chip
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos5420-arndale-octa.dts      | 7 -------
- arch/arm/boot/dts/exynos5420-smdk5420.dts          | 7 -------
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 7 -------
- 3 files changed, 21 deletions(-)
+[...]
 
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index a103ce8c3985..60bc861d0f9d 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -75,13 +75,6 @@
- 	s2mps11_pmic@66 {
- 		compatible = "samsung,s2mps11-pmic";
- 		reg = <0x66>;
--		s2mps11,buck2-ramp-delay = <12>;
--		s2mps11,buck34-ramp-delay = <12>;
--		s2mps11,buck16-ramp-delay = <12>;
--		s2mps11,buck6-ramp-enable = <1>;
--		s2mps11,buck2-ramp-enable = <1>;
--		s2mps11,buck3-ramp-enable = <1>;
--		s2mps11,buck4-ramp-enable = <1>;
- 
- 		interrupt-parent = <&gpx3>;
- 		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index 49920b4330ed..2e748d19322f 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -140,13 +140,6 @@
- 	s2mps11_pmic@66 {
- 		compatible = "samsung,s2mps11-pmic";
- 		reg = <0x66>;
--		s2mps11,buck2-ramp-delay = <12>;
--		s2mps11,buck34-ramp-delay = <12>;
--		s2mps11,buck16-ramp-delay = <12>;
--		s2mps11,buck6-ramp-enable = <1>;
--		s2mps11,buck2-ramp-enable = <1>;
--		s2mps11,buck3-ramp-enable = <1>;
--		s2mps11,buck4-ramp-enable = <1>;
- 
- 		s2mps11_osc: clocks {
- 			#clock-cells = <1>;
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 0e71d4253205..20fa7612080d 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -92,13 +92,6 @@
- 	s2mps11_pmic@66 {
- 		compatible = "samsung,s2mps11-pmic";
- 		reg = <0x66>;
--		s2mps11,buck2-ramp-delay = <12>;
--		s2mps11,buck34-ramp-delay = <12>;
--		s2mps11,buck16-ramp-delay = <12>;
--		s2mps11,buck6-ramp-enable = <1>;
--		s2mps11,buck2-ramp-enable = <1>;
--		s2mps11,buck3-ramp-enable = <1>;
--		s2mps11,buck4-ramp-enable = <1>;
- 		samsung,s2mps11-acokb-ground;
- 
- 		interrupt-parent = <&gpx0>;
--- 
-1.9.1
+> >>+		a10sr_hwmon: a10sr_hwmon {
+> >
+> >Device type only please.
+> >
+> I need to revisit where this will live (hwmon does not seem to be
+> the correct place) so it will change but I can follow the format
+> above if it is correct.
+
+BTW, "hwmon" is a subsystem in Linux, therefore is a Linuxism and is
+not allowed in DT.  What does the device *actually* do?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
