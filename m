@@ -1,70 +1,99 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
-Date: Mon, 18 Apr 2016 09:29:09 -0500
-Message-ID: <20160418142909.GA5608@rob-hp-laptop>
-References: <1460360506-14692-1-git-send-email-navam@xilinx.com>
- <20160412140338.GA19311@rob-hp-laptop>
- <4542055.HvdgVkDRYK@wuerfel>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Mon, 18 Apr 2016 16:34:35 +0200
+Message-ID: <5714F07B.3010005@st.com>
+References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>	<1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>	<CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>	<20160321124043.GA26873@rob-hp-laptop>	<CAGhQ9VwS=YwgfeUuK+LzGjy3f9btVGV7bN=TATGHwQs+JW+iGA@mail.gmail.com> <CAJgp7zxfFRhfNjcE23n+DKD0ffrvH4_sowPjK_-DZAS4ecH5dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4542055.HvdgVkDRYK@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, radhey.shyam.pandey-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAJgp7zxfFRhfNjcE23n+DKD0ffrvH4_sowPjK_-DZAS4ecH5dg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@gmail.com>, Joachim Eastwood <manabian@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 17, 2016 at 03:14:34PM +0200, Arnd Bergmann wrote:
-> On Tuesday 12 April 2016 09:03:38 Rob Herring wrote:
-> > On Mon, Apr 11, 2016 at 01:11:46PM +0530, Nava kishore Manne wrote:
-> > > This patch updates the driver to support 64-bit DMA
-> > > addressing.
-> > > 
-> > > Signed-off-by: Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/usb/udc-xilinx.txt         |  3 +-
-> > >  drivers/usb/gadget/udc/udc-xilinx.c                | 38 ++++++++++++++++++++--
-> > >  2 files changed, 37 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > > index 47b4e39..d417872 100644
-> > > --- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
-> > > @@ -7,12 +7,13 @@ Required properties:
-> > >  - interrupts         : Should contain single irq line of USB2 device
-> > >                         controller
-> > >  - xlnx,has-builtin-dma       : if DMA is included
-> > > -
-> > > +- xlnx,addrwidth       : Should be the dma addressing size in bits(ex: 40 bits).
-> > 
-> > Now this property shows up in a 2nd device. Now I'm more convinced this 
-> > is the wrong approach and should use dma-ranges.
-> 
-> Not necessarily: We need to be careful not to mix up two different things here:
-> 
-> * dma-ranges describes the address width of a bus, along with possible offsets.
->   In order to do wider than 32-bit addressing, all upstream busses must be
->   capable of supporting this, and AXI can have either 64-bit or 32-bit addressing.
-> 
-> * A device may have a register set that allows wider DMA. This is normally
->   identified through the 'compatible' property, and you can have all
->   combinations with bus addressing: a device with 32-bit DMA can be connected
->   to a 64-bit AXI bus, and a device with 64-bit DMA can have an upstream parent
->   or grandparent that is limited to 32 bits (or any other width really).
-> 
-> The patch here is almost certainly wrong. For one thing, it never sets the
-> DMA mask to the correct value, and it also infers the presence of the
-> 0x308..0x317 register range from an arbitrary DT property that describes
-> something else (the supported width of the DMA).
+On 3/22/2016 5:11 PM, Alexandre Torgue wrote:
+> Hi guys,
+>
+> I will fix typo issues (s/vesrion/version and ethernet @).
+>
+> Concerning compatible string. For sure "snps,dwmac-3.50a" string is
+> not used inside glue driver.
+> I perfere to keep it for information but if you really want that I
+> remove it I will not block ;)
+>
+> 2016-03-21 16:36 GMT+01:00 Joachim  Eastwood <manabian@gmail.com>:
+>> On 21 March 2016 at 13:40, Rob Herring <robh@kernel.org> wrote:
+>>> On Sat, Mar 19, 2016 at 12:00:22AM +0800, Chen-Yu Tsai wrote:
+>>>> Hi,
+>>>>
+>>>> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
+>>>> <alexandre.torgue@gmail.com> wrote:
+>>>>> +- clocks: Must contain a phandle for each entry in clock-names.
+>>>>> +- clock-names: Should be "stmmaceth" for the host clock.
+>>>
+> We can remove host clock (stmmac eth) entry here and refer to
+> stmmac.txt binding for common entry
+>
+>>> This doesn't sound like the clock input signal name...
+>>>
+>>>>> +              Should be "tx-clk" for the MAC TX clock.
+>>>>> +              Should be "rx-clk" for the MAC RX clock.
+>>>
+>>> How can other DWMAC blocks not have these clocks? The glue can't really
+>>> add these clocks. It could combine them into one or a new version of
+>>> DWMAC could have a different number of clock inputs. So if there is
+>>> variation here, then some of the bindings are probably wrong. I guess
+>>> the only change I'm suggesting is possibly moving these into common
+>>> binding doc.
+>>
+>> The LPC18xx implementation probably have these clocks as well but the
+>> LPC1850 user manual only documents the main clock. Someone with access
+>> to the IP block doc from Synopsys should be able to check which clocks
+>> the MAC really needs.
+>>
+>> Rockchip bindings have two clocks named "mac_clk_rx" and "mac_clk_tx".
+>> These are probably the same as stm32 needs so maybe use these names
+>> and move them into the main doc and update the rockchip binding.
+>>
+> I think we can use same name. But I have a doubt on moving it in a
+> common bindings (maybe I don't well understood). When you say "common
+> binding file" is it "stmmac.txt" binding ? If yes does it mean that we
+> have to control it inside stmmac driver (no more in glue) ? In this
+> case those clocks will become "required" for stm32 and rockship but
+> not for others chip. It could create confusion?
 
-Right, you don't need to know the exact bus width for determining the 
-register/descriptor set is 32 or 64 bit addesses. I'm fine with a 
-property for that, but if limiting the actual connected address bits is 
-needed, then dma-ranges should be used.
+Currently we keep the "host" and "csr" " ptp  "clock from common
+bindings because directly connected to the either MAC core or optional
+internals modules.
+Indeed, also clk_tx_i and clk_rx_i could be treated in the same way.
+but... (my personal view).
+Many platforms, also inside STi, have different clock routing schema,
+so we could relax them giving each glue the way to internally manage
+all (as done nowadays).
+So these clocks can stay inside the glue and documented inside each
+binding doc. Maybe, it could be not so easy to have generic schema
+suitable for all the glues so documenting all inside the same binding
+text file.
+We could try to better name these clocks in each glue. For example, for
+this, although I do not know the clk schema, I can image a single
+rmii_clk (maybe from internal oscillator) that is connected to
+clk_tx_i and clk_rx_i. So it could be useless to pass both. Please
+let me know if I am wrong...
+In case of (G)MII, we should use something like (g)mii_tx_clk,
+(g)mii_rx_clk according to the real connections (if from
+an internal oscillator and not from an ext one connected to the phy).
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Peppe
+
+
+> Best regards
+>
+> Alex
+>
+>>
+>> regards,
+>> Joachim Eastwood
+>
