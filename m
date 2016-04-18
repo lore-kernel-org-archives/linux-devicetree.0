@@ -1,83 +1,107 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V3] iio: pressure: hp03: Add Hope RF HP03 sensor support
-Date: Mon, 18 Apr 2016 15:59:20 +0200
-Message-ID: <5714E838.6040702@denx.de>
-References: <1460321544-8619-1-git-send-email-marex@denx.de> <57129538.6010300@kernel.org> <5714E07B.4090902@denx.de> <1a6d907d4f0229c80eae5075139febbb@jic23.retrosnub.co.uk> <5714E78F.6020305@denx.de> <809d6d41963caff6c7f3fa26e2009dff@jic23.retrosnub.co.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/5] doc: DT: Add Generic Serial Device Tree Bindings
+Date: Mon, 18 Apr 2016 16:05:24 +0200
+Message-ID: <10322130.q5nmK1X286@wuerfel>
+References: <1460636003-3011-1-git-send-email-geert+renesas@glider.be> <5792073.qsBJ1LK659@wuerfel> <CAMuHMdWmHUhhwbYDcmNXuxBRC6n+tp=oX03dBaK2VgL4OA72MQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <809d6d41963caff6c7f3fa26e2009dff-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWmHUhhwbYDcmNXuxBRC6n+tp=oX03dBaK2VgL4OA72MQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Qipan Li <Qipan.Li-kQvG35nSl+M@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/18/2016 03:57 PM, jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org wrote:
-> On 18.04.2016 14:56, Marek Vasut wrote:
->> On 04/18/2016 03:44 PM, jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org wrote:
->>> On 18.04.2016 14:26, Marek Vasut wrote:
->>>> On 04/16/2016 09:40 PM, Jonathan Cameron wrote:
->>>>> On 10/04/16 21:52, Marek Vasut wrote:
->>>>>> Add support for HopeRF pressure and temperature sensor.
->>>>>>
->>>>>> This device uses two fixed I2C addresses, one for storing
->>>>>> calibration coefficients and another for accessing the ADC.
->>>>>>
->>>>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>>>>> Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>> Sorry I didn't get to this earlier in the week.
->>>>>
->>>>> Unfortunately the resulting scales don't match the standard ABI for
->>>>> these
->>>>> two channel types.
->>>>
->>>> Ah, sorry for the inconvenience.
->>>>
->>>>> Otherwise, looks good. I've cc'd the devicetree list and maintainers.
->>>>> The binding is trivial I think, but always good to give people a
->>>>> opportunity to comment.
->>>>>
->>>>> Jonathan
->>>>>> ---
->>>>>> V2: - Expand the binding document with more details on the XCLR pin
->>>>>>     - Switch from IIO_CHAN_INFO_PROCESSED to RAW + SCALE
->>>>>>     - Add failpath into hp03_update_temp_pressure() for the case
->>>>>>       when ADC readout fails. This correctly sets the XCLR pin back
->>>>>>       to LO now.
->>>>>>     - Add comment explaining the need for allocation of child device
->>>>>>       in hp03_probe().
->>>>>> V3: - Fix indent in the DT binding documentation
->>>>>>     - Report raw pressure and temperature unmodified
->>>>> Good
->>>>>>     - Report pressure scale to be 1 , since pressure is in Pa
->>>>> Standard units for pressure (see
->>>>> Documentation/ABI/testing/sysfs-bus-iio
->>>>> are KPa so it wants to report 0.001)
->>>>
->>>> OK, got it.
->>>>
->>>>>>     - Report temperature scale to be 0.01 , since temp is in 0.01C
->>>>>> steps
->>>>> Unfortunately the documented base unit for temp (originally from
->>>>> hwmon before
->>>>> we started going for SI units every time) are milli Celcius.  Thus
->>>>> the value
->>>>> reported * scale should end up in milli degrees Celcius. Hence if it
->>>>> is in 0.01
->>>>> steps the scale should be 0.1
->>>>
->>>> Shouldn't this be 10 ? The value is in 0.01C steps , so the value
->>>> has to
->>>> be multiplied by 10 to convert it into mC units.
->>> err. yes I'm clearly wrong :)
->>
->> Thanks for confirming :) V4 is coming.
-> Beware, I might not be any more correct today ;)
+On Monday 18 April 2016 14:34:12 Geert Uytterhoeven wrote:
+> Hi Arnd,
+> 
+> CC Richard (serial-mctrl-gpio)
+> CC Grant (ePAPR successor) and Frank
+> 
+> On Sat, Apr 16, 2016 at 6:30 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Thursday 14 April 2016 14:13:19 Geert Uytterhoeven wrote:
+> >> Document a set of generic properties for describing UARTs in a
+> >> device tree:
+> >>   1. The GPIO modem control properties are currently duplicated across
+> >>      hardware-specific binding documentation,
+> >>   2. The property for dedicated RTS/CTS hardware flow control lines is
+> >>      already supported by several drivers, albeit with a vendor-specific
+> >>      prefix, hence make it generic.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >
+> > Originally the ISA 8250 uart binding (from ieee) was used as the
+> > template for other uart bindings. How about documenting the parts that
+> > are used in 8250-of today (current-speed, clock-frequency,
+> > reg-offset, reg-shift, fifo-size, reg-io-width, auto-flow-control)
+> > in the same file?
+> 
+> I don't think we have the habit of documenting (duplicating) bindings for ePAPR
+> under Documentation/devicetree/bindings/. Perhaps we should?
+> 
+> Apart from that, most of the properties you mention look legacy or overly
+> broad too me.
+> 
+>   - current-speed: This is configuration, not a property of the hardware.
+>     For the console, this has been deprecated by appending the serial config
+>     to chosen/stdout-path (e.g. "serial0:115200n8").
+>     For non-consoles, its use is debatable, IMHO.
+>     It's users are mostly legacy powerpc and early adaptors of DT on ARM.
+>   - clock-frequency: Legacy predating the Common Clock Framework.
+>     Any modern SoC uses clock specifiers with clock handles pointing to clock
+>     providers.
 
-That's fine, take your time, MW opening is far away :)
+I think both are still used by IBM Firmware, which does not use the clock
+binding or the linux syntax for passing the speed.
 
--- 
-Best regards,
-Marek Vasut
+>   - reg-offset, reg-shift, reg-io-width: These are much broader than serial,
+>     and IMHO thus don't belong in
+>     Documentation/devicetree/bindings/serial/serial.txt.
+
+The exact meaning can be explained elsewhere, but I think the binding
+can mention that they are allowed.
+
+>   - auto-flow-control: Looks a bit like a vague version of "uart-has-rtscts".
+>     Documentation/devicetree/bindings/serial/8250.txt doesn't make it clear
+>     whether this is about hardware capabilities or software configuration.
+>     Even the driver doesn't make it clear:
+>     #define UART_CAP_AFE    (1 << 11)       /* MCR-based hw flow control */
+>     "MCR" could mean RTS/CTS, DSR/DTR, ...
+>   - fifo-size: This one could be generic. atmel-usart uses a vendor-specific
+>     version "atmel,fifo-size".
+> 
+> I suggest we move forward with my initial set, as I have patches that depend on
+> them? We can always add more properties later.
+
+Sounds ok to me.
+
+> >>  - out1-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
+> >>    used as the UART's OUT1 line.
+> >>  - out2-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
+> >>    used as the UART's OUT2 line.
+> >
+> > I had to look up what OUT1 and OUT2 are, but I still don't see how you'd
+> > implement them using a GPIO line: From all I can tell, these are usually
+> > internal registers in a hardware uart but they are not assigned to an
+> > external line on the standard db9 or even the old db25 connectors. Should
+> > we drop these instead?
+> 
+> They're indeed fairly exotic, and they're burried deeply in the ns16550
+> datasheet. We do have TIOCM_OUT1 and TIOCM_LOOP in asm-generic/termios.h,
+> probably for obscure historical reasons.
+> 
+> If we drop them, I guess they should be removed from the helper code in
+> drivers/tty/serial/serial_mctrl_gpio.c, too? There don't seem to be any
+> current users.
+
+I think it makes sense for user space to toggle at least TIOCM_OUT1
+through the ioctl and for drivers to implement it correctly. Apparently
+the "Hayes SmartModem" used this for resetting the modem from its
+integrated uart.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
