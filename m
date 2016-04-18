@@ -1,177 +1,206 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH 3/7] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
- Decoder Driver
-Date: Mon, 18 Apr 2016 09:32:30 +0200
-Message-ID: <57148D8E.9060601@xs4all.nl>
-References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
- <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
- <1460548915-17536-3-git-send-email-tiffany.lin@mediatek.com>
- <1460548915-17536-4-git-send-email-tiffany.lin@mediatek.com>
- <5710FA3A.2030603@xs4all.nl> <1460958046.7861.48.camel@mtksdaap41>
+From: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 20/24] iio: imu: inv_mpu6050: change the i2c gate to be mux-locked
+Date: Mon, 18 Apr 2016 10:37:44 +0300
+Message-ID: <CAEnQRZBEUC4DUmZci0MrXWzEBFXDR0bLN_taDuWR+mt6LMe-5w@mail.gmail.com>
+References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
+	<1459673574-11440-21-git-send-email-peda@lysator.liu.se>
+	<5700F648.1010804@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460958046.7861.48.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5700F648.1010804-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus@int>
 List-Id: devicetree@vger.kernel.org
 
-On 04/18/2016 07:40 AM, tiffany lin wrote:
-> 
-> snipped.
-> 
->>> +
->>> +void mtk_vcodec_dec_set_default_params(struct mtk_vcodec_ctx *ctx)
->>> +{
->>> +	struct mtk_q_data *q_data;
->>> +
->>> +	ctx->m2m_ctx->q_lock = &ctx->dev->dev_mutex;
->>> +	ctx->fh.m2m_ctx = ctx->m2m_ctx;
->>> +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
->>> +	INIT_WORK(&ctx->decode_work, mtk_vdec_worker);
->>> +
->>> +	q_data = &ctx->q_data[MTK_Q_DATA_SRC];
->>> +	memset(q_data, 0, sizeof(struct mtk_q_data));
->>> +	q_data->visible_width = DFT_CFG_WIDTH;
->>> +	q_data->visible_height = DFT_CFG_HEIGHT;
->>> +	q_data->fmt = &mtk_video_formats[OUT_FMT_IDX];
->>> +	q_data->colorspace = V4L2_COLORSPACE_REC709;
->>> +	q_data->field = V4L2_FIELD_NONE;
->>> +	ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
->>> +		DFT_CFG_WIDTH * DFT_CFG_HEIGHT;
->>> +	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] = 0;
->>> +
->>> +
->>> +	q_data = &ctx->q_data[MTK_Q_DATA_DST];
->>> +	memset(q_data, 0, sizeof(struct mtk_q_data));
->>> +	q_data->visible_width = DFT_CFG_WIDTH;
->>> +	q_data->visible_height = DFT_CFG_HEIGHT;
->>> +	q_data->coded_width = DFT_CFG_WIDTH;
->>> +	q_data->coded_height = DFT_CFG_HEIGHT;
->>> +	q_data->colorspace = V4L2_COLORSPACE_REC709;
->>> +	q_data->field = V4L2_FIELD_NONE;
->>> +
->>> +	q_data->fmt = &mtk_video_formats[CAP_FMT_IDX];
->>> +
->>> +	v4l_bound_align_image(&q_data->coded_width,
->>> +					MTK_VDEC_MIN_W,
->>> +					MTK_VDEC_MAX_W, 4,
->>> +					&q_data->coded_height,
->>> +					MTK_VDEC_MIN_H,
->>> +					MTK_VDEC_MAX_H, 5, 6);
->>> +
->>> +	q_data->sizeimage[0] = q_data->coded_width * q_data->coded_height;
->>> +	q_data->bytesperline[0] = q_data->coded_width;
->>> +	q_data->sizeimage[1] = q_data->sizeimage[0] / 2;
->>> +	q_data->bytesperline[1] = q_data->coded_width;
->>> +
->>> +}
->>> +
->>> +static int vidioc_vdec_streamon(struct file *file, void *priv,
->>> +				enum v4l2_buf_type type)
->>> +{
->>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
->>> +
->>> +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
->>> +
->>> +	return v4l2_m2m_streamon(file, ctx->m2m_ctx, type);
->>> +}
->>> +
->>> +static int vidioc_vdec_streamoff(struct file *file, void *priv,
->>> +				 enum v4l2_buf_type type)
->>> +{
->>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
->>> +
->>> +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
->>> +	return v4l2_m2m_streamoff(file, ctx->m2m_ctx, type);
->>> +}
->>> +
->>> +static int vidioc_vdec_reqbufs(struct file *file, void *priv,
->>> +			       struct v4l2_requestbuffers *reqbufs)
->>> +{
->>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
->>> +	int ret;
->>> +
->>> +	mtk_v4l2_debug(3, "[%d] (%d) count=%d", ctx->idx,
->>> +			 reqbufs->type, reqbufs->count);
->>> +	ret = v4l2_m2m_reqbufs(file, ctx->m2m_ctx, reqbufs);
->>> +
->>> +	return ret;
->>> +}
+On Sun, Apr 3, 2016 at 1:54 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 03/04/16 09:52, Peter Rosin wrote:
+>> From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 >>
->> Please use the v4l2_m2m_ioctl_* helper functions were applicable.
+>> The root i2c adapter lock is then no longer held by the i2c mux during
+>> accesses behind the i2c gate, and such accesses need to take that lock
+>> just like any other ordinary i2c accesses do.
 >>
-> 
-> 
-> 
-> snipped.
->>> +static unsigned int fops_vcodec_poll(struct file *file,
->>> +				     struct poll_table_struct *wait)
->>> +{
->>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
->>> +	struct mtk_vcodec_dev *dev = ctx->dev;
->>> +	int ret;
->>> +
->>> +	mutex_lock(&dev->dev_mutex);
->>> +	ret = v4l2_m2m_poll(file, ctx->m2m_ctx, wait);
->>> +	mutex_unlock(&dev->dev_mutex);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +static int fops_vcodec_mmap(struct file *file, struct vm_area_struct *vma)
->>> +{
->>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
->>> +
->>> +	return v4l2_m2m_mmap(file, ctx->m2m_ctx, vma);
->>> +}
->>> +
->>> +static const struct v4l2_file_operations mtk_vcodec_fops = {
->>> +	.owner				= THIS_MODULE,
->>> +	.open				= fops_vcodec_open,
->>> +	.release			= fops_vcodec_release,
->>> +	.poll				= fops_vcodec_poll,
->>> +	.unlocked_ioctl			= video_ioctl2,
->>> +	.mmap				= fops_vcodec_mmap,
+>> So, declare the i2c gate mux-locked, and zap the code that makes the
+>> unlocked i2c accesses and just use ordinary regmap_write accesses.
 >>
->> You should be able to use the v4l2_m2m_fop helper functions for poll and mmap.
+>> This also happens to fix the deadlock described in
+>> http://patchwork.ozlabs.org/patch/584776/ authored by
+>> Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> and submitted by
+>> Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 >>
-> 
-> Hi Hans,
-> 
-> We are plaining to remove m2m framework in th feature, although we think
+>> ----------8<----------
+>> iio: imu: inv_mpu6050: Fix deadlock between i2c adapter lock and mpu lock
+>>
+>> This deadlock occurs if the accel/gyro and the sensor on the auxiliary
+>> I2C (in my setup it's an ak8975) are working at the same time.
+>>
+>> Scenario:
+>>
+>>       T1                                      T2
+>>      ====                                    ====
+>> inv_mpu6050_read_fifo                  aux sensor op (eg. ak8975_read_raw)
+>>         |                                     |
+>> mutex_lock(&indio_dev->mlock)           i2c_transfer
+>>         |                                     |
+>> i2c transaction                         i2c adapter lock
+>>         |                                     |
+>> i2c adapter lock                        i2c_mux_master_xfer
+>>                                               |
+>>                                         inv_mpu6050_select_bypass
+>>                                               |
+>>                                         mutex_lock(&indio_dev->mlock)
+>>
+>> When we operate on an mpu sensor the order of locking is mpu lock
+>> followed by the i2c adapter lock. However, when we operate the auxiliary
+>> sensor the order of locking is the other way around.
+>>
+>> ...
+>> ----------8<----------
+>>
+>> The reason this patch fixes the deadlock is that T2 does not grab the
+>> i2c adapter lock until the very end (and grabs the newfangled i2c mux
+>> lock where it previously grabbed the i2c adapter lock).
+>>
+>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> This one obviously wants a ack from Adriana or Daniel in addition to mine.
+> I'm more than happy for these to go through the i2c tree btw.
+>
+> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Remove it for just the decoder driver or both encoder and decoder?
+Acked-by: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-> it is easy to use and could save a lot of code similar to what m2m
-> framework implemented and reduce code size.
-> The main reason is that in v4l2_m2m_try_schedule, it required that at
-> least one output buffer and one capture buffer to run device_run.
-> We want to start device_run without capture buffer queued.
 
-I assume the reason is that you need to get the resolution etc. information
-from the encoded stream? Without a capture buffer you can't actually decode
-a frame, but that's probably not what this is about.
-
-> Is there any suggestion that we could use m2m framework but trigger
-> device_run with only output buffer.
-> Or we need to remove m2m and write our own implementation.
-
-I am assuming that not using the m2m framework is for the decoder only and
-that its purpose is to obtain data about the encoded stream early.
-
-This is something that was discussed with Pawel in the past. I don't have a
-problem if you do it yourself (without the m2m framework), but it might also
-be an idea to adapt the framework for this.
-
-Pawel, do you have any thoughts on that?
-
-Regards,
-
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> ---
+>>  Documentation/i2c/i2c-topology            |  2 +-
+>>  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c | 56 +++++++------------------------
+>>  2 files changed, 13 insertions(+), 45 deletions(-)
+>>
+>> diff --git a/Documentation/i2c/i2c-topology b/Documentation/i2c/i2c-topology
+>> index 7a10edd0874f..346623a80bd1 100644
+>> --- a/Documentation/i2c/i2c-topology
+>> +++ b/Documentation/i2c/i2c-topology
+>> @@ -50,7 +50,7 @@ i2c-mux-pinctrl           Normally parent-locked, mux-locked iff
+>>  i2c-mux-reg               Parent-locked
+>>
+>>  In drivers/iio/
+>> -imu/inv_mpu6050/          Parent-locked
+>> +imu/inv_mpu6050/          Mux-locked
+>>
+>>  In drivers/media/
+>>  dvb-frontends/m88ds3103   Parent-locked
+>> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+>> index 0d429d788106..71ad31a275c9 100644
+>> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+>> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
+>> @@ -24,45 +24,16 @@ static const struct regmap_config inv_mpu_regmap_config = {
+>>       .val_bits = 8,
+>>  };
+>>
+>> -/*
+>> - * The i2c read/write needs to happen in unlocked mode. As the parent
+>> - * adapter is common. If we use locked versions, it will fail as
+>> - * the mux adapter will lock the parent i2c adapter, while calling
+>> - * select/deselect functions.
+>> - */
+>> -static int inv_mpu6050_write_reg_unlocked(struct i2c_client *client,
+>> -                                       u8 reg, u8 d)
+>> -{
+>> -     int ret;
+>> -     u8 buf[2] = {reg, d};
+>> -     struct i2c_msg msg[1] = {
+>> -             {
+>> -                     .addr = client->addr,
+>> -                     .flags = 0,
+>> -                     .len = sizeof(buf),
+>> -                     .buf = buf,
+>> -             }
+>> -     };
+>> -
+>> -     ret = __i2c_transfer(client->adapter, msg, 1);
+>> -     if (ret != 1)
+>> -             return ret;
+>> -
+>> -     return 0;
+>> -}
+>> -
+>>  static int inv_mpu6050_select_bypass(struct i2c_mux_core *muxc, u32 chan_id)
+>>  {
+>> -     struct i2c_client *client = i2c_mux_priv(muxc);
+>> -     struct iio_dev *indio_dev = dev_get_drvdata(&client->dev);
+>> +     struct iio_dev *indio_dev = i2c_mux_priv(muxc);
+>>       struct inv_mpu6050_state *st = iio_priv(indio_dev);
+>>       int ret = 0;
+>>
+>>       /* Use the same mutex which was used everywhere to protect power-op */
+>>       mutex_lock(&indio_dev->mlock);
+>>       if (!st->powerup_count) {
+>> -             ret = inv_mpu6050_write_reg_unlocked(client,
+>> -                                                  st->reg->pwr_mgmt_1, 0);
+>> +             ret = regmap_write(st->map, st->reg->pwr_mgmt_1, 0);
+>>               if (ret)
+>>                       goto write_error;
+>>
+>> @@ -71,10 +42,9 @@ static int inv_mpu6050_select_bypass(struct i2c_mux_core *muxc, u32 chan_id)
+>>       }
+>>       if (!ret) {
+>>               st->powerup_count++;
+>> -             ret = inv_mpu6050_write_reg_unlocked(client,
+>> -                                                  st->reg->int_pin_cfg,
+>> -                                                  INV_MPU6050_INT_PIN_CFG |
+>> -                                                  INV_MPU6050_BIT_BYPASS_EN);
+>> +             ret = regmap_write(st->map, st->reg->int_pin_cfg,
+>> +                                INV_MPU6050_INT_PIN_CFG |
+>> +                                INV_MPU6050_BIT_BYPASS_EN);
+>>       }
+>>  write_error:
+>>       mutex_unlock(&indio_dev->mlock);
+>> @@ -84,18 +54,16 @@ write_error:
+>>
+>>  static int inv_mpu6050_deselect_bypass(struct i2c_mux_core *muxc, u32 chan_id)
+>>  {
+>> -     struct i2c_client *client = i2c_mux_priv(muxc);
+>> -     struct iio_dev *indio_dev = dev_get_drvdata(&client->dev);
+>> +     struct iio_dev *indio_dev = i2c_mux_priv(muxc);
+>>       struct inv_mpu6050_state *st = iio_priv(indio_dev);
+>>
+>>       mutex_lock(&indio_dev->mlock);
+>>       /* It doesn't really mattter, if any of the calls fails */
+>> -     inv_mpu6050_write_reg_unlocked(client, st->reg->int_pin_cfg,
+>> -                                    INV_MPU6050_INT_PIN_CFG);
+>> +     regmap_write(st->map, st->reg->int_pin_cfg, INV_MPU6050_INT_PIN_CFG);
+>>       st->powerup_count--;
+>>       if (!st->powerup_count)
+>> -             inv_mpu6050_write_reg_unlocked(client, st->reg->pwr_mgmt_1,
+>> -                                            INV_MPU6050_BIT_SLEEP);
+>> +             regmap_write(st->map, st->reg->pwr_mgmt_1,
+>> +                          INV_MPU6050_BIT_SLEEP);
+>>       mutex_unlock(&indio_dev->mlock);
+>>
+>>       return 0;
+>> @@ -133,15 +101,15 @@ static int inv_mpu_probe(struct i2c_client *client,
+>>               return result;
+>>
+>>       st = iio_priv(dev_get_drvdata(&client->dev));
+>> -     st->muxc = i2c_mux_one_adapter(client->adapter, &client->dev, 0, 0,
+>> -                                    0, 0, 0,
+>> +     st->muxc = i2c_mux_one_adapter(client->adapter, &client->dev, 0,
+>> +                                    I2C_MUX_LOCKED, 0, 0, 0,
+>>                                      inv_mpu6050_select_bypass,
+>>                                      inv_mpu6050_deselect_bypass);
+>>       if (IS_ERR(st->muxc)) {
+>>               result = PTR_ERR(st->muxc);
+>>               goto out_unreg_device;
+>>       }
+>> -     st->muxc->priv = client;
+>> +     st->muxc->priv = dev_get_drvdata(&client->dev);
+>>
+>>       result = inv_mpu_acpi_create_mux_client(client);
+>>       if (result)
+>>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
