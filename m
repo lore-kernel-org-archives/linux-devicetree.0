@@ -1,77 +1,84 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] doc: DT: Add Generic Serial Device Tree Bindings
-Date: Mon, 18 Apr 2016 10:02:55 -0700
-Message-ID: <5715133F.2040103@hurleysoftware.com>
-References: <1460636003-3011-1-git-send-email-geert+renesas@glider.be>
- <1460636003-3011-2-git-send-email-geert+renesas@glider.be>
- <5792073.qsBJ1LK659@wuerfel>
- <CAMuHMdWmHUhhwbYDcmNXuxBRC6n+tp=oX03dBaK2VgL4OA72MQ@mail.gmail.com>
- <CACQ1gAhnEuCZbzpyiAcCx_kRhzCBvWAVVaecUdUhvu4vDD0REw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 0/4] ASoC: add graph base connection on
+	simple-card
+Date: Mon, 18 Apr 2016 12:12:48 -0500
+Message-ID: <20160418171248.GA18460@rob-hp-laptop>
+References: <871t68wxxe.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACQ1gAhnEuCZbzpyiAcCx_kRhzCBvWAVVaecUdUhvu4vDD0REw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Qipan Li <Qipan.Li-kQvG35nSl+M@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <871t68wxxe.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon <horms@verge.net.au>, Laurent <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/18/2016 08:43 AM, Richard Genoud wrote:
-> 2016-04-18 14:34 GMT+02:00 Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>:
->> Hi Arnd,
->>
->> CC Richard (serial-mctrl-gpio)
->> CC Grant (ePAPR successor) and Frank
->>
->> On Sat, Apr 16, 2016 at 6:30 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>> On Thursday 14 April 2016 14:13:19 Geert Uytterhoeven wrote:
+On Thu, Apr 14, 2016 at 05:45:41AM +0000, Kuninori Morimoto wrote:
+> Hi Mark
+> 
+> Current simple-card is using "sound-dai" base connection on DT,
+> but V4L2 is using graph base connection.
+> For example HDMI case, we would like to use both connection.
+> To above confusable connection method, and to reuse current resource,
+> this patch adds new function, and detect both "sound-dai" and "remote-endpoint"
+> on simple-card. like this
+> 
+> 	sound {
+> 		compatible = "simple-audio-card";
+> 		...
+> 		sndcpu: simple-audio-card,cpu {
+> 			sound-dai = <&xxx>;
+> 		};
+> 		sndcodec: simple-audio-card,codec {
+> =>			remote-endpoint = <&out_hdmi>;
 
-[...]
+This is not valid usage of the graph binding. You are only using half of 
+it.
 
->>>>  - out1-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
->>>>    used as the UART's OUT1 line.
->>>>  - out2-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
->>>>    used as the UART's OUT2 line.
->>>
->>> I had to look up what OUT1 and OUT2 are, but I still don't see how you'd
->>> implement them using a GPIO line: From all I can tell, these are usually
->>> internal registers in a hardware uart but they are not assigned to an
->>> external line on the standard db9 or even the old db25 connectors. Should
->>> we drop these instead?
-
-Yeah, not sure how those snuck in for gpios.
-
-The original 8250/16550 uarts had OUT1 and OUT2 pins, and OUT1 could be used
-like gpio. That was 3 decades ago though so maybe we don't need to try to
-recreate that tech again :)
-
-
->> They're indeed fairly exotic, and they're burried deeply in the ns16550
->> datasheet. We do have TIOCM_OUT1 and TIOCM_LOOP in asm-generic/termios.h,
->> probably for obscure historical reasons.
-
-Please leave the bit defs alone.
-
-
->> If we drop them, I guess they should be removed from the helper code in
->> drivers/tty/serial/serial_mctrl_gpio.c, too? There don't seem to be any
->> current users.
-> I must confess that I don't really know what TIOCM_OUT1&2 are for.
-> (I implemented them for completeness)
-> But it seems that OUT2 is used in some drivers:
-> drivers/tty/serial/omap-serial.c:
->         /*
->          * Most PC uarts need OUT2 raised to enable interrupts.
->          */
->         up->port.mctrl |= TIOCM_OUT2;
-
-There's no need for OUT1 and OUT2 gpios; let's fix that.
-
-Regards,
-Peter Hurley
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 		};
+> 	};
+> 
+> 	xxx {
+> 		...
+> 		ports {
+> 			...
+> 			port@0 {
+> 				reg = <0>;
+> 				out_rgb: endpoint {
+> 				};
+> 			};
+> 			port@1 {
+> 				reg = <1>;
+> =>				out_hdmi: endpoint {
+> 				};
+> 			};
+> 			...
+> 		};
+> 	};
+> 
+> Kuninori Morimoto (4):
+>       of_graph: add of_graph_get_endpoint_count()
+>       ASoC: add of_parse_snd_connection_with_args() for sound-dai/graph connection
+>       ASoC: snd_soc_of_get_dai_name() uses of_parse_snd_soc_connection_with_args()
+>       ASoC: simple-card: probe both sound-dai and remote-endpoint
+> 
+>  Documentation/devicetree/bindings/sound/simple-card.txt | 19 +++++++++++++++++++
+>  include/linux/of_graph.h                                | 11 +++++++++++
+>  include/sound/soc.h                                     |  2 ++
+>  sound/soc/generic/simple-card.c                         |  9 ++++++---
+>  sound/soc/soc-core.c                                    | 45 +++++++++++++++++++++++++++++++++++++++++++--
+>  5 files changed, 81 insertions(+), 5 deletions(-)
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
