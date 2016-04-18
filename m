@@ -1,61 +1,137 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4 4/6] slim: qcom: Add Qualcomm Slimbus controller driver
-Date: Mon, 18 Apr 2016 10:19:39 +0100
-Message-ID: <20160418091939.GK3217@sirena.org.uk>
-References: <1454784265-5194-1-git-send-email-sdharia@codeaurora.org>
- <1454784265-5194-5-git-send-email-sdharia@codeaurora.org>
- <20160305052315.GE18327@sirena.org.uk>
- <57111420.8060208@codeaurora.org>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 2/6] ASoC: Davinci: McBSP: add device tree
+ support for McBSP
+Date: Mon, 18 Apr 2016 11:27:00 +0200
+Message-ID: <5714A864.5050505@barix.com>
+References: <1460375117-4311-1-git-send-email-petr@barix.com>
+ <1460375117-4311-3-git-send-email-petr@barix.com> <5710B516.2000006@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sdEQJo40s7ofW8iR"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57111420.8060208@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sagar Dharia <sdharia@codeaurora.org>
-Cc: robh@kernel.org, gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5710B516.2000006-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---sdEQJo40s7ofW8iR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Apr 15, 2016 at 10:17:36AM -0600, Sagar Dharia wrote:
+On 15.04.2016 11:32, Peter Ujfalusi wrote:
+> On 04/11/16 14:45, Petr Kulhavy wrote:
+>> This adds DT support for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx McBSP driver.
+>>
+>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>> ---
+>> v1: initial
+>> v2: remove "-audio" postfix from the compatible string
+>>      of_match_table renamed consistently with the rest of the file (davinci_i2s_match)
+>>      "channel-combine" property removed
+>>      devicetree DMA configuration in probe simplified
+>>
+>>   sound/soc/davinci/Kconfig       |   6 ++-
+>>   sound/soc/davinci/davinci-i2s.c | 116 +++++++++++++++++++++++++++++++---------
+>>   2 files changed, 95 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/sound/soc/davinci/Kconfig b/sound/soc/davinci/Kconfig
+>> index 50ca291cc225..6b732d8e5896 100644
+>> --- a/sound/soc/davinci/Kconfig
+>> +++ b/sound/soc/davinci/Kconfig
+>> @@ -16,7 +16,11 @@ config SND_EDMA_SOC
+>>   	  - DRA7xx family
+>>   
+>>   config SND_DAVINCI_SOC_I2S
+>> -	tristate
+>> +	tristate "DaVinci Multichannel Buffered Serial Port (McBSP) support"
+>> +	depends on SND_EDMA_SOC
+>> +	help
+>> +	  Say Y or M here if you want to have support for McBSP IP found in
+>> +	  Texas Instruments DaVinci DA850 SoCs.
+>>   
+>>   config SND_DAVINCI_SOC_MCASP
+>>   	tristate "Multichannel Audio Serial Port (McASP) support"
+>> diff --git a/sound/soc/davinci/davinci-i2s.c b/sound/soc/davinci/davinci-i2s.c
+>> index ec98548a5fc9..a3f82d1a73dc 100644
+>> --- a/sound/soc/davinci/davinci-i2s.c
+>> +++ b/sound/soc/davinci/davinci-i2s.c
+>> @@ -4,9 +4,15 @@
+>>    * Author:      Vladimir Barinov, <vbarinov-L1vi/lXTdtvkgf6YlCu6wwC/G2K4zDHf@public.gmane.org>
+>>    * Copyright:   (C) 2007 MontaVista Software, Inc., <source-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+>>    *
+>> + * DT support	(c) 2016 Petr Kulhavy, Barix AG <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>> + *		based on davinci-mcasp.c DT support
+>> + *
+>>    * This program is free software; you can redistribute it and/or modify
+>>    * it under the terms of the GNU General Public License version 2 as
+>>    * published by the Free Software Foundation.
+>> + *
+>> + * TODO:
+>> + * on DA850 implement HW FIFOs instead of DMA into DXR and DRR registers
+>>    */
+>>   
+>>   #include <linux/init.h>
+>> @@ -648,15 +654,62 @@ static const struct snd_soc_component_driver davinci_i2s_component = {
+>>   	.name		= "davinci-i2s",
+>>   };
+>>   
+>> +static struct snd_platform_data*
+>> +davinci_i2s_set_pdata_from_of(struct platform_device *pdev)
+> It is a bit misleading function name, would be better to name it as
+> davinci_i2s_get_pdata()
+>
+> as it will fetch the legacy pdata or craft one when booting with DT.
+Thanks, I will change the name.
+> +
+> +	/* parse properties here */
+> +
+> +	/*
+> +	 * pdata->clk_input_pin is deliberately not exported to DT
+> +	 * and the default value of the clk_input_pin is MCBSP_CLKR.
+> +	 * The value MCBSP_CLKS makes no sense as it turns the CPU
+> +	 * to a bit clock master in the SND_SOC_DAIFMT_CBM_CFS mode
+> +	 * where it should be bit clock slave!
+> +	 */
+> +
+> +	return pdata;
+> +}
+> +
+>   static int davinci_i2s_probe(struct platform_device *pdev)
+>   {
+> +	struct snd_dmaengine_dai_dma_data *dma_data;
+> +	struct snd_platform_data *pdata;
+>   	struct davinci_mcbsp_dev *dev;
+>   	struct resource *mem, *res;
+>   	void __iomem *io_base;
+>   	int *dma;
+>   	int ret;
+>   
+> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pdata = davinci_i2s_set_pdata_from_of(pdev);
+> +	if (IS_ERR(pdata)) {
+> +		dev_err(&pdev->dev, "Error populating platform data, err %ld\n",
+> +			PTR_ERR(pdata));
+> +		return PTR_ERR(pdata);
+> +	}
+> The current driver does not use the pdata as far as I can see. Kind of
+> strange. So now in DT boot you will allocate memory for the pdata, which is
+> not used by the driver at all.
+> I think we should implement the pdata handling in the driver first for the
+> legacy mode, then probably having pdata allocated for DT case might make sense.
+Indeed the current driver does not use pdata. Neither the legacy board 
+drivers in arch/mach-davinci do.
+Well, except for the dm365_evm which sets the asp_chan_q which is later 
+not used:
 
-Please leave blank lines between paragraphs, it makes things much easier
-to read than a wall of uninterrupted text.
+static struct snd_platform_data dm365_evm_snd_data __maybe_unused = {
+         .asp_chan_q = EVENTQ_3,
+};
 
-> >>+	ret = devm_request_irq(&pdev->dev, dev->irq, msm_slim_interrupt,
-> >>+				IRQF_TRIGGER_HIGH, "msm_slim_irq", dev);
-> >>+	if (ret) {
-> >>+		dev_err(&pdev->dev, "request IRQ failed\n");
-> >>+		goto err_request_irq_failed;
-> >>+	}
 
-> >Are you sure this is safe and we don't deallocate things the interrupt
-> >handler uses before we disable the interrupt?
+If the pdata is not used at all I would completely drop it.
+Or what do you think the pdata should carry?
 
-> Since clock is not enabled before this step, we won't be getting any
-> interrupts from HW at this stage.
-
-No, that's not what I'm saying - I'm asking about the *disable* path on
-remove.
-
---sdEQJo40s7ofW8iR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXFKaqAAoJECTWi3JdVIfQHF4H/RZ7vQ4xVWEyNrNP5cpNVFYy
-kzqhy4AvXybpB08bYxaicspEIKXctr4xa5wlPwPbHIWRQzshhEckGVHFb0Ici8SM
-mRaPLhzgEZB9WGJt6ZPOqMtBH5NTvSv18qpEewjXlBAC2SuMWFarzff9XMV+3lfn
-Ak9/ubwmisMAZmomqJFOjB4nPjDbi1qibGtkyKHveAKXzmAjaf65CLpTDc58mx5+
-Ke8h7y0nw52IU1diFbIJqbdu14qV/0MlmaGnUKo6Zre8U3ZHjrH8D2WduEIxz/JK
-9ykq8bF40L90eBgHc4EmEWuU7SHD6jXP+CMZUy8+PLaSKdJc+EcM1KvGyJT6Tss=
-=nETp
------END PGP SIGNATURE-----
-
---sdEQJo40s7ofW8iR--
+Petr
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
