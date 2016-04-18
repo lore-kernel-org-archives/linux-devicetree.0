@@ -1,61 +1,139 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v1] ARM: dts: omap3-n900: Specify peripherals LDO
- regulators initial mode
-Date: Mon, 18 Apr 2016 07:11:46 +0200
-Message-ID: <20160418051146.GA3215@earth>
-References: <20160417122933.GA8093@earth>
- <1460903363-2197-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RESEND PATCH 2/3] power: axp288_charger: Replace deprecatd API of
+ extcon
+Date: Mon, 18 Apr 2016 14:31:41 +0900
+Message-ID: <5714713D.7000903@samsung.com>
+References: <1460681016-2770-1-git-send-email-cw00.choi@samsung.com>
+ <1460681016-2770-3-git-send-email-cw00.choi@samsung.com>
+ <20160415142053.GB24087@earth>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460903363-2197-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: tony@atomide.com, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20160415142053.GB24087@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sebastian,
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sun, Apr 17, 2016 at 05:29:23PM +0300, Ivaylo Dimitrov wrote:
-> Without that, regulators are left in the mode last set by the bootloader =
-or
-> by the kernel the device was rebooted from. This leads to various problem=
-s,
-> like non-working peripherals.
+On 2016=EB=85=84 04=EC=9B=94 15=EC=9D=BC 23:20, Sebastian Reichel wrote=
+:
+> Hi,
 >=20
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> On Fri, Apr 15, 2016 at 09:43:35AM +0900, Chanwoo Choi wrote:
+>> This patch removes the deprecated notifier API of extcon framework a=
+nd then use
+>> the new extcon API[2] with the unique id[1] to indicate the each ext=
+ernal
+>> connector. Alter deprecated API as following:
+>> - extcon_register_interest() -> extcon_register_notifier()
+>> - extcon_unregister_interest() -> extcon_unregister_notifier()
+>> - extcon_get_cable_state() -> extcon_get_cable_state_()
+>>
+>> And, extcon alters the name of USB charger connector in patch[3] as =
+following:
+>> - EXTCON_CHG_USB_SDP /* Standard Downstream Port */
+>> - EXTCON_CHG_USB_DCP /* Dedicated Charging Port */
+>> - EXTCON_CHG_USB_CDP /* Charging Downstream Port */
+>> - EXTCON_CHG_USB_ACA /* Accessory Charger Adapter */
+>>
+>> [1] Commit 2a9de9c0f08d61
+>> - ("extcon: Use the unique id for external connector instead of stri=
+ng)
+>> [2] Commit 046050f6e623e4
+>> - ("extcon: Update the prototype of extcon_register_notifier() with =
+enum extcon
+>> [3] Commit 11eecf910bd81d
+>> - ("extcon: Modify the id and name of external connector")
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/power/axp288_charger.c | 77 +++++++++++++++++++++++++++++--=
+-----------
+>>  1 file changed, 53 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/power/axp288_charger.c b/drivers/power/axp288_c=
+harger.c
+>> index e4d569f57acc..e5c2569befa6 100644
+>> --- a/drivers/power/axp288_charger.c
+>> +++ b/drivers/power/axp288_charger.c
+>> @@ -129,10 +129,6 @@
+>> =20
 
-Reviewed-By: Sebastian Reichel <sre@kernel.org>
+[snip]
 
--- Sebastian
+>>  	/* Register charger interrupts */
+>>  	for (i =3D 0; i < CHRG_INTR_END; i++) {
+>> @@ -905,11 +922,17 @@ static int axp288_charger_probe(struct platfor=
+m_device *pdev)
+>>  	return 0;
+>> =20
+>>  intr_reg_failed:
+>> -	if (info->otg.cable.edev)
+>> -		extcon_unregister_interest(&info->otg.cable);
+>> +	if (info->otg.cable)
+>> +		extcon_unregister_notifier(info->otg.cable, EXTCON_USB_HOST,
+>> +					&info->otg.id_nb);
+>>  	power_supply_unregister(info->psy_usb);
+>>  psy_reg_failed:
+>> -	extcon_unregister_notifier(info->cable.edev, EXTCON_NONE, &info->c=
+able.nb);
+>> +	extcon_unregister_notifier(info->cable.edev, EXTCON_CHG_USB_SDP,
+>> +					&info->cable.nb);
+>> +	extcon_unregister_notifier(info->cable.edev, EXTCON_CHG_USB_SDP,
+>> +					&info->cable.nb);
+>=20
+> EXTCON_CHG_USB_SDP -> EXTCON_CHG_USB_CDP?
 
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature; name="signature.asc"
+I was mistaken. I'll fix it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>=20
+>> +	extcon_unregister_notifier(info->cable.edev, EXTCON_CHG_USB_DCP,
+>> +					&info->cable.nb);
+>>  	return ret;
+>>  }
+>> =20
+>> @@ -917,10 +940,16 @@ static int axp288_charger_remove(struct platfo=
+rm_device *pdev)
+>>  {
+>>  	struct axp288_chrg_info *info =3D  dev_get_drvdata(&pdev->dev);
+>> =20
+>> -	if (info->otg.cable.edev)
+>> -		extcon_unregister_interest(&info->otg.cable);
+>> +	if (info->otg.cable)
+>> +		extcon_unregister_notifier(info->otg.cable, EXTCON_USB_HOST,
+>> +					&info->otg.id_nb);
+>> =20
+>> -	extcon_unregister_notifier(info->cable.edev, EXTCON_NONE, &info->c=
+able.nb);
+>> +	extcon_unregister_notifier(info->cable.edev, EXTCON_CHG_USB_SDP,
+>> +					&info->cable.nb);
+>> +	extcon_unregister_notifier(info->cable.edev, EXTCON_CHG_USB_SDP,
+>> +					&info->cable.nb);
+>=20
+> EXTCON_CHG_USB_SDP -> EXTCON_CHG_USB_CDP?
 
-iQIcBAEBCgAGBQJXFGyPAAoJENju1/PIO/qaS5MP/1IamRu4v72Z2QKdDpfmCKz9
-dnEar9Mz2XvBPI24XDWZPyh9RUxtKP89onAawzh0TCgSsxzFmRKEqC89ZWwrmSU/
-/436lhnXfLHcwNieXIwlexPQ/qqI7QYt0zVd1DAn1gmbaiyQu6YEgARvgEonJkkf
-tRMINsGwuCn63ZI1LRpuUSYmH0X+gpkZySeVaJeqrvfG79jwVHElHIssQ6kmwx8A
-uAvFk3XtFNoQsG4naIRwxUnGyxC1R/ISfGRrR9Gfqst7rZIbHY0ZuHSACDdtWdhL
-qyfGlFbBiYiAwsQbhPlkgJvTnVN6mKthhqxuqnDVLfKUUsTuZ/QGBBtReP6u0bOx
-Cgk2Yr6gbivHWdgJ3fPXqkVPKqtWNDLThoxs7G5E/psldPCXBZqp6MBDyJVGzPXy
-UF52rBvsEXy+npM7i5dZDmpAA9UsnMeZNq4qjLwJqUiqX2gFa2c7g62xDgzgpILi
-W5w0OQPbS5U+NCkL0ctYXsQSxp5m1WBTA5u5pYO/snmK3awXPOU1Op1+/PI8zOyR
-nAB8VJBp6NkCA1sSgV6lpfwUr5IApeCnxRq8XMOz5I4a4ithvrC3Bck8JRI6reKS
-AREZxC1v+c9BScTOAvCJdJa5yStYQKpvX214z33qnSjpwCxcp0Gk1m748vUHELs9
-a8ijIOQhN/wlBarZykQI
-=GlPE
------END PGP SIGNATURE-----
+ditto.
 
---gKMricLos+KVdGMg--
+>=20
+>> +	extcon_unregister_notifier(info->cable.edev, EXTCON_CHG_USB_DCP,
+>> +					&info->cable.nb);
+>>  	power_supply_unregister(info->psy_usb);
+>> =20
+>>  	return 0;
+>=20
+> Has this dependencies to your tree or are all dependencies already
+> in torvalds tree?
+
+This patch-set have the dependency on Linus torvalds tree[1].
+[1] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/
+
+So, when picking this patch-set, someone make the immutable branch for =
+this patchset
+to prevent the merge conflict between power_supply and extcon tree.
+
+Thanks,
+Chanwoo Choi
+
