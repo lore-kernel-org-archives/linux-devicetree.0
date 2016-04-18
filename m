@@ -1,185 +1,66 @@
-From: tiffany lin <tiffany.lin@mediatek.com>
-Subject: Re: [PATCH 3/7] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
- Decoder Driver
-Date: Mon, 18 Apr 2016 16:22:34 +0800
-Message-ID: <1460967754.7861.61.camel@mtksdaap41>
-References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-3-git-send-email-tiffany.lin@mediatek.com>
-	 <1460548915-17536-4-git-send-email-tiffany.lin@mediatek.com>
-	 <5710FA3A.2030603@xs4all.nl> <1460958046.7861.48.camel@mtksdaap41>
-	 <57148D8E.9060601@xs4all.nl>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: uniphier: add /memreserve/ for spin-table
+ release address
+Date: Mon, 18 Apr 2016 09:45:09 +0100
+Message-ID: <20160418084508.GA21438@leverpostej>
+References: <1460743138-17768-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57148D8E.9060601@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Pawel Osciak <pawel@osciak.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1460743138-17768-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Sat, Apr 16, 2016 at 02:58:58AM +0900, Masahiro Yamada wrote:
+> As Documentation/arm64/booting.txt says, the cpu-release-addr
+> location should be reserved.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+> 
+>  arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+> index 651c9d9..90909d2 100644
+> --- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+> +++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+> @@ -42,6 +42,8 @@
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+> +/memreserve/ 0x80000100 0x00000008;
+> +
 
-On Mon, 2016-04-18 at 09:32 +0200, Hans Verkuil wrote:
-> On 04/18/2016 07:40 AM, tiffany lin wrote:
-> > 
-> > snipped.
-> > 
-> >>> +
-> >>> +void mtk_vcodec_dec_set_default_params(struct mtk_vcodec_ctx *ctx)
-> >>> +{
-> >>> +	struct mtk_q_data *q_data;
-> >>> +
-> >>> +	ctx->m2m_ctx->q_lock = &ctx->dev->dev_mutex;
-> >>> +	ctx->fh.m2m_ctx = ctx->m2m_ctx;
-> >>> +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
-> >>> +	INIT_WORK(&ctx->decode_work, mtk_vdec_worker);
-> >>> +
-> >>> +	q_data = &ctx->q_data[MTK_Q_DATA_SRC];
-> >>> +	memset(q_data, 0, sizeof(struct mtk_q_data));
-> >>> +	q_data->visible_width = DFT_CFG_WIDTH;
-> >>> +	q_data->visible_height = DFT_CFG_HEIGHT;
-> >>> +	q_data->fmt = &mtk_video_formats[OUT_FMT_IDX];
-> >>> +	q_data->colorspace = V4L2_COLORSPACE_REC709;
-> >>> +	q_data->field = V4L2_FIELD_NONE;
-> >>> +	ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
-> >>> +		DFT_CFG_WIDTH * DFT_CFG_HEIGHT;
-> >>> +	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] = 0;
-> >>> +
-> >>> +
-> >>> +	q_data = &ctx->q_data[MTK_Q_DATA_DST];
-> >>> +	memset(q_data, 0, sizeof(struct mtk_q_data));
-> >>> +	q_data->visible_width = DFT_CFG_WIDTH;
-> >>> +	q_data->visible_height = DFT_CFG_HEIGHT;
-> >>> +	q_data->coded_width = DFT_CFG_WIDTH;
-> >>> +	q_data->coded_height = DFT_CFG_HEIGHT;
-> >>> +	q_data->colorspace = V4L2_COLORSPACE_REC709;
-> >>> +	q_data->field = V4L2_FIELD_NONE;
-> >>> +
-> >>> +	q_data->fmt = &mtk_video_formats[CAP_FMT_IDX];
-> >>> +
-> >>> +	v4l_bound_align_image(&q_data->coded_width,
-> >>> +					MTK_VDEC_MIN_W,
-> >>> +					MTK_VDEC_MAX_W, 4,
-> >>> +					&q_data->coded_height,
-> >>> +					MTK_VDEC_MIN_H,
-> >>> +					MTK_VDEC_MAX_H, 5, 6);
-> >>> +
-> >>> +	q_data->sizeimage[0] = q_data->coded_width * q_data->coded_height;
-> >>> +	q_data->bytesperline[0] = q_data->coded_width;
-> >>> +	q_data->sizeimage[1] = q_data->sizeimage[0] / 2;
-> >>> +	q_data->bytesperline[1] = q_data->coded_width;
-> >>> +
-> >>> +}
-> >>> +
-> >>> +static int vidioc_vdec_streamon(struct file *file, void *priv,
-> >>> +				enum v4l2_buf_type type)
-> >>> +{
-> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
-> >>> +
-> >>> +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
-> >>> +
-> >>> +	return v4l2_m2m_streamon(file, ctx->m2m_ctx, type);
-> >>> +}
-> >>> +
-> >>> +static int vidioc_vdec_streamoff(struct file *file, void *priv,
-> >>> +				 enum v4l2_buf_type type)
-> >>> +{
-> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
-> >>> +
-> >>> +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
-> >>> +	return v4l2_m2m_streamoff(file, ctx->m2m_ctx, type);
-> >>> +}
-> >>> +
-> >>> +static int vidioc_vdec_reqbufs(struct file *file, void *priv,
-> >>> +			       struct v4l2_requestbuffers *reqbufs)
-> >>> +{
-> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
-> >>> +	int ret;
-> >>> +
-> >>> +	mtk_v4l2_debug(3, "[%d] (%d) count=%d", ctx->idx,
-> >>> +			 reqbufs->type, reqbufs->count);
-> >>> +	ret = v4l2_m2m_reqbufs(file, ctx->m2m_ctx, reqbufs);
-> >>> +
-> >>> +	return ret;
-> >>> +}
-> >>
-> >> Please use the v4l2_m2m_ioctl_* helper functions were applicable.
-> >>
-> > 
-> > 
-> > 
-> > snipped.
-> >>> +static unsigned int fops_vcodec_poll(struct file *file,
-> >>> +				     struct poll_table_struct *wait)
-> >>> +{
-> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
-> >>> +	struct mtk_vcodec_dev *dev = ctx->dev;
-> >>> +	int ret;
-> >>> +
-> >>> +	mutex_lock(&dev->dev_mutex);
-> >>> +	ret = v4l2_m2m_poll(file, ctx->m2m_ctx, wait);
-> >>> +	mutex_unlock(&dev->dev_mutex);
-> >>> +
-> >>> +	return ret;
-> >>> +}
-> >>> +
-> >>> +static int fops_vcodec_mmap(struct file *file, struct vm_area_struct *vma)
-> >>> +{
-> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
-> >>> +
-> >>> +	return v4l2_m2m_mmap(file, ctx->m2m_ctx, vma);
-> >>> +}
-> >>> +
-> >>> +static const struct v4l2_file_operations mtk_vcodec_fops = {
-> >>> +	.owner				= THIS_MODULE,
-> >>> +	.open				= fops_vcodec_open,
-> >>> +	.release			= fops_vcodec_release,
-> >>> +	.poll				= fops_vcodec_poll,
-> >>> +	.unlocked_ioctl			= video_ioctl2,
-> >>> +	.mmap				= fops_vcodec_mmap,
-> >>
-> >> You should be able to use the v4l2_m2m_fop helper functions for poll and mmap.
-> >>
-> > 
-> > Hi Hans,
-> > 
-> > We are plaining to remove m2m framework in th feature, although we think
-> 
-> Remove it for just the decoder driver or both encoder and decoder?
-> 
-Remove it from decoder driver.
+Please add a comment above the memreserve to mention what it is
+protecting. That helps to avoid having this cargo-culted to cases where
+it is not needed.
 
-> > it is easy to use and could save a lot of code similar to what m2m
-> > framework implemented and reduce code size.
-> > The main reason is that in v4l2_m2m_try_schedule, it required that at
-> > least one output buffer and one capture buffer to run device_run.
-> > We want to start device_run without capture buffer queued.
-> 
-> I assume the reason is that you need to get the resolution etc. information
-> from the encoded stream? Without a capture buffer you can't actually decode
-> a frame, but that's probably not what this is about.
-Yes, it could start parsing without waiting CAPTURE ready and get
-CAPTURE buffer from vb2 when it really need it.
+I take it that the code for the spin-table is not in RAM, and does not
+need to be protected similarly?
 
+Assuming so:
 
-> > Is there any suggestion that we could use m2m framework but trigger
-> > device_run with only output buffer.
-> > Or we need to remove m2m and write our own implementation.
-> 
-> I am assuming that not using the m2m framework is for the decoder only and
-> that its purpose is to obtain data about the encoded stream early.
-> 
-yes. it's for decode only.
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
+Thanks,
+Mark.
 
-> This is something that was discussed with Pawel in the past. I don't have a
-> problem if you do it yourself (without the m2m framework), but it might also
-> be an idea to adapt the framework for this.
+>  / {
+>  	compatible = "socionext,ph1-ld20";
+>  	#address-cells = <2>;
+> -- 
+> 1.9.1
 > 
-> Pawel, do you have any thoughts on that?
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> Regards,
-> 
-> 	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
