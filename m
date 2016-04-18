@@ -1,102 +1,147 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 0/4] ASoC: add graph base connection on
- simple-card
-Date: Mon, 18 Apr 2016 09:38:27 +0200
-Message-ID: <20160418093827.65b9f8a5bd2ec17cde2e7b5b@free.fr>
-References: <871t68wxxe.wl%kuninori.morimoto.gx@renesas.com>
-	<20160414110128.56a0da97d526cdcb8d5f1ddf@free.fr>
-	<87h9f3jq3m.wl%kuninori.morimoto.gx@renesas.com>
-	<87fuunjkio.wl%kuninori.morimoto.gx@renesas.com>
-	<20160415133158.9c5c0dc7367325606c53ce17@free.fr>
-	<87r3e3ej5t.wl%kuninori.morimoto.gx@renesas.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Mon, 18 Apr 2016 08:43:35 +0100
+Message-ID: <20160418074335.GA3346@x1>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1>
+ <57111E8B.1040503@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87r3e3ej5t.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57111E8B.1040503@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Apr 2016 02:43:21 +0000
-Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-
-> But can I ask something ?
+On Fri, 15 Apr 2016, Thor Thayer wrote:
+> On 03/30/2016 06:35 AM, Lee Jones wrote:
+> >On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+> >
+> >>From: Thor Thayer <tthayer@opensource.altera.com>
+> >>
+> >>The Altera Arria10 Devkit System Resource chip is a Multi-Function
+> >>Device, it has two subdevices:
+> >>      - GPIO
+> >>      - HWMON
+> >>
+> >>This patch adds documentation for the Altera A10-SR DT bindings.
+> >>
+> >>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> >>---
+> >>  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 +++++++=
++++++++++++++
+> >>  1 file changed, 35 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a=
+10sr.txt
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt=
+ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> >>new file mode 100644
+> >>index 0000000..564c761
+> >>--- /dev/null
+> >>+++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> >>@@ -0,0 +1,35 @@
+> >>+* Altera Arria10 Development Kit System Resource Chip
+> >>+
+> >>+Required parent device properties:
+> >>+- compatible : "altr,altr_a10sr"
+> >>+- spi-max-frequency : Maximum SPI frequency.
+> >>+- reg : the SPI Chip Select address for the Arria10 System Resourc=
+e chip
+> >
+> >DT bindings are much easier to read in the following format:
+> >
+> >- compatible		: "altr,altr_a10sr"
+> >- spi-max-frequency	: Maximum SPI frequency.
+> >- reg			: the SPI Chip Select address for the Arria10 System Resourc=
+e chip
+> >
+> >... also, sentences start with an uppercase char.
+> >
+> >>+The A10SR consists of this varied group of sub-devices:
+> >>+
+> >>+Device                   Description
+> >>+------                   ----------
+> >>+altr_a10sr_gpio          GPIO Controller
+> >>+altr_a10sr_hwmon         Hardware Monitor
+> >>+
+> >>+The LEDs are implemented entirely in the device tree using
+> >>+the gpio-led framework.
+> >
+> >This is a Linuxisum and should not live in DT bindings.
+> >
+> >>+Example:
+> >>+
+> >>+        a10-sr: a10-sr@0 {
+> >
+> >Nodes should be named after their device 'type'.
+> >
+> >Does this device really start a address 0?
+> >
 >=20
-> > > > My concern is if audio side need to care/support "formal" graph=
- style,
-> > > > I think all cpu/codec/card driver (and soc-core too ?) need to =
-be updated,
-> > > > but it is too much for me.
-> > > > if fake graph style (like this patch) is OK, I'm happy to hack =
-it more.
-> > >=20
-> > > This "fake graph style" means it is supporting both graph's "remo=
-te-endpoint"
-> > > and current simple-card's "sound-dai" (=3D not 100% graph style).
-> (snip)
-> > So, in brief:
-> > - the simple-card with only "sound-dai" works fine with or without =
-a
-> >   graph of ports,
-> > - for a full use of the graph of ports, forget about the simple-car=
-d.
+> I see in the documentation on device trees there are a number of
+> categories I can use. GPIO is easy because it is one of the
+> categories but I'm not sure about the new device I'm adding since
+> the a10sr is a new device.
+
+It's always difficult with MFDs as they are by their very nature, more
+than one device.  But how about 'resource-manager'?
+
+> I believe I should only call out the name and address on the SPI bus =
+like:
 >=20
-> Q1
-> If we use full graph style card, and if it would like to reuse curren=
-t existing
-> CPU/CODEC driver, then, I think CPU/CODEC driver should support graph=
- style too.
-> (Now, I'm checking v4l2 side existing graph style driver)
-> I know it is based on its current implementation, but basically YES ?
+> a10sr@0 {
+
+Correct.
+
+> >>+		compatible =3D "altr,altr-a10sr";
+> >>+		reg =3D <0>;
+> >>+		spi-max-frequency =3D <100000>;
+> >>+
+> >>+		a10sr_gpio: a10sr_gpio {
+> >
+> >Device type only please.
+> >
 >=20
-> Q2
-> If Q1 was Yes, to keeping ABI compatibility,
-> that CPU/CODEC driver should support both "phandle" and "graph" style=
- ?
+> and this would be a10sr_gpio: gpio-controller {
+>=20
+> Does that seem correct?
 
-Hi Kuninori,
+Also correct.  No address though?
 
-When the cards are defined from a graph of ports, the CPU/CODEC drivers
-do not need to know about this graph if they use a fixed numbering of
-their DAIs (I think this is the case of all existing drivers but the
-ones in my system). There is no useful information for these drivers
-in the DT, so, they don't need any change when moving to a graph of
-ports.
-
-Such a move is done first in the DT by removing the simple-card node
-and replacing the previous 'dai-link' definitions by couples of ports
-in the CPU (audio controller) and in the CODEC device nodes.
-
-The previous DAI properties (tdm-slots, clocks...) must also be moved
-to the graph (ports of the graph links). As nothing exists about these
-port properties in the DT documentation, they must be added.
-
-The previous global (simple-)card properties (widgets, routing..) must
-also be moved. Where? Simply to the main audio controller node.
-They could be named 'audio-xxx' or included in an audio container.
-
-Now, let's talk about the code. As there is no simple-card device to
-create the card, an other piece of code must do the job.
-The simplest way to run it is to put it in the audio controller:
-when the audio controller scans the DT, it sees the card definitions
-(audio-xxx' or audio container), so, it has all elements to create the
-card.
-This card is as generic as the simple-card, so it could be in the
-sound/soc core.
-
-So, in brief again: when using a full graph style card:
-- there is no change in the CPU/CODEC drivers,
-- there is no simple-card,
-- the 'audio-graph-card's are created by the audio controllers which
-  run a generic code.
+> >>+			compatible =3D "altr,a10sr-gpio";
+> >>+			gpio-controller;
+> >>+			#gpio-cells =3D <2>;
+> >>+			ngpios =3D <16>;
+> >>+		};
+> >>+
+> >>+		a10sr_hwmon: a10sr_hwmon {
+> >
+> >Device type only please.
+> >
+> I need to revisit where this will live (hwmon does not seem to be
+> the correct place) so it will change but I can follow the format
+> above if it is correct.
+>=20
+> Thanks for reviewing.
+>=20
+> >>+			compatible =3D "altr,a10sr-hwmon";
+> >>+		};
+> >>+	};
+> >
 
 --=20
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
