@@ -1,87 +1,91 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Mon, 18 Apr 2016 10:12:02 -0500
-Message-ID: <5714F942.5040309@opensource.altera.com>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1> <57111E8B.1040503@opensource.altera.com>
- <20160418074540.GB3346@x1>
-Reply-To: <tthayer@opensource.altera.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [Question] reset controlling
+Date: Mon, 18 Apr 2016 17:13:57 +0200
+Message-ID: <4342692.6LEQF6clJv@wuerfel>
+References: <CAK7LNATcVwx1q0Nb2WMSpqW3LcoRkZx3RgpMjmbt2EmffJnFvg@mail.gmail.com> <5910310.IeFB0QAt6Q@wuerfel> <CAK7LNARJo-xDkkwZ0qA+DaKmQ0SixxGytNSKWBZMZ_N_6eWWow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160418074540.GB3346@x1>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNARJo-xDkkwZ0qA+DaKmQ0SixxGytNSKWBZMZ_N_6eWWow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+On Sunday 17 April 2016 17:16:58 Masahiro Yamada wrote:
+> 2016-04-17 4:23 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> >> Reset signals are sometimes cascaded.
+> >> For example, the UART blocks on my SoCs have a reset for the whole of
+> >> UART blocks
+> >> besides per-channel reset signals.
+> >>
+> >>                      |---(UART ch0 reset)---> UART0
+> >>                      |
+> >> ----(UART reset)-----|---(UART ch1 reset)---> UART1
+> >>                      |
+> >>                      |---(UART ch2 reset)---> UART2
+> >>
+> >> I found this works well with clk-gate drivers.
+> >> Even reset_control_reset() can be implemented
+> >> with clk_disable() followed by clk_enable().
+> >>
+> >
+> > Interesting. My feeling from your description is that this is something
+> > that should be added to the reset controller subsystem. It has probably
+> > not been a serious issue for anyone else, but it's also likely that you
+> > are not the only one that would benefit from having support for nested
+> > resets in the API.
+> 
+> I want reset sub-system to support (1) nesting,  (2) enable_count.
+> 
+> To get these two features supported, the reset frame-work
+> would be similar implementation to the clock subsystem.
+> (In other words, we would duplicate effort
+> between clock and reset.)
+> 
+> Moreover, it is very common to control resets and clocks
+> from one hardware block.
+> 
+> So, I am looking for some idea that perhaps can unify the clock
+> and reset subsystems.
 
-On 04/18/2016 02:45 AM, Lee Jones wrote:
-> On Fri, 15 Apr 2016, Thor Thayer wrote:
->> On 03/30/2016 06:35 AM, Lee Jones wrote:
->>> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
->>>
->>>> From: Thor Thayer <tthayer@opensource.altera.com>
->>>>
->>>> The Altera Arria10 Devkit System Resource chip is a Multi-Function
->>>> Device, it has two subdevices:
->>>>       - GPIO
->>>>       - HWMON
->>>>
->>>> This patch adds documentation for the Altera A10-SR DT bindings.
->>>>
->>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->>>> ---
->>>>   .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
->>>>   1 file changed, 35 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>> new file mode 100644
->>>> index 0000000..564c761
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>> @@ -0,0 +1,35 @@
->>>> +* Altera Arria10 Development Kit System Resource Chip
->>>> +
->>>> +Required parent device properties:
->>>> +- compatible : "altr,altr_a10sr"
->>>> +- spi-max-frequency : Maximum SPI frequency.
->>>> +- reg : the SPI Chip Select address for the Arria10 System Resource chip
->
-> [...]
->
->>>> +		a10sr_hwmon: a10sr_hwmon {
->>>
->>> Device type only please.
->>>
->> I need to revisit where this will live (hwmon does not seem to be
->> the correct place) so it will change but I can follow the format
->> above if it is correct.
->
-> BTW, "hwmon" is a subsystem in Linux, therefore is a Linuxism and is
-> not allowed in DT.  What does the device *actually* do?
->
+If you find parts of the code that could be shared, we can probably
+split those out into a file in lib/*.c and have that used by both
+subsystems and potentially others as well.
 
-OK. I'll be careful not to introduce the Linux subsystem name.
+> I found some SoCs implement reset drivers in drivers/clk.
+> 
+> 
+> masahiro@grover:~/workspace/linux/drivers/clk$ git grep
+> reset_controller_register
+> mediatek/reset.c:       ret = reset_controller_register(&data->rcdev);
+> mmp/reset.c:    reset_controller_register(&unit->rcdev);
+> qcom/common.c:  ret = reset_controller_register(&reset->rcdev);
+> rockchip/softrst.c:     ret = reset_controller_register(&softrst->rcdev);
+> sirf/clk-atlas7.c:      reset_controller_register(&atlas7_rst_ctlr);
+> sunxi/clk-a10-ve.c:     err = reset_controller_register(&reset_data->rcdev);
+> sunxi/clk-sun9i-mmc.c:  ret = reset_controller_register(&data->rcdev);
+> sunxi/clk-usb.c:        reset_controller_register(&reset_data->rcdev);
+> tegra/clk.c:    reset_controller_register(&rst_ctlr);
 
-This module indicates whether the power supplies are at the correct 
-voltage. It uses a boolean instead of giving an actual voltage value as 
-required by HWMON. In other words it is a comparator instead of an 
-Analog-to-Digital Converter.
+I think these are all the ones that have a shared hardware block doing
+both clocks and resets. My guess is that most other hardware does it
+differently.
 
-I could call it a power supply supervisor or voltage status monitor but 
-it only acts in a passive role. There is no output to trigger an error - 
-only polling, so supervisor doesn't seem like a good name.
+> I asked about this in the following thread.
+> https://lkml.org/lkml/2015/11/10/724
 
-Maybe something like this?
+Your hardware seems to be in a third category, which is not uncommon
+either: you have clocks, resets and additional registers all in a
+single block without a structure around them.
 
-	power_supply_status {
-		compatible = "altr,a10sr-hwmon";
-	}
+You can handle this with purely syscon based abstraction, or you
+can have a driver for the combined device that registers itself
+to multiple subsystems in addition to being a syscon.
 
-Thanks for reviewing and helping me figure out the device tree naming.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
