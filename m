@@ -1,40 +1,63 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH 1/3] mmc: dt: usdhi6rol0: add optional pinctrl binding
-Date: Mon, 18 Apr 2016 11:38:24 +0200
-Message-ID: <0376e04a938f459cee9e1f80e1447e060ba7e497.1460971625.git.larper@axis.com>
-References: <cover.1460971625.git.larper@axis.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <cover.1460971625.git.larper@axis.com>
-In-Reply-To: <cover.1460971625.git.larper@axis.com>
-References: <cover.1460971625.git.larper@axis.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: g.liakhovetski@gmx.de, ulf.hansson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 2/2] dt-bindings: Add Oxford Semiconductor OXNAS Standard Clocks bindings
+Date: Mon, 18 Apr 2016 12:01:36 +0200
+Message-ID: <1460973696-5977-3-git-send-email-narmstrong@baylibre.com>
+References: <1460973696-5977-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1460973696-5977-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a pinctrl binding to specify different pin settings for high speed
-modes and UHS modes.
-
-Signed-off-by: Lars Persson <larper@axis.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/mmc/usdhi6rol0.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/clock/oxnas,stdclk.txt     | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
 
-diff --git a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
-index 8babdaa..9dd9478 100644
---- a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
-+++ b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
-@@ -12,6 +12,10 @@ Optional properties:
- 
- - vmmc-supply:	a phandle of a regulator, supplying Vcc to the card
- - vqmmc-supply:	a phandle of a regulator, supplying VccQ to the card
-+- pinctrl-names: Must contain a "default" entry and optionally a "pins_uhs"
-+                 entry for the UHS pin configuration.
-+- pinctrl-N: One property for each name listed in pinctrl-names, see
-+             ../pinctrl/pinctrl-bindings.txt.
- 
- Additionally any standard mmc bindings from mmc.txt can be used.
- 
+diff --git a/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt b/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
+new file mode 100644
+index 0000000..208cca6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
+@@ -0,0 +1,35 @@
++Oxford Semiconductor OXNAS SoC Family Standard Clocks
++================================================
++
++Please also refer to clock-bindings.txt in this directory for common clock
++bindings usage.
++
++Required properties:
++- compatible: Should be "oxsemi,ox810se-stdclk"
++- #clock-cells: 1, see below
++
++Parent node should have the following properties :
++- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
++
++For OX810SE, the clock indices are :
++ - 0: LEON
++ - 1: DMA_SGDMA
++ - 2: CIPHER
++ - 3: SATA
++ - 4: AUDIO
++ - 5: USBMPH
++ - 6: ETHA
++ - 7: PCIA
++ - 8: NAND
++
++example:
++
++sys: sys-ctrl@000000 {
++	compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
++	reg = <0x000000 0x100000>;
++
++	stdclk: stdclk {
++		compatible = "oxsemi,ox810se-stdclk";
++		#clock-cells = <1>;
++	};
++};
 -- 
-2.1.4
+1.9.1
 
