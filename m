@@ -1,50 +1,82 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 2/9] dt-bindings: pinctrl: Deprecate Tegra XUSB pad
- controller binding
-Date: Mon, 18 Apr 2016 13:26:22 +0200
-Message-ID: <CACRpkdaSXajvsyncgGdyN61TOSpV_5fA+rwzeXYjyrpG++OMGQ@mail.gmail.com>
-References: <1457108379-20794-1-git-send-email-thierry.reding@gmail.com>
-	<1457108379-20794-2-git-send-email-thierry.reding@gmail.com>
-	<CACRpkda_YvQQesSUiZB0cpotZWyyd+5nUqzz3HjnY9fCanWJwQ@mail.gmail.com>
-	<20160418111200.GA17716@ulmo.ba.sec>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160418111200.GA17716-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v4 3/4] devicetree: Add ANX7814 SlimPort transmitter binding.
+Date: Mon, 18 Apr 2016 13:26:11 +0200
+Message-ID: <1460978772-7569-4-git-send-email-enric.balletbo@collabora.com>
+References: <1460978772-7569-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460978772-7569-1-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, treding@nvidia.com
+Cc: airlied@linux.ie, robh+dt@kernel.org, djkurtz@chromium.org, drinkcat@chromium.org, dan.carpenter@oracle.com, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 18, 2016 at 1:12 PM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Mar 15, 2016 at 10:01:25AM +0100, Linus Walleij wrote:
->> On Fri, Mar 4, 2016 at 5:19 PM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> >
->> > This is an old version of the binding that isn't flexible enough to
->> > describe all aspects of the XUSB pad controller. Specifically with the
->> > addition of XUSB support (for SuperSpeed USB) the existing binding is
->> > no longer suitable.
->> >
->> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> That's unfortunate, not to say unelegant. I want to know Stephen's
->> opinion on these patches (probably they are in another mail)
->> before merging.
->>
->> Will the new binding also work with SuperDuperSpeed USB and
->> SuperSuperMegaUltraOrtonSpeed USB I wonder... or will we
->> change the bindings again?
->
-> Linus, Stephen's gave his Acked-by on this patch (provided it gets
-> merged into patch 1/9, which I've done locally), would you be willing to
-> give your Acked-by so that this change can go in via the PHY tree where
-> the new bindings are introduced?
+The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+designed for portable devices.
 
-Yes I trust Stephen to know what's right for Tegra.
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Rob Herring <robh@kernel.org>
+---
+Changes since v3:
+ - Model v10 as regulator (dvdd10-supply)
+ - Removed the Acked-by: Rob Herring. Guess I need your ack again if you're agree
+   with the change.
+Changes since v2:
+ - Add Acked-by: Rob Herring <robh@kernel.org>
 
-Yours,
-Linus Walleij
+Changes since v1:
+ - Rob Herring:
+   - Rename cable-det-gpios for hpd-gpios as is more standard
+   - Fix HDMI output for HDMI input
+
+ .../devicetree/bindings/video/bridge/anx7814.txt   | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/bridge/anx7814.txt
+
+diff --git a/Documentation/devicetree/bindings/video/bridge/anx7814.txt b/Documentation/devicetree/bindings/video/bridge/anx7814.txt
+new file mode 100644
+index 0000000..b2a22c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/bridge/anx7814.txt
+@@ -0,0 +1,40 @@
++Analogix ANX7814 SlimPort (Full-HD Transmitter)
++-----------------------------------------------
++
++The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
++designed for portable devices.
++
++Required properties:
++
++ - compatible		: "analogix,anx7814"
++ - reg			: I2C address of the device
++ - interrupt-parent	: Should be the phandle of the interrupt controller
++			  that services interrupts for this device
++ - interrupts		: Should contain the INTP interrupt
++ - hpd-gpios		: Which GPIO to use for hpd
++ - pd-gpios		: Which GPIO to use for power down
++ - reset-gpios		: Which GPIO to use for reset
++
++Optional properties:
++
++ - dvdd10-supply	: Regulator for 1.0V digital core power.
++ - Video port for HDMI input, using the DT bindings defined in [1].
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++	anx7814: anx7814@38 {
++		compatible = "analogix,anx7814";
++		reg = <0x38>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
++		hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
++		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
++		port {
++			anx7814_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
++	};
+-- 
+2.1.0
