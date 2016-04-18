@@ -1,29 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: add vendor-prefix for mqmaker
-Date: Mon, 18 Apr 2016 12:28:03 -0500
-Message-ID: <20160418172803.GA31975@rob-hp-laptop>
-References: <1460933375-6718-1-git-send-email-heiko@sntech.de>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH V3 2/2] thermal: generic-adc: Add ADC based thermal sensor driver
+Date: Mon, 18 Apr 2016 18:31:36 +0100
+Message-ID: <D84D2ED7-81D4-4635-8244-4017D66C6A3B@jic23.retrosnub.co.uk>
+References: <1460644878-19943-1-git-send-email-ldewangan@nvidia.com> <1460644878-19943-2-git-send-email-ldewangan@nvidia.com> <57136B7C.6030204@kernel.org> <57151023.8010505@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460933375-6718-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <57151023.8010505@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, robh@kernel.org, edubezval@gmail.com, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 18, 2016 at 12:49:34AM +0200, Heiko Stuebner wrote:
-> Add vendor-prefix for Shenzen-based mqmaker Inc.
-> 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 18 April 2016 17:49:39 BST, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+>
+>On Sunday 17 April 2016 04:24 PM, Jonathan Cameron wrote:
+>> On 14/04/16 15:41, Laxman Dewangan wrote:
+>> +static int gadc_thermal_read_channel(struct gadc_thermal_info *gti,
+>int *val)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = iio_read_channel_processed(gti->channel, val);
+>> +	if (ret < 0)
+>> +		ret = iio_read_channel_raw(gti->channel, val);
+>> Is this case actually useful given it means the scaling of the adc
+>> isn't known?
+>>
+>> I suppose you might have defined the table in terms of raw readings,
+>> but then when someone comes along and 'fixes' the ADC driver to
+>output
+>> it's scale your table will be wrong.
+>>
+>
+>Yes, that may be possible if someone just move the implementation of 
+>processed read to raw read.
+>I assumed that some of adc driver implemented as raw and some of 
+>implemented as processed and so fallback.
+>
+>However, if adc driver has processed implementation then it should not 
+>move to raw and deprecate the processed.
+>
+>It seems raw as default should be better option. We can have two option
+>now:
+>
+>- Support raw only, not to processed.
+>
+>- Or support the raw as default and processed as the optional from DT.
+>if (!processed)
+>     read_raw()
+>else
+>   read_processed()
+>
+>
+>Your opinion?
+Processed only. It will compute the right value if raw and scale are provided by the
+ device (which they should be for an ADC). The read_processed function does
+ the maths if needed.
+
+ The only time devices should
+ supply raw without scale is if their is no direct transform ( e.g. an infrared
+ intensity measure where only known transform involves combining it with
+ another signal) or their is an external unknown (e.g. proximity sensors where
+ you have to know what they were close to in order to know the scaling!)
+
+If there is a conventional ADC driver not providing either processed directly or
+ both raw and scale let us know and we will fix it!
+
+Jonathan
+>
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>the body of a message to majordomo@vger.kernel.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
