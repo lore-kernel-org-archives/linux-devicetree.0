@@ -1,51 +1,30 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: lpc32xx: set default clock rate of HCLK PLL
-Date: Mon, 18 Apr 2016 07:12:00 +0300
-Message-ID: <1460952720-6638-1-git-send-email-vz@mleia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx35: restore existing used clock
+ enumeration
+Date: Mon, 18 Apr 2016 12:39:49 +0800
+Message-ID: <20160418043949.GV28903@tiger>
+References: <1460669450-11729-1-git-send-email-akurz@blala.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460669450-11729-1-git-send-email-akurz@blala.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Alexander Kurz <akurz@blala.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Philippe Reynes <tremyfr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Probably most of NXP LPC32xx boards have 13MHz main oscillator and
-therefore for HCLK PLL and ARM core clock rate default hardware
-setting is 16 * 13MHz = 208MHz, however a user may vary HCLK PLL/ARM
-core rate from 156MHz to about 266MHz for 13MHz clock source.
+On Thu, Apr 14, 2016 at 11:30:49PM +0200, Alexander Kurz wrote:
+> A new element got inserted into enum mx35_clks with commit 3713e3f5e927
+> ("clk: imx35: define two clocks for rtc"). This insertion shifted most
+> nummerical clock assignments to a new nummerical value which in turn
+> rendered most hardcoded nummeric values in imx35.dtsi incorrect.
+> 
+> Restore the existing order by moving the newly introduced clock to the
+> end of the enum. Update the dts documentation accordingly.
+> 
+> Signed-off-by: Alexander Kurz <akurz@blala.de>
 
-The change explicitly defines HCLK PLL output rate to default 208MHz
-to overwrite any settings done by a bootloader, if needed it can be
-redefined in a board DTS file.
+Applied as a fix and Cc-ed stable, thanks.
 
-Acked-by: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
----
-The change was discussed on linux-clk mailing list, from that
-times I grab Sylvain's acked-by tag:
-
-  http://www.spinics.net/lists/devicetree/msg116863.html
-
- arch/arm/boot/dts/lpc32xx.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index c58d8da..d7b84cd 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -294,6 +294,9 @@
- 
- 					clocks = <&xtal_32k>, <&xtal>;
- 					clock-names = "xtal_32k", "xtal";
-+
-+					assigned-clocks = <&clk LPC32XX_CLK_HCLK_PLL>;
-+					assigned-clock-rates = <208000000>;
- 				};
- 			};
- 
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
