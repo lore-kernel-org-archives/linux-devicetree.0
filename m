@@ -1,79 +1,39 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Mon, 18 Apr 2016 08:45:40 +0100
-Message-ID: <20160418074540.GB3346@x1>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1>
- <57111E8B.1040503@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57111E8B.1040503@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/3] Add support simple-card parse jack detection via external codec
+Date: Mon, 18 Apr 2016 16:17:29 +0800
+Message-ID: <1460967452-24574-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Adam.Thomson-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Mengdong Lin <mengdong.lin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Apr 2016, Thor Thayer wrote:
-> On 03/30/2016 06:35 AM, Lee Jones wrote:
-> >On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
-> >
-> >>From: Thor Thayer <tthayer@opensource.altera.com>
-> >>
-> >>The Altera Arria10 Devkit System Resource chip is a Multi-Function
-> >>Device, it has two subdevices:
-> >>      - GPIO
-> >>      - HWMON
-> >>
-> >>This patch adds documentation for the Altera A10-SR DT bindings.
-> >>
-> >>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> >>---
-> >>  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 +++++++=
-+++++++++++++
-> >>  1 file changed, 35 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a=
-10sr.txt
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt=
- b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> >>new file mode 100644
-> >>index 0000000..564c761
-> >>--- /dev/null
-> >>+++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> >>@@ -0,0 +1,35 @@
-> >>+* Altera Arria10 Development Kit System Resource Chip
-> >>+
-> >>+Required parent device properties:
-> >>+- compatible : "altr,altr_a10sr"
-> >>+- spi-max-frequency : Maximum SPI frequency.
-> >>+- reg : the SPI Chip Select address for the Arria10 System Resourc=
-e chip
 
-[...]
+Hi,
+    In most cases, many codecs already supports jack detection,
+previouslly, we need to create a customized machine driver every time.
 
-> >>+		a10sr_hwmon: a10sr_hwmon {
-> >
-> >Device type only please.
-> >
-> I need to revisit where this will live (hwmon does not seem to be
-> the correct place) so it will change but I can follow the format
-> above if it is correct.
+    Hence, the simple-card need to support use them dynamically via
+parse dts file for better flexibility.
 
-BTW, "hwmon" is a subsystem in Linux, therefore is a Linuxism and is
-not allowed in DT.  What does the device *actually* do?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Xing Zheng (3):
+  ASoC: jack: Add a jack detect callback via codec
+  ASoC: simple-card: Add support jack detection via codec
+  ASoC: da7219: Add detect_jack callback in the snd_soc_codec_driver
+
+ .../devicetree/bindings/sound/simple-card.txt      |   17 +++
+ include/sound/soc.h                                |    6 +
+ sound/soc/codecs/da7219.c                          |    2 +
+ sound/soc/generic/simple-card.c                    |  126 +++++++++++++++++++-
+ sound/soc/soc-jack.c                               |    8 ++
+ 5 files changed, 156 insertions(+), 3 deletions(-)
+
+-- 
+1.7.9.5
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
