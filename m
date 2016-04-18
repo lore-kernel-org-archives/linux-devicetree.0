@@ -1,95 +1,55 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: usdhi6rol0: add support for UHS modes
-Date: Mon, 18 Apr 2016 13:18:24 +0200
-Message-ID: <CAPDyKFqTwZG6AA4ALEACM_vuWUTZNymrwzUPzUOcV2euoHKz5w@mail.gmail.com>
-References: <cover.1460971625.git.larper@axis.com>
-	<ba126adf4953f61ed11ed8b0219608663cfb5fbc.1460971625.git.larper@axis.com>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH v2 0/3] Add support simple-card parse jack
+	detection via external codec
+Date: Mon, 18 Apr 2016 19:20:00 +0800
+Message-ID: <1460978403-4754-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <ba126adf4953f61ed11ed8b0219608663cfb5fbc.1460971625.git.larper@axis.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Phil Edworthy <phil@edworthys.org>, Lars Persson <larper@axis.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, Mengdong Lin <mengdong.lin@linux.intel.com>, heiko@sntech.de, Liam Girdwood <lgirdwood@gmail.com>, dianders@chromium.org, Xing Zheng <zhengxing@rock-chips.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Takashi Iwai <tiwai@suse.com>, sugar.zhang@rock-chips.com, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-kernel@vger.kernel.org, Adam.Thomson@diasemi.com, broonie@kernel.org, Kumar Gala <galak@codeaurora.org>, Jun Nie <jun.nie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 April 2016 at 11:38, Lars Persson <lars.persson@axis.com> wrote:
-> From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
->
-> The mmc core will only enable UHS modes if the host supports the
-> .start_signal_voltage_switch() operation. Add this method to the v08r07
-> driver even if there's actually nothing to do in it.
->
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Signed-off-by: Phil Edworthy <phil@edworthys.org>
-> Signed-off-by: Lars Persson <larper@axis.com>
-> ---
->  drivers/mmc/host/usdhi6rol0.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
-> index 807c06e..5dde31b 100644
-> --- a/drivers/mmc/host/usdhi6rol0.c
-> +++ b/drivers/mmc/host/usdhi6rol0.c
-> @@ -23,6 +23,7 @@
->  #include <linux/module.h>
->  #include <linux/pagemap.h>
->  #include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/scatterlist.h>
->  #include <linux/string.h>
->  #include <linux/time.h>
-> @@ -1147,12 +1148,43 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
->         }
->  }
->
-> +static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
-> +{
-> +       int ret;
-> +
-> +       if (IS_ERR(mmc->supply.vqmmc))
-> +               return 0;
-> +
-> +       switch (ios->signal_voltage) {
-> +       case MMC_SIGNAL_VOLTAGE_330:
-> +               ret = regulator_set_voltage(mmc->supply.vqmmc,
-> +                                           2700000, 3600000);
-> +               break;
-> +       case MMC_SIGNAL_VOLTAGE_180:
-> +               ret = regulator_set_voltage(mmc->supply.vqmmc,
-> +                                           1700000, 1950000);
-> +               break;
-> +       case MMC_SIGNAL_VOLTAGE_120:
-> +               ret = regulator_set_voltage(mmc->supply.vqmmc,
-> +                                           1100000, 1300000);
-> +               break;
-> +       default:
-> +               return 0;
-> +       }
 
-Please replace this switch statement with a call to
-mmc_regulator_set_vqmmc() instead.
+Hi,
+    In most cases, many codecs already supports jack detection,
+previouslly, we need to create a customized machine driver every time.
 
-> +
-> +       if (ret < 0)
-> +               dev_warn(mmc_dev(mmc), "Voltage switch failed: %d\n", ret);
-> +
-> +       return ret;
-> +}
-> +
->  static struct mmc_host_ops usdhi6_ops = {
->         .request        = usdhi6_request,
->         .set_ios        = usdhi6_set_ios,
->         .get_cd         = usdhi6_get_cd,
->         .get_ro         = usdhi6_get_ro,
->         .enable_sdio_irq = usdhi6_enable_sdio_irq,
-> +       .start_signal_voltage_switch = usdhi6_sig_volt_switch,
->  };
->
->  /*                     State machine handlers                          */
-> --
-> 2.1.4
->
+    In my opinion, the codec fill the detect_jack explicitly and tell
+sound framework it supports the jack detection, the simple-card is
+able to parse the dts file and call the export function to initialize
+the jace detection via the codec.
 
-Kind regards
-Uffe
+    I think that it will bring better flexibility.
+
+    Thanks.
+
+Changes in v1:
+- clean up the commit message and notes
+
+Xing Zheng (3):
+  ASoC: jack: Add an export of a function that calls the codec jack
+    detection
+  ASoC: simple-card: Add support call the codec jack detection after
+    parse dts
+  ASoC: da7219: Add detect_jack callback in the snd_soc_codec_driver
+
+ .../devicetree/bindings/sound/simple-card.txt      |   17 +++
+ include/sound/soc.h                                |    7 ++
+ sound/soc/codecs/da7219.c                          |    2 +
+ sound/soc/generic/simple-card.c                    |  126 +++++++++++++++++++-
+ sound/soc/soc-jack.c                               |   17 +++
+ 5 files changed, 166 insertions(+), 3 deletions(-)
+
+-- 
+1.7.9.5
