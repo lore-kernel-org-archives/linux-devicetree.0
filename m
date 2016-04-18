@@ -1,151 +1,143 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Mon, 18 Apr 2016 16:48:09 +0200
-Message-ID: <20160418144809.GC20508@ulmo.ba.sec>
-References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
- <56E98F2E.5010307@wwwdotorg.org>
- <20160413162203.GB30129@ulmo.ba.sec>
- <570E7C38.3070005@wwwdotorg.org>
- <20160414152905.GB3366@ulmo.ba.sec>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Mon, 18 Apr 2016 09:55:37 -0500
+Message-ID: <5714F569.807@opensource.altera.com>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1> <57111E8B.1040503@opensource.altera.com>
+ <20160418074335.GA3346@x1>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S1BNGpv0yoYahz37"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160414152905.GB3366-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20160418074335.GA3346@x1>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
---S1BNGpv0yoYahz37
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 04/18/2016 02:43 AM, Lee Jones wrote:
+> On Fri, 15 Apr 2016, Thor Thayer wrote:
+>> On 03/30/2016 06:35 AM, Lee Jones wrote:
+>>> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+>>>
+>>>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>>>
+>>>> The Altera Arria10 Devkit System Resource chip is a Multi-Function
+>>>> Device, it has two subdevices:
+>>>>       - GPIO
+>>>>       - HWMON
+>>>>
+>>>> This patch adds documentation for the Altera A10-SR DT bindings.
+>>>>
+>>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>>>> ---
+>>>>   .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
+>>>>   1 file changed, 35 insertions(+)
+>>>>   create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>>>> new file mode 100644
+>>>> index 0000000..564c761
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>>>> @@ -0,0 +1,35 @@
+>>>> +* Altera Arria10 Development Kit System Resource Chip
+>>>> +
+>>>> +Required parent device properties:
+>>>> +- compatible : "altr,altr_a10sr"
+>>>> +- spi-max-frequency : Maximum SPI frequency.
+>>>> +- reg : the SPI Chip Select address for the Arria10 System Resource chip
+>>>
+>>> DT bindings are much easier to read in the following format:
+>>>
+>>> - compatible		: "altr,altr_a10sr"
+>>> - spi-max-frequency	: Maximum SPI frequency.
+>>> - reg			: the SPI Chip Select address for the Arria10 System Resource chip
+>>>
+>>> ... also, sentences start with an uppercase char.
+>>>
+>>>> +The A10SR consists of this varied group of sub-devices:
+>>>> +
+>>>> +Device                   Description
+>>>> +------                   ----------
+>>>> +altr_a10sr_gpio          GPIO Controller
+>>>> +altr_a10sr_hwmon         Hardware Monitor
+>>>> +
+>>>> +The LEDs are implemented entirely in the device tree using
+>>>> +the gpio-led framework.
+>>>
+>>> This is a Linuxisum and should not live in DT bindings.
+>>>
+>>>> +Example:
+>>>> +
+>>>> +        a10-sr: a10-sr@0 {
+>>>
+>>> Nodes should be named after their device 'type'.
+>>>
+>>> Does this device really start a address 0?
+>>>
+>>
+>> I see in the documentation on device trees there are a number of
+>> categories I can use. GPIO is easy because it is one of the
+>> categories but I'm not sure about the new device I'm adding since
+>> the a10sr is a new device.
+>
+> It's always difficult with MFDs as they are by their very nature, more
+> than one device.  But how about 'resource-manager'?
+>
+OK. Yes, that would be a good name. Thanks.
 
-On Thu, Apr 14, 2016 at 05:29:05PM +0200, Thierry Reding wrote:
-> On Wed, Apr 13, 2016 at 11:04:56AM -0600, Stephen Warren wrote:
-> > On 04/13/2016 10:22 AM, Thierry Reding wrote:
-> > > On Wed, Mar 16, 2016 at 10:51:58AM -0600, Stephen Warren wrote:
-> > > > On 03/08/2016 08:48 AM, Thierry Reding wrote:
-> > > > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > >=20
-> > > > > Changes to the pad controller device tree binding have required t=
-hat
-> > > > > each lane be associated with a separate PHY.
-> > > >=20
-> > > > I still don't think this has anything to do with DT bindings. Rathe=
-r, the
-> > > > definition of a PHY (in HW and the Linux PHY subsystem) is a single=
- lane.
-> > > > That fact then requires drivers to support a PHY per lane rather th=
-an a
-> > > > single multi-lane PHY, and equally means the DT bindings must be wr=
-itten
-> > > > according to the correct definition of a PHY.
-> > > >=20
-> > > > Still, I suppose the commit description is fine as is.
-> > >=20
-> > > I've reworded the commit message to give a more accurate rationale for
-> > > the change. I'll be posting a v5 soon.
-> > >=20
-> > > > > Update the PCI host bridge
-> > > > > device tree binding to allow each root port to define the list of=
- PHYs
-> > > > > required to drive the lanes associated with it.
-> > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20=
--pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
-> > > >=20
-> > > > > +Required properties for Tegra124 and later:
-> > > > > +- phys: Must contain an phandle to a PHY for each entry in phy-n=
-ames.
-> > > > > +- phy-names: Must include an entry for each active lane. Note th=
-at the number
-> > > > > +  of entries does not have to (though usually will) be equal to =
-the specified
-> > > > > +  number of lanes in the nvidia,num-lanes property. Entries are =
-of the form
-> > > > > +  "pcie-N": where N ranges from 0 to the value specified in nvid=
-ia,num-lanes.
-> > > >=20
-> > > > When would the number of PHYs not equal the number of lanes? I thou=
-ght the
-> > > > whole point of this patch was to switch to per-lane PHYs? Perhaps I=
-'m just
-> > > > misremembering some exception, so there may be no need to change th=
-is.
-> > >=20
-> > > This is useful to support the case where we want to connect a x1 or x2
-> > > device to a root port that is configured to drive more lanes. It's a
-> > > rather unusual configuration, but it would be possible for example to
-> > > have an onboard x1 ethernet card, but the board layout is such that it
-> > > runs in x1/x2 mode, with the ethernet card connected to the x2 port.
-> >=20
-> > Does the controller HW actually work correctly in such a mode?
->=20
-> I think it does, and up until a few minutes ago I was even sure that I
-> had tested it once. But looking at the various boards that I have I
-> don't think I actually have test equipment that's wired the proper way
-> to test this.
->=20
-> > Obviously a fully initialized x4 controller has to correctly handle bei=
-ng
-> > attached solely to a x1 device. However, that's a different case to sim=
-ply
-> > not initializing 3 of the 4 PHYs. It's plausible the controller handles=
- this
-> > just fine, or that it hangs up or otherwise misbehaves if some of the P=
-HYs
-> > aren't enabled and hence it can't even detect whether something is atta=
-ched
-> > to them or not. Either way, adding your explanation into the binding wo=
-uld
-> > be useful to highlight the reason for the special case.
->=20
-> Perhaps for now it would be better to make the binding stricter. The
-> wording could be relaxed if we ever determine that it still works
-> correctly with a number of PHYs smaller than the number of lanes.
+>> I believe I should only call out the name and address on the SPI bus like:
+>>
+>> a10sr@0 {
+>
+> Correct.
+>
+>>>> +		compatible = "altr,altr-a10sr";
+>>>> +		reg = <0>;
+>>>> +		spi-max-frequency = <100000>;
+>>>> +
+>>>> +		a10sr_gpio: a10sr_gpio {
+>>>
+>>> Device type only please.
+>>>
+>>
+>> and this would be a10sr_gpio: gpio-controller {
+>>
+>> Does that seem correct?
+>
+> Also correct.  No address though?
+>
 
-Going over the patches again I realized that Jetson TK1 is actually one
-such case. The PCI host bridge controller is configured to run root port
-0 using two lanes, and root port 1 using one lane. However, only one
-lane is connected to each port. Root port 0 goes to the miniPCIe slot,
-which takes a single lane (PEX4), while root port 1 goes to the onboard
-NIC, which takes a single lane (PEX2) as well. x1 + x1 is an unsupported
-configuration for the root complex, though, hence why it is configured
-to be x2 + x1.
+Thank you. It is at a fixed address inside the SPI device. When making 
+this binding I followed the format of other gpio controllers like the 
+tps65086 and lp3943 which didn't have an address.
 
-I've tested that both the onboard NIC as well as a miniPCIe card work
-correctly with the setup.
+Thanks for the clarification.
 
-So I think the wording in the binding, as well as the example, are
-correct. So I left the original wording in place, but instead added a
-couple more examples so that we have one per SoC generation, which will
-hopefully clarify what properties should and shouldn't be used.
-
-Thierry
-
---S1BNGpv0yoYahz37
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXFPOnAAoJEN0jrNd/PrOhe90P/RQkdtw7v450sx3y/I4LIkTC
-GIr3Wqr/TrBlmMojqt7buyqgLcBbcCQrDCdC4NKv2F8cC0mw0PEcUr7VbzjApMcd
-PN/ZwfCsbTwBkqaThjL4H4Nshx34Q8ePUFAf8iq/ZxrU/NHQFNFxeKlO+eHChdlS
-1IR/WTk2QEqixWIoe85rZrFKLxVCCDV5FVlFADzRQkG1H7lvPI3Xb8G0RS7A2899
-XNQfWzMvDF9Bk7srMcd2guVp4CtlnQrcquvE3evUCiN5dxINd5q4gNJ7yFlLbrip
-fTFG7iQOQ6oWfLnt0FyDg5T3zZJ7hskm24x0GjYgdekX8CMRcwRbrGEJCIeABtBk
-b1oZ9dVlCYegurLUPBMjXaSkqZSOyIBRyPQXdEvQtuIHHbg9CErgmSIYjkJ1y1N8
-L1GXMneMpsFIrWkVH0i+6FWfBqgCQt9skRpVR5Azili73EhamHLetjdXiQYq/5GV
-Dj+vqKF6PDwmjdqBYZn0ow9PeEJAm7pfkNhQWGl8jBAP7CYdrvkLUcACatB6n1o7
-SyiufscgVr41nmYlVZ2yeWQR9xfh62CI5hBHeLxKnbW8CLfIkR5YFLrGfRhHkmYt
-mlej0bz7ogNWYiX1ZG7Ijhzjkp/jlOBNtoz5tsWtts7ydS/LhlayznEahSisMkx0
-sMr0p4XzJe8ByS074qiT
-=NC8e
------END PGP SIGNATURE-----
-
---S1BNGpv0yoYahz37--
+>>>> +			compatible = "altr,a10sr-gpio";
+>>>> +			gpio-controller;
+>>>> +			#gpio-cells = <2>;
+>>>> +			ngpios = <16>;
+>>>> +		};
+>>>> +
+>>>> +		a10sr_hwmon: a10sr_hwmon {
+>>>
+>>> Device type only please.
+>>>
+>> I need to revisit where this will live (hwmon does not seem to be
+>> the correct place) so it will change but I can follow the format
+>> above if it is correct.
+>>
+>> Thanks for reviewing.
+>>
+>>>> +			compatible = "altr,a10sr-hwmon";
+>>>> +		};
+>>>> +	};
+>>>
+>
