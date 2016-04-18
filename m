@@ -1,38 +1,54 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH] Add EDAC peripheral init functions & Ethernet EDAC.
-Date: Mon, 18 Apr 2016 15:25:56 -0500
-Message-ID: <571542D4.1030409@opensource.altera.com>
-References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
- <20160414143501.GA25212@rob-hp-laptop>
- <20160415064042.330406ab.m.chehab@samsung.com>
- <5711087A.8050501@opensource.altera.com> <20160415214618.GB4545@cz.tnic>
- <5714EEC4.4060807@opensource.altera.com> <20160418200227.GA2057@cz.tnic>
- <20160418200637.GB2057@cz.tnic>
-Reply-To: <tthayer@opensource.altera.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 08/12] devicetree: Add infineon to
+	vendor-prefix.txt
+Date: Tue, 19 Apr 2016 00:17:40 +0200
+Message-ID: <1461017864-3903-9-git-send-email-christophe-h.ricard@st.com>
+References: <1461017864-3903-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160418200637.GB2057@cz.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh@kernel.org>, dougthompson@xmission.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1461017864-3903-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add missing vendor to vendor-prefix.txt
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 72e2c5a..6c3d970 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -113,6 +113,7 @@ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
+ iom	Iomega Corporation
+ img	Imagination Technologies Ltd.
++infineon Infineon Technologies
+ ingenic	Ingenic Semiconductor
+ innolux	Innolux Corporation
+ intel	Intel Corporation
+-- 
+2.1.4
 
 
-On 04/18/2016 03:06 PM, Borislav Petkov wrote:
-> On Mon, Apr 18, 2016 at 10:02:27PM +0200, Borislav Petkov wrote:
->>>   the number of uncorrectable errors is useful from a system point of
->>> view.
->
-> I forgot: so altr_edac_a10_ecc_irq() panics on uncorrectable errors. Do we want
-> to do that even for UEs coming from the network...?
->
-> Seems a bit overboard to me...
->
-
-Yes, as currently submitted, it is overboard and I'll fix this in the 
-next patch submission. In the uncorrectable error case, I plan to just 
-count the error. I'll add a constant flag in the Ethernet module's 
-edac_device_prv_data to determine if the panic should be bypassed.
+------------------------------------------------------------------------------
+Find and fix application performance issues faster with Applications Manager
+Applications Manager provides deep performance insights into multiple tiers of
+your business applications. It resolves application problems quickly and
+reduces your MTTR. Get your free trial!
+https://ad.doubleclick.net/ddm/clk/302982198;130105516;z
