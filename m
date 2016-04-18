@@ -1,167 +1,148 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC
- NAND on non-OMAP platforms
-Date: Mon, 18 Apr 2016 16:57:55 +0200
-Message-ID: <20160418165755.77d1d661@bbrezillon>
-References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
-	<20160413212500.GD5995@atomide.com>
-	<5710B58C.7050108@ti.com>
-	<20160415120942.3131eac1@bbrezillon>
-	<5710C86A.9060108@ti.com>
-	<20160415135108.63716f06@bbrezillon>
-	<20160415154139.GS5995@atomide.com>
-	<20160415180531.15d790d2@bbrezillon>
-	<20160415161950.GT5995@atomide.com>
-	<20160416105711.5310d2d0@bbrezillon>
-	<5714D3A4.2050405@ti.com>
-	<5714D8AA.9040304@ti.com>
-	<20160418151305.17a42437@bbrezillon>
-	<5714E5AA.5050200@ti.com>
-	<20160418161001.2a1c0bed@bbrezillon>
-	<5714F185.5080103@ti.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 2/3] dmaengine: tegra-adma: Add support for Tegra210
+ ADMA
+Date: Mon, 18 Apr 2016 16:06:23 +0100
+Message-ID: <5714F7EF.5000605@nvidia.com>
+References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
+ <1458057390-20756-3-git-send-email-jonathanh@nvidia.com>
+ <20160405213649.GA11586@vkoul-mobl.iind.intel.com>
+ <570BB001.3020202@nvidia.com> <20160412141025.GJ2274@localhost>
+ <570D2104.1040607@nvidia.com> <20160413134917.GP2274@localhost>
+ <570F7952.2030606@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5714F185.5080103@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <570F7952.2030606-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Apr 2016 17:39:01 +0300
-Roger Quadros <rogerq@ti.com> wrote:
+Hi Vinod,
 
-> On 18/04/16 17:10, Boris Brezillon wrote:
-> > On Mon, 18 Apr 2016 16:48:26 +0300
-> > Roger Quadros <rogerq@ti.com> wrote:
-> > 
-> >> Boris,
-> >>
-> >> On 18/04/16 16:13, Boris Brezillon wrote:
-> >>> Hi Roger,
-> >>>
-> >>> On Mon, 18 Apr 2016 15:52:58 +0300
-> >>> Roger Quadros <rogerq@ti.com> wrote:
-> >>>
-> >>>> On 18/04/16 15:31, Roger Quadros wrote:
-> >>>>> On 16/04/16 11:57, Boris Brezillon wrote:
-> >>>>>> On Fri, 15 Apr 2016 09:19:51 -0700
-> >>>>>> Tony Lindgren <tony@atomide.com> wrote:
-> >>>>>>
-> >>>>>>>
-> >>>>>>>> Or should I just pull this immutable branch in my current nand/next and
-> >>>>>>>> let you pull the same immutable branch in omap-soc. I mean, would this
-> >>>>>>>> prevent conflicts when our branches are merged into linux-next, no
-> >>>>>>>> matter the order.
-> >>>>>>>
-> >>>>>>> Ideally just one or more branches with just minimal changes in
-> >>>>>>> them against -rc1. But you may have other dependencies in
-> >>>>>>> your NAND tree so that may no longer be doable :) Usually if
-> >>>>>>> I merge something that may need to get merged into other
-> >>>>>>> branches, I just apply them into a separate branch against -rc1
-> >>>>>>> to start with, then merge that branch in.
-> >>>>>>
-> >>>>>> Okay, in this case, that's pretty much what I did from the beginning,
-> >>>>>> except the immutable branch was provided by Roger (based on 4.6-rc1).
-> >>>>>> Thanks for this detailed explanation, I'll try to remember that when
-> >>>>>> I'll need to provide an immutable branch for another subsystem.
-> >>>>>>
-> >>>>>> Roger, my request remains, could you check/test my conflict resolution
-> >>>>>> (branch nand/next-with-gpmc-rework)?
-> >>>>>
-> >>>>> I couldn't test that branch yet as nand/next is broken on omap platforms
-> >>>>> (at least on dra7-evm).
-> >>>>>
-> >>>>> The commit where it breaks is:
-> >>>>> a662ef4 mtd: nand: omap2: use mtd_ooblayout_xxx() helpers where appropriate
-> >>>>>
-> >>>>> I'm trying to figure out what went wrong there. Failure log below.
-> >>>>
-> >>>> OK. I was able to fix it when at commit a662ef4 with the below patch.
-> >>>
-> >>> Thanks for debugging that.
-> >>>
-> >>>>
-> >>>> Looks like we need to read exactly the ECC bytes through the ECC engine and not
-> >>>> the entire OOB region.
-> >>>
-> >>> Hm, it looks like there's a bug somewhere else, because I don't see any
-> >>> reason why the controller wouldn't be able to read the full OOB region.
-> >>
-> >> The controller can read the full OOB region but we only want it to read just
-> >> the ECC bytes because that is the way the ELM ECC engine works.
-> > 
-> > Ok, I think I got it: the ECC correction is pipelined with data read,
-> > and the controller expect to have ECC bytes right after the in-band
-> > data, is that correct?
+Any more comments here? Or are you ok?
+
+Cheers
+Jon
+
+On 14/04/16 12:04, Jon Hunter wrote:
 > 
-> That is correct.
+> On 13/04/16 14:49, Vinod Koul wrote:
+>> On Tue, Apr 12, 2016 at 05:23:32PM +0100, Jon Hunter wrote:
+>>>>>> why should this be hard coded in kernel and not queried from something like
+>>>>>> DT? This case seems to be hardware property
+>>>>>
+>>>>> Originally, I did have this in DT, however, the Tegra maintainers prefer
+>>>>> this and this is consistent with the other Tegra DMA driver (see
+>>>>> driver/dma/tegra20-apb-dma.c) [0].
+>>>>
+>>>> But this creates a problem when you have next generation of controller with
+>>>> different channel count!
+>>>> How do we solve then?
+>>>
+>>> Same way we solve this for the tegra20-apb-dma driver by having
+>>> different chip data per SoC in the driver ...
+>>>
+>>> 1259 /* Tegra20 specific DMA controller information */
+>>> 1260 static const struct tegra_dma_chip_data tegra20_dma_chip_data = {
+>>> 1261         .nr_channels            = 16,
+>>> 1262         .channel_reg_size       = 0x20,
+>>> 1263         .max_dma_count          = 1024UL * 64,
+>>> 1264         .support_channel_pause  = false,
+>>> 1265         .support_separate_wcount_reg = false,
+>>> 1266 };
+>>> 1267
+>>> 1268 /* Tegra30 specific DMA controller information */
+>>> 1269 static const struct tegra_dma_chip_data tegra30_dma_chip_data = {
+>>> 1270         .nr_channels            = 32,
+>>> 1271         .channel_reg_size       = 0x20,
+>>> 1272         .max_dma_count          = 1024UL * 64,
+>>> 1273         .support_channel_pause  = false,
+>>> 1274         .support_separate_wcount_reg = false,
+>>> 1275 };
+>>> 1276
+>>> 1277 /* Tegra114 specific DMA controller information */
+>>> 1278 static const struct tegra_dma_chip_data tegra114_dma_chip_data = {
+>>> 1279         .nr_channels            = 32,
+>>> 1280         .channel_reg_size       = 0x20,
+>>> 1281         .max_dma_count          = 1024UL * 64,
+>>> 1282         .support_channel_pause  = true,
+>>> 1283         .support_separate_wcount_reg = false,
+>>> 1284 };
+>>> 1285
+>>> 1286 /* Tegra148 specific DMA controller information */
+>>> 1287 static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
+>>> 1288         .nr_channels            = 32,
+>>> 1289         .channel_reg_size       = 0x40,
+>>> 1290         .max_dma_count          = 1024UL * 64,
+>>> 1291         .support_channel_pause  = true,
+>>> 1292         .support_separate_wcount_reg = true,
+>>> 1293 };
+>>>
+>>> You may still say this should be in the DT, but the Tegra maintainers
+>>> prefer this data in the driver.
+>>
+>> Okay I don't see a a rationale behind this not being in DT, Stephan?
 > 
-> > 
-> >>
-> >>>>
-> >>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> >>>> index e622a1b..46b61d2 100644
-> >>>> --- a/drivers/mtd/nand/omap2.c
-> >>>> +++ b/drivers/mtd/nand/omap2.c
-> >>>> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
-> >>>>  	chip->read_buf(mtd, buf, mtd->writesize);
-> >>>>  
-> >>>>  	/* Read oob bytes */
-> >>>> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
-> >>>> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
-> >>>> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + chip->ecc.layout->eccpos[0], -1);
-> >>>
-> >>> The whole point of this series is to get rid of chip->ecc.layout, so
-> >>> we'd rather use the mtd_ooblayout_find_eccregion() instead of
-> >>> chip->ecc.layout->eccpos[0].
-> >>
-> >> We just need the position of the first ECC byte offset.
-> >> Is that the most optimal way to get it?
-> > 
-> > For the BCH case, it seems that ECC bytes always start at offset
-> > BADBLOCK_MARKER_LENGTH, so you can just pass
-> > mtd->writesize + BADBLOCK_MARKER_LENGTH.
-> > 
-> > Let me know if this works, and I'll squash those changes into the
-> > faulty commit (I know this implies a rebase + push -f, but IMO that's
-> > better than breaking bisectability).
-> > 
-> > 
+> Let me know what you think of Stephen's feedback and if you are OK with
+> this.
 > 
-> So, the below patch works as well. Please feel free to fold it with your patch.
-
-Will do.
-
-Thanks,
-
-Boris
-
+>>>>>>> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+>>>>>>> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+>>>>>>> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
+>>>>>>
+>>>>>> I think you should not set DMA_SLAVE, do you need caps to be exported. I
+>>>>>> think that should be exported for cyclic too, let me know if that was the
+>>>>>> issue?
+>>>>>>
+>>>>>
+>>>>> Why should I not be setting DMA_SLAVE? Should I not be calling
+>>>>> dma_get_any_slave_channel() in the xlate?
+>>>>>
+>>>>> I think that I do want to set DMA_CYCLIC as well to ensure that we check
+>>>>> that the device->device_prep_dma_cyclic() function pointer is populated
+>>>>> when registering the DMA controller.
+>>>>
+>>>> Only setting DMA_CYCLIC should do, if you see any issues around that please
+>>>> get back, we cna fix those :)
+>>>
+>>> It did not work for me because dma_get_any_slave_channel() wants a DMA
+>>> device with the DMA_SLAVE bit capability set. So if I remove this above,
+>>> then requesting the channel fails via dma_get_any_slave_channel() fails.
+>>> Is there something I don't understand here?
+>>
+>> You should use dma_request_channel() we cleaned up the APIs and recommend to
+>> use dma_request_channel() for slave usages. See Documentation update in 
+>> a8135d0d79e9: (dmaengine: core: Introduce new, universal API to request a
+>> channel)
+> 
+> I had a look at this, but actually, I don't think this is going to work.
+> 
+> Looking at dma_request_channel(), it is going to get a DMA channel that
+> matches the mask for any DMA controller. In the xlate I already know
+> which DMA controller I am and I just want one of the channels. The flow
+> here is ...
+> 
+> dma_request_chan()
+>   --> of_dma_request_slave_channel()
+>     --> xlate()
+>       --> dma_get_any_slave_channel()
+> 
+> There are several other DMA drivers that are calling
+> dma_get_any_slave_channel() from their xlate function which makes sense
+> because they are requesting one of their own channels.
+> 
+> I can understand that you wish to consolidate the APIs for requesting a
+> channel, but it seems to me that you still need to have an API that DMA
+> controller drivers can call where they can pass their dma_device
+> structure to ensure you get a channel for the appropriate DMA controller.
+> 
+> Cheers
+> Jon
 > 
 > --
-> cheers,
-> -roger
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> index e622a1b..eb85d6b 100644
-> --- a/drivers/mtd/nand/omap2.c
-> +++ b/drivers/mtd/nand/omap2.c
-> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
->  	chip->read_buf(mtd, buf, mtd->writesize);
->  
->  	/* Read oob bytes */
-> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
-> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
-> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + BADBLOCK_MARKER_LENGTH, -1);
-> +	chip->read_buf(mtd, chip->oob_poi, chip->ecc.total);
->  
->  	/* Calculate ecc bytes */
->  	chip->ecc.calculate(mtd, buf, ecc_calc);
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
