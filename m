@@ -1,50 +1,27 @@
-From: Nicole Rice <nrice-t/c9uNvYwG/RZgsRAHYzsgC/G2K4zDHf@public.gmane.org>
-Subject: Gamers Email List
-Date: Mon, 18 Apr 2016 13:05:41 -0400
-Message-ID: <571513E5.6050609@contactmaxima.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH] driver: leds: is31fl3196/99 dimmable dual/triple rgb driver
+Date: Mon, 18 Apr 2016 20:43:15 +0200
+Message-ID: <cover.1461004995.git.hns@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds a driver for the is31fl3196/99 dimmable dual/triple rgb controller chips from ISSI.
 
-Hi,
+H. Nikolaus Schaller (1):
+  drivers: led: is31fl319x: 6/9-channel light effect led driver
 
-Would you be interested in acquiring an email list of "Gamers" from USA=
-?
+ .../devicetree/bindings/leds/is31fl319x.txt        |  41 +++
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-is31fl319x.c                     | 406 +++++++++++++++++++++
+ include/linux/leds-is31fl319x.h                    |  24 ++
+ 5 files changed, 480 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
+ create mode 100644 drivers/leds/leds-is31fl319x.c
+ create mode 100644 include/linux/leds-is31fl319x.h
 
-We also have data for Car Owners, Motorcycle Owners, BMW Owners, Appare=
-l Buyers, RV Owners, Boat Owners, Truck Owners, Pickup-Truck Owners, HN=
-I List and many more.
-
-Each record in the list contains Contact Name (First, Middle and Last N=
-ame), Mailing Address, List type and Opt-in email address.
-
-All the contacts are opt-in verified, 100% permission based and can be =
-used for unlimited multi-channel marketing.
-
-Please let me know your thoughts towards procuring the Harley-Davidson =
-Owners List.
-
-Best Regards,
-Nicole Rice
-Research Analyst
-
-We respect your privacy, if you do not wish to receive any further emai=
-ls from our end, please reply with a subject =E2=80=9CLeave Out=E2=80=9D=
-=2E
-
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.3
