@@ -1,67 +1,45 @@
-From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCHv2] wlcore: spi: add wl18xx support
-Date: Mon, 18 Apr 2016 05:55:51 +0000
-Message-ID: <8665E2433BC68541A24DFFCA87B70F5B360BF614@DFRE01.ent.ti.com>
-References: <1460273570-12298-1-git-send-email-eyalr@ti.com>
- <8665E2433BC68541A24DFFCA87B70F5B360B6C90@DFRE01.ent.ti.com>
- <14313437.cDJIgY3kzo@wuerfel>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 1/3] ARM: DTS: da850: add node for spi0
+Date: Mon, 18 Apr 2016 11:25:16 +0530
+Message-ID: <571476C4.6050201@ti.com>
+References: <1460586628-25152-1-git-send-email-david@lechnology.com>
+ <1460586628-25152-2-git-send-email-david@lechnology.com>
+ <5710C176.3040304@ti.com> <57111433.6080402@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <14313437.cDJIgY3kzo@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57111433.6080402@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> >
-> > - all wilink family needs special init command for entering wspi mode.
-> >   extra clock cycles should be sent after the spi init command while the
-> >   cs pin is high.
-> > - switch to controling the cs pin from the spi driver for achieveing the
-> >   above.
-> > - the selected cs gpio is read from the spi device-tree node using the
-> >   cs-gpios field and setup as a gpio.
-> > - See the example below for specifying the cs gpio using the cs-gpios entry
-> > &spi0   {
-> >         ...
-> >         cs-gpios = <&gpio0 5 0>;
-> >         ...
-> >         wlcore: wlcore@0 {
-> >                 compatible = "ti,wl1835";
-> >         ...
-> >         ...
-> >         };
-> > };
-> >
-> > Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+On Friday 15 April 2016 09:47 PM, David Lechner wrote:
+> On 04/15/2016 05:24 AM, Sekhar Nori wrote:
 > 
-> I don't think this can work in general: not all SPI hosts uses GPIOs for
-> controlling CS, so the logic can't work, and it's also a layering violation for the
-> driver to look at the parent.
+>>
+>> This made me notice that num-cs is populated wrongly for spi1. It
+>> actually has 8 chip selects. This is fine though.
 > 
-> I would suggest fixing this using a new API function from the SPI core, if we
-> don't already have a generic way to do it.
->
-Originally this is what I have done until I was pointed to the generic cs-gpio mechanism 
-in the SPI core. 
-It is a generic mechanism already in the SPI core driver.
-See: Documentation/devicetree/bindings/spi/spi-bus.txt
+> I might as well fix it since I have to make changes anyway. Don't
+> remember how I came up with 6.
 
-It is also part of the generic spi.h (include/Linux/spi/spi.h), already part of 
-" struct spi_device" So it seemed redundant adding another mechanism for 
-implementing the same.
-Platform that interact with a wilink need to use it, and platforms that don't  
-have this capability will probably not interact with a wilink device using SPI.
+In section 3.7.7 of datasheet, there are 6 possible chip selects listed
+for SPI0 and 8 possible chipselects for SPI1.
 
-Best Regards,
-Eyal
+If you are fixing SPI1, please make that a separate patch.
 
+>> Also, it will be nice to add pinctrl entries for spi0 like it is done
+>> for spi1. You will need those anyway for using the interface.
+> 
+> I omitted this on purpose. For my use case, I am using the SPI as
+> write-only, so not using the SOMI pin, which is actually muxed as a GPIO
+> for something else. So having a pinctl like spi1 is of no use to me. I
+> figured if someone needs it, they can add it, otherwise it just is
+> wasted space to me.
 
+Alright, makes sense.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sekhar
