@@ -1,69 +1,38 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH 4/4] pinctrl: iproc: Allow PINCONF to be disabled
- completely
-Date: Mon, 18 Apr 2016 12:30:26 -0700
-Message-ID: <3a66ff72-dac1-eaa9-2567-a20f24bba1cf@broadcom.com>
-References: <1460506523-6249-1-git-send-email-ray.jui@broadcom.com>
- <1460506523-6249-5-git-send-email-ray.jui@broadcom.com>
- <CACRpkdYmGUxQu5Sagw+J70wpFc+3Smg3V8mKxF2OFOhbMATYDw@mail.gmail.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] Add EDAC peripheral init functions & Ethernet EDAC.
+Date: Mon, 18 Apr 2016 22:02:27 +0200
+Message-ID: <20160418200227.GA2057@cz.tnic>
+References: <1460499181-23080-1-git-send-email-tthayer@opensource.altera.com>
+ <20160414143501.GA25212@rob-hp-laptop>
+ <20160415064042.330406ab.m.chehab@samsung.com>
+ <5711087A.8050501@opensource.altera.com>
+ <20160415214618.GB4545@cz.tnic>
+ <5714EEC4.4060807@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYmGUxQu5Sagw+J70wpFc+3Smg3V8mKxF2OFOhbMATYDw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5714EEC4.4060807@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh@kernel.org>, dougthompson@xmission.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Mon, Apr 18, 2016 at 09:27:16AM -0500, Thor Thayer wrote:
+> We're still getting the single bit correction
 
-On 4/15/2016 1:24 AM, Linus Walleij wrote:
-> On Wed, Apr 13, 2016 at 2:15 AM, Ray Jui <ray.jui@broadcom.com> wrote:
->
->> In some of the future iProc based SoCs, pinconf is handled by another
->> block and the iProc GPIO controller is solely used as a GPIO controller.
->> This patch adds support of a new compatible string "brcm,iproc-gpio-only",
->> that is introduced to handle this case, where pinconf functions in this
->> driver are completely disabled
->>
->> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
->> Reviewed-by: Jon Mason <jon.mason@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->
-> If this was entirely true, then the driver should end up only executing
-> [devm_]gpiochip_add_data() but that does not seem to be the case.
+By that you mean, you get that by enabling ECC on the FIFO block?
 
-Yes, in the case of compatible string "brcm,iproc-gpio-only" is 
-detected, the driver only registers 'gpiochip_add_data'. Please check 
-patch 2/4 of this series, which takes care of it.
+> which makes the entire system more stable and the ability to see both
+> single bit errors corrected and the number of uncorrectable errors is
+> useful from a system point of view.
 
->
-> You are still registering a pin controller, right? Just disabling some of
-> the pin config options. The pin multiplexing is still there, right?
-> Then it is not "solely a GPIO controller". Not at all.
+If so, that makes sense, yes.
 
-This driver does not register itself as a PINCONF driver if 
-"brcm,iproc-gpio-only" compatible string is detected. This is addressed 
-in patch 2/4 of this series.
+Thanks.
 
-Pin based IOMUX GPIO override is only activated when 
-'chip->pinmux_is_supported' is true, and it is only true if the optional 
-DT property "gpio-ranges" is defined.
+-- 
+Regards/Gruss,
+    Boris.
 
->
-> This patch set needs some elaboration I think.
->
-> Yours,
-> Linus Walleij
->
-
-I believe the current issue with this patch series is now only on the 
-naming of the new compatible string "brcm,iproc-gpio-only". Please 
-correct me if I'm wrong.
-
-Thanks,
-
-Ray
-
+ECO tip #101: Trim your mails when you reply. Srsly.
