@@ -1,262 +1,185 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH 2/3] ASoC: simple-card: Add support jack detection via codec
-Date: Mon, 18 Apr 2016 16:17:31 +0800
-Message-ID: <1460967452-24574-3-git-send-email-zhengxing@rock-chips.com>
-References: <1460967452-24574-1-git-send-email-zhengxing@rock-chips.com>
+From: tiffany lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH 3/7] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
+ Decoder Driver
+Date: Mon, 18 Apr 2016 16:22:34 +0800
+Message-ID: <1460967754.7861.61.camel@mtksdaap41>
+References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
+	 <1460548915-17536-3-git-send-email-tiffany.lin@mediatek.com>
+	 <1460548915-17536-4-git-send-email-tiffany.lin@mediatek.com>
+	 <5710FA3A.2030603@xs4all.nl> <1460958046.7861.48.camel@mtksdaap41>
+	 <57148D8E.9060601@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460967452-24574-1-git-send-email-zhengxing@rock-chips.com>
+In-Reply-To: <57148D8E.9060601@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: heiko@sntech.de, Adam.Thomson@diasemi.com, sugar.zhang@rock-chips.com, jay.xu@rock-chips.com, broonie@kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Lunn <andrew@lunn.ch>, Mengdong Lin <mengdong.lin@linux.intel.com>, Jun Nie <jun.nie@linaro.org>, Jyri Sarha <jsarha@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Pawel Osciak <pawel@osciak.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-In most cases, many codecs already supports jack detection, previouslly,
-we need to create a customized machine driver every time.
+Hi Hans,
 
-Hence, the simple-card need to support use them dynamically via parse dts
-file for better flexibility.
+On Mon, 2016-04-18 at 09:32 +0200, Hans Verkuil wrote:
+> On 04/18/2016 07:40 AM, tiffany lin wrote:
+> > 
+> > snipped.
+> > 
+> >>> +
+> >>> +void mtk_vcodec_dec_set_default_params(struct mtk_vcodec_ctx *ctx)
+> >>> +{
+> >>> +	struct mtk_q_data *q_data;
+> >>> +
+> >>> +	ctx->m2m_ctx->q_lock = &ctx->dev->dev_mutex;
+> >>> +	ctx->fh.m2m_ctx = ctx->m2m_ctx;
+> >>> +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
+> >>> +	INIT_WORK(&ctx->decode_work, mtk_vdec_worker);
+> >>> +
+> >>> +	q_data = &ctx->q_data[MTK_Q_DATA_SRC];
+> >>> +	memset(q_data, 0, sizeof(struct mtk_q_data));
+> >>> +	q_data->visible_width = DFT_CFG_WIDTH;
+> >>> +	q_data->visible_height = DFT_CFG_HEIGHT;
+> >>> +	q_data->fmt = &mtk_video_formats[OUT_FMT_IDX];
+> >>> +	q_data->colorspace = V4L2_COLORSPACE_REC709;
+> >>> +	q_data->field = V4L2_FIELD_NONE;
+> >>> +	ctx->q_data[MTK_Q_DATA_DST].sizeimage[0] =
+> >>> +		DFT_CFG_WIDTH * DFT_CFG_HEIGHT;
+> >>> +	ctx->q_data[MTK_Q_DATA_DST].bytesperline[0] = 0;
+> >>> +
+> >>> +
+> >>> +	q_data = &ctx->q_data[MTK_Q_DATA_DST];
+> >>> +	memset(q_data, 0, sizeof(struct mtk_q_data));
+> >>> +	q_data->visible_width = DFT_CFG_WIDTH;
+> >>> +	q_data->visible_height = DFT_CFG_HEIGHT;
+> >>> +	q_data->coded_width = DFT_CFG_WIDTH;
+> >>> +	q_data->coded_height = DFT_CFG_HEIGHT;
+> >>> +	q_data->colorspace = V4L2_COLORSPACE_REC709;
+> >>> +	q_data->field = V4L2_FIELD_NONE;
+> >>> +
+> >>> +	q_data->fmt = &mtk_video_formats[CAP_FMT_IDX];
+> >>> +
+> >>> +	v4l_bound_align_image(&q_data->coded_width,
+> >>> +					MTK_VDEC_MIN_W,
+> >>> +					MTK_VDEC_MAX_W, 4,
+> >>> +					&q_data->coded_height,
+> >>> +					MTK_VDEC_MIN_H,
+> >>> +					MTK_VDEC_MAX_H, 5, 6);
+> >>> +
+> >>> +	q_data->sizeimage[0] = q_data->coded_width * q_data->coded_height;
+> >>> +	q_data->bytesperline[0] = q_data->coded_width;
+> >>> +	q_data->sizeimage[1] = q_data->sizeimage[0] / 2;
+> >>> +	q_data->bytesperline[1] = q_data->coded_width;
+> >>> +
+> >>> +}
+> >>> +
+> >>> +static int vidioc_vdec_streamon(struct file *file, void *priv,
+> >>> +				enum v4l2_buf_type type)
+> >>> +{
+> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
+> >>> +
+> >>> +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
+> >>> +
+> >>> +	return v4l2_m2m_streamon(file, ctx->m2m_ctx, type);
+> >>> +}
+> >>> +
+> >>> +static int vidioc_vdec_streamoff(struct file *file, void *priv,
+> >>> +				 enum v4l2_buf_type type)
+> >>> +{
+> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
+> >>> +
+> >>> +	mtk_v4l2_debug(3, "[%d] (%d)", ctx->idx, type);
+> >>> +	return v4l2_m2m_streamoff(file, ctx->m2m_ctx, type);
+> >>> +}
+> >>> +
+> >>> +static int vidioc_vdec_reqbufs(struct file *file, void *priv,
+> >>> +			       struct v4l2_requestbuffers *reqbufs)
+> >>> +{
+> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
+> >>> +	int ret;
+> >>> +
+> >>> +	mtk_v4l2_debug(3, "[%d] (%d) count=%d", ctx->idx,
+> >>> +			 reqbufs->type, reqbufs->count);
+> >>> +	ret = v4l2_m2m_reqbufs(file, ctx->m2m_ctx, reqbufs);
+> >>> +
+> >>> +	return ret;
+> >>> +}
+> >>
+> >> Please use the v4l2_m2m_ioctl_* helper functions were applicable.
+> >>
+> > 
+> > 
+> > 
+> > snipped.
+> >>> +static unsigned int fops_vcodec_poll(struct file *file,
+> >>> +				     struct poll_table_struct *wait)
+> >>> +{
+> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
+> >>> +	struct mtk_vcodec_dev *dev = ctx->dev;
+> >>> +	int ret;
+> >>> +
+> >>> +	mutex_lock(&dev->dev_mutex);
+> >>> +	ret = v4l2_m2m_poll(file, ctx->m2m_ctx, wait);
+> >>> +	mutex_unlock(&dev->dev_mutex);
+> >>> +
+> >>> +	return ret;
+> >>> +}
+> >>> +
+> >>> +static int fops_vcodec_mmap(struct file *file, struct vm_area_struct *vma)
+> >>> +{
+> >>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
+> >>> +
+> >>> +	return v4l2_m2m_mmap(file, ctx->m2m_ctx, vma);
+> >>> +}
+> >>> +
+> >>> +static const struct v4l2_file_operations mtk_vcodec_fops = {
+> >>> +	.owner				= THIS_MODULE,
+> >>> +	.open				= fops_vcodec_open,
+> >>> +	.release			= fops_vcodec_release,
+> >>> +	.poll				= fops_vcodec_poll,
+> >>> +	.unlocked_ioctl			= video_ioctl2,
+> >>> +	.mmap				= fops_vcodec_mmap,
+> >>
+> >> You should be able to use the v4l2_m2m_fop helper functions for poll and mmap.
+> >>
+> > 
+> > Hi Hans,
+> > 
+> > We are plaining to remove m2m framework in th feature, although we think
+> 
+> Remove it for just the decoder driver or both encoder and decoder?
+> 
+Remove it from decoder driver.
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
----
+> > it is easy to use and could save a lot of code similar to what m2m
+> > framework implemented and reduce code size.
+> > The main reason is that in v4l2_m2m_try_schedule, it required that at
+> > least one output buffer and one capture buffer to run device_run.
+> > We want to start device_run without capture buffer queued.
+> 
+> I assume the reason is that you need to get the resolution etc. information
+> from the encoded stream? Without a capture buffer you can't actually decode
+> a frame, but that's probably not what this is about.
+Yes, it could start parsing without waiting CAPTURE ready and get
+CAPTURE buffer from vb2 when it really need it.
 
- .../devicetree/bindings/sound/simple-card.txt      |   17 +++
- sound/soc/generic/simple-card.c                    |  126 +++++++++++++++++++-
- 2 files changed, 140 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index cf3979e..d25c8eb 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -22,6 +22,23 @@ Optional properties:
- 					  headphones are attached.
- - simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
- 					  a microphone is attached.
-+- simple-audio-card,codec-jack		: A list of the codec supports jack detection.
-+					  The jack types which are supported refer to include/sound/jack.h.
-+					  All of the jack types:
-+						"JACK_HEADPHONE",
-+						"JACK_MICROPHONE",
-+						"JACK_HEADSET",
-+						"JACK_LINEOUT",
-+						"JACK_MECHANICAL",
-+						"JACK_VIDEOOUT",
-+						"JACK_AVOUT",
-+						"JACK_LINEIN",
-+						"JACK_BTN_0",
-+						"JACK_BTN_1",
-+						"JACK_BTN_2",
-+						"JACK_BTN_3",
-+						"JACK_BTN_4",
-+						"JACK_BTN_5".
- 
- Optional subnodes:
- 
-diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
-index 2389ab4..bc61022 100644
---- a/sound/soc/generic/simple-card.c
-+++ b/sound/soc/generic/simple-card.c
-@@ -33,12 +33,35 @@ struct simple_card_data {
- 	int gpio_hp_det_invert;
- 	int gpio_mic_det;
- 	int gpio_mic_det_invert;
-+	struct simple_codecs_jack {
-+		int jack_det;
-+		int jack_types;
-+		struct snd_soc_jack codec_jack;
-+	} *codec_det_jack;
- 	struct snd_soc_dai_link dai_link[];	/* dynamically allocated */
- };
- 
- #define simple_priv_to_dev(priv) ((priv)->snd_card.dev)
- #define simple_priv_to_link(priv, i) ((priv)->snd_card.dai_link + i)
- #define simple_priv_to_props(priv, i) ((priv)->dai_props + i)
-+#define simple_priv_to_codecdetjack(priv, i) ((priv)->codec_det_jack + i)
-+
-+static const char * const jack_types_list[] = {
-+	"JACK_HEADPHONE",
-+	"JACK_MICROPHONE",
-+	"JACK_HEADSET",
-+	"JACK_LINEOUT",
-+	"JACK_MECHANICAL",
-+	"JACK_VIDEOOUT",
-+	"JACK_AVOUT",
-+	"JACK_LINEIN",
-+	"JACK_BTN_0",
-+	"JACK_BTN_1",
-+	"JACK_BTN_2",
-+	"JACK_BTN_3",
-+	"JACK_BTN_4",
-+	"JACK_BTN_5",
-+};
- 
- static int asoc_simple_card_startup(struct snd_pcm_substream *substream)
- {
-@@ -136,6 +159,8 @@ static struct snd_soc_jack_gpio simple_card_mic_jack_gpio = {
- 	.debounce_time = 150,
- };
- 
-+static struct snd_soc_jack simple_card_codecs_jack;
-+
- static int __asoc_simple_card_dai_init(struct snd_soc_dai *dai,
- 				       struct asoc_simple_dai *set)
- {
-@@ -173,9 +198,12 @@ static int asoc_simple_card_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_dai *codec = rtd->codec_dai;
- 	struct snd_soc_dai *cpu = rtd->cpu_dai;
- 	struct simple_dai_props *dai_props;
-+	struct simple_codecs_jack *codec_det_jack;
- 	int ret;
- 
- 	dai_props = &priv->dai_props[rtd->num];
-+	codec_det_jack = &priv->codec_det_jack[rtd->num];
-+
- 	ret = __asoc_simple_card_dai_init(codec, &dai_props->codec_dai);
- 	if (ret < 0)
- 		return ret;
-@@ -208,6 +236,80 @@ static int asoc_simple_card_dai_init(struct snd_soc_pcm_runtime *rtd)
- 		snd_soc_jack_add_gpios(&simple_card_mic_jack, 1,
- 				       &simple_card_mic_jack_gpio);
- 	}
-+
-+	if (codec_det_jack->jack_det) {
-+		ret = snd_soc_card_jack_new(rtd->card, "Simple-card Codec Jack",
-+					    codec_det_jack->jack_types,
-+					    &simple_card_codecs_jack, NULL, 0);
-+		if (ret) {
-+			dev_err(rtd->card->dev, "New Simple-card Codec Jack failed! (%d)\n", ret);
-+			return ret;
-+		}
-+
-+		snd_soc_jack_codec_detect(rtd->codec, &simple_card_codecs_jack);
-+	}
-+
-+	return 0;
-+}
-+
-+static int asoc_simple_card_parse_jack(struct device_node *np, int *jack_types)
-+{
-+	const char *propname = "simple-audio-card,codec-jack";
-+	const char *jack_name;
-+	int num_jacks, i, j, ret;
-+
-+	/* init with invalid, don't need to de-init if get count strings failed. */
-+	*jack_types = -1;
-+
-+	num_jacks = of_property_count_strings(np, propname);
-+	if (num_jacks < 0) {
-+		pr_err("simple-card: Property '%s' number is invalid\n", propname);
-+		return -EINVAL;
-+	}
-+
-+	/* init and clean value */
-+	*jack_types = 0;
-+
-+	for (i = 0; i < num_jacks; i++) {
-+		ret = of_property_read_string_index(np, propname, i, &jack_name);
-+		if (ret) {
-+			pr_err("simple-card: Property '%s' index %d read error: %d\n",
-+				propname, i, ret);
-+			return -EINVAL;
-+		}
-+
-+		for (j = 0; j < ARRAY_SIZE(jack_types_list); j++) {
-+			if (!strcmp(jack_name, "JACK_HEADPHONE"))
-+				*jack_types |= SND_JACK_HEADPHONE;
-+			else if (!strcmp(jack_name, "JACK_MICROPHONE"))
-+				*jack_types |= SND_JACK_MICROPHONE;
-+			else if (!strcmp(jack_name, "JACK_HEADSET"))
-+				*jack_types |= SND_JACK_HEADSET;
-+			else if (!strcmp(jack_name, "JACK_LINEOUT"))
-+				*jack_types |= SND_JACK_LINEOUT;
-+			else if (!strcmp(jack_name, "JACK_MECHANICAL"))
-+				*jack_types |= SND_JACK_MECHANICAL;
-+			else if (!strcmp(jack_name, "JACK_VIDEOOUT"))
-+				*jack_types |= SND_JACK_VIDEOOUT;
-+			else if (!strcmp(jack_name, "JACK_AVOUT"))
-+				*jack_types |= SND_JACK_AVOUT;
-+			else if (!strcmp(jack_name, "JACK_LINEIN"))
-+				*jack_types |= SND_JACK_LINEIN;
-+			else if (!strcmp(jack_name, "JACK_BTN_0"))
-+				*jack_types |= SND_JACK_BTN_0;
-+			else if (!strcmp(jack_name, "JACK_BTN_1"))
-+				*jack_types |= SND_JACK_BTN_1;
-+			else if (!strcmp(jack_name, "JACK_BTN_2"))
-+				*jack_types |= SND_JACK_BTN_2;
-+			else if (!strcmp(jack_name, "JACK_BTN_3"))
-+				*jack_types |= SND_JACK_BTN_3;
-+			else if (!strcmp(jack_name, "JACK_BTN_4"))
-+				*jack_types |= SND_JACK_BTN_4;
-+			else if (!strcmp(jack_name, "JACK_BTN_5"))
-+				*jack_types |= SND_JACK_BTN_5;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -216,7 +318,8 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
- 			      struct asoc_simple_dai *dai,
- 			      struct device_node **p_node,
- 			      const char **name,
--			      int *args_count)
-+			      int *args_count,
-+			      struct simple_codecs_jack *codec_det_jack)
- {
- 	struct of_phandle_args args;
- 	struct clk *clk;
-@@ -272,6 +375,13 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
- 			dai->sysclk = clk_get_rate(clk);
- 	}
- 
-+	if (codec_det_jack) {
-+		codec_det_jack->jack_det = of_property_read_bool(np,
-+						"simple-audio-card,codec-jack");
-+		if (codec_det_jack->jack_det)
-+			asoc_simple_card_parse_jack(np, &codec_det_jack->jack_types);
-+	}
-+
- 	return 0;
- }
- 
-@@ -325,6 +435,7 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
- 	struct device *dev = simple_priv_to_dev(priv);
- 	struct snd_soc_dai_link *dai_link = simple_priv_to_link(priv, idx);
- 	struct simple_dai_props *dai_props = simple_priv_to_props(priv, idx);
-+	struct simple_codecs_jack *codec_det_jack = simple_priv_to_codecdetjack(priv, idx);
- 	struct device_node *cpu = NULL;
- 	struct device_node *plat = NULL;
- 	struct device_node *codec = NULL;
-@@ -364,13 +475,15 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
- 	ret = asoc_simple_card_sub_parse_of(cpu, &dai_props->cpu_dai,
- 					    &dai_link->cpu_of_node,
- 					    &dai_link->cpu_dai_name,
--					    &cpu_args);
-+					    &cpu_args, NULL);
- 	if (ret < 0)
- 		goto dai_link_of_err;
- 
- 	ret = asoc_simple_card_sub_parse_of(codec, &dai_props->codec_dai,
- 					    &dai_link->codec_of_node,
--					    &dai_link->codec_dai_name, NULL);
-+					    &dai_link->codec_dai_name, NULL,
-+					    codec_det_jack);
-+
- 	if (ret < 0)
- 		goto dai_link_of_err;
- 
-@@ -565,6 +678,13 @@ static int asoc_simple_card_probe(struct platform_device *pdev)
- 	if (!priv->dai_props)
- 		return -ENOMEM;
- 
-+	/* Get room for the other properties */
-+	priv->codec_det_jack = devm_kzalloc(dev,
-+			sizeof(*priv->codec_det_jack) * num_links,
-+			GFP_KERNEL);
-+	if (!priv->codec_det_jack)
-+		return -ENOMEM;
-+
- 	if (np && of_device_is_available(np)) {
- 
- 		ret = asoc_simple_card_parse_of(np, priv);
--- 
-1.7.9.5
+> > Is there any suggestion that we could use m2m framework but trigger
+> > device_run with only output buffer.
+> > Or we need to remove m2m and write our own implementation.
+> 
+> I am assuming that not using the m2m framework is for the decoder only and
+> that its purpose is to obtain data about the encoded stream early.
+> 
+yes. it's for decode only.
+
+
+> This is something that was discussed with Pawel in the past. I don't have a
+> problem if you do it yourself (without the m2m framework), but it might also
+> be an idea to adapt the framework for this.
+> 
+> Pawel, do you have any thoughts on that?
+> 
+> Regards,
+> 
+> 	Hans
