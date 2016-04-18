@@ -1,74 +1,37 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] thermal: generic-adc: Add ADC based thermal sensor
- driver
-Date: Mon, 18 Apr 2016 23:04:48 +0530
-Message-ID: <57151AB8.7040405@nvidia.com>
-References: <1460644878-19943-1-git-send-email-ldewangan@nvidia.com> <1460644878-19943-2-git-send-email-ldewangan@nvidia.com> <57136B7C.6030204@kernel.org> <57151023.8010505@nvidia.com> <D84D2ED7-81D4-4635-8244-4017D66C6A3B@jic23.retrosnub.co.uk>
+From: Nicolas Dufresne <nicolas.dufresne@gmail.com>
+Subject: Re: [PATCH 3/7] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
+ Decoder Driver
+Date: Mon, 18 Apr 2016 13:48:17 -0400
+Message-ID: <1461001697.2719.7.camel@gmail.com>
+References: <1460548915-17536-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1460548915-17536-2-git-send-email-tiffany.lin@mediatek.com>
+	 <1460548915-17536-3-git-send-email-tiffany.lin@mediatek.com>
+	 <1460548915-17536-4-git-send-email-tiffany.lin@mediatek.com>
+	 <5710FA3A.2030603@xs4all.nl> <1460958046.7861.48.camel@mtksdaap41>
+	 <57148D8E.9060601@xs4all.nl> <1460967754.7861.61.camel@mtksdaap41>
+Reply-To: nicolas@ndufresne.ca
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D84D2ED7-81D4-4635-8244-4017D66C6A3B-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460967754.7861.61.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tiffany lin <tiffany.lin@mediatek.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Pawel Osciak <pawel@osciak.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+Le lundi 18 avril 2016 =C3=A0 16:22 +0800, tiffany lin a =C3=A9crit=C2=A0=
+:
+> > > We are plaining to remove m2m framework in th feature, although
+> we think
+> >=C2=A0
+> > Remove it for just the decoder driver or both encoder and decoder?
+> >=C2=A0
+> Remove it from decoder driver.
 
-On Monday 18 April 2016 11:01 PM, Jonathan Cameron wrote:
->
-> On 18 April 2016 17:49:39 BST, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On Sunday 17 April 2016 04:24 PM, Jonathan Cameron wrote:
->>> On 14/04/16 15:41, Laxman Dewangan wrote:
->>> +static int gadc_thermal_read_channel(struct gadc_thermal_info *gti,
->> int *val)
->>> +{
->>> +	int ret;
->>> +
->>> +	ret = iio_read_channel_processed(gti->channel, val);
->>> +	if (ret < 0)
->>> +		ret = iio_read_channel_raw(gti->channel, val);
->>> Is this case actually useful given it means the scaling of the adc
->>> isn't known?
->>>
->>> I suppose you might have defined the table in terms of raw readings,
->>> but then when someone comes along and 'fixes' the ADC driver to
->> output
->>> it's scale your table will be wrong.
->>>
->> Yes, that may be possible if someone just move the implementation of
->> processed read to raw read.
->> I assumed that some of adc driver implemented as raw and some of
->> implemented as processed and so fallback.
->>
->> However, if adc driver has processed implementation then it should not
->> move to raw and deprecate the processed.
->>
->> It seems raw as default should be better option. We can have two option
->> now:
->>
->> - Support raw only, not to processed.
->>
->> - Or support the raw as default and processed as the optional from DT.
->> if (!processed)
->>      read_raw()
->> else
->>    read_processed()
->>
->>
->> Your opinion?
-> Processed only. It will compute the right value if raw and scale are provided by the
->   device (which they should be for an ADC). The read_processed function does
->   the maths if needed.
->
->   The only time devices should
->   supply raw without scale is if their is no direct transform ( e.g. an infrared
->   intensity measure where only known transform involves combining it with
->   another signal) or their is an external unknown (e.g. proximity sensors where
->   you have to know what they were close to in order to know the scaling!)
->
-> If there is a conventional ADC driver not providing either processed directly or
->   both raw and scale let us know and we will fix it!
->
+Did you look at how CODA handle it (drivers/media/platform/coda/coda-
+common.c) ? I don't know any detail, but they do have the same issue
+and use both=C2=A0v4l2_m2m_fop_poll and=C2=A0v4l2_m2m_fop_mmap.
 
-Thanks, I will recycle this patch to use processed only.
+cheers,
+Nicolas
