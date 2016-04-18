@@ -1,143 +1,302 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Mon, 18 Apr 2016 09:55:37 -0500
-Message-ID: <5714F569.807@opensource.altera.com>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1> <57111E8B.1040503@opensource.altera.com>
- <20160418074335.GA3346@x1>
-Reply-To: <tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160418074335.GA3346@x1>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v5 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Mon, 18 Apr 2016 16:51:44 +0200
+Message-ID: <1460991105-22861-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+From: Thierry Reding <treding@nvidia.com>
 
-On 04/18/2016 02:43 AM, Lee Jones wrote:
-> On Fri, 15 Apr 2016, Thor Thayer wrote:
->> On 03/30/2016 06:35 AM, Lee Jones wrote:
->>> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
->>>
->>>> From: Thor Thayer <tthayer@opensource.altera.com>
->>>>
->>>> The Altera Arria10 Devkit System Resource chip is a Multi-Function
->>>> Device, it has two subdevices:
->>>>       - GPIO
->>>>       - HWMON
->>>>
->>>> This patch adds documentation for the Altera A10-SR DT bindings.
->>>>
->>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->>>> ---
->>>>   .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
->>>>   1 file changed, 35 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>> new file mode 100644
->>>> index 0000000..564c761
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>> @@ -0,0 +1,35 @@
->>>> +* Altera Arria10 Development Kit System Resource Chip
->>>> +
->>>> +Required parent device properties:
->>>> +- compatible : "altr,altr_a10sr"
->>>> +- spi-max-frequency : Maximum SPI frequency.
->>>> +- reg : the SPI Chip Select address for the Arria10 System Resource chip
->>>
->>> DT bindings are much easier to read in the following format:
->>>
->>> - compatible		: "altr,altr_a10sr"
->>> - spi-max-frequency	: Maximum SPI frequency.
->>> - reg			: the SPI Chip Select address for the Arria10 System Resource chip
->>>
->>> ... also, sentences start with an uppercase char.
->>>
->>>> +The A10SR consists of this varied group of sub-devices:
->>>> +
->>>> +Device                   Description
->>>> +------                   ----------
->>>> +altr_a10sr_gpio          GPIO Controller
->>>> +altr_a10sr_hwmon         Hardware Monitor
->>>> +
->>>> +The LEDs are implemented entirely in the device tree using
->>>> +the gpio-led framework.
->>>
->>> This is a Linuxisum and should not live in DT bindings.
->>>
->>>> +Example:
->>>> +
->>>> +        a10-sr: a10-sr@0 {
->>>
->>> Nodes should be named after their device 'type'.
->>>
->>> Does this device really start a address 0?
->>>
->>
->> I see in the documentation on device trees there are a number of
->> categories I can use. GPIO is easy because it is one of the
->> categories but I'm not sure about the new device I'm adding since
->> the a10sr is a new device.
->
-> It's always difficult with MFDs as they are by their very nature, more
-> than one device.  But how about 'resource-manager'?
->
-OK. Yes, that would be a good name. Thanks.
+The XUSB pad controller allows PCIe lanes to be controlled individually,
+providing fine-grained control over their power state. Previous attempts
+at describing the XUSB pad controller in DT had erroneously assumed that
+all PCIe lanes were driven by the same PHY, and hence the PCI host
+controller would reference only a single PHY.
 
->> I believe I should only call out the name and address on the SPI bus like:
->>
->> a10sr@0 {
->
-> Correct.
->
->>>> +		compatible = "altr,altr-a10sr";
->>>> +		reg = <0>;
->>>> +		spi-max-frequency = <100000>;
->>>> +
->>>> +		a10sr_gpio: a10sr_gpio {
->>>
->>> Device type only please.
->>>
->>
->> and this would be a10sr_gpio: gpio-controller {
->>
->> Does that seem correct?
->
-> Also correct.  No address though?
->
+Moving to a representation of per-lane PHYs requires that the operating
+system driver for the PCI host controller have access to the set of PHY
+devices that make up the connection of each root port in order to power
+up and down all of the lanes as necessary.
 
-Thank you. It is at a fixed address inside the SPI device. When making 
-this binding I followed the format of other gpio controllers like the 
-tps65086 and lp3943 which didn't have an address.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Changes in v5:
+- add per-SoC examples to clarify what properties are relevant on each
+  generation
+- clarify the rationale for moving the per-lane PHYs
 
-Thanks for the clarification.
+Changes in v4:
+- add additional lanes subnode when dereferencing PHYs from the XUSB pad
+  controller to reflect changes in its binding
 
->>>> +			compatible = "altr,a10sr-gpio";
->>>> +			gpio-controller;
->>>> +			#gpio-cells = <2>;
->>>> +			ngpios = <16>;
->>>> +		};
->>>> +
->>>> +		a10sr_hwmon: a10sr_hwmon {
->>>
->>> Device type only please.
->>>
->> I need to revisit where this will live (hwmon does not seem to be
->> the correct place) so it will change but I can follow the format
->> above if it is correct.
->>
->> Thanks for reviewing.
->>
->>>> +			compatible = "altr,a10sr-hwmon";
->>>> +		};
->>>> +	};
->>>
->
+ .../bindings/pci/nvidia,tegra20-pcie.txt           | 224 ++++++++++++++++++++-
+ 1 file changed, 219 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+index 75321ae23c08..b8cc395fffea 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+@@ -60,11 +60,14 @@ Required properties:
+   - afi
+   - pcie_x
+ 
+-Required properties on Tegra124 and later:
++Required properties on Tegra124 and later (deprecated):
+ - phys: Must contain an entry for each entry in phy-names.
+ - phy-names: Must include the following entries:
+   - pcie
+ 
++These properties are deprecated in favour of per-lane PHYs define in each of
++the root ports (see below).
++
+ Power supplies for Tegra20:
+ - avdd-pex-supply: Power supply for analog PCIe logic. Must supply 1.05 V.
+ - vdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05 V.
+@@ -122,11 +125,22 @@ Required properties:
+   - Root port 0 uses 4 lanes, root port 1 is unused.
+   - Both root ports use 2 lanes.
+ 
+-Example:
++Required properties for Tegra124 and later:
++- phys: Must contain an phandle to a PHY for each entry in phy-names.
++- phy-names: Must include an entry for each active lane. Note that the number
++  of entries does not have to (though usually will) be equal to the specified
++  number of lanes in the nvidia,num-lanes property. Entries are of the form
++  "pcie-N": where N ranges from 0 to the value specified in nvidia,num-lanes.
++
++Examples:
++=========
++
++Tegra20:
++--------
+ 
+ SoC DTSI:
+ 
+-	pcie-controller {
++	pcie-controller@80003000 {
+ 		compatible = "nvidia,tegra20-pcie";
+ 		device_type = "pci";
+ 		reg = <0x80003000 0x00000800   /* PADS registers */
+@@ -186,10 +200,9 @@ SoC DTSI:
+ 		};
+ 	};
+ 
+-
+ Board DTS:
+ 
+-	pcie-controller {
++	pcie-controller@80003000 {
+ 		status = "okay";
+ 
+ 		vdd-supply = <&pci_vdd_reg>;
+@@ -222,3 +235,204 @@ if a device on the PCI bus provides a non-probeable bus such as I2C or SPI,
+ device nodes need to be added in order to allow the bus' children to be
+ instantiated at the proper location in the operating system's device tree (as
+ illustrated by the optional nodes in the example above).
++
++Tegra30:
++--------
++
++SoC DTSI:
++
++	pcie-controller@00003000 {
++		compatible = "nvidia,tegra30-pcie";
++		device_type = "pci";
++		reg = <0x00003000 0x00000800   /* PADS registers */
++		       0x00003800 0x00000200   /* AFI registers */
++		       0x10000000 0x10000000>; /* configuration space */
++		reg-names = "pads", "afi", "cs";
++		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH   /* controller interrupt */
++			      GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>; /* MSI interrupt */
++		interrupt-names = "intr", "msi";
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &intc GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++
++		bus-range = <0x00 0xff>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++
++		ranges = <0x82000000 0 0x00000000 0x00000000 0 0x00001000   /* port 0 configuration space */
++			  0x82000000 0 0x00001000 0x00001000 0 0x00001000   /* port 1 configuration space */
++			  0x82000000 0 0x00004000 0x00004000 0 0x00001000   /* port 2 configuration space */
++			  0x81000000 0 0          0x02000000 0 0x00010000   /* downstream I/O */
++			  0x82000000 0 0x20000000 0x20000000 0 0x08000000   /* non-prefetchable memory */
++			  0xc2000000 0 0x28000000 0x28000000 0 0x18000000>; /* prefetchable memory */
++
++		clocks = <&tegra_car TEGRA30_CLK_PCIE>,
++			 <&tegra_car TEGRA30_CLK_AFI>,
++			 <&tegra_car TEGRA30_CLK_PLL_E>,
++			 <&tegra_car TEGRA30_CLK_CML0>;
++		clock-names = "pex", "afi", "pll_e", "cml";
++		resets = <&tegra_car 70>,
++			 <&tegra_car 72>,
++			 <&tegra_car 74>;
++		reset-names = "pex", "afi", "pcie_x";
++		status = "disabled";
++
++		pci@1,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82000800 0 0x00000000 0 0x1000>;
++			reg = <0x000800 0 0 0 0>;
++			status = "disabled";
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++
++			nvidia,num-lanes = <2>;
++		};
++
++		pci@2,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82001000 0 0x00001000 0 0x1000>;
++			reg = <0x001000 0 0 0 0>;
++			status = "disabled";
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++
++			nvidia,num-lanes = <2>;
++		};
++
++		pci@3,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82001800 0 0x00004000 0 0x1000>;
++			reg = <0x001800 0 0 0 0>;
++			status = "disabled";
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++
++			nvidia,num-lanes = <2>;
++		};
++	};
++
++Board DTS:
++
++	pcie-controller@00003000 {
++		status = "okay";
++
++		avdd-pexa-supply = <&ldo1_reg>;
++		vdd-pexa-supply = <&ldo1_reg>;
++		avdd-pexb-supply = <&ldo1_reg>;
++		vdd-pexb-supply = <&ldo1_reg>;
++		avdd-pex-pll-supply = <&ldo1_reg>;
++		avdd-plle-supply = <&ldo1_reg>;
++		vddio-pex-ctl-supply = <&sys_3v3_reg>;
++		hvdd-pex-supply = <&sys_3v3_pexs_reg>;
++
++		pci@1,0 {
++			status = "okay";
++		};
++
++		pci@3,0 {
++			status = "okay";
++		};
++	};
++
++Tegra124:
++---------
++
++SoC DTSI:
++
++	pcie-controller@01003000 {
++		compatible = "nvidia,tegra124-pcie";
++		device_type = "pci";
++		reg = <0x0 0x01003000 0x0 0x00000800   /* PADS registers */
++		       0x0 0x01003800 0x0 0x00000800   /* AFI registers */
++		       0x0 0x02000000 0x0 0x10000000>; /* configuration space */
++		reg-names = "pads", "afi", "cs";
++		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>, /* controller interrupt */
++			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>; /* MSI interrupt */
++		interrupt-names = "intr", "msi";
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++
++		bus-range = <0x00 0xff>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++
++		ranges = <0x82000000 0 0x01000000 0x0 0x01000000 0 0x00001000   /* port 0 configuration space */
++			  0x82000000 0 0x01001000 0x0 0x01001000 0 0x00001000   /* port 1 configuration space */
++			  0x81000000 0 0x0        0x0 0x12000000 0 0x00010000   /* downstream I/O (64 KiB) */
++			  0x82000000 0 0x13000000 0x0 0x13000000 0 0x0d000000   /* non-prefetchable memory (208 MiB) */
++			  0xc2000000 0 0x20000000 0x0 0x20000000 0 0x20000000>; /* prefetchable memory (512 MiB) */
++
++		clocks = <&tegra_car TEGRA124_CLK_PCIE>,
++			 <&tegra_car TEGRA124_CLK_AFI>,
++			 <&tegra_car TEGRA124_CLK_PLL_E>,
++			 <&tegra_car TEGRA124_CLK_CML0>;
++		clock-names = "pex", "afi", "pll_e", "cml";
++		resets = <&tegra_car 70>,
++			 <&tegra_car 72>,
++			 <&tegra_car 74>;
++		reset-names = "pex", "afi", "pcie_x";
++		status = "disabled";
++
++		pci@1,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82000800 0 0x01000000 0 0x1000>;
++			reg = <0x000800 0 0 0 0>;
++			status = "disabled";
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++
++			nvidia,num-lanes = <2>;
++		};
++
++		pci@2,0 {
++			device_type = "pci";
++			assigned-addresses = <0x82001000 0 0x01001000 0 0x1000>;
++			reg = <0x001000 0 0 0 0>;
++			status = "disabled";
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++
++			nvidia,num-lanes = <1>;
++		};
++	};
++
++Board DTS:
++
++	pcie-controller@01003000 {
++		status = "okay";
++
++		avddio-pex-supply = <&vdd_1v05_run>;
++		dvddio-pex-supply = <&vdd_1v05_run>;
++		avdd-pex-pll-supply = <&vdd_1v05_run>;
++		hvdd-pex-supply = <&vdd_3v3_lp0>;
++		hvdd-pex-pll-e-supply = <&vdd_3v3_lp0>;
++		vddio-pex-ctl-supply = <&vdd_3v3_lp0>;
++		avdd-pll-erefe-supply = <&avdd_1v05_run>;
++
++		/* Mini PCIe */
++		pci@1,0 {
++			phys = <&{/padctl@7009f000/pads/pcie/lanes/pcie-4}>;
++			phy-names = "pcie-0";
++			status = "okay";
++		};
++
++		/* Gigabit Ethernet */
++		pci@2,0 {
++			phys = <&{/padctl@7009f000/pads/pcie/lanes/pcie-2}>;
++			phy-names = "pcie-0";
++			status = "okay";
++		};
++	};
+-- 
+2.8.0
