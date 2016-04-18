@@ -1,87 +1,68 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Mon, 18 Apr 2016 16:54:29 +0200
-Message-ID: <20160418145429.GD20508@ulmo.ba.sec>
-References: <1460991105-22861-1-git-send-email-thierry.reding@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv2] wlcore: spi: add wl18xx support
+Date: Mon, 18 Apr 2016 16:57:03 +0200
+Message-ID: <1463330011.BhWEcYYuGD@wuerfel>
+References: <1460273570-12298-1-git-send-email-eyalr@ti.com> <14313437.cDJIgY3kzo@wuerfel> <8665E2433BC68541A24DFFCA87B70F5B360BF614@DFRE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RYJh/3oyKhIjGcML"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460991105-22861-1-git-send-email-thierry.reding@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B360BF614@DFRE01.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Reizer, Eyal" <eyalr@ti.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalreizer@gmail.com>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 18 April 2016 05:55:51 Reizer, Eyal wrote:
+> > >
+> > > - all wilink family needs special init command for entering wspi mode.
+> > >   extra clock cycles should be sent after the spi init command while the
+> > >   cs pin is high.
+> > > - switch to controling the cs pin from the spi driver for achieveing the
+> > >   above.
+> > > - the selected cs gpio is read from the spi device-tree node using the
+> > >   cs-gpios field and setup as a gpio.
+> > > - See the example below for specifying the cs gpio using the cs-gpios entry
+> > > &spi0   {
+> > >         ...
+> > >         cs-gpios = <&gpio0 5 0>;
+> > >         ...
+> > >         wlcore: wlcore@0 {
+> > >                 compatible = "ti,wl1835";
+> > >         ...
+> > >         ...
+> > >         };
+> > > };
+> > >
+> > > Signed-off-by: Eyal Reizer <eyalr@ti.com>
+> > 
+> > I don't think this can work in general: not all SPI hosts uses GPIOs for
+> > controlling CS, so the logic can't work, and it's also a layering violation for the
+> > driver to look at the parent.
+> > 
+> > I would suggest fixing this using a new API function from the SPI core, if we
+> > don't already have a generic way to do it.
+> >
+> Originally this is what I have done until I was pointed to the generic cs-gpio mechanism 
+> in the SPI core. 
+> It is a generic mechanism already in the SPI core driver.
+> See: Documentation/devicetree/bindings/spi/spi-bus.txt
 
---RYJh/3oyKhIjGcML
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The cs-gpios property is documented as optional, it defines how you should
+list the gpios if CS is implemented using gpio, but not all hardware does
+it like this.
 
-On Mon, Apr 18, 2016 at 04:51:44PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
->=20
-> The XUSB pad controller allows PCIe lanes to be controlled individually,
-> providing fine-grained control over their power state. Previous attempts
-> at describing the XUSB pad controller in DT had erroneously assumed that
-> all PCIe lanes were driven by the same PHY, and hence the PCI host
-> controller would reference only a single PHY.
->=20
-> Moving to a representation of per-lane PHYs requires that the operating
-> system driver for the PCI host controller have access to the set of PHY
-> devices that make up the connection of each root port in order to power
-> up and down all of the lanes as necessary.
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes in v5:
-> - add per-SoC examples to clarify what properties are relevant on each
->   generation
-> - clarify the rationale for moving the per-lane PHYs
->=20
-> Changes in v4:
-> - add additional lanes subnode when dereferencing PHYs from the XUSB pad
->   controller to reflect changes in its binding
->=20
->  .../bindings/pci/nvidia,tegra20-pcie.txt           | 224 +++++++++++++++=
-+++++-
->  1 file changed, 219 insertions(+), 5 deletions(-)
+> It is also part of the generic spi.h (include/Linux/spi/spi.h), already part of 
+> " struct spi_device" So it seemed redundant adding another mechanism for 
+> implementing the same.
+> Platform that interact with a wilink need to use it, and platforms that don't  
+> have this capability will probably not interact with a wilink device using SPI.
 
-Hi Bjorn,
+The cs_gpio field in spi_device belongs to the spi host controller, no other
+slave driver uses it.
 
-I think I've requested this before, but in case I didn't: once you're
-happy with these changes, I'd like to take them through the Tegra tree
-to resolve the dependencies with the remainder of a series that involves
-the pinctrl and PHY drivers as well as devicetree changes. In order to
-do so I'm looking for an Acked-by.
+I wasn't asking for a duplication of this mechanism, but an interface to
+use it properly. Internally, the spi core uses the spi_set_cs() function to
+pick a CS. Find a way to use that rather than reimplementing it incorrectly.
 
-Once applied I can provide a stable branch containing the dependencies
-for you to pull into the PCI tree if necessary.
-
-Thierry
-
---RYJh/3oyKhIjGcML
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXFPUkAAoJEN0jrNd/PrOhELcQALkBpPAht5Ix5Ux9Wtm5aL7L
-Vb2Tq5uj9ZIMjG7+nIFJyYYMOIUHmAy2pGrzlWz4cl2hlT4D+BhRiBpHhUhIBWyE
-bbzhOjllgFqItDvDuyvWjmlaoOiUuTS3NVylqCO/8xx4FnGadfraHkiu+C/YMbEJ
-83YsGyYyx26af+iHFZOU6LB5j423Qci2QT4FpyM3EAzjIVjJwS5+hqbcNgU/wAXI
-/vIZWuvN1gFrj4LrBB5qKy2tdKTDuJpU0GpktV48czg7QtnyPvdEXS/yMC5Neyxv
-f8HlDqfaJuVYYbKeXXeAKxfiVNjdZHbUNUnGkdUdnMXARTQsFTkTNkpsjDQggraF
-FAkvBbeK1KhX0tGbkhhujIxzJmiymXuh8+crOb1rZZyOg1EAy5hUo+5Y99k/Mmc2
-Q41d+Et8AXhvFyh1PoVzxymk1vhu/zZYZf3hYaLyAdx/Vd0DHDhD1oY6gHUvTdFt
-hHQt0sU+vQJWt0iCvZgWACWzad3Irv0A7LHRfzRZO4WbvvCu8sFcQzZv4Q4Qcxho
-IhpT88v27TlTJKyq92pL7hh8mm6gXMDAGrTnqIzstO8n3lP91RSjdyETdYWWug6J
-UanCoIL2HHHVzWeAVL2ZuG1CIqK+yhK9Ca0uI3egyyb4gMan0b+HXbWlkH5xpCZW
-eD+JCSAH1mZFGcdchxQN
-=9MNZ
------END PGP SIGNATURE-----
-
---RYJh/3oyKhIjGcML--
+	Arnd
