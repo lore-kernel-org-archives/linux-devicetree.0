@@ -1,303 +1,112 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] mmc: meson: Add driver for the SD/MMC host found
- on Amlogic Meson SoCs
-Date: Mon, 18 Apr 2016 15:47:25 +0200
-Message-ID: <CAPDyKFqrmpeRASDhBrY0nqhKGEfKw0B6tuP57xPJO0iKuXVb2A@mail.gmail.com>
-References: <1456596108-1406-1-git-send-email-carlo@caione.org>
-	<1456596108-1406-3-git-send-email-carlo@caione.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Mon, 18 Apr 2016 16:48:26 +0300
+Message-ID: <5714E5AA.5050200@ti.com>
+References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
+ <20160413212500.GD5995@atomide.com> <5710B58C.7050108@ti.com>
+ <20160415120942.3131eac1@bbrezillon> <5710C86A.9060108@ti.com>
+ <20160415135108.63716f06@bbrezillon> <20160415154139.GS5995@atomide.com>
+ <20160415180531.15d790d2@bbrezillon> <20160415161950.GT5995@atomide.com>
+ <20160416105711.5310d2d0@bbrezillon> <5714D3A4.2050405@ti.com>
+ <5714D8AA.9040304@ti.com> <20160418151305.17a42437@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456596108-1406-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160418151305.17a42437@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Tony Lindgren <tony@atomide.com>, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 February 2016 at 19:01, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->
-> Add a driver for the SD/MMC host found on the Amlogic Meson SoCs. This
-> is an MMC controller which provides an interface between the application
-> processor and various memory cards. It supports the SD specification
-> v2.0 and the eMMC specification v4.41.
->
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Boris,
 
-Sorry for the delay.
+On 18/04/16 16:13, Boris Brezillon wrote:
+> Hi Roger,
+> 
+> On Mon, 18 Apr 2016 15:52:58 +0300
+> Roger Quadros <rogerq@ti.com> wrote:
+> 
+>> On 18/04/16 15:31, Roger Quadros wrote:
+>>> On 16/04/16 11:57, Boris Brezillon wrote:
+>>>> On Fri, 15 Apr 2016 09:19:51 -0700
+>>>> Tony Lindgren <tony@atomide.com> wrote:
+>>>>
+>>>>>
+>>>>>> Or should I just pull this immutable branch in my current nand/next and
+>>>>>> let you pull the same immutable branch in omap-soc. I mean, would this
+>>>>>> prevent conflicts when our branches are merged into linux-next, no
+>>>>>> matter the order.
+>>>>>
+>>>>> Ideally just one or more branches with just minimal changes in
+>>>>> them against -rc1. But you may have other dependencies in
+>>>>> your NAND tree so that may no longer be doable :) Usually if
+>>>>> I merge something that may need to get merged into other
+>>>>> branches, I just apply them into a separate branch against -rc1
+>>>>> to start with, then merge that branch in.
+>>>>
+>>>> Okay, in this case, that's pretty much what I did from the beginning,
+>>>> except the immutable branch was provided by Roger (based on 4.6-rc1).
+>>>> Thanks for this detailed explanation, I'll try to remember that when
+>>>> I'll need to provide an immutable branch for another subsystem.
+>>>>
+>>>> Roger, my request remains, could you check/test my conflict resolution
+>>>> (branch nand/next-with-gpmc-rework)?
+>>>
+>>> I couldn't test that branch yet as nand/next is broken on omap platforms
+>>> (at least on dra7-evm).
+>>>
+>>> The commit where it breaks is:
+>>> a662ef4 mtd: nand: omap2: use mtd_ooblayout_xxx() helpers where appropriate
+>>>
+>>> I'm trying to figure out what went wrong there. Failure log below.
+>>
+>> OK. I was able to fix it when at commit a662ef4 with the below patch.
+> 
+> Thanks for debugging that.
+> 
+>>
+>> Looks like we need to read exactly the ECC bytes through the ECC engine and not
+>> the entire OOB region.
+> 
+> Hm, it looks like there's a bug somewhere else, because I don't see any
+> reason why the controller wouldn't be able to read the full OOB region.
 
-Apparently this slipped through my mmc mail filters, as I think you
-forgotten to post this to linux-mmc.
+The controller can read the full OOB region but we only want it to read just
+the ECC bytes because that is the way the ELM ECC engine works.
 
-[...]
+>>
+>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>> index e622a1b..46b61d2 100644
+>> --- a/drivers/mtd/nand/omap2.c
+>> +++ b/drivers/mtd/nand/omap2.c
+>> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
+>>  	chip->read_buf(mtd, buf, mtd->writesize);
+>>  
+>>  	/* Read oob bytes */
+>> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
+>> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+>> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + chip->ecc.layout->eccpos[0], -1);
+> 
+> The whole point of this series is to get rid of chip->ecc.layout, so
+> we'd rather use the mtd_ooblayout_find_eccregion() instead of
+> chip->ecc.layout->eccpos[0].
 
-> +static void meson_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> +{
-> +       struct meson_mmc_host *host = mmc_priv(mmc);
-> +       struct mmc_command *cmd = mrq->cmd;
-> +       struct mmc_data *data = mrq->data;
-> +       unsigned long flags;
-> +       int ret;
-> +
-> +       spin_lock_irqsave(&host->lock, flags);
+We just need the position of the first ECC byte offset.
+Is that the most optimal way to get it?
 
-I would advise you to re-visit the deployment of the locking in this
-driver. It doesn't seem correct.
+> 
+>> +	chip->read_buf(mtd, chip->oob_poi, chip->ecc.total);
+> 
+> Can you print the ->oobsize, ->writesize, chip->ecc.layout->eccpos[0]
+> and chip->ecc.total values here. I'll also need your NAND page layout
+> (page size and OOB size provided in the datasheet).
 
-For example, keeping IRQ disabled while mapping DMA buffers isn't a
-good idea, as it may cause the IRQs to be disabled for quite a while.
+eccpos[0]: 2, oobsize 64, ecctotal 56, writesize 2048
 
-> +
-> +       if (host->error) {
-> +               cmd->error = host->error;
-> +               spin_unlock_irqrestore(&host->lock, flags);
-> +               mmc_request_done(mmc, mrq);
-> +               return;
-> +       }
-> +
-> +       if (data) {
-> +               ret = meson_mmc_map_dma(host, data, data->flags);
-> +               if (ret < 0) {
-> +                       dev_err(mmc_dev(mmc), "map DMA failed\n");
-> +                       cmd->error = ret;
-> +                       data->error = ret;
-> +                       spin_unlock_irqrestore(&host->lock, flags);
-> +                       mmc_request_done(mmc, mrq);
-> +                       return;
-> +               }
-> +               writel(sg_dma_address(data->sg), host->base + SDIO_ADDR);
-> +       }
-> +
-> +       host->mrq = mrq;
-> +       meson_mmc_start_cmd(mmc, mrq->cmd);
-> +
-> +       spin_unlock_irqrestore(&host->lock, flags);
-> +
-> +       schedule_delayed_work(&host->timeout_work, host->timeout);
-> +}
-> +
-> +static irqreturn_t meson_mmc_irq(int irq, void *data)
-> +{
-> +       struct meson_mmc_host *host = (void *) data;
-> +       struct mmc_request *mrq = host->mrq;
-> +       u32 irqs;
-> +
-> +       irqs = readl(host->base + SDIO_IRQS);
-> +       if (mrq && (irqs & REG_IRQS_CMD_INT))
-> +               return IRQ_WAKE_THREAD;
+Nand part is MT29F2G16ABAEAWP
+This has page size 2048 bytes and OOB size 64 bytes.
 
-As you don't use the IRQF_ONESHOT flag, this hard IRQ handler may be
-invoked while the threaded handler runs.
-
-Although, I don't see any protection of the host->mrq pointer etc,
-don't you need that?
-
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +void meson_mmc_read_response(struct meson_mmc_host *host)
-> +{
-> +       struct mmc_command *cmd = host->mrq->cmd;
-> +       u32 mult;
-> +       int i, resp[4] = { 0 };
-> +
-> +       mult = readl(host->base + SDIO_MULT);
-> +       mult |= REG_MULT_WR_RD_OUT_IND;
-> +       mult &= ~(REG_MULT_RD_INDEX_M << REG_MULT_RD_INDEX_S);
-> +       writel(mult, host->base + SDIO_MULT);
-> +
-> +       if (cmd->flags & MMC_RSP_136) {
-> +               for (i = 0; i <= 3; i++)
-> +                       resp[3 - i] = readl(host->base + SDIO_ARGU);
-> +               cmd->resp[0] = (resp[0] << 8) | ((resp[1] >> 24) & 0xff);
-> +               cmd->resp[1] = (resp[1] << 8) | ((resp[2] >> 24) & 0xff);
-> +               cmd->resp[2] = (resp[2] << 8) | ((resp[3] >> 24) & 0xff);
-> +               cmd->resp[3] = (resp[3] << 8);
-> +       } else if (cmd->flags & MMC_RSP_PRESENT) {
-> +               cmd->resp[0] = readl(host->base + SDIO_ARGU);
-> +       }
-> +}
-> +
-> +static irqreturn_t meson_mmc_irq_thread(int irq, void *irq_data)
-> +{
-> +       struct meson_mmc_host *host = (void *) irq_data;
-> +       struct mmc_data *data;
-> +       unsigned long flags;
-> +       struct mmc_request *mrq;
-> +       u32 irqs, send;
-> +
-> +       cancel_delayed_work_sync(&host->timeout_work);
-> +       spin_lock_irqsave(&host->lock, flags);
-
-You are disabling IRQs during the entire execution of this threaded
-IRQ handler, that's not a good behaviour as it may be disabled for
-quite a while.
-
-Although, perhaps you do this to avoid needing to protect host->mrq in
-the hard IRQ handler!?
-
-> +
-> +       mrq = host->mrq;
-> +       data = mrq->data;
-> +
-> +       if (!mrq) {
-> +               spin_unlock_irqrestore(&host->lock, flags);
-> +               return IRQ_HANDLED;
-> +       }
-> +
-> +       if (host->cmd_is_stop)
-> +               goto out;
-> +
-> +       irqs = readl(host->base + SDIO_IRQS);
-> +       send = readl(host->base + SDIO_SEND);
-> +
-> +       mrq->cmd->error = 0;
-> +
-> +       if (!data) {
-> +               if (!((irqs & REG_IRQS_RESP_CRC7) ||
-> +                     (send & REG_SEND_RESP_NO_CRC7)))
-> +                       mrq->cmd->error = -EILSEQ;
-> +               else
-> +                       meson_mmc_read_response(host);
-> +       } else {
-> +               if (!((irqs & REG_IRQS_RD_CRC16) ||
-> +                     (irqs & REG_IRQS_WR_CRC16))) {
-> +                       mrq->cmd->error = -EILSEQ;
-> +               } else {
-> +                       data->bytes_xfered = data->blksz * data->blocks;
-> +                       dma_unmap_sg(mmc_dev(host->mmc), data->sg, data->sg_len,
-> +                                    ((data->flags & MMC_DATA_READ) ?
-> +                                    DMA_FROM_DEVICE : DMA_TO_DEVICE));
-> +               }
-> +       }
-> +
-> +       if (mrq->stop) {
-> +               host->cmd_is_stop = true;
-> +               meson_mmc_start_cmd(host->mmc, mrq->stop);
-> +               spin_unlock_irqrestore(&host->lock, flags);
-> +               return IRQ_HANDLED;
-> +       }
-> +
-> +out:
-> +       host->cmd_is_stop = false;
-> +       host->mrq = NULL;
-> +       spin_unlock_irqrestore(&host->lock, flags);
-> +       mmc_request_done(host->mmc, mrq);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-
-[...]
-
-> +static int meson_mmc_probe(struct platform_device *pdev)
-> +{
-> +       struct mmc_host *mmc;
-> +       struct meson_mmc_host *host;
-> +       struct pinctrl *pinctrl;
-> +       struct resource *res;
-> +       int ret, irq;
-> +       u32 port;
-> +
-> +       mmc = mmc_alloc_host(sizeof(struct meson_mmc_host), &pdev->dev);
-> +       if (!mmc) {
-> +               dev_err(&pdev->dev, "mmc alloc host failed\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       host = mmc_priv(mmc);
-> +       host->mmc = mmc;
-> +       host->timeout = msecs_to_jiffies(10000);
-> +       host->port = 0;
-> +
-> +       if (!of_property_read_u32(pdev->dev.of_node, "meson,sd-port", &port))
-> +               host->port = port;
-> +
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       host->base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(host->base)) {
-> +               ret = PTR_ERR(host->base);
-> +               goto error_free_host;
-> +       }
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +       ret = devm_request_threaded_irq(&pdev->dev, irq, meson_mmc_irq,
-> +                                       meson_mmc_irq_thread, 0, "meson_mmc",
-
-Is the IRQs level or edge triggered? In other words, will the hard IRQ
-handler miss IRQs if you use IRQF_ONESHOT?
-
-> +                                       host);
-> +       if (ret)
-> +               goto error_free_host;
-> +
-> +       host->clk = devm_clk_get(&pdev->dev, NULL);
-> +       if (IS_ERR(host->clk)) {
-> +               ret = PTR_ERR(host->clk);
-> +               goto error_free_host;
-> +       }
-> +
-> +       ret = clk_prepare_enable(host->clk);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Enable clk error %d\n", ret);
-> +               goto error_free_host;
-> +       }
-> +
-> +       /* we do not support scatter lists in hardware */
-> +       mmc->max_segs = 1;
-> +       mmc->max_req_size = SDIO_BOUNCE_REQ_SIZE;
-> +       mmc->max_seg_size = mmc->max_req_size;
-> +       mmc->max_blk_count = 256;
-> +       mmc->max_blk_size = mmc->max_req_size / mmc->max_blk_count;
-> +       mmc->f_min = 300000;
-> +       mmc->f_max = 50000000;
-> +       mmc->caps |= MMC_CAP_4_BIT_DATA;
-> +       mmc->caps |= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED;
-> +       mmc->caps2 |= MMC_CAP2_NO_SDIO;
-> +       mmc->ocr_avail = MMC_VDD_33_34;
-> +       mmc->ops = &meson_mmc_ops;
-> +
-> +       spin_lock_init(&host->lock);
-> +
-> +       INIT_DELAYED_WORK(&host->timeout_work, meson_mmc_timeout);
-> +
-> +       pinctrl = devm_pinctrl_get(&pdev->dev);
-> +       if (IS_ERR(pinctrl)) {
-> +               ret = PTR_ERR(pinctrl);
-> +               goto error;
-> +       }
-> +
-> +       ret = mmc_of_parse(mmc);
-> +       if (ret)
-> +               goto error;
-> +
-> +       platform_set_drvdata(pdev, mmc);
-> +
-> +       ret = mmc_add_host(mmc);
-> +       if (ret)
-> +               goto error;
-> +
-> +       dev_info(&pdev->dev, "base:0x%p irq:%u port:%u\n",
-> +                host->base, irq, host->port);
-> +
-> +       return 0;
-> +
-> +error:
-> +       clk_disable_unprepare(host->clk);
-> +error_free_host:
-> +       mmc_free_host(mmc);
-> +
-> +       return ret;
-> +}
-> +
-
-[...]
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
