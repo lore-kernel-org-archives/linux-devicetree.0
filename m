@@ -1,48 +1,60 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 4/5] ARM: dts: omap5: describe control for ckobuffer
-Date: Mon, 18 Apr 2016 20:21:00 +0200
-Message-ID: <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com>
-References: <cover.1461003660.git.hns@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1461003660.git.hns@goldelico.com>
-In-Reply-To: <cover.1461003660.git.hns@goldelico.com>
-References: <cover.1461003660.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: ldewangan@nvidia.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, marek@goldelico.com, kernel@pyra-handheld.com, letux-kernel@openphoenux.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH 3/4] dt-bindings: Update iProc GPIO bindings
+Date: Mon, 18 Apr 2016 11:27:51 -0700
+Message-ID: <31a7fbd4-0b0b-c49b-651e-1a1494ab5978@broadcom.com>
+References: <1460506523-6249-1-git-send-email-ray.jui@broadcom.com>
+ <1460506523-6249-4-git-send-email-ray.jui@broadcom.com>
+ <20160414143812.GA20964@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160414143812.GA20964@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-OMAP5 has a register to control if the ckobuffer is enabled
-and defines the polarity. ckobuffer is required to drive a twl6040
-with the system clock. Hence, add the pinctrl,single to the
-OMAP5 SoC description so that omap5-board-common can
-set up the ckobuffer as required.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap5.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 120b6b8..1d9050f 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -277,6 +277,16 @@
- 				pinctrl-single,register-width = <16>;
- 				pinctrl-single,function-mask = <0x7fff>;
- 			};
-+
-+			omap5_control_ckobuffer: pinmux@cdb4 {
-+				compatible = "ti,omap5-padconf",
-+					     "pinctrl-single";
-+				reg = <0xcdb4 4>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				pinctrl-single,register-width = <32>;
-+				pinctrl-single,function-mask = <0xf0000000>;
-+			};
- 		};
- 
- 		ocmcram: ocmcram@40300000 {
--- 
-2.7.3
+On 4/14/2016 7:38 AM, Rob Herring wrote:
+> On Tue, Apr 12, 2016 at 05:15:22PM -0700, Ray Jui wrote:
+>> Update the iProc GPIO binding document to introduce a new compatible
+>> string "brcm,iproc-gpio-only", that allows the generic pinconf function
+>> to be disabled completely
+>>
+>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>> Reviewed-by: Jon Mason <jon.mason@broadcom.com>
+>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>> ---
+>>  Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+>> index ddaa1b0..75a4370 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+>> @@ -3,8 +3,11 @@ Broadcom iProc GPIO/PINCONF Controller
+>>  Required properties:
+>>
+>>  - compatible:
+>> -    Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
+>> -    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
+>> +    For Cygnus, it must be brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio", or
+>> +"brcm,cygnus-crmu-gpio"
+>> +    For non-Cygnus iProc SoCs, it must be either "brcm,iproc-gpio-only" (if
+>> +only GPIO is supported) or "brcm,iproc-gpio" (if both generic pinconf and GPIO
+>> +are supported)
+>
+> No. That's not how compatible strings work. Use SoC specific compatible
+> strings if you need to distinguish this.
+>
+> Rob
+>
+
+Okay. Let me reply this to the email from Linus so we can consolidate 
+all related discussions.
+
+Thanks,
+
+Ray
