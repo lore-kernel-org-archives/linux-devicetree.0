@@ -1,67 +1,151 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] phy: Add a driver for simple phy
-Date: Mon, 18 Apr 2016 16:40:58 +0200
-Message-ID: <10235833.eh3J2kCBDh@wuerfel>
-References: <1447708924-15076-1-git-send-email-albeu@free.fr> <4848615.OezLJod6Cv@wuerfel> <5714D35B.8000208@ti.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
+Date: Mon, 18 Apr 2016 16:48:09 +0200
+Message-ID: <20160418144809.GC20508@ulmo.ba.sec>
+References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
+ <56E98F2E.5010307@wwwdotorg.org>
+ <20160413162203.GB30129@ulmo.ba.sec>
+ <570E7C38.3070005@wwwdotorg.org>
+ <20160414152905.GB3366@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5714D35B.8000208-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="S1BNGpv0yoYahz37"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160414152905.GB3366-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 April 2016 18:00:19 Kishon Vijay Abraham I wrote:
-> Hi Arnd,
-> 
-> On Sunday 17 April 2016 01:20 AM, Arnd Bergmann wrote:
-> > On Thursday 14 April 2016 11:22:58 Kishon Vijay Abraham I wrote:
-> >>
-> >> IMO simple-phy driver should be an independent driver and shouldn't export
-> >> symbols. The dt binding for the simple phy device should be something like
-> >> below where all the properties of the simple phy device should be in the
-> >> binding documentation.
-> >> usbphy {
-> >>         compatible = "simple-phy";
-> >>         phy-supply = <&supply>;
-> >>         clocks = <&clock>;
-> >>         reset = <&reset>;
-> >> };
-> >>
-> >> Anything that needs more than this shouldn't be a simple phy.
-> > 
-> > I think there are two aspects here:
-> > 
-> > a) I agree that a driver that matches "simple-phy" should only call
-> >    the generic functions and not use any other properties.
-> > 
-> > b) Independent of that, I think that it makes a lot of sense to export
-> >    those functions from the generic PHY subsystems so they can be
-> >    called from drivers that are a little less generic, or that already
-> >    have an established binding but need no other code.
-> 
-> These export functions can be abused and called directly from the controller
-> driver bypassing the phy core.
-> 
-> Actually lot of generic PHY programming are done in the phy-core itself. (For
-> example, the generic PHY regulator binding "phy-supply" can be used for the phy
-> core to enable the regulator during power on and disable during power off, phy
-> core also invokes pm_runtime API's during power_on and power_off which can be
-> used to enable/disable clocks). So drivers which are less generic can just
-> populate their specific handling part in their phy ops and leave the rest to be
-> done in phy core.
-> "simple-phy" should be used to avoid adding new PHY drivers that does simple
-> PHY ops.
 
-Having the phy core do everything automatically indeed sounds superior here,
-the simple-phy driver can then become a trivial stub without any calls
-into the regulator/clk/reset subsystems. If that works (or can be made to
-work), that's great.
+--S1BNGpv0yoYahz37
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Apr 14, 2016 at 05:29:05PM +0200, Thierry Reding wrote:
+> On Wed, Apr 13, 2016 at 11:04:56AM -0600, Stephen Warren wrote:
+> > On 04/13/2016 10:22 AM, Thierry Reding wrote:
+> > > On Wed, Mar 16, 2016 at 10:51:58AM -0600, Stephen Warren wrote:
+> > > > On 03/08/2016 08:48 AM, Thierry Reding wrote:
+> > > > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > >=20
+> > > > > Changes to the pad controller device tree binding have required t=
+hat
+> > > > > each lane be associated with a separate PHY.
+> > > >=20
+> > > > I still don't think this has anything to do with DT bindings. Rathe=
+r, the
+> > > > definition of a PHY (in HW and the Linux PHY subsystem) is a single=
+ lane.
+> > > > That fact then requires drivers to support a PHY per lane rather th=
+an a
+> > > > single multi-lane PHY, and equally means the DT bindings must be wr=
+itten
+> > > > according to the correct definition of a PHY.
+> > > >=20
+> > > > Still, I suppose the commit description is fine as is.
+> > >=20
+> > > I've reworded the commit message to give a more accurate rationale for
+> > > the change. I'll be posting a v5 soon.
+> > >=20
+> > > > > Update the PCI host bridge
+> > > > > device tree binding to allow each root port to define the list of=
+ PHYs
+> > > > > required to drive the lanes associated with it.
+> > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20=
+-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> > > >=20
+> > > > > +Required properties for Tegra124 and later:
+> > > > > +- phys: Must contain an phandle to a PHY for each entry in phy-n=
+ames.
+> > > > > +- phy-names: Must include an entry for each active lane. Note th=
+at the number
+> > > > > +  of entries does not have to (though usually will) be equal to =
+the specified
+> > > > > +  number of lanes in the nvidia,num-lanes property. Entries are =
+of the form
+> > > > > +  "pcie-N": where N ranges from 0 to the value specified in nvid=
+ia,num-lanes.
+> > > >=20
+> > > > When would the number of PHYs not equal the number of lanes? I thou=
+ght the
+> > > > whole point of this patch was to switch to per-lane PHYs? Perhaps I=
+'m just
+> > > > misremembering some exception, so there may be no need to change th=
+is.
+> > >=20
+> > > This is useful to support the case where we want to connect a x1 or x2
+> > > device to a root port that is configured to drive more lanes. It's a
+> > > rather unusual configuration, but it would be possible for example to
+> > > have an onboard x1 ethernet card, but the board layout is such that it
+> > > runs in x1/x2 mode, with the ethernet card connected to the x2 port.
+> >=20
+> > Does the controller HW actually work correctly in such a mode?
+>=20
+> I think it does, and up until a few minutes ago I was even sure that I
+> had tested it once. But looking at the various boards that I have I
+> don't think I actually have test equipment that's wired the proper way
+> to test this.
+>=20
+> > Obviously a fully initialized x4 controller has to correctly handle bei=
+ng
+> > attached solely to a x1 device. However, that's a different case to sim=
+ply
+> > not initializing 3 of the 4 PHYs. It's plausible the controller handles=
+ this
+> > just fine, or that it hangs up or otherwise misbehaves if some of the P=
+HYs
+> > aren't enabled and hence it can't even detect whether something is atta=
+ched
+> > to them or not. Either way, adding your explanation into the binding wo=
+uld
+> > be useful to highlight the reason for the special case.
+>=20
+> Perhaps for now it would be better to make the binding stricter. The
+> wording could be relaxed if we ever determine that it still works
+> correctly with a number of PHYs smaller than the number of lanes.
+
+Going over the patches again I realized that Jetson TK1 is actually one
+such case. The PCI host bridge controller is configured to run root port
+0 using two lanes, and root port 1 using one lane. However, only one
+lane is connected to each port. Root port 0 goes to the miniPCIe slot,
+which takes a single lane (PEX4), while root port 1 goes to the onboard
+NIC, which takes a single lane (PEX2) as well. x1 + x1 is an unsupported
+configuration for the root complex, though, hence why it is configured
+to be x2 + x1.
+
+I've tested that both the onboard NIC as well as a miniPCIe card work
+correctly with the setup.
+
+So I think the wording in the binding, as well as the example, are
+correct. So I left the original wording in place, but instead added a
+couple more examples so that we have one per SoC generation, which will
+hopefully clarify what properties should and shouldn't be used.
+
+Thierry
+
+--S1BNGpv0yoYahz37
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXFPOnAAoJEN0jrNd/PrOhe90P/RQkdtw7v450sx3y/I4LIkTC
+GIr3Wqr/TrBlmMojqt7buyqgLcBbcCQrDCdC4NKv2F8cC0mw0PEcUr7VbzjApMcd
+PN/ZwfCsbTwBkqaThjL4H4Nshx34Q8ePUFAf8iq/ZxrU/NHQFNFxeKlO+eHChdlS
+1IR/WTk2QEqixWIoe85rZrFKLxVCCDV5FVlFADzRQkG1H7lvPI3Xb8G0RS7A2899
+XNQfWzMvDF9Bk7srMcd2guVp4CtlnQrcquvE3evUCiN5dxINd5q4gNJ7yFlLbrip
+fTFG7iQOQ6oWfLnt0FyDg5T3zZJ7hskm24x0GjYgdekX8CMRcwRbrGEJCIeABtBk
+b1oZ9dVlCYegurLUPBMjXaSkqZSOyIBRyPQXdEvQtuIHHbg9CErgmSIYjkJ1y1N8
+L1GXMneMpsFIrWkVH0i+6FWfBqgCQt9skRpVR5Azili73EhamHLetjdXiQYq/5GV
+Dj+vqKF6PDwmjdqBYZn0ow9PeEJAm7pfkNhQWGl8jBAP7CYdrvkLUcACatB6n1o7
+SyiufscgVr41nmYlVZ2yeWQR9xfh62CI5hBHeLxKnbW8CLfIkR5YFLrGfRhHkmYt
+mlej0bz7ogNWYiX1ZG7Ijhzjkp/jlOBNtoz5tsWtts7ydS/LhlayznEahSisMkx0
+sMr0p4XzJe8ByS074qiT
+=NC8e
+-----END PGP SIGNATURE-----
+
+--S1BNGpv0yoYahz37--
