@@ -1,108 +1,178 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] doc: DT: Add Generic Serial Device Tree Bindings
-Date: Mon, 18 Apr 2016 17:43:17 +0200
-Message-ID: <CACQ1gAhnEuCZbzpyiAcCx_kRhzCBvWAVVaecUdUhvu4vDD0REw@mail.gmail.com>
-References: <1460636003-3011-1-git-send-email-geert+renesas@glider.be>
- <1460636003-3011-2-git-send-email-geert+renesas@glider.be>
- <5792073.qsBJ1LK659@wuerfel> <CAMuHMdWmHUhhwbYDcmNXuxBRC6n+tp=oX03dBaK2VgL4OA72MQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC] I2C: i2c-smbus: add device tree support
+Date: Mon, 18 Apr 2016 11:44:57 -0500
+Message-ID: <CAL_JsqL8G3yAGqRvw5Nh_2R_CqdLbEWN6mAB6S0D484qsGV0bQ@mail.gmail.com>
+References: <1460536591-12573-1-git-send-email-andrea.merello@gmail.com>
+ <20160414161012.GA20532@rob-hp-laptop> <CAN8YU5PpXfPRBXD+Khe4wMWpxgyvZeBQOOV4oFxkCS=epCyoQQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWmHUhhwbYDcmNXuxBRC6n+tp=oX03dBaK2VgL4OA72MQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAN8YU5PpXfPRBXD+Khe4wMWpxgyvZeBQOOV4oFxkCS=epCyoQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Qipan Li <Qipan.Li-kQvG35nSl+M@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-04-18 14:34 GMT+02:00 Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>:
-> Hi Arnd,
->
-> CC Richard (serial-mctrl-gpio)
-> CC Grant (ePAPR successor) and Frank
->
-> On Sat, Apr 16, 2016 at 6:30 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> On Thursday 14 April 2016 14:13:19 Geert Uytterhoeven wrote:
->>> Document a set of generic properties for describing UARTs in a
->>> device tree:
->>>   1. The GPIO modem control properties are currently duplicated across
->>>      hardware-specific binding documentation,
->>>   2. The property for dedicated RTS/CTS hardware flow control lines is
->>>      already supported by several drivers, albeit with a vendor-specific
->>>      prefix, hence make it generic.
+On Mon, Apr 18, 2016 at 8:35 AM, Andrea Merello
+<andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Apr 14, 2016 at 6:10 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, Apr 13, 2016 at 10:36:31AM +0200, Andrea Merello wrote:
+>>> According to Documentation/i2c/smbus-protocol, a smbus controller driver
+>>> that wants to hook-in smbus extensions support, can call
+>>> i2c_setup_smbus_alert(). There are very few drivers that are currently
+>>> doing this.
 >>>
->>> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>>> However the i2c-smbus module can also work with any
+>>> smbus-extensions-unaware I2C controller, as long as we provide an extra
+>>> IRQ line connected to the I2C bus ALARM signal.
+>>>
+>>> This patch makes it possible to go this way via DT. Note that the DT node
+>>> will indeed describe a (little) piece of HW, that is the routing of the
+>>> ALARM signal to an IRQ line (so it seems a fair DT use to me, but RFC).
+>>>
+>>> Note that AFAICT, by design, i2c-smbus module pretends to be an I2C slave
+>>> with address 0x0C (that is the alarm response address), and IMHO this is
+>>> quite consistent with usage in the DT as a I2C child node.
+>>>
+>>> Signed-off-by: Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-smbus.txt b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
+>>> new file mode 100644
+>>> index 0000000..da83127
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-smbus.txt
+>>> @@ -0,0 +1,20 @@
+>>> +* i2c-smbus extensions
+>>> +
+>>> +Required Properties:
+>>> +  - compatible: Must contain "smbus_alert"
+>>> +  - interrupts: The irq line for smbus ALERT signal
+>>> +  - reg: I2C slave address. Set to 0x0C (alert response address).
+>>> +
+>>> +Note: The i2c-smbus module registers itself as a slave I2C device. Whenever
+>>> +a smbus controller directly support smbus extensions (and its driver supports
+>>> +this), there is no need to add anything special to the DT. Otherwise, for using
+>>> +i2c-smbus with any smbus-extensions-unaware I2C controllers, you need to
+>>> +route the smbus ALARM signal to an extra IRQ line, thus you need to describe
+>>> +this in the DT.
 >>
->> Originally the ISA 8250 uart binding (from ieee) was used as the
->> template for other uart bindings. How about documenting the parts that
->> are used in 8250-of today (current-speed, clock-frequency,
->> reg-offset, reg-shift, fifo-size, reg-io-width, auto-flow-control)
->> in the same file?
+>> Seems like you are designing the binding around how the module is
+>> currently designed and creating a virtual device that doesn't exist.
 >
-> I don't think we have the habit of documenting (duplicating) bindings for ePAPR
-> under Documentation/devicetree/bindings/. Perhaps we should?
+> Yes, I actually stayed close to the original module design, but the current
+> module design seems the result of reasonable rationale and it didn't
+> appeared completely unreasonable for me even for DT.. Said that, my
+> bindings didn't completely convinced me too, but while I agree that we
+> have not a real I2C slave, I'm not completely convinced that there is no
+> any real HW "device" to describe in the DT (see below).
 >
-> Apart from that, most of the properties you mention look legacy or overly
-> broad too me.
+>> A "smbalert-gpios" property in the controller node would be sufficient
+>> here. Alternatively, an interrupt and standardized interrupt-names value
+>> could be used.
 >
->   - current-speed: This is configuration, not a property of the hardware.
->     For the console, this has been deprecated by appending the serial config
->     to chosen/stdout-path (e.g. "serial0:115200n8").
->     For non-consoles, its use is debatable, IMHO.
->     It's users are mostly legacy powerpc and early adaptors of DT on ARM.
->   - clock-frequency: Legacy predating the Common Clock Framework.
->     Any modern SoC uses clock specifiers with clock handles pointing to clock
->     providers.
->   - reg-offset, reg-shift, reg-io-width: These are much broader than serial,
->     and IMHO thus don't belong in
->     Documentation/devicetree/bindings/serial/serial.txt.
->   - auto-flow-control: Looks a bit like a vague version of "uart-has-rtscts".
->     Documentation/devicetree/bindings/serial/8250.txt doesn't make it clear
->     whether this is about hardware capabilities or software configuration.
->     Even the driver doesn't make it clear:
->     #define UART_CAP_AFE    (1 << 11)       /* MCR-based hw flow control */
->     "MCR" could mean RTS/CTS, DSR/DTR, ...
->   - fifo-size: This one could be generic. atmel-usart uses a vendor-specific
->     version "atmel,fifo-size".
+> Hmm, IMHO this way is not closer to the real HW. We are adding an
+> interrupt property inside the I2C controller node, but that's not how the
+> HW really is: the I2C controller is completely unaware of it (and it isn't
+> its driver that handles it). If the I2C controller had that wire, then its
+> driver could hook the i2c-smbus module by itself, without any extra DT
+> prop.
 >
-> I suggest we move forward with my initial set, as I have patches that depend on
-> them? We can always add more properties later.
+> I don't see the point here. IMHO it isn't definitely about the I2C controller.
+> The smbus-alert thing here is exactly what the I2C controller has _not_
+> (and we are "emulating" it with external HW).
+
+Fair enough, I don't really disagree. There is some precedence doing
+things this way. SPI GPIO chip selects go in the SPI controller node.
+SD card detect GPIO goes in the SD host node.
+
+>> Another option would be add a boolean property to each child node
+>> smbalert capable and the childrens' interrupt properties would all be
+>> the shared interrupt.
 >
->>>  - out1-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
->>>    used as the UART's OUT1 line.
->>>  - out2-gpios: Must contain a GPIO specifier, referring to the GPIO pin to be
->>>    used as the UART's OUT2 line.
->>
->> I had to look up what OUT1 and OUT2 are, but I still don't see how you'd
->> implement them using a GPIO line: From all I can tell, these are usually
->> internal registers in a hardware uart but they are not assigned to an
->> external line on the standard db9 or even the old db25 connectors. Should
->> we drop these instead?
+> That's seems closer to the real HW, because at least the slave devices
+> really have that wire..
 >
-> They're indeed fairly exotic, and they're burried deeply in the ns16550
-> datasheet. We do have TIOCM_OUT1 and TIOCM_LOOP in asm-generic/termios.h,
-> probably for obscure historical reasons.
+> However I'm unsure whether the boolean property is enough: maybe
+> there is some I2C slave that has both a regular INT line (handled by the
+> I2C slave driver) and a smbus ALERT line (handled by the common
+> i2c-smbus module)... Adding another interrupt property in the slave node
+> seems also not good to me, because the I2C slave drivers must be made
+> aware of it (to get the right one). Maybe we could introduce a new
+> property like "alert-interrupt" in the slave nodes, that is caught by
+> common I2C layer code..
+
+I could apply logic that having 2 signals is completely pointless as
+the whole point of ALERT is to save pins. But logic is often not
+applied to hardware design. If the device has 2 lines (IRQ and ALERT),
+then having the driver be aware of h/w properties such as that seems
+perfectly normal to me.
+
+I don't want to see "alert-interrupt" as a non-standard way to define
+an interrupt. Either it is an interrupt and we use the standard
+binding or it is not... IMO, it is an interrupt.
+
+
+> This could be nearly-OK to me, but there is a bunch of things because of
+> which I'm still not 100% convinced that offloading this "smbalert" thing on
+> every slave DT node is really right:
 >
-> If we drop them, I guess they should be removed from the helper code in
-> drivers/tty/serial/serial_mctrl_gpio.c, too? There don't seem to be any
-> current users.
-I must confess that I don't really know what TIOCM_OUT1&2 are for.
-(I implemented them for completeness)
-But it seems that OUT2 is used in some drivers:
-drivers/tty/serial/omap-serial.c:
-        /*
-         * Most PC uarts need OUT2 raised to enable interrupts.
-         */
-        up->port.mctrl |= TIOCM_OUT2;
+> - The alert line is not properly an interrupt. It's something that should
+> go to the smalert pin of the I2C controller. But sometimes there is some
+> HW (in my case a NOT and an OR logic, but it can be simply a wire) that
+> _translates_ this signal to a interrupt signal. This can be as simple as a
+> _connection_ but _logically_ this connection is changing the semantic.
+> So I'd say we _have_ a (doesn't matter if it's as simple as a PCB track)
+> piece of HW  that is in charge of this (and to which our DT property may
+> belongs).. (And you can see the the i2c-smbus module as its driver).
+
+I don't really follow. My read of it is that it is simply a shared
+interrupt line with a standardized way to clear the interrupt.
+
+
+> - Let's consider this example: I change the I2C controller with one that has
+> the ALERT pin and manages the i2c-smbus by itself.. So I will have to
+> delete the "alert-interrupt" property from all slave nodes.. IMHO this smells
+> like something not good, or at least weird, doesn't it ?
+
+This is one reason to do things like my first suggestion if you want
+to avoid changing the child nodes. It is reasonable for child nodes to
+be different for a different controller and different h/w.
+
+The I2C core should see whether the I2C controller is managing the
+ALERT or not. If it is, then do nothing. If it is not, then the core
+needs to register the GPIO based handler.
+
+> - I admit that we often use the DT nodes to describe things that are
+> not really about how a device _is_, rather are about how the device is
+> connected (regular interrupts, for example). But at least in this case
+> the driver for the device needs to know this information and it's
+> reasonable to let it access from the device node (and none else needs
+> this). In the i2c-smbus case, on the other hand, our property is not related
+> to the slave device itself, it's maybe related to how the device is connected,
+> but it's also about how the BUS _is_, and the slave's driver don't care
+> about it. It's indeed a property that should be caught by the common I2C
+> code (that will instantiate the i2c-smbus module). This IMHO could be a
+> symptom that this property shouldn't be in the I2C slave nodes. I'd say I
+> can't really see any strong point for which it has to stay in the slaves' DT
+> nodes..
 >
->> On a related note, do you think it would be possible to do a bit-banged
->> uart if we defined gpio lines for rxd and txd?
->
-> Sure we can. Whether it would work well is another question ;-)
-> Regardless of flow control, byte transmission and reception has hard real-time
-> requirements due to the implicit clocking.
-> Bit-banging i2c and spi (master) is much easier, as clocking is explicit.
-> Even i2c slave is easier, as the slave can stretch cycles.
-+1
+> Does all this make any sense in your opinion?
+
+DT is ALL about how things are connected. That is what the
+parent-child relationships and phandles to other nodes convey.
+Primarily, only the compatible property conveys what the device is.
+
+The alert support is a property of the slaves though. There are only
+certain h/w devices that follow this acknowledgement protocol for the
+alert.
+
+> I'm thinking about a dedicated DT node for the i2c-smbus "extra
+> hardware" with the interrupt property, and referenced by phandle in some
+> way from the I2C bus...
+
+Sorry, I still don't agree.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
