@@ -1,12 +1,12 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.5 074/124] pinctrl: pistachio: fix mfio84-89 function description and pinmux.
-Date: Mon, 18 Apr 2016 11:29:06 +0900
-Message-ID: <20160418022619.547446496@linuxfoundation.org>
-References: <20160418022615.726954227@linuxfoundation.org>
+Subject: [PATCH 4.4 086/137] pinctrl: pistachio: fix mfio84-89 function description and pinmux.
+Date: Mon, 18 Apr 2016 11:29:08 +0900
+Message-ID: <20160418022512.897788997@linuxfoundation.org>
+References: <20160418022507.236379264@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20160418022615.726954227@linuxfoundation.org>
+In-Reply-To: <20160418022507.236379264@linuxfoundation.org>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -20,7 +20,7 @@ To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, James Hartley <James.Hartley@imgtec.com>, Govindraj Raja <Govindraj.Raja@imgtec.com>, Andrew Bresticker <abrestic@chromium.org>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-4.5-stable review patch.  If anyone has any objections, please let me know.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
