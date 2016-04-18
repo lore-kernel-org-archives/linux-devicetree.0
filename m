@@ -1,91 +1,43 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [Question] reset controlling
-Date: Mon, 18 Apr 2016 17:13:57 +0200
-Message-ID: <4342692.6LEQF6clJv@wuerfel>
-References: <CAK7LNATcVwx1q0Nb2WMSpqW3LcoRkZx3RgpMjmbt2EmffJnFvg@mail.gmail.com> <5910310.IeFB0QAt6Q@wuerfel> <CAK7LNARJo-xDkkwZ0qA+DaKmQ0SixxGytNSKWBZMZ_N_6eWWow@mail.gmail.com>
+From: Xu Wei <xuwei04@gmail.com>
+Subject: Re: [PATCH v2 RESEND 2/4] arm64: Kconfig: select sp804 timer for
+ ARCH_HISI
+Date: Mon, 18 Apr 2016 16:14:53 +0100
+Message-ID: <5714F9ED.3020907@gmail.com>
+References: <1453373630-4693-1-git-send-email-leo.yan@linaro.org> <1453373630-4693-3-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARJo-xDkkwZ0qA+DaKmQ0SixxGytNSKWBZMZ_N_6eWWow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1453373630-4693-3-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yiping Xu <xuyiping@hisilicon.com>, Yu Dongbin <yudongbin@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Chen Feng <puck.chen@hisilicon.com>, Tyler Baker <tyler.baker@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Wei Xu <xuwei5@hisilicon.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 17 April 2016 17:16:58 Masahiro Yamada wrote:
-> 2016-04-17 4:23 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> >> Reset signals are sometimes cascaded.
-> >> For example, the UART blocks on my SoCs have a reset for the whole of
-> >> UART blocks
-> >> besides per-channel reset signals.
-> >>
-> >>                      |---(UART ch0 reset)---> UART0
-> >>                      |
-> >> ----(UART reset)-----|---(UART ch1 reset)---> UART1
-> >>                      |
-> >>                      |---(UART ch2 reset)---> UART2
-> >>
-> >> I found this works well with clk-gate drivers.
-> >> Even reset_control_reset() can be implemented
-> >> with clk_disable() followed by clk_enable().
-> >>
-> >
-> > Interesting. My feeling from your description is that this is something
-> > that should be added to the reset controller subsystem. It has probably
-> > not been a serious issue for anyone else, but it's also likely that you
-> > are not the only one that would benefit from having support for nested
-> > resets in the API.
-> 
-> I want reset sub-system to support (1) nesting,  (2) enable_count.
-> 
-> To get these two features supported, the reset frame-work
-> would be similar implementation to the clock subsystem.
-> (In other words, we would duplicate effort
-> between clock and reset.)
-> 
-> Moreover, it is very common to control resets and clocks
-> from one hardware block.
-> 
-> So, I am looking for some idea that perhaps can unify the clock
-> and reset subsystems.
+Hi Leo,
 
-If you find parts of the code that could be shared, we can probably
-split those out into a file in lib/*.c and have that used by both
-subsystems and potentially others as well.
+On 21/01/16 10:53, Leo Yan wrote:
+> Select sp804 timer for ARCH_HISI, which is used as broadcast timer.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>   arch/arm64/Kconfig.platforms | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 4043c35..94c410d 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -36,6 +36,7 @@ config ARCH_LAYERSCAPE
+>   
+>   config ARCH_HISI
+>   	bool "Hisilicon SoC Family"
+> +	select ARM_TIMER_SP804
+>   	help
+>   	  This enables support for Hisilicon ARMv8 SoC family
+>   
+Just applied this to the hisilicon soc tree.
+The others have been picked up from Guodong's patch set.
+Thanks!
 
-> I found some SoCs implement reset drivers in drivers/clk.
-> 
-> 
-> masahiro@grover:~/workspace/linux/drivers/clk$ git grep
-> reset_controller_register
-> mediatek/reset.c:       ret = reset_controller_register(&data->rcdev);
-> mmp/reset.c:    reset_controller_register(&unit->rcdev);
-> qcom/common.c:  ret = reset_controller_register(&reset->rcdev);
-> rockchip/softrst.c:     ret = reset_controller_register(&softrst->rcdev);
-> sirf/clk-atlas7.c:      reset_controller_register(&atlas7_rst_ctlr);
-> sunxi/clk-a10-ve.c:     err = reset_controller_register(&reset_data->rcdev);
-> sunxi/clk-sun9i-mmc.c:  ret = reset_controller_register(&data->rcdev);
-> sunxi/clk-usb.c:        reset_controller_register(&reset_data->rcdev);
-> tegra/clk.c:    reset_controller_register(&rst_ctlr);
-
-I think these are all the ones that have a shared hardware block doing
-both clocks and resets. My guess is that most other hardware does it
-differently.
-
-> I asked about this in the following thread.
-> https://lkml.org/lkml/2015/11/10/724
-
-Your hardware seems to be in a third category, which is not uncommon
-either: you have clocks, resets and additional registers all in a
-single block without a structure around them.
-
-You can handle this with purely syscon based abstraction, or you
-can have a driver for the combined device that registers itself
-to multiple subsystems in addition to being a syscon.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Wei
