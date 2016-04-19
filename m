@@ -1,42 +1,65 @@
-From: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] nvmem: imx-ocotp: support i.MX6UL
-Date: Tue, 19 Apr 2016 16:59:14 +0800
-Message-ID: <1461056354-973-3-git-send-email-van.freenix@gmail.com>
-References: <1461056354-973-1-git-send-email-van.freenix@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461056354-973-1-git-send-email-van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v8 32/45] powerpc/pci: Update bridge windows on PCI plug
+Date: Tue, 19 Apr 2016 18:47:21 +1000
+Message-ID: <5715F099.1060901@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-33-git-send-email-gwshan@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-33-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add of_device_id entry for i.MX6UL to let imx-ocotp driver
-support i.MX6UL.
+On 02/17/2016 02:44 PM, Gavin Shan wrote:
+> On the PCI plugging event, PCI slot's subordinate devices are
+> scanned and their (IO and MMIO) resources are assigned. Platform
+> dependent resources (PE#, IO/MMIO/DMA windows) are allocated or
+> created on updating windows of the slot's upstream bridge.
+>
+> This updates the windows of the hot plugged slot's upstream bridge
+> in pcibios_finish_adding_to_bus() so that the platform resources
+> (PE#, IO/MMIO/DMA segments) are allocated or created accordingly.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 
-Signed-off-by: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/nvmem/imx-ocotp.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index 55095c0..4c6e05a 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -96,6 +96,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx6q-ocotp",  (void *)128 },
- 	{ .compatible = "fsl,imx6sl-ocotp", (void *)32 },
- 	{ .compatible = "fsl,imx6sx-ocotp", (void *)128 },
-+	{ .compatible = "fsl,imx6ul-ocotp", (void *)128 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
+To my very limited knowledge of the common PCI code, looks good.
+
+
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+
+
+
+
+> ---
+>   arch/powerpc/kernel/pci-common.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> index 40df3a5..be9e515 100644
+> --- a/arch/powerpc/kernel/pci-common.c
+> +++ b/arch/powerpc/kernel/pci-common.c
+> @@ -1444,8 +1444,12 @@ void pcibios_finish_adding_to_bus(struct pci_bus *bus)
+>   	/* Allocate bus and devices resources */
+>   	pcibios_allocate_bus_resources(bus);
+>   	pcibios_claim_one_bus(bus);
+> -	if (!pci_has_flag(PCI_PROBE_ONLY))
+> -		pci_assign_unassigned_bus_resources(bus);
+> +	if (!pci_has_flag(PCI_PROBE_ONLY)) {
+> +		if (bus->self)
+> +			pci_assign_unassigned_bridge_resources(bus->self);
+> +		else
+> +			pci_assign_unassigned_bus_resources(bus);
+> +	}
+>
+>   	/* Fixup EEH */
+>   	eeh_add_device_tree_late(bus);
+>
+
+
 -- 
-1.8.4.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alexey
