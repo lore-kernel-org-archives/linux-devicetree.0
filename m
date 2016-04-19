@@ -1,52 +1,52 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 03/19] clk: sunxi: Add PLL3 clock
-Date: Tue, 19 Apr 2016 11:18:23 +0200
-Message-ID: <20160419091823.GX4005@lukather>
-References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-4-git-send-email-maxime.ripard@free-electrons.com>
- <20160415223441.GT14441@codeaurora.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
+Date: Tue, 19 Apr 2016 11:23:51 +0200
+Message-ID: <5715F927.3030102@samsung.com>
+References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y46NoIcKQuicSz3X"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2XP264AKGQE2AKVAPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160415223441.GT14441-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
+Sender: linux-leds-owner@vger.kernel.org
+To: Olliver Schinagl <oliver@schinagl.nl>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Peter Meerwald <pmeerw@pmeerw.net>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---Y46NoIcKQuicSz3X
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Olliver,
 
-On Fri, Apr 15, 2016 at 03:34:41PM -0700, Stephen Boyd wrote:
-> On 03/23, Maxime Ripard wrote:
-> > The A10 SoCs and relatives have a PLL controller to drive the PLL3 and
-> > PLL7, clocked from a 3MHz oscillator, that drives the display related
-> > clocks (GPU, display engine, TCON, etc.)
-> > 
-> > Add a driver for it.
-> > 
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> 
-> Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Thanks for the patches.
+Adding driver authors on cc.
 
-Applied, thanks!
-Maxime
+On 04/19/2016 09:40 AM, Olliver Schinagl wrote:
+> Using the pca963x for a while, I noticed something that may look like some
+> i2c accessing issues where sometimes data was incorrectly written to the bus,
+> possibly because we where not properly locking the i2c reads. Though I'm not
+> familiar enough with the i2c framework to be certain reads need to be locked
+> at all. A patch was added to properly lock i2c access more tightly.
+>
+> Furthermore there was no method to support inverted outputs. This series
+> adds a property to the device tree to inform the driver that the output
+> is inverted (active-high vs active-low).
+>
+> Additionally, this patch set does some cleanups to please checkpatch, and
+> removes a few magic values.
+>
+> Olliver Schinagl (6):
+>    leds: pca963x: Alphabetize headers
+>    leds: pca963x: Lock i2c r/w access
+>    leds: pca963x: Add defines and remove some magic values
+>    leds: pca963x: Reduce magic values
+>    leds: pca963x: Inform the output that it is inverted
+>    leds: pca963x: Remove whitespace and checkpatch problems
+>
+>   Documentation/devicetree/bindings/leds/pca963x.txt |   1 +
+>   drivers/leds/leds-pca963x.c                        | 243 ++++++++++++++-------
+>   include/linux/platform_data/leds-pca963x.h         |   1 +
+>   3 files changed, 171 insertions(+), 74 deletions(-)
+>
+
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Y46NoIcKQuicSz3X--
+Best regards,
+Jacek Anaszewski
