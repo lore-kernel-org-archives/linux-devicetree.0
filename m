@@ -1,80 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] Documentation: devicetree: Clean up gpio-keys example
-Date: Tue, 19 Apr 2016 17:13:49 -0500
-Message-ID: <20160419221349.GA25916@rob-hp-laptop>
-References: <1458129209-15449-1-git-send-email-afaerber@suse.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: Correct path for ARM GIC documentation
+Date: Tue, 19 Apr 2016 17:14:10 -0500
+Message-ID: <20160419221410.GA26533@rob-hp-laptop>
+References: <1458226077-7179-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458129209-15449-1-git-send-email-afaerber@suse.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-input@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Julien Chauveau <chauveau.julien@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+In-Reply-To: <1458226077-7179-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 12:53:29PM +0100, Andreas F=E4rber wrote:
-> Drop #address-cells and #size-cells, which are not required by the
-> gpio-keys binding documentation, as button sub-nodes are not devices.
->=20
-> Rename sub-nodes to avoid new dtc unit address warnings when copied.
->=20
-> While at it, adopt the dashes convention for the node name.
->=20
-> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
-> Cc: Julien Chauveau <chauveau.julien@gmail.com>
-> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
+On Thu, Mar 17, 2016 at 02:47:57PM +0000, Jon Hunter wrote:
+> Commit eb3fcf007fff ("dt-bindings: consolidate interrupt controller
+> bindings") moved the binding documentation for the ARM GIC from
+> arm/gic.txt to interrupt-controller/arm,gic.txt. However, there are
+> still some binding documents referring to the old path. Update these
+> binding documents to use the correct location.
+> 
+> Fixes: eb3fcf007fff ("dt-bindings: consolidate interrupt controller bindings")
+> 
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
 Applied, thanks.
 
 Rob
 
 > ---
->  v1 -> v2:
->  * Changed node name from underscore to dash
->  * Inserted white lines
->  * Renamed sub-nodes (Geert, Julien)
-> =20
->  Documentation/devicetree/bindings/input/gpio-keys.txt | 10 +++++----=
--
->  1 file changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/=
-Documentation/devicetree/bindings/input/gpio-keys.txt
-> index 21641236c095..a94940481e55 100644
-> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-> @@ -32,17 +32,17 @@ Optional subnode-properties:
-> =20
->  Example nodes:
-> =20
-> -	gpio_keys {
-> +	gpio-keys {
->  			compatible =3D "gpio-keys";
-> -			#address-cells =3D <1>;
-> -			#size-cells =3D <0>;
->  			autorepeat;
-> -			button@21 {
-> +
-> +			up {
->  				label =3D "GPIO Key UP";
->  				linux,code =3D <103>;
->  				gpios =3D <&gpio1 0 1>;
->  			};
-> -			button@22 {
-> +
-> +			down {
->  				label =3D "GPIO Key DOWN";
->  				linux,code =3D <108>;
->  				interrupts =3D <1 IRQ_TYPE_LEVEL_HIGH 7>;
-> --=20
-> 2.6.2
->=20
+>  Documentation/devicetree/bindings/arm/omap/crossbar.txt                | 3 ++-
+>  Documentation/devicetree/bindings/arm/ux500/boards.txt                 | 2 +-
+>  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt       | 3 +--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> index a9b28d74d902..bb5727ae004a 100644
+> --- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> @@ -42,7 +42,8 @@ Examples:
+>  Consumer:
+>  ========
+>  See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
+> -Documentation/devicetree/bindings/arm/gic.txt for further details.
+> +Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt for
+> +further details.
+>  
+>  An interrupt consumer on an SoC using crossbar will use:
+>  	interrupts = <GIC_SPI request_number interrupt_level>
+> diff --git a/Documentation/devicetree/bindings/arm/ux500/boards.txt b/Documentation/devicetree/bindings/arm/ux500/boards.txt
+> index b8737a8de718..7334c24625fc 100644
+> --- a/Documentation/devicetree/bindings/arm/ux500/boards.txt
+> +++ b/Documentation/devicetree/bindings/arm/ux500/boards.txt
+> @@ -23,7 +23,7 @@ scu:
+>  	see binding for arm/scu.txt
+>  
+>  interrupt-controller:
+> -	see binding for arm/gic.txt
+> +	see binding for interrupt-controller/arm,gic.txt
+>  
+>  timer:
+>  	see binding for arm/twd.txt
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> index b8e1674c7837..8cf564d083d2 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> @@ -16,8 +16,7 @@ Required properties:
+>  	"mediatek,mt6577-sysirq"
+>  	"mediatek,mt2701-sysirq"
+>  - interrupt-controller : Identifies the node as an interrupt controller
+> -- #interrupt-cells : Use the same format as specified by GIC in
+> -  Documentation/devicetree/bindings/arm/gic.txt
+> +- #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+>  - interrupt-parent: phandle of irq parent for sysirq. The parent must
+>    use the same interrupt-cells format as GIC.
+>  - reg: Physical base address of the intpol registers and length of memory
+> -- 
+> 2.1.4
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
