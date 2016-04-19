@@ -1,33 +1,60 @@
-From: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH v1 1/1] add missing UARTs pins for AllWinner
- H3 DTS + add new I2C entries for AllWinner H3 DTS
-Date: Tue, 19 Apr 2016 11:30:03 -0700 (PDT)
-Message-ID: <1c76eafd-5003-4a0f-b9c8-38f326a7322d@googlegroups.com>
-References: <8673D89D449742EAB9F6EBD05655A295@GirolesWin7> <CAGb2v67e_F1=VaY7ovzW7Whc2ToJU3YabeT-orrLTb0Pouhw_Q@mail.gmail.com>
- <21e74cd8-2ec7-4fd3-aa5c-ba4eed29a6ab@googlegroups.com>
- <CAGb2v65dsjbpGUrJXFG35cLGnFA6uDxtgMqupBN97=8XNnO68Q@mail.gmail.com>
- <16057207-027e-4709-b5c2-61be199e5cb5@googlegroups.com>
-Reply-To: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2] wlcore: spi: add wl18xx support
+Date: Tue, 19 Apr 2016 19:46:27 +0100
+Message-ID: <20160419184627.GG3217@sirena.org.uk>
+References: <14313437.cDJIgY3kzo@wuerfel>
+ <8665E2433BC68541A24DFFCA87B70F5B360BF614@DFRE01.ent.ti.com>
+ <1463330011.BhWEcYYuGD@wuerfel>
+ <8665E2433BC68541A24DFFCA87B70F5B360C0745@DFRE01.ent.ti.com>
+ <20160419171239.GC3217@sirena.org.uk>
+ <sjdvun1fuj4nyi0bgf268g53.1461086401627@email.android.com>
+ <20160419172706.GD3217@sirena.org.uk>
+ <oe8hqfknrcljrjawnrxlohvr.1461087275186@email.android.com>
+ <20160419175402.GE3217@sirena.org.uk>
+ <us0dopt1inbrt0x47njgc2vy.1461089085965@email.android.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_885_2115583739.1461090603512"
-Return-path: <linux-sunxi+bncBDW4XUV4YULRBK7S3G4AKGQEQQMCC3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <16057207-027e-4709-b5c2-61be199e5cb5-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mEgWsss+US7fWyVR"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <us0dopt1inbrt0x47njgc2vy.1461089085965-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Cc: "kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?B?77+977+977+977+9IO+/ve+/ve+/ve+/ve+/vQ==?= <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_885_2115583739.1461090603512
-Content-Type: text/plain; charset=UTF-8
 
-Oupps ! sorry for again have a line length exceeding 80 chars.
+--mEgWsss+US7fWyVR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-------=_Part_885_2115583739.1461090603512--
+On Tue, Apr 19, 2016 at 06:04:49PM +0000, Reizer, Eyal wrote:
+
+> Thanks! Glad the illustration helped.
+> I will try it out again as if i recall cotrectly, i did try that l, and it didnt produce the correct waveform, but perhaps i didnt understand the usage of .cs_change correctly.
+> Will double check anyway.
+
+It could also be a bug in your controller driver, it's common for them
+to not handle cs_change correctly (at least those that open code the
+message loop, obviously modern ones just factor this out into the core).
+
+--mEgWsss+US7fWyVR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXFn0CAAoJECTWi3JdVIfQKw0H/jOYdlXC0V/rFL8ZKhslFovs
+ldUSdQfhkzvk7V5VBXP4hGnX+TwCXdNXSc/O7/gK1IUYBOmvsKISonGuIypTUVXu
+ExgAsuR2JfUprjfCldeUhhIJIQryCP0gc1adis4IK4UrjoX6hSwqu3pK9OKHpdYT
+0Q4WwnDAP07hFfWGJEM1Jeid8n2rnQRW1B/mCOteW1r85+XdtuiS/NVWZwj6SDUr
+m135oFf9d0cVycKqcu4KXW+FBCHAp25I/XKGUg924jU0ZfSn5TB5HJpvLiiMq3d/
+JppDWHOmfsNjLzBLb5Ciq2LQzSVHz4JuTK9n9Y5ezwsJ+MSX16XxnuL1RaQ7314=
+=UEMr
+-----END PGP SIGNATURE-----
+
+--mEgWsss+US7fWyVR--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
