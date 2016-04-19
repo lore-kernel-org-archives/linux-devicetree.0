@@ -1,69 +1,126 @@
 From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 21/45] powerpc/powernv: Create PEs at PCI hot plugging
- time
-Date: Tue, 19 Apr 2016 14:16:42 +1000
-Message-ID: <5715B12A.6020203@ozlabs.ru>
+Subject: Re: [PATCH v8 22/45] powerpc/powernv/ioda1: Support releasing IODA1
+ TCE table
+Date: Tue, 19 Apr 2016 14:28:51 +1000
+Message-ID: <5715B403.7050408@ozlabs.ru>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-22-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-23-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-22-git-send-email-gwshan@linux.vnet.ibm.com>
+In-Reply-To: <1455680668-23298-23-git-send-email-gwshan@linux.vnet.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 On 02/17/2016 02:44 PM, Gavin Shan wrote:
-> Currently, the PEs and their associated resources are assigned
-> in ppc_md.pcibios_fixup() except those used by SRIOV VFs.
-
-But this new code does not affect IOV and VF's PEs will still be created 
-somewhere else rather than pnv_pci_setup_bridge()?
-
-
-> The
-> function is called for once after PCI probing and resources
-> assignment is completed. So it isn't hotplug friendly.
+> pnv_pci_ioda_table_free_pages() can be reused to release the IODA1
+> TCE table when releasing IODA1 PE in subsequent patches.
 >
-> This creates PEs dynamically by ppc_md.pcibios_setup_bridge(), which
-> is called on the event during system bootup and PCI hotplug: updating
-> PCI bridge's windows after resource assignment/reassignment are done.
-> For partial hotplug case, where not all PCI devices belonging to the
-> PE are unplugged and plugged again, we just need unbinding/binding
-> the affected PCI devices with the corresponding PE without creating
-> new one.
->
-> As there is no upstream bridge for root bus that needs to be covered
-> by PE, we have to create PE for root bus in ppc_md.pcibios_setup_bridge()
-> before any other PEs can be created, as PE for root bus is the ancestor
-> to anyone else.
+> This renames the following functions to support releasing IODA1 TCE
+> table: pnv_pci_ioda2_table_free_pages() to pnv_pci_ioda_table_free_pages(),
+> pnv_pci_ioda2_table_do_free_pages() to pnv_pci_ioda_table_do_free_pages().
+> No logical changes introduced.
 
-We did not need a root bus PE before? What is the other PE reserved for? 
-Comments only say "reserved"...
+I can only see renaming here but it seems (from 
+IODA_architecture_04-14-2008.pdf) that IODA1 does not support multi-level 
+TCE tables in the way IODA2 does.
+
 
 >
-> Also, the windows of root port or the upstream port of PCIe switch behind
-> root port are extended to be PHB's apertures to accommodate the additional
-> resources needed by newly plugged devices based on the fact: hotpluggable
-> slot is behind root port or downstream port of the PCIe switch behind
-> root port. The extension for those PCI brdiges' windows is done in
-> ppc_md.pcibios_setup_bridge() as well.
-
-
-This patch seems to be doing way too many things, hard to follow.
-
-Could you please split the patch into smaller chunks? For example (you can 
-do it totally different):
-- move pnv_pci_ioda_setup_opal_tce_kill()
-- move PE creation from pnv_pci_ioda_fixup() to pnv_pci_setup_bridge();
-- add pnv_pci_fixup_bridge_resources()
-- add an extra reserved PE for the root bus (and all this magic with 
-root_pe_idx/root_pe_populated)
-- ...
-
-
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 18 +++++++++---------
+>   1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index d360607..077f9db 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -51,7 +51,7 @@
+>   #define POWERNV_IOMMU_DEFAULT_LEVELS	1
+>   #define POWERNV_IOMMU_MAX_LEVELS	5
+>
+> -static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl);
+> +static void pnv_pci_ioda_table_free_pages(struct iommu_table *tbl);
+>
+>   static void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+>   			    const char *fmt, ...)
+> @@ -1352,7 +1352,7 @@ static void pnv_pci_ioda2_release_dma_pe(struct pci_dev *dev, struct pnv_ioda_pe
+>   		iommu_group_put(pe->table_group.group);
+>   		BUG_ON(pe->table_group.group);
+>   	}
+> -	pnv_pci_ioda2_table_free_pages(tbl);
+> +	pnv_pci_ioda_table_free_pages(tbl);
+>   	iommu_free_table(tbl, of_node_full_name(dev->dev.of_node));
+>   }
+>
+> @@ -1946,7 +1946,7 @@ static void pnv_ioda2_tce_free(struct iommu_table *tbl, long index,
+>
+>   static void pnv_ioda2_table_free(struct iommu_table *tbl)
+>   {
+> -	pnv_pci_ioda2_table_free_pages(tbl);
+> +	pnv_pci_ioda_table_free_pages(tbl);
+>   	iommu_free_table(tbl, "pnv");
+>   }
+>
+> @@ -2448,7 +2448,7 @@ static __be64 *pnv_pci_ioda2_table_do_alloc_pages(int nid, unsigned shift,
+>   	return addr;
+>   }
+>
+> -static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
+> +static void pnv_pci_ioda_table_do_free_pages(__be64 *addr,
+>   		unsigned long size, unsigned level);
+>
+>   static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
+> @@ -2487,7 +2487,7 @@ static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
+>   	 * release partially allocated table.
+>   	 */
+>   	if (offset < tce_table_size) {
+> -		pnv_pci_ioda2_table_do_free_pages(addr,
+> +		pnv_pci_ioda_table_do_free_pages(addr,
+>   				1ULL << (level_shift - 3), levels - 1);
+>   		return -ENOMEM;
+>   	}
+> @@ -2505,7 +2505,7 @@ static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
+>   	return 0;
+>   }
+>
+> -static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
+> +static void pnv_pci_ioda_table_do_free_pages(__be64 *addr,
+>   		unsigned long size, unsigned level)
+>   {
+>   	const unsigned long addr_ul = (unsigned long) addr &
+> @@ -2521,7 +2521,7 @@ static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
+>   			if (!(hpa & (TCE_PCI_READ | TCE_PCI_WRITE)))
+>   				continue;
+>
+> -			pnv_pci_ioda2_table_do_free_pages(__va(hpa), size,
+> +			pnv_pci_ioda_table_do_free_pages(__va(hpa), size,
+>   					level - 1);
+>   		}
+>   	}
+> @@ -2529,7 +2529,7 @@ static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
+>   	free_pages(addr_ul, get_order(size << 3));
+>   }
+>
+> -static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl)
+> +static void pnv_pci_ioda_table_free_pages(struct iommu_table *tbl)
+>   {
+>   	const unsigned long size = tbl->it_indirect_levels ?
+>   			tbl->it_level_size : tbl->it_size;
+> @@ -2537,7 +2537,7 @@ static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl)
+>   	if (!tbl->it_size)
+>   		return;
+>
+> -	pnv_pci_ioda2_table_do_free_pages((__be64 *)tbl->it_base, size,
+> +	pnv_pci_ioda_table_do_free_pages((__be64 *)tbl->it_base, size,
+>   			tbl->it_indirect_levels);
+>   }
+>
+>
 
 
 -- 
