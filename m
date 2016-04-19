@@ -1,52 +1,225 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
-Date: Tue, 19 Apr 2016 11:23:51 +0200
-Message-ID: <5715F927.3030102@samsung.com>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
+From: Alexey Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v8 36/45] powerpc/powernv: Support PCI slot ID
+Date: Tue, 19 Apr 2016 19:28:20 +1000
+Message-ID: <5715FA34.40004@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-37-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
-Sender: linux-leds-owner@vger.kernel.org
-To: Olliver Schinagl <oliver@schinagl.nl>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Peter Meerwald <pmeerw@pmeerw.net>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455680668-23298-37-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olliver,
+On 02/17/2016 02:44 PM, Gavin Shan wrote:
+> PowerNV platforms runs on top of skiboot firmware that includes
+> changes to support PCI slots. PCI slots are identified by PHB's
+> ID or the combo of that and PCI slot ID.
+>
+> This changes the EEH PowerNV backend to support PCI slots:
+>
+>     * Rename arguments of opal_pci_reset() and opal_pci_poll().
+>     * One more argument (PCI slot's state) added to opal_pci_poll().
+>     * Drop pnv_eeh_phb_poll() and introduce a enhanced similar
+>       function pnv_pci_poll() that will be used by PowerNV hotplug
+>       backends.
+>
+> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> ---
+>   arch/powerpc/include/asm/opal.h              |  4 +--
+>   arch/powerpc/platforms/powernv/eeh-powernv.c | 42 ++++++----------------------
+>   arch/powerpc/platforms/powernv/pci.c         | 21 ++++++++++++++
+>   arch/powerpc/platforms/powernv/pci.h         |  1 +
+>   4 files changed, 32 insertions(+), 36 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+> index 07a99e6..9e0039f 100644
+> --- a/arch/powerpc/include/asm/opal.h
+> +++ b/arch/powerpc/include/asm/opal.h
+> @@ -131,7 +131,7 @@ int64_t opal_pci_map_pe_dma_window(uint64_t phb_id, uint16_t pe_number, uint16_t
+>   int64_t opal_pci_map_pe_dma_window_real(uint64_t phb_id, uint16_t pe_number,
+>   					uint16_t dma_window_number, uint64_t pci_start_addr,
+>   					uint64_t pci_mem_size);
+> -int64_t opal_pci_reset(uint64_t phb_id, uint8_t reset_scope, uint8_t assert_state);
+> +int64_t opal_pci_reset(uint64_t id, uint8_t reset_scope, uint8_t assert_state);
+>
+>   int64_t opal_pci_get_hub_diag_data(uint64_t hub_id, void *diag_buffer,
+>   				   uint64_t diag_buffer_len);
+> @@ -148,7 +148,7 @@ int64_t opal_get_dpo_status(__be64 *dpo_timeout);
+>   int64_t opal_set_system_attention_led(uint8_t led_action);
+>   int64_t opal_pci_next_error(uint64_t phb_id, __be64 *first_frozen_pe,
+>   			    __be16 *pci_error_type, __be16 *severity);
+> -int64_t opal_pci_poll(uint64_t phb_id);
+> +int64_t opal_pci_poll(uint64_t id, uint8_t *state);
+>   int64_t opal_return_cpu(void);
+>   int64_t opal_check_token(uint64_t token);
+>   int64_t opal_reinit_cpus(uint64_t flags);
+> diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+> index c7454ba..e23b063 100644
+> --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
+> +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+> @@ -717,28 +717,11 @@ static int pnv_eeh_get_state(struct eeh_pe *pe, int *delay)
+>   	return ret;
+>   }
+>
+> -static s64 pnv_eeh_phb_poll(struct pnv_phb *phb)
+> -{
+> -	s64 rc = OPAL_HARDWARE;
+> -
+> -	while (1) {
+> -		rc = opal_pci_poll(phb->opal_id);
+> -		if (rc <= 0)
+> -			break;
+> -
+> -		if (system_state < SYSTEM_RUNNING)
+> -			udelay(1000 * rc);
+> -		else
+> -			msleep(rc);
+> -	}
+> -
+> -	return rc;
+> -}
+> -
+>   int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
+>   {
+>   	struct pnv_phb *phb = hose->private_data;
+>   	s64 rc = OPAL_HARDWARE;
+> +	int ret;
+>
+>   	pr_debug("%s: Reset PHB#%x, option=%d\n",
+>   		 __func__, hose->global_number, option);
+> @@ -753,8 +736,6 @@ int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
+>   		rc = opal_pci_reset(phb->opal_id,
+>   				    OPAL_RESET_PHB_COMPLETE,
+>   				    OPAL_DEASSERT_RESET);
+> -	if (rc < 0)
+> -		goto out;
+>
+>   	/*
+>   	 * Poll state of the PHB until the request is done
+> @@ -762,24 +743,22 @@ int pnv_eeh_phb_reset(struct pci_controller *hose, int option)
+>   	 * reset followed by hot reset on root bus. So we also
+>   	 * need the PCI bus settlement delay.
+>   	 */
+> -	rc = pnv_eeh_phb_poll(phb);
+> -	if (option == EEH_RESET_DEACTIVATE) {
+> +	ret = pnv_pci_poll(phb->opal_id, rc, NULL);
+> +	if (option == EEH_RESET_DEACTIVATE && !ret) {
+>   		if (system_state < SYSTEM_RUNNING)
+>   			udelay(1000 * EEH_PE_RST_SETTLE_TIME);
+>   		else
+>   			msleep(EEH_PE_RST_SETTLE_TIME);
+>   	}
+> -out:
+> -	if (rc != OPAL_SUCCESS)
+> -		return -EIO;
+>
+> -	return 0;
+> +	return ret;
+>   }
+>
+>   static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
+>   {
+>   	struct pnv_phb *phb = hose->private_data;
+>   	s64 rc = OPAL_HARDWARE;
+> +	int ret;
+>
+>   	pr_debug("%s: Reset PHB#%x, option=%d\n",
+>   		 __func__, hose->global_number, option);
+> @@ -801,18 +780,13 @@ static int pnv_eeh_root_reset(struct pci_controller *hose, int option)
+>   		rc = opal_pci_reset(phb->opal_id,
+>   				    OPAL_RESET_PCI_HOT,
+>   				    OPAL_DEASSERT_RESET);
+> -	if (rc < 0)
+> -		goto out;
+>
+>   	/* Poll state of the PHB until the request is done */
+> -	rc = pnv_eeh_phb_poll(phb);
+> -	if (option == EEH_RESET_DEACTIVATE)
+> +	ret = pnv_pci_poll(phb->opal_id, rc, NULL);
+> +	if (option == EEH_RESET_DEACTIVATE && !ret)
+>   		msleep(EEH_PE_RST_SETTLE_TIME);
+> -out:
+> -	if (rc != OPAL_SUCCESS)
+> -		return -EIO;
+>
+> -	return 0;
+> +	return ret;
+>   }
+>
+>   static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+> index b87a315..a458703 100644
+> --- a/arch/powerpc/platforms/powernv/pci.c
+> +++ b/arch/powerpc/platforms/powernv/pci.c
+> @@ -42,6 +42,27 @@
+>   #define cfg_dbg(fmt...)	do { } while(0)
+>   //#define cfg_dbg(fmt...)	printk(fmt)
+>
+> +int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state)
+> +{
+> +	while (rval > 0) {
+> +		if (system_state < SYSTEM_RUNNING)
+> +			udelay(1000 * rval);
+> +		else
+> +			msleep(rval);
+> +
+> +		rval = opal_pci_poll(id, state);
+> +	}
+> +
+> +	/*
+> +	 * The caller expects to retrieve additional
+> +	 * information if the last argument isn't NULL.
+> +	 */
+> +	if (rval == OPAL_SUCCESS && state)
+> +		rval = opal_pci_poll(id, state);
 
-Thanks for the patches.
-Adding driver authors on cc.
 
-On 04/19/2016 09:40 AM, Olliver Schinagl wrote:
-> Using the pca963x for a while, I noticed something that may look like some
-> i2c accessing issues where sometimes data was incorrectly written to the bus,
-> possibly because we where not properly locking the i2c reads. Though I'm not
-> familiar enough with the i2c framework to be certain reads need to be locked
-> at all. A patch was added to properly lock i2c access more tightly.
+Old OPAL won't touch @state so whatever garbage was there will stay there 
+as the only caller which is passing not-NULL there is 
+pnv_php_get_power_state() and it does not initialize @power_state (it is in 
+"[PATCH v8 45/45] PCI/hotplug: PowerPC PowerNV PCI hotplug driver").
+
+
+btw how will new OPAL react if old kernel is running, i.e. not passing 
+@state at all? If it is initialized to NULL somewher - fine but what 
+exactly does this initialization and makes sure that OPAL won't see garbage 
+as a second parameter?
+
+When ABI like this changes, I expect to see opal_pci_poll2() or 
+opal_pci_poll_ex() rather than just an additional parameter to 
+opal_pci_poll()...
+
+
+
+> +
+> +	return (rval == OPAL_SUCCESS) ? 0 : -EIO;
+> +}
+> +
+>   #ifdef CONFIG_PCI_MSI
+>   int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+>   {
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index 0cddde3..6857703 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -192,6 +192,7 @@ extern int pnv_tce_xchg(struct iommu_table *tbl, long index,
+>   		unsigned long *hpa, enum dma_data_direction *direction);
+>   extern unsigned long pnv_tce_get(struct iommu_table *tbl, long index);
 >
-> Furthermore there was no method to support inverted outputs. This series
-> adds a property to the device tree to inform the driver that the output
-> is inverted (active-high vs active-low).
->
-> Additionally, this patch set does some cleanups to please checkpatch, and
-> removes a few magic values.
->
-> Olliver Schinagl (6):
->    leds: pca963x: Alphabetize headers
->    leds: pca963x: Lock i2c r/w access
->    leds: pca963x: Add defines and remove some magic values
->    leds: pca963x: Reduce magic values
->    leds: pca963x: Inform the output that it is inverted
->    leds: pca963x: Remove whitespace and checkpatch problems
->
->   Documentation/devicetree/bindings/leds/pca963x.txt |   1 +
->   drivers/leds/leds-pca963x.c                        | 243 ++++++++++++++-------
->   include/linux/platform_data/leds-pca963x.h         |   1 +
->   3 files changed, 171 insertions(+), 74 deletions(-)
+> +int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state);
+>   void pnv_pci_dump_phb_diag_data(struct pci_controller *hose,
+>   				unsigned char *log_buff);
+>   int pnv_pci_cfg_read(struct pci_dn *pdn,
 >
 
 
 -- 
-Best regards,
-Jacek Anaszewski
+Alexey
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
