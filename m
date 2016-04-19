@@ -1,85 +1,90 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: BCM5301X: Add DT entry for SPI controller and NOR flash
-Date: Tue, 19 Apr 2016 08:56:46 +0200
-Message-ID: <1461049006-22818-1-git-send-email-zajec5@gmail.com>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [RESEND PATCH v10 2/6] clk: hisilicon: add CRG driver for hi3519
+ soc
+Date: Tue, 19 Apr 2016 15:11:55 +0800
+Message-ID: <5715DA3B.1070605@hisilicon.com>
+References: <1459411811-12390-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1459411811-12390-3-git-send-email-xuejiancheng@hisilicon.com>
+ <20160416004055.GN26353@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160416004055.GN26353-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:BROADCOM BCM5301X ARM
-	ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Controller is present on every BCM4708* board but only few devices have
-serial flash attached so mark it as disabled by default.
+Hi Stephen,
 
-Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts  |  4 ++++
- arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts |  4 ++++
- arch/arm/boot/dts/bcm5301x.dtsi               | 14 ++++++++++++++
- 3 files changed, 22 insertions(+)
+On 2016/4/16 8:40, Stephen Boyd wrote:
+> On 03/31, Jiancheng Xue wrote:
+>> diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
+>> new file mode 100644
+>> index 0000000..ee9df82
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/clk-hi3519.c
+>> @@ -0,0 +1,129 @@
+>> +/*
+>> + * Hi3519 Clock Driver
+>> + *
+>> + * Copyright (c) 2015-2016 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+[...]
+>> +static int hi3519_clk_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	struct hisi_clock_data *clk_data;
+>> +
+>> +	clk_data = hisi_clk_init(np, HI3519_NR_CLKS);
+>> +	if (!clk_data)
+>> +		return -ENODEV;
+>> +
+>> +	hisi_clk_register_fixed_rate(hi3519_fixed_rate_clks,
+>> +				     ARRAY_SIZE(hi3519_fixed_rate_clks),
+>> +				     clk_data);
+>> +	hisi_clk_register_mux(hi3519_mux_clks, ARRAY_SIZE(hi3519_mux_clks),
+>> +					clk_data);
+>> +	hisi_clk_register_gate(hi3519_gate_clks,
+>> +			ARRAY_SIZE(hi3519_gate_clks), clk_data);
+>> +
+>> +	return hisi_reset_init(np);
+> 
+> Now that this is a platform driver we need to do lots of cleanup
+> in error cases. I mean we need to unregister clks, OF clk
+> providers, and reset controllers. Please add all that code too.
+> 
+Practically, clock driver is always needed during the whole system running.
+It must be probed and never be removed. Is it a must for clock driver being
+a platform driver? If it's not, I'd prefer to use CLK_OF_DECLARE instead.
+Could you help me to understand the advantage of platform driver here? If
+it's really a must, I will continue to fix these bugs as you pointed. It indeed
+needs to be changed a lot including drivers/clk/hisilicon/clk.c.
 
-diff --git a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts b/arch/arm/bo=
-ot/dts/bcm4708-luxul-xwc-1000.dts
-index c973f768..1c7e53d 100644
---- a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
-+++ b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
-@@ -59,3 +59,7 @@
- &uart0 {
- 	status =3D "okay";
- };
-+
-+&spi_nor {
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/b=
-oot/dts/bcm4708-smartrg-sr400ac.dts
-index 4d610ff..8b0c440 100644
---- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-+++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-@@ -122,3 +122,7 @@
- &uart0 {
- 	status =3D "okay";
- };
-+
-+&spi_nor {
-+	status =3D "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm530=
-1x.dtsi
-index 9c06d91..7d4d29b 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -225,6 +225,20 @@
- 			#address-cells =3D <1>;
- 			#size-cells =3D <1>;
- 		};
-+
-+		spi@29000 {
-+			reg =3D <0x00029000 0x1000>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+
-+			spi_nor: spi-nor@0 {
-+				compatible =3D "jedec,spi-nor";
-+				reg =3D <0>;
-+				spi-max-frequency =3D <20000000>;
-+				linux,part-probe =3D "ofpart", "bcm47xxpart";
-+				status =3D "disabled";
-+			};
-+		};
- 	};
-=20
- 	lcpll0: lcpll0@1800c100 {
---=20
-1.8.4.5
+Thank you!
+
+Regards,
+Jiancheng
+
+
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
