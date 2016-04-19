@@ -1,127 +1,57 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 22/45] powerpc/powernv/ioda1: Support releasing IODA1
- TCE table
-Date: Tue, 19 Apr 2016 14:28:51 +1000
-Message-ID: <5715B403.7050408@ozlabs.ru>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-23-git-send-email-gwshan@linux.vnet.ibm.com>
+From: HS Liao <hs.liao@mediatek.com>
+Subject: [RFC v4 0/4] Mediatek MT8173 CMDQ support
+Date: Tue, 19 Apr 2016 12:49:58 +0800
+Message-ID: <1461041402-19962-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-23-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2016 02:44 PM, Gavin Shan wrote:
-> pnv_pci_ioda_table_free_pages() can be reused to release the IODA1
-> TCE table when releasing IODA1 PE in subsequent patches.
->
-> This renames the following functions to support releasing IODA1 TCE
-> table: pnv_pci_ioda2_table_free_pages() to pnv_pci_ioda_table_free_pages(),
-> pnv_pci_ioda2_table_do_free_pages() to pnv_pci_ioda_table_do_free_pages().
-> No logical changes introduced.
 
-I can only see renaming here but it seems (from 
-IODA_architecture_04-14-2008.pdf) that IODA1 does not support multi-level 
-TCE tables in the way IODA2 does.
+Hi,
 
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help read/write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
 
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 18 +++++++++---------
->   1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index d360607..077f9db 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -51,7 +51,7 @@
->   #define POWERNV_IOMMU_DEFAULT_LEVELS	1
->   #define POWERNV_IOMMU_MAX_LEVELS	5
->
-> -static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl);
-> +static void pnv_pci_ioda_table_free_pages(struct iommu_table *tbl);
->
->   static void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
->   			    const char *fmt, ...)
-> @@ -1352,7 +1352,7 @@ static void pnv_pci_ioda2_release_dma_pe(struct pci_dev *dev, struct pnv_ioda_pe
->   		iommu_group_put(pe->table_group.group);
->   		BUG_ON(pe->table_group.group);
->   	}
-> -	pnv_pci_ioda2_table_free_pages(tbl);
-> +	pnv_pci_ioda_table_free_pages(tbl);
->   	iommu_free_table(tbl, of_node_full_name(dev->dev.of_node));
->   }
->
-> @@ -1946,7 +1946,7 @@ static void pnv_ioda2_tce_free(struct iommu_table *tbl, long index,
->
->   static void pnv_ioda2_table_free(struct iommu_table *tbl)
->   {
-> -	pnv_pci_ioda2_table_free_pages(tbl);
-> +	pnv_pci_ioda_table_free_pages(tbl);
->   	iommu_free_table(tbl, "pnv");
->   }
->
-> @@ -2448,7 +2448,7 @@ static __be64 *pnv_pci_ioda2_table_do_alloc_pages(int nid, unsigned shift,
->   	return addr;
->   }
->
-> -static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
-> +static void pnv_pci_ioda_table_do_free_pages(__be64 *addr,
->   		unsigned long size, unsigned level);
->
->   static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
-> @@ -2487,7 +2487,7 @@ static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
->   	 * release partially allocated table.
->   	 */
->   	if (offset < tce_table_size) {
-> -		pnv_pci_ioda2_table_do_free_pages(addr,
-> +		pnv_pci_ioda_table_do_free_pages(addr,
->   				1ULL << (level_shift - 3), levels - 1);
->   		return -ENOMEM;
->   	}
-> @@ -2505,7 +2505,7 @@ static long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
->   	return 0;
->   }
->
-> -static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
-> +static void pnv_pci_ioda_table_do_free_pages(__be64 *addr,
->   		unsigned long size, unsigned level)
->   {
->   	const unsigned long addr_ul = (unsigned long) addr &
-> @@ -2521,7 +2521,7 @@ static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
->   			if (!(hpa & (TCE_PCI_READ | TCE_PCI_WRITE)))
->   				continue;
->
-> -			pnv_pci_ioda2_table_do_free_pages(__va(hpa), size,
-> +			pnv_pci_ioda_table_do_free_pages(__va(hpa), size,
->   					level - 1);
->   		}
->   	}
-> @@ -2529,7 +2529,7 @@ static void pnv_pci_ioda2_table_do_free_pages(__be64 *addr,
->   	free_pages(addr_ul, get_order(size << 3));
->   }
->
-> -static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl)
-> +static void pnv_pci_ioda_table_free_pages(struct iommu_table *tbl)
->   {
->   	const unsigned long size = tbl->it_indirect_levels ?
->   			tbl->it_level_size : tbl->it_size;
-> @@ -2537,7 +2537,7 @@ static void pnv_pci_ioda2_table_free_pages(struct iommu_table *tbl)
->   	if (!tbl->it_size)
->   		return;
->
-> -	pnv_pci_ioda2_table_do_free_pages((__be64 *)tbl->it_base, size,
-> +	pnv_pci_ioda_table_do_free_pages((__be64 *)tbl->it_base, size,
->   			tbl->it_indirect_levels);
->   }
->
->
+These patches have a build dependency on top of v4.6-rc1.
 
+Changes since v3:
+ - rebase to v4.6-rc1
+ - pass both arm and arm64 arch compilation
+ - fix bug of removing free task list in v3
+ - marchal return error code
+ - use offset instead of physical address
+ - centralize release flow
+ - add "suspend/resume protection" patch
+ - add queue_work() in cmdq_auto_release() to prevent no more flush
+   or interrupt to consume waiting tasks
+ - remove some debug or redundant code
+ - rewrite some code to shrink code size
+
+Best regards,
+HS Liao
+
+HS Liao (4):
+  dt-bindings: soc: Add documentation for the MediaTek GCE unit
+  CMDQ: Mediatek CMDQ driver
+  arm64: dts: mt8173: Add GCE node
+  CMDQ: suspend/resume protection
+
+ .../devicetree/bindings/soc/mediatek/gce.txt       |   34 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |    8 +
+ drivers/soc/mediatek/Kconfig                       |   10 +
+ drivers/soc/mediatek/Makefile                      |    1 +
+ drivers/soc/mediatek/mtk-cmdq.c                    | 1997 ++++++++++++++++++++
+ include/soc/mediatek/cmdq.h                        |  197 ++
+ 6 files changed, 2247 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+ create mode 100644 include/soc/mediatek/cmdq.h
 
 -- 
-Alexey
+1.7.9.5
