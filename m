@@ -1,52 +1,87 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Remove unsupported s2mps11 regulator
- bindings from Exynos5420 boards
-Date: Tue, 19 Apr 2016 07:46:17 +0200
-Message-ID: <5715C629.1030602@samsung.com>
-References: <1460965453-5337-1-git-send-email-k.kozlowski@samsung.com>
- <571510D5.3090406@osg.samsung.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v8 28/45] powerpc/pci: Introduce
+ pci_remove_device_node_info()
+Date: Tue, 19 Apr 2016 15:48:26 +1000
+Message-ID: <5715C6AA.2060606@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-29-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <571510D5.3090406@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-29-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/18/2016 06:52 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 04/18/2016 03:44 AM, Krzysztof Kozlowski wrote:
->> The bindings like s2mps11,buck6-ramp-enable or s2mps11,buck2-ramp-delay
->> where ignored. They were never parse by s2mps11 regulator driver. Also
->> the values used in these bindings were equal to default reset values of
->> S2MPS11 device. It is safe to remove them.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
-> 
-> The patch looks good to me.
-> 
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+On 02/17/2016 02:44 PM, Gavin Shan wrote:
+> This implements and exports pci_remove_device_node_info(). It's
+> used to remove the pdn (struct pci_dn) for the indicated device
+> node. The function is going to be used by PowerNV PCI hotplug
+> driver.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 
-Thanks.
+Kind of strange that there is no such helper for pseries, is there?
 
-> 
-> On a related note, the s5m8767 regulator driver parses similar DT properties
-> ("s5m8767,pmic-buck-ramp-delay", "s5m8767,pmic-buck2-ramp-enable", etc) that
-> are not in Documentation/devicetree/bindings/regulator/samsung,s5m8767.txt.
-> 
-> So those should either be added to the binding doc or removed from the driver
-> if are not correct (I don't have documentation for the s5m8767 PMIC but the
-> DT properties are not use by any DTS in mainline using the s5m8767 PMIC).
 
-That's the grey area. :) I mean that instead of making these implemented
-bindings an interface, they should rather be converted to standard
-regulator bindings. However the device is quite old, not used on newer
-boards, so there is no interest in improving this. In the same time
-removal of this code is not strictly necessary. Its existence does not hurt.
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-Best regards,
-Krzysztof
+
+> ---
+>   arch/powerpc/include/asm/pci-bridge.h |  1 +
+>   arch/powerpc/kernel/pci_dn.c          | 23 +++++++++++++++++++++++
+>   2 files changed, 24 insertions(+)
+>
+> diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+> index 72a9d4e..c6310e2 100644
+> --- a/arch/powerpc/include/asm/pci-bridge.h
+> +++ b/arch/powerpc/include/asm/pci-bridge.h
+> @@ -240,6 +240,7 @@ extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
+>   extern void remove_dev_pci_data(struct pci_dev *pdev);
+>   extern struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
+>   					       struct device_node *dn);
+> +extern void pci_remove_device_node_info(struct device_node *dn);
+>
+>   static inline int pci_device_from_OF_node(struct device_node *np,
+>   					  u8 *bus, u8 *devfn)
+> diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
+> index 0a249ff..ce10281 100644
+> --- a/arch/powerpc/kernel/pci_dn.c
+> +++ b/arch/powerpc/kernel/pci_dn.c
+> @@ -331,6 +331,29 @@ struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
+>   }
+>   EXPORT_SYMBOL_GPL(pci_add_device_node_info);
+>
+> +void pci_remove_device_node_info(struct device_node *dn)
+> +{
+> +	struct pci_dn *pdn = dn ? PCI_DN(dn) : NULL;
+> +#ifdef CONFIG_EEH
+> +	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
+> +
+> +	if (edev)
+> +		edev->pdn = NULL;
+> +#endif
+> +
+> +	if (!pdn)
+> +		return;
+> +
+> +	WARN_ON(!list_empty(&pdn->child_list));
+> +	list_del(&pdn->list);
+> +	if (pdn->parent)
+> +		of_node_put(pdn->parent->node);
+> +
+> +	dn->data = NULL;
+> +	kfree(pdn);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_remove_device_node_info);
+> +
+>   /*
+>    * Traverse a device tree stopping each PCI device in the tree.
+>    * This is done depth first.  As each node is processed, a "pre"
+>
+
+
+-- 
+Alexey
