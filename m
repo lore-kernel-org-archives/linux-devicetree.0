@@ -1,53 +1,142 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Tue, 19 Apr 2016 16:26:27 +0530
-Message-ID: <57160EDB.5040704@nvidia.com>
-References: <20160331192227.GU2350@sirena.org.uk> <56FD7F07.7010404@nvidia.com> <20160331203942.GV2350@sirena.org.uk> <56FE2009.4020302@nvidia.com> <20160401161121.GZ2350@sirena.org.uk> <570370E5.3070901@nvidia.com> <20160412010226.GO3351@sirena.org.uk> <570CF822.4050002@nvidia.com> <20160413065310.GK14664@sirena.org.uk> <571601E7.2000901@nvidia.com> <20160419105545.GT3217@sirena.org.uk>
+From: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] Axi-usb: Add support for 64-bit addressing.
+Date: Tue, 19 Apr 2016 16:40:48 +0530
+Message-ID: <1461064248-31288-1-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160419105545.GT3217-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, radhey.shyam.pandey-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch updates the driver to support 64-bit DMA
+addressing.
 
-On Tuesday 19 April 2016 04:25 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Tue, Apr 19, 2016 at 03:31:11PM +0530, Laxman Dewangan wrote:
->> On Wednesday 13 April 2016 12:23 PM, Mark Brown wrote:
->>> Possibly.  It did also occur to me last night that having a Maxim
->>> specific property which lets you specify a raw register value to
->>> configure in cases where the board goes out of spec (as opposed to a
->>> time which could be left specified as the real value) might solve the
->>> problem without being too terrible from an interface point of view,
->>> though something that's directly obvious from the schematic would be
->>> much better.
-> You appear to have ignord my suggestion above...
->
->
-I was too focused on the getting the info from Maxim on this to get 
-something in equation form.
-There is no way to get the deviation equation and your suggestion is 
-only seems solution for this issue.
-Thanks for evaluating/trying at your end and for valuable suggestion.
+Signed-off-by: Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes for v2:
+		-Added dma-ranges property in device tree as suggested by Arnd Bergmann.
+                -Modified the driver code based on the xlnx,addrwidth.
+ .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
+ drivers/usb/gadget/udc/udc-xilinx.c                | 39 ++++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
-Now, for property, I will add
-  maxim,ramp-delay
-
-This is device specific ramp delay which need to be configure on device 
-register. The platform observed delay must be provided via 
-regulator-ramp-delay.
-
-I will send the patch on this.
-
-Thanks,
-Laxman
-
+diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+index 47b4e39..850d792 100644
+--- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
++++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+@@ -7,12 +7,15 @@ Required properties:
+ - interrupts		: Should contain single irq line of USB2 device
+ 			  controller
+ - xlnx,has-builtin-dma	: if DMA is included
+-
++- dma-ranges: Should be as the following <dma_addr cpu_addr max_len>.
++- xlnx,addrwidth       : Should be the dma addressing size in bits(ex: 40 bits).
+ Example:
+  		axi-usb2-device@42e00000 {
+                         compatible = "xlnx,usb2-device-4.00.a";
+                         interrupts = <0x0 0x39 0x1>;
+                         reg = <0x42e00000 0x10000>;
++			dma-ranges = <0x00000000 0x00000000 0x40000000>;
+                         xlnx,has-builtin-dma;
++			xlnx,addrwidth = <0x28>;
+                 };
+ 
+diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
+index 1cbb0ac..702ab9e 100644
+--- a/drivers/usb/gadget/udc/udc-xilinx.c
++++ b/drivers/usb/gadget/udc/udc-xilinx.c
+@@ -28,6 +28,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/prefetch.h>
+ #include <linux/usb/ch9.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/usb/gadget.h>
+ 
+ /* Register offsets for the USB device.*/
+@@ -47,6 +48,15 @@
+ #define XUSB_DMA_LENGTH_OFFSET		0x0210	/* DMA Length Register */
+ #define XUSB_DMA_STATUS_OFFSET		0x0214	/* DMA Status Register */
+ 
++/* DMA source Address Reg for LSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_LSB   0x0308
++/* DMA source Address Reg for MSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_MSB   0x030C
++/* DMA destination Addr Reg LSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_LSB   0x0310
++/* DMA destination Addr Reg MSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_MSB   0x0314
++
+ /* Endpoint Configuration Space offsets */
+ #define XUSB_EP_CFGSTATUS_OFFSET	0x00	/* Endpoint Config Status  */
+ #define XUSB_EP_BUF0COUNT_OFFSET	0x08	/* Buffer 0 Count */
+@@ -176,6 +186,7 @@ struct xusb_ep {
+  * @addr: the usb device base address
+  * @lock: instance of spinlock
+  * @dma_enabled: flag indicating whether the dma is included in the system
++ * @dma_addrwidth:Indicate the DMA address width.
+  * @read_fn: function pointer to read device registers
+  * @write_fn: function pointer to write to device registers
+  */
+@@ -193,7 +204,7 @@ struct xusb_udc {
+ 	void __iomem *addr;
+ 	spinlock_t lock;
+ 	bool dma_enabled;
+-
++	u32 dma_addrwidth;
+ 	unsigned int (*read_fn)(void __iomem *);
+ 	void (*write_fn)(void __iomem *, u32, u32);
+ };
+@@ -215,6 +226,17 @@ static const struct usb_endpoint_descriptor config_bulk_out_desc = {
+ };
+ 
+ /**
++ * xudc_write64 - write 64bit value to device registers
++ * @addr: base addr of device registers
++ * @offset: register offset
++ * @val: data to be written
++ **/
++static void xudc_write64(void __iomem *addr, u32 offset, u64 val)
++{
++	lo_hi_writeq(val, addr + offset);
++}
++
++/**
+  * xudc_write32 - little endian write to device registers
+  * @addr: base addr of device registers
+  * @offset: register offset
+@@ -330,8 +352,13 @@ static int xudc_start_dma(struct xusb_ep *ep, dma_addr_t src,
+ 	 * destination registers and then set the length
+ 	 * into the DMA length register.
+ 	 */
+-	udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
+-	udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	if (udc->dma_addrwidth > 32) {
++		xudc_write64(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET_LSB, src);
++		xudc_write64(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET_LSB, dst);
++	} else {
++		udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
++		udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	}
+ 	udc->write_fn(udc->addr, XUSB_DMA_LENGTH_OFFSET, length);
+ 
+ 	/*
+@@ -2097,6 +2124,12 @@ static int xudc_probe(struct platform_device *pdev)
+ 
+ 	udc->dma_enabled = of_property_read_bool(np, "xlnx,has-builtin-dma");
+ 
++	ret = of_property_read_u32(np, "xlnx,addrwidth", &udc->dma_addrwidth);
++	if (ret < 0)
++		dev_warn(&pdev->dev, "missing xlnx,addrwidth property\n");
++
++	/* Set the dma mask bits */
++	dma_set_mask(&pdev->dev, DMA_BIT_MASK(udc->dma_addrwidth));
+ 	/* Setup gadget structure */
+ 	udc->gadget.ops = &xusb_udc_ops;
+ 	udc->gadget.max_speed = USB_SPEED_HIGH;
+-- 
+2.1.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
