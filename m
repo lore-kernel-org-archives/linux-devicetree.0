@@ -1,80 +1,69 @@
 From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 20/45] powerpc/powernv: Allocate PE# in reverse order
-Date: Tue, 19 Apr 2016 13:07:59 +1000
-Message-ID: <5715A10F.2030704@ozlabs.ru>
+Subject: Re: [PATCH v8 21/45] powerpc/powernv: Create PEs at PCI hot plugging
+ time
+Date: Tue, 19 Apr 2016 14:16:42 +1000
+Message-ID: <5715B12A.6020203@ozlabs.ru>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-21-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-22-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-21-git-send-email-gwshan@linux.vnet.ibm.com>
+In-Reply-To: <1455680668-23298-22-git-send-email-gwshan@linux.vnet.ibm.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 On 02/17/2016 02:44 PM, Gavin Shan wrote:
-> PE number for one particular PE can be allocated dynamically or
-> reserved according to the consumed M64 (64-bits prefetchable)
-> segments of the PE. The M64 resources, and hence their segments
-> and PE number are assigned/reserved in ascending order. The PE
-> numbers are allocated dynamically in ascending order as well.
-> It's not a problem as the PE numbers are reserved and then
-> allocated all at once in fine order. However, it will introduce
-> conflicts when PCI hotplug is supported: the PE number to be
-> reserved for newly added PE might have been assigned.
->
-> To resolve above conflicts, this forces the PE number to be
-> allocated dynamically in reverse order. With this patch applied,
-> the PE numbers are reserved in ascending order, but allocated
-> dynamically in reverse order.
+> Currently, the PEs and their associated resources are assigned
+> in ppc_md.pcibios_fixup() except those used by SRIOV VFs.
+
+But this new code does not affect IOV and VF's PEs will still be created 
+somewhere else rather than pnv_pci_setup_bridge()?
 
 
-The patch is probably is ok, the commit log is not - I do not follow it. 
-Some PEs are reserved (for what? why does the absolute PE number matter? 
-put it in the commit log), that means that the corresponding bits in 
-pe_alloc[] should be set so when you will be allocating PEs for a just 
-plugged device, you won't pick them and you will pick free ones, and the 
-order should not matter. I would think that "reservation" happens once at 
-the boot time so you set "used" bits for the reserved PEs then and after 
-that the dynamic allocator will skip them.
+> The
+> function is called for once after PCI probing and resources
+> assignment is completed. So it isn't hotplug friendly.
+>
+> This creates PEs dynamically by ppc_md.pcibios_setup_bridge(), which
+> is called on the event during system bootup and PCI hotplug: updating
+> PCI bridge's windows after resource assignment/reassignment are done.
+> For partial hotplug case, where not all PCI devices belonging to the
+> PE are unplugged and plugged again, we just need unbinding/binding
+> the affected PCI devices with the corresponding PE without creating
+> new one.
+>
+> As there is no upstream bridge for root bus that needs to be covered
+> by PE, we have to create PE for root bus in ppc_md.pcibios_setup_bridge()
+> before any other PEs can be created, as PE for root bus is the ancestor
+> to anyone else.
+
+We did not need a root bus PE before? What is the other PE reserved for? 
+Comments only say "reserved"...
+
+>
+> Also, the windows of root port or the upstream port of PCIe switch behind
+> root port are extended to be PHB's apertures to accommodate the additional
+> resources needed by newly plugged devices based on the fact: hotpluggable
+> slot is behind root port or downstream port of the PCIe switch behind
+> root port. The extension for those PCI brdiges' windows is done in
+> ppc_md.pcibios_setup_bridge() as well.
 
 
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 14 ++++++--------
->   1 file changed, 6 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index f182ca7..565725b 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -144,16 +144,14 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
->
->   static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
->   {
-> -	unsigned long pe;
-> +	unsigned long pe = phb->ioda.total_pe_num - 1;
->
-> -	do {
-> -		pe = find_next_zero_bit(phb->ioda.pe_alloc,
-> -					phb->ioda.total_pe_num, 0);
-> -		if (pe >= phb->ioda.total_pe_num)
-> -			return NULL;
-> -	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
-> +	for (pe = phb->ioda.total_pe_num - 1; pe >= 0; pe--) {
-> +		if (!test_and_set_bit(pe, phb->ioda.pe_alloc))
-> +			return pnv_ioda_init_pe(phb, pe);
-> +	}
->
-> -	return pnv_ioda_init_pe(phb, pe);
-> +	return NULL;
->   }
->
->   static void pnv_ioda_free_pe(struct pnv_ioda_pe *pe)
->
+This patch seems to be doing way too many things, hard to follow.
+
+Could you please split the patch into smaller chunks? For example (you can 
+do it totally different):
+- move pnv_pci_ioda_setup_opal_tce_kill()
+- move PE creation from pnv_pci_ioda_fixup() to pnv_pci_setup_bridge();
+- add pnv_pci_fixup_bridge_resources()
+- add an extra reserved PE for the root bus (and all this magic with 
+root_pe_idx/root_pe_populated)
+- ...
+
+
 
 
 -- 
