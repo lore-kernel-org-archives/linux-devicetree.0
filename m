@@ -1,129 +1,136 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: Re: [PATCH v2 3/3] mmc: usdhi6rol0: add pinctrl to set pin drive
- strength
-Date: Tue, 19 Apr 2016 10:10:42 +0000
-Message-ID: <8190F2E9-1F0C-4A33-90AF-7C594F2EB997@axis.com>
-References: <cover.1460986983.git.larper@axis.com>
-	<181127e4ec8bbfbf0f80018ff157b59d63597c44.1460986983.git.larper@axis.com>,<CAPDyKFo60PBkOtLRyuDBHVh+LB_d0vcATSuTMu4TWeLsWgQVSw@mail.gmail.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Tue, 19 Apr 2016 15:31:11 +0530
+Message-ID: <571601E7.2000901@nvidia.com>
+References: <20160331185945.GT2350@sirena.org.uk> <56FD7379.2000307@nvidia.com> <20160331192227.GU2350@sirena.org.uk> <56FD7F07.7010404@nvidia.com> <20160331203942.GV2350@sirena.org.uk> <56FE2009.4020302@nvidia.com> <20160401161121.GZ2350@sirena.org.uk> <570370E5.3070901@nvidia.com> <20160412010226.GO3351@sirena.org.uk> <570CF822.4050002@nvidia.com> <20160413065310.GK14664@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFo60PBkOtLRyuDBHVh+LB_d0vcATSuTMu4TWeLsWgQVSw@mail.gmail.com>
-Content-Language: sv-SE
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?Q?Pawe=B3_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160413065310.GK14664@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
 
-> 19 apr. 2016 at 11:45 Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> 
->> On 18 April 2016 at 15:44, Lars Persson <lars.persson@axis.com> wrote:
->> Some boards need different pin drive strength for the UHS mode. Add an
->> optional pinctrl setting with two pin states covering UHS speeds and
->> other speeds.
->> 
->> Signed-off-by: Lars Persson <larper@axis.com>
->> ---
->> drivers/mmc/host/usdhi6rol0.c | 40 +++++++++++++++++++++++++++++++++++++++-
->> 1 file changed, 39 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
->> index 2585ea4..e8a5c8f 100644
->> --- a/drivers/mmc/host/usdhi6rol0.c
->> +++ b/drivers/mmc/host/usdhi6rol0.c
->> @@ -22,6 +22,7 @@
->> #include <linux/mmc/sdio.h>
->> #include <linux/module.h>
->> #include <linux/pagemap.h>
->> +#include <linux/pinctrl/consumer.h>
->> #include <linux/platform_device.h>
->> #include <linux/scatterlist.h>
->> #include <linux/string.h>
->> @@ -198,6 +199,11 @@ struct usdhi6_host {
->>        struct dma_chan *chan_rx;
->>        struct dma_chan *chan_tx;
->>        bool dma_active;
->> +
->> +       /* Pin control */
->> +       struct pinctrl *pinctrl;
->> +       struct pinctrl_state *pins_default;
->> +       struct pinctrl_state *pins_uhs;
->> };
->> 
->> /*                     I/O primitives                                  */
->> @@ -1147,14 +1153,39 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
->>        }
->> }
->> 
->> +static int usdhi6_set_pinstates(struct usdhi6_host *host, int voltage)
->> +{
->> +       if (IS_ERR(host->pinctrl) || IS_ERR(host->pins_default) ||
->> +           IS_ERR(host->pins_uhs))
-> 
-> So this means, if you have UHS support you need both default and uhs
-> pins. That makes sense but it's not according to the DT documentation
-> in patch 1/3.
+On Wednesday 13 April 2016 12:23 PM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+>
+> On Tue, Apr 12, 2016 at 06:59:06PM +0530, Laxman Dewangan wrote:
+>
+>> I have put my understanding based on datasheet and observation but i=
+t seems
+>> I am missing some important information which is making difficult to
+>> understand further here.
+>> We are not crossing the maximum limit of the load on the rail per da=
+tasheet.
+>> We just changed the output capacitor in the platforms and saw deviat=
+ion.
+> Well, we might be hitting an inrush limit as we attempt to ramp the
+> voltage up.
 
-No. It means that if this particular board requires distinct settings for UHS then both pin states need to be defined. Otherwise we assume that the default settings are fine also for UHS.
+Yes, and Maxim said that once this is there, there is no way to=20
+calculate the actual ramp time. It just say that ramp will not meet the=
+=20
+advertised value but there is no equation or anything to get the actual=
+=20
+ramp time. :-(
 
-> 
->> +               return 0;
->> +
->> +       switch (voltage) {
->> +       case MMC_SIGNAL_VOLTAGE_180:
->> +       case MMC_SIGNAL_VOLTAGE_120:
->> +               return pinctrl_select_state(host->pinctrl,
->> +                                           host->pins_uhs);
->> +
->> +       default:
->> +               return pinctrl_select_state(host->pinctrl,
->> +                                           host->pins_default);
->> +       }
->> +}
->> +
->> static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
->> {
->>        int ret;
->> 
->>        ret = mmc_regulator_set_vqmmc(mmc, ios);
-> 
-> What if you don't have pins for default and uhs state? Should you
-> verify that's the case before deciding to switch voltage
 
-No see my reply above.
 
-> 
->> 
->> -       if (ret < 0)
->> +       if (ret < 0) {
->>                dev_warn(mmc_dev(mmc), "Voltage switch failed: %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       ret = usdhi6_set_pinstates(mmc_priv(mmc), ios->signal_voltage);
->> +       if (ret)
->> +               dev_warn_once(mmc_dev(mmc),
->> +                             "Failed to set pinstate err=%d\n", ret);
->> 
->>        return ret;
->> }
->> @@ -1817,6 +1848,13 @@ static int usdhi6_probe(struct platform_device *pdev)
->>                mmc->f_max = host->imclk;
->>        mmc->f_min = host->imclk / 512;
->> 
->> +       host->pinctrl = devm_pinctrl_get(&pdev->dev);
->> +       if (!IS_ERR(host->pinctrl)) {
->> +               host->pins_default = pinctrl_lookup_state(host->pinctrl,
->> +                                                         PINCTRL_STATE_DEFAULT);
-> 
-> According to the DT documentation in patch 1/3, the default pins
-> should be required and not optional. I assume you want them to be
-> optional, but required when supporting UHS, right?
+>
+>> I think I need to go again to Vendor to find out that why changing o=
+f
+>> capacitor making the deviation in ramp delay and what is the relatio=
+n.
+>> Probably, that may help here.
+> Possibly.  It did also occur to me last night that having a Maxim
+> specific property which lets you specify a raw register value to
+> configure in cases where the board goes out of spec (as opposed to a
+> time which could be left specified as the real value) might solve the
+> problem without being too terrible from an interface point of view,
+> though something that's directly obvious from the schematic would be
+> much better.
 
-Yes the default is required only when a UHS pin state is defined. Hence all the pinctrl parameters are listed as optional, but the presence of a pinctrl-names parameter makes the default pins required.
+We had discussion with maxim and he pointed us the datasheet for=20
+descriptions and helped on some query:
 
-Thanks.
+/*
+Note 20. During a soft-start event or a DVS transition, the regulators=20
+output current will increase by COUT*dV/dt. In the event that the load=20
+current plus the additional current imposed by the soft-start or DVS=20
+transition, reach the regulator=C2=92s current limit, the current limit=
+ will=20
+be enforced. When the current limit is enforced, the advertised=20
+transition rate (dV/dt) will not occur.
+---
+13.4 Soft-Start and Dynamic Voltage Scaling
+The linear regulators have a programmable soft-start rate. When a linea=
+r=20
+regulator is enabled, the output voltage ramps to its final voltage at =
+a=20
+slew rate of either 5mV/=C2=B5s or 100mV/=C2=B5s, depending on the stat=
+e of the=20
+SS_Lx bit.
+The 5mV/=C2=B5s ramp rate limits the input inrush current to around 10m=
+A on a=20
+300mA regulator with a 2.2=C2=B5F output capacitor and no load. The 100=
+mV/=C2=B5s=20
+ramp rate results in a 200mA inrush current on a 300mA regulator with a=
+=20
+2.2=C2=B5F output capacitor and no load, but achieves regulation within=
+ 50=C2=B5s.=20
+The soft-start ramp rate is also the rate of change at the output when=20
+changing dynamically between two output voltages while enabled (dynamic=
+=20
+voltage scaling: DVS).
+The LDO soft-start circuitry supports starting into a pre-biased output=
+=2E=20
+=46or example, if the output capacitor has an initial voltage of 0.4V w=
+hen=20
+the regulator is enabled, the regulator gracefully increases the=20
+capacitor voltage to the required target voltage such as 1.2V. This is=20
+unlike other regulators without the start into pre-bias feature where=20
+they may force the output capacitor voltage to 0V before the soft-start=
+=20
+ramp begins.
+During a soft-start event or a DVS transition, the regulators output=20
+current will increase by COUT*dV/dt. In the event that the load current=
+=20
+plus the additional current imposed by the soft-start or DVS transition=
+,=20
+reach the regulator=C2=92s current limit, the current limit will be enf=
+orced.=20
+When the current limit is enforced, the advertised transition rate=20
+(dV/dt) will not occur.
+*/
 
-- Lars
+We have more capacitance on the board and this increases the current at=
+=20
+power up. If we are within the specs for the LDO current then you will=20
+notice that Maxim specs are guaranteed. However, Maxim does not=20
+guarantee the timings in case current exceeds the LDO specs. In this=20
+case because of the larger capacitances the currents seen by the LDO is=
+=20
+much more and hence Maxim device enforces current limit. When the=20
+current limit is enforced then the dv/dt will be different than what is=
+ set.
+
+Some more query to help SW interface:
+Q: Is there any mechanism where we can derive ramp rate based on maximu=
+m=20
+load or capacitor or inrush current?
+Ans: No. Since the LDO imposes the current limit the standard formula=20
+doesn=C2=92t hold correct. That=C2=92s the reason Maxim in their datash=
+eet has=20
+mentioned that the advertised rate will not occur.
+
+
+So based on this, when platform does not have the advertised ramp, we=20
+need to have:
+Maxim specific property for register configurations and do not allow ru=
+n=20
+time changes as this does not hold correctly.
