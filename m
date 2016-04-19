@@ -1,243 +1,108 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v1 1/1] add missing UARTs pins for AllWinner
- H3 DTS + add new I2C entries for AllWinner H3 DTS
-Date: Tue, 19 Apr 2016 19:11:21 +0800
-Message-ID: <CAGb2v67e_F1=VaY7ovzW7Whc2ToJU3YabeT-orrLTb0Pouhw_Q@mail.gmail.com>
-References: <8673D89D449742EAB9F6EBD05655A295@GirolesWin7>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
+Date: Tue, 19 Apr 2016 13:18:14 +0200
+Message-ID: <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
+References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
+ <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4NE3C4AKGQEW4MZI2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <8673D89D449742EAB9F6EBD05655A295@GirolesWin7>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Martin Ayotte <martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Jean=2DFran=C3=A7ois_Moine?= <moinejf-GANU6spQydw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5715FCE8.7080106-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Ollivier
 
-On Sat, Apr 16, 2016 at 1:11 AM, Martin Ayotte <martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi everyone,
->
-> This patch is submit to provide endusers access to additional UARTs on
-> AllWinner H3 SoC along with I2C ports.
->
-> Regards,
-> Martin.
-> ---
->  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts  | 36 ++++++++++++++
->  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 36 ++++++++++++++
->  arch/arm/boot/dts/sun8i-h3.dtsi            | 75
+Sorry to not reply to the patches, but I am not subscribed to linux-leds
 
-First of all, you are touching 3 different files here. These should
-be separate patches.
+Regarding:
+[PATCH 2/6] leds: pca963x: Lock i2c r/w access
 
-Secondly, our policy is to not have a default function for generic GPIO pins.
+I am not sure why this patch is needed. the only thing that should be
+protected is the write to ledout.
+
+It seems that mode2 needs to be set to PCA963X_MODE2_DMBLNK, or at
+least, the driver never clears that bit. Couldnt we just set it at
+probe time and remove the read/write of it? I do not have the hardware
+at the moment, so it should be something that you need to test.
+
+[PATCH 4/6] leds: pca963x: Reduce magic values
+Maybe you want to create the inverse macro of PCA963X_LEDOUT_LDR, so
+you can do something linke
+
+PCA963X_LEDOUT_LDR_INV(ledout, pca963x->led_num) != PCA963X_LEDOUT_LED_GRP_PWM
 
 
-Regards
-ChenYu
+[PATCH 3/6] leds: pca963x: Add defines and remove some magic values
 
-> ++++++++++++++++++++++++++++++
->  3 files changed, 147 insertions(+)
+I am not big fan of defining things that are not used. and the magic
+assigment to n_leds is perfectly fine IMHO
+
+For PCA963X_LEDOUT_LDR.  Do not forget the parenthesis around led_num.
+Also replace %4 with &3 to be consisten.t
+
+Regards!
+
+On Tue, Apr 19, 2016 at 11:39 AM, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org> wrote:
+> On 19-04-16 11:23, Jacek Anaszewski wrote:
+>>
+>> Hi Olliver,
+>>
+>> Thanks for the patches.
+>> Adding driver authors on cc.
 >
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> index f93f5d1..f0b9823 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> @@ -176,6 +176,42 @@
->         status = "okay";
->  };
+> Ah sorry about that, thanks. I guess get_maintainers doesn't do that.
 >
-> +&uart1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart1_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart2_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&uart3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart3_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c0_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c1_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c2_pins_a>;
-> +       status = "okay";
-> +};
-> +
->  &usb1_vbus_pin_a {
->         allwinner,pins = "PG13";
->  };
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-> b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-> index daf50b9a6..6994349 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-> @@ -161,6 +161,42 @@
->         status = "okay";
->  };
+> As for the compile bug, I'll fix that with v2, it only applies on the
+> intermediate patches, not on the whole set.
 >
-> +&uart1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart1_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart2_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&uart3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart3_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c0_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c1_pins_a>;
-> +       status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c2_pins_a>;
-> +       status = "okay";
-> +};
-> +
->  &usbphy {
->         /* USB VBUS is always on */
->         status = "okay";
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi
-> b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 4a4926b..c947360d 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -508,6 +508,48 @@
->                                 allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->                         };
+> Olliver
 >
-> +                       uart1_pins_a: uart1@0 {
-> +                               allwinner,pins = "PG6", "PG7";
-> +                               allwinner,function = "uart1";
-> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +                       };
-> +
-> +                       uart2_pins_a: uart2@0 {
-> +                               allwinner,pins = "PA0", "PA1";
-> +                               allwinner,function = "uart2";
-> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +                       };
-> +
-> +                       uart3_pins_a: uart3@0 {
-> +                               allwinner,pins = "PA13", "PA14";
-> +                               allwinner,function = "uart3";
-> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +                       };
-> +
-> +                       i2c0_pins_a: i2c0@0 {
-> +                               allwinner,pins = "PA11", "PA12";
-> +                               allwinner,function = "i2c0";
-> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +                       };
-> +
-> +                       i2c1_pins_a: i2c1@0 {
-> +                               allwinner,pins = "PA18", "PA19";
-> +                               allwinner,function = "i2c1";
-> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +                       };
-> +
-> +                       i2c2_pins_a: i2c2@0 {
-> +                               allwinner,pins = "PE12", "PE13";
-> +                               allwinner,function = "i2c2";
-> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +                               allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +                       };
-> +
->                         mmc0_pins_a: mmc0@0 {
->                                 allwinner,pins = "PF0", "PF1", "PF2", "PF3",
->                                                  "PF4", "PF5";
-> @@ -626,6 +668,39 @@
->                         status = "disabled";
->                 };
+>>
+>> On 04/19/2016 09:40 AM, Olliver Schinagl wrote:
+>>>
+>>> Using the pca963x for a while, I noticed something that may look like
+>>> some
+>>> i2c accessing issues where sometimes data was incorrectly written to the
+>>> bus,
+>>> possibly because we where not properly locking the i2c reads. Though I'm
+>>> not
+>>> familiar enough with the i2c framework to be certain reads need to be
+>>> locked
+>>> at all. A patch was added to properly lock i2c access more tightly.
+>>>
+>>> Furthermore there was no method to support inverted outputs. This series
+>>> adds a property to the device tree to inform the driver that the output
+>>> is inverted (active-high vs active-low).
+>>>
+>>> Additionally, this patch set does some cleanups to please checkpatch, and
+>>> removes a few magic values.
+>>>
+>>> Olliver Schinagl (6):
+>>>    leds: pca963x: Alphabetize headers
+>>>    leds: pca963x: Lock i2c r/w access
+>>>    leds: pca963x: Add defines and remove some magic values
+>>>    leds: pca963x: Reduce magic values
+>>>    leds: pca963x: Inform the output that it is inverted
+>>>    leds: pca963x: Remove whitespace and checkpatch problems
+>>>
+>>>   Documentation/devicetree/bindings/leds/pca963x.txt |   1 +
+>>>   drivers/leds/leds-pca963x.c                        | 243
+>>> ++++++++++++++-------
+>>>   include/linux/platform_data/leds-pca963x.h         |   1 +
+>>>   3 files changed, 171 insertions(+), 74 deletions(-)
+>>>
+>>
+>>
 >
-> +               i2c0: i2c@01c2ac00 {
-> +                       compatible = "allwinner,sun6i-a31-i2c";
-> +                       reg = <0x01c2ac00 0x400>;
-> +                       interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&bus_gates 96>;
-> +                       resets = <&apb2_rst 0>;
-> +                       status = "disabled";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +               };
-> +
-> +               i2c1: i2c@01c2b000 {
-> +                       compatible = "allwinner,sun6i-a31-i2c";
-> +                       reg = <0x01c2b000 0x400>;
-> +                       interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&bus_gates 97>;
-> +                       resets = <&apb2_rst 1>;
-> +                       status = "disabled";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +               };
-> +
-> +               i2c2: i2c@01c2b400 {
-> +                       compatible = "allwinner,sun6i-a31-i2c";
-> +                       reg = <0x01c2b400 0x400>;
-> +                       interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&bus_gates 98>;
-> +                       resets = <&apb2_rst 2>;
-> +                       status = "disabled";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +               };
-> +
->                 gic: interrupt-controller@01c81000 {
->                         compatible = "arm,cortex-a7-gic",
-> "arm,cortex-a15-gic";
->                         reg = <0x01c81000 0x1000>,
-> --
-> 2.7.4
->
+
+
+
+-- 
+Ricardo Ribalda
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
