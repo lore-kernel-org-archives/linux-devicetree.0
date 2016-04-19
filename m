@@ -1,48 +1,53 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 39/45] powerpc/powernv: Select OF_DYNAMIC
-Date: Tue, 19 Apr 2016 19:42:01 +1000
-Message-ID: <5715FD69.3060302@ozlabs.ru>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-40-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 1/3] mmc: dt: usdhi6rol0: add optional pinctrl binding
+Date: Tue, 19 Apr 2016 11:43:05 +0200
+Message-ID: <CAPDyKFq_9pv==9BFWCJSu6x9ncCP7ZzQRaArAvCD-Rr9eXaddg@mail.gmail.com>
+References: <cover.1460986983.git.larper@axis.com>
+	<0376e04a938f459cee9e1f80e1447e060ba7e497.1460986983.git.larper@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-40-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <0376e04a938f459cee9e1f80e1447e060ba7e497.1460986983.git.larper@axis.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2016 02:44 PM, Gavin Shan wrote:
-> The device tree will change dynamically in PowerNV PCI hotplug
-> driver. This enables CONFIG_OF_DYNAMIC to support that.
+On 18 April 2016 at 15:44, Lars Persson <lars.persson@axis.com> wrote:
+> Add a pinctrl binding to specify different pin settings for high speed
+> modes and UHS modes.
 >
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> Signed-off-by: Lars Persson <larper@axis.com>
 > ---
->   arch/powerpc/platforms/powernv/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/mmc/usdhi6rol0.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> diff --git a/arch/powerpc/platforms/powernv/Kconfig b/arch/powerpc/platforms/powernv/Kconfig
-> index 604190c..e7b1ad7 100644
-> --- a/arch/powerpc/platforms/powernv/Kconfig
-> +++ b/arch/powerpc/platforms/powernv/Kconfig
-> @@ -18,6 +18,7 @@ config PPC_POWERNV
->   	select CPU_FREQ_GOV_ONDEMAND
->   	select CPU_FREQ_GOV_CONSERVATIVE
->   	select PPC_DOORBELL
-> +	select OF_DYNAMIC
-
-
-Why not to enable it in 45/45 under config HOTPLUG_PCI_POWERNV? Is there 
-any benefit of having it always on if HOTPLUG_PCI_POWERNV is not enabled?
-
-
->   	default y
+> diff --git a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+> index 8babdaa..9dd9478 100644
+> --- a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+> +++ b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+> @@ -12,6 +12,10 @@ Optional properties:
 >
->   config OPAL_PRD
+>  - vmmc-supply: a phandle of a regulator, supplying Vcc to the card
+>  - vqmmc-supply:        a phandle of a regulator, supplying VccQ to the card
+> +- pinctrl-names: Must contain a "default" entry and optionally a "pins_uhs"
+
+"state_uhs" is becoming more and more widely deployed, I suggest you
+use that as well.
+
+Moreover, I am reviewing patch 3/3 and I think some more clarification
+is needed here, on whether what is required and optional. See those
+comment on patch 3/3.
+
+> +                 entry for the UHS pin configuration.
+> +- pinctrl-N: One property for each name listed in pinctrl-names, see
+> +             ../pinctrl/pinctrl-bindings.txt.
+>
+>  Additionally any standard mmc bindings from mmc.txt can be used.
+>
+> --
+> 2.1.4
 >
 
-
--- 
-Alexey
+Kind regards
+Uffe
