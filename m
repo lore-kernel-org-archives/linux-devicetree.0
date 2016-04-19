@@ -1,31 +1,34 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] fdt: fix extend of cmd line
-Date: Tue, 19 Apr 2016 16:30:59 -0500
-Message-ID: <CAL_JsqLKjMaHc8NCrDtCucRdJBk0qWp7uZxvRioSsQGfrwcBRA@mail.gmail.com>
-References: <1460541136-18385-1-git-send-email-muvarov@gmail.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: [PATCH 0/2 v3] fsl-mc binding and device tree updates
+Date: Tue, 19 Apr 2016 16:43:27 -0500
+Message-ID: <1461102207-13263-1-git-send-email-stuart.yoder@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460541136-18385-1-git-send-email-muvarov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Max Uvarov <muvarov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, german.rivera@freescale.com, linux-kernel@vger.kernel.org, shawnguo@kernel.org, Stuart Yoder <stuart.yoder@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 4:52 AM, Max Uvarov <muvarov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On arm CONFIG_CMDLINE_EXTEND does not append build-in
-> cmdline in kernel to U-boot parameters. Fix it here.
-> Theoretically this patch should repair kdump work where
-> it adds elfcorehdr= and memmap additional parameters
-> to second kernel.
->
-> Signed-off-by: Max Uvarov <muvarov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This patch series adds a few missing things from the binding
+for the fsl-mc node on the ls2080a Soc-- msi-parent, ranges,
+dpmac definition.  The ls2080a device tree is updated to
+reflect the binding updates.
 
-Applied, thanks. There was some work to standardize these config
-options across architectures, but it seems that stalled.
+-v3
+   -updated dpmac unit addresses to be in hex, to match the
+    reg property
+-v2
+   -added ack to binding patch
+   -updated whitespace and comment in dts patch
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stuart Yoder (2):
+  Documentation: fsl-mc: binding updates for MSIs, ranges, PHYs
+  arm64: dts: ls2080a: fsl-mc dt node updates
+
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 81 +++++++++++++++++-
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     | 98 ++++++++++++++++++++++
+ 2 files changed, 178 insertions(+), 1 deletion(-)
+
+-- 
+1.9.0
