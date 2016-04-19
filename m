@@ -1,55 +1,85 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Tue, 19 Apr 2016 16:47:40 +0100
-Message-ID: <20160419154740.GX3217@sirena.org.uk>
-References: <20160331203942.GV2350@sirena.org.uk>
- <56FE2009.4020302@nvidia.com>
- <20160401161121.GZ2350@sirena.org.uk>
- <570370E5.3070901@nvidia.com>
- <20160412010226.GO3351@sirena.org.uk>
- <570CF822.4050002@nvidia.com>
- <20160413065310.GK14664@sirena.org.uk>
- <571601E7.2000901@nvidia.com>
- <20160419105545.GT3217@sirena.org.uk>
- <57160EDB.5040704@nvidia.com>
+From: Crestez Dan Leonard <leonard.crestez@intel.com>
+Subject: Re: [PATCH v6 08/24] iio: imu: inv_mpu6050: convert to use an
+ explicit i2c mux core
+Date: Tue, 19 Apr 2016 18:58:11 +0300
+Message-ID: <57165593.4040700@intel.com>
+References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
+ <1459673574-11440-9-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FxQkOwrLuQ+yAGv2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57160EDB.5040704@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1459673574-11440-9-git-send-email-peda@lysator.liu.se>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Rosin <peda@lysator.liu.se>, linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Mat
 List-Id: devicetree@vger.kernel.org
 
+On 04/03/2016 11:52 AM, Peter Rosin wrote:
+> From: Peter Rosin <peda@axentia.se>
+> 
+> Allocate an explicit i2c mux core to handle parent and child adapters
+> etc. Update the select/deselect ops to be in terms of the i2c mux core
+> instead of the child adapter.
+> 
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c
+> @@ -136,16 +133,15 @@ static int inv_mpu_probe(struct i2c_client *client,
+>  		return result;
+>  
+>  	st = iio_priv(dev_get_drvdata(&client->dev));
+> -	st->mux_adapter = i2c_add_mux_adapter(client->adapter,
+> -					      &client->dev,
+> -					      client,
+> -					      0, 0, 0,
+> -					      inv_mpu6050_select_bypass,
+> -					      inv_mpu6050_deselect_bypass);
+> -	if (!st->mux_adapter) {
+> -		result = -ENODEV;
+> +	st->muxc = i2c_mux_one_adapter(client->adapter, &client->dev, 0, 0,
+> +				       0, 0, 0,
+> +				       inv_mpu6050_select_bypass,
+> +				       inv_mpu6050_deselect_bypass);
+> +	if (IS_ERR(st->muxc)) {
+> +		result = PTR_ERR(st->muxc);
+>  		goto out_unreg_device;
+>  	}
+> +	st->muxc->priv = client;
 
---FxQkOwrLuQ+yAGv2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I just tested this patch on mpu9150 (combo mpu6050+ak8975) and I got a
+crash on probe which looks sort of like this:
 
-On Tue, Apr 19, 2016 at 04:26:27PM +0530, Laxman Dewangan wrote:
+[    5.565374] RIP: 0010:[<ffffffff81481aed>] [<ffffffff81481aed>]
+mutex_lock+0xd/0x30
+[    5.565374] Call Trace:
+[    5.565374]  [<ffffffff813be34c>] inv_mpu6050_select_bypass+0x1c/0xa0
+...
+[    5.565374]  [<ffffffff81392141>] i2c_transfer+0x51/0x90
+...
+[    5.565374]  [<ffffffff81392cb5>] i2c_smbus_read_i2c_block_data+0x45/0xd0
+[    5.565374]  [<ffffffff813bec5a>] ak8975_probe+0x14a/0x5c0
+...
+[    5.565374]  [<ffffffff813933d8>] i2c_new_device+0x178/0x1e0
+[    5.565374]  [<ffffffff8139362d>] of_i2c_register_device+0xdd/0x1a0
+[    5.565374]  [<ffffffff8139372b>] of_i2c_register_devices+0x3b/0x60
+[    5.565374]  [<ffffffff81393e88>] i2c_register_adapter+0x178/0x410
+[    5.565374]  [<ffffffff81394203>] i2c_add_adapter+0x73/0x90
+[    5.565374]  [<ffffffff81395f3d>] i2c_mux_add_adapter+0x2ed/0x400
+[    5.565374]  [<ffffffff81396091>] i2c_mux_one_adapter+0x41/0x70
+[    5.565374]  [<ffffffff813be48a>] inv_mpu_probe+0xba/0x1a0
 
-> Now, for property, I will add
->  maxim,ramp-delay
+This happens because muxc->priv is not initialized when probing devices
+behind the mux as described by devicetree. This can be easily fixed by
+using muxc->dev instead of muxc->priv, or perhaps by calling
+i2c_mux_alloc, initializing priv and later doing i2c_mux_add_adapter.
 
-Please call it something that makes it obvious that it's a register
-value rather than a time like ramp-setting or something.
+These fixes are driver-specific and other drivers might experience
+similar issues. Perhaps i2c_mux_one_adapter should take void *priv just
+like old i2c_add_mux_adapter?
 
---FxQkOwrLuQ+yAGv2
-Content-Type: application/pgp-signature; name="signature.asc"
+After I fix this locally the deadlock when reading from both devices no
+longer happens.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXFlMbAAoJECTWi3JdVIfQj1UH/RWMpznIXxCCNwjWDFau9Tro
-mLP8E98ztEEAD9LPmfL/KRtMG8mACP6oSrfPSJCFzF/E499uVc3ZRUEgKyRLVEbo
-tNwk20csaJRqVPoLeASse+ssgjce20mCrc71NxI5iMA5UeNFjs/AN6wdVSDvgbOJ
-FU8hdmmFa49tK92R6CQZSce9tUl1ShdfXKlY7s7lpoaDPVcy0CioRMS8b44bz2C+
-2uBJEsLVTwaZBnWy1+AHE7XUNSwSKCyOr1dB/7XM8QHxjmh9rpUQWWQtGDajwLLj
-hwTD9CfH5H64pIyeoaCNlver3ClfXz2iR0IAShEdCHAitGNoGO9G1f3CZs2l3/Q=
-=eXtD
------END PGP SIGNATURE-----
-
---FxQkOwrLuQ+yAGv2--
+--
+Regards,
+Leonard
