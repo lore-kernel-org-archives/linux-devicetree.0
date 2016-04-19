@@ -1,67 +1,55 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] of/overlay: add of overlay notifications
-Date: Tue, 19 Apr 2016 16:13:58 -0500
-Message-ID: <CAL_JsqKLLOPfy8Psxgq7uOuy09+vj4K2jnoU+iZspfgou5ui4g@mail.gmail.com>
-References: <1457017841-20141-1-git-send-email-atull@opensource.altera.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v1] ARM: dts: omap3-n900: Specify peripherals LDO
+ regulators initial mode
+Date: Tue, 19 Apr 2016 17:18:33 -0400
+Message-ID: <CABxcv=kT5TM1dtK-GXH+XM-DtWpraReirootKSLddQPz4ft1EA@mail.gmail.com>
+References: <20160417122933.GA8093@earth>
+	<1460903363-2197-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457017841-20141-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <1460903363-2197-1-git-send-email-ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 3, 2016 at 9:10 AM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> This patch add of overlay notifications.
+Hello Ivaylo,
+
+On Sun, Apr 17, 2016 at 10:29 AM, Ivaylo Dimitrov
+<ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Without that, regulators are left in the mode last set by the bootloader or
+> by the kernel the device was rebooted from. This leads to various problems,
+> like non-working peripherals.
 >
-> When DT overlays are being added, some drivers/subsystems
-> need to see device tree overlays before the changes go into
-> the live tree.
->
-> This is distinct from reconfig notifiers that are
-> post-apply or post-remove and which issue very granular
-> notifications without providing access to the context
-> of a whole overlay.
->
-> The following 4 notificatons are issued:
->   OF_OVERLAY_PRE_APPLY
->   OF_OVERLAY_POST_APPLY
->   OF_OVERLAY_PRE_REMOVE
->   OF_OVERLAY_POST_REMOVE
->
-> In the case of pre-apply notification, if the notifier
-> returns error, the overlay will be rejected.
->
-> This patch exports two functions for registering/unregistering
-> notifications:
->   of_overlay_notifier_register(struct notifier_block *nb)
->   of_overlay_notifier_unregister(struct notifier_block *nb)
->
-> The of_mutex is held during these notifications. The
-> notification data includes pointers to the overlay target
-> and the overlay:
->
-> struct of_overlay_notify_data {
->        struct device_node *overlay;
->        struct device_node *target;
-> };
->
-> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> v2: add missing 'static inline' in of.h
-> v3: fix build for !OF_OVERLAY in of.h
->     add a note in the header that the of_mutex is held
-> ---
->  drivers/of/overlay.c |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
->  include/linux/of.h   |   25 +++++++++++++++++++++++++
->  2 files changed, 71 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/omap3-n900.dts | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+> index b3c26a9..d9e2d9c 100644
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -329,6 +329,7 @@
+>         regulator-name = "V28";
+>         regulator-min-microvolt = <2800000>;
+>         regulator-max-microvolt = <2800000>;
+> +       regulator-initial-mode = <0x0e>; /* RES_STATE_ACTIVE */
 
-This looks fine to me, but apply it when you have a user.
+As Sebastian said, it would be nice if instead of magic numbers +
+comments, we have defines for the modes by moving the definitions from
+include/linux/i2c/twl.h to include/dt-bindings/regulator/ so they can
+be used by DTS.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+But that can be done as a follow-up though, to avoid adding a
+dependency between the regulator and arm-soc subsystems to get this
+fix applied.
 
-Rob
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
