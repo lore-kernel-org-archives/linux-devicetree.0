@@ -1,44 +1,129 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 08/19] ARM: sun5i: Add DRAM gates
-Date: Tue, 19 Apr 2016 12:02:39 +0200
-Message-ID: <20160419100239.GD26050@lukather>
-References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-9-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Lars Persson <lars.persson@axis.com>
+Subject: Re: [PATCH v2 3/3] mmc: usdhi6rol0: add pinctrl to set pin drive
+ strength
+Date: Tue, 19 Apr 2016 10:10:42 +0000
+Message-ID: <8190F2E9-1F0C-4A33-90AF-7C594F2EB997@axis.com>
+References: <cover.1460986983.git.larper@axis.com>
+	<181127e4ec8bbfbf0f80018ff157b59d63597c44.1460986983.git.larper@axis.com>,<CAPDyKFo60PBkOtLRyuDBHVh+LB_d0vcATSuTMu4TWeLsWgQVSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="llIrKcgUOe3dCx0c"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSUE3C4AKGQE5SRL32I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1458751122-23976-9-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo60PBkOtLRyuDBHVh+LB_d0vcATSuTMu4TWeLsWgQVSw@mail.gmail.com>
+Content-Language: sv-SE
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?Q?Pawe=B3_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---llIrKcgUOe3dCx0c
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-On Wed, Mar 23, 2016 at 05:38:31PM +0100, Maxime Ripard wrote:
-> The DRAM gates control whether the image / display devices on the SoC have
-> access to the DRAM clock or not.
+> 19 apr. 2016 at 11:45 Ulf Hansson <ulf.hansson@linaro.org> wrote:
 > 
-> Enable it.
+>> On 18 April 2016 at 15:44, Lars Persson <lars.persson@axis.com> wrote:
+>> Some boards need different pin drive strength for the UHS mode. Add an
+>> optional pinctrl setting with two pin states covering UHS speeds and
+>> other speeds.
+>> 
+>> Signed-off-by: Lars Persson <larper@axis.com>
+>> ---
+>> drivers/mmc/host/usdhi6rol0.c | 40 +++++++++++++++++++++++++++++++++++++++-
+>> 1 file changed, 39 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
+>> index 2585ea4..e8a5c8f 100644
+>> --- a/drivers/mmc/host/usdhi6rol0.c
+>> +++ b/drivers/mmc/host/usdhi6rol0.c
+>> @@ -22,6 +22,7 @@
+>> #include <linux/mmc/sdio.h>
+>> #include <linux/module.h>
+>> #include <linux/pagemap.h>
+>> +#include <linux/pinctrl/consumer.h>
+>> #include <linux/platform_device.h>
+>> #include <linux/scatterlist.h>
+>> #include <linux/string.h>
+>> @@ -198,6 +199,11 @@ struct usdhi6_host {
+>>        struct dma_chan *chan_rx;
+>>        struct dma_chan *chan_tx;
+>>        bool dma_active;
+>> +
+>> +       /* Pin control */
+>> +       struct pinctrl *pinctrl;
+>> +       struct pinctrl_state *pins_default;
+>> +       struct pinctrl_state *pins_uhs;
+>> };
+>> 
+>> /*                     I/O primitives                                  */
+>> @@ -1147,14 +1153,39 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
+>>        }
+>> }
+>> 
+>> +static int usdhi6_set_pinstates(struct usdhi6_host *host, int voltage)
+>> +{
+>> +       if (IS_ERR(host->pinctrl) || IS_ERR(host->pins_default) ||
+>> +           IS_ERR(host->pins_uhs))
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> So this means, if you have UHS support you need both default and uhs
+> pins. That makes sense but it's not according to the DT documentation
+> in patch 1/3.
 
-Applied,
-Maxime
+No. It means that if this particular board requires distinct settings for UHS then both pin states need to be defined. Otherwise we assume that the default settings are fine also for UHS.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---llIrKcgUOe3dCx0c--
+> 
+>> +               return 0;
+>> +
+>> +       switch (voltage) {
+>> +       case MMC_SIGNAL_VOLTAGE_180:
+>> +       case MMC_SIGNAL_VOLTAGE_120:
+>> +               return pinctrl_select_state(host->pinctrl,
+>> +                                           host->pins_uhs);
+>> +
+>> +       default:
+>> +               return pinctrl_select_state(host->pinctrl,
+>> +                                           host->pins_default);
+>> +       }
+>> +}
+>> +
+>> static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
+>> {
+>>        int ret;
+>> 
+>>        ret = mmc_regulator_set_vqmmc(mmc, ios);
+> 
+> What if you don't have pins for default and uhs state? Should you
+> verify that's the case before deciding to switch voltage
+
+No see my reply above.
+
+> 
+>> 
+>> -       if (ret < 0)
+>> +       if (ret < 0) {
+>>                dev_warn(mmc_dev(mmc), "Voltage switch failed: %d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret = usdhi6_set_pinstates(mmc_priv(mmc), ios->signal_voltage);
+>> +       if (ret)
+>> +               dev_warn_once(mmc_dev(mmc),
+>> +                             "Failed to set pinstate err=%d\n", ret);
+>> 
+>>        return ret;
+>> }
+>> @@ -1817,6 +1848,13 @@ static int usdhi6_probe(struct platform_device *pdev)
+>>                mmc->f_max = host->imclk;
+>>        mmc->f_min = host->imclk / 512;
+>> 
+>> +       host->pinctrl = devm_pinctrl_get(&pdev->dev);
+>> +       if (!IS_ERR(host->pinctrl)) {
+>> +               host->pins_default = pinctrl_lookup_state(host->pinctrl,
+>> +                                                         PINCTRL_STATE_DEFAULT);
+> 
+> According to the DT documentation in patch 1/3, the default pins
+> should be required and not optional. I assume you want them to be
+> optional, but required when supporting UHS, right?
+
+Yes the default is required only when a UHS pin state is defined. Hence all the pinctrl parameters are listed as optional, but the presence of a pinctrl-names parameter makes the default pins required.
+
+Thanks.
+
+- Lars
