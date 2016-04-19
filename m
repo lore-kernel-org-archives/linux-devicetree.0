@@ -1,41 +1,55 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] Documentation: power: reset: move gpio-{poweroff|restart}
- to proper place
-Date: Tue, 19 Apr 2016 10:19:38 +0200
-Message-ID: <CACRpkdZKS77CQpf5xQ4aA++jg6SH32BptoSbDCg0yugF4O0Jtw@mail.gmail.com>
-References: <1460476853-3306-1-git-send-email-wsa@the-dreams.de>
-	<CACRpkdaUj5w3zkjWVf1GML3reeDnRpT8avOPkRB6_qFXB6EGjw@mail.gmail.com>
-	<CAL_JsqKK1QmGdyae-P9SoP2-7JiLK1XCyskxbd-wrn+7CidMJw@mail.gmail.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v8 31/45] powerpc/pci: Don't scan empty slot
+Date: Tue, 19 Apr 2016 18:19:58 +1000
+Message-ID: <5715EA2E.4090105@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-32-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKK1QmGdyae-P9SoP2-7JiLK1XCyskxbd-wrn+7CidMJw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-32-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 15, 2016 at 6:53 PM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Apr 15, 2016 at 2:48 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Tue, Apr 12, 2016 at 6:00 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
->>
->>> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
->>>
->>> I did only find them after a fuzzy search, so let them be where one
->>> would expect them.
->>>
->>> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->>
->> I saw this the other day too I agree.
->> Sebastian: are you OK that I move this by committing the patch to the GPIO tree?
->> DT maintainers: OK?
+On 02/17/2016 02:44 PM, Gavin Shan wrote:
+> In hotplug case, function pci_add_pci_devices() is called to rescan
+> the specified PCI bus, which might not have any child devices. Access
+> to the PCI bus's child device node will cause kernel crash without
+> exception.
 >
-> Acked-by: Rob Herring <robh@kernel.org>
+> This adds one more check to skip scanning PCI bus that doesn't have
+> any subordinate devices from device-tree, in order to avoid kernel
+> crash.
 >
-> Seems like this should go thru my tree though, but I don't have the patch.
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 
-I have it merged in my tree, is is OK or shall I extract it and send
-it to you?
 
-Yours,
-Linus Walleij
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+
+
+> ---
+>   arch/powerpc/kernel/pci-hotplug.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
+> index 7929a1c..3628c38 100644
+> --- a/arch/powerpc/kernel/pci-hotplug.c
+> +++ b/arch/powerpc/kernel/pci-hotplug.c
+> @@ -120,7 +120,8 @@ void pci_add_pci_devices(struct pci_bus *bus)
+>   	if (mode == PCI_PROBE_DEVTREE) {
+>   		/* use ofdt-based probe */
+>   		of_rescan_bus(dn, bus);
+> -	} else if (mode == PCI_PROBE_NORMAL) {
+> +	} else if (mode == PCI_PROBE_NORMAL &&
+> +		   dn->child && PCI_DN(dn->child)) {
+>   		/*
+>   		 * Use legacy probe. In the partial hotplug case, we
+>   		 * probably have grandchildren devices unplugged. So
+>
+
+
+-- 
+Alexey
