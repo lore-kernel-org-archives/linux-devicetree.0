@@ -1,112 +1,262 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Tue, 19 Apr 2016 08:23:58 +0100
-Message-ID: <20160419072358.GB3222@x1>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1>
- <57111E8B.1040503@opensource.altera.com>
- <20160418074540.GB3346@x1>
- <5714F942.5040309@opensource.altera.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V4 2/2] thermal: generic-adc: Add ADC based thermal sensor driver
+Date: Tue, 19 Apr 2016 12:52:01 +0530
+Message-ID: <1461050521-6080-2-git-send-email-ldewangan@nvidia.com>
+References: <1461050521-6080-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5714F942.5040309@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461050521-6080-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, robh@kernel.org, edubezval@gmail.com, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Apr 2016, Thor Thayer wrote:
+In some of platform, thermal sensors like NCT thermistors are
+connected to the one of ADC channel. The temperature is read by
+reading the voltage across the sensor resistance via ADC. Lookup
+table for ADC read value to temperature is referred to get
+temperature. ADC is read via IIO framework.
 
-> Hi Lee,
->=20
-> On 04/18/2016 02:45 AM, Lee Jones wrote:
-> >On Fri, 15 Apr 2016, Thor Thayer wrote:
-> >>On 03/30/2016 06:35 AM, Lee Jones wrote:
-> >>>On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
-> >>>
-> >>>>From: Thor Thayer <tthayer@opensource.altera.com>
-> >>>>
-> >>>>The Altera Arria10 Devkit System Resource chip is a Multi-Functio=
-n
-> >>>>Device, it has two subdevices:
-> >>>>      - GPIO
-> >>>>      - HWMON
-> >>>>
-> >>>>This patch adds documentation for the Altera A10-SR DT bindings.
-> >>>>
-> >>>>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> >>>>---
-> >>>>  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 +++++=
-+++++++++++++++
-> >>>>  1 file changed, 35 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/mfd/altera=
--a10sr.txt
-> >>>>
-> >>>>diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.t=
-xt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> >>>>new file mode 100644
-> >>>>index 0000000..564c761
-> >>>>--- /dev/null
-> >>>>+++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> >>>>@@ -0,0 +1,35 @@
-> >>>>+* Altera Arria10 Development Kit System Resource Chip
-> >>>>+
-> >>>>+Required parent device properties:
-> >>>>+- compatible : "altr,altr_a10sr"
-> >>>>+- spi-max-frequency : Maximum SPI frequency.
-> >>>>+- reg : the SPI Chip Select address for the Arria10 System Resou=
-rce chip
-> >
-> >[...]
-> >
-> >>>>+		a10sr_hwmon: a10sr_hwmon {
-> >>>
-> >>>Device type only please.
-> >>>
-> >>I need to revisit where this will live (hwmon does not seem to be
-> >>the correct place) so it will change but I can follow the format
-> >>above if it is correct.
-> >
-> >BTW, "hwmon" is a subsystem in Linux, therefore is a Linuxism and is
-> >not allowed in DT.  What does the device *actually* do?
-> >
->=20
-> OK. I'll be careful not to introduce the Linux subsystem name.
->=20
-> This module indicates whether the power supplies are at the correct
-> voltage. It uses a boolean instead of giving an actual voltage value
-> as required by HWMON. In other words it is a comparator instead of
-> an Analog-to-Digital Converter.
->=20
-> I could call it a power supply supervisor or voltage status monitor
-> but it only acts in a passive role. There is no output to trigger an
-> error - only polling, so supervisor doesn't seem like a good name.
->=20
-> Maybe something like this?
->=20
-> 	power_supply_status {
-> 		compatible =3D "altr,a10sr-hwmon";
-> 	}
->=20
-> Thanks for reviewing and helping me figure out the device tree naming=
-=2E
+Add support for thermal sensor driver which read the voltage across
+sensor resistance from ADC through IIO framework.
 
-Does it have its own address space?  How complex is the device?  Not
-very, by the sounds of it.  In which case, does it really need its own
-driver?
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+Changes from V1:
+- Use the two dimensional lookup table for temperature vs ADC value.
+- Use non devm_ for thermal zone sensor registration as there may be
+  race between IIO channel release and temperature read.
+
+Changes from V2:
+- None.
+
+Changes from V3:
+- Jonathan suggested to use the iio_channel_read_processed only. Making
+  changes accordingly.
+---
+ drivers/thermal/Kconfig               |  10 ++
+ drivers/thermal/Makefile              |   1 +
+ drivers/thermal/thermal-generic-adc.c | 182 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 193 insertions(+)
+ create mode 100644 drivers/thermal/thermal-generic-adc.c
+
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 594748e..d7d0136 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -400,4 +400,14 @@ config QCOM_SPMI_TEMP_ALARM
+ 	  real time die temperature if an ADC is present or an estimate of the
+ 	  temperature based upon the over temperature stage value.
+ 
++config GENERIC_ADC_THERMAL
++	tristate "Generic ADC based thermal sensor"
++	depends on IIO
++	help
++	  This enabled a thermal sysfs driver for the temperature sensor
++	  which is connected to the General Purpose ADC. The ADC channel
++	  is read via IIO framework and the channel information is provided
++	  to this driver. This driver reports the temperature by reading ADC
++	  channel and converts it to temperature based on lookup table.
++
+ endif
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index d64f7f7..904593a 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -49,3 +49,4 @@ obj-$(CONFIG_ST_THERMAL)	+= st/
+ obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra/
+ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+ obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
++obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
+diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/thermal-generic-adc.c
+new file mode 100644
+index 0000000..73f55d6
+--- /dev/null
++++ b/drivers/thermal/thermal-generic-adc.c
+@@ -0,0 +1,182 @@
++/*
++ * Generic ADC thermal driver
++ *
++ * Copyright (C) 2016 NVIDIA CORPORATION. All rights reserved.
++ *
++ * Author: Laxman Dewangan <ldewangan@nvidia.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/iio/consumer.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/thermal.h>
++
++struct gadc_thermal_info {
++	struct device *dev;
++	struct thermal_zone_device *tz_dev;
++	struct iio_channel *channel;
++	s32 *lookup_table;
++	int nlookup_table;
++};
++
++static int gadc_thermal_adc_to_temp(struct gadc_thermal_info *gti, int val)
++{
++	int temp, adc_hi, adc_lo;
++	int i;
++
++	for (i = 0; i < gti->nlookup_table; i++) {
++		if (val >= gti->lookup_table[2 * i + 1])
++			break;
++	}
++
++	if (i == 0) {
++		temp = gti->lookup_table[0];
++	} else if (i >= (gti->nlookup_table - 1)) {
++		temp = gti->lookup_table[2 * (gti->nlookup_table - 1)];
++	} else {
++		adc_hi = gti->lookup_table[2 * i - 1];
++		adc_lo = gti->lookup_table[2 * i + 1];
++		temp = gti->lookup_table[2 * i];
++		temp -= ((val - adc_lo) * 1000) / (adc_hi - adc_lo);
++	}
++
++	return temp;
++}
++
++static int gadc_thermal_get_temp(void *data, int *temp)
++{
++	struct gadc_thermal_info *gti = data;
++	int val;
++	int ret;
++
++	ret = iio_read_channel_processed(gti->channel, &val);
++	if (ret < 0) {
++		dev_err(gti->dev, "IIO channel read failed %d\n", ret);
++		return ret;
++	}
++	*temp = gadc_thermal_adc_to_temp(gti, val);
++
++	return 0;
++}
++
++static const struct thermal_zone_of_device_ops gadc_thermal_ops = {
++	.get_temp = gadc_thermal_get_temp,
++};
++
++static int gadc_thermal_read_linear_lookup_table(struct device *dev,
++						 struct gadc_thermal_info *gti)
++{
++	struct device_node *np = dev->of_node;
++	int ntable;
++	int ret;
++
++	ntable = of_property_count_elems_of_size(np, "temperature-lookup-table",
++						 sizeof(u32));
++	if (ntable < 0) {
++		dev_err(dev, "Lookup table is not provided\n");
++		return ntable;
++	}
++
++	if (ntable % 2) {
++		dev_err(dev, "Pair of temperature vs ADC read value missing\n");
++		return -EINVAL;
++	}
++
++	gti->lookup_table = devm_kzalloc(dev, sizeof(*gti->lookup_table) *
++					 ntable, GFP_KERNEL);
++	if (!gti->lookup_table)
++		return -ENOMEM;
++
++	ret = of_property_read_u32_array(np, "temperature-lookup-table",
++					 (u32 *)gti->lookup_table, ntable);
++	if (ret < 0) {
++		dev_err(dev, "Failed to read temperature lookup table: %d\n",
++			ret);
++		return ret;
++	}
++
++	gti->nlookup_table = ntable / 2;
++
++	return 0;
++}
++
++static int gadc_thermal_probe(struct platform_device *pdev)
++{
++	struct gadc_thermal_info *gti;
++	int ret;
++
++	if (!pdev->dev.of_node) {
++		dev_err(&pdev->dev, "Only DT based supported\n");
++		return -ENODEV;
++	}
++
++	gti = devm_kzalloc(&pdev->dev, sizeof(*gti), GFP_KERNEL);
++	if (!gti)
++		return -ENOMEM;
++
++	ret = gadc_thermal_read_linear_lookup_table(&pdev->dev, gti);
++	if (ret < 0)
++		return ret;
++
++	gti->dev = &pdev->dev;
++	platform_set_drvdata(pdev, gti);
++
++	gti->channel = iio_channel_get(&pdev->dev, "sensor-channel");
++	if (IS_ERR(gti->channel)) {
++		ret = PTR_ERR(gti->channel);
++		dev_err(&pdev->dev, "IIO channel not found: %d\n", ret);
++		return ret;
++	}
++
++	gti->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0,
++						      gti, &gadc_thermal_ops);
++	if (IS_ERR(gti->tz_dev)) {
++		ret = PTR_ERR(gti->tz_dev);
++		dev_err(&pdev->dev, "Thermal zone sensor register failed: %d\n",
++			ret);
++		goto sensor_fail;
++	}
++
++	return 0;
++
++sensor_fail:
++	iio_channel_release(gti->channel);
++
++	return ret;
++}
++
++static int gadc_thermal_remove(struct platform_device *pdev)
++{
++	struct gadc_thermal_info *gti = platform_get_drvdata(pdev);
++
++	thermal_zone_of_sensor_unregister(&pdev->dev, gti->tz_dev);
++	iio_channel_release(gti->channel);
++
++	return 0;
++}
++
++static const struct of_device_id of_adc_thermal_match[] = {
++	{ .compatible = "generic-adc-thermal", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_adc_thermal_match);
++
++static struct platform_driver gadc_thermal_driver = {
++	.driver = {
++		.name = "generic-adc-thermal",
++		.of_match_table = of_adc_thermal_match,
++	},
++	.probe = gadc_thermal_probe,
++	.remove = gadc_thermal_remove,
++};
++
++module_platform_driver(gadc_thermal_driver);
++
++MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
++MODULE_DESCRIPTION("Generic ADC thermal driver using IIO framework with DT");
++MODULE_LICENSE("GPL v2");
+-- 
+2.1.4
