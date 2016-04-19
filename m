@@ -1,130 +1,57 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 2/2] crypto: s5p-sss - Remove useless hash interrupt handler
-Date: Tue, 19 Apr 2016 15:44:12 +0200
-Message-ID: <1461073452-10426-2-git-send-email-k.kozlowski@samsung.com>
-References: <1461073452-10426-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1461073452-10426-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vladimir Zapolskiy <vz@mleia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
+ addresses
+Date: Tue, 19 Apr 2016 15:49:57 +0200
+Message-ID: <20160419134957.GA3814@katana>
+References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
+ <20160415080111.GD1714@lahna.fi.intel.com>
+ <1460992811.8946.22.camel@linux.intel.com>
+ <5714FCBE.3060009@metafoo.de>
+ <20160419124028.GF1725@lahna.fi.intel.com>
+ <57162C4E.9090904@metafoo.de>
+ <20160419131631.GG1725@lahna.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160419131631.GG1725@lahna.fi.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
 List-Id: devicetree@vger.kernel.org
 
-Beside regular feed control interrupt, the driver requires also hash
-interrupt for older SoCs (samsung,s5pv210-secss). However after
-requesting it, the interrupt handler isn't doing anything with it, not
-even clearing the hash interrupt bit.
 
-Driver does not provide hash functions so it is safe to remove the hash
-interrupt related code and to not require the interrupt in Device Tree.
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- .../devicetree/bindings/crypto/samsung-sss.txt     |  6 ++--
- drivers/crypto/s5p-sss.c                           | 34 ++++------------------
- 2 files changed, 8 insertions(+), 32 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-index a6dafa83c6df..7a5ca56683cc 100644
---- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-+++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-@@ -23,10 +23,8 @@ Required properties:
-   - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
- 		Exynos5260 and Exynos5420 SoCs.
- - reg : Offset and length of the register set for the module
--- interrupts : interrupt specifiers of SSS module interrupts, should contain
--		following entries:
--		- first : feed control interrupt (required for all variants),
--		- second : hash interrupt (required only for samsung,s5pv210-secss).
-+- interrupts : interrupt specifiers of SSS module interrupts (one feed
-+		control interrupt).
- 
- - clocks : list of clock phandle and specifier pairs for all clocks  listed in
- 		clock-names property.
-diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-index b0484d4d68d9..71ca6a5d636d 100644
---- a/drivers/crypto/s5p-sss.c
-+++ b/drivers/crypto/s5p-sss.c
-@@ -149,7 +149,6 @@
- 
- /**
-  * struct samsung_aes_variant - platform specific SSS driver data
-- * @has_hash_irq: true if SSS module uses hash interrupt, false otherwise
-  * @aes_offset: AES register offset from SSS module's base.
-  *
-  * Specifies platform specific configuration of SSS module.
-@@ -157,7 +156,6 @@
-  * expansion of its usage.
-  */
- struct samsung_aes_variant {
--	bool			    has_hash_irq;
- 	unsigned int		    aes_offset;
- };
- 
-@@ -178,7 +176,6 @@ struct s5p_aes_dev {
- 	struct clk                 *clk;
- 	void __iomem               *ioaddr;
- 	void __iomem               *aes_ioaddr;
--	int                         irq_hash;
- 	int                         irq_fc;
- 
- 	struct ablkcipher_request  *req;
-@@ -201,12 +198,10 @@ struct s5p_aes_dev {
- static struct s5p_aes_dev *s5p_dev;
- 
- static const struct samsung_aes_variant s5p_aes_data = {
--	.has_hash_irq	= true,
- 	.aes_offset	= 0x4000,
- };
- 
- static const struct samsung_aes_variant exynos_aes_data = {
--	.has_hash_irq	= false,
- 	.aes_offset	= 0x200,
- };
- 
-@@ -421,15 +416,13 @@ static irqreturn_t s5p_aes_interrupt(int irq, void *dev_id)
- 
- 	spin_lock_irqsave(&dev->lock, flags);
- 
--	if (irq == dev->irq_fc) {
--		status = SSS_READ(dev, FCINTSTAT);
--		if (status & SSS_FCINTSTAT_BRDMAINT)
--			s5p_aes_rx(dev);
--		if (status & SSS_FCINTSTAT_BTDMAINT)
--			s5p_aes_tx(dev);
-+	status = SSS_READ(dev, FCINTSTAT);
-+	if (status & SSS_FCINTSTAT_BRDMAINT)
-+		s5p_aes_rx(dev);
-+	if (status & SSS_FCINTSTAT_BTDMAINT)
-+		s5p_aes_tx(dev);
- 
--		SSS_WRITE(dev, FCINTPEND, status);
--	}
-+	SSS_WRITE(dev, FCINTPEND, status);
- 
- 	spin_unlock_irqrestore(&dev->lock, flags);
- 
-@@ -795,21 +788,6 @@ static int s5p_aes_probe(struct platform_device *pdev)
- 		goto err_irq;
- 	}
- 
--	if (variant->has_hash_irq) {
--		pdata->irq_hash = platform_get_irq(pdev, 1);
--		if (pdata->irq_hash < 0) {
--			err = pdata->irq_hash;
--			dev_warn(dev, "hash interrupt is not available.\n");
--			goto err_irq;
--		}
--		err = devm_request_irq(dev, pdata->irq_hash, s5p_aes_interrupt,
--				       IRQF_SHARED, pdev->name, pdev);
--		if (err < 0) {
--			dev_warn(dev, "hash interrupt is not available.\n");
--			goto err_irq;
--		}
--	}
--
- 	pdata->busy = false;
- 	pdata->variant = variant;
- 	pdata->dev = dev;
--- 
-1.9.1
+> It is still not clear to me if this supports more than two addresses and
+
+I stumbled over this as well: "Secondary" doesn't mean "as in second address",
+but "as in not primary address". So, more than two are supported.
+
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXFjeFAAoJEBQN5MwUoCm2zaYP/215BQJPHTcZLiroZKD22Cye
+j6w9/4xrlOjHR5YZ2BtxmvGbItHBnYDy2GS/4FMkWR4WkFHf0UpLvCawUCZ9OE8z
+fxZonxJfyOcl+SZb0352sk8356nR5g0GjNT77A9ZTWkI9lsyvptQ5kI/B56bPjHl
+/DDZs2whHVSMAsOmAdYsIXZkv3l1cPVBrtXkHWz5XjMPSkAzpDvwuZkokI6TUhKo
+27ch3+7+2eUvCIRWhj+M2RKbB9PLzNSs4t36/n5L8FuIex356UZVzSExllTyL1Rm
++70o6sLvE+TMGEEO6nGT0l+bglWpoXEfTCSPWsMFT+U+IqGgJarWCKsVZ/wrUNw0
+twWOmXGgZSsZUSrEhg93qHKBzxh8mMXlFOO9bMDrrnnZOdIJOLGYypGGTQpbfGm9
+oBSkBWBZannyaRIPmduKXv+vWPJdbUqqU4S0DwK2MDsW6qtq6b7zojptTj6mxBvn
+MncJMAh2aPc1G3kA1eFPNdn24oAQcQ+zgc3Pd3b+9Hn88RbdF1sowDV8l9k9IbBq
+7CNWMkTn6rXzse2teFROTQz05/AG9JnBFn0lJdvBfbHp+9AUMvy2oz4xAwvgaG47
+fbfPtExVdzn8cfdJW95Ozba9Tjaze7PA658nVclM3k7CUER2dxMsWFfyNJG6Aok9
+R9ut+0My6MdSyfxLDRAA
+=9shY
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
