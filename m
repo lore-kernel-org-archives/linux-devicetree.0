@@ -1,32 +1,38 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional
- clocks
-Date: Wed, 20 Apr 2016 08:51:26 +1000
-Message-ID: <20160419225125.GB9826@verge.net.au>
-References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
- <CAMuHMdWcsi0XE6htZW=V5DDKy8LX_1rdBoo_dEeDBvLcDeMFvw@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: regression: 3a878c430fd6 ("tty: serial: msm: Add TX DMA support")
+ drops data
+Date: Tue, 19 Apr 2016 16:23:29 -0700
+Message-ID: <5716BDF1.1010407@gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWcsi0XE6htZW=V5DDKy8LX_1rdBoo_dEeDBvLcDeMFvw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ivan.ivanov@linaro.org
+Cc: agross@codeaurora.org, David Brown <davidb@codeaurora.org>, srinivas.kandagatla@linaro.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jslaby@suse.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 09:18:55AM +0200, Geert Uytterhoeven wrote:
-> On Wed, Apr 6, 2016 at 2:52 PM, Sjoerd Simons
-> <sjoerd.simons@collabora.co.uk> wrote:
-> > clk_get on a disabled clock node will return EPROBE_DEFER, which can
-> > cause drivers to be deferred forever if such clocks are referenced in
-> > their clocks property.
-> >
-> > Update the various disabled external clock nodes to default to a
-> > frequency of 0, but don't disable them to prevent this.
-> >
-> > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Ivan,
 
-Thanks, I will add your tag.
+It appears that I have found a regression caused by
+3a878c430fd6 ("tty: serial: msm: Add TX DMA support").
+
+When I cat a file slightly larger than 126000 bytes on
+the console, viewed via minicom connected to the serial
+port, I am losing random chunks of data, almost always
+three bytes in length.  I have also seen a lost chunk
+of two bytes.
+
+I am using the 8074 dragonboard, with the dts of
+arch/arm/boot/dts/qcom-apq8074-dragonboard.dts.
+The dts node is serial@f991e000, which has a
+compatible of "qcom,msm-uartdm-v1.4", so is_uartdm
+should be UARTDM_1P4.
+
+Do you have any thoughts on what might be going
+wrong, or what I can do to debug this?
+
+Thanks,
+
+Frank
