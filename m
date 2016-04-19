@@ -1,42 +1,32 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/6 v2] of: Implement iterator for phandles
-Date: Tue, 19 Apr 2016 17:30:00 -0500
-Message-ID: <CAL_Jsq+ybv2=sNW_FWBOnThuh_Lfv32jwYC++vxoy2CxqNw2ig@mail.gmail.com>
-References: <1459784962-9808-1-git-send-email-joro@8bytes.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional
+ clocks
+Date: Wed, 20 Apr 2016 08:51:26 +1000
+Message-ID: <20160419225125.GB9826@verge.net.au>
+References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
+ <CAMuHMdWcsi0XE6htZW=V5DDKy8LX_1rdBoo_dEeDBvLcDeMFvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1459784962-9808-1-git-send-email-joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWcsi0XE6htZW=V5DDKy8LX_1rdBoo_dEeDBvLcDeMFvw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 4, 2016 at 10:49 AM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
-> Hi,
->
-> here is a new version of the implementation of the iterator
-> over phandles concept which Rob Herring suggested to me some
-> time ago. My approach is a little bit different from what
-> the diff showed back then, but it gets rid of the allocation
-> and 'struct of_phandle_args' misuse.
->
-> I also converted the arm-smmu driver to make use of the
-> iterator. The resulting kernel boots on my AMD Seattle
-> system and fixes the warning triggered there. The patches
-> now also pass all dt-unittests in my kvm environment.
->
-> Patches are based on v4.6-rc2
+On Tue, Apr 19, 2016 at 09:18:55AM +0200, Geert Uytterhoeven wrote:
+> On Wed, Apr 6, 2016 at 2:52 PM, Sjoerd Simons
+> <sjoerd.simons@collabora.co.uk> wrote:
+> > clk_get on a disabled clock node will return EPROBE_DEFER, which can
+> > cause drivers to be deferred forever if such clocks are referenced in
+> > their clocks property.
+> >
+> > Update the various disabled external clock nodes to default to a
+> > frequency of 0, but don't disable them to prevent this.
+> >
+> > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Series now applied.
-
-Rob
+Thanks, I will add your tag.
