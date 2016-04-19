@@ -1,56 +1,51 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC
- NAND on non-OMAP platforms
-Date: Tue, 19 Apr 2016 22:11:29 +0200
-Message-ID: <20160419221129.59b559fb@bbrezillon>
-References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
-	<20160413212500.GD5995@atomide.com>
-	<5710B58C.7050108@ti.com>
-	<20160415120942.3131eac1@bbrezillon>
-	<5710C86A.9060108@ti.com>
-	<20160415135108.63716f06@bbrezillon>
-	<20160415154139.GS5995@atomide.com>
-	<20160415180531.15d790d2@bbrezillon>
-	<20160415161950.GT5995@atomide.com>
-	<20160416105711.5310d2d0@bbrezillon>
-	<5714D3A4.2050405@ti.com>
-	<5714D8AA.9040304@ti.com>
-	<20160418151305.17a42437@bbrezillon>
-	<5714E5AA.5050200@ti.com>
-	<20160418161001.2a1c0bed@bbrezillon>
-	<5714F185.5080103@ti.com>
-	<20160418165755.77d1d661@bbrezillon>
-	<5716289B.4060302@ti.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Remove unsupported s2mps11 regulator
+ bindings from Exynos5420 boards
+Date: Tue, 19 Apr 2016 16:13:00 -0400
+Message-ID: <5716914C.1030102@osg.samsung.com>
+References: <1460965453-5337-1-git-send-email-k.kozlowski@samsung.com>
+ <571510D5.3090406@osg.samsung.com> <5715C629.1030602@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5716289B.4060302@ti.com>
+In-Reply-To: <5715C629.1030602@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Apr 2016 15:46:19 +0300
-Roger Quadros <rogerq@ti.com> wrote:
+Hello Krzysztof,
 
+On 04/19/2016 01:46 AM, Krzysztof Kozlowski wrote:
+> On 04/18/2016 06:52 PM, Javier Martinez Canillas wrote:
+
+[snip]
+
+>>
+>> On a related note, the s5m8767 regulator driver parses similar DT properties
+>> ("s5m8767,pmic-buck-ramp-delay", "s5m8767,pmic-buck2-ramp-enable", etc) that
+>> are not in Documentation/devicetree/bindings/regulator/samsung,s5m8767.txt.
+>>
+>> So those should either be added to the binding doc or removed from the driver
+>> if are not correct (I don't have documentation for the s5m8767 PMIC but the
+>> DT properties are not use by any DTS in mainline using the s5m8767 PMIC).
 > 
-> After all the changes we discussed in [1] I was able to test nand/next-with-gpmc-rework
-> and it worked fine.
+> That's the grey area. :) I mean that instead of making these implemented
+> bindings an interface, they should rather be converted to standard
+> regulator bindings. However the device is quite old, not used on newer
+> boards, so there is no interest in improving this. In the same time
+> removal of this code is not strictly necessary. Its existence does not hurt.
+>
+
+Fair enough.
+ 
+> Best regards,
+> Krzysztof
 > 
-> [1] - http://thread.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/22596/focus=22936
-> 
-> I'd be happy to test the branch again after you've incorporated all changes.
 
-Just pushed what's supposed to be my new nand/next into
-nand/next-with-gpmc-rework, can you test it? I'll push it to nand/next
-once I have your confirmation that everything is good.
-
-Thanks,
-
-Boris
-
+Best regards,
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
