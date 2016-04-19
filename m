@@ -1,138 +1,145 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: [PATCH 4/4 v6] arc: axs10x - add support of ARC PGU
-Date: Tue, 19 Apr 2016 16:19:40 +0300
-Message-ID: <1461071980-5916-5-git-send-email-abrodkin@synopsys.com>
-References: <1461071980-5916-1-git-send-email-abrodkin@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461071980-5916-1-git-send-email-abrodkin@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 2/3] dmaengine: tegra-adma: Add support for Tegra210
+ ADMA
+Date: Tue, 19 Apr 2016 18:55:56 +0530
+Message-ID: <20160419132556.GP2274@localhost>
+References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
+ <1458057390-20756-3-git-send-email-jonathanh@nvidia.com>
+ <20160405213649.GA11586@vkoul-mobl.iind.intel.com>
+ <570BB001.3020202@nvidia.com>
+ <20160412141025.GJ2274@localhost>
+ <570D2104.1040607@nvidia.com>
+ <20160413134917.GP2274@localhost>
+ <570F7952.2030606@nvidia.com>
+ <5714F7EF.5000605@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5714F7EF.5000605-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Synopsys DesignWare ARC SDP boards sport ARC SDP display
-controller attached to ADV7511 HDMI encoder.
+On Mon, Apr 18, 2016 at 04:06:23PM +0100, Jon Hunter wrote:
+> On 14/04/16 12:04, Jon Hunter wrote:
+> > 
+> > On 13/04/16 14:49, Vinod Koul wrote:
+> >> On Tue, Apr 12, 2016 at 05:23:32PM +0100, Jon Hunter wrote:
+> >>>>>> why should this be hard coded in kernel and not queried from something like
+> >>>>>> DT? This case seems to be hardware property
+> >>>>>
+> >>>>> Originally, I did have this in DT, however, the Tegra maintainers prefer
+> >>>>> this and this is consistent with the other Tegra DMA driver (see
+> >>>>> driver/dma/tegra20-apb-dma.c) [0].
+> >>>>
+> >>>> But this creates a problem when you have next generation of controller with
+> >>>> different channel count!
+> >>>> How do we solve then?
+> >>>
+> >>> Same way we solve this for the tegra20-apb-dma driver by having
+> >>> different chip data per SoC in the driver ...
+> >>>
+> >>> 1259 /* Tegra20 specific DMA controller information */
+> >>> 1260 static const struct tegra_dma_chip_data tegra20_dma_chip_data = {
+> >>> 1261         .nr_channels            = 16,
+> >>> 1262         .channel_reg_size       = 0x20,
+> >>> 1263         .max_dma_count          = 1024UL * 64,
+> >>> 1264         .support_channel_pause  = false,
+> >>> 1265         .support_separate_wcount_reg = false,
+> >>> 1266 };
+> >>> 1267
+> >>> 1268 /* Tegra30 specific DMA controller information */
+> >>> 1269 static const struct tegra_dma_chip_data tegra30_dma_chip_data = {
+> >>> 1270         .nr_channels            = 32,
+> >>> 1271         .channel_reg_size       = 0x20,
+> >>> 1272         .max_dma_count          = 1024UL * 64,
+> >>> 1273         .support_channel_pause  = false,
+> >>> 1274         .support_separate_wcount_reg = false,
+> >>> 1275 };
+> >>> 1276
+> >>> 1277 /* Tegra114 specific DMA controller information */
+> >>> 1278 static const struct tegra_dma_chip_data tegra114_dma_chip_data = {
+> >>> 1279         .nr_channels            = 32,
+> >>> 1280         .channel_reg_size       = 0x20,
+> >>> 1281         .max_dma_count          = 1024UL * 64,
+> >>> 1282         .support_channel_pause  = true,
+> >>> 1283         .support_separate_wcount_reg = false,
+> >>> 1284 };
+> >>> 1285
+> >>> 1286 /* Tegra148 specific DMA controller information */
+> >>> 1287 static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
+> >>> 1288         .nr_channels            = 32,
+> >>> 1289         .channel_reg_size       = 0x40,
+> >>> 1290         .max_dma_count          = 1024UL * 64,
+> >>> 1291         .support_channel_pause  = true,
+> >>> 1292         .support_separate_wcount_reg = true,
+> >>> 1293 };
+> >>>
+> >>> You may still say this should be in the DT, but the Tegra maintainers
+> >>> prefer this data in the driver.
+> >>
+> >> Okay I don't see a a rationale behind this not being in DT, Stephan?
+> > 
+> > Let me know what you think of Stephen's feedback and if you are OK with
+> > this.
+> > 
+> >>>>>>> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+> >>>>>>> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+> >>>>>>> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
+> >>>>>>
+> >>>>>> I think you should not set DMA_SLAVE, do you need caps to be exported. I
+> >>>>>> think that should be exported for cyclic too, let me know if that was the
+> >>>>>> issue?
+> >>>>>>
+> >>>>>
+> >>>>> Why should I not be setting DMA_SLAVE? Should I not be calling
+> >>>>> dma_get_any_slave_channel() in the xlate?
+> >>>>>
+> >>>>> I think that I do want to set DMA_CYCLIC as well to ensure that we check
+> >>>>> that the device->device_prep_dma_cyclic() function pointer is populated
+> >>>>> when registering the DMA controller.
+> >>>>
+> >>>> Only setting DMA_CYCLIC should do, if you see any issues around that please
+> >>>> get back, we cna fix those :)
+> >>>
+> >>> It did not work for me because dma_get_any_slave_channel() wants a DMA
+> >>> device with the DMA_SLAVE bit capability set. So if I remove this above,
+> >>> then requesting the channel fails via dma_get_any_slave_channel() fails.
+> >>> Is there something I don't understand here?
+> >>
+> >> You should use dma_request_channel() we cleaned up the APIs and recommend to
+> >> use dma_request_channel() for slave usages. See Documentation update in 
+> >> a8135d0d79e9: (dmaengine: core: Introduce new, universal API to request a
+> >> channel)
+> > 
+> > I had a look at this, but actually, I don't think this is going to work.
+> > 
+> > Looking at dma_request_channel(), it is going to get a DMA channel that
+> > matches the mask for any DMA controller. In the xlate I already know
+> > which DMA controller I am and I just want one of the channels. The flow
+> > here is ...
+> > 
+> > dma_request_chan()
+> >   --> of_dma_request_slave_channel()
+> >     --> xlate()
+> >       --> dma_get_any_slave_channel()
+> > 
+> > There are several other DMA drivers that are calling
+> > dma_get_any_slave_channel() from their xlate function which makes sense
+> > because they are requesting one of their own channels.
+> > 
+> > I can understand that you wish to consolidate the APIs for requesting a
+> > channel, but it seems to me that you still need to have an API that DMA
+> > controller drivers can call where they can pass their dma_device
+> > structure to ensure you get a channel for the appropriate DMA controller.
 
-That change adds desctiption of both ARC PGU and ADV7511 in
-ARC SDP'd base-board Device Tree.
+Yes but the idea was that xlate will help you to get the right channel. The
+whole dmaengine property was supposed to help you with that
 
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-snps-arc@lists.infradead.org
----
+Please check the omap code which gets a specfic channel using this
 
-No changes v5 -> v6.
-
-No changes v4 -> v5.
-
-Changes v3 -> v4:
- * Removed "0x" from node names (as suggested by Rob)
-
-No changes v2 -> v3.
-
-Changes v1 -> v2:
- * Added missing "pxlclk" clock in axs10x_mb.dtsi
-
- arch/arc/boot/dts/axs10x_mb.dtsi | 61 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index ab5d570..823f15c 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -34,6 +34,12 @@
- 				clock-frequency = <50000000>;
- 				#clock-cells = <0>;
- 			};
-+
-+			pguclk: pguclk {
-+				#clock-cells = <0>;
-+				compatible = "fixed-clock";
-+				clock-frequency = <74440000>;
-+			};
- 		};
- 
- 		ethernet@0x18000 {
-@@ -155,6 +161,37 @@
- 			clocks = <&i2cclk>;
- 			interrupts = <16>;
- 
-+			adv7511:adv7511@39{
-+				compatible="adi,adv7511";
-+				reg = <0x39>;
-+				interrupts = <23>;
-+				adi,input-depth = <8>;
-+				adi,input-colorspace = "rgb";
-+				adi,input-clock = "1x";
-+				adi,clock-delay = <0x03>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					/* RGB/YUV input */
-+					port@0 {
-+						reg = <0>;
-+						adv7511_input:endpoint {
-+						remote-endpoint = <&pgu_output>;
-+						};
-+					};
-+
-+					/* HDMI output */
-+					port@1 {
-+						reg = <1>;
-+						adv7511_output: endpoint {
-+							remote-endpoint = <&hdmi_connector_in>;
-+						};
-+					};
-+				};
-+			};
-+
- 			eeprom@0x54{
- 				compatible = "24c01";
- 				reg = <0x54>;
-@@ -168,6 +205,16 @@
- 			};
- 		};
- 
-+		hdmi0: connector {
-+			compatible = "hdmi-connector";
-+			type = "a";
-+			port {
-+				hdmi_connector_in: endpoint {
-+					remote-endpoint = <&adv7511_output>;
-+				};
-+			};
-+		};
-+
- 		gpio0:gpio@13000 {
- 			compatible = "snps,dw-apb-gpio";
- 			reg = <0x13000 0x1000>;
-@@ -229,5 +276,19 @@
- 				reg = <2>;
- 			};
- 		};
-+
-+		pgu@17000 {
-+			compatible = "snps,arcpgu";
-+			reg = <0x17000 0x400>;
-+			encoder-slave = <&adv7511>;
-+			clocks = <&pguclk>;
-+			clock-names = "pxlclk";
-+
-+			port {
-+				pgu_output: endpoint {
-+					remote-endpoint = <&adv7511_input>;
-+				};
-+			};
-+		};
- 	};
- };
+Thanks
 -- 
-2.5.5
+~Vinod
