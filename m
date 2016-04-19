@@ -1,1191 +1,656 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v4 2/2] power: ucs1002: Add support for Programmable
- USB Port Power Controller
-Date: Tue, 19 Apr 2016 11:09:12 +0200
-Message-ID: <5715F5B8.8010800@collabora.com>
-References: <1460705181-10493-1-git-send-email-enric.balletbo@collabora.com> <1460705181-10493-3-git-send-email-enric.balletbo@collabora.com> <20160415192509.GA16113@earth>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] drivers: led: is31fl319x: 6/9-channel light effect led
+ driver
+Date: Tue, 19 Apr 2016 11:14:23 +0200
+Message-ID: <5715F6EF.9090909@samsung.com>
+References: <cover.1461004995.git.hns@goldelico.com>
+ <75127f4bf2bb11343bdff5bfb1129a092e668c61.1461004995.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160415192509.GA16113@earth>
+In-reply-to: <75127f4bf2bb11343bdff5bfb1129a092e668c61.1461004995.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Hi Nikolaus,
 
-Many thanks to look at the patch, see my comments below.
+Thanks for the patch. Please refer to my remarks in the code.
 
-On 15/04/16 21:25, Sebastian Reichel wrote:
-> Hi,
+On 04/18/2016 08:43 PM, H. Nikolaus Schaller wrote:
+> This is a driver for the Integrated Silicon Solution Inc. LED driver
+> chips IS31FL3196 and IS31FL3199. They can drive up to 6 or 9
+> LEDs.
 >
-> On Fri, Apr 15, 2016 at 09:26:21AM +0200, Enric Balletbo i Serra wrot=
-e:
->> The UCS1002-2 provides a USB port power switch for precise control o=
-f up
->> to 2.5 amperes continuous current with over-current limit (OCL), dyn=
-amic
->> thermal management, latch or auto-recovery (low test current) fault
->> handling, selectable active low or high enable, under- and over-volt=
-age
->> lockout, back-drive protection, and back-voltage protection.
+> Each LED is individually controllable in brightness (through pwm)
+> in 256 steps so that RGB LEDs can show any of ca. 16 Mio colors.
 >
-> Sorry for the delay in reviewing this. I have two problems with
-> this:
+> The maximum current of the LEDs can be programmed and limited to
+> 5 .. 40mA through a device tree property.
 >
-> 1. The extra sysfs properties should be documented. Apart from that
-> the profile sysfs file contains more than one value, which is not
-> ok for sysfs files.
+> The chip is connected through I2C and can have one of 4 addresses (0x64 .. 0x67)
+> depending on how the AD pin is connected. The address is defined by the
+> reg property as usual.
 >
-> 2. As far as I can see the chip is used to control the power, that
-> the system supplies to a USB port? POWER_SUPPLY_TYPE_MAINS is for
-> the main power supply from the system (basically the other way
-> around).
+> The chip also has a shutdown input which could be connected to a GPIO,
+> but this driver uses software shutdown if all LEDs are inactivated.
 >
-> The power supply framework has no matching type for your scenario at
-> the moment. It may be more fitting to convert this into a regulator
-> driver.
+> The chip also has breathing and audio features which are not supported
+> by this driver.
+>
+> This driver was developed and tested on OMAP5 based Pyra handheld prototype.
+>
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> ---
+>   .../devicetree/bindings/leds/is31fl319x.txt        |  41 +++
+>   drivers/leds/Kconfig                               |   8 +
+>   drivers/leds/Makefile                              |   1 +
+>   drivers/leds/leds-is31fl319x.c                     | 406 +++++++++++++++++++++
+>   include/linux/leds-is31fl319x.h                    |  24 ++
+>   5 files changed, 480 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
+>   create mode 100644 drivers/leds/leds-is31fl319x.c
+>   create mode 100644 include/linux/leds-is31fl319x.h
+>
+> diff --git a/Documentation/devicetree/bindings/leds/is31fl319x.txt b/Documentation/devicetree/bindings/leds/is31fl319x.txt
+> new file mode 100644
+> index 0000000..d13c7ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/is31fl319x.txt
+> @@ -0,0 +1,41 @@
+> +LEDs connected to is31fl319x RGB LED controller chip
+> +
+> +Required properties:
+> +- compatible : should be : "issi,is31fl3196" or "issi,is31fl3199".
+
+s/should be :/Should be/
+
+> +- #address-cells: must be 1
+> +- #size-cells: must be 0
+
+s/must/Must/
+
+Please begin the property description with a capital letter,
+and also end it with a dot.
+This remark applies also to the other properties.
+
+> +- reg: 0x64, 0x65, 0x66, 0x67.
+> +
+> +Optional properties:
+> +- max-current-ma:	maximum led current (5..40 mA, default 20 mA)
+
+There is leds-max-microamp property for this -
+see Documentation/devicetree/bindings/leds/common.txt.
+I'd rephrase this as follows:
+
+- led-max-microamp: See Documentation/devicetree/bindings/leds/common.txt.
+         Valid values: 50000 - 400000, step by (?) (rounded {up|down})
+         Default: 20000
+
+> +- audio-gain-db:	audio gain selection (0..21 dB. default 0 dB)
+
+Please follow the aforementioned "Valid values" pattern.
+It would also be nice to have more informative description on the
+purpose of this property.
+
+> +- breathing & audio:	not implemented
+
+There is no point in documenting unused properties.
+
+> +
+> +Each led is represented as a sub-node of the issi,is31fl319x device.
+> +
+> +LED sub-node properties:
+> +- label : (optional) see Documentation/devicetree/bindings/leds/common.txt
+> +- reg : number of LED line (0 to 5 or 0 to 8 - not all need to be present)
+> +- linux,default-trigger : (optional)
+> +   see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Examples:
+> +
+> +fancy_leds: is31fl3196@65 {
+> +	compatible = "issi,is31fl319x";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0x65>;
+> +
+> +	led0: red-aux@0 {
+> +		label = "red:aux";
+> +		reg = <0>;
+> +	};
+> +
+> +	led1: green-power@4 {
+> +		label = "green:power";
+> +		reg = <4>;
+> +		linux,default-trigger = "default-on";
+> +	};
+> +};
+
+Generally I prefer to have DT bindings documentation in a separate
+patch.
+
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 2251478..f099bcb 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -491,6 +491,14 @@ config LEDS_ASIC3
+>   	  cannot be used. This driver supports hardware blinking with an on+off
+>   	  period from 62ms to 125s. Say Y to enable LEDs on the HP iPAQ hx4700.
+>
+> +config LEDS_IS31FL319X
+> +	tristate "LED Support for IS31FL319x I2C chip"
+> +	depends on LEDS_CLASS && I2C
+> +	help
+> +	  This option enables support for LEDs connected to IS31FL3196
+> +	  or IS31FL3199 LED driver chips accessed via the I2C bus.
+> +	  Driver support brightness control and hardware-assisted blinking.
+> +
+>   config LEDS_TCA6507
+>   	tristate "LED Support for TCA6507 I2C chip"
+>   	depends on LEDS_CLASS && I2C
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index cb2013d..eee3010 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_LEDS_TCA6507)		+= leds-tca6507.o
+>   obj-$(CONFIG_LEDS_TLC591XX)		+= leds-tlc591xx.o
+>   obj-$(CONFIG_LEDS_CLEVO_MAIL)		+= leds-clevo-mail.o
+>   obj-$(CONFIG_LEDS_IPAQ_MICRO)		+= leds-ipaq-micro.o
+> +obj-$(CONFIG_LEDS_IS31FL319X)		+= leds-is31fl319x.o
+>   obj-$(CONFIG_LEDS_HP6XX)		+= leds-hp6xx.o
+>   obj-$(CONFIG_LEDS_OT200)		+= leds-ot200.o
+>   obj-$(CONFIG_LEDS_FSG)			+= leds-fsg.o
+> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
+> new file mode 100644
+> index 0000000..e211c46
+> --- /dev/null
+> +++ b/drivers/leds/leds-is31fl319x.c
+> @@ -0,0 +1,406 @@
+> +/*
+> + * Copyright 2015 Golden Delcious Computers
+> + *
+> + * Author: Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> + *
+> + * Based on leds-tca6507.c
+> + *
+> + * This file is subject to the terms and conditions of version 2 of
+> + * the GNU General Public License.  See the file COPYING in the main
+> + * directory of this archive for more details.
+> + *
+> + * LED driver for the IS31FL3196/99 to drive 6 or 9 light effect LEDs.
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/leds.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/leds-is31fl319x.h>
+> +#include <linux/of.h>
+
+Please keep include directives in an alphabetical order.
+
+> +
+> +/* register numbers */
+> +#define IS31FL319X_SHUTDOWN	0x00
+> +#define IS31FL319X_CTRL1	0x01
+> +#define IS31FL319X_CTRL2	0x02
+> +#define IS31FL319X_CONFIG1	0x03
+> +#define IS31FL319X_CONFIG2	0x04
+> +#define IS31FL319X_RAMP_MODE	0x05
+> +#define IS31FL319X_BREATH_MASK	0x06
+> +#define IS31FL319X_PWM1		0x07
+> +#define IS31FL319X_PWM2		0x08
+> +#define IS31FL319X_PWM3		0x09
+> +#define IS31FL319X_PWM4		0x0a
+> +#define IS31FL319X_PWM5		0x0b
+> +#define IS31FL319X_PWM6		0x0c
+> +#define IS31FL319X_PWM7		0x0d
+> +#define IS31FL319X_PWM8		0x0e
+> +#define IS31FL319X_PWM9		0x0f
+> +#define IS31FL319X_DATA_UPDATE	0x10
+> +#define IS31FL319X_T0_1		0x11
+> +#define IS31FL319X_T0_2		0x12
+> +#define IS31FL319X_T0_3		0x13
+> +#define IS31FL319X_T0_4		0x14
+> +#define IS31FL319X_T0_5		0x15
+> +#define IS31FL319X_T0_6		0x16
+> +#define IS31FL319X_T0_7		0x17
+> +#define IS31FL319X_T0_8		0x18
+> +#define IS31FL319X_T0_9		0x19
+> +#define IS31FL319X_T123_1	0x1a
+> +#define IS31FL319X_T123_2	0x1b
+> +#define IS31FL319X_T123_3	0x1c
+> +#define IS31FL319X_T4_1		0x1d
+> +#define IS31FL319X_T4_2		0x1e
+> +#define IS31FL319X_T4_3		0x1f
+> +#define IS31FL319X_T4_4		0x20
+> +#define IS31FL319X_T4_5		0x21
+> +#define IS31FL319X_T4_6		0x22
+> +#define IS31FL319X_T4_7		0x23
+> +#define IS31FL319X_T4_8		0x24
+> +#define IS31FL319X_T4_9		0x25
+> +#define IS31FL319X_TIME_UPDATE	0x26
+> +
+> +#define	IS31FL319X_REG_CNT	(IS31FL319X_TIME_UPDATE + 1)
+> +
+> +#define NUM_LEDS 9	/* max for 3199 chip */
+> +
+> +struct is31fl319x_chip {
+> +	struct i2c_client	*client;
+> +	struct work_struct	work;
+> +	bool			work_scheduled;
+> +	spinlock_t		lock;
+> +	u8			reg_file[IS31FL319X_REG_CNT];
+> +
+> +	struct is31fl319x_led {
+> +		struct is31fl319x_chip	*chip;
+> +		struct led_classdev	led_cdev;
+> +	} leds[NUM_LEDS];
+> +};
+> +
+> +static const struct i2c_device_id is31fl319x_id[] = {
+> +	{ "is31fl3196", 6 },
+> +	{ "is31fl3196", 9 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, is31fl319x_id);
+> +
+> +
+> +static int is31fl319x_write(struct is31fl319x_chip *is31, u8 reg, u8 byte)
+> +{
+> +	struct i2c_client *cl = is31->client;
+> +
+> +	if (reg >= IS31FL319X_REG_CNT)
+> +		return -EIO;
+> +	is31->reg_file[reg] = byte;	/* save in cache */
+> +	dev_dbg(&is31->client->dev, "write %02x to reg %02x\n", byte, reg);
+> +	return i2c_smbus_write_byte_data(cl, reg, byte);
+> +}
+> +
+> +static int is31fl319x_read(struct is31fl319x_chip *is31, u8 reg)
+> +{
+> +	if (reg >= IS31FL319X_REG_CNT)
+> +		return -EIO;
+> +	return is31->reg_file[reg];	/* read crom cache (can't read chip) */
+> +}
+> +
+> +static void is31fl319x_work(struct work_struct *work)
+> +{
+> +	struct is31fl319x_chip *is31 = container_of(work,
+> +						    struct is31fl319x_chip,
+> +						    work);
+> +	unsigned long flags;
+> +	int i;
+> +	u8 ctrl1, ctrl2;
+> +
+> +	dev_dbg(&is31->client->dev, "work called\n");
+> +
+> +	spin_lock_irqsave(&is31->lock, flags);
+> +	/* make subsequent changes run another schedule_work */
+> +	is31->work_scheduled = false;
+> +	spin_unlock_irqrestore(&is31->lock, flags);
+> +
+> +	dev_dbg(&is31->client->dev, "write to chip\n");
+> +
+> +	ctrl1 = 0;
+> +	ctrl2 = 0;
+> +
+> +	for (i = 0; i < NUM_LEDS; i++) {
+> +		struct led_classdev *led = &is31->leds[i].led_cdev;
+> +		bool on;
+> +
+> +		if (!is31->leds[i].led_cdev.name)
+> +			continue;
+> +
+> +		dev_dbg(&is31->client->dev, "set brightness %u for led %u\n",
+> +					    led->brightness, i);
+> +
+> +		/* update brightness register */
+> +		is31fl319x_write(is31, IS31FL319X_PWM1 + i, led->brightness);
+> +
+> +		/* update output enable bits */
+> +		on = led->brightness > LED_OFF;
+
+It's more common to achieve the same in the following way:
+
+                 on = !!led->brightness;
+
+> +		if (i < 3)
+> +			ctrl1 |= on << i;	/* 0..2 => bit 0..2 */
+> +		else if (i < 6)
+> +			ctrl1 |= on << (i+1);	/* 3..5 => bit 4..6 */
+> +		else
+> +			ctrl2 |= on << (i-6);	/* 6..8 => bit 0..2 */
+> +	}
+
+Why are you iterating over all sub-LEDs? One LED class device should
+control single sub-LED/iout.
+
+> +
+> +	/* check if any PWM is enabled or all outputs are now off */
+> +	if (ctrl1 > 0 || ctrl2 > 0) {
+> +		dev_dbg(&is31->client->dev, "power up\n");
+> +		is31fl319x_write(is31, IS31FL319X_CTRL1, ctrl1);
+> +		is31fl319x_write(is31, IS31FL319X_CTRL2, ctrl2);
+> +		/* update PWMs */
+> +		is31fl319x_write(is31, IS31FL319X_DATA_UPDATE, 0x00);
+> +		/* enable chip from shut down */
+> +		is31fl319x_write(is31, IS31FL319X_SHUTDOWN, 0x01);
+> +	} else {
+> +		dev_dbg(&is31->client->dev, "power down\n");
+> +		/* shut down */
+> +		is31fl319x_write(is31, IS31FL319X_SHUTDOWN, 0x00);
+> +	}
+> +
+> +	dev_dbg(&is31->client->dev, "work done\n");
+> +
+> +}
+> +
+> +/* NOTE: this may be called from within irq context, e.g. led_trigger_event */
+> +
+> +static int is31fl319x_brightness_get(struct led_classdev *led_cdev)
+> +{
+> +	struct is31fl319x_led *led = container_of(led_cdev,
+> +						  struct is31fl319x_led,
+> +						  led_cdev);
+> +	struct is31fl319x_chip *is31 = led->chip;
+> +
+> +	/* read PWM register */
+> +	return is31fl319x_read(is31, IS31FL319X_PWM1 + (led - is31->leds));
+> +}
+> +
+> +static void is31fl319x_brightness_set(struct led_classdev *led_cdev,
+> +				   enum led_brightness brightness)
+> +{
+> +	struct is31fl319x_led *led = container_of(led_cdev,
+> +						  struct is31fl319x_led,
+> +						  led_cdev);
+> +	struct is31fl319x_chip *is31 = led->chip;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&is31->lock, flags);
+> +
+> +	if (brightness != is31fl319x_brightness_get(led_cdev)) {
+
+Current brightness is cached in led_cdev->brightness.
+
+> +		if (!is31->work_scheduled) {
+> +			schedule_work(&is31->work);
+> +			is31->work_scheduled = true;
+> +		}
+> +	}
+> +
+> +	spin_unlock_irqrestore(&is31->lock, flags);
+> +}
+> +
+> +static int is31fl319x_blink_set(struct led_classdev *led_cdev,
+> +			     unsigned long *delay_on,
+> +			     unsigned long *delay_off)
+> +{
+> +	/* use software blink */
+> +	return 1;
+> +}
+
+This function is useless, please remove it.
+
+> +#ifdef CONFIG_OF
+
+Please provide only version for CONFIG_OF defined case and just fail
+probing if of_node is NULL.
+
+> +static struct is31fl319x_platform_data *
+> +is31fl319x_led_dt_init(struct i2c_client *client, int num_leds)
+
+Please rename it to is31fl319x_parse_dt.
+
+> +{
+> +	struct device_node *np = client->dev.of_node, *child;
+> +	struct is31fl319x_platform_data *pdata;
+> +	struct led_info *is31_leds;
+> +	int count;
+> +
+> +	count = of_get_child_count(np);
+> +	dev_dbg(&client->dev, "child count %d\n", count);
+> +	if (!count || count > NUM_LEDS)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	is31_leds = devm_kzalloc(&client->dev,
+> +			sizeof(struct led_info) * NUM_LEDS, GFP_KERNEL);
+> +	if (!is31_leds)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for_each_child_of_node(np, child) {
+> +		struct led_info led;
+> +		u32 reg;
+> +		int ret;
+> +
+> +		led.name =
+> +			of_get_property(child, "label", NULL) ? : child->name;
+> +		led.default_trigger =
+> +			of_get_property(child, "linux,default-trigger", NULL);
+> +		led.flags = 0;
+> +		ret = of_property_read_u32(child, "reg", &reg);
+> +		dev_dbg(&client->dev, "name = %s reg = %d\n", led.name, reg);
+> +		if (ret != 0 || reg < 0 || reg >= num_leds)
+> +			continue;
+> +
+> +		if (is31_leds[reg].name)
+> +			dev_err(&client->dev, "duplicate led line %d for %s -> %s\n",
+> +				reg, is31_leds[reg].name, led.name);
+> +		is31_leds[reg] = led;
+> +	}
+> +	pdata = devm_kzalloc(&client->dev,
+> +			sizeof(struct is31fl319x_platform_data), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pdata->leds.leds = is31_leds;
+> +	return pdata;
+> +}
+> +
+> +static const struct of_device_id of_is31fl319x_leds_match[] = {
+> +	{ .compatible = "issi,is31fl3196", (void *) 6 },
+> +	{ .compatible = "issi,is31fl3199", (void *) 9 },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, of_is31fl319x_leds_match);
+> +
+> +#else
+> +static struct is31fl319x_platform_data *
+> +is31fl319x_led_dt_init(struct i2c_client *client)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+> +#endif
+> +
+> +static int is31fl319x_probe(struct i2c_client *client,
+> +		const struct i2c_device_id *id)
+> +{
+> +	struct is31fl319x_chip *is31;
+> +	struct i2c_adapter *adapter;
+> +	struct is31fl319x_platform_data *pdata;
+> +	int err;
+> +	int i = 0;
+> +
+> +	adapter = to_i2c_adapter(client->dev.parent);
+> +	pdata = dev_get_platdata(&client->dev);
+> +
+> +	dev_dbg(&client->dev, "probe\n");
+> +
+> +	dev_dbg(&client->dev, "NUM_LEDS = %d num_leds = %d\n",
+> +		NUM_LEDS, (int) id->driver_data);
+
+I believe this is stray debug logging.
+
+> +
+> +	if (!i2c_check_functionality(adapter, I2C_FUNC_I2C))
+> +		return -EIO;
+> +
+> +	if (!pdata) {
+> +		pdata = is31fl319x_led_dt_init(client, (int) id->driver_data);
+> +		if (IS_ERR(pdata)) {
+> +			dev_err(&client->dev, "DT led error %d\n",
+
+s/DT led error/DT parsing error/
+
+> +				(int) PTR_ERR(pdata));
+> +			return PTR_ERR(pdata);
+> +		}
+> +	}
+> +	is31 = devm_kzalloc(&client->dev, sizeof(*is31), GFP_KERNEL);
+> +	if (!is31)
+> +		return -ENOMEM;
+> +
+> +	is31->client = client;
+> +	INIT_WORK(&is31->work, is31fl319x_work);
+> +	spin_lock_init(&is31->lock);
+> +	i2c_set_clientdata(client, is31);
+> +
+> +	/* check for reply from chip (we can't read any registers) */
+> +	err = is31fl319x_write(is31, IS31FL319X_SHUTDOWN, 0x01);
+> +	if (err < 0) {
+> +		dev_err(&client->dev, "no response from chip write: err = %d\n",
+> +			err);
+> +		return -EPROBE_DEFER;	/* does not answer (yet) */
+
+When can it happen? Does the chip have a long booting time or so?
+
+> +	}
+> +
+> +	for (i = 0; i < NUM_LEDS; i++) {
+> +		struct is31fl319x_led *l = is31->leds + i;
+> +
+> +		l->chip = is31;
+> +		if (pdata->leds.leds[i].name && !pdata->leds.leds[i].flags) {
+> +			l->led_cdev.name = pdata->leds.leds[i].name;
+> +			l->led_cdev.default_trigger
+> +				= pdata->leds.leds[i].default_trigger;
+> +			l->led_cdev.brightness_set = is31fl319x_brightness_set;
+> +			l->led_cdev.blink_set = is31fl319x_blink_set;
+> +			err = led_classdev_register(&client->dev,
+> +						    &l->led_cdev);
+> +			if (err < 0)
+> +				goto exit;
+> +		}
+> +	}
+> +
+> +	if (client->dev.of_node) {
+> +		u32 val;
+> +		u8 config2 = 0;
+> +
+> +		if (of_property_read_u32(client->dev.of_node, "max-current-ma",
+> +					 &val)) {
+> +			if (val > 40)
+> +				val = 40;
+> +			if (val < 5)
+> +				val = 5;
+> +			config2 |= (((64 - val) / 5) & 0x7) << 4; /* CS */
+> +		}
+> +		if (of_property_read_u32(client->dev.of_node, "audio-gain-db",
+> +					 &val)) {
+> +			if (val > 21)
+> +				val = 21;
+> +			config2 |= val / 3; /* AGS */
+> +		}
+> +		if (config2)
+> +			is31fl319x_write(is31, IS31FL319X_CONFIG2, config2);
+> +	}
+
+Could you move the contents of this condition to is31fl319x_led_dt_init?
+
+> +
+> +	schedule_work(&is31->work);	/* first update */
+> +
+> +	dev_dbg(&client->dev, "probed\n");
+> +	return 0;
+> +exit:
+> +	dev_err(&client->dev, "led error %d\n", err);
+> +
+> +	while (i--) {
+> +		if (is31->leds[i].led_cdev.name)
+> +			led_classdev_unregister(&is31->leds[i].led_cdev);
+> +	}
+> +	return err;
+> +}
+> +
+> +static int is31fl319x_remove(struct i2c_client *client)
+> +{
+> +	int i;
+> +	struct is31fl319x_chip *is31 = i2c_get_clientdata(client);
+> +	struct is31fl319x_led *is31_leds = is31->leds;
+> +
+> +	for (i = 0; i < NUM_LEDS; i++) {
+> +		if (is31_leds[i].led_cdev.name)
+> +			led_classdev_unregister(&is31_leds[i].led_cdev);
+> +	}
+> +
+> +	cancel_work_sync(&is31->work);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct i2c_driver is31fl319x_driver = {
+> +	.driver   = {
+> +		.name    = "leds-is31fl319x",
+> +		.of_match_table = of_match_ptr(of_is31fl319x_leds_match),
+> +	},
+> +	.probe    = is31fl319x_probe,
+> +	.remove   = is31fl319x_remove,
+> +	.id_table = is31fl319x_id,
+> +};
+> +
+> +module_i2c_driver(is31fl319x_driver);
+> +
+> +MODULE_AUTHOR("H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>");
+> +MODULE_DESCRIPTION("IS31FL319X LED driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/leds-is31fl319x.h b/include/linux/leds-is31fl319x.h
+> new file mode 100644
+> index 0000000..5f55abf
+> --- /dev/null
+> +++ b/include/linux/leds-is31fl319x.h
+> @@ -0,0 +1,24 @@
+> +/*
+> + * IS31FL3196 LED chip driver.
+> + *
+> + * Copyright (C) 2015 H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + * General Public License for more details.
+> + */
+> +
+> +#ifndef __LINUX_IS31FL319X_H
+> +#define __LINUX_IS31FL319X_H
+> +#include <linux/leds.h>
+> +
+> +struct is31fl319x_platform_data {
+> +	struct led_platform_data leds;
+> +};
+
+We don't use led_platform_data for new drivers.
+Device Tree has become a standard.
+Effectively this header is not needed, please drop it.
+
+> +#endif /* __LINUX_IS31FL319X_H */
 >
 
-You have more knowledge than me about this kind of drivers but I'm not=20
-sure that model as a regulator is correct here. It's right that I set=20
-POWER_SUPPLY_TYPE_MAINS but this is wrong, my bad. The system can be=20
-used to control the power to supply a USB port, right, but the most=20
-interesting feature is that can work as a charger, controlling charger=20
-status, current, voltage, power supplied, etc... It supports USB-IF=20
-BC1.2 charging downstream port (CDP), dedicated charging port (DCP) mod=
-e=20
-and one custom programmable charger profile. And it also can work as a=20
-USB switch pass-through model.
 
-Basically the reason why I modelled as a power_supply is to have access=
-=20
-to the multiple proprieties that the power supply model offers.
-
-Maybe I should first cut the patch and leave out the portions like set=20
-charger profile for further discussion in the future? Will be this=20
-acceptable?
-
-Thanks,
-- Enric
-
-> -- Sebastian
->
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->> Changes since v3:
->>   - Fix kbuild error:
->>     - regmap-i2c.c:(.text+0x97485): undefined reference to
->>       `i2c_smbus_read_byte_data'
->> Changes since v2:
->>   - Rename microchip,current-limit to microchip,limit-microamps (Rob=
- Herring)
->> Changes since v1:
->>   - Fix ERROR: info -> pdata is NULL but dereferenced (kbuild)
->>   - Change CONFIG_POWER_UCS1002 to CONFIG_UCS1002_POWER, seems more =
-standard
->>     (Enric Balletbo)
->>   drivers/power/Kconfig         |    9 +
->>   drivers/power/Makefile        |    1 +
->>   drivers/power/ucs1002_power.c | 1004 +++++++++++++++++++++++++++++=
-++++++++++++
->>   3 files changed, 1014 insertions(+)
->>   create mode 100644 drivers/power/ucs1002_power.c
->>
->> diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
->> index 1ddd13c..dcdfb21 100644
->> --- a/drivers/power/Kconfig
->> +++ b/drivers/power/Kconfig
->> @@ -502,6 +502,15 @@ config AXP20X_POWER
->>   	  This driver provides support for the power supply features of
->>   	  AXP20x PMIC.
->>
->> +config UCS1002_POWER
->> +	tristate "UCS1002-2 power supply driver"
->> +	depends on I2C
->> +	depends on GPIOLIB || COMPILE_TEST
->> +	select REGMAP_I2C
->> +	help
->> +	  This driver provices support for UCS1002-2 Programmable USB Port
->> +	  Power Controller.
->> +
->>   endif # POWER_SUPPLY
->>
->>   source "drivers/power/reset/Kconfig"
->> diff --git a/drivers/power/Makefile b/drivers/power/Makefile
->> index 0e4eab5..936d2e1 100644
->> --- a/drivers/power/Makefile
->> +++ b/drivers/power/Makefile
->> @@ -73,3 +73,4 @@ obj-$(CONFIG_CHARGER_TPS65217)	+=3D tps65217_charg=
-er.o
->>   obj-$(CONFIG_POWER_RESET)	+=3D reset/
->>   obj-$(CONFIG_AXP288_FUEL_GAUGE) +=3D axp288_fuel_gauge.o
->>   obj-$(CONFIG_AXP288_CHARGER)	+=3D axp288_charger.o
->> +obj-$(CONFIG_UCS1002_POWER)	+=3D ucs1002_power.o
->> diff --git a/drivers/power/ucs1002_power.c b/drivers/power/ucs1002_p=
-ower.c
->> new file mode 100644
->> index 0000000..4f0e4ff
->> --- /dev/null
->> +++ b/drivers/power/ucs1002_power.c
->> @@ -0,0 +1,1004 @@
->> +/*
->> + * Driver for UCS1002 Programmable USB Port Power Controller
->> + *
->> + * Copyright (C) 2016 Zodiac Inflight Innovations
->> + *
->> + * This program is free software; you can redistribute it and/or mo=
-dify it
->> + * under the terms and conditions of the GNU General Public License=
-,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but W=
-ITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILI=
-TY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Li=
-cense for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public Licens=
-e
->> + * along with this program.  If not, see <http://www.gnu.org/licens=
-es/>.
->> + *
->> + */
->> +#include <linux/freezer.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/i2c.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/kernel.h>
->> +#include <linux/kthread.h>
->> +#include <linux/device.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/power_supply.h>
->> +#include <linux/regmap.h>
->> +
->> +#define POLL_INTERVAL		(HZ * 2)
->> +
->> +/* UCS1002 Registers */
->> +#define UCS1002_REG_CURRENT_MEASUREMENT	0x00
->> +
->> +/*
->> + * The Total Accumulated Charge registers store the total accumulat=
-ed charge
->> + * delivered from the VS source to a portable device. The total val=
-ue is
->> + * calculated using four registers, from 01h to 04h. The bit weight=
-ing of
->> + * the registers is given in mA/hrs.
->> + */
->> +#define UCS1002_REG_TOTAL_ACC_CHARGE	0x01
->> +
->> +/* Other Status Register */
->> +#define UCS1020_REG_OTHER_STATUS	0x0f
->> +#  define F_ALERT_PIN			BIT(5)
->> +#  define F_ADET_PIN			BIT(4)
->> +#  define F_CHG_ACT			BIT(3)
->> +#  define F_EM_ACT			BIT(2)
->> +#  define F_EM_STEP_MASK		0x03
->> +
->> +/* Interrupt Status */
->> +#define UCS1002_REG_INTERRUPT_STATUS	0x10
->> +#  define F_DISCHARGE_ERR		BIT(6)
->> +#  define F_RESET			BIT(5)
->> +#  define F_MIN_KEEP_OUT		BIT(4)
->> +#  define F_TSD				BIT(3)
->> +#  define F_OVER_VOLT			BIT(2)
->> +#  define F_BACK_VOLT			BIT(1)
->> +#  define F_OVER_ILIM			BIT(0)
->> +
->> +/* Pin Status Register */
->> +#define UCS1002_REG_PIN_STATUS		0x14
->> +#  define UCS1002_PWR_STATE_MASK	0x03
->> +#  define F_PWR_EN_PIN			BIT(6)
->> +#  define F_M2_PIN			BIT(5)
->> +#  define F_M1_PIN			BIT(4)
->> +#  define F_EM_EN_PIN			BIT(3)
->> +#  define F_SEL_PIN			BIT(2)
->> +#  define F_ACTIVE_MODE_MASK		0x38
->> +#  define F_ACTIVE_MODE_SHIFT		3
->> +
->> +/* General Configuration Register */
->> +#define UCS1002_REG_GENERAL_CFG	0x15
->> +#  define F_ALERT_MASK			BIT(6)
->> +#  define F_ALERT_LINK			BIT(5)
->> +#  define F_DISCHARGE			BIT(4)
->> +#  define F_RATION_EN			BIT(3)
->> +#  define F_RATION_RST			BIT(2)
->> +#  define F_RATION_BEH_MASK		0x03
->> +#  define F_RATION_BEH_REPORT		0x00
->> +#  define F_RATION_BEH_REPORT_DISCON	0x01
->> +#  define F_RATION_BEH_DISCON_SLEEP	0x02
->> +#  define F_RATION_BEH_IGNORE		0x03
->> +
->> +/* Emulation Configuration Register */
->> +#define UCS1002_REG_EMU_CFG		0x16
->> +
->> +/* Switch Configuration Register */
->> +#define UCS1002_REG_SWITCH_CFG		0x17
->> +#  define F_PIN_IGNORE			BIT(7)
->> +#  define F_EM_EN_SET			BIT(5)
->> +#  define F_M2_SET			BIT(4)
->> +#  define F_M1_SET			BIT(3)
->> +#  define F_S0_SET			BIT(2)
->> +#  define F_PWR_EN_SET			BIT(1)
->> +#  define F_LATCH_SET			BIT(0)
->> +#  define V_SET_ACTIVE_MODE_MASK	0x38
->> +#  define V_SET_ACTIVE_MODE_PASSTHROUGH	F_M2_SET
->> +#  define V_SET_ACTIVE_MODE_DEDICATED	F_EM_EN_SET
->> +#  define V_SET_ACTIVE_MODE_BC12_DCP	(F_M2_SET | F_EM_EN_SET)
->> +#  define V_SET_ACTIVE_MODE_BC12_SDP	F_M1_SET
->> +#  define V_SET_ACTIVE_MODE_BC12_CDP	(F_M1_SET | F_M2_SET | F_EM_EN=
-_SET)
->> +
->> +/* Current Limit Register */
->> +#define UCS1002_REG_ILIMIT		0x19
->> +#  define UCS1002_ILIM_SW_MASK		0x07
->> +
->> +/* High-speed Switch Configuration Register */
->> +#define UCS1002_REG_HS_SWITCH_CFG	0x25
->> +
->> +/* Custom Emulation Configuration Register */
->> +#define UCS1002_REG_CUSTOM_EMU_CFG_BASE	0x40
->> +#define V_CUSTOM_EMU_CFG_NREGS		12
->> +
->> +/* Custom Current Limiting Behavior Config */
->> +#define UCS1002_REG_CUSTOM_ILIMIT_CFG	0x51
->> +
->> +/* Product ID */
->> +#define UCS1002_REG_PRODUCT_ID		0xfd
->> +#  define UCS1002_PRODUCT_ID		0x4e
->> +
->> +/* Manufacture name */
->> +#define UCS1002_MANUFACTURER		"SMSC"
->> +
->> +/* Number of registers to set a custom profile */
->> +#define UCS1002_PROFILE_NREGS		17
->> +
->> +struct ucs1002_platform_data {
->> +	struct gpio_desc *gpiod_em;
->> +	struct gpio_desc *gpiod_m1;
->> +	struct gpio_desc *gpiod_m2;
->> +	struct gpio_desc *gpiod_pwr;
->> +};
->> +
->> +struct ucs1002_info {
->> +	struct power_supply *charger;
->> +	struct i2c_client *client;
->> +	struct regmap *regmap;
->> +	struct ucs1002_platform_data *pdata;
->> +	struct task_struct *poll_task;
->> +
->> +	bool curr_alarm;
->> +	bool enabled;
->> +	bool present;
->> +	/* Interrupts */
->> +	int irq_a_det;
->> +	int irq_alert;
->> +};
->> +
->> +static const struct regmap_config ucs1002_regmap_config =3D {
->> +	.reg_bits =3D 8,
->> +	.val_bits =3D 8,
->> +};
->> +
->> +static enum power_supply_property ucs1002_props[] =3D {
->> +	POWER_SUPPLY_PROP_ONLINE,
->> +	POWER_SUPPLY_PROP_CHARGE_NOW,
->> +	POWER_SUPPLY_PROP_CURRENT_NOW,
->> +	POWER_SUPPLY_PROP_CURRENT_MAX,
->> +	POWER_SUPPLY_PROP_PRESENT, /* the presence of PED */
->> +	POWER_SUPPLY_PROP_MANUFACTURER,
->> +};
->> +
->> +/*
->> + * Iterate through each element of the 'map' array until an element=
- whose value
->> + * is equal to 'value' is found. Return the index of the respective=
- element or
->> + * -EINVAL if no such element is found.
->> + */
->> +static int ucs1002_find_idx(int value, const int *map, int map_size=
-)
->> +{
->> +	int idx;
->> +
->> +	for (idx =3D 0; idx < map_size; idx++)
->> +		if (value =3D=3D map[idx])
->> +			return idx;
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static int ucs1002_power_enable(struct ucs1002_info *info, bool ena=
-ble)
->> +{
->> +	int ret, regval;
->> +	unsigned int val;
->> +
->> +	/* Read the polarity setting determined by the SEL pin */
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval)=
-;
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (regval & F_SEL_PIN)
->> +		val =3D enable ? F_PWR_EN_SET : 0;
->> +	else
->> +		val =3D enable ? 0 : F_PWR_EN_SET;
->> +
->> +	if (info->pdata) {
->> +		gpiod_set_value_cansleep(info->pdata->gpiod_pwr, val ? 0 : 1);
->> +	} else {
->> +		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
->> +					 F_PWR_EN_SET, val);
->> +		if (ret < 0)
->> +			return ret;
->> +	}
->> +
->> +	info->enabled =3D enable;
->> +
->> +	return 0;
->> +}
->> +
->> +static int ucs1002_get_online(struct ucs1002_info *info,
->> +			      union power_supply_propval *val)
->> +{
->> +	int ret, regval;
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1020_REG_OTHER_STATUS, &regva=
-l);
->> +	if (ret < 0)
->> +		return -EINVAL;
->> +
->> +	val->intval =3D (regval & F_CHG_ACT) ? 1 : 0;
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * To fit within 32 bits some values are rounded (uA/h)
->> + *
->> + * For Total Accumulated Charge Middle Low Byte register, addr 03h,=
- byte 2
->> + *
->> + *   B0: 0.01084 mA/h rounded to 11 uA/h
->> + *   B1: 0.02169 mA/h rounded to 22 uA/h
->> + *   B2: 0.04340 mA/h rounded to 43 uA/h
->> + *   B3: 0.08676 mA/h rounded to 87 uA/h
->> + *   B4: 0.17350 mA/h rounded to 173 u=C1/h
->> + *
->> + * For Total Accumulated Charge Low Byte register, addr 04h, byte 3
->> + *
->> + *   B6: 0.00271 mA/h rounded to 3 uA/h
->> + *   B7: 0.005422 mA/h rounded to 5 uA/h
->> + */
->> +static const u32 ucs1002_charge_byte_values[4][8] =3D {
->> +	[0] =3D {
->> +		710700, 1421000, 2843000, 5685000, 11371000, 22742000,
->> +		45484000, 90968000
->> +	      },
->> +	[1] =3D {
->> +		2776, 5552, 11105, 22210, 44420, 88840, 177700, 355400
->> +	      },
->> +	[2] =3D {
->> +		11, 22, 43, 87, 173, 347, 694, 1388
->> +	      },
->> +	[3] =3D {
->> +		0, 0, 0, 0, 0, 0, 3, 5
->> +	      }
->> +};
->> +
->> +static int ucs1002_get_charge(struct ucs1002_info *info,
->> +			      union power_supply_propval *val)
->> +{
->> +	int i, j, ret, regval;
->> +	unsigned int total =3D 0;
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_GENERAL_CFG, &regval=
-);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	for (i =3D 0; i < 4; i++) {
->> +		ret =3D regmap_read(info->regmap,
->> +				  UCS1002_REG_TOTAL_ACC_CHARGE + i,
->> +				  &regval);
->> +		if (ret < 0)
->> +			return -EINVAL;
->> +
->> +		for (j =3D 0; j < 8; j++)
->> +			if (regval & BIT(j))
->> +				total +=3D ucs1002_charge_byte_values[i][j];
->> +	}
->> +
->> +	val->intval =3D total;
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * The Current Measurement register stores the measured current val=
-ue
->> + * delivered to the portable device. The range is from 9.76 mA to 2=
-=2E5 A.
->> + * Following values are in uA.
->> + */
->> +static const u32 ucs1002_current_measurement_values[] =3D {
->> +	9760, 19500, 39000, 78100, 156200, 312300, 624600,
->> +	1249300
->> +};
->> +
->> +static int ucs1002_get_current(struct ucs1002_info *info,
->> +			       union power_supply_propval *val)
->> +{
->> +	int n, ret, regval;
->> +	unsigned int total =3D 0;
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_CURRENT_MEASUREMENT,
->> +			  &regval);
->> +	if (ret < 0)
->> +		return -EINVAL;
->> +
->> +	for (n =3D 0; n < ARRAY_SIZE(ucs1002_current_measurement_values); =
-n++)
->> +		if (regval & BIT(n))
->> +			total +=3D ucs1002_current_measurement_values[n];
->> +
->> +	val->intval =3D total;
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * The Current Limit register stores the maximum current used by th=
-e port
->> + * switch. The range is from 500mA to 2.5 A. Following values are i=
-n uA.
->> + */
->> +static const u32 ucs1002_current_limit_values[] =3D {
->> +	500000, 900000, 1000000, 1200000, 1500000, 1800000, 2000000, 25000=
-00
->> +};
->> +
->> +static int ucs1002_get_max_current(struct ucs1002_info *info,
->> +				   union power_supply_propval *val)
->> +{
->> +	int ret, regval;
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_ILIMIT, &regval);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	regval &=3D UCS1002_ILIM_SW_MASK;
->> +	val->intval =3D ucs1002_current_limit_values[regval];
->> +
->> +	return 0;
->> +}
->> +
->> +static int ucs1002_set_max_current(struct ucs1002_info *info, u32 v=
-al)
->> +{
->> +	int ret, idx;
->> +
->> +	idx =3D ucs1002_find_idx(val, ucs1002_current_limit_values,
->> +			       ARRAY_SIZE(ucs1002_current_limit_values));
->> +	if (idx < 0) {
->> +		dev_err(&info->client->dev,
->> +			"%d is an invalid max current value\n", val);
->> +		return -EINVAL;
->> +	}
->> +
->> +	ret =3D regmap_write(info->regmap, UCS1002_REG_ILIMIT, idx);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static int ucs1002_get_property(struct power_supply *psy,
->> +				enum power_supply_property psp,
->> +				union power_supply_propval *val)
->> +{
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_ONLINE:
->> +		return ucs1002_get_online(info, val);
->> +	case POWER_SUPPLY_PROP_CHARGE_NOW:
->> +		return ucs1002_get_charge(info, val);
->> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
->> +		return ucs1002_get_current(info, val);
->> +	case POWER_SUPPLY_PROP_CURRENT_MAX:
->> +		return ucs1002_get_max_current(info, val);
->> +	case POWER_SUPPLY_PROP_PRESENT:
->> +		val->intval =3D info->present ? 1 : 0;
->> +		return 0;
->> +	case POWER_SUPPLY_PROP_MANUFACTURER:
->> +		val->strval =3D UCS1002_MANUFACTURER;
->> +		return 0;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static int ucs1002_set_property(struct power_supply *psy,
->> +				enum power_supply_property psp,
->> +				const union power_supply_propval *val)
->> +{
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_CURRENT_MAX:
->> +		return ucs1002_set_max_current(info, val->intval);
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static int ucs1002_property_is_writeable(struct power_supply *psy,
->> +					 enum power_supply_property psp)
->> +{
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_CURRENT_MAX:
->> +		return true;
->> +	default:
->> +		return false;
->> +	}
->> +}
->> +
->> +static const struct power_supply_desc ucs1002_charger_desc =3D {
->> +	.name			=3D "ucs1002",
->> +	.type			=3D POWER_SUPPLY_TYPE_MAINS,
->> +	.get_property		=3D ucs1002_get_property,
->> +	.set_property		=3D ucs1002_set_property,
->> +	.property_is_writeable	=3D ucs1002_property_is_writeable,
->> +	.properties		=3D ucs1002_props,
->> +	.num_properties		=3D ARRAY_SIZE(ucs1002_props),
->> +};
->> +
->> +static ssize_t ucs1002_sysfs_show_curr_alarm(struct device *dev,
->> +					     struct device_attribute *attr,
->> +					     char *buf)
->> +{
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +
->> +	return scnprintf(buf, PAGE_SIZE, "%d\n", info->curr_alarm);
->> +}
->> +
->> +static ssize_t ucs1002_sysfs_show_active_mode(struct device *dev,
->> +					      struct device_attribute *attr,
->> +					      char *buf)
->> +{
->> +	int ret, regval;
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval)=
-;
->> +	if (ret < 0)
->> +		return -EINVAL;
->> +
->> +	regval &=3D F_ACTIVE_MODE_MASK;
->> +	regval =3D regval >> F_ACTIVE_MODE_SHIFT;
->> +
->> +	switch (regval) {
->> +	/* Dedicated Charger Emulation Cycle */
->> +	case 1:
->> +	case 3:
->> +		return scnprintf(buf, PAGE_SIZE, "%s\n", "dedicated");
->> +	/* Data Pass-through */
->> +	case 4:
->> +	case 6:
->> +		return scnprintf(buf, PAGE_SIZE, "%s\n", "pass-through");
->> +	/* BC1.2 SDP */
->> +	case 2:
->> +		return scnprintf(buf, PAGE_SIZE, "%s\n", "BC1.2-SDP");
->> +	/* BC1.2 DCP */
->> +	case 5:
->> +		return scnprintf(buf, PAGE_SIZE, "%s\n", "BC1.2-DCP");
->> +	/* BC1.2 CDP */
->> +	case 7:
->> +		return scnprintf(buf, PAGE_SIZE, "%s\n", "BC1.2-CDP");
->> +	default:
->> +		return scnprintf(buf, PAGE_SIZE, "%s\n", "unknown");
->> +	};
->> +}
->> +
->> +static ssize_t ucs1002_sysfs_set_active_mode(struct device *dev,
->> +					     struct device_attribute *attr,
->> +					     const char *buf, size_t count)
->> +{
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +	int mode, ret =3D 0;
->> +
->> +	if (strncmp(buf, "dedicated", 9) =3D=3D 0)
->> +		mode =3D V_SET_ACTIVE_MODE_DEDICATED;
->> +	else if (strncmp(buf, "pass-through", 12) =3D=3D 0)
->> +		mode =3D V_SET_ACTIVE_MODE_PASSTHROUGH;
->> +	else if (strncmp(buf, "BC1.2-DCP", 9) =3D=3D 0)
->> +		mode =3D V_SET_ACTIVE_MODE_BC12_DCP;
->> +	else if (strncmp(buf, "BC1.2-SDP", 9) =3D=3D 0)
->> +		mode =3D V_SET_ACTIVE_MODE_BC12_SDP;
->> +	else if (strncmp(buf, "BC1.2-CDP", 9) =3D=3D 0)
->> +		mode =3D V_SET_ACTIVE_MODE_BC12_CDP;
->> +	else
->> +		return -EINVAL;
->> +
->> +	if (info->pdata) {
->> +		gpiod_set_value_cansleep(info->pdata->gpiod_em,
->> +					 (mode & F_EM_EN_SET) ? 1 : 0);
->> +		gpiod_set_value_cansleep(info->pdata->gpiod_m1,
->> +					 (mode & F_M1_SET) ? 1 : 0);
->> +		gpiod_set_value_cansleep(info->pdata->gpiod_m2,
->> +					 (mode & F_M2_SET) ? 1 : 0);
->> +	} else {
->> +		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
->> +					 V_SET_ACTIVE_MODE_MASK, mode);
->> +		if (ret < 0)
->> +			return ret;
->> +	}
->> +
->> +	return count;
->> +}
->> +
->> +static ssize_t ucs1002_sysfs_show_enabled(struct device *dev,
->> +					  struct device_attribute *attr,
->> +					  char *buf)
->> +{
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +
->> +	return scnprintf(buf, PAGE_SIZE, "%d\n", info->enabled);
->> +}
->> +
->> +static ssize_t ucs1002_sysfs_set_enabled(struct device *dev,
->> +					 struct device_attribute *attr,
->> +					 const char *buf, size_t count)
->> +{
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +	long val;
->> +	int ret;
->> +
->> +	if (kstrtol(buf, 10, &val) < 0)
->> +		return -EINVAL;
->> +
->> +	ret =3D ucs1002_power_enable(info, val ? true : false);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return count;
->> +}
->> +
->> +static ssize_t ucs1002_sysfs_show_profile(struct device *dev,
->> +					  struct device_attribute *attr,
->> +					  char *buf)
->> +{
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +	int idx, regval, ret, len =3D 0;
->> +
->> +	/*
->> +	 * Read Custom Emulation Profile
->> +	 */
->> +
->> +	/* read registers 40h-4Ch (Custom Emulation Configuration) */
->> +	for (idx =3D 0; idx < V_CUSTOM_EMU_CFG_NREGS; idx++) {
->> +		ret =3D regmap_read(info->regmap,
->> +				  UCS1002_REG_CUSTOM_EMU_CFG_BASE + idx,
->> +				  &regval);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
->> +	}
->> +
->> +	/* read register 16h (Emulation Configuration) */
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_EMU_CFG, &regval);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
->> +
->> +	/* read register 19h (Current Limit) */
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_ILIMIT, &regval);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
->> +
->> +	/* read register 25h (High-speed Switch Configuration) */
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_HS_SWITCH_CFG, &regv=
-al);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
->> +
->> +	/* read register 51h (Custom Current Limiting Behavior Config) */
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_CUSTOM_ILIMIT_CFG,
->> +			  &regval);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x\n", regval);
->> +
->> +	return len;
->> +}
->> +
->> +static ssize_t ucs1002_sysfs_set_profile(struct device *dev,
->> +					 struct device_attribute *attr,
->> +					 const char *buf, size_t count)
->> +{
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +	const char *delim =3D " ";
->> +	char profile_data[256];
->> +	char *token, *str_ptr;
->> +	int regval[UCS1002_PROFILE_NREGS];
->> +	int idx =3D 0, ret;
->> +
->> +	strncpy(profile_data, buf, 256);
->> +	str_ptr =3D &profile_data[0];
->> +
->> +	while (str_ptr && (idx < UCS1002_PROFILE_NREGS)) {
->> +		token =3D strsep(&str_ptr, delim);
->> +		if (kstrtoint(token, 0, &regval[idx])) {
->> +			dev_dbg(dev, "failed to convert %s to integer\n",
->> +				token);
->> +			return -EINVAL;
->> +		}
->> +		idx++;
->> +	}
->> +
->> +	if (idx !=3D UCS1002_PROFILE_NREGS) {
->> +		dev_dbg(dev, "failed to set emulation profile (%d)\n", idx);
->> +		return -EINVAL;
->> +	}
->> +
->> +	/*
->> +	 * Write Custom Emulation Profile
->> +	 */
->> +
->> +	/* write registers 40h-4Ch (Custom Emulation Configuration) */
->> +	for (idx =3D 0; idx < V_CUSTOM_EMU_CFG_NREGS; idx++) {
->> +		ret =3D regmap_write(info->regmap,
->> +				   UCS1002_REG_CUSTOM_EMU_CFG_BASE + idx,
->> +				   regval[idx]);
->> +		if (ret < 0)
->> +			return ret;
->> +	}
->> +
->> +	/* write register 16h (Emulation Configuration) */
->> +	ret =3D regmap_write(info->regmap, UCS1002_REG_EMU_CFG,
->> +			   regval[idx++]);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* write register 19h (Current Limit) */
->> +	ret =3D regmap_write(info->regmap, UCS1002_REG_ILIMIT, regval[idx+=
-+]);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* write register 25h (High-speed Switch Configuration) */
->> +	ret =3D regmap_write(info->regmap, UCS1002_REG_HS_SWITCH_CFG,
->> +			   regval[idx++]);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* write register 51h (Custom Current Limiting Behavior Config) */
->> +	ret =3D regmap_write(info->regmap, UCS1002_REG_CUSTOM_ILIMIT_CFG,
->> +			   regval[idx]);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return count;
->> +}
->> +
->> +const char * const ucs1002_pwr_state_values[] =3D {
->> +	"sleep", "detect", "active", "error"
->> +};
->> +
->> +static ssize_t ucs1002_sysfs_show_state(struct device *dev,
->> +					struct device_attribute *attr,
->> +					char *buf)
->> +{
->> +	int ret, regval;
->> +	struct power_supply *psy =3D dev_get_drvdata(dev);
->> +	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval)=
-;
->> +	if (ret < 0)
->> +		return -EINVAL;
->> +
->> +	regval &=3D UCS1002_PWR_STATE_MASK;
->> +
->> +	return scnprintf(buf, PAGE_SIZE, "%s\n",
->> +			 ucs1002_pwr_state_values[regval]);
->> +}
->> +
->> +static DEVICE_ATTR(curr_alarm, S_IRUGO, ucs1002_sysfs_show_curr_ala=
-rm, NULL);
->> +static DEVICE_ATTR(enabled, S_IWUSR | S_IRUGO, ucs1002_sysfs_show_e=
-nabled,
->> +		   ucs1002_sysfs_set_enabled);
->> +static DEVICE_ATTR(mode, S_IWUSR | S_IRUGO, ucs1002_sysfs_show_acti=
-ve_mode,
->> +		   ucs1002_sysfs_set_active_mode);
->> +static DEVICE_ATTR(profile, S_IWUSR | S_IRUGO, ucs1002_sysfs_show_p=
-rofile,
->> +		   ucs1002_sysfs_set_profile);
->> +static DEVICE_ATTR(state, S_IRUGO, ucs1002_sysfs_show_state, NULL);
->> +
->> +static struct attribute *ucs1002_specific_attr[] =3D {
->> +	&dev_attr_curr_alarm.attr,
->> +	&dev_attr_enabled.attr,
->> +	&dev_attr_mode.attr,
->> +	&dev_attr_profile.attr,
->> +	&dev_attr_state.attr,
->> +	NULL,
->> +};
->> +
->> +static const struct attribute_group ucs1002_attr_group =3D {
->> +	.attrs =3D ucs1002_specific_attr,
->> +};
->> +
->> +static irqreturn_t ucs1002_charger_irq(int irq, void *data)
->> +{
->> +	int ret, regval;
->> +	bool present;
->> +	struct ucs1002_info *info =3D data;
->> +
->> +	present =3D info->present;
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1020_REG_OTHER_STATUS, &regva=
-l);
->> +	if (ret < 0)
->> +		return IRQ_HANDLED;
->> +
->> +	/* update attached status */
->> +	info->present =3D (regval & F_ADET_PIN) ? true : false;
->> +
->> +	/* notify the change */
->> +	if (present !=3D info->present)
->> +		power_supply_changed(info->charger);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static irqreturn_t ucs1002_alert_irq(int irq, void *data)
->> +{
->> +	int ret, regval;
->> +	struct ucs1002_info *info =3D data;
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_INTERRUPT_STATUS, &r=
-egval);
->> +	if (ret < 0)
->> +		return IRQ_HANDLED;
->> +
->> +	/* update current alarm status */
->> +	info->curr_alarm =3D (regval & F_OVER_ILIM) ? true : false;
->> +
->> +	/* over current alarm */
->> +	if (regval & F_OVER_ILIM)
->> +		power_supply_changed(info->charger);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int ucs1002_poll_task(void *data)
->> +{
->> +	set_freezable();
->> +
->> +	while (!kthread_should_stop()) {
->> +		schedule_timeout_interruptible(POLL_INTERVAL);
->> +		try_to_freeze();
->> +		ucs1002_charger_irq(-1, data);
->> +		ucs1002_alert_irq(-1, data);
->> +	}
->> +	return 0;
->> +}
->> +
->> +static int ucs1002_get_control_gpios(struct ucs1002_info *info)
->> +{
->> +	int ret, regval;
->> +	struct device *dev =3D &info->client->dev;
->> +
->> +	info->pdata =3D devm_kzalloc(dev, sizeof(struct ucs1002_platform_d=
-ata),
->> +				   GFP_KERNEL);
->> +	if (!info->pdata)
->> +		return -ENOMEM;
->> +
->> +	/* gpio for chip EM_EN pin */
->> +	info->pdata->gpiod_em =3D devm_gpiod_get_index(dev, "control", 0,
->> +						     GPIOD_OUT_HIGH);
->> +	if (IS_ERR(info->pdata->gpiod_em)) {
->> +		dev_err(dev, "unable to claim EM_EN gpio\n");
->> +		return PTR_ERR(info->pdata->gpiod_em);
->> +	}
->> +
->> +	/* gpio for chip M1 pin */
->> +	info->pdata->gpiod_m1 =3D devm_gpiod_get_index(dev, "control", 1,
->> +						     GPIOD_OUT_LOW);
->> +	if (IS_ERR(info->pdata->gpiod_m1)) {
->> +		dev_err(dev, "unable to claim M1 gpio\n");
->> +		return PTR_ERR(info->pdata->gpiod_m1);
->> +	}
->> +
->> +	/* gpio for chip M2 pin */
->> +	info->pdata->gpiod_m2 =3D devm_gpiod_get_index(dev, "control", 2,
->> +						     GPIOD_OUT_LOW);
->> +	if (IS_ERR(info->pdata->gpiod_m2)) {
->> +		dev_err(dev, "unable to claim EM_EN gpio\n");
->> +		return PTR_ERR(info->pdata->gpiod_m2);
->> +	}
->> +
->> +	/* Read the polarity setting determined by the SEL pin */
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS,
->> +			  &regval);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* gpio for chip PWR_EN pin - power off */
->> +	info->pdata->gpiod_pwr =3D devm_gpiod_get_index(dev, "control", 3,
->> +						      (regval & F_SEL_PIN) ?
->> +						      GPIOD_OUT_LOW :
->> +						      GPIOD_OUT_HIGH);
->> +	if (IS_ERR(info->pdata->gpiod_pwr)) {
->> +		dev_err(dev, "unable to claim PWR_EN gpio\n");
->> +		return PTR_ERR(info->pdata->gpiod_pwr);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int ucs1002_probe(struct i2c_client *client,
->> +			 const struct i2c_device_id *dev_id)
->> +{
->> +	int ret, regval;
->> +	u32 property;
->> +	struct ucs1002_info *info;
->> +	struct device *dev =3D &client->dev;
->> +	struct power_supply_config ucs1002_charger_config =3D {};
->> +
->> +	info =3D devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
->> +	if (!info)
->> +		return -ENOMEM;
->> +
->> +	info->regmap =3D devm_regmap_init_i2c(client, &ucs1002_regmap_conf=
-ig);
->> +	if (IS_ERR(info->regmap)) {
->> +		ret =3D PTR_ERR(info->regmap);
->> +		dev_err(dev, "regmap initialization failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	info->client =3D client;
->> +	info->curr_alarm =3D false;
->> +	info->enabled =3D false;
->> +	info->present =3D false;
->> +
->> +	info->irq_a_det =3D irq_of_parse_and_map(dev->of_node, 0);
->> +	info->irq_alert =3D irq_of_parse_and_map(dev->of_node, 1);
->> +
->> +	i2c_set_clientdata(client, info);
->> +
->> +	ucs1002_charger_config.of_node =3D dev->of_node;
->> +	ucs1002_charger_config.drv_data =3D info;
->> +
->> +	ret =3D regmap_read(info->regmap, UCS1002_REG_PRODUCT_ID, &regval)=
-;
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (regval !=3D UCS1002_PRODUCT_ID) {
->> +		dev_err(dev,
->> +			"Product ID does not match (0x%02x !=3D 0x%02x)\n",
->> +			regval, UCS1002_PRODUCT_ID);
->> +		return -ENODEV;
->> +	}
->> +
->> +	dev_info(dev, "registered with product id 0x%02x\n",
->> +		 UCS1002_PRODUCT_ID);
->> +
->> +	/* Enable charge rationing by default */
->> +	ret =3D regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
->> +				 F_RATION_EN, F_RATION_EN);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (!device_property_present(dev, "control-gpios")) {
->> +		dev_dbg(dev, "set active mode selection through i2c\n");
->> +		/*
->> +		 * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
->> +		 * mode selection to Dedicated Charger Emulation Cycle.
->> +		 *
->> +		 * #M1    #M2    EM_EN
->> +		 *  0      0       1   - Dedicated Charger Emulation Cycle
->> +		 *
->> +		 */
->> +		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
->> +					 F_PIN_IGNORE | F_EM_EN_SET | F_M2_SET |
->> +					 F_M1_SET, F_PIN_IGNORE | F_EM_EN_SET);
->> +		if (ret < 0)
->> +			return ret;
->> +	} else {
->> +		dev_dbg(dev, "set active mode selection through pins\n");
->> +
->> +		/*
->> +		 * The Active mode selection and power state will be set by the
->> +		 * OR'd combination of the M1, M2, PWR_EN, and EM_EN pin states
->> +		 * and the corresponding bit states.
->> +		 */
->> +		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
->> +					 F_PIN_IGNORE | F_EM_EN_SET | F_M2_SET |
->> +					 F_M1_SET | F_PWR_EN_SET, 0);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		/*
->> +		 * PIN_IGNORE mode not set, so EM, M1 and M2 pins must be
->> +		 * defined.
->> +		 */
->> +		ret =3D ucs1002_get_control_gpios(info);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	/*
->> +	 * The current limit is based on the resistor on the COMM_SEL / IL=
-IM
->> +	 * pin and this value cannot be changed to be higher than hardware
->> +	 * set value. If the property is not set, the value set by hardwar=
-e is
->> +	 * the default.
->> +	 */
->> +	ret =3D device_property_read_u32(dev, "microchip,limit-microamps",
->> +				       &property);
->> +	if (ret =3D=3D 0)
->> +		ucs1002_set_max_current(info, property);
->> +
->> +	info->charger =3D devm_power_supply_register(dev, &ucs1002_charger=
-_desc,
->> +						   &ucs1002_charger_config);
->> +	if (IS_ERR(info->charger)) {
->> +		dev_err(dev, "failed to register power supply\n");
->> +		return PTR_ERR(info->charger);
->> +	}
->> +
->> +	ret =3D sysfs_create_group(&info->charger->dev.kobj, &ucs1002_attr=
-_group);
->> +	if (ret < 0) {
->> +		dev_err(dev, "can't create sysfs entries\n");
->> +		return ret;
->> +	}
->> +
->> +	/* Turn on the port power switch */
->> +	ucs1002_power_enable(info, true);
->> +
->> +	if (info->irq_a_det && info->irq_alert) {
->> +		ret =3D devm_request_threaded_irq(dev, info->irq_a_det, NULL,
->> +						ucs1002_charger_irq,
->> +						IRQF_TRIGGER_FALLING |
->> +						IRQF_TRIGGER_RISING |
->> +						IRQF_ONESHOT,
->> +						"ucs1002-a_det", info);
->> +		if (ret) {
->> +			dev_err(dev, "failed to request A_DET threaded irq\n");
->> +			goto fail_remove_group;
->> +		}
->> +
->> +		ret =3D devm_request_threaded_irq(dev, info->irq_alert, NULL,
->> +						ucs1002_alert_irq,
->> +						IRQF_TRIGGER_FALLING |
->> +						IRQF_TRIGGER_RISING |
->> +						IRQF_ONESHOT,
->> +						"ucs1002-alert", info);
->> +		if (ret) {
->> +			dev_err(dev, "failed to request ALERT threaded irq\n");
->> +			goto fail_remove_group;
->> +		}
->> +	} else {
->> +		dev_warn(dev, "no IRQ support, using polling mode\n");
->> +		info->poll_task =3D kthread_run(ucs1002_poll_task, info,
->> +					      "kucs1002");
->> +		if (IS_ERR(info->poll_task)) {
->> +			ret =3D PTR_ERR(info->poll_task);
->> +			dev_err(dev, "unable to run kthread err (%d)\n", ret);
->> +			goto fail_remove_group;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +
->> +fail_remove_group:
->> +	sysfs_remove_group(&info->charger->dev.kobj, &ucs1002_attr_group);
->> +	return ret;
->> +}
->> +
->> +static int ucs1002_remove(struct i2c_client *client)
->> +{
->> +	struct ucs1002_info *info =3D i2c_get_clientdata(client);
->> +
->> +	if (info->poll_task)
->> +		kthread_stop(info->poll_task);
->> +
->> +	sysfs_remove_group(&info->charger->dev.kobj, &ucs1002_attr_group);
->> +
->> +	return 0;
->> +}
->> +
->> +#if IS_ENABLED(CONFIG_OF)
->> +static const struct of_device_id ucs1002_of_match[] =3D {
->> +	{ .compatible =3D "microchip,ucs1002", },
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, ucs1002_of_match);
->> +#endif
->> +
->> +static const struct i2c_device_id ucs1002_ids[] =3D {
->> +	{"ucs1002", 0},
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(i2c, ucs1002_ids);
->> +
->> +static struct i2c_driver ucs1002_driver =3D {
->> +	.driver =3D {
->> +		   .name =3D "ucs1002",
->> +		   .of_match_table =3D of_match_ptr(ucs1002_of_match),
->> +	},
->> +	.probe =3D ucs1002_probe,
->> +	.remove =3D ucs1002_remove,
->> +	.id_table =3D ucs1002_ids,
->> +};
->> +module_i2c_driver(ucs1002_driver);
->> +
->> +MODULE_DESCRIPTION("Microchip UCS1002 Programmable USB Port Power C=
-ontroller");
->> +MODULE_AUTHOR("Enric Balletbo Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>"=
-);
->> +MODULE_LICENSE("GPL v2");
->> --
->> 2.1.0
->>
+-- 
+Best regards,
+Jacek Anaszewski
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
