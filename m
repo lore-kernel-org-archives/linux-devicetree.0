@@ -1,51 +1,68 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Remove unsupported s2mps11 regulator
- bindings from Exynos5420 boards
-Date: Tue, 19 Apr 2016 16:13:00 -0400
-Message-ID: <5716914C.1030102@osg.samsung.com>
-References: <1460965453-5337-1-git-send-email-k.kozlowski@samsung.com>
- <571510D5.3090406@osg.samsung.com> <5715C629.1030602@samsung.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] of/overlay: add of overlay notifications
+Date: Tue, 19 Apr 2016 16:13:58 -0500
+Message-ID: <CAL_JsqKLLOPfy8Psxgq7uOuy09+vj4K2jnoU+iZspfgou5ui4g@mail.gmail.com>
+References: <1457017841-20141-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5715C629.1030602@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457017841-20141-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 04/19/2016 01:46 AM, Krzysztof Kozlowski wrote:
-> On 04/18/2016 06:52 PM, Javier Martinez Canillas wrote:
-
-[snip]
-
->>
->> On a related note, the s5m8767 regulator driver parses similar DT properties
->> ("s5m8767,pmic-buck-ramp-delay", "s5m8767,pmic-buck2-ramp-enable", etc) that
->> are not in Documentation/devicetree/bindings/regulator/samsung,s5m8767.txt.
->>
->> So those should either be added to the binding doc or removed from the driver
->> if are not correct (I don't have documentation for the s5m8767 PMIC but the
->> DT properties are not use by any DTS in mainline using the s5m8767 PMIC).
-> 
-> That's the grey area. :) I mean that instead of making these implemented
-> bindings an interface, they should rather be converted to standard
-> regulator bindings. However the device is quite old, not used on newer
-> boards, so there is no interest in improving this. In the same time
-> removal of this code is not strictly necessary. Its existence does not hurt.
+On Thu, Mar 3, 2016 at 9:10 AM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> This patch add of overlay notifications.
 >
+> When DT overlays are being added, some drivers/subsystems
+> need to see device tree overlays before the changes go into
+> the live tree.
+>
+> This is distinct from reconfig notifiers that are
+> post-apply or post-remove and which issue very granular
+> notifications without providing access to the context
+> of a whole overlay.
+>
+> The following 4 notificatons are issued:
+>   OF_OVERLAY_PRE_APPLY
+>   OF_OVERLAY_POST_APPLY
+>   OF_OVERLAY_PRE_REMOVE
+>   OF_OVERLAY_POST_REMOVE
+>
+> In the case of pre-apply notification, if the notifier
+> returns error, the overlay will be rejected.
+>
+> This patch exports two functions for registering/unregistering
+> notifications:
+>   of_overlay_notifier_register(struct notifier_block *nb)
+>   of_overlay_notifier_unregister(struct notifier_block *nb)
+>
+> The of_mutex is held during these notifications. The
+> notification data includes pointers to the overlay target
+> and the overlay:
+>
+> struct of_overlay_notify_data {
+>        struct device_node *overlay;
+>        struct device_node *target;
+> };
+>
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+> v2: add missing 'static inline' in of.h
+> v3: fix build for !OF_OVERLAY in of.h
+>     add a note in the header that the of_mutex is held
+> ---
+>  drivers/of/overlay.c |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/of.h   |   25 +++++++++++++++++++++++++
+>  2 files changed, 71 insertions(+), 1 deletion(-)
 
-Fair enough.
- 
-> Best regards,
-> Krzysztof
-> 
+This looks fine to me, but apply it when you have a user.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
