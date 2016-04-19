@@ -1,38 +1,101 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: regression: 3a878c430fd6 ("tty: serial: msm: Add TX DMA support")
- drops data
-Date: Tue, 19 Apr 2016 16:23:29 -0700
-Message-ID: <5716BDF1.1010407@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v8 03/45] powerpc/pci: Cleanup on struct
+ pci_controller_ops
+Date: Wed, 20 Apr 2016 09:59:20 +1000
+Message-ID: <20160419235919.GA11304@gwshan>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-4-git-send-email-gwshan@linux.vnet.ibm.com>
+ <570DDE99.7070103@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: ivan.ivanov@linaro.org
-Cc: agross@codeaurora.org, David Brown <davidb@codeaurora.org>, srinivas.kandagatla@linaro.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jslaby@suse.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <570DDE99.7070103@ozlabs.ru>
+Sender: linux-pci-owner@vger.kernel.org
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
+On Wed, Apr 13, 2016 at 03:52:25PM +1000, Alexey Kardashevskiy wrote:
+>On 02/17/2016 02:43 PM, Gavin Shan wrote:
+>>Each PHB has one instance of "struct pci_controller_ops", which
+>>includes various callbacks called by PCI subsystem. In the definition
+>>of this struct, some callbacks have explicit names for its arguments,
+>>but the left don't have.
+>>
+>>This adds all explicit names of the arguments to the callbacks in
+>>"struct pci_controller_ops" so that the code looks consistent.
+>>
+>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>Reviewed-by: Daniel Axtens <dja@axtens.net>
+>
+>With tiny nit below,
+>
+>Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+>
+>
+>
+>>---
+>>  arch/powerpc/include/asm/pci-bridge.h | 13 +++++++------
+>>  1 file changed, 7 insertions(+), 6 deletions(-)
+>>
+>>diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+>>index b688d04..4dd6ef4 100644
+>>--- a/arch/powerpc/include/asm/pci-bridge.h
+>>+++ b/arch/powerpc/include/asm/pci-bridge.h
+>>@@ -21,18 +21,19 @@ struct pci_controller_ops {
+>>  	void		(*dma_dev_setup)(struct pci_dev *dev);
+>>  	void		(*dma_bus_setup)(struct pci_bus *bus);
+>>
+>>-	int		(*probe_mode)(struct pci_bus *);
+>>+	int		(*probe_mode)(struct pci_bus *bus);
+>>
+>>  	/* Called when pci_enable_device() is called. Returns true to
+>>  	 * allow assignment/enabling of the device. */
+>>-	bool		(*enable_device_hook)(struct pci_dev *);
+>>+	bool		(*enable_device_hook)(struct pci_dev *dev);
+>
+>
+>"pdev" is slightly better as it is of the "pci_dev" type (4130 occurrences of
+>"pci_dev *pdev" and just 2833 of "pci_dev *dev" in the current kernel), "dev"
+>is for "struct device".
+>
 
-It appears that I have found a regression caused by
-3a878c430fd6 ("tty: serial: msm: Add TX DMA support").
+Thanks for your review. I don't know if "dev" is for "struct device" only.
+Usually, "dev" and "pdev" are interchangeably used for "struct pci_dev".
+Especially the code written in old days uses "dev" for "struct pci_dev"
+heavily.
 
-When I cat a file slightly larger than 126000 bytes on
-the console, viewed via minicom connected to the serial
-port, I am losing random chunks of data, almost always
-three bytes in length.  I have also seen a lost chunk
-of two bytes.
+Yes, I agree "pdev" is better than "dev" in this case and I'm going to
+fix this up in next revision.
 
-I am using the 8074 dragonboard, with the dts of
-arch/arm/boot/dts/qcom-apq8074-dragonboard.dts.
-The dts node is serial@f991e000, which has a
-compatible of "qcom,msm-uartdm-v1.4", so is_uartdm
-should be UARTDM_1P4.
-
-Do you have any thoughts on what might be going
-wrong, or what I can do to debug this?
-
-Thanks,
-
-Frank
+>>
+>>-	void		(*disable_device)(struct pci_dev *);
+>>+	void		(*disable_device)(struct pci_dev *dev);
+>>
+>>-	void		(*release_device)(struct pci_dev *);
+>>+	void		(*release_device)(struct pci_dev *dev);
+>>
+>>  	/* Called during PCI resource reassignment */
+>>-	resource_size_t (*window_alignment)(struct pci_bus *, unsigned long type);
+>>+	resource_size_t (*window_alignment)(struct pci_bus *bus,
+>>+					    unsigned long type);
+>>  	void		(*setup_bridge)(struct pci_bus *bus,
+>>  					unsigned long type);
+>>  	void		(*reset_secondary_bus)(struct pci_dev *dev);
+>>@@ -46,7 +47,7 @@ struct pci_controller_ops {
+>>  	int             (*dma_set_mask)(struct pci_dev *dev, u64 dma_mask);
+>>  	u64		(*dma_get_required_mask)(struct pci_dev *dev);
+>>
+>>-	void		(*shutdown)(struct pci_controller *);
+>>+	void		(*shutdown)(struct pci_controller *hose);
+>>  };
+>>
+>>  /*
+>>
+>
+>
+>-- 
+>Alexey
+>
