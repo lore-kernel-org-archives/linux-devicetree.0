@@ -1,39 +1,93 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
- addresses
-Date: Tue, 19 Apr 2016 09:27:39 -0700
-Message-ID: <1461083259.8946.93.camel@linux.intel.com>
-References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
-	 <20160415080111.GD1714@lahna.fi.intel.com>
-	 <1460992811.8946.22.camel@linux.intel.com> <5714FCBE.3060009@metafoo.de>
-	 <20160419124028.GF1725@lahna.fi.intel.com> <57162C4E.9090904@metafoo.de>
-	 <20160419131631.GG1725@lahna.fi.intel.com> <5716333D.1040106@metafoo.de>
-	 <20160419144027.GH1725@lahna.fi.intel.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] ARM64: Enable SP805 WDT support for FSL LS2080A
+Date: Tue, 19 Apr 2016 17:36:04 +0100
+Message-ID: <57165E74.2030500@arm.com>
+References: <1451296884-7932-1-git-send-email-bhupesh.sharma@freescale.com>
+ <570FBBD8.4030704@arm.com>
+ <VI1PR04MB12308B0964726B5D1A4492BE886C0@VI1PR04MB1230.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160419144027.GH1725@lahna.fi.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>
-Cc: Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <VI1PR04MB12308B0964726B5D1A4492BE886C0-mr6QIVyDiCG4zNWkhB+yk89NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhupesh Sharma <bhupesh.sharma-3arQi8VN3Tc@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Catalin.Marinas-5wv7dgnIgG8@public.gmane.org" <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-04-19 at 17:40 +0300, Mika Westerberg wrote:
-> On Tue, Apr 19, 2016 at 03:31:41PM +0200, Lars-Peter Clausen wrote:
-> > 
-> > It adds a standard API for dealing with devices that have more than
-> > one
-> > address. It uses the normal way of specifying multiple (named)
-> > address in DT.
-> > 
-> > reg = <0xa>, <0xb>, <0xc>;
-> > reg-names = "main", "aux1", "aux2";
-> > 
-[...]
+On 19/04/16 13:09, Bhupesh Sharma wrote:
+> Hi Mark,
+> 
+> Sorry for the delayed reply. I was on holidays.
+> 
+>> From: Marc Zyngier [mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org]
+>> Sent: Thursday, April 14, 2016 9:19 PM
+>>
+>> Hi Bhupesh,
+>>
+>> On 28/12/15 10:01, Bhupesh Sharma wrote:
+>>> Hi Arnd, Kevin, Olof
+>>>
+>>> This is the v4 of patchset which adds the support for SP805 WDT on
+>> FSL
+>>> LS2080A and also adds the missing documentation of SP805 WDT device-
+>> tree bindings.
+>>>
+>>> Rebased against arm-soc/next/dt
+>>>
+>>> Changes since v3:
+>>> (v3 can be viewed here:
+>>> https://www.mail-
+>> archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg97249.html)
+>>> - Added Rob's Acked-by for patch 1/2.
+>>> - Sending to 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org' list and also cc'ed Shawn Guo
+>>>
+>>> Changes since v2:
+>>> (v2 can be viewed here:
+>>> http://permalink.gmane.org/gmane.linux.ports.arm.kernel/463141)
+>>> - Addressed Rob's comments regarding the second mandatory CLK
+>> source's
+>>>   (WDOGCLK) name in the bindings.
+>>>
+>>> Changes since v1:
+>>> (v1 can be viewed here:
+>>> http://www.spinics.net/lists/devicetree/msg102487.html)
+>>>
+>>> - Addressed Rob and Mark's comments regarding the mandatory CLK
+>>> sources
+>>> - Removed interrupt property from the bindings for now (as discussed
+>>>   with Mark on IRC) till Will's patch proceeds further and enables
+>>>   handling the WDOG interrupts for each core connected to the same
+>> PPI
+>>>   line
+>>> (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-
+>> December/3
+>>> 91616.html)
+>>
+>> Will just pointed me to this series. I've recently posted a set of
+>> patches that should be able to deal with the quirkiness of your HW with
+>> regards to PPIs:
+>>
+>> http://thread.gmane.org/gmane.linux.drivers.devicetree/163464
+>>
+>> Could you please let me know if this works for you?
+>>
+> 
+> Sure. I will have a look at the patchset and get back asap.
 
-> Srinivas, do you think this works with the sensor stuff?
-Yes, it will work.
+Thanks. It should be pretty easy to do (define all 8 affinities for your
+CPUs, and assign each one to the watchdog it corresponds to).
 
-Thanks,
-Srinivas
+Of course, the watchdog driver itself is missing interrupt support, so
+you will have to hack that as well. If you have any issue with this
+stuff, please give me a shout.
+
+Cheers,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
