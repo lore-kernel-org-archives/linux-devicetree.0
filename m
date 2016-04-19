@@ -1,57 +1,60 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 3/7] ASoC: hdmi-codec: Add hdmi-codec for external
- HDMI-encoders
-Date: Tue, 19 Apr 2016 11:54:29 +0100
-Message-ID: <20160419105429.GS3217@sirena.org.uk>
-References: <cover.1459431292.git.jsarha@ti.com>
- <636486b25db48fa13ae640516cdebe7bcfea0d23.1459431292.git.jsarha@ti.com>
- <57160B9F.9090907@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Tue, 19 Apr 2016 11:55:45 +0100
+Message-ID: <20160419105545.GT3217@sirena.org.uk>
+References: <20160331192227.GU2350@sirena.org.uk>
+ <56FD7F07.7010404@nvidia.com>
+ <20160331203942.GV2350@sirena.org.uk>
+ <56FE2009.4020302@nvidia.com>
+ <20160401161121.GZ2350@sirena.org.uk>
+ <570370E5.3070901@nvidia.com>
+ <20160412010226.GO3351@sirena.org.uk>
+ <570CF822.4050002@nvidia.com>
+ <20160413065310.GK14664@sirena.org.uk>
+ <571601E7.2000901@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WkmTq0Xj5pNQBic9"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="AaroDtM9M79Ffl67"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <57160B9F.9090907-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <571601E7.2000901@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
 
---WkmTq0Xj5pNQBic9
+--AaroDtM9M79Ffl67
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Apr 19, 2016 at 01:42:39PM +0300, Jyri Sarha wrote:
+On Tue, Apr 19, 2016 at 03:31:11PM +0530, Laxman Dewangan wrote:
+> On Wednesday 13 April 2016 12:23 PM, Mark Brown wrote:
 
-> There is now two acks (and a tested-by?) to this patch and reviewed-by
-> to an earlier version (with very small change this this one). I think it
-> would make sense to apply this one now, even if there are no users to
-> the driver just yet. Then all the video side users could (at least in
-> theory) implement the HW specific hdmi audio support with video side
-> patches only.
+> >Possibly.  It did also occur to me last night that having a Maxim
+> >specific property which lets you specify a raw register value to
+> >configure in cases where the board goes out of spec (as opposed to a
+> >time which could be left specified as the real value) might solve the
+> >problem without being too terrible from an interface point of view,
+> >though something that's directly obvious from the schematic would be
+> >much better.
 
-> What do you think?
+You appear to have ignord my suggestion above...
 
-I applied it yesterday.
-
---WkmTq0Xj5pNQBic9
+--AaroDtM9M79Ffl67
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXFg5jAAoJECTWi3JdVIfQg9IH/jEA7d1UFAO/vxk0CzmRR541
-recG/2lb7Hm8rLTQE7YsZGAD4NqiY+3pCJqJ28t16sh3583ZhxXgj1/9dt8sREqP
-mFfxOV/Lp1t9MUm2UFbryW9zpAGr7vxwwuifQnpL2isXFI68hOwEPyM6sbg4wjDv
-p9IRNMlY4SGLlTSOl8bob5AsqVb3oQ+OIvPLlv3+A7QHHOml63IXeR4TwCOAES14
-Fg/DLafvzusqdJ3CfJNh+eBrQ66g8GUSTv4KqmwQdb0hBqOal4malqbguU5dCkXH
-TSEW1UYjwGE1V9tKOv19wFaTe0iKsvsAeBghNJ3NFt9aHxBic8+RTwO4NAS6HSY=
-=/Fe+
+iQEcBAEBCAAGBQJXFg6wAAoJECTWi3JdVIfQmgoH/jWBq1jQp4mJyjQaEoBz5aUf
+zEIFIxHpEuQ4u3k+J3y2BcHHWUZS7Ha4cep9xWpRRLoWs7vjRyemJjsTEzsvRPz/
+8QFbAVh4PWm0iGWdzidIGnRcDvcbe3RJ1rSTj45iwvXZ66gcnz12yGiCcmSQUtdL
+9PqjkcTXQsfY+oCT1iZ2srCr0Lbwivh4Fv8lDL9Nz+cl1+NaNu060mrb3ET7u3C1
+0BLujf8b+Wtp+qh0kh8CUB0aMWCgqx/8WXLA/zDHFyBn1YZGzscKbNsOIliqo0lS
+QhVUaYTMnj6xpAXPol7jgxR7gMsAvk4tAW3o3PzeXiokrh0jYXe4jTJtZN5E6YE=
+=0Ug3
 -----END PGP SIGNATURE-----
 
---WkmTq0Xj5pNQBic9--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--AaroDtM9M79Ffl67--
