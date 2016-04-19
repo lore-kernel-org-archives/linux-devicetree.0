@@ -1,20 +1,23 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Shenzhen Embest Technology
-Date: Tue, 19 Apr 2016 17:23:05 -0500
-Message-ID: <20160419222305.GA31280@rob-hp-laptop>
-References: <1460225665-15261-1-git-send-email-sergio.prado@e-labworks.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: Add Arrow Electronics to vendor prefix list
+Date: Tue, 19 Apr 2016 17:23:20 -0500
+Message-ID: <20160419222320.GA31467@rob-hp-laptop>
+References: <1460453397-5597-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460225665-15261-1-git-send-email-sergio.prado@e-labworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergio Prado <sergio.prado@e-labworks.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, treding@nvidia.com, jic23@kernel.org, broonie@kernel.org, mranostay@gmail.com, stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1460453397-5597-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 09, 2016 at 03:14:25PM -0300, Sergio Prado wrote:
-> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+On Tue, Apr 12, 2016 at 10:29:56AM +0100, Srinivas Kandagatla wrote:
+> This patch adds Arrow Electronics to vendor perfix list, as this vendor
+> makes some of the Qualcomm SOC based 96boards like DB600c and DB410c.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Applied, thanks.
 
@@ -25,17 +28,21 @@ Rob
 >  1 file changed, 1 insertion(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index e52cc8a6b2ae..3d08bafd5669 100644
+> index 86740d4..f382061 100644
 > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
 > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -74,6 +74,7 @@ ea	Embedded Artists AB
->  ebv	EBV Elektronik
->  edt	Emerging Display Technologies
->  elan	Elan Microelectronic Corp.
-> +embest	Shenzhen Embest Technology Co., Ltd.
->  emmicro	EM Microelectronic
->  energymicro	Silicon Laboratories (formerly Energy Micro AS)
->  epcos	EPCOS AG
+> @@ -27,6 +27,7 @@ aptina	Aptina Imaging
+>  arasan	Arasan Chip Systems
+>  arm	ARM Ltd.
+>  armadeus	ARMadeus Systems SARL
+> +arrow	Arrow Electronics
+>  artesyn	Artesyn Embedded Technologies Inc.
+>  asahi-kasei	Asahi Kasei Corp.
+>  atlas	Atlas Scientific LLC
 > -- 
-> 1.9.1
+> 2.5.0
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
