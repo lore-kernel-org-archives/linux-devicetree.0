@@ -1,88 +1,50 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: tegra: Rename some bindings for
- consistency
-Date: Tue, 19 Apr 2016 17:24:21 -0500
-Message-ID: <20160419222421.GA32163@rob-hp-laptop>
-References: <1460473656-27209-1-git-send-email-thierry.reding@gmail.com>
- <1460473656-27209-2-git-send-email-thierry.reding@gmail.com>
+Subject: Re: [PATCH/TRIVIAL] devicetree: bindings: designware-pcie: Fix unit
+ address
+Date: Tue, 19 Apr 2016 17:24:33 -0500
+Message-ID: <20160419222433.GA32298@rob-hp-laptop>
+References: <1460491294-32437-1-git-send-email-stephen.boyd@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460473656-27209-2-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1460491294-32437-1-git-send-email-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 12, 2016 at 05:07:36PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tue, Apr 12, 2016 at 01:01:34PM -0700, Stephen Boyd wrote:
+> Remove the 0x in the unit address because it shouldn't be there.
 > 
-> Device tree binding for NVIDIA Tegra have traditionally carried the
-> "nvidia," vendor prefix in the filename. A couple of odd ones don't, so
-> fix them up for consistency.
-> 
-> Also rename existing bindings to reflect the first compatible value that
-> they document. This wasn't done consistently either.
-> 
-> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Cc: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Applied, thanks.
 
 Rob
 
 > ---
-> Changes in v2:
-> - rename a couple more binding documents whose name didn't reflect the
->   compatible string that they describe
-> - generate patch with -M to make obvious that there weren't any changes
->   besides the renaming
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  .../devicetree/bindings/ata/{tegra-sata.txt => nvidia,tegra124-ahci.txt}  | 0
->  .../cpufreq/{tegra124-cpufreq.txt => nvidia,tegra124-cpufreq.txt}         | 0
->  .../bindings/dma/{tegra20-apbdma.txt => nvidia,tegra20-apbdma.txt}        | 0
->  .../{nvidia,tegra-ictlr.txt => nvidia,tegra20-ictlr.txt}                  | 0
->  .../memory-controllers/{tegra-emc.txt => nvidia,tegra124-emc.txt}         | 0
->  .../memory-controllers/{nvidia,tegra-mc.txt => nvidia,tegra30-mc.txt}     | 0
->  .../bindings/thermal/{tegra-soctherm.txt => nvidia,tegra124-soctherm.txt} | 0
->  7 files changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/ata/{tegra-sata.txt => nvidia,tegra124-ahci.txt} (100%)
->  rename Documentation/devicetree/bindings/cpufreq/{tegra124-cpufreq.txt => nvidia,tegra124-cpufreq.txt} (100%)
->  rename Documentation/devicetree/bindings/dma/{tegra20-apbdma.txt => nvidia,tegra20-apbdma.txt} (100%)
->  rename Documentation/devicetree/bindings/interrupt-controller/{nvidia,tegra-ictlr.txt => nvidia,tegra20-ictlr.txt} (100%)
->  rename Documentation/devicetree/bindings/memory-controllers/{tegra-emc.txt => nvidia,tegra124-emc.txt} (100%)
->  rename Documentation/devicetree/bindings/memory-controllers/{nvidia,tegra-mc.txt => nvidia,tegra30-mc.txt} (100%)
->  rename Documentation/devicetree/bindings/thermal/{tegra-soctherm.txt => nvidia,tegra124-soctherm.txt} (100%)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/tegra-sata.txt b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/ata/tegra-sata.txt
-> rename to Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> diff --git a/Documentation/devicetree/bindings/cpufreq/tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/cpufreq/tegra124-cpufreq.txt
-> rename to Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> diff --git a/Documentation/devicetree/bindings/dma/tegra20-apbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/dma/tegra20-apbdma.txt
-> rename to Documentation/devicetree/bindings/dma/nvidia,tegra20-apbdma.txt
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra-ictlr.txt b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra-ictlr.txt
-> rename to Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-emc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/memory-controllers/tegra-emc.txt
-> rename to Documentation/devicetree/bindings/memory-controllers/nvidia,tegra124-emc.txt
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/memory-controllers/nvidia,tegra-mc.txt
-> rename to Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
-> diff --git a/Documentation/devicetree/bindings/thermal/tegra-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/thermal/tegra-soctherm.txt
-> rename to Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 64f2fff12128..6c5322c55411 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -31,7 +31,7 @@ Optional properties:
+>  
+>  Example configuration:
+>  
+> -	pcie: pcie@0xdffff000 {
+> +	pcie: pcie@dffff000 {
+>  		compatible = "snps,dw-pcie";
+>  		reg = <0xdffff000 0x1000>, /* Controller registers */
+>  		      <0xd0000000 0x2000>; /* PCI config space */
 > -- 
-> 2.8.0
+> 2.8.0.rc4
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
