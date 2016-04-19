@@ -1,64 +1,48 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and
- cleanups
-Date: Tue, 19 Apr 2016 11:39:52 +0200
-Message-ID: <5715FCE8.7080106@schinagl.nl>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <5715F927.3030102@samsung.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v8 39/45] powerpc/powernv: Select OF_DYNAMIC
+Date: Tue, 19 Apr 2016 19:42:01 +1000
+Message-ID: <5715FD69.3060302@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-40-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <5715F927.3030102@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Peter Meerwald <pmeerw@pmeerw.net>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1455680668-23298-40-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 19-04-16 11:23, Jacek Anaszewski wrote:
-> Hi Olliver,
+On 02/17/2016 02:44 PM, Gavin Shan wrote:
+> The device tree will change dynamically in PowerNV PCI hotplug
+> driver. This enables CONFIG_OF_DYNAMIC to support that.
 >
-> Thanks for the patches.
-> Adding driver authors on cc.
-Ah sorry about that, thanks. I guess get_maintainers doesn't do that.
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/powerpc/platforms/powernv/Kconfig b/arch/powerpc/platforms/powernv/Kconfig
+> index 604190c..e7b1ad7 100644
+> --- a/arch/powerpc/platforms/powernv/Kconfig
+> +++ b/arch/powerpc/platforms/powernv/Kconfig
+> @@ -18,6 +18,7 @@ config PPC_POWERNV
+>   	select CPU_FREQ_GOV_ONDEMAND
+>   	select CPU_FREQ_GOV_CONSERVATIVE
+>   	select PPC_DOORBELL
+> +	select OF_DYNAMIC
 
-As for the compile bug, I'll fix that with v2, it only applies on the 
-intermediate patches, not on the whole set.
 
-Olliver
+Why not to enable it in 45/45 under config HOTPLUG_PCI_POWERNV? Is there 
+any benefit of having it always on if HOTPLUG_PCI_POWERNV is not enabled?
+
+
+>   	default y
 >
-> On 04/19/2016 09:40 AM, Olliver Schinagl wrote:
->> Using the pca963x for a while, I noticed something that may look like 
->> some
->> i2c accessing issues where sometimes data was incorrectly written to 
->> the bus,
->> possibly because we where not properly locking the i2c reads. Though 
->> I'm not
->> familiar enough with the i2c framework to be certain reads need to be 
->> locked
->> at all. A patch was added to properly lock i2c access more tightly.
->>
->> Furthermore there was no method to support inverted outputs. This series
->> adds a property to the device tree to inform the driver that the output
->> is inverted (active-high vs active-low).
->>
->> Additionally, this patch set does some cleanups to please checkpatch, 
->> and
->> removes a few magic values.
->>
->> Olliver Schinagl (6):
->>    leds: pca963x: Alphabetize headers
->>    leds: pca963x: Lock i2c r/w access
->>    leds: pca963x: Add defines and remove some magic values
->>    leds: pca963x: Reduce magic values
->>    leds: pca963x: Inform the output that it is inverted
->>    leds: pca963x: Remove whitespace and checkpatch problems
->>
->>   Documentation/devicetree/bindings/leds/pca963x.txt |   1 +
->>   drivers/leds/leds-pca963x.c                        | 243 
->> ++++++++++++++-------
->>   include/linux/platform_data/leds-pca963x.h         |   1 +
->>   3 files changed, 171 insertions(+), 74 deletions(-)
->>
+>   config OPAL_PRD
 >
->
+
+
+-- 
+Alexey
