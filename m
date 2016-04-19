@@ -1,116 +1,55 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Tue, 19 Apr 2016 09:38:18 -0500
-Message-ID: <571642DA.2060903@opensource.altera.com>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1> <57111E8B.1040503@opensource.altera.com>
- <20160418074540.GB3346@x1> <5714F942.5040309@opensource.altera.com>
- <20160419072358.GB3222@x1>
-Reply-To: <tthayer@opensource.altera.com>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCHv2] wlcore: spi: add wl18xx support
+Date: Tue, 19 Apr 2016 14:35:24 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B360C0C5D@DFRE01.ent.ti.com>
+References: <1460273570-12298-1-git-send-email-eyalr@ti.com>
+ <1463330011.BhWEcYYuGD@wuerfel>
+ <8665E2433BC68541A24DFFCA87B70F5B360C0745@DFRE01.ent.ti.com>
+ <4133521.UUI3B1RTyv@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160419072358.GB3222@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4133521.UUI3B1RTyv@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> > > > It is also part of the generic spi.h (include/Linux/spi/spi.h),
+> > > > already part of " struct spi_device" So it seemed redundant adding
+> > > > another mechanism for implementing the same.
+> > > > Platform that interact with a wilink need to use it, and platforms
+> > > > that don't have this capability will probably not interact with a
+> > > > wilink device
+> > > using SPI.
+> > >
+> > > The cs_gpio field in spi_device belongs to the spi host controller,
+> > > no other slave driver uses it.
+> > >
+> > > I wasn't asking for a duplication of this mechanism, but an
+> > > interface to use it properly. Internally, the spi core uses the spi_set_cs()
+> function to pick a CS.
+> > > Find a way to use that rather than reimplementing it incorrectly.
+> > >
+> >
+> > Understood. As this special CS manipulation is unique to wspi (wilink
+> > spi)  I think the best option is to move this gpio allocation into
+> > wlcore_spi as a new device tree entry used only by this driver.
+> > If you agree I will submit a v3.
+> 
+> I don't think that can work either: aside of not solving the problem of wilink
+> devices on spi controllers that don't use gpio, it also doesn't solve the
+> problem of what happens when the driver manually triggers the gpio to hold
+> the CS signal while another driver talks to a different device using another CS
+> on the same controller.
+> 
+Ok, understood. Will look into it.
 
-
-On 04/19/2016 02:23 AM, Lee Jones wrote:
-> On Mon, 18 Apr 2016, Thor Thayer wrote:
->
->> Hi Lee,
->>
->> On 04/18/2016 02:45 AM, Lee Jones wrote:
->>> On Fri, 15 Apr 2016, Thor Thayer wrote:
->>>> On 03/30/2016 06:35 AM, Lee Jones wrote:
->>>>> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
->>>>>
->>>>>> From: Thor Thayer <tthayer@opensource.altera.com>
->>>>>>
->>>>>> The Altera Arria10 Devkit System Resource chip is a Multi-Function
->>>>>> Device, it has two subdevices:
->>>>>>       - GPIO
->>>>>>       - HWMON
->>>>>>
->>>>>> This patch adds documentation for the Altera A10-SR DT bindings.
->>>>>>
->>>>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->>>>>> ---
->>>>>>   .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
->>>>>>   1 file changed, 35 insertions(+)
->>>>>>   create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..564c761
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
->>>>>> @@ -0,0 +1,35 @@
->>>>>> +* Altera Arria10 Development Kit System Resource Chip
->>>>>> +
->>>>>> +Required parent device properties:
->>>>>> +- compatible : "altr,altr_a10sr"
->>>>>> +- spi-max-frequency : Maximum SPI frequency.
->>>>>> +- reg : the SPI Chip Select address for the Arria10 System Resource chip
->>>
->>> [...]
->>>
->>>>>> +		a10sr_hwmon: a10sr_hwmon {
->>>>>
->>>>> Device type only please.
->>>>>
->>>> I need to revisit where this will live (hwmon does not seem to be
->>>> the correct place) so it will change but I can follow the format
->>>> above if it is correct.
->>>
->>> BTW, "hwmon" is a subsystem in Linux, therefore is a Linuxism and is
->>> not allowed in DT.  What does the device *actually* do?
->>>
->>
->> OK. I'll be careful not to introduce the Linux subsystem name.
->>
->> This module indicates whether the power supplies are at the correct
->> voltage. It uses a boolean instead of giving an actual voltage value
->> as required by HWMON. In other words it is a comparator instead of
->> an Analog-to-Digital Converter.
->>
->> I could call it a power supply supervisor or voltage status monitor
->> but it only acts in a passive role. There is no output to trigger an
->> error - only polling, so supervisor doesn't seem like a good name.
->>
->> Maybe something like this?
->>
->> 	power_supply_status {
->> 		compatible = "altr,a10sr-hwmon";
->> 	}
->>
->> Thanks for reviewing and helping me figure out the device tree naming.
->
-> Does it have its own address space?  How complex is the device?  Not
-> very, by the sounds of it.  In which case, does it really need its own
-> driver?
->
-Yes, you are correct that the voltage status is not very complex but I'd 
-need a driver to expose these signals.
-
-I initially started with an MFD because it was similar to the other MFD 
-drivers. The device has GPI, GPO, voltage status, device enables, device 
-present indications, and device resets.
-
-There is a discussion now on where the voltage status driver should live 
-(iio/ , hwmon/, misc/). It isn't clear to me where the device enables, 
-device present indications and voltage status would go. I'm leaning 
-toward a driver in the misc/ directory that would cover all of these. In 
-that case, this wouldn't be a MFD driver.
-
-Any thoughts or suggestions?
-
-Thanks,
-
-Thor
+Best Regards,
+Eyal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
