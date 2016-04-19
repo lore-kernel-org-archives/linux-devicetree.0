@@ -1,132 +1,80 @@
-From: Stuart Yoder <stuart.yoder@nxp.com>
-Subject: [PATCH 1/2 v3] Documentation: fsl-mc: binding updates for MSIs, ranges, PHYs
-Date: Tue, 19 Apr 2016 16:53:08 -0500
-Message-ID: <1461102788-30565-1-git-send-email-stuart.yoder@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] Documentation: devicetree: Clean up gpio-keys example
+Date: Tue, 19 Apr 2016 17:13:49 -0500
+Message-ID: <20160419221349.GA25916@rob-hp-laptop>
+References: <1458129209-15449-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, german.rivera@freescale.com, linux-kernel@vger.kernel.org, shawnguo@kernel.org, Stuart Yoder <stuart.yoder@freescale.com>, Stuart Yoder <stuart.yoder@nxp.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1458129209-15449-1-git-send-email-afaerber@suse.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: linux-input@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Julien Chauveau <chauveau.julien@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stuart Yoder <stuart.yoder@freescale.com>
+On Wed, Mar 16, 2016 at 12:53:29PM +0100, Andreas F=E4rber wrote:
+> Drop #address-cells and #size-cells, which are not required by the
+> gpio-keys binding documentation, as button sub-nodes are not devices.
+>=20
+> Rename sub-nodes to avoid new dtc unit address warnings when copied.
+>=20
+> While at it, adopt the dashes convention for the node name.
+>=20
+> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+> Cc: Julien Chauveau <chauveau.julien@gmail.com>
+> Cc: Javier Martinez Canillas <javier@dowhile0.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
 
--The Freescale Management Complex and all associated objects
- use message interrupts, and thus an msi-parent is required.
+Applied, thanks.
 
--Define a ranges property to specify the mapping between
- the MC address space and the system address space.
+Rob
 
--The fsl-mc node may optionally have dpmac sub-nodes that describe
- the relationship between the Ethernet MACs which belong to the MC
- and the Ethernet PHYs on the system board.
-
-Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
-Acked-by: J. German Rivera <German.Rivera@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
--v3
-   -no changes
-
- .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 81 +++++++++++++++++++++-
- 1 file changed, 80 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-index c7a26ca..6611a7c 100644
---- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-+++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-@@ -30,11 +30,90 @@ Required properties:
-                         region may not be present in some scenarios, such
-                         as in the device tree presented to a virtual machine.
- 
-+    - msi-parent
-+        Value type: <phandle>
-+        Definition: Must be present and point to the MSI controller node
-+                    handling message interrupts for the MC.
-+
-+    - ranges
-+        Value type: <prop-encoded-array>
-+        Definition: A standard property.  Defines the mapping between the child
-+                    MC address space and the parent system address space.
-+
-+                    The MC address space is defined by 3 components:
-+                       <region type> <offset hi> <offset lo>
-+
-+                    Valid values for region type are
-+                       0x0 - MC portals
-+                       0x1 - QBMAN portals
-+
-+    - #address-cells
-+        Value type: <u32>
-+        Definition: Must be 3.  (see definition in 'ranges' property)
-+
-+    - #size-cells
-+        Value type: <u32>
-+        Definition: Must be 1.
-+
-+Sub-nodes:
-+
-+        The fsl-mc node may optionally have dpmac sub-nodes that describe
-+        the relationship between the Ethernet MACs which belong to the MC
-+        and the Ethernet PHYs on the system board.
-+
-+        The dpmac nodes must be under a node named "dpmacs" which contains
-+        the following properties:
-+
-+            - #address-cells
-+              Value type: <u32>
-+              Definition: Must be present if dpmac sub-nodes are defined and must
-+                          have a value of 1.
-+
-+            - #size-cells
-+              Value type: <u32>
-+              Definition: Must be present if dpmac sub-nodes are defined and must
-+                          have a value of 0.
-+
-+        These nodes must have the following properties:
-+
-+            - compatible
-+              Value type: <string>
-+              Definition: Must be "fsl,qoriq-mc-dpmac".
-+
-+            - reg
-+              Value type: <prop-encoded-array>
-+              Definition: Specifies the id of the dpmac.
-+
-+            - phy-handle
-+              Value type: <phandle>
-+              Definition: Specifies the phandle to the PHY device node associated
-+                          with the this dpmac.
-+
- Example:
- 
-         fsl_mc: fsl-mc@80c000000 {
-                 compatible = "fsl,qoriq-mc";
-                 reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
-                       <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
--        };
-+                msi-parent = <&its>;
-+                #address-cells = <3>;
-+                #size-cells = <1>;
-+
-+                /*
-+                 * Region type 0x0 - MC portals
-+                 * Region type 0x1 - QBMAN portals
-+                 */
-+                ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
-+                          0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
- 
-+                dpmacs {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    dpmac@1 {
-+                        compatible = "fsl,qoriq-mc-dpmac";
-+                        reg = <1>;
-+                        phy-handle = <&mdio0_phy0>;
-+                    }
-+                }
-+        };
--- 
-1.9.0
+> ---
+>  v1 -> v2:
+>  * Changed node name from underscore to dash
+>  * Inserted white lines
+>  * Renamed sub-nodes (Geert, Julien)
+> =20
+>  Documentation/devicetree/bindings/input/gpio-keys.txt | 10 +++++----=
+-
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/=
+Documentation/devicetree/bindings/input/gpio-keys.txt
+> index 21641236c095..a94940481e55 100644
+> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
+> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+> @@ -32,17 +32,17 @@ Optional subnode-properties:
+> =20
+>  Example nodes:
+> =20
+> -	gpio_keys {
+> +	gpio-keys {
+>  			compatible =3D "gpio-keys";
+> -			#address-cells =3D <1>;
+> -			#size-cells =3D <0>;
+>  			autorepeat;
+> -			button@21 {
+> +
+> +			up {
+>  				label =3D "GPIO Key UP";
+>  				linux,code =3D <103>;
+>  				gpios =3D <&gpio1 0 1>;
+>  			};
+> -			button@22 {
+> +
+> +			down {
+>  				label =3D "GPIO Key DOWN";
+>  				linux,code =3D <108>;
+>  				interrupts =3D <1 IRQ_TYPE_LEVEL_HIGH 7>;
+> --=20
+> 2.6.2
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
