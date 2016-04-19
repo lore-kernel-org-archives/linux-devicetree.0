@@ -1,78 +1,57 @@
-From: Alexey Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v8 35/45] powerpc/powernv: Fundamental reset in
- pnv_pci_reset_secondary_bus()
-Date: Tue, 19 Apr 2016 19:04:19 +1000
-Message-ID: <5715F493.2030002@ozlabs.ru>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-36-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 6/9] pinctrl: Add IRQ support to STM32 gpios
+Date: Tue, 19 Apr 2016 11:04:46 +0200
+Message-ID: <CALszF6CUFKAjzUpEh3pDtSDdJuFan1ON0Kcu_uKD_OX36kXOHQ@mail.gmail.com>
+References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1459436979-17275-7-git-send-email-mcoquelin.stm32@gmail.com>
+	<CACRpkdYLPWNQZgdFHVwLOZv+rS=bdERM9St5b0hVHTd_+ZJMKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455680668-23298-36-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYLPWNQZgdFHVwLOZv+rS=bdERM9St5b0hVHTd_+ZJMKg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2016 02:44 PM, Gavin Shan wrote:
-> In pnv_pci_reset_secondary_bus(), we should issue fundamental reset
-> if any one subordinate device of the specified bus is requesting that.
-> Otherwise, the device might not come up after the reset.
+Hi Linus
+
+2016-04-08 11:43 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Thu, Mar 31, 2016 at 5:09 PM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
 >
-> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-
-
-Reviewed-by: Alexey Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>
-
-
-Out of curiosity - what does "fundamental" reset actually do?
-
-
-> ---
->   arch/powerpc/platforms/powernv/eeh-powernv.c | 21 ++++++++++++++++++++-
->   1 file changed, 20 insertions(+), 1 deletion(-)
+>> +static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+>> +{
+>> +       struct stm32_pinctrl *pctl = dev_get_drvdata(chip->parent);
+>> +       struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
+>> +       unsigned int irq;
+>> +
+>> +       regmap_field_write(pctl->irqmux[offset], bank->range.id);
 >
-> diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
-> index 593b8dc..c7454ba 100644
-> --- a/arch/powerpc/platforms/powernv/eeh-powernv.c
-> +++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-> @@ -866,9 +866,28 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
->   	return 0;
->   }
+> No. You must implement the irqchip and GPIO controllers to
+> be orthogonal, doing things like this creates a semantic that
+> assumes .to_irq() is always called before using the IRQ and
+> that is not guaranteed at all. A consumer may very well
+> use an interrupt right off the irqchip without this being called
+> first. All this function should do is translate a number. No
+> other semantics.
 >
-> +static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
-> +{
-> +	int *freset = data;
-> +
-> +	/*
-> +	 * Stop the iteration immediately if there has any one
-> +	 * PCI device requesting fundamental reset.
-> +	 */
-> +	*freset |= pdev->needs_freset;
-> +	return *freset;
-> +}
-> +
->   void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
->   {
-> -	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
-> +	int option, freset = 0;
-> +
-> +	if (dev->subordinate)
-> +		pci_walk_bus(dev->subordinate,
-> +			     pnv_pci_dev_reset_type, &freset);
-> +
-> +	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
-> +	pnv_eeh_bridge_reset(dev, option);
->   	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
->   }
->
->
+> This needs to be done from the irqchip (sorry).
 
+Actually, the register written here is not part of the irqchip.
+It is a system config register that is only used when using a GPIO as
+external interrupt.
+Its aim is to mux the GPIO bank on a line.
+For example on line 1, it can be muxed to select either gpioa1,
+gpiob1, gpioc1, ...
+How could I do it in the irqchip that has no gpio knowledge?
 
--- 
-Alexey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In case the consumer uses an interrupt right off the irqchip, it
+should not access this register.
+For example the RTC wakeup lines, where we will reference directly the irqchip.
+
+That said, do you still believe the implementation is wrong? Do I miss
+something?
+
+Best regards,
+Maxime
