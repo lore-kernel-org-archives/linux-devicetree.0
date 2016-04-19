@@ -1,82 +1,95 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
-Date: Tue, 19 Apr 2016 16:07:06 +0200
-Message-ID: <11193586.PGqlzvJDML@wuerfel>
-References: <1460360506-14692-1-git-send-email-navam@xilinx.com> <4449845.qT8BZnpD4R@wuerfel> <C89496FEAE474D468F30D558A9468D9F26CD3753@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 05/15] irqchip: Mask the non-type/sense bits when
+ translating an IRQ
+Date: Tue, 19 Apr 2016 15:14:07 +0100
+Message-ID: <57163D2F.5020005@nvidia.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+ <1458224359-32665-6-git-send-email-jonathanh@nvidia.com>
+ <20160409120333.3982c53b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C89496FEAE474D468F30D558A9468D9F26CD3753-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160409120333.3982c53b-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 19 April 2016 09:15:01 Nava kishore Manne wrote:
-> > -----Original Message-----
-> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> > Sent: Monday, April 18, 2016 8:05 PM
-> > To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Nava kishore Manne
-> > <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; mark.rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Hyun Kwon
-> > <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; pawel.moll-5wv7dgnIgG8@public.gmane.org; ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org;
-> > gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
-> > Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; balbi-l0cyMroinI0@public.gmane.org; linux-
-> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Soren Brinkmann
-> > <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
-> >
-> > On Monday 18 April 2016 09:29:09 Rob Herring wrote:
-> > >
-> > > Right, you don't need to know the exact bus width for determining the
-> > > register/descriptor set is 32 or 64 bit addesses. I'm fine with a
-> > > property for that, but if limiting the actual connected address bits
-> > > is needed, then dma-ranges should be used.
-> >
-> > The other way round: dma-ranges is needed to allow 64-bit addressing, the
-> > default is to only allow 32-bit addressing (and arm64 has a known bug here, it
-> > just allows it anyway when it shouldn't).
-> 
-> AXI-USB IP configurable for 32-bit or 64-bit addressing.
-> 
-> In any of the configuration I mean if it is a 32-bit or 64-bit addressing there is a flexibility for the dma to choose the
-> Memory range supported by the AXI-USB...
-> 
-> For example if AXI-USB (dma ) is configured for 40-bit addressing.
 
-You seem to contradict yourself here, saying that it can be either
-32-bit or 64-bit, but then you say it is configured for 40-bit mode.
-
-Can you be more specific of which configurations are possible in the
-AXI-USB hardware block? Does it have three modes (32, 40, 64) or just
-two modes where it always truncates the 64-bit register values
-to 40 bits before sending a transaction out on the AXI master port?
-
-
-> Theoretically it can access memory up to 1TB if it is true we can get the
-> Address width using log2 of the dma-ranges size as you mentioned above.
+On 09/04/16 12:03, Marc Zyngier wrote:
+> On Thu, 17 Mar 2016 14:19:09 +0000
+> Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 > 
-> But in real use case user won't map the entire memory
-> He will map only the memory of his own choice...
+>> The firmware parameter that contains the IRQ sense bits may also contain
+>> other data. When return the IRQ type, bits outside of these sense bits
+>> should be masked. If these bits are not masked and
+>> irq_create_fwspec_mapping() is called to map an IRQ, then the comparison
+>> of the type returned from irq_domain_translate() will never match
+>> that returned by irq_get_trigger_type() (because this function masks the
+>> none sense bits) and so we will always call irq_set_irq_type() to program
+>> the type even if it was not really necessary.
+>>
+>> Currently, the downside to this is unnecessarily re-programmming the type
+>> but nevertheless this should be avoided.
+>>
+>> The Tegra LIC, TI Crossbar and GIC-V3 irqchips all have client instances
+>> (from reviewing the device-tree sources) where bits outside the IRQ sense
+>> bits are set, but do not mask these bits. Therefore, ensure these bits
+>> are masked for these irqchips.
 > 
-> For example user mapped 2GB then dma-ranges property will be like below.
-> 
-> dma-ranges = <0x00000000 0x00000000  0x80000000>;
+> For GICv3, this shouldn't be the case. The DT clearly says that the 3rd
+> field should only contain the trigger description. It looks like people
+> have been copying their GICv2 DT and simply slapped the v3 description
+> in the middle, without changing their interrupt specifiers. Duh.
 
-Again, that is not how dma-ranges works. The dma-ranges should list how
-the bus address space translates into the CPU address space, and that
-is completely independent of how much memory is installed. Unfortunately
-this was designed back when we had hierarchical buses, whereas nowadays
-we use point-to-point connections. We can normally work around that
-by translating each AXI link in the SoC design into a single line
-in the dma-ranges property, except when two devices on the same logical
-bus (which doesn't exist on AXI) have AXI master ports connecting to
-different places using the same address.
+Hmmm ... I was just double checking on this for the gic-v3 by wading
+through the DTS files, and may be there is no issue here. However,
+looking at the current code it is a bit inconsistent between firmware
+types ...
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ static int gic_irq_domain_translate(struct irq_domain *d,
+                                     struct irq_fwspec *fwspec,
+                                     unsigned long *hwirq,
+                                     unsigned int *type)
+ {
+         if (is_of_node(fwspec->fwnode)) {
+                 if (fwspec->param_count < 3)
+                         return -EINVAL;
+
+                 switch (fwspec->param[0]) {
+                 case 0:                 /* SPI */
+                         *hwirq = fwspec->param[1] + 32;
+                         break;
+                 case 1:                 /* PPI */
+                         *hwirq = fwspec->param[1] + 16;
+                         break;
+                 case GIC_IRQ_TYPE_LPI:  /* LPI */
+                         *hwirq = fwspec->param[1];
+                         break;
+                 default:
+                         return -EINVAL;
+                 }
+
+                 *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+                 return 0;
+         }
+
+         if (is_fwnode_irqchip(fwspec->fwnode)) {
+                 if(fwspec->param_count != 2)
+                         return -EINVAL;
+
+                 *hwirq = fwspec->param[0];
+                 *type = fwspec->param[1];
+                 return 0;
+         }
+
+         return -EINVAL;
+
+> I guess this patch doesn't hurt though.
+
+Yes, it doesn't but I think I will leave this alone for now, given that
+I can't find a case where this would be a problem.
+
+Cheers
+Jon
