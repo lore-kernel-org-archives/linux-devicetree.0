@@ -1,85 +1,35 @@
-From: Crestez Dan Leonard <leonard.crestez@intel.com>
-Subject: Re: [PATCH v6 08/24] iio: imu: inv_mpu6050: convert to use an
- explicit i2c mux core
-Date: Tue, 19 Apr 2016 18:58:11 +0300
-Message-ID: <57165593.4040700@intel.com>
-References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
- <1459673574-11440-9-git-send-email-peda@lysator.liu.se>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v2 3/3] leds: gpio: Support the "panic-indicator" firmware property
+Date: Tue, 19 Apr 2016 13:18:36 -0300
+Message-ID: <CAAEAJfA6O8QV0zk9vnHwePaB7BFgtDVaAsTOm=LVh22eS6Lccg@mail.gmail.com>
+References: <1460570899-24642-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+	<1460570899-24642-4-git-send-email-ezequiel@vanguardiasur.com.ar>
+	<570F5B6B.3000702@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1459673574-11440-9-git-send-email-peda@lysator.liu.se>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Rosin <peda@lysator.liu.se>, linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Mat
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <570F5B6B.3000702@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2016 11:52 AM, Peter Rosin wrote:
-> From: Peter Rosin <peda@axentia.se>
-> 
-> Allocate an explicit i2c mux core to handle parent and child adapters
-> etc. Update the select/deselect ops to be in terms of the i2c mux core
-> instead of the child adapter.
-> 
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c
-> @@ -136,16 +133,15 @@ static int inv_mpu_probe(struct i2c_client *client,
->  		return result;
->  
->  	st = iio_priv(dev_get_drvdata(&client->dev));
-> -	st->mux_adapter = i2c_add_mux_adapter(client->adapter,
-> -					      &client->dev,
-> -					      client,
-> -					      0, 0, 0,
-> -					      inv_mpu6050_select_bypass,
-> -					      inv_mpu6050_deselect_bypass);
-> -	if (!st->mux_adapter) {
-> -		result = -ENODEV;
-> +	st->muxc = i2c_mux_one_adapter(client->adapter, &client->dev, 0, 0,
-> +				       0, 0, 0,
-> +				       inv_mpu6050_select_bypass,
-> +				       inv_mpu6050_deselect_bypass);
-> +	if (IS_ERR(st->muxc)) {
-> +		result = PTR_ERR(st->muxc);
->  		goto out_unreg_device;
->  	}
-> +	st->muxc->priv = client;
+Hi Jacek,
 
-I just tested this patch on mpu9150 (combo mpu6050+ak8975) and I got a
-crash on probe which looks sort of like this:
+On 14 April 2016 at 05:57, Jacek Anaszewski <j.anaszewski@samsung.com> =
+wrote:
+> Hi Ezequiel,
+>
+> It would be good to update also leds-gpio bindings,
+> of course in a separate patch:
+>
+> Documentation/devicetree/bindings/leds/leds-gpio.txt
+>
 
-[    5.565374] RIP: 0010:[<ffffffff81481aed>] [<ffffffff81481aed>]
-mutex_lock+0xd/0x30
-[    5.565374] Call Trace:
-[    5.565374]  [<ffffffff813be34c>] inv_mpu6050_select_bypass+0x1c/0xa0
-...
-[    5.565374]  [<ffffffff81392141>] i2c_transfer+0x51/0x90
-...
-[    5.565374]  [<ffffffff81392cb5>] i2c_smbus_read_i2c_block_data+0x45/0xd0
-[    5.565374]  [<ffffffff813bec5a>] ak8975_probe+0x14a/0x5c0
-...
-[    5.565374]  [<ffffffff813933d8>] i2c_new_device+0x178/0x1e0
-[    5.565374]  [<ffffffff8139362d>] of_i2c_register_device+0xdd/0x1a0
-[    5.565374]  [<ffffffff8139372b>] of_i2c_register_devices+0x3b/0x60
-[    5.565374]  [<ffffffff81393e88>] i2c_register_adapter+0x178/0x410
-[    5.565374]  [<ffffffff81394203>] i2c_add_adapter+0x73/0x90
-[    5.565374]  [<ffffffff81395f3d>] i2c_mux_add_adapter+0x2ed/0x400
-[    5.565374]  [<ffffffff81396091>] i2c_mux_one_adapter+0x41/0x70
-[    5.565374]  [<ffffffff813be48a>] inv_mpu_probe+0xba/0x1a0
+Yes, you are right. I will send a new series adding this.
 
-This happens because muxc->priv is not initialized when probing devices
-behind the mux as described by devicetree. This can be easily fixed by
-using muxc->dev instead of muxc->priv, or perhaps by calling
-i2c_mux_alloc, initializing priv and later doing i2c_mux_add_adapter.
-
-These fixes are driver-specific and other drivers might experience
-similar issues. Perhaps i2c_mux_one_adapter should take void *priv just
-like old i2c_add_mux_adapter?
-
-After I fix this locally the deadlock when reading from both devices no
-longer happens.
-
---
-Regards,
-Leonard
+Thanks,
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
