@@ -1,159 +1,168 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Tue, 19 Apr 2016 17:26:28 +0300
-Message-ID: <57164014.3040603@ti.com>
-References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
- <20160413212500.GD5995@atomide.com> <5710B58C.7050108@ti.com>
- <20160415120942.3131eac1@bbrezillon> <5710C86A.9060108@ti.com>
- <20160415135108.63716f06@bbrezillon> <20160415154139.GS5995@atomide.com>
- <20160415180531.15d790d2@bbrezillon> <20160415161950.GT5995@atomide.com>
- <20160416105711.5310d2d0@bbrezillon> <5714D3A4.2050405@ti.com>
- <5714D8AA.9040304@ti.com> <20160418151305.17a42437@bbrezillon>
- <5714E5AA.5050200@ti.com> <20160418161001.2a1c0bed@bbrezillon>
- <5714F185.5080103@ti.com> <20160419152250.6fc3f441@bbrezillon>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH] gpio: of: make it possible to name GPIO lines
+Date: Tue, 19 Apr 2016 09:29:35 -0500
+Message-ID: <20160419142935.GA25674@deathstar>
+References: <1461073157-26574-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160419152250.6fc3f441@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Tony Lindgren <tony@atomide.com>, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461073157-26574-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Markus Pargmann <mpa@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/04/16 16:22, Boris Brezillon wrote:
-> On Mon, 18 Apr 2016 17:39:01 +0300
-> Roger Quadros <rogerq@ti.com> wrote:
+On Tue, Apr 19, 2016 at 03:39:17PM +0200, Linus Walleij wrote:
+> Make it possible to name the producer side of a GPIO line using
+> a "gpio-names" property array, modeled on the "clock-names"
+> property from the clock bindings.
 > 
->> On 18/04/16 17:10, Boris Brezillon wrote:
->>> On Mon, 18 Apr 2016 16:48:26 +0300
->>> Roger Quadros <rogerq@ti.com> wrote:
->>>
->>>> Boris,
->>>>
->>>> On 18/04/16 16:13, Boris Brezillon wrote:
->>>>> Hi Roger,
->>>>>
->>>>> On Mon, 18 Apr 2016 15:52:58 +0300
->>>>> Roger Quadros <rogerq@ti.com> wrote:
->>>>>
->>>>>> On 18/04/16 15:31, Roger Quadros wrote:
->>>>>>> On 16/04/16 11:57, Boris Brezillon wrote:
->>>>>>>> On Fri, 15 Apr 2016 09:19:51 -0700
->>>>>>>> Tony Lindgren <tony@atomide.com> wrote:
->>>>>>>>
->>>>>>>>>
->>>>>>>>>> Or should I just pull this immutable branch in my current nand/next and
->>>>>>>>>> let you pull the same immutable branch in omap-soc. I mean, would this
->>>>>>>>>> prevent conflicts when our branches are merged into linux-next, no
->>>>>>>>>> matter the order.
->>>>>>>>>
->>>>>>>>> Ideally just one or more branches with just minimal changes in
->>>>>>>>> them against -rc1. But you may have other dependencies in
->>>>>>>>> your NAND tree so that may no longer be doable :) Usually if
->>>>>>>>> I merge something that may need to get merged into other
->>>>>>>>> branches, I just apply them into a separate branch against -rc1
->>>>>>>>> to start with, then merge that branch in.
->>>>>>>>
->>>>>>>> Okay, in this case, that's pretty much what I did from the beginning,
->>>>>>>> except the immutable branch was provided by Roger (based on 4.6-rc1).
->>>>>>>> Thanks for this detailed explanation, I'll try to remember that when
->>>>>>>> I'll need to provide an immutable branch for another subsystem.
->>>>>>>>
->>>>>>>> Roger, my request remains, could you check/test my conflict resolution
->>>>>>>> (branch nand/next-with-gpmc-rework)?
->>>>>>>
->>>>>>> I couldn't test that branch yet as nand/next is broken on omap platforms
->>>>>>> (at least on dra7-evm).
->>>>>>>
->>>>>>> The commit where it breaks is:
->>>>>>> a662ef4 mtd: nand: omap2: use mtd_ooblayout_xxx() helpers where appropriate
->>>>>>>
->>>>>>> I'm trying to figure out what went wrong there. Failure log below.
->>>>>>
->>>>>> OK. I was able to fix it when at commit a662ef4 with the below patch.
->>>>>
->>>>> Thanks for debugging that.
->>>>>
->>>>>>
->>>>>> Looks like we need to read exactly the ECC bytes through the ECC engine and not
->>>>>> the entire OOB region.
->>>>>
->>>>> Hm, it looks like there's a bug somewhere else, because I don't see any
->>>>> reason why the controller wouldn't be able to read the full OOB region.
->>>>
->>>> The controller can read the full OOB region but we only want it to read just
->>>> the ECC bytes because that is the way the ELM ECC engine works.
->>>
->>> Ok, I think I got it: the ECC correction is pipelined with data read,
->>> and the controller expect to have ECC bytes right after the in-band
->>> data, is that correct?
->>
->> That is correct.
->>
->>>
->>>>
->>>>>>
->>>>>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
->>>>>> index e622a1b..46b61d2 100644
->>>>>> --- a/drivers/mtd/nand/omap2.c
->>>>>> +++ b/drivers/mtd/nand/omap2.c
->>>>>> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
->>>>>>  	chip->read_buf(mtd, buf, mtd->writesize);
->>>>>>  
->>>>>>  	/* Read oob bytes */
->>>>>> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
->>>>>> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
->>>>>> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + chip->ecc.layout->eccpos[0], -1);
->>>>>
->>>>> The whole point of this series is to get rid of chip->ecc.layout, so
->>>>> we'd rather use the mtd_ooblayout_find_eccregion() instead of
->>>>> chip->ecc.layout->eccpos[0].
->>>>
->>>> We just need the position of the first ECC byte offset.
->>>> Is that the most optimal way to get it?
->>>
->>> For the BCH case, it seems that ECC bytes always start at offset
->>> BADBLOCK_MARKER_LENGTH, so you can just pass
->>> mtd->writesize + BADBLOCK_MARKER_LENGTH.
->>>
->>> Let me know if this works, and I'll squash those changes into the
->>> faulty commit (I know this implies a rebase + push -f, but IMO that's
->>> better than breaking bisectability).
->>>
->>>
->>
->> So, the below patch works as well. Please feel free to fold it with your patch.
->>
->> --
->> cheers,
->> -roger
->>
->> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
->> index e622a1b..eb85d6b 100644
->> --- a/drivers/mtd/nand/omap2.c
->> +++ b/drivers/mtd/nand/omap2.c
->> @@ -1547,8 +1547,8 @@ static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
->>  	chip->read_buf(mtd, buf, mtd->writesize);
->>  
->>  	/* Read oob bytes */
->> -	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize, -1);
->> -	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
->> +	chip->cmdfunc(mtd, NAND_CMD_RNDOUT, mtd->writesize + BADBLOCK_MARKER_LENGTH, -1);
->> +	chip->read_buf(mtd, chip->oob_poi, chip->ecc.total);
+> This naming is especially useful for:
 > 
-> Are you sure this patch works? Cause it seems to me that it should be
-
-For my limited test case yes. My test case involves reading an existing ubifs partition
-and creating a new one and then reading it back using an older kernel.
-
+> - Debugging: lines are named after function, not just opaque
+>   offset numbers.
 > 
-> 	chip->read_buf(mtd, chip->oob_poi + BADBLOCK_MARKER_LENGTH,
-> 		       chip->ecc.total);
+> - Exploration: systems where some or all GPIO lines are available
+>   to end users, such as prototyping, one-off's "makerspace usecases"
+>   users are helped by the names of the GPIO lines when tinkering.
+>   This usecase has been surfacing recently.
 > 
+> The gpio-names attribute is completely optional.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> This has been discussed at some length now.
+> 
+> Why we are not using hogs: these are consumer side, not producer
+> side. The gpio-controller in DT (gpio_chip in Linux) is a
+> producer, not a consumer.
+> 
+> This patch is not about assigning initial values to GPIO lines.
+> That is an orthogonal usecase. This is just about naming lines.
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 19 +++++++++++
+>  drivers/gpio/gpiolib-of.c                       | 43 +++++++++++++++++++++++++
+>  2 files changed, 62 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index c88d2ccb05ca..6b371ab6098e 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -152,6 +152,21 @@ additional bitmask is needed to specify which GPIOs are actually in use,
+>  and which are dummies. The bindings for this case has not yet been
+>  specified, but should be specified if/when such hardware appears.
+>  
+> +Optionally, a GPIO controller may have a "gpio-names" property. This is
+> +an array of strings defining the names of the GPIO lines going out of the
+> +GPIO controller. This name should be the most meaningful producer name
+> +for the system, such as a rail name indicating the usage. Package names
+> +such as pin name are discouraged: such lines have opaque names (since they
+> +are by definition generic purpose) and such names are usually not very
+> +helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
+> +reasonable line names as they describe what the line is used for. "GPIO0"
+> +is not a good name to give to a GPIO line. Placeholders are discouraged:
+> +rather use the "" (blank string) if the use of the GPIO line is undefined
+> +in your design. The names are assigned starting from line offset 0 from
+> +left to right from the passed array. An incomplete array (where the number
+> +of passed named are less than ngpios) will still be used up until the last
+> +provided valid line index.
+> +
+>  Example:
+>  
+>  gpio-controller@00000000 {
+> @@ -160,6 +175,10 @@ gpio-controller@00000000 {
+>  	gpio-controller;
+>  	#gpio-cells = <2>;
+>  	ngpios = <18>;
+> +	gpio-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
+> +		"LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
+> +		"Row A", "Row B", "Row C", "Row D", "NMI button",
+> +		"poweroff", "reset";
+>  }
+>  
+>  The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index d81dbd8e90d9..b4e3a42e7aae 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -196,6 +196,42 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+>  }
+>  
+>  /**
+> + * of_gpiochip_set_names() - set up the names of the lines
+> + * @chip: GPIO chip whose lines should be named, if possible
+> + */
+> +static int of_gpiochip_set_names(struct gpio_chip *gc)
+> +{
+> +	struct gpio_device *gdev = gc->gpiodev;
+> +	struct device_node *np = gc->of_node;
+> +	int i;
+> +	int nstrings;
+> +
+> +	/* Do we even have the "gpio-names" property */
+> +	if (!of_property_read_bool(np, "gpio-names"))
+> +		return 0;
+> +
+> +	nstrings = of_property_count_strings(np, "gpio-names");
+> +	for (i = 0; i < nstrings; i++) {
+> +		const char *name;
+> +		int ret;
+> +
+> +		ret = of_property_read_string_index(np,
+> +						    "gpio-names",
+> +						    i,
+> +						    &name);
+> +		if (!ret)
+> +			gdev->descs[i].name = name;
+> +
+> +		/* Empty strings are OK */
+> +		if (ret != -ENODATA)
+> +			dev_err(&gdev->dev, "unable to name line %d\n",
+> +				i);
 
-You are right. Else we'd have wrong OOB data during reads.
+Linus,
 
-cheers,
--roger
+This above if statement does not make sense. Sure empty strings are okay but it
+seems that an error would be printed even when the name is set above when ret
+is 0.
+
+Using else if perhaps would make more sense.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+>   * of_gpiochip_scan_gpios - Scan gpio-controller for gpio definitions
+>   * @chip:	gpio chip to act on
+>   *
+> @@ -445,6 +481,13 @@ int of_gpiochip_add(struct gpio_chip *chip)
+>  	if (status)
+>  		return status;
+>  
+> +	/* If the chip defines names itself, these take precedence */
+> +	if (!chip->names) {
+> +		status = of_gpiochip_set_names(chip);
+
+Looking at the above of_gpiochip_set_names function it always returns 0. Not
+sure if that was the intention but it renders this if statement below
+useless.
+
+Regards,
+
+Michael
+> +		if (status)
+> +			return status;
+> +	}
+> +
+>  	of_node_get(chip->of_node);
+>  
+>  	return of_gpiochip_scan_gpios(chip);
+> -- 
+> 2.4.11
+> 
