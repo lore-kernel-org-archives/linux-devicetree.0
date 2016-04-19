@@ -1,57 +1,86 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 6/9] pinctrl: Add IRQ support to STM32 gpios
-Date: Tue, 19 Apr 2016 11:04:46 +0200
-Message-ID: <CALszF6CUFKAjzUpEh3pDtSDdJuFan1ON0Kcu_uKD_OX36kXOHQ@mail.gmail.com>
-References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1459436979-17275-7-git-send-email-mcoquelin.stm32@gmail.com>
-	<CACRpkdYLPWNQZgdFHVwLOZv+rS=bdERM9St5b0hVHTd_+ZJMKg@mail.gmail.com>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCHv2] wlcore: spi: add wl18xx support
+Date: Tue, 19 Apr 2016 09:05:45 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B360C0745@DFRE01.ent.ti.com>
+References: <1460273570-12298-1-git-send-email-eyalr@ti.com>
+ <14313437.cDJIgY3kzo@wuerfel>
+ <8665E2433BC68541A24DFFCA87B70F5B360BF614@DFRE01.ent.ti.com>
+ <1463330011.BhWEcYYuGD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYLPWNQZgdFHVwLOZv+rS=bdERM9St5b0hVHTd_+ZJMKg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463330011.BhWEcYYuGD@wuerfel>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus
+Arnd,
 
-2016-04-08 11:43 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Thu, Mar 31, 2016 at 5:09 PM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com> wrote:
->
->> +static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
->> +{
->> +       struct stm32_pinctrl *pctl = dev_get_drvdata(chip->parent);
->> +       struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
->> +       unsigned int irq;
->> +
->> +       regmap_field_write(pctl->irqmux[offset], bank->range.id);
->
-> No. You must implement the irqchip and GPIO controllers to
-> be orthogonal, doing things like this creates a semantic that
-> assumes .to_irq() is always called before using the IRQ and
-> that is not guaranteed at all. A consumer may very well
-> use an interrupt right off the irqchip without this being called
-> first. All this function should do is translate a number. No
-> other semantics.
->
-> This needs to be done from the irqchip (sorry).
+> > > >
+> > > > - all wilink family needs special init command for entering wspi mode.
+> > > >   extra clock cycles should be sent after the spi init command while the
+> > > >   cs pin is high.
+> > > > - switch to controling the cs pin from the spi driver for achieveing the
+> > > >   above.
+> > > > - the selected cs gpio is read from the spi device-tree node using the
+> > > >   cs-gpios field and setup as a gpio.
+> > > > - See the example below for specifying the cs gpio using the cs-gpios
+> entry
+> > > > &spi0   {
+> > > >         ...
+> > > >         cs-gpios = <&gpio0 5 0>;
+> > > >         ...
+> > > >         wlcore: wlcore@0 {
+> > > >                 compatible = "ti,wl1835";
+> > > >         ...
+> > > >         ...
+> > > >         };
+> > > > };
+> > > >
+> > > > Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+> > >
+> > > I don't think this can work in general: not all SPI hosts uses GPIOs
+> > > for controlling CS, so the logic can't work, and it's also a
+> > > layering violation for the driver to look at the parent.
+> > >
+> > > I would suggest fixing this using a new API function from the SPI
+> > > core, if we don't already have a generic way to do it.
+> > >
+> > Originally this is what I have done until I was pointed to the generic
+> > cs-gpio mechanism in the SPI core.
+> > It is a generic mechanism already in the SPI core driver.
+> > See: Documentation/devicetree/bindings/spi/spi-bus.txt
+> 
+> The cs-gpios property is documented as optional, it defines how you should
+> list the gpios if CS is implemented using gpio, but not all hardware does it like
+> this.
+> 
+> > It is also part of the generic spi.h (include/Linux/spi/spi.h),
+> > already part of " struct spi_device" So it seemed redundant adding
+> > another mechanism for implementing the same.
+> > Platform that interact with a wilink need to use it, and platforms
+> > that don't have this capability will probably not interact with a wilink device
+> using SPI.
+> 
+> The cs_gpio field in spi_device belongs to the spi host controller, no other
+> slave driver uses it.
+> 
+> I wasn't asking for a duplication of this mechanism, but an interface to use it
+> properly. Internally, the spi core uses the spi_set_cs() function to pick a CS.
+> Find a way to use that rather than reimplementing it incorrectly.
+> 
 
-Actually, the register written here is not part of the irqchip.
-It is a system config register that is only used when using a GPIO as
-external interrupt.
-Its aim is to mux the GPIO bank on a line.
-For example on line 1, it can be muxed to select either gpioa1,
-gpiob1, gpioc1, ...
-How could I do it in the irqchip that has no gpio knowledge?
+Understood. As this special CS manipulation is unique to wspi (wilink spi)  I think the 
+best option is to move this gpio allocation into wlcore_spi as a new device tree entry
+used only by this driver.
+If you agree I will submit a v3.
 
-In case the consumer uses an interrupt right off the irqchip, it
-should not access this register.
-For example the RTC wakeup lines, where we will reference directly the irqchip.
-
-That said, do you still believe the implementation is wrong? Do I miss
-something?
-
-Best regards,
-Maxime
+Best Regards,
+Eyal
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
