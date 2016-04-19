@@ -1,93 +1,138 @@
 From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: [PATCH 0/4 v6] drm: Add support of ARC PGU display controller
-Date: Tue, 19 Apr 2016 16:19:36 +0300
-Message-ID: <1461071980-5916-1-git-send-email-abrodkin@synopsys.com>
+Subject: [PATCH 4/4 v6] arc: axs10x - add support of ARC PGU
+Date: Tue, 19 Apr 2016 16:19:40 +0300
+Message-ID: <1461071980-5916-5-git-send-email-abrodkin@synopsys.com>
+References: <1461071980-5916-1-git-send-email-abrodkin@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461071980-5916-1-git-send-email-abrodkin@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-snps-arc@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series add support of ARC PGU display controller.
-ARC PGU is a quite simple byte streamer that gets data from the framebuffer
-and pushes it to hte connected encoder (DP or HDMI).
+Synopsys DesignWare ARC SDP boards sport ARC SDP display
+controller attached to ADV7511 HDMI encoder.
 
-It was tested on ARC SDP boards (axs101/103 in particular).
+That change adds desctiption of both ARC PGU and ADV7511 in
+ARC SDP'd base-board Device Tree.
 
-Note following series (v6) that introduces drm_connector_register_all()
-is a prerequisite now: https://lkml.org/lkml/2016/4/19/299
-
-Changes v5 -> v6:
- * "arc: Add our own implementation of fb_pgprotect()" was already applied to
-   ARC's tree and available in linux-next:
-   http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=e5e0a65cd20a7a892a87e6bd73bdc3d83726d725
-
-Changes v4 -> v5:
- * Removed encode node from DT bindings example (as suggested by Rob)
-
-Changes v3 -> v4:
- * Main driver author is now set properly (thanks Carlos for all your efforts)
- * Implemented correct hsync and vsync setup (thanks Jose)
- * Dummy call-backs were removed (as suggested by Daniel)
- * Obsolete load()/unload() call-backs were removed (as suggested by Daniel)
- * With above in mind we were able to adopt recently introduced
-   drm_connector_register_all()/drm_connector_unregister_all()
- * Implemented setup of properties (uncached) for FB user-pages
- * Minor clean-up in DT binding docs and axs10x_mb.dtsi
-
-Changes v2 -> v3:
- * Improved failure path if arcpgu_connector wasn't allocated.
- * Fixed driver building as module.
- * Implemented uncached mapping of user-space FB pages.
- * Again updated DT bindings docs.
-
-Changes v1 -> v2:
- * Clean-up of DT bindings documentation.
- * Added missing "pxlclk" clock in axs10x_mb.dtsi.
-
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
 Cc: Kumar Gala <galak@codeaurora.org>
-Cc: linux-snps-arc@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: Carlos Palminha <palminha@synopsys.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+---
 
-Alexey Brodkin (3):
-  drm: Add DT bindings documentation for ARC PGU display controller
-  MAINTAINERS: Add maintainer for ARC PGU display controller
-  arc: axs10x - add support of ARC PGU
+No changes v5 -> v6.
 
-Carlos Palminha (1):
-  drm: Add support of ARC PGU display controller
+No changes v4 -> v5.
 
- .../devicetree/bindings/display/snps,arcpgu.txt    |  35 +++
- MAINTAINERS                                        |   6 +
- arch/arc/boot/dts/axs10x_mb.dtsi                   |  61 +++++
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/arc/Kconfig                        |  10 +
- drivers/gpu/drm/arc/Makefile                       |   2 +
- drivers/gpu/drm/arc/arcpgu.h                       |  50 ++++
- drivers/gpu/drm/arc/arcpgu_crtc.c                  | 257 +++++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_drv.c                   | 282 +++++++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_hdmi.c                  | 201 +++++++++++++++
- drivers/gpu/drm/arc/arcpgu_regs.h                  |  40 +++
- 12 files changed, 947 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
- create mode 100644 drivers/gpu/drm/arc/Kconfig
- create mode 100644 drivers/gpu/drm/arc/Makefile
- create mode 100644 drivers/gpu/drm/arc/arcpgu.h
- create mode 100644 drivers/gpu/drm/arc/arcpgu_crtc.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_drv.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_hdmi.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_regs.h
+Changes v3 -> v4:
+ * Removed "0x" from node names (as suggested by Rob)
 
+No changes v2 -> v3.
+
+Changes v1 -> v2:
+ * Added missing "pxlclk" clock in axs10x_mb.dtsi
+
+ arch/arc/boot/dts/axs10x_mb.dtsi | 61 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index ab5d570..823f15c 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -34,6 +34,12 @@
+ 				clock-frequency = <50000000>;
+ 				#clock-cells = <0>;
+ 			};
++
++			pguclk: pguclk {
++				#clock-cells = <0>;
++				compatible = "fixed-clock";
++				clock-frequency = <74440000>;
++			};
+ 		};
+ 
+ 		ethernet@0x18000 {
+@@ -155,6 +161,37 @@
+ 			clocks = <&i2cclk>;
+ 			interrupts = <16>;
+ 
++			adv7511:adv7511@39{
++				compatible="adi,adv7511";
++				reg = <0x39>;
++				interrupts = <23>;
++				adi,input-depth = <8>;
++				adi,input-colorspace = "rgb";
++				adi,input-clock = "1x";
++				adi,clock-delay = <0x03>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					/* RGB/YUV input */
++					port@0 {
++						reg = <0>;
++						adv7511_input:endpoint {
++						remote-endpoint = <&pgu_output>;
++						};
++					};
++
++					/* HDMI output */
++					port@1 {
++						reg = <1>;
++						adv7511_output: endpoint {
++							remote-endpoint = <&hdmi_connector_in>;
++						};
++					};
++				};
++			};
++
+ 			eeprom@0x54{
+ 				compatible = "24c01";
+ 				reg = <0x54>;
+@@ -168,6 +205,16 @@
+ 			};
+ 		};
+ 
++		hdmi0: connector {
++			compatible = "hdmi-connector";
++			type = "a";
++			port {
++				hdmi_connector_in: endpoint {
++					remote-endpoint = <&adv7511_output>;
++				};
++			};
++		};
++
+ 		gpio0:gpio@13000 {
+ 			compatible = "snps,dw-apb-gpio";
+ 			reg = <0x13000 0x1000>;
+@@ -229,5 +276,19 @@
+ 				reg = <2>;
+ 			};
+ 		};
++
++		pgu@17000 {
++			compatible = "snps,arcpgu";
++			reg = <0x17000 0x400>;
++			encoder-slave = <&adv7511>;
++			clocks = <&pguclk>;
++			clock-names = "pxlclk";
++
++			port {
++				pgu_output: endpoint {
++					remote-endpoint = <&adv7511_input>;
++				};
++			};
++		};
+ 	};
+ };
 -- 
 2.5.5
