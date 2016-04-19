@@ -1,82 +1,53 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: RE: [PATCH] Axi-usb: Add support for 64-bit addressing.
-Date: Tue, 19 Apr 2016 09:15:01 +0000
-Message-ID: <C89496FEAE474D468F30D558A9468D9F26CD3753@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1460360506-14692-1-git-send-email-navam@xilinx.com>
- <4542055.HvdgVkDRYK@wuerfel> <20160418142909.GA5608@rob-hp-laptop>
- <4449845.qT8BZnpD4R@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 05/19] dt-bindings: clk: sun5i: add DRAM
+ gates compatible
+Date: Tue, 19 Apr 2016 11:16:05 +0200
+Message-ID: <20160419091605.GW4005@lukather>
+References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1458751122-23976-6-git-send-email-maxime.ripard@free-electrons.com>
+ <20160415222911.GR14441@codeaurora.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4449845.qT8BZnpD4R@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hyun Kwon <hyunk@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Radhey Shyam Pandey <radheys@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2VOk7s3pVsDYAazo"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYPO264AKGQEGQDBFAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160415222911.GR14441-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--2VOk7s3pVsDYAazo
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
+On Fri, Apr 15, 2016 at 03:29:11PM -0700, Stephen Boyd wrote:
+> On 03/23, Maxime Ripard wrote:
+> > The Allwinner SoCs have a gate controller to gate the access to the DRAM
+> > clock to the some devices that need to access the DRAM directly (mostly
+> > display / image related IPs).
+> > 
+> > Use a simple gates driver to support the one found in the A13 / R8 SoCs.
+> > 
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> 
+> Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: Monday, April 18, 2016 8:05 PM
-> To: Rob Herring <robh@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org; Nava kishore Manne
-> <navam@xilinx.com>; mark.rutland@arm.com; devicetree@vger.kernel.org;
-> Nava kishore Manne <navam@xilinx.com>; Hyun Kwon
-> <hyunk@xilinx.com>; pawel.moll@arm.com; ijc+devicetree@hellion.org.uk;
-> gregkh@linuxfoundation.org; Radhey Shyam Pandey <radheys@xilinx.com>;
-> Michal Simek <michals@xilinx.com>; balbi@ti.com; linux-
-> kernel@vger.kernel.org; galak@codeaurora.org; Soren Brinkmann
-> <sorenb@xilinx.com>
-> Subject: Re: [PATCH] Axi-usb: Add support for 64-bit addressing.
->
-> On Monday 18 April 2016 09:29:09 Rob Herring wrote:
-> >
-> > Right, you don't need to know the exact bus width for determining the
-> > register/descriptor set is 32 or 64 bit addesses. I'm fine with a
-> > property for that, but if limiting the actual connected address bits
-> > is needed, then dma-ranges should be used.
->
-> The other way round: dma-ranges is needed to allow 64-bit addressing, the
-> default is to only allow 32-bit addressing (and arm64 has a known bug here, it
-> just allows it anyway when it shouldn't).
+Applied, thanks!
+Maxime
 
-AXI-USB IP configurable for 32-bit or 64-bit addressing.
-
-In any of the configuration I mean if it is a 32-bit or 64-bit addressing there is a flexibility for the dma to choose the
-Memory range supported by the AXI-USB...
-
-For example if AXI-USB (dma ) is configured for 40-bit addressing.
-
-Theoretically it can access memory up to 1TB if it is true we can get the
-Address width using log2 of the dma-ranges size as you mentioned above.
-
-But in real use case user won't map the entire memory
-He will map only the memory of his own choice...
-
-For example user mapped 2GB then dma-ranges property will be like below.
-
-dma-ranges = <0x00000000 0x00000000  0x80000000>;
-
-In this case log2 of the dma-ranges size won't give exact value for address width.
-That's why used separate h/w property for getting address width of the IP...
-
-Will address the remaining comments in v2.
-
-Regards,
-Navakishore.
-
->       Arnd
-
-
-This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--2VOk7s3pVsDYAazo--
