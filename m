@@ -1,7 +1,7 @@
 From: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 5/7] arm64/perf: Access pmu register using <read/write>_sys_reg
-Date: Tue, 19 Apr 2016 11:54:20 -0700
-Message-ID: <1461092062-7484-6-git-send-email-ashoks@broadcom.com>
+Subject: [PATCH v5 6/7] arm64/perf: Filter common events based on PMCEIDn_EL0
+Date: Tue, 19 Apr 2016 11:54:21 -0700
+Message-ID: <1461092062-7484-7-git-send-email-ashoks@broadcom.com>
 References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1461092062-7484-1-git-send-email-ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
@@ -10,136 +10,187 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-changed pmu register access to make use of <read/write>_sys_reg
-from sysreg.h instead of accessing them directly.
+The complete common architectural and micro-architectural
+event number structure is filtered based on PMCEIDn_EL0 and
+exposed to /sys using is_visibile function pointer in events
+attribute_group.
+To filter the events in is_visible function, pmceid based bitmap
+is stored in arm_pmu structure and the id field from
+perf_pmu_events_attr is used to check against the bitmap.
+
+The function which derives event bitmap from PMCEIDn_EL0 is
+executed in the cpus, which has the pmu being initialized,
+for heterogeneous pmu support.
 
 Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/kernel/perf_event.c | 33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ arch/arm64/kernel/perf_event.c | 76 ++++++++++++++++++++++++++++++++++--------
+ include/linux/perf/arm_pmu.h   |  2 ++
+ 2 files changed, 64 insertions(+), 14 deletions(-)
 
 diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 2ee61e8..86790d2 100644
+index 86790d2..71eb90f 100644
 --- a/arch/arm64/kernel/perf_event.c
 +++ b/arch/arm64/kernel/perf_event.c
-@@ -22,6 +22,7 @@
- #include <asm/irq_regs.h>
- #include <asm/perf_event.h>
- #include <asm/virt.h>
-+#include <asm/sysreg.h>
+@@ -326,10 +326,22 @@ static const unsigned armv8_thunder_perf_cache_map[PERF_COUNT_HW_CACHE_MAX]
+ 	[C(BPU)][C(OP_WRITE)][C(RESULT_MISS)]	= ARMV8_PMUV3_PERFCTR_BR_MIS_PRED,
+ };
  
- #include <linux/of.h>
- #include <linux/perf/arm_pmu.h>
-@@ -476,16 +477,14 @@ static const struct attribute_group *armv8_pmuv3_attr_groups[] = {
++
++static ssize_t
++armv8pmu_events_sysfs_show(struct device *dev,
++			   struct device_attribute *attr, char *page)
++{
++	struct perf_pmu_events_attr *pmu_attr;
++
++	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
++
++	return sprintf(page, "event=0x%02llx\n", pmu_attr->id);
++}
++
+ #define ARMV8_EVENT_ATTR_RESOLVE(m) #m
+ #define ARMV8_EVENT_ATTR(name, config) \
+-	PMU_EVENT_ATTR_STRING(name, armv8_event_attr_##name, \
+-			      "event=" ARMV8_EVENT_ATTR_RESOLVE(config))
++	PMU_EVENT_ATTR(name, armv8_event_attr_##name, \
++		       config, armv8pmu_events_sysfs_show)
  
- static inline u32 armv8pmu_pmcr_read(void)
+ ARMV8_EVENT_ATTR(sw_incr, ARMV8_PMUV3_PERFCTR_SW_INCR);
+ ARMV8_EVENT_ATTR(l1i_cache_refill, ARMV8_PMUV3_PERFCTR_L1I_CACHE_REFILL);
+@@ -434,9 +446,27 @@ static struct attribute *armv8_pmuv3_event_attrs[] = {
+ 	NULL,
+ };
+ 
++static umode_t
++armv8pmu_event_attr_is_visible(struct kobject *kobj,
++			       struct attribute *attr, int unused)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct pmu *pmu = dev_get_drvdata(dev);
++	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
++	struct perf_pmu_events_attr *pmu_attr;
++
++	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
++
++	if (test_bit(pmu_attr->id, cpu_pmu->pmceid_bitmap))
++		return attr->mode;
++
++	return 0;
++}
++
+ static struct attribute_group armv8_pmuv3_events_attr_group = {
+ 	.name = "events",
+ 	.attrs = armv8_pmuv3_event_attrs,
++	.is_visible = armv8pmu_event_attr_is_visible,
+ };
+ 
+ PMU_FORMAT_ATTR(event, "config:0-9");
+@@ -859,10 +889,8 @@ static int armv8_thunder_map_event(struct perf_event *event)
+ 				ARMV8_PMU_EVTYPE_EVENT);
+ }
+ 
+-static void armv8pmu_read_num_pmnc_events(void *info)
++static void armv8pmu_read_num_pmnc_events(int *nb_cnt)
  {
--	u32 val;
--	asm volatile("mrs %0, pmcr_el0" : "=r" (val));
--	return val;
-+	return read_sysreg(pmcr_el0);
+-	int *nb_cnt = info;
+-
+ 	/* Read the nb of CNTx counters supported from PMNC */
+ 	*nb_cnt = (armv8pmu_pmcr_read() >> ARMV8_PMU_PMCR_N_SHIFT) & ARMV8_PMU_PMCR_N_MASK;
+ 
+@@ -870,11 +898,30 @@ static void armv8pmu_read_num_pmnc_events(void *info)
+ 	*nb_cnt += 1;
  }
  
- static inline void armv8pmu_pmcr_write(u32 val)
+-static int armv8pmu_probe_num_events(struct arm_pmu *arm_pmu)
++static void armv8pmu_read_common_events_bitmap(unsigned long *bmp)
++{
++	u32 arr[2];
++
++	arr[0] = read_sysreg(pmceid0_el0);
++	arr[1] = read_sysreg(pmceid1_el0);
++
++	bitmap_from_u32array(bmp, ARMV8_PMUV3_MAX_COMMON_EVENTS,
++			     arr, ARRAY_SIZE(arr));
++}
++
++static void __armv8pmu_probe_pmu(void *info)
++{
++	struct arm_pmu *cpu_pmu = info;
++
++	armv8pmu_read_num_pmnc_events(&cpu_pmu->num_events);
++	armv8pmu_read_common_events_bitmap(cpu_pmu->pmceid_bitmap);
++}
++
++static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
  {
- 	val &= ARMV8_PMU_PMCR_MASK;
- 	isb();
--	asm volatile("msr pmcr_el0, %0" :: "r" (val));
-+	write_sysreg(val, pmcr_el0);
+-	return smp_call_function_any(&arm_pmu->supported_cpus,
+-				    armv8pmu_read_num_pmnc_events,
+-				    &arm_pmu->num_events, 1);
++	return smp_call_function_any(&cpu_pmu->supported_cpus,
++				    __armv8pmu_probe_pmu,
++				    cpu_pmu, 1);
  }
  
- static inline int armv8pmu_has_overflowed(u32 pmovsr)
-@@ -507,7 +506,7 @@ static inline int armv8pmu_counter_has_overflowed(u32 pmnc, int idx)
- static inline int armv8pmu_select_counter(int idx)
- {
- 	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
--	asm volatile("msr pmselr_el0, %0" :: "r" (counter));
-+	write_sysreg(counter, pmselr_el0);
- 	isb();
- 
- 	return idx;
-@@ -524,9 +523,9 @@ static inline u32 armv8pmu_read_counter(struct perf_event *event)
- 		pr_err("CPU%u reading wrong counter %d\n",
- 			smp_processor_id(), idx);
- 	else if (idx == ARMV8_IDX_CYCLE_COUNTER)
--		asm volatile("mrs %0, pmccntr_el0" : "=r" (value));
-+		value = read_sysreg(pmccntr_el0);
- 	else if (armv8pmu_select_counter(idx) == idx)
--		asm volatile("mrs %0, pmxevcntr_el0" : "=r" (value));
-+		value = read_sysreg(pmxevcntr_el0);
- 
- 	return value;
- }
-@@ -548,47 +547,47 @@ static inline void armv8pmu_write_counter(struct perf_event *event, u32 value)
- 		 */
- 		u64 value64 = 0xffffffff00000000ULL | value;
- 
--		asm volatile("msr pmccntr_el0, %0" :: "r" (value64));
-+		write_sysreg(value64, pmccntr_el0);
- 	} else if (armv8pmu_select_counter(idx) == idx)
--		asm volatile("msr pmxevcntr_el0, %0" :: "r" (value));
-+		write_sysreg(value, pmxevcntr_el0);
+ static void armv8_pmu_init(struct arm_pmu *cpu_pmu)
+@@ -897,7 +944,8 @@ static int armv8_pmuv3_init(struct arm_pmu *cpu_pmu)
+ 	armv8_pmu_init(cpu_pmu);
+ 	cpu_pmu->name			= "armv8_pmuv3";
+ 	cpu_pmu->map_event		= armv8_pmuv3_map_event;
+-	return armv8pmu_probe_num_events(cpu_pmu);
++	cpu_pmu->pmu.attr_groups	= armv8_pmuv3_attr_groups;
++	return armv8pmu_probe_pmu(cpu_pmu);
  }
  
- static inline void armv8pmu_write_evtype(int idx, u32 val)
- {
- 	if (armv8pmu_select_counter(idx) == idx) {
- 		val &= ARMV8_PMU_EVTYPE_MASK;
--		asm volatile("msr pmxevtyper_el0, %0" :: "r" (val));
-+		write_sysreg(val, pmxevtyper_el0);
- 	}
+ static int armv8_a53_pmu_init(struct arm_pmu *cpu_pmu)
+@@ -906,7 +954,7 @@ static int armv8_a53_pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->name			= "armv8_cortex_a53";
+ 	cpu_pmu->map_event		= armv8_a53_map_event;
+ 	cpu_pmu->pmu.attr_groups	= armv8_pmuv3_attr_groups;
+-	return armv8pmu_probe_num_events(cpu_pmu);
++	return armv8pmu_probe_pmu(cpu_pmu);
  }
  
- static inline int armv8pmu_enable_counter(int idx)
- {
- 	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
--	asm volatile("msr pmcntenset_el0, %0" :: "r" (BIT(counter)));
-+	write_sysreg(BIT(counter), pmcntenset_el0);
- 	return idx;
+ static int armv8_a57_pmu_init(struct arm_pmu *cpu_pmu)
+@@ -915,7 +963,7 @@ static int armv8_a57_pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->name			= "armv8_cortex_a57";
+ 	cpu_pmu->map_event		= armv8_a57_map_event;
+ 	cpu_pmu->pmu.attr_groups	= armv8_pmuv3_attr_groups;
+-	return armv8pmu_probe_num_events(cpu_pmu);
++	return armv8pmu_probe_pmu(cpu_pmu);
  }
  
- static inline int armv8pmu_disable_counter(int idx)
- {
- 	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
--	asm volatile("msr pmcntenclr_el0, %0" :: "r" (BIT(counter)));
-+	write_sysreg(BIT(counter), pmcntenclr_el0);
- 	return idx;
+ static int armv8_a72_pmu_init(struct arm_pmu *cpu_pmu)
+@@ -924,7 +972,7 @@ static int armv8_a72_pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->name			= "armv8_cortex_a72";
+ 	cpu_pmu->map_event		= armv8_a57_map_event;
+ 	cpu_pmu->pmu.attr_groups	= armv8_pmuv3_attr_groups;
+-	return armv8pmu_probe_num_events(cpu_pmu);
++	return armv8pmu_probe_pmu(cpu_pmu);
  }
  
- static inline int armv8pmu_enable_intens(int idx)
- {
- 	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
--	asm volatile("msr pmintenset_el1, %0" :: "r" (BIT(counter)));
-+	write_sysreg(BIT(counter), pmintenset_el1);
- 	return idx;
+ static int armv8_thunder_pmu_init(struct arm_pmu *cpu_pmu)
+@@ -933,7 +981,7 @@ static int armv8_thunder_pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->name			= "armv8_cavium_thunder";
+ 	cpu_pmu->map_event		= armv8_thunder_map_event;
+ 	cpu_pmu->pmu.attr_groups	= armv8_pmuv3_attr_groups;
+-	return armv8pmu_probe_num_events(cpu_pmu);
++	return armv8pmu_probe_pmu(cpu_pmu);
  }
  
- static inline int armv8pmu_disable_intens(int idx)
- {
- 	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
--	asm volatile("msr pmintenclr_el1, %0" :: "r" (BIT(counter)));
-+	write_sysreg(BIT(counter), pmintenclr_el1);
- 	isb();
- 	/* Clear the overflow flag in case an interrupt is pending. */
--	asm volatile("msr pmovsclr_el0, %0" :: "r" (BIT(counter)));
-+	write_sysreg(BIT(counter), pmovsclr_el0);
- 	isb();
- 
- 	return idx;
-@@ -599,11 +598,11 @@ static inline u32 armv8pmu_getreset_flags(void)
- 	u32 value;
- 
- 	/* Read */
--	asm volatile("mrs %0, pmovsclr_el0" : "=r" (value));
-+	value = read_sysreg(pmovsclr_el0);
- 
- 	/* Write to clear flags */
- 	value &= ARMV8_PMU_OVSR_MASK;
--	asm volatile("msr pmovsclr_el0, %0" :: "r" (value));
-+	write_sysreg(value, pmovsclr_el0);
- 
- 	return value;
- }
+ static const struct of_device_id armv8_pmu_of_device_ids[] = {
+diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+index 4196c90..d28ac05 100644
+--- a/include/linux/perf/arm_pmu.h
++++ b/include/linux/perf/arm_pmu.h
+@@ -105,6 +105,8 @@ struct arm_pmu {
+ 	struct mutex	reserve_mutex;
+ 	u64		max_period;
+ 	bool		secure_access; /* 32-bit ARM only */
++#define ARMV8_PMUV3_MAX_COMMON_EVENTS 0x40
++	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
+ 	struct platform_device	*plat_device;
+ 	struct pmu_hw_events	__percpu *hw_events;
+ 	struct notifier_block	hotplug_nb;
 -- 
 2.1.0
 
