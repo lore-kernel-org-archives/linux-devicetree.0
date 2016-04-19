@@ -1,41 +1,89 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
- addresses
-Date: Tue, 19 Apr 2016 16:16:31 +0300
-Message-ID: <20160419131631.GG1725@lahna.fi.intel.com>
-References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
- <20160415080111.GD1714@lahna.fi.intel.com>
- <1460992811.8946.22.camel@linux.intel.com>
- <5714FCBE.3060009@metafoo.de>
- <20160419124028.GF1725@lahna.fi.intel.com>
- <57162C4E.9090904@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57162C4E.9090904@metafoo.de>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: [PATCH 2/4 v6] drm: Add DT bindings documentation for ARC PGU display controller
+Date: Tue, 19 Apr 2016 16:19:38 +0300
+Message-ID: <1461071980-5916-3-git-send-email-abrodkin@synopsys.com>
+References: <1461071980-5916-1-git-send-email-abrodkin@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461071980-5916-1-git-send-email-abrodkin@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 03:02:06PM +0200, Lars-Peter Clausen wrote:
-> On 04/19/2016 02:40 PM, Mika Westerberg wrote:
-> > On Mon, Apr 18, 2016 at 05:26:54PM +0200, Lars-Peter Clausen wrote:
-> >> A generic API by indexes wont work. The order between DT and ACPI will most
-> >> likely be different. I'd even assume that the order will be different with
-> >> ACPI for the same device on different platforms.
-> > 
-> > Yes, unfortunately that might be possible.
-> > 
-> >> If we want to support ACPI over the same interface drivers need to provide a
-> >> lookup table that maps a name to the index.
-> > 
-> > Indeed something like we already have with GPIOs. The lookup table could
-> > be filled from names in _DSD where it is available.
-> 
-> Does that mean you are OK with the patch as it is?
+This add DT bindings documentation for ARC PGU display controller.
 
-It is still not clear to me if this supports more than two addresses and
-if it does, how those are represented in DT and how the function can be
-used to fetch all those additional addresses.
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Acked-by: Rob Herring <robh@kernel.org>
+---
+
+No changes v5 -> v6.
+
+Changes v4 -> v5: (addressing Rob's comment)
+ * Added Rob's acked-by
+ * Remove "encoder-slave" from the example as well.
+   Now only "pgu" node is mentioned in the example.
+
+Changes v3 -> v4: (addressing Rob's comments)
+ * Removed "encoder-slave" from required properties
+ * Removed "0x" from node names
+
+Changes v2 -> v3:
+ * Reverted back to initial larger version of example
+   with minor fixes (thanks Rob for spotting those).
+
+Changes v1 -> v2:
+ * Removed everything except PGU node itself.
+
+ .../devicetree/bindings/display/snps,arcpgu.txt    | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
+
+diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
+new file mode 100644
+index 0000000..c5c7dfd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
+@@ -0,0 +1,35 @@
++ARC PGU
++
++This is a display controller found on several development boards produced
++by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
++framebuffer and sends it to a single digital encoder (usually HDMI).
++
++Required properties:
++  - compatible: "snps,arcpgu"
++  - reg: Physical base address and length of the controller's registers.
++  - clocks: A list of phandle + clock-specifier pairs, one for each
++    entry in 'clock-names'.
++  - clock-names: A list of clock names. For ARC PGU it should contain:
++      - "pxlclk" for the clock feeding the output PLL of the controller.
++
++Required sub-nodes:
++  - port: The PGU connection to an encoder chip.
++
++Example:
++
++/ {
++	...
++
++	pgu@XXXXXXXX {
++		compatible = "snps,arcpgu";
++		reg = <0xXXXXXXXX 0x400>;
++		clocks = <&clock_node>;
++		clock-names = "pxlclk";
++
++		port {
++			pgu_output: endpoint {
++				remote-endpoint = <&hdmi_enc_input>;
++			};
++		};
++	};
++};
+-- 
+2.5.5
