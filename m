@@ -1,55 +1,41 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 30/45] powerpc/pci: Delay populating pdn
-Date: Tue, 19 Apr 2016 18:19:20 +1000
-Message-ID: <5715EA08.3040901@ozlabs.ru>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-31-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] Documentation: power: reset: move gpio-{poweroff|restart}
+ to proper place
+Date: Tue, 19 Apr 2016 10:19:38 +0200
+Message-ID: <CACRpkdZKS77CQpf5xQ4aA++jg6SH32BptoSbDCg0yugF4O0Jtw@mail.gmail.com>
+References: <1460476853-3306-1-git-send-email-wsa@the-dreams.de>
+	<CACRpkdaUj5w3zkjWVf1GML3reeDnRpT8avOPkRB6_qFXB6EGjw@mail.gmail.com>
+	<CAL_JsqKK1QmGdyae-P9SoP2-7JiLK1XCyskxbd-wrn+7CidMJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1455680668-23298-31-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKK1QmGdyae-P9SoP2-7JiLK1XCyskxbd-wrn+7CidMJw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2016 02:44 PM, Gavin Shan wrote:
-> The pdn (struct pci_dn) instances are allocated from memblock or
-> bootmem when creating PCI controller (hoses) in setup_arch(). PCI
-> hotplug, which will be supported by proceeding patches, releases
-> PCI device nodes and their corresponding pdn on unplugging event.
-> The memory chunks for pdn instances allocated from memblock or
-> bootmem are hard to reused after being released.
+On Fri, Apr 15, 2016 at 6:53 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Apr 15, 2016 at 2:48 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Tue, Apr 12, 2016 at 6:00 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+>>
+>>> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>>>
+>>> I did only find them after a fuzzy search, so let them be where one
+>>> would expect them.
+>>>
+>>> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>>
+>> I saw this the other day too I agree.
+>> Sebastian: are you OK that I move this by committing the patch to the GPIO tree?
+>> DT maintainers: OK?
 >
-> This delays creating pdn by pci_devs_phb_init() from setup_arch()
-> to core_initcall() so that they are allocated from slab. The memory
-> consumed by pdn can be released to system without problem during
-> PCI unplugging time. It indicates that pci_dn is unavailable in
-> setup_arch() and the the fixup on pdn (like AGP's) can't be carried
-> out that time. We have to do that in ppc_md.pcibios_root_bridge_prepare()
-> on maple/pasemi/powermac platforms where/when the pdn is available.
+> Acked-by: Rob Herring <robh@kernel.org>
 >
-> At the mean while, the EEH device is created when pdn is populated,
-> meaning pdn and EEH device have same life cycle. In turn, we needn't
-> call eeh_dev_init() to create EEH device explicitly.
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> Seems like this should go thru my tree though, but I don't have the patch.
 
+I have it merged in my tree, is is OK or shall I extract it and send
+it to you?
 
-Uff. It would not hurt to mention that  pcibios_root_bridge_prepare is 
-called from subsys_initcall() which is executed after core_initcall() so 
-the code flow does not change.
-
-Have you checked if there is anything in between 
-core_initcall(pci_devs_phb_init) and subsys_initcall(pcibios_init) which 
-might need device tree nodes? For example, subsys_initcall(pcibios_init) 
-calls (eventually) pnv_pci_ioda_fixup(), if we are unlucky and 
-pcibios_init() (and therefore pnv_pci_ioda_fixup() or what pseries/others 
-do) is called before pcibios_init() - won't we crash or something?
-
-
-
-
--- 
-Alexey
+Yours,
+Linus Walleij
