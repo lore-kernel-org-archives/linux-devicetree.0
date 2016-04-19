@@ -1,113 +1,54 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and
- cleanups
-Date: Tue, 19 Apr 2016 15:27:46 +0200
-Message-ID: <57163252.5090000@schinagl.nl>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
- <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
+ addresses
+Date: Tue, 19 Apr 2016 15:31:41 +0200
+Message-ID: <5716333D.1040106@metafoo.de>
+References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
+ <20160415080111.GD1714@lahna.fi.intel.com>
+ <1460992811.8946.22.camel@linux.intel.com> <5714FCBE.3060009@metafoo.de>
+ <20160419124028.GF1725@lahna.fi.intel.com> <57162C4E.9090904@metafoo.de>
+ <20160419131631.GG1725@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160419131631.GG1725@lahna.fi.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Ricardo,
-
-On 19-04-16 13:18, Ricardo Ribalda Delgado wrote:
-> Hi Ollivier
->
-> Sorry to not reply to the patches, but I am not subscribed to linux-leds
->
-> Regarding:
-> [PATCH 2/6] leds: pca963x: Lock i2c r/w access
->
-> I am not sure why this patch is needed. the only thing that should be
-> protected is the write to ledout.
->
-> It seems that mode2 needs to be set to PCA963X_MODE2_DMBLNK, or at
-> least, the driver never clears that bit. Couldnt we just set it at
-> probe time and remove the read/write of it? I do not have the hardware
-> at the moment, so it should be something that you need to test.
-Without actually looking at the code right now, but the driver does a 
-read/modify/write on the register, and a register is shared among 
-several leds. So in that regard, it makes sense and I don't think it's 
-very expensive to move the lock, since we have to lock for the write a 
-few lines down anyway.
->
-> [PATCH 4/6] leds: pca963x: Reduce magic values
-> Maybe you want to create the inverse macro of PCA963X_LEDOUT_LDR, so
-> you can do something linke
->
-> PCA963X_LEDOUT_LDR_INV(ledout, pca963x->led_num) != PCA963X_LEDOUT_LED_GRP_PWM
-Good point, I'll add it, I like it.
->
->
-> [PATCH 3/6] leds: pca963x: Add defines and remove some magic values
->
-> I am not big fan of defining things that are not used. and the magic
-> assigment to n_leds is perfectly fine IMHO
-Well i needed some of the defines for the invert part and then I figured 
-just add everything that the datasheet defines to make everything 
-exlusive/easy to use.
-
-But I can remove unused defines if desired.
->
-> For PCA963X_LEDOUT_LDR.  Do not forget the parenthesis around led_num.
-> Also replace %4 with &3 to be consisten.t
-Yeah, i'll check and fix that.
->
-> Regards!
->
-> On Tue, Apr 19, 2016 at 11:39 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
->> On 19-04-16 11:23, Jacek Anaszewski wrote:
->>> Hi Olliver,
+On 04/19/2016 03:16 PM, Mika Westerberg wrote:
+> On Tue, Apr 19, 2016 at 03:02:06PM +0200, Lars-Peter Clausen wrote:
+>> On 04/19/2016 02:40 PM, Mika Westerberg wrote:
+>>> On Mon, Apr 18, 2016 at 05:26:54PM +0200, Lars-Peter Clausen wrote:
+>>>> A generic API by indexes wont work. The order between DT and ACPI will most
+>>>> likely be different. I'd even assume that the order will be different with
+>>>> ACPI for the same device on different platforms.
 >>>
->>> Thanks for the patches.
->>> Adding driver authors on cc.
->> Ah sorry about that, thanks. I guess get_maintainers doesn't do that.
->>
->> As for the compile bug, I'll fix that with v2, it only applies on the
->> intermediate patches, not on the whole set.
->>
->> Olliver
->>
->>> On 04/19/2016 09:40 AM, Olliver Schinagl wrote:
->>>> Using the pca963x for a while, I noticed something that may look like
->>>> some
->>>> i2c accessing issues where sometimes data was incorrectly written to the
->>>> bus,
->>>> possibly because we where not properly locking the i2c reads. Though I'm
->>>> not
->>>> familiar enough with the i2c framework to be certain reads need to be
->>>> locked
->>>> at all. A patch was added to properly lock i2c access more tightly.
->>>>
->>>> Furthermore there was no method to support inverted outputs. This series
->>>> adds a property to the device tree to inform the driver that the output
->>>> is inverted (active-high vs active-low).
->>>>
->>>> Additionally, this patch set does some cleanups to please checkpatch, and
->>>> removes a few magic values.
->>>>
->>>> Olliver Schinagl (6):
->>>>     leds: pca963x: Alphabetize headers
->>>>     leds: pca963x: Lock i2c r/w access
->>>>     leds: pca963x: Add defines and remove some magic values
->>>>     leds: pca963x: Reduce magic values
->>>>     leds: pca963x: Inform the output that it is inverted
->>>>     leds: pca963x: Remove whitespace and checkpatch problems
->>>>
->>>>    Documentation/devicetree/bindings/leds/pca963x.txt |   1 +
->>>>    drivers/leds/leds-pca963x.c                        | 243
->>>> ++++++++++++++-------
->>>>    include/linux/platform_data/leds-pca963x.h         |   1 +
->>>>    3 files changed, 171 insertions(+), 74 deletions(-)
->>>>
+>>> Yes, unfortunately that might be possible.
 >>>
->
->
+>>>> If we want to support ACPI over the same interface drivers need to provide a
+>>>> lookup table that maps a name to the index.
+>>>
+>>> Indeed something like we already have with GPIOs. The lookup table could
+>>> be filled from names in _DSD where it is available.
+>>
+>> Does that mean you are OK with the patch as it is?
+> 
+> It is still not clear to me if this supports more than two addresses and
+> if it does, how those are represented in DT and how the function can be
+> used to fetch all those additional addresses.
+
+It adds a standard API for dealing with devices that have more than one
+address. It uses the normal way of specifying multiple (named) address in DT.
+
+reg = <0xa>, <0xb>, <0xc>;
+reg-names = "main", "aux1", "aux2";
+
+The function the new i2c_new_secondary_device() function takes the name of
+the address region and allocates a dummy I2C client for it, which can be
+used to access that I2C part of the device that responds to that region. The
+name is used to lookup the address from the name to address map.
+
+- Lars
