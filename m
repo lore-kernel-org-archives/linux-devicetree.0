@@ -1,145 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: of: make it possible to name GPIO lines
-Date: Tue, 19 Apr 2016 15:39:17 +0200
-Message-ID: <1461073157-26574-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>
-Cc: Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
+Date: Tue, 19 Apr 2016 15:42:51 +0200
+Message-ID: <CAPybu_2uZqR4exnS08taVYyr=ziK+EzuJy+_FxhbtqSiOE_=mw@mail.gmail.com>
+References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
+ <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
+ <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com> <57163252.5090000@schinagl.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57163252.5090000-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Make it possible to name the producer side of a GPIO line using
-a "gpio-names" property array, modeled on the "clock-names"
-property from the clock bindings.
+Hi again
 
-This naming is especially useful for:
+On Tue, Apr 19, 2016 at 3:27 PM, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org> wrote:
+> Hey Ricardo,
 
-- Debugging: lines are named after function, not just opaque
-  offset numbers.
+> Without actually looking at the code right now, but the driver does a
+> read/modify/write on the register, and a register is shared among several
+> leds. So in that regard, it makes sense and I don't think it's very
+> expensive to move the lock, since we have to lock for the write a few lines
+> down anyway.
 
-- Exploration: systems where some or all GPIO lines are available
-  to end users, such as prototyping, one-off's "makerspace usecases"
-  users are helped by the names of the GPIO lines when tinkering.
-  This usecase has been surfacing recently.
+Actually, the code is only making sure that PCA963X_MODE2_DMBLNK is
+on. It is never cleared afterwards.
 
-The gpio-names attribute is completely optional.
+It will be great if you could set that bit on probe and remove those
+two lines and verify that it works on real hardware.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-This has been discussed at some length now.
 
-Why we are not using hogs: these are consumer side, not producer
-side. The gpio-controller in DT (gpio_chip in Linux) is a
-producer, not a consumer.
+The move of the lock can be a bit expensive. i2c writes can take a
+while to be performed, this is why only ledout was protected
+initially.
 
-This patch is not about assigning initial values to GPIO lines.
-That is an orthogonal usecase. This is just about naming lines.
----
- Documentation/devicetree/bindings/gpio/gpio.txt | 19 +++++++++++
- drivers/gpio/gpiolib-of.c                       | 43 +++++++++++++++++++++++++
- 2 files changed, 62 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index c88d2ccb05ca..6b371ab6098e 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -152,6 +152,21 @@ additional bitmask is needed to specify which GPIOs are actually in use,
- and which are dummies. The bindings for this case has not yet been
- specified, but should be specified if/when such hardware appears.
- 
-+Optionally, a GPIO controller may have a "gpio-names" property. This is
-+an array of strings defining the names of the GPIO lines going out of the
-+GPIO controller. This name should be the most meaningful producer name
-+for the system, such as a rail name indicating the usage. Package names
-+such as pin name are discouraged: such lines have opaque names (since they
-+are by definition generic purpose) and such names are usually not very
-+helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
-+reasonable line names as they describe what the line is used for. "GPIO0"
-+is not a good name to give to a GPIO line. Placeholders are discouraged:
-+rather use the "" (blank string) if the use of the GPIO line is undefined
-+in your design. The names are assigned starting from line offset 0 from
-+left to right from the passed array. An incomplete array (where the number
-+of passed named are less than ngpios) will still be used up until the last
-+provided valid line index.
-+
- Example:
- 
- gpio-controller@00000000 {
-@@ -160,6 +175,10 @@ gpio-controller@00000000 {
- 	gpio-controller;
- 	#gpio-cells = <2>;
- 	ngpios = <18>;
-+	gpio-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
-+		"LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
-+		"Row A", "Row B", "Row C", "Row D", "NMI button",
-+		"poweroff", "reset";
- }
- 
- The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index d81dbd8e90d9..b4e3a42e7aae 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -196,6 +196,42 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- }
- 
- /**
-+ * of_gpiochip_set_names() - set up the names of the lines
-+ * @chip: GPIO chip whose lines should be named, if possible
-+ */
-+static int of_gpiochip_set_names(struct gpio_chip *gc)
-+{
-+	struct gpio_device *gdev = gc->gpiodev;
-+	struct device_node *np = gc->of_node;
-+	int i;
-+	int nstrings;
-+
-+	/* Do we even have the "gpio-names" property */
-+	if (!of_property_read_bool(np, "gpio-names"))
-+		return 0;
-+
-+	nstrings = of_property_count_strings(np, "gpio-names");
-+	for (i = 0; i < nstrings; i++) {
-+		const char *name;
-+		int ret;
-+
-+		ret = of_property_read_string_index(np,
-+						    "gpio-names",
-+						    i,
-+						    &name);
-+		if (!ret)
-+			gdev->descs[i].name = name;
-+
-+		/* Empty strings are OK */
-+		if (ret != -ENODATA)
-+			dev_err(&gdev->dev, "unable to name line %d\n",
-+				i);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-  * of_gpiochip_scan_gpios - Scan gpio-controller for gpio definitions
-  * @chip:	gpio chip to act on
-  *
-@@ -445,6 +481,13 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 	if (status)
- 		return status;
- 
-+	/* If the chip defines names itself, these take precedence */
-+	if (!chip->names) {
-+		status = of_gpiochip_set_names(chip);
-+		if (status)
-+			return status;
-+	}
-+
- 	of_node_get(chip->of_node);
- 
- 	return of_gpiochip_scan_gpios(chip);
--- 
-2.4.11
-
+Best regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
