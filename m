@@ -1,43 +1,44 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
-Date: Tue, 19 Apr 2016 15:42:51 +0200
-Message-ID: <CAPybu_2uZqR4exnS08taVYyr=ziK+EzuJy+_FxhbtqSiOE_=mw@mail.gmail.com>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
- <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com> <57163252.5090000@schinagl.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57163252.5090000-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 1/2] crypto: s5p-sss - Fix use after free of copied input
+ buffer in error path
+Date: Tue, 19 Apr 2016 15:44:11 +0200
+Message-ID: <1461073452-10426-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Vladimir Zapolskiy <vz@mleia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi again
+The driver makes copies of memory (input or output scatterlists) if they
+are not aligned. In s5p_aes_crypt_start() error path (on unsuccessful
+initialization of output scatterlist), if input scatterlist was not
+aligned, the driver first freed copied input memory and then unmapped it
+from the device, instead of doing otherwise (unmap and then free).
 
-On Tue, Apr 19, 2016 at 3:27 PM, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org> wrote:
-> Hey Ricardo,
+This was wrong in two ways:
+1. Freed pages were still mapped to the device.
+2. The dma_unmap_sg() iterated over freed scatterlist structure.
 
-> Without actually looking at the code right now, but the driver does a
-> read/modify/write on the register, and a register is shared among several
-> leds. So in that regard, it makes sense and I don't think it's very
-> expensive to move the lock, since we have to lock for the write a few lines
-> down anyway.
+The call to s5p_free_sg_cpy() in this error path is not needed because
+the copied scatterlists will be freed by s5p_aes_complete().
 
-Actually, the code is only making sure that PCA963X_MODE2_DMBLNK is
-on. It is never cleared afterwards.
+Fixes: 9e4a1100a445 ("crypto: s5p-sss - Handle unaligned buffers")
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ drivers/crypto/s5p-sss.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-It will be great if you could set that bit on probe and remove those
-two lines and verify that it works on real hardware.
-
-
-The move of the lock can be a bit expensive. i2c writes can take a
-while to be performed, this is why only ledout was protected
-initially.
-
-Best regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+index 4f6d5b3ec418..b0484d4d68d9 100644
+--- a/drivers/crypto/s5p-sss.c
++++ b/drivers/crypto/s5p-sss.c
+@@ -577,7 +577,6 @@ static void s5p_aes_crypt_start(struct s5p_aes_dev *dev, unsigned long mode)
+ 	return;
+ 
+ outdata_error:
+-	s5p_free_sg_cpy(dev, &dev->sg_src_cpy);
+ 	s5p_unset_indata(dev);
+ 
+ indata_error:
+-- 
+1.9.1
