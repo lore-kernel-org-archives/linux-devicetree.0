@@ -1,29 +1,57 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: DT: vdma: Add clock support for vdma
-Date: Wed, 20 Apr 2016 13:15:27 +0200
-Message-ID: <571764CF.6070003@metafoo.de>
-References: <1461136800-20334-1-git-send-email-appanad@xilinx.com>
- <CAKfKVtEkfnDqU476troXmCw20ATvQvj-JdPX-BCuPDR-9ZxKHQ@mail.gmail.com>
- <C246CAC1457055469EF09E3A7AC4E11A4A578F73@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] Documentation: arm64: pmu: Add Broadcom Vulcan
+ PMU binding
+Date: Wed, 20 Apr 2016 12:15:48 +0100
+Message-ID: <20160420111547.GG11453@leverpostej>
+References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
+ <1461092062-7484-2-git-send-email-ashoks@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A578F73-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461092062-7484-2-git-send-email-ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2016 10:39 AM, Appana Durga Kedareswara Rao wrote:
-[...]
->> however  we should keep the names same as the TRM.
+On Tue, Apr 19, 2016 at 11:54:16AM -0700, Ashok Kumar wrote:
+> Document the compatible string for Broadcom Vulcan PMU.
+> Also arranged the list in alphabetical order.
 > 
-> Why?? Why can't we use simple convenient names that refers to equivalent clocks of h/w 
+> Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Because it is confusing. If you use the same name it's very straight forward
-to understand which clock is being referred to. That's not the case if you
-come up with random new names.
+FWIW:
+
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Mark.
+
+> ---
+>  Documentation/devicetree/bindings/arm/pmu.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+> index 6eb73be..74d5417 100644
+> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> @@ -22,10 +22,11 @@ Required properties:
+>  	"arm,arm11mpcore-pmu"
+>  	"arm,arm1176-pmu"
+>  	"arm,arm1136-pmu"
+> +	"brcm,vulcan-pmu"
+> +	"cavium,thunder-pmu"
+>  	"qcom,scorpion-pmu"
+>  	"qcom,scorpion-mp-pmu"
+>  	"qcom,krait-pmu"
+> -	"cavium,thunder-pmu"
+>  - interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
+>                 interrupt (PPI) then 1 interrupt should be specified.
+>  
+> -- 
+> 2.1.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
