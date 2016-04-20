@@ -1,193 +1,248 @@
-From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Wed, 20 Apr 2016 10:50:28 +0800
-Message-ID: <5716EE74.6040107@atmel.com>
-References: <1460533460-32336-1-git-send-email-songjun.wu@atmel.com>
- <1460533460-32336-3-git-send-email-songjun.wu@atmel.com>
- <20160414152933.GA14073@rob-hp-laptop>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v8 13/45] powerpc/powernv/ioda1: M64 support on P7IOC
+Date: Wed, 20 Apr 2016 12:55:08 +1000
+Message-ID: <5716EF8C.8020607@ozlabs.ru>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-14-git-send-email-gwshan@linux.vnet.ibm.com>
+ <570DF9AF.6020104@ozlabs.ru> <20160420002254.GA13506@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160414152933.GA14073@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160420002254.GA13506@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 4/14/2016 23:29, Rob Herring wrote:
-> On Wed, Apr 13, 2016 at 03:44:20PM +0800, Songjun Wu wrote:
->> DT binding documentation for ISC driver.
+On 04/20/2016 10:22 AM, Gavin Shan wrote:
+> On Wed, Apr 13, 2016 at 05:47:59PM +1000, Alexey Kardashevskiy wrote:
+>> On 02/17/2016 02:43 PM, Gavin Shan wrote:
+>>> This enables M64 window on P7IOC, which has been enabled on PHB3.
+>>> Different from PHB3 where 16 M64 BARs are supported and each of
+>>> them can be owned by one particular PE# exclusively or divided
+>>> evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
+>>> of them are divided to 8 segments. So every P7IOC PHB supports
+>>> 128 M64 segments in total. P7IOC has M64DT, which helps mapping
+>>> one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
+>>> M64DT, indicating that one M64 segment can only be pinned to the
+>>> fixed PE#. In order to have same code to support M64 on P7IOC and
+>>> PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
+>>> of them is pinned to the fixed PE# by bypassing the function of
+>>> M64DT. In turn, we just need different phb->init_m64() for P7IOC
+>>> and PHB3 to support M64.
 >>
->> Signed-off-by: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
+>> The comment is not quite correct - in addition to pnv_ioda1_init_m64(), you
+>> also need to hack pnv_ioda_pick_m64_pe().
 >>
->>   .../devicetree/bindings/media/atmel-isc.txt        | 84 ++++++++++++++++++++++
->>   1 file changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+>
+> Right, will talk about the changes to pnv_ioda_pick_m64_pe() in the
+> commit log of next revision.
+>
 >>
->> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
->> new file mode 100644
->> index 0000000..449f05f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
->> @@ -0,0 +1,84 @@
->> +Atmel Image Sensor Controller (ISC)
->> +----------------------------------------------
->> +
->> +Required properties:
->> +- compatible
->> +	Must be "atmel,sama5d2-isc"
->> +- reg
->> +	Physical base address and length of the registers set for the device;
->> +- interrupts
->> +  Should contain IRQ line for the ISI;
->> +- clocks
->> +	List of clock specifiers, corresponding to entries in
->> +	the clock-names property;
->> +	Please refer to clock-bindings.txt.
->> +- clock-names
->> +	Required elements: "hclock", "ispck".
->> +- pinctrl-names, pinctrl-0
->> +	Please refer to pinctrl-bindings.txt.
->> +- clk_in_isc
+>>>
+>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>> ---
+>>>   arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
+>>>   arch/powerpc/platforms/powernv/pci.h      |  3 ++
+>>>   2 files changed, 86 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> index 1dc663a..8488238 100644
+>>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> @@ -246,6 +246,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
+>>>   	}
+>>>   }
+>>>
+>>> +static int pnv_ioda1_init_m64(struct pnv_phb *phb)
+>>> +{
+>>> +	struct resource *r;
+>>> +	int index;
+>>> +
+>>> +	/*
+>>> +	 * There are 16 M64 BARs, each of which has 8 segments. So
+>>> +	 * there are as many M64 segments as the maximum number of
+>>> +	 * PEs, which is 128.
+>>> +	 */
+>>> +	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
+>>> +		unsigned long base, segsz = phb->ioda.m64_segsize;
+>>> +		int64_t rc;
+>>> +
+>>> +		base = phb->ioda.m64_base +
+>>> +		       index * PNV_IODA1_M64_SEGS * segsz;
+>>> +		rc = opal_pci_set_phb_mem_window(phb->opal_id,
+>>> +				OPAL_M64_WINDOW_TYPE, index, base, 0,
+>>> +				PNV_IODA1_M64_SEGS * segsz);
+>>> +		if (rc != OPAL_SUCCESS) {
+>>> +			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
+>>> +				rc, phb->hose->global_number, index);
+>>> +			goto fail;
+>>> +		}
+>>> +
+>>> +		rc = opal_pci_phb_mmio_enable(phb->opal_id,
+>>> +				OPAL_M64_WINDOW_TYPE, index,
+>>> +				OPAL_ENABLE_M64_SPLIT);
+>>> +		if (rc != OPAL_SUCCESS) {
+>>> +			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
+>>> +				rc, phb->hose->global_number, index);
+>>> +			goto fail;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	/*
+>>> +	 * Exclude the segment used by the reserved PE, which
+>>> +	 * is expected to be 0 or last supported PE#.
+>>> +	 */
+>>> +	r = &phb->hose->mem_resources[1];
+>>> +	if (phb->ioda.reserved_pe_idx == 0)
+>>> +		r->start += phb->ioda.m64_segsize;
+>>> +	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+>>> +		r->end -= phb->ioda.m64_segsize;
+>>> +	else
+>>> +		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
+>>> +			phb->ioda.reserved_pe_idx);
+>>> +
+>>> +	return 0;
+>>> +
+>>> +fail:
+>>> +	for ( ; index >= 0; index--)
+>>> +		opal_pci_phb_mmio_enable(phb->opal_id,
+>>> +			OPAL_M64_WINDOW_TYPE, index, OPAL_DISABLE_M64);
+>>> +
+>>> +	return -EIO;
+>>> +}
+>>> +
+>>>   static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
+>>>   				    unsigned long *pe_bitmap,
+>>>   				    bool all)
+>>> @@ -315,6 +373,26 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>>>   			pe->master = master_pe;
+>>>   			list_add_tail(&pe->list, &master_pe->slaves);
+>>>   		}
+>>> +
+>>> +		/*
+>>> +		 * P7IOC supports M64DT, which helps mapping M64 segment
+>>> +		 * to one particular PE#. However, PHB3 has fixed mapping
+>>> +		 * between M64 segment and PE#. In order to have same logic
+>>> +		 * for P7IOC and PHB3, we enforce fixed mapping between M64
+>>> +		 * segment and PE# on P7IOC.
+>>> +		 */
+>>> +		if (phb->type == PNV_PHB_IODA1) {
+>>> +			int64_t rc;
+>>> +
+>>> +			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>> +					pe->pe_number, OPAL_M64_WINDOW_TYPE,
+>>> +					pe->pe_number / PNV_IODA1_M64_SEGS,
+>>> +					pe->pe_number % PNV_IODA1_M64_SEGS);
+>>> +			if (rc != OPAL_SUCCESS)
+>>> +				pr_warn("%s: Error %lld mapping M64 for PHB#%d-PE#%d\n",
+>>> +					__func__, rc, phb->hose->global_number,
+>>> +					pe->pe_number);
+>>> +		}
+>>
+>>
+>> Cannot this go to pnv_ioda1_init_m64()? From the commit log I understood that
+>> this setup is supposed to be static so it can be done once. Or it is sort of
+>> enable/disable PE? Then make is a helper and call it ioda1_pe_enable() or
+>> something.
+>>
 >
-> No underscores and this needs a better explanation.
->
-Accept.
-This is a node includes the isc internal clocks.
-Maybe it should be 'List of ISC interal clocks'.
-Do you think it's better?
-Thank you.
+> No, we cannot. This associates the M64 segments with the PE# and it can be
+> done in pnv_ioda1_init_m64() where PE# is unknown.
 
->> +	ISC internal clock node, it includes the isc_ispck and isc_mck.
->> +	Please refer to clock-bindings.txt.
->> +- atmel,sensor-preferred
->> +	Sensor is preferred to process image (1-preferred, 0-not).
->> +	The default value is 1.
->
-> This seems a bit questionable.
->
-ISC has an internal image processor, it can convert raw format to the 
-other format, like YUYV format. If user want to output YUYV format, ISC 
-driver has two choices, one is sensor output YUYV format, ISC does not 
-do any process, the other is sensor output raw format, ISC converts raw 
-format to YUYV format.
-But how to choose? I set a option 'atmel,sensor-preferred' in dts to let 
-user decide.
+Ok.
 
->> +
->> +ISC supports a single port node with parallel bus. It should contain one
->> +'port' child node with child 'endpoint' node. Please refer to the bindings
->> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Example:
->> +isc: isc@f0008000 {
->> +	compatible = "atmel,sama5d2-isc";
->> +	reg = <0xf0008000 0x4000>;
->> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
->> +	clocks = <&isc_clk>, <&isc_ispck>;
->> +	clock-names = "hclock", "ispck";
->> +	atmel,sensor-preferred = <1>;
->> +
->> +	port {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		isc_0: endpoint@0 {
->
-> Don't need a unit address for a single endpoint.
->
-Yes, it's a single endpoint.
-But we can create more endpoints, but only one endpoint will be 
-effective. If you want to change the sensor, you can use the same dtb 
-file. It's convenient for user.
 
->> +			remote-endpoint = <&ov7740_0>;
->> +			hsync-active = <1>;
->> +			vsync-active = <0>;
->> +			pclk-sample = <1>;
->
-> Are these documented? They are really properties of the sensor and
-> should be part of the sensor node.
->
-Accept. It should be part of the sensor node.
-Thank you.
+> I don't understand what
+> you meant by "sort of enable/disable PE". PE starts the jurney when PELTM
+> has the corresponding mapping and it doesn't depend on M64 mapping necessarily.
 
->> +		};
->> +	};
->> +
->> +	clk_in_isc {
->
-> Completely missed this is a node from the above description. I should be
-> able to write or validate the example from the description.
->
-> I think perhaps you should just drop all this from the DT, just list the
-> input clocks, and make the ISC node the clock controller.
->
-I think this node is needed. ISC will provide the clock to sensor, we 
-need create the corresponding clock node int DT file, then the sensor 
-will get this clock and set the clock rate in DT file
+Ok.
 
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		isc_ispck: isc_ispck {
+
+>>
+>>>   	}
+>>>
+>>>   	kfree(pe_alloc);
+>>> @@ -329,8 +407,7 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+>>>   	const u32 *r;
+>>>   	u64 pci_addr;
+>>>
+>>> -	/* FIXME: Support M64 for P7IOC */
+>>> -	if (phb->type != PNV_PHB_IODA2) {
+>>> +	if (phb->type != PNV_PHB_IODA1 && phb->type != PNV_PHB_IODA2) {
+>>>   		pr_info("  Not support M64 window\n");
+>>>   		return;
+>>>   	}
+>>> @@ -364,7 +441,10 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
+>>>
+>>>   	/* Use last M64 BAR to cover M64 window */
+>>>   	phb->ioda.m64_bar_idx = 15;
+>>> -	phb->init_m64 = pnv_ioda2_init_m64;
+>>> +	if (phb->type == PNV_PHB_IODA1)
+>>> +		phb->init_m64 = pnv_ioda1_init_m64;
+>>> +	else
+>>> +		phb->init_m64 = pnv_ioda2_init_m64;
+>>>   	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
+>>>   	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
+>>>   }
+>>> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>> index 866a5ea..00539ff 100644
+>>> --- a/arch/powerpc/platforms/powernv/pci.h
+>>> +++ b/arch/powerpc/platforms/powernv/pci.h
+>>> @@ -82,6 +82,9 @@ struct pnv_ioda_pe {
+>>>   	struct list_head	list;
+>>>   };
+>>>
+>>> +#define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
+>>> +#define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
+>>> +
+>>
+>> Why here, not in the beginning of arch/powerpc/platforms/powernv/pci-ioda.c ?
+>> It exposes symbols but nothing is using them (except pci-ioda.c) and code
+>> browsing gets bit more inconvenient.
+>>
 >
-> No underscores in node names.
-Accept, thank you.
+> It would be personal taste: those macros is tied with the definition
+> of "struct pnv_ioda_pe" or "struct pnv_ioda_phb".
+
+
+Neither of these structs uses these macros though.
+
+> On the other hand,
+> those macros have to be in the header file once we split pci-ioda.c
+> to multiple source files some day.
+
+Why? When/if we do such a split, these macros will simply go to pci-ioda1.c 
+and won't pollute global powernv/ioda namespace.
+
+
+> However, I can move them to
+> pci-ioda.c if you really want see them there. Let me know anyway.
+
+
+Please move. Thanks.
+
 
 >
->> +			#clock-cells = <0>;
->> +			reg = <0>;
->
-> Drop or you need a unit address.
->
-OK, I will set a unit address.
-
->> +			clocks = <&isc_clk>, <&iscck>;
->> +		};
->> +
->> +		isc_mck: isc_mck {
->> +			#clock-cells = <0>;
->> +			reg = <1>;
->> +			clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
->> +		};
->> +	};
->> +};
->> +
->> +i2c1: i2c@fc028000 {
->> +	ov7740: camera@0x21 {
->
-> Drop "0x"
->
-Accept, thank you.
-
->> +	compatible = "ovti,ov7740";
->> +	reg = <0x21>;
->> +
->> +	clocks = <&isc_mck>;
->> +	clock-names = "xvclk";
->> +	assigned-clocks = <&isc_mck>;
->> +	assigned-clock-rates = <24000000>;
->> +
->> +	port {
->> +		ov7740_0: endpoint {
->> +			remote-endpoint = <&isc_0>;
->> +		};
->> +	};
->> +};
+>>
+>>>   #define PNV_PHB_FLAG_EEH	(1 << 0)
+>>>
+>>>   struct pnv_phb {
+>>>
+>>
+>>
 >> --
->> 2.7.4
+>> Alexey
 >>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+
+-- 
+Alexey
