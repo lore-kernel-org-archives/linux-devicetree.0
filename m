@@ -1,90 +1,54 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH 1/2] Documentation: DT: vdma: Add clock support for vdma
-Date: Wed, 20 Apr 2016 08:39:40 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A578F73@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1461136800-20334-1-git-send-email-appanad@xilinx.com>
- <CAKfKVtEkfnDqU476troXmCw20ATvQvj-JdPX-BCuPDR-9ZxKHQ@mail.gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] arm64: defconfig: Add Renesas R-Car USB 3.0 driver support
+Date: Wed, 20 Apr 2016 17:47:14 +0900
+Message-ID: <1461142034-5008-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKfKVtEkfnDqU476troXmCw20ATvQvj-JdPX-BCuPDR-9ZxKHQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Moritz Fischer <moritz.fischer@ettus.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2h1YmhyYWp5b3RpLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
-IFNodWJocmFqeW90aSBEYXR0YSBbbWFpbHRvOnNodWJocmFqeW90aS5kYXR0YUBnbWFpbC5jb21d
-DQo+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwgMjAsIDIwMTYgMTozMCBQTQ0KPiBUbzogQXBwYW5h
-IER1cmdhIEtlZGFyZXN3YXJhIFJhbyA8YXBwYW5hZEB4aWxpbnguY29tPg0KPiBDYzogUm9iIEhl
-cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNv
-bT47DQo+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2FtcGJlbGwN
-Cj4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29k
-ZWF1cm9yYS5vcmc+OyBNaWNoYWwNCj4gU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IFNvcmVu
-IEJyaW5rbWFubiA8c29yZW5iQHhpbGlueC5jb20+Ow0KPiB2aW5vZC5rb3VsQGludGVsLmNvbTsg
-ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmENCj4gUmFv
-IDxhcHBhbmFkQHhpbGlueC5jb20+OyBNb3JpdHogRmlzY2hlciA8bW9yaXR6LmZpc2NoZXJAZXR0
-dXMuY29tPjsNCj4gTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
-cmQuY29tPjsNCj4gbHVpc0BkZWJldGhlbmNvdXJ0LmNvbTsgQW5pcnVkaGEgU2FyYW5naSA8YW5p
-cnVkaEB4aWxpbnguY29tPjsgUHVubmFpYWgNCj4gQ2hvdWRhcnkgS2FsbHVyaSA8cHVubmFpYUB4
-aWxpbnguY29tPjsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4g
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIERv
-Y3VtZW50YXRpb246IERUOiB2ZG1hOiBBZGQgY2xvY2sgc3VwcG9ydCBmb3IgdmRtYQ0KPiANCj4g
-T24gV2VkLCBBcHIgMjAsIDIwMTYgYXQgMTI6NDkgUE0sIEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEN
-Cj4gPGFwcGFuYS5kdXJnYS5yYW9AeGlsaW54LmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCB1
-cGRhdGVzIHRoZSBiaW5kaW5nIGRvYyB3aXRoIGNsb2NrIGRlc2NyaXB0aW9uIGZvciB2ZG1hLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogS2VkYXJlc3dhcmEgcmFvIEFwcGFuYSA8YXBwYW5hZEB4
-aWxpbnguY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZG1hL3hpbGlueC94aWxpbnhfdmRtYS50eHQgfCA2DQo+ID4gKysrKysrDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlueF92ZG1hLnR4
-dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS94aWxpbngveGls
-aW54X3ZkbWEudHh0DQo+ID4gaW5kZXggZmNjMmI2NS4uZTFjOTAxOSAxMDA2NDQNCj4gPiAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlueC94aWxpbnhfdmRt
-YS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hp
-bGlueC94aWxpbnhfdmRtYS50eHQNCj4gPiBAQCAtMjEsNiArMjEsMTAgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoNCj4gPiAgLSBkbWEtY2hhbm5lbCBjaGlsZCBub2RlOiBTaG91bGQgaGF2ZSBhdCBs
-ZWFzdCBvbmUgY2hhbm5lbCBhbmQgY2FuIGhhdmUgdXANCj4gdG8NCj4gPiAgICAgICAgIHR3byBj
-aGFubmVscyBwZXIgZGV2aWNlLiBUaGlzIG5vZGUgc3BlY2lmaWVzIHRoZSBwcm9wZXJ0aWVzIG9m
-IGVhY2gNCj4gPiAgICAgICAgIERNQSBjaGFubmVsIChzZWUgY2hpbGQgbm9kZSBwcm9wZXJ0aWVz
-IGJlbG93KS4NCj4gPiArLSBjbG9ja3M6IElucHV0IGNsb2NrIHNwZWNpZmllci4gUmVmZXIgdG8g
-Y29tbW9uIGNsb2NrIGJpbmRpbmdzLg0KPiA+ICstIGNsb2NrLW5hbWVzOiBMaXN0IG9mIGlucHV0
-IGNsb2NrcyAiYXhpX2NsayIsICJ0eF9jbGsiLCAidHhzX2NsayIgKGxpc3Qgb2YgaW5wdXQNCj4g
-PiArICAgICAgICAgICAgICBjbG9rcyBtYXkgdmFyeSBiYXNlZCBvbiB0aGUgaXAgY29uZmlndXJh
-dGlvbi4gc2VlIGNsb2NrIGJpbmRpbmdzDQo+ID4gKyAgICAgICAgICAgICAgZm9yIG1vcmUgaW5m
-bykuDQo+ID4NCj4gPiAgUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgVkRNQToNCj4gPiAgLSB4bG54
-LG51bS1mc3RvcmVzOiBTaG91bGQgYmUgdGhlIG51bWJlciBvZiBmcmFtZWJ1ZmZlcnMgYXMgY29u
-ZmlndXJlZCBpbg0KPiBoL3cuDQo+ID4gQEAgLTYwLDYgKzY0LDggQEAgYXhpX3ZkbWFfMDogYXhp
-dmRtYUA0MDAzMDAwMCB7DQo+ID4gICAgICAgICB4bG54LG51bS1mc3RvcmVzID0gPDB4OD47DQo+
-ID4gICAgICAgICB4bG54LGZsdXNoLWZzeW5jID0gPDB4MT47DQo+ID4gICAgICAgICB4bG54LGFk
-ZHJ3aWR0aCA9IDwweDIwPjsNCj4gPiArICAgICAgIGNsb2NrcyA9IDwmY2xrIDA+LCA8JmNsayAx
-PiwgPCZjbGsgMj47DQo+ID4gKyAgICAgICBjbG9jay1uYW1lcyA9ICJheGlfY2xrIiwgInR4X2Ns
-ayIsICJ0eHNfY2xrIjsNCj4gDQo+IHRoZSBtb2R1bGUgaGFzDQo+IHNfYXhpX2xpdGVfYWNsayBD
-bG9jayBJIEFYSSBWRE1BIEFYSTQtTGl0ZSBpbnRlcmZhY2UgY2xvY2sgIG1fYXhpX21tMnNfYWNs
-aw0KPiBDbG9jayBJIEFYSSBWRE1BIE1NMlMgY2xvY2sgIG1fYXhpX3MybW1fYWNsayBDbG9jayBJ
-IEFYSSBWRE1BIFMyTU0gY2xvY2sNCj4gbV9heGlzX21tMnNfYWNsayBDbG9jayBJIEFYSSBWRE1B
-IE1NMlMgQVhJUyBjbG9jayAgc19heGlzX3MybW1fYWNsaw0KPiBDbG9jayBJIEFYSSBWRE1BIFMy
-TU0gQVhJUyBjbG9jaw0KPiANCj4gSSB0aGluayBhIHBhcnRpYWwgc3VwcG9ydCBpcyBub3Qgd3Jv
-bmcuDQoNCkl0IGlzIG5vdCBwYXJ0aWFsIHN1cHBvcnQgdGhlIGRyaXZlciBpcyBzdXBwb3J0aW5n
-IGFsbCB0aGUgY2xvY2tzIGF2YWlsYWJsZSBpbiB0aGUgSVAgKHBsZWFzZSByZWZlciB0aGUgcGF0
-Y2ggMiBpbiB0aGUgc2VyaWVzKS4NCkluIHRoZSBleGFtcGxlIEkganVzdCBwdXR0ZWQgY2xvY2sg
-bmFtZXMgZm9yIFRYIHBhdGggSSBtZWFuIHdoZW4gdGhlIElQIGlzIGNvbmZpZ3VyZWQgb25seSB3
-aXRoIG9uZSBjaGFubmVsLg0KDQpXaWxsIHVwZGF0ZSB0aGUgY2xvY2stbmFtZXMgZXhhbXBsZSB3
-aXRoIHRoZSBhbGwgdGhlIHN1cHBvcnRlZCBjbG9ja3MgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0K
-PiBob3dldmVyICB3ZSBzaG91bGQga2VlcCB0aGUgbmFtZXMgc2FtZSBhcyB0aGUgVFJNLg0KDQpX
-aHk/PyBXaHkgY2FuJ3Qgd2UgdXNlIHNpbXBsZSBjb252ZW5pZW50IG5hbWVzIHRoYXQgcmVmZXJz
-IHRvIGVxdWl2YWxlbnQgY2xvY2tzIG9mIGgvdyANCkkgbWVhbiBJIHVzZWQgYXhpX2NsayBpbnN0
-ZWFkIG9mIHNfYXhpX2xpdGVfYWNsaywNClVzZWQgdHhfY2xrIGluc3RlYWQgb2YgbV9heGlfbW0y
-c19hY2xrLA0KVXNlZCB0eHNfY2xrIGluc3RlYWQgb2YgbV9heGlzX21tMnNfYWNsay4NCg0KSWYg
-aXQgbWFuZGF0b3J5IHRvIHVzZSBuYW1lcyBhcyB0aGUgVFJNIHBsZWFzZSBsZXQgbWUga25vdyB3
-aWxsIHVwZGF0ZSB0aGUgc2FtZSB2Mi4uLg0KDQpSZWdhcmRzLA0KS2VkYXIuDQoNCj4gDQo+IA0K
-PiA+ICAgICAgICAgZG1hLWNoYW5uZWxANDAwMzAwMDAgew0KPiA+ICAgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gInhsbngsYXhpLXZkbWEtbW0ycy1jaGFubmVsIjsNCj4gPiAgICAgICAgICAg
-ICAgICAgaW50ZXJydXB0cyA9IDwgMCA1NCA0ID47DQo+ID4gLS0NCj4gPiAyLjEuMg0KPiA+DQo+
-ID4NCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-PiA+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnDQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsDQo=
+If we doesn't enable this configuration and runs on R-Car Gen3,
+xhci host driver will cause timeout in xhci_reset() because
+the R-Car Gen3 xHCI controller needs specific initialization.
+
+[    1.565605] xhci-hcd ee000000.usb: xHCI Host Controller
+[    1.570636] xhci-hcd ee000000.usb: new USB bus registered, assigned bus number 5
+[   22.270160] xhci-hcd ee000000.usb: can't setup: -110
+[   22.274931] xhci-hcd ee000000.usb: USB bus 5 deregistered
+[   22.280158] xhci-hcd: probe of ee000000.usb failed with error -110
+
+Remarks:
+The timestamp doesn't work correctly on R-Car H3 ES1.0. It should be
+10 seconds.
+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ arch/arm64/configs/defconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index a44ef99..a95751d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1,7 +1,6 @@
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+-CONFIG_FHANDLE=y
+ CONFIG_AUDIT=y
+ CONFIG_NO_HZ_IDLE=y
+ CONFIG_HIGH_RES_TIMERS=y
+@@ -192,7 +191,7 @@ CONFIG_SND_SOC_AK4613=y
+ CONFIG_USB=y
+ CONFIG_USB_OTG=y
+ CONFIG_USB_XHCI_HCD=y
+-CONFIG_USB_XHCI_PLATFORM=y
++CONFIG_USB_XHCI_RCAR=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_MSM=y
+ CONFIG_USB_EHCI_HCD_PLATFORM=y
+-- 
+1.9.1
