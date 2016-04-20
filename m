@@ -1,62 +1,166 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] dmaengine: bcm2835: use platform_get_irq_byname
-Date: Wed, 20 Apr 2016 13:12:36 +0200
-Message-ID: <CAMuHMdUgfyLrdmfHLHd3eNh79FcJarVPuhbxtU4XYZok=skLkw@mail.gmail.com>
-References: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
-	<1460381349-14408-3-git-send-email-kernel@martin.sperl.org>
-	<CAMuHMdW2Jw5=f9ojNSM0d1cGvPc6_QxwH4rcQdWBQTP89zyj4Q@mail.gmail.com>
-	<571762A7.7000005@martin.sperl.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 5/7] arm64/perf: Access pmu register using
+ <read/write>_sys_reg
+Date: Wed, 20 Apr 2016 12:12:39 +0100
+Message-ID: <20160420111239.GF11453@leverpostej>
+References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
+ <1461092062-7484-6-git-send-email-ashoks@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571762A7.7000005-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461092062-7484-6-git-send-email-ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+On Tue, Apr 19, 2016 at 11:54:20AM -0700, Ashok Kumar wrote:
+> changed pmu register access to make use of <read/write>_sys_reg
+> from sysreg.h instead of accessing them directly.
+> 
+> Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/kernel/perf_event.c | 33 ++++++++++++++++-----------------
+>  1 file changed, 16 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index 2ee61e8..86790d2 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -22,6 +22,7 @@
+>  #include <asm/irq_regs.h>
+>  #include <asm/perf_event.h>
+>  #include <asm/virt.h>
+> +#include <asm/sysreg.h>
 
-On Wed, Apr 20, 2016 at 1:06 PM, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
-> On 20.04.2016 08:51, Geert Uytterhoeven wrote:
->>
->> On Mon, Apr 11, 2016 at 3:29 PM,  <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
->>>
->>> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->>>
->>> Use platform_get_irq_byname to allow for correct mapping of
->>> interrupts to dma channels.
->>>
->>> The currently implemented device tree is unfortunately
->>> implemented with the wrong assumption, that each dma-channel
->>> has its own dma channel, but dma-irq 11 is handling
->>> dma-channel 11-14 and dma-irq 12 is actually a "catch all"
->>> interrupt.
->>>
->>> So here we use the byname variant and require that interrupts
->>> are explicitly named via the interrupts-name property in the
->>
->> interrupt-names
->
-> Vinod has just merged this patch - do you want me to submit another
+Please move this between the includes of <asm/perf_event.h> and
+<asm/virt.h>, so as to keep them in alphabetical order.
 
-Yeah, that's how I noticed by accident :-)
+Otherwise, this looks like a nice cleanup!
 
-> to correct those?
+With that fixed up:
 
-For the commit message it's indeed too late. For the error message in the
-code, yes please.
+Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-Gr{oetje,eeting}s,
+Mark.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  
+>  #include <linux/of.h>
+>  #include <linux/perf/arm_pmu.h>
+> @@ -476,16 +477,14 @@ static const struct attribute_group *armv8_pmuv3_attr_groups[] = {
+>  
+>  static inline u32 armv8pmu_pmcr_read(void)
+>  {
+> -	u32 val;
+> -	asm volatile("mrs %0, pmcr_el0" : "=r" (val));
+> -	return val;
+> +	return read_sysreg(pmcr_el0);
+>  }
+>  
+>  static inline void armv8pmu_pmcr_write(u32 val)
+>  {
+>  	val &= ARMV8_PMU_PMCR_MASK;
+>  	isb();
+> -	asm volatile("msr pmcr_el0, %0" :: "r" (val));
+> +	write_sysreg(val, pmcr_el0);
+>  }
+>  
+>  static inline int armv8pmu_has_overflowed(u32 pmovsr)
+> @@ -507,7 +506,7 @@ static inline int armv8pmu_counter_has_overflowed(u32 pmnc, int idx)
+>  static inline int armv8pmu_select_counter(int idx)
+>  {
+>  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+> -	asm volatile("msr pmselr_el0, %0" :: "r" (counter));
+> +	write_sysreg(counter, pmselr_el0);
+>  	isb();
+>  
+>  	return idx;
+> @@ -524,9 +523,9 @@ static inline u32 armv8pmu_read_counter(struct perf_event *event)
+>  		pr_err("CPU%u reading wrong counter %d\n",
+>  			smp_processor_id(), idx);
+>  	else if (idx == ARMV8_IDX_CYCLE_COUNTER)
+> -		asm volatile("mrs %0, pmccntr_el0" : "=r" (value));
+> +		value = read_sysreg(pmccntr_el0);
+>  	else if (armv8pmu_select_counter(idx) == idx)
+> -		asm volatile("mrs %0, pmxevcntr_el0" : "=r" (value));
+> +		value = read_sysreg(pmxevcntr_el0);
+>  
+>  	return value;
+>  }
+> @@ -548,47 +547,47 @@ static inline void armv8pmu_write_counter(struct perf_event *event, u32 value)
+>  		 */
+>  		u64 value64 = 0xffffffff00000000ULL | value;
+>  
+> -		asm volatile("msr pmccntr_el0, %0" :: "r" (value64));
+> +		write_sysreg(value64, pmccntr_el0);
+>  	} else if (armv8pmu_select_counter(idx) == idx)
+> -		asm volatile("msr pmxevcntr_el0, %0" :: "r" (value));
+> +		write_sysreg(value, pmxevcntr_el0);
+>  }
+>  
+>  static inline void armv8pmu_write_evtype(int idx, u32 val)
+>  {
+>  	if (armv8pmu_select_counter(idx) == idx) {
+>  		val &= ARMV8_PMU_EVTYPE_MASK;
+> -		asm volatile("msr pmxevtyper_el0, %0" :: "r" (val));
+> +		write_sysreg(val, pmxevtyper_el0);
+>  	}
+>  }
+>  
+>  static inline int armv8pmu_enable_counter(int idx)
+>  {
+>  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+> -	asm volatile("msr pmcntenset_el0, %0" :: "r" (BIT(counter)));
+> +	write_sysreg(BIT(counter), pmcntenset_el0);
+>  	return idx;
+>  }
+>  
+>  static inline int armv8pmu_disable_counter(int idx)
+>  {
+>  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+> -	asm volatile("msr pmcntenclr_el0, %0" :: "r" (BIT(counter)));
+> +	write_sysreg(BIT(counter), pmcntenclr_el0);
+>  	return idx;
+>  }
+>  
+>  static inline int armv8pmu_enable_intens(int idx)
+>  {
+>  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+> -	asm volatile("msr pmintenset_el1, %0" :: "r" (BIT(counter)));
+> +	write_sysreg(BIT(counter), pmintenset_el1);
+>  	return idx;
+>  }
+>  
+>  static inline int armv8pmu_disable_intens(int idx)
+>  {
+>  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
+> -	asm volatile("msr pmintenclr_el1, %0" :: "r" (BIT(counter)));
+> +	write_sysreg(BIT(counter), pmintenclr_el1);
+>  	isb();
+>  	/* Clear the overflow flag in case an interrupt is pending. */
+> -	asm volatile("msr pmovsclr_el0, %0" :: "r" (BIT(counter)));
+> +	write_sysreg(BIT(counter), pmovsclr_el0);
+>  	isb();
+>  
+>  	return idx;
+> @@ -599,11 +598,11 @@ static inline u32 armv8pmu_getreset_flags(void)
+>  	u32 value;
+>  
+>  	/* Read */
+> -	asm volatile("mrs %0, pmovsclr_el0" : "=r" (value));
+> +	value = read_sysreg(pmovsclr_el0);
+>  
+>  	/* Write to clear flags */
+>  	value &= ARMV8_PMU_OVSR_MASK;
+> -	asm volatile("msr pmovsclr_el0, %0" :: "r" (value));
+> +	write_sysreg(value, pmovsclr_el0);
+>  
+>  	return value;
+>  }
+> -- 
+> 2.1.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
