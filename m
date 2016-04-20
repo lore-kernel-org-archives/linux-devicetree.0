@@ -1,49 +1,63 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 01/14] irqchip/gic: Don't unnecessarily write the IRQ configuration
-Date: Wed, 20 Apr 2016 12:03:44 +0100
-Message-ID: <1461150237-15580-2-git-send-email-jonathanh@nvidia.com>
-References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] dmaengine: bcm2835: use platform_get_irq_byname
+Date: Wed, 20 Apr 2016 13:12:36 +0200
+Message-ID: <CAMuHMdUgfyLrdmfHLHd3eNh79FcJarVPuhbxtU4XYZok=skLkw@mail.gmail.com>
+References: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
+	<1460381349-14408-3-git-send-email-kernel@martin.sperl.org>
+	<CAMuHMdW2Jw5=f9ojNSM0d1cGvPc6_QxwH4rcQdWBQTP89zyj4Q@mail.gmail.com>
+	<571762A7.7000005@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461150237-15580-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <571762A7.7000005-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If the interrupt configuration matches the current configuration, then
-don't bother writing the configuration again.
+Hi Martin,
 
-Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
----
- drivers/irqchip/irq-gic-common.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+On Wed, Apr 20, 2016 at 1:06 PM, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
+> On 20.04.2016 08:51, Geert Uytterhoeven wrote:
+>>
+>> On Mon, Apr 11, 2016 at 3:29 PM,  <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
+>>>
+>>> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>>>
+>>> Use platform_get_irq_byname to allow for correct mapping of
+>>> interrupts to dma channels.
+>>>
+>>> The currently implemented device tree is unfortunately
+>>> implemented with the wrong assumption, that each dma-channel
+>>> has its own dma channel, but dma-irq 11 is handling
+>>> dma-channel 11-14 and dma-irq 12 is actually a "catch all"
+>>> interrupt.
+>>>
+>>> So here we use the byname variant and require that interrupts
+>>> are explicitly named via the interrupts-name property in the
+>>
+>> interrupt-names
+>
+> Vinod has just merged this patch - do you want me to submit another
 
-diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index f174ce0ca361..ffff5a45f1e3 100644
---- a/drivers/irqchip/irq-gic-common.c
-+++ b/drivers/irqchip/irq-gic-common.c
-@@ -50,13 +50,17 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
- 	else if (type & IRQ_TYPE_EDGE_BOTH)
- 		val |= confmask;
- 
-+	/* If the current configuration is the same, then we are done */
-+	if (val == oldval)
-+		return 0;
-+
- 	/*
- 	 * Write back the new configuration, and possibly re-enable
--	 * the interrupt. If we tried to write a new configuration and failed,
-+	 * the interrupt. If we fail to write a new configuration,
- 	 * return an error.
- 	 */
- 	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
--	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val && val != oldval)
-+	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val)
- 		ret = -EINVAL;
- 
- 	if (sync_access)
--- 
-2.1.4
+Yeah, that's how I noticed by accident :-)
+
+> to correct those?
+
+For the commit message it's indeed too late. For the error message in the
+code, yes please.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
