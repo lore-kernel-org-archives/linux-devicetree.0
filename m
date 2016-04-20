@@ -1,202 +1,114 @@
-From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v1 3/3] iio:imu:mpu6050: enhance mounting matrix support
-Date: Wed, 20 Apr 2016 19:23:45 +0200
-Message-ID: <09429500c3879ba07731ce170d0a2242a0399422.1461170293.git.gregor.boirie@parrot.com>
-References: <cover.1461170293.git.gregor.boirie@parrot.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1461170293.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Cristina Opriceana <cristina.opriceana-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Leonard Crestez <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+From: Luke Starrett <luke.starrett-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/1] arm64: dts: NS2 secondary core enablement via PSCI
+Date: Wed, 20 Apr 2016 13:40:02 -0400
+Message-ID: <1461174002-18178-1-git-send-email-luke.starrett@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Luke Starrett <luke.starrett-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a new rotation matrix sysfs attribute compliant with IIO core
-mounting matrix API.
-Matrix is retrieved from "in_anglvel_mount_matrix" and
-"in_accel_mount_matrix" sysfs attributes. It is declared into mpu6050 DTS
-entry as a "mount-matrix" property.
+Declare PSCI-1.0 node and enable CPU_ON method via PSCI.  Spin-table
+memreserve has been removed as well as syscon based reset, as PSCI-1.0
+expects reset implementation in firmware.
 
-Old interface is kept for backward userspace compatibility and may be
-retrieved from legacy platform_data mechanism only.
-
-Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Luke Starrett <luke.starrett-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/ABI/testing/sysfs-bus-iio            |  2 ++
- .../devicetree/bindings/iio/imu/inv_mpu6050.txt    | 13 ++++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         | 36 ++++++++++++++++++++--
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h          |  4 ++-
- include/linux/platform_data/invensense_mpu6050.h   |  5 ++-
- 5 files changed, 55 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index ba8df69..df44998 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1516,6 +1516,8 @@ Description:
- What:           /sys/bus/iio/devices/iio:deviceX/mount_matrix
- What:           /sys/bus/iio/devices/iio:deviceX/in_mount_matrix
- What:           /sys/bus/iio/devices/iio:deviceX/out_mount_matrix
-+What:           /sys/bus/iio/devices/iio:deviceX/in_anglvel_mount_matrix
-+What:           /sys/bus/iio/devices/iio:deviceX/in_accel_mount_matrix
- KernelVersion:  4.6
- Contact:        linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- Description:
-diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-index e4d8f1c..a9fc11e 100644
---- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
-@@ -8,10 +8,23 @@ Required properties:
-  - interrupt-parent : should be the phandle for the interrupt controller
-  - interrupts : interrupt mapping for GPIO IRQ
+Changes from v1:
+ - No code changes, adding missing reviewers to CC list
+
+ arch/arm64/boot/dts/broadcom/ns2.dtsi | 31 +++++++++----------------------
+ 1 file changed, 9 insertions(+), 22 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index 123cd9c..ec68ec1 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -33,8 +33,6 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/bcm-ns2.h>
  
-+Optional properties:
-+ - mount-matrix: an optional 3x3 mounting rotation matrix
-+
-+
- Example:
- 	mpu6050@68 {
- 		compatible = "invensense,mpu6050";
- 		reg = <0x68>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <18 1>;
-+		mount-matrix = "-0.984807753012208",  /* x0 */
-+		               "0",                   /* y0 */
-+		               "-0.173648177666930",  /* z0 */
-+		               "0",                   /* x1 */
-+		               "-1",                  /* y1 */
-+		               "0",                   /* z1 */
-+		               "-0.173648177666930",  /* x2 */
-+		               "0",                   /* y2 */
-+		               "0.984807753012208";   /* z2 */
+-/memreserve/ 0x84b00000 0x00000008;
+-
+ / {
+ 	compatible = "brcm,ns2";
+ 	interrupt-parent = <&gic>;
+@@ -49,8 +47,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a57", "arm,armv8";
+ 			reg = <0 0>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0 0x84b00000>;
++			enable-method = "psci";
+ 			next-level-cache = <&CLUSTER0_L2>;
+ 		};
+ 
+@@ -58,8 +55,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a57", "arm,armv8";
+ 			reg = <0 1>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0 0x84b00000>;
++			enable-method = "psci";
+ 			next-level-cache = <&CLUSTER0_L2>;
+ 		};
+ 
+@@ -67,8 +63,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a57", "arm,armv8";
+ 			reg = <0 2>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0 0x84b00000>;
++			enable-method = "psci";
+ 			next-level-cache = <&CLUSTER0_L2>;
+ 		};
+ 
+@@ -76,8 +71,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a57", "arm,armv8";
+ 			reg = <0 3>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0 0x84b00000>;
++			enable-method = "psci";
+ 			next-level-cache = <&CLUSTER0_L2>;
+ 		};
+ 
+@@ -86,6 +80,11 @@
+ 		};
  	};
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index d192953..482a249 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -600,6 +600,10 @@ inv_fifo_rate_show(struct device *dev, struct device_attribute *attr,
- /**
-  * inv_attr_show() - calling this function will show current
-  *                    parameters.
-+ *
-+ * Deprecated in favor of IIO mounting matrix API.
-+ *
-+ * See inv_get_mount_matrix()
-  */
- static ssize_t inv_attr_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
-@@ -644,6 +648,18 @@ static int inv_mpu6050_validate_trigger(struct iio_dev *indio_dev,
- 	return 0;
- }
  
-+static const struct iio_mount_matrix *
-+inv_get_mount_matrix(const struct iio_dev *indio_dev,
-+		     const struct iio_chan_spec *chan)
-+{
-+	return &((struct inv_mpu6050_state *)iio_priv(indio_dev))->orientation;
-+}
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
 +
-+static const struct iio_chan_spec_ext_info inv_ext_info[] = {
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_TYPE, inv_get_mount_matrix),
-+	{ },
-+};
-+
- #define INV_MPU6050_CHAN(_type, _channel2, _index)                    \
- 	{                                                             \
- 		.type = _type,                                        \
-@@ -660,6 +676,7 @@ static int inv_mpu6050_validate_trigger(struct iio_dev *indio_dev,
- 				.shift = 0,                           \
- 				.endianness = IIO_BE,                 \
- 			     },                                       \
-+		.ext_info = inv_ext_info,                             \
- 	}
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_RAW(0xff) |
+@@ -252,18 +251,6 @@
+ 			mmu-masters;
+ 		};
  
- static const struct iio_chan_spec inv_mpu_channels[] = {
-@@ -692,14 +709,16 @@ static IIO_CONST_ATTR(in_accel_scale_available,
- 					  "0.000598 0.001196 0.002392 0.004785");
- static IIO_DEV_ATTR_SAMP_FREQ(S_IRUGO | S_IWUSR, inv_fifo_rate_show,
- 	inv_mpu6050_fifo_rate_store);
-+
-+/* Deprecated: kept for userspace backward compatibility. */
- static IIO_DEVICE_ATTR(in_gyro_matrix, S_IRUGO, inv_attr_show, NULL,
- 	ATTR_GYRO_MATRIX);
- static IIO_DEVICE_ATTR(in_accel_matrix, S_IRUGO, inv_attr_show, NULL,
- 	ATTR_ACCL_MATRIX);
- 
- static struct attribute *inv_attributes[] = {
--	&iio_dev_attr_in_gyro_matrix.dev_attr.attr,
--	&iio_dev_attr_in_accel_matrix.dev_attr.attr,
-+	&iio_dev_attr_in_gyro_matrix.dev_attr.attr,  /* deprecated */
-+	&iio_dev_attr_in_accel_matrix.dev_attr.attr, /* deprecated */
- 	&iio_dev_attr_sampling_frequency.dev_attr.attr,
- 	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
- 	&iio_const_attr_in_accel_scale_available.dev_attr.attr,
-@@ -779,9 +798,20 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 	st->powerup_count = 0;
- 	st->irq = irq;
- 	st->map = regmap;
-+
- 	pdata = dev_get_platdata(dev);
--	if (pdata)
-+	if (!pdata) {
-+		result = of_iio_read_mount_matrix(dev, "mount-matrix",
-+						  &st->orientation);
-+		if (result) {
-+			dev_err(dev, "Failed to retrieve mounting matrix %d\n",
-+				result);
-+			return result;
-+		}
-+	} else {
- 		st->plat_data = *pdata;
-+	}
-+
- 	/* power is turned on inside check chip type*/
- 	result = inv_check_and_setup_chip(st);
- 	if (result)
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index e302a49..52d60cd 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -114,7 +114,8 @@ struct inv_mpu6050_hw {
-  *  @hw:		Other hardware-specific information.
-  *  @chip_type:		chip type.
-  *  @time_stamp_lock:	spin lock to time stamp.
-- *  @plat_data:		platform data.
-+ *  @plat_data:		platform data (deprecated in favor of @orientation).
-+ *  @orientation:	sensor chip orientation relative to main hardware.
-  *  @timestamps:        kfifo queue to store time stamp.
-  *  @map		regmap pointer.
-  *  @irq		interrupt number.
-@@ -131,6 +132,7 @@ struct inv_mpu6050_state {
- 	struct i2c_client *mux_client;
- 	unsigned int powerup_count;
- 	struct inv_mpu6050_platform_data plat_data;
-+	struct iio_mount_matrix orientation;
- 	DECLARE_KFIFO(timestamps, long long, TIMESTAMP_FIFO_SIZE);
- 	struct regmap *map;
- 	int irq;
-diff --git a/include/linux/platform_data/invensense_mpu6050.h b/include/linux/platform_data/invensense_mpu6050.h
-index ad3aa7b..554b598 100644
---- a/include/linux/platform_data/invensense_mpu6050.h
-+++ b/include/linux/platform_data/invensense_mpu6050.h
-@@ -16,13 +16,16 @@
- 
- /**
-  * struct inv_mpu6050_platform_data - Platform data for the mpu driver
-- * @orientation:	Orientation matrix of the chip
-+ * @orientation:	Orientation matrix of the chip (deprecated in favor of
-+ *			mounting matrix retrieved from device-tree)
-  *
-  * Contains platform specific information on how to configure the MPU6050 to
-  * work on this platform.  The orientation matricies are 3x3 rotation matricies
-  * that are applied to the data to rotate from the mounting orientation to the
-  * platform orientation.  The values must be one of 0, 1, or -1 and each row and
-  * column should have exactly 1 non-zero value.
-+ *
-+ * Deprecated in favor of mounting matrix retrieved from device-tree.
-  */
- struct inv_mpu6050_platform_data {
- 	__s8 orientation[9];
+-		crmu: crmu@65024000 {
+-			compatible = "syscon";
+-			reg = <0x65024000 0x100>;
+-		};
+-
+-		reboot@65024000 {
+-			compatible ="syscon-reboot";
+-			regmap = <&crmu>;
+-			offset = <0x90>;
+-			mask = <0xfffffffd>;
+-		};
+-
+ 		gic: interrupt-controller@65210000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
 -- 
-2.1.4
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
