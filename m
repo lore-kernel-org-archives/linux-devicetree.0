@@ -1,118 +1,109 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 3/3] mmc: usdhi6rol0: add pinctrl to set pin drive strength
-Date: Wed, 20 Apr 2016 14:15:18 +0200
-Message-ID: <CAPDyKFoV7h73K+7HhkdS7BC1RUAo3dcum_+cRikY=_F2YBeNSA@mail.gmail.com>
-References: <cover.1460986983.git.larper@axis.com>
-	<181127e4ec8bbfbf0f80018ff157b59d63597c44.1460986983.git.larper@axis.com>
-	<CAPDyKFo60PBkOtLRyuDBHVh+LB_d0vcATSuTMu4TWeLsWgQVSw@mail.gmail.com>
-	<8190F2E9-1F0C-4A33-90AF-7C594F2EB997@axis.com>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v3 3/3] drm: bridge: anx78xx: Add anx78xx driver support.
+Date: Wed, 20 Apr 2016 14:56:56 +0200
+Message-ID: <20160420125655.GC20346@ulmo.ba.sec>
+References: <1460119972-8658-1-git-send-email-enric.balletbo@collabora.com>
+ <1460119972-8658-4-git-send-email-enric.balletbo@collabora.com>
+ <20160414131013.GA32237@ulmo.ba.sec>
+ <5714C3CA.5020102@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <8190F2E9-1F0C-4A33-90AF-7C594F2EB997@axis.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/mixed; boundary="===============1741523285=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5714C3CA.5020102@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: devicetree@vger.kernel.org, drinkcat@chromium.org, Emil Velikov <emil.l.velikov@gmail.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, dan.carpenter@oracle.com
 List-Id: devicetree@vger.kernel.org
 
+--===============1741523285==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
+Content-Disposition: inline
+
+--XMCwj5IQnwKtuyBG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 18, 2016 at 01:23:54PM +0200, Enric Balletbo i Serra wrote:
+> On 14/04/16 15:10, Thierry Reding wrote:
+> > On Fri, Apr 08, 2016 at 02:52:52PM +0200, Enric Balletbo i Serra wrote:
 [...]
+> > > +	/* Map slave addresses of ANX7814 */
+> > > +	for (i =3D 0; i < I2C_NUM_ADDRESSES; i++) {
+> > > +		anx78xx->i2c_dummy[i] =3D i2c_new_dummy(client->adapter,
+> > > +						anx78xx_i2c_addresses[i] >> 1);
+> > > +		if (!anx78xx->i2c_dummy[i]) {
+> > > +			err =3D -ENOMEM;
+> > > +			DRM_ERROR("Failed to reserve i2c bus %02x.\n",
+> > > +				  anx78xx_i2c_addresses[i]);
+> > > +			goto err_unregister_i2c;
+> > > +		}
+> > > +
+> > > +		anx78xx->map[i] =3D devm_regmap_init_i2c(anx78xx->i2c_dummy[i],
+> > > +						       &anx78xx_regmap_config);
+> > > +		if (IS_ERR(anx78xx->map[i])) {
+> > > +			err =3D PTR_ERR(anx78xx->map[i]);
+> > > +			DRM_ERROR("Failed regmap initialization %02x.\n",
+> > > +				  anx78xx_i2c_addresses[i]);
+> > > +			goto err_unregister_i2c;
+> > > +		}
+> > > +	}
+> >=20
+> > That's quite some overhead merely to use regmap... Perhaps there's room
+> > to enhance regmap-i2c to support multiple addresses for the same device?
+> >=20
+>=20
+> Yes it is, guess this is also used on other drivers, so will make sense
+> enhance regmap-i2c, but let me do this on a future regmap-i2c patch series
+> ;)
 
->>>
->>> +static int usdhi6_set_pinstates(struct usdhi6_host *host, int voltage)
->>> +{
->>> +       if (IS_ERR(host->pinctrl) || IS_ERR(host->pins_default) ||
->>> +           IS_ERR(host->pins_uhs))
->>
->> So this means, if you have UHS support you need both default and uhs
->> pins. That makes sense but it's not according to the DT documentation
->> in patch 1/3.
->
-> No. It means that if this particular board requires distinct settings for UHS then both pin states need to be defined. Otherwise we assume that the default settings are fine also for UHS.
+Yes, improving this in a follow-up patch seems fine, especially since
+this already seems to be a common pattern.
 
-I see.
+I'll try to take a look at v4 hopefully within the week.
 
-I would rather see that you bail out in ->probe() when
-IS_ERR(host->pinctrl) instead of testing for that here.
+Thierry
 
-Conforming to the policy you describe here, you should only need to
-test for IS_ERR(host->pins_uhs), as host->pins_default shall then be
-implicitly covered by that test.
+--XMCwj5IQnwKtuyBG
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
->>
->>> +               return 0;
->>> +
->>> +       switch (voltage) {
->>> +       case MMC_SIGNAL_VOLTAGE_180:
->>> +       case MMC_SIGNAL_VOLTAGE_120:
->>> +               return pinctrl_select_state(host->pinctrl,
->>> +                                           host->pins_uhs);
->>> +
->>> +       default:
->>> +               return pinctrl_select_state(host->pinctrl,
->>> +                                           host->pins_default);
->>> +       }
->>> +}
->>> +
->>> static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
->>> {
->>>        int ret;
->>>
->>>        ret = mmc_regulator_set_vqmmc(mmc, ios);
->>
->> What if you don't have pins for default and uhs state? Should you
->> verify that's the case before deciding to switch voltage
->
-> No see my reply above.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Okay!
+iQIcBAABCAAGBQJXF3yXAAoJEN0jrNd/PrOhVPQP/2WFN9J4Copm4Bv6+rhj31AW
+sjZ/bdPJtFi9GGEzAz4VJCNkOKwY9tLxk3P3eetneELrZvJIQPeaLjSBiFLuWE0E
+qAKAuJrq9PZ0ZHXG8b6fGYBfAdRl4ezixLPBylGaEax/Tm/4RqOqYG0Nh+adabEy
+cpujc8UKuISPmchbfo0j4ESPFfk5q/cev2SmyST7P64BZgs1SRYgX2dlBtp1sZWQ
+fn4ku0LGqLf59q+2jmVlGwEXJxyvmuQ+yLVX1SQT2mUBt/QC9XeEHKSnzty1Q3vE
+9B+kHbGev0/CuQzT8PnTJApsubL7DwnY2jUH6SYl6vvy9l+V2wKTwDONiOMXbr5F
+LmylZzCB6tAJAVDkZht1b2sp7vrC1KtoTHkkLjW9hhLKIR4VbhinkfIVs9Qqqsue
+RkNjzSXOsCBvSJ5uSETPOBagMcJ2t7+df1M/zVJHqJFkdFfVvjTSx35x8w2286dQ
+oO1giMoMhyuIadqdEkTXa9NVnis8rku0U9WMLdxue+cP5CIxvDLyubNpe5omYxYK
+9tdHhY9k/iy1M8VETjAPofPAlHZKzAw/FUe9/4WOzzXchYS66qw4XjZ5UiLyXr46
+1RMNb6WWqdnpbknowt0fUIS/g7aKQ2j7LG4iK7InA0qt9WlHYRD/WE4Ei8awEb2K
+kRkIXwwPOXpiQh8jigKl
+=jdPj
+-----END PGP SIGNATURE-----
 
->
->>
->>>
->>> -       if (ret < 0)
->>> +       if (ret < 0) {
->>>                dev_warn(mmc_dev(mmc), "Voltage switch failed: %d\n", ret);
->>> +               return ret;
->>> +       }
->>> +
->>> +       ret = usdhi6_set_pinstates(mmc_priv(mmc), ios->signal_voltage);
->>> +       if (ret)
->>> +               dev_warn_once(mmc_dev(mmc),
->>> +                             "Failed to set pinstate err=%d\n", ret);
->>>
->>>        return ret;
->>> }
->>> @@ -1817,6 +1848,13 @@ static int usdhi6_probe(struct platform_device *pdev)
->>>                mmc->f_max = host->imclk;
->>>        mmc->f_min = host->imclk / 512;
->>>
->>> +       host->pinctrl = devm_pinctrl_get(&pdev->dev);
->>> +       if (!IS_ERR(host->pinctrl)) {
->>> +               host->pins_default = pinctrl_lookup_state(host->pinctrl,
->>> +                                                         PINCTRL_STATE_DEFAULT);
->>
->> According to the DT documentation in patch 1/3, the default pins
->> should be required and not optional. I assume you want them to be
->> optional, but required when supporting UHS, right?
->
-> Yes the default is required only when a UHS pin state is defined. Hence all the pinctrl parameters are listed as optional, but the presence of a pinctrl-names parameter makes the default pins required.
+--XMCwj5IQnwKtuyBG--
 
-I am not sure why you say default state is required when pinctrl-names
-is defined. It's rather a recommendation and it's being selected by
-the driver core if it exist.
+--===============1741523285==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-Please update the patch for DT documentation to reflect the policy.
-Moreover you need to deploy this policy properly here and you also
-need to add error handling.
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
-In more detail.
-1. Check for errors from devm_pinctrl_get() and propagate them.
-2. Check if "state_uhs" can be fetched and if so try also to fetch
-default state. If the latter fails you need propagate that as an error
-as well.
-
-Does that make sense?
-
-Kind regards
-Uffe
+--===============1741523285==--
