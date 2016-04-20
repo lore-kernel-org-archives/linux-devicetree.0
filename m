@@ -1,58 +1,92 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: DT: vdma: Add clock support for
- vdma
-Date: Wed, 20 Apr 2016 07:27:36 -0700
-Message-ID: <20160420142736.GO7128@xsjsorenbubuntu>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2 2/2] dmaengine: vdma: Add clock support
+Date: Wed, 20 Apr 2016 07:36:22 -0700
+Message-ID: <20160420143622.GP7128@xsjsorenbubuntu>
 References: <1461152599-28858-1-git-send-email-appanad@xilinx.com>
+ <1461152599-28858-2-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1461152599-28858-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1461152599-28858-2-git-send-email-appanad@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: mark.rutland@arm.com, moritz.fischer@ettus.com, anirudh@xilinx.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, vinod.koul@intel.com, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, galak@codeaurora.org, dmaengine@vger.kernel.org, punnaia@xilinx.com, dan.j.williams@intel.com, appanad@xilinx.com, shubhraj@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-04-20 at 17:13:18 +0530, Kedareswara rao Appana wrote:
-> This patch updates the binding doc with clock description
-> for vdma.
->=20
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes for v2:
-> --> Listed down all the clocks supported by the h/w
->     as suggested by the Datta.
-> --> Used IP clock names instead of shortcut clock names.
->=20
->  Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 8 +++=
-+++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma=
-=2Etxt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> index fcc2b65..afe9eb7 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> @@ -21,6 +21,11 @@ Required properties:
->  - dma-channel child node: Should have at least one channel and can h=
-ave up to
->  	two channels per device. This node specifies the properties of each
->  	DMA channel (see child node properties below).
-> +- clocks: Input clock specifier. Refer to common clock bindings.
-> +- clock-names: List of input clocks "s_axi_lite_aclk", "m_axi_mm2s_a=
-clk"
-> +	       "m_axi_s2mm_aclk", "m_axis_mm2s_aclk", "s_axis_s2mm_aclk"
-> +	       (list of input cloks may vary based on the ip configuration.
-
-s/cloks/clocks
-
-Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-
-	S=C3=B6ren
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyMDE2LTA0LTIwIGF0IDE3OjEzOjE5ICswNTMwLCBLZWRhcmVzd2FyYSByYW8gQXBw
+YW5hIHdyb3RlOgo+IEFkZGVkIGJhc2ljIGNsb2NrIHN1cHBvcnQuIFRoZSBjbG9ja3MgYXJlIHJl
+cXVlc3RlZCBhdCBwcm9iZQo+IGFuZCByZWxlYXNlZCBhdCByZW1vdmUuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogS2VkYXJlc3dhcmEgcmFvIEFwcGFuYSA8YXBwYW5hZEB4aWxpbnguY29tPgo+IC0tLQo+
+IENoYW5nZXMgZm9yIHYyOgo+IC0tPiBOb25lLgo+IAo+ICBkcml2ZXJzL2RtYS94aWxpbngveGls
+aW54X3ZkbWEuYyB8IDU2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysK
+PiAgMSBmaWxlIGNoYW5nZWQsIDU2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9kbWEveGlsaW54L3hpbGlueF92ZG1hLmMgYi9kcml2ZXJzL2RtYS94aWxpbngveGlsaW54
+X3ZkbWEuYwo+IGluZGV4IDcwY2FlYTYuLmQ1MjYwMjkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9k
+bWEveGlsaW54L3hpbGlueF92ZG1hLmMKPiArKysgYi9kcml2ZXJzL2RtYS94aWxpbngveGlsaW54
+X3ZkbWEuYwo+IEBAIC00NCw2ICs0NCw3IEBACj4gICNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9y
+bS5oPgo+ICAjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9zbGFi
+Lmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiAgCj4gICNpbmNsdWRlICIuLi9kbWFlbmdp
+bmUuaCIKPiAgCj4gQEAgLTM1Miw2ICszNTMsOCBAQCBzdHJ1Y3QgeGlsaW54X2RtYV9jaGFuIHsK
+PiAgICogQGZsdXNoX29uX2ZzeW5jOiBGbHVzaCBvbiBmcmFtZSBzeW5jCj4gICAqIEBleHRfYWRk
+cjogSW5kaWNhdGVzIDY0IGJpdCBhZGRyZXNzaW5nIGlzIHN1cHBvcnRlZCBieSBkbWEgZGV2aWNl
+Cj4gICAqIEBkbWF0eXBlOiBETUEgaXAgdHlwZQo+ICsgKiBAY2xrczoJcG9pbnRlciB0byBhcnJh
+eSBvZiBjbG9ja3MKPiArICogQG51bWNsa3M6CW51bWJlciBvZiBjbG9ja3MgYXZhaWxhYmxlCj4g
+ICAqLwo+ICBzdHJ1Y3QgeGlsaW54X2RtYV9kZXZpY2Ugewo+ICAJdm9pZCBfX2lvbWVtICpyZWdz
+Owo+IEBAIC0zNjIsNiArMzY1LDggQEAgc3RydWN0IHhpbGlueF9kbWFfZGV2aWNlIHsKPiAgCXUz
+MiBmbHVzaF9vbl9mc3luYzsKPiAgCWJvb2wgZXh0X2FkZHI7Cj4gIAllbnVtIHhkbWFfaXBfdHlw
+ZSBkbWF0eXBlOwo+ICsJc3RydWN0IGNsayAqKmNsa3M7Cj4gKwlpbnQgbnVtY2xrczsKPiAgfTsK
+PiAgCj4gIC8qIE1hY3JvcyAqLwo+IEBAIC0xNzMxLDYgKzE3MzYsMjYgQEAgaW50IHhpbGlueF92
+ZG1hX2NoYW5uZWxfc2V0X2NvbmZpZyhzdHJ1Y3QgZG1hX2NoYW4gKmRjaGFuLAo+ICB9Cj4gIEVY
+UE9SVF9TWU1CT0woeGlsaW54X3ZkbWFfY2hhbm5lbF9zZXRfY29uZmlnKTsKPiAgCj4gK3N0YXRp
+YyBpbnQgeGRtYV9jbGtfaW5pdChzdHJ1Y3QgeGlsaW54X2RtYV9kZXZpY2UgKnhkZXYsIGJvb2wg
+ZW5hYmxlKQo+ICt7Cj4gKwlpbnQgaSA9IDAsIHJldDsKPiArCj4gKwlmb3IgKGkgPSAwOyBpIDwg
+eGRldi0+bnVtY2xrczsgaSsrKSB7Cj4gKwkJaWYgKGVuYWJsZSkgewo+ICsJCQlyZXQgPSBjbGtf
+cHJlcGFyZV9lbmFibGUoeGRldi0+Y2xrc1tpXSk7Cj4gKwkJCWlmIChyZXQpIHsKPiArCQkJCWRl
+dl9lcnIoeGRldi0+ZGV2LAo+ICsJCQkJCSJmYWlsZWQgdG8gZW5hYmxlIHRoZSBheGlkbWEgY2xv
+Y2tcbiIpOwo+ICsJCQkJcmV0dXJuIHJldDsKPiArCQkJfQo+ICsJCX0gZWxzZSB7Cj4gKwkJCWNs
+a19kaXNhYmxlX3VucHJlcGFyZSh4ZGV2LT5jbGtzW2ldKTsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJ
+cmV0dXJuIDA7Cj4gK30KPiArCj4gIC8qIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gICAqIFByb2Jl
+IGFuZCByZW1vdmUKPiAgICovCj4gQEAgLTE5MTksNiArMTk0NCw3IEBAIHN0YXRpYyBpbnQgeGls
+aW54X2RtYV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJc3RydWN0IHJl
+c291cmNlICppbzsKPiAgCXUzMiBudW1fZnJhbWVzLCBhZGRyX3dpZHRoOwo+ICAJaW50IGksIGVy
+cjsKPiArCWNvbnN0IGNoYXIgKnN0cjsKPiAgCj4gIAkvKiBBbGxvY2F0ZSBhbmQgaW5pdGlhbGl6
+ZSB0aGUgRE1BIGVuZ2luZSBzdHJ1Y3R1cmUgKi8KPiAgCXhkZXYgPSBkZXZtX2t6YWxsb2MoJnBk
+ZXYtPmRldiwgc2l6ZW9mKCp4ZGV2KSwgR0ZQX0tFUk5FTCk7Cj4gQEAgLTE5NjUsNiArMTk5MSwz
+MiBAQCBzdGF0aWMgaW50IHhpbGlueF9kbWFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
+cGRldikKPiAgCS8qIFNldCB0aGUgZG1hIG1hc2sgYml0cyAqLwo+ICAJZG1hX3NldF9tYXNrKHhk
+ZXYtPmRldiwgRE1BX0JJVF9NQVNLKGFkZHJfd2lkdGgpKTsKPiAgCj4gKwl4ZGV2LT5udW1jbGtz
+ID0gb2ZfcHJvcGVydHlfY291bnRfc3RyaW5ncyhwZGV2LT5kZXYub2Zfbm9kZSwKPiArCQkJCQkJ
+ICAiY2xvY2stbmFtZXMiKTsKPiArCWlmICh4ZGV2LT5udW1jbGtzID4gMCkgewo+ICsJCXhkZXYt
+PmNsa3MgPSBkZXZtX2ttYWxsb2NfYXJyYXkoJnBkZXYtPmRldiwgeGRldi0+bnVtY2xrcywKPiAr
+CQkJCQkJc2l6ZW9mKHN0cnVjdCBjbGsgKiksCj4gKwkJCQkJCUdGUF9LRVJORUwpOwo+ICsJCWlm
+ICgheGRldi0+Y2xrcykKPiArCQkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJCWZvciAoaSA9IDA7
+IGkgPCB4ZGV2LT5udW1jbGtzOyBpKyspIHsKPiArCQkJb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmdf
+aW5kZXgocGRldi0+ZGV2Lm9mX25vZGUsCj4gKwkJCQkJCSAgICAgICJjbG9jay1uYW1lcyIsIGks
+ICZzdHIpOwo+ICsJCQl4ZGV2LT5jbGtzW2ldID0gZGV2bV9jbGtfZ2V0KHhkZXYtPmRldiwgc3Ry
+KTsKPiArCQkJaWYgKElTX0VSUih4ZGV2LT5jbGtzW2ldKSkgewo+ICsJCQkJaWYgKFBUUl9FUlIo
+eGRldi0+Y2xrc1tpXSkgPT0gLUVOT0VOVCkKPiArCQkJCQl4ZGV2LT5jbGtzW2ldID0gTlVMTDsK
+PiArCQkJCWVsc2UKPiArCQkJCQlyZXR1cm4gUFRSX0VSUih4ZGV2LT5jbGtzW2ldKTsKPiArCQkJ
+fQo+ICsJCX0KPiArCj4gKwkJZXJyID0geGRtYV9jbGtfaW5pdCh4ZGV2LCB0cnVlKTsKPiArCQlp
+ZiAoZXJyKQo+ICsJCQlyZXR1cm4gZXJyOwo+ICsJfQoKSSBndWVzcyB0aGlzIHdvcmtzLCBidXQg
+dGhlIHJlbGF0aW9uIHRvIHRoZSBiaW5kaW5nIGlzIGEgbGl0dGxlIGxvb3NlLApJTUhPLiBJbnN0
+ZWFkIG9mIHVzaW5nIHRoZSBjbG9jayBuYW1lcyBmcm9tIHRoZSBiaW5kaW5nIHRoaXMgaXMganVz
+dAp1c2luZyB3aGF0ZXZlciBpcyBwcm92aWRlZCBpbiBEVCBhbmQgZW5hYmxpbmcgaXQuIEFsc28s
+IGFsbCB0aGUgY2xvY2tzCmhlcmUgYXJlIGhhbmRsZWQgYXMgb3B0aW9uYWwgZmVhdHVyZSwgd2hp
+bGUgYmluZGluZyAtIGFuZCBJIGd1ZXNzCnJlYWxpdHkgdG9vIC0gaGF2ZSB0aGVtIGFzIG1hbmRh
+dG9yeS4KSXQgd291bGQgYmUgbmljZXIgaWYgdGhlIGRyaXZlciBzcGVjaWZpY2FsbHkgYXNrcyBm
+b3IgdGhlIGNsb2NrcyBpdApuZWVkcyBhbmQgcmV0dXJuIGFuIGVycm9yIGlmIGEgbWFuZGF0b3J5
+IGNsb2NrIGlzIG1pc3NpbmcuCgoJU8O2cmVuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
