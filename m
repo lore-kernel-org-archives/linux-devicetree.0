@@ -1,56 +1,69 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] dmaengine: bcm2835: use platform_get_irq_byname
-Date: Wed, 20 Apr 2016 13:06:15 +0200
-Message-ID: <571762A7.7000005@martin.sperl.org>
-References: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
- <1460381349-14408-3-git-send-email-kernel@martin.sperl.org>
- <CAMuHMdW2Jw5=f9ojNSM0d1cGvPc6_QxwH4rcQdWBQTP89zyj4Q@mail.gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH V2 09/14] irqchip/gic: Remove static irq_chip definition for eoimode1
+Date: Wed, 20 Apr 2016 12:03:52 +0100
+Message-ID: <1461150237-15580-10-git-send-email-jonathanh@nvidia.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdW2Jw5=f9ojNSM0d1cGvPc6_QxwH4rcQdWBQTP89zyj4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+There are only 3 differences (not including the name) in the definitions
+of the gic_chip and gic_eoimode1_chip structures. Instead of statically
+defining the gic_eoimode1_chip structure, remove it and populate the
+eoimode1 functions dynamically for the appropriate GIC irqchips.
 
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+---
+ drivers/irqchip/irq-gic.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
-On 20.04.2016 08:51, Geert Uytterhoeven wrote:
-> On Mon, Apr 11, 2016 at 3:29 PM,  <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
->> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->>
->> Use platform_get_irq_byname to allow for correct mapping of
->> interrupts to dma channels.
->>
->> The currently implemented device tree is unfortunately
->> implemented with the wrong assumption, that each dma-channel
->> has its own dma channel, but dma-irq 11 is handling
->> dma-channel 11-14 and dma-irq 12 is actually a "catch all"
->> interrupt.
->>
->> So here we use the byname variant and require that interrupts
->> are explicitly named via the interrupts-name property in the
->
-> interrupt-names
-
-
-Vinod has just merged this patch - do you want me to submit another
-to correct those?
-
-> You're not explicitly looking for "dma-shared-all" for that?
-> You might as well just declare a single unnamed interrupt in the bindings.
-
-dma-shared-all is unfortunately an interrupt-line that triggers
-for interrupt-channels 0-15 and that includes the dma channels
-that are owned by the firmware.
-
-It is there mostly to document the interrupt-line (which is there in the 
-existing device tree files - it is not used.
-
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 48ed3cd215df..f1b51317267f 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -391,20 +391,6 @@ static struct irq_chip gic_chip = {
+ 				  IRQCHIP_MASK_ON_SUSPEND,
+ };
+ 
+-static struct irq_chip gic_eoimode1_chip = {
+-	.name			= "GICv2",
+-	.irq_mask		= gic_eoimode1_mask_irq,
+-	.irq_unmask		= gic_unmask_irq,
+-	.irq_eoi		= gic_eoimode1_eoi_irq,
+-	.irq_set_type		= gic_set_type,
+-	.irq_get_irqchip_state	= gic_irq_get_irqchip_state,
+-	.irq_set_irqchip_state	= gic_irq_set_irqchip_state,
+-	.irq_set_vcpu_affinity	= gic_irq_set_vcpu_affinity,
+-	.flags			= IRQCHIP_SET_TYPE_MASKED |
+-				  IRQCHIP_SKIP_SET_WAKE |
+-				  IRQCHIP_MASK_ON_SUSPEND,
+-};
+-
+ void __init gic_cascade_irq(unsigned int gic_nr, unsigned int irq)
+ {
+ 	BUG_ON(gic_nr >= CONFIG_ARM_GIC_MAX_NR);
+@@ -1026,10 +1012,14 @@ static void __init __gic_init_bases(unsigned int gic_nr, int irq_start,
+ 	gic = &gic_data[gic_nr];
+ 
+ 	/* Initialize irq_chip */
++	gic->chip = gic_chip;
++
+ 	if (static_key_true(&supports_deactivate) && gic_nr == 0) {
+-		gic->chip = gic_eoimode1_chip;
++		gic->chip.irq_mask = gic_eoimode1_mask_irq;
++		gic->chip.irq_eoi = gic_eoimode1_eoi_irq;
++		gic->chip.irq_set_vcpu_affinity = gic_irq_set_vcpu_affinity;
++		gic->chip.name = "GICv2";
+ 	} else {
+-		gic->chip = gic_chip;
+ 		gic->chip.name = kasprintf(GFP_KERNEL, "GIC-%d", gic_nr);
+ 	}
+ 
+-- 
+2.1.4
