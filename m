@@ -1,50 +1,66 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Wed, 20 Apr 2016 07:45:45 -0700
-Message-ID: <20160420144545.GE5995@atomide.com>
-References: <20160416105711.5310d2d0@bbrezillon>
- <5714D3A4.2050405@ti.com>
- <5714D8AA.9040304@ti.com>
- <20160418151305.17a42437@bbrezillon>
- <5714E5AA.5050200@ti.com>
- <20160418161001.2a1c0bed@bbrezillon>
- <5714F185.5080103@ti.com>
- <20160418165755.77d1d661@bbrezillon>
- <5716289B.4060302@ti.com>
- <20160419221129.59b559fb@bbrezillon>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 1/2] Documentation: DT: vdma: Add clock support for
+ vdma
+Date: Wed, 20 Apr 2016 14:50:27 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5792F0@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1461152599-28858-1-git-send-email-appanad@xilinx.com>
+ <20160420142736.GO7128@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160419221129.59b559fb@bbrezillon>
+In-Reply-To: <20160420142736.GO7128@xsjsorenbubuntu>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel@vge>
 List-Id: devicetree@vger.kernel.org
 
-* Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> [160419 13:13]:
-> On Tue, 19 Apr 2016 15:46:19 +0300
-> Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
-> 
-> > 
-> > After all the changes we discussed in [1] I was able to test nand/next-with-gpmc-rework
-> > and it worked fine.
-> > 
-> > [1] - http://thread.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/22596/focus=22936
-> > 
-> > I'd be happy to test the branch again after you've incorporated all changes.
-> 
-> Just pushed what's supposed to be my new nand/next into
-> nand/next-with-gpmc-rework, can you test it? I'll push it to nand/next
-> once I have your confirmation that everything is good.
-
-Looks good to me too, merges fine with my for-next and still
-works for me.
-
-Thanks,
-
-Tony
+SGkgU29yZW4sCQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFPDtnJl
+biBCcmlua21hbm4gW21haWx0bzpzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbV0NCj4gU2VudDog
+V2VkbmVzZGF5LCBBcHJpbCAyMCwgMjAxNiA3OjU4IFBNDQo+IFRvOiBBcHBhbmEgRHVyZ2EgS2Vk
+YXJlc3dhcmEgUmFvIDxhcHBhbmFkQHhpbGlueC5jb20+DQo+IENjOiByb2JoK2R0QGtlcm5lbC5v
+cmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGlqYytkZXZp
+Y2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgTWljaGFsIFNpbWVr
+DQo+IDxtaWNoYWxzQHhpbGlueC5jb20+OyB2aW5vZC5rb3VsQGludGVsLmNvbTsgZGFuLmoud2ls
+bGlhbXNAaW50ZWwuY29tOw0KPiBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgUmFvIDxhcHBhbmFk
+QHhpbGlueC5jb20+Ow0KPiBtb3JpdHouZmlzY2hlckBldHR1cy5jb207IGxhdXJlbnQucGluY2hh
+cnRAaWRlYXNvbmJvYXJkLmNvbTsNCj4gbHVpc0BkZWJldGhlbmNvdXJ0LmNvbTsgQW5pcnVkaGEg
+U2FyYW5naSA8YW5pcnVkaEB4aWxpbnguY29tPjsgUHVubmFpYWgNCj4gQ2hvdWRhcnkgS2FsbHVy
+aSA8cHVubmFpYUB4aWxpbnguY29tPjsgU2h1YmhyYWp5b3RpIERhdHRhDQo+IDxzaHViaHJhakB4
+aWxpbnguY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+
+IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxLzJd
+IERvY3VtZW50YXRpb246IERUOiB2ZG1hOiBBZGQgY2xvY2sgc3VwcG9ydCBmb3INCj4gdmRtYQ0K
+PiANCj4gT24gV2VkLCAyMDE2LTA0LTIwIGF0IDE3OjEzOjE4ICswNTMwLCBLZWRhcmVzd2FyYSBy
+YW8gQXBwYW5hIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggdXBkYXRlcyB0aGUgYmluZGluZyBkb2Mg
+d2l0aCBjbG9jayBkZXNjcmlwdGlvbiBmb3IgdmRtYS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgPGFwcGFuYWRAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4g
+PiBDaGFuZ2VzIGZvciB2MjoNCj4gPiAtLT4gTGlzdGVkIGRvd24gYWxsIHRoZSBjbG9ja3Mgc3Vw
+cG9ydGVkIGJ5IHRoZSBoL3cNCj4gPiAgICAgYXMgc3VnZ2VzdGVkIGJ5IHRoZSBEYXR0YS4NCj4g
+PiAtLT4gVXNlZCBJUCBjbG9jayBuYW1lcyBpbnN0ZWFkIG9mIHNob3J0Y3V0IGNsb2NrIG5hbWVz
+Lg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54
+L3hpbGlueF92ZG1hLnR4dCB8IDgNCj4gPiArKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+OCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlueC94aWxpbnhfdmRtYS50eHQNCj4gPiBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlueF92ZG1hLnR4
+dA0KPiA+IGluZGV4IGZjYzJiNjUuLmFmZTllYjcgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS94aWxpbngveGlsaW54X3ZkbWEudHh0DQo+ID4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS94aWxpbngveGlsaW54
+X3ZkbWEudHh0DQo+ID4gQEAgLTIxLDYgKzIxLDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+
+ID4gIC0gZG1hLWNoYW5uZWwgY2hpbGQgbm9kZTogU2hvdWxkIGhhdmUgYXQgbGVhc3Qgb25lIGNo
+YW5uZWwgYW5kIGNhbiBoYXZlIHVwDQo+IHRvDQo+ID4gIAl0d28gY2hhbm5lbHMgcGVyIGRldmlj
+ZS4gVGhpcyBub2RlIHNwZWNpZmllcyB0aGUgcHJvcGVydGllcyBvZiBlYWNoDQo+ID4gIAlETUEg
+Y2hhbm5lbCAoc2VlIGNoaWxkIG5vZGUgcHJvcGVydGllcyBiZWxvdykuDQo+ID4gKy0gY2xvY2tz
+OiBJbnB1dCBjbG9jayBzcGVjaWZpZXIuIFJlZmVyIHRvIGNvbW1vbiBjbG9jayBiaW5kaW5ncy4N
+Cj4gPiArLSBjbG9jay1uYW1lczogTGlzdCBvZiBpbnB1dCBjbG9ja3MgInNfYXhpX2xpdGVfYWNs
+ayIsICJtX2F4aV9tbTJzX2FjbGsiDQo+ID4gKwkgICAgICAgIm1fYXhpX3MybW1fYWNsayIsICJt
+X2F4aXNfbW0yc19hY2xrIiwgInNfYXhpc19zMm1tX2FjbGsiDQo+ID4gKwkgICAgICAgKGxpc3Qg
+b2YgaW5wdXQgY2xva3MgbWF5IHZhcnkgYmFzZWQgb24gdGhlIGlwIGNvbmZpZ3VyYXRpb24uDQo+
+IA0KPiBzL2Nsb2tzL2Nsb2Nrcw0KDQpPayB3aWxsIGZpeCBpbiBuZXh0IHZlcnNpb24uLi4NCj4g
+DQo+IEFja2VkLWJ5OiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNv
+bT4NCg0KVGhhbmtzIGZvciB0aGUgYWNrLi4uDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KPiANCj4g
+CVPDtnJlbg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
