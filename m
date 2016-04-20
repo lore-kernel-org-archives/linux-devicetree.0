@@ -1,81 +1,116 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 35/45] powerpc/powernv: Fundamental reset in
- pnv_pci_reset_secondary_bus()
-Date: Wed, 20 Apr 2016 11:36:10 +1000
-Message-ID: <20160420013610.GA25585@gwshan>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-36-git-send-email-gwshan@linux.vnet.ibm.com>
- <5715F493.2030002@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Tue, 19 Apr 2016 18:48:35 -0700
+Message-ID: <5716DFF3.6080905@roeck-us.net>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1> <57111E8B.1040503@opensource.altera.com>
+ <20160418074540.GB3346@x1> <5714F942.5040309@opensource.altera.com>
+ <20160419072358.GB3222@x1> <571642DA.2060903@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5715F493.2030002@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <571642DA.2060903@opensource.altera.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: tthayer@opensource.altera.com, Lee Jones <lee.jones@linaro.org>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 07:04:19PM +1000, Alexey Kardashevskiy wrote:
->On 02/17/2016 02:44 PM, Gavin Shan wrote:
->>In pnv_pci_reset_secondary_bus(), we should issue fundamental reset
->>if any one subordinate device of the specified bus is requesting that.
->>Otherwise, the device might not come up after the reset.
+On 04/19/2016 07:38 AM, Thor Thayer wrote:
+>
+>
+> On 04/19/2016 02:23 AM, Lee Jones wrote:
+>> On Mon, 18 Apr 2016, Thor Thayer wrote:
 >>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->
->
->Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
->
->
->Out of curiosity - what does "fundamental" reset actually do?
+>>> Hi Lee,
+>>>
+>>> On 04/18/2016 02:45 AM, Lee Jones wrote:
+>>>> On Fri, 15 Apr 2016, Thor Thayer wrote:
+>>>>> On 03/30/2016 06:35 AM, Lee Jones wrote:
+>>>>>> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+>>>>>>
+>>>>>>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>>>>>>
+>>>>>>> The Altera Arria10 Devkit System Resource chip is a Multi-Function
+>>>>>>> Device, it has two subdevices:
+>>>>>>>       - GPIO
+>>>>>>>       - HWMON
+>>>>>>>
+>>>>>>> This patch adds documentation for the Altera A10-SR DT bindings.
+>>>>>>>
+>>>>>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>>>>>>> ---
+>>>>>>>   .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
+>>>>>>>   1 file changed, 35 insertions(+)
+>>>>>>>   create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 0000000..564c761
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>>>>>>> @@ -0,0 +1,35 @@
+>>>>>>> +* Altera Arria10 Development Kit System Resource Chip
+>>>>>>> +
+>>>>>>> +Required parent device properties:
+>>>>>>> +- compatible : "altr,altr_a10sr"
+>>>>>>> +- spi-max-frequency : Maximum SPI frequency.
+>>>>>>> +- reg : the SPI Chip Select address for the Arria10 System Resource chip
+>>>>
+>>>> [...]
+>>>>
+>>>>>>> +        a10sr_hwmon: a10sr_hwmon {
+>>>>>>
+>>>>>> Device type only please.
+>>>>>>
+>>>>> I need to revisit where this will live (hwmon does not seem to be
+>>>>> the correct place) so it will change but I can follow the format
+>>>>> above if it is correct.
+>>>>
+>>>> BTW, "hwmon" is a subsystem in Linux, therefore is a Linuxism and is
+>>>> not allowed in DT.  What does the device *actually* do?
+>>>>
+>>>
+>>> OK. I'll be careful not to introduce the Linux subsystem name.
+>>>
+>>> This module indicates whether the power supplies are at the correct
+>>> voltage. It uses a boolean instead of giving an actual voltage value
+>>> as required by HWMON. In other words it is a comparator instead of
+>>> an Analog-to-Digital Converter.
+>>>
+>>> I could call it a power supply supervisor or voltage status monitor
+>>> but it only acts in a passive role. There is no output to trigger an
+>>> error - only polling, so supervisor doesn't seem like a good name.
+>>>
+>>> Maybe something like this?
+>>>
+>>>     power_supply_status {
+>>>         compatible = "altr,a10sr-hwmon";
+>>>     }
+>>>
+>>> Thanks for reviewing and helping me figure out the device tree naming.
+>>
+>> Does it have its own address space?  How complex is the device?  Not
+>> very, by the sounds of it.  In which case, does it really need its own
+>> driver?
+>>
+> Yes, you are correct that the voltage status is not very complex but I'd need a driver to expose these signals.
 >
 
-Please refer to the skiboot patches - power off/on the target slot.
+A completely different option might be to expose the signals as gpio pins.
 
+Guenter
+
+> I initially started with an MFD because it was similar to the other MFD drivers. The device has GPI, GPO, voltage status, device enables, device present indications, and device resets.
 >
->>---
->>  arch/powerpc/platforms/powernv/eeh-powernv.c | 21 ++++++++++++++++++++-
->>  1 file changed, 20 insertions(+), 1 deletion(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
->>index 593b8dc..c7454ba 100644
->>--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
->>+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
->>@@ -866,9 +866,28 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
->>  	return 0;
->>  }
->>
->>+static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
->>+{
->>+	int *freset = data;
->>+
->>+	/*
->>+	 * Stop the iteration immediately if there has any one
->>+	 * PCI device requesting fundamental reset.
->>+	 */
->>+	*freset |= pdev->needs_freset;
->>+	return *freset;
->>+}
->>+
->>  void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
->>  {
->>-	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
->>+	int option, freset = 0;
->>+
->>+	if (dev->subordinate)
->>+		pci_walk_bus(dev->subordinate,
->>+			     pnv_pci_dev_reset_type, &freset);
->>+
->>+	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
->>+	pnv_eeh_bridge_reset(dev, option);
->>  	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
->>  }
->>
->>
+> There is a discussion now on where the voltage status driver should live (iio/ , hwmon/, misc/). It isn't clear to me where the device enables, device present indications and voltage status would go. I'm leaning toward a driver in the misc/ directory that would cover all of these. In that case, this wouldn't be a MFD driver.
 >
+> Any thoughts or suggestions?
 >
->-- 
->Alexey
+> Thanks,
 >
+> Thor
+>
+
