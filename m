@@ -1,93 +1,98 @@
-From: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] arm: dts: mt2701: Use real clock for UARTs
-Date: Wed, 20 Apr 2016 16:02:16 +0800
-Message-ID: <1461139336-1107-1-git-send-email-erin.lo@mediatek.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: AM57xx/DRA7: Update SoC voltage rail limits to match data sheet
+Date: Wed, 20 Apr 2016 03:18:39 -0500
+Message-ID: <1461140319-32026-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-We used to use a fixed rate clock for the UARTs. Now that we have clock
-support we can associate the correct clocks to the UARTs and drop the
-26MHz fixed rate UART clock.
+As per the data sheet starting from SPRUHQ0H (Nov 2015 - Latest[1]),
+VDD_CORE can vary from 0.85v to 1.15v for AVS class0. VDD GPU/DSP
+et.al. can range from 0.85v to 1.25V with AVS class0
 
-Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Since dynamic voltage scaling is disabled for DRA7/AM57xx SoCs for
+all SoC rails other than MPU, the bootloader is responsible for
+setting up the AVS class0 voltage, however, with wrong voltage machine
+constraints in dtb, regulator framework will lower the voltage below
+the required voltage levels for certain samples in production flow.
+This can cause catastrophic failures which can be pretty hard to
+identify.
+
+Update board files which don't match required specification.
+
+[1] http://www.ti.com/product/AM5728/datasheet/specifications#SPRT637-7340
+
+Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
-This patch dependents on "Add clock support for Mediatek MT2701"[1].
+Based on:
+git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
+omap-for-v4.7/dt     a4240d3af677 ARM: dts: Add support for dra72-evm rev C (SR2.0)
 
-If we have clock support, we must associate the correct clocks to the UARTs.
-Otherwise it will cause booting issue.
-Please also accept this patch together with [1].
+ arch/arm/boot/dts/am57xx-beagle-x15.dts | 4 ++--
+ arch/arm/boot/dts/dra7-evm.dts          | 4 ++--
+ arch/arm/boot/dts/dra72-evm-common.dtsi | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-[1]http://lists.infradead.org/pipermail/linux-mediatek/2016-April/004938.html
----
- arch/arm/boot/dts/mt2701.dtsi | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 171d4da..e79e88f 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -71,12 +71,6 @@
- 		#clock-cells = <0>;
- 	};
- 
--	uart_clk: dummy26m {
--		compatible = "fixed-clock";
--		clock-frequency = <26000000>;
--		#clock-cells = <0>;
--	};
--
- 	clk26m: oscillator@0 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
-@@ -167,7 +161,8 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11002000 0 0x400>;
- 		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&uart_clk>;
-+		clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
- 
-@@ -176,7 +171,8 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11003000 0 0x400>;
- 		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&uart_clk>;
-+		clocks = <&pericfg CLK_PERI_UART1_SEL>, <&pericfg CLK_PERI_UART1>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
- 
-@@ -185,7 +181,8 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11004000 0 0x400>;
- 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&uart_clk>;
-+		clocks = <&pericfg CLK_PERI_UART2_SEL>, <&pericfg CLK_PERI_UART2>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
- 
-@@ -194,7 +191,8 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11005000 0 0x400>;
- 		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&uart_clk>;
-+		clocks = <&pericfg CLK_PERI_UART3_SEL>, <&pericfg CLK_PERI_UART3>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
- };
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+index 75d04b1bbd1b..779466e18d34 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+@@ -438,7 +438,7 @@
+ 					/* VDD_DSPEVE, VDD_IVA, VDD_GPU */
+ 					regulator-name = "smps45";
+ 					regulator-min-microvolt = < 850000>;
+-					regulator-max-microvolt = <1150000>;
++					regulator-max-microvolt = <1250000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+ 				};
+@@ -447,7 +447,7 @@
+ 					/* VDD_CORE */
+ 					regulator-name = "smps6";
+ 					regulator-min-microvolt = <850000>;
+-					regulator-max-microvolt = <1030000>;
++					regulator-max-microvolt = <1150000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+ 				};
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index d272cf140197..e94cbb7dd3c5 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -431,7 +431,7 @@
+ 					/* VDD_DSPEVE */
+ 					regulator-name = "smps45";
+ 					regulator-min-microvolt = < 850000>;
+-					regulator-max-microvolt = <1150000>;
++					regulator-max-microvolt = <1250000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+ 				};
+@@ -449,7 +449,7 @@
+ 					/* CORE_VDD */
+ 					regulator-name = "smps7";
+ 					regulator-min-microvolt = <850000>;
+-					regulator-max-microvolt = <1060000>;
++					regulator-max-microvolt = <1150000>;
+ 					regulator-always-on;
+ 					regulator-boot-on;
+ 				};
+diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+index 2c880501ba2e..874bdf1db306 100644
+--- a/arch/arm/boot/dts/dra72-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+@@ -328,7 +328,7 @@
+ 					/* VDD_CORE */
+ 					regulator-name = "smps2";
+ 					regulator-min-microvolt = <850000>;
+-					regulator-max-microvolt = <1060000>;
++					regulator-max-microvolt = <1150000>;
+ 					regulator-boot-on;
+ 					regulator-always-on;
+ 				};
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.8.0
