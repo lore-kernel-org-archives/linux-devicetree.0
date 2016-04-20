@@ -1,103 +1,55 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v8 21/45] powerpc/powernv: Create PEs at PCI hot plugging
- time
-Date: Wed, 20 Apr 2016 13:00:38 +1000
-Message-ID: <5716F0D6.7010609@ozlabs.ru>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v8 39/45] powerpc/powernv: Select OF_DYNAMIC
+Date: Wed, 20 Apr 2016 12:38:04 +1000
+Message-ID: <20160420023804.GA3754@gwshan>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-22-git-send-email-gwshan@linux.vnet.ibm.com>
- <5715B12A.6020203@ozlabs.ru> <20160420011205.GA21871@gwshan>
+ <1455680668-23298-40-git-send-email-gwshan@linux.vnet.ibm.com>
+ <5715FD69.3060302@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160420011205.GA21871@gwshan>
+Content-Disposition: inline
+In-Reply-To: <5715FD69.3060302@ozlabs.ru>
 Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2016 11:12 AM, Gavin Shan wrote:
-> On Tue, Apr 19, 2016 at 02:16:42PM +1000, Alexey Kardashevskiy wrote:
->> On 02/17/2016 02:44 PM, Gavin Shan wrote:
->>> Currently, the PEs and their associated resources are assigned
->>> in ppc_md.pcibios_fixup() except those used by SRIOV VFs.
+On Tue, Apr 19, 2016 at 07:42:01PM +1000, Alexey Kardashevskiy wrote:
+>On 02/17/2016 02:44 PM, Gavin Shan wrote:
+>>The device tree will change dynamically in PowerNV PCI hotplug
+>>driver. This enables CONFIG_OF_DYNAMIC to support that.
 >>
->> But this new code does not affect IOV and VF's PEs will still be created
->> somewhere else rather than pnv_pci_setup_bridge()?
+>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>---
+>>  arch/powerpc/platforms/powernv/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
 >>
+>>diff --git a/arch/powerpc/platforms/powernv/Kconfig b/arch/powerpc/platforms/powernv/Kconfig
+>>index 604190c..e7b1ad7 100644
+>>--- a/arch/powerpc/platforms/powernv/Kconfig
+>>+++ b/arch/powerpc/platforms/powernv/Kconfig
+>>@@ -18,6 +18,7 @@ config PPC_POWERNV
+>>  	select CPU_FREQ_GOV_ONDEMAND
+>>  	select CPU_FREQ_GOV_CONSERVATIVE
+>>  	select PPC_DOORBELL
+>>+	select OF_DYNAMIC
 >
-> Correct. VF PEs cannot be created in pnv_pci_setup_bridge() as the PF's
-> IOV capability isn't enabled at that point.
 >
->>
->>> The
->>> function is called for once after PCI probing and resources
->>> assignment is completed. So it isn't hotplug friendly.
->>>
->>> This creates PEs dynamically by ppc_md.pcibios_setup_bridge(), which
->>> is called on the event during system bootup and PCI hotplug: updating
->>> PCI bridge's windows after resource assignment/reassignment are done.
->>> For partial hotplug case, where not all PCI devices belonging to the
->>> PE are unplugged and plugged again, we just need unbinding/binding
->>> the affected PCI devices with the corresponding PE without creating
->>> new one.
->>>
->>> As there is no upstream bridge for root bus that needs to be covered
->>> by PE, we have to create PE for root bus in ppc_md.pcibios_setup_bridge()
->>> before any other PEs can be created, as PE for root bus is the ancestor
->>> to anyone else.
->>
->> We did not need a root bus PE before? What is the other PE reserved for?
->> Comments only say "reserved"...
->>
->
-> No, A PE for root bus is needed before.
-
-Ok. We needed a PE for the root bus and we need it now. What changed? Why 
-do you reserve another PE?
-
-
->
-other PEs can be for the PCI bus
-> originated from root port and the subordinate domains.
->
->>>
->>> Also, the windows of root port or the upstream port of PCIe switch behind
->>> root port are extended to be PHB's apertures to accommodate the additional
->>> resources needed by newly plugged devices based on the fact: hotpluggable
->>> slot is behind root port or downstream port of the PCIe switch behind
->>> root port. The extension for those PCI brdiges' windows is done in
->>> ppc_md.pcibios_setup_bridge() as well.
->>
->>
->> This patch seems to be doing way too many things, hard to follow.
->>
->> Could you please split the patch into smaller chunks? For example (you can do
->> it totally different):
->> - move pnv_pci_ioda_setup_opal_tce_kill()
->> - move PE creation from pnv_pci_ioda_fixup() to pnv_pci_setup_bridge();
->> - add pnv_pci_fixup_bridge_resources()
->> - add an extra reserved PE for the root bus (and all this magic with
->> root_pe_idx/root_pe_populated)
->> - ...
->>
->
-> I'll evaluate it later. It's always nice to have small patches. Thanks
-> for the comments.
->
->>
->>
->>
->> --
->> Alexey
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>Why not to enable it in 45/45 under config HOTPLUG_PCI_POWERNV? Is there any
+>benefit of having it always on if HOTPLUG_PCI_POWERNV is not enabled?
 >
 
+Agree, I will move accordingly in next revision. Note that we have to move
+it back here once something else depends on OF_DYNAMIC in future.
 
--- 
-Alexey
+>>  	default y
+>>
+>>  config OPAL_PRD
+>>
+>
+>
+>-- 
+>Alexey
+>
