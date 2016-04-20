@@ -1,54 +1,63 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] arm64: defconfig: Add Renesas R-Car USB 3.0 driver support
-Date: Wed, 20 Apr 2016 17:47:14 +0900
-Message-ID: <1461142034-5008-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v15 0/6] MT8173 HDMI support
+Date: Wed, 20 Apr 2016 10:49:24 +0200
+Message-ID: <1461142170-23946-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-If we doesn't enable this configuration and runs on R-Car Gen3,
-xhci host driver will cause timeout in xhci_reset() because
-the R-Car Gen3 xHCI controller needs specific initialization.
-
-[    1.565605] xhci-hcd ee000000.usb: xHCI Host Controller
-[    1.570636] xhci-hcd ee000000.usb: new USB bus registered, assigned bus number 5
-[   22.270160] xhci-hcd ee000000.usb: can't setup: -110
-[   22.274931] xhci-hcd ee000000.usb: USB bus 5 deregistered
-[   22.280158] xhci-hcd: probe of ee000000.usb failed with error -110
-
-Remarks:
-The timestamp doesn't work correctly on R-Car H3 ES1.0. It should be
-10 seconds.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm64/configs/defconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a44ef99..a95751d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1,7 +1,6 @@
- # CONFIG_LOCALVERSION_AUTO is not set
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
--CONFIG_FHANDLE=y
- CONFIG_AUDIT=y
- CONFIG_NO_HZ_IDLE=y
- CONFIG_HIGH_RES_TIMERS=y
-@@ -192,7 +191,7 @@ CONFIG_SND_SOC_AK4613=y
- CONFIG_USB=y
- CONFIG_USB_OTG=y
- CONFIG_USB_XHCI_HCD=y
--CONFIG_USB_XHCI_PLATFORM=y
-+CONFIG_USB_XHCI_RCAR=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_MSM=y
- CONFIG_USB_EHCI_HCD_PLATFORM=y
--- 
-1.9.1
+VGhpcyBzZXJpZXMgY29udGFpbnMgdGhlIEhETUkgZW5jb2RlciwgUEhZLCBhbmQgRERDIGRyaXZl
+cnMgc3BsaXQgb3V0CmZyb20gdGhlICJNVDgxNzMgRFJNIHN1cHBvcnQiIHNlcmllcy4gSXQgbm93
+IGRlcGVuZHMgb24gdGhlIHJlY2VudGx5Cm1lcmdlZCBoZG1pLWNvZGVjIFsxXSBkcml2ZXIsIHRv
+IHdoaWNoIGl0IGludGVyZmFjZXMgZm9yIGF1ZGlvIHBsYXliYWNrLgoKWzFdIGNvbW1pdCAwOTE4
+NDExOGE4YWIgKCJBU29DOiBoZG1pLWNvZGVjOiBBZGQgaGRtaS1jb2RlYyBmb3IgZXh0ZXJuYWwg
+SERNSS1lbmNvZGVycyIpCiAgICBvZiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
+L2tlcm5lbC9naXQvYnJvb25pZS9zb3VuZC5naXQKCkNoYW5nZXMgc2luY2UgdjE0OgogLSBTZWxl
+Y3QgSERNSV9DT0RFQwogLSBBZGQgaGRtaS1jb2RlYyBpbnRlcmZhY2UKIC0gU2ltcGxpZnkgbXRr
+X2hkbWlfaHdfYXVkX3NldF9jaGFubmVsX3N0YXR1cwoKcmVnYXJkcwpQaGlsaXBwCgpDSyBIdSAo
+MSk6CiAgYXJtNjQ6IGR0czogbXQ4MTczOiBBZGQgSERNSSByZWxhdGVkIG5vZGVzCgpKaWUgUWl1
+ICgyKToKICBkcm0vbWVkaWF0ZWs6IEFkZCBIRE1JIHN1cHBvcnQKICBkcm0vbWVkaWF0ZWs6IGVu
+YWJsZSBoZG1pIG91dHB1dCBjb250cm9sIGJpdAoKUGhpbGlwcCBaYWJlbCAoMyk6CiAgZHQtYmlu
+ZGluZ3M6IGRybS9tZWRpYXRlazogQWRkIE1lZGlhdGVrIEhETUkgZHRzIGJpbmRpbmcKICBkdC1i
+aW5kaW5nczogaGRtaS1jb25uZWN0b3I6IGFkZCBEREMgSTJDIGJ1cyBwaGFuZGxlIGRvY3VtZW50
+YXRpb24KICBhcm02NDogZHRzOiBtdDgxNzMtZXZiOiBlbmFibGUgSERNSSBvdXRwdXQKCiAuLi4v
+YmluZGluZ3MvZGlzcGxheS9jb25uZWN0b3IvaGRtaS1jb25uZWN0b3IudHh0ICB8ICAgIDEgKwog
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssaGRtaS50eHQgICAgfCAgMTQ4
+ICsrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My1ldmIuZHRzICAgICAgICB8
+ICAgMzggKwogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaSAgICAgICAg
+ICAgfCAgIDc3ICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9LY29uZmlnICAgICAgICAgICAg
+ICAgICAgIHwgICAgOCArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICB8ICAgIDcgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19jZWMuYyAg
+ICAgICAgICAgICAgICAgfCAgMjY1ICsrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19j
+ZWMuaCAgICAgICAgICAgICAgICAgfCAgIDI2ICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfaGRtaS5jICAgICAgICAgICAgICAgIHwgMTgzNSArKysrKysrKysrKysrKysrKysrKwogZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pLmggICAgICAgICAgICAgICAgfCAgIDIzICsK
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9kZGMuYyAgICAgICAgICAgIHwgIDM1
+OCArKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfcmVncy5oICAgICAgICAg
+ICB8ICAyMzggKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX210ODE3M19oZG1pX3Bo
+eS5jICAgICB8ICA1MTUgKysrKysrCiAxMyBmaWxlcyBjaGFuZ2VkLCAzNTM5IGluc2VydGlvbnMo
+KykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxoZG1pLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfY2VjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2NlYy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9kZGMuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9yZWdzLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX210ODE3M19oZG1pX3BoeS5jCgotLSAKMi44LjAu
+cmMzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
