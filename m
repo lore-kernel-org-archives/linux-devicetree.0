@@ -1,69 +1,43 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] gpio: of: make it possible to name GPIO lines
-Date: Wed, 20 Apr 2016 18:41:34 -0500
-Message-ID: <CAL_JsqJb+T+r=jOpF+nNkMD_gzB6B7=08_+mNRc-ZRA2TZNpiA@mail.gmail.com>
-References: <1461190600-20955-1-git-send-email-linus.walleij@linaro.org>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH V4 2/2] thermal: generic-adc: Add ADC based thermal
+ sensor driver
+Date: Wed, 20 Apr 2016 16:43:23 -0700
+Message-ID: <20160420234322.GA2558@localhost.localdomain>
+References: <1461050521-6080-1-git-send-email-ldewangan@nvidia.com>
+ <1461050521-6080-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1461190600-20955-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461050521-6080-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: jic23@kernel.org, robh@kernel.org, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 5:16 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> Make it possible to name the producer side of a GPIO line using
-> a "gpio-names" property array, modeled on the "clock-names"
-> property from the clock bindings.
+Laxman,
 
-Except clock-names is the consumer side. There is clock-output-names
-for the clock controller side though.
+On Tue, Apr 19, 2016 at 12:52:01PM +0530, Laxman Dewangan wrote:
+> In some of platform, thermal sensors like NCT thermistors are
+> connected to the one of ADC channel. The temperature is read by
+> reading the voltage across the sensor resistance via ADC. Lookup
+> table for ADC read value to temperature is referred to get
+> temperature. ADC is read via IIO framework.
+> 
+> Add support for thermal sensor driver which read the voltage across
+> sensor resistance from ADC through IIO framework.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
->
-> This naming is especially useful for:
->
-> - Debugging: lines are named after function, not just opaque
->   offset numbers.
->
-> - Exploration: systems where some or all GPIO lines are available
->   to end users, such as prototyping, one-off's "makerspace usecases"
->   users are helped by the names of the GPIO lines when tinkering.
->   This usecase has been surfacing recently.
->
-> The gpio-names attribute is completely optional.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v1->v2:
-> - Make the naming function return void: we continue at all times
->   and always return 0 anyway.
-> - Fix a return value check.
->
-> This has been discussed at some length now.
->
-> Why we are not using hogs: these are consumer side, not producer
-> side. The gpio-controller in DT (gpio_chip in Linux) is a
-> producer, not a consumer.
+I really like this driver, as I mentioned  before. Just one comment
+though.
 
-Arguably, the names you have are the consumer side. The consumer side
-is what defines the function. The consumer name is typically local
-like vddio being the input supply pin, but the producer names are more
-global like ldo3.
+> 
+> +
+> +	gti->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0,
+> +						      gti, &gadc_thermal_ops);
 
-> This patch is not about assigning initial values to GPIO lines.
-> That is an orthogonal usecase. This is just about naming lines.
+Why not using the devm_ version you introduced?
 
-It is unless we decide that both should use the same structure.
+Any particular reason?
 
-I'm also worried that just putting in somewhat random names doesn't
-buy much. If you have to figure out what the name is for the GPIO line
-you want from userspace, then you might as well know the chip and
-offset. I'm doubtful we could standardize naming across platforms.
-
-I'm not saying yes or no yet, just raising some of the concerns I have.
-
-Rob
