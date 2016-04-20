@@ -1,142 +1,78 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 29/45] powerpc/pci: Export pci_traverse_device_nodes()
-Date: Wed, 20 Apr 2016 11:27:37 +1000
-Message-ID: <20160420012737.GB24704@gwshan>
+Subject: Re: [PATCH v8 35/45] powerpc/powernv: Fundamental reset in
+ pnv_pci_reset_secondary_bus()
+Date: Wed, 20 Apr 2016 11:36:10 +1000
+Message-ID: <20160420013610.GA25585@gwshan>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-30-git-send-email-gwshan@linux.vnet.ibm.com>
- <5715C747.4080005@ozlabs.ru>
+ <1455680668-23298-36-git-send-email-gwshan@linux.vnet.ibm.com>
+ <5715F493.2030002@ozlabs.ru>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5715C747.4080005@ozlabs.ru>
+In-Reply-To: <5715F493.2030002@ozlabs.ru>
 Sender: linux-pci-owner@vger.kernel.org
 To: Alexey Kardashevskiy <aik@ozlabs.ru>
 Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 03:51:03PM +1000, Alexey Kardashevskiy wrote:
+On Tue, Apr 19, 2016 at 07:04:19PM +1000, Alexey Kardashevskiy wrote:
 >On 02/17/2016 02:44 PM, Gavin Shan wrote:
->>This renames traverse_pci_devices() to pci_traverse_device_nodes().
->>The function traverses all subordinate device nodes of the specified
->>one. Also, below cleanup applied to the function. No logical changes
->>introduced.
->>
->>    * Rename "pre" to "fn".
->>    * Avoid assignment in if condition reported from checkpatch.pl.
+>>In pnv_pci_reset_secondary_bus(), we should issue fundamental reset
+>>if any one subordinate device of the specified bus is requesting that.
+>>Otherwise, the device might not come up after the reset.
 >>
 >>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/include/asm/ppc-pci.h   |  6 +++---
->>  arch/powerpc/kernel/pci_dn.c         | 15 ++++++++++-----
->>  arch/powerpc/platforms/pseries/msi.c |  4 ++--
->>  3 files changed, 15 insertions(+), 10 deletions(-)
->>
->>diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
->>index ca0c5bf..8753e4e 100644
->>--- a/arch/powerpc/include/asm/ppc-pci.h
->>+++ b/arch/powerpc/include/asm/ppc-pci.h
->>@@ -33,9 +33,9 @@ extern struct pci_dev *isa_bridge_pcidev;	/* may be NULL if no ISA bus */
->>  struct device_node;
->>  struct pci_dn;
->>
->>-typedef void *(*traverse_func)(struct device_node *me, void *data);
 >
->
->
->Why removing this typedef? Typedef's are good.
->
->Anyway,
->
-
-Could you please provide more details why it's good? I removed it
-because it was used for only once.
-
-
 >
 >Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 >
 >
+>Out of curiosity - what does "fundamental" reset actually do?
 >
+
+Please refer to the skiboot patches - power off/on the target slot.
+
 >
->>-void *traverse_pci_devices(struct device_node *start, traverse_func pre,
->>-		void *data);
->>+void *pci_traverse_device_nodes(struct device_node *start,
->>+				void *(*fn)(struct device_node *, void *),
->>+				void *data);
->>  void *traverse_pci_dn(struct pci_dn *root,
->>  		      void *(*fn)(struct pci_dn *, void *),
->>  		      void *data);
->>diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
->>index ce10281..ecdccce 100644
->>--- a/arch/powerpc/kernel/pci_dn.c
->>+++ b/arch/powerpc/kernel/pci_dn.c
->>@@ -372,8 +372,9 @@ EXPORT_SYMBOL_GPL(pci_remove_device_node_info);
->>   * one of these nodes we also assume its siblings are non-pci for
->>   * performance.
->>   */
->>-void *traverse_pci_devices(struct device_node *start, traverse_func pre,
->>-		void *data)
->>+void *pci_traverse_device_nodes(struct device_node *start,
->>+				void *(*fn)(struct device_node *, void *),
->>+				void *data)
+>>---
+>>  arch/powerpc/platforms/powernv/eeh-powernv.c | 21 ++++++++++++++++++++-
+>>  1 file changed, 20 insertions(+), 1 deletion(-)
+>>
+>>diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
+>>index 593b8dc..c7454ba 100644
+>>--- a/arch/powerpc/platforms/powernv/eeh-powernv.c
+>>+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
+>>@@ -866,9 +866,28 @@ static int pnv_eeh_bridge_reset(struct pci_dev *dev, int option)
+>>  	return 0;
+>>  }
+>>
+>>+static int pnv_pci_dev_reset_type(struct pci_dev *pdev, void *data)
+>>+{
+>>+	int *freset = data;
+>>+
+>>+	/*
+>>+	 * Stop the iteration immediately if there has any one
+>>+	 * PCI device requesting fundamental reset.
+>>+	 */
+>>+	*freset |= pdev->needs_freset;
+>>+	return *freset;
+>>+}
+>>+
+>>  void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
 >>  {
->>  	struct device_node *dn, *nextdn;
->>  	void *ret;
->>@@ -388,8 +389,11 @@ void *traverse_pci_devices(struct device_node *start, traverse_func pre,
->>  		if (classp)
->>  			class = of_read_number(classp, 1);
->>
->>-		if (pre && ((ret = pre(dn, data)) != NULL))
->>-			return ret;
->>+		if (fn) {
->>+			ret = fn(dn, data);
->>+			if (ret)
->>+				return ret;
->>+		}
->>
->>  		/* If we are a PCI bridge, go down */
->>  		if (dn->child && ((class >> 8) == PCI_CLASS_BRIDGE_PCI ||
->>@@ -411,6 +415,7 @@ void *traverse_pci_devices(struct device_node *start, traverse_func pre,
->>  	}
->>  	return NULL;
->>  }
->>+EXPORT_SYMBOL_GPL(pci_traverse_device_nodes);
->>
->>  static struct pci_dn *pci_dn_next_one(struct pci_dn *root,
->>  				      struct pci_dn *pdn)
->>@@ -487,7 +492,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
->>  	}
->>
->>  	/* Update dn->phb ptrs for new phb and children devices */
->>-	traverse_pci_devices(dn, add_pdn, phb);
->>+	pci_traverse_device_nodes(dn, add_pdn, phb);
+>>-	pnv_eeh_bridge_reset(dev, EEH_RESET_HOT);
+>>+	int option, freset = 0;
+>>+
+>>+	if (dev->subordinate)
+>>+		pci_walk_bus(dev->subordinate,
+>>+			     pnv_pci_dev_reset_type, &freset);
+>>+
+>>+	option = freset ? EEH_RESET_FUNDAMENTAL : EEH_RESET_HOT;
+>>+	pnv_eeh_bridge_reset(dev, option);
+>>  	pnv_eeh_bridge_reset(dev, EEH_RESET_DEACTIVATE);
 >>  }
 >>
->>  /**
->>diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
->>index 272e9ec..543a638 100644
->>--- a/arch/powerpc/platforms/pseries/msi.c
->>+++ b/arch/powerpc/platforms/pseries/msi.c
->>@@ -305,7 +305,7 @@ static int msi_quota_for_device(struct pci_dev *dev, int request)
->>  	memset(&counts, 0, sizeof(struct msi_counts));
->>
->>  	/* Work out how many devices we have below this PE */
->>-	traverse_pci_devices(pe_dn, count_non_bridge_devices, &counts);
->>+	pci_traverse_device_nodes(pe_dn, count_non_bridge_devices, &counts);
->>
->>  	if (counts.num_devices == 0) {
->>  		pr_err("rtas_msi: found 0 devices under PE for %s\n",
->>@@ -320,7 +320,7 @@ static int msi_quota_for_device(struct pci_dev *dev, int request)
->>  	/* else, we have some more calculating to do */
->>  	counts.requestor = pci_device_to_OF_node(dev);
->>  	counts.request = request;
->>-	traverse_pci_devices(pe_dn, count_spare_msis, &counts);
->>+	pci_traverse_device_nodes(pe_dn, count_spare_msis, &counts);
->>
->>  	/* If the quota isn't an integer multiple of the total, we can
->>  	 * use the remainder as spare MSIs for anyone that wants them. */
 >>
 >
 >
