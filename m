@@ -1,278 +1,141 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH next v2 1/2] PCI: keystone: add pci error irq handler
-Date: Wed, 20 Apr 2016 10:13:36 -0400
-Message-ID: <57178E90.5090205@ti.com>
-References: <1460386231-8377-1-git-send-email-m-karicheri2@ti.com>
- <20160420010343.GI17863@localhost>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 4/7] arm64/perf: Define complete ARMv8 recommended
+ implementation defined events
+Date: Wed, 20 Apr 2016 15:24:57 +0100
+Message-ID: <20160420142457.GA15229@leverpostej>
+References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
+ <1461092062-7484-5-git-send-email-ashoks@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160420010343.GI17863@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461092062-7484-5-git-send-email-ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2016 09:03 PM, Bjorn Helgaas wrote:
-> Hi Murali,
+On Tue, Apr 19, 2016 at 11:54:19AM -0700, Ashok Kumar wrote:
+> Defined all the ARMv8 recommended implementation defined events
+> from J3 - "ARM recommendations for IMPLEMENTATION DEFINED event numbers"
+> in ARMv8 ARM.
 > 
-> On Mon, Apr 11, 2016 at 10:50:30AM -0400, Murali Karicheri wrote:
->> Keystone PCI hardware generates error interrupts at RC using platform
->> irq instead of standard msi/legacy irq. Add a simple error handler that
->> logs the fatal interrupt status to the console.
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> I applied this with minor changes to pci/host-keystone for v4.7.
-> See below:
-> 
->> +bool ks_dw_pcie_handle_error_irq(struct device *dev, void __iomem *reg_base)
->> +{
->> +	u32 status;
->> +	bool ret = false;
->> +
->> +	status = readl(reg_base + ERR_IRQ_STATUS_RAW) & ERR_IRQ_ALL;
->> +	if (status) {
->> +		/* The PCIESS interrupt status buts are "write 1 to clear" */
->> +		if (status & ERR_FATAL_IRQ)
->> +			dev_err(dev, "PCIE fatal error detected\n");
->> +
->> +		/* ack the irq event. */
->> +		writel(status, reg_base + ERR_IRQ_STATUS);
->> +		ret = true;
->> +	}
->> +	return ret;
->> +}
-> 
-> It seems pointless to me to return true/false here and then:
-> 
->> +static irqreturn_t pcie_err_irq_handler(int irq, void *priv)
->> +{
->> +	struct keystone_pcie *ks_pcie = priv;
->> +
->> +	if (ks_dw_pcie_handle_error_irq(ks_pcie->pp.dev, ks_pcie->va_app_base))
->> +		return IRQ_HANDLED;
->> +
->> +	return IRQ_NONE;
->> +}
-> 
-> convert the true/false to IRQ_HANDLED/IRQ_NONE here.  So I changed
-> ks_dw_pcie_handle_error_irq() to return IRQ_HANDLED/IRQ_NONE directly,
-> resulting in the patch below.
+> Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-I think that should be fine. Only reason, i did that way was that the pcie-designware
-code is kept as a library of functions to configure the designware hardware common to
-all platforms that has the designware core h/w and keep all of the platform specific info
-such as IRQ handler to the platform glue driver such as pci-keystone.c. But that is not
-true today as there is msi irq handler in this driver. So this is fine.
+As far as I can tell, these are correct per the ARM ARM (ARM DDI 0487A.i).
 
-I will pull these from your designware pci/host-keystone and let you know if I see
-any issues or send a diff patch to the list.
+In the commit message, please mention the ARM document number for the
+ARM ARM used, for future reference.
 
-Once again, thanks for pulling this to v4.7.
+With that:
 
-Murali
-> 
-> This is applied to pci/host-keystone for v4.7.
-> 
-> 
-> commit 7be92716c1aa40f5690e6a5f01fc0d385dd72303
-> Author: Murali Karicheri <m-karicheri2@ti.com>
-> Date:   Mon Apr 11 10:50:30 2016 -0400
-> 
->     PCI: keystone: Add error IRQ handler
->     
->     Keystone PCI hardware generates error interrupts at RC using a platform IRQ
->     instead of a standard MSI or legacy IRQ.  Add a simple error handler that
->     logs the fatal interrupt status to the console.
->     
->     [bhelgaas: tidy comments, return irqreturn_t directly]
->     Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->     Acked-by: Rob Herring <robh@kernel.org>
->     CC: Pawel Moll <pawel.moll@arm.com>
->     CC: Mark Rutland <mark.rutland@arm.com>
->     CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
->     CC: Kumar Gala <galak@codeaurora.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
-> index 54eae29..d08a4d5 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
-> @@ -56,6 +56,7 @@ Optional properties:-
->  	phy-names: name of the Generic Keystine SerDes phy for PCI
->  	  - If boot loader already does PCI link establishment, then phys and
->  	    phy-names shouldn't be present.
-> +	interrupts: platform interrupt for error interrupts.
->  
->  Designware DT Properties not applicable for Keystone PCI
->  
-> diff --git a/drivers/pci/host/pci-keystone-dw.c b/drivers/pci/host/pci-keystone-dw.c
-> index 6153853..4151509 100644
-> --- a/drivers/pci/host/pci-keystone-dw.c
-> +++ b/drivers/pci/host/pci-keystone-dw.c
-> @@ -14,6 +14,7 @@
->  
->  #include <linux/irq.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/irqreturn.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_pci.h>
-> @@ -53,6 +54,21 @@
->  #define IRQ_STATUS			0x184
->  #define MSI_IRQ_OFFSET			4
->  
-> +/* Error IRQ bits */
-> +#define ERR_AER		BIT(5)	/* ECRC error */
-> +#define ERR_AXI		BIT(4)	/* AXI tag lookup fatal error */
-> +#define ERR_CORR	BIT(3)	/* Correctable error */
-> +#define ERR_NONFATAL	BIT(2)	/* Non-fatal error */
-> +#define ERR_FATAL	BIT(1)	/* Fatal error */
-> +#define ERR_SYS		BIT(0)	/* System (fatal, non-fatal, or correctable) */
-> +#define ERR_IRQ_ALL	(ERR_AER | ERR_AXI | ERR_CORR | \
-> +			 ERR_NONFATAL | ERR_FATAL | ERR_SYS)
-> +#define ERR_FATAL_IRQ	(ERR_FATAL | ERR_AXI)
-> +#define ERR_IRQ_STATUS_RAW		0x1c0
-> +#define ERR_IRQ_STATUS			0x1c4
-> +#define ERR_IRQ_ENABLE_SET		0x1c8
-> +#define ERR_IRQ_ENABLE_CLR		0x1cc
-> +
->  /* Config space registers */
->  #define DEBUG0				0x728
->  
-> @@ -243,6 +259,28 @@ void ks_dw_pcie_handle_legacy_irq(struct keystone_pcie *ks_pcie, int offset)
->  	writel(offset, ks_pcie->va_app_base + IRQ_EOI);
->  }
->  
-> +void ks_dw_pcie_enable_error_irq(void __iomem *reg_base)
-> +{
-> +	writel(ERR_IRQ_ALL, reg_base + ERR_IRQ_ENABLE_SET);
-> +}
-> +
-> +irqreturn_t ks_dw_pcie_handle_error_irq(struct device *dev,
-> +					void __iomem *reg_base)
-> +{
-> +	u32 status;
-> +
-> +	status = readl(reg_base + ERR_IRQ_STATUS_RAW) & ERR_IRQ_ALL;
-> +	if (!status)
-> +		return IRQ_NONE;
-> +
-> +	if (status & ERR_FATAL_IRQ)
-> +		dev_err(dev, "fatal error (status %#010x)\n", status);
-> +
-> +	/* Ack the IRQ; status bits are RW1C */
-> +	writel(status, reg_base + ERR_IRQ_STATUS);
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static void ks_dw_pcie_ack_legacy_irq(struct irq_data *d)
->  {
->  }
-> diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-> index b71f55b..6868918 100644
-> --- a/drivers/pci/host/pci-keystone.c
-> +++ b/drivers/pci/host/pci-keystone.c
-> @@ -15,6 +15,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/interrupt.h>
->  #include <linux/irqdomain.h>
->  #include <linux/module.h>
->  #include <linux/msi.h>
-> @@ -226,6 +227,9 @@ static void ks_pcie_setup_interrupts(struct keystone_pcie *ks_pcie)
->  							 ks_pcie);
->  		}
->  	}
-> +
-> +	if (ks_pcie->error_irq > 0)
-> +		ks_dw_pcie_enable_error_irq(ks_pcie->va_app_base);
->  }
->  
->  /*
-> @@ -289,6 +293,14 @@ static struct pcie_host_ops keystone_pcie_host_ops = {
->  	.scan_bus = ks_dw_pcie_v3_65_scan_bus,
->  };
->  
-> +static irqreturn_t pcie_err_irq_handler(int irq, void *priv)
-> +{
-> +	struct keystone_pcie *ks_pcie = priv;
-> +
-> +	return ks_dw_pcie_handle_error_irq(ks_pcie->pp.dev,
-> +					   ks_pcie->va_app_base);
-> +}
-> +
->  static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
->  			 struct platform_device *pdev)
->  {
-> @@ -309,6 +321,22 @@ static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
->  			return ret;
->  	}
->  
-> +	/*
-> +	 * Index 0 is the platform interrupt for error interrupt
-> +	 * from RC.  This is optional.
-> +	 */
-> +	ks_pcie->error_irq = irq_of_parse_and_map(ks_pcie->np, 0);
-> +	if (ks_pcie->error_irq <= 0)
-> +		dev_info(&pdev->dev, "no error IRQ defined\n");
-> +	else {
-> +		if (request_irq(ks_pcie->error_irq, pcie_err_irq_handler,
-> +				IRQF_SHARED, "pcie-error-irq", ks_pcie) < 0) {
-> +			dev_err(&pdev->dev, "failed to request error IRQ %d\n",
-> +				ks_pcie->error_irq);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	pp->root_bus_nr = -1;
->  	pp->ops = &keystone_pcie_host_ops;
->  	ret = ks_dw_pcie_host_init(ks_pcie, ks_pcie->msi_intc_np);
-> @@ -376,6 +404,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
->  	devm_release_mem_region(dev, res->start, resource_size(res));
->  
->  	pp->dev = dev;
-> +	ks_pcie->np = node;
->  	platform_set_drvdata(pdev, ks_pcie);
->  	ks_pcie->clk = devm_clk_get(dev, "pcie");
->  	if (IS_ERR(ks_pcie->clk)) {
-> diff --git a/drivers/pci/host/pci-keystone.h b/drivers/pci/host/pci-keystone.h
-> index f0944e8..a5b0cb2 100644
-> --- a/drivers/pci/host/pci-keystone.h
-> +++ b/drivers/pci/host/pci-keystone.h
-> @@ -29,6 +29,9 @@ struct keystone_pcie {
->  	int			msi_host_irqs[MAX_MSI_HOST_IRQS];
->  	struct			device_node *msi_intc_np;
->  	struct irq_domain	*legacy_irq_domain;
-> +	struct device_node	*np;
-> +
-> +	int error_irq;
->  
->  	/* Application register space */
->  	void __iomem		*va_app_base;
-> @@ -42,6 +45,9 @@ phys_addr_t ks_dw_pcie_get_msi_addr(struct pcie_port *pp);
->  /* Keystone specific PCI controller APIs */
->  void ks_dw_pcie_enable_legacy_irqs(struct keystone_pcie *ks_pcie);
->  void ks_dw_pcie_handle_legacy_irq(struct keystone_pcie *ks_pcie, int offset);
-> +void ks_dw_pcie_enable_error_irq(void __iomem *reg_base);
-> +irqreturn_t ks_dw_pcie_handle_error_irq(struct device *dev,
-> +					void __iomem *reg_base);
->  int  ks_dw_pcie_host_init(struct keystone_pcie *ks_pcie,
->  			struct device_node *msi_intc_np);
->  int ks_dw_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-> 
+Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
+Thanks,
+Mark.
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+> ---
+>  arch/arm64/kernel/perf_event.c | 79 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index 59d5091..2ee61e8 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -94,10 +94,89 @@
+>  #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR			0x41
+>  #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_RD		0x42
+>  #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR		0x43
+> +#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_INNER		0x44
+> +#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_OUTER		0x45
+> +#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WB_VICTIM		0x46
+> +#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WB_CLEAN			0x47
+> +#define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_INVAL			0x48
+> +
+>  #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD			0x4C
+>  #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR			0x4D
+>  #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD				0x4E
+>  #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR				0x4F
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_RD			0x50
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_WR			0x51
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_REFILL_RD		0x52
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_REFILL_WR		0x53
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_WB_VICTIM		0x56
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_WB_CLEAN			0x57
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_CACHE_INVAL			0x58
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_REFILL_RD			0x5C
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_REFILL_WR			0x5D
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_RD				0x5E
+> +#define ARMV8_IMPDEF_PERFCTR_L2D_TLB_WR				0x5F
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD			0x60
+> +#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR			0x61
+> +#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_SHARED			0x62
+> +#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_NOT_SHARED		0x63
+> +#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_NORMAL			0x64
+> +#define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_PERIPH			0x65
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_MEM_ACCESS_RD			0x66
+> +#define ARMV8_IMPDEF_PERFCTR_MEM_ACCESS_WR			0x67
+> +#define ARMV8_IMPDEF_PERFCTR_UNALIGNED_LD_SPEC			0x68
+> +#define ARMV8_IMPDEF_PERFCTR_UNALIGNED_ST_SPEC			0x69
+> +#define ARMV8_IMPDEF_PERFCTR_UNALIGNED_LDST_SPEC		0x6A
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_LDREX_SPEC				0x6C
+> +#define ARMV8_IMPDEF_PERFCTR_STREX_PASS_SPEC			0x6D
+> +#define ARMV8_IMPDEF_PERFCTR_STREX_FAIL_SPEC			0x6E
+> +#define ARMV8_IMPDEF_PERFCTR_STREX_SPEC				0x6F
+> +#define ARMV8_IMPDEF_PERFCTR_LD_SPEC				0x70
+> +#define ARMV8_IMPDEF_PERFCTR_ST_SPEC				0x71
+> +#define ARMV8_IMPDEF_PERFCTR_LDST_SPEC				0x72
+> +#define ARMV8_IMPDEF_PERFCTR_DP_SPEC				0x73
+> +#define ARMV8_IMPDEF_PERFCTR_ASE_SPEC				0x74
+> +#define ARMV8_IMPDEF_PERFCTR_VFP_SPEC				0x75
+> +#define ARMV8_IMPDEF_PERFCTR_PC_WRITE_SPEC			0x76
+> +#define ARMV8_IMPDEF_PERFCTR_CRYPTO_SPEC			0x77
+> +#define ARMV8_IMPDEF_PERFCTR_BR_IMMED_SPEC			0x78
+> +#define ARMV8_IMPDEF_PERFCTR_BR_RETURN_SPEC			0x79
+> +#define ARMV8_IMPDEF_PERFCTR_BR_INDIRECT_SPEC			0x7A
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_ISB_SPEC				0x7C
+> +#define ARMV8_IMPDEF_PERFCTR_DSB_SPEC				0x7D
+> +#define ARMV8_IMPDEF_PERFCTR_DMB_SPEC				0x7E
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_UNDEF				0x81
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_SVC				0x82
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_PABORT				0x83
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_DABORT				0x84
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_IRQ				0x86
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_FIQ				0x87
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_SMC				0x88
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_HVC				0x8A
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_PABORT			0x8B
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_DABORT			0x8C
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_OTHER			0x8D
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_IRQ			0x8E
+> +#define ARMV8_IMPDEF_PERFCTR_EXC_TRAP_FIQ			0x8F
+> +#define ARMV8_IMPDEF_PERFCTR_RC_LD_SPEC				0x90
+> +#define ARMV8_IMPDEF_PERFCTR_RC_ST_SPEC				0x91
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_RD			0xA0
+> +#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_WR			0xA1
+> +#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_REFILL_RD		0xA2
+> +#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_REFILL_WR		0xA3
+> +
+> +#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_WB_VICTIM		0xA6
+> +#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_WB_CLEAN			0xA7
+> +#define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_INVAL			0xA8
+>  
+>  /* ARMv8 Cortex-A53 specific event types. */
+>  #define ARMV8_A53_PERFCTR_PREFETCH_LINEFILL			0xC2
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
