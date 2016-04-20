@@ -1,116 +1,118 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH v3 3/3] mmc: usdhi6rol0: add pinctrl to set pin drive strength
-Date: Wed, 20 Apr 2016 16:53:13 +0200
-Message-ID: <aacd3dcf6a2e5a8249ca5ff2e614b3e4c04d2020.1461163234.git.larper@axis.com>
-References: <cover.1461163234.git.larper@axis.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <cover.1461163234.git.larper@axis.com>
-In-Reply-To: <cover.1461163234.git.larper@axis.com>
-References: <cover.1461163234.git.larper@axis.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: g.liakhovetski@gmx.de, ulf.hansson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] dmaengine: vdma: Add clock support
+Date: Wed, 20 Apr 2016 14:55:27 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57930F@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1461152599-28858-1-git-send-email-appanad@xilinx.com>
+ <1461152599-28858-2-git-send-email-appanad@xilinx.com>
+ <20160420143622.GP7128@xsjsorenbubuntu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160420143622.GP7128@xsjsorenbubuntu>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel@vge>
 List-Id: devicetree@vger.kernel.org
 
-Some boards need different pin drive strength for the UHS mode. Add an
-optional pinctrl setting with two pin states covering UHS speeds and
-other speeds.
-
-Signed-off-by: Lars Persson <larper@axis.com>
----
- drivers/mmc/host/usdhi6rol0.c | 51 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
-index 2585ea4..c4d923b 100644
---- a/drivers/mmc/host/usdhi6rol0.c
-+++ b/drivers/mmc/host/usdhi6rol0.c
-@@ -22,6 +22,7 @@
- #include <linux/mmc/sdio.h>
- #include <linux/module.h>
- #include <linux/pagemap.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/scatterlist.h>
- #include <linux/string.h>
-@@ -198,6 +199,11 @@ struct usdhi6_host {
- 	struct dma_chan *chan_rx;
- 	struct dma_chan *chan_tx;
- 	bool dma_active;
-+
-+	/* Pin control */
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pins_default;
-+	struct pinctrl_state *pins_uhs;
- };
- 
- /*			I/O primitives					*/
-@@ -1147,14 +1153,38 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
- 	}
- }
- 
-+static int usdhi6_set_pinstates(struct usdhi6_host *host, int voltage)
-+{
-+	if (IS_ERR(host->pins_uhs))
-+		return 0;
-+
-+	switch (voltage) {
-+	case MMC_SIGNAL_VOLTAGE_180:
-+	case MMC_SIGNAL_VOLTAGE_120:
-+		return pinctrl_select_state(host->pinctrl,
-+					    host->pins_uhs);
-+
-+	default:
-+		return pinctrl_select_state(host->pinctrl,
-+					    host->pins_default);
-+	}
-+}
-+
- static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	int ret;
- 
- 	ret = mmc_regulator_set_vqmmc(mmc, ios);
- 
--	if (ret < 0)
-+	if (ret < 0) {
- 		dev_warn(mmc_dev(mmc), "Voltage switch failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = usdhi6_set_pinstates(mmc_priv(mmc), ios->signal_voltage);
-+	if (ret)
-+		dev_warn_once(mmc_dev(mmc),
-+			      "Failed to set pinstate err=%d\n", ret);
- 
- 	return ret;
- }
-@@ -1743,6 +1773,25 @@ static int usdhi6_probe(struct platform_device *pdev)
- 	host->wait	= USDHI6_WAIT_FOR_REQUEST;
- 	host->timeout	= msecs_to_jiffies(4000);
- 
-+	host->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (IS_ERR(host->pinctrl)) {
-+		ret = PTR_ERR(host->pinctrl);
-+		goto e_free_mmc;
-+	}
-+
-+	host->pins_uhs = pinctrl_lookup_state(host->pinctrl, "state_uhs");
-+	if (!IS_ERR(host->pins_uhs)) {
-+		host->pins_default = pinctrl_lookup_state(host->pinctrl,
-+							  PINCTRL_STATE_DEFAULT);
-+
-+		if (IS_ERR(host->pins_default)) {
-+			dev_err(dev,
-+				"UHS pinctrl requires a default pin state.\n");
-+			ret = PTR_ERR(host->pins_default);
-+			goto e_free_mmc;
-+		}
-+	}
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	host->base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(host->base)) {
--- 
-2.1.4
-
+SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
+IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBX
+ZWRuZXNkYXksIEFwcmlsIDIwLCAyMDE2IDg6MDYgUE0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRh
+cmVzd2FyYSBSYW8gPGFwcGFuYWRAeGlsaW54LmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9y
+ZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gaWpjK2Rldmlj
+ZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnOyBNaWNoYWwgU2ltZWsN
+Cj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IHZpbm9kLmtvdWxAaW50ZWwuY29tOyBkYW4uai53aWxs
+aWFtc0BpbnRlbC5jb207DQo+IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gPGFwcGFuYWRA
+eGlsaW54LmNvbT47DQo+IG1vcml0ei5maXNjaGVyQGV0dHVzLmNvbTsgbGF1cmVudC5waW5jaGFy
+dEBpZGVhc29uYm9hcmQuY29tOw0KPiBsdWlzQGRlYmV0aGVuY291cnQuY29tOyBBbmlydWRoYSBT
+YXJhbmdpIDxhbmlydWRoQHhpbGlueC5jb20+OyBQdW5uYWlhaA0KPiBDaG91ZGFyeSBLYWxsdXJp
+IDxwdW5uYWlhQHhpbGlueC5jb20+OyBTaHViaHJhanlvdGkgRGF0dGENCj4gPHNodWJocmFqQHhp
+bGlueC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4g
+ZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0g
+ZG1hZW5naW5lOiB2ZG1hOiBBZGQgY2xvY2sgc3VwcG9ydA0KPiANCj4gT24gV2VkLCAyMDE2LTA0
+LTIwIGF0IDE3OjEzOjE5ICswNTMwLCBLZWRhcmVzd2FyYSByYW8gQXBwYW5hIHdyb3RlOg0KPiA+
+IEFkZGVkIGJhc2ljIGNsb2NrIHN1cHBvcnQuIFRoZSBjbG9ja3MgYXJlIHJlcXVlc3RlZCBhdCBw
+cm9iZSBhbmQNCj4gPiByZWxlYXNlZCBhdCByZW1vdmUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBLZWRhcmVzd2FyYSByYW8gQXBwYW5hIDxhcHBhbmFkQHhpbGlueC5jb20+DQo+ID4gLS0tDQo+
+ID4gQ2hhbmdlcyBmb3IgdjI6DQo+ID4gLS0+IE5vbmUuDQo+ID4NCj4gPiAgZHJpdmVycy9kbWEv
+eGlsaW54L3hpbGlueF92ZG1hLmMgfCA1Ng0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDU2IGluc2VydGlvbnMoKykNCj4g
+Pg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS94aWxpbngveGlsaW54X3ZkbWEuYw0KPiA+
+IGIvZHJpdmVycy9kbWEveGlsaW54L3hpbGlueF92ZG1hLmMNCj4gPiBpbmRleCA3MGNhZWE2Li5k
+NTI2MDI5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZG1hL3hpbGlueC94aWxpbnhfdmRtYS5j
+DQo+ID4gKysrIGIvZHJpdmVycy9kbWEveGlsaW54L3hpbGlueF92ZG1hLmMNCj4gPiBAQCAtNDQs
+NiArNDQsNyBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4NCj4gPiAgI2lu
+Y2x1ZGUgPGxpbnV4L29mX2lycS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+
+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+DQo+ID4NCj4gPiAgI2luY2x1ZGUgIi4uL2RtYWVuZ2lu
+ZS5oIg0KPiA+DQo+ID4gQEAgLTM1Miw2ICszNTMsOCBAQCBzdHJ1Y3QgeGlsaW54X2RtYV9jaGFu
+IHsNCj4gPiAgICogQGZsdXNoX29uX2ZzeW5jOiBGbHVzaCBvbiBmcmFtZSBzeW5jDQo+ID4gICAq
+IEBleHRfYWRkcjogSW5kaWNhdGVzIDY0IGJpdCBhZGRyZXNzaW5nIGlzIHN1cHBvcnRlZCBieSBk
+bWEgZGV2aWNlDQo+ID4gICAqIEBkbWF0eXBlOiBETUEgaXAgdHlwZQ0KPiA+ICsgKiBAY2xrczoJ
+cG9pbnRlciB0byBhcnJheSBvZiBjbG9ja3MNCj4gPiArICogQG51bWNsa3M6CW51bWJlciBvZiBj
+bG9ja3MgYXZhaWxhYmxlDQo+ID4gICAqLw0KPiA+ICBzdHJ1Y3QgeGlsaW54X2RtYV9kZXZpY2Ug
+ew0KPiA+ICAJdm9pZCBfX2lvbWVtICpyZWdzOw0KPiA+IEBAIC0zNjIsNiArMzY1LDggQEAgc3Ry
+dWN0IHhpbGlueF9kbWFfZGV2aWNlIHsNCj4gPiAgCXUzMiBmbHVzaF9vbl9mc3luYzsNCj4gPiAg
+CWJvb2wgZXh0X2FkZHI7DQo+ID4gIAllbnVtIHhkbWFfaXBfdHlwZSBkbWF0eXBlOw0KPiA+ICsJ
+c3RydWN0IGNsayAqKmNsa3M7DQo+ID4gKwlpbnQgbnVtY2xrczsNCj4gPiAgfTsNCj4gPg0KPiA+
+ICAvKiBNYWNyb3MgKi8NCj4gPiBAQCAtMTczMSw2ICsxNzM2LDI2IEBAIGludCB4aWxpbnhfdmRt
+YV9jaGFubmVsX3NldF9jb25maWcoc3RydWN0DQo+ID4gZG1hX2NoYW4gKmRjaGFuLCAgfSAgRVhQ
+T1JUX1NZTUJPTCh4aWxpbnhfdmRtYV9jaGFubmVsX3NldF9jb25maWcpOw0KPiA+DQo+ID4gK3N0
+YXRpYyBpbnQgeGRtYV9jbGtfaW5pdChzdHJ1Y3QgeGlsaW54X2RtYV9kZXZpY2UgKnhkZXYsIGJv
+b2wgZW5hYmxlKQ0KPiA+ICt7DQo+ID4gKwlpbnQgaSA9IDAsIHJldDsNCj4gPiArDQo+ID4gKwlm
+b3IgKGkgPSAwOyBpIDwgeGRldi0+bnVtY2xrczsgaSsrKSB7DQo+ID4gKwkJaWYgKGVuYWJsZSkg
+ew0KPiA+ICsJCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoeGRldi0+Y2xrc1tpXSk7DQo+ID4g
+KwkJCWlmIChyZXQpIHsNCj4gPiArCQkJCWRldl9lcnIoeGRldi0+ZGV2LA0KPiA+ICsJCQkJCSJm
+YWlsZWQgdG8gZW5hYmxlIHRoZSBheGlkbWEgY2xvY2tcbiIpOw0KPiA+ICsJCQkJcmV0dXJuIHJl
+dDsNCj4gPiArCQkJfQ0KPiA+ICsJCX0gZWxzZSB7DQo+ID4gKwkJCWNsa19kaXNhYmxlX3VucHJl
+cGFyZSh4ZGV2LT5jbGtzW2ldKTsNCj4gPiArCQl9DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0
+dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gIC8qIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4g
+ICAqIFByb2JlIGFuZCByZW1vdmUNCj4gPiAgICovDQo+ID4gQEAgLTE5MTksNiArMTk0NCw3IEBA
+IHN0YXRpYyBpbnQgeGlsaW54X2RtYV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpw
+ZGV2KQ0KPiA+ICAJc3RydWN0IHJlc291cmNlICppbzsNCj4gPiAgCXUzMiBudW1fZnJhbWVzLCBh
+ZGRyX3dpZHRoOw0KPiA+ICAJaW50IGksIGVycjsNCj4gPiArCWNvbnN0IGNoYXIgKnN0cjsNCj4g
+Pg0KPiA+ICAJLyogQWxsb2NhdGUgYW5kIGluaXRpYWxpemUgdGhlIERNQSBlbmdpbmUgc3RydWN0
+dXJlICovDQo+ID4gIAl4ZGV2ID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqeGRl
+diksIEdGUF9LRVJORUwpOyBAQA0KPiA+IC0xOTY1LDYgKzE5OTEsMzIgQEAgc3RhdGljIGludCB4
+aWxpbnhfZG1hX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ID4gIAkv
+KiBTZXQgdGhlIGRtYSBtYXNrIGJpdHMgKi8NCj4gPiAgCWRtYV9zZXRfbWFzayh4ZGV2LT5kZXYs
+IERNQV9CSVRfTUFTSyhhZGRyX3dpZHRoKSk7DQo+ID4NCj4gPiArCXhkZXYtPm51bWNsa3MgPSBv
+Zl9wcm9wZXJ0eV9jb3VudF9zdHJpbmdzKHBkZXYtPmRldi5vZl9ub2RlLA0KPiA+ICsJCQkJCQkg
+ICJjbG9jay1uYW1lcyIpOw0KPiA+ICsJaWYgKHhkZXYtPm51bWNsa3MgPiAwKSB7DQo+ID4gKwkJ
+eGRldi0+Y2xrcyA9IGRldm1fa21hbGxvY19hcnJheSgmcGRldi0+ZGV2LCB4ZGV2LT5udW1jbGtz
+LA0KPiA+ICsJCQkJCQlzaXplb2Yoc3RydWN0IGNsayAqKSwNCj4gPiArCQkJCQkJR0ZQX0tFUk5F
+TCk7DQo+ID4gKwkJaWYgKCF4ZGV2LT5jbGtzKQ0KPiA+ICsJCQlyZXR1cm4gLUVOT01FTTsNCj4g
+PiArDQo+ID4gKwkJZm9yIChpID0gMDsgaSA8IHhkZXYtPm51bWNsa3M7IGkrKykgew0KPiA+ICsJ
+CQlvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZ19pbmRleChwZGV2LT5kZXYub2Zfbm9kZSwNCj4gPiAr
+CQkJCQkJICAgICAgImNsb2NrLW5hbWVzIiwgaSwgJnN0cik7DQo+ID4gKwkJCXhkZXYtPmNsa3Nb
+aV0gPSBkZXZtX2Nsa19nZXQoeGRldi0+ZGV2LCBzdHIpOw0KPiA+ICsJCQlpZiAoSVNfRVJSKHhk
+ZXYtPmNsa3NbaV0pKSB7DQo+ID4gKwkJCQlpZiAoUFRSX0VSUih4ZGV2LT5jbGtzW2ldKSA9PSAt
+RU5PRU5UKQ0KPiA+ICsJCQkJCXhkZXYtPmNsa3NbaV0gPSBOVUxMOw0KPiA+ICsJCQkJZWxzZQ0K
+PiA+ICsJCQkJCXJldHVybiBQVFJfRVJSKHhkZXYtPmNsa3NbaV0pOw0KPiA+ICsJCQl9DQo+ID4g
+KwkJfQ0KPiA+ICsNCj4gPiArCQllcnIgPSB4ZG1hX2Nsa19pbml0KHhkZXYsIHRydWUpOw0KPiA+
+ICsJCWlmIChlcnIpDQo+ID4gKwkJCXJldHVybiBlcnI7DQo+ID4gKwl9DQo+IA0KPiBJIGd1ZXNz
+IHRoaXMgd29ya3MsIGJ1dCB0aGUgcmVsYXRpb24gdG8gdGhlIGJpbmRpbmcgaXMgYSBsaXR0bGUg
+bG9vc2UsIElNSE8uIEluc3RlYWQNCj4gb2YgdXNpbmcgdGhlIGNsb2NrIG5hbWVzIGZyb20gdGhl
+IGJpbmRpbmcgdGhpcyBpcyBqdXN0IHVzaW5nIHdoYXRldmVyIGlzIHByb3ZpZGVkDQo+IGluIERU
+IGFuZCBlbmFibGluZyBpdC4gQWxzbywgYWxsIHRoZSBjbG9ja3MgaGVyZSBhcmUgaGFuZGxlZCBh
+cyBvcHRpb25hbCBmZWF0dXJlLA0KPiB3aGlsZSBiaW5kaW5nIC0gYW5kIEkgZ3Vlc3MgcmVhbGl0
+eSB0b28gLSBoYXZlIHRoZW0gYXMgbWFuZGF0b3J5Lg0KPiBJdCB3b3VsZCBiZSBuaWNlciBpZiB0
+aGUgZHJpdmVyIHNwZWNpZmljYWxseSBhc2tzIGZvciB0aGUgY2xvY2tzIGl0IG5lZWRzIGFuZCBy
+ZXR1cm4NCj4gYW4gZXJyb3IgaWYgYSBtYW5kYXRvcnkgY2xvY2sgaXMgbWlzc2luZy4NCg0KSGVy
+ZSBETUEgY2hhbm5lbHMgYXJlIGNvbmZpZ3VyYWJsZSBJIG1lYW4gaWYgdXNlciBzZWxlY3Qgb25s
+eSBtbTJzIGNoYW5uZWwgdGhlbiB3ZSB3aWxsIGhhdmUNCk9ubHkgMyBjbG9ja3MuIElmIHVzZXIg
+c2VsZWN0cyBib3RoIG1tMnMgYW5kIHMybW0gY2hhbm5lbHMgd2Ugd2lsbCBoYXZlIDUgY2xvY2tz
+Lg0KVGhhdOKAmXMgd2h5IHJlYWRpbmcgdGhlIG51bWJlciBvZiBjbG9ja3MgZnJvbSB0aGUgY2xv
+Y2stbmFtZXMgcHJvcGVydHkuDQoNCkFuZCBhbHNvIHRoZSBBWEkgRE1BL0NETUEgSXAgc3VwcG9y
+dCBhbHNvIGdldHRpbmcgYWRkZWQgdG8gdGhpcyBkcml2ZXIgZm9yIHRob3NlIElQJ3MgYWxzbyB0
+aGUgY2xvY2tzIGFyZSBjb25maWd1cmFibGUNCkZvciBBWEkgRE1BIGl0IGlzIGVpdGhlciAzIG9y
+IDQgY2xvY2tzIGFuZCBmb3IgQVhJIENETUEgaXQgaXMgMiBjbG9ja3MuDQoNClRoYXQncyB3aHkg
+SSB0aG91Z2h0IGl0IGlzIHRoZSBwcm9wZXIgc29sdXRpb24uDQoNCklmIHlvdSBoYXZlIGFueSBi
+ZXR0ZXIgaWRlYSBwbGVhc2UgbGV0IG1lIGtub3cgd2lsbCB0cnkgaW4gdGhhdCB3YXkuLi4NCg0K
+UmVnYXJkcywNCktlZGFyLg0KPiANCj4gCVPDtnJlbg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
