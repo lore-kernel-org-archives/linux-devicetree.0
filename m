@@ -1,43 +1,47 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH V4 2/2] thermal: generic-adc: Add ADC based thermal
- sensor driver
-Date: Wed, 20 Apr 2016 16:43:23 -0700
-Message-ID: <20160420234322.GA2558@localhost.localdomain>
-References: <1461050521-6080-1-git-send-email-ldewangan@nvidia.com>
- <1461050521-6080-2-git-send-email-ldewangan@nvidia.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 04/14] ARM: dts: OMAP36xx: : DT spelling s/#address-cell/#address-cells/
+Date: Wed, 20 Apr 2016 18:46:45 -0500
+Message-ID: <CAL_JsqKSbGPKNZdZnowGpdF8zxXbh6g-wkq96+KmBNLwp7n=HQ@mail.gmail.com>
+References: <1461166339-11109-1-git-send-email-geert+renesas@glider.be> <1461166339-11109-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461050521-6080-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: jic23@kernel.org, robh@kernel.org, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1461166339-11109-5-git-send-email-geert+renesas@glider.be>
+Sender: linux-pci-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, Tony Lindgren <tony@atomide.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Joe Perches <joe@perches.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Laxman,
+On Wed, Apr 20, 2016 at 10:32 AM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/arm/boot/dts/omap36xx.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+> index ce1e242d4dc07ea8..8b797915300894d8 100644
+> --- a/arch/arm/boot/dts/omap36xx.dtsi
+> +++ b/arch/arm/boot/dts/omap36xx.dtsi
+> @@ -44,7 +44,7 @@
+>                 abb_mpu_iva: regulator-abb-mpu {
+>                         compatible = "ti,abb-v1";
+>                         regulator-name = "abb_mpu_iva";
+> -                       #address-cell = <0>;
+> +                       #address-cells = <0>;
 
-On Tue, Apr 19, 2016 at 12:52:01PM +0530, Laxman Dewangan wrote:
-> In some of platform, thermal sensors like NCT thermistors are
-> connected to the one of ADC channel. The temperature is read by
-> reading the voltage across the sensor resistance via ADC. Lookup
-> table for ADC read value to temperature is referred to get
-> temperature. ADC is read via IIO framework.
-> 
-> Add support for thermal sensor driver which read the voltage across
-> sensor resistance from ADC through IIO framework.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+dtc should flag this if it was really needed. However, it looks like
+it isn't as there are no child nodes (unless the board files add
+them).
 
-I really like this driver, as I mentioned  before. Just one comment
-though.
+A nice dtc check would be to flag unnecessary #address-cells or
+#size-cells. That would only help here after your fix though.
 
-> 
-> +
-> +	gti->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0,
-> +						      gti, &gadc_thermal_ops);
+Rob
 
-Why not using the devm_ version you introduced?
-
-Any particular reason?
-
+>                         #size-cells = <0>;
+>                         reg = <0x483072f0 0x8>, <0x48306818 0x4>;
+>                         reg-names = "base-address", "int-address";
+> --
+> 1.9.1
+>
