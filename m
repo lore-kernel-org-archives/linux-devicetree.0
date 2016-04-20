@@ -1,51 +1,38 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and
- cleanups
-Date: Wed, 20 Apr 2016 11:06:42 +0200
-Message-ID: <571746A2.8040609@schinagl.nl>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
- <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
- <57163252.5090000@schinagl.nl>
- <CAPybu_2uZqR4exnS08taVYyr=ziK+EzuJy+_FxhbtqSiOE_=mw@mail.gmail.com>
- <57172DFA.9030107@schinagl.nl>
- <CAPybu_2fys29MUTBCDPb+tpfCgbr9SL+LXq061Tq20_z7UO-Vg@mail.gmail.com>
- <5717430D.30702@schinagl.nl>
- <CAPybu_3=VdXR_X_00EiYMyhRPLsR40GW1kHS5rzdOkSzrCMVWg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_3=VdXR_X_00EiYMyhRPLsR40GW1kHS5rzdOkSzrCMVWg@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>
+From: Peng Fan <van.freenix@gmail.com>
+Subject: [PATCH V2 1/3] arm: dts: imx6qdl: add clocks property for ocotp node
+Date: Thu, 21 Apr 2016 01:26:15 +0800
+Message-ID: <1461173177-11930-1-git-send-email-van.freenix@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, van.freenix@gmail.com, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Add clocks property for ocotp node.
 
+Signed-off-by: Peng Fan <van.freenix@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+---
 
-On 20-04-16 10:56, Ricardo Ribalda Delgado wrote:
-> Hi
->
-> On Wed, Apr 20, 2016 at 10:51 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
->
->>> As I said before, the reason for this proposal is that the code NEVER
->>> clears PCA963X_MODE2_DMBLNK, only sets it.
->>> Unfortunately I do not have the HW to test this change.
->> The code never clears it, but the hardware does. So we have to set it
->> everytime we enable blink.
-> Ok, that was the part I was missing. I was not aware that the hw was
-> clearing it.
-The devil is in the details :)
-> Saving mode2 sounds like a good compromise then.
->
-> But I still believe that we should limit the lock to ledout. No matter
-> what we do, we cannot have two leds blinking at different frequencies
-> on the same chip.
-So to save a mutex a little bit, we take the risk that nobody else 
-enables the blink or if they do, enable it in the same way?
-If it saves so much, then I guess its worth the risk I suppose?
->
->
-> Regards
->
+V2:
+ none
+
+ arch/arm/boot/dts/imx6qdl.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index b42822a..6b2ef6c 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1100,6 +1100,7 @@
+ 			ocotp: ocotp@021bc000 {
+ 				compatible = "fsl,imx6q-ocotp", "syscon";
+ 				reg = <0x021bc000 0x4000>;
++				clocks = <&clks IMX6QDL_CLK_IIM>;
+ 			};
+ 
+ 			tzasc@021d0000 { /* TZASC1 */
+-- 
+2.6.6
