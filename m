@@ -1,62 +1,49 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] dmaengine: bcm2835: use platform_get_irq_byname
-Date: Wed, 20 Apr 2016 18:41:46 +0530
-Message-ID: <20160420131146.GA2274@localhost>
-References: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
- <1460381349-14408-3-git-send-email-kernel@martin.sperl.org>
- <CAMuHMdW2Jw5=f9ojNSM0d1cGvPc6_QxwH4rcQdWBQTP89zyj4Q@mail.gmail.com>
- <571762A7.7000005@martin.sperl.org>
- <CAMuHMdUgfyLrdmfHLHd3eNh79FcJarVPuhbxtU4XYZok=skLkw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/3] ARM: dts: lpc32xx: update ssp / spi nodes
+Date: Wed, 20 Apr 2016 09:20:57 -0400
+Message-ID: <1461158460-2946-1-git-send-email-slemieux.tyco@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUgfyLrdmfHLHd3eNh79FcJarVPuhbxtU4XYZok=skLkw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org
+Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 01:12:36PM +0200, Geert Uytterhoeven wrote:
-> Hi Martin,
-> 
-> On Wed, Apr 20, 2016 at 1:06 PM, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
-> > On 20.04.2016 08:51, Geert Uytterhoeven wrote:
-> >>
-> >> On Mon, Apr 11, 2016 at 3:29 PM,  <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
-> >>>
-> >>> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> >>>
-> >>> Use platform_get_irq_byname to allow for correct mapping of
-> >>> interrupts to dma channels.
-> >>>
-> >>> The currently implemented device tree is unfortunately
-> >>> implemented with the wrong assumption, that each dma-channel
-> >>> has its own dma channel, but dma-irq 11 is handling
-> >>> dma-channel 11-14 and dma-irq 12 is actually a "catch all"
-> >>> interrupt.
-> >>>
-> >>> So here we use the byname variant and require that interrupts
-> >>> are explicitly named via the interrupts-name property in the
-> >>
-> >> interrupt-names
+From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
 
-well spotted
+This patchset change the following:
+1) adds clock properties to spi peripheral devices,
+   clock ids are taken from dt-bindings/clock/lpc32xx-clock.h.
 
-> >
-> > Vinod has just merged this patch - do you want me to submit another
-> 
-> Yeah, that's how I noticed by accident :-)
-> 
-> > to correct those?
-> 
-> For the commit message it's indeed too late. For the error message in the
-> code, yes please.
+2) enable SSP0 used by PHY3250.
+   preparatory change prior to disabling SSPx controllers.
 
-I can drop the branch
+3) disable, by default, the SSP0/SPI1 and SSP1/SPI2 shared pinout;
+   shared pin should be enable in board specific dts, as needed.
+---
+Changes from v1 to v2:
+* Update the patch as per the feedback received from:
+  Arnd: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493250
+  - Start subject with "ARM" instead of "arm".
+  - Add a multi-line description for trivial patches.
+  Vladimir: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493323
+            http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493324
+  - Remove "clock-names" property.
+  - Switch patch #2 and #3 order.
+* Rebased on the following patch:
+  http://permalink.gmane.org/gmane.linux.drivers.devicetree/164584/
+
+Sylvain Lemieux (3):
+  ARM: dts: lpc32xx: add clock properties to spi nodes
+  ARM: dts: phy3250: enable ssp0
+  ARM: dts: lpc32xx: disabled ssp0/spi1 & ssp1/spi2 by default
+
+ arch/arm/boot/dts/lpc32xx.dtsi | 14 ++++++++++++++
+ arch/arm/boot/dts/phy3250.dts  |  1 +
+ 2 files changed, 15 insertions(+)
 
 -- 
-~Vinod
+1.8.3.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
