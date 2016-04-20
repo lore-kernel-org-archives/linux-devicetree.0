@@ -1,20 +1,22 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Vladimir Zapolskiy <vz@mleia.com>
 Subject: Re: [PATCH 1/2] crypto: s5p-sss - Fix use after free of copied input
  buffer in error path
-Date: Wed, 20 Apr 2016 17:59:02 +0800
-Message-ID: <20160420095902.GD3003@gondor.apana.org.au>
+Date: Wed, 20 Apr 2016 13:03:43 +0300
+Message-ID: <571753FF.9080405@mleia.com>
 References: <1461073452-10426-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
 In-Reply-To: <1461073452-10426-1-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-crypto-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Vladimir Zapolskiy <vz@mleia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 03:44:11PM +0200, Krzysztof Kozlowski wrote:
+Hi Krzysztof,
+
+On 19.04.2016 16:44, Krzysztof Kozlowski wrote:
 > The driver makes copies of memory (input or output scatterlists) if they
 > are not aligned. In s5p_aes_crypt_start() error path (on unsuccessful
 > initialization of output scatterlist), if input scatterlist was not
@@ -31,8 +33,29 @@ On Tue, Apr 19, 2016 at 03:44:11PM +0200, Krzysztof Kozlowski wrote:
 > Fixes: 9e4a1100a445 ("crypto: s5p-sss - Handle unaligned buffers")
 > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Both applied.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+I see that Herbert have just applied the changes, but anyway I reviewed
+them and they are good in my opinion.
+
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
+
+> ---
+>  drivers/crypto/s5p-sss.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+> index 4f6d5b3ec418..b0484d4d68d9 100644
+> --- a/drivers/crypto/s5p-sss.c
+> +++ b/drivers/crypto/s5p-sss.c
+> @@ -577,7 +577,6 @@ static void s5p_aes_crypt_start(struct s5p_aes_dev *dev, unsigned long mode)
+>  	return;
+>  
+>  outdata_error:
+> -	s5p_free_sg_cpy(dev, &dev->sg_src_cpy);
+>  	s5p_unset_indata(dev);
+>  
+>  indata_error:
+> 
+
+--
+With best wishes,
+Vladimir
