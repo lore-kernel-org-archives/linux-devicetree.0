@@ -1,64 +1,47 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] arm64: spin-table: add missing of_node_put()
-Date: Wed, 20 Apr 2016 10:17:55 +0100
-Message-ID: <20160420091755.GC30601@arm.com>
-References: <1461115411-2843-1-git-send-email-yamada.masahiro@socionext.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
+Date: Wed, 20 Apr 2016 11:17:38 +0200
+Message-ID: <CAPybu_2WXdGck_FtW2MQEiPU-oXA6yz8W3jGkUnABfbir82Jdg@mail.gmail.com>
+References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
+ <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
+ <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
+ <57163252.5090000@schinagl.nl> <CAPybu_2uZqR4exnS08taVYyr=ziK+EzuJy+_FxhbtqSiOE_=mw@mail.gmail.com>
+ <57172DFA.9030107@schinagl.nl> <CAPybu_2fys29MUTBCDPb+tpfCgbr9SL+LXq061Tq20_z7UO-Vg@mail.gmail.com>
+ <5717430D.30702@schinagl.nl> <CAPybu_3=VdXR_X_00EiYMyhRPLsR40GW1kHS5rzdOkSzrCMVWg@mail.gmail.com>
+ <571746A2.8040609@schinagl.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461115411-2843-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <571746A2.8040609@schinagl.nl>
+Sender: linux-leds-owner@vger.kernel.org
+To: Olliver Schinagl <oliver@schinagl.nl>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 10:23:31AM +0900, Masahiro Yamada wrote:
-> Since of_get_cpu_node() increments refcount, the node should be put.
+Hello again
 
-Urgh, I really hate the dt refcounting stuff.
+On Wed, Apr 20, 2016 at 11:06 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  arch/arm64/kernel/smp_spin_table.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/smp_spin_table.c b/arch/arm64/kernel/smp_spin_table.c
-> index aef3605..18a71bc 100644
-> --- a/arch/arm64/kernel/smp_spin_table.c
-> +++ b/arch/arm64/kernel/smp_spin_table.c
-> @@ -52,6 +52,7 @@ static void write_pen_release(u64 val)
->  static int smp_spin_table_cpu_init(unsigned int cpu)
->  {
->  	struct device_node *dn;
-> +	int ret;
->  
->  	dn = of_get_cpu_node(cpu, NULL);
->  	if (!dn)
-> @@ -60,15 +61,15 @@ static int smp_spin_table_cpu_init(unsigned int cpu)
->  	/*
->  	 * Determine the address from which the CPU is polling.
->  	 */
-> -	if (of_property_read_u64(dn, "cpu-release-addr",
-> -				 &cpu_release_addr[cpu])) {
-> +	ret = of_property_read_u64(dn, "cpu-release-addr",
-> +				   &cpu_release_addr[cpu]);
-> +	if (ret)
->  		pr_err("CPU %d: missing or invalid cpu-release-addr property\n",
->  		       cpu);
->  
-> -		return -1;
-> -	}
-> +	of_node_put(dn);
->  
-> -	return 0;
-> +	return ret;
+> The devil is in the details :)
+:)
+>>
+>> Saving mode2 sounds like a good compromise then.
+>>
+>> But I still believe that we should limit the lock to ledout. No matter
+>> what we do, we cannot have two leds blinking at different frequencies
+>> on the same chip.
+>
+> So to save a mutex a little bit, we take the risk that nobody else enables
+> the blink or if they do, enable it in the same way?
+> If it saves so much, then I guess its worth the risk I suppose?
+
+Give me a day to go through the chip doc and see if I can find a good
+compromise, that at least warranties that the leds that are enable
+stay enabled ;)
+
+Regards!
 
 
-Looks ok to me. The slight change in return code should be harmless for
-->cpu_init.
 
-Acked-by: Will Deacon <will.deacon@arm.com>
-
-Will
+-- 
+Ricardo Ribalda
