@@ -1,48 +1,69 @@
-From: Ivan Ivanov <iivanov.xz@gmail.com>
-Subject: Re: regression: 3a878c430fd6 ("tty: serial: msm: Add TX DMA support") drops data
-Date: Wed, 20 Apr 2016 09:07:19 +0300
-Message-ID: <EEBBF78A-33BB-4ACD-8CBF-285E1149FB9F@gmail.com>
-References: <5716BDF1.1010407@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5716BDF1.1010407@gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, srinivas.kandagatla@linaro.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jslaby@suse.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: pxa: add pxa25x device-tree support
+Date: Wed, 20 Apr 2016 08:37:26 +0200
+Message-ID: <871t60u6op.fsf@belgarion.home>
+References: <1460316600-15978-1-git-send-email-robert.jarzmik@free.fr>
+	<1460316600-15978-2-git-send-email-robert.jarzmik@free.fr>
+	<5954693.SgGqqDgWJO@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-> On Apr 20, 2016, at 02:23, Frank Rowand <frowand.list@gmail.com> wrot=
-e:
->=20
-> Hi Ivan,
->=20
-> It appears that I have found a regression caused by
-> 3a878c430fd6 ("tty: serial: msm: Add TX DMA support").
->=20
-> When I cat a file slightly larger than 126000 bytes on
-> the console, viewed via minicom connected to the serial
-> port, I am losing random chunks of data, almost always
-> three bytes in length.  I have also seen a lost chunk
-> of two bytes.
->=20
-> I am using the 8074 dragonboard, with the dts of
-> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts.
-> The dts node is serial@f991e000, which has a
-> compatible of "qcom,msm-uartdm-v1.4", so is_uartdm
-> should be UARTDM_1P4.
+> On Sunday 10 April 2016 21:29:59 Robert Jarzmik wrote:
+>> +
+>> +DT_MACHINE_START(PXA_DT, "Marvell PXA3xx (Device Tree Support)")
+>> +       .map_io         = pxa3xx_map_io,
+>> +       .init_irq       = pxa3xx_dt_init_irq,
+>> +       .handle_irq     = pxa3xx_handle_irq,
+>> +       .restart        = pxa_restart,
+>> +       .dt_compat      = pxa3xx_dt_board_compat,
+>> +MACHINE_END
+>> 
+>
+> Nothing wrong with your series, it's a straightforward continuation of what
+> you have for the other platforms, but I have a few comments on the method
+> overall, and it might be good if you could work on improving those next,
+> basically eliminating most of the machine descriptor contents in the long
+> run:
+>
+> - It would be nice not to call map_io() at all and instead ensure that all
+>   drivers that have DT bindings use ioremap. The main reason for this is
+>   that relying on the hardwired mapping makes it easy to get things wrong
+>   in the bindings, by leaving out required memory ranges.
+Okay, that sounds good, I'll add it to my todo list.
+I seem to remember some legacy driver relying on one of these mapping (cpufreq
+for pxa relying on memory controller maybe ...), but that's a fix easy enough to
+queue. Let's hope I'm not bitten by something else.
 
-I don=E2=80=99t remember what was biggest chunk, which DMA
-could carry, sorry. Are you using DMA or just PIO?=20
-Is this happening only with cat and terminal or even
-when you send data in other means. I believe that=20
-people from Linaro could help you better.
+> - The init_irq()/handle_irq() callbacks can probably be replaced with
+>   a IRQCHIP_DECLARE() statement per irqchip variant, which then goes
+>   on to initialize the controller and set the handler.
+Okay, I'll verify that, especially that the ordering is ensured, ie. that
+interrupts are available at the same time that when it was the machine code
+calling the irq init, and that's also going to my todo list.
 
-Regards,
-Ivan--
-To unsubscribe from this list: send the line "unsubscribe linux-arm-msm=
-" in
-the body of a message to majordomo@vger.kernel.org
+>
+> - The restart method is the least important here, but I guess we can
+>   convert that into a driver, or use an existing one from DT, like
+>   drivers/power/reset/gpio-restart.c
+I think most of the required stuff is already done. The only remaining part is
+the reset status clearing specific to pxa, which as you said would ask for a
+very tiny driver.
+
+As soon as I'm done with the ac97 rework and if no v4l2 pressure is applied to
+pxa, I'll work on this and the MMP to pinctrl conversion.
+
+Thanks for the comments, and cheers.
+
+--
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
