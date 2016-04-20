@@ -1,56 +1,70 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [alsa-devel] [PATCH 0/4] ASoC: add graph base connection on
- simple-card
-Date: Wed, 20 Apr 2016 18:18:55 +0200
-Message-ID: <20160420181855.38a9dc6dfb4eaeb538a7d5ee@free.fr>
-References: <871t68wxxe.wl%kuninori.morimoto.gx@renesas.com>
-	<20160414110128.56a0da97d526cdcb8d5f1ddf@free.fr>
-	<87h9f3jq3m.wl%kuninori.morimoto.gx@renesas.com>
-	<87fuunjkio.wl%kuninori.morimoto.gx@renesas.com>
-	<20160415133158.9c5c0dc7367325606c53ce17@free.fr>
-	<87r3e3ej5t.wl%kuninori.morimoto.gx@renesas.com>
-	<20160418093827.65b9f8a5bd2ec17cde2e7b5b@free.fr>
-	<87shyhngdd.wl%kuninori.morimoto.gx@renesas.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: regression: 3a878c430fd6 ("tty: serial: msm: Add TX DMA support")
+ drops data
+Date: Wed, 20 Apr 2016 09:48:10 -0700
+Message-ID: <5717B2CA.3020206@gmail.com>
+References: <5716BDF1.1010407@gmail.com> <EEBBF78A-33BB-4ACD-8CBF-285E1149FB9F@gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <87shyhngdd.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Brown <broonie@kernel.org>, Laurent <laurent.pinchart@ideasonboard.com>, Lars-Peter Clausen <lars@metafoo.de>, Jose Abreu <Jose.Abreu@synopsys.com>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon <horms@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <EEBBF78A-33BB-4ACD-8CBF-285E1149FB9F-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Ivanov <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, jslaby-IBi9RG/b67k@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Apr 2016 02:55:39 +0000
-Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote:
+On 4/19/2016 11:07 PM, Ivan Ivanov wrote:
+>=20
+>> On Apr 20, 2016, at 02:23, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
+te:
+>>
+>> Hi Ivan,
+>>
+>> It appears that I have found a regression caused by
+>> 3a878c430fd6 ("tty: serial: msm: Add TX DMA support").
+>>
+>> When I cat a file slightly larger than 126000 bytes on
+>> the console, viewed via minicom connected to the serial
+>> port, I am losing random chunks of data, almost always
+>> three bytes in length.  I have also seen a lost chunk
+>> of two bytes.
+>>
+>> I am using the 8074 dragonboard, with the dts of
+>> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts.
+>> The dts node is serial@f991e000, which has a
+>> compatible of "qcom,msm-uartdm-v1.4", so is_uartdm
+>> should be UARTDM_1P4.
+>=20
+> I don=E2=80=99t remember what was biggest chunk, which DMA
+> could carry, sorry. Are you using DMA or just PIO?=20
+> Is this happening only with cat and terminal or even
+> when you send data in other means. I believe that=20
+> people from Linaro could help you better.
 
-> I could understand your idea,
-> and had read previous some discussions.
-> I would like to have it on upstream too.
-> Can you show me about your plan for next step ?
+I assumed you would be the person who would have the
+information and would be able to help maintain the
+code in question since you submitted this not small
+patch.  Do you have a pointer to the hardware
+documentation of the DMA and uart?  Who at Linaro
+are you suggesting?
 
-Hi Kuninori,
+Thanks for the questions, I'll look into them today.
 
-I have no plan.
-My Cubox machine has too many specific code and it is used in an organ
-as the sound synthesizer. I will not do any more development in its
-kernel.
-In my new machine, an Orange PI 2, while audio on HDMI is working for
-me, there is still a lot of job to do aside (YUV video, analog
-audio, embedded wifi...) and I am blocked by the HDMI driver which has
-no free license nor documentation about the hardware. So, I have not
-submitted yet a patch series about audio for this machine.
+One more observation that may provide an insight:
+if I cat a file multiple times, the location of
+the dropped chunks varies.
 
-Otherwise, if you read the previous discussions, I think the most
-important is Mark's remark (Sat, 7 Feb 2015 16:33:55 +0800 in the
-alsa-devel mailing-list):
+In further testing I also found examples of single
+bytes lost.
 
-> We already have simple-card to provide a binding for trivial
-> systems and don't want to end up with a never ending series of slight=
-ly
-> more complicated bindings which each cover slightly different sets of
-> systems in ways that users struggle to differentiate between.
+Thanks,
 
---=20
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+=46rank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
