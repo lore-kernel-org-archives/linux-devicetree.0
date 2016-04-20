@@ -1,92 +1,51 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v2 2/2] dmaengine: vdma: Add clock support
-Date: Wed, 20 Apr 2016 07:36:22 -0700
-Message-ID: <20160420143622.GP7128@xsjsorenbubuntu>
-References: <1461152599-28858-1-git-send-email-appanad@xilinx.com>
- <1461152599-28858-2-git-send-email-appanad@xilinx.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 20 Apr 2016 07:45:45 -0700
+Message-ID: <20160420144545.GE5995@atomide.com>
+References: <20160416105711.5310d2d0@bbrezillon>
+ <5714D3A4.2050405@ti.com>
+ <5714D8AA.9040304@ti.com>
+ <20160418151305.17a42437@bbrezillon>
+ <5714E5AA.5050200@ti.com>
+ <20160418161001.2a1c0bed@bbrezillon>
+ <5714F185.5080103@ti.com>
+ <20160418165755.77d1d661@bbrezillon>
+ <5716289B.4060302@ti.com>
+ <20160419221129.59b559fb@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1461152599-28858-2-git-send-email-appanad@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: mark.rutland@arm.com, moritz.fischer@ettus.com, anirudh@xilinx.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, vinod.koul@intel.com, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, galak@codeaurora.org, dmaengine@vger.kernel.org, punnaia@xilinx.com, dan.j.williams@intel.com, appanad@xilinx.com, shubhraj@xilinx.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20160419221129.59b559fb@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE2LTA0LTIwIGF0IDE3OjEzOjE5ICswNTMwLCBLZWRhcmVzd2FyYSByYW8gQXBw
-YW5hIHdyb3RlOgo+IEFkZGVkIGJhc2ljIGNsb2NrIHN1cHBvcnQuIFRoZSBjbG9ja3MgYXJlIHJl
-cXVlc3RlZCBhdCBwcm9iZQo+IGFuZCByZWxlYXNlZCBhdCByZW1vdmUuCj4gCj4gU2lnbmVkLW9m
-Zi1ieTogS2VkYXJlc3dhcmEgcmFvIEFwcGFuYSA8YXBwYW5hZEB4aWxpbnguY29tPgo+IC0tLQo+
-IENoYW5nZXMgZm9yIHYyOgo+IC0tPiBOb25lLgo+IAo+ICBkcml2ZXJzL2RtYS94aWxpbngveGls
-aW54X3ZkbWEuYyB8IDU2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysK
-PiAgMSBmaWxlIGNoYW5nZWQsIDU2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9kbWEveGlsaW54L3hpbGlueF92ZG1hLmMgYi9kcml2ZXJzL2RtYS94aWxpbngveGlsaW54
-X3ZkbWEuYwo+IGluZGV4IDcwY2FlYTYuLmQ1MjYwMjkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9k
-bWEveGlsaW54L3hpbGlueF92ZG1hLmMKPiArKysgYi9kcml2ZXJzL2RtYS94aWxpbngveGlsaW54
-X3ZkbWEuYwo+IEBAIC00NCw2ICs0NCw3IEBACj4gICNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9y
-bS5oPgo+ICAjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9zbGFi
-Lmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiAgCj4gICNpbmNsdWRlICIuLi9kbWFlbmdp
-bmUuaCIKPiAgCj4gQEAgLTM1Miw2ICszNTMsOCBAQCBzdHJ1Y3QgeGlsaW54X2RtYV9jaGFuIHsK
-PiAgICogQGZsdXNoX29uX2ZzeW5jOiBGbHVzaCBvbiBmcmFtZSBzeW5jCj4gICAqIEBleHRfYWRk
-cjogSW5kaWNhdGVzIDY0IGJpdCBhZGRyZXNzaW5nIGlzIHN1cHBvcnRlZCBieSBkbWEgZGV2aWNl
-Cj4gICAqIEBkbWF0eXBlOiBETUEgaXAgdHlwZQo+ICsgKiBAY2xrczoJcG9pbnRlciB0byBhcnJh
-eSBvZiBjbG9ja3MKPiArICogQG51bWNsa3M6CW51bWJlciBvZiBjbG9ja3MgYXZhaWxhYmxlCj4g
-ICAqLwo+ICBzdHJ1Y3QgeGlsaW54X2RtYV9kZXZpY2Ugewo+ICAJdm9pZCBfX2lvbWVtICpyZWdz
-Owo+IEBAIC0zNjIsNiArMzY1LDggQEAgc3RydWN0IHhpbGlueF9kbWFfZGV2aWNlIHsKPiAgCXUz
-MiBmbHVzaF9vbl9mc3luYzsKPiAgCWJvb2wgZXh0X2FkZHI7Cj4gIAllbnVtIHhkbWFfaXBfdHlw
-ZSBkbWF0eXBlOwo+ICsJc3RydWN0IGNsayAqKmNsa3M7Cj4gKwlpbnQgbnVtY2xrczsKPiAgfTsK
-PiAgCj4gIC8qIE1hY3JvcyAqLwo+IEBAIC0xNzMxLDYgKzE3MzYsMjYgQEAgaW50IHhpbGlueF92
-ZG1hX2NoYW5uZWxfc2V0X2NvbmZpZyhzdHJ1Y3QgZG1hX2NoYW4gKmRjaGFuLAo+ICB9Cj4gIEVY
-UE9SVF9TWU1CT0woeGlsaW54X3ZkbWFfY2hhbm5lbF9zZXRfY29uZmlnKTsKPiAgCj4gK3N0YXRp
-YyBpbnQgeGRtYV9jbGtfaW5pdChzdHJ1Y3QgeGlsaW54X2RtYV9kZXZpY2UgKnhkZXYsIGJvb2wg
-ZW5hYmxlKQo+ICt7Cj4gKwlpbnQgaSA9IDAsIHJldDsKPiArCj4gKwlmb3IgKGkgPSAwOyBpIDwg
-eGRldi0+bnVtY2xrczsgaSsrKSB7Cj4gKwkJaWYgKGVuYWJsZSkgewo+ICsJCQlyZXQgPSBjbGtf
-cHJlcGFyZV9lbmFibGUoeGRldi0+Y2xrc1tpXSk7Cj4gKwkJCWlmIChyZXQpIHsKPiArCQkJCWRl
-dl9lcnIoeGRldi0+ZGV2LAo+ICsJCQkJCSJmYWlsZWQgdG8gZW5hYmxlIHRoZSBheGlkbWEgY2xv
-Y2tcbiIpOwo+ICsJCQkJcmV0dXJuIHJldDsKPiArCQkJfQo+ICsJCX0gZWxzZSB7Cj4gKwkJCWNs
-a19kaXNhYmxlX3VucHJlcGFyZSh4ZGV2LT5jbGtzW2ldKTsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJ
-cmV0dXJuIDA7Cj4gK30KPiArCj4gIC8qIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gICAqIFByb2Jl
-IGFuZCByZW1vdmUKPiAgICovCj4gQEAgLTE5MTksNiArMTk0NCw3IEBAIHN0YXRpYyBpbnQgeGls
-aW54X2RtYV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJc3RydWN0IHJl
-c291cmNlICppbzsKPiAgCXUzMiBudW1fZnJhbWVzLCBhZGRyX3dpZHRoOwo+ICAJaW50IGksIGVy
-cjsKPiArCWNvbnN0IGNoYXIgKnN0cjsKPiAgCj4gIAkvKiBBbGxvY2F0ZSBhbmQgaW5pdGlhbGl6
-ZSB0aGUgRE1BIGVuZ2luZSBzdHJ1Y3R1cmUgKi8KPiAgCXhkZXYgPSBkZXZtX2t6YWxsb2MoJnBk
-ZXYtPmRldiwgc2l6ZW9mKCp4ZGV2KSwgR0ZQX0tFUk5FTCk7Cj4gQEAgLTE5NjUsNiArMTk5MSwz
-MiBAQCBzdGF0aWMgaW50IHhpbGlueF9kbWFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikKPiAgCS8qIFNldCB0aGUgZG1hIG1hc2sgYml0cyAqLwo+ICAJZG1hX3NldF9tYXNrKHhk
-ZXYtPmRldiwgRE1BX0JJVF9NQVNLKGFkZHJfd2lkdGgpKTsKPiAgCj4gKwl4ZGV2LT5udW1jbGtz
-ID0gb2ZfcHJvcGVydHlfY291bnRfc3RyaW5ncyhwZGV2LT5kZXYub2Zfbm9kZSwKPiArCQkJCQkJ
-ICAiY2xvY2stbmFtZXMiKTsKPiArCWlmICh4ZGV2LT5udW1jbGtzID4gMCkgewo+ICsJCXhkZXYt
-PmNsa3MgPSBkZXZtX2ttYWxsb2NfYXJyYXkoJnBkZXYtPmRldiwgeGRldi0+bnVtY2xrcywKPiAr
-CQkJCQkJc2l6ZW9mKHN0cnVjdCBjbGsgKiksCj4gKwkJCQkJCUdGUF9LRVJORUwpOwo+ICsJCWlm
-ICgheGRldi0+Y2xrcykKPiArCQkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJCWZvciAoaSA9IDA7
-IGkgPCB4ZGV2LT5udW1jbGtzOyBpKyspIHsKPiArCQkJb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmdf
-aW5kZXgocGRldi0+ZGV2Lm9mX25vZGUsCj4gKwkJCQkJCSAgICAgICJjbG9jay1uYW1lcyIsIGks
-ICZzdHIpOwo+ICsJCQl4ZGV2LT5jbGtzW2ldID0gZGV2bV9jbGtfZ2V0KHhkZXYtPmRldiwgc3Ry
-KTsKPiArCQkJaWYgKElTX0VSUih4ZGV2LT5jbGtzW2ldKSkgewo+ICsJCQkJaWYgKFBUUl9FUlIo
-eGRldi0+Y2xrc1tpXSkgPT0gLUVOT0VOVCkKPiArCQkJCQl4ZGV2LT5jbGtzW2ldID0gTlVMTDsK
-PiArCQkJCWVsc2UKPiArCQkJCQlyZXR1cm4gUFRSX0VSUih4ZGV2LT5jbGtzW2ldKTsKPiArCQkJ
-fQo+ICsJCX0KPiArCj4gKwkJZXJyID0geGRtYV9jbGtfaW5pdCh4ZGV2LCB0cnVlKTsKPiArCQlp
-ZiAoZXJyKQo+ICsJCQlyZXR1cm4gZXJyOwo+ICsJfQoKSSBndWVzcyB0aGlzIHdvcmtzLCBidXQg
-dGhlIHJlbGF0aW9uIHRvIHRoZSBiaW5kaW5nIGlzIGEgbGl0dGxlIGxvb3NlLApJTUhPLiBJbnN0
-ZWFkIG9mIHVzaW5nIHRoZSBjbG9jayBuYW1lcyBmcm9tIHRoZSBiaW5kaW5nIHRoaXMgaXMganVz
-dAp1c2luZyB3aGF0ZXZlciBpcyBwcm92aWRlZCBpbiBEVCBhbmQgZW5hYmxpbmcgaXQuIEFsc28s
-IGFsbCB0aGUgY2xvY2tzCmhlcmUgYXJlIGhhbmRsZWQgYXMgb3B0aW9uYWwgZmVhdHVyZSwgd2hp
-bGUgYmluZGluZyAtIGFuZCBJIGd1ZXNzCnJlYWxpdHkgdG9vIC0gaGF2ZSB0aGVtIGFzIG1hbmRh
-dG9yeS4KSXQgd291bGQgYmUgbmljZXIgaWYgdGhlIGRyaXZlciBzcGVjaWZpY2FsbHkgYXNrcyBm
-b3IgdGhlIGNsb2NrcyBpdApuZWVkcyBhbmQgcmV0dXJuIGFuIGVycm9yIGlmIGEgbWFuZGF0b3J5
-IGNsb2NrIGlzIG1pc3NpbmcuCgoJU8O2cmVuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+* Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> [160419 13:13]:
+> On Tue, 19 Apr 2016 15:46:19 +0300
+> Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> 
+> > 
+> > After all the changes we discussed in [1] I was able to test nand/next-with-gpmc-rework
+> > and it worked fine.
+> > 
+> > [1] - http://thread.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/22596/focus=22936
+> > 
+> > I'd be happy to test the branch again after you've incorporated all changes.
+> 
+> Just pushed what's supposed to be my new nand/next into
+> nand/next-with-gpmc-rework, can you test it? I'll push it to nand/next
+> once I have your confirmation that everything is good.
+
+Looks good to me too, merges fine with my for-next and still
+works for me.
+
+Thanks,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
