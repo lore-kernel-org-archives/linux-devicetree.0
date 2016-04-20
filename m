@@ -1,39 +1,118 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH 2/2] dmaengine: vdma: Add clock support
-Date: Wed, 20 Apr 2016 11:39:02 -0700
-Message-ID: <CAAtXAHd=QER9ukD8LKpHCGdmsv=MzJ4bxkvWVEatpfUhsh98SQ@mail.gmail.com>
-References: <1461136800-20334-1-git-send-email-appanad@xilinx.com>
-	<1461136800-20334-2-git-send-email-appanad@xilinx.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: NS2 secondary core enablement via PSCI
+Date: Wed, 20 Apr 2016 12:05:14 -0700
+Message-ID: <5717D2EA.4030900@broadcom.com>
+References: <1461174002-18178-1-git-send-email-luke.starrett@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461136800-20334-2-git-send-email-appanad@xilinx.com>
+In-Reply-To: <1461174002-18178-1-git-send-email-luke.starrett@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Luis de Bethencourt <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org
+To: Luke Starrett <luke.starrett@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Looks good while we are using PSCI-1.0
 
-thanks for looking into this.
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 
-On Wed, Apr 20, 2016 at 12:20 AM, Kedareswara rao Appana
-<appana.durga.rao@xilinx.com> wrote:
-
-> +static int xdma_clk_init(struct xilinx_dma_device *xdev, bool enable)
-> +{
-> +       int i = 0, ret;
+On 16-04-20 10:40 AM, Luke Starrett wrote:
+> Declare PSCI-1.0 node and enable CPU_ON method via PSCI.  Spin-table
+> memreserve has been removed as well as syscon based reset, as PSCI-1.0
+> expects reset implementation in firmware.
+>
+> Signed-off-by: Luke Starrett <luke.starrett@broadcom.com>
+> ---
+>
+> Changes from v1:
+>   - No code changes, adding missing reviewers to CC list
+>
+>   arch/arm64/boot/dts/broadcom/ns2.dtsi | 31 +++++++++----------------------
+>   1 file changed, 9 insertions(+), 22 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> index 123cd9c..ec68ec1 100644
+> --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> @@ -33,8 +33,6 @@
+>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/clock/bcm-ns2.h>
+>
+> -/memreserve/ 0x84b00000 0x00000008;
+> -
+>   / {
+>   	compatible = "brcm,ns2";
+>   	interrupt-parent = <&gic>;
+> @@ -49,8 +47,7 @@
+>   			device_type = "cpu";
+>   			compatible = "arm,cortex-a57", "arm,armv8";
+>   			reg = <0 0>;
+> -			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x84b00000>;
+> +			enable-method = "psci";
+>   			next-level-cache = <&CLUSTER0_L2>;
+>   		};
+>
+> @@ -58,8 +55,7 @@
+>   			device_type = "cpu";
+>   			compatible = "arm,cortex-a57", "arm,armv8";
+>   			reg = <0 1>;
+> -			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x84b00000>;
+> +			enable-method = "psci";
+>   			next-level-cache = <&CLUSTER0_L2>;
+>   		};
+>
+> @@ -67,8 +63,7 @@
+>   			device_type = "cpu";
+>   			compatible = "arm,cortex-a57", "arm,armv8";
+>   			reg = <0 2>;
+> -			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x84b00000>;
+> +			enable-method = "psci";
+>   			next-level-cache = <&CLUSTER0_L2>;
+>   		};
+>
+> @@ -76,8 +71,7 @@
+>   			device_type = "cpu";
+>   			compatible = "arm,cortex-a57", "arm,armv8";
+>   			reg = <0 3>;
+> -			enable-method = "spin-table";
+> -			cpu-release-addr = <0 0x84b00000>;
+> +			enable-method = "psci";
+>   			next-level-cache = <&CLUSTER0_L2>;
+>   		};
+>
+> @@ -86,6 +80,11 @@
+>   		};
+>   	};
+>
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
 > +
-> +       for (i = 0; i < xdev->numclks; i++) {
-> +               if (enable) {
-> +                       ret = clk_prepare_enable(xdev->clks[i]);
-> +                       if (ret) {
-> +                               dev_err(xdev->dev,
-> +                                       "failed to enable the axidma clock\n");
-> +                               return ret;
-
-What happens to the ones you already turned on, if say the third fails?
-
-Cheers,
-
-Moritz
+>   	timer {
+>   		compatible = "arm,armv8-timer";
+>   		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_RAW(0xff) |
+> @@ -252,18 +251,6 @@
+>   			mmu-masters;
+>   		};
+>
+> -		crmu: crmu@65024000 {
+> -			compatible = "syscon";
+> -			reg = <0x65024000 0x100>;
+> -		};
+> -
+> -		reboot@65024000 {
+> -			compatible ="syscon-reboot";
+> -			regmap = <&crmu>;
+> -			offset = <0x90>;
+> -			mask = <0xfffffffd>;
+> -		};
+> -
+>   		gic: interrupt-controller@65210000 {
+>   			compatible = "arm,gic-400";
+>   			#interrupt-cells = <3>;
+>
