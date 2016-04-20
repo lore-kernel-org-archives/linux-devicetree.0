@@ -1,166 +1,29 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 5/7] arm64/perf: Access pmu register using
- <read/write>_sys_reg
-Date: Wed, 20 Apr 2016 12:12:39 +0100
-Message-ID: <20160420111239.GF11453@leverpostej>
-References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
- <1461092062-7484-6-git-send-email-ashoks@broadcom.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: DT: vdma: Add clock support for vdma
+Date: Wed, 20 Apr 2016 13:15:27 +0200
+Message-ID: <571764CF.6070003@metafoo.de>
+References: <1461136800-20334-1-git-send-email-appanad@xilinx.com>
+ <CAKfKVtEkfnDqU476troXmCw20ATvQvj-JdPX-BCuPDR-9ZxKHQ@mail.gmail.com>
+ <C246CAC1457055469EF09E3A7AC4E11A4A578F73@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1461092062-7484-6-git-send-email-ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A578F73-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 11:54:20AM -0700, Ashok Kumar wrote:
-> changed pmu register access to make use of <read/write>_sys_reg
-> from sysreg.h instead of accessing them directly.
+On 04/20/2016 10:39 AM, Appana Durga Kedareswara Rao wrote:
+[...]
+>> however  we should keep the names same as the TRM.
 > 
-> Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/kernel/perf_event.c | 33 ++++++++++++++++-----------------
->  1 file changed, 16 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index 2ee61e8..86790d2 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -22,6 +22,7 @@
->  #include <asm/irq_regs.h>
->  #include <asm/perf_event.h>
->  #include <asm/virt.h>
-> +#include <asm/sysreg.h>
+> Why?? Why can't we use simple convenient names that refers to equivalent clocks of h/w 
 
-Please move this between the includes of <asm/perf_event.h> and
-<asm/virt.h>, so as to keep them in alphabetical order.
-
-Otherwise, this looks like a nice cleanup!
-
-With that fixed up:
-
-Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Mark.
-
->  
->  #include <linux/of.h>
->  #include <linux/perf/arm_pmu.h>
-> @@ -476,16 +477,14 @@ static const struct attribute_group *armv8_pmuv3_attr_groups[] = {
->  
->  static inline u32 armv8pmu_pmcr_read(void)
->  {
-> -	u32 val;
-> -	asm volatile("mrs %0, pmcr_el0" : "=r" (val));
-> -	return val;
-> +	return read_sysreg(pmcr_el0);
->  }
->  
->  static inline void armv8pmu_pmcr_write(u32 val)
->  {
->  	val &= ARMV8_PMU_PMCR_MASK;
->  	isb();
-> -	asm volatile("msr pmcr_el0, %0" :: "r" (val));
-> +	write_sysreg(val, pmcr_el0);
->  }
->  
->  static inline int armv8pmu_has_overflowed(u32 pmovsr)
-> @@ -507,7 +506,7 @@ static inline int armv8pmu_counter_has_overflowed(u32 pmnc, int idx)
->  static inline int armv8pmu_select_counter(int idx)
->  {
->  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
-> -	asm volatile("msr pmselr_el0, %0" :: "r" (counter));
-> +	write_sysreg(counter, pmselr_el0);
->  	isb();
->  
->  	return idx;
-> @@ -524,9 +523,9 @@ static inline u32 armv8pmu_read_counter(struct perf_event *event)
->  		pr_err("CPU%u reading wrong counter %d\n",
->  			smp_processor_id(), idx);
->  	else if (idx == ARMV8_IDX_CYCLE_COUNTER)
-> -		asm volatile("mrs %0, pmccntr_el0" : "=r" (value));
-> +		value = read_sysreg(pmccntr_el0);
->  	else if (armv8pmu_select_counter(idx) == idx)
-> -		asm volatile("mrs %0, pmxevcntr_el0" : "=r" (value));
-> +		value = read_sysreg(pmxevcntr_el0);
->  
->  	return value;
->  }
-> @@ -548,47 +547,47 @@ static inline void armv8pmu_write_counter(struct perf_event *event, u32 value)
->  		 */
->  		u64 value64 = 0xffffffff00000000ULL | value;
->  
-> -		asm volatile("msr pmccntr_el0, %0" :: "r" (value64));
-> +		write_sysreg(value64, pmccntr_el0);
->  	} else if (armv8pmu_select_counter(idx) == idx)
-> -		asm volatile("msr pmxevcntr_el0, %0" :: "r" (value));
-> +		write_sysreg(value, pmxevcntr_el0);
->  }
->  
->  static inline void armv8pmu_write_evtype(int idx, u32 val)
->  {
->  	if (armv8pmu_select_counter(idx) == idx) {
->  		val &= ARMV8_PMU_EVTYPE_MASK;
-> -		asm volatile("msr pmxevtyper_el0, %0" :: "r" (val));
-> +		write_sysreg(val, pmxevtyper_el0);
->  	}
->  }
->  
->  static inline int armv8pmu_enable_counter(int idx)
->  {
->  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
-> -	asm volatile("msr pmcntenset_el0, %0" :: "r" (BIT(counter)));
-> +	write_sysreg(BIT(counter), pmcntenset_el0);
->  	return idx;
->  }
->  
->  static inline int armv8pmu_disable_counter(int idx)
->  {
->  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
-> -	asm volatile("msr pmcntenclr_el0, %0" :: "r" (BIT(counter)));
-> +	write_sysreg(BIT(counter), pmcntenclr_el0);
->  	return idx;
->  }
->  
->  static inline int armv8pmu_enable_intens(int idx)
->  {
->  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
-> -	asm volatile("msr pmintenset_el1, %0" :: "r" (BIT(counter)));
-> +	write_sysreg(BIT(counter), pmintenset_el1);
->  	return idx;
->  }
->  
->  static inline int armv8pmu_disable_intens(int idx)
->  {
->  	u32 counter = ARMV8_IDX_TO_COUNTER(idx);
-> -	asm volatile("msr pmintenclr_el1, %0" :: "r" (BIT(counter)));
-> +	write_sysreg(BIT(counter), pmintenclr_el1);
->  	isb();
->  	/* Clear the overflow flag in case an interrupt is pending. */
-> -	asm volatile("msr pmovsclr_el0, %0" :: "r" (BIT(counter)));
-> +	write_sysreg(BIT(counter), pmovsclr_el0);
->  	isb();
->  
->  	return idx;
-> @@ -599,11 +598,11 @@ static inline u32 armv8pmu_getreset_flags(void)
->  	u32 value;
->  
->  	/* Read */
-> -	asm volatile("mrs %0, pmovsclr_el0" : "=r" (value));
-> +	value = read_sysreg(pmovsclr_el0);
->  
->  	/* Write to clear flags */
->  	value &= ARMV8_PMU_OVSR_MASK;
-> -	asm volatile("msr pmovsclr_el0, %0" :: "r" (value));
-> +	write_sysreg(value, pmovsclr_el0);
->  
->  	return value;
->  }
-> -- 
-> 2.1.0
-> 
+Because it is confusing. If you use the same name it's very straight forward
+to understand which clock is being referred to. That's not the case if you
+come up with random new names.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
