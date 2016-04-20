@@ -1,45 +1,45 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] ASoC: davinci-mcbsp: add binding for McBSP
-Date: Wed, 20 Apr 2016 08:49:20 +0200
-Message-ID: <CAMuHMdVCW0zAxAZRTazVhXz72fkp_escQM2JTSX2J4Ertru==Q@mail.gmail.com>
-References: <1460982766-18632-1-git-send-email-petr@barix.com>
-	<1460982766-18632-2-git-send-email-petr@barix.com>
+Subject: Re: [PATCH V2 2/3] dmaengine: bcm2835: use platform_get_irq_byname
+Date: Wed, 20 Apr 2016 08:51:23 +0200
+Message-ID: <CAMuHMdW2Jw5=f9ojNSM0d1cGvPc6_QxwH4rcQdWBQTP89zyj4Q@mail.gmail.com>
+References: <1460381349-14408-1-git-send-email-kernel@martin.sperl.org>
+	<1460381349-14408-3-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460982766-18632-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1460381349-14408-3-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 18, 2016 at 2:32 PM, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org> wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
-> @@ -0,0 +1,51 @@
+On Mon, Apr 11, 2016 at 3:29 PM,  <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> Use platform_get_irq_byname to allow for correct mapping of
+> interrupts to dma channels.
+>
+> The currently implemented device tree is unfortunately
+> implemented with the wrong assumption, that each dma-channel
+> has its own dma channel, but dma-irq 11 is handling
+> dma-channel 11-14 and dma-irq 12 is actually a "catch all"
+> interrupt.
+>
+> So here we use the byname variant and require that interrupts
+> are explicitly named via the interrupts-name property in the
 
-> +Optional properties:
-> +~~~~~~~~~~~~~~~~~~~~
-> +- interrupts : Interrupt numbers for McBSP
-> +- interrupt-names : Known interrupt names are "rx" and "tx"
-> +
-> +- pinctrl-0: Should specify pin control group used for this controller.
-> +- pinctrl-names: Should contain only one value - "default", for more details
-> +        please refer to pinctrl-bindings.txt
-> +
-> +Example (AM1808):
-> +~~~~~~~~~~~~~~~~~
-> +
-> +mcbsp0: mcbsp@1d10000 {
-> +       compatible = "ti,da850-mcbsp";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mcbsp0_pins>;
-> +
-> +       reg =   <0x00110000 0x1000>,
-> +               <0x00310000 0x1000>;
-> +       reg-names = "mpu", "dat";
-> +       interrupts = <97 98>;
-> +       interrupts-names = "rx", "tx";
+interrupt-names
+
+> device tree.
+>
+> The use of shared interrupts is also implemented.
+
+You're not explicitly looking for "dma-shared-all" for that?
+You might as well just declare a single unnamed interrupt in the bindings.
+
+> +               /* legacy device tree case handling */
+> +               dev_warn_once(&pdev->dev,
+> +                             "missing interrupts-names property in device tree - legacy interpretation is used");
 
 interrupt-names
 
