@@ -1,72 +1,125 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: DT: vdma: Add clock support for vdma
-Date: Wed, 20 Apr 2016 13:29:32 +0530
-Message-ID: <CAKfKVtEkfnDqU476troXmCw20ATvQvj-JdPX-BCuPDR-9ZxKHQ@mail.gmail.com>
-References: <1461136800-20334-1-git-send-email-appanad@xilinx.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
+Date: Wed, 20 Apr 2016 10:01:28 +0200
+Message-ID: <CAPybu_2fys29MUTBCDPb+tpfCgbr9SL+LXq061Tq20_z7UO-Vg@mail.gmail.com>
+References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
+ <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
+ <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
+ <57163252.5090000@schinagl.nl> <CAPybu_2uZqR4exnS08taVYyr=ziK+EzuJy+_FxhbtqSiOE_=mw@mail.gmail.com>
+ <57172DFA.9030107@schinagl.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461136800-20334-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <57172DFA.9030107@schinagl.nl>
+Sender: linux-leds-owner@vger.kernel.org
+To: Olliver Schinagl <oliver@schinagl.nl>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 12:49 PM, Kedareswara rao Appana
-<appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> This patch updates the binding doc with clock description
-> for vdma.
->
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> index fcc2b65..e1c9019 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> @@ -21,6 +21,10 @@ Required properties:
->  - dma-channel child node: Should have at least one channel and can have up to
->         two channels per device. This node specifies the properties of each
->         DMA channel (see child node properties below).
-> +- clocks: Input clock specifier. Refer to common clock bindings.
-> +- clock-names: List of input clocks "axi_clk", "tx_clk", "txs_clk" (list of input
-> +              cloks may vary based on the ip configuration. see clock bindings
-> +              for more info).
->
->  Required properties for VDMA:
->  - xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
-> @@ -60,6 +64,8 @@ axi_vdma_0: axivdma@40030000 {
->         xlnx,num-fstores = <0x8>;
->         xlnx,flush-fsync = <0x1>;
->         xlnx,addrwidth = <0x20>;
-> +       clocks = <&clk 0>, <&clk 1>, <&clk 2>;
-> +       clock-names = "axi_clk", "tx_clk", "txs_clk";
-
-the module has
-s_axi_lite_aclk Clock I AXI VDMA AXI4-Lite interface clock
- m_axi_mm2s_aclk Clock I AXI VDMA MM2S clock
- m_axi_s2mm_aclk Clock I AXI VDMA S2MM clock
- m_axis_mm2s_aclk Clock I AXI VDMA MM2S AXIS clock
- s_axis_s2mm_aclk Clock I AXI VDMA S2MM AXIS clock
-
-I think a partial support is not wrong.
-however  we should keep the names same as the TRM.
+Hi Ollivier
 
 
->         dma-channel@40030000 {
->                 compatible = "xlnx,axi-vdma-mm2s-channel";
->                 interrupts = < 0 54 4 >;
-> --
-> 2.1.2
+On Wed, Apr 20, 2016 at 9:21 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
+
+What I am propossing is at probe():
+
+replace:
+
+if (pdata) {
+/* Configure output: open-drain or totem pole (push-pull) */
+if (pdata->outdrv == PCA963X_OPEN_DRAIN)
+i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x01);
+else
+i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x05);
+}
+
+with something like (forgive the spacing):
+
+
+u8 mode2 = PCA963X_MODE2_DMBLNK | 0x1;
+if (pdata && pdata->outdrv == PCA963X_OPEN_DRAIN)
+   mode2 |= 0x4;
+i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2, mode2);
+
+
+and then remove from pca963x_blink() these lines:
+
+u8 mode2 = i2c_smbus_read_byte_data(pca963x->chip->client,
+PCA963X_MODE2);
+
+if (!(mode2 & PCA963X_MODE2_DMBLNK))
+i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
+mode2 | PCA963X_MODE2_DMBLNK);
+
+As I said before, the reason for this proposal is that the code NEVER
+clears PCA963X_MODE2_DMBLNK, only sets it.
+Unfortunately I do not have the HW to test this change.
+
 >
+> Now I understand your concern, the i2c operations are slow and time
+> consuming making the mutex very expensive.
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The thing is, to be able to write the blink bit, we need to read the whole
+> mode2 register, to do a proper read-modify-write. We don't know what's in
+> the mode2 register and we only want to write the bit if it is actually not
+> set to begin with, to save a i2c write operation.
+
+As I said earlier, nowhere in the code clears that bit. The bit is
+only set. so no reason to read/modify/write. We can set that bit at
+probe time and assume that it will not be changed.
+
+>
+> We start this function already however with with two write calls of
+> sequential registers, the grp and pwm enable registers. There is even a call
+> to automatically update these registers, which I think we'd use
+> i2c_master_send() to set the address via the auto-increment register and
+> enable auto increment of these two registers. Now we reduced the 2 seperate
+> calls into one bigger 'faster' call. So 1 win there. But! it will require us
+> however to change the other calls to disable auto increment via de mode1
+> register. Since this is an extra i2c_write operation, it makes the other i2c
+> writes more expensive, which may happen much more often (enable blink only
+> happens occasionally, changing the brightness may change a lot (fade in fade
+> out).
+
+Be careful with that. Sometimes this chips are connected to the smbus,
+wich has a limited number of operations/lengths. We should keep the
+i2c_smbus_write_byte_data() call, because that makes the driver
+compatible with more hardware.
+
+>
+> So unless i'm totally misunderstanding something, I don't think we can safe
+> much here at all.
+
+To be clear: My proposal is that (after being tested), move the set of
+DMBLINK to probe, remove the read/modify/write from blink() and keep
+the locking as it is now, only protecting ledout.
+
+Also you need to fix the patch that breaks bisect, but I believe that
+you are already working on that.
+
+I have reviewed a bit Documentation/device-tree and it seems that
+there is already a binding for active-low. Instead of nxp,active-low
+you should call it just active-low. But I am not a device-tree expert.
+
+Finally, you mention that you are fixing some checkpatch errors, but I
+cannot replicate those in my side :S
+
+ricardo@pilix:~/curro/linux$ scripts/checkpatch.pl -f
+drivers/leds/leds-pca963x.c
+total: 0 errors, 0 warnings, 439 lines checked
+
+drivers/leds/leds-pca963x.c has no obvious style problems and is ready
+for submission.
+
+So maybe the errors you are fixing are introduced by your patches.
+About the other style patches, I do not know what is the policy of the
+Maintainer in that matter, especially when the driver did not break
+originally checkpatch.
+
+
+
+Regards!
+
+
+---
+Ricardo
