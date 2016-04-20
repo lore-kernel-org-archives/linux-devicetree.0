@@ -1,161 +1,134 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH next v2 2/2] PCI: keystone: remove unnecessary goto
- statement
-Date: Tue, 19 Apr 2016 20:06:27 -0500
-Message-ID: <20160420010627.GJ17863@localhost>
-References: <1460386231-8377-1-git-send-email-m-karicheri2@ti.com>
- <1460386231-8377-2-git-send-email-m-karicheri2@ti.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] gpio: of: make it possible to name GPIO lines
+Date: Wed, 20 Apr 2016 10:10:43 +0900
+Message-ID: <CAAVeFuLt6PSLqUUROGKnpEdVjN55-L-HKzTcgCwfJD0NvuFYWA@mail.gmail.com>
+References: <1461073157-26574-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460386231-8377-2-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461073157-26574-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bamvor Jian Zhang <bamvor.zhangjian-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Murali,
+On Tue, Apr 19, 2016 at 10:39 PM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Make it possible to name the producer side of a GPIO line using
+> a "gpio-names" property array, modeled on the "clock-names"
+> property from the clock bindings.
+>
+> This naming is especially useful for:
+>
+> - Debugging: lines are named after function, not just opaque
+>   offset numbers.
+>
+> - Exploration: systems where some or all GPIO lines are available
+>   to end users, such as prototyping, one-off's "makerspace usecases"
+>   users are helped by the names of the GPIO lines when tinkering.
+>   This usecase has been surfacing recently.
+>
+> The gpio-names attribute is completely optional.
 
-On Mon, Apr 11, 2016 at 10:50:31AM -0400, Murali Karicheri wrote:
-> Fix the misuse of goto statement in ks_pcie_get_irq_controller_info()
-> as simple return is more appropriate for this function. While at
-> it add an error log for absence of interrupt controller node.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> 
+Been a little bit late on this discussion, but I like the idea.
+
+Acked-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+One nit below...
+
+>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  v2 - removed an unnecessary extra line added in the previous version
->  v1 - same as before initial version
->  drivers/pci/host/pci-keystone.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-> index 299f2f0..0234828 100644
-> --- a/drivers/pci/host/pci-keystone.c
-> +++ b/drivers/pci/host/pci-keystone.c
-> @@ -181,11 +181,13 @@ static int ks_pcie_get_irq_controller_info(struct keystone_pcie *ks_pcie,
->  	*np_temp = of_find_node_by_name(np_pcie, controller);
->  	if (!(*np_temp)) {
->  		dev_err(dev, "Node for %s is absent\n", controller);
-> -		goto out;
-> +		return ret;
->  	}
->  	temp = of_irq_count(*np_temp);
-> -	if (!temp)
-> -		goto out;
-> +	if (!temp) {
-> +		dev_err(dev, "No entries in %s\n", controller);
-> +		return ret;
-> +	}
->  	if (temp > max_host_irqs)
->  		dev_warn(dev, "Too many %s interrupts defined %u\n",
->  			(legacy ? "legacy" : "MSI"), temp);
-> @@ -203,7 +205,6 @@ static int ks_pcie_get_irq_controller_info(struct keystone_pcie *ks_pcie,
->  		*num_irqs = temp;
->  		ret = 0;
->  	}
-> -out:
->  	return ret;
+> This has been discussed at some length now.
+>
+> Why we are not using hogs: these are consumer side, not producer
+> side. The gpio-controller in DT (gpio_chip in Linux) is a
+> producer, not a consumer.
+>
+> This patch is not about assigning initial values to GPIO lines.
+> That is an orthogonal usecase. This is just about naming lines.
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 19 +++++++++++
+>  drivers/gpio/gpiolib-of.c                       | 43 +++++++++++++++++++++++++
+>  2 files changed, 62 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index c88d2ccb05ca..6b371ab6098e 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -152,6 +152,21 @@ additional bitmask is needed to specify which GPIOs are actually in use,
+>  and which are dummies. The bindings for this case has not yet been
+>  specified, but should be specified if/when such hardware appears.
+>
+> +Optionally, a GPIO controller may have a "gpio-names" property. This is
+> +an array of strings defining the names of the GPIO lines going out of the
+> +GPIO controller. This name should be the most meaningful producer name
+> +for the system, such as a rail name indicating the usage. Package names
+> +such as pin name are discouraged: such lines have opaque names (since they
+> +are by definition generic purpose) and such names are usually not very
+> +helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
+> +reasonable line names as they describe what the line is used for. "GPIO0"
+> +is not a good name to give to a GPIO line. Placeholders are discouraged:
+> +rather use the "" (blank string) if the use of the GPIO line is undefined
+> +in your design. The names are assigned starting from line offset 0 from
+> +left to right from the passed array. An incomplete array (where the number
+> +of passed named are less than ngpios) will still be used up until the last
+> +provided valid line index.
+> +
+>  Example:
+>
+>  gpio-controller@00000000 {
+> @@ -160,6 +175,10 @@ gpio-controller@00000000 {
+>         gpio-controller;
+>         #gpio-cells = <2>;
+>         ngpios = <18>;
+> +       gpio-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
+> +               "LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
+> +               "Row A", "Row B", "Row C", "Row D", "NMI button",
+> +               "poweroff", "reset";
+>  }
+>
+>  The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index d81dbd8e90d9..b4e3a42e7aae 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -196,6 +196,42 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+>  }
+>
+>  /**
+> + * of_gpiochip_set_names() - set up the names of the lines
+> + * @chip: GPIO chip whose lines should be named, if possible
+> + */
+> +static int of_gpiochip_set_names(struct gpio_chip *gc)
+> +{
+> +       struct gpio_device *gdev = gc->gpiodev;
+> +       struct device_node *np = gc->of_node;
+> +       int i;
+> +       int nstrings;
+> +
+> +       /* Do we even have the "gpio-names" property */
+> +       if (!of_property_read_bool(np, "gpio-names"))
+> +               return 0;
+> +
+> +       nstrings = of_property_count_strings(np, "gpio-names");
+> +       for (i = 0; i < nstrings; i++) {
+> +               const char *name;
+> +               int ret;
+> +
+> +               ret = of_property_read_string_index(np,
+> +                                                   "gpio-names",
+> +                                                   i,
+> +                                                   &name);
+> +               if (!ret)
+> +                       gdev->descs[i].name = name;
 
-I really like these cleanups; thanks for doing them.
-
-I went a step further because I think we always know the value of
-"ret" at each of these places, so I inserted those and dropped "ret"
-altogether.
-
-I applied the patch below to pci/host-keystone for v4.7.
-
-
-commit a7ed67a22484f70b8d0c33c76ad7faeac97222a7
-Author: Murali Karicheri <m-karicheri2@ti.com>
-Date:   Mon Apr 11 10:50:31 2016 -0400
-
-    PCI: keystone: Remove unnecessary goto statement
-    
-    Fix the misuse of goto statement in ks_pcie_get_irq_controller_info() as
-    simple return is more appropriate for this function.  While at it add an
-    error log for absence of interrupt controller node.
-    
-    [bhelgaas: drop "ret" altogether since we always know the return value]
-    Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    CC: Rob Herring <robh+dt@kernel.org>
-    CC: Pawel Moll <pawel.moll@arm.com>
-    CC: Mark Rutland <mark.rutland@arm.com>
-    CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-    CC: Kumar Gala <galak@codeaurora.org>
-
-diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-index 6868918..95a66f77 100644
---- a/drivers/pci/host/pci-keystone.c
-+++ b/drivers/pci/host/pci-keystone.c
-@@ -160,7 +160,7 @@ static void ks_pcie_legacy_irq_handler(struct irq_desc *desc)
- static int ks_pcie_get_irq_controller_info(struct keystone_pcie *ks_pcie,
- 					   char *controller, int *num_irqs)
- {
--	int temp, max_host_irqs, legacy = 1, *host_irqs, ret = -EINVAL;
-+	int temp, max_host_irqs, legacy = 1, *host_irqs;
- 	struct device *dev = ks_pcie->pp.dev;
- 	struct device_node *np_pcie = dev->of_node, **np_temp;
- 
-@@ -181,11 +181,15 @@ static int ks_pcie_get_irq_controller_info(struct keystone_pcie *ks_pcie,
- 	*np_temp = of_find_node_by_name(np_pcie, controller);
- 	if (!(*np_temp)) {
- 		dev_err(dev, "Node for %s is absent\n", controller);
--		goto out;
-+		return -EINVAL;
- 	}
-+
- 	temp = of_irq_count(*np_temp);
--	if (!temp)
--		goto out;
-+	if (!temp) {
-+		dev_err(dev, "No IRQ entries in %s\n", controller);
-+		return -EINVAL;
-+	}
-+
- 	if (temp > max_host_irqs)
- 		dev_warn(dev, "Too many %s interrupts defined %u\n",
- 			(legacy ? "legacy" : "MSI"), temp);
-@@ -199,12 +203,13 @@ static int ks_pcie_get_irq_controller_info(struct keystone_pcie *ks_pcie,
- 		if (!host_irqs[temp])
- 			break;
- 	}
-+
- 	if (temp) {
- 		*num_irqs = temp;
--		ret = 0;
-+		return 0;
- 	}
--out:
--	return ret;
-+
-+	return -EINVAL;
- }
- 
- static void ks_pcie_setup_interrupts(struct keystone_pcie *ks_pcie)
-@@ -345,7 +350,7 @@ static int __init ks_add_pcie_port(struct keystone_pcie *ks_pcie,
- 		return ret;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static const struct of_device_id ks_pcie_of_match[] = {
-@@ -374,7 +379,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *reg_p;
- 	struct phy *phy;
--	int ret = 0;
-+	int ret;
- 
- 	ks_pcie = devm_kzalloc(&pdev->dev, sizeof(*ks_pcie),
- 				GFP_KERNEL);
+Shouldn't we check for name collision (by calling gpio_name_to_desc()
+as gpiochip_set_desc_names() does) here?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
