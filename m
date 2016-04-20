@@ -1,463 +1,77 @@
-From: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: imx6: Add dts for Embest MarS Board
-Date: Wed, 20 Apr 2016 17:38:04 -0300
-Message-ID: <1461184684-5241-1-git-send-email-sergio.prado@e-labworks.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
+Date: Wed, 20 Apr 2016 20:31:00 +0000
+Message-ID: <AM4PR02MB129981BAE6A4E893DDD38173BC6D0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: sv-SE
+Sender: linux-kernel-owner@vger.kernel.org
+To: Crestez Dan Leonard <leonard.crestez@intel.com>, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-Embest MarS Board [1] is a multi-core platform based on Freescale i.MX6
-Cortex-A9 Dual Core, running up to 1GHz with 1 GB of RAM, 4GB of eMMC
-and with a 4MB SPI flash.
+Crestez Dan Leonard wrote:
+> The MPU has an auxiliary I2C bus for connecting external
+> sensors. This bus has two operating modes:
+> * pass-through, which connects the primary and auxiliary busses
+> together. This is already supported via an i2c mux.
+> * I2C master mode, where the mpu60x0 acts as a master to any external
+> connected sensors. This is implemented by this patch.
+> 
+> This I2C master mode also works when the MPU itself is connected via
+> SPI.
+> 
+> I2C master supports up to 5 slaves. Slaves 0-3 have a common operating
+> mode while slave 4 is different. This patch implements an i2c adapter
+> using slave 4 because it has a cleaner interface and it has an
+> interrupt that signals when data from slave to master arrived.
+> 
+> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
+> ---
+> 
+> This is based on earlier work by Daniel Baluta <daniel.baluta@intel.com>:
+> https://www.spinics.net/lists/linux-iio/msg23573.html
+> 
+> Changes since that version:
+> * Nest the adapter in inv_mpu6050_state instead of making it static
+> * Explicitly forward of_node "i2c-aux-master" to allow describing aux devices
+> via devicetree.
+> 
+> For bypass/mux mode devicetree works automatically. The forwarding is based on
+> the "chan_id" parameter to i2c_add_mux_adapter and is implemented here:
+> 
+> http://lxr.free-electrons.com/source/drivers/i2c/i2c-mux.c#L158
 
-[1] http://www.embest-tech.com/shop/star/marsboard.html
+With any luck [1], this reference will be stale when 4.6 is released. It
+should be qulified with a version, something like .../i2c-mux.c?v=4.5#L158
 
-Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
----
+> Perhaps it might be better for devices handled via master mode to be described
+> via i2c@1? This would work by scanning the mpu node's children for something
+> with reg == 1.
 
-Changes v2 -> v3:
-- change board compatible string to fsl,imx6q
-- the ethernet reset pin is active low
-- remove artificial simple-bus for regulators
-- add enable-active-high to usb otg vbus regulator node
-- remove @1 and @2 from leds node
-- remove the unnecessary imx6-riotboard node from iomuxc
+The 0 in i2c@0 (which is used by the mux mode) is the index of the mux slave
+meaning that i2c@1 would be a second mux slave on the same mux, but this is
+not a real mux as such, it is a gate which is piggybacking on the i2c mux infra.
+So, this "mux" can't have a second slave which is why only 0 is valid.
 
-Changes v1 -> v2:
-- Makefile entry added
+Tl;dr i2c@1 is definitely wrong for something that is not related to i2c@0.
 
----
- arch/arm/boot/dts/Makefile            |   1 +
- arch/arm/boot/dts/imx6q-marsboard.dts | 402 ++++++++++++++++++++++++++++++++++
- 2 files changed, 403 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-marsboard.dts
+> Or maybe the two busses should be called i2c-aux-master and i2c-aux-mux? Not
+> sure how to deal with that on the mux side.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923ce6fa..04b87ea75f2f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -346,6 +346,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-gw552x.dtb \
- 	imx6q-hummingboard.dtb \
- 	imx6q-icore-rqs.dtb \
-+	imx6q-marsboard.dtb \
- 	imx6q-nitrogen6x.dtb \
- 	imx6q-nitrogen6_max.dtb \
- 	imx6q-novena.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
-new file mode 100644
-index 000000000000..9c2a336f0327
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-marsboard.dts
-@@ -0,0 +1,402 @@
-+/*
-+ * Copyright (C) 2016 Sergio Prado (sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org)
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "imx6q.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "Embest MarS Board i.MX6Dual";
-+	compatible = "embest,imx6q-marsboard", "fsl,imx6q";
-+
-+	memory {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	reg_usb_otg_vbus: regulator-usb-otg-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_led>;
-+
-+		user1 {
-+			label = "imx6:green:user1";
-+			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		user2 {
-+			label = "imx6:green:user2";
-+			gpios = <&gpio3 28 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	vmmc-supply = <&reg_3p3v>;
-+	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	vmmc-supply = <&reg_3p3v>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+};
-+
-+&ecspi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	cs-gpios = <&gpio2 30 GPIO_ACTIVE_LOW>;
-+	fsl,spi-num-chipselects = <1>;
-+	status = "okay";
-+
-+	m25p80@0 {
-+		compatible = "microchip,sst25vf016b";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>;
-+	status = "okay";
-+};
-+
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>;
-+	status = "okay";
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	dr_mode = "otg";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&i2c2>;
-+	status = "okay";
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D26__UART2_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_EIM_D27__UART2_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
-+			/* AR8035 CLK_25M --> ENET_REF_CLK (V22) */
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1
-+			/* AR8035 pin strapping: IO voltage: pull up */
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
-+			/* AR8035 pin strapping: PHYADDR#0: pull down */
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x130b0
-+			/* AR8035 pin strapping: PHYADDR#1: pull down */
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x130b0
-+			/* AR8035 pin strapping: MODE#1: pull up */
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
-+			/* AR8035 pin strapping: MODE#3: pull up */
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
-+			/* AR8035 pin strapping: MODE#0: pull down */
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x130b0
-+			/* GPIO16 -> AR8035 25MHz */
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
-+			/* RGMII_nRST */
-+			MX6QDL_PAD_EIM_D31__GPIO3_IO31		0x130b0
-+			/* AR8035 interrupt */
-+			MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x180b0
-+		>;
-+	};
-+
-+	pinctrl_led: ledgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x1b0b1	/* LED1 */
-+			MX6QDL_PAD_EIM_D28__GPIO3_IO28		0x1b0b1	/* LED2 */
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-+			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x1b0b0	/* CD */
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1f0b0	/* WP */
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17009
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10009
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17009
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17009
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17009
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17009
-+			MX6QDL_PAD_SD3_RST__SD3_RESET		0x17009
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001b8b1
-+			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-+			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_5__I2C3_SCL		0x4001b8b1
-+			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
-+			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
-+			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
-+			MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x000b1	/* CS0 */
-+		>;
-+	};
-+
-+	pinctrl_pwm1: pwm1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT9__PWM2_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm3: pwm3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg: usbotggrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x17059
-+			MX6QDL_PAD_EIM_D21__USB_OTG_OC		0x1b0b0
-+			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x000b0	/* USB OTG POWER ENABLE */
-+		>;
-+	};
-+
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-+			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-+			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
-+			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
-+			MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0	/* CAM_MCLK */
-+		>;
-+	};
-+};
--- 
-1.9.1
+Changing i2c to i2c-aux-mux would break existing device trees, that seems
+like a bad thing, no?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> It is not clear how to properly handle this and suggestions are welcome. The
+> way it currently works with this patch is documented immediately below.
+
+I think the naming could be i2c-master0, i2c-master1 etc if it, with
+future work, would be possible to add more than one master (you talked about
+5 i2c slaves..).
+
+Cheers,
+Peter
+
+[1] https://lkml.org/lkml/2016/4/20/467
