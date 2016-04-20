@@ -1,213 +1,203 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 13/45] powerpc/powernv/ioda1: M64 support on P7IOC
-Date: Wed, 20 Apr 2016 10:22:54 +1000
-Message-ID: <20160420002254.GA13506@gwshan>
+Subject: Re: [PATCH v8 15/45] powerpc/powernv/ioda1: Introduce
+ PNV_IODA1_DMA32_SEGSIZE
+Date: Wed, 20 Apr 2016 10:25:36 +1000
+Message-ID: <20160420002536.GA15693@gwshan>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-14-git-send-email-gwshan@linux.vnet.ibm.com>
- <570DF9AF.6020104@ozlabs.ru>
+ <1455680668-23298-16-git-send-email-gwshan@linux.vnet.ibm.com>
+ <570E0376.3030704@ozlabs.ru>
+ <20160413235429.GB5330@gwshan>
+ <570F1041.5090901@ozlabs.ru>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <570DF9AF.6020104@ozlabs.ru>
+In-Reply-To: <570F1041.5090901@ozlabs.ru>
 Sender: linux-pci-owner@vger.kernel.org
 To: Alexey Kardashevskiy <aik@ozlabs.ru>
 Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, dja@axtens.net, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 13, 2016 at 05:47:59PM +1000, Alexey Kardashevskiy wrote:
->On 02/17/2016 02:43 PM, Gavin Shan wrote:
->>This enables M64 window on P7IOC, which has been enabled on PHB3.
->>Different from PHB3 where 16 M64 BARs are supported and each of
->>them can be owned by one particular PE# exclusively or divided
->>evenly to 256 segments, every P7IOC PHB has 16 M64 BARs and each
->>of them are divided to 8 segments. So every P7IOC PHB supports
->>128 M64 segments in total. P7IOC has M64DT, which helps mapping
->>one particular M64 segment# to arbitrary PE#. PHB3 doesn't have
->>M64DT, indicating that one M64 segment can only be pinned to the
->>fixed PE#. In order to have same code to support M64 on P7IOC and
->>PHB3, we just provide 128 M64 segments on every P7IOC PHB and each
->>of them is pinned to the fixed PE# by bypassing the function of
->>M64DT. In turn, we just need different phb->init_m64() for P7IOC
->>and PHB3 to support M64.
+On Thu, Apr 14, 2016 at 01:36:33PM +1000, Alexey Kardashevskiy wrote:
+>On 04/14/2016 09:54 AM, Gavin Shan wrote:
+>>On Wed, Apr 13, 2016 at 06:29:42PM +1000, Alexey Kardashevskiy wrote:
+>>>On 02/17/2016 02:43 PM, Gavin Shan wrote:
+>>>>Currently, there is one macro (TCE32_TABLE_SIZE) representing the
+>>>>TCE table size for one DMA32 segment. The constant representing
+>>>>the DMA32 segment size (1 << 28) is still used in the code.
+>>>>
+>>>>This defines PNV_IODA1_DMA32_SEGSIZE representing one DMA32
+>>>>segment size. the TCE table size can be calcualted when the page
+>>>
+>>>s/calcualted/calculated/
+>>>
+>>>
+>>>>has fixed 4KB size. So all the related calculation depends on one
+>>>>macro (PNV_IODA1_DMA32_SEGSIZE). No logical changes introduced.
+>>>
+>>>Please move PNV_IODA1_DMA32_SEGSIZE where TCE32_TABLE_SIZE was.
+>>>
+>>>
+>>>>
+>>>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>>>---
+>>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 30 +++++++++++++++++-------------
+>>>>  arch/powerpc/platforms/powernv/pci.h      |  1 +
+>>>>  2 files changed, 18 insertions(+), 13 deletions(-)
+>>>>
+>>>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>index d18b95e..e60cff6 100644
+>>>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>@@ -48,9 +48,6 @@
+>>>>  #include "powernv.h"
+>>>>  #include "pci.h"
+>>>>
+>>>>-/* 256M DMA window, 4K TCE pages, 8 bytes TCE */
+>>>>-#define TCE32_TABLE_SIZE	((0x10000000 / 0x1000) * 8)
+>>>>-
+>>>>  #define POWERNV_IOMMU_DEFAULT_LEVELS	1
+>>>>  #define POWERNV_IOMMU_MAX_LEVELS	5
+>>>>
+>>>>@@ -2034,7 +2031,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>>>
+>>>>  	struct page *tce_mem = NULL;
+>>>>  	struct iommu_table *tbl;
+>>>>-	unsigned int i;
+>>>>+	unsigned int tce32_segsz, i;
+>>>
+>>>
+>>>PNV_IODA1_DMA32_SEGSIZE is a segment size in bytes. The name @tce32_segsz
+>>>also suggests that it is a segment size in bytes (otherwise it would be
+>>>tce32_seg_entries or something like this) but it is not, it is a number of
+>>>TCE entries (arch/powerpc/kernel/iommu.c uses "entry" for these). And
+>>>tce32_segsz never changes. So:
+>>>
+>>>const unsigned int entries = PNV_IODA1_DMA32_SEGSIZE >> (IOMMU_PAGE_SHIFT_4K
+>>>- 3);
+>>>
+>>
+>>Are you sure @tce32_segsz and equation you gave are for number of TCE entries,
+>>not the size of meory required for the DMA32 segment TCE table?
 >
->The comment is not quite correct - in addition to pnv_ioda1_init_m64(), you
->also need to hack pnv_ioda_pick_m64_pe().
+>No, I am not :) "-3" makes it a table size in bytes, so it is rather tablesz
+>then.
 >
 
-Right, will talk about the changes to pnv_ioda_pick_m64_pe() in the
-commit log of next revision.
+Ok. @tce32_segsz is the size of memory used for TCE entries for one segment (256MB),
+not a whole TCE table. So I think @tce32_segsz is better than @tablesz from the
+perspective.
 
 >
 >>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 86 +++++++++++++++++++++++++++++--
->>  arch/powerpc/platforms/powernv/pci.h      |  3 ++
->>  2 files changed, 86 insertions(+), 3 deletions(-)
+>>>>  	int64_t rc;
+>>>>  	void *addr;
+>>>>
+>>>>@@ -2054,29 +2051,34 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>>>  	/* Grab a 32-bit TCE table */
+>>>>  	pe->tce32_seg = base;
+>>>>  	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
+>>>>-		(base << 28), ((base + segs) << 28) - 1);
+>>>>+		base * PNV_IODA1_DMA32_SEGSIZE,
+>>>>+		(base + segs) * PNV_IODA1_DMA32_SEGSIZE - 1);
+>>>>
+>>>>  	/* XXX Currently, we allocate one big contiguous table for the
+>>>>  	 * TCEs. We only really need one chunk per 256M of TCE space
+>>>>  	 * (ie per segment) but that's an optimization for later, it
+>>>>  	 * requires some added smarts with our get/put_tce implementation
+>>>>+	 *
+>>>>+	 * Each TCE page is 4KB in size and each TCE entry occupies 8
+>>>>+	 * bytes
+>>>>  	 */
+>>>>+	tce32_segsz = PNV_IODA1_DMA32_SEGSIZE >> (IOMMU_PAGE_SHIFT_4K - 3);
+>>>
+>>>>  	tce_mem = alloc_pages_node(phb->hose->node, GFP_KERNEL,
+>>>>-				   get_order(TCE32_TABLE_SIZE * segs));
+>>>>+				   get_order(tce32_segsz * segs));
+>>>>  	if (!tce_mem) {
+>>>>  		pe_err(pe, " Failed to allocate a 32-bit TCE memory\n");
+>>>>  		goto fail;
+>>>>  	}
+>>>>  	addr = page_address(tce_mem);
+>>>>-	memset(addr, 0, TCE32_TABLE_SIZE * segs);
+>>>>+	memset(addr, 0, tce32_segsz * segs);
+>>>>
+>>>>  	/* Configure HW */
+>>>>  	for (i = 0; i < segs; i++) {
+>>>>  		rc = opal_pci_map_pe_dma_window(phb->opal_id,
+>>>>  					      pe->pe_number,
+>>>>  					      base + i, 1,
+>>>>-					      __pa(addr) + TCE32_TABLE_SIZE * i,
+>>>>-					      TCE32_TABLE_SIZE, 0x1000);
+>>>>+					      __pa(addr) + tce32_segsz * i,
+>>>>+					      tce32_segsz, 0x1000);
+>>>
+>>>
+>>>As you started using IOMMU_PAGE_SHIFT_4K and you are also touching this piece
+>>>of code -
+>>>
+>>>s/0x1000/IOMMU_PAGE_SHIFT_4K/
+>>>
 >>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index 1dc663a..8488238 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -246,6 +246,64 @@ static void pnv_ioda_reserve_dev_m64_pe(struct pci_dev *pdev,
->>  	}
->>  }
->>
->>+static int pnv_ioda1_init_m64(struct pnv_phb *phb)
->>+{
->>+	struct resource *r;
->>+	int index;
->>+
->>+	/*
->>+	 * There are 16 M64 BARs, each of which has 8 segments. So
->>+	 * there are as many M64 segments as the maximum number of
->>+	 * PEs, which is 128.
->>+	 */
->>+	for (index = 0; index < PNV_IODA1_M64_NUM; index++) {
->>+		unsigned long base, segsz = phb->ioda.m64_segsize;
->>+		int64_t rc;
->>+
->>+		base = phb->ioda.m64_base +
->>+		       index * PNV_IODA1_M64_SEGS * segsz;
->>+		rc = opal_pci_set_phb_mem_window(phb->opal_id,
->>+				OPAL_M64_WINDOW_TYPE, index, base, 0,
->>+				PNV_IODA1_M64_SEGS * segsz);
->>+		if (rc != OPAL_SUCCESS) {
->>+			pr_warn("  Error %lld setting M64 PHB#%d-BAR#%d\n",
->>+				rc, phb->hose->global_number, index);
->>+			goto fail;
->>+		}
->>+
->>+		rc = opal_pci_phb_mmio_enable(phb->opal_id,
->>+				OPAL_M64_WINDOW_TYPE, index,
->>+				OPAL_ENABLE_M64_SPLIT);
->>+		if (rc != OPAL_SUCCESS) {
->>+			pr_warn("  Error %lld enabling M64 PHB#%d-BAR#%d\n",
->>+				rc, phb->hose->global_number, index);
->>+			goto fail;
->>+		}
->>+	}
->>+
->>+	/*
->>+	 * Exclude the segment used by the reserved PE, which
->>+	 * is expected to be 0 or last supported PE#.
->>+	 */
->>+	r = &phb->hose->mem_resources[1];
->>+	if (phb->ioda.reserved_pe_idx == 0)
->>+		r->start += phb->ioda.m64_segsize;
->>+	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
->>+		r->end -= phb->ioda.m64_segsize;
->>+	else
->>+		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
->>+			phb->ioda.reserved_pe_idx);
->>+
->>+	return 0;
->>+
->>+fail:
->>+	for ( ; index >= 0; index--)
->>+		opal_pci_phb_mmio_enable(phb->opal_id,
->>+			OPAL_M64_WINDOW_TYPE, index, OPAL_DISABLE_M64);
->>+
->>+	return -EIO;
->>+}
->>+
->>  static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
->>  				    unsigned long *pe_bitmap,
->>  				    bool all)
->>@@ -315,6 +373,26 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
->>  			pe->master = master_pe;
->>  			list_add_tail(&pe->list, &master_pe->slaves);
->>  		}
->>+
->>+		/*
->>+		 * P7IOC supports M64DT, which helps mapping M64 segment
->>+		 * to one particular PE#. However, PHB3 has fixed mapping
->>+		 * between M64 segment and PE#. In order to have same logic
->>+		 * for P7IOC and PHB3, we enforce fixed mapping between M64
->>+		 * segment and PE# on P7IOC.
->>+		 */
->>+		if (phb->type == PNV_PHB_IODA1) {
->>+			int64_t rc;
->>+
->>+			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
->>+					pe->pe_number, OPAL_M64_WINDOW_TYPE,
->>+					pe->pe_number / PNV_IODA1_M64_SEGS,
->>+					pe->pe_number % PNV_IODA1_M64_SEGS);
->>+			if (rc != OPAL_SUCCESS)
->>+				pr_warn("%s: Error %lld mapping M64 for PHB#%d-PE#%d\n",
->>+					__func__, rc, phb->hose->global_number,
->>+					pe->pe_number);
->>+		}
+>>Does 0x1000 is equal to IOMMU_PAGE_SHIFT_4K? I guess you probably suggested
+>>to use IOMMU_PAGE_SIZE_4K instead?
 >
 >
->Cannot this go to pnv_ioda1_init_m64()? From the commit log I understood that
->this setup is supposed to be static so it can be done once. Or it is sort of
->enable/disable PE? Then make is a helper and call it ioda1_pe_enable() or
->something.
+>Ah, my bad, should have been IOMMU_PAGE_SIZE_4K. I'll pay more attention to
+>the details, sorry.
 >
 
-No, we cannot. This associates the M64 segments with the PE# and it can be
-done in pnv_ioda1_init_m64() where PE# is unknown. I don't understand what
-you meant by "sort of enable/disable PE". PE starts the jurney when PELTM
-has the corresponding mapping and it doesn't depend on M64 mapping necessarily.
+No worries. Thanks for your review anyway.
 
->
->>  	}
 >>
->>  	kfree(pe_alloc);
->>@@ -329,8 +407,7 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
->>  	const u32 *r;
->>  	u64 pci_addr;
->>
->>-	/* FIXME: Support M64 for P7IOC */
->>-	if (phb->type != PNV_PHB_IODA2) {
->>+	if (phb->type != PNV_PHB_IODA1 && phb->type != PNV_PHB_IODA2) {
->>  		pr_info("  Not support M64 window\n");
->>  		return;
->>  	}
->>@@ -364,7 +441,10 @@ static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
->>
->>  	/* Use last M64 BAR to cover M64 window */
->>  	phb->ioda.m64_bar_idx = 15;
->>-	phb->init_m64 = pnv_ioda2_init_m64;
->>+	if (phb->type == PNV_PHB_IODA1)
->>+		phb->init_m64 = pnv_ioda1_init_m64;
->>+	else
->>+		phb->init_m64 = pnv_ioda2_init_m64;
->>  	phb->reserve_m64_pe = pnv_ioda_reserve_m64_pe;
->>  	phb->pick_m64_pe = pnv_ioda_pick_m64_pe;
->>  }
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index 866a5ea..00539ff 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -82,6 +82,9 @@ struct pnv_ioda_pe {
->>  	struct list_head	list;
->>  };
->>
->>+#define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
->>+#define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
->>+
->
->Why here, not in the beginning of arch/powerpc/platforms/powernv/pci-ioda.c ?
->It exposes symbols but nothing is using them (except pci-ioda.c) and code
->browsing gets bit more inconvenient.
->
-
-It would be personal taste: those macros is tied with the definition
-of "struct pnv_ioda_pe" or "struct pnv_ioda_phb". On the other hand,
-those macros have to be in the header file once we split pci-ioda.c
-to multiple source files some day. However, I can move them to
-pci-ioda.c if you really want see them there. Let me know anyway.
-
->
->>  #define PNV_PHB_FLAG_EEH	(1 << 0)
->>
->>  struct pnv_phb {
->>
->
+>>>>  		if (rc) {
+>>>>  			pe_err(pe, " Failed to configure 32-bit TCE table,"
+>>>>  			       " err %ld\n", rc);
+>>>>@@ -2085,8 +2087,9 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>>>  	}
+>>>>
+>>>>  	/* Setup linux iommu table */
+>>>>-	pnv_pci_setup_iommu_table(tbl, addr, TCE32_TABLE_SIZE * segs,
+>>>>-				  base << 28, IOMMU_PAGE_SHIFT_4K);
+>>>>+	pnv_pci_setup_iommu_table(tbl, addr, tce32_segsz * segs,
+>>>>+				  base * PNV_IODA1_DMA32_SEGSIZE,
+>>>>+				  IOMMU_PAGE_SHIFT_4K);
+>>>>
+>>>>  	/* OPAL variant of P7IOC SW invalidated TCEs */
+>>>>  	if (phb->ioda.tce_inval_reg)
+>>>>@@ -2116,7 +2119,7 @@ static void pnv_pci_ioda1_setup_dma_pe(struct pnv_phb *phb,
+>>>>  	if (pe->tce32_seg >= 0)
+>>>>  		pe->tce32_seg = -1;
+>>>>  	if (tce_mem)
+>>>>-		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
+>>>>+		__free_pages(tce_mem, get_order(tce32_segsz * segs));
+>>>>  	if (tbl) {
+>>>>  		pnv_pci_unlink_table_and_group(tbl, &pe->table_group);
+>>>>  		iommu_free_table(tbl, "pnv");
+>>>>@@ -3445,7 +3448,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>>>>  	mutex_init(&phb->ioda.pe_list_mutex);
+>>>>
+>>>>  	/* Calculate how many 32-bit TCE segments we have */
+>>>>-	phb->ioda.tce32_count = phb->ioda.m32_pci_base >> 28;
+>>>>+	phb->ioda.tce32_count = phb->ioda.m32_pci_base /
+>>>>+				PNV_IODA1_DMA32_SEGSIZE;
+>>>>
+>>>>  #if 0 /* We should really do that ... */
+>>>>  	rc = opal_pci_set_phb_mem_window(opal->phb_id,
+>>>>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>>>index 00539ff..1d8e775 100644
+>>>>--- a/arch/powerpc/platforms/powernv/pci.h
+>>>>+++ b/arch/powerpc/platforms/powernv/pci.h
+>>>>@@ -84,6 +84,7 @@ struct pnv_ioda_pe {
+>>>>
+>>>>  #define PNV_IODA1_M64_NUM	16	/* Number of M64 BARs   */
+>>>>  #define PNV_IODA1_M64_SEGS	8	/* Segments per M64 BAR */
+>>>>+#define PNV_IODA1_DMA32_SEGSIZE	0x10000000
+>>>>
+>>>>  #define PNV_PHB_FLAG_EEH	(1 << 0)
+>>>>
+>>>>
 >
 >-- 
 >Alexey
