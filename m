@@ -1,48 +1,46 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and cleanups
-Date: Wed, 20 Apr 2016 10:56:51 +0200
-Message-ID: <CAPybu_3=VdXR_X_00EiYMyhRPLsR40GW1kHS5rzdOkSzrCMVWg@mail.gmail.com>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
- <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
- <57163252.5090000@schinagl.nl> <CAPybu_2uZqR4exnS08taVYyr=ziK+EzuJy+_FxhbtqSiOE_=mw@mail.gmail.com>
- <57172DFA.9030107@schinagl.nl> <CAPybu_2fys29MUTBCDPb+tpfCgbr9SL+LXq061Tq20_z7UO-Vg@mail.gmail.com>
- <5717430D.30702@schinagl.nl>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 20 Apr 2016 11:58:23 +0300
+Message-ID: <571744AF.5030008@ti.com>
+References: <1460023715-19332-1-git-send-email-rogerq@ti.com>
+ <20160413212500.GD5995@atomide.com> <5710B58C.7050108@ti.com>
+ <20160415120942.3131eac1@bbrezillon> <5710C86A.9060108@ti.com>
+ <20160415135108.63716f06@bbrezillon> <20160415154139.GS5995@atomide.com>
+ <20160415180531.15d790d2@bbrezillon> <20160415161950.GT5995@atomide.com>
+ <20160416105711.5310d2d0@bbrezillon> <5714D3A4.2050405@ti.com>
+ <5714D8AA.9040304@ti.com> <20160418151305.17a42437@bbrezillon>
+ <5714E5AA.5050200@ti.com> <20160418161001.2a1c0bed@bbrezillon>
+ <5714F185.5080103@ti.com> <20160418165755.77d1d661@bbrezillon>
+ <5716289B.4060302@ti.com> <20160419221129.59b559fb@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5717430D.30702-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160419221129.59b559fb@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Tony Lindgren <tony@atomide.com>, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On 19/04/16 23:11, Boris Brezillon wrote:
+> On Tue, 19 Apr 2016 15:46:19 +0300
+> Roger Quadros <rogerq@ti.com> wrote:
+> 
+>>
+>> After all the changes we discussed in [1] I was able to test nand/next-with-gpmc-rework
+>> and it worked fine.
+>>
+>> [1] - http://thread.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/22596/focus=22936
+>>
+>> I'd be happy to test the branch again after you've incorporated all changes.
+> 
+> Just pushed what's supposed to be my new nand/next into
+> nand/next-with-gpmc-rework, can you test it? I'll push it to nand/next
+> once I have your confirmation that everything is good.
+> 
 
-On Wed, Apr 20, 2016 at 10:51 AM, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org> wrote:
+Tested this on dra7-evm, am437x-gp-evm and omap3-beagle and all seems good. Thanks :).
 
->> As I said before, the reason for this proposal is that the code NEVER
->> clears PCA963X_MODE2_DMBLNK, only sets it.
->> Unfortunately I do not have the HW to test this change.
->
-> The code never clears it, but the hardware does. So we have to set it
-> everytime we enable blink.
-
-Ok, that was the part I was missing. I was not aware that the hw was
-clearing it.
-
-Saving mode2 sounds like a good compromise then.
-
-But I still believe that we should limit the lock to ledout. No matter
-what we do, we cannot have two leds blinking at different frequencies
-on the same chip.
-
-
-Regards
-
--- 
-Ricardo Ribalda
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
