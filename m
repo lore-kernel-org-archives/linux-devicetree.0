@@ -1,28 +1,50 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 01/18] dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding documentation
-Date: Thu, 21 Apr 2016 13:25:19 +0200
-Message-ID: <3920014.LnOL9gjB2a@wuerfel>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org> <1461236675-10176-2-git-send-email-peter.griffin@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 08/18] ARM: multi_v7_defconfig: Enable STi FDMA driver
+Date: Thu, 21 Apr 2016 13:25:46 +0200
+Message-ID: <5937696.Zdx8BrBD6K@wuerfel>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-9-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461236675-10176-2-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461236675-10176-9-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, vinod.koul@intel.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>, broonie@kernel.org, dmaengine@vger.kernel.org, lee.jones@linaro.org, ludovic.barre@st.com, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 April 2016 12:04:18 Peter Griffin wrote:
-> +- clocks       : Must contain an entry for each name in clock-names
-> +- clock-names  : Must contain "fdma_slim, fdma_hi, fdma_low, fdma_ic" entries
-> +See: Documentation/devicetree/bindings/clock/clock-bindings.txt
+On Thursday 21 April 2016 12:04:25 Peter Griffin wrote:
+> This DMA controller is found on all STi chipsets.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  arch/arm/configs/multi_v7_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> index 2823490..61008a0 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -727,6 +727,7 @@ CONFIG_DMA_OMAP=y
+>  CONFIG_QCOM_BAM_DMA=y
+>  CONFIG_XILINX_VDMA=y
+>  CONFIG_DMA_SUN6I=y
+> +CONFIG_ST_FDMA=y
+>  CONFIG_STAGING=y
+>  CONFIG_SENSORS_ISL29018=y
+>  CONFIG_SENSORS_ISL29028=y
+> -- 
 
-The fdma_ prefix for the clock names is redundant, just make these
-"slim", "hi", "low", and "ic".
+Is this needed for booting? If not, make it a loadable module.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
