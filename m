@@ -1,30 +1,36 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add jdi panel vendor
-Date: Thu, 21 Apr 2016 10:33:07 -0500
-Message-ID: <20160421153307.GA19543@rob-hp-laptop>
-References: <20160414171500.GA11505@rob-hp-laptop>
- <1461144755-10633-1-git-send-email-simhavcs@gmail.com>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] Fix bindings documentation for Palmas.
+Date: Thu, 21 Apr 2016 17:41:38 +0200
+Message-ID: <31078C90-14C1-4C12-9BE3-FCF54BC80A7C@goldelico.com>
+References: <cover.1461080571.git.hns@goldelico.com> <20160421153114.GB15700@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1461144755-10633-1-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160421153114.GB15700@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 03:02:30PM +0530, Vinay Simha BN wrote:
-> Japan Display Inc.
+
+> Am 21.04.2016 um 17:31 schrieb Rob Herring <robh@kernel.org>:
 > 
-> Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> On Tue, Apr 19, 2016 at 05:42:51PM +0200, H. Nikolaus Schaller wrote:
+>> 
+>> 
+>> H. Nikolaus Schaller (1):
+>>  Documentation: bindings: fix palmas-rtc documentation
+>> 
+>> Documentation/devicetree/bindings/rtc/rtc-palmas.txt | 6 +++---
+>> 1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> Don't send a cover letter for a single patch especially when you don't 
+> actually write anything in it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sorry,
+that should not have happened. AFAIK git send-email should suppress it.
+Have to check what is wrong in our patch submission tool.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR,
+Nikolaus
