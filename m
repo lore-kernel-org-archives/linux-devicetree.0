@@ -1,171 +1,113 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Thu, 21 Apr 2016 15:58:22 +0100
-Message-ID: <20160421145822.GA1725@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <1461236675-10176-4-git-send-email-peter.griffin@linaro.org>
- <C246CAC1457055469EF09E3A7AC4E11A4A57989B@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drivers: led: is31fl319x: 6/9-channel light effect led
+ driver
+Date: Thu, 21 Apr 2016 10:01:00 -0500
+Message-ID: <20160421150100.GA28324@rob-hp-laptop>
+References: <cover.1461004995.git.hns@goldelico.com>
+ <75127f4bf2bb11343bdff5bfb1129a092e668c61.1461004995.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A57989B-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maxime.coquelin-qxv4g6HH51o@public.gmane.org" <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, "patrice.chotard-qxv4g6HH51o@public.gmane.org" <patrice.chotard-qxv4g6HH51o@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ludovic.barre-qxv4g6HH51o@public.gmane.org" <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <75127f4bf2bb11343bdff5bfb1129a092e668c61.1461004995.git.hns@goldelico.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Appana,
-
-Thanks for the review.
-
-On Thu, 21 Apr 2016, Appana Durga Kedareswara Rao wrote:
-
+On Mon, Apr 18, 2016 at 08:43:16PM +0200, H. Nikolaus Schaller wrote:
+> This is a driver for the Integrated Silicon Solution Inc. LED driver
+> chips IS31FL3196 and IS31FL3199. They can drive up to 6 or 9
+> LEDs.
 > 
+> Each LED is individually controllable in brightness (through pwm)
+> in 256 steps so that RGB LEDs can show any of ca. 16 Mio colors.
 > 
-> > -----Original Message-----
-> > From: dmaengine-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:dmaengine-
-> > owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Peter Griffin
-> > Sent: Thursday, April 21, 2016 4:34 PM
-> > To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; maxime.coquelin-qxv4g6HH51o@public.gmane.org;
-> > patrice.chotard-qxv4g6HH51o@public.gmane.org; vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> > Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
-> > dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; arnd-r2nGTMty4D4@public.gmane.org;
-> > broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; ludovic.barre-qxv4g6HH51o@public.gmane.org
-> > Subject: [PATCH 03/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
-> > engine driver support
-> > 
-> > This patch adds support for the Flexible Direct Memory Access (FDMA) core
-> > driver. The FDMA is a slim core CPU with a dedicated firmware.
-> > It is a general purpose DMA controller capable of supporting 16
-> > independent DMA channels. Data moves maybe from memory to memory
-> > or between memory and paced latency critical real time targets and it
-> > is found on al STi based chipsets.
-> > 
-> > Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/dma/Kconfig   |  12 +
-> >  drivers/dma/Makefile  |   1 +
-> >  drivers/dma/st_fdma.c | 967
-> > ++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 980 insertions(+)
-> >  create mode 100644 drivers/dma/st_fdma.c
-> > 
-> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > index d96d87c..5910c4f 100644
-> > --- a/drivers/dma/Kconfig
-> > +++ b/drivers/dma/Kconfig
-> > @@ -527,6 +527,18 @@ config ZX_DMA
-> >  	help
-> >  	  Support the DMA engine for ZTE ZX296702 platform devices.
-> > 
-> > +config ST_FDMA
-> > +	tristate "ST FDMA dmaengine support"
-> > +	depends on ARCH_STI
-> > +	select DMA_ENGINE
-> > +	select FW_LOADER
-> > +	select DMA_VIRTUAL_CHANNELS
-> > +	help
-> > +	  Enable support for ST FDMA controller.
-> > +	  It supports 16 independent DMA channels, accepts up to 32 DMA
-> > requests
-> > +
-> > +	  Say Y here if you have such a chipset.
-> > +	  If unsure, say N.
-> > 
-> >  # driver files
-> >  source "drivers/dma/bestcomm/Kconfig"
-> > diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> > index 6084127..b81ca99 100644
-> > --- a/drivers/dma/Makefile
-> > +++ b/drivers/dma/Makefile
-> > @@ -65,6 +65,7 @@ obj-$(CONFIG_TI_DMA_CROSSBAR) += ti-dma-crossbar.o
-> >  obj-$(CONFIG_TI_EDMA) += edma.o
-> >  obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
-> >  obj-$(CONFIG_ZX_DMA) += zx296702_dma.o
-> > +obj-$(CONFIG_ST_FDMA) += st_fdma.o
-> > 
-> >  obj-y += qcom/
-> >  obj-y += xilinx/
-> > diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
-> > new file mode 100644
-> > index 0000000..9bf0100
-> > --- /dev/null
-> > +++ b/drivers/dma/st_fdma.c
-> > @@ -0,0 +1,967 @@
-> > +/*
-> > + * st_fdma.c
-> > + *
-> > + * Copyright (C) 2014 STMicroelectronics
-> > + * Author: Ludovic Barre <Ludovic.barre-qxv4g6HH51o@public.gmane.org>
-> > + * License terms:  GNU General Public License (GPL), version 2
-> > + */
-> > +#include <linux/init.h>
-> > +#include <linux/module.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_dma.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/dmaengine.h>
-> > +#include <linux/dmapool.h>
-> > +#include <linux/firmware.h>
-> > +#include <linux/elf.h>
-> > +#include <linux/atomic.h>
-> > +
-> > +#include "st_fdma.h"
-> > +#include "dmaengine.h"
-> > +#include "virt-dma.h"
-> > +
-> > +static char *fdma_clk_name[CLK_MAX_NUM] = {
-> > +	[CLK_SLIM]	= "fdma_slim",
-> > +	[CLK_HI]	= "fdma_hi",
-> > +	[CLK_LOW]	= "fdma_low",
-> > +	[CLK_IC]	= "fdma_ic",
-> > +};
-> > +
-> > +static int st_fdma_clk_get(struct st_fdma_dev *fdev)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i = 0; i < CLK_MAX_NUM; i++) {
-> > +		fdev->clks[i] = devm_clk_get(fdev->dev, fdma_clk_name[i]);
-> > +		if (IS_ERR(fdev->clks[i])) {
-> > +			dev_err(fdev->dev,
-> > +				"failed to get clock: %s\n", fdma_clk_name[i]);
-> > +			return PTR_ERR(fdev->clks[i]);
-> > +		}
-> > +	}
-> > +
-> > +	if (i != CLK_MAX_NUM) {
-> > +		dev_err(fdev->dev, "all clocks are not defined\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int st_fdma_clk_enable(struct st_fdma_dev *fdev)
-> > +{
-> > +	int i, ret;
-> > +
-> > +	for (i = 0; i < CLK_MAX_NUM; i++) {
-> > +		ret = clk_prepare_enable(fdev->clks[i]);
-> > +		if (ret < 0)
+> The maximum current of the LEDs can be programmed and limited to
+> 5 .. 40mA through a device tree property.
 > 
-> You should disable and unprepared the other clocks...
+> The chip is connected through I2C and can have one of 4 addresses (0x64 .. 0x67)
+> depending on how the AD pin is connected. The address is defined by the
+> reg property as usual.
+> 
+> The chip also has a shutdown input which could be connected to a GPIO,
+> but this driver uses software shutdown if all LEDs are inactivated.
+> 
+> The chip also has breathing and audio features which are not supported
+> by this driver.
+> 
+> This driver was developed and tested on OMAP5 based Pyra handheld prototype.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/leds/is31fl319x.txt        |  41 +++
+>  drivers/leds/Kconfig                               |   8 +
+>  drivers/leds/Makefile                              |   1 +
+>  drivers/leds/leds-is31fl319x.c                     | 406 +++++++++++++++++++++
+>  include/linux/leds-is31fl319x.h                    |  24 ++
+>  5 files changed, 480 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
+>  create mode 100644 drivers/leds/leds-is31fl319x.c
+>  create mode 100644 include/linux/leds-is31fl319x.h
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/is31fl319x.txt b/Documentation/devicetree/bindings/leds/is31fl319x.txt
+> new file mode 100644
+> index 0000000..d13c7ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/is31fl319x.txt
+> @@ -0,0 +1,41 @@
+> +LEDs connected to is31fl319x RGB LED controller chip
+> +
+> +Required properties:
+> +- compatible : should be : "issi,is31fl3196" or "issi,is31fl3199".
 
-Good point, will fix in v4.
+One per line please.
 
-regards,
+> +- #address-cells: must be 1
+> +- #size-cells: must be 0
+> +- reg: 0x64, 0x65, 0x66, 0x67.
+> +
+> +Optional properties:
+> +- max-current-ma:	maximum led current (5..40 mA, default 20 mA)
 
-Perer
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Use standard property led-max-microamp.
+
+> +- audio-gain-db:	audio gain selection (0..21 dB. default 0 dB)
+> +- breathing & audio:	not implemented
+> +
+> +Each led is represented as a sub-node of the issi,is31fl319x device.
+> +
+> +LED sub-node properties:
+> +- label : (optional) see Documentation/devicetree/bindings/leds/common.txt
+> +- reg : number of LED line (0 to 5 or 0 to 8 - not all need to be present)
+> +- linux,default-trigger : (optional)
+> +   see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Examples:
+> +
+> +fancy_leds: is31fl3196@65 {
+> +	compatible = "issi,is31fl319x";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0x65>;
+> +
+> +	led0: red-aux@0 {
+
+Use generic unit names:
+
+red-aux: led@0
+
+> +		label = "red:aux";
+> +		reg = <0>;
+> +	};
+> +
+> +	led1: green-power@4 {
+
+ditto
+
+> +		label = "green:power";
+> +		reg = <4>;
+> +		linux,default-trigger = "default-on";
+> +	};
+> +};
+> +
