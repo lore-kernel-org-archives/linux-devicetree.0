@@ -1,38 +1,58 @@
-From: Antti Palosaari <crope@iki.fi>
-Subject: Re: [PATCH v7 00/24] i2c mux cleanup and locking update
-Date: Thu, 21 Apr 2016 04:10:59 +0300
-Message-ID: <571828A3.7090007@iki.fi>
-References: <1461165484-2314-1-git-send-email-peda@axentia.se>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 2/2] thermal: generic-adc: Add ADC based thermal sensor
+ driver
+Date: Thu, 21 Apr 2016 06:42:16 +0530
+Message-ID: <571828F0.8000101@nvidia.com>
+References: <1461050521-6080-1-git-send-email-ldewangan@nvidia.com> <1461050521-6080-2-git-send-email-ldewangan@nvidia.com> <20160420234322.GA2558@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461165484-2314-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160420234322.GA2558-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2016 06:17 PM, Peter Rosin wrote:
 
-Retested all the previously tested + now I tested also cx231xx with 
-Hauppauge 930C HD device having eeprom other mux port and demod on the 
-other port.
+On Thursday 21 April 2016 05:13 AM, Eduardo Valentin wrote:
+> Laxman,
+>
+> On Tue, Apr 19, 2016 at 12:52:01PM +0530, Laxman Dewangan wrote:
+>> In some of platform, thermal sensors like NCT thermistors are
+>> connected to the one of ADC channel. The temperature is read by
+>> reading the voltage across the sensor resistance via ADC. Lookup
+>> table for ADC read value to temperature is referred to get
+>> temperature. ADC is read via IIO framework.
+>>
+>> Add support for thermal sensor driver which read the voltage across
+>> sensor resistance from ADC through IIO framework.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> I really like this driver, as I mentioned  before. Just one comment
+> though.
+>
+>> +
+>> +	gti->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0,
+>> +						      gti, &gadc_thermal_ops);
+> Why not using the devm_ version you introduced?
+>
+> Any particular reason?
+>
 
->    [media] si2168: change the i2c gate to be mux-locked
->    [media] m88ds3103: convert to use an explicit i2c mux core
->    [media] rtl2830: convert to use an explicit i2c mux core
->    [media] rtl2832: convert to use an explicit i2c mux core
->    [media] si2168: convert to use an explicit i2c mux core
->    [media] cx231xx: convert to use an explicit i2c mux core
->    [media] rtl2832: change the i2c gate to be mux-locked
->    [media] rtl2832_sdr: get rid of empty regmap wrappers
->    [media] rtl2832: regmap is aware of lockdep, drop local locking hack
+Yaah, the reason is just to maintain the proper sequence in releasing of 
+resource during driver unbinding.
 
-I really hope that this whole patch series will arrive asap to mainline.
+Sequence in probe are:
+         iio_channel_get()
+         thermal_zone_of_sensor_register()
 
-regards
-Antti
+and on release, sensor should be released first before iio channel.
+As of now, we do not have devm_iio_channel_get() [I already post patch 
+and it is accepted by Jonathan in iio sub system] and hence I can not 
+use the devm_ for sensor register to avoid race.
 
--- 
-http://palosaari.fi/
+However, once the devm_ for iio channel get available in all subsystem 
+(may be in next release), I will post the patch to use devm_.
+
+Currently, we can go with these APIs.
