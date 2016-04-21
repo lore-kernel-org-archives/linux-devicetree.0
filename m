@@ -1,44 +1,58 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: devicetree: avoid duplicated matching code (was: Re: [PATCH 1/3]
- xhci: plat: adapt to unified device property interface)
-Date: Thu, 21 Apr 2016 08:00:07 -0500
-Message-ID: <CAL_JsqLVAN_dEcGUbNyiBjFJTSPSPjMKzWG9QBoJ71whpfmBiA@mail.gmail.com>
-References: <1461064246-27350-1-git-send-email-heikki.krogerus@linux.intel.com>
- <1461064246-27350-2-git-send-email-heikki.krogerus@linux.intel.com> <87fuuf9pip.fsf@intel.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [rtc-linux] [PATCH v2] rtc: s3c: Document in binding that only
+ s3c6410 needs a src clk
+Date: Thu, 21 Apr 2016 15:09:11 +0200
+Message-ID: <20160421130911.GX29844@piout.net>
+References: <1455545466-25709-1-git-send-email-javier@osg.samsung.com>
+ <20160328221915.GC2346@piout.net>
+ <5718CBA9.30801@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fuuf9pip.fsf-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5718CBA9.30801@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 6:20 AM, Felipe Balbi
-<felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->
-> Hi,
->
-> Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> writes:
->> @@ -197,7 +196,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
->>       }
->>
->>       xhci = hcd_to_xhci(hcd);
->> -     match = of_match_node(usb_xhci_of_match, node);
->> +     match = of_match_node(usb_xhci_of_match, pdev->dev.of_node);
->
-> Rob, it's weird that OF-based drivers have to redo the same matching
-> which was already done by drivers/base/platform.c::platform_match() just
-> to get match->data. If we know we matched, couldn't we just cache a
-> pointer to match->data in struct device_node.data ? Something like
-> below? (completely untested)
+On 21/04/2016 at 08:46:33 -0400, Javier Martinez Canillas wrote :
+> Hello Alexandre,
+> 
+> On 03/28/2016 06:19 PM, Alexandre Belloni wrote:
+> > On 15/02/2016 at 11:11:06 -0300, Javier Martinez Canillas wrote :
+> >> The S3C binding doc says that the RTC and RTC source clocks are required
+> >> but the S3C driver supports different HW IP and only the s3c6410 needs a
+> >> source clock.
+> >>
+> >> Fix the binding explaining that the source clock is only needed for the
+> >> s3c6410-rtc compatible controller.
+> >>
+> >> Reported-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> >> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> >> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> >>
+> >> ---
+> >> Hello,
+> >>
+> >> This patch depends on a previous one that was picked by Rob Herring so
+> >> this one has to go through his tree again and not through the RTC tree
+> >> to avoid conflicts.
+> >>
+> > 
+> > Well, I'm queuing that one in rtc-fixes for 4.6
+> > 
+> 
+> Are you still planning to push this fix for v4.6? I don't see the patch in
+> neither v4.6-rc4 nor linux-next.
+> 
 
-Yes, it is. AIUI, there is some sort of race condition in doing what
-you suggest though. IIRC, Grant did that and reverted it if you look
-at the git history.
+Well, I was expecting to get more fixes but didn't so I still didn't
+send the PR to Linus. I'll do that this week.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks for the reminder!
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
