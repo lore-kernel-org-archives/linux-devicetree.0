@@ -1,128 +1,91 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 06/14] irqdomain: Don't set type when mapping an IRQ
-Date: Thu, 21 Apr 2016 16:45:23 +0100
-Message-ID: <5718F593.40605@nvidia.com>
-References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
- <1461150237-15580-7-git-send-email-jonathanh@nvidia.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: Add jdi lt070me05000 panel bindings
+Date: Thu, 21 Apr 2016 10:45:46 -0500
+Message-ID: <20160421154546.GA20028@rob-hp-laptop>
+References: <20160414171500.GA11505@rob-hp-laptop>
+ <1461144755-10633-1-git-send-email-simhavcs@gmail.com>
+ <1461144755-10633-2-git-send-email-simhavcs@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461150237-15580-7-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461144755-10633-2-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 20/04/16 12:03, Jon Hunter wrote:
-> Some IRQ chips, such as GPIO controllers or secondary level interrupt
-> controllers, may require require additional runtime power management
-> control to ensure they are accessible. For such IRQ chips, it makes sense
-> to enable the IRQ chip when interrupts are requested and disabled them
-> again once all interrupts have been freed.
+On Wed, Apr 20, 2016 at 03:02:31PM +0530, Vinay Simha BN wrote:
+> Add documentation for lt070me05000 panel
 > 
-> When mapping an IRQ, the IRQ type settings are read and then programmed.
-> The mapping of the IRQ happens before the IRQ is requested and so the
-> programming of the type settings occurs before the IRQ is requested. This
-> is a problem for IRQ chips that require additional power management
-> control because they may not be accessible yet. Therefore, when mapping
-> the IRQ, don't program the type settings, just save them and then program
-> these saved settings when the IRQ is requested (so long as if they are not
-> overridden via the call to request the IRQ).
-> 
-> Add a stub function for irq_domain_free_irqs() to avoid any compilation
-> errors when CONFIG_IRQ_DOMAIN_HIERARCHY is not selected.
-> 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  include/linux/irqdomain.h |  3 +++
->  kernel/irq/irqdomain.c    | 17 +++++++++++++----
->  2 files changed, 16 insertions(+), 4 deletions(-)
-
-[snip]
- 
-> -	/* Set type if specified and different than the current one */
-> -	if (type != IRQ_TYPE_NONE &&
-> -	    type != irq_get_trigger_type(virq))
-> -		irq_set_irq_type(virq, type);
-> +	irq_data = irq_get_irq_data(virq);
-> +	if (!irq_data) {
-> +		if (irq_domain_is_hierarchy(domain))
-> +			irq_domain_free_irqs(virq, 1);
-> +		else
-> +			irq_dispose_mapping(virq);
-> +		return 0;
-> +	}
+>  .../bindings/display/panel/jdi,lt070me05000.txt    | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
+> new file mode 100644
+> index 0000000..ffe0550
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
+> @@ -0,0 +1,43 @@
+> +JDI model LT070ME05000 1200x1920 7" DSI Panel
 > +
-> +	/* Store trigger type */
-> +	irqd_set_trigger_type(irq_data, type);
+> +Required properties:
+> +- compatible: should be "jdi,lt070me05000"
+> +- power-supply: phandle of the regulator that provides the supply voltage
+> +  IOVCC , power supply for LCM (1.8V)
+> +- vddp-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply (3-5V)
+> +- dcdc_en-supply: phandle of the regulator that provides the supply voltage
+> +  Power IC supply enable, High active
+> +- reset-gpio: phandle of gpio for reset line
+> +  This should be 8mA, gpio can be configured using mux and pinctrl.
+> +  XRES, Reset, Low active
+> +- enable-gpio: phandle of gpio for enable line
+> +  LED_EN, LED backlight enable, High active
+
+These should all be -gpios instead.
+
+> +- vcc-gpio: phandle of regulator/gpio that provides the supply voltage
+> +  VDD, LED power supply (3-5V)
+
+Is it a regulator or gpio?
+
 > +
+> +Optional properties:
+> +- pwm-gpio: phandle of gpio/pwm
 
-I appear to have missed another place for saving the irq type
-which I had change in this version. Next time I will triple
-check! Should have been ...
+This should use the PWM binding. It may not be a GPIO on some hosts.
 
-
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 2aed04396210..fc66876d1965 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -440,6 +440,9 @@ static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
-        return -1;
- }
- 
-+static inline void irq_domain_free_irqs(unsigned int virq,
-+                                       unsigned int nr_irqs) { }
-+
- static inline bool irq_domain_is_hierarchy(struct irq_domain *domain)
- {
-        return false;
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 3d6ef5527b71..46ecf5d468b2 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -569,6 +569,7 @@ static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
- unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
- {
-        struct irq_domain *domain;
-+       struct irq_data *irq_data;
-        irq_hw_number_t hwirq;
-        unsigned int type = IRQ_TYPE_NONE;
-        int virq;
-@@ -619,7 +620,11 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-                 * it now and return the interrupt number.
-                 */
-                if (IRQ_TYPE_NONE == irq_get_trigger_type(virq)) {
--                       irq_set_irq_type(virq, type);
-+                       irq_data = irq_get_irq_data(virq);
-+                       if (!irq_data)
-+                               return 0;
-+
-+                       irqd_set_trigger_type(irq_data, type);
-                        return virq;
-                }
- 
-@@ -639,10 +644,18 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
-                        return virq;
-        }
- 
--       /* Set type if specified and different than the current one */
--       if (type != IRQ_TYPE_NONE &&
--           type != irq_get_trigger_type(virq))
--               irq_set_irq_type(virq, type);
-+       irq_data = irq_get_irq_data(virq);
-+       if (!irq_data) {
-+               if (irq_domain_is_hierarchy(domain))
-+                       irq_domain_free_irqs(virq, 1);
-+               else
-+                       irq_dispose_mapping(virq);
-+               return 0;
-+       }
-+
-+       /* Store trigger type */
-+       irqd_set_trigger_type(irq_data, type);
-+
-        return virq;
- }
- EXPORT_SYMBOL_GPL(irq_create_fwspec_mapping);
+> +  pwm backlight control, this should be mapped to the backlight level
+> +  display brightness (0x51)
+> +
+> +Example:
+> +
+> +	dsi0: qcom,mdss_dsi@4700000 {
+> +		panel@0 {
+> +			compatible = "jdi,lt070me05000";
+> +			reg = <0>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&dsi_panel_pinctrl>;
+> +
+> +			power-supply = <&pm8921_lvs5>;
+> +			vddp-supply = <&pm8921_l17>;
+> +			dcdc_en-supply = <&pm8921_lvs7>;
+> +
+> +			reset-gpio = <&tlmm_pinmux 54 0>;
+> +			enable-gpio = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
+> +			vcc-gpio = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
+> +
+> +			pwm-gpio = <&pm8921_gpio 26 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> -- 
+> 2.1.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
