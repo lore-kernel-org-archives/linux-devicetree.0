@@ -1,46 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/6] leds: pca963x: Inform the output that it is inverted
-Date: Thu, 21 Apr 2016 10:07:50 -0500
-Message-ID: <20160421150750.GA3116@rob-hp-laptop>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <1461051650-18824-6-git-send-email-oliver@schinagl.nl>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] documentation: nvmem: imx-ocotp: Add i.MX6UL support
+Date: Thu, 21 Apr 2016 10:10:19 -0500
+Message-ID: <20160421151019.GA7103@rob-hp-laptop>
+References: <1461056354-973-1-git-send-email-van.freenix@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1461051650-18824-6-git-send-email-oliver@schinagl.nl>
-Sender: linux-leds-owner@vger.kernel.org
-To: Olliver Schinagl <oliver@schinagl.nl>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <1461056354-973-1-git-send-email-van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 09:40:49AM +0200, Olliver Schinagl wrote:
-> When leds are connected in a totem-pole configuration, they can be
-> connected either in a active-high, or active-low manor. The driver
-> currently always assumes active-high. This patch adds the
-> 'nxp,inverted-out' boolean property to tell the driver that the leds
-> are driven active-low, or rather, that the behavior is inverted to what
-> is normally expected.
-
-How do I know what is normally expected?
-
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> ---
->  Documentation/devicetree/bindings/leds/pca963x.txt |  1 +
->  drivers/leds/leds-pca963x.c                        | 20 +++++++++++++-------
->  include/linux/platform_data/leds-pca963x.h         |  1 +
->  3 files changed, 15 insertions(+), 7 deletions(-)
+On Tue, Apr 19, 2016 at 04:59:12PM +0800, Peng Fan wrote:
+> Add i.MX6UL support in documentation.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
-> index dafbe99..7b23725 100644
-> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
-> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
-> @@ -6,6 +6,7 @@ Required properties:
->  Optional properties:
->  - nxp,totem-pole : use totem pole (push-pull) instead of open-drain (pca9632 defaults
->    to open-drain, newer chips to totem pole)
-> +  nxp,inverted-out: the connected leds are active-low, default to active-high
+> Signed-off-by: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Just state what mode you want: nxp,active-low
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
