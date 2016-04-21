@@ -1,64 +1,57 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: dts: lpc32xx: update ssp / spi nodes
-Date: Thu, 21 Apr 2016 05:07:43 +0300
-Message-ID: <571835EF.8040309@mleia.com>
-References: <1461158460-2946-1-git-send-email-slemieux.tyco@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2] ARM: dts: uniphier: add NAND pinmux node
+Date: Thu, 21 Apr 2016 11:11:23 +0900
+Message-ID: <1461204683-28753-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461158460-2946-1-git-send-email-slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylvain,
+This commit adds pin-mux nodes for the NAND controller.
+Some SoCs support 2 chip selects and the others only support
+1 chip select.
 
-On 20.04.2016 16:20, Sylvain Lemieux wrote:
-> From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
-> 
-> This patchset change the following:
-> 1) adds clock properties to spi peripheral devices,
->    clock ids are taken from dt-bindings/clock/lpc32xx-clock.h.
-> 
-> 2) enable SSP0 used by PHY3250.
->    preparatory change prior to disabling SSPx controllers.
-> 
-> 3) disable, by default, the SSP0/SPI1 and SSP1/SPI2 shared pinout;
->    shared pin should be enable in board specific dts, as needed.
-> ---
-> Changes from v1 to v2:
-> * Update the patch as per the feedback received from:
->   Arnd: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493250
->   - Start subject with "ARM" instead of "arm".
->   - Add a multi-line description for trivial patches.
->   Vladimir: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493323
->             http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493324
->   - Remove "clock-names" property.
->   - Switch patch #2 and #3 order.
-> * Rebased on the following patch:
->   http://permalink.gmane.org/gmane.linux.drivers.devicetree/164584/
-> 
-> Sylvain Lemieux (3):
->   ARM: dts: lpc32xx: add clock properties to spi nodes
->   ARM: dts: phy3250: enable ssp0
->   ARM: dts: lpc32xx: disabled ssp0/spi1 & ssp1/spi2 by default
-> 
->  arch/arm/boot/dts/lpc32xx.dtsi | 14 ++++++++++++++
->  arch/arm/boot/dts/phy3250.dts  |  1 +
->  2 files changed, 15 insertions(+)
-> 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-all changes in the series are good from my point of view, I'll apply
-them shortly.
+Changes in v2:
+  - Add pinctrl_nand2cs node (NAND with 2 chip selects)
 
-Acked-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+index 2459279..f2f3fbe 100644
+--- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
++++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+@@ -68,6 +68,16 @@
+ 		function = "i2c4";
+ 	};
+ 
++	pinctrl_nand: nand_grp {
++		groups = "nand";
++		function = "nand";
++	};
++
++	pinctrl_nand2cs: nand2cs_grp {
++		groups = "nand", "nand_cs1";
++		function = "nand";
++	};
++
+ 	pinctrl_uart0: uart0_grp {
+ 		groups = "uart0";
+ 		function = "uart0";
+-- 
+1.9.1
