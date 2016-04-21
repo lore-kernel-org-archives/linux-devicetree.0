@@ -1,58 +1,64 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 2/2] thermal: generic-adc: Add ADC based thermal sensor
- driver
-Date: Thu, 21 Apr 2016 06:42:16 +0530
-Message-ID: <571828F0.8000101@nvidia.com>
-References: <1461050521-6080-1-git-send-email-ldewangan@nvidia.com> <1461050521-6080-2-git-send-email-ldewangan@nvidia.com> <20160420234322.GA2558@localhost.localdomain>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: dts: lpc32xx: update ssp / spi nodes
+Date: Thu, 21 Apr 2016 05:07:43 +0300
+Message-ID: <571835EF.8040309@mleia.com>
+References: <1461158460-2946-1-git-send-email-slemieux.tyco@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160420234322.GA2558-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461158460-2946-1-git-send-email-slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylvain,
 
-On Thursday 21 April 2016 05:13 AM, Eduardo Valentin wrote:
-> Laxman,
->
-> On Tue, Apr 19, 2016 at 12:52:01PM +0530, Laxman Dewangan wrote:
->> In some of platform, thermal sensors like NCT thermistors are
->> connected to the one of ADC channel. The temperature is read by
->> reading the voltage across the sensor resistance via ADC. Lookup
->> table for ADC read value to temperature is referred to get
->> temperature. ADC is read via IIO framework.
->>
->> Add support for thermal sensor driver which read the voltage across
->> sensor resistance from ADC through IIO framework.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> I really like this driver, as I mentioned  before. Just one comment
-> though.
->
->> +
->> +	gti->tz_dev = thermal_zone_of_sensor_register(&pdev->dev, 0,
->> +						      gti, &gadc_thermal_ops);
-> Why not using the devm_ version you introduced?
->
-> Any particular reason?
->
+On 20.04.2016 16:20, Sylvain Lemieux wrote:
+> From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+> 
+> This patchset change the following:
+> 1) adds clock properties to spi peripheral devices,
+>    clock ids are taken from dt-bindings/clock/lpc32xx-clock.h.
+> 
+> 2) enable SSP0 used by PHY3250.
+>    preparatory change prior to disabling SSPx controllers.
+> 
+> 3) disable, by default, the SSP0/SPI1 and SSP1/SPI2 shared pinout;
+>    shared pin should be enable in board specific dts, as needed.
+> ---
+> Changes from v1 to v2:
+> * Update the patch as per the feedback received from:
+>   Arnd: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493250
+>   - Start subject with "ARM" instead of "arm".
+>   - Add a multi-line description for trivial patches.
+>   Vladimir: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493323
+>             http://permalink.gmane.org/gmane.linux.ports.arm.kernel/493324
+>   - Remove "clock-names" property.
+>   - Switch patch #2 and #3 order.
+> * Rebased on the following patch:
+>   http://permalink.gmane.org/gmane.linux.drivers.devicetree/164584/
+> 
+> Sylvain Lemieux (3):
+>   ARM: dts: lpc32xx: add clock properties to spi nodes
+>   ARM: dts: phy3250: enable ssp0
+>   ARM: dts: lpc32xx: disabled ssp0/spi1 & ssp1/spi2 by default
+> 
+>  arch/arm/boot/dts/lpc32xx.dtsi | 14 ++++++++++++++
+>  arch/arm/boot/dts/phy3250.dts  |  1 +
+>  2 files changed, 15 insertions(+)
+> 
 
-Yaah, the reason is just to maintain the proper sequence in releasing of 
-resource during driver unbinding.
+all changes in the series are good from my point of view, I'll apply
+them shortly.
 
-Sequence in probe are:
-         iio_channel_get()
-         thermal_zone_of_sensor_register()
+Acked-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 
-and on release, sensor should be released first before iio channel.
-As of now, we do not have devm_iio_channel_get() [I already post patch 
-and it is accepted by Jonathan in iio sub system] and hence I can not 
-use the devm_ for sensor register to avoid race.
-
-However, once the devm_ for iio channel get available in all subsystem 
-(may be in next release), I will post the patch to use devm_.
-
-Currently, we can go with these APIs.
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
