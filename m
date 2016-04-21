@@ -1,97 +1,56 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [RESEND PATCH 0/3 v6] Add Mediatek MT8173 cpufreq driver
-Date: Thu, 21 Apr 2016 19:37:58 +0800
-Message-ID: <1461238678.20801.11.camel@mtksdaap41>
-References: <1439803465-19683-1-git-send-email-pi-cheng.chen@linaro.org>
-	 <20150826021659.GD8784@linux>
-	 <CALx668V2herrp6XOtCDR7nNvFhd7DLLMjXmr86cjfCOQ_cgmrw@mail.gmail.com>
-	 <22538895.vrRgZUmQTV@vostro.rjw.lan>
-	 <CAGS+omAtiALWTjVJS4wNatXVLqZRSOk3m29QQvW=fQWs7Hs5ng@mail.gmail.com>
-	 <55E73077.8060106@gmail.com> <5718AAF0.3010606@gmail.com>
-	 <5718B244.3020201@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 02/19] clk: sunxi: Add display and TCON0
+ clocks driver
+Date: Thu, 21 Apr 2016 14:01:15 +0200
+Message-ID: <20160421120115.GN13045@lukather>
+References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1458751122-23976-3-git-send-email-maxime.ripard@free-electrons.com>
+ <20160415223410.GS14441@codeaurora.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5718B244.3020201@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Pi-Cheng Chen <pi-cheng.chen@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V7BlxAaPrdhzdIM1"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDEC4O4AKGQE6V5KT7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160415223410.GS14441-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+--V7BlxAaPrdhzdIM1
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Thu, 2016-04-21 at 12:58 +0200, Matthias Brugger wrote:
+Hi Stephen,
+
+On Fri, Apr 15, 2016 at 03:34:10PM -0700, Stephen Boyd wrote:
+> > +static int sun4i_a10_display_reset_xlate(struct reset_controller_dev *rcdev,
+> > +					 const struct of_phandle_args *spec)
+> > +{
+> > +	/* We only have a single reset signal */
+> > +	return 0;
+> > +}
 > 
-> On 21/04/16 12:26, Matthias Brugger wrote:
-> >
-> >
-> > On 02/09/15 19:23, Matthias Brugger wrote:
-> >>
-> >>
-> >> On 02/09/15 08:45, Daniel Kurtz wrote:
-> >>> Matthias,
-> >>>
-> >>> On Fri, Aug 28, 2015 at 10:06 PM, Rafael J. Wysocki
-> >>> <rjw@rjwysocki.net> wrote:
-> >>>> On Wednesday, August 26, 2015 02:53:39 PM Pi-Cheng Chen wrote:
-> >>>>> On Wed, Aug 26, 2015 at 10:16 AM, Viresh Kumar
-> >>>>> <viresh.kumar@linaro.org> wrote:
-> >>>>>> On 26-08-15, 09:25, Pi-Cheng Chen wrote:
-> >>>>>>> The [3/3] is based on Mediatek SoC maintainer tree[1] and the
-> >>>>>>> patch which
-> >>>>>>> introduce a new clock type[2] consumed by MT8173 cpufreq driver.
-> >>>>>>> So it will
-> >>>>>>> cause some conflicts if it goes through your tree. I am not sure
-> >>>>>>> how this
-> >>>>>>> should be handled, but should it be merged through Mediatek SoC
-> >>>>>>> maintainer
-> >>>>>>> tree?
-> >>>>>>
-> >>>>>> Just get that applied to MTK tree, it doesn't have any dependency on
-> >>>>>> rest of the patches for build/boot. The only thing is that cpufreq
-> >>>>>> wouldn't work and it will work as soon as Rafael's and MTK's trees
-> >>>>>> are
-> >>>>>> merged by Linus.
-> >>>>>
-> >>>>> Thanks for your explanation.
-> >>>>>
-> >>>>> @Rafael, Would you please apply [1,2] to your tree?
-> >>>>
-> >>>> Applied, thanks!
-> >>>
-> >>> Can you please apply [3] from this set to your dts tree?
-> >>>
-> >>
-> >> I will as soon as v4.3-rc1 shows up.
-> >
-> > I somehow forgot this patch. Sorry for that.
-> > Applied for v4.6-next/dts64 right now.
-> >
-> 
-> I just realized that CLK_INFRA_CA53SEL and CLK_APMIXED_MAINPLL are not 
-> part of the clk driver.
-> 
-> Pi-Cheng, can you check if they got renamed in the meanwhile? Or do we 
-> need some clock driver patches that enable this clocks for the series?
-> 
+> Is there a default function for this case in the reset framework?
 
-Thanks your notice. Unfortunately, we still have no chance let patch
-with these two clock merged. The last version is [1]. This clock patch
-will block cpufreq dts [2] and dynamic power dts [3]. Clock maintainer
-is working on new architecture [4], hopefully we can send new clock
-patch soon. After that, we will send new cpufreq and dynamic power dts.
-So please ignore [2] [3] at this moment. 
+No, the reset bindings assumes that you have a cell size of 1, and
+it's the only case that's supported by the reset framework default
+xlate.
 
-[1]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/369737.html
-[2] https://lkml.org/lkml/2015/7/9/206
-[3]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/423899.html
-[4]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-March/418796.html
+I adressed the rest of your comments.
 
-Eddie
-Thanks
+Thanks!
+Maxime
 
-
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--V7BlxAaPrdhzdIM1--
