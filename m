@@ -1,105 +1,91 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: rockchip: add core dtsi file for RK3399
- SoCs
-Date: Thu, 21 Apr 2016 12:30:18 +0100
-Message-ID: <20160421123018.096d4a75@arm.com>
-References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com>
-	<1461211092-26331-1-git-send-email-jay.xu@rock-chips.com>
-	<20160421101930.GG6879@leverpostej>
-	<5718AFB8.5070004@rock-chips.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V2 04/14] irqdomain: Fix handling of type settings for
+ existing mappings
+Date: Thu, 21 Apr 2016 12:31:55 +0100
+Message-ID: <5718BA2B.2060708@nvidia.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+ <1461150237-15580-5-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5718AFB8.5070004-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461150237-15580-5-git-send-email-jonathanh@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Apr 2016 18:47:20 +0800
-"Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 
-> Hi, Mark:
-> On 2016=E5=B9=B404=E6=9C=8821=E6=97=A5 18:19, Mark Rutland wrote:
-> > On Thu, Apr 21, 2016 at 11:58:12AM +0800, Jianqun Xu wrote:
-> >> +		cpu_l0: cpu@0 {
-> >> +			device_type =3D "cpu";
-> >> +			compatible =3D "arm,cortex-a53", "arm,armv8";
-> >> +			reg =3D <0x0 0x0>;
-> >> +			enable-method =3D "psci";
-> >> +			#cooling-cells =3D <2>; /* min followed by max */
-> >> +			clocks =3D <&cru ARMCLKL>;
-> >> +		};
-> >> +		cpu_b0: cpu@100 {
-> >> +			device_type =3D "cpu";
-> >> +			compatible =3D "arm,cortex-a72", "arm,armv8";
-> >> +			reg =3D <0x0 0x100>;
-> >> +			enable-method =3D "psci";
-> >> +			#cooling-cells =3D <2>; /* min followed by max */
-> >> +			clocks =3D <&cru ARMCLKB>;
-> >> +		};
-> >> +
-> >> +	arm-pmu {
-> >> +		compatible =3D "arm,armv8-pmuv3";
-> >> +		interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> >> +	};
-> > This is wrong, and must go. There should be a separate node for the=
- PMU
-> > of each microarchitecture, with the appropriate compatible string t=
-o
-> > represent that (see the juno dts).
-> You are right. The first version we wrote is:
->     pmu_a53 {
->         compatible =3D "arm,cortex-a53-pmu";
->         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
->         interrupt-affinity =3D <&cpu_l0>,
->                      <&cpu_l1>,
->                      <&cpu_l2>,
->                      <&cpu_l3>;
->     };
->=20
->     pmu_a72 {
->         compatible =3D "arm,cortex-a72-pmu";
->         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
->         interrupt-affinity =3D <&cpu_b0>,
->                      <&cpu_b1>;
->     };
-> but unfortunately, the arm pmu driver do not support PPI in two clust=
-er
-> well,
-> so we have to replace with this implementation.
-> > In this case things are messier as the same PPI number is being use=
-d
-> > across clusters. Marc (Cc'd) has been working on PPI partitions, wh=
-ich
-> > should allow us to support that.
-> Great! So what we can do right now? Wait this feature, and delete
-> arm-pmu node?
+On 20/04/16 12:03, Jon Hunter wrote:
+> When mapping an IRQ, it is possible that a mapping for the IRQ already
+> exists. If mapping does exist then there are the following issues with
+> regard to the handling of the IRQ type settings ...
+> 1. If the domain is part of a hierarchy, then:
+>    a. We do not check that the type settings for the existing mapping
+>       match those of the new mapping.
+>    b. We do not check to see if the type settings have been programmed
+>       yet (and they might not have been) and so we may never set the
+>       type.
+> 2. If the domain is NOT part of a hierarchy, we will overwrite the
+>    current type settings programmed if they are different from the
+>    previous mapping. Please note that irq_create_mapping()
+>    calls irq_find_mapping() to check if a mapping already exists.
+> 
+> Although, it may be unlikely that the type settings for a shared
+> interrupt would not match, nonetheless we should check for this.
+> Therefore, to fix this check if a mapping exists (regardless of whether
+> the domain is part of a hierarchy or not) and if it does then:
+> 1. Return the IRQ number if the type settings match or are not
+>    specified.
+> 2. Program the type settings and return the IRQ number if the type
+>    settings have not been programmed yet.
+> 3. Otherwise if the type setting do not match, then print a warning
+>    and don't return the IRQ number.
+> 
+> Furthermore, add a warning if the type return by irq_domain_translate()
+> has bits outside the sense mask set and then clear these bits. If these
+> bits are not cleared then this will cause the comparision of the type
+> settings for an existing mapping to fail with that of the new mapping
+> even if the sense bit themselves match. The reason being is that the
+> existing type settings are read by calling irq_get_trigger_type() which
+> will clear any bits outside the sense mask. This will allow us to detect
+> irqchips that are not correctly clearing these bits and fix them.
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  kernel/irq/irqdomain.c | 38 +++++++++++++++++++++++++++++++++-----
+>  1 file changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 245a485ffb61..88e9328b7aab 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -592,15 +592,43 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>  	if (irq_domain_translate(domain, fwspec, &hwirq, &type))
+>  		return 0;
+>  
+> -	if (irq_domain_is_hierarchy(domain)) {
+> +	/*
+> +	 * WARN if the irqchip returns a type with bits
+> +	 * outside the sense mask set and clear these bits.
+> +	 */
+> +	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
+> +		type &= IRQ_TYPE_SENSE_MASK;
+> +
+> +	/*
+> +	 * If we've already configured this interrupt,
+> +	 * don't do it again, or hell will break loose.
+> +	 */
+> +	virq = irq_find_mapping(domain, hwirq);
+> +	if (virq) {
+>  		/*
+> -		 * If we've already configured this interrupt,
+> -		 * don't do it again, or hell will break loose.
+> +		 * If the trigger type is not specified or matches the
+> +		 * current trigger type then we are done so return the
+> +		 * interrupt number. Otherwise, if the trigger type does
+> +		 * not match return 0.
 
-I'd rather you have a look at the patches, test them with your HW,
-and comment on what doesn't work!
+I think I should have dropped this 'otherwise' sentence from here.
 
-You can find the patches over there:
-
-https://lkml.org/lkml/2016/4/11/182
-
-and on the following branch:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
-irq/percpu-partition
-
-Of course, you'll have to hack a bit in the PMU code to make it
-understand per-PMU affinity together with percpu interrupts, but it
-wouldn't be fun if there was nothing to do...
-
-Thanks,
-
-	M.
---=20
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jon
