@@ -1,14 +1,16 @@
-From: Pramod Kumar <pramod.kumar@broadcom.com>
-Subject: [PATCH 6/6] net:phy: Add Ethernet Master for iProc Shared MDIO
- Controller
-Date: Thu, 21 Apr 2016 14:48:43 +0530
-Message-ID: <1461230323-27891-7-git-send-email-pramod.kumar@broadcom.com>
-References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+From: Ashok Kumar <ashoks@broadcom.com>
+Subject: Re: [PATCH v5 3/7] arm64/perf: Changed events naming as per ARM ARM
+Date: Thu, 21 Apr 2016 02:21:10 -0700
+Message-ID: <44471.9862346121$1461230567@news.gmane.org>
+References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
+ <1461092062-7484-4-git-send-email-ashoks@broadcom.com>
+ <20160420133456.GJ11453@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <20160420133456.GJ11453@leverpostej>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,175 +20,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, jchandra@broadcom.com, Suzuki.Poulose@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, jglauber@cavium.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add Ethernet master driver which registers the ethernet phy
-to standard legacy mdio framework.
+On Wed, Apr 20, 2016 at 02:34:56PM +0100, Mark Rutland wrote:
+> On Tue, Apr 19, 2016 at 11:54:18AM -0700, Ashok Kumar wrote:
+> > changed all the events name definition as per ARM ARM
+> > naming convention.
+> 
+> Please note which document you got these from (I assume the ARM ARM),
+> complete with the ARM document number (e.g. ARM DDI 0487A.i for revision
+> A.i). That gives us a consistent point of reference, which is helpful
+> for review and in case these names have cahnged (or change in future).
+> 
+> I've verified that the renaming of architected events now leaves them
+> named as per the ARM ARM. I see that we don't have the full list of
+> IMPDEF events, but that's a matter for another patch.
+> 
+> It might also be worth explicitly noting the correction of the l21/l2i
+> typo, as that looks a little odd otherwise.
+> 
+> >  /* ARMv8 Cortex-A53 specific event types. */
+> >  #define ARMV8_A53_PERFCTR_PREFETCH_LINEFILL			0xC2
+> >  
+> >  /* ARMv8 Cavium ThunderX specific event types. */
+> > -#define ARMV8_THUNDER_PERFCTR_L1_DCACHE_MISS_ST			0xE9
+> > -#define ARMV8_THUNDER_PERFCTR_L1_DCACHE_PREF_ACCESS		0xEA
+> > -#define ARMV8_THUNDER_PERFCTR_L1_DCACHE_PREF_MISS		0xEB
+> > -#define ARMV8_THUNDER_PERFCTR_L1_ICACHE_PREF_ACCESS		0xEC
+> > -#define ARMV8_THUNDER_PERFCTR_L1_ICACHE_PREF_MISS		0xED
+> > +#define ARMV8_THUNDER_PERFCTR_L1D_CACHE_MISS_ST			0xE9
+> > +#define ARMV8_THUNDER_PERFCTR_L1D_CACHE_PREF_ACCESS		0xEA
+> > +#define ARMV8_THUNDER_PERFCTR_L1D_CACHE_PREF_MISS		0xEB
+> > +#define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
+> > +#define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
+> 
+> I'm not sure of the value of renaming these. I would think these should
+> match whatever is in the documentation for Cortex-A53 and ThunderX
+> respectively (and there's the obvious PREFETCH/PREF difference
+> remaining).
+I have changed them to PREF and will post it in v6.
+I checked table 12.28 in Cortex-A53 MPCore Processor TRM r0p4.
+For 0xc2, event mnemonic is not available but event name says 
+"Linefill because of prefetch".
 
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/net/phy/Kconfig                 |  11 +++
- drivers/net/phy/Makefile                |   1 +
- drivers/net/phy/mdio-bcm-iproc-shared.c | 116 ++++++++++++++++++++++++++++++++
- 3 files changed, 128 insertions(+)
- create mode 100644 drivers/net/phy/mdio-bcm-iproc-shared.c
-
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 6dad9a9..35a7d59 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -271,6 +271,17 @@ config MDIO_BCM_IPROC
- 	  This module provides a driver for the MDIO busses found in the
- 	  Broadcom iProc SoC's.
- 
-+config MDIO_BCM_IPROC_SHARED
-+	tristate "Ethernet Master for Broadcom iProc Shared MDIO Controller"
-+	depends on OF && OF_MDIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	default ARCH_BCM_IPROC
-+	help
-+	  This module provides a driver for the ethernet master found in
-+	  shared MDIO controller in the Broadcom iProc SoC's.
-+
-+	  Enable this to support the Shared MDIO controller.
-+	  if unsure, say N.
-+
- endif # PHYLIB
- 
- config MICREL_KS8995MA
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index fcdbb92..e1c0bc5 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -44,3 +44,4 @@ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
- obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
- obj-$(CONFIG_MICROCHIP_PHY)	+= microchip.o
- obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
-+obj-$(CONFIG_MDIO_BCM_IPROC_SHARED)	+= mdio-bcm-iproc-shared.o
-diff --git a/drivers/net/phy/mdio-bcm-iproc-shared.c b/drivers/net/phy/mdio-bcm-iproc-shared.c
-new file mode 100644
-index 0000000..6844107
---- /dev/null
-+++ b/drivers/net/phy/mdio-bcm-iproc-shared.c
-@@ -0,0 +1,116 @@
-+/*
-+ * Copyright (C) 2016 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/shared_mdio.h>
-+#include <linux/io.h>
-+#include <linux/phy.h>
-+#include <linux/of_mdio.h>
-+
-+struct iproc_mdio_priv {
-+	struct shared_mdio_master *master;
-+	struct mii_bus *mii_bus;
-+};
-+
-+static int iproc_mdio_mii_read(struct mii_bus *bus, int phyadr, int reg)
-+{
-+	struct iproc_mdio_priv *priv = (struct iproc_mdio_priv *)bus->priv;
-+
-+	return shared_mdio_read(priv->master, phyadr, reg);
-+}
-+
-+static int iproc_mdio_mii_write(struct mii_bus *bus, int phyadr, int reg,
-+				u16 val)
-+{
-+	struct iproc_mdio_priv *priv = bus->priv;
-+
-+	return shared_mdio_write(priv->master, phyadr, reg, val);
-+}
-+
-+static int iproc_mdio_probe(struct shared_mdio_master *master)
-+{
-+	struct device *dev = &master->dev;
-+	struct iproc_mdio_priv *priv;
-+	struct mii_bus *bus;
-+	struct device_node *dn = dev->of_node;
-+	int rc = 0;
-+
-+	if (of_get_child_count(dn) == 0)
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	priv->master = master;
-+
-+	priv->mii_bus = mdiobus_alloc();
-+	if (!priv->mii_bus) {
-+		dev_err(dev, "mdio bus alloc failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	bus = priv->mii_bus;
-+	bus->priv = priv;
-+	bus->name = "iProc MDIO bus";
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-%d", dev_name(&master->dev),
-+							master->dev_num);
-+	bus->parent = &master->dev;
-+	bus->read = iproc_mdio_mii_read;
-+	bus->write = iproc_mdio_mii_write;
-+
-+	rc = of_mdiobus_register(bus, master->dev.of_node);
-+	if (rc) {
-+		dev_err(dev, "mdio bus registration failed\n");
-+		goto mdiobus_err;
-+	}
-+
-+	shared_mdio_set_drvdata(master, priv);
-+	dev_info(dev, "iProc MDIO bus registered\n");
-+	return 0;
-+
-+mdiobus_err:
-+	mdiobus_free(bus);
-+	return rc;
-+}
-+
-+int iproc_mdio_remove(struct shared_mdio_master *master)
-+{
-+	struct iproc_mdio_priv *priv = shared_mdio_get_drvdata(master);
-+
-+	mdiobus_unregister(priv->mii_bus);
-+	mdiobus_free(priv->mii_bus);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id iproc_mdio_of_match[] = {
-+	{ .compatible = "brcm,iproc-mdio-master-eth" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, iproc_mdio_of_match);
-+
-+static struct shared_mdio_driver iproc_mdio_driver = {
-+	.driver = {
-+		.name = "iproc-mdio-master-eth",
-+		.of_match_table = iproc_mdio_of_match,
-+	},
-+	.probe = iproc_mdio_probe,
-+	.remove = iproc_mdio_remove,
-+};
-+module_shared_mdio_driver(iproc_mdio_driver);
-+
-+MODULE_DESCRIPTION("Broadcom iProc shared mdio master driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Pramod Kumar <pramod.kumar@broadcom.com>");
--- 
-1.9.1
+Thanks for the review.
+> 
+> However, I'll leave that to Will.
+> 
+> Other than that, this looks good to me:
+> 
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Thanks for putting this together!
+> 
+> Mark.
