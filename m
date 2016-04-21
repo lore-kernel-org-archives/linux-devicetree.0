@@ -1,63 +1,60 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 10/18] ASoC: sti: Update example to include assigned-clocks and mclk-fs
-Date: Thu, 21 Apr 2016 12:04:27 +0100
-Message-ID: <1461236675-10176-11-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 17/18] ARM: STi: DT: STiH407: Add uniperif reader dt nodes
+Date: Thu, 21 Apr 2016 12:04:34 +0100
+Message-ID: <1461236675-10176-18-git-send-email-peter.griffin@linaro.org>
 References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com, arnaud.pouliquen@st.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com
 List-Id: devicetree@vger.kernel.org
 
-Update the examples, as otherwise driver errors with an incorrect
-mclk ratio at runtime.
+This patch adds the DT node for the uniperif reader
+IP block found on STiH407 family silicon.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: arnaud.pouliquen@st.com
 ---
- Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-index ef2e0c6..e6ef96a8 100644
---- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-+++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-@@ -62,6 +62,9 @@ Example:
- 		#sound-dai-cells = <0>;
- 		st,syscfg = <&syscfg_core>;
- 		clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
-+		assigned-clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
-+		assigned-clock-parents = <&clk_s_d0_quadfs 2>;
-+		assigned-clock-rates = <50000000>;
- 		reg = <0x8D82000 0x158>;
- 		interrupts = <GIC_SPI 86 IRQ_TYPE_NONE>;
- 		dmas = <&fdma0 4 0 1>;
-@@ -78,6 +81,9 @@ Example:
- 		#sound-dai-cells = <0>;
- 		st,syscfg = <&syscfg_core>;
- 		clocks = <&clk_s_d0_flexgen CLK_SPDIFF>;
-+		assigned-clocks = <&clk_s_d0_flexgen CLK_SPDIFF>;
-+		assigned-clock-parents = <&clk_s_d0_quadfs 3>;
-+		assigned-clock-rates = <50000000>;
- 		reg = <0x8D85000 0x158>;
- 		interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
- 		dmas = <&fdma0 7 0 1>;
-@@ -133,6 +139,7 @@ Example of audio card declaration:
- 			/* DAC */
- 			format = "i2s";
- 			dai-tdm-slot-width = <32>;
-+			mclk-fs = <256>;
- 			cpu {
- 				sound-dai = <&sti_uni_player2>;
- 			};
-@@ -144,6 +151,7 @@ Example of audio card declaration:
- 		simple-audio-card,dai-link@1 {
- 			/* SPDIF */
- 			format = "left_j";
-+			mclk-fs = <128>;
- 			cpu {
- 				sound-dai = <&sti_uni_player3>;
- 			};
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index af184c4..9a27354 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -830,5 +830,33 @@
+ 			st,version = <5>;
+ 			st,mode = "SPDIF";
+ 		};
++
++		sti_uni_reader0: sti-uni-reader@0 {
++			compatible = "st,sti-uni-reader";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			reg = <0x8D83000 0x158>;
++			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 5 0 1>;
++			dma-names = "rx";
++			dai-name = "Uni Reader #0 (PCM IN)";
++			st,version = <3>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2s_8ch_in>;
++		};
++
++		sti_uni_reader1: sti-uni-reader@1 {
++			compatible = "st,sti-uni-reader";
++			status = "disabled";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			reg = <0x8D84000 0x158>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 6 0 1>;
++			dma-names = "rx";
++			dai-name = "Uni Reader #1 (HDMI RX)";
++			st,version = <3>;
++		};
+ 	};
+ };
 -- 
 1.9.1
