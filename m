@@ -1,56 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 02/19] clk: sunxi: Add display and TCON0
- clocks driver
-Date: Thu, 21 Apr 2016 14:01:15 +0200
-Message-ID: <20160421120115.GN13045@lukather>
-References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-3-git-send-email-maxime.ripard@free-electrons.com>
- <20160415223410.GS14441@codeaurora.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Crestez Dan Leonard <leonard.crestez@intel.com>
+Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
+Date: Thu, 21 Apr 2016 15:01:30 +0300
+Message-ID: <5718C11A.6010001@intel.com>
+References: <AM4PR02MB129981BAE6A4E893DDD38173BC6D0@AM4PR02MB1299.eurprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V7BlxAaPrdhzdIM1"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDEC4O4AKGQE6V5KT7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160415223410.GS14441-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <AM4PR02MB129981BAE6A4E893DDD38173BC6D0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---V7BlxAaPrdhzdIM1
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi Stephen,
-
-On Fri, Apr 15, 2016 at 03:34:10PM -0700, Stephen Boyd wrote:
-> > +static int sun4i_a10_display_reset_xlate(struct reset_controller_dev *rcdev,
-> > +					 const struct of_phandle_args *spec)
-> > +{
-> > +	/* We only have a single reset signal */
-> > +	return 0;
-> > +}
+On 04/20/2016 11:31 PM, Peter Rosin wrote:
+> Crestez Dan Leonard wrote:
+>> Changes since that version:
+>> * Nest the adapter in inv_mpu6050_state instead of making it static
+>> * Explicitly forward of_node "i2c-aux-master" to allow describing aux devices
+>> via devicetree.
+>>
+>> For bypass/mux mode devicetree works automatically. The forwarding is based on
+>> the "chan_id" parameter to i2c_add_mux_adapter and is implemented here:
+>>
+>> http://lxr.free-electrons.com/source/drivers/i2c/i2c-mux.c?v=4.5#L158
+>>
+>> Perhaps it might be better for devices handled via master mode to be described
+>> via i2c@1? This would work by scanning the mpu node's children for something
+>> with reg == 1.
 > 
-> Is there a default function for this case in the reset framework?
+> The 0 in i2c@0 (which is used by the mux mode) is the index of the mux slave
+> meaning that i2c@1 would be a second mux slave on the same mux, but this is
+> not a real mux as such, it is a gate which is piggybacking on the i2c mux infra.
+> So, this "mux" can't have a second slave which is why only 0 is valid.
 
-No, the reset bindings assumes that you have a cell size of 1, and
-it's the only case that's supported by the reset framework default
-xlate.
+This behavior is automatic in i2c mux code and seems to assume that all
+the children of mux_dev are i2c muxes. This might be obviously correct
+and useful for dedicated i2c mux devices but in my case mux_dev is just
+the i2c_client for a sensor.
 
-I adressed the rest of your comments.
+>From Documentation/devicetree/bindings/i2c/i2c-mux.txt:
 
-Thanks!
-Maxime
+> An i2c bus multiplexer/switch will have several child busses that are
+> numbered uniquely in a device dependent manner.  The nodes for an i2c
+> bus multiplexer/switch will have one child node for each child bus.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---V7BlxAaPrdhzdIM1--
+This seems to be written in a way that would allow me to define the
+"auxiliary i2c master" as bus "1". After all, the numbering is device
+dependent and it's not clear that all the child busses need to be
+accessible through muxing rather than indirect access through device
+registers.
+
+>> Or maybe the two busses should be called i2c-aux-master and i2c-aux-mux? Not
+>> sure how to deal with that on the mux side.
+> 
+> Changing i2c to i2c-aux-mux would break existing device trees, that seems
+> like a bad thing, no?
+
+That support was not documented in mpu6050's bindings and might not be
+actually used.
+
+>> It is not clear how to properly handle this and suggestions are welcome. The
+>> way it currently works with this patch is documented immediately below.
+> 
+> I think the naming could be i2c-master0, i2c-master1 etc if it, with
+> future work, would be possible to add more than one master (you talked about
+> 5 i2c slaves..).
+
+The device has 5 sets of registers for controlling i2c slaves but only
+one physical auxiliary i2c bus. As far as I can tell slaves 0-3 are
+intended to be used for gathering readings for slaved sensors
+periodically without external intervention. Slave 4 can generate an
+interrupt on completion and is more suitable for general-purpose
+communication with any number of devices.
