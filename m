@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 05/18] dmaengine: st_fdma: Add fdma suspend and resume callbacks.
-Date: Thu, 21 Apr 2016 12:04:22 +0100
-Message-ID: <1461236675-10176-6-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 01/18] dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding documentation
+Date: Thu, 21 Apr 2016 12:04:18 +0100
+Message-ID: <1461236675-10176-2-git-send-email-peter.griffin@linaro.org>
 References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
@@ -10,70 +10,108 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the functions to gate the xp70 clock on
-suspend and resume.
+This patch adds the DT binding documentation for the FDMA constroller
+found on STi based chipsets from STMicroelectronics.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- drivers/dma/st_fdma.c | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ Documentation/devicetree/bindings/dma/st_fdma.txt | 87 +++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/st_fdma.txt
 
-diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
-index 5fcaf10..48a66c9 100644
---- a/drivers/dma/st_fdma.c
-+++ b/drivers/dma/st_fdma.c
-@@ -1132,10 +1132,51 @@ static int st_fdma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int st_fdma_pm_suspend(struct device *dev)
-+{
-+	struct st_fdma_dev *fdev = dev_get_drvdata(dev);
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/dma/st_fdma.txt b/Documentation/devicetree/bindings/dma/st_fdma.txt
+new file mode 100644
+index 0000000..13029dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/st_fdma.txt
+@@ -0,0 +1,87 @@
++* STMicroelectronics Flexible Direct Memory Access Device Tree bindings
 +
-+	if (atomic_read(&fdev->fw_loaded)) {
-+		ret = st_fdma_disable(fdev);
-+		if (ret & FDMA_EN_RUN) {
-+			dev_warn(fdev->dev, "Failed to disable channels");
-+			return -EBUSY;
-+		}
-+	}
++The FDMA is a general-purpose direct memory access controller capable of
++supporting 16 independent DMA channels. It accepts up to 32 DMA requests.
++The FDMA is based on a Slim processor which require a firmware.
 +
-+	st_fdma_clk_disable(fdev);
++* FDMA Controller
 +
-+	return 0;
-+}
++Required properties:
++- compatible	: Should be one of
++		 - st,stih407-fdma-mpe31-11
++		 - st,stih407-fdma-mpe31-12
++		 - st,stih407-fdma-mpe31-13
++- reg		: Should contain DMA registers location and length
++- interrupts	: Should contain one interrupt shared by all channels
++- dma-channels	: Number of channels supported by the controller
++- #dma-cells	: Must be <3>. See DMA client section below
++- clocks	: Must contain an entry for each name in clock-names
++- clock-names	: Must contain "fdma_slim, fdma_hi, fdma_low, fdma_ic" entries
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
-+static int st_fdma_pm_resume(struct device *dev)
-+{
-+	struct st_fdma_dev *fdev = dev_get_drvdata(dev);
-+	int ret;
 +
-+	ret = st_fdma_clk_enable(fdev);
-+	if (ret) {
-+		dev_err(fdev->dev, "Failed to enable clocks\n");
-+		goto out;
-+	}
++Example:
 +
-+	ret = st_fdma_get_fw(fdev);
-+out:
-+	return ret;
-+}
-+#endif
++	fdma1-app: dma-controller@8e40000 {
++		compatible = "st,stih407-fdma-mpe31-11";
++		reg = <0x8e40000 0x20000>;
++		interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>;
++		dma-channels = <16>;
++		#dma-cells = <3>;
++		clocks = <&CLK_S_C0_FLEXGEN CLK_FDMA>,
++			 <&CLK_S_C0_FLEXGEN CLK_TX_ICN_DMU>,
++			 <&CLK_S_C0_FLEXGEN CLK_TX_ICN_DMU>,
++			 <&CLK_S_C0_FLEXGEN CLK_EXT2F_A9>;
++		clock-names = "fdma_slim",
++			      "fdma_hi",
++			      "fdma_low",
++			      "fdma_ic";
++		};
 +
-+static const struct dev_pm_ops st_fdma_pm = {
-+	SET_RUNTIME_PM_OPS(st_fdma_pm_suspend, st_fdma_pm_resume, NULL)
-+};
++* DMA client
 +
- static struct platform_driver st_fdma_platform_driver = {
- 	.driver = {
- 		.name = "st-fdma",
- 		.of_match_table = st_fdma_match,
-+		.pm = &st_fdma_pm,
- 	},
- 	.probe = st_fdma_probe,
- 	.remove = st_fdma_remove,
++Required properties:
++- dmas: Comma separated list of dma channel requests
++- dma-names: Names of the aforementioned requested channels
++
++Each dmas request consists of 4 cells:
++1. A phandle pointing to the FDMA controller
++2. The request line number
++3. A 32bit mask specifying (see include/linux/platform_data/dma-st-fdma.h)
++ -bit 2-0: Holdoff value, dreq will be masked for
++	0x0: 0-0.5us
++	0x1: 0.5-1us
++	0x2: 1-1.5us
++ -bit 17: data swap
++	0x0: disabled
++	0x1: enabled
++ -bit 21: Increment Address
++	0x0: no address increment between transfers
++	0x1: increment address between transfers
++ -bit 22: 2 STBus Initiator Coprocessor interface
++	0x0: high priority port
++	0x1: low priority port
++4. transfers type
++ 0 free running
++ 1 paced
++
++Example:
++
++	sti_uni_player2: sti-uni-player@2 {
++		compatible = "st,sti-uni-player";
++		status = "disabled";
++		#sound-dai-cells = <0>;
++		st,syscfg = <&syscfg_core>;
++		clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
++		assigned-clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
++		assigned-clock-parents = <&clk_s_d0_quadfs 2>;
++		assigned-clock-rates = <50000000>;
++		reg = <0x8D82000 0x158>;
++		interrupts = <GIC_SPI 86 IRQ_TYPE_NONE>;
++		dmas = <&fdma0 4 0 1>;
++		dai-name = "Uni Player #1 (DAC)";
++		dma-names = "tx";
++		st,uniperiph-id = <2>;
++		st,version = <5>;
++		st,mode = "PCM";
++	};
 -- 
 1.9.1
