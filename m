@@ -1,125 +1,80 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
-Date: Thu, 21 Apr 2016 13:56:18 +0000
-Message-ID: <AM4PR02MB1299B78B76BF112B2E06F20BBC6E0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: devicetree: avoid duplicated matching code (was: Re: [PATCH 1/3] xhci: plat: adapt to unified device property interface)
+Date: Thu, 21 Apr 2016 16:57:12 +0300
+Message-ID: <874mav9i9z.fsf@intel.com>
+References: <1461064246-27350-1-git-send-email-heikki.krogerus@linux.intel.com> <1461064246-27350-2-git-send-email-heikki.krogerus@linux.intel.com> <87fuuf9pip.fsf@intel.com> <CAL_JsqLVAN_dEcGUbNyiBjFJTSPSPjMKzWG9QBoJ71whpfmBiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: sv-SE
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLVAN_dEcGUbNyiBjFJTSPSPjMKzWG9QBoJ71whpfmBiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Crestez Dan Leonard wrote:
-> On 04/20/2016 11:31 PM, Peter Rosin wrote:
-> > Crestez Dan Leonard wrote:
-> >> Changes since that version:
-> >> * Nest the adapter in inv_mpu6050_state instead of making it static
-> >> * Explicitly forward of_node "i2c-aux-master" to allow describing aux devices
-> >> via devicetree.
-> >>
-> >> For bypass/mux mode devicetree works automatically. The forwarding is based on
-> >> the "chan_id" parameter to i2c_add_mux_adapter and is implemented here:
-> >>
-> >> http://lxr.free-electrons.com/source/drivers/i2c/i2c-mux.c?v=4.5#L158
-> >>
-> >> Perhaps it might be better for devices handled via master mode to be described
-> >> via i2c@1? This would work by scanning the mpu node's children for something
-> >> with reg == 1.
-> > 
-> > The 0 in i2c@0 (which is used by the mux mode) is the index of the mux slave
-> > meaning that i2c@1 would be a second mux slave on the same mux, but this is
-> > not a real mux as such, it is a gate which is piggybacking on the i2c mux infra.
-> > So, this "mux" can't have a second slave which is why only 0 is valid.
-> 
-> This behavior is automatic in i2c mux code and seems to assume that all
-> the children of mux_dev are i2c muxes. This might be obviously correct
-> and useful for dedicated i2c mux devices but in my case mux_dev is just
-> the i2c_client for a sensor.
-> 
-> From Documentation/devicetree/bindings/i2c/i2c-mux.txt:
-> 
-> > An i2c bus multiplexer/switch will have several child busses that are
-> > numbered uniquely in a device dependent manner.  The nodes for an i2c
-> > bus multiplexer/switch will have one child node for each child bus.
-> 
-> This seems to be written in a way that would allow me to define the
-> "auxiliary i2c master" as bus "1". After all, the numbering is device
-> dependent and it's not clear that all the child busses need to be
-> accessible through muxing rather than indirect access through device
-> registers.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-You are correct that if you have devicetree children where reg does
-not match the chan_id given to i2c_add_mux_adapter() those children
-will be ignored by the i2c-mux code. So, the code would be happy with
-a devicetree such as:
 
-	mpu6050@68 {
-		compatible = "...";
-		reg = <0x68>;
-		...
-		i2c-aux-mux@0 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			reg = <0>;
+Hi,
 
-			foo@44 {
-				compatible = "bar";
-				reg = <0x44>;
-				...
-			}
-		}
-		i2c-aux-master@1 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			reg = <1>;
+Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> On Thu, Apr 21, 2016 at 6:20 AM, Felipe Balbi
+> <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>
+>> Hi,
+>>
+>> Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> writes:
+>>> @@ -197,7 +196,7 @@ static int xhci_plat_probe(struct platform_device *=
+pdev)
+>>>       }
+>>>
+>>>       xhci =3D hcd_to_xhci(hcd);
+>>> -     match =3D of_match_node(usb_xhci_of_match, node);
+>>> +     match =3D of_match_node(usb_xhci_of_match, pdev->dev.of_node);
+>>
+>> Rob, it's weird that OF-based drivers have to redo the same matching
+>> which was already done by drivers/base/platform.c::platform_match() just
+>> to get match->data. If we know we matched, couldn't we just cache a
+>> pointer to match->data in struct device_node.data ? Something like
+>> below? (completely untested)
+>
+> Yes, it is. AIUI, there is some sort of race condition in doing what
+> you suggest though. IIRC, Grant did that and reverted it if you look
+> at the git history.
 
-			gazonk@44 {
-				compatible = "baz";
-				reg = <0x44>;
-				...
-			}
-		}
-	}
+looking at drivers/base/platform.c I can't find anything along these
+lines. Adding Grant.
 
-as long as you do only call i2c_add_mux_adapter() with chan_id = 0. And that
-is what you are doing. But I think it is a bit subtle...
+Grant, any memory left of this race ?
 
-> >> Or maybe the two busses should be called i2c-aux-master and i2c-aux-mux? Not
-> >> sure how to deal with that on the mux side.
-> > 
-> > Changing i2c to i2c-aux-mux would break existing device trees, that seems
-> > like a bad thing, no?
-> 
-> That support was not documented in mpu6050's bindings and might not be
-> actually used.
-> 
-> >> It is not clear how to properly handle this and suggestions are welcome. The
-> >> way it currently works with this patch is documented immediately below.
-> > 
-> > I think the naming could be i2c-master0, i2c-master1 etc if it, with
-> > future work, would be possible to add more than one master (you talked about
-> > 5 i2c slaves..).
-> 
-> The device has 5 sets of registers for controlling i2c slaves but only
-> one physical auxiliary i2c bus. As far as I can tell slaves 0-3 are
-> intended to be used for gathering readings for slaved sensors
-> periodically without external intervention. Slave 4 can generate an
-> interrupt on completion and is more suitable for general-purpose
-> communication with any number of devices.
+=2D-=20
+balbi
 
-Ah, ok, so all 5 sets of slave registers are about the same physical i2c
-bus. So, you basically cannot sanely use this physical aux i2c bus as an
-i2c-mux and an extra i2c adapter in the same hw design. Correct?
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In that case, couldn't you look at the names of any devicetree children
-and use that to decide if you should even attempt to call
-i2c_add_mux_adapter or i2c_add_adapter?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-(But please don't clobber stuff for my i2c-mux rework, or you will have
-to wait even longer for that deadlock to be resolved)
-
-Cheers,
-Peter
+iQIcBAEBAgAGBQJXGNw5AAoJEIaOsuA1yqREgrQQAK+m7MYiZgkAvw5J3q+T6vgU
+VhOYDqwOpb/LcXSH9Ka7T2rFHPgB4ShLJVzVxcg0ix4B2Cw5A3HOa7Wx9Kr4R9wB
+KhI/W5AzuBNgMz72vK9w8UV4qYGRXzQ+8Sm+D6Nl2CDK/B1VHUh4W4NDk+ClM0rN
++FvAyTeffwmcyN+3G3gFqg781pFVxh0s3zKxOjGcX9JVknSvwNnMRw578yLdSjtp
+/ADEmhVnxJNFWzk8rcshkGTQaQF074j8yAQS6kG962COLlB8DonqKtvHT/EMPL4x
+tvpmHnZIbu06lB4/gLxxkSn9kNzLWXJAJ58eXQVnS9IPjAsvZ2EzUQkCuIS9JCfq
+YtFgzaudP8fZNQWBs5we4USn6IlxcMpv4D9G9baticWKNGsOKMark0Xa1wBWkztd
+rzob5wPsmPBUai7PHT31gmHmSURXhjEcTK/RkkJgOHZ/GJFFyTvwRCWpQSDkOGtT
+iJvGJqMubXJ/Fcd3h4MIUBpwpz60J1GeNaHOaHw8YzVRBgKzNHOgDL4mppOHPOsi
+Fnk1bc37aA9lQzMpJlpgY8IYGh6ekEJoEcbK1nUTmun1gD+sY1r+LKr4nUSvBb4p
+pPWxNwrL4CSvdld3FYlADJW07Ay92xZmEvoJ02z/73ps7tNBGjdr68VbpU7ma4dF
+ho35GdLcknURYez5wreo
+=E9WH
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
