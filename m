@@ -1,118 +1,125 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] ARM64: dts: rockchip: add core dtsi file for RK3399 SoCs
-Date: Thu, 21 Apr 2016 22:24:09 +0200
-Message-ID: <2131452.5tyGOfVRfi@diego>
-References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com> <5718AFB8.5070004@rock-chips.com> <20160421123018.096d4a75@arm.com>
+Date: Thu, 21 Apr 2016 16:02:19 -0500
+Message-ID: <CAL_JsqJ-kyCc=3XdVGvtK4MvRqWOr2RA=9t4kgy73K+cE=JOUg@mail.gmail.com>
+References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com> <1461211092-26331-1-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160421123018.096d4a75-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1461211092-26331-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: "Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 21. April 2016, 12:30:18 schrieb Marc Zyngier:
-> On Thu, 21 Apr 2016 18:47:20 +0800
->=20
-> "Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> > Hi, Mark:
-> >=20
-> > On 2016=E5=B9=B404=E6=9C=8821=E6=97=A5 18:19, Mark Rutland wrote:
-> > > On Thu, Apr 21, 2016 at 11:58:12AM +0800, Jianqun Xu wrote:
-> > >> +		cpu_l0: cpu@0 {
-> > >> +			device_type =3D "cpu";
-> > >> +			compatible =3D "arm,cortex-a53", "arm,armv8";
-> > >> +			reg =3D <0x0 0x0>;
-> > >> +			enable-method =3D "psci";
-> > >> +			#cooling-cells =3D <2>; /* min followed by max */
-> > >> +			clocks =3D <&cru ARMCLKL>;
-> > >> +		};
-> > >> +		cpu_b0: cpu@100 {
-> > >> +			device_type =3D "cpu";
-> > >> +			compatible =3D "arm,cortex-a72", "arm,armv8";
-> > >> +			reg =3D <0x0 0x100>;
-> > >> +			enable-method =3D "psci";
-> > >> +			#cooling-cells =3D <2>; /* min followed by max */
-> > >> +			clocks =3D <&cru ARMCLKB>;
-> > >> +		};
-> > >> +
-> > >> +	arm-pmu {
-> > >> +		compatible =3D "arm,armv8-pmuv3";
-> > >> +		interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> > >> +	};
-> > >=20
-> > > This is wrong, and must go. There should be a separate node for t=
-he PMU
-> > > of each microarchitecture, with the appropriate compatible string=
- to
-> > > represent that (see the juno dts).
-> >=20
-> > You are right. The first version we wrote is:
-> >     pmu_a53 {
-> >    =20
-> >         compatible =3D "arm,cortex-a53-pmu";
-> >         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> >         interrupt-affinity =3D <&cpu_l0>,
-> >        =20
-> >                      <&cpu_l1>,
-> >                      <&cpu_l2>,
-> >                      <&cpu_l3>;
-> >    =20
-> >     };
-> >    =20
-> >     pmu_a72 {
-> >    =20
-> >         compatible =3D "arm,cortex-a72-pmu";
-> >         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> >         interrupt-affinity =3D <&cpu_b0>,
-> >        =20
-> >                      <&cpu_b1>;
-> >    =20
-> >     };
-> >=20
-> > but unfortunately, the arm pmu driver do not support PPI in two clu=
-ster
-> > well,
-> > so we have to replace with this implementation.
-> >=20
-> > > In this case things are messier as the same PPI number is being u=
-sed
-> > > across clusters. Marc (Cc'd) has been working on PPI partitions, =
-which
-> > > should allow us to support that.
-> >=20
-> > Great! So what we can do right now? Wait this feature, and delete
-> > arm-pmu node?
->=20
-> I'd rather you have a look at the patches, test them with your HW,
-> and comment on what doesn't work!
+On Wed, Apr 20, 2016 at 10:58 PM, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This patch adds rk3399.dtsi for rk3399 found on Rockchip
+> RK3399 SoCs, also add rk3399-evb.dts for Rockchip RK3399
+> Evaluation Board.
+>
+> Patch is tested on RK3399 evb.
+>
+> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile       |    1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-evb.dts |  537 ++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi    | 1757 +++++++++++++++++++++++++++
+>  3 files changed, 2295 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index df37865..7037a16 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -1,6 +1,7 @@
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
+>
+>  always         := $(dtb-y)
+>  subdir-y       := $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> new file mode 100644
+> index 0000000..4cb0028
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> @@ -0,0 +1,537 @@
+> +/*
+> + * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include "rk3399.dtsi"
+> +
+> +/ {
+> +       model = "Rockchip RK3399 Evaluation Board";
+> +       compatible = "rockchip,evb", "rockchip,rk3399-evb";
+> +
+> +       chosen {
+> +               bootargs = "console=uart,mmio32,0xff1a0000";
+> +       };
+> +
+> +       ramoops_mem: ramoops_mem {
+> +               reg = <0x0 0x100000 0x0 0x100000>;
+> +               reg-names = "ramoops_mem";
+> +       };
+> +
+> +       ramoops {
+> +               compatible = "ramoops";
+> +               record-size = <0x0 0x20000>;
+> +               console-size = <0x0 0x80000>;
+> +               ftrace-size = <0x0 0x10000>;
+> +               pmsg-size = <0x0 0x50000>;
+> +               memory-region = <&ramoops_mem>;
+> +       };
 
-I would think we could do it in two tracks, testing and fixing but also=
- letting=20
-the rk3399 devicetrees move forward without the pmu at first :-) .
+This binding is not upstream yet. It would be great if it was if you
+want to pick up the last try.
 
->=20
-> You can find the patches over there:
->=20
-> https://lkml.org/lkml/2016/4/11/182
->=20
-> and on the following branch:
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
-> irq/percpu-partition
->=20
-> Of course, you'll have to hack a bit in the PMU code to make it
-> understand per-PMU affinity together with percpu interrupts, but it
-> wouldn't be fun if there was nothing to do...
->=20
-> Thanks,
->=20
-> 	M.
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
