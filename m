@@ -1,61 +1,74 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V2 07/14] genirq: Add runtime power management support for
- IRQ chips
-Date: Thu, 21 Apr 2016 10:19:05 +0100
-Message-ID: <57189B09.4030402@nvidia.com>
-References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
- <1461150237-15580-8-git-send-email-jonathanh@nvidia.com>
- <7h37qgb3xi.fsf@baylibre.com>
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: [PATCH 5/6] Documentation: Binding doc for ethernet master in NS2
+Date: Thu, 21 Apr 2016 14:48:42 +0530
+Message-ID: <1461230323-27891-6-git-send-email-pramod.kumar@broadcom.com>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7h37qgb3xi.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, Pramod Kumar <pramod.kumar@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Adding binding doc for ethernet master present in shared
+MDIO controller.
 
-On 20/04/16 18:11, Kevin Hilman wrote:
-> Jon Hunter <jonathanh@nvidia.com> writes:
-> 
->> Some IRQ chips may be located in a power domain outside of the CPU
->> subsystem and hence will require device specific runtime power
->> management. In order to support such IRQ chips, add a pointer for a
->> device structure to the irq_chip structure, and if this pointer is
->> populated by the IRQ chip driver and CONFIG_PM is selected in the kernel
->> configuration, then the pm_runtime_get/put APIs for this chip will be
->> called when an IRQ is requested/freed, respectively.
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> 
-> [...]
-> 
->> @@ -1891,10 +1906,18 @@ int setup_percpu_irq(unsigned int irq, struct irqaction *act)
->>  
->>  	if (!desc || !irq_settings_is_per_cpu_devid(desc))
->>  		return -EINVAL;
->> +
->> +	retval = irq_chip_pm_get(&desc->irq_data);
->> +	if (retval < 0)
->> +		return retval;
->> +
->>  	chip_bus_lock(desc);
->>  	retval = __setup_irq(irq, desc, act);
->>  	chip_bus_sync_unlock(desc);
->>  
->> +	if (retval)
->> +		irq_chip_pm_get(&desc->irq_data);
->> +
-> 
-> Shouldn't this one be a _put() ?
+Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+---
+ .../bindings/net/brcm,iproc-mdio-shared.txt        | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt
 
-Good grief! Yes it should. Sorry, will fix :-(
-
-> Otherwise, LGTM
-> 
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-
-Thanks!
-Jon
+diff --git a/Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt b/Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt
+new file mode 100644
+index 0000000..1ffdd4b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt
+@@ -0,0 +1,32 @@
++Broadcom Ethernet master for shared mdio controller
++
++Required properties:
++- compatible: must be "brcm,iproc-mdio-master-eth"
++- reg: master id of Ethernet block
++- address-cells: should be 1
++- size-cells: should be 0
++
++Sub-nodes:
++  Each port's PHY should be represented as a sub-node.
++
++Sub-nodes required properties:
++- reg: the PHY number
++- phy-mode: media type connecting the PHY and MAC.
++
++
++Example:
++	eth-master@0 {
++		compatible = "brcm,iproc-mdio-master-eth";
++		reg = <0x0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		gphy0: eth-phy@10 {
++			reg = <0x10>;
++			phy-mode = "mii";
++		};
++		status = "ok"
++	};
++
++For more info on ethernet phy binding, please,refer to:
++Documentation/devicetree/bindings/net/phy.txt
++Documentation/devicetree/bindings/net/ethernet.txt
+-- 
+1.9.1
