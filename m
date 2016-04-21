@@ -1,52 +1,68 @@
-From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 7/7] rtc: Kconfig: Name RK818 in Kconfig for RTC_DRV_RK808
-Date: Thu, 21 Apr 2016 15:12:41 +0200
-Message-ID: <1461244361-45686-8-git-send-email-w.egorov@phytec.de>
-References: <1461244361-45686-1-git-send-email-w.egorov@phytec.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+ device tree binding documentation
+Date: Thu, 21 Apr 2016 08:42:26 -0500
+Message-ID: <20160421134226.GA10399@rob-hp-laptop>
+References: <1460710374-25077-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1461244361-45686-1-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460710374-25077-1-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, anirudh@xilinx.com, punnaia@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The RK808 and RK818 PMICs are using a similar register map.
-We can reuse the rtc driver for the RK818 PMIC. So let's add
-the RK818 in the Kconfig description.
+On Fri, Apr 15, 2016 at 02:22:53PM +0530, Kedareswara rao Appana wrote:
+> Device-tree binding documentation for Xilinx zynqmp dma engine used in
+> Zynq UltraScale+ MPSoC.
+> 
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> ---
+> Changes in v6:
+> - Removed desc-axi-cache/dst-axi-cache/src-axi-cache properties
+>   from the binding doc as it allow broken combinations when dma-coherent
+>   is set as suggested by Rob.
+> - Fixed minor comments given by Rob related coding(lower case DT node name).
+> Changes in v5:
+> - Use dma-coherent flag for coherent transfers as suggested by rob.
+> - Removed unnecessary properties from binding doc as suggested by Rob.
+> Changes in v4:
+> - None
+> Changes in v3:
+> - None
+> Changes in v2:
+> - None.
+> 
+>  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> new file mode 100644
+> index 0000000..f0f0b54
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+> @@ -0,0 +1,44 @@
+> +Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
+> +memory to device and device to memory transfers. It also has flow
+> +control and rate control support for slave/peripheral dma access.
+> +
+> +Required properties:
+> +- compatible		: Should be "xlnx,zynqmp-dma-1.0"
+> +- reg			: Memory map for gdma/adma module access.
+> +- interrupt-parent	: Interrupt controller the interrupt is routed through
+> +- interrupts		: Should contain DMA channel interrupt.
+> +- xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
 
-Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
----
- drivers/rtc/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I think how this is getting used by the driver is wrong. 
+{src,dst}_addr_widths are supposed to be a bitmask of supported slave 
+device register widths. You aren't doing a bitmask and you are also 
+saying you only support slaves with 8 or 16 byte data registers which is 
+somewhat rare. It may happen to work because 128/8 == BIT(4). However, 
+the documentation for the field is contradictory in that it says 1,2,4 
+or 8 byte widths are supported, but the enum has more sizes.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 3e84315..acc2651 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -324,11 +324,11 @@ config RTC_DRV_MAX77686
- 	  will be called rtc-max77686.
- 
- config RTC_DRV_RK808
--	tristate "Rockchip RK808 RTC"
-+	tristate "Rockchip RK808/RK818 RTC"
- 	depends on MFD_RK808
- 	help
- 	  If you say yes here you will get support for the
--	  RTC of RK808 PMIC.
-+	  RTC of RK808 and RK818 PMIC.
- 
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rk808-rtc.
--- 
-1.9.1
+Rob
