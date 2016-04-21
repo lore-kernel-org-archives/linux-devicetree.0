@@ -1,5 +1,5 @@
-Return-Path: <linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org>
-Message-ID: <57189c3c.8eed420a.3cf1e.ffffe242SMTPIN_ADDED_BROKEN@mx.google.com>
+Return-Path: <ashoks@broadcom.com>
+Message-ID: <57189b9a.0df6420a.b7307.fffff379SMTPIN_ADDED_BROKEN@mx.google.com>
 Date: Thu, 21 Apr 2016 02:21:10 -0700
 From: Ashok Kumar <ashoks@broadcom.com>
 Subject: Re: [PATCH v5 3/7] arm64/perf: Changed events naming as per ARM ARM
@@ -7,21 +7,11 @@ References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
  <1461092062-7484-4-git-send-email-ashoks@broadcom.com>
  <20160420133456.GJ11453@leverpostej>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20160420133456.GJ11453@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, jchandra@broadcom.com, Suzuki.Poulose@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, jglauber@cavium.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, will.deacon@arm.com, Suzuki.Poulose@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com, jchandra@broadcom.com, jglauber@cavium.com
 List-ID: <devicetree@vger.kernel.org>
 
 On Wed, Apr 20, 2016 at 02:34:56PM +0100, Mark Rutland wrote:
@@ -76,8 +66,3 @@ Thanks for the review.
 > Thanks for putting this together!
 > 
 > Mark.
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
