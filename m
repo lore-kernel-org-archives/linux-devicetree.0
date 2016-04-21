@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 13/18] ARM: DT: STiH407: Add i2s_in pinctrl configuration
-Date: Thu, 21 Apr 2016 12:04:30 +0100
-Message-ID: <1461236675-10176-14-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 15/18] ARM: STi: DT: STiH407: Add sti-sasg-codec dt node
+Date: Thu, 21 Apr 2016 12:04:32 +0100
+Message-ID: <1461236675-10176-16-git-send-email-peter.griffin@linaro.org>
 References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
@@ -10,48 +10,32 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the pinctrl config for the i2s_in pins
-used by the uniperif reader IP.
+This patch adds the dt node for the internal audio
+codec IP.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index 0fb5c8a..537db7e 100644
---- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -1090,6 +1090,30 @@
- 				};
- 			};
- 
-+			i2s_in {
-+				pinctrl_i2s_8ch_in: i2s_8ch_in{
-+					st,pins {
-+						mclk = <&pio32 5 ALT1 IN>;
-+						lrclk = <&pio32 7 ALT1 IN>;
-+						sclk = <&pio32 6 ALT1 IN>;
-+						data0 = <&pio32 4 ALT1 IN>;
-+						data1 = <&pio33 0 ALT1 IN>;
-+						data2 = <&pio33 1 ALT1 IN>;
-+						data3 = <&pio33 2 ALT1 IN>;
-+						data4 = <&pio33 3 ALT1 IN>;
-+					};
-+				};
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index a77008f..740c443 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -745,5 +745,14 @@
+ 				      "fdma_low",
+ 				      "fdma_ic";
+ 		};
 +
-+				pinctrl_i2s_2ch_in: i2s_2ch_in{
-+					st,pins {
-+						mclk = <&pio32 5 ALT1 IN>;
-+						lrclk = <&pio32 7 ALT1 IN>;
-+						sclk = <&pio32 6 ALT1 IN>;
-+						data0 = <&pio32 4 ALT1 IN>;
-+					};
-+				};
-+			};
-+
- 			serial3 {
- 				pinctrl_serial3: serial3-0 {
- 					st,pins {
++		sti_sasg_codec: sti-sasg-codec {
++			compatible = "st,stih407-sas-codec";
++			#sound-dai-cells = <1>;
++			status = "okay";
++			st,syscfg = <&syscfg_core>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_spdif_out >;
++		};
+ 	};
+ };
 -- 
 1.9.1
