@@ -1,80 +1,38 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: regression: 3a878c430fd6 ("tty: serial: msm: Add TX DMA support")
- drops data
-Date: Wed, 20 Apr 2016 18:00:37 -0700
-Message-ID: <57182635.5070606@gmail.com>
-References: <5716BDF1.1010407@gmail.com> <EEBBF78A-33BB-4ACD-8CBF-285E1149FB9F@gmail.com> <5717B2CA.3020206@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Antti Palosaari <crope@iki.fi>
+Subject: Re: [PATCH v7 00/24] i2c mux cleanup and locking update
+Date: Thu, 21 Apr 2016 04:10:59 +0300
+Message-ID: <571828A3.7090007@iki.fi>
+References: <1461165484-2314-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5717B2CA.3020206@gmail.com>
+In-Reply-To: <1461165484-2314-1-git-send-email-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Ivanov <iivanov.xz@gmail.com>
-Cc: Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, srinivas.kandagatla@linaro.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jslaby@suse.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans
 List-Id: devicetree@vger.kernel.org
 
-On 4/20/2016 9:48 AM, Frank Rowand wrote:
-> On 4/19/2016 11:07 PM, Ivan Ivanov wrote:
->>
->>> On Apr 20, 2016, at 02:23, Frank Rowand <frowand.list@gmail.com> wr=
-ote:
->>>
->>> Hi Ivan,
->>>
->>> It appears that I have found a regression caused by
->>> 3a878c430fd6 ("tty: serial: msm: Add TX DMA support").
->>>
->>> When I cat a file slightly larger than 126000 bytes on
->>> the console, viewed via minicom connected to the serial
->>> port, I am losing random chunks of data, almost always
->>> three bytes in length.  I have also seen a lost chunk
->>> of two bytes.
->>>
->>> I am using the 8074 dragonboard, with the dts of
->>> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts.
->>> The dts node is serial@f991e000, which has a
->>> compatible of "qcom,msm-uartdm-v1.4", so is_uartdm
->>> should be UARTDM_1P4.
->>
->> I don=E2=80=99t remember what was biggest chunk, which DMA
->> could carry, sorry. Are you using DMA or just PIO?=20
->> Is this happening only with cat and terminal or even
->> when you send data in other means. I believe that=20
->> people from Linaro could help you better.
->=20
-> I assumed you would be the person who would have the
-> information and would be able to help maintain the
-> code in question since you submitted this not small
-> patch.  Do you have a pointer to the hardware
-> documentation of the DMA and uart?  Who at Linaro
-> are you suggesting?
->=20
-> Thanks for the questions, I'll look into them today.
+On 04/20/2016 06:17 PM, Peter Rosin wrote:
 
-I switched from cat to several variations of dd and on
-the host side I tried using programs other than minicom.
+Retested all the previously tested + now I tested also cx231xx with 
+Hauppauge 930C HD device having eeprom other mux port and demod on the 
+other port.
 
-My symptoms have now changed to something else that I
-have seen in the past, but I am now suspicious of my
-environment.  I'll reset and do some more tests.
+>    [media] si2168: change the i2c gate to be mux-locked
+>    [media] m88ds3103: convert to use an explicit i2c mux core
+>    [media] rtl2830: convert to use an explicit i2c mux core
+>    [media] rtl2832: convert to use an explicit i2c mux core
+>    [media] si2168: convert to use an explicit i2c mux core
+>    [media] cx231xx: convert to use an explicit i2c mux core
+>    [media] rtl2832: change the i2c gate to be mux-locked
+>    [media] rtl2832_sdr: get rid of empty regmap wrappers
+>    [media] rtl2832: regmap is aware of lockdep, drop local locking hack
 
-I'm not sure if the driver was in DMA or PIO mode, both
-before the change and after.  This seems like a rather
-important question to answer, so I'll try to verify
-that tonight.
+I really hope that this whole patch series will arrive asap to mainline.
 
->=20
-> One more observation that may provide an insight:
-> if I cat a file multiple times, the location of
-> the dropped chunks varies.
->=20
-> In further testing I also found examples of single
-> bytes lost.
->=20
-> Thanks,
->=20
-> Frank
->=20
->=20
+regards
+Antti
+
+-- 
+http://palosaari.fi/
