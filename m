@@ -1,75 +1,30 @@
-From: Crestez Dan Leonard <leonard.crestez@intel.com>
-Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
-Date: Thu, 21 Apr 2016 15:01:30 +0300
-Message-ID: <5718C11A.6010001@intel.com>
-References: <AM4PR02MB129981BAE6A4E893DDD38173BC6D0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+From: Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 00/24] i2c mux cleanup and locking update
+Date: Thu, 21 Apr 2016 15:33:26 +0300
+Message-ID: <5718C896.9070302@intel.com>
+References: <1461165484-2314-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <AM4PR02MB129981BAE6A4E893DDD38173BC6D0@AM4PR02MB1299.eurprd02.prod.outlook.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461165484-2314-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Ranostay <matt.ranostay-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.k>
 List-Id: devicetree@vger.kernel.org
 
-On 04/20/2016 11:31 PM, Peter Rosin wrote:
-> Crestez Dan Leonard wrote:
->> Changes since that version:
->> * Nest the adapter in inv_mpu6050_state instead of making it static
->> * Explicitly forward of_node "i2c-aux-master" to allow describing aux devices
->> via devicetree.
->>
->> For bypass/mux mode devicetree works automatically. The forwarding is based on
->> the "chan_id" parameter to i2c_add_mux_adapter and is implemented here:
->>
->> http://lxr.free-electrons.com/source/drivers/i2c/i2c-mux.c?v=4.5#L158
->>
->> Perhaps it might be better for devices handled via master mode to be described
->> via i2c@1? This would work by scanning the mpu node's children for something
->> with reg == 1.
-> 
-> The 0 in i2c@0 (which is used by the mux mode) is the index of the mux slave
-> meaning that i2c@1 would be a second mux slave on the same mux, but this is
-> not a real mux as such, it is a gate which is piggybacking on the i2c mux infra.
-> So, this "mux" can't have a second slave which is why only 0 is valid.
+On 04/20/2016 06:17 PM, Peter Rosin wrote:
+> v7 compared to v6:
+> - Removed i2c_mux_reserve_adapters, and all realloc attempts in
+>   i2c_mux_add_adapter. Supply a maximum number of adapters in i2c_mux_alloc
+>   instead.
+> - Removed i2c_mux_one_adapter since it is was hard to use correctly, which
+>   was evident from the crash in the mpu6050 driver (on a mpu9150 chip) reported
+>   by Crestez Dan Leonard. Also, it didn't make things all that much simpler
+>   anyway (even if used correctly).
+> - Rename i2c_mux_core:adapters into i2c_mux_core:num_adapters.
+> - Some grammar and spelling fixes.
 
-This behavior is automatic in i2c mux code and seems to assume that all
-the children of mux_dev are i2c muxes. This might be obviously correct
-and useful for dedicated i2c mux devices but in my case mux_dev is just
-the i2c_client for a sensor.
-
->From Documentation/devicetree/bindings/i2c/i2c-mux.txt:
-
-> An i2c bus multiplexer/switch will have several child busses that are
-> numbered uniquely in a device dependent manner.  The nodes for an i2c
-> bus multiplexer/switch will have one child node for each child bus.
-
-This seems to be written in a way that would allow me to define the
-"auxiliary i2c master" as bus "1". After all, the numbering is device
-dependent and it's not clear that all the child busses need to be
-accessible through muxing rather than indirect access through device
-registers.
-
->> Or maybe the two busses should be called i2c-aux-master and i2c-aux-mux? Not
->> sure how to deal with that on the mux side.
-> 
-> Changing i2c to i2c-aux-mux would break existing device trees, that seems
-> like a bad thing, no?
-
-That support was not documented in mpu6050's bindings and might not be
-actually used.
-
->> It is not clear how to properly handle this and suggestions are welcome. The
->> way it currently works with this patch is documented immediately below.
-> 
-> I think the naming could be i2c-master0, i2c-master1 etc if it, with
-> future work, would be possible to add more than one master (you talked about
-> 5 i2c slaves..).
-
-The device has 5 sets of registers for controlling i2c slaves but only
-one physical auxiliary i2c bus. As far as I can tell slaves 0-3 are
-intended to be used for gathering readings for slaved sensors
-periodically without external intervention. Slave 4 can generate an
-interrupt on completion and is more suitable for general-purpose
-communication with any number of devices.
+I tested this new version on mpu9150 and there are no more obvious
+deadlocks or crashes. The magnetometer and accel/gyro can be used at the
+same time without issues.
