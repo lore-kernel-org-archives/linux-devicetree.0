@@ -1,96 +1,197 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v3 3/3] dmaengine: vdma: Add clock support
-Date: Thu, 21 Apr 2016 17:13:18 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A579A06@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1461235118-800-1-git-send-email-appanad@xilinx.com>
- <1461235118-800-4-git-send-email-appanad@xilinx.com>
- <20160421162153.GZ7128@xsjsorenbubuntu>
- <C246CAC1457055469EF09E3A7AC4E11A4A5799D9@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160421170215.GB7128@xsjsorenbubuntu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160421170215.GB7128@xsjsorenbubuntu>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-ker
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2.1 1/9] dt-binding: remoteproc: Introduce Qualcomm WCNSS loader binding
+Date: Thu, 21 Apr 2016 10:20:56 -0700
+Message-ID: <1461259256-28529-1-git-send-email-bjorn.andersson@linaro.org>
+References: <1459222625-11440-2-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459222625-11440-2-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Suman Anna <s-anna@ti.com>, John Stultz <john.stultz@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
-IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBU
-aHVyc2RheSwgQXByaWwgMjEsIDIwMTYgMTA6MzIgUE0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRh
-cmVzd2FyYSBSYW8gPGFwcGFuYWRAeGlsaW54LmNvbT4NCj4gQ2M6IFNvcmVuIEJyaW5rbWFubiA8
-c29yZW5iQHhpbGlueC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IHBhd2VsLm1vbGxAYXJt
-LmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
-Ow0KPiBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5j
-b20+Ow0KPiB2aW5vZC5rb3VsQGludGVsLmNvbTsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBt
-b3JpdHouZmlzY2hlckBldHR1cy5jb207DQo+IGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJk
-LmNvbTsgbHVpc0BkZWJldGhlbmNvdXJ0LmNvbTsgQW5pcnVkaGENCj4gU2FyYW5naSA8YW5pcnVk
-aEB4aWxpbnguY29tPjsgUHVubmFpYWggQ2hvdWRhcnkgS2FsbHVyaQ0KPiA8cHVubmFpYUB4aWxp
-bnguY29tPjsgU2h1YmhyYWp5b3RpIERhdHRhIDxzaHViaHJhakB4aWxpbnguY29tPjsNCj4gZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRtYWVuZ2luZUB2Z2VyLmtl
-cm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAzLzNdIGRtYWVuZ2luZTogdmRtYTog
-QWRkIGNsb2NrIHN1cHBvcnQNCj4gDQo+IE9uIFRodSwgMjAxNi0wNC0yMSBhdCAwOTozMjo0NCAt
-MDcwMCwgQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbyB3cm90ZToNCj4gPiBIaSBTb3JlbiwN
-Cj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFPDtnJl
-biBCcmlua21hbm4gW21haWx0bzpzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbV0NCj4gPiA+IFNl
-bnQ6IFRodXJzZGF5LCBBcHJpbCAyMSwgMjAxNiA5OjUyIFBNDQo+ID4gPiBUbzogQXBwYW5hIER1
-cmdhIEtlZGFyZXN3YXJhIFJhbyA8YXBwYW5hZEB4aWxpbnguY29tPg0KPiA+ID4gQ2M6IHJvYmgr
-ZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
-Cj4gPiA+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9y
-ZzsgTWljaGFsIFNpbWVrDQo+ID4gPiA8bWljaGFsc0B4aWxpbnguY29tPjsgdmlub2Qua291bEBp
-bnRlbC5jb207IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsNCj4gPiA+IEFwcGFuYSBEdXJnYSBL
-ZWRhcmVzd2FyYSBSYW8gPGFwcGFuYWRAeGlsaW54LmNvbT47DQo+ID4gPiBtb3JpdHouZmlzY2hl
-ckBldHR1cy5jb207IGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbTsNCj4gPiA+IGx1
-aXNAZGViZXRoZW5jb3VydC5jb207IEFuaXJ1ZGhhIFNhcmFuZ2kgPGFuaXJ1ZGhAeGlsaW54LmNv
-bT47IFB1bm5haWFoDQo+ID4gPiBDaG91ZGFyeSBLYWxsdXJpIDxwdW5uYWlhQHhpbGlueC5jb20+
-OyBTaHViaHJhanlvdGkgRGF0dGENCj4gPiA+IDxzaHViaHJhakB4aWxpbnguY29tPjsgZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiA+IGtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gZG1hZW5naW5l
-QHZnZXIua2VybmVsLm9yZw0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAzLzNdIGRtYWVu
-Z2luZTogdmRtYTogQWRkIGNsb2NrIHN1cHBvcnQNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIDIwMTYt
-MDQtMjEgYXQgMTY6MDg6MzggKzA1MzAsIEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgd3JvdGU6DQo+
-IFsuLi5dDQo+ID4gPiA+IEBAIC0xNzU3LDYgKzE3NjcsMjAwIEBAIHN0YXRpYyB2b2lkIHhpbGlu
-eF9kbWFfY2hhbl9yZW1vdmUoc3RydWN0DQo+ID4gPiB4aWxpbnhfZG1hX2NoYW4gKmNoYW4pDQo+
-ID4gPiA+ICAJbGlzdF9kZWwoJmNoYW4tPmNvbW1vbi5kZXZpY2Vfbm9kZSk7DQo+ID4gPiA+ICB9
-DQo+ID4gPiA+DQo+ID4gPiA+ICtzdGF0aWMgaW50IGF4aWRtYV9jbGtfaW5pdChzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3QgY2xrDQo+ICoqYXhpX2NsaywNCj4gPiA+ID4gKwkJ
-CSAgICBzdHJ1Y3QgY2xrICoqdHhfY2xrLCBzdHJ1Y3QgY2xrICoqcnhfY2xrLA0KPiA+ID4gPiAr
-CQkJICAgIHN0cnVjdCBjbGsgKipzZ19jbGssIHN0cnVjdCBjbGsgKip0bXBfY2xrKSB7DQo+ID4g
-PiA+ICsJaW50IGVycjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCSp0bXBfY2xrID0gTlVMTDsNCj4g
-PiA+ID4gKw0KPiA+ID4gPiArCSpheGlfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJz
-X2F4aV9saXRlX2FjbGsiKTsNCj4gPiA+ID4gKwlpZiAoSVNfRVJSKCpheGlfY2xrKSkgew0KPiA+
-ID4gPiArCQllcnIgPSBQVFJfRVJSKCpheGlfY2xrKTsNCj4gPiA+ID4gKwkJZGV2X2VycigmcGRl
-di0+ZGV2LCAiZmFpbGVkIHRvIGdldCBheGlfYWNsayAoJXUpXG4iLCBlcnIpOw0KPiA+ID4gPiAr
-CQlyZXR1cm4gZXJyOw0KPiA+ID4gPiArCX0NCj4gPiA+ID4gKw0KPiA+ID4gPiArCSp0eF9jbGsg
-PSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgIm1fYXhpX21tMnNfYWNsayIpOw0KPiA+ID4gPiAr
-CWlmIChJU19FUlIoKnR4X2NsaykpDQo+ID4gPiA+ICsJCSp0eF9jbGsgPSBOVUxMOw0KPiA+ID4g
-PiArDQo+ID4gPiA+ICsJKnJ4X2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAibV9heGlf
-czJtbV9hY2xrIik7DQo+ID4gPiA+ICsJaWYgKElTX0VSUigqcnhfY2xrKSkNCj4gPiA+ID4gKwkJ
-KnJ4X2NsayA9IE5VTEw7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkqc2dfY2xrID0gZGV2bV9jbGtf
-Z2V0KCZwZGV2LT5kZXYsICJtX2F4aV9zZ19hY2xrIik7DQo+ID4gPiA+ICsJaWYgKElTX0VSUigq
-c2dfY2xrKSkNCj4gPiA+ID4gKwkJKnNnX2NsayA9IE5VTEw7DQo+ID4gPiA+ICsNCj4gPiA+ID4g
-Kw0KPiA+ID4gPiArCWVyciA9IGNsa19wcmVwYXJlX2VuYWJsZSgqYXhpX2Nsayk7DQo+ID4gPg0K
-PiA+ID4gU2hvdWxkIHRoaXMgYmUgY2FsbGVkIGlmIHlvdSBrbm93IHRoYXQgdGhlIHBvaW50ZXIg
-bWlnaHQgYmUgTlVMTD8NCj4gPg0KPiA+IEl0IGlzIGEgbWFuZGF0b3J5IGNsb2NrIGFuZCBpZiB0
-aGlzIGNsayBpcyBub3QgdGhlcmUgaW4gRFQgSSBhbSBhbHJlYWR5IHJldHVybmluZw0KPiBlcnJv
-ci4uLg0KPiA+IEkgZGlkbid0IGdldCB5b3VyIHF1ZXN0aW9uIGNvdWxkIHlvdSBwbGVhc2UgZWxh
-Ym9yYXRlPz8/DQo+IA0KPiBCdXQgZm9yIGFsbCB0aGUgb3B0aW9uYWwgY2xvY2tzLiBUaGV5IGNv
-dWxkIGFsbCBiZSBOVUxMIGFuZCB5b3UncmUgY2FsbGluZw0KPiBjbGtfcHJlcGFyZV9lbmFibGUg
-d2l0aCBhIE5VTEwgcG9pbnRlci4gVGhhdCBmdW5jdGlvbiBpcyBuaWNlIGVub3VnaCB0bw0KPiBk
-byBhIE5VTEwgY2hlY2sgZm9yIHlvdSwgYnV0IEkgd29uZGVyIHdoZXRoZXIgdGhlc2UgY2FsbHMg
-c2hvdWxkIGhhcHBlbiBhdA0KPiBhbGwgd2hlbiB5b3UgYWxyZWFkeSBrbm93IHRoYXQgdGhlIHBv
-aW50ZXIgaXMgbm90IGEgdmFsaWQgY2xvY2suDQoNCkkgcmVmZXJyZWQgbWFjYiBkcml2ZXIgaHR0
-cDovL2x4ci5mcmVlLWVsZWN0cm9ucy5jb20vc291cmNlL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Nh
-ZGVuY2UvbWFjYi5jIA0KVGhlcmUgdHhfY2xrIGlzIG9wdGlvbmFsIGFuZCBpbiB0aGlzIGRyaXZl
-ciB0aGV5IGFyZSBjYWxsaW5nIGNsa19wcmVwYXJlX2VuYWJsZSBmb3IgdGhlIG9wdGlvbmFsIGNs
-b2Nrcy4NClBsZWFzZSBsZXQgbWUga25vdyBpZiB5b3UgYXJlIG9rIHRvIGNhbGwgdGhlIGNsa19w
-cmVwYXJlX2VuYWJsZSgpIGZvciBvcHRpb25hbCBjbG9ja3Mgd2l0aCBhIE5VTEwgcG9pbnRlci4N
-CldpbGwgZml4IHJlc3Qgb2YgdGhlIGNvbW1lbnRzIGFuZCB3aWxsIHNlbmQgbmV4dCB2ZXJzaW9u
-IG9mIHRoZSBwYXRjaC4uLg0KDQpSZWdhcmRzLA0KS2VkYXIuDQoNCj4gDQo+IAlTw7ZyZW4NCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+
+The document defines the binding for a component that loads firmware for
+and boots the Qualcomm WCNSS core.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+Rob,
+
+I got your Ack on v2, but I would like to make a small amendment before merging
+this.
+
+
+As we discussed related to the WiFi binding I should reference the mmio
+registers by a phandle to a DT node specifying the two necessary register
+blocks (ccu & dxe).
+
+These two register blocks are part of the riva/pronto (the two major versions)
+subsystem, that also contains the "pmu" register block, which is what I access
+here.
+
+Further more, the ccu block contains valuable information for debugging
+purposes that the implementation of this binding would find useful.
+
+
+I would therefor like to double this node (in the dts) as both the
+riva/pronto-pil and the target for the mmio phandle reference from the WiFi
+node.
+
+This works fine, but unless using reg-names for defining the order or the regs
+I get a messy ordering dependency between the two bindings. I do not know which
+of the other 7-8 register blocks we will add for debugging, but with the below
+change I can keep them in block order regardless of the order we implement them
+in.
+
+So, can I update the "reg" and add "reg-names" as below to the binding and
+depend on reg-names for the ordering of reg? Or should I speculatively add all
+ranges I know of to keep the order sane?
+
+Regards,
+Bjorn
+
+Changes since v2:
+- Modify definition of "reg"
+- Add "reg-names"
+- Update example
+
+ .../bindings/remoteproc/qcom,wcnss-pil.txt         | 124 +++++++++++++++++++++
+ 1 file changed, 124 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+new file mode 100644
+index 000000000000..2ddca9be893e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+@@ -0,0 +1,124 @@
++Qualcomm WCNSS Peripheral Image Loader
++
++This document defines the binding for a component that loads and boots firmware
++on the Qualcomm WCNSS core.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,riva-pil",
++		    "qcom,pronto-v1-pil",
++		    "qcom,pronto-v2-pil"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must contain base address and size of riva/pronto PMU
++		    registers
++
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must contain "pmu"
++
++- interrupts-extended:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must list the watchdog and fatal IRQs and may specify the
++		    ready, handover and stop-ack IRQs
++
++- interrupt-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: should be "wdog", "fatal", optionally followed by "ready",
++		    "handover", "stop-ack"
++
++- vddmx-supply:
++- vddcx-supply:
++- vddpx-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the regulators to be held on behalf of the
++		    booting of the WCNSS core
++
++- qcom,state:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: reference to the SMEM state used to indicate to WCNSS that
++		    it should shut down
++
++- qcom,state-names:
++	Usage: optional
++	Value type: <stringlist>
++	Definition: should be "stop"
++
++= SUBNODES
++A single subnode of the WCNSS PIL describes the attached rf module and its
++resource dependencies.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,wcn3620",
++		    "qcom,wcn3660",
++		    "qcom,wcn3680"
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the xo clock and optionally the rf clock
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: should be "xo", optionally followed by "rf"
++
++- vddxo-supply:
++- vddrfa-supply:
++- vddpa-supply:
++- vdddig-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the regulators to be held on behalf of the
++		    booting of the WCNSS core
++
++= EXAMPLE
++The following example describes the resources needed to boot control the WCNSS,
++with attached WCN3680, as it is commonly found on MSM8974 boards.
++
++pronto@fb21b000 {
++	compatible = "qcom,pronto-v2-pil";
++	reg = <0xfb21b000 0x3000>;
++	reg-names = "pmu";
++
++	interrupts-extended = <&intc 0 149 1>,
++			      <&wcnss_smp2p_slave 0 0>,
++			      <&wcnss_smp2p_slave 1 0>,
++			      <&wcnss_smp2p_slave 2 0>,
++			      <&wcnss_smp2p_slave 3 0>;
++	interrupt-names = "wdog", "fatal", "ready", "handover", "stop-ack";
++
++	vddmx-supply = <&pm8841_s1>;
++	vddcx-supply = <&pm8841_s2>;
++	vddpx-supply = <&pm8941_s3>;
++
++	qcom,state = <&wcnss_smp2p_out 0>;
++	qcom,state-names = "stop";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&wcnss_pin_a>;
++
++	iris {
++		compatible = "qcom,wcn3680";
++
++		clocks = <&rpmcc RPM_CXO_CLK_SRC>, <&rpmcc RPM_CXO_A2>;
++		clock-names = "xo", "rf";
++
++		vddxo-supply = <&pm8941_l6>;
++		vddrfa-supply = <&pm8941_l11>;
++		vddpa-supply = <&pm8941_l19>;
++		vdddig-supply = <&pm8941_s3>;
++	};
++};
+-- 
+2.5.0
