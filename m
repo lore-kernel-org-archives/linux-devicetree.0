@@ -1,68 +1,81 @@
-From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] mmc: usdhi6rol0: add support for UHS modes
-Date: Thu, 21 Apr 2016 10:26:55 +0200
-Message-ID: <57188ECF.70101@axis.com>
-References: <cover.1461163234.git.larper@axis.com> <92b72ede5f8ddf2b2f74cdb7422bc8ef5458b23c.1461163234.git.larper@axis.com> <57187D74.8090601@axis.com> <4129305.Ka9B8YpEaI@wuerfel>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] gpio: of: make it possible to name GPIO lines
+Date: Thu, 21 Apr 2016 11:17:44 +0200
+Message-ID: <CACRpkdZrFye5k8yRevofmbRBk=1pKtv8M1Ls5h5hqY_fMTnz_g@mail.gmail.com>
+References: <1461190600-20955-1-git-send-email-linus.walleij@linaro.org>
+	<CAL_JsqJb+T+r=jOpF+nNkMD_gzB6B7=08_+mNRc-ZRA2TZNpiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4129305.Ka9B8YpEaI@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJb+T+r=jOpF+nNkMD_gzB6B7=08_+mNRc-ZRA2TZNpiA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Mandala <david.mandala@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/21/2016 09:53 AM, Arnd Bergmann wrote:
-> On Thursday 21 April 2016 09:12:52 Lars Persson wrote:
->> On 04/20/2016 04:53 PM, Lars Persson wrote:
->>> Add a start_signal_voltage_switch() operation to support enabling of
->>> UHS modes.
->>>
->>> Signed-off-by: Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
->>> ---
->>>    drivers/mmc/host/usdhi6rol0.c | 13 +++++++++++++
->>>    1 file changed, 13 insertions(+)
->>>
->>> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
->>> index 807c06e..2585ea4 100644
->>> --- a/drivers/mmc/host/usdhi6rol0.c
->>> +++ b/drivers/mmc/host/usdhi6rol0.c
->>> @@ -1147,12 +1147,25 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
->>>        }
->>>    }
->>>
->>> +static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
->>> +{
->>> +     int ret;
->>> +
->>
->> To support boards without regulator we need to put a
->> IS_ERR_OR_NULL(mmc->supply.vqmmc) check here and bail out with return 0.
->> Missing vqmmc is OK according to our binding document, but treated as an
->> error by mmc_regulator_set_vqmmc().
+On Thu, Apr 21, 2016 at 1:41 AM, Rob Herring <robh+dt@kernel.org> wrote:
+> On Wed, Apr 20, 2016 at 5:16 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> Make it possible to name the producer side of a GPIO line using
+>> a "gpio-names" property array, modeled on the "clock-names"
+>> property from the clock bindings.
 >
-> mmc_regulator_set_vqmmc() should already take care of handling
-> all the those cases. In general, it's almost always a bug to use
-> IS_ERR_OR_NULL(): if you ever feel the need to use it, you should
-> either fix the code that made the pointer ambiguous or you have
-> misunderstood the interface.
+> Except clock-names is the consumer side. There is clock-output-names
+> for the clock controller side though.
+
+Ah yes you're 100% right.
+
+However I cannot name it "gpio-output-names" since that becomes
+ever confusing: GPIO is both input and output (I remember we
+discussed this at some point).
+
+"gpio-line-names" was my best suggestion at the time,
+I will respin the patch with that convention (how could I forget
+this!).
+
+>> Why we are not using hogs: these are consumer side, not producer
+>> side. The gpio-controller in DT (gpio_chip in Linux) is a
+>> producer, not a consumer.
 >
-> 	Arnd
+> Arguably, the names you have are the consumer side. The consumer side
+> is what defines the function. The consumer name is typically local
+> like vddio being the input supply pin, but the producer names are more
+> global like ldo3.
+
+Depends on what you mean with "producer" and "consumer".
+
+To the GPIO subsystem atleast a "consumer" is a device
+grabbing a GPIO, like SMSC911x WLAN chip or something.
+
+The producer name here is something like the name of the
+rail. (I would even consider using "gpio-rail-names" for this
+property...)
+
+If the GPIO controls an LDO regulator, then the rail will be
+named something like "ldo3" indeed.
+
+We need to distinguish the producer name from e.g. the
+name of the pin on the package, as that is by nature
+ambigous and likely to have a name such as "gpio3".
+
+>> This patch is not about assigning initial values to GPIO lines.
+>> That is an orthogonal usecase. This is just about naming lines.
 >
+> It is unless we decide that both should use the same structure.
 
-Yes it should of course be IS_ERR() rather than IS_ERR_OR_NULL().
+It would still be a different property?
 
-It is a common pattern in all upstream mmc drivers to not make the call 
-to mmc_regulator_set_vqmmc() when a regulator is missing. We basically 
-want to log errors except for the EINVAL returned in case of a missing 
-regulator.
+> I'm also worried that just putting in somewhat random names doesn't
+> buy much. If you have to figure out what the name is for the GPIO line
+> you want from userspace, then you might as well know the chip and
+> offset. I'm doubtful we could standardize naming across platforms.
 
+Having a symbolic GPIO line/rail name across several board
+with different chipsets is the explicit goal for people like
+96boards and IoT libraries they use. (Put them on CC).
 
-- Lars
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I'm not saying yes or no yet, just raising some of the concerns I have.
+
+Let me respin the patch and we keep talking.
+
+Yours,
+Linus Walleij
