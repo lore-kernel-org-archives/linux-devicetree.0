@@ -1,81 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: dtc warnings
-Date: Thu, 21 Apr 2016 07:47:15 -0500
-Message-ID: <CAL_Jsq+fWBkNK6gVAuyp8L3gUoztaYJGaCy47rrqke2AKKhEcw@mail.gmail.com>
-References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 1/7] Documentation: arm64: pmu: Add Broadcom Vulcan PMU binding
+Date: Thu, 21 Apr 2016 05:58:39 -0700
+Message-ID: <1461243525-13603-2-git-send-email-ashoks@broadcom.com>
+References: <1461243525-13603-1-git-send-email-ashoks@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1461243525-13603-1-git-send-email-ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Cc: jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 8:40 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> You may have noticed that linux-next had gotten noisy with dtc
-> warnings lately. I dropped the change for a bit, but added it back
-> today except now it is disabled unless building with "W=1".
->
-> There's ~25K (2500 unique) warnings generated from the ARM dts files.
-> Here's the ranking of warnings by dtb. OMAP is the clear winner (based
-> on the similar counts, probably lots of duplicates). Please help
-> remind contributors to test with W=1 and start to fix these.
+Document the compatible string for Broadcom Vulcan PMU.
+Also arranged the list in alphabetical order.
 
-Good progress here. Next is now 11054 total, 1516 unique. Here's the
-top ones now:
+Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/pmu.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-165 : arch/arm/boot/dts/atlas7-evb.dtb
-91 : arch/arm/boot/dts/at91-sama5d4ek.dtb
-90 : arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dtb
-88 : arch/arm/boot/dts/at91-sama5d4_xplained.dtb
-87 : arch/arm/boot/dts/at91-vinco.dtb
-82 : arch/arm/boot/dts/at91-sama5d2_xplained.dtb
-79 : arch/arm/boot/dts/keystone-k2hk-evm.dtb
-74 : arch/arm/boot/dts/ste-nomadik-s8815.dtb
-74 : arch/arm/boot/dts/ste-nomadik-nhk15.dtb
-73 : arch/arm/boot/dts/at91-sama5d3_xplained.dtb
-72 : arch/arm/boot/dts/sama5d36ek.dtb
-70 : arch/arm/boot/dts/sama5d35ek.dtb
-70 : arch/arm/boot/dts/sama5d34ek.dtb
-69 : arch/arm/boot/dts/sama5d31ek.dtb
-68 : arch/arm/boot/dts/at91-kizbox2.dtb
-67 : arch/arm/boot/dts/sama5d33ek.dtb
-65 : arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dtb
-65 : arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dtb
-64 : arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dtb
-62 : arch/arm/boot/dts/atlas6-evb.dtb
-61 : arch/arm/boot/dts/prima2-evb.dtb
-59 : arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dtb
-59 : arch/arm/boot/dts/sun7i-a20-pcduino3.dtb
-59 : arch/arm/boot/dts/keystone-k2l-evm.dtb
-58 : arch/arm/boot/dts/sun7i-a20-cubietruck.dtb
-57 : arch/arm/boot/dts/sun7i-a20-orangepi-mini.dtb
-57 : arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dtb
-57 : arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dtb
-57 : arch/arm/boot/dts/sun7i-a20-i12-tvbox.dtb
-56 : arch/arm/boot/dts/sun7i-a20-orangepi.dtb
-56 : arch/arm/boot/dts/sun7i-a20-lamobo-r1.dtb
-56 : arch/arm/boot/dts/sun7i-a20-bananapro.dtb
-56 : arch/arm/boot/dts/sun7i-a20-bananapi.dtb
-55 : arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dtb
-55 : arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dtb
-55 : arch/arm/boot/dts/sun7i-a20-mk808c.dtb
-55 : arch/arm/boot/dts/sun7i-a20-hummingbird.dtb
-55 : arch/arm/boot/dts/sun7i-a20-cubieboard2.dtb
-54 : arch/arm/boot/dts/sun7i-a20-m3.dtb
-54 : arch/arm/boot/dts/sun7i-a20-itead-ibox.dtb
-53 : arch/arm/boot/dts/sun7i-a20-icnova-swac.dtb
-51 : arch/arm/boot/dts/at91sam9x35ek.dtb
-50 : arch/arm/boot/dts/at91sam9x25ek.dtb
-49 : arch/arm/boot/dts/at91sam9g35ek.dtb
-48 : arch/arm/boot/dts/at91sam9g15ek.dtb
-48 : arch/arm/boot/dts/at91-ariag25.dtb
-47 : arch/arm/boot/dts/at91sam9g25ek.dtb
-47 : arch/arm/boot/dts/at91-cosino_mega2560.dtb
-46 : arch/arm/boot/dts/pm9g45.dtb
+diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+index 6eb73be..74d5417 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/pmu.txt
+@@ -22,10 +22,11 @@ Required properties:
+ 	"arm,arm11mpcore-pmu"
+ 	"arm,arm1176-pmu"
+ 	"arm,arm1136-pmu"
++	"brcm,vulcan-pmu"
++	"cavium,thunder-pmu"
+ 	"qcom,scorpion-pmu"
+ 	"qcom,scorpion-mp-pmu"
+ 	"qcom,krait-pmu"
+-	"cavium,thunder-pmu"
+ - interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
+                interrupt (PPI) then 1 interrupt should be specified.
+ 
+-- 
+2.1.0
 
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
