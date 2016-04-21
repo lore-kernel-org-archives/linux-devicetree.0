@@ -1,91 +1,97 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V2 04/14] irqdomain: Fix handling of type settings for
- existing mappings
-Date: Thu, 21 Apr 2016 12:31:55 +0100
-Message-ID: <5718BA2B.2060708@nvidia.com>
-References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
- <1461150237-15580-5-git-send-email-jonathanh@nvidia.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [RESEND PATCH 0/3 v6] Add Mediatek MT8173 cpufreq driver
+Date: Thu, 21 Apr 2016 19:37:58 +0800
+Message-ID: <1461238678.20801.11.camel@mtksdaap41>
+References: <1439803465-19683-1-git-send-email-pi-cheng.chen@linaro.org>
+	 <20150826021659.GD8784@linux>
+	 <CALx668V2herrp6XOtCDR7nNvFhd7DLLMjXmr86cjfCOQ_cgmrw@mail.gmail.com>
+	 <22538895.vrRgZUmQTV@vostro.rjw.lan>
+	 <CAGS+omAtiALWTjVJS4wNatXVLqZRSOk3m29QQvW=fQWs7Hs5ng@mail.gmail.com>
+	 <55E73077.8060106@gmail.com> <5718AAF0.3010606@gmail.com>
+	 <5718B244.3020201@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461150237-15580-5-git-send-email-jonathanh@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5718B244.3020201@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, Pi-Cheng Chen <pi-cheng.chen@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Matthias,
 
-On 20/04/16 12:03, Jon Hunter wrote:
-> When mapping an IRQ, it is possible that a mapping for the IRQ already
-> exists. If mapping does exist then there are the following issues with
-> regard to the handling of the IRQ type settings ...
-> 1. If the domain is part of a hierarchy, then:
->    a. We do not check that the type settings for the existing mapping
->       match those of the new mapping.
->    b. We do not check to see if the type settings have been programmed
->       yet (and they might not have been) and so we may never set the
->       type.
-> 2. If the domain is NOT part of a hierarchy, we will overwrite the
->    current type settings programmed if they are different from the
->    previous mapping. Please note that irq_create_mapping()
->    calls irq_find_mapping() to check if a mapping already exists.
+On Thu, 2016-04-21 at 12:58 +0200, Matthias Brugger wrote:
 > 
-> Although, it may be unlikely that the type settings for a shared
-> interrupt would not match, nonetheless we should check for this.
-> Therefore, to fix this check if a mapping exists (regardless of whether
-> the domain is part of a hierarchy or not) and if it does then:
-> 1. Return the IRQ number if the type settings match or are not
->    specified.
-> 2. Program the type settings and return the IRQ number if the type
->    settings have not been programmed yet.
-> 3. Otherwise if the type setting do not match, then print a warning
->    and don't return the IRQ number.
+> On 21/04/16 12:26, Matthias Brugger wrote:
+> >
+> >
+> > On 02/09/15 19:23, Matthias Brugger wrote:
+> >>
+> >>
+> >> On 02/09/15 08:45, Daniel Kurtz wrote:
+> >>> Matthias,
+> >>>
+> >>> On Fri, Aug 28, 2015 at 10:06 PM, Rafael J. Wysocki
+> >>> <rjw@rjwysocki.net> wrote:
+> >>>> On Wednesday, August 26, 2015 02:53:39 PM Pi-Cheng Chen wrote:
+> >>>>> On Wed, Aug 26, 2015 at 10:16 AM, Viresh Kumar
+> >>>>> <viresh.kumar@linaro.org> wrote:
+> >>>>>> On 26-08-15, 09:25, Pi-Cheng Chen wrote:
+> >>>>>>> The [3/3] is based on Mediatek SoC maintainer tree[1] and the
+> >>>>>>> patch which
+> >>>>>>> introduce a new clock type[2] consumed by MT8173 cpufreq driver.
+> >>>>>>> So it will
+> >>>>>>> cause some conflicts if it goes through your tree. I am not sure
+> >>>>>>> how this
+> >>>>>>> should be handled, but should it be merged through Mediatek SoC
+> >>>>>>> maintainer
+> >>>>>>> tree?
+> >>>>>>
+> >>>>>> Just get that applied to MTK tree, it doesn't have any dependency on
+> >>>>>> rest of the patches for build/boot. The only thing is that cpufreq
+> >>>>>> wouldn't work and it will work as soon as Rafael's and MTK's trees
+> >>>>>> are
+> >>>>>> merged by Linus.
+> >>>>>
+> >>>>> Thanks for your explanation.
+> >>>>>
+> >>>>> @Rafael, Would you please apply [1,2] to your tree?
+> >>>>
+> >>>> Applied, thanks!
+> >>>
+> >>> Can you please apply [3] from this set to your dts tree?
+> >>>
+> >>
+> >> I will as soon as v4.3-rc1 shows up.
+> >
+> > I somehow forgot this patch. Sorry for that.
+> > Applied for v4.6-next/dts64 right now.
+> >
 > 
-> Furthermore, add a warning if the type return by irq_domain_translate()
-> has bits outside the sense mask set and then clear these bits. If these
-> bits are not cleared then this will cause the comparision of the type
-> settings for an existing mapping to fail with that of the new mapping
-> even if the sense bit themselves match. The reason being is that the
-> existing type settings are read by calling irq_get_trigger_type() which
-> will clear any bits outside the sense mask. This will allow us to detect
-> irqchips that are not correctly clearing these bits and fix them.
+> I just realized that CLK_INFRA_CA53SEL and CLK_APMIXED_MAINPLL are not 
+> part of the clk driver.
 > 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  kernel/irq/irqdomain.c | 38 +++++++++++++++++++++++++++++++++-----
->  1 file changed, 33 insertions(+), 5 deletions(-)
+> Pi-Cheng, can you check if they got renamed in the meanwhile? Or do we 
+> need some clock driver patches that enable this clocks for the series?
 > 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 245a485ffb61..88e9328b7aab 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -592,15 +592,43 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  	if (irq_domain_translate(domain, fwspec, &hwirq, &type))
->  		return 0;
->  
-> -	if (irq_domain_is_hierarchy(domain)) {
-> +	/*
-> +	 * WARN if the irqchip returns a type with bits
-> +	 * outside the sense mask set and clear these bits.
-> +	 */
-> +	if (WARN_ON(type & ~IRQ_TYPE_SENSE_MASK))
-> +		type &= IRQ_TYPE_SENSE_MASK;
-> +
-> +	/*
-> +	 * If we've already configured this interrupt,
-> +	 * don't do it again, or hell will break loose.
-> +	 */
-> +	virq = irq_find_mapping(domain, hwirq);
-> +	if (virq) {
->  		/*
-> -		 * If we've already configured this interrupt,
-> -		 * don't do it again, or hell will break loose.
-> +		 * If the trigger type is not specified or matches the
-> +		 * current trigger type then we are done so return the
-> +		 * interrupt number. Otherwise, if the trigger type does
-> +		 * not match return 0.
 
-I think I should have dropped this 'otherwise' sentence from here.
+Thanks your notice. Unfortunately, we still have no chance let patch
+with these two clock merged. The last version is [1]. This clock patch
+will block cpufreq dts [2] and dynamic power dts [3]. Clock maintainer
+is working on new architecture [4], hopefully we can send new clock
+patch soon. After that, we will send new cpufreq and dynamic power dts.
+So please ignore [2] [3] at this moment. 
 
-Jon
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/369737.html
+[2] https://lkml.org/lkml/2015/7/9/206
+[3]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/423899.html
+[4]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-March/418796.html
+
+Eddie
+Thanks
+
+
