@@ -1,164 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/2] dt: bindings: add MARVELL's bt-sd8xxx wireless
- device
-Date: Thu, 21 Apr 2016 09:36:12 -0500
-Message-ID: <20160421143612.GA19427@rob-hp-laptop>
-References: <1460982230-1470-1-git-send-email-akarwar@marvell.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] ASoC: davinci-mcbsp: add binding for McBSP
+Date: Thu, 21 Apr 2016 09:42:08 -0500
+Message-ID: <CAL_JsqJEGwhPk+79-bg48KAOPK+n3eNNB8NXPZvG6Uk8zBKFpg@mail.gmail.com>
+References: <1460375117-4311-1-git-send-email-petr@barix.com>
+ <1460375117-4311-2-git-send-email-petr@barix.com> <20160413143014.GA12136@rob-hp-laptop>
+ <5710AACF.9070402@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460982230-1470-1-git-send-email-akarwar@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amitkumar Karwar <akarwar@marvell.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5710AACF.9070402-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 18, 2016 at 05:23:49AM -0700, Amitkumar Karwar wrote:
-> From: Xinming Hu <huxm@marvell.com>
-> 
-> Add device tree binding documentation for MARVELL's bluetooth sdio
-> (sd8897 and sd8997) chip.
-> 
-> Signed-off-by: Xinming Hu <huxm@marvell.com>
-> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
-> ---
-> Listing changelist for both 1/2 and 2/2 here
-> v2: Fixed build error reported by kbuild test robot
-> drivers/bluetooth/btmrvl_platform.c:141:22: error:
-> 'btmrvl_plt_pm_ops' undeclared here (not in a function)
-> 
-> v3: Add NULL check for 'btmrvl_plt_dev'
-> 
-> v4: Moved the bindings file to bindings/net/
->     Corrected the name of 'name' and 'compatible' properties(Rob Herring)
-> 
-> v5: Comments for wlan patches were applicable here as well. Like all binding
->     changes in single file, specifying node as a child of SDIO controller.
-> 
-> v6: a)Use <chip>-bt order for compatible attribute(Rob Herring)
->     b)Split wakeuppin-gap to wakeup-pin and wakeup-gap(Rob Herring) 
->     c)Use sdio function number for both the unit address and reg(Rob Herring)
-> 
-> v7: a)Use suggested vendor name and generic node name(Rob Herring)
-> ---
->  Documentation/devicetree/bindings/btmrvl.txt       | 29 -----------
->  .../devicetree/bindings/net/marvell-bt-sd8xxx.txt  | 57 ++++++++++++++++++++++
->  2 files changed, 57 insertions(+), 29 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/btmrvl.txt
->  create mode 100644 Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/btmrvl.txt b/Documentation/devicetree/bindings/btmrvl.txt
-> deleted file mode 100644
-> index 58f964b..0000000
-> --- a/Documentation/devicetree/bindings/btmrvl.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -btmrvl
-> -------
-> -
-> -Required properties:
-> -
-> -  - compatible : must be "btmrvl,cfgdata"
-> -
-> -Optional properties:
-> -
-> -  - btmrvl,cal-data : Calibration data downloaded to the device during
-> -		      initialization. This is an array of 28 values(u8).
-> -
-> -  - btmrvl,gpio-gap : gpio and gap (in msecs) combination to be
-> -		      configured.
-> -
-> -Example:
-> -
-> -GPIO pin 13 is configured as a wakeup source and GAP is set to 100 msecs
-> -in below example.
-> -
-> -btmrvl {
-> -	compatible = "btmrvl,cfgdata";
-> -
-> -	btmrvl,cal-data = /bits/ 8 <
-> -		0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
-> -		0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
-> -		0x00 0x00 0xf0 0x00>;
-> -	btmrvl,gpio-gap = <0x0d64>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> new file mode 100644
-> index 0000000..17f8470
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> @@ -0,0 +1,57 @@
-> +Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
-> +------
-> +
-> +Required properties:
-> +
-> +  - compatible : should be one of the following:
-> +	* "marvell,sd8897-bt"
-> +	* "marvell,sd8997-bt"
-> +
-> +Optional properties:
-> +
-> +  - marvell,cal-data : Calibration data downloaded to the device during
-> +		      initialization. This is an array of 28 values(u8).
-> +
-> +  - btmrvl,wakeup-pin : 'wakeup-pin' represents wakeup pin number of the bluetooth
-> +		      chip. firmware will use the pin to wakeup host system.
-> +  - btmrvl,wakeup-gap-msec : wakeup gap represents wakeup latency of the host platform.
-> +		      The value will be configured to firmware. This is needed to work
-> +		      chip's sleep feature as expected.
+On Fri, Apr 15, 2016 at 3:48 AM, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org> wrote:
+>
+> On 13.04.2016 16:30, Rob Herring wrote:
+>>
+>> On Mon, Apr 11, 2016 at 01:45:12PM +0200, Petr Kulhavy wrote:
+>>>
+>>> Add devicetree binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx
+>>> MultiChannel Buffered Serial Port (McBSP)
+>>>
+>>> The optional register range "dat" is not implemented at the moment.
+>>> The current driver supports only DMA into RX/TX registers but no FIFO.
+>>> Once the FIFO is implemented in the driver the "dat" range will be used.
+>>>
+>>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>> v1: initial
+>>> v2: add missing TC channel in dmas properties (for compatibility with the
+>>> new EDMA3 binding)
+>>>      remove "-audio" postfix from the compatible string
+>>>      remove "channel-combine" property
+>>>
+>>>   .../devicetree/bindings/sound/davinci-mcbsp.txt    | 51
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 51 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>>> b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>>> new file mode 100644
+>>> index 000000000000..de45865c3863
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>>> @@ -0,0 +1,51 @@
+>>> +Texas Instruments DaVinci McBSP module
+>>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> +
+>>> +This binding describes the "Multi-channel Buffered Serial Port" (McBSP)
+>>> +audio interface found in some TI DaVinci processors like the OMAP-L138
+>>> or AM180x.
+>>> +
+>>> +
+>>> +Required properties:
+>>> +~~~~~~~~~~~~~~~~~~~~
+>>> +- compatible : "ti,da850-mcbsp"
+>>
+>> You list several SoCs above, but only one compatible string here. A
+>> specific compatible string per SoC please.
+>>
+> Hi Rob,
+>
+> thank you for your feedback. I can test only on the AM1808 platform, however
+> as far as I understand the OMAP L138 and AM1808 use the same McBSP hardware.
+> The TI guys can give more insight here... Isn't it then redundant to define
+> more compatible strings? Sorry for my ignorance, I just don't know the
+> policy of defining the compatible strings.
 
-These should be marvell, not btmrvl.
+Based on Sekhar's reply okay.
 
-Also, -ms is the standard unit rather than -msec as defined in 
-Documentation/devicetree/bindings/property-units.txt.
+>>> +
+>>> +- reg : physical base address and length of the controller memory mapped
+>>> +        region(s).
+>>> +- reg-names : Should contain:
+>>> +        * "mpu" for the main registers (required). For compatibility
+>>> with
+>>> +          existing software, it is recommended this is the first entry.
+>>
+>> s/recommended/required/
+>
+> Recommended is correct, but I think it make sense to drop the sentence.
+> If the reg-names are provided then the probe() finds the resource regardless
+> of the index.
+> If not provided it expects it at index 0.
+> But since we declare that the reg-names is mandatory this sentence is just
+> confusing and should be removed.
 
-> +  - interrupt-parent: phandle of the parent interrupt controller
-> +  - interrupts : interrupt pin number to the cpu. Driver will request an irq based on
-> +		 this interrupt number. During system suspend, the irq will be enabled
-> +		 so that the bluetooth chip can wakeup host platform under certain
-> +		 condition. During system resume, the irq will be disabled to make sure
-> +		 unnecessary interrupt is not received.
-> +
-> +Example:
-> +
-> +IRQ pin 119 is used as system wakeup source interrupt.
-> +wakeup pin 13 and gap 100ms are configured so that firmware can wakeup host
-> +using this device side pin and wakeup latency.
-> +calibration data is also available in below example.
-> +
-> +&mmc3 {
-> +	status = "okay";
-> +	vmmc-supply = <&wlan_en_reg>;
-> +	bus-width = <4>;
-> +	cap-power-off-card;
-> +	keep-power-in-suspend;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	btmrvl: bluetooth@2 {
-> +		compatible = "marvell,sd8897-bt";
-> +		reg = <2>;
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		btmrvl,cal-data = /bits/ 8 <
-> +			0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
-> +			0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
-> +			0x00 0x00 0xf0 0x00>;
-> +		btmrvl,wakeup-pin = <0x0d>;
-> +		btmrvl,wakeup-gap-msec = <0x64>;
+No, required is correct. The order of reg (or any other property)
+entries must be defined regardless of the use of *-names or not.
 
-These are wrong too.
-
-> +	};
-> +};
-> +
-> -- 
-> 1.8.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
