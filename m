@@ -1,59 +1,65 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [RESEND][PATCH 1/3] thermal: mediatek: Add cpu dynamic power
- cooling model.
-Date: Thu, 21 Apr 2016 19:53:08 +0200
-Message-ID: <CAJZ5v0h_W6CW6Z-kux-kbur_NE3XZH-hKZazXV5TX3tET-6cAg@mail.gmail.com>
-References: <1458029437-12846-1-git-send-email-dawei.chien@mediatek.com>
-	<CAJZ5v0hpkyMCVhvYy4JzR1A5OZKs7dqDOB64aQXmjXiLM0F=BQ@mail.gmail.com>
-	<57176ECF.6020705@gmail.com>
-	<12007858.UuqVGafLHV@vostro.rjw.lan>
-	<20160421030141.GA4845@localhost.localdomain>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH 2/2 v6] arc: axs10x: Add DT bindings for I2S PLL Clock
+Date: Thu, 21 Apr 2016 18:56:11 +0100
+Message-ID: <5719143B.2080901@synopsys.com>
+References: <cover.1461258787.git.joabreu@synopsys.com>
+ <e98c3f738b3a8f6755793959d89b4e43c9410fb1.1461258787.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160421030141.GA4845@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Dawei Chien <dawei.chien@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.comSascha
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e98c3f738b3a8f6755793959d89b4e43c9410fb1.1461258787.git.joabreu@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org
+Cc: mturquette@baylibre.com, Alexey.Brodkin@synopsys.com, sboyd@codeaurora.org, CARLOS.PALMINHA@synopsys.com, robh+dt@kernel.org, Vineet.Gupta1@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 5:01 AM, Eduardo Valentin <edubezval@gmail.com> wrote:
-> On Thu, Apr 21, 2016 at 02:41:24AM +0200, Rafael J. Wysocki wrote:
->> On Wednesday, April 20, 2016 01:58:07 PM Matthias Brugger wrote:
->> > Hi Rafael,
->> >
->> > On 13/04/16 06:52, Rafael J. Wysocki wrote:
->> > > On Tue, Apr 12, 2016 at 7:38 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> > >> Hi Rafael,
->> > >>
->> > >> On 15-03-16, 16:10, Dawei Chien wrote:
->> > >>> MT8173 cpufreq driver select of_cpufreq_power_cooling_register registering
->> > >>> cooling devices with dynamic power coefficient.
->> > >>>
->> > >>> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
->> > >>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> > >>
->> > >> Can you please apply this patch from Dawei ?
->> > >
->> > > I can, but I'm traveling this week, so that's rather going to happen next week.
->> > >
->> >
->> > I don't see the patch in linux-next, did you forget to pick/push it?
->>
->> No, I didn't.  I just didn't have the time to get to them before.
->>
->> Now, given that they are thermal patches, they really should go in via
->> linux-soc-thermal.git.
->>
->> Eduardo, any chance to take care of these?
+Adding device tree mailing list and Rob Herring.
+
+On 21-04-2016 18:19, Jose Abreu wrote:
+> Add device tree bindings for AXS10X I2S PLL Clock driver.
 >
-> Yes I can add this one, given that they have the proper acked-by. I was
-> a bit hesitant to just get them because they are touching
-> drivers/cpufreq.
-
-Generally, ACKs from Viresh are sufficient for ARM cpufreq drivers
-unless the maintainers of the platform in question disagree.
-
-> Anyways, I am adding this to my branch to the next merge window.
-
-Thanks!
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> ---
+>
+> Changes v5 -> v6:
+> * Added 'clocks' field
+>
+> This patch was only introduced in v5.
+>
+>  arch/arc/boot/dts/axs10x_mb.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+> index ab5d570..5c6489e 100644
+> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
+> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+> @@ -16,7 +16,20 @@
+>  		ranges = <0x00000000 0xe0000000 0x10000000>;
+>  		interrupt-parent = <&mb_intc>;
+>  
+> +		i2sclk: i2sclk@100a0 {
+> +			compatible = "snps,axs10x-i2s-pll-clock";
+> +			reg = <0x100a0 0x10>;
+> +			clocks = <&i2spll_clk>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+>  		clocks {
+> +			i2spll_clk: i2spll_clk {
+> +				compatible = "fixed-clock";
+> +				clock-frequency = <27000000>;
+> +				#clock-cells = <0>;
+> +			};
+> +
+>  			i2cclk: i2cclk {
+>  				compatible = "fixed-clock";
+>  				clock-frequency = <50000000>;
