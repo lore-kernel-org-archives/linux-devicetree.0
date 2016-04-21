@@ -1,73 +1,92 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 04/19] clk: sunxi: Add TCON channel1 clock
-Date: Thu, 21 Apr 2016 18:56:14 +0200
-Message-ID: <20160421165614.GR13045@lukather>
-References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-5-git-send-email-maxime.ripard@free-electrons.com>
- <20160415223936.GU14441@codeaurora.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3 3/3] dmaengine: vdma: Add clock support
+Date: Thu, 21 Apr 2016 10:02:15 -0700
+Message-ID: <20160421170215.GB7128@xsjsorenbubuntu>
+References: <1461235118-800-1-git-send-email-appanad@xilinx.com>
+ <1461235118-800-4-git-send-email-appanad@xilinx.com>
+ <20160421162153.GZ7128@xsjsorenbubuntu>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5799D9@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1Sa0i77dkqaUxqYg"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160415223936.GU14441@codeaurora.org>
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5799D9@XAP-PVEXMBX01.xlnx.xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>
+To: Appana Durga Kedareswara Rao <appanad@xilinx.com>
+Cc: Soren Brinkmann <sorenb@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-ker
 List-Id: devicetree@vger.kernel.org
 
-
---1Sa0i77dkqaUxqYg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 15, 2016 at 03:39:36PM -0700, Stephen Boyd wrote:
-> On 03/23, Maxime Ripard wrote:
-> > The TCON is a controller generating the timings to output videos signal=
-s,
-> > acting like both a CRTC and an encoder.
-> >=20
-> > It has two channels depending on the output, each channel being driven =
-by
-> > its own clock (and own clock controller).
-> >=20
-> > Add a driver for the channel 1 clock.
-> >=20
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
+On Thu, 2016-04-21 at 09:32:44 -0700, Appana Durga Kedareswara Rao wrot=
+e:
+> Hi Soren,
 >=20
-> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> > -----Original Message-----
+> > From: S=C3=B6ren Brinkmann [mailto:soren.brinkmann@xilinx.com]
+> > Sent: Thursday, April 21, 2016 9:52 PM
+> > To: Appana Durga Kedareswara Rao <appanad@xilinx.com>
+> > Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> > <michals@xilinx.com>; vinod.koul@intel.com; dan.j.williams@intel.co=
+m;
+> > Appana Durga Kedareswara Rao <appanad@xilinx.com>;
+> > moritz.fischer@ettus.com; laurent.pinchart@ideasonboard.com;
+> > luis@debethencourt.com; Anirudha Sarangi <anirudh@xilinx.com>; Punn=
+aiah
+> > Choudary Kalluri <punnaia@xilinx.com>; Shubhrajyoti Datta
+> > <shubhraj@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > dmaengine@vger.kernel.org
+> > Subject: Re: [PATCH v3 3/3] dmaengine: vdma: Add clock support
+> >=20
+> > On Thu, 2016-04-21 at 16:08:38 +0530, Kedareswara rao Appana wrote:
+[...]
+> > > @@ -1757,6 +1767,200 @@ static void xilinx_dma_chan_remove(struct
+> > xilinx_dma_chan *chan)
+> > >  	list_del(&chan->common.device_node);
+> > >  }
+> > >
+> > > +static int axidma_clk_init(struct platform_device *pdev, struct =
+clk **axi_clk,
+> > > +			    struct clk **tx_clk, struct clk **rx_clk,
+> > > +			    struct clk **sg_clk, struct clk **tmp_clk) {
+> > > +	int err;
+> > > +
+> > > +	*tmp_clk =3D NULL;
+> > > +
+> > > +	*axi_clk =3D devm_clk_get(&pdev->dev, "s_axi_lite_aclk");
+> > > +	if (IS_ERR(*axi_clk)) {
+> > > +		err =3D PTR_ERR(*axi_clk);
+> > > +		dev_err(&pdev->dev, "failed to get axi_aclk (%u)\n", err);
+> > > +		return err;
+> > > +	}
+> > > +
+> > > +	*tx_clk =3D devm_clk_get(&pdev->dev, "m_axi_mm2s_aclk");
+> > > +	if (IS_ERR(*tx_clk))
+> > > +		*tx_clk =3D NULL;
+> > > +
+> > > +	*rx_clk =3D devm_clk_get(&pdev->dev, "m_axi_s2mm_aclk");
+> > > +	if (IS_ERR(*rx_clk))
+> > > +		*rx_clk =3D NULL;
+> > > +
+> > > +	*sg_clk =3D devm_clk_get(&pdev->dev, "m_axi_sg_aclk");
+> > > +	if (IS_ERR(*sg_clk))
+> > > +		*sg_clk =3D NULL;
+> > > +
+> > > +
+> > > +	err =3D clk_prepare_enable(*axi_clk);
+> >=20
+> > Should this be called if you know that the pointer might be NULL?
+>=20
+> It is a mandatory clock and if this clk is not there in DT I am alrea=
+dy returning error...
+> I didn't get your question could you please elaborate???
 
-Applied, thanks!
-Maxime
+But for all the optional clocks. They could all be NULL and you're call=
+ing
+clk_prepare_enable with a NULL pointer. That function is nice enough to
+do a NULL check for you, but I wonder whether these calls should happen=
+ at
+all when you already know that the pointer is not a valid clock.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---1Sa0i77dkqaUxqYg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXGQYuAAoJEBx+YmzsjxAgU4AP+wdIGhuiGxzD8IkTlTBZ9KYp
-Y7N5If0LdSei8XNy/GkAkQ/FCD8iaYj86OormkWXWCjFTiOwe+WzCJUg/sW/X/5Z
-BeJsKi/anc7olsBu7MdxmkwTo5YDfpCeCHm9fad0SIPNqGkEIHkvTdSqIwvDN/Bj
-ntjR3aVZGLIYi1/F+jeQy0G9AS7wL8N+N8OovryZ9JyIgIGzcQUaB0/0D6DdvgDN
-vajl+vlY8FpTNxNjiCGPc2E2a+4H2AjZEkpGHggVucV512guiCwmd4Hsx28Z94Hn
-iRvveMiwBqgKQEChu647NP07mkvrt72VEKEo0tIfA7pGKweE85tCE+x58ndJyIZW
-sE1DpGTB9oHC8aOtdvgT988YoEQmCgQh6lNK/4sfguSj1/V/1zSMuQN2/cHrxDvE
-1Y6ujecmFmHG1gnSC72XBuXM5NxhtSuDKBjEY+cEK84lJDT6vFecaPR6PdTsZ/+X
-8920BW8HEAeJVYOoC9xYw9i8Xoe7IFTfEr92YYt0aQ/UkR0RAcfwbLHLFS5MpLFb
-Xur9zJVIeMPZvEEAfbSge64qvtclWM7DoOEtJ0PSCZbrZNaEelfSKFerv/bWf5Kg
-ky4+osPOOiiYXlXs1czwoxuypaWJpt//E4O1xejyoS0o1wtuBmaLhK9vYmA7l7gs
-1/zF6qwA1Zm+psUvH/lK
-=uhOr
------END PGP SIGNATURE-----
-
---1Sa0i77dkqaUxqYg--
+	S=C3=B6ren
