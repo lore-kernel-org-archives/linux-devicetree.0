@@ -1,54 +1,59 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] dt: bindings: add MARVELL's sd8xxx wireless device
-Date: Thu, 21 Apr 2016 09:31:02 -0500
-Message-ID: <20160421143102.GA17372@rob-hp-laptop>
-References: <1460982143-1419-1-git-send-email-akarwar@marvell.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] rtc: Kconfig: Name RK818 in Kconfig for
+ RTC_DRV_RK808
+Date: Thu, 21 Apr 2016 16:35:06 +0200
+Message-ID: <20160421143506.GB29844@piout.net>
+References: <1461244361-45686-1-git-send-email-w.egorov@phytec.de>
+ <1461244361-45686-8-git-send-email-w.egorov@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460982143-1419-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1461244361-45686-8-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 18, 2016 at 05:22:22AM -0700, Amitkumar Karwar wrote:
-> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On 21/04/2016 at 15:12:41 +0200, Wadim Egorov wrote :
+> The RK808 and RK818 PMICs are using a similar register map.
+> We can reuse the rtc driver for the RK818 PMIC. So let's add
+> the RK818 in the Kconfig description.
 > 
-> Add device tree binding documentation for MARVELL's sd8xxx
-> (sd8897 and sd8997) wlan chip.
-> 
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Listing changelist for both 1/2 and 2/2 patches
-> v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
-> 
-> v4: a)Corrected the 'name' and 'compatible' property names.(Arnd Bergmann and Rob
->     Herring)
->     b)Patch description wraped in 72 columns(Rob Herring)
->     c)Moved DT binding file to bindings/net/wireless/(Rob Herring)
->     d)Renamed "mwifiex,chip-gpio" to "marvell,wakeup-gpios"(Rob Herring/
->     Arnd Bergmann)
->     e)Replaced #ifdef with __maybe_unused(Arnd Bergmann)
-> 
-> v5: a)Removed wildcards from compatible string(Arnd Bergmann)
->     b)Prepared single patch for all binding changes(Rob Herring)
->     c)Specified our node as a subnode of SDIO controller. With this approach, we
->     don't need to register new platform driver. (Rob herring)
-> 
-> v6: a)List out the specific property names for marvell,caldata* and size of the data(Rob Herring)
->     b)Use sdio function number for both the unit address and reg(Rob Herring)
-> 
-> v7: a)Use suggested specific marvell,caldata property name and generic node name(Rob Herring)
-> ---
->  .../bindings/net/wireless/marvell-sd8xxx.txt       | 63 ++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/rtc/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 3e84315..acc2651 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -324,11 +324,11 @@ config RTC_DRV_MAX77686
+>  	  will be called rtc-max77686.
+>  
+>  config RTC_DRV_RK808
+> -	tristate "Rockchip RK808 RTC"
+> +	tristate "Rockchip RK808/RK818 RTC"
+>  	depends on MFD_RK808
+>  	help
+>  	  If you say yes here you will get support for the
+> -	  RTC of RK808 PMIC.
+> +	  RTC of RK808 and RK818 PMIC.
+>  
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rk808-rtc.
+> -- 
+> 1.9.1
+> 
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
