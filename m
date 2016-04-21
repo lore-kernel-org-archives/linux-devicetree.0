@@ -1,74 +1,96 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3] gpio: of: make it possible to name GPIO lines
-Date: Thu, 21 Apr 2016 10:06:15 -0700
-Message-ID: <20160421170615.GA25466@dtor-ws>
-References: <1461236901-28626-1-git-send-email-linus.walleij@linaro.org>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v3 3/3] dmaengine: vdma: Add clock support
+Date: Thu, 21 Apr 2016 17:13:18 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A579A06@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1461235118-800-1-git-send-email-appanad@xilinx.com>
+ <1461235118-800-4-git-send-email-appanad@xilinx.com>
+ <20160421162153.GZ7128@xsjsorenbubuntu>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5799D9@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160421170215.GB7128@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461236901-28626-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Lee Campbell <leecam@google.com>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Mandala <david.mandala@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160421170215.GB7128@xsjsorenbubuntu>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-ker
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Thu, Apr 21, 2016 at 01:08:21PM +0200, Linus Walleij wrote:
->  /**
-> + * of_gpiochip_set_names() - set up the names of the lines
-> + * @chip: GPIO chip whose lines should be named, if possible
-> + */
-> +static void of_gpiochip_set_names(struct gpio_chip *gc)
-> +{
-> +	struct gpio_device *gdev = gc->gpiodev;
-> +	struct device_node *np = gc->of_node;
-> +	int i;
-> +	int nstrings;
-> +
-> +	/* Do we even have the "gpio-line-names" property */
-> +	if (!of_property_read_bool(np, "gpio-line-names"))
-> +		return;
-> +
-> +	nstrings = of_property_count_strings(np, "gpio-line-names");
-> +	/*
-> +	 * Make sure to not index beyond either the end of the
-> +	 * "gpio-names" array nor the number of descriptors of
-> +	 * the GPIO device.
-> +	 */
-
-I know you mentioned that it already been discussed much, but I am not
-sure why we need to count the string (and validate that strings are
-present by treating the property as boolean?), when we could do
-something like this (relying on the fact that
-of_property_read_string_index() returns 0 or negative error, no positive
-return codes):
-
-	for (i = 0; i < gdev->ngpio; i++) {
-		const char *name;
-		int error;
-
-		error = of_property_read_string_index(np,
-						      "gpio-line-names",
-						      i,
-						      &name);
-		if (error) {
-			if (error != -ENODATA)
-				dev_err(&gdev->dev,
-					"unable to name line %d: %d\n",
-					i, error);
-			/*
-			 * Either no more strings (-ENODATA), or
-			 * other error, in any case we are done naming.
-			 */
-			break;
-		}
-
-		gdev->descs[i].name = name;
-	}
-
-Thanks.
-
--- 
-Dmitry
+SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
+IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBU
+aHVyc2RheSwgQXByaWwgMjEsIDIwMTYgMTA6MzIgUE0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRh
+cmVzd2FyYSBSYW8gPGFwcGFuYWRAeGlsaW54LmNvbT4NCj4gQ2M6IFNvcmVuIEJyaW5rbWFubiA8
+c29yZW5iQHhpbGlueC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IHBhd2VsLm1vbGxAYXJt
+LmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
+Ow0KPiBnYWxha0Bjb2RlYXVyb3JhLm9yZzsgTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5j
+b20+Ow0KPiB2aW5vZC5rb3VsQGludGVsLmNvbTsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBt
+b3JpdHouZmlzY2hlckBldHR1cy5jb207DQo+IGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJk
+LmNvbTsgbHVpc0BkZWJldGhlbmNvdXJ0LmNvbTsgQW5pcnVkaGENCj4gU2FyYW5naSA8YW5pcnVk
+aEB4aWxpbnguY29tPjsgUHVubmFpYWggQ2hvdWRhcnkgS2FsbHVyaQ0KPiA8cHVubmFpYUB4aWxp
+bnguY29tPjsgU2h1YmhyYWp5b3RpIERhdHRhIDxzaHViaHJhakB4aWxpbnguY29tPjsNCj4gZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRtYWVuZ2luZUB2Z2VyLmtl
+cm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAzLzNdIGRtYWVuZ2luZTogdmRtYTog
+QWRkIGNsb2NrIHN1cHBvcnQNCj4gDQo+IE9uIFRodSwgMjAxNi0wNC0yMSBhdCAwOTozMjo0NCAt
+MDcwMCwgQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbyB3cm90ZToNCj4gPiBIaSBTb3JlbiwN
+Cj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFPDtnJl
+biBCcmlua21hbm4gW21haWx0bzpzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbV0NCj4gPiA+IFNl
+bnQ6IFRodXJzZGF5LCBBcHJpbCAyMSwgMjAxNiA5OjUyIFBNDQo+ID4gPiBUbzogQXBwYW5hIER1
+cmdhIEtlZGFyZXN3YXJhIFJhbyA8YXBwYW5hZEB4aWxpbnguY29tPg0KPiA+ID4gQ2M6IHJvYmgr
+ZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
+Cj4gPiA+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9y
+ZzsgTWljaGFsIFNpbWVrDQo+ID4gPiA8bWljaGFsc0B4aWxpbnguY29tPjsgdmlub2Qua291bEBp
+bnRlbC5jb207IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsNCj4gPiA+IEFwcGFuYSBEdXJnYSBL
+ZWRhcmVzd2FyYSBSYW8gPGFwcGFuYWRAeGlsaW54LmNvbT47DQo+ID4gPiBtb3JpdHouZmlzY2hl
+ckBldHR1cy5jb207IGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbTsNCj4gPiA+IGx1
+aXNAZGViZXRoZW5jb3VydC5jb207IEFuaXJ1ZGhhIFNhcmFuZ2kgPGFuaXJ1ZGhAeGlsaW54LmNv
+bT47IFB1bm5haWFoDQo+ID4gPiBDaG91ZGFyeSBLYWxsdXJpIDxwdW5uYWlhQHhpbGlueC5jb20+
+OyBTaHViaHJhanlvdGkgRGF0dGENCj4gPiA+IDxzaHViaHJhakB4aWxpbnguY29tPjsgZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiA+IGtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gZG1hZW5naW5l
+QHZnZXIua2VybmVsLm9yZw0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAzLzNdIGRtYWVu
+Z2luZTogdmRtYTogQWRkIGNsb2NrIHN1cHBvcnQNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIDIwMTYt
+MDQtMjEgYXQgMTY6MDg6MzggKzA1MzAsIEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgd3JvdGU6DQo+
+IFsuLi5dDQo+ID4gPiA+IEBAIC0xNzU3LDYgKzE3NjcsMjAwIEBAIHN0YXRpYyB2b2lkIHhpbGlu
+eF9kbWFfY2hhbl9yZW1vdmUoc3RydWN0DQo+ID4gPiB4aWxpbnhfZG1hX2NoYW4gKmNoYW4pDQo+
+ID4gPiA+ICAJbGlzdF9kZWwoJmNoYW4tPmNvbW1vbi5kZXZpY2Vfbm9kZSk7DQo+ID4gPiA+ICB9
+DQo+ID4gPiA+DQo+ID4gPiA+ICtzdGF0aWMgaW50IGF4aWRtYV9jbGtfaW5pdChzdHJ1Y3QgcGxh
+dGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3QgY2xrDQo+ICoqYXhpX2NsaywNCj4gPiA+ID4gKwkJ
+CSAgICBzdHJ1Y3QgY2xrICoqdHhfY2xrLCBzdHJ1Y3QgY2xrICoqcnhfY2xrLA0KPiA+ID4gPiAr
+CQkJICAgIHN0cnVjdCBjbGsgKipzZ19jbGssIHN0cnVjdCBjbGsgKip0bXBfY2xrKSB7DQo+ID4g
+PiA+ICsJaW50IGVycjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCSp0bXBfY2xrID0gTlVMTDsNCj4g
+PiA+ID4gKw0KPiA+ID4gPiArCSpheGlfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJz
+X2F4aV9saXRlX2FjbGsiKTsNCj4gPiA+ID4gKwlpZiAoSVNfRVJSKCpheGlfY2xrKSkgew0KPiA+
+ID4gPiArCQllcnIgPSBQVFJfRVJSKCpheGlfY2xrKTsNCj4gPiA+ID4gKwkJZGV2X2VycigmcGRl
+di0+ZGV2LCAiZmFpbGVkIHRvIGdldCBheGlfYWNsayAoJXUpXG4iLCBlcnIpOw0KPiA+ID4gPiAr
+CQlyZXR1cm4gZXJyOw0KPiA+ID4gPiArCX0NCj4gPiA+ID4gKw0KPiA+ID4gPiArCSp0eF9jbGsg
+PSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgIm1fYXhpX21tMnNfYWNsayIpOw0KPiA+ID4gPiAr
+CWlmIChJU19FUlIoKnR4X2NsaykpDQo+ID4gPiA+ICsJCSp0eF9jbGsgPSBOVUxMOw0KPiA+ID4g
+PiArDQo+ID4gPiA+ICsJKnJ4X2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAibV9heGlf
+czJtbV9hY2xrIik7DQo+ID4gPiA+ICsJaWYgKElTX0VSUigqcnhfY2xrKSkNCj4gPiA+ID4gKwkJ
+KnJ4X2NsayA9IE5VTEw7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkqc2dfY2xrID0gZGV2bV9jbGtf
+Z2V0KCZwZGV2LT5kZXYsICJtX2F4aV9zZ19hY2xrIik7DQo+ID4gPiA+ICsJaWYgKElTX0VSUigq
+c2dfY2xrKSkNCj4gPiA+ID4gKwkJKnNnX2NsayA9IE5VTEw7DQo+ID4gPiA+ICsNCj4gPiA+ID4g
+Kw0KPiA+ID4gPiArCWVyciA9IGNsa19wcmVwYXJlX2VuYWJsZSgqYXhpX2Nsayk7DQo+ID4gPg0K
+PiA+ID4gU2hvdWxkIHRoaXMgYmUgY2FsbGVkIGlmIHlvdSBrbm93IHRoYXQgdGhlIHBvaW50ZXIg
+bWlnaHQgYmUgTlVMTD8NCj4gPg0KPiA+IEl0IGlzIGEgbWFuZGF0b3J5IGNsb2NrIGFuZCBpZiB0
+aGlzIGNsayBpcyBub3QgdGhlcmUgaW4gRFQgSSBhbSBhbHJlYWR5IHJldHVybmluZw0KPiBlcnJv
+ci4uLg0KPiA+IEkgZGlkbid0IGdldCB5b3VyIHF1ZXN0aW9uIGNvdWxkIHlvdSBwbGVhc2UgZWxh
+Ym9yYXRlPz8/DQo+IA0KPiBCdXQgZm9yIGFsbCB0aGUgb3B0aW9uYWwgY2xvY2tzLiBUaGV5IGNv
+dWxkIGFsbCBiZSBOVUxMIGFuZCB5b3UncmUgY2FsbGluZw0KPiBjbGtfcHJlcGFyZV9lbmFibGUg
+d2l0aCBhIE5VTEwgcG9pbnRlci4gVGhhdCBmdW5jdGlvbiBpcyBuaWNlIGVub3VnaCB0bw0KPiBk
+byBhIE5VTEwgY2hlY2sgZm9yIHlvdSwgYnV0IEkgd29uZGVyIHdoZXRoZXIgdGhlc2UgY2FsbHMg
+c2hvdWxkIGhhcHBlbiBhdA0KPiBhbGwgd2hlbiB5b3UgYWxyZWFkeSBrbm93IHRoYXQgdGhlIHBv
+aW50ZXIgaXMgbm90IGEgdmFsaWQgY2xvY2suDQoNCkkgcmVmZXJyZWQgbWFjYiBkcml2ZXIgaHR0
+cDovL2x4ci5mcmVlLWVsZWN0cm9ucy5jb20vc291cmNlL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Nh
+ZGVuY2UvbWFjYi5jIA0KVGhlcmUgdHhfY2xrIGlzIG9wdGlvbmFsIGFuZCBpbiB0aGlzIGRyaXZl
+ciB0aGV5IGFyZSBjYWxsaW5nIGNsa19wcmVwYXJlX2VuYWJsZSBmb3IgdGhlIG9wdGlvbmFsIGNs
+b2Nrcy4NClBsZWFzZSBsZXQgbWUga25vdyBpZiB5b3UgYXJlIG9rIHRvIGNhbGwgdGhlIGNsa19w
+cmVwYXJlX2VuYWJsZSgpIGZvciBvcHRpb25hbCBjbG9ja3Mgd2l0aCBhIE5VTEwgcG9pbnRlci4N
+CldpbGwgZml4IHJlc3Qgb2YgdGhlIGNvbW1lbnRzIGFuZCB3aWxsIHNlbmQgbmV4dCB2ZXJzaW9u
+IG9mIHRoZSBwYXRjaC4uLg0KDQpSZWdhcmRzLA0KS2VkYXIuDQoNCj4gDQo+IAlTw7ZyZW4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
