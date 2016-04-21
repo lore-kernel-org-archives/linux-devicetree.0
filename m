@@ -1,85 +1,64 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
- ADV7533
-Date: Fri, 22 Apr 2016 01:32:31 +0300
-Message-ID: <1992414.kkmfQUJ8oO@avalon>
-References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
- <1457521038-5906-1-git-send-email-architt@codeaurora.org>
- <1457521038-5906-8-git-send-email-architt@codeaurora.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] ARM64: dts: rockchip: add core dtsi file for rk3399 SoCs
+Date: Fri, 22 Apr 2016 00:32:54 +0200
+Message-ID: <1828302.c0tldb2naZ@diego>
+References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com> <20160421214826.GA69116@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1457521038-5906-8-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, andy.green@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, srinivas.kandagatla@linaro.org, amit.kucheria@linaro.org, treding@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160421214826.GA69116@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Jianqun Xu <jay.xu@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, rockchip-discuss@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBXZWRuZXNkYXkgMDkgTWFy
-IDIwMTYgMTY6Mjc6MTggQXJjaGl0IFRhbmVqYSB3cm90ZToKPiBBZGQgZGVzY3JpcHRpb24gb2Yg
-QURWNzUzMy4gQWRkIHRoZSByZXF1aXJlZCBhbmQgb3B0aW9uYWwgcHJvcGVydGllcyB0aGF0Cj4g
-YXJlIHNwZWNpZmljIHRvIGl0Lgo+IAo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+
-IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFy
-Y2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQgICAgICAgIHwgMjUgKysrKysrKysrKysr
-KystLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMo
-LSkKPiAKPiBkaWZmIC0tZ2l0Cj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0IGluZGV4Cj4gOTZjMjVl
-ZS4uNDIwZGE1YSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4dAo+IEBAIC0x
-LDEzICsxLDE5IEBACj4gLUFuYWxvZyBEZXZpY2UgQURWNzUxMShXKS8xMyBIRE1JIEVuY29kZXJz
-Cj4gK0FuYWxvZyBEZXZpY2UgQURWNzUxMShXKS8xMy8zMyBIRE1JIEVuY29kZXJzCj4gIC0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gCj4gLVRoZSBBRFY3NTExLCBB
-RFY3NTExVyBhbmQgQURWNzUxMyBhcmUgSERNSSBhdWRpbyBhbmQgdmlkZW8gdHJhbnNtaXR0ZXJz
-Cj4gK1RoZSBBRFY3NTExLCBBRFY3NTExVywgQURWNzUxMyBhbmQgQURWNzUzMyBhcmUgSERNSSBh
-dWRpbyBhbmQgdmlkZW8KPiB0cmFuc21pdHRlcnMgY29tcGF0aWJsZSB3aXRoIEhETUkgMS40IGFu
-ZCBEVkkgMS4wLiBUaGV5IHN1cHBvcnQgY29sb3Igc3BhY2UKPiBjb252ZXJzaW9uLCAtUy9QRElG
-LCBDRUMgYW5kIEhEQ1AuCj4gK1MvUERJRiwgQ0VDIGFuZCBIRENQLiBBRFY3NTMzIHN1cHBvcnRz
-IHRoZSBEU0kgaW50ZXJmYWNlIGZvciBpbnB1dCBwaXhlbHMsCj4gd2hpbGUgK3RoZSBvdGhlcnMg
-c3VwcG9ydCBSR0IgaW50ZXJmYWNlLgo+IAo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IAo+IC0t
-IGNvbXBhdGlibGU6IFNob3VsZCBiZSBvbmUgb2YgImFkaSxhZHY3NTExIiwgImFkaSxhZHY3NTEx
-dyIgb3IKPiAiYWRpLGFkdjc1MTMiICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSBvbmUgb2Y6Cj4g
-KwkJImFkaSxhZHY3NTExIgo+ICsJCSJhZGksYWR2NzUxMXciCj4gKwkJImFkaSxhZHY3NTEzIgo+
-ICsJCSJhZGksYWR2NzUzMyIKPiArCj4gIC0gcmVnOiBJMkMgc2xhdmUgYWRkcmVzcwo+IAo+ICBU
-aGUgQURWNzUxMSBzdXBwb3J0cyBhIGxhcmdlIG51bWJlciBvZiBpbnB1dCBkYXRhIGZvcm1hdHMg
-dGhhdCBkaWZmZXIgYnkKPiB0aGVpciBAQCAtMzIsNiArMzgsMTEgQEAgVGhlIGZvbGxvd2luZyBp
-bnB1dCBmb3JtYXQgcHJvcGVydGllcyBhcmUgcmVxdWlyZWQKPiBleGNlcHQgaW4gInJnYiAxeCIg
-YW5kIC0gYWRpLGlucHV0LWp1c3RpZmljYXRpb246IFRoZSBpbnB1dCBiaXQKPiBqdXN0aWZpY2F0
-aW9uICgibGVmdCIsICJldmVubHkiLCAicmlnaHQiKS4KPiAKPiArVGhlIGZvbGxvd2luZyBwcm9w
-ZXJ0aWVzIGFyZSByZXF1aXJlZCBmb3IgQURWNzUzMzoKPiArCj4gKy0gYWRpLGRzaS1sYW5lczog
-TnVtYmVyIG9mIERTSSBkYXRhIGxhbmVzIGNvbm5lY3RlZCB0byB0aGUgRFNJIGhvc3QuIEl0Cj4g
-c2hvdWxkICsgIGJlIG9uZSBvZiAxLCAyLCAzIG9yIDQuCgpEb2VzIHRoZSBBRFY3NTMzIHN1cHBv
-cnQgZGF0YSBsYW5lcyByZW1hcHBpbmcgPwoKPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAKPiAg
-LSBpbnRlcnJ1cHRzOiBTcGVjaWZpZXIgZm9yIHRoZSBBRFY3NTExIGludGVycnVwdAo+IEBAIC00
-MiwxMyArNTMsMTcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBhZGksZW1iZWRkZWQtc3lu
-YzogVGhlIGlucHV0IHVzZXMgc3luY2hyb25pemF0aW9uIHNpZ25hbHMgZW1iZWRkZWQgaW4gdGhl
-Cj4gZGF0YSBzdHJlYW0gKHNpbWlsYXIgdG8gQlQuNjU2KS4gRGVmYXVsdHMgdG8gc2VwYXJhdGUg
-SC9WIHN5bmNocm9uaXphdGlvbgo+IHNpZ25hbHMuCj4gKy0gYWRpLGRpc2FibGUtdGltaW5nLWdl
-bmVyYXRvcjogT25seSBmb3IgQURWNzUzMy4gRGlzYWJsZXMgdGhlIGludGVybmFsCj4gdGltaW5n
-ICsgIGdlbmVyYXRvci4gVGhlIGNoaXAgd2lsbCByZWx5IG9uIHRoZSBzeW5jIHNpZ25hbHMgaW4g
-dGhlIERTSSBkYXRhCj4gbGFuZXMsICsgIHJhdGhlciB0aGFuIGdlbmVyYXRlIGl0cyBvd24gdGlt
-aW5ncyBmb3IgSERNSSBvdXRwdXQuCgpJc24ndCB0aGF0IHNvbWV0aGluZyB0aGF0IHNob3VsZCBi
-ZSBzZWxlY3RhYmxlIGF0IHJ1bnRpbWUgPwoKPiAgUmVxdWlyZWQgbm9kZXM6Cj4gCj4gIFRoZSBB
-RFY3NTExIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGxl
-ZCB1c2luZyB0aGUKPiBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiAKPiAtLSBWaWRlbyBwb3J0IDAgZm9y
-IHRoZSBSR0Igb3IgWVVWIGlucHV0Cj4gKy0gVmlkZW8gcG9ydCAwIGZvciB0aGUgUkdCLCBZVVYg
-b3IgRFNJIGlucHV0LiBJbiB0aGUgY2FzZSBvZiBBRFY3NTMzLCB0aGUKPiArICByZW1vdGUgZW5k
-cG9pbnQgcGhhbmRsZSBzaG91bGQgcmVmZXIgdG8gYSB2YWxpZCBtaXBpX2RzaV9ob3N0IGRldmlj
-ZQoKTml0cGlja2luZywgSSB3b3VsZCB3cml0ZSAicmVmZXJlbmNlIiBpbnN0ZWFkIG9mICJyZWZl
-ciB0byIuCgo+IG5vZGUuIC0gVmlkZW8gcG9ydCAxIGZvciB0aGUgSERNSSBvdXRwdXQKCi0tIApS
-ZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+Am Donnerstag, 21. April 2016, 14:48:26 schrieb Brian Norris:
+> Hi,
+> 
+> On Wed, Apr 20, 2016 at 11:15:50AM +0800, Jianqun Xu wrote:
+> > This patch adds core dtsi file for rk3399 found on Rockchip
+> > rk3399 SoCs, tested on rk3399 evb.
+> > 
+> > Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> > ---
+> > 
+> >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1744
+> >  ++++++++++++++++++++++++++++++ 1 file changed, 1744 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi new file mode 100644
+> > index 0000000..fa6fc2c
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > @@ -0,0 +1,1744 @@
+> 
+> [...]
+> 
+> > +	emmc_phy: phy {
+> > +		compatible = "rockchip,rk3399-emmc-phy";
+> > +		reg-offset = <0xf780>;
+> 
+> This property is not documented. The current doc says we "require" reg,
+> but you're kinda misusing it, I believe. At any rate, the current phy
+> driver won't probe without 'reg'.
+
+thanks for spotting this.
+
+Please also note the changed binding [0] that I'm still hoping
+will make it into 4.6.
+
+
+
+[0] https://git.kernel.org/cgit/linux/kernel/git/kishon/linux-phy.git/log/?h=fixes
+
+
+> > +		#phy-cells = <0>;
+> > +		rockchip,grf = <&grf>;
+> > +		status = "disabled";
+> > +	};
+> 
+> [...]
+> 
+> Brian
