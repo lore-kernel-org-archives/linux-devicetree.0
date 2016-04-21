@@ -1,63 +1,29 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 2/2] dmaengine: vdma: Add clock support
-Date: Thu, 21 Apr 2016 05:17:50 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A579616@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1461136800-20334-1-git-send-email-appanad@xilinx.com>
-	<1461136800-20334-2-git-send-email-appanad@xilinx.com>
- <CAAtXAHd=QER9ukD8LKpHCGdmsv=MzJ4bxkvWVEatpfUhsh98SQ@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] ARM: dts: uniphier: add NAND pinmux node
+Date: Thu, 21 Apr 2016 14:47:55 +0900
+Message-ID: <CAK7LNAQVDRt3V0ZfMQPRu6JhYA14K1JqOsOTq+v0xUucoOsOKg@mail.gmail.com>
+References: <1460716503-31128-1-git-send-email-yamada.masahiro@socionext.com>
+	<1460716503-31128-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAtXAHd=QER9ukD8LKpHCGdmsv=MzJ4bxkvWVEatpfUhsh98SQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Luis de Bethencourt <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460716503-31128-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTW9yaXR6LA0KDQogICAgICAgIFRoYW5rcyBmb3IgdGhlIHJldmlldy4uLg0KDQo+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1vcml0eiBGaXNjaGVyIFttYWlsdG86bW9y
-aXR6LmZpc2NoZXJAZXR0dXMuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMjEsIDIwMTYg
-MTI6MDkgQU0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gPGFwcGFuYWRAeGls
-aW54LmNvbT4NCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBwYXdlbC5t
-b2xsQGFybS5jb207IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4g
-Q2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsNCj4gS3VtYXIgR2FsYSA8
-Z2FsYWtAY29kZWF1cm9yYS5vcmc+OyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47
-DQo+IFNvcmVuIEJyaW5rbWFubiA8c29yZW5iQHhpbGlueC5jb20+OyBWaW5vZCBLb3VsIDx2aW5v
-ZC5rb3VsQGludGVsLmNvbT47DQo+IERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwu
-Y29tPjsgQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbw0KPiA8YXBwYW5hZEB4aWxpbnguY29t
-PjsgTGF1cmVudCBQaW5jaGFydA0KPiA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29t
-PjsgTHVpcyBkZSBCZXRoZW5jb3VydA0KPiA8bHVpc0BkZWJldGhlbmNvdXJ0LmNvbT47IEFuaXJ1
-ZGhhIFNhcmFuZ2kgPGFuaXJ1ZGhAeGlsaW54LmNvbT47IFB1bm5haWFoDQo+IENob3VkYXJ5IEth
-bGx1cmkgPHB1bm5haWFAeGlsaW54LmNvbT47IERldmljZXRyZWUgTGlzdA0KPiA8ZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1hcm0ta2VybmVsIDxsaW51eC1hcm0tDQo+IGtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgt
-DQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnDQo+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBkbWFlbmdpbmU6IHZkbWE6IEFkZCBjbG9jayBzdXBw
-b3J0DQo+DQo+IEhpLA0KPg0KPiB0aGFua3MgZm9yIGxvb2tpbmcgaW50byB0aGlzLg0KPg0KPiBP
-biBXZWQsIEFwciAyMCwgMjAxNiBhdCAxMjoyMCBBTSwgS2VkYXJlc3dhcmEgcmFvIEFwcGFuYQ0K
-PiA8YXBwYW5hLmR1cmdhLnJhb0B4aWxpbnguY29tPiB3cm90ZToNCj4NCj4gPiArc3RhdGljIGlu
-dCB4ZG1hX2Nsa19pbml0KHN0cnVjdCB4aWxpbnhfZG1hX2RldmljZSAqeGRldiwgYm9vbCBlbmFi
-bGUpDQo+ID4gK3sNCj4gPiArICAgICAgIGludCBpID0gMCwgcmV0Ow0KPiA+ICsNCj4gPiArICAg
-ICAgIGZvciAoaSA9IDA7IGkgPCB4ZGV2LT5udW1jbGtzOyBpKyspIHsNCj4gPiArICAgICAgICAg
-ICAgICAgaWYgKGVuYWJsZSkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IGNs
-a19wcmVwYXJlX2VuYWJsZSh4ZGV2LT5jbGtzW2ldKTsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBpZiAocmV0KSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXZf
-ZXJyKHhkZXYtPmRldiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgImZhaWxlZCB0byBlbmFibGUgdGhlIGF4aWRtYSBjbG9ja1xuIik7DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPg0KPiBXaGF0IGhhcHBlbnMgdG8g
-dGhlIG9uZXMgeW91IGFscmVhZHkgdHVybmVkIG9uLCBpZiBzYXkgdGhlIHRoaXJkIGZhaWxzPw0K
-DQpXaWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uIG9mIHRoZSBwYXRjaC4uLg0KDQpSZWdhcmRz
-LA0KS2VkYXIuDQo+DQo+IENoZWVycywNCj4NCj4gTW9yaXR6DQoNCg0KVGhpcyBlbWFpbCBhbmQg
-YW55IGF0dGFjaG1lbnRzIGFyZSBpbnRlbmRlZCBmb3IgdGhlIHNvbGUgdXNlIG9mIHRoZSBuYW1l
-ZCByZWNpcGllbnQocykgYW5kIGNvbnRhaW4ocykgY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIHRo
-YXQgbWF5IGJlIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkIG9yIGNvcHlyaWdodGVkIHVuZGVyIGFw
-cGxpY2FibGUgbGF3LiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBkbyBu
-b3QgcmVhZCwgY29weSwgb3IgZm9yd2FyZCB0aGlzIGVtYWlsIG1lc3NhZ2Ugb3IgYW55IGF0dGFj
-aG1lbnRzLiBEZWxldGUgdGhpcyBlbWFpbCBtZXNzYWdlIGFuZCBhbnkgYXR0YWNobWVudHMgaW1t
-ZWRpYXRlbHkuDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2016-04-15 19:35 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+
+
+This patch was replaced with v2:
+
+https://patchwork.kernel.org/patch/8895761/
+
+
+-- 
+Best Regards
+Masahiro Yamada
