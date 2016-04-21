@@ -1,347 +1,300 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH 1/2 v6] clk/axs10x: Add I2S PLL clock driver
-Date: Thu, 21 Apr 2016 18:55:35 +0100
-Message-ID: <57191417.6040909@synopsys.com>
-References: <cover.1461258787.git.joabreu@synopsys.com>
- <6bae37562ffc6c62c015e12b7bf6a35c9a3e734d.1461258787.git.joabreu@synopsys.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Thu, 21 Apr 2016 13:03:33 -0500
+Message-ID: <571915F5.5070504@codeaurora.org>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <6bae37562ffc6c62c015e12b7bf6a35c9a3e734d.1461258787.git.joabreu@synopsys.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-snps-arc@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: CARLOS.PALMINHA@synopsys.com, Alexey.Brodkin@synopsys.com, Vineet.Gupta1@synopsys.com, mturquette@baylibre.com, sboyd@codeaurora.org, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57100962.40404@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Adding device tree mailing list and Rob Herring.
+Florian Fainelli wrote:
 
-On 21-04-2016 18:19, Jose Abreu wrote:
-> The ARC SDP I2S clock can be programmed using a
-> specific PLL.
->
-> This patch has the goal of adding a clock driver
-> that programs this PLL.
->
-> At this moment the rate values are hardcoded in
-> a table but in the future it would be ideal to
-> use a function which determines the PLL values
-> given the desired rate.
->
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-> ---
->
-> Changes v5 -> v6:
-> * Use parent clock to determine PLL input rate instead of using hardcoded values
-> * Documentation update (added 'clocks' field)
->
-> Changes v4 -> v5:
-> * Documentation update (as suggested by Alexey Brodkin)
-> * Changed compatible string to "snps,axs10x-i2s-pll-clock" (as suggested by Alexey Brodkin)
->
-> Changes v3 -> v4:
-> * Added binding document (as suggested by Stephen Boyd)
-> * Minor code style fixes (as suggested by Stephen Boyd)
-> * Use ioremap (as suggested by Stephen Boyd)
-> * Implement round_rate (as suggested by Stephen Boyd)
-> * Change to platform driver (as suggested by Stephen Boyd)
-> * Use {readl/writel}_relaxed (as suggested by Vineet Gupta)
->
-> Changes v2 -> v3:
-> * Implemented recalc_rate
->
-> Changes v1 -> v2:
-> * Renamed folder to axs10x (as suggested by Alexey Brodkin)
-> * Added more supported rates
->
->  .../bindings/clock/axs10x-i2s-pll-clock.txt        |  25 +++
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/axs10x/Makefile                        |   1 +
->  drivers/clk/axs10x/i2s_pll_clock.c                 | 228 +++++++++++++++++++++
->  4 files changed, 255 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/axs10x-i2s-pll-clock.txt
->  create mode 100644 drivers/clk/axs10x/Makefile
->  create mode 100644 drivers/clk/axs10x/i2s_pll_clock.c
->
-> diff --git a/Documentation/devicetree/bindings/clock/axs10x-i2s-pll-clock.txt b/Documentation/devicetree/bindings/clock/axs10x-i2s-pll-clock.txt
-> new file mode 100644
-> index 0000000..5ffc8df
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/axs10x-i2s-pll-clock.txt
-> @@ -0,0 +1,25 @@
-> +Binding for the AXS10X I2S PLL clock
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible: shall be "snps,axs10x-i2s-pll-clock"
-> +- reg : address and length of the I2S PLL register set.
-> +- clocks: shall be the input parent clock phandle for the PLL.
-> +- #clock-cells: from common clock binding; Should always be set to 0.
-> +
-> +Example:
-> +	pll_clock: pll_clock {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <27000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	i2s_clock@100a0 {
-> +		compatible = "snps,axs10x-i2s-pll-clock";
-> +		reg = <0x100a0 0x10>;
-> +		clocks = <&pll_clock>;
-> +		#clock-cells = <0>;
-> +	};
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 46869d6..2ca62dc6 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -84,3 +84,4 @@ obj-$(CONFIG_X86)			+= x86/
->  obj-$(CONFIG_ARCH_ZX)			+= zte/
->  obj-$(CONFIG_ARCH_ZYNQ)			+= zynq/
->  obj-$(CONFIG_H8300)		+= h8300/
-> +obj-$(CONFIG_ARC_PLAT_AXS10X)		+= axs10x/
-> diff --git a/drivers/clk/axs10x/Makefile b/drivers/clk/axs10x/Makefile
-> new file mode 100644
-> index 0000000..01996b8
-> --- /dev/null
-> +++ b/drivers/clk/axs10x/Makefile
-> @@ -0,0 +1 @@
-> +obj-y += i2s_pll_clock.o
-> diff --git a/drivers/clk/axs10x/i2s_pll_clock.c b/drivers/clk/axs10x/i2s_pll_clock.c
-> new file mode 100644
-> index 0000000..411310d
-> --- /dev/null
-> +++ b/drivers/clk/axs10x/i2s_pll_clock.c
-> @@ -0,0 +1,228 @@
-> +/*
-> + * Synopsys AXS10X SDP I2S PLL clock driver
-> + *
-> + * Copyright (C) 2016 Synopsys
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +
-> +/* PLL registers addresses */
-> +#define PLL_IDIV_REG	0x0
-> +#define PLL_FBDIV_REG	0x4
-> +#define PLL_ODIV0_REG	0x8
-> +#define PLL_ODIV1_REG	0xC
-> +
-> +struct i2s_pll_cfg {
-> +	unsigned int rate;
-> +	unsigned int idiv;
-> +	unsigned int fbdiv;
-> +	unsigned int odiv0;
-> +	unsigned int odiv1;
-> +};
-> +
-> +static const struct i2s_pll_cfg i2s_pll_cfg_27m[] = {
-> +	/* 27 Mhz */
-> +	{ 1024000, 0x104, 0x451, 0x10E38, 0x2000 },
-> +	{ 1411200, 0x104, 0x596, 0x10D35, 0x2000 },
-> +	{ 1536000, 0x208, 0xA28, 0x10B2C, 0x2000 },
-> +	{ 2048000, 0x82, 0x451, 0x10E38, 0x2000 },
-> +	{ 2822400, 0x82, 0x596, 0x10D35, 0x2000 },
-> +	{ 3072000, 0x104, 0xA28, 0x10B2C, 0x2000 },
-> +	{ 2116800, 0x82, 0x3CF, 0x10C30, 0x2000 },
-> +	{ 2304000, 0x104, 0x79E, 0x10B2C, 0x2000 },
-> +	{ 0, 0, 0, 0, 0 },
-> +};
-> +
-> +static const struct i2s_pll_cfg i2s_pll_cfg_28m[] = {
-> +	/* 28.224 Mhz */
-> +	{ 1024000, 0x82, 0x105, 0x107DF, 0x2000 },
-> +	{ 1411200, 0x28A, 0x1, 0x10001, 0x2000 },
-> +	{ 1536000, 0xA28, 0x187, 0x10042, 0x2000 },
-> +	{ 2048000, 0x41, 0x105, 0x107DF, 0x2000 },
-> +	{ 2822400, 0x145, 0x1, 0x10001, 0x2000 },
-> +	{ 3072000, 0x514, 0x187, 0x10042, 0x2000 },
-> +	{ 2116800, 0x514, 0x42, 0x10001, 0x2000 },
-> +	{ 2304000, 0x619, 0x82, 0x10001, 0x2000 },
-> +	{ 0, 0, 0, 0, 0 },
-> +};
-> +
-> +struct i2s_pll_clk {
-> +	void __iomem *base;
-> +	struct clk_hw hw;
-> +	struct device *dev;
-> +};
-> +
-> +static inline void i2s_pll_write(struct i2s_pll_clk *clk, unsigned int reg,
-> +		unsigned int val)
-> +{
-> +	writel_relaxed(val, clk->base + reg);
-> +}
-> +
-> +static inline unsigned int i2s_pll_read(struct i2s_pll_clk *clk,
-> +		unsigned int reg)
-> +{
-> +	return readl_relaxed(clk->base + reg);
-> +}
-> +
-> +static inline struct i2s_pll_clk *to_i2s_pll_clk(struct clk_hw *hw)
-> +{
-> +	return container_of(hw, struct i2s_pll_clk, hw);
-> +}
-> +
-> +static inline unsigned int i2s_pll_get_value(unsigned int val)
-> +{
-> +	return (val & 0x3F) + ((val >> 6) & 0x3F);
-> +}
-> +
-> +static const struct i2s_pll_cfg *i2s_pll_get_cfg(unsigned long prate)
-> +{
-> +	switch (prate) {
-> +	case 27000000:
-> +		return i2s_pll_cfg_27m;
-> +	case 28224000:
-> +		return i2s_pll_cfg_28m;
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +
-> +static unsigned long i2s_pll_recalc_rate(struct clk_hw *hw,
-> +			unsigned long parent_rate)
-> +{
-> +	struct i2s_pll_clk *clk = to_i2s_pll_clk(hw);
-> +	unsigned int idiv, fbdiv, odiv;
-> +
-> +	idiv = i2s_pll_get_value(i2s_pll_read(clk, PLL_IDIV_REG));
-> +	fbdiv = i2s_pll_get_value(i2s_pll_read(clk, PLL_FBDIV_REG));
-> +	odiv = i2s_pll_get_value(i2s_pll_read(clk, PLL_ODIV0_REG));
-> +
-> +	return ((parent_rate / idiv) * fbdiv) / odiv;
-> +}
-> +
-> +static long i2s_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-> +			unsigned long *prate)
-> +{
-> +	struct i2s_pll_clk *clk = to_i2s_pll_clk(hw);
-> +	const struct i2s_pll_cfg *pll_cfg = i2s_pll_get_cfg(*prate);
-> +	int i;
-> +
-> +	if (!pll_cfg) {
-> +		dev_err(clk->dev, "invalid parent rate=%ld\n", *prate);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; pll_cfg[i].rate != 0; i++)
-> +		if (pll_cfg[i].rate == rate)
-> +			return rate;
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int i2s_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-> +			unsigned long parent_rate)
-> +{
-> +	struct i2s_pll_clk *clk = to_i2s_pll_clk(hw);
-> +	const struct i2s_pll_cfg *pll_cfg = i2s_pll_get_cfg(parent_rate);
-> +	int i;
-> +
-> +	if (!pll_cfg) {
-> +		dev_err(clk->dev, "invalid parent rate=%ld\n", parent_rate);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; pll_cfg[i].rate != 0; i++) {
-> +		if (pll_cfg[i].rate == rate) {
-> +			i2s_pll_write(clk, PLL_IDIV_REG, pll_cfg[i].idiv);
-> +			i2s_pll_write(clk, PLL_FBDIV_REG, pll_cfg[i].fbdiv);
-> +			i2s_pll_write(clk, PLL_ODIV0_REG, pll_cfg[i].odiv0);
-> +			i2s_pll_write(clk, PLL_ODIV1_REG, pll_cfg[i].odiv1);
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	dev_err(clk->dev, "invalid rate=%ld, parent_rate=%ld\n", rate,
-> +			parent_rate);
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct clk_ops i2s_pll_ops = {
-> +	.recalc_rate = i2s_pll_recalc_rate,
-> +	.round_rate = i2s_pll_round_rate,
-> +	.set_rate = i2s_pll_set_rate,
-> +};
-> +
-> +static int i2s_pll_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	const char *clk_name;
-> +	const char *parent_name;
-> +	struct clk *clk;
-> +	struct i2s_pll_clk *pll_clk;
-> +	struct clk_init_data init;
-> +	struct resource *mem;
-> +
-> +	pll_clk = devm_kzalloc(dev, sizeof(*pll_clk), GFP_KERNEL);
-> +	if (!pll_clk)
-> +		return -ENOMEM;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pll_clk->base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(pll_clk->base))
-> +		return PTR_ERR(pll_clk->base);
-> +
-> +	clk_name = node->name;
-> +	init.name = clk_name;
-> +	init.ops = &i2s_pll_ops;
-> +	parent_name = of_clk_get_parent_name(node, 0);
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +	pll_clk->hw.init = &init;
-> +	pll_clk->dev = dev;
-> +
-> +	clk = devm_clk_register(dev, &pll_clk->hw);
-> +	if (IS_ERR(clk)) {
-> +		dev_err(dev, "failed to register %s clock (%ld)\n",
-> +				clk_name, PTR_ERR(clk));
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	return of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +
-> +static int i2s_pll_clk_remove(struct platform_device *pdev)
-> +{
-> +	of_clk_del_provider(pdev->dev.of_node);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id i2s_pll_clk_id[] = {
-> +	{ .compatible = "snps,axs10x-i2s-pll-clock", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, i2s_pll_clk_id);
-> +
-> +static struct platform_driver i2s_pll_clk_driver = {
-> +	.driver = {
-> +		.name = "axs10x-i2s-pll-clock",
-> +		.of_match_table = i2s_pll_clk_id,
-> +	},
-> +	.probe = i2s_pll_clk_probe,
-> +	.remove = i2s_pll_clk_remove,
-> +};
-> +module_platform_driver(i2s_pll_clk_driver);
-> +
-> +MODULE_AUTHOR("Jose Abreu <joabreu@synopsys.com>");
-> +MODULE_DESCRIPTION("Synopsys AXS10X SDP I2S PLL Clock Driver");
-> +MODULE_LICENSE("GPL v2");
+> Well, PHYLIB does prefer using MDIO accesses to "speak" to PHYs,
+> built-in or external, but there is always the option of investing into
+> some custom development with the subsystem to make it play nicely with
+> your HW.
 
+So I've done some more research, and I believe that the internal phy is 
+not a candidate for phylib, but the external phy (which is a real phy) 
+might be.  There's no MDIO bus to the internal phy.
+
+Does this mean that I will need to enable a PHY driver, and that driver 
+will control the external phy?  If so, then does that mean that I would 
+delete all to code in my driver that calls emac_phy_read() and 
+emac_phy_write()?  For example, I wouldn't need emac_phy_link_check() 
+any more?
+
+>> The MDIO bus on these chips is not accessible as a separate entity.  It
+>> is melded (for lack of a better word) into the EMAC itself.  That's why
+>> there is a "qcom,no-external-phy" property.  You could, in theory, wire
+>> the internal phy of one SOC directly to the internal phy of another SOC,
+>> and use that as in interconnect between SOCs.  I don't know of any such
+>> use-cases however.
+>
+> The fact the MDIO bus is built-into the MAC is really not a problem
+> here, there are tons of drivers that deal with that just fine, yet, the
+> DT binding needs to reflect that properly by having a sub-node of the
+> Ethernet MAC which is a MDIO bus controller node. If external or
+> internal PHYs are accessible through that MDIO bus, they also need to
+> appear as child-nodes of that MDIO bus controller node.
+
+Does the compatible property of the phy node (for the external phy) need 
+to list the actual external phy?  That is, should it look like this:
+
+	phy0: ethernet-phy@0 {
+		compatible = "qcom,fsm9900-emac-phy";
+		reg = <0>;
+	}
+
+or this:
+
+	phy0: ethernet-phy@0 {
+		compatible = "athr,whatever-phy";
+		reg = <0>;
+	}
+
+
+
+> Can we just say that, an absence of PHY specified in the Device Tree (no
+> phy-handle property and PHY not a child node of the MDIO bus), means
+> that there is no external PHY?
+
+Yes, that works.
+
+>
+> [snip]
+>
+>>> Do you need to maintain these flags when most, if not all of them
+>>> already exist in dev->flags or dev->features?
+>>
+>> So you're saying that, for example, in emac_set_features() I should
+>> remove this:
+>>
+>>      if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX)
+>>          set_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
+>>      else
+>>          clear_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
+>>
+>> and then in emac_mac_mode_config(), I should do this instead:
+>>
+>> void emac_mac_mode_config(struct emac_adapter *adpt)
+>> {
+>>      struct net_device *netdev = adpt->netdev;
+>>
+>>      if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX)
+>>          mac |= VLAN_STRIP;
+>>      else
+>>          mac &= ~VLAN_STRIP;
+>>
+>>
+>> If so, then what do I do in emac_rx_mode_set()?  Should I delete this
+>> entire block:
+>>
+>>      /* Check for Promiscuous and All Multicast modes */
+>>      if (netdev->flags & IFF_PROMISC) {
+>>          set_bit(EMAC_STATUS_PROMISC_EN, &adpt->status);
+>>      } else if (netdev->flags & IFF_ALLMULTI) {
+>>          set_bit(EMAC_STATUS_MULTIALL_EN, &adpt->status);
+>>          clear_bit(EMAC_STATUS_PROMISC_EN, &adpt->status);
+>>      } else {
+>>          clear_bit(EMAC_STATUS_MULTIALL_EN, &adpt->status);
+>>          clear_bit(EMAC_STATUS_PROMISC_EN, &adpt->status);
+>>      }
+>>
+>> It does look like Gilad is just mirroring the flags/features variable
+>> into adpt->status.  What I can't figure out is why.  It seems completely
+>> redundant, but I have a nagging feeling that there is a good reason.
+>
+> Yes, I think your set_features and set_rx_mode functions would be
+> greatly simplified, if each of them did take care of programming the HW
+> immediately based on function arguments/flags. Unless absolutely
+> required (e.g: suspend/resume, outside of the scope of the function
+> etc..) having bookeeping variables is always something that can be out
+> of sync, so better avoid them as much as possible.
+
+Ok, I'll try to clean this up.
+
+>> So I should move the netif_start_queue() to the end of this function?
+>> Sorry if that's a stupid question, but I know little about the MAC side
+>> of network drivers.
+>
+> That's fine, yes moving netif_start_queue() at the far end of the
+> function is a good change.
+
+Ok.
+
+>>>> +/* Bring down the interface/HW */
+>>>> +void emac_mac_down(struct emac_adapter *adpt, bool reset)
+>>>> +{
+>>>> +    struct net_device *netdev = adpt->netdev;
+>>>> +    struct emac_phy *phy = &adpt->phy;
+>>>> +    unsigned long flags;
+>>>> +
+>>>> +    set_bit(EMAC_STATUS_DOWN, &adpt->status);
+>>>
+>>> Do you need to maintain that? Would not netif_running() tell you what
+>>> you want if you reflect the carrier state properly?
+>>
+>> I think that emac_work_thread_link_check() handles this.  It's a timer
+>> thread that polls the link state and calls netif_carrier_off() if the
+>> link is down.  Is that sufficient?
+>>
+>
+> Probably, then again, with PHYLIB you have the option of either
+> switching the PHY to interrupt mode (thsus saving the polling_), or it
+> polls the PHY for link statuses every HZ.
+
+I'll have to check and see if interrupt mode is even an option.  So 
+phylib can do the polling for me?
+
+>>> Since you have a producer index, you should consider checking
+>>> skb->xmit_more to know whether you can update the register now, or
+>>> later, which could save some expensive operation and batch TX.
+>>
+>> I'll have to figure out what means and get back to you.  When would
+>> "later" be?
+>
+> After the driver gets accepted mainline for instance would seem fine.
+> Considering how this seems to work, something like this is usally all
+> that is needed:
+>
+> if (!skb->xmit_more || netif_xmit_stopped(txq)
+> 	/* write producer index to get HW to transmit */
+
+Oh, I thought you meant later in the code somewhere.  At a later date 
+with another patch sounds great to me, though.
+
+>>>> +irqreturn_t emac_isr(int _irq, void *data)
+>>>> +{
+>>>> +    struct emac_irq *irq = data;
+>>>> +    struct emac_adapter *adpt = container_of(irq, struct
+>>>> emac_adapter, irq);
+>>>> +    struct emac_rx_queue *rx_q = &adpt->rx_q;
+>>>> +
+>>>> +    int max_ints = 1;
+>>>> +    u32 isr, status;
+>>>> +
+>>>> +    /* disable the interrupt */
+>>>> +    writel(0, adpt->base + EMAC_INT_MASK);
+>>>> +
+>>>> +    do {
+>>>
+>>> With max_ints = 1, this is essentially the same as no loop, so just
+>>> inline it to reduce the indentation.
+>>
+>> In another internal version of this driver, max_ints is set to 5.  Could
+>> this be some way of processing multiple packets in one interrupt?  Isn't
+>> that something that NAPI already takes care of, anyway?
+>
+> Yes, NAPI is going to mitigate the cost of taking an interrupt and
+> scheduling your bottom-half/soft IRQ for actual packet processing, it is
+> the recommended way to mitigate the number of interrupts in the receive
+> path (and transmit for that matter).
+
+I'll clean up the code and remove max_ints.
+
+>
+>>
+>>>> +        isr = readl_relaxed(adpt->base + EMAC_INT_STATUS);
+>>>> +        status = isr & irq->mask;
+>>>> +
+>>>> +        if (status == 0)
+>>>> +            break;
+>>>> +
+>>>> +        if (status & ISR_ERROR) {
+>>>> +            netif_warn(adpt,  intr, adpt->netdev,
+>>>> +                   "warning: error irq status 0x%lx\n",
+>>>> +                   status & ISR_ERROR);
+>>>> +            /* reset MAC */
+>>>> +            set_bit(EMAC_STATUS_TASK_REINIT_REQ, &adpt->status);
+>>>> +            emac_work_thread_reschedule(adpt);
+>>>> +        }
+>>>> +
+>>>> +        /* Schedule the napi for receive queue with interrupt
+>>>> +         * status bit set
+>>>> +         */
+>>>> +        if ((status & rx_q->intr)) {
+>>>> +            if (napi_schedule_prep(&rx_q->napi)) {
+>>>> +                irq->mask &= ~rx_q->intr;
+>>>> +                __napi_schedule(&rx_q->napi);
+>>>> +            }
+>>>> +        }
+>>>> +
+>>>> +        if (status & TX_PKT_INT)
+>>>> +            emac_mac_tx_process(adpt, &adpt->tx_q);
+>>>
+>>> You should consider using a NAPI instance for reclaiming TX buffers as
+>>> well.
+>>
+>> I'll have to figure out what means and get back to you.
+>
+> drivers/net/ethernet/broadcom/bcmsysport.c is an example driver that
+> reclaims transmitted buffers in NAPI. What that means is, take the TX
+> completion interrupt, schedule a NAPI instance to run, and this NAPI
+> instance cleans up the entire TX queue (it is not bounded, like the RX
+> NAPI instance). It is really just moving the freeing of SKBs into
+> softIRQ context vs. hardIRQ.
+
+Thanks.  I don't think I'll get to any of the NAPI fixes in v5 of this 
+driver.  I want to make sure I get the phylib conversion correct first.
+
+>>>> +/* Configure VLAN tag strip/insert feature */
+>>>> +static int emac_set_features(struct net_device *netdev,
+>>>> +                 netdev_features_t features)
+>>>> +{
+>>>> +    struct emac_adapter *adpt = netdev_priv(netdev);
+>>>> +
+>>>> +    netdev_features_t changed = features ^ netdev->features;
+>>>> +
+>>>> +    if (!(changed & (NETIF_F_HW_VLAN_CTAG_TX |
+>>>> NETIF_F_HW_VLAN_CTAG_RX)))
+>>>> +        return 0;
+>>>> +
+>>>> +    netdev->features = features;
+>>>> +    if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX)
+>>>> +        set_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
+>>>> +    else
+>>>> +        clear_bit(EMAC_STATUS_VLANSTRIP_EN, &adpt->status);
+>>>
+>>> What about TX vlan offload?
+>>
+>> I don't know what that is.
+>
+> TX VLAN offload would be that you can specify the VLAN id somewhere in a
+> packet's descriptor and have the HW automatically build an Ethernet
+> frame with the correct VLAN id, and all the Ethernet frame payload
+> appropriately placed at the correct offsets, with no cost for the CPU
+> but indicating that information (and not having to do a memmove() to
+> insert the 802.1Q tag).
+
+I have no idea if our hardware supports that.  I'll make a note of TX 
+VLAN offload and submit a separate patch if I can make it work.
+
+>> and I've never understood why it's necessary to fall back to 32-bits if
+>> 64 bits fails.  Isn't 64 bits a superset of 32 bits?  The driver is
+>> saying that the hardware supports all of DDR.  How could fail, and how
+>> could 32-bit succeed if 64-bits fails?
+>
+> I believe there could be cases where the HW is capable of addressing
+> more physical memory than the CPU itself (usually unlikely, but it
+> could),there could be cases where the HW is behind an IOMMMU which only
+> has a window into the DDR, and that could prevent a higher DMA_BIT_MASK
+> from being successfully configured.
+
+So, so I'm going to add dma-ranges support (I posted another patch asked 
+for feedback, but I haven't gotten it yet).
+
+For ACPI, we're going to depend on IORT to set the DMA mask for us.
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
