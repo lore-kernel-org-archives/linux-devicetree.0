@@ -1,81 +1,86 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: of: make it possible to name GPIO lines
-Date: Thu, 21 Apr 2016 11:17:44 +0200
-Message-ID: <CACRpkdZrFye5k8yRevofmbRBk=1pKtv8M1Ls5h5hqY_fMTnz_g@mail.gmail.com>
-References: <1461190600-20955-1-git-send-email-linus.walleij@linaro.org>
-	<CAL_JsqJb+T+r=jOpF+nNkMD_gzB6B7=08_+mNRc-ZRA2TZNpiA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJb+T+r=jOpF+nNkMD_gzB6B7=08_+mNRc-ZRA2TZNpiA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Mandala <david.mandala@linaro.org>
+From: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/6] Add Shared MDIO framework for iProc based SoCs
+Date: Thu, 21 Apr 2016 14:48:37 +0530
+Message-ID: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 1:41 AM, Rob Herring <robh+dt@kernel.org> wrote:
-> On Wed, Apr 20, 2016 at 5:16 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> Make it possible to name the producer side of a GPIO line using
->> a "gpio-names" property array, modeled on the "clock-names"
->> property from the clock bindings.
->
-> Except clock-names is the consumer side. There is clock-output-names
-> for the clock controller side though.
+Broadcom iProc based SoCs uses MDIO bus for programming PHYs belonging to
+different I/O subsystem like USB, SATA, PCIe, ETHERNET etc. Every subsystem
+is referred as "Master" When a master is selected, all PHYs belonging to
+this subsystem get active on the MDIO bus and responds to MDIO transaction.
+In this way one MDIO controller is shared among all masters hence named as
+"Shared MDIO controller".
 
-Ah yes you're 100% right.
+We have two important entities in "Shared MDIO Bus" framework:
+1) shared_mdio_master and
+2) shared_mdio_driver.
 
-However I cannot name it "gpio-output-names" since that becomes
-ever confusing: GPIO is both input and output (I remember we
-discussed this at some point).
+The shared MDIO controller driver is registered as platform driver and it
+creates shared_mdio_master instances and adds them to "Shared MDIO Bus"
+framework. The "Shared MDIO Bus" framework will try to match-n-probe each
+shared_mdio_master instance with all available shared_mdio_driver based on
+DT matching. The shared_mdio_driver will acts as phy provider for
+respective PHY frameworks and it will access PHY registers only using
+"Shared MDIO Bus" framework APIs. All PHY read/write from
+shared_mdio_driver will eventually reach shared MDIO controller driver
+(who originally created shared_mdio_master instances) and shared MDIO
+controller driver will serialized these PHY read/write as required.
 
-"gpio-line-names" was my best suggestion at the time,
-I will respin the patch with that convention (how could I forget
-this!).
+This patch set includes Shared MDIO Bus framework, Shared MDIO block driver
+and one Shared MDIO driver, ETHERNET PHY provider driver.
 
->> Why we are not using hogs: these are consumer side, not producer
->> side. The gpio-controller in DT (gpio_chip in Linux) is a
->> producer, not a consumer.
->
-> Arguably, the names you have are the consumer side. The consumer side
-> is what defines the function. The consumer name is typically local
-> like vddio being the input supply pin, but the producer names are more
-> global like ldo3.
+shared_mdio.c: This is the bus framework where all masters are registered
+via shared MDIO block driver.
 
-Depends on what you mean with "producer" and "consumer".
+iproc_shared_mdio.c: Represent the shared MDIO block driver. The driver
+registers all masters to shared mdio bus framework.
 
-To the GPIO subsystem atleast a "consumer" is a device
-grabbing a GPIO, like SMSC911x WLAN chip or something.
+mdio-bcm-iproc-shared.c: Master driver which registers ETHERNET phy to
+legacy MII framework.
 
-The producer name here is something like the name of the
-rail. (I would even consider using "gpio-rail-names" for this
-property...)
+In future there will be more driver for SATA, USB, PCIe masters which will
+register phys for their subsystem.
 
-If the GPIO controls an LDO regulator, then the rail will be
-named something like "ldo3" indeed.
+Patch series is developed based on Linux v4.6-rc1 and available at:
+repo: https://github.com/Broadcom/arm64-linux.git
+branch: shared_mdio_v0
 
-We need to distinguish the producer name from e.g. the
-name of the pin on the package, as that is by nature
-ambigous and likely to have a name such as "gpio3".
+Pramod Kumar (6):
+  bus: Add shared MDIO bus framework
+  Documentation: DT binding doc for iProc Shared MDIO Controller.
+  bus: Add platform driver for iProc shared MDIO Controller
+  dt: Add Shared MDIO Controller node for NS2
+  Documentation: Binding doc for ethernet master in NS2
+  net:phy: Add Ethernet Master for iProc Shared MDIO Controller
 
->> This patch is not about assigning initial values to GPIO lines.
->> That is an orthogonal usecase. This is just about naming lines.
->
-> It is unless we decide that both should use the same structure.
+ .../bindings/bus/brcm,iproc-shared-mdio.txt        |  76 ++++++
+ .../bindings/net/brcm,iproc-mdio-shared.txt        |  32 +++
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  15 ++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |   8 +
+ drivers/bus/Kconfig                                |  22 ++
+ drivers/bus/Makefile                               |   2 +
+ drivers/bus/iproc_shared_mdio.c                    | 287 +++++++++++++++++++++
+ drivers/bus/shared_mdio.c                          | 179 +++++++++++++
+ drivers/net/phy/Kconfig                            |  11 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/mdio-bcm-iproc-shared.c            | 116 +++++++++
+ include/linux/shared_mdio.h                        | 123 +++++++++
+ 12 files changed, 872 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt
+ create mode 100644 Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt
+ create mode 100644 drivers/bus/iproc_shared_mdio.c
+ create mode 100644 drivers/bus/shared_mdio.c
+ create mode 100644 drivers/net/phy/mdio-bcm-iproc-shared.c
+ create mode 100644 include/linux/shared_mdio.h
 
-It would still be a different property?
+-- 
+1.9.1
 
-> I'm also worried that just putting in somewhat random names doesn't
-> buy much. If you have to figure out what the name is for the GPIO line
-> you want from userspace, then you might as well know the chip and
-> offset. I'm doubtful we could standardize naming across platforms.
-
-Having a symbolic GPIO line/rail name across several board
-with different chipsets is the explicit goal for people like
-96boards and IoT libraries they use. (Put them on CC).
-
-> I'm not saying yes or no yet, just raising some of the concerns I have.
-
-Let me respin the patch and we keep talking.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
