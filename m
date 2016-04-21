@@ -1,80 +1,65 @@
-From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: devicetree: avoid duplicated matching code (was: Re: [PATCH 1/3] xhci: plat: adapt to unified device property interface)
-Date: Thu, 21 Apr 2016 16:57:12 +0300
-Message-ID: <874mav9i9z.fsf@intel.com>
-References: <1461064246-27350-1-git-send-email-heikki.krogerus@linux.intel.com> <1461064246-27350-2-git-send-email-heikki.krogerus@linux.intel.com> <87fuuf9pip.fsf@intel.com> <CAL_JsqLVAN_dEcGUbNyiBjFJTSPSPjMKzWG9QBoJ71whpfmBiA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: simple-card: Add support jack detection via
+ codec
+Date: Thu, 21 Apr 2016 09:19:21 -0500
+Message-ID: <20160421141921.GA25900@rob-hp-laptop>
+References: <1460967452-24574-1-git-send-email-zhengxing@rock-chips.com>
+ <1460967452-24574-3-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLVAN_dEcGUbNyiBjFJTSPSPjMKzWG9QBoJ71whpfmBiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460967452-24574-3-git-send-email-zhengxing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xing Zheng <zhengxing@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, heiko@sntech.de, Adam.Thomson@diasemi.com, sugar.zhang@rock-chips.com, jay.xu@rock-chips.com, broonie@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Lunn <andrew@lunn.ch>, Mengdong Lin <mengdong.lin@linux.intel.com>, Jun Nie <jun.nie@linaro.org>, Jyri Sarha <jsarha@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 18, 2016 at 04:17:31PM +0800, Xing Zheng wrote:
+> In most cases, many codecs already supports jack detection, previouslly,
+> we need to create a customized machine driver every time.
+> 
+> Hence, the simple-card need to support use them dynamically via parse dts
+> file for better flexibility.
+> 
+> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+> ---
+> 
+>  .../devicetree/bindings/sound/simple-card.txt      |   17 +++
+>  sound/soc/generic/simple-card.c                    |  126 +++++++++++++++++++-
+>  2 files changed, 140 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+> index cf3979e..d25c8eb 100644
+> --- a/Documentation/devicetree/bindings/sound/simple-card.txt
+> +++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+> @@ -22,6 +22,23 @@ Optional properties:
+>  					  headphones are attached.
+>  - simple-audio-card,mic-det-gpio	: Reference to GPIO that signals when
+>  					  a microphone is attached.
+> +- simple-audio-card,codec-jack		: A list of the codec supports jack detection.
+> +					  The jack types which are supported refer to include/sound/jack.h.
+> +					  All of the jack types:
+> +						"JACK_HEADPHONE",
+> +						"JACK_MICROPHONE",
+> +						"JACK_HEADSET",
+> +						"JACK_LINEOUT",
+> +						"JACK_MECHANICAL",
+> +						"JACK_VIDEOOUT",
+> +						"JACK_AVOUT",
+> +						"JACK_LINEIN",
+> +						"JACK_BTN_0",
+> +						"JACK_BTN_1",
+> +						"JACK_BTN_2",
+> +						"JACK_BTN_3",
+> +						"JACK_BTN_4",
+> +						"JACK_BTN_5".
 
+simple-card is not so simple...
 
-Hi,
+I think this information be part of the codec node if the codec 
+provides the functionality. The binding should not be different whether 
+a codec is part of simple-card or not. Also, I would make all these just 
+boolean props. 
 
-Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
-> On Thu, Apr 21, 2016 at 6:20 AM, Felipe Balbi
-> <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->>
->> Hi,
->>
->> Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> writes:
->>> @@ -197,7 +196,7 @@ static int xhci_plat_probe(struct platform_device *=
-pdev)
->>>       }
->>>
->>>       xhci =3D hcd_to_xhci(hcd);
->>> -     match =3D of_match_node(usb_xhci_of_match, node);
->>> +     match =3D of_match_node(usb_xhci_of_match, pdev->dev.of_node);
->>
->> Rob, it's weird that OF-based drivers have to redo the same matching
->> which was already done by drivers/base/platform.c::platform_match() just
->> to get match->data. If we know we matched, couldn't we just cache a
->> pointer to match->data in struct device_node.data ? Something like
->> below? (completely untested)
->
-> Yes, it is. AIUI, there is some sort of race condition in doing what
-> you suggest though. IIRC, Grant did that and reverted it if you look
-> at the git history.
-
-looking at drivers/base/platform.c I can't find anything along these
-lines. Adding Grant.
-
-Grant, any memory left of this race ?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXGNw5AAoJEIaOsuA1yqREgrQQAK+m7MYiZgkAvw5J3q+T6vgU
-VhOYDqwOpb/LcXSH9Ka7T2rFHPgB4ShLJVzVxcg0ix4B2Cw5A3HOa7Wx9Kr4R9wB
-KhI/W5AzuBNgMz72vK9w8UV4qYGRXzQ+8Sm+D6Nl2CDK/B1VHUh4W4NDk+ClM0rN
-+FvAyTeffwmcyN+3G3gFqg781pFVxh0s3zKxOjGcX9JVknSvwNnMRw578yLdSjtp
-/ADEmhVnxJNFWzk8rcshkGTQaQF074j8yAQS6kG962COLlB8DonqKtvHT/EMPL4x
-tvpmHnZIbu06lB4/gLxxkSn9kNzLWXJAJ58eXQVnS9IPjAsvZ2EzUQkCuIS9JCfq
-YtFgzaudP8fZNQWBs5we4USn6IlxcMpv4D9G9baticWKNGsOKMark0Xa1wBWkztd
-rzob5wPsmPBUai7PHT31gmHmSURXhjEcTK/RkkJgOHZ/GJFFyTvwRCWpQSDkOGtT
-iJvGJqMubXJ/Fcd3h4MIUBpwpz60J1GeNaHOaHw8YzVRBgKzNHOgDL4mppOHPOsi
-Fnk1bc37aA9lQzMpJlpgY8IYGh6ekEJoEcbK1nUTmun1gD+sY1r+LKr4nUSvBb4p
-pPWxNwrL4CSvdld3FYlADJW07Ay92xZmEvoJ02z/73ps7tNBGjdr68VbpU7ma4dF
-ho35GdLcknURYez5wreo
-=E9WH
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
