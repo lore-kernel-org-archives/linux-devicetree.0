@@ -1,56 +1,76 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 3/7] arm64/perf: Changed events naming as per ARM ARM
-Date: Thu, 21 Apr 2016 10:26:36 +0100
-Message-ID: <20160421092636.GB6879@leverpostej>
-References: <1461092062-7484-1-git-send-email-ashoks@broadcom.com>
- <1461092062-7484-4-git-send-email-ashoks@broadcom.com>
- <20160420133456.GJ11453@leverpostej>
- <20160421092107.GA3673@ashok.sekar@broadcom.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] arm64: defconfig: Add Renesas R-Car USB 3.0 driver
+ support
+Date: Thu, 21 Apr 2016 09:44:57 +0000
+Message-ID: <SG2PR06MB09199B8168E3822A9B09E9C6D86E0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1461142034-5008-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20160421031514.GB11116@verge.net.au>
+ <SG2PR06MB0919C567798F775F2685811ED86E0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+ <20160421035623.GB28575@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160421092107.GA3673-418NljS/xK2EokMDITG9tw@public.gmane.org@broadcom.com>
+In-Reply-To: <20160421035623.GB28575-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: ja-JP
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 02:21:10AM -0700, Ashok Kumar wrote:
-> On Wed, Apr 20, 2016 at 02:34:56PM +0100, Mark Rutland wrote:
-> > On Tue, Apr 19, 2016 at 11:54:18AM -0700, Ashok Kumar wrote:
-> > >  /* ARMv8 Cortex-A53 specific event types. */
-> > >  #define ARMV8_A53_PERFCTR_PREFETCH_LINEFILL			0xC2
-> > >  
-> > >  /* ARMv8 Cavium ThunderX specific event types. */
-> > > -#define ARMV8_THUNDER_PERFCTR_L1_DCACHE_MISS_ST			0xE9
-> > > -#define ARMV8_THUNDER_PERFCTR_L1_DCACHE_PREF_ACCESS		0xEA
-> > > -#define ARMV8_THUNDER_PERFCTR_L1_DCACHE_PREF_MISS		0xEB
-> > > -#define ARMV8_THUNDER_PERFCTR_L1_ICACHE_PREF_ACCESS		0xEC
-> > > -#define ARMV8_THUNDER_PERFCTR_L1_ICACHE_PREF_MISS		0xED
-> > > +#define ARMV8_THUNDER_PERFCTR_L1D_CACHE_MISS_ST			0xE9
-> > > +#define ARMV8_THUNDER_PERFCTR_L1D_CACHE_PREF_ACCESS		0xEA
-> > > +#define ARMV8_THUNDER_PERFCTR_L1D_CACHE_PREF_MISS		0xEB
-> > > +#define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_ACCESS		0xEC
-> > > +#define ARMV8_THUNDER_PERFCTR_L1I_CACHE_PREF_MISS		0xED
-> > 
-> > I'm not sure of the value of renaming these. I would think these should
-> > match whatever is in the documentation for Cortex-A53 and ThunderX
-> > respectively (and there's the obvious PREFETCH/PREF difference
-> > remaining).
-> I have changed them to PREF and will post it in v6.
-> I checked table 12.28 in Cortex-A53 MPCore Processor TRM r0p4.
-> For 0xc2, event mnemonic is not available but event name says 
-> "Linefill because of prefetch".
+Hi Simon-san,
 
-Ok. Plese mention that explicitly in the commit message for v6, as it's
-non-obvious.
+> From: Simon Horman
+> Sent: Thursday, April 21, 2016 12:56 PM
+> 
+< snip >
+> > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > > > index a44ef99..a95751d 100644
+> > > > --- a/arch/arm64/configs/defconfig
+> > > > +++ b/arch/arm64/configs/defconfig
+> > > > @@ -1,7 +1,6 @@
+> > > >  # CONFIG_LOCALVERSION_AUTO is not set
+> > > >  CONFIG_SYSVIPC=y
+> > > >  CONFIG_POSIX_MQUEUE=y
+> > > > -CONFIG_FHANDLE=y
+> > > >  CONFIG_AUDIT=y
+> > > >  CONFIG_NO_HZ_IDLE=y
+> > > >  CONFIG_HIGH_RES_TIMERS=y
+> > >
+> > > Is the hunk above intended?
+> > > It does not seem to match my reading of the changelog.
+> >
+> > Perhaps I should make a patch for this change because
+> > if I did the following commands, this change appeared.
+> 
+> I'm not sure how the ARM-SoC maintainers feel about such cleanups
+> these days. I suggest just dropping that part of the change for now.
 
-Otherwise that sounds fine to me (and my Reviewed-by stands). I'll leave
-the final say to Will.
+Thank you for the suggestion!
+I agree with you. So, I will submit v2 patch today.
 
-Thanks,
-Mark.
+Best regards,
+Yoshihiro Shimoda
+
+> > on renesas-devel-20160420-v4.6-rc4
+> > $ make defconfig
+> > $ cp defconfig arch/arm64/config
+> > $ git diff
+> >
+> > Best regards,
+> > Yoshihiro Shimoda
+> >
+> > > > @@ -192,7 +191,7 @@ CONFIG_SND_SOC_AK4613=y
+> > > >  CONFIG_USB=y
+> > > >  CONFIG_USB_OTG=y
+> > > >  CONFIG_USB_XHCI_HCD=y
+> > > > -CONFIG_USB_XHCI_PLATFORM=y
+> > > > +CONFIG_USB_XHCI_RCAR=y
+> > > >  CONFIG_USB_EHCI_HCD=y
+> > > >  CONFIG_USB_EHCI_MSM=y
+> > > >  CONFIG_USB_EHCI_HCD_PLATFORM=y
+> > > > --
+> > > > 1.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
