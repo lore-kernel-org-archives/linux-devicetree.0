@@ -1,39 +1,85 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 01/19] clk: composite: Add unregister function
-Date: Thu, 21 Apr 2016 15:16:23 -0700
-Message-ID: <20160421221623.GC13149@codeaurora.org>
-References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-2-git-send-email-maxime.ripard@free-electrons.com>
- <20160415222856.GQ14441@codeaurora.org>
- <20160419095250.GA26050@lukather>
-Reply-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
+ ADV7533
+Date: Fri, 22 Apr 2016 01:32:31 +0300
+Message-ID: <1992414.kkmfQUJ8oO@avalon>
+References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
+ <1457521038-5906-1-git-send-email-architt@codeaurora.org>
+ <1457521038-5906-8-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDHZXHXDRAMBBOVC4W4AKGQEXFITDBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160419095250.GA26050@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1457521038-5906-8-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: devicetree@vger.kernel.org, andy.green@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, srinivas.kandagatla@linaro.org, amit.kucheria@linaro.org, treding@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/19, Maxime Ripard wrote:
-> 
-> I have a bunch of other clock patches that need this, so I guess it
-> would be easier if applied it directly with your acked-by, or if you
-> could apply it and give a stable branch I can base my future PR on.
-
-Ok. I pushed it to stable branch 'clk-composite-unregister' in
-the clk.git repo. That way I can go ahead and delete this API
-assuming I get around to converting all the composite users in
-the next few days.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkgQXJjaGl0LAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBXZWRuZXNkYXkgMDkgTWFy
+IDIwMTYgMTY6Mjc6MTggQXJjaGl0IFRhbmVqYSB3cm90ZToKPiBBZGQgZGVzY3JpcHRpb24gb2Yg
+QURWNzUzMy4gQWRkIHRoZSByZXF1aXJlZCBhbmQgb3B0aW9uYWwgcHJvcGVydGllcyB0aGF0Cj4g
+YXJlIHNwZWNpZmljIHRvIGl0Lgo+IAo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+
+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFy
+Y2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50eHQgICAgICAgIHwgMjUgKysrKysrKysrKysr
+KystLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMo
+LSkKPiAKPiBkaWZmIC0tZ2l0Cj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0IGluZGV4Cj4gOTZjMjVl
+ZS4uNDIwZGE1YSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4dAo+IEBAIC0x
+LDEzICsxLDE5IEBACj4gLUFuYWxvZyBEZXZpY2UgQURWNzUxMShXKS8xMyBIRE1JIEVuY29kZXJz
+Cj4gK0FuYWxvZyBEZXZpY2UgQURWNzUxMShXKS8xMy8zMyBIRE1JIEVuY29kZXJzCj4gIC0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gCj4gLVRoZSBBRFY3NTExLCBB
+RFY3NTExVyBhbmQgQURWNzUxMyBhcmUgSERNSSBhdWRpbyBhbmQgdmlkZW8gdHJhbnNtaXR0ZXJz
+Cj4gK1RoZSBBRFY3NTExLCBBRFY3NTExVywgQURWNzUxMyBhbmQgQURWNzUzMyBhcmUgSERNSSBh
+dWRpbyBhbmQgdmlkZW8KPiB0cmFuc21pdHRlcnMgY29tcGF0aWJsZSB3aXRoIEhETUkgMS40IGFu
+ZCBEVkkgMS4wLiBUaGV5IHN1cHBvcnQgY29sb3Igc3BhY2UKPiBjb252ZXJzaW9uLCAtUy9QRElG
+LCBDRUMgYW5kIEhEQ1AuCj4gK1MvUERJRiwgQ0VDIGFuZCBIRENQLiBBRFY3NTMzIHN1cHBvcnRz
+IHRoZSBEU0kgaW50ZXJmYWNlIGZvciBpbnB1dCBwaXhlbHMsCj4gd2hpbGUgK3RoZSBvdGhlcnMg
+c3VwcG9ydCBSR0IgaW50ZXJmYWNlLgo+IAo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IAo+IC0t
+IGNvbXBhdGlibGU6IFNob3VsZCBiZSBvbmUgb2YgImFkaSxhZHY3NTExIiwgImFkaSxhZHY3NTEx
+dyIgb3IKPiAiYWRpLGFkdjc1MTMiICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSBvbmUgb2Y6Cj4g
+KwkJImFkaSxhZHY3NTExIgo+ICsJCSJhZGksYWR2NzUxMXciCj4gKwkJImFkaSxhZHY3NTEzIgo+
+ICsJCSJhZGksYWR2NzUzMyIKPiArCj4gIC0gcmVnOiBJMkMgc2xhdmUgYWRkcmVzcwo+IAo+ICBU
+aGUgQURWNzUxMSBzdXBwb3J0cyBhIGxhcmdlIG51bWJlciBvZiBpbnB1dCBkYXRhIGZvcm1hdHMg
+dGhhdCBkaWZmZXIgYnkKPiB0aGVpciBAQCAtMzIsNiArMzgsMTEgQEAgVGhlIGZvbGxvd2luZyBp
+bnB1dCBmb3JtYXQgcHJvcGVydGllcyBhcmUgcmVxdWlyZWQKPiBleGNlcHQgaW4gInJnYiAxeCIg
+YW5kIC0gYWRpLGlucHV0LWp1c3RpZmljYXRpb246IFRoZSBpbnB1dCBiaXQKPiBqdXN0aWZpY2F0
+aW9uICgibGVmdCIsICJldmVubHkiLCAicmlnaHQiKS4KPiAKPiArVGhlIGZvbGxvd2luZyBwcm9w
+ZXJ0aWVzIGFyZSByZXF1aXJlZCBmb3IgQURWNzUzMzoKPiArCj4gKy0gYWRpLGRzaS1sYW5lczog
+TnVtYmVyIG9mIERTSSBkYXRhIGxhbmVzIGNvbm5lY3RlZCB0byB0aGUgRFNJIGhvc3QuIEl0Cj4g
+c2hvdWxkICsgIGJlIG9uZSBvZiAxLCAyLCAzIG9yIDQuCgpEb2VzIHRoZSBBRFY3NTMzIHN1cHBv
+cnQgZGF0YSBsYW5lcyByZW1hcHBpbmcgPwoKPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAKPiAg
+LSBpbnRlcnJ1cHRzOiBTcGVjaWZpZXIgZm9yIHRoZSBBRFY3NTExIGludGVycnVwdAo+IEBAIC00
+MiwxMyArNTMsMTcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBhZGksZW1iZWRkZWQtc3lu
+YzogVGhlIGlucHV0IHVzZXMgc3luY2hyb25pemF0aW9uIHNpZ25hbHMgZW1iZWRkZWQgaW4gdGhl
+Cj4gZGF0YSBzdHJlYW0gKHNpbWlsYXIgdG8gQlQuNjU2KS4gRGVmYXVsdHMgdG8gc2VwYXJhdGUg
+SC9WIHN5bmNocm9uaXphdGlvbgo+IHNpZ25hbHMuCj4gKy0gYWRpLGRpc2FibGUtdGltaW5nLWdl
+bmVyYXRvcjogT25seSBmb3IgQURWNzUzMy4gRGlzYWJsZXMgdGhlIGludGVybmFsCj4gdGltaW5n
+ICsgIGdlbmVyYXRvci4gVGhlIGNoaXAgd2lsbCByZWx5IG9uIHRoZSBzeW5jIHNpZ25hbHMgaW4g
+dGhlIERTSSBkYXRhCj4gbGFuZXMsICsgIHJhdGhlciB0aGFuIGdlbmVyYXRlIGl0cyBvd24gdGlt
+aW5ncyBmb3IgSERNSSBvdXRwdXQuCgpJc24ndCB0aGF0IHNvbWV0aGluZyB0aGF0IHNob3VsZCBi
+ZSBzZWxlY3RhYmxlIGF0IHJ1bnRpbWUgPwoKPiAgUmVxdWlyZWQgbm9kZXM6Cj4gCj4gIFRoZSBB
+RFY3NTExIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGxl
+ZCB1c2luZyB0aGUKPiBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiAKPiAtLSBWaWRlbyBwb3J0IDAgZm9y
+IHRoZSBSR0Igb3IgWVVWIGlucHV0Cj4gKy0gVmlkZW8gcG9ydCAwIGZvciB0aGUgUkdCLCBZVVYg
+b3IgRFNJIGlucHV0LiBJbiB0aGUgY2FzZSBvZiBBRFY3NTMzLCB0aGUKPiArICByZW1vdGUgZW5k
+cG9pbnQgcGhhbmRsZSBzaG91bGQgcmVmZXIgdG8gYSB2YWxpZCBtaXBpX2RzaV9ob3N0IGRldmlj
+ZQoKTml0cGlja2luZywgSSB3b3VsZCB3cml0ZSAicmVmZXJlbmNlIiBpbnN0ZWFkIG9mICJyZWZl
+ciB0byIuCgo+IG5vZGUuIC0gVmlkZW8gcG9ydCAxIGZvciB0aGUgSERNSSBvdXRwdXQKCi0tIApS
+ZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
