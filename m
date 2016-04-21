@@ -1,34 +1,63 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 08/18] ARM: multi_v7_defconfig: Enable STi FDMA driver
-Date: Thu, 21 Apr 2016 12:04:25 +0100
-Message-ID: <1461236675-10176-9-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 10/18] ASoC: sti: Update example to include assigned-clocks and mclk-fs
+Date: Thu, 21 Apr 2016 12:04:27 +0100
+Message-ID: <1461236675-10176-11-git-send-email-peter.griffin@linaro.org>
 References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com, arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-This DMA controller is found on all STi chipsets.
+Update the examples, as otherwise driver errors with an incorrect
+mclk ratio at runtime.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Cc: arnaud.pouliquen@st.com
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 2823490..61008a0 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -727,6 +727,7 @@ CONFIG_DMA_OMAP=y
- CONFIG_QCOM_BAM_DMA=y
- CONFIG_XILINX_VDMA=y
- CONFIG_DMA_SUN6I=y
-+CONFIG_ST_FDMA=y
- CONFIG_STAGING=y
- CONFIG_SENSORS_ISL29018=y
- CONFIG_SENSORS_ISL29028=y
+diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+index ef2e0c6..e6ef96a8 100644
+--- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
++++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+@@ -62,6 +62,9 @@ Example:
+ 		#sound-dai-cells = <0>;
+ 		st,syscfg = <&syscfg_core>;
+ 		clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
++		assigned-clocks = <&clk_s_d0_flexgen CLK_PCM_2>;
++		assigned-clock-parents = <&clk_s_d0_quadfs 2>;
++		assigned-clock-rates = <50000000>;
+ 		reg = <0x8D82000 0x158>;
+ 		interrupts = <GIC_SPI 86 IRQ_TYPE_NONE>;
+ 		dmas = <&fdma0 4 0 1>;
+@@ -78,6 +81,9 @@ Example:
+ 		#sound-dai-cells = <0>;
+ 		st,syscfg = <&syscfg_core>;
+ 		clocks = <&clk_s_d0_flexgen CLK_SPDIFF>;
++		assigned-clocks = <&clk_s_d0_flexgen CLK_SPDIFF>;
++		assigned-clock-parents = <&clk_s_d0_quadfs 3>;
++		assigned-clock-rates = <50000000>;
+ 		reg = <0x8D85000 0x158>;
+ 		interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
+ 		dmas = <&fdma0 7 0 1>;
+@@ -133,6 +139,7 @@ Example of audio card declaration:
+ 			/* DAC */
+ 			format = "i2s";
+ 			dai-tdm-slot-width = <32>;
++			mclk-fs = <256>;
+ 			cpu {
+ 				sound-dai = <&sti_uni_player2>;
+ 			};
+@@ -144,6 +151,7 @@ Example of audio card declaration:
+ 		simple-audio-card,dai-link@1 {
+ 			/* SPDIF */
+ 			format = "left_j";
++			mclk-fs = <128>;
+ 			cpu {
+ 				sound-dai = <&sti_uni_player3>;
+ 			};
 -- 
 1.9.1
