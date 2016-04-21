@@ -1,29 +1,55 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] ARM: dts: uniphier: add NAND pinmux node
-Date: Thu, 21 Apr 2016 14:47:55 +0900
-Message-ID: <CAK7LNAQVDRt3V0ZfMQPRu6JhYA14K1JqOsOTq+v0xUucoOsOKg@mail.gmail.com>
-References: <1460716503-31128-1-git-send-email-yamada.masahiro@socionext.com>
-	<1460716503-31128-2-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH] arm64: dts: uniphier: use Daughter board on PH1-LD20
+ reference board
+Date: Thu, 21 Apr 2016 14:58:41 +0900
+Message-ID: <1461218321-16455-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460716503-31128-2-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2016-04-15 19:35 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
+Include the development base board, which is equipped with some
+devices such as EEPROM.
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-This patch was replaced with v2:
+ arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts  | 1 +
+ arch/arm64/boot/dts/socionext/uniphier-ref-daughter.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
+ create mode 120000 arch/arm64/boot/dts/socionext/uniphier-ref-daughter.dtsi
 
-https://patchwork.kernel.org/patch/8895761/
-
-
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+index b0ed443..2adad8c 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
++++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+@@ -44,6 +44,7 @@
+ 
+ /dts-v1/;
+ /include/ "uniphier-ph1-ld20.dtsi"
++/include/ "uniphier-ref-daughter.dtsi"
+ /include/ "uniphier-support-card.dtsi"
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ref-daughter.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ref-daughter.dtsi
+new file mode 120000
+index 0000000..4685a8d
+--- /dev/null
++++ b/arch/arm64/boot/dts/socionext/uniphier-ref-daughter.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/uniphier-ref-daughter.dtsi
+\ No newline at end of file
 -- 
-Best Regards
-Masahiro Yamada
+1.9.1
