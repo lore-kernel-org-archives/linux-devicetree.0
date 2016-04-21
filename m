@@ -1,58 +1,30 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 00/14] DT: Fix spelling of standard properties
-Date: Wed, 20 Apr 2016 18:58:21 -0500
-Message-ID: <CAL_Jsq+JO41w2PweW0n1Z78=wPnYh+wfa==Hb8o37L3ynDndkA@mail.gmail.com>
-References: <1461166339-11109-1-git-send-email-geert+renesas@glider.be>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: imx6: Add dts for Embest MarS Board
+Date: Wed, 20 Apr 2016 21:27:43 -0300
+Message-ID: <CAOMZO5Cyth4inJKmPJzd-so=Xh_DTe5+iD7gqOZoSgM+hG+KCQ@mail.gmail.com>
+References: <1461184684-5241-1-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1461166339-11109-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-input-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, Tony Lindgren <tony@atomide.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Joe Perches <joe@perches.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, dmaengine@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461184684-5241-1-git-send-email-sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 10:32 AM, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->         Hi all,
->
-> This patch series fixes misspellings of various standard DT properties
-> in DT binding documentation, DTS files, and error messages.
-> While most of these are harmless, some of them may cause hard-to-debug
-> failures.
->
-> Please apply where appropriate.
+On Wed, Apr 20, 2016 at 5:38 PM, Sergio Prado
+<sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org> wrote:
 
-I'll happily take the whole series if you like, though I've not
-reviewed it all yet.
+> Embest MarS Board [1] is a multi-core platform based on Freescale i.MX6
+> Cortex-A9 Dual Core, running up to 1GHz with 1 GB of RAM, 4GB of eMMC
+> and with a 4MB SPI flash.
+>
+> [1] http://www.embest-tech.com/shop/star/marsboard.html
+>
+> Signed-off-by: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
 
->
-> Thanks!
->
-> P.S. I used the following to detect misspellings:
->
->     words="(address|clock|cooling|dma|gpio|index|interrupt|mbox|msi|nvmem|phy|phys|power-domain|pwm|reset|size|sleep|sound-dai|thermal-sensor)"
->
->     git grep -Ew "${words}s-names"
->     git grep -E "[^-]\<${words}-name\>[^-]"
->     git grep -Ew "#${words}s-cells"             # false positive phys-cells
->     git grep -E "#${words}-cell\>[^-]"
->
->     git grep -w adress-cells
->     git grep -Ew "interrupts-(map|parent)"
->
-> How can we prevent adding more of these?
->
-> One simple option is to add the offenders to scripts/spelling.txt.
-> Alternatively, we may want to do something smarter and more DT specific?
-
-At least for #*-cells, we should be able to check most in dtc. When we
-find common properties, we can check the node for the phandle has a
-cells property. That would also check that the property is in fact a
-phandle.
-
-For *-names, we might be able to do a generic check in dtc for the
-corresponding property being present when we find a -names property.
-Though I suspect we're not consistent enough when/where we use plural.
-
-Rob
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
