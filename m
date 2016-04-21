@@ -1,59 +1,105 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver
- code
-Date: Thu, 21 Apr 2016 13:27:39 +0200
-Message-ID: <4337545.DyleYAUzIV@wuerfel>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <1461236675-10176-10-git-send-email-peter.griffin@linaro.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: rockchip: add core dtsi file for RK3399
+ SoCs
+Date: Thu, 21 Apr 2016 12:30:18 +0100
+Message-ID: <20160421123018.096d4a75@arm.com>
+References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com>
+	<1461211092-26331-1-git-send-email-jay.xu@rock-chips.com>
+	<20160421101930.GG6879@leverpostej>
+	<5718AFB8.5070004@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461236675-10176-10-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: devicetree@vger.kernel.org, vinod.koul@intel.com, srinivas.kandagatla@gmail.com, arnaud.pouliquen@st.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, broonie@kernel.org, ludovic.barre@st.com, dmaengine@vger.kernel.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, maxime.coquelin@st.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5718AFB8.5070004-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 April 2016 12:04:26 Peter Griffin wrote:
-> uniperiph-id, version and mode are ST specific bindings and
-> need the 'st,' prefix. Update the examples, as otherwise copying
-> them yields a runtime error parsing the DT node.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Cc: arnaud.pouliquen@st.com
-> ---
->  .../devicetree/bindings/sound/st,sti-asoc-card.txt         | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> index 028fa1c..ef2e0c6 100644
-> --- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> +++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> @@ -67,9 +67,9 @@ Example:
->                 dmas = <&fdma0 4 0 1>;
->                 dai-name = "Uni Player #1 (DAC)";
->                 dma-names = "tx";
-> -               uniperiph-id = <2>;
-> -               version = <5>;
-> -               mode = "PCM";
-> +               st,uniperiph-id = <2>;
-> +               st,version = <5>;
-> +               st,mode = "PCM";
->         };
+On Thu, 21 Apr 2016 18:47:20 +0800
+"Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 
-You don't change the binding desciption here, only the example,
-so they no longer match.
+> Hi, Mark:
+> On 2016=E5=B9=B404=E6=9C=8821=E6=97=A5 18:19, Mark Rutland wrote:
+> > On Thu, Apr 21, 2016 at 11:58:12AM +0800, Jianqun Xu wrote:
+> >> +		cpu_l0: cpu@0 {
+> >> +			device_type =3D "cpu";
+> >> +			compatible =3D "arm,cortex-a53", "arm,armv8";
+> >> +			reg =3D <0x0 0x0>;
+> >> +			enable-method =3D "psci";
+> >> +			#cooling-cells =3D <2>; /* min followed by max */
+> >> +			clocks =3D <&cru ARMCLKL>;
+> >> +		};
+> >> +		cpu_b0: cpu@100 {
+> >> +			device_type =3D "cpu";
+> >> +			compatible =3D "arm,cortex-a72", "arm,armv8";
+> >> +			reg =3D <0x0 0x100>;
+> >> +			enable-method =3D "psci";
+> >> +			#cooling-cells =3D <2>; /* min followed by max */
+> >> +			clocks =3D <&cru ARMCLKB>;
+> >> +		};
+> >> +
+> >> +	arm-pmu {
+> >> +		compatible =3D "arm,armv8-pmuv3";
+> >> +		interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+> >> +	};
+> > This is wrong, and must go. There should be a separate node for the=
+ PMU
+> > of each microarchitecture, with the appropriate compatible string t=
+o
+> > represent that (see the juno dts).
+> You are right. The first version we wrote is:
+>     pmu_a53 {
+>         compatible =3D "arm,cortex-a53-pmu";
+>         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>         interrupt-affinity =3D <&cpu_l0>,
+>                      <&cpu_l1>,
+>                      <&cpu_l2>,
+>                      <&cpu_l3>;
+>     };
+>=20
+>     pmu_a72 {
+>         compatible =3D "arm,cortex-a72-pmu";
+>         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>         interrupt-affinity =3D <&cpu_b0>,
+>                      <&cpu_b1>;
+>     };
+> but unfortunately, the arm pmu driver do not support PPI in two clust=
+er
+> well,
+> so we have to replace with this implementation.
+> > In this case things are messier as the same PPI number is being use=
+d
+> > across clusters. Marc (Cc'd) has been working on PPI partitions, wh=
+ich
+> > should allow us to support that.
+> Great! So what we can do right now? Wait this feature, and delete
+> arm-pmu node?
 
-What is st,uniperiph-id needed for anyway? It's often an indication
-that you are doing something wrong if you need this.
+I'd rather you have a look at the patches, test them with your HW,
+and comment on what doesn't work!
 
-	Arnd
+You can find the patches over there:
+
+https://lkml.org/lkml/2016/4/11/182
+
+and on the following branch:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
+irq/percpu-partition
+
+Of course, you'll have to hack a bit in the PMU code to make it
+understand per-PMU affinity together with percpu interrupts, but it
+wouldn't be fun if there was nothing to do...
+
+Thanks,
+
+	M.
+--=20
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
