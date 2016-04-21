@@ -1,50 +1,80 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [RESEND][PATCH 1/3] thermal: mediatek: Add cpu dynamic power cooling model.
-Date: Thu, 21 Apr 2016 02:41:24 +0200
-Message-ID: <12007858.UuqVGafLHV@vostro.rjw.lan>
-References: <1458029437-12846-1-git-send-email-dawei.chien@mediatek.com> <CAJZ5v0hpkyMCVhvYy4JzR1A5OZKs7dqDOB64aQXmjXiLM0F=BQ@mail.gmail.com> <57176ECF.6020705@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: regression: 3a878c430fd6 ("tty: serial: msm: Add TX DMA support")
+ drops data
+Date: Wed, 20 Apr 2016 18:00:37 -0700
+Message-ID: <57182635.5070606@gmail.com>
+References: <5716BDF1.1010407@gmail.com> <EEBBF78A-33BB-4ACD-8CBF-285E1149FB9F@gmail.com> <5717B2CA.3020206@gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57176ECF.6020705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5717B2CA.3020206@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivan Ivanov <iivanov.xz@gmail.com>
+Cc: Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, srinivas.kandagatla@linaro.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jslaby@suse.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, April 20, 2016 01:58:07 PM Matthias Brugger wrote:
-> Hi Rafael,
-> 
-> On 13/04/16 06:52, Rafael J. Wysocki wrote:
-> > On Tue, Apr 12, 2016 at 7:38 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >> Hi Rafael,
-> >>
-> >> On 15-03-16, 16:10, Dawei Chien wrote:
-> >>> MT8173 cpufreq driver select of_cpufreq_power_cooling_register registering
-> >>> cooling devices with dynamic power coefficient.
-> >>>
-> >>> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>
-> >> Can you please apply this patch from Dawei ?
-> >
-> > I can, but I'm traveling this week, so that's rather going to happen next week.
-> >
-> 
-> I don't see the patch in linux-next, did you forget to pick/push it?
+On 4/20/2016 9:48 AM, Frank Rowand wrote:
+> On 4/19/2016 11:07 PM, Ivan Ivanov wrote:
+>>
+>>> On Apr 20, 2016, at 02:23, Frank Rowand <frowand.list@gmail.com> wr=
+ote:
+>>>
+>>> Hi Ivan,
+>>>
+>>> It appears that I have found a regression caused by
+>>> 3a878c430fd6 ("tty: serial: msm: Add TX DMA support").
+>>>
+>>> When I cat a file slightly larger than 126000 bytes on
+>>> the console, viewed via minicom connected to the serial
+>>> port, I am losing random chunks of data, almost always
+>>> three bytes in length.  I have also seen a lost chunk
+>>> of two bytes.
+>>>
+>>> I am using the 8074 dragonboard, with the dts of
+>>> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts.
+>>> The dts node is serial@f991e000, which has a
+>>> compatible of "qcom,msm-uartdm-v1.4", so is_uartdm
+>>> should be UARTDM_1P4.
+>>
+>> I don=E2=80=99t remember what was biggest chunk, which DMA
+>> could carry, sorry. Are you using DMA or just PIO?=20
+>> Is this happening only with cat and terminal or even
+>> when you send data in other means. I believe that=20
+>> people from Linaro could help you better.
+>=20
+> I assumed you would be the person who would have the
+> information and would be able to help maintain the
+> code in question since you submitted this not small
+> patch.  Do you have a pointer to the hardware
+> documentation of the DMA and uart?  Who at Linaro
+> are you suggesting?
+>=20
+> Thanks for the questions, I'll look into them today.
 
-No, I didn't.  I just didn't have the time to get to them before.
+I switched from cat to several variations of dd and on
+the host side I tried using programs other than minicom.
 
-Now, given that they are thermal patches, they really should go in via
-linux-soc-thermal.git.
+My symptoms have now changed to something else that I
+have seen in the past, but I am now suspicious of my
+environment.  I'll reset and do some more tests.
 
-Eduardo, any chance to take care of these?
+I'm not sure if the driver was in DMA or PIO mode, both
+before the change and after.  This seems like a rather
+important question to answer, so I'll try to verify
+that tonight.
 
-Thanks,
-Rafael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> One more observation that may provide an insight:
+> if I cat a file multiple times, the location of
+> the dropped chunks varies.
+>=20
+> In further testing I also found examples of single
+> bytes lost.
+>=20
+> Thanks,
+>=20
+> Frank
+>=20
+>=20
