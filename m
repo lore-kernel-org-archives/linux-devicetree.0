@@ -1,112 +1,125 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH v4 3/3] mmc: usdhi6rol0: add pinctrl to set pin drive strength
-Date: Thu, 21 Apr 2016 15:55:44 +0200
-Message-ID: <7eca8ca9ed439369f47341a7eca4a62d982b6766.1461246772.git.larper@axis.com>
-References: <cover.1461246772.git.larper@axis.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <cover.1461246772.git.larper@axis.com>
-In-Reply-To: <cover.1461246772.git.larper@axis.com>
-References: <cover.1461246772.git.larper@axis.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: g.liakhovetski@gmx.de, ulf.hansson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
+Date: Thu, 21 Apr 2016 13:56:18 +0000
+Message-ID: <AM4PR02MB1299B78B76BF112B2E06F20BBC6E0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: sv-SE
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some boards need different pin drive strength for the UHS mode. Add an
-optional pinctrl setting with two pin states covering UHS speeds and
-other speeds.
+Crestez Dan Leonard wrote:
+> On 04/20/2016 11:31 PM, Peter Rosin wrote:
+> > Crestez Dan Leonard wrote:
+> >> Changes since that version:
+> >> * Nest the adapter in inv_mpu6050_state instead of making it static
+> >> * Explicitly forward of_node "i2c-aux-master" to allow describing aux devices
+> >> via devicetree.
+> >>
+> >> For bypass/mux mode devicetree works automatically. The forwarding is based on
+> >> the "chan_id" parameter to i2c_add_mux_adapter and is implemented here:
+> >>
+> >> http://lxr.free-electrons.com/source/drivers/i2c/i2c-mux.c?v=4.5#L158
+> >>
+> >> Perhaps it might be better for devices handled via master mode to be described
+> >> via i2c@1? This would work by scanning the mpu node's children for something
+> >> with reg == 1.
+> > 
+> > The 0 in i2c@0 (which is used by the mux mode) is the index of the mux slave
+> > meaning that i2c@1 would be a second mux slave on the same mux, but this is
+> > not a real mux as such, it is a gate which is piggybacking on the i2c mux infra.
+> > So, this "mux" can't have a second slave which is why only 0 is valid.
+> 
+> This behavior is automatic in i2c mux code and seems to assume that all
+> the children of mux_dev are i2c muxes. This might be obviously correct
+> and useful for dedicated i2c mux devices but in my case mux_dev is just
+> the i2c_client for a sensor.
+> 
+> From Documentation/devicetree/bindings/i2c/i2c-mux.txt:
+> 
+> > An i2c bus multiplexer/switch will have several child busses that are
+> > numbered uniquely in a device dependent manner.  The nodes for an i2c
+> > bus multiplexer/switch will have one child node for each child bus.
+> 
+> This seems to be written in a way that would allow me to define the
+> "auxiliary i2c master" as bus "1". After all, the numbering is device
+> dependent and it's not clear that all the child busses need to be
+> accessible through muxing rather than indirect access through device
+> registers.
 
-Signed-off-by: Lars Persson <larper@axis.com>
----
- drivers/mmc/host/usdhi6rol0.c | 48 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+You are correct that if you have devicetree children where reg does
+not match the chan_id given to i2c_add_mux_adapter() those children
+will be ignored by the i2c-mux code. So, the code would be happy with
+a devicetree such as:
 
-diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
-index 28fe5c7..38c418c 100644
---- a/drivers/mmc/host/usdhi6rol0.c
-+++ b/drivers/mmc/host/usdhi6rol0.c
-@@ -23,6 +23,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pagemap.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/scatterlist.h>
- #include <linux/string.h>
-@@ -199,6 +200,11 @@ struct usdhi6_host {
- 	struct dma_chan *chan_rx;
- 	struct dma_chan *chan_tx;
- 	bool dma_active;
-+
-+	/* Pin control */
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pins_default;
-+	struct pinctrl_state *pins_uhs;
- };
- 
- /*			I/O primitives					*/
-@@ -1148,12 +1154,35 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
- 	}
- }
- 
-+static int usdhi6_set_pinstates(struct usdhi6_host *host, int voltage)
-+{
-+	if (IS_ERR(host->pins_uhs))
-+		return 0;
-+
-+	switch (voltage) {
-+	case MMC_SIGNAL_VOLTAGE_180:
-+	case MMC_SIGNAL_VOLTAGE_120:
-+		return pinctrl_select_state(host->pinctrl,
-+					    host->pins_uhs);
-+
-+	default:
-+		return pinctrl_select_state(host->pinctrl,
-+					    host->pins_default);
-+	}
-+}
-+
- static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	int ret;
- 
- 	ret = mmc_regulator_set_vqmmc(mmc, ios);
-+	if (ret < 0)
-+		return ret;
- 
-+	ret = usdhi6_set_pinstates(mmc_priv(mmc), ios->signal_voltage);
-+	if (ret)
-+		dev_warn_once(mmc_dev(mmc),
-+			      "Failed to set pinstate err=%d\n", ret);
- 	return ret;
- }
- 
-@@ -1741,6 +1770,25 @@ static int usdhi6_probe(struct platform_device *pdev)
- 	host->wait	= USDHI6_WAIT_FOR_REQUEST;
- 	host->timeout	= msecs_to_jiffies(4000);
- 
-+	host->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (IS_ERR(host->pinctrl)) {
-+		ret = PTR_ERR(host->pinctrl);
-+		goto e_free_mmc;
-+	}
-+
-+	host->pins_uhs = pinctrl_lookup_state(host->pinctrl, "state_uhs");
-+	if (!IS_ERR(host->pins_uhs)) {
-+		host->pins_default = pinctrl_lookup_state(host->pinctrl,
-+							  PINCTRL_STATE_DEFAULT);
-+
-+		if (IS_ERR(host->pins_default)) {
-+			dev_err(dev,
-+				"UHS pinctrl requires a default pin state.\n");
-+			ret = PTR_ERR(host->pins_default);
-+			goto e_free_mmc;
-+		}
-+	}
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	host->base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(host->base)) {
--- 
-2.1.4
+	mpu6050@68 {
+		compatible = "...";
+		reg = <0x68>;
+		...
+		i2c-aux-mux@0 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0>;
 
+			foo@44 {
+				compatible = "bar";
+				reg = <0x44>;
+				...
+			}
+		}
+		i2c-aux-master@1 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <1>;
+
+			gazonk@44 {
+				compatible = "baz";
+				reg = <0x44>;
+				...
+			}
+		}
+	}
+
+as long as you do only call i2c_add_mux_adapter() with chan_id = 0. And that
+is what you are doing. But I think it is a bit subtle...
+
+> >> Or maybe the two busses should be called i2c-aux-master and i2c-aux-mux? Not
+> >> sure how to deal with that on the mux side.
+> > 
+> > Changing i2c to i2c-aux-mux would break existing device trees, that seems
+> > like a bad thing, no?
+> 
+> That support was not documented in mpu6050's bindings and might not be
+> actually used.
+> 
+> >> It is not clear how to properly handle this and suggestions are welcome. The
+> >> way it currently works with this patch is documented immediately below.
+> > 
+> > I think the naming could be i2c-master0, i2c-master1 etc if it, with
+> > future work, would be possible to add more than one master (you talked about
+> > 5 i2c slaves..).
+> 
+> The device has 5 sets of registers for controlling i2c slaves but only
+> one physical auxiliary i2c bus. As far as I can tell slaves 0-3 are
+> intended to be used for gathering readings for slaved sensors
+> periodically without external intervention. Slave 4 can generate an
+> interrupt on completion and is more suitable for general-purpose
+> communication with any number of devices.
+
+Ah, ok, so all 5 sets of slave registers are about the same physical i2c
+bus. So, you basically cannot sanely use this physical aux i2c bus as an
+i2c-mux and an extra i2c adapter in the same hw design. Correct?
+
+In that case, couldn't you look at the names of any devicetree children
+and use that to decide if you should even attempt to call
+i2c_add_mux_adapter or i2c_add_adapter?
+
+(But please don't clobber stuff for my i2c-mux rework, or you will have
+to wait even longer for that deadlock to be resolved)
+
+Cheers,
+Peter
