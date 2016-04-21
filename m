@@ -1,74 +1,178 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 09/18] ASoC: sti: Update DT example to match the driver code
-Date: Thu, 21 Apr 2016 12:04:26 +0100
-Message-ID: <1461236675-10176-10-git-send-email-peter.griffin@linaro.org>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com
-Cc: devicetree@vger.kernel.org, arnd@arndb.de, arnaud.pouliquen@st.com, peter.griffin@linaro.org, broonie@kernel.org, dmaengine@vger.kernel.org, lee.jones@linaro.org, ludovic.barre@st.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v3] gpio: of: make it possible to name GPIO lines
+Date: Thu, 21 Apr 2016 13:08:21 +0200
+Message-ID: <1461236901-28626-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Lee Campbell <leecam@google.com>
+Cc: Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Mandala <david.mandala@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-uniperiph-id, version and mode are ST specific bindings and
-need the 'st,' prefix. Update the examples, as otherwise copying
-them yields a runtime error parsing the DT node.
+Make it possible to name the producer side of a GPIO line using
+a "gpio-line-names" property array, modeled on the
+"clock-output-names" property from the clock bindings.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Cc: arnaud.pouliquen@st.com
+This naming is especially useful for:
+
+- Debugging: lines are named after function, not just opaque
+  offset numbers.
+
+- Exploration: systems where some or all GPIO lines are available
+  to end users, such as prototyping, one-off's "makerspace usecases"
+  users are helped by the names of the GPIO lines when tinkering.
+  This usecase has been surfacing recently.
+
+The gpio-line-names attribute is completely optional.
+
+Example output from lsgpio on a patched Snowball tree:
+
+GPIO chip: gpiochip6, "8000e180.gpio", 32 GPIO lines
+        line  0: unnamed unused
+        line  1: "AP_GPIO161" "extkb3" [kernel]
+        line  2: "AP_GPIO162" "extkb4" [kernel]
+        line  3: "ACCELEROMETER_INT1_RDY" unused [kernel]
+        line  4: "ACCELEROMETER_INT2" unused
+        line  5: "MAG_DRDY" unused [kernel]
+        line  6: "GYRO_DRDY" unused [kernel]
+        line  7: "RSTn_MLC" unused
+        line  8: "RSTn_SLC" unused
+        line  9: "GYRO_INT" unused
+        line 10: "UART_WAKE" unused
+        line 11: "GBF_RESET" unused
+        line 12: unnamed unused
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: David Mandala <david.mandala@linaro.org>
+Cc: Lee Campbell <leecam@google.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Michael Welling <mwelling@ieee.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../devicetree/bindings/sound/st,sti-asoc-card.txt         | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ChangeLog v2->v3:
+- Swap "gpio-names" for "gpio-line-names" as "gpio-names" indicate
+  a consumer endpoint in DT terminology.
+- Index to either:
+  (A) The end of the gpio-names array or
+  (B) ngpios
+  So we don't risk going out of bounds on either
+ChangeLog v1->v2:
+- Make the naming function return void: we continue at all times
+  and always return 0 anyway.
+- Fix a return value check.
 
-diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-index 028fa1c..ef2e0c6 100644
---- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-+++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-@@ -67,9 +67,9 @@ Example:
- 		dmas = <&fdma0 4 0 1>;
- 		dai-name = "Uni Player #1 (DAC)";
- 		dma-names = "tx";
--		uniperiph-id = <2>;
--		version = <5>;
--		mode = "PCM";
-+		st,uniperiph-id = <2>;
-+		st,version = <5>;
-+		st,mode = "PCM";
- 	};
+This has been discussed at some length now.
+
+Why we are not using hogs: these are consumer side, not producer
+side. The gpio-controller in DT (gpio_chip in Linux) is a
+producer, not a consumer.
+
+This patch is not about assigning initial values to GPIO lines.
+That is an orthogonal usecase. This is just about naming lines.
+---
+ Documentation/devicetree/bindings/gpio/gpio.txt | 19 +++++++++++
+ drivers/gpio/gpiolib-of.c                       | 43 +++++++++++++++++++++++++
+ 2 files changed, 62 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index c88d2ccb05ca..68d28f62a6f4 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -152,6 +152,21 @@ additional bitmask is needed to specify which GPIOs are actually in use,
+ and which are dummies. The bindings for this case has not yet been
+ specified, but should be specified if/when such hardware appears.
  
- 	sti_uni_player3: sti-uni-player@3 {
-@@ -83,9 +83,9 @@ Example:
- 		dmas = <&fdma0 7 0 1>;
- 		dma-names = "tx";
- 		dai-name = "Uni Player #1 (PIO)";
--		uniperiph-id = <3>;
--		version = <5>;
--		mode = "SPDIF";
-+		st,uniperiph-id = <3>;
-+		st,version = <5>;
-+		st,mode = "SPDIF";
- 	};
++Optionally, a GPIO controller may have a "gpio-line-names" property. This is
++an array of strings defining the names of the GPIO lines going out of the
++GPIO controller. This name should be the most meaningful producer name
++for the system, such as a rail name indicating the usage. Package names
++such as pin name are discouraged: such lines have opaque names (since they
++are by definition generic purpose) and such names are usually not very
++helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
++reasonable line names as they describe what the line is used for. "GPIO0"
++is not a good name to give to a GPIO line. Placeholders are discouraged:
++rather use the "" (blank string) if the use of the GPIO line is undefined
++in your design. The names are assigned starting from line offset 0 from
++left to right from the passed array. An incomplete array (where the number
++of passed named are less than ngpios) will still be used up until the last
++provided valid line index.
++
+ Example:
  
- 	sti_uni_reader1: sti-uni-reader@1 {
-@@ -98,7 +98,7 @@ Example:
- 		dmas = <&fdma0 6 0 1>;
- 		dma-names = "rx";
- 		dai-name = "Uni Reader #1 (HDMI RX)";
--		version = <3>;
-+		st,version = <3>;
- 	};
+ gpio-controller@00000000 {
+@@ -160,6 +175,10 @@ gpio-controller@00000000 {
+ 	gpio-controller;
+ 	#gpio-cells = <2>;
+ 	ngpios = <18>;
++	gpio-line-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
++		"LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
++		"Row A", "Row B", "Row C", "Row D", "NMI button",
++		"poweroff", "reset";
+ }
  
- 2) sti-sas-codec: internal audio codec IPs driver
+ The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index d81dbd8e90d9..d43eaca803e3 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -196,6 +196,45 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+ }
+ 
+ /**
++ * of_gpiochip_set_names() - set up the names of the lines
++ * @chip: GPIO chip whose lines should be named, if possible
++ */
++static void of_gpiochip_set_names(struct gpio_chip *gc)
++{
++	struct gpio_device *gdev = gc->gpiodev;
++	struct device_node *np = gc->of_node;
++	int i;
++	int nstrings;
++
++	/* Do we even have the "gpio-line-names" property */
++	if (!of_property_read_bool(np, "gpio-line-names"))
++		return;
++
++	nstrings = of_property_count_strings(np, "gpio-line-names");
++	/*
++	 * Make sure to not index beyond either the end of the
++	 * "gpio-names" array nor the number of descriptors of
++	 * the GPIO device.
++	 */
++	for (i = 0; i < nstrings && i < gdev->ngpio; i++) {
++		const char *name;
++		int ret;
++
++		ret = of_property_read_string_index(np,
++						    "gpio-line-names",
++						    i,
++						    &name);
++		if (!ret)
++			gdev->descs[i].name = name;
++
++		/* Empty strings are OK */
++		if (ret < 0 && ret != -ENODATA)
++			dev_err(&gdev->dev, "unable to name line %d\n",
++				i);
++	}
++}
++
++/**
+  * of_gpiochip_scan_gpios - Scan gpio-controller for gpio definitions
+  * @chip:	gpio chip to act on
+  *
+@@ -445,6 +484,10 @@ int of_gpiochip_add(struct gpio_chip *chip)
+ 	if (status)
+ 		return status;
+ 
++	/* If the chip defines names itself, these take precedence */
++	if (!chip->names)
++		of_gpiochip_set_names(chip);
++
+ 	of_node_get(chip->of_node);
+ 
+ 	return of_gpiochip_scan_gpios(chip);
 -- 
-1.9.1
+2.4.11
+
