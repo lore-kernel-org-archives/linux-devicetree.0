@@ -1,48 +1,28 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] mmc: dt: usdhi6rol0: add optional pinctrl binding
-Date: Fri, 22 Apr 2016 15:27:33 -0500
-Message-ID: <20160422202733.GA11270@rob-hp-laptop>
-References: <cover.1461246772.git.larper@axis.com>
- <a96281244b55d55e36b72a40cd061d7ffd70b88e.1461246772.git.larper@axis.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] Documentation: bindings: fix palmas-rtc documentation
+Date: Fri, 22 Apr 2016 15:29:15 -0500
+Message-ID: <20160422202915.GA12186@rob-hp-laptop>
+References: <ac069bc32d31b6c6bf6ad7e136e021b5e296deca.1461254594.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <a96281244b55d55e36b72a40cd061d7ffd70b88e.1461246772.git.larper@axis.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, g.liakhovetski@gmx.de, ulf.hansson@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
+In-Reply-To: <ac069bc32d31b6c6bf6ad7e136e021b5e296deca.1461254594.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 03:55:42PM +0200, Lars Persson wrote:
-> Add a pinctrl binding to specify different pin settings for high speed
-> modes and UHS modes.
+On Thu, Apr 21, 2016 at 06:03:15PM +0200, H. Nikolaus Schaller wrote:
+> change 100mA -> 100uA
 > 
-> Signed-off-by: Lars Persson <larper@axis.com>
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mmc/usdhi6rol0.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
-> index 8babdaa..6d1b797 100644
-> --- a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
-> +++ b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
-> @@ -12,6 +12,12 @@ Optional properties:
->  
->  - vmmc-supply:	a phandle of a regulator, supplying Vcc to the card
->  - vqmmc-supply:	a phandle of a regulator, supplying VccQ to the card
-> +- pinctrl-names: Can contain a "default" entry and a "state_uhs"
+>  Documentation/devicetree/bindings/rtc/rtc-palmas.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Don't use underscores. Just "uhs" should be sufficient, right?
-
-> +                 entry. The state_uhs entry is used together with the default
-> +                 entry when the board requires distinct settings for UHS speeds.
-> +
-> +- pinctrl-N: One property for each name listed in pinctrl-names, see
-> +             ../pinctrl/pinctrl-bindings.txt.
->  
->  Additionally any standard mmc bindings from mmc.txt can be used.
->  
-> -- 
-> 2.1.4
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
