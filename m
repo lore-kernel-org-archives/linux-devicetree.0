@@ -1,46 +1,90 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V2 02/14] irqchip/gic: WARN if setting the interrupt type
- for a PPI fails
-Date: Fri, 22 Apr 2016 09:49:46 +0100
-Message-ID: <5719E5AA.9060504@arm.com>
-References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
- <1461150237-15580-3-git-send-email-jonathanh@nvidia.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 1/9] clk: mediatek: Refine the makefile to support
+ multiple clock drivers
+Date: Fri, 22 Apr 2016 11:02:49 +0200
+Message-ID: <5719E8B9.4030908@gmail.com>
+References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1460621514-65191-2-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461150237-15580-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1460621514-65191-2-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/04/16 12:03, Jon Hunter wrote:
-> Setting the interrupt type for private peripheral interrupts (PPIs) may
-> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
-> whether this is allowed. There is no way to know if setting the type is
-> supported for a given GIC and so the value written is read back to
-> verify it matches the desired configuration. If it does not match then
-> an error is return.
-> 
-> There are cases where the interrupt configuration read from firmware
-> (such as a device-tree blob), has been incorrect and hence
-> gic_configure_irq() has returned an error. This error has gone
-> undetected because the error code returned was ignored but the interrupt
-> still worked fine because the configuration for the interrupt could not
-> be overwritten.
-> 
-> Given that this has done undetected and that failing to set the
-> configuration for a PPI may not be a catastrophic, don't return an error
-> but WARN if we fail to configure a PPI. This will allows us to fix up
-> any places in the kernel where we should be checking the return status
-> and maintain backward compatibility with firmware images that may have
-> incorrect PPI configurations.
-> 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+On 14/04/16 10:11, James Liao wrote:
+> Add a Kconfig to define clock configuration for each SoC, and
+> modify the Makefile to build drivers that only selected in config.
+>
+> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> Tested-by: John Crispin <blogic@openwrt.org>
+> ---
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+>   drivers/clk/Kconfig           |  1 +
+>   drivers/clk/mediatek/Kconfig  | 23 +++++++++++++++++++++++
+>   drivers/clk/mediatek/Makefile |  6 +++---
+>   3 files changed, 27 insertions(+), 3 deletions(-)
+>   create mode 100644 drivers/clk/mediatek/Kconfig
+>
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 16f7d33..d94302e 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -199,6 +199,7 @@ config COMMON_CLK_PXA
+>
+>   source "drivers/clk/bcm/Kconfig"
+>   source "drivers/clk/hisilicon/Kconfig"
+> +source "drivers/clk/mediatek/Kconfig"
+>   source "drivers/clk/mvebu/Kconfig"
+>   source "drivers/clk/qcom/Kconfig"
+>   source "drivers/clk/samsung/Kconfig"
+> diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
+> new file mode 100644
+> index 0000000..dc224e6
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/Kconfig
+> @@ -0,0 +1,23 @@
+> +#
+> +# MediaTek SoC drivers
+> +#
+> +config COMMON_CLK_MEDIATEK
+> +	bool
+> +	---help---
+> +	  Mediatek SoCs' clock support.
+> +
+> +config COMMON_CLK_MT8135
+> +	bool "Clock driver for Mediatek MT8135"
+> +	depends on COMMON_CLK
+> +	select COMMON_CLK_MEDIATEK
+> +	default ARCH_MEDIATEK
+> +	---help---
+> +	  This driver supports Mediatek MT8135 clocks.
+> +
+> +config COMMON_CLK_MT8173
+> +	bool "Clock driver for Mediatek MT8173"
+> +	depends on COMMON_CLK
+> +	select COMMON_CLK_MEDIATEK
+> +	default ARCH_MEDIATEK
+> +	---help---
+> +	  This driver supports Mediatek MT8173 clocks.
+> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+> index 95fdfac..32e7222 100644
+> --- a/drivers/clk/mediatek/Makefile
+> +++ b/drivers/clk/mediatek/Makefile
+> @@ -1,4 +1,4 @@
+> -obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
+> +obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
+>   obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+> -obj-y += clk-mt8135.o
+> -obj-y += clk-mt8173.o
+> +obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
+> +obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
+>
