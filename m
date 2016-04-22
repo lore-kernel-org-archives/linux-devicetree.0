@@ -1,43 +1,116 @@
-From: "Huang, Tao" <huangtao@rock-chips.com>
-Subject: Re: [PATCH] ARM64: dts: rockchip: add core dtsi file for RK3399 SoCs
-Date: Fri, 22 Apr 2016 12:23:06 +0800
-Message-ID: <5719A72A.4070603@rock-chips.com>
-References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com>
- <1461211092-26331-1-git-send-email-jay.xu@rock-chips.com>
- <3937420.4aN2rRBlcO@diego>
- <CAD=FV=X9S4z2WLEJ-KaaCZxfkdO4+-i2hUd3dsYJi5qXEvpVBQ@mail.gmail.com>
+From: Alistair Popple <alistair@popple.id.au>
+Subject: Re: [PATCH v8 36/45] powerpc/powernv: Support PCI slot ID
+Date: Fri, 22 Apr 2016 14:23:54 +1000
+Message-ID: <5008269.vZDqGUuHuL@new-mexico>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com> <20160420022840.GC28594@gwshan> <57170215.7080405@ozlabs.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=X9S4z2WLEJ-KaaCZxfkdO4+-i2hUd3dsYJi5qXEvpVBQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Jianqun Xu <jay.xu@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Riley <davidriley@chromium.org>, Julius Werner <jwerner@chromium.org>, smbarber@chromium.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <57170215.7080405@ozlabs.ru>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Alexey Kardashevskiy <aik@ozlabs.ru>, Gavin Shan <gwshan@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net
 List-Id: devicetree@vger.kernel.org
 
-Hi, Doug:
-On 2016=E5=B9=B404=E6=9C=8822=E6=97=A5 06:38, Doug Anderson wrote:
->
->>> +     i2c1: i2c@ff110000 {
->>> +             compatible =3D "rockchip,rk3399-i2c";
->> David respun the rk3399 i2c-support on tuesday, so this and the othe=
-rs below
->> are waiting on Wolfram to take a look.
-> I think it can work with the rk3288-i2c as a fallback, at least for
-> low speed stuff, right?  Should this be:
->
-> compatible =3D "rockchip,rk3399-i2c", "rockchip,rk3288-i2c"
->
-> Looks like that was done for rk3368.
-No. For RK3399 I2C controller:
-The I2C controller uses the APB clock/clk_i2c as the working clock. The
-APB clock will determine the I2C bus clock, clk_i2c is the function clk=
-,
-up to 200MHz.
-Chips such as RK3288/3368 only uses APB clock. So old driver do not wor=
-k
-on RK3399.
+On Wed, 20 Apr 2016 14:14:13 Alexey Kardashevskiy wrote:
 
-Thanks,
-Huang, Tao
+<snip>
+
+> >
+> >>
+> >> btw how will new OPAL react if old kernel is running, i.e. not passing @state
+> >> at all? If it is initialized to NULL somewher - fine but what exactly does
+> >> this initialization and makes sure that OPAL won't see garbage as a second
+> >> parameter?
+> >>
+> >
+> > @state is always NULL for old kernel + new OPAL.
+> 
+> What piece of code writes NULL to "state"? Old kernel will do 
+> opal_pci_poll(id) and omit the "state" so something has to take care of it 
+> and write NULL where OPAL expects to see a pointer to "state" (which we set 
+> to NULL) and that place would be some GPR which may have garbage.
+> 
+> I am looking at
+> #define OPAL_CALL(name, token)
+> 
+> and cannot see where the second parameter (which old kernel omits) is 
+> reset, i.e. gpr4 (or gpr5?) is cleared.
+
+Gavin walked me through the code here and he's right that this won't cause a
+problem at the moment. Not because @state is NULL on old kernels (as you point
+out it isn't) but because old kernels call a specific sequence of OPAL calls 
+which mean that the new Skiboot wont check @state when an old kernel is running.
+
+However this is more a side-effect and is very brittle. It would need far more
+commenting on the OPAL side and there's still a good chance someone will break
+it by accident. Far easier just to add another OPAL call - eg. opal_pci_poll2().
+
+> > @state is used in
+> > PCI hotplug functionality in OPAL only. As old kernel doesn't support
+> > PCI hotplug, @state is never used. I'm not sure it's the answer you
+> > want?
+> 
+> No, it is not :)
+> 
+> >> When ABI like this changes, I expect to see opal_pci_poll2() or
+> >> opal_pci_poll_ex() rather than just an additional parameter to
+> >> opal_pci_poll()...
+> >>
+> >
+> > It's a good suggestion but it would be nicer if you raised this
+> > early. One question I have: current opal_pci_poll() is enough
+> > to cover all cases, why we need introduce and maintain another
+> > similar one? Sorry that I don't see the reason from your context
+> > and could you please provide more details?
+
+Because @state will be some non-NULL random number when opal_pci_poll() is
+called on older kernels and if OPAL ever dereferences it you will at best get
+a machine check and at worst random memory corruption. It would be far easier
+to maintain a new OPAL call than to deal with these kind of problems in the
+future.
+
+Also it is an important suggestion that has potentially saved some difficult
+debugging. Whilst it is *preferable* for reviewers to notice things earlier in
+the review process it is also *preferable* for developers to not write bugs in
+the first place. Unfortunately we all miss things and make mistakes. It's far
+more important that we catch and correct these problems even if they are noticed
+later than we would desire.
+
+- Alistair
+
+> >>> +
+> >>> +	return (rval == OPAL_SUCCESS) ? 0 : -EIO;
+> >>> +}
+> >>> +
+> >>>   #ifdef CONFIG_PCI_MSI
+> >>>   int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+> >>>   {
+> >>> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> >>> index 0cddde3..6857703 100644
+> >>> --- a/arch/powerpc/platforms/powernv/pci.h
+> >>> +++ b/arch/powerpc/platforms/powernv/pci.h
+> >>> @@ -192,6 +192,7 @@ extern int pnv_tce_xchg(struct iommu_table *tbl, long index,
+> >>>   		unsigned long *hpa, enum dma_data_direction *direction);
+> >>>   extern unsigned long pnv_tce_get(struct iommu_table *tbl, long index);
+> >>>
+> >>> +int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state);
+> >>>   void pnv_pci_dump_phb_diag_data(struct pci_controller *hose,
+> >>>   				unsigned char *log_buff);
+> >>>   int pnv_pci_cfg_read(struct pci_dn *pdn,
+> >>>
+> >>
+> >>
+> >> --
+> >> Alexey
+> >>
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >
+> 
+> 
+> 
