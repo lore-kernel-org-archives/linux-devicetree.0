@@ -1,44 +1,35 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] Documentation: DT: vdma: Add clock support for
- dmas
-Date: Fri, 22 Apr 2016 15:34:56 -0500
-Message-ID: <20160422203456.GA15238@rob-hp-laptop>
-References: <1461305630-4826-1-git-send-email-appanad@xilinx.com>
- <1461305630-4826-3-git-send-email-appanad@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH net-next 04/10] net: hns: add attribute
+ reset-field-offset for dsaf node
+Date: Fri, 22 Apr 2016 15:44:18 -0500
+Message-ID: <20160422204418.GA19071@rob-hp-laptop>
+References: <1461309619-167621-1-git-send-email-Yisen.Zhuang@huawei.com>
+ <1461309619-167621-5-git-send-email-Yisen.Zhuang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461305630-4826-3-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1461309619-167621-5-git-send-email-Yisen.Zhuang@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Yisen Zhuang <Yisen.Zhuang@huawei.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 22, 2016 at 11:43:49AM +0530, Kedareswara rao Appana wrote:
-> This patch updates the binding doc with clock description
-> for AXI DMA's.
->=20
-> Acked-by: S=F6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+On Fri, Apr 22, 2016 at 03:20:13PM +0800, Yisen Zhuang wrote:
+> Add the subctrl reset offset for dsaf, this property is used to reset
+> xge/ge ports for different dsaf. If this attribute is not present,
+> default value 0 will be used.
+> 
+> Signed-off-by: Daode Huang <huangdaode@hisilicon.com>
+> Signed-off-by: Yisen Zhuang <yisen.zhuang@huawei.com>
 > ---
-> Changes for v4:
-> ---> None.
-> Changes for v3:
-> ---> Added clock support for all the AXI DMA's.
-> Changes for v2:
-> --> Listed down all the clocks supported by the h/w
->     as suggested by the Datta.
-> --> Used IP clock names instead of shortcut clock name
->=20
->  .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt        | 15 +++++=
-++++++++++
->  1 file changed, 15 insertions(+)
+>  .../devicetree/bindings/net/hisilicon-hns-dsaf.txt |  2 ++
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please put DT bindings in separate patches and don't modify the same 
+binding in a series of patches. You are describing h/w and the h/w is 
+not changing.
+
+>  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  8 +++++
+>  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h |  1 +
+>  drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c | 40 +++++++++++++++-------
+>  4 files changed, 39 insertions(+), 12 deletions(-)
