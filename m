@@ -1,35 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next 04/10] net: hns: add attribute
- reset-field-offset for dsaf node
-Date: Fri, 22 Apr 2016 15:44:18 -0500
-Message-ID: <20160422204418.GA19071@rob-hp-laptop>
-References: <1461309619-167621-1-git-send-email-Yisen.Zhuang@huawei.com>
- <1461309619-167621-5-git-send-email-Yisen.Zhuang@huawei.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] clk: Kconfig: Name RK818 in Kconfig for
+ COMMON_CLK_RK808
+Date: Fri, 22 Apr 2016 14:37:57 -0700
+Message-ID: <20160422213757.GG13149@codeaurora.org>
+References: <1461244361-45686-1-git-send-email-w.egorov@phytec.de>
+ <1461244361-45686-7-git-send-email-w.egorov@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1461309619-167621-5-git-send-email-Yisen.Zhuang@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yisen Zhuang <Yisen.Zhuang@huawei.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, linuxarm@huawei.com
+In-Reply-To: <1461244361-45686-7-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 22, 2016 at 03:20:13PM +0800, Yisen Zhuang wrote:
-> Add the subctrl reset offset for dsaf, this property is used to reset
-> xge/ge ports for different dsaf. If this attribute is not present,
-> default value 0 will be used.
+On 04/21, Wadim Egorov wrote:
+> The RK808 and RK818 PMICs are using a similar register map.
+> We can reuse the clk driver for the RK818 PMIC. So let's add
+> the RK818 in the Kconfig description.
 > 
-> Signed-off-by: Daode Huang <huangdaode@hisilicon.com>
-> Signed-off-by: Yisen Zhuang <yisen.zhuang@huawei.com>
+> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/hisilicon-hns-dsaf.txt |  2 ++
 
-Please put DT bindings in separate patches and don't modify the same 
-binding in a series of patches. You are describing h/w and the h/w is 
-not changing.
+Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  8 +++++
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h |  1 +
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c | 40 +++++++++++++++-------
->  4 files changed, 39 insertions(+), 12 deletions(-)
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
