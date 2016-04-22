@@ -1,77 +1,139 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ASoC: simple-card: Add support jack detection via
- codec
-Date: Fri, 22 Apr 2016 10:22:50 +0100
-Message-ID: <20160422092250.GA3217@sirena.org.uk>
-References: <1460967452-24574-1-git-send-email-zhengxing@rock-chips.com>
- <1460967452-24574-3-git-send-email-zhengxing@rock-chips.com>
- <20160421141921.GA25900@rob-hp-laptop>
- <57197BBA.50304@rock-chips.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V2 06/14] irqdomain: Don't set type when mapping an IRQ
+Date: Fri, 22 Apr 2016 10:34:48 +0100
+Message-ID: <5719F038.20800@arm.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+ <1461150237-15580-7-git-send-email-jonathanh@nvidia.com>
+ <5718F593.40605@nvidia.com> <5719DF5B.9010304@arm.com>
+ <5719E563.3010303@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5894506196616713872=="
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <57197BBA.50304-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mengdong Lin <mengdong.lin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adam.Thomson-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5719E563.3010303-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 22/04/16 09:48, Jon Hunter wrote:
+> 
+> On 22/04/16 09:22, Marc Zyngier wrote:
+>> Hi Jon,
+>>
+>> On 21/04/16 16:45, Jon Hunter wrote:
+>>>
+>>> On 20/04/16 12:03, Jon Hunter wrote:
+>>>> Some IRQ chips, such as GPIO controllers or secondary level interrupt
+>>>> controllers, may require require additional runtime power management
+>>>> control to ensure they are accessible. For such IRQ chips, it makes sense
+>>>> to enable the IRQ chip when interrupts are requested and disabled them
+>>>> again once all interrupts have been freed.
+>>>>
+>>>> When mapping an IRQ, the IRQ type settings are read and then programmed.
+>>>> The mapping of the IRQ happens before the IRQ is requested and so the
+>>>> programming of the type settings occurs before the IRQ is requested. This
+>>>> is a problem for IRQ chips that require additional power management
+>>>> control because they may not be accessible yet. Therefore, when mapping
+>>>> the IRQ, don't program the type settings, just save them and then program
+>>>> these saved settings when the IRQ is requested (so long as if they are not
+>>>> overridden via the call to request the IRQ).
+>>>>
+>>>> Add a stub function for irq_domain_free_irqs() to avoid any compilation
+>>>> errors when CONFIG_IRQ_DOMAIN_HIERARCHY is not selected.
+>>>>
+>>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  include/linux/irqdomain.h |  3 +++
+>>>>  kernel/irq/irqdomain.c    | 17 +++++++++++++----
+>>>>  2 files changed, 16 insertions(+), 4 deletions(-)
+>>>
+>>> [snip]
+>>>  
+>>>> -	/* Set type if specified and different than the current one */
+>>>> -	if (type != IRQ_TYPE_NONE &&
+>>>> -	    type != irq_get_trigger_type(virq))
+>>>> -		irq_set_irq_type(virq, type);
+>>>> +	irq_data = irq_get_irq_data(virq);
+>>>> +	if (!irq_data) {
+>>>> +		if (irq_domain_is_hierarchy(domain))
+>>>> +			irq_domain_free_irqs(virq, 1);
+>>>> +		else
+>>>> +			irq_dispose_mapping(virq);
+>>>> +		return 0;
+>>>> +	}
+>>>> +
+>>>> +	/* Store trigger type */
+>>>> +	irqd_set_trigger_type(irq_data, type);
+>>>> +
+>>>
+>>> I appear to have missed another place for saving the irq type
+>>> which I had change in this version. Next time I will triple
+>>> check! Should have been ...
+>>>
+>>>
+>>> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+>>> index 2aed04396210..fc66876d1965 100644
+>>> --- a/include/linux/irqdomain.h
+>>> +++ b/include/linux/irqdomain.h
+>>> @@ -440,6 +440,9 @@ static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
+>>>         return -1;
+>>>  }
+>>>  
+>>> +static inline void irq_domain_free_irqs(unsigned int virq,
+>>> +                                       unsigned int nr_irqs) { }
+>>> +
+>>>  static inline bool irq_domain_is_hierarchy(struct irq_domain *domain)
+>>>  {
+>>>         return false;
+>>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+>>> index 3d6ef5527b71..46ecf5d468b2 100644
+>>> --- a/kernel/irq/irqdomain.c
+>>> +++ b/kernel/irq/irqdomain.c
+>>> @@ -569,6 +569,7 @@ static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
+>>>  unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>>>  {
+>>>         struct irq_domain *domain;
+>>> +       struct irq_data *irq_data;
+>>>         irq_hw_number_t hwirq;
+>>>         unsigned int type = IRQ_TYPE_NONE;
+>>>         int virq;
+>>> @@ -619,7 +620,11 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
+>>>                  * it now and return the interrupt number.
+>>>                  */
+>>>                 if (IRQ_TYPE_NONE == irq_get_trigger_type(virq)) {
+>>> -                       irq_set_irq_type(virq, type);
+>>> +                       irq_data = irq_get_irq_data(virq);
+>>> +                       if (!irq_data)
+>>> +                               return 0;
+>>
+>> Can you point out in which circumstances irq_data can be NULL? If we can
+>> lookup the interrupt in the domain, it'd better exist somewhere. Or am I
+>> missing something obvious?
+> 
+> To be honest, I was not 100% sure if this could be possible if we find
+> an existing mapping or if there were any paths that could race. So if we
+> can guarantee that it is not NULL here, I can drop this and simplify the
+> change.
 
---===============5894506196616713872==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TWLMYU3k2ba4mEMM"
-Content-Disposition: inline
+No, you're right. It could very well race against irq_dispose_mapping
+(and the disassociate method doesn't provide enough guarantee).
+Unfortunately, most of the irqdomain code still relies on this race not
+happening. How to fix this is still a bit unclear to me.
 
+> By the way, is there any sort of reference count for mapping an IRQ so
+> that if irq_create_fwspec_mapping() is called more than once for an IRQ,
+> it is not freed on the first call to irq_dispose_mapping()? I assume
+> there is but could not see where this is handled.
 
---TWLMYU3k2ba4mEMM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There is none, unfortunately.
 
-On Fri, Apr 22, 2016 at 09:17:46AM +0800, Xing Zheng wrote:
+Thanks,
 
-> Hi Mark, the other question here, how do we make sense to use the
-> simple-card to call the "snd_soc_dai_set_pll" if the codec (like da7219)
-> requires do this?
-
-What we should do there is move the CODEC clocking to be represented
-using the clock API and then there are common clock bindings that
-already exist for configuring clocks.
-
---TWLMYU3k2ba4mEMM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXGe1pAAoJECTWi3JdVIfQ8VEH/R6U0WQdP79xYu08En2ZZeG+
-KxEwOe3xjOB9qkzifp9ONKasWkmYQBiWJuTty9rNUI5zxuXyY5rrUVaeLNXhxmgV
-uRzZ2Df0rZHdmrwTev1+fe6GKu21c1o1St5ZxhW2roWBtL3U78z2pWL+/M66YW/2
-em0hVwD7Nuxf+8L+B1xU5JDwIkgLFBOo80A95sfpUJLKfBRIwywXBOoA2Uqpk7tM
-IsRCs+Rnw8KOuDT+qplYF2ZMt+/V42JeO0RvL3hdKdnpL5YeX8uSEAMWgBI2hUAN
-qVirdIV8/BCv360vcIgp033tGJzkusZgM027YTGU2NNjFDp/XdzSCwNDyGW6AiM=
-=cGoo
------END PGP SIGNATURE-----
-
---TWLMYU3k2ba4mEMM--
-
-
---===============5894506196616713872==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
---===============5894506196616713872==--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
