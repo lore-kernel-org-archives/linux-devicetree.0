@@ -1,95 +1,79 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/3] mfd: add Cypress FM33256B Processor Companion driver
-Date: Fri, 22 Apr 2016 22:11:53 +0200
-Message-ID: <20160422201153.GB17051@piout.net>
-References: <1461150471-23163-1-git-send-email-jlp@gomspace.com>
- <1461150471-23163-2-git-send-email-jlp@gomspace.com>
- <20160422193232.GA9737@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] Documentation: Binding doc for ethernet master in NS2
+Date: Fri, 22 Apr 2016 15:13:51 -0500
+Message-ID: <20160422201351.GA3048@rob-hp-laptop>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+ <1461230323-27891-6-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160422193232.GA9737@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jeppe Ledet-Pedersen <jlp@gomspace.com>, lee.jones@linaro.org, arnd@arndb.de, gregkh@linuxfoundation.org, a.zummo@towertech.it, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1461230323-27891-6-git-send-email-pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/04/2016 at 14:32:32 -0500, Rob Herring wrote :
-> On Wed, Apr 20, 2016 at 01:07:49PM +0200, Jeppe Ledet-Pedersen wrote:
-> > This patch adds support for the Cypress Semiconductor FM33256B processor
-> > companion. The device contains a 256 kbit FRAM, an RTC, a supply voltage
-> > monitor, and a watchdog timer.
-> > 
-> > Signed-off-by: Jeppe Ledet-Pedersen <jlp@gomspace.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/fm33256b.txt |  30 ++
-> >  MAINTAINERS                                        |   6 +
-> >  drivers/mfd/Kconfig                                |  16 +
-> >  drivers/mfd/Makefile                               |   1 +
-> >  drivers/mfd/fm33256b.c                             | 488 +++++++++++++++++++++
-> >  include/linux/mfd/fm33256b.h                       |  76 ++++
-> >  6 files changed, 617 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/fm33256b.txt
-> >  create mode 100644 drivers/mfd/fm33256b.c
-> >  create mode 100644 include/linux/mfd/fm33256b.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/fm33256b.txt b/Documentation/devicetree/bindings/mfd/fm33256b.txt
-> > new file mode 100644
-> > index 0000000..6591c94
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/fm33256b.txt
-> > @@ -0,0 +1,30 @@
-> > +Device-tree bindings for Cypress Semiconductor FM33256B Processor Companion
-> > +---------------------------------------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible: must be "cypress,fm33256b".
-> > +- reg: SPI chip select
-> > +- spi-max-frequency: Max SPI frequency to use (< 16000000)
-> > +
-> > +Optional properties:
-> > +- cypress,charge-enabled: enable trickle charger
+On Thu, Apr 21, 2016 at 02:48:42PM +0530, Pramod Kumar wrote:
+> Adding binding doc for ethernet master present in shared
+> MDIO controller.
 > 
-> What does the driver do if charging is disabled? Would using 'status = 
-> "disabled"' be any different?
->  
-
-Good catch, I didn't look at this patch but it includes a lot of code
-that should be going to the RTC driver.
-If trickle charging is not enabled, I guess the RTC will not charge its
-backup battery.
-
-> > +- cypress,charge-fast: enable fast (1 mA) charging
+> Signed-off-by: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../bindings/net/brcm,iproc-mdio-shared.txt        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt
 > 
-> What does fast mean?
+> diff --git a/Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt b/Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt
+> new file mode 100644
+> index 0000000..1ffdd4b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/brcm,iproc-mdio-shared.txt
+> @@ -0,0 +1,32 @@
+> +Broadcom Ethernet master for shared mdio controller
+> +
+> +Required properties:
+> +- compatible: must be "brcm,iproc-mdio-master-eth"
+> +- reg: master id of Ethernet block
+> +- address-cells: should be 1
+> +- size-cells: should be 0
+> +
+> +Sub-nodes:
+> +  Each port's PHY should be represented as a sub-node.
+> +
+> +Sub-nodes required properties:
+> +- reg: the PHY number
+> +- phy-mode: media type connecting the PHY and MAC.
+> +
+> +
+> +Example:
+> +	eth-master@0 {
+
+Is this a child of something?
+
+Why is this not just an mdio bus underneath the ethernet controller? How 
+is this accessed?
+
+> +		compatible = "brcm,iproc-mdio-master-eth";
+> +		reg = <0x0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		gphy0: eth-phy@10 {
+> +			reg = <0x10>;
+> +			phy-mode = "mii";
+> +		};
+> +		status = "ok"
+> +	};
+> +
+> +For more info on ethernet phy binding, please,refer to:
+> +Documentation/devicetree/bindings/net/phy.txt
+> +Documentation/devicetree/bindings/net/ethernet.txt
+> -- 
+> 1.9.1
 > 
-> I think it is time for a common binding here. There's all sorts of 
-> variations on setting the charge current in bindings. Add something like 
-> "charge-current-microamp" in power_supply.txt and use it here. Then 
-> 1000uA implies "fast charge".
-
-Well, this is not a power supply, it is an RTC.
-
-I think both properties should got to the RTC subdevice and be parsed in
-the RTC driver.
-
-Note that for trickle charging, we currently have the following
-properties:
- - trickle-resistor-ohms
- - trickle-diode-disable
- - abracon,tc-diode
- - abracon,tc-resistor
-
-abracon,tc-resistor can be replaced by trickle-resistor-ohms, I'll make
-a patch but abracon,tc-diode allows to select a diode type (and in
-particular a voltage drop).
-
-I think we could add a trickle-current-microamp like you suggested and
-trickle-diode-disable can be reused.
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
