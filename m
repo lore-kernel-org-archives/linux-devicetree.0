@@ -1,307 +1,153 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH resend v2 3/9] mfd: axp20x: Add support for
- AXP809 PMIC
-Date: Fri, 22 Apr 2016 14:58:25 +0800
-Message-ID: <CAGb2v65oT8NwWp2nx9_qc-YcR1W8WteBh7zn6a3q4snHoXRfhg@mail.gmail.com>
-References: <1459243352-23344-1-git-send-email-wens@csie.org>
- <1459243352-23344-4-git-send-email-wens@csie.org> <20160411082409.GG4592@x1>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Yisen Zhuang <Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH net-next 09/10] net: hns: add attribute port-rst-offset for dsaf port node
+Date: Fri, 22 Apr 2016 15:20:18 +0800
+Message-ID: <1461309619-167621-10-git-send-email-Yisen.Zhuang@huawei.com>
+References: <1461309619-167621-1-git-send-email-Yisen.Zhuang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBKMX464AKGQEN637XWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160411082409.GG4592@x1>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461309619-167621-1-git-send-email-Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieqianqian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+The reset offset for each port in a dsaf is different. The current code is
+not so readability. This patch adds configuration named port-rst-offset to
+make the code more simple and readability. If this attribute doesn't exist,
+default value of this attribute is equal to its port index.
 
-On Mon, Apr 11, 2016 at 4:24 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 29 Mar 2016, Chen-Yu Tsai wrote:
->
->> The X-Powers AXP809 is a new PMIC that is paired with Allwinner's A80
->> SoC, along with a slave AXP806 PMIC.
->>
->> This PMIC is quite similar to the earlier AXP223, though the interrupts
->> and regulator have changed a bit.
->>
->> This patch adds support for the interrupts and power button of the PMIC.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  drivers/mfd/axp20x-rsb.c   |  1 +
->>  drivers/mfd/axp20x.c       | 79 +++++++++++++++++++++++++++++++++++++++=
-+++++++
->>  include/linux/mfd/axp20x.h | 59 ++++++++++++++++++++++++++++++++++
->>  3 files changed, 139 insertions(+)
->
-> Applied, thanks.
+Signed-off-by: Yisen Zhuang <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/net/hisilicon-hns-dsaf.txt |  2 ++
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c  | 10 +++++++++
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h  |  1 +
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c | 25 +++++++---------------
+ 4 files changed, 21 insertions(+), 17 deletions(-)
 
-Could you also merge the MAINTAINERS patch ("MAINTAINERS: Add entry for
-X-Powers AXP family PMIC drivers") and push an immutable tree for Mark
-to merge the regulator patch?
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+index 0a1647e..2afc3fa 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+@@ -43,6 +43,8 @@ Required properties:
+   isn't cpld device.
+ - cpld-ctrl-reg: is cpld register offset. It is not required if there isn't
+   cpld-syscon.
++- port-rst-offset: is offset of reset field for each port in dsaf. Its value
++  depends on the hardware user manual.
+ 
+ 
+ [1] Documentation/devicetree/bindings/net/phy.txt
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
+index 7073ca2..52d757d 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
+@@ -664,6 +664,7 @@ static int  hns_mac_get_info(struct hns_mac_cb *mac_cb)
+ 
+ 	mac_cb->max_frm = MAC_DEFAULT_MTU;
+ 	mac_cb->tx_pause_frm_time = MAC_DEFAULT_PAUSE_TIME;
++	mac_cb->port_rst_off = mac_cb->mac_id;
+ 
+ 	/* if the dsaf node doesn't contain a port subnode, get phy-handle
+ 	 * from dsaf node
+@@ -693,6 +694,15 @@ static int  hns_mac_get_info(struct hns_mac_cb *mac_cb)
+ 	}
+ 	mac_cb->serdes_ctrl = syscon;
+ 
++	ret = fwnode_property_read_u32(mac_cb->fw_port,
++				       "port-rst-offset",
++				       &mac_cb->port_rst_off);
++	if (ret) {
++		dev_dbg(mac_cb->dev,
++			"mac%d port-rst-offset not found, use default value.\n",
++			mac_cb->mac_id);
++	}
++
+ 	syscon = syscon_node_to_regmap(
+ 			of_parse_phandle(to_of_node(mac_cb->fw_port),
+ 					 "cpld-syscon", 0));
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h
+index 719816b..7be7104 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h
+@@ -318,6 +318,7 @@ struct hns_mac_cb {
+ 	struct regmap *serdes_ctrl;
+ 	struct regmap *cpld_ctrl;
+ 	u32 cpld_ctrl_reg;
++	u32 port_rst_off;
+ 	struct mac_entry_idx addr_entry_idx[DSAF_MAX_VM_NUM];
+ 	u8 sfp_prsnt;
+ 	u8 cpld_led_value;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
+index c549aa8..e549a11 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
+@@ -135,11 +135,7 @@ void hns_dsaf_xge_srst_by_port(struct dsaf_device *dsaf_dev, u32 port, u32 val)
+ 		return;
+ 
+ 	reg_val |= RESET_REQ_OR_DREQ;
+-
+-	if (!HNS_DSAF_IS_DEBUG(dsaf_dev))
+-		reg_val |= 0x2082082 << port;
+-	else
+-		reg_val |= 0x2082082 << (dsaf_dev->reset_offset + 6);
++	reg_val |= 0x2082082 << dsaf_dev->mac_cb[port]->port_rst_off;
+ 
+ 	if (val == 0)
+ 		reg_addr = DSAF_SUB_SC_XGE_RESET_REQ_REG;
+@@ -158,11 +154,8 @@ void hns_dsaf_xge_core_srst_by_port(struct dsaf_device *dsaf_dev,
+ 	if (port >= DSAF_XGE_NUM)
+ 		return;
+ 
+-	if (!HNS_DSAF_IS_DEBUG(dsaf_dev))
+-		reg_val |= XGMAC_TRX_CORE_SRST_M << port;
+-	else
+-		reg_val |= XGMAC_TRX_CORE_SRST_M <<
+-			(dsaf_dev->reset_offset + 6);
++	reg_val |= XGMAC_TRX_CORE_SRST_M
++		<< dsaf_dev->mac_cb[port]->port_rst_off;
+ 
+ 	if (val == 0)
+ 		reg_addr = DSAF_SUB_SC_XGE_RESET_REQ_REG;
+@@ -176,17 +169,19 @@ void hns_dsaf_ge_srst_by_port(struct dsaf_device *dsaf_dev, u32 port, u32 val)
+ {
+ 	u32 reg_val_1;
+ 	u32 reg_val_2;
++	u32 port_rst_off;
+ 
+ 	if (port >= DSAF_GE_NUM)
+ 		return;
+ 
+ 	if (!HNS_DSAF_IS_DEBUG(dsaf_dev)) {
+ 		reg_val_1  = 0x1 << port;
++		port_rst_off = dsaf_dev->mac_cb[port]->port_rst_off;
+ 		/* there is difference between V1 and V2 in register.*/
+ 		if (AE_IS_VER1(dsaf_dev->dsaf_ver))
+-			reg_val_2  = 0x1041041 << port;
++			reg_val_2  = 0x1041041 << port_rst_off;
+ 		else
+-			reg_val_2  = 0x2082082 << port;
++			reg_val_2  = 0x2082082 << port_rst_off;
+ 
+ 		if (val == 0) {
+ 			dsaf_write_sub(dsaf_dev, DSAF_SUB_SC_GE_RESET_REQ1_REG,
+@@ -226,11 +221,7 @@ void hns_ppe_srst_by_port(struct dsaf_device *dsaf_dev, u32 port, u32 val)
+ 	u32 reg_val = 0;
+ 	u32 reg_addr;
+ 
+-	if (!HNS_DSAF_IS_DEBUG(dsaf_dev))
+-		reg_val |= RESET_REQ_OR_DREQ << port;
+-	else
+-		reg_val |= RESET_REQ_OR_DREQ <<
+-			(dsaf_dev->reset_offset + 6);
++	reg_val |= RESET_REQ_OR_DREQ <<	dsaf_dev->mac_cb[port]->port_rst_off;
+ 
+ 	if (val == 0)
+ 		reg_addr = DSAF_SUB_SC_PPE_RESET_REQ_REG;
+-- 
+1.9.1
 
-Thanks again.
-
-ChenYu
-
->
->> diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
->> index 28c20247c112..a407527bcd09 100644
->> --- a/drivers/mfd/axp20x-rsb.c
->> +++ b/drivers/mfd/axp20x-rsb.c
->> @@ -61,6 +61,7 @@ static int axp20x_rsb_remove(struct sunxi_rsb_device *=
-rdev)
->>
->>  static const struct of_device_id axp20x_rsb_of_match[] =3D {
->>       { .compatible =3D "x-powers,axp223", .data =3D (void *)AXP223_ID }=
-,
->> +     { .compatible =3D "x-powers,axp809", .data =3D (void *)AXP809_ID }=
-,
->>       { },
->>  };
->>  MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
->> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
->> index a57d6e940610..1ce923277cc8 100644
->> --- a/drivers/mfd/axp20x.c
->> +++ b/drivers/mfd/axp20x.c
->> @@ -37,6 +37,7 @@ static const char * const axp20x_model_names[] =3D {
->>       "AXP221",
->>       "AXP223",
->>       "AXP288",
->> +     "AXP809",
->>  };
->>
->>  static const struct regmap_range axp152_writeable_ranges[] =3D {
->> @@ -85,6 +86,7 @@ static const struct regmap_access_table axp20x_volatil=
-e_table =3D {
->>       .n_yes_ranges   =3D ARRAY_SIZE(axp20x_volatile_ranges),
->>  };
->>
->> +/* AXP22x ranges are shared with the AXP809, as they cover the same ran=
-ge */
->>  static const struct regmap_range axp22x_writeable_ranges[] =3D {
->>       regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
->>       regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
->> @@ -211,6 +213,20 @@ static struct resource axp288_fuel_gauge_resources[=
-] =3D {
->>       },
->>  };
->>
->> +static struct resource axp809_pek_resources[] =3D {
->> +     {
->> +             .name   =3D "PEK_DBR",
->> +             .start  =3D AXP809_IRQ_PEK_RIS_EDGE,
->> +             .end    =3D AXP809_IRQ_PEK_RIS_EDGE,
->> +             .flags  =3D IORESOURCE_IRQ,
->> +     }, {
->> +             .name   =3D "PEK_DBF",
->> +             .start  =3D AXP809_IRQ_PEK_FAL_EDGE,
->> +             .end    =3D AXP809_IRQ_PEK_FAL_EDGE,
->> +             .flags  =3D IORESOURCE_IRQ,
->> +     },
->> +};
->> +
->>  static const struct regmap_config axp152_regmap_config =3D {
->>       .reg_bits       =3D 8,
->>       .val_bits       =3D 8,
->> @@ -378,6 +394,41 @@ static const struct regmap_irq axp288_regmap_irqs[]=
- =3D {
->>       INIT_REGMAP_IRQ(AXP288, BC_USB_CHNG,            5, 1),
->>  };
->>
->> +static const struct regmap_irq axp809_regmap_irqs[] =3D {
->> +     INIT_REGMAP_IRQ(AXP809, ACIN_OVER_V,            0, 7),
->> +     INIT_REGMAP_IRQ(AXP809, ACIN_PLUGIN,            0, 6),
->> +     INIT_REGMAP_IRQ(AXP809, ACIN_REMOVAL,           0, 5),
->> +     INIT_REGMAP_IRQ(AXP809, VBUS_OVER_V,            0, 4),
->> +     INIT_REGMAP_IRQ(AXP809, VBUS_PLUGIN,            0, 3),
->> +     INIT_REGMAP_IRQ(AXP809, VBUS_REMOVAL,           0, 2),
->> +     INIT_REGMAP_IRQ(AXP809, VBUS_V_LOW,             0, 1),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_PLUGIN,            1, 7),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_REMOVAL,           1, 6),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_ENT_ACT_MODE,      1, 5),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_EXIT_ACT_MODE,     1, 4),
->> +     INIT_REGMAP_IRQ(AXP809, CHARG,                  1, 3),
->> +     INIT_REGMAP_IRQ(AXP809, CHARG_DONE,             1, 2),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_HIGH,     2, 7),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_HIGH_END, 2, 6),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_LOW,      2, 5),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_LOW_END,  2, 4),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_HIGH,     2, 3),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_HIGH_END, 2, 2),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_LOW,      2, 1),
->> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_LOW_END,  2, 0),
->> +     INIT_REGMAP_IRQ(AXP809, DIE_TEMP_HIGH,          3, 7),
->> +     INIT_REGMAP_IRQ(AXP809, LOW_PWR_LVL1,           3, 1),
->> +     INIT_REGMAP_IRQ(AXP809, LOW_PWR_LVL2,           3, 0),
->> +     INIT_REGMAP_IRQ(AXP809, TIMER,                  4, 7),
->> +     INIT_REGMAP_IRQ(AXP809, PEK_RIS_EDGE,           4, 6),
->> +     INIT_REGMAP_IRQ(AXP809, PEK_FAL_EDGE,           4, 5),
->> +     INIT_REGMAP_IRQ(AXP809, PEK_SHORT,              4, 4),
->> +     INIT_REGMAP_IRQ(AXP809, PEK_LONG,               4, 3),
->> +     INIT_REGMAP_IRQ(AXP809, PEK_OVER_OFF,           4, 2),
->> +     INIT_REGMAP_IRQ(AXP809, GPIO1_INPUT,            4, 1),
->> +     INIT_REGMAP_IRQ(AXP809, GPIO0_INPUT,            4, 0),
->> +};
->> +
->>  static const struct regmap_irq_chip axp152_regmap_irq_chip =3D {
->>       .name                   =3D "axp152_irq_chip",
->>       .status_base            =3D AXP152_IRQ1_STATE,
->> @@ -428,6 +479,18 @@ static const struct regmap_irq_chip axp288_regmap_i=
-rq_chip =3D {
->>
->>  };
->>
->> +static const struct regmap_irq_chip axp809_regmap_irq_chip =3D {
->> +     .name                   =3D "axp809",
->> +     .status_base            =3D AXP20X_IRQ1_STATE,
->> +     .ack_base               =3D AXP20X_IRQ1_STATE,
->> +     .mask_base              =3D AXP20X_IRQ1_EN,
->> +     .mask_invert            =3D true,
->> +     .init_ack_masked        =3D true,
->> +     .irqs                   =3D axp809_regmap_irqs,
->> +     .num_irqs               =3D ARRAY_SIZE(axp809_regmap_irqs),
->> +     .num_regs               =3D 5,
->> +};
->> +
->>  static struct mfd_cell axp20x_cells[] =3D {
->>       {
->>               .name           =3D "axp20x-pek",
->> @@ -572,6 +635,16 @@ static struct mfd_cell axp288_cells[] =3D {
->>       },
->>  };
->>
->> +static struct mfd_cell axp809_cells[] =3D {
->> +     {
->> +             .name                   =3D "axp20x-pek",
->> +             .num_resources          =3D ARRAY_SIZE(axp809_pek_resource=
-s),
->> +             .resources              =3D axp809_pek_resources,
->> +     }, {
->> +             .name                   =3D "axp20x-regulator",
->> +     },
->> +};
->> +
->>  static struct axp20x_dev *axp20x_pm_power_off;
->>  static void axp20x_power_off(void)
->>  {
->> @@ -631,6 +704,12 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
->>               axp20x->regmap_cfg =3D &axp288_regmap_config;
->>               axp20x->regmap_irq_chip =3D &axp288_regmap_irq_chip;
->>               break;
->> +     case AXP809_ID:
->> +             axp20x->nr_cells =3D ARRAY_SIZE(axp809_cells);
->> +             axp20x->cells =3D axp809_cells;
->> +             axp20x->regmap_cfg =3D &axp22x_regmap_config;
->> +             axp20x->regmap_irq_chip =3D &axp809_regmap_irq_chip;
->> +             break;
->>       default:
->>               dev_err(dev, "unsupported AXP20X ID %lu\n", axp20x->varian=
-t);
->>               return -EINVAL;
->> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
->> index d82e7d51372b..0be4982f08fe 100644
->> --- a/include/linux/mfd/axp20x.h
->> +++ b/include/linux/mfd/axp20x.h
->> @@ -20,6 +20,7 @@ enum {
->>       AXP221_ID,
->>       AXP223_ID,
->>       AXP288_ID,
->> +     AXP809_ID,
->>       NR_AXP20X_VARIANTS,
->>  };
->>
->> @@ -264,6 +265,29 @@ enum {
->>       AXP22X_REG_ID_MAX,
->>  };
->>
->> +enum {
->> +     AXP809_DCDC1 =3D 0,
->> +     AXP809_DCDC2,
->> +     AXP809_DCDC3,
->> +     AXP809_DCDC4,
->> +     AXP809_DCDC5,
->> +     AXP809_DC1SW,
->> +     AXP809_DC5LDO,
->> +     AXP809_ALDO1,
->> +     AXP809_ALDO2,
->> +     AXP809_ALDO3,
->> +     AXP809_ELDO1,
->> +     AXP809_ELDO2,
->> +     AXP809_ELDO3,
->> +     AXP809_DLDO1,
->> +     AXP809_DLDO2,
->> +     AXP809_RTC_LDO,
->> +     AXP809_LDO_IO0,
->> +     AXP809_LDO_IO1,
->> +     AXP809_SW,
->> +     AXP809_REG_ID_MAX,
->> +};
->> +
->>  /* IRQs */
->>  enum {
->>       AXP152_IRQ_LDO0IN_CONNECT =3D 1,
->> @@ -390,6 +414,41 @@ enum axp288_irqs {
->>       AXP288_IRQ_BC_USB_CHNG,
->>  };
->>
->> +enum axp809_irqs {
->> +     AXP809_IRQ_ACIN_OVER_V =3D 1,
->> +     AXP809_IRQ_ACIN_PLUGIN,
->> +     AXP809_IRQ_ACIN_REMOVAL,
->> +     AXP809_IRQ_VBUS_OVER_V,
->> +     AXP809_IRQ_VBUS_PLUGIN,
->> +     AXP809_IRQ_VBUS_REMOVAL,
->> +     AXP809_IRQ_VBUS_V_LOW,
->> +     AXP809_IRQ_BATT_PLUGIN,
->> +     AXP809_IRQ_BATT_REMOVAL,
->> +     AXP809_IRQ_BATT_ENT_ACT_MODE,
->> +     AXP809_IRQ_BATT_EXIT_ACT_MODE,
->> +     AXP809_IRQ_CHARG,
->> +     AXP809_IRQ_CHARG_DONE,
->> +     AXP809_IRQ_BATT_CHG_TEMP_HIGH,
->> +     AXP809_IRQ_BATT_CHG_TEMP_HIGH_END,
->> +     AXP809_IRQ_BATT_CHG_TEMP_LOW,
->> +     AXP809_IRQ_BATT_CHG_TEMP_LOW_END,
->> +     AXP809_IRQ_BATT_ACT_TEMP_HIGH,
->> +     AXP809_IRQ_BATT_ACT_TEMP_HIGH_END,
->> +     AXP809_IRQ_BATT_ACT_TEMP_LOW,
->> +     AXP809_IRQ_BATT_ACT_TEMP_LOW_END,
->> +     AXP809_IRQ_DIE_TEMP_HIGH,
->> +     AXP809_IRQ_LOW_PWR_LVL1,
->> +     AXP809_IRQ_LOW_PWR_LVL2,
->> +     AXP809_IRQ_TIMER,
->> +     AXP809_IRQ_PEK_RIS_EDGE,
->> +     AXP809_IRQ_PEK_FAL_EDGE,
->> +     AXP809_IRQ_PEK_SHORT,
->> +     AXP809_IRQ_PEK_LONG,
->> +     AXP809_IRQ_PEK_OVER_OFF,
->> +     AXP809_IRQ_GPIO1_INPUT,
->> +     AXP809_IRQ_GPIO0_INPUT,
->> +};
->> +
->>  #define AXP288_TS_ADC_H              0x58
->>  #define AXP288_TS_ADC_L              0x59
->>  #define AXP288_GP_ADC_H              0x5a
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
