@@ -1,44 +1,52 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap3: Fix ISP syscon register offset
-Date: Fri, 22 Apr 2016 07:34:43 +0300
-Message-ID: <5719A9E3.1000902@gmail.com>
-References: <1460787628-17316-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/4] ARM64: dts: rockchip: add support for RK3399
+Date: Fri, 22 Apr 2016 13:21:31 +0800
+Message-ID: <1461302491-13233-1-git-send-email-jay.xu@rock-chips.com>
+References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460787628-17316-1-git-send-email-ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1461122150-9042-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add dtsi file for RK3399 SoCs, and evb dts file for RK3399 evb.
+
+To make patch more easily to be reviewed, some nodes have been removed
+temporarily, after this base file been applied, more patches will be
+upstreamed independently.
+
+Jianqun Xu (3):
+  ARM64: dts: rockchip: add core dtsi file for RK3399 SoCs
+  ARM64: dts: rockchip: add RK3399 evaluation board
+  ARM64: dts: rockchip: add dts file for RK3399 evaluation board
+
+Shawn Lin (1):
+  Documentation: rockchip-dw-mshc: add description for rk3399
+
+ Documentation/devicetree/bindings/arm/rockchip.txt |    6 +-
+ .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |    1 +
+ arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts        |  122 +++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 1022 ++++++++++++++++++++
+ 5 files changed, 1151 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+
+--
+changes in v2:
+- split into more patches. (Heiko)
+- remove arm-pmu at first. (Marc, Heiko, Mark)
+- remove rga, emmc, usb3, mipi, edp, pd, i2c, gpu, thermal, tsadc, saradc, which will upstream independently
+- remove rk808 since without i2c, which will upstream independently
+- remove es8316 since without i2c, which will upstream independently
+- add rockchip-dw-mshc binding patch
+- add rockchip,rk3399-evb binding patch
+- fix codingstyle issues
+
+1.9.1
 
 
-On 16.04.2016 09:20, Ivaylo Dimitrov wrote:
-> According to the TRM, SCM CONTROL_CSIRXFE register is on offset 0x6c
->
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   arch/arm/boot/dts/omap34xx.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-> index 5cdba1f..e446562 100644
-> --- a/arch/arm/boot/dts/omap34xx.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> @@ -46,7 +46,7 @@
->   			       0x480bd800 0x017c>;
->   			interrupts = <24>;
->   			iommus = <&mmu_isp>;
-> -			syscon = <&scm_conf 0xdc>;
-> +			syscon = <&scm_conf 0x6c>;
->   			ti,phy-type = <OMAP3ISP_PHY_TYPE_COMPLEX_IO>;
->   			#clock-cells = <1>;
->   			ports {
->
-
-Anyone going to review that?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
