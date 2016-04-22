@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH 3/5] ata: ahci_ceva: use the new port_{offset,length} members
-Date: Fri, 22 Apr 2016 16:32:39 +0200
-Message-ID: <1461335561-18363-4-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 2/5] ata: acard-ahci: use the new port_{offset,length} members
+Date: Fri, 22 Apr 2016 16:32:38 +0200
+Message-ID: <1461335561-18363-3-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1461335561-18363-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-ide-owner@vger.kernel.org>
 In-Reply-To: <1461335561-18363-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -11,37 +11,28 @@ Cc: linux-ide@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <
 List-Id: devicetree@vger.kernel.org
 
 Now that the ahci_host_priv structure contains port_offset and
-port_length members, this commit moves the ahci_ceva driver to use
+port_length members, this commit moves the acard-ahci driver to use
 them rather than hardcoded values.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- drivers/ata/ahci_ceva.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/ata/acard-ahci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c
-index 207649d..38611f2 100644
---- a/drivers/ata/ahci_ceva.c
-+++ b/drivers/ata/ahci_ceva.c
-@@ -79,8 +79,6 @@
- #define PORT_SCTL_SPD_GEN1	(0x1 << 4)
- #define PORT_SCTL_IPM		(0x3 << 8)
+diff --git a/drivers/ata/acard-ahci.c b/drivers/ata/acard-ahci.c
+index ed6a30c..54c8ae4 100644
+--- a/drivers/ata/acard-ahci.c
++++ b/drivers/ata/acard-ahci.c
+@@ -476,7 +476,8 @@ static int acard_ahci_init_one(struct pci_dev *pdev, const struct pci_device_id
  
--#define PORT_BASE	0x100
--#define PORT_OFFSET	0x80
- #define NR_PORTS	2
- #define DRV_NAME	"ahci-ceva"
- #define CEVA_FLAG_BROKEN_GEN2	1
-@@ -154,7 +152,8 @@ static void ahci_ceva_setup(struct ahci_host_priv *hpriv)
- 		tmp = PORT_SCTL_SPD_GEN2 | PORT_SCTL_IPM;
- 		if (cevapriv->flags & CEVA_FLAG_BROKEN_GEN2)
- 			tmp = PORT_SCTL_SPD_GEN1 | PORT_SCTL_IPM;
--		writel(tmp, mmio + PORT_SCR_CTL + PORT_BASE + PORT_OFFSET * i);
-+		writel(tmp, mmio + PORT_SCR_CTL + hpriv->port_offset +
-+		       hpriv->port_length * i);
- 	}
- }
+ 		ata_port_pbar_desc(ap, AHCI_PCI_BAR, -1, "abar");
+ 		ata_port_pbar_desc(ap, AHCI_PCI_BAR,
+-				   0x100 + ap->port_no * 0x80, "port");
++				   hpriv->port_offset +
++				   ap->port_no * hpriv->port_length, "port");
  
+ 		/* set initial link pm policy */
+ 		/*
 -- 
 2.6.4
 
