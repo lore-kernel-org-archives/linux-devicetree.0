@@ -1,129 +1,86 @@
-From: Crestez Dan Leonard <leonard.crestez@intel.com>
-Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
-Date: Fri, 22 Apr 2016 13:15:16 +0300
-Message-ID: <5719F9B4.1020704@intel.com>
-References: <AM4PR02MB1299B78B76BF112B2E06F20BBC6E0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V2 14/14] irqchip/gic: Add support for tegra AGIC
+ interrupt controller
+Date: Fri, 22 Apr 2016 11:21:35 +0100
+Message-ID: <5719FB2F.10708@nvidia.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+ <1461150237-15580-15-git-send-email-jonathanh@nvidia.com>
+ <5719F5A1.6060301@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM4PR02MB1299B78B76BF112B2E06F20BBC6E0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+In-Reply-To: <5719F5A1.6060301@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2016 04:56 PM, Peter Rosin wrote:
-> Crestez Dan Leonard wrote:
->> On 04/20/2016 11:31 PM, Peter Rosin wrote:
->>> Crestez Dan Leonard wrote:
->>>> Changes since that version:
->>>> * Nest the adapter in inv_mpu6050_state instead of making it static
->>>> * Explicitly forward of_node "i2c-aux-master" to allow describing aux devices
->>>> via devicetree.
->>>>
->>>> For bypass/mux mode devicetree works automatically. The forwarding is based on
->>>> the "chan_id" parameter to i2c_add_mux_adapter and is implemented here:
->>>>
->>>> http://lxr.free-electrons.com/source/drivers/i2c/i2c-mux.c?v=4.5#L158
->>>>
->>>> Perhaps it might be better for devices handled via master mode to be described
->>>> via i2c@1? This would work by scanning the mpu node's children for something
->>>> with reg == 1.
->>>
->>> The 0 in i2c@0 (which is used by the mux mode) is the index of the mux slave
->>> meaning that i2c@1 would be a second mux slave on the same mux, but this is
->>> not a real mux as such, it is a gate which is piggybacking on the i2c mux infra.
->>> So, this "mux" can't have a second slave which is why only 0 is valid.
+
+On 22/04/16 10:57, Marc Zyngier wrote:
+> On 20/04/16 12:03, Jon Hunter wrote:
+>> Add a driver for the Tegra-AGIC interrupt controller which is compatible
+>> with the ARM GIC-400 interrupt controller.
 >>
->> This behavior is automatic in i2c mux code and seems to assume that all
->> the children of mux_dev are i2c muxes. This might be obviously correct
->> and useful for dedicated i2c mux devices but in my case mux_dev is just
->> the i2c_client for a sensor.
+>> The Tegra AGIC (Audio GIC) is part of the Audio Processing Engine (APE) on
+>> Tegra210 and can route interrupts to either the GIC for the CPU subsystem
+>> or the Audio DSP (ADSP) within the APE. The AGIC uses CPU interface 0 to
+>> route interrupts to the CPU GIC and CPU interface 1 to route interrupts to
+>> the ADSP.
 >>
->> From Documentation/devicetree/bindings/i2c/i2c-mux.txt:
+>> The APE is located within its own power domain on the chip and so the
+>> AGIC needs to manage both the power domain and its clocks. Commit
+>> afbbd2338176 ("irqchip/gic: Document optional Clock and Power Domain
+>> properties") has already added clock and power-domain properties to the
+>> GIC binding and so we can make use of these for the AGIC.
 >>
->>> An i2c bus multiplexer/switch will have several child busses that are
->>> numbered uniquely in a device dependent manner.  The nodes for an i2c
->>> bus multiplexer/switch will have one child node for each child bus.
+>> With the AGIC being located in a different power domain to the main CPU
+>> cluster this means that:
+>> 1. The interrupt controller cannot be registered via IRQCHIP_DECLARE()
+>>    because it needs to be registered as a platform device so that the
+>>    generic PM domain core will ensure that the power domain is available
+>>    before probing.
+>> 2. The interrupt controller cannot be suspended/restored based upon
+>>    changes in the CPU power state and needs to use runtime-pm instead.
 >>
->> This seems to be written in a way that would allow me to define the
->> "auxiliary i2c master" as bus "1". After all, the numbering is device
->> dependent and it's not clear that all the child busses need to be
->> accessible through muxing rather than indirect access through device
->> registers.
-> 
-> You are correct that if you have devicetree children where reg does
-> not match the chan_id given to i2c_add_mux_adapter() those children
-> will be ignored by the i2c-mux code. So, the code would be happy with
-> a devicetree such as:
-> 
-> 	mpu6050@68 {
-> 		compatible = "...";
-> 		reg = <0x68>;
-> 		...
-> 		i2c-aux-mux@0 {
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			reg = <0>;
-> 
-> 			foo@44 {
-> 				compatible = "bar";
-> 				reg = <0x44>;
-> 				...
-> 			}
-> 		}
-> 		i2c-aux-master@1 {
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			reg = <1>;
-> 
-> 			gazonk@44 {
-> 				compatible = "baz";
-> 				reg = <0x44>;
-> 				...
-> 			}
-> 		}
-> 	}
-> 
-> as long as you do only call i2c_add_mux_adapter() with chan_id = 0. And that
-> is what you are doing. But I think it is a bit subtle...
-
-This kind of stuff needs to be written up in
-Documentation/devicetree/bindings anyway.
-
->>> I think the naming could be i2c-master0, i2c-master1 etc if it, with
->>> future work, would be possible to add more than one master (you talked about
->>> 5 i2c slaves..).
+>> The GIC platform driver has been implemented by making the following
+>> changes to the core GIC driver:
+>> 1. Remove the dependency on CONFIG_CPU_PM from PM specific variables and
+>>    functions so that they can be used by the platform driver even when
+>>    CONFIG_CPU_PM is not selected.
+>> 2. Move the code that maps the GIC registers and parses the device-tree
+>>    blob into a new function called gic_of_setup() that can be used by
+>>    both the platform driver as well as the existing driver.
+>> 3. Add and register platform driver for the GIC. The platform driver
+>>    uses the PM_CLK framework for managing the clocks used by the GIC
+>>    and so select CONFIG_PM_CLK.
 >>
->> The device has 5 sets of registers for controlling i2c slaves but only
->> one physical auxiliary i2c bus. As far as I can tell slaves 0-3 are
->> intended to be used for gathering readings for slaved sensors
->> periodically without external intervention. Slave 4 can generate an
->> interrupt on completion and is more suitable for general-purpose
->> communication with any number of devices.
+>> Finally, a couple other notes on the implementation are:
+>> 1. Currently the GIC platform driver only supports non-root GICs and
+>>    assumes that the GIC has a parent interrupt. It is assumed that
+>>    root interrupt controllers need to be initialised early.
+>> 2. There is no specific suspend handling for GICs registered as platform
+>>    devices. Non-wakeup interrupts will be disabled by the kernel during
+>>    late suspend, however, this alone will not power down the GIC if
+>>    interrupts have been requested and not freed. Therefore, requestors
+>>    of non-wakeup interrupts will need to free them on entering suspend
+>>    in order to power-down the GIC.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>> ---
+>>
+>> Please note that so far I have not added all the clock names for the
+>> various GIC versions (as described by the DT documentation). I thought
+>> we could add these as they are needed.
 > 
-> Ah, ok, so all 5 sets of slave registers are about the same physical i2c
-> bus. So, you basically cannot sanely use this physical aux i2c bus as an
-> i2c-mux and an extra i2c adapter in the same hw design. Correct?
+> So while the code looks OK, I'd like to stop adding more code to this
+> poor GIC driver, because it is starting to look like a huge mess.
 
-You can access devices on the auxiliary i2c bus either through mux-ing
-or the adapter added by this patch. I think mux mode works better (lower
-latency) but is not available when the primary connection is via SPI.
-You can use both but it doesn't particularly make sense.
+Agree.
 
-> In that case, couldn't you look at the names of any devicetree children
-> and use that to decide if you should even attempt to call
-> i2c_add_mux_adapter or i2c_add_adapter?
+> What is preventing us to move this to a separate irq-gic-pm.c file?
 
-But the adapter should be added even if nothing is defined for it.
-Registering i2c clients by echoing in new_device is a valid usecase.
+Absolutely nothing. Once we sort out the clocking, I will do that.
 
-What could be done is only register the i2c mux in i2c mode and the i2c
-master in spi mode and make the bindings identical.
-
-> (But please don't clobber stuff for my i2c-mux rework, or you will
-> have to wait even longer for that deadlock to be resolved)
-
-I won't. I should have sent this as an [RFC] anyway, it will take a
-while to get it.
+Cheers
+Jon
