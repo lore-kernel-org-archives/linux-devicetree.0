@@ -1,83 +1,97 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH 1/3] mtd: nand: add support for "nand-ecc-algo" DT property
-Date: Fri, 22 Apr 2016 13:23:13 +0200
-Message-ID: <1461324197-1333-1-git-send-email-zajec5@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: fix naming in GPIO DT binding header
+Date: Fri, 22 Apr 2016 13:24:06 +0200
+Message-ID: <20160422112406.GB9047@ulmo.ba.sec>
+References: <1459884307-24043-1-git-send-email-swarren@wwwdotorg.org>
+ <20160406172845.GC28843@ulmo.ba.sec>
+ <5705481D.3030700@wwwdotorg.org>
+ <CACRpkdZxeV07_rb2xL+HRGp-ay1B-U=_tEbPCYqvM+ZYD-wpYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QTprm0S8XgL7H0Dt"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZxeV07_rb2xL+HRGp-ay1B-U=_tEbPCYqvM+ZYD-wpYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-So far it was only possible to specify ECC algorithm using "soft" and
-"soft_bch" values of nand-ecc-mode prop. There wasn't a way to specify
-it for a hardware ECC mode.
 
-Now that we have independent field in NAND subsystem for storing info
-about ECC algorithm we may also add support for this new DT property.
+--QTprm0S8XgL7H0Dt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
----
- Documentation/devicetree/bindings/mtd/nand.txt |  2 ++
- drivers/mtd/nand/nand_base.c                   | 20 +++++++++++++-----=
---
- 2 files changed, 15 insertions(+), 7 deletions(-)
+On Mon, Apr 11, 2016 at 09:04:09AM +0200, Linus Walleij wrote:
+> On Wed, Apr 6, 2016 at 7:32 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wr=
+ote:
+> > On 04/06/2016 11:28 AM, Thierry Reding wrote:
+> >>
+> >> On Tue, Apr 05, 2016 at 01:25:07PM -0600, Stephen Warren wrote:
+> >>>
+> >>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>>
+> >>> According to the Tegra TRM, GPIOs are aggregated into /ports/ of 8 GP=
+IOs,
+> >>> not into /banks/. Fix <dt-bindings/gpio/tegra-gpio.h> to correctly
+> >>> reflect
+> >>> this naming convention. While this seems like silly churn, it will be=
+come
+> >>> slightly more important once we introduce the GPIO binding for upcomi=
+ng
+> >>> Tegra chips.
+> >>>
+> >>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>> ---
+> >>>   include/dt-bindings/gpio/tegra-gpio.h | 68
+> >>> +++++++++++++++++------------------
+> >>>   1 file changed, 34 insertions(+), 34 deletions(-)
+> >>
+> >>
+> >> It's not clear to me where this should be applied. This is technically
+> >> part of the GPIO controller bindings, in which case it'd need to go via
+> >> the GPIO tree. I'm fine with taking it through the Tegra tree, too, but
+> >> in case you agree that it should go through the GPIO tree:
+> >>
+> >> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >
+> > I typically consider bindings part of the SoC code-base they related to=
+, so
+> > I'd imagine this going through the Tegra tree. I didn't Cc LinusW on the
+> > patch because of that thinking and oversight, but have done so now just=
+ in
+> > case he feels strongly.
+>=20
+> No strong opinion, only time I care is when we merge a new driver
+> and it #includes <dt-bindings/...>.
+>=20
+> Take it through the tegra tree.
+> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documenta=
-tion/devicetree/bindings/mtd/nand.txt
-index a17662b..5ac4ab7 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -22,6 +22,8 @@ Optional NAND chip properties:
- - nand-ecc-mode : String, operation mode of the NAND ecc mode.
-   Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_f=
-irst",
-   "soft_bch".
-+- nand-ecc-algo: string, algorithm of NAND ECC.
-+		 Supported values are: "hamming", "bch".
- - nand-bus-width : 8 or 16 bus width if not present 8
- - nand-on-flash-bbt: boolean to enable on flash bbt option if not pres=
-ent false
-=20
-diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.=
-c
-index 7bc37b4..a5417a0 100644
---- a/drivers/mtd/nand/nand_base.c
-+++ b/drivers/mtd/nand/nand_base.c
-@@ -4003,17 +4003,23 @@ static int of_get_nand_ecc_mode(struct device_n=
-ode *np)
- 	return -ENODEV;
- }
-=20
-+static const char * const nand_ecc_algos[] =3D {
-+	[NAND_ECC_HAMMING]	=3D "hamming",
-+	[NAND_ECC_BCH]		=3D "bch",
-+};
-+
- static int of_get_nand_ecc_algo(struct device_node *np)
- {
- 	const char *pm;
--	int err;
-+	int err, i;
-=20
--	/*
--	 * TODO: Read ECC algo OF property and map it to enum nand_ecc_algo.
--	 * It's not implemented yet as currently NAND subsystem ignores
--	 * algorithm explicitly set this way. Once it's handled we should
--	 * document & support new property.
--	 */
-+	err =3D of_property_read_string(np, "nand-ecc-algo", &pm);
-+	if (!err) {
-+		for (i =3D 0; i < ARRAY_SIZE(nand_ecc_algos); i++)
-+			if (!strcasecmp(pm, nand_ecc_algos[i]))
-+				return i;
-+		return -ENODEV;
-+	}
-=20
- 	/*
- 	 * For backward compatibility we also read "nand-ecc-mode" checking
---=20
-1.8.4.5
+Applied, thanks.
+
+Thierry
+
+--QTprm0S8XgL7H0Dt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXGgnUAAoJEN0jrNd/PrOhm+wP/3uqH7t79yyewub5qGsyyNro
+DvFnPvP7hMD2a2vQu6V7ezZin1VLFfmTqIM1PKE3g746HBd+GZuB9hlEqLGELUkn
+sxdJVOoe+JUCT7mb8gOqnxLS2+ekF+BRhL9KX1q2dgkcRiY8UTBAmJHq6cN/KTP2
+48c3qHqmwYzb1cMo2OaVR22SBXefkNprNIedx/ZbghxD1rIZlmeI6cN5BDBqucfi
+sgiUok9RXJ/7uNka9pt6Q3yojLs/PzA6eRXt7+/VXOORjCkZkG7823KGxbGyZkPs
+BOthOtflQT6191rY30CKjyy7zY625NwA9ChhC8LM+DgHXvPTSR4skcNjygQmLrxG
+x8107S8IFdzKih2ujfAurka7Vj+hp4OutFnhL04AJp5oAQHDX5lFHkrcdu6I+Ufz
+mMOD+alsrK39TEWf5qEdpY1RE/ZmIoAHOXoUEpiky3hBtFBIj/l49QtktkVhJzJJ
+YbfI9kaKNNY5H2e0k+lnhqk83v9LEA0GrdmrZ8TfcZK610Ay6uIa63NFrrNRZs3Z
+NXgg/oe/cx8ApW1JvjkiwCma5a9jh4wkrSXINJJUQIQjsTefbG3ukmGuBjdUToPR
+zVv8ix2ut7Rcb37U5L81g4OGSFa+Te/JkEoRaSyPF3eSMbxV69hG2gYEkHe0ojBr
+VlwIzX514pDIXQbWwV9A
+=Qm2N
+-----END PGP SIGNATURE-----
+
+--QTprm0S8XgL7H0Dt--
