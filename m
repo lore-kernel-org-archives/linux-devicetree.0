@@ -1,141 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] Documentation: DT binding doc for iProc Shared MDIO
- Controller.
-Date: Fri, 22 Apr 2016 15:10:45 -0500
-Message-ID: <20160422201045.GA32303@rob-hp-laptop>
-References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
- <1461230323-27891-3-git-send-email-pramod.kumar@broadcom.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/3] mfd: add Cypress FM33256B Processor Companion driver
+Date: Fri, 22 Apr 2016 22:11:53 +0200
+Message-ID: <20160422201153.GB17051@piout.net>
+References: <1461150471-23163-1-git-send-email-jlp@gomspace.com>
+ <1461150471-23163-2-git-send-email-jlp@gomspace.com>
+ <20160422193232.GA9737@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461230323-27891-3-git-send-email-pramod.kumar@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Pramod Kumar <pramod.kumar@broadcom.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20160422193232.GA9737@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jeppe Ledet-Pedersen <jlp@gomspace.com>, lee.jones@linaro.org, arnd@arndb.de, gregkh@linuxfoundation.org, a.zummo@towertech.it, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 02:48:39PM +0530, Pramod Kumar wrote:
-> Add DT binding doc for iProc Shared MDIO Controller which
-> populate all masters to Shared MDIO framework.
+On 22/04/2016 at 14:32:32 -0500, Rob Herring wrote :
+> On Wed, Apr 20, 2016 at 01:07:49PM +0200, Jeppe Ledet-Pedersen wrote:
+> > This patch adds support for the Cypress Semiconductor FM33256B processor
+> > companion. The device contains a 256 kbit FRAM, an RTC, a supply voltage
+> > monitor, and a watchdog timer.
+> > 
+> > Signed-off-by: Jeppe Ledet-Pedersen <jlp@gomspace.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/fm33256b.txt |  30 ++
+> >  MAINTAINERS                                        |   6 +
+> >  drivers/mfd/Kconfig                                |  16 +
+> >  drivers/mfd/Makefile                               |   1 +
+> >  drivers/mfd/fm33256b.c                             | 488 +++++++++++++++++++++
+> >  include/linux/mfd/fm33256b.h                       |  76 ++++
+> >  6 files changed, 617 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/fm33256b.txt
+> >  create mode 100644 drivers/mfd/fm33256b.c
+> >  create mode 100644 include/linux/mfd/fm33256b.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/fm33256b.txt b/Documentation/devicetree/bindings/mfd/fm33256b.txt
+> > new file mode 100644
+> > index 0000000..6591c94
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/fm33256b.txt
+> > @@ -0,0 +1,30 @@
+> > +Device-tree bindings for Cypress Semiconductor FM33256B Processor Companion
+> > +---------------------------------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: must be "cypress,fm33256b".
+> > +- reg: SPI chip select
+> > +- spi-max-frequency: Max SPI frequency to use (< 16000000)
+> > +
+> > +Optional properties:
+> > +- cypress,charge-enabled: enable trickle charger
 > 
-> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  .../bindings/bus/brcm,iproc-shared-mdio.txt        | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt
+> What does the driver do if charging is disabled? Would using 'status = 
+> "disabled"' be any different?
+>  
+
+Good catch, I didn't look at this patch but it includes a lot of code
+that should be going to the RTC driver.
+If trickle charging is not enabled, I guess the RTC will not charge its
+backup battery.
+
+> > +- cypress,charge-fast: enable fast (1 mA) charging
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt b/Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt
-> new file mode 100644
-> index 0000000..f455f3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt
-> @@ -0,0 +1,76 @@
-> +Broadcom iProc Shared MDIO Controller
-> +
-> +Required properties:
-> +- compatible:
-> +    "brcm,iproc-shared-mdio" for shared MDIO controller.
-> +- reg: specifies the base physical address and size of the registers
-> +- reg-names: should be "mdio"
-> +- #address-cells: must be 1.
-> +- #size-cells: must be 0.
-> +
-> +optional:
-> +child nodes: Masters are represented as a child node of shared MDIO controller
-> +and all the PHYs handled by this master are represented as its child node.
-
-Seems kind of useless if child nodes are optional.
-
-> +
-> +Master nodes properties are defined as-
-> +
-> +Required properties:
-> +- compatible: Used to match driver of this PHY.
-> +- reg: MDIO master ID.
-> +- #address-cells: must be 1.
-> +- #size-cells: must be 0.
-> +
-> +optional:
-> +-brcm,phy-internal: if presents, PHYs are internal. Absence shows phy is
-> +external.
-> +-brcm,is-c45: if presents, Controller uses Clause-45 to issue MDIO transaction.
-> +else Controller uses Clause-22 for transactions.
-
-Isn't this a property of the phy? IIRC, there is a standard property or 
-compatible string for this.
-
-> +
-> +PHY nodes are represented as the child node of Master. Child nodes properties
-> +are defined as-
-> +
-> +Required properties:
-> +-reg: phy id of attached PHY.
-> +
-> +optional:
-> +There could be additional properties required to configure the specific phy like
-> +phy-mode in case of gpphy node below. These should be defined here and used by
-> +respective drivers.
-> +
-> +Example:
-> +iproc_mdio: iproc_mdio@663f0000 {
-> +	compatible = "brcm,iproc-shared-mdio";
-> +	reg = <0x6602023c 0x14>;
-> +	reg-names = "mdio";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	sata-master@6 {
-
-mdio@6
-
-> +		compatible = "brcm,iproc-ns2-sata-phy";
-> +		reg = <0x6>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		brcm,phy-internal;
-> +
-> +		sata_phy0: sata-phy@1 {
-
-phy@1
-
-> +			reg = <0x1>;
-> +			#phy-cells = <0>;
-> +		};
-> +
-> +		sata_phy1: sata-phy@2 {
-
-phy@2
-
-> +			reg = <0x2>;
-> +			#phy-cells = <0>;
-> +		};
-> +	};
-> +
-> +	eth-master@0 {
-
-mdio@0
-
-> +		compatible = "brcm,iproc-mdio-master-eth";
-> +		reg = <0x0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		gphy0: eth-phy@10 {
-
-phy@10
-
-> +			reg = <0x10>;
-> +			phy-mode = "mii";
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
+> What does fast mean?
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> I think it is time for a common binding here. There's all sorts of 
+> variations on setting the charge current in bindings. Add something like 
+> "charge-current-microamp" in power_supply.txt and use it here. Then 
+> 1000uA implies "fast charge".
+
+Well, this is not a power supply, it is an RTC.
+
+I think both properties should got to the RTC subdevice and be parsed in
+the RTC driver.
+
+Note that for trickle charging, we currently have the following
+properties:
+ - trickle-resistor-ohms
+ - trickle-diode-disable
+ - abracon,tc-diode
+ - abracon,tc-resistor
+
+abracon,tc-resistor can be replaced by trickle-resistor-ohms, I'll make
+a patch but abracon,tc-diode allows to select a diode type (and in
+particular a voltage drop).
+
+I think we could add a trickle-current-microamp like you suggested and
+trickle-diode-disable can be reused.
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
