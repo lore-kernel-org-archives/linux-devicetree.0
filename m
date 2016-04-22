@@ -1,70 +1,26 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/8] firmware: qcom: scm: Use atomic SCM for cold boot
-Date: Fri, 22 Apr 2016 16:50:05 -0700
-Message-ID: <20160422235005.GI3202@tuxbot>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 7/8] dts: qcom: apq8084: Add SCM firmware node
+Date: Fri, 22 Apr 2016 16:50:50 -0700
+Message-ID: <20160422235050.GJ3202@tuxbot>
 References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
- <1461363432-5730-6-git-send-email-andy.gross@linaro.org>
+ <1461363432-5730-8-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461363432-5730-6-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1461363432-5730-8-git-send-email-andy.gross@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 On Fri 22 Apr 15:17 PDT 2016, Andy Gross wrote:
 
-> This patch changes the cold_set_boot_addr function to use atomic SCM
-> calls.  This removes the need for memory allocation and instead places
-> all arguments in registers.
+> This patch adds the firmware node for the SCM
 > 
-> Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/firmware/qcom_scm-32.c | 40 ++++++++++++++++++++++++++--------------
->  1 file changed, 26 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-[..]
->  /*
->   * Set the cold/warm boot address for one of the CPU cores.
->   */
-> -static int qcom_scm_set_boot_addr(u32 addr, int flags)
-> +static int qcom_scm_set_boot_addr(u32 addr, int flags, bool do_atomic)
->  {
->  	struct {
->  		__le32 flags;
->  		__le32 addr;
->  	} cmd;
->  
-> -	cmd.addr = cpu_to_le32(addr);
-> -	cmd.flags = cpu_to_le32(flags);
-> -	return qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
-> -			&cmd, sizeof(cmd), NULL, 0);
-> +	if (do_atomic) {
-> +		return qcom_scm_call_atomic(QCOM_SCM_SVC_BOOT,
-> +					    QCOM_SCM_BOOT_ADDR, 2, flags, addr);
-> +	} else {
-> +
-> +		cmd.addr = cpu_to_le32(addr);
-> +		cmd.flags = cpu_to_le32(flags);
-> +
-> +		return qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
-> +				     &cmd, sizeof(cmd), NULL, 0);
-> +	}
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
 
-I would prefer that you split this into two functions, rather than
-hiding two functions bodies in one function.
-
-Perhaps qcom_scm_set_boot_addr and qcom_scm_set_boot_addr_atomic?
-
->  }
->  
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
