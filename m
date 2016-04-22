@@ -1,145 +1,46 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v7 00/24] i2c mux cleanup and locking update
-Date: Fri, 22 Apr 2016 11:52:41 +0000
-Message-ID: <AM4PR02MB129919DA6CE8A98793D10C43BC6F0@AM4PR02MB1299.eurprd02.prod.outlook.com>
+From: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 15/17] ARM64: XEN: Add a function to initialize Xen
+ specific UEFI runtime services
+Date: Fri, 22 Apr 2016 12:57:41 +0100 (BST)
+Message-ID: <alpine.DEB.2.10.1604221257150.6744@sstabellini-ThinkPad-X260>
+References: <1460030614-16112-1-git-send-email-zhaoshenglong@huawei.com> <1460030614-16112-16-git-send-email-zhaoshenglong@huawei.com> <20160422105427.GG2998@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Language: sv-SE
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ran>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160422105427.GG2998-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, julien.grall-5wv7dgnIgG8@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Wolfram Sang wrote:
-> > The problem with waiting until 4.8 with the rest of the series is that it
-> > will likely go stale, e.g. patch 22 ([media] rtl2832: change the i2c gate
-> > to be mux-locked) touches a ton of register accesses in that driver since
-> > it removes a regmap wrapper that is rendered obsolete. Expecting that
-> > patch to work for 4.8 is overly optimistic, and while patching things up
+On Fri, 22 Apr 2016, Catalin Marinas wrote:
+> On Thu, Apr 07, 2016 at 08:03:32PM +0800, Shannon Zhao wrote:
+> > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > When running on Xen hypervisor, runtime services are supported through
+> > hypercall. Add a Xen specific function to initialize runtime services.
+> > 
+> > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> > ---
+> >  arch/arm/include/asm/xen/xen-ops.h   |  6 ++++++
+> >  arch/arm/xen/Makefile                |  1 +
+> >  arch/arm/xen/efi.c                   | 40 ++++++++++++++++++++++++++++++++++++
+> >  arch/arm64/include/asm/xen/xen-ops.h |  6 ++++++
+> >  arch/arm64/xen/Makefile              |  1 +
+> >  drivers/xen/Kconfig                  |  2 +-
+> >  6 files changed, 55 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/arm/include/asm/xen/xen-ops.h
+> >  create mode 100644 arch/arm/xen/efi.c
+> >  create mode 100644 arch/arm64/include/asm/xen/xen-ops.h
 > 
-> Okay, that can be argued, I understand that. So, what about this
-> suggestion: I pull in patches 1-15 today, and we schedule the rest of
-> the patches for like next week or so. That still gives the first set of
-> patches some time in linux-next for further exposure and testing whilst
-> the whole series should arrive in 4.7.
-
-That sounds really good, thanks!
-
-> However, I need help with that. There are serious locking changes
-> involved and ideally these patches are reviewed by multiple people,
-> especially patches 16-19. I first want to say that the collaboration
-> experience with this series was great so far, lots of testing and
-> reporting back. Thanks for that already. Yet, if we want to have this in
-> 4.7, this needs to be a group effort. So, if people interested could
-> review even a little and report back this would be extremly helpful.
-
-Yes please!
-
-> > Third, should we deprecate the old i2c_add_mux_adapter, so that new
-> > users do not crop up behind our backs in the transition? Or not bother?
+> This looks like entirely Xen code, so I don't think it needs arm64
+> maintainers' approval. FWIW:
 > 
-> Usually it is fine to change in-kernel-APIs when you take care that all
-> current users are converted. But I am also fine with being nice and
-> keeping the old call around for a few cycles. It is your call.
+> Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 
-Ok, I'm a bit fed up with this series and will ignore it then.
-
-> > Fourth, I forgot to change patch 8 (iio: imu: inv_mpu6050: convert to
-> > use an explicit i2c mux core) to not change i2c_get_clientdata() ->
-> > dev_get_drvdata() as requested by Jonathan Cameron. How should I handle
-> > that?
-> 
-> I'll pull in the first patches this eveneing. You can choose to send me
-> an incremental patch or resend patch 8. I am fine with both, but it
-> should appear on the mailing list somehow.
-
-I just sent a v8 of 08/24 (not sending a whole v8 for that though)
-
-> > There are also some new Tested-by tags that I have added to my
-> > local branch but have not pushed anywhere. I'm ready to push all that
-> > to a new branch once you are ready to take it.
-> 
-> For the patches 1-15, I am ready when you are :)
-
-Ok, I pushed out v8, see below. Pick what you want :-)
+Thanks Catalin, I'll go ahead and queue the series up for 4.7.
 
 Cheers,
-Peter
 
-The following changes since commit f55532a0c0b8bb6148f4e07853b876ef73bc69ca:
-
-  Linux 4.6-rc1 (2016-03-26 16:03:24 -0700)
-
-are available in the git repository at:
-
-  https://github.com/peda-r/i2c-mux.git mux-core-and-locking-8
-
-for you to fetch changes up to b9a0ea3a309a3a4051c7c0cc54ade0eb5a877896:
-
-  [media] rtl2832: regmap is aware of lockdep, drop local locking hack (2016-04-22 12:18:45 +0200)
-
-----------------------------------------------------------------
-Antti Palosaari (1):
-      [media] si2168: change the i2c gate to be mux-locked
-
-Peter Rosin (23):
-      i2c-mux: add common data for every i2c-mux instance
-      i2c: i2c-mux-gpio: convert to use an explicit i2c mux core
-      i2c: i2c-mux-pinctrl: convert to use an explicit i2c mux core
-      i2c: i2c-arb-gpio-challenge: convert to use an explicit i2c mux core
-      i2c: i2c-mux-pca9541: convert to use an explicit i2c mux core
-      i2c: i2c-mux-pca954x: convert to use an explicit i2c mux core
-      i2c: i2c-mux-reg: convert to use an explicit i2c mux core
-      iio: imu: inv_mpu6050: convert to use an explicit i2c mux core
-      [media] m88ds3103: convert to use an explicit i2c mux core
-      [media] rtl2830: convert to use an explicit i2c mux core
-      [media] rtl2832: convert to use an explicit i2c mux core
-      [media] si2168: convert to use an explicit i2c mux core
-      [media] cx231xx: convert to use an explicit i2c mux core
-      of/unittest: convert to use an explicit i2c mux core
-      i2c-mux: drop old unused i2c-mux api
-      i2c: allow adapter drivers to override the adapter locking
-      i2c: muxes always lock the parent adapter
-      i2c-mux: relax locking of the top i2c adapter during mux-locked muxing
-      i2c-mux: document i2c muxes and elaborate on parent-/mux-locked muxes
-      iio: imu: inv_mpu6050: change the i2c gate to be mux-locked
-      [media] rtl2832: change the i2c gate to be mux-locked
-      [media] rtl2832_sdr: get rid of empty regmap wrappers
-      [media] rtl2832: regmap is aware of lockdep, drop local locking hack
-
- Documentation/i2c/i2c-topology               | 370 +++++++++++++++++++++++++++
- MAINTAINERS                                  |   1 +
- drivers/i2c/i2c-core.c                       |  66 +++--
- drivers/i2c/i2c-mux.c                        | 297 ++++++++++++++++-----
- drivers/i2c/muxes/i2c-arb-gpio-challenge.c   |  47 ++--
- drivers/i2c/muxes/i2c-mux-gpio.c             |  73 +++---
- drivers/i2c/muxes/i2c-mux-pca9541.c          |  58 ++---
- drivers/i2c/muxes/i2c-mux-pca954x.c          |  61 +++--
- drivers/i2c/muxes/i2c-mux-pinctrl.c          | 121 +++++----
- drivers/i2c/muxes/i2c-mux-reg.c              |  69 ++---
- drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c   |   2 +-
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c   |   1 -
- drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c    |  79 ++----
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h    |   3 +-
- drivers/media/dvb-frontends/m88ds3103.c      |  19 +-
- drivers/media/dvb-frontends/m88ds3103_priv.h |   2 +-
- drivers/media/dvb-frontends/rtl2830.c        |  20 +-
- drivers/media/dvb-frontends/rtl2830_priv.h   |   2 +-
- drivers/media/dvb-frontends/rtl2832.c        | 243 +++---------------
- drivers/media/dvb-frontends/rtl2832.h        |   4 +-
- drivers/media/dvb-frontends/rtl2832_priv.h   |   3 +-
- drivers/media/dvb-frontends/rtl2832_sdr.c    | 303 ++++++++++------------
- drivers/media/dvb-frontends/rtl2832_sdr.h    |   5 +-
- drivers/media/dvb-frontends/si2168.c         | 106 +++-----
- drivers/media/dvb-frontends/si2168_priv.h    |   3 +-
- drivers/media/usb/cx231xx/cx231xx-core.c     |   6 +-
- drivers/media/usb/cx231xx/cx231xx-i2c.c      |  47 ++--
- drivers/media/usb/cx231xx/cx231xx.h          |   4 +-
- drivers/media/usb/dvb-usb-v2/rtl28xxu.c      |   5 +-
- drivers/of/unittest.c                        |  37 +--
- include/linux/i2c-mux.h                      |  53 +++-
- include/linux/i2c.h                          |  29 ++-
- 32 files changed, 1224 insertions(+), 915 deletions(-)
- create mode 100644 Documentation/i2c/i2c-topology
+Stefano
