@@ -1,42 +1,49 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 5/8] devicetree: Add Trusted Computing Group to vendor-prefix.txt
-Date: Sat, 23 Apr 2016 00:11:22 +0200
-Message-ID: <1461363085-9908-6-git-send-email-christophe-h.ricard@st.com>
-References: <1461363085-9908-1-git-send-email-christophe-h.ricard@st.com>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/8] Qualcomm SCM Rework
+Date: Fri, 22 Apr 2016 17:17:04 -0500
+Message-ID: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461363085-9908-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, peterhuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing vendor to vendor-prefix.txt.
+The following set of patches does a bit of rework on the existing
+Qualcomm SCM firmware.  The first couple of patches deals with turning
+the current SCM into a platform driver.  The next couple are cleanups
+that make adding the 64 support a little easier.
 
-Trusted Computing Group design common specifications for
-TPM (Trusted Platform Module) vendors.
-TCG designates a TPM answering to a public specification.
+I took Kumar's 64 bit support patch and modified it to use the arm_smccc
+calls.  This simplified things quite a bit.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Lastly, there are a few DT patches to add the firmware node for a couple of the
+supported platforms.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 6c3d970..717bae9 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -230,6 +230,7 @@ stericsson	ST-Ericsson
- synology	Synology, Inc.
- tbs	TBS Technologies
- tcl	Toby Churchill Ltd.
-+tcg	Trusted Computing Group
- technologic	Technologic Systems
- thine	THine Electronics, Inc.
- ti	Texas Instruments
+Andy Gross (7):
+  dt/bindings: firmware: Add Qualcomm SCM binding
+  firmware: qcom: scm: Convert SCM to platform driver
+  firmware: qcom: scm: Generalize shared error map
+  firmware: qcom: scm: Use atomic SCM for cold boot
+  firmware: qcom: scm: Add memory allocation API
+  dts: qcom: apq8084: Add SCM firmware node
+  arm64: dts: msm8916: Add SCM firmware node
+
+Kumar Gala (1):
+  firmware: qcom: scm: Add support for ARM64 SoCs
+
+ .../devicetree/bindings/firmware/qcom,scm.txt      |  31 ++++
+ arch/arm/boot/dts/qcom-apq8084.dtsi                |  10 ++
+ arch/arm64/Kconfig.platforms                       |   1 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  10 ++
+ drivers/firmware/qcom_scm-32.c                     |  61 ++++---
+ drivers/firmware/qcom_scm-64.c                     | 194 ++++++++++++++++++++-
+ drivers/firmware/qcom_scm.c                        | 178 ++++++++++++++++++-
+ drivers/firmware/qcom_scm.h                        |  24 +++
+ 8 files changed, 468 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+
 -- 
-2.1.4
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
