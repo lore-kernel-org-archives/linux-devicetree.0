@@ -1,175 +1,131 @@
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 4/4] ARM64: dts: rockchip: add dts file for RK3399 evaluation board
-Date: Fri, 22 Apr 2016 13:36:56 +0800
-Message-ID: <1461303416-13731-1-git-send-email-jay.xu@rock-chips.com>
-References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461122150-9042-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
+ ADV7533
+Date: Fri, 22 Apr 2016 11:10:18 +0530
+Message-ID: <5719B942.8070907@codeaurora.org>
+References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
+ <1457521038-5906-1-git-send-email-architt@codeaurora.org>
+ <1457521038-5906-8-git-send-email-architt@codeaurora.org>
+ <1992414.kkmfQUJ8oO@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1992414.kkmfQUJ8oO@avalon>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch, treding@nvidia.com, linux-arm-msm@vger.kernel.org, srinivas.kandagatla@linaro.org, andy.green@linaro.org, lars@metafoo.de, xinliang.liu@linaro.org, amit.kucheria@linaro.org, robdclark@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add rk3399-evb.dts for RK3399 evaluation board.
-Tested on RK3399 evb.
 
-Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-changes in v2:
-- remove rk808 since without i2c, which will upstream independently
-- remove es8316 since without i2c, which will upstream independently
-- fix codingstyle issues
 
- arch/arm64/boot/dts/rockchip/Makefile       |   1 +
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 122 ++++++++++++++++++++++++++++
- 2 files changed, 123 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+On 04/22/2016 04:02 AM, Laurent Pinchart wrote:
+> Hi Archit,
+>
+> Thank you for the patch.
+>
+> On Wednesday 09 Mar 2016 16:27:18 Archit Taneja wrote:
+>> Add description of ADV7533. Add the required and optional properties that
+>> are specific to it.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Rob Herring <robh@kernel.org>
+>>
+>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>> ---
+>>   .../bindings/display/bridge/adi,adv7511.txt        | 25 ++++++++++++++-----
+>>   1 file changed, 20 insertions(+), 5 deletions(-)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
+>> 96c25ee..420da5a 100644
+>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> @@ -1,13 +1,19 @@
+>> -Analog Device ADV7511(W)/13 HDMI Encoders
+>> +Analog Device ADV7511(W)/13/33 HDMI Encoders
+>>   -----------------------------------------
+>>
+>> -The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
+>> +The ADV7511, ADV7511W, ADV7513 and ADV7533 are HDMI audio and video
+>> transmitters compatible with HDMI 1.4 and DVI 1.0. They support color space
+>> conversion, -S/PDIF, CEC and HDCP.
+>> +S/PDIF, CEC and HDCP. ADV7533 supports the DSI interface for input pixels,
+>> while +the others support RGB interface.
+>>
+>>   Required properties:
+>>
+>> -- compatible: Should be one of "adi,adv7511", "adi,adv7511w" or
+>> "adi,adv7513" +- compatible: Should be one of:
+>> +		"adi,adv7511"
+>> +		"adi,adv7511w"
+>> +		"adi,adv7513"
+>> +		"adi,adv7533"
+>> +
+>>   - reg: I2C slave address
+>>
+>>   The ADV7511 supports a large number of input data formats that differ by
+>> their @@ -32,6 +38,11 @@ The following input format properties are required
+>> except in "rgb 1x" and - adi,input-justification: The input bit
+>> justification ("left", "evenly", "right").
+>>
+>> +The following properties are required for ADV7533:
+>> +
+>> +- adi,dsi-lanes: Number of DSI data lanes connected to the DSI host. It
+>> should +  be one of 1, 2, 3 or 4.
+>
+> Does the ADV7533 support data lanes remapping ?
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index df37865..7037a16 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -1,6 +1,7 @@
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-new file mode 100644
-index 0000000..309f870
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -0,0 +1,122 @@
-+/*
-+ * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/pwm/pwm.h>
-+#include "rk3399.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3399-evb", "rockchip,rk3399";
-+
-+	vdd_center: vdd-center {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm3 0 25000 0>;
-+		regulator-name = "vdd_center";
-+		regulator-min-microvolt = <800000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		status = "okay";
-+	};
-+
-+	vcc3v3_sys: vcc3v3-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_phy: vcc-phy-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_phy";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&pwm0 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
-+&pwm3 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ohci {
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins =
-+				<1 21 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		pmic_dvs2: pmic-dvs2 {
-+			rockchip,pins =
-+				<1 18 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+};
+It doesn't support remapping of lanes. There is only one register field
+that allows us to select the number of lanes.
+
+>
+>>   Optional properties:
+>>
+>>   - interrupts: Specifier for the ADV7511 interrupt
+>> @@ -42,13 +53,17 @@ Optional properties:
+>>   - adi,embedded-sync: The input uses synchronization signals embedded in the
+>> data stream (similar to BT.656). Defaults to separate H/V synchronization
+>> signals.
+>> +- adi,disable-timing-generator: Only for ADV7533. Disables the internal
+>> timing +  generator. The chip will rely on the sync signals in the DSI data
+>> lanes, +  rather than generate its own timings for HDMI output.
+>
+> Isn't that something that should be selectable at runtime ?
+
+The timing generator can be enabled/disabled at runtime. Although, we
+don't have a way to tell the driver whether we want to keep it enabled
+or not.
+
+It's a hardware feature that works well on most platforms, but not on
+all. In particular, it works well on DB410c, but causes issues with
+the Hikey 96 board. The DSI host on Hikey has different clock sources 
+that generate the display controller's pixel clock and DSI byte clock,
+whereas the Qualcomm SoC uses the same source. My guess is that the
+ADV7533's timing generator doesn't like it when the pixel data and
+clock are out of phase or something.
+
+Since it is a hardware feature which needs tweaking, I thought it
+qualified as a DT property.
+
+>
+>>   Required nodes:
+>>
+>>   The ADV7511 has two video ports. Their connections are modelled using the
+>> OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+>>
+>> -- Video port 0 for the RGB or YUV input
+>> +- Video port 0 for the RGB, YUV or DSI input. In the case of ADV7533, the
+>> +  remote endpoint phandle should refer to a valid mipi_dsi_host device
+>
+> Nitpicking, I would write "reference" instead of "refer to".
+
+I'll fix this in the next revision.
+
+Thanks,
+Archit
+
 -- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, hosted by The Linux Foundation
