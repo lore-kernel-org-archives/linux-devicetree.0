@@ -1,161 +1,119 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v8 08/24] iio: imu: inv_mpu6050: convert to use an explicit i2c mux core
-Date: Fri, 22 Apr 2016 13:37:12 +0200
-Message-ID: <1461325032-24299-1-git-send-email-peda@axentia.se>
-References: <1461165484-2314-9-git-send-email-peda@axentia.se>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2] ARM: tegra: add DT binding for Tegra186 GPIO
+ controllers
+Date: Fri, 22 Apr 2016 13:41:10 +0200
+Message-ID: <20160422114110.GC9047@ulmo.ba.sec>
+References: <1460483197-5130-1-git-send-email-swarren@wwwdotorg.org>
+ <CACRpkdYmcEQBN5QwjLa-Wyorv-otPdJh5C1KgKwUjUBWXvnb_w@mail.gmail.com>
+ <570FB459.8090802@wwwdotorg.org>
+ <CACRpkdbazmBE6rMO0EKmK6qxqL7uaWNQmf=SNEDBJPCTVteFiA@mail.gmail.com>
+ <57111107.8060309@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1461165484-2314-9-git-send-email-peda@axentia.se>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oTHb8nViIGeoXxdp"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57111107.8060309@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Allocate an explicit i2c mux core to handle parent and child adapters
-etc. Update the select/deselect ops to be in terms of the i2c mux core
-instead of the child adapter.
 
-Acked-by: Jonathan Cameron <jic23@kernel.org>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c |  2 +-
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c |  1 -
- drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  | 33 +++++++++++++++---------------
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  3 ++-
- 4 files changed, 19 insertions(+), 20 deletions(-)
+--oTHb8nViIGeoXxdp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v8 compared to v7:
-- Do not change i2c_get_clientdata() into dev_get_drvdata()
+On Fri, Apr 15, 2016 at 10:04:23AM -0600, Stephen Warren wrote:
+> On 04/15/2016 03:17 AM, Linus Walleij wrote:
+> > On Thu, Apr 14, 2016 at 5:16 PM, Stephen Warren <swarren@wwwdotorg.org>=
+ wrote:
+> > > On 04/14/2016 06:42 AM, Linus Walleij wrote:
+> > > > On Tue, Apr 12, 2016 at 7:46 PM, Stephen Warren <swarren@wwwdotorg.=
+org>
+> > > > wrote:
+> >=20
+> > > > I suspect that the Tegra definition of a "port" is close to what ot=
+her
+> > > > people
+> > > > call a "bank" like I try to define in this patch?
+> > > > http://marc.info/?l=3Dlinux-gpio&m=3D145941547420164&w=3D2
+> > >=20
+> > > There are similarities, but the concepts are quite different. In that
+> > > thread, the term "bank" actually refers to an instance of a standalon=
+e HW IP
+> > > block. Here, "port" is definitely something internal to a single HW b=
+lock.
+> >=20
+> > OK I get it. I wonder if we can make that common terminology as well.
+> >=20
+> > GPIO bank :=3D unique instance of a common IP block
+> > GPIO port :=3D unique line range inside an IP block
+>=20
+> I think this would be hard, and in some places potentially confusing.
+>=20
+> Various HW documentation likely uses the terms bank and port, without reg=
+ard
+> to how those terms are used in documentation for other chips. I'd like the
+> binding for any particular chip to use the same terminology as the HW
+> documentation for that chip, even if it's inconsistent with other bindings
+> (or at least contain an explicit terminology translation table). That's
+> because the binding is intended as HW documentation.
+>=20
+> Within the Linux code, we could certainly attempt to use consistent
+> terminology. If so, I suggest we use terms that are quite unlikely to be
+> used by any HW documentation, or could only realistically be used to mean
+> the same thing. If we decided to use "GPIO bank" and "GPIO port" as you
+> defined above, yet some HW documentation already used "GPIO bank" to mean=
+ a
+> subset of GPIOs within a single IP block, and "GPIO port" to mean a single
+> GPIO (both of which I think are quite likely/possible), then that's going=
+ to
+> make matters worse not better.
+>=20
+> Perhaps "HW module"m "IP block" or perhaps "device" would be a reasonable
+> term for "GPIO bank" as you defined that above. Of course, bikeshedding:-)
+>=20
+> I'm not sure of a reasonable term for "GPIO port" as you defined it.
+>=20
+> ...
+> > It's cool.
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >=20
+> > I assume you want to merge this through the Tegra tree, or
+> > should I apply it to the GPIO tree?
+>=20
+> I'm happy either way. If through the Tegra tree, Thierry would be applying
+> it so I'll let him make the call.
+>=20
+> I suspect that both this patch and my earlier "ARM: tegra: fix naming in
+> GPIO DT binding header" should be applied through the same tree for
+> consistency.
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c
-index 2771106fd650..f62b8bd9ad7e 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c
-@@ -183,7 +183,7 @@ int inv_mpu_acpi_create_mux_client(struct i2c_client *client)
- 			} else
- 				return 0; /* no secondary addr, which is OK */
- 		}
--		st->mux_client = i2c_new_device(st->mux_adapter, &info);
-+		st->mux_client = i2c_new_device(st->muxc->adapter[0], &info);
- 		if (!st->mux_client)
- 			return -ENODEV;
- 	}
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index d192953e9a38..0c2bded2b5b7 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -23,7 +23,6 @@
- #include <linux/kfifo.h>
- #include <linux/spinlock.h>
- #include <linux/iio/iio.h>
--#include <linux/i2c-mux.h>
- #include <linux/acpi.h>
- #include "inv_mpu_iio.h"
- 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-index f581256d9d4c..3a078df84224 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-@@ -15,7 +15,6 @@
- #include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
--#include <linux/i2c-mux.h>
- #include <linux/iio/iio.h>
- #include <linux/module.h>
- #include "inv_mpu_iio.h"
-@@ -52,10 +51,9 @@ static int inv_mpu6050_write_reg_unlocked(struct i2c_client *client,
- 	return 0;
- }
- 
--static int inv_mpu6050_select_bypass(struct i2c_adapter *adap, void *mux_priv,
--				     u32 chan_id)
-+static int inv_mpu6050_select_bypass(struct i2c_mux_core *muxc, u32 chan_id)
- {
--	struct i2c_client *client = mux_priv;
-+	struct i2c_client *client = i2c_mux_priv(muxc);
- 	struct iio_dev *indio_dev = dev_get_drvdata(&client->dev);
- 	struct inv_mpu6050_state *st = iio_priv(indio_dev);
- 	int ret = 0;
-@@ -84,10 +82,9 @@ write_error:
- 	return ret;
- }
- 
--static int inv_mpu6050_deselect_bypass(struct i2c_adapter *adap,
--				       void *mux_priv, u32 chan_id)
-+static int inv_mpu6050_deselect_bypass(struct i2c_mux_core *muxc, u32 chan_id)
- {
--	struct i2c_client *client = mux_priv;
-+	struct i2c_client *client = i2c_mux_priv(muxc);
- 	struct iio_dev *indio_dev = dev_get_drvdata(&client->dev);
- 	struct inv_mpu6050_state *st = iio_priv(indio_dev);
- 
-@@ -136,16 +133,18 @@ static int inv_mpu_probe(struct i2c_client *client,
- 		return result;
- 
- 	st = iio_priv(dev_get_drvdata(&client->dev));
--	st->mux_adapter = i2c_add_mux_adapter(client->adapter,
--					      &client->dev,
--					      client,
--					      0, 0, 0,
--					      inv_mpu6050_select_bypass,
--					      inv_mpu6050_deselect_bypass);
--	if (!st->mux_adapter) {
--		result = -ENODEV;
-+	st->muxc = i2c_mux_alloc(client->adapter, &client->dev,
-+				 1, 0, 0,
-+				 inv_mpu6050_select_bypass,
-+				 inv_mpu6050_deselect_bypass);
-+	if (!st->muxc) {
-+		result = -ENOMEM;
- 		goto out_unreg_device;
- 	}
-+	st->muxc->priv = dev_get_drvdata(&client->dev);
-+	result = i2c_mux_add_adapter(st->muxc, 0, 0, 0);
-+	if (result)
-+		goto out_unreg_device;
- 
- 	result = inv_mpu_acpi_create_mux_client(client);
- 	if (result)
-@@ -154,7 +153,7 @@ static int inv_mpu_probe(struct i2c_client *client,
- 	return 0;
- 
- out_del_mux:
--	i2c_del_mux_adapter(st->mux_adapter);
-+	i2c_mux_del_adapters(st->muxc);
- out_unreg_device:
- 	inv_mpu_core_remove(&client->dev);
- 	return result;
-@@ -166,7 +165,7 @@ static int inv_mpu_remove(struct i2c_client *client)
- 	struct inv_mpu6050_state *st = iio_priv(indio_dev);
- 
- 	inv_mpu_acpi_delete_mux_client(client);
--	i2c_del_mux_adapter(st->mux_adapter);
-+	i2c_mux_del_adapters(st->muxc);
- 
- 	return inv_mpu_core_remove(&client->dev);
- }
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index e302a49703bf..bb3cef6d7059 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -11,6 +11,7 @@
- * GNU General Public License for more details.
- */
- #include <linux/i2c.h>
-+#include <linux/i2c-mux.h>
- #include <linux/kfifo.h>
- #include <linux/spinlock.h>
- #include <linux/iio/iio.h>
-@@ -127,7 +128,7 @@ struct inv_mpu6050_state {
- 	const struct inv_mpu6050_hw *hw;
- 	enum   inv_devices chip_type;
- 	spinlock_t time_stamp_lock;
--	struct i2c_adapter *mux_adapter;
-+	struct i2c_mux_core *muxc;
- 	struct i2c_client *mux_client;
- 	unsigned int powerup_count;
- 	struct inv_mpu6050_platform_data plat_data;
--- 
-2.1.4
+Applied (to the same tree as that other patch), thanks.
+
+Thierry
+
+--oTHb8nViIGeoXxdp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXGg3TAAoJEN0jrNd/PrOhcbEP/2hffZ6MBcIaPX1093qhZRs/
+LZl299cOWZiRjcSV2DCDokgwEr7oerJ1u29qJBerlvQevslPoSUkFzfbyd6JCigq
+TEs6TJR5Ci4mFq1CUy1bQgxBRKfY0WPtvdYYNP3FC/ZMpk55FG+tcntJMx/ZCaRO
+xsiABPZWFJBwQDffmcr4Ukjox1DqvKYceQkYRwMHPK89RKJzsCC11Yx+hmM/w2/4
+Id3U7fTevK8Co+xPDXPaXDWYaKugtCkOi6vgUgGfNDRiMJeMffQpTsZfQ6voeSSw
+kA6AL6pjZNDb/QXxu3fLTPtCvoDwpqIMfzd3TPAVEaDtt8MOY41Pu79+SvUJqQE8
+Ai/zTTkEvb3cI5BibuNi8wMp0yu1MjTG+NNJ/0aQaktjhuTw7WJ88MDStcVxclHW
+iRdQvBuAip4G0t9m/H4+D+afAM/CC+93RNs75u3N53fC5V0GpN68lU3BigPdQHAe
+x5wQhJ6szut4tMAYD53+viz/ypFSsvrYJfEfjinOt/TlOfzmXu0a4UgzX1Z1Rd+q
+vPo/JRz0a/12SJ1V2S+Yj5EUT4+T5pUEG97UdzS64j2GZMREOegMRGHYkXQ9AiVM
+/TYg9QmqjRfOJaYOuLMSgEHpLPVGaExFAsGUo9Y3relyNyXbAj98XgnwJG7tWac1
+VxLW0C69CM6PeiNRRBlJ
+=kciN
+-----END PGP SIGNATURE-----
+
+--oTHb8nViIGeoXxdp--
