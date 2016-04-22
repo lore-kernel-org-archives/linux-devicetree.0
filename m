@@ -1,318 +1,320 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: [PATCH 4/8] firmware: qcom: scm: Add support for ARM64 SoCs
-Date: Fri, 22 Apr 2016 17:17:08 -0500
-Message-ID: <1461363432-5730-5-git-send-email-andy.gross@linaro.org>
-References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 10/11] hwmon: Add Altera A10-SR power supply alarms
+Date: Fri, 22 Apr 2016 15:24:02 -0700
+Message-ID: <20160422222402.GA22294@roeck-us.net>
+References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
+ <1461339219-15255-11-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461339219-15255-11-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kumar Gala <galak@codeaurora.org>
+On Fri, Apr 22, 2016 at 10:33:38AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> This patch adds the power supply alarms of the hwmon framework
+> to the Arria10 System Resource chip.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
 
-Add an implementation of the SCM interface that works on ARM64 SoCs.  This
-is used by things like determine if we have HDCP support or not on the
-system.
+Please read and follow Documentation/hwmon/sysfs-interface 
+as well as Documentation/hwmon/submitting-patches. At the very least,
+you are expected to document your driver, and you are expected to
+use standard attribute names.
 
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
----
- drivers/firmware/qcom_scm-32.c |   4 +
- drivers/firmware/qcom_scm-64.c | 194 ++++++++++++++++++++++++++++++++++++++++-
- drivers/firmware/qcom_scm.c    |   7 ++
- drivers/firmware/qcom_scm.h    |   4 +
- 4 files changed, 207 insertions(+), 2 deletions(-)
+>  drivers/hwmon/Kconfig              |    9 ++
+>  drivers/hwmon/Makefile             |    1 +
+>  drivers/hwmon/altera-a10sr-hwmon.c |  215 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 225 insertions(+)
+>  create mode 100644 drivers/hwmon/altera-a10sr-hwmon.c
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index ff94007..af08846 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -248,6 +248,15 @@ config SENSORS_ADT7475
+>  	  This driver can also be build as a module.  If so, the module
+>  	  will be called adt7475.
+>  
+> +config SENSORS_ALTERA_A10SR
+> +	bool "Altera Arria10 System Status"
+> +	depends on MFD_ALTERA_A10SR
+> +	help
+> +	  If you say yes here you get support for the power ready status
+> +	  for the Arria10's external power supplies on the Arria10 DevKit.
+> +	  These values are read over the SPI bus from the Arria10 System
+> +	  Resource chip.
+> +
+>  config SENSORS_ASC7621
+>  	tristate "Andigilog aSC7621"
+>  	depends on I2C
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 2ef5b7c..17d72a7 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_SENSORS_ADT7411)	+= adt7411.o
+>  obj-$(CONFIG_SENSORS_ADT7462)	+= adt7462.o
+>  obj-$(CONFIG_SENSORS_ADT7470)	+= adt7470.o
+>  obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
+> +obj-$(CONFIG_SENSORS_ALTERA_A10SR) += altera-a10sr-hwmon.o
+>  obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
+>  obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
+>  obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
+> diff --git a/drivers/hwmon/altera-a10sr-hwmon.c b/drivers/hwmon/altera-a10sr-hwmon.c
+> new file mode 100644
+> index 0000000..1eecc6b
+> --- /dev/null
+> +++ b/drivers/hwmon/altera-a10sr-hwmon.c
+> @@ -0,0 +1,215 @@
+> +/*
+> + *  Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + * HW Monitor driver for  Altera Arria10 MAX5 System Resource Chip
+> + * Adapted from DA9052
+> + */
+> +
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/mfd/altera-a10sr.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
 
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 9e3dc2f..0d2a3f8 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -482,3 +482,7 @@ int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
- 	return qcom_scm_call(QCOM_SCM_SVC_HDCP, QCOM_SCM_CMD_HDCP,
- 		req, req_cnt * sizeof(*req), resp, sizeof(*resp));
- }
-+
-+void __qcom_scm_init(void)
-+{
-+}
-diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index bb6555f..86bec08 100644
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -13,6 +13,142 @@
- #include <linux/io.h>
- #include <linux/errno.h>
- #include <linux/qcom_scm.h>
-+#include <linux/cpumask.h>
-+#include <linux/delay.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/qcom_scm.h>
-+#include <linux/arm-smccc.h>
-+
-+#include <asm/cacheflush.h>
-+#include <asm/compiler.h>
-+#include <asm/smp_plat.h>
-+
-+#include "qcom_scm.h"
-+
-+#define QCOM_SCM_FNID(s, c) ((((s) & 0xFF) << 8) | ((c) & 0xFF))
-+
-+#define MAX_QCOM_SCM_ARGS 10
-+#define MAX_QCOM_SCM_RETS 3
-+
-+#define QCOM_SCM_ARGS_IMPL(num, a, b, c, d, e, f, g, h, i, j, ...) (\
-+			   (((a) & 0xff) << 4) | \
-+			   (((b) & 0xff) << 6) | \
-+			   (((c) & 0xff) << 8) | \
-+			   (((d) & 0xff) << 10) | \
-+			   (((e) & 0xff) << 12) | \
-+			   (((f) & 0xff) << 14) | \
-+			   (((g) & 0xff) << 16) | \
-+			   (((h) & 0xff) << 18) | \
-+			   (((i) & 0xff) << 20) | \
-+			   (((j) & 0xff) << 22) | \
-+			   (num & 0xffff))
-+
-+#define QCOM_SCM_ARGS(...) QCOM_SCM_ARGS_IMPL(__VA_ARGS__, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-+
-+/**
-+ * struct qcom_scm_desc
-+ * @arginfo: Metadata describing the arguments in args[]
-+ * @args: The array of arguments for the secure syscall
-+ * @res: The values returned by the secure syscall
-+ * @extra_args_virt: The buffer containing extra arguments
-+		   (that don't fit in available registers)
-+ * @extra_args_phys: The physical address of the extra arguments
-+ */
-+struct qcom_scm_desc {
-+	u32 arginfo;
-+	u64 args[MAX_QCOM_SCM_ARGS];
-+	struct arm_smccc_res res;
-+
-+	/* private */
-+	void *extra_args_virt;
-+	dma_addr_t extra_args_phys;
-+	size_t alloc_size;
-+};
-+
-+static u64 qcom_smccc_convention = -1;
-+static DEFINE_MUTEX(qcom_scm_lock);
-+
-+#define QCOM_SCM_EBUSY_WAIT_MS 30
-+#define QCOM_SCM_EBUSY_MAX_RETRY 20
-+
-+#define N_EXT_QCOM_SCM_ARGS 7
-+#define FIRST_EXT_ARG_IDX 3
-+#define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
-+
-+/**
-+ * qcom_scm_call() - Invoke a syscall in the secure world
-+ * @svc_id: service identifier
-+ * @cmd_id: command identifier
-+ * @fn_id: The function ID for this syscall
-+ * @desc: Descriptor structure containing arguments and return values
-+ *
-+ * Sends a command to the SCM and waits for the command to finish processing.
-+ * This should *only* be called in pre-emptible context.
-+ *
-+*/
-+static int qcom_scm_call(u32 svc_id, u32 cmd_id, struct qcom_scm_desc *desc)
-+{
-+	int arglen = desc->arginfo & 0xf;
-+	int ret, retry_count = 0, i;
-+	u32 fn_id = QCOM_SCM_FNID(svc_id, cmd_id);
-+	u64 cmd, x5 = desc->args[FIRST_EXT_ARG_IDX];
-+
-+	if (unlikely(arglen > N_REGISTER_ARGS)) {
-+		desc->alloc_size = N_EXT_QCOM_SCM_ARGS * sizeof(u64);
-+		desc->extra_args_virt =
-+			qcom_scm_alloc_buffer(desc->alloc_size,
-+						 &desc->extra_args_phys,
-+						 GFP_KERNEL);
-+		if (!desc->extra_args_virt)
-+			return qcom_scm_remap_error(-ENOMEM);
-+
-+		if (qcom_smccc_convention == ARM_SMCCC_SMC_32) {
-+			u32 *args = desc->extra_args_virt;
-+
-+			for (i = 0; i < N_EXT_QCOM_SCM_ARGS; i++)
-+				args[i] = desc->args[i + FIRST_EXT_ARG_IDX];
-+		} else {
-+			u64 *args = desc->extra_args_virt;
-+
-+			for (i = 0; i < N_EXT_QCOM_SCM_ARGS; i++)
-+				args[i] = desc->args[i + FIRST_EXT_ARG_IDX];
-+		}
-+
-+		x5 = desc->extra_args_phys;
-+	}
-+
-+	do {
-+		mutex_lock(&qcom_scm_lock);
-+
-+		cmd = ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL,
-+					 qcom_smccc_convention,
-+					 ARM_SMCCC_OWNER_SIP, fn_id);
-+
-+		do {
-+			arm_smccc_smc(cmd, arglen, desc->args[0], desc->args[1],
-+				      desc->args[2], x5, 0, 0, &desc->res);
-+		} while (desc->res.a0 == QCOM_SCM_INTERRUPTED);
-+
-+		mutex_unlock(&qcom_scm_lock);
-+
-+		if (desc->res.a0 == QCOM_SCM_V2_EBUSY) {
-+			if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
-+				break;
-+			msleep(QCOM_SCM_EBUSY_WAIT_MS);
-+		}
-+	}  while (desc->res.a0 == QCOM_SCM_V2_EBUSY);
-+
-+	if (desc->extra_args_virt)
-+		qcom_scm_free_buffer(desc->alloc_size, desc->extra_args_virt,
-+				     desc->extra_args_phys);
-+
-+	if (desc->res.a0 < 0)
-+		return qcom_scm_remap_error(ret);
-+
-+	return 0;
-+}
- 
- /**
-  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-@@ -50,14 +186,68 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
-  */
- void __qcom_scm_cpu_power_down(u32 flags)
- {
-+	return;
- }
- 
- int __qcom_scm_is_call_available(u32 svc_id, u32 cmd_id)
- {
--	return -ENOTSUPP;
-+	int ret;
-+	struct qcom_scm_desc desc = {0};
-+
-+	desc.arginfo = QCOM_SCM_ARGS(1);
-+	desc.args[0] = QCOM_SCM_FNID(svc_id, cmd_id) |
-+			(ARM_SMCCC_OWNER_SIP << ARM_SMCCC_OWNER_SHIFT);
-+
-+	ret = qcom_scm_call(QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AVAIL_CMD,
-+			    &desc);
-+
-+	if (ret)
-+		return ret;
-+
-+	return desc.res.a1;
- }
- 
- int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
- {
--	return -ENOTSUPP;
-+	int ret;
-+	struct qcom_scm_desc desc = {0};
-+
-+	if (req_cnt > QCOM_SCM_HDCP_MAX_REQ_CNT)
-+		return -ERANGE;
-+
-+	desc.args[0] = req[0].addr;
-+	desc.args[1] = req[0].val;
-+	desc.args[2] = req[1].addr;
-+	desc.args[3] = req[1].val;
-+	desc.args[4] = req[2].addr;
-+	desc.args[5] = req[2].val;
-+	desc.args[6] = req[3].addr;
-+	desc.args[7] = req[3].val;
-+	desc.args[8] = req[4].addr;
-+	desc.args[9] = req[4].val;
-+	desc.arginfo = QCOM_SCM_ARGS(10);
-+
-+	ret = qcom_scm_call(QCOM_SCM_SVC_HDCP, QCOM_SCM_CMD_HDCP, &desc);
-+	*resp = desc.res.a1;
-+
-+	return ret;
-+}
-+
-+void __qcom_scm_init(void)
-+{
-+	u64 cmd;
-+	struct arm_smccc_res res;
-+	u32 function = QCOM_SCM_FNID(QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AVAIL_CMD);
-+
-+	/* First try a SMC64 call */
-+	cmd = ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_64,
-+				 ARM_SMCCC_OWNER_SIP, function);
-+
-+	arm_smccc_smc(cmd, QCOM_SCM_ARGS(1), cmd & (~BIT(ARM_SMCCC_TYPE_SHIFT)),
-+		      0, 0, 0, 0, 0, &res);
-+
-+	if (!res.a0 && res.a1)
-+		qcom_smccc_convention = ARM_SMCCC_SMC_64;
-+	else
-+		qcom_smccc_convention = ARM_SMCCC_SMC_32;
- }
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 8e1eeb8..7d7b12b 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -166,6 +166,11 @@ bool qcom_scm_is_available(void)
- }
- EXPORT_SYMBOL(qcom_scm_is_available);
- 
-+static void qcom_scm_init(void)
-+{
-+	__qcom_scm_init();
-+}
-+
- static int qcom_scm_probe(struct platform_device *pdev)
- {
- 	struct qcom_scm *scm;
-@@ -208,6 +213,8 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 	__scm = scm;
- 	__scm->dev = &pdev->dev;
- 
-+	qcom_scm_init();
-+
- 	return 0;
- }
- 
-diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-index 7dcc733..d3f1f0a 100644
---- a/drivers/firmware/qcom_scm.h
-+++ b/drivers/firmware/qcom_scm.h
-@@ -36,7 +36,9 @@ extern int __qcom_scm_is_call_available(u32 svc_id, u32 cmd_id);
- extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
- 		u32 *resp);
- 
-+extern void __qcom_scm_init(void);
- /* common error codes */
-+#define QCOM_SCM_V2_EBUSY	-12
- #define QCOM_SCM_ENOMEM		-5
- #define QCOM_SCM_EOPNOTSUPP	-4
- #define QCOM_SCM_EINVAL_ADDR	-3
-@@ -56,6 +58,8 @@ static inline int qcom_scm_remap_error(int err)
- 		return -EOPNOTSUPP;
- 	case QCOM_SCM_ENOMEM:
- 		return -ENOMEM;
-+	case QCOM_SCM_V2_EBUSY:
-+		return err;
- 	}
- 	return -EINVAL;
- }
--- 
-1.9.1
+Please list include files in alphabetic order.
+
+> +
+> +#define ALTR_A10SR_1V0_BIT_POS          ALTR_A10SR_PG1_1V0_SHIFT
+> +#define ALTR_A10SR_0V95_BIT_POS         ALTR_A10SR_PG1_0V95_SHIFT
+> +#define ALTR_A10SR_0V9_BIT_POS          ALTR_A10SR_PG1_0V9_SHIFT
+> +#define ALTR_A10SR_10V_BIT_POS          ALTR_A10SR_PG1_10V_SHIFT
+> +#define ALTR_A10SR_5V0_BIT_POS          ALTR_A10SR_PG1_5V0_SHIFT
+> +#define ALTR_A10SR_3V3_BIT_POS          ALTR_A10SR_PG1_3V3_SHIFT
+> +#define ALTR_A10SR_2V5_BIT_POS          ALTR_A10SR_PG1_2V5_SHIFT
+> +#define ALTR_A10SR_1V8_BIT_POS          ALTR_A10SR_PG1_1V8_SHIFT
+> +#define ALTR_A10SR_OP_FLAG_BIT_POS      ALTR_A10SR_PG1_OP_FLAG_SHIFT
+> +/* 2nd register needs an offset of 8 to get to 2nd register */
+> +#define ALTR_A10SR_FBC2MP_BIT_POS       (8 + ALTR_A10SR_PG2_FBC2MP_SHIFT)
+> +#define ALTR_A10SR_FAC2MP_BIT_POS       (8 + ALTR_A10SR_PG2_FAC2MP_SHIFT)
+> +#define ALTR_A10SR_FMCBVADJ_BIT_POS     (8 + ALTR_A10SR_PG2_FMCBVADJ_SHIFT)
+> +#define ALTR_A10SR_FMCAVADJ_BIT_POS     (8 + ALTR_A10SR_PG2_FMCAVADJ_SHIFT)
+> +#define ALTR_A10SR_HL_VDDQ_BIT_POS      (8 + ALTR_A10SR_PG2_HL_VDDQ_SHIFT)
+> +#define ALTR_A10SR_HL_VDD_BIT_POS       (8 + ALTR_A10SR_PG2_HL_VDD_SHIFT)
+> +#define ALTR_A10SR_HL_HPS_BIT_POS       (8 + ALTR_A10SR_PG2_HL_HPS_SHIFT)
+> +#define ALTR_A10SR_HPS_BIT_POS          (8 + ALTR_A10SR_PG2_HPS_SHIFT)
+> +/* 3rd register needs an offset of 16 to get to 3rd register */
+> +#define ALTR_A10SR_10V_FAIL_BIT_POS     (16 + ALTR_A10SR_PG3_10V_FAIL_SHIFT)
+> +#define ALTR_A10SR_FAM2C_BIT_POS        (16 + ALTR_A10SR_PG3_FAM2C_SHIFT)
+> +
+> +/**
+> + * struct altr_a10sr_hwmon - Altera Max5 HWMON device private data structure
+> + * @device: hwmon class.
+> + * @regmap: the regmap from the parent device.
+> + */
+> +struct altr_a10sr_hwmon {
+> +	struct device		*class_device;
+> +	struct regmap		*regmap;
+> +};
+> +
+> +static ssize_t altr_a10sr_read_status(struct device *dev,
+> +				      struct device_attribute *devattr,
+> +				      char *buf)
+> +{
+> +	struct altr_a10sr_hwmon *hwmon = dev_get_drvdata(dev);
+> +	int val, ret, index = to_sensor_dev_attr(devattr)->index;
+> +	int mask = ALTR_A10SR_REG_BIT_MASK(index);
+> +	unsigned char reg = ALTR_A10SR_PWR_GOOD1_REG +
+> +			    ALTR_A10SR_REG_OFFSET(index);
+> +
+> +	ret = regmap_read(hwmon->regmap, reg, &val);
+
+The pointer parameter to regmap_read() is unsigned int. I would suggest
+to use the same variable type to avoid surprises.
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return sprintf(buf, "%d\n", !!(~val & mask));
+
+Are alarms all active low ?
+
+> +}
+> +
+> +static ssize_t altr_a10sr_hwmon_show_name(struct device *dev,
+> +					  struct device_attribute *devattr,
+> +					  char *buf)
+> +{
+> +	return sprintf(buf, "altr_a10sr\n");
+> +}
+> +
+> +/* First Power Good Register Bits */
+> +static SENSOR_DEVICE_ATTR(1v0_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_1V0_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(0v95_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_0V95_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(0v9_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_0V9_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(5v0_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_5V0_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(3v3_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_3V3_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(2v5_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_2V5_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(1v8_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_1V8_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(opflag_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_OP_FLAG_BIT_POS);
+> +/* Second Power Good Register Bits */
+> +static SENSOR_DEVICE_ATTR(fbc2mp_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_FBC2MP_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(fac2mp_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_FAC2MP_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(fmcbvadj_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_FMCBVADJ_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(fmcavadj_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_FMCAVADJ_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(hl_vddq_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_HL_VDDQ_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(hl_vdd_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_HL_VDD_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(hlhps_vdd_alarm, S_IRUGO, altr_a10sr_read_status,
+> +			  NULL, ALTR_A10SR_HL_HPS_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(hps_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_HPS_BIT_POS);
+> +/* Third Power Good Register Bits */
+> +static SENSOR_DEVICE_ATTR(10v_alarm, S_IRUGO, altr_a10sr_read_status,
+> +			  NULL, ALTR_A10SR_10V_FAIL_BIT_POS);
+> +static SENSOR_DEVICE_ATTR(fam2c_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
+> +			  ALTR_A10SR_FAM2C_BIT_POS);
+> +
+> +static DEVICE_ATTR(name, S_IRUGO, altr_a10sr_hwmon_show_name, NULL);
+> +
+> +static struct attribute *altr_a10sr_attr[] = {
+> +	&dev_attr_name.attr,
+> +	/* First Power Good Register */
+> +	&sensor_dev_attr_opflag_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_1v8_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_2v5_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_1v0_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_3v3_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_5v0_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_0v9_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_0v95_alarm.dev_attr.attr,
+> +	/* Second Power Good Register */
+> +	&sensor_dev_attr_hps_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_hlhps_vdd_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_hl_vdd_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_hl_vddq_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_fmcavadj_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_fmcbvadj_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_fac2mp_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_fbc2mp_alarm.dev_attr.attr,
+> +	/* Third Power Good Register */
+> +	&sensor_dev_attr_10v_alarm.dev_attr.attr,
+> +	&sensor_dev_attr_fam2c_alarm.dev_attr.attr,
+
+Ultimately, this doesn't really make much sense, even with standard attribute
+names. The ABI assumes that _input attrributes exist. Not sure if that could
+be solved by providing 'dummy' unreadable input attributes (permission 0);
+that might be worth a try. If you want to attach names to the attributes,
+you would need to provide label attributes. Specifically you would need
+
+	inX_input (with permission 0) - not sure if that is even possible
+	inX_alarm
+	inX_label
+
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group altr_a10sr_attr_group = {
+> +	.attrs = altr_a10sr_attr
+> +};
+> +
+> +static int altr_a10sr_hwmon_probe(struct platform_device *pdev)
+> +{
+> +	struct altr_a10sr_hwmon *hwmon;
+> +	int ret;
+> +	struct altr_a10sr *a10sr = dev_get_drvdata(pdev->dev.parent);
+> +
+
+What if someone creates a stand-alone devicetree property for this driver,
+and there is no parent (or parent driver data) ?
+
+> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
+> +	if (!hwmon)
+> +		return -ENOMEM;
+> +
+> +	hwmon->regmap = a10sr->regmap;
+> +
+> +	platform_set_drvdata(pdev, hwmon);
+> +
+> +	ret = sysfs_create_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
+> +	if (ret)
+> +		goto err_mem;
+> +
+> +	hwmon->class_device = hwmon_device_register(&pdev->dev);
+> +	if (IS_ERR(hwmon->class_device)) {
+> +		ret = PTR_ERR(hwmon->class_device);
+> +		goto err_sysfs;
+> +	}
+
+Please use devm_hwmon_device_register_with_groups().
+
+> +
+> +	return 0;
+> +
+> +err_sysfs:
+> +	sysfs_remove_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
+> +err_mem:
+> +	return ret;
+> +}
+> +
+> +static int altr_a10sr_hwmon_remove(struct platform_device *pdev)
+> +{
+> +	struct altr_a10sr_hwmon *hwmon = platform_get_drvdata(pdev);
+> +
+> +	hwmon_device_unregister(hwmon->class_device);
+> +	sysfs_remove_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id altr_a10sr_hwmon_of_match[] = {
+> +	{ .compatible = "altr,a10sr-hwmon" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, altr_a10sr_hwmon_of_match);
+> +
+> +static struct platform_driver altr_a10sr_hwmon_driver = {
+> +	.probe = altr_a10sr_hwmon_probe,
+> +	.remove = altr_a10sr_hwmon_remove,
+> +	.driver = {
+> +		.name = "altr_a10sr_hwmon",
+> +		.of_match_table = of_match_ptr(altr_a10sr_hwmon_of_match),
+> +	},
+> +};
+> +
+> +module_platform_driver(altr_a10sr_hwmon_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Thor Thayer <tthayer@opensource.altera.com>");
+> +MODULE_DESCRIPTION("HW Monitor driver for Altera Arria10 System Resource Chip");
+> -- 
+> 1.7.9.5
+> 
