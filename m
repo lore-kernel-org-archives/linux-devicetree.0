@@ -1,136 +1,88 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/8] firmware: qcom: scm: Use atomic SCM for cold boot
-Date: Fri, 22 Apr 2016 17:17:09 -0500
-Message-ID: <1461363432-5730-6-git-send-email-andy.gross@linaro.org>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: [PATCH 3/8] firmware: qcom: scm: Generalize shared error map
+Date: Fri, 22 Apr 2016 17:17:07 -0500
+Message-ID: <1461363432-5730-4-git-send-email-andy.gross@linaro.org>
 References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461363432-5730-1-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch changes the cold_set_boot_addr function to use atomic SCM
-calls.  This removes the need for memory allocation and instead places
-all arguments in registers.
+This patch moves the qcom_scm_remap_error function to the include file
+where can be used by both the 32 and 64 bit versions of the code.
 
-Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 ---
- drivers/firmware/qcom_scm-32.c | 40 ++++++++++++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 14 deletions(-)
+ drivers/firmware/qcom_scm-32.c | 17 -----------------
+ drivers/firmware/qcom_scm.h    | 16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 0d2a3f8..f596091 100644
+index 0883292..9e3dc2f 100644
 --- a/drivers/firmware/qcom_scm-32.c
 +++ b/drivers/firmware/qcom_scm-32.c
-@@ -294,34 +294,39 @@ out:
- 				(n & 0xf))
+@@ -168,23 +168,6 @@ static inline void *qcom_scm_get_response_buffer(const struct qcom_scm_response
+ 	return (void *)rsp + le32_to_cpu(rsp->buf_offset);
+ }
  
- /**
-- * qcom_scm_call_atomic1() - Send an atomic SCM command with one argument
-+ * qcom_scm_call_atomic() - Send an atomic SCM command with one argument
-  * @svc_id: service identifier
-  * @cmd_id: command identifier
-+ * @arglen: number of arguments
-  * @arg1: first argument
-+ * @arg2: second argument (optional - fill with 0 if unused)
-  *
-  * This shall only be used with commands that are guaranteed to be
-  * uninterruptable, atomic and SMP safe.
-  */
--static s32 qcom_scm_call_atomic1(u32 svc, u32 cmd, u32 arg1)
-+static s32 qcom_scm_call_atomic(u32 svc, u32 cmd, u32 arglen, u32 arg1,
-+				u32 arg2)
+-static int qcom_scm_remap_error(int err)
+-{
+-	pr_err("qcom_scm_call failed with error code %d\n", err);
+-	switch (err) {
+-	case QCOM_SCM_ERROR:
+-		return -EIO;
+-	case QCOM_SCM_EINVAL_ADDR:
+-	case QCOM_SCM_EINVAL_ARG:
+-		return -EINVAL;
+-	case QCOM_SCM_EOPNOTSUPP:
+-		return -EOPNOTSUPP;
+-	case QCOM_SCM_ENOMEM:
+-		return -ENOMEM;
+-	}
+-	return -EINVAL;
+-}
+-
+ static u32 smc(u32 cmd_addr)
  {
  	int context_id;
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index 2cce75c..7dcc733 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -44,4 +44,20 @@ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+ #define QCOM_SCM_ERROR		-1
+ #define QCOM_SCM_INTERRUPTED	1
  
--	register u32 r0 asm("r0") = SCM_ATOMIC(svc, cmd, 1);
-+	register u32 r0 asm("r0") = SCM_ATOMIC(svc, cmd, arglen);
- 	register u32 r1 asm("r1") = (u32)&context_id;
- 	register u32 r2 asm("r2") = arg1;
-+	register u32 r3 asm("r3") = arg2;
- 
- 	asm volatile(
- 			__asmeq("%0", "r0")
- 			__asmeq("%1", "r0")
- 			__asmeq("%2", "r1")
- 			__asmeq("%3", "r2")
-+			__asmeq("%4", "r3")
- #ifdef REQUIRES_SEC
- 			".arch_extension sec\n"
- #endif
- 			"smc    #0      @ switch to secure world\n"
- 			: "=r" (r0)
--			: "r" (r0), "r" (r1), "r" (r2)
--			: "r3");
-+			: "r" (r0), "r" (r1), "r" (r2), "r" (r3)
-+			);
- 	return r0;
- }
- 
-@@ -364,17 +369,24 @@ EXPORT_SYMBOL(qcom_scm_get_version);
- /*
-  * Set the cold/warm boot address for one of the CPU cores.
-  */
--static int qcom_scm_set_boot_addr(u32 addr, int flags)
-+static int qcom_scm_set_boot_addr(u32 addr, int flags, bool do_atomic)
- {
- 	struct {
- 		__le32 flags;
- 		__le32 addr;
- 	} cmd;
- 
--	cmd.addr = cpu_to_le32(addr);
--	cmd.flags = cpu_to_le32(flags);
--	return qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
--			&cmd, sizeof(cmd), NULL, 0);
-+	if (do_atomic) {
-+		return qcom_scm_call_atomic(QCOM_SCM_SVC_BOOT,
-+					    QCOM_SCM_BOOT_ADDR, 2, flags, addr);
-+	} else {
-+
-+		cmd.addr = cpu_to_le32(addr);
-+		cmd.flags = cpu_to_le32(flags);
-+
-+		return qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
-+				     &cmd, sizeof(cmd), NULL, 0);
++static inline int qcom_scm_remap_error(int err)
++{
++	switch (err) {
++	case QCOM_SCM_ERROR:
++		return -EIO;
++	case QCOM_SCM_EINVAL_ADDR:
++	case QCOM_SCM_EINVAL_ARG:
++		return -EINVAL;
++	case QCOM_SCM_EOPNOTSUPP:
++		return -EOPNOTSUPP;
++	case QCOM_SCM_ENOMEM:
++		return -ENOMEM;
 +	}
- }
- 
- /**
-@@ -406,7 +418,7 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- 			set_cpu_present(cpu, false);
- 	}
- 
--	return qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
-+	return qcom_scm_set_boot_addr(virt_to_phys(entry), flags, true);
- }
- 
- /**
-@@ -437,7 +449,7 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
- 	if (!flags)
- 		return 0;
- 
--	ret = qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
-+	ret = qcom_scm_set_boot_addr(virt_to_phys(entry), flags, false);
- 	if (!ret) {
- 		for_each_cpu(cpu, cpus)
- 			qcom_scm_wb[cpu].entry = entry;
-@@ -456,8 +468,8 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
-  */
- void __qcom_scm_cpu_power_down(u32 flags)
- {
--	qcom_scm_call_atomic1(QCOM_SCM_SVC_BOOT, QCOM_SCM_CMD_TERMINATE_PC,
--			flags & QCOM_SCM_FLUSH_FLAG_MASK);
-+	qcom_scm_call_atomic(QCOM_SCM_SVC_BOOT, QCOM_SCM_CMD_TERMINATE_PC, 1,
-+			flags & QCOM_SCM_FLUSH_FLAG_MASK, 0);
- }
- 
- int __qcom_scm_is_call_available(u32 svc_id, u32 cmd_id)
++	return -EINVAL;
++}
++
+ #endif
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
