@@ -1,39 +1,54 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: dra7x: Support QSPI MODE-0 operation at
- 64MHz
-Date: Fri, 22 Apr 2016 14:33:53 -0500
-Message-ID: <20160422193353.GA15316@rob-hp-laptop>
-References: <1461151980-28139-1-git-send-email-vigneshr@ti.com>
- <1461151980-28139-3-git-send-email-vigneshr@ti.com>
+Subject: Re: [PATCH v2 1/2] Documentation: DT: vdma: Add clock support for
+ vdma
+Date: Fri, 22 Apr 2016 14:37:07 -0500
+Message-ID: <20160422193707.GA16116@rob-hp-laptop>
+References: <1461152599-28858-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1461151980-28139-3-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1461152599-28858-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 05:03:00PM +0530, Vignesh R wrote:
-> According to Data Manual(SPRS915P) of AM57x, TI QSPI controller on
-> DRA74(rev 1.1+)/DRA72 EVM can support up to 64MHz in MODE-0, whereas
-> MODE-3 is limited to 48MHz. Hence, switch to MODE-0 for better
-> throughput.
+On Wed, Apr 20, 2016 at 05:13:18PM +0530, Kedareswara rao Appana wrote:
+> This patch updates the binding doc with clock description
+> for vdma.
 > 
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
+> Changes for v2:
+> --> Listed down all the clocks supported by the h/w
+>     as suggested by the Datta.
+> --> Used IP clock names instead of shortcut clock names.
 > 
-> v2: rebased on linux-next 20160419 to include moving to
-> dra72-evm-common.dtsi
+>  Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> 
->  Documentation/devicetree/bindings/spi/ti_qspi.txt | 7 +++++++
->  arch/arm/boot/dts/dra7-evm.dts                    | 6 ++----
->  arch/arm/boot/dts/dra72-evm-common.dtsi           | 6 ++----
->  3 files changed, 11 insertions(+), 8 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+> index fcc2b65..afe9eb7 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+> @@ -21,6 +21,11 @@ Required properties:
+>  - dma-channel child node: Should have at least one channel and can have up to
+>  	two channels per device. This node specifies the properties of each
+>  	DMA channel (see child node properties below).
+> +- clocks: Input clock specifier. Refer to common clock bindings.
+> +- clock-names: List of input clocks "s_axi_lite_aclk", "m_axi_mm2s_aclk"
+> +	       "m_axi_s2mm_aclk", "m_axis_mm2s_aclk", "s_axis_s2mm_aclk"
+> +	       (list of input cloks may vary based on the ip configuration.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+s/cloks/clocks/
+
+> +		see clock bindings for more info).
+
+This does not make sense. The common clock binding is going to tell me 
+more about how the clocks vary?
+
+You need to define here how the clocks can vary.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
