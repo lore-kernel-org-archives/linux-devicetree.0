@@ -1,45 +1,46 @@
-From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: imx28: Provide regulators for the current sources of the LRADC
-Date: Fri, 22 Apr 2016 13:52:27 +0000
-Message-ID: <1461333147-11873-4-git-send-email-harald@ccbib.org>
-References: <1461333147-11873-1-git-send-email-harald@ccbib.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461333147-11873-1-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/5] ata: add support for Marvell Armada 7K/8K AHCI
+Date: Fri, 22 Apr 2016 16:32:36 +0200
+Message-ID: <1461335561-18363-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the devicetree nodes to make the mxs-lradc driver register
-regulator devices for the integrated current sources.
+Hello,
 
-Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
----
-I couln't test this patch on actual HW, but it is a straight forward
-port from the imx23 case. With only a funny change in the node label,
-to match the naming convention of the IMX28 Reference Manual.
+The following small series adds support for the Marvell Armada 7K/8K
+AHCI controller. This controller is a standard AHCI controller, so not
+much is needed, except that it uses a non-default port offset and
+length. Due to this, some preparatory patches are used to make it
+possible to override the default port offset/length used by the AHCI
+core.
 
- arch/arm/boot/dts/imx28.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Thanks!
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index f637ec9..38f8675 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -1070,6 +1070,14 @@
- 				status = "disabled";
- 				clocks = <&clks 41>;
- 				#io-channel-cells = <1>;
-+
-+				isrc_lradc0: ISRC0 {
-+					regulator-max-microamp = <300>;
-+				};
-+
-+				isrc_lradc6: ISRC1 {
-+					regulator-max-microamp = <300>;
-+				};
- 			};
- 
- 			spdif: spdif@80054000 {
+Thomas
+
+Thomas Petazzoni (5):
+  ata: ahci: add support for non-standard port offset/length
+  ata: acard-ahci: use the new port_{offset,length} members
+  ata: ahci_ceva: use the new port_{offset,length} members
+  ata: ahci_mvebu: add support for Armada 8K
+  dt-bindings: ata: add compatible string for Armada 8K to ahci-platform
+
+ Documentation/devicetree/bindings/ata/ahci-platform.txt | 1 +
+ drivers/ata/acard-ahci.c                                | 3 ++-
+ drivers/ata/ahci.c                                      | 5 +++--
+ drivers/ata/ahci.h                                      | 7 ++++++-
+ drivers/ata/ahci_ceva.c                                 | 5 ++---
+ drivers/ata/ahci_mvebu.c                                | 5 +++++
+ drivers/ata/libahci_platform.c                          | 7 ++++++-
+ 7 files changed, 25 insertions(+), 8 deletions(-)
+
 -- 
-2.1.4
+2.6.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
