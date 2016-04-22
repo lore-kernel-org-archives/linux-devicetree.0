@@ -1,100 +1,192 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCH 5/6] leds: pca963x: Inform the output that it is inverted
-Date: Fri, 22 Apr 2016 17:44:09 +0200
-Message-ID: <D4B039B1-9910-455B-BE8F-50DD9AA7C4EA@schinagl.nl>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl> <1461051650-18824-6-git-send-email-oliver@schinagl.nl> <20160421150750.GA3116@rob-hp-laptop> <571A1B60.3020804@schinagl.nl> <CAL_JsqJdvfrAy+1pYVYOp+tGhjOO3WkQo24+hfxV0_Ncpj6dSg@mail.gmail.com>
+From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Subject: Re: [PATCH net v2 2/3] drivers: net: cpsw: fix error messages when
+ using phy-handle DT property
+Date: Fri, 22 Apr 2016 11:45:45 -0400
+Message-ID: <20160422114545.57b477ad.drivshin.allworx@gmail.com>
+References: <1461261035-5578-1-git-send-email-drivshin.allworx@gmail.com>
+	<1461263172-10428-1-git-send-email-drivshin.allworx@gmail.com>
+	<571A2126.2060708@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJdvfrAy+1pYVYOp+tGhjOO3WkQo24+hfxV0_Ncpj6dSg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <571A2126.2060708@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>, Mugunthan V N <mugunthanvnm@ti.com>, Andrew Goodbody <andrew.goodbody@cambrionix.com>, Markus Brunner <systemprogrammierung.brunner@gmail.com>, Nicolas Chauvet <kwizart@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 22 Apr 2016 16:03:34 +0300
+Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+
+> On 04/21/2016 09:26 PM, David Rivshin (Allworx) wrote:
+> > From: David Rivshin <drivshin@allworx.com>
+> > 
+> > The phy-handle, phy_id, and fixed-link properties are mutually exclusive,
+> > and only one need be specified. However if phy-handle was specified, an
+> > error message would complain about the lack of phy_id or fixed-link.
+> > 
+> > Also, if phy-handle was specified and the subsequent of_phy_connect()
+> > failed, the error message still referenced slaved->data->phy_id, which
+> > would be empty. Instead, use the name of the device_node as a useful
+> > identifier.
+> > 
+> > Fixes: 9e42f715264f ("drivers: net: cpsw: add phy-handle parsing")
+> > Signed-off-by: David Rivshin <drivshin@allworx.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Tested-by: Nicolas Chauvet <kwizart@gmail.com>
+> > ---
+> > If would like this for -stable it should apply cleanly as far back
+> > as 4.5. It failes on 4.4 due to some context differences, but can be
+> > applied with 'git am -C2'. Or, I can produce a separate patch against
+> > linux-4.4.y if preferred.
+> > 
+> > Changes since v1 [1]:
+> > - Rebased (no conflicts)
+> > - Added Tested-by from Nicolas Chauvet
+> > - Added Acked-by from Rob Herring for the binding change
+> > 
+> > [1] https://patchwork.ozlabs.org/patch/560324/
+> > 
+> >   Documentation/devicetree/bindings/net/cpsw.txt |  4 ++--
+> >   drivers/net/ethernet/ti/cpsw.c                 | 17 +++++++++++++----
+> >   2 files changed, 15 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+> > index 28a4781..3033c0f 100644
+> > --- a/Documentation/devicetree/bindings/net/cpsw.txt
+> > +++ b/Documentation/devicetree/bindings/net/cpsw.txt
+> > @@ -46,16 +46,16 @@ Optional properties:
+> >   - dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
+> >   - mac-address		: See ethernet.txt file in the same directory
+> >   - phy_id		: Specifies slave phy id  
+> 
+> May be the "phy_id" can be marked as deprecated? (while here)
+> The recommended property now is "phy-handle".
+
+I can certainly do that. Perhaps something like this?
+ - phy_id		: Specifies slave phy id (deprecated, use phy-handle)
+
+Rob, would you have any issues with bundling that?
+
+> 
+> >   - phy-handle		: See ethernet.txt file in the same directory
+> >   
+> >   Slave sub-nodes:
+> >   - fixed-link		: See fixed-link.txt file in the same directory
+> > -			  Either the property phy_id, or the sub-node
+> > -			  fixed-link can be specified
+> > +
+> > +Note: Exactly one of phy_id, phy-handle, or fixed-link must be specified.
+> >   
+> >   Note: "ti,hwmods" field is used to fetch the base address and irq
+> >   resources from TI, omap hwmod data base during device registration.
+> >   Future plan is to migrate hwmod data base contents into device tree
+> >   blob so that, all the required data will be used from device tree dts
+> >   file.
+> >   
+> > diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+> > index d69cb3f..3c81413 100644
+> > --- a/drivers/net/ethernet/ti/cpsw.c
+> > +++ b/drivers/net/ethernet/ti/cpsw.c
+> > @@ -1150,16 +1150,19 @@ static void cpsw_slave_open(struct cpsw_slave *slave, struct cpsw_priv *priv)
+> >   	if (slave->data->phy_node)
+> >   		slave->phy = of_phy_connect(priv->ndev, slave->data->phy_node,
+> >   				 &cpsw_adjust_link, 0, slave->data->phy_if);
+> >   	else
+> >   		slave->phy = phy_connect(priv->ndev, slave->data->phy_id,
+> >   				 &cpsw_adjust_link, slave->data->phy_if);
+> >   	if (IS_ERR(slave->phy)) {
+> > -		dev_err(priv->dev, "phy %s not found on slave %d\n",
+> > -			slave->data->phy_id, slave->slave_num);
+> > +		dev_err(priv->dev, "phy \"%s\" not found on slave %d\n",
+> > +			slave->data->phy_node ?
+> > +				slave->data->phy_node->full_name :
+> > +				slave->data->phy_id,
+> > +			slave->slave_num);  
+> 
+> Unfortunately,  there are some inconsistency between legacy and FDT API :(
+> of_phy_connect() will return valid phy_device or NULL, but phy_connect()
+> can return valid phy_device or ERR_PTR().
+
+Good catch, I hadn't noticed that. It looks like that's actually a more 
+serious (pre-existing) bug: if of_phy_connect() returns NULL, we'd end 
+up dereferencing it and pagefaulting.
+
+How about moving the IS_ERR() check into the phy_connect() case like this:
+	if (slave->data->phy_node) {
+		slave->phy = of_phy_connect(priv->ndev, slave->data->phy_node,
+				 &cpsw_adjust_link, 0, slave->data->phy_if);
+	} else {
+		slave->phy = phy_connect(priv->ndev, slave->data->phy_id,
+				 &cpsw_adjust_link, slave->data->phy_if);
+		if (IS_ERR(slave->phy))
+			slave->phy = NULL;
+	}
+	if (!slave->phy) {
+		dev_err(priv->dev, "phy \"%s\" not found on slave %d\n",
+			slave->data->phy_node ?
+				slave->data->phy_node->full_name :
+				slave->data->phy_id,
+			slave->slave_num);  
+	} else {
+
+Since you say the phy_id case is deprecated anyways, I'm not too concerned
+about not printing the error code returned by phy_connect() in that case
+(especially since it never did so in the past). That lets us still avoid
+duplicating the dev_err() itself.
 
 
-On April 22, 2016 3:09:35 PM CEST, Rob Herring <robh@kernel.org> wrote:
->On Fri, Apr 22, 2016 at 7:38 AM, Olliver Schinagl <oliver@schinagl.nl>
->wrote:
->> Hey Rob,
->>
->> On 21-04-16 17:07, Rob Herring wrote:
->>>
->>> On Tue, Apr 19, 2016 at 09:40:49AM +0200, Olliver Schinagl wrote:
->>>>
->>>> When leds are connected in a totem-pole configuration, they can be
->>>> connected either in a active-high, or active-low manor. The driver
->>>> currently always assumes active-high. This patch adds the
->>>> 'nxp,inverted-out' boolean property to tell the driver that the
->leds
->>>> are driven active-low, or rather, that the behavior is inverted to
->what
->>>> is normally expected.
->>>
->>> How do I know what is normally expected?
->>
->> fair point, and in fact, you don't. The text is bad here.
->
->The problem is not so much the text here, but the property is also
->meaningless without some explanation.
->
-Well the datasheet states only that it will invert the output. So would it make sense to just state the same here?
->>>
->>>
->>>> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
->>>> ---
->>>>   Documentation/devicetree/bindings/leds/pca963x.txt |  1 +
->>>>   drivers/leds/leds-pca963x.c                        | 20
->>>> +++++++++++++-------
->>>>   include/linux/platform_data/leds-pca963x.h         |  1 +
->>>>   3 files changed, 15 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt
->>>> b/Documentation/devicetree/bindings/leds/pca963x.txt
->>>> index dafbe99..7b23725 100644
->>>> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
->>>> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
->>>> @@ -6,6 +6,7 @@ Required properties:
->>>>   Optional properties:
->>>>   - nxp,totem-pole : use totem pole (push-pull) instead of
->open-drain
->>>> (pca9632 defaults
->>>>     to open-drain, newer chips to totem pole)
->>>> +  nxp,inverted-out: the connected leds are active-low, default to
->>>> active-high
->>>
->>> Just state what mode you want: nxp,active-low
->>
->> But that's not what happens, which is why my text is bad :) It
->depends on
->> how the board is wired and if it is push-pull or open-drain. Though
->this
->> goes beyond my electronics knowledge. So I'll reduce the text to say
->exactly
->> what we mean, inverted output (or not).
->>
->> Unless you can explain that it would be unrelated and it is actually
->> active-high/low. I'll be more than happy to oblige.
->
->I'm not familiar with this chip, but googling for "active low LED
->circuit" can give you lots of examples. To put it simply, you are
->defining whether the control/switch is on the cathode or anode side of
->the LED. Open-drain vs. push-pull is also related to how the circuit
->is done, but is probably an independent property. I'd think the only
->reason you would use open-drain here is if you wanted to control the
->LED from 2 different signals. Whether you wanted the controls to
->function as OR or AND logic to turn on would determine what the active
->state needs to be.
-I was thinking that the output behaves differently depending whether it is configured as push-pull or open-drain.
-
-So to summarize, does the output always go into active-low mode, or does it depend on other parameters as well?
-
-Olliver
->
->Rob
-
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+> 
+> 
+> 
+> >   		slave->phy = NULL;
+> >   	} else {
+> >   		phy_attached_info(slave->phy);
+> >   
+> >   		phy_start(slave->phy);
+> >   
+> >   		/* Configure GMII_SEL register */
+> > @@ -2030,15 +2033,19 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
+> >   		/* This is no slave child node, continue */
+> >   		if (strcmp(slave_node->name, "slave"))
+> >   			continue;
+> >   
+> >   		slave_data->phy_node = of_parse_phandle(slave_node,
+> >   							"phy-handle", 0);
+> >   		parp = of_get_property(slave_node, "phy_id", &lenp);
+> > -		if (of_phy_is_fixed_link(slave_node)) {
+> > +		if (slave_data->phy_node) {
+> > +			dev_dbg(&pdev->dev,
+> > +				"slave[%d] using phy-handle=\"%s\"\n",
+> > +				i, slave_data->phy_node->full_name);
+> > +		} else if (of_phy_is_fixed_link(slave_node)) {
+> >   			struct device_node *phy_node;
+> >   			struct phy_device *phy_dev;
+> >   
+> >   			/* In the case of a fixed PHY, the DT node associated
+> >   			 * to the PHY is the Ethernet MAC DT node.
+> >   			 */
+> >   			ret = of_phy_register_fixed_link(slave_node);
+> > @@ -2067,15 +2074,17 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
+> >   			if (!mdio) {
+> >   				dev_err(&pdev->dev, "Missing mdio platform device\n");
+> >   				return -EINVAL;
+> >   			}
+> >   			snprintf(slave_data->phy_id, sizeof(slave_data->phy_id),
+> >   				 PHY_ID_FMT, mdio->name, phyid);
+> >   		} else {
+> > -			dev_err(&pdev->dev, "No slave[%d] phy_id or fixed-link property\n", i);
+> > +			dev_err(&pdev->dev,
+> > +				"No slave[%d] phy_id, phy-handle, or fixed-link property\n",
+> > +				i);
+> >   			goto no_phy_slave;
+> >   		}
+> >   		slave_data->phy_if = of_get_phy_mode(slave_node);
+> >   		if (slave_data->phy_if < 0) {
+> >   			dev_err(&pdev->dev, "Missing or malformed slave[%d] phy-mode property\n",
+> >   				i);
+> >   			return slave_data->phy_if;
+> >   
+> 
+> 
