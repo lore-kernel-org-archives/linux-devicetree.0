@@ -1,26 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/7] mfd: dt-bindings: Add RK818 device tree bindings
- document
-Date: Fri, 22 Apr 2016 15:25:50 -0500
-Message-ID: <20160422202550.GA10437@rob-hp-laptop>
-References: <1461244361-45686-1-git-send-email-w.egorov@phytec.de>
- <1461244361-45686-6-git-send-email-w.egorov@phytec.de>
+Subject: Re: [PATCH v4 1/3] mmc: dt: usdhi6rol0: add optional pinctrl binding
+Date: Fri, 22 Apr 2016 15:27:33 -0500
+Message-ID: <20160422202733.GA11270@rob-hp-laptop>
+References: <cover.1461246772.git.larper@axis.com>
+ <a96281244b55d55e36b72a40cd061d7ffd70b88e.1461246772.git.larper@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461244361-45686-6-git-send-email-w.egorov@phytec.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Wadim Egorov <w.egorov@phytec.de>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
+In-Reply-To: <a96281244b55d55e36b72a40cd061d7ffd70b88e.1461246772.git.larper@axis.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, g.liakhovetski@gmx.de, ulf.hansson@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 03:12:39PM +0200, Wadim Egorov wrote:
-> Add device tree bindings documentation for Rockchip's RK818 PMIC.
+On Thu, Apr 21, 2016 at 03:55:42PM +0200, Lars Persson wrote:
+> Add a pinctrl binding to specify different pin settings for high speed
+> modes and UHS modes.
 > 
-> Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+> Signed-off-by: Lars Persson <larper@axis.com>
 > ---
->  Documentation/devicetree/bindings/mfd/rk808.txt | 37 +++++++++++++++++++++++--
->  1 file changed, 34 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/mmc/usdhi6rol0.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+> index 8babdaa..6d1b797 100644
+> --- a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+> +++ b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+> @@ -12,6 +12,12 @@ Optional properties:
+>  
+>  - vmmc-supply:	a phandle of a regulator, supplying Vcc to the card
+>  - vqmmc-supply:	a phandle of a regulator, supplying VccQ to the card
+> +- pinctrl-names: Can contain a "default" entry and a "state_uhs"
 
-Acked-by: Rob Herring <robh@kernel.org>
+Don't use underscores. Just "uhs" should be sufficient, right?
+
+> +                 entry. The state_uhs entry is used together with the default
+> +                 entry when the board requires distinct settings for UHS speeds.
+> +
+> +- pinctrl-N: One property for each name listed in pinctrl-names, see
+> +             ../pinctrl/pinctrl-bindings.txt.
+>  
+>  Additionally any standard mmc bindings from mmc.txt can be used.
+>  
+> -- 
+> 2.1.4
+> 
