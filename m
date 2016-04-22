@@ -1,171 +1,96 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 2/2] regulator: max77620: Add support for device specific ramp rate setting
-Date: Fri, 22 Apr 2016 18:09:41 +0530
-Message-ID: <1461328781-22768-2-git-send-email-ldewangan@nvidia.com>
-References: <1461328781-22768-1-git-send-email-ldewangan@nvidia.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 2/3] mmc: usdhi6rol0: add support for UHS modes
+Date: Fri, 22 Apr 2016 14:53:40 +0200
+Message-ID: <CAPDyKFqFLsSbnt9VgT4PNCC38=d+bjLhYzPTYXr7TOFfTqN14Q@mail.gmail.com>
+References: <cover.1461246772.git.larper@axis.com>
+	<f53bfd4b14c36df41449d0bfdaadabd2c8d3ab1d.1461246772.git.larper@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461328781-22768-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <f53bfd4b14c36df41449d0bfdaadabd2c8d3ab1d.1461246772.git.larper@axis.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Maxim advertised the ramp rate of the rail with some recommended
-design specification like output capacitance of rail should be
-2.2uF. This make sure that current change in the rail is within
-maximum current limit and hence meet the advertised ramp rate.
+On 21 April 2016 at 15:55, Lars Persson <lars.persson@axis.com> wrote:
+> Add a start_signal_voltage_switch() operation to support enabling of
+> UHS modes.
+>
+> Signed-off-by: Lars Persson <larper@axis.com>
+> ---
+>  drivers/mmc/host/usdhi6rol0.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
+> index 807c06e..28fe5c7 100644
+> --- a/drivers/mmc/host/usdhi6rol0.c
+> +++ b/drivers/mmc/host/usdhi6rol0.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/mmc/sd.h>
+>  #include <linux/mmc/sdio.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/scatterlist.h>
+> @@ -1147,12 +1148,22 @@ static void usdhi6_enable_sdio_irq(struct mmc_host *mmc, int enable)
+>         }
+>  }
+>
+> +static int usdhi6_sig_volt_switch(struct mmc_host *mmc, struct mmc_ios *ios)
+> +{
+> +       int ret;
+> +
+> +       ret = mmc_regulator_set_vqmmc(mmc, ios);
+> +
+> +       return ret;
+> +}
+> +
+>  static struct mmc_host_ops usdhi6_ops = {
+>         .request        = usdhi6_request,
+>         .set_ios        = usdhi6_set_ios,
+>         .get_cd         = usdhi6_get_cd,
+>         .get_ro         = usdhi6_get_ro,
+>         .enable_sdio_irq = usdhi6_enable_sdio_irq,
+> +       .start_signal_voltage_switch = usdhi6_sig_volt_switch,
+>  };
+>
+>  /*                     State machine handlers                          */
+> @@ -1785,7 +1796,17 @@ static int usdhi6_probe(struct platform_device *pdev)
+>
+>         mmc->ops = &usdhi6_ops;
+>         mmc->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED |
+> -               MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_DDR50 | MMC_CAP_SDIO_IRQ;
 
-If there is variation in design which causes the rail current to
-change more that maximum current limit then device applies the
-current limit. In this case, ramp rate is different than advertised
-ramp rate.
+Oh, this was weird. The driver already claimed to support UHS mode,
+but when in fact it didn't. :-)
 
-Add device specific settings for ramp rate which need to be configure
-on device register when measure ramp rate on platform is deviated from
-advertised ramp rate. In this case, all delay time calculation for
-voltage change is done with measured ramp rate and device ramp rate
-is used for configuring the device register.
+Perhaps that change deserves its own fixup patch?
 
-If measured ramp rate in the platform is same as advertised ramp rate
-then regulator-ramp-delay is used for the device register configuration
-and ramp time calculation for voltage change.
+> +                    MMC_CAP_SDIO_IRQ;
+> +
+> +       /*
+> +        * A vqmmc regulator with a 1.8V mode is mandatory to support
+> +        * UHS modes.
+> +        */
+> +       if (!of_property_read_bool(dev->of_node, "no-1-8-v") &&
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+No, please don't use this binding.
 
----
-This patch is based on discussion on earlier patch:
- regulator: DT: Add support to scale ramp delay based on platform behavior
-The last point of the discussion is to have device specific ramp setting
-property to configure the device.
----
- drivers/regulator/max77620-regulator.c | 83 +++++++++++++++++++++++-----------
- 1 file changed, 56 insertions(+), 27 deletions(-)
+Instead there is already bindings for MMC_CAP_UHS_DDR50 and
+MMC_CAP_UHS_SDR50, please use them instead.
 
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index 6f82b97..232377d 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -81,6 +81,7 @@ struct max77620_regulator_pdata {
- 	int suspend_fps_pd_slot;
- 	int suspend_fps_pu_slot;
- 	int current_mode;
-+	int ramp_rate_setting;
- };
- 
- struct max77620_regulator {
-@@ -307,6 +308,43 @@ static int max77620_read_slew_rate(struct max77620_regulator *pmic, int id)
- 	return 0;
- }
- 
-+static int max77620_set_slew_rate(struct max77620_regulator *pmic, int id,
-+				  int slew_rate)
-+{
-+	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
-+	unsigned int val;
-+	int ret;
-+	u8 mask;
-+
-+	if (rinfo->type == MAX77620_REGULATOR_TYPE_SD) {
-+		if (slew_rate <= 13750)
-+			val = 0;
-+		else if (slew_rate <= 27500)
-+			val = 1;
-+		else if (slew_rate <= 55000)
-+			val = 2;
-+		else
-+			val = 3;
-+		val <<= MAX77620_SD_SR_SHIFT;
-+		mask = MAX77620_SD_SR_MASK;
-+	} else {
-+		if (slew_rate <= 5000)
-+			val = 1;
-+		else
-+			val = 0;
-+		mask = MAX77620_LDO_SLEW_RATE_MASK;
-+	}
-+
-+	ret = regmap_update_bits(pmic->rmap, rinfo->cfg_addr, mask, val);
-+	if (ret < 0) {
-+		dev_err(pmic->dev, "Regulator %d slew rate set failed: %d\n",
-+			id, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
- {
- 	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
-@@ -351,6 +389,13 @@ static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
- 	if (ret < 0)
- 		return ret;
- 
-+	if (rpdata->ramp_rate_setting) {
-+		ret = max77620_set_slew_rate(pmic, id,
-+					     rpdata->ramp_rate_setting);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -502,35 +547,16 @@ static int max77620_regulator_set_ramp_delay(struct regulator_dev *rdev,
- {
- 	struct max77620_regulator *pmic = rdev_get_drvdata(rdev);
- 	int id = rdev_get_id(rdev);
--	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
--	int ret, val;
--	u8 mask;
--
--	if (rinfo->type == MAX77620_REGULATOR_TYPE_SD) {
--		if (ramp_delay <= 13750)
--			val = 0;
--		else if (ramp_delay <= 27500)
--			val = 1;
--		else if (ramp_delay <= 55000)
--			val = 2;
--		else
--			val = 3;
--		val <<= MAX77620_SD_SR_SHIFT;
--		mask = MAX77620_SD_SR_MASK;
--	} else {
--		if (ramp_delay <= 5000)
--			val = 1;
--		else
--			val = 0;
--		mask = MAX77620_LDO_SLEW_RATE_MASK;
--	}
-+	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
- 
--	ret = regmap_update_bits(pmic->rmap, rinfo->cfg_addr, mask, val);
--	if (ret < 0)
--		dev_err(pmic->dev, "Reg 0x%02x update failed: %d\n",
--			rinfo->cfg_addr, ret);
-+	/* Device specific ramp rate setting tells that platform has
-+	 * different ramp rate from advertised value. In this case,
-+	 * do not configure anything and just return success.
-+	 */
-+	if (rpdata->ramp_rate_setting)
-+		return 0;
- 
--	return ret;
-+	return max77620_set_slew_rate(pmic, id, ramp_delay);
- }
- 
- static int max77620_of_parse_cb(struct device_node *np,
-@@ -563,6 +589,9 @@ static int max77620_of_parse_cb(struct device_node *np,
- 			np, "maxim,suspend-fps-power-down-slot", &pval);
- 	rpdata->suspend_fps_pd_slot = (!ret) ? pval : -1;
- 
-+	ret = of_property_read_u32(np, "maxim,ramp-rate-setting", &pval);
-+	rpdata->ramp_rate_setting = (!ret) ? pval : 0;
-+
- 	return max77620_init_pmic(pmic, desc->id);
- }
- 
--- 
-2.1.4
+> +           !IS_ERR(mmc->supply.vqmmc)) {
+> +               mmc->caps |= MMC_CAP_UHS_DDR50 | MMC_CAP_UHS_SDR50;
+> +       }
+> +
+>         /* Set .max_segs to some random number. Feel free to adjust. */
+>         mmc->max_segs = 32;
+>         mmc->max_blk_size = 512;
+> --
+> 2.1.4
+>
+
+Kind regards
+Uffe
