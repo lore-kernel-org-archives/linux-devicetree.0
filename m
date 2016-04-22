@@ -1,7 +1,7 @@
 From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH 03/11] mfd: altr_a10sr: Add Altera Arria10 DevKit System Resource Chip
-Date: Fri, 22 Apr 2016 10:33:31 -0500
-Message-ID: <1461339219-15255-4-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCH 10/11] hwmon: Add Altera A10-SR power supply alarms
+Date: Fri, 22 Apr 2016 10:33:38 -0500
+Message-ID: <1461339219-15255-11-git-send-email-tthayer@opensource.altera.com>
 References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,60 +14,57 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add support for the Altera Arria10 Development Kit System Resource
-chip which is implemented using a MAX5 as a external gpio extender,
-and power supply alarm (hwmon) with the regmap framework over a SPI bus.
+This patch adds the power supply alarms of the hwmon framework
+to the Arria10 System Resource chip.
 
 Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
- drivers/mfd/Kconfig              |   11 +++
- drivers/mfd/Makefile             |    2 +
- drivers/mfd/altera-a10sr.c       |  179 ++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/altera-a10sr.h |   87 ++++++++++++++++++
- 4 files changed, 279 insertions(+)
- create mode 100644 drivers/mfd/altera-a10sr.c
- create mode 100644 include/linux/mfd/altera-a10sr.h
+ drivers/hwmon/Kconfig              |    9 ++
+ drivers/hwmon/Makefile             |    1 +
+ drivers/hwmon/altera-a10sr-hwmon.c |  215 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 225 insertions(+)
+ create mode 100644 drivers/hwmon/altera-a10sr-hwmon.c
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index eea61e3..4fc27c6 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -18,6 +18,17 @@ config MFD_CS5535
- 	  This is the core driver for CS5535/CS5536 MFD functions.  This is
-           necessary for using the board's GPIO and MFGPT functionality.
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index ff94007..af08846 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -248,6 +248,15 @@ config SENSORS_ADT7475
+ 	  This driver can also be build as a module.  If so, the module
+ 	  will be called adt7475.
  
-+config MFD_ALTERA_A10SR
-+       bool "Altera Arria10 DevKit System Resource chip"
-+       depends on ARCH_SOCFPGA && SPI_MASTER=y && OF
-+       select REGMAP_SPI
-+       select MFD_CORE
-+       help
-+         Support for the Altera Arria10 DevKit MAX5 System Resource chip
-+         using the SPI interface. This driver provides common support for
-+         accessing the external gpio extender (LEDs & buttons) and
-+         power supply alarms (hwmon).
++config SENSORS_ALTERA_A10SR
++	bool "Altera Arria10 System Status"
++	depends on MFD_ALTERA_A10SR
++	help
++	  If you say yes here you get support for the power ready status
++	  for the Arria10's external power supplies on the Arria10 DevKit.
++	  These values are read over the SPI bus from the Arria10 System
++	  Resource chip.
 +
- config MFD_ACT8945A
- 	tristate "Active-semi ACT8945A"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 5eaa6465d..4f1ff91 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -203,3 +203,5 @@ intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
- intel-soc-pmic-$(CONFIG_INTEL_PMC_IPC)	+= intel_soc_pmic_bxtwc.o
- obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
- obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
-+
-+obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
+ config SENSORS_ASC7621
+ 	tristate "Andigilog aSC7621"
+ 	depends on I2C
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 2ef5b7c..17d72a7 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -43,6 +43,7 @@ obj-$(CONFIG_SENSORS_ADT7411)	+= adt7411.o
+ obj-$(CONFIG_SENSORS_ADT7462)	+= adt7462.o
+ obj-$(CONFIG_SENSORS_ADT7470)	+= adt7470.o
+ obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
++obj-$(CONFIG_SENSORS_ALTERA_A10SR) += altera-a10sr-hwmon.o
+ obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
+ obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
+ obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
+diff --git a/drivers/hwmon/altera-a10sr-hwmon.c b/drivers/hwmon/altera-a10sr-hwmon.c
 new file mode 100644
-index 0000000..2ff08e3
+index 0000000..1eecc6b
 --- /dev/null
-+++ b/drivers/mfd/altera-a10sr.c
-@@ -0,0 +1,179 @@
++++ b/drivers/hwmon/altera-a10sr-hwmon.c
+@@ -0,0 +1,215 @@
 +/*
-+ * Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
++ *  Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
 + *
 + * This program is free software; you can redistribute it and/or modify it
 + * under the terms and conditions of the GNU General Public License,
@@ -81,263 +78,206 @@ index 0000000..2ff08e3
 + * You should have received a copy of the GNU General Public License along with
 + * this program.  If not, see <http://www.gnu.org/licenses/>.
 + *
-+ * SPI access for Altera Arria10 MAX5 System Resource Chip
-+ *
++ * HW Monitor driver for  Altera Arria10 MAX5 System Resource Chip
 + * Adapted from DA9052
-+ * Copyright(c) 2011 Dialog Semiconductor Ltd.
-+ * Author: David Dajun Chen <dchen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 + */
 +
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
 +#include <linux/mfd/altera-a10sr.h>
-+#include <linux/mfd/core.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/spi/spi.h>
 +
-+static const struct mfd_cell altr_a10sr_subdev_info[] = {
-+	{
-+		.name = "altr_a10sr_gpio",
-+		.of_compatible = "altr,a10sr-gpio",
-+	},
++#define ALTR_A10SR_1V0_BIT_POS          ALTR_A10SR_PG1_1V0_SHIFT
++#define ALTR_A10SR_0V95_BIT_POS         ALTR_A10SR_PG1_0V95_SHIFT
++#define ALTR_A10SR_0V9_BIT_POS          ALTR_A10SR_PG1_0V9_SHIFT
++#define ALTR_A10SR_10V_BIT_POS          ALTR_A10SR_PG1_10V_SHIFT
++#define ALTR_A10SR_5V0_BIT_POS          ALTR_A10SR_PG1_5V0_SHIFT
++#define ALTR_A10SR_3V3_BIT_POS          ALTR_A10SR_PG1_3V3_SHIFT
++#define ALTR_A10SR_2V5_BIT_POS          ALTR_A10SR_PG1_2V5_SHIFT
++#define ALTR_A10SR_1V8_BIT_POS          ALTR_A10SR_PG1_1V8_SHIFT
++#define ALTR_A10SR_OP_FLAG_BIT_POS      ALTR_A10SR_PG1_OP_FLAG_SHIFT
++/* 2nd register needs an offset of 8 to get to 2nd register */
++#define ALTR_A10SR_FBC2MP_BIT_POS       (8 + ALTR_A10SR_PG2_FBC2MP_SHIFT)
++#define ALTR_A10SR_FAC2MP_BIT_POS       (8 + ALTR_A10SR_PG2_FAC2MP_SHIFT)
++#define ALTR_A10SR_FMCBVADJ_BIT_POS     (8 + ALTR_A10SR_PG2_FMCBVADJ_SHIFT)
++#define ALTR_A10SR_FMCAVADJ_BIT_POS     (8 + ALTR_A10SR_PG2_FMCAVADJ_SHIFT)
++#define ALTR_A10SR_HL_VDDQ_BIT_POS      (8 + ALTR_A10SR_PG2_HL_VDDQ_SHIFT)
++#define ALTR_A10SR_HL_VDD_BIT_POS       (8 + ALTR_A10SR_PG2_HL_VDD_SHIFT)
++#define ALTR_A10SR_HL_HPS_BIT_POS       (8 + ALTR_A10SR_PG2_HL_HPS_SHIFT)
++#define ALTR_A10SR_HPS_BIT_POS          (8 + ALTR_A10SR_PG2_HPS_SHIFT)
++/* 3rd register needs an offset of 16 to get to 3rd register */
++#define ALTR_A10SR_10V_FAIL_BIT_POS     (16 + ALTR_A10SR_PG3_10V_FAIL_SHIFT)
++#define ALTR_A10SR_FAM2C_BIT_POS        (16 + ALTR_A10SR_PG3_FAM2C_SHIFT)
++
++/**
++ * struct altr_a10sr_hwmon - Altera Max5 HWMON device private data structure
++ * @device: hwmon class.
++ * @regmap: the regmap from the parent device.
++ */
++struct altr_a10sr_hwmon {
++	struct device		*class_device;
++	struct regmap		*regmap;
 +};
 +
-+static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
++static ssize_t altr_a10sr_read_status(struct device *dev,
++				      struct device_attribute *devattr,
++				      char *buf)
 +{
-+	switch (reg) {
-+	case ALTR_A10SR_VERSION_READ:
-+	case ALTR_A10SR_LED_REG:
-+	case ALTR_A10SR_PBDSW_REG:
-+	case ALTR_A10SR_PBDSW_IRQ_REG:
-+	case ALTR_A10SR_PWR_GOOD1_REG:
-+	case ALTR_A10SR_PWR_GOOD2_REG:
-+	case ALTR_A10SR_PWR_GOOD3_REG:
-+	case ALTR_A10SR_FMCAB_REG:
-+	case ALTR_A10SR_HPS_RST_REG:
-+	case ALTR_A10SR_USB_QSPI_REG:
-+	case ALTR_A10SR_SFPA_REG:
-+	case ALTR_A10SR_SFPB_REG:
-+	case ALTR_A10SR_I2C_M_REG:
-+	case ALTR_A10SR_WARM_RST_REG:
-+	case ALTR_A10SR_WR_KEY_REG:
-+	case ALTR_A10SR_PMBUS_REG:
-+		return true;
-+	default:
-+		return false;
-+	}
++	struct altr_a10sr_hwmon *hwmon = dev_get_drvdata(dev);
++	int val, ret, index = to_sensor_dev_attr(devattr)->index;
++	int mask = ALTR_A10SR_REG_BIT_MASK(index);
++	unsigned char reg = ALTR_A10SR_PWR_GOOD1_REG +
++			    ALTR_A10SR_REG_OFFSET(index);
++
++	ret = regmap_read(hwmon->regmap, reg, &val);
++	if (ret < 0)
++		return ret;
++
++	return sprintf(buf, "%d\n", !!(~val & mask));
 +}
 +
-+static bool altr_a10sr_reg_writeable(struct device *dev, unsigned int reg)
++static ssize_t altr_a10sr_hwmon_show_name(struct device *dev,
++					  struct device_attribute *devattr,
++					  char *buf)
 +{
-+	switch (reg) {
-+	case ALTR_A10SR_LED_REG:
-+	case ALTR_A10SR_PBDSW_IRQ_REG:
-+	case ALTR_A10SR_FMCAB_REG:
-+	case ALTR_A10SR_HPS_RST_REG:
-+	case ALTR_A10SR_USB_QSPI_REG:
-+	case ALTR_A10SR_SFPA_REG:
-+	case ALTR_A10SR_SFPB_REG:
-+	case ALTR_A10SR_WARM_RST_REG:
-+	case ALTR_A10SR_WR_KEY_REG:
-+	case ALTR_A10SR_PMBUS_REG:
-+		return true;
-+	default:
-+		return false;
-+	}
++	return sprintf(buf, "altr_a10sr\n");
 +}
 +
-+static bool altr_a10sr_reg_volatile(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case ALTR_A10SR_PBDSW_REG:
-+	case ALTR_A10SR_PBDSW_IRQ_REG:
-+	case ALTR_A10SR_PWR_GOOD1_REG:
-+	case ALTR_A10SR_PWR_GOOD2_REG:
-+	case ALTR_A10SR_PWR_GOOD3_REG:
-+	case ALTR_A10SR_HPS_RST_REG:
-+	case ALTR_A10SR_I2C_M_REG:
-+	case ALTR_A10SR_WARM_RST_REG:
-+	case ALTR_A10SR_WR_KEY_REG:
-+	case ALTR_A10SR_PMBUS_REG:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
++/* First Power Good Register Bits */
++static SENSOR_DEVICE_ATTR(1v0_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_1V0_BIT_POS);
++static SENSOR_DEVICE_ATTR(0v95_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_0V95_BIT_POS);
++static SENSOR_DEVICE_ATTR(0v9_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_0V9_BIT_POS);
++static SENSOR_DEVICE_ATTR(5v0_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_5V0_BIT_POS);
++static SENSOR_DEVICE_ATTR(3v3_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_3V3_BIT_POS);
++static SENSOR_DEVICE_ATTR(2v5_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_2V5_BIT_POS);
++static SENSOR_DEVICE_ATTR(1v8_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_1V8_BIT_POS);
++static SENSOR_DEVICE_ATTR(opflag_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_OP_FLAG_BIT_POS);
++/* Second Power Good Register Bits */
++static SENSOR_DEVICE_ATTR(fbc2mp_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_FBC2MP_BIT_POS);
++static SENSOR_DEVICE_ATTR(fac2mp_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_FAC2MP_BIT_POS);
++static SENSOR_DEVICE_ATTR(fmcbvadj_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_FMCBVADJ_BIT_POS);
++static SENSOR_DEVICE_ATTR(fmcavadj_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_FMCAVADJ_BIT_POS);
++static SENSOR_DEVICE_ATTR(hl_vddq_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_HL_VDDQ_BIT_POS);
++static SENSOR_DEVICE_ATTR(hl_vdd_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_HL_VDD_BIT_POS);
++static SENSOR_DEVICE_ATTR(hlhps_vdd_alarm, S_IRUGO, altr_a10sr_read_status,
++			  NULL, ALTR_A10SR_HL_HPS_BIT_POS);
++static SENSOR_DEVICE_ATTR(hps_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_HPS_BIT_POS);
++/* Third Power Good Register Bits */
++static SENSOR_DEVICE_ATTR(10v_alarm, S_IRUGO, altr_a10sr_read_status,
++			  NULL, ALTR_A10SR_10V_FAIL_BIT_POS);
++static SENSOR_DEVICE_ATTR(fam2c_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
++			  ALTR_A10SR_FAM2C_BIT_POS);
 +
-+const struct regmap_config altr_a10sr_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
++static DEVICE_ATTR(name, S_IRUGO, altr_a10sr_hwmon_show_name, NULL);
 +
-+	.cache_type = REGCACHE_NONE,
-+
-+	.use_single_rw = true,
-+	.read_flag_mask = 1,
-+	.write_flag_mask = 0,
-+
-+	.max_register = ALTR_A10SR_WR_KEY_REG,
-+	.readable_reg = altr_a10sr_reg_readable,
-+	.writeable_reg = altr_a10sr_reg_writeable,
-+	.volatile_reg = altr_a10sr_reg_volatile,
-+
++static struct attribute *altr_a10sr_attr[] = {
++	&dev_attr_name.attr,
++	/* First Power Good Register */
++	&sensor_dev_attr_opflag_alarm.dev_attr.attr,
++	&sensor_dev_attr_1v8_alarm.dev_attr.attr,
++	&sensor_dev_attr_2v5_alarm.dev_attr.attr,
++	&sensor_dev_attr_1v0_alarm.dev_attr.attr,
++	&sensor_dev_attr_3v3_alarm.dev_attr.attr,
++	&sensor_dev_attr_5v0_alarm.dev_attr.attr,
++	&sensor_dev_attr_0v9_alarm.dev_attr.attr,
++	&sensor_dev_attr_0v95_alarm.dev_attr.attr,
++	/* Second Power Good Register */
++	&sensor_dev_attr_hps_alarm.dev_attr.attr,
++	&sensor_dev_attr_hlhps_vdd_alarm.dev_attr.attr,
++	&sensor_dev_attr_hl_vdd_alarm.dev_attr.attr,
++	&sensor_dev_attr_hl_vddq_alarm.dev_attr.attr,
++	&sensor_dev_attr_fmcavadj_alarm.dev_attr.attr,
++	&sensor_dev_attr_fmcbvadj_alarm.dev_attr.attr,
++	&sensor_dev_attr_fac2mp_alarm.dev_attr.attr,
++	&sensor_dev_attr_fbc2mp_alarm.dev_attr.attr,
++	/* Third Power Good Register */
++	&sensor_dev_attr_10v_alarm.dev_attr.attr,
++	&sensor_dev_attr_fam2c_alarm.dev_attr.attr,
++	NULL
 +};
 +
-+static int altr_a10sr_spi_probe(struct spi_device *spi)
++static const struct attribute_group altr_a10sr_attr_group = {
++	.attrs = altr_a10sr_attr
++};
++
++static int altr_a10sr_hwmon_probe(struct platform_device *pdev)
 +{
++	struct altr_a10sr_hwmon *hwmon;
 +	int ret;
-+	struct altr_a10sr *a10sr;
++	struct altr_a10sr *a10sr = dev_get_drvdata(pdev->dev.parent);
 +
-+	a10sr = devm_kzalloc(&spi->dev, sizeof(*a10sr),
-+			     GFP_KERNEL);
-+	if (!a10sr)
++	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
++	if (!hwmon)
 +		return -ENOMEM;
 +
-+	spi->mode = SPI_MODE_3;
-+	spi->bits_per_word = 8;
-+	spi_setup(spi);
++	hwmon->regmap = a10sr->regmap;
 +
-+	a10sr->dev = &spi->dev;
++	platform_set_drvdata(pdev, hwmon);
 +
-+	spi_set_drvdata(spi, a10sr);
++	ret = sysfs_create_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
++	if (ret)
++		goto err_mem;
 +
-+	a10sr->regmap = devm_regmap_init_spi(spi, &altr_a10sr_regmap_config);
-+	if (IS_ERR(a10sr->regmap)) {
-+		ret = PTR_ERR(a10sr->regmap);
-+		dev_err(&spi->dev, "Failed to allocate register map: %d\n",
-+			ret);
-+		return ret;
++	hwmon->class_device = hwmon_device_register(&pdev->dev);
++	if (IS_ERR(hwmon->class_device)) {
++		ret = PTR_ERR(hwmon->class_device);
++		goto err_sysfs;
 +	}
 +
-+	ret = mfd_add_devices(a10sr->dev, PLATFORM_DEVID_AUTO,
-+			      altr_a10sr_subdev_info,
-+			      ARRAY_SIZE(altr_a10sr_subdev_info),
-+			      NULL, 0, NULL);
-+	if (ret)
-+		dev_err(a10sr->dev, "Failed to register sub-devices: %d\n",
-+			ret);
++	return 0;
 +
++err_sysfs:
++	sysfs_remove_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
++err_mem:
 +	return ret;
 +}
 +
-+static int altr_a10sr_spi_remove(struct spi_device *spi)
++static int altr_a10sr_hwmon_remove(struct platform_device *pdev)
 +{
-+	mfd_remove_devices(&spi->dev);
++	struct altr_a10sr_hwmon *hwmon = platform_get_drvdata(pdev);
++
++	hwmon_device_unregister(hwmon->class_device);
++	sysfs_remove_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
 +
 +	return 0;
 +}
 +
-+static const struct of_device_id altr_a10sr_spi_of_match[] = {
-+	{ .compatible = "altr,a10sr" },
++static const struct of_device_id altr_a10sr_hwmon_of_match[] = {
++	{ .compatible = "altr,a10sr-hwmon" },
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(of, altr_a10sr_spi_of_match);
++MODULE_DEVICE_TABLE(of, altr_a10sr_hwmon_of_match);
 +
-+static struct spi_driver altr_a10sr_spi_driver = {
-+	.probe = altr_a10sr_spi_probe,
-+	.remove = altr_a10sr_spi_remove,
++static struct platform_driver altr_a10sr_hwmon_driver = {
++	.probe = altr_a10sr_hwmon_probe,
++	.remove = altr_a10sr_hwmon_remove,
 +	.driver = {
-+		.name = "altr_a10sr",
-+		.of_match_table = of_match_ptr(altr_a10sr_spi_of_match),
++		.name = "altr_a10sr_hwmon",
++		.of_match_table = of_match_ptr(altr_a10sr_hwmon_of_match),
 +	},
 +};
 +
-+module_spi_driver(altr_a10sr_spi_driver);
++module_platform_driver(altr_a10sr_hwmon_driver);
 +
 +MODULE_LICENSE("GPL v2");
 +MODULE_AUTHOR("Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>");
-+MODULE_DESCRIPTION("Altera Arria10 DevKit System Resource MFD Driver");
-diff --git a/include/linux/mfd/altera-a10sr.h b/include/linux/mfd/altera-a10sr.h
-new file mode 100644
-index 0000000..c869fe7
---- /dev/null
-+++ b/include/linux/mfd/altera-a10sr.h
-@@ -0,0 +1,87 @@
-+/*
-+ * Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Declarations for Altera Arria10 MAX5 System Resource Chip
-+ *
-+ * Adapted from DA9052
-+ * Copyright(c) 2011 Dialog Semiconductor Ltd.
-+ * Author: David Dajun Chen <dchen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-+ */
-+
-+#ifndef __MFD_ALTERA_A10SR_H
-+#define __MFD_ALTERA_A10SR_H
-+
-+#include <linux/completion.h>
-+#include <linux/list.h>
-+#include <linux/mfd/core.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+/* Write registers are always on even addresses */
-+#define  WRITE_REG_MASK              0xFE
-+/* Odd registers are always on odd addresses */
-+#define  READ_REG_MASK               0x01
-+
-+#define ALTR_A10SR_BITS_PER_REGISTER  8
-+/*
-+ * To find the correct register, we divide the input GPIO by
-+ * the number of GPIO in each register. We then need to multiply
-+ * by 2 because the reads are at odd addresses.
-+ */
-+#define ALTR_A10SR_REG_OFFSET(X)     (((X) / ALTR_A10SR_BITS_PER_REGISTER) << 1)
-+#define ALTR_A10SR_REG_BIT(X)        ((X) % ALTR_A10SR_BITS_PER_REGISTER)
-+#define ALTR_A10SR_REG_BIT_CHG(X, Y) ((X) << ALTR_A10SR_REG_BIT(Y))
-+#define ALTR_A10SR_REG_BIT_MASK(X)   (1 << ALTR_A10SR_REG_BIT(X))
-+
-+/* Arria10 System Controller Register Defines */
-+#define ALTR_A10SR_NOP                0x00    /* No Change */
-+#define ALTR_A10SR_VERSION_READ       0x00    /* MAX5 Version Read */
-+
-+#define ALTR_A10SR_LED_REG            0x02    /* LED - Upper 4 bits */
-+/* LED register Bit Definitions */
-+#define ALTR_A10SR_LED_VALID_SHIFT        4       /* LED - Upper 4 bits valid */
-+#define ALTR_A10SR_OUT_VALID_RANGE_LO     ALTR_A10SR_LED_VALID_SHIFT
-+#define ALTR_A10SR_OUT_VALID_RANGE_HI     7
-+
-+#define ALTR_A10SR_PBDSW_REG          0x04    /* PB & DIP SW - Input only */
-+#define ALTR_A10SR_PBDSW_IRQ_REG      0x06    /* PB & DIP SW Flag Clear */
-+/* Pushbutton & DIP Switch Bit Definitions */
-+#define ALTR_A10SR_IN_VALID_RANGE_LO      8
-+#define ALTR_A10SR_IN_VALID_RANGE_HI      15
-+
-+#define ALTR_A10SR_PWR_GOOD1_REG      0x08    /* Power Good1 Read */
-+#define ALTR_A10SR_PWR_GOOD2_REG      0x0A    /* Power Good2 Read */
-+#define ALTR_A10SR_PWR_GOOD3_REG      0x0C    /* Power Good3 Read */
-+#define ALTR_A10SR_FMCAB_REG          0x0E    /* FMCA/B & PCIe Pwr Enable */
-+#define ALTR_A10SR_HPS_RST_REG        0x10    /* HPS Reset */
-+#define ALTR_A10SR_USB_QSPI_REG       0x12    /* USB, BQSPI, FILE Reset */
-+#define ALTR_A10SR_SFPA_REG           0x14    /* SFPA Control Reg */
-+#define ALTR_A10SR_SFPB_REG           0x16    /* SFPB Control Reg */
-+#define ALTR_A10SR_I2C_M_REG          0x18    /* I2C Master Select */
-+#define ALTR_A10SR_WARM_RST_REG       0x1A    /* HPS Warm Reset */
-+#define ALTR_A10SR_WR_KEY_REG         0x1C    /* HPS Warm Reset Key */
-+#define ALTR_A10SR_PMBUS_REG          0x1E    /* HPS PM Bus */
-+
-+/**
-+ * struct altr_a10sr - Altera Max5 MFD device private data structure
-+ * @dev:  : this device
-+ * @regmap: the regmap assigned to the parent device.
-+ */
-+struct altr_a10sr {
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+#endif /* __MFD_ALTERA_A10SR_H */
++MODULE_DESCRIPTION("HW Monitor driver for Altera Arria10 System Resource Chip");
 -- 
 1.7.9.5
 
