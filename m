@@ -1,32 +1,48 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/8] firmware: qcom: scm: Generalize shared error map
-Date: Fri, 22 Apr 2016 16:13:17 -0700
-Message-ID: <20160422231317.GF3202@tuxbot>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 6/8] firmware: qcom: scm: Add memory allocation API
+Date: Fri, 22 Apr 2016 16:23:31 -0700
+Message-ID: <20160422232331.GG3202@tuxbot>
 References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
- <1461363432-5730-4-git-send-email-andy.gross@linaro.org>
+ <1461363432-5730-7-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461363432-5730-4-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1461363432-5730-7-git-send-email-andy.gross@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 On Fri 22 Apr 15:17 PDT 2016, Andy Gross wrote:
 
-> This patch moves the qcom_scm_remap_error function to the include file
-> where can be used by both the 32 and 64 bit versions of the code.
+> This patch adds APIs for the scm-32 and scm-64 to use for coherent memory
+> allocation.
 > 
-> Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
 
-Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patch must come before the ARM64 implementation.
+
+> ---
+>  drivers/firmware/qcom_scm.c | 17 +++++++++++++++++
+>  drivers/firmware/qcom_scm.h |  4 ++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+[..]
+> +
+> +void qcom_scm_free_buffer(size_t size, void *cpu_addr,
+> +				 dma_addr_t dma_addr)
+> +{
+> +	if (__scm)
+
+This would be quite bad and the caller expects that the memory is
+released when you return from here. This should also only happen if the
+arch specific implementation is buggy, so just let it go BANG!
+
+> +		dma_free_writecombine(__scm->dev, size, cpu_addr, dma_addr);
+> +}
+> +
 
 Regards,
 Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
