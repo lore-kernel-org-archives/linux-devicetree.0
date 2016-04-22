@@ -1,92 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: max77620: Add details of device specific ramp rate setting" to the regulator tree
-Date: Fri, 22 Apr 2016 16:27:36 +0100
-Message-ID: <E1atczY-0007mI-PJ@debutante>
-References: <1461328781-22768-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461328781-22768-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: <tthayer@opensource.altera.com>
+Subject: [PATCH 00/11] Addition of Altera Arria10 System Resource Chip
+Date: Fri, 22 Apr 2016 10:33:28 -0500
+Message-ID: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com
+Cc: linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Thor Thayer <tthayer@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-   regulator: max77620: Add details of device specific ramp rate setting
+This patch series adds the SPI MultiFunction Device for the Altera System
+Resource Chip for the Arria10 Developement Kit. The MFD implements GPIO
+expansion and power supply alarms on an Altera MAX5.
 
-has been applied to the regulator tree at
+Thor Thayer (11):
+  dt-bindings: mfd: Add Altera Arria10 System Resource Chip bindings
+  MAINTAINERS: Add Altera Arria10 System Resource Chip
+  mfd: altr_a10sr: Add Altera Arria10 DevKit System Resource Chip
+  gpio: altera-a10sr: Add A10 System Resource Chip GPIO support.
+  ARM: socfpga: dts: Add SPI Master1 for Arria10 System Resource chip
+  ARM: socfpga: dts: Add Devkit A10-SR fields for Arria10
+  ARM: socfpga: dts: Add LED framework to A10-SR GPIO
+  dt-bindings: mfd: Add Altera A10-SR power supply alarm
+  mfd: altr_a10sr: Add Altera A10-SR power supply alarms
+  hwmon: Add Altera A10-SR power supply alarms
+  ARM: socfpga: dts: Add A10-SR Devkit power supply alarms
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+ .../devicetree/bindings/mfd/altera-a10sr.txt       |   43 ++++
+ MAINTAINERS                                        |    8 +
+ arch/arm/boot/dts/socfpga_arria10.dtsi             |   15 ++
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi       |   44 ++++
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-altera-a10sr.c                   |  140 +++++++++++++
+ drivers/hwmon/Kconfig                              |    9 +
+ drivers/hwmon/Makefile                             |    1 +
+ drivers/hwmon/altera-a10sr-hwmon.c                 |  215 ++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   11 +
+ drivers/mfd/Makefile                               |    2 +
+ drivers/mfd/altera-a10sr.c                         |  183 +++++++++++++++++
+ include/linux/mfd/altera-a10sr.h                   |  111 ++++++++++
+ 14 files changed, 791 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+ create mode 100644 drivers/gpio/gpio-altera-a10sr.c
+ create mode 100644 drivers/hwmon/altera-a10sr-hwmon.c
+ create mode 100644 drivers/mfd/altera-a10sr.c
+ create mode 100644 include/linux/mfd/altera-a10sr.h
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From e7fc278ceb5725070e4e3ecfc2f259ab2101c30e Mon Sep 17 00:00:00 2001
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Date: Fri, 22 Apr 2016 18:09:40 +0530
-Subject: [PATCH] regulator: max77620: Add details of device specific ramp rate
- setting
-
-It is observed that the ramp rate measured on platform is not same as
-advertised ramp rate due to platform design variation. On this case,
-measured ramp rate is provided with property regulator-ramp-rate.
-
-For such cases, add DT property for device specific configurations.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/regulator-max77620.txt      | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/regulator-max77620.txt b/Documentation/devicetree/bindings/regulator/regulator-max77620.txt
-index b3c8ca672024..1c4bfe786736 100644
---- a/Documentation/devicetree/bindings/regulator/regulator-max77620.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator-max77620.txt
-@@ -94,6 +94,28 @@ Following are additional properties:
- 					This is applicable if suspend state
- 					FPS source is selected as FPS0, FPS1 or
- 					FPS2.
-+- maxim,ramp-rate-setting:		integer, ramp rate(uV/us) setting to be
-+					configured to the device.
-+					The platform may have different ramp
-+					rate than advertised ramp rate if it has
-+					design variation from Maxim's
-+					recommended. On this case, platform
-+					specific ramp rate is used for ramp time
-+					calculation and this property is used
-+					for device register configurations.
-+					The measured ramp rate of platform is
-+					provided by the regulator-ramp-delay
-+					as described in <devicetree/bindings/
-+					regulator/regulator.txt>.
-+					Maxim Max77620 supports following ramp
-+					delay:
-+					  SD: 13.75mV/us, 27.5mV/us, 55mV/us
-+					  LDOs: 5mV/us, 100mV/us
-+
-+Note: If the measured ramp delay is same as advertised ramp delay then it is not
-+required to provide the ramp delay with property "maxim,ramp-rate-setting". The
-+ramp rate can be provided by the regulator-ramp-delay which will be used for
-+ramp time calculation for voltage change as well as for device configuration.
- 
- Example:
- --------
 -- 
-2.8.0.rc3
+1.7.9.5
+
