@@ -1,81 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/6] leds: pca963x: Inform the output that it is inverted
-Date: Fri, 22 Apr 2016 08:09:35 -0500
-Message-ID: <CAL_JsqJdvfrAy+1pYVYOp+tGhjOO3WkQo24+hfxV0_Ncpj6dSg@mail.gmail.com>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <1461051650-18824-6-git-send-email-oliver@schinagl.nl> <20160421150750.GA3116@rob-hp-laptop>
- <571A1B60.3020804@schinagl.nl>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [v8, 1/7] Documentation: DT: update Freescale DCFG compatible
+Date: Fri, 22 Apr 2016 14:11:51 +0100
+Message-ID: <20160422131151.GJ10606@leverpostej>
+References: <1461306464-19521-1-git-send-email-yangbo.lu@nxp.com>
+ <1461306464-19521-2-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <571A1B60.3020804@schinagl.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olliver Schinagl <oliver@schinagl.nl>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461306464-19521-2-git-send-email-yangbo.lu@nxp.com>
+Sender: netdev-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: linux-mmc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, ulf.hansson@linaro.org, scott.wood@nxp.com, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Zhao Qiang <qiang.zhao@freescale.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, leoyang.li@nxp.com, xiaobo.xie@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 22, 2016 at 7:38 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
-> Hey Rob,
->
-> On 21-04-16 17:07, Rob Herring wrote:
->>
->> On Tue, Apr 19, 2016 at 09:40:49AM +0200, Olliver Schinagl wrote:
->>>
->>> When leds are connected in a totem-pole configuration, they can be
->>> connected either in a active-high, or active-low manor. The driver
->>> currently always assumes active-high. This patch adds the
->>> 'nxp,inverted-out' boolean property to tell the driver that the leds
->>> are driven active-low, or rather, that the behavior is inverted to what
->>> is normally expected.
->>
->> How do I know what is normally expected?
->
-> fair point, and in fact, you don't. The text is bad here.
+On Fri, Apr 22, 2016 at 02:27:38PM +0800, Yangbo Lu wrote:
+> Update Freescale DCFG compatible with 'fsl,<chip>-dcfg' instead
+> of 'fsl,ls1021a-dcfg' to include more chips.
+> 
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> ---
+> Changes for v8:
+> 	- Added this patch
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index 752a685..1d5f512 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -119,7 +119,7 @@ Freescale DCFG
+>  configuration and status for the device. Such as setting the secondary
+>  core start address and release the secondary core from holdoff and startup.
+>    Required properties:
+> -  - compatible: should be "fsl,ls1021a-dcfg"
+> +  - compatible: should be "fsl,<chip>-dcfg"
 
-The problem is not so much the text here, but the property is also
-meaningless without some explanation.
+Please list specific values expected for <chip>, while jusy saying
+<chip> may be more generic, it makes it practically impossible to search
+for the correct binding given a compatible string, and it's vague as to
+exaclty what <chip> should be.
 
->>
->>
->>> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
->>> ---
->>>   Documentation/devicetree/bindings/leds/pca963x.txt |  1 +
->>>   drivers/leds/leds-pca963x.c                        | 20
->>> +++++++++++++-------
->>>   include/linux/platform_data/leds-pca963x.h         |  1 +
->>>   3 files changed, 15 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt
->>> b/Documentation/devicetree/bindings/leds/pca963x.txt
->>> index dafbe99..7b23725 100644
->>> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
->>> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
->>> @@ -6,6 +6,7 @@ Required properties:
->>>   Optional properties:
->>>   - nxp,totem-pole : use totem pole (push-pull) instead of open-drain
->>> (pca9632 defaults
->>>     to open-drain, newer chips to totem pole)
->>> +  nxp,inverted-out: the connected leds are active-low, default to
->>> active-high
->>
->> Just state what mode you want: nxp,active-low
->
-> But that's not what happens, which is why my text is bad :) It depends on
-> how the board is wired and if it is push-pull or open-drain. Though this
-> goes beyond my electronics knowledge. So I'll reduce the text to say exactly
-> what we mean, inverted output (or not).
->
-> Unless you can explain that it would be unrelated and it is actually
-> active-high/low. I'll be more than happy to oblige.
+Thanks,
+Mark.
 
-I'm not familiar with this chip, but googling for "active low LED
-circuit" can give you lots of examples. To put it simply, you are
-defining whether the control/switch is on the cathode or anode side of
-the LED. Open-drain vs. push-pull is also related to how the circuit
-is done, but is probably an independent property. I'd think the only
-reason you would use open-drain here is if you wanted to control the
-LED from 2 different signals. Whether you wanted the controls to
-function as OR or AND logic to turn on would determine what the active
-state needs to be.
 
-Rob
+
+>    - reg : should contain base address and length of DCFG memory-mapped registers
+>  
+>  Example:
+> -- 
+> 2.1.0.27.g96db324
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
