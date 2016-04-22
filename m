@@ -1,187 +1,30 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/8] firmware: qcom: scm: Convert SCM to platform driver
-Date: Fri, 22 Apr 2016 16:11:11 -0700
-Message-ID: <20160422231111.GD3202@tuxbot>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Fri, 22 Apr 2016 16:12:26 -0700
+Message-ID: <20160422231226.GE3202@tuxbot>
 References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
- <1461363432-5730-3-git-send-email-andy.gross@linaro.org>
+ <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1461363432-5730-3-git-send-email-andy.gross@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1461363432-5730-2-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri 22 Apr 15:17 PDT 2016, Andy Gross wrote:
 
-[..]
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-[..]
-> +static struct qcom_scm *__scm;
-> +
-> +static int qcom_scm_clk_enable(void)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(__scm->core_clk);
-> +	if (ret)
-> +		goto bail;
-> +
-> +	if (__scm->iface_clk) {
+> This patch adds the device tree support for the Qualcomm SCM firmware.
+> 
+> Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-No need for this check, the clk api accepts NULL.
-
-> +		ret = clk_prepare_enable(__scm->iface_clk);
-> +		if (ret)
-> +			goto disable_core;
-> +	}
-> +
-> +	if (__scm->bus_clk) {
-
-dito
-
-> +		ret = clk_prepare_enable(__scm->bus_clk);
-> +		if (ret)
-> +			goto disable_iface;
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_iface:
-> +	if (__scm->iface_clk)
-
-dito
-
-> +		clk_disable_unprepare(__scm->iface_clk);
-> +disable_core:
-> +	if (__scm->bus_clk)
-
-and here
-
-> +		clk_disable_unprepare(__scm->core_clk);
-> +bail:
-> +	return ret;
-> +}
-> +
-> +static void qcom_scm_clk_disable(void)
-> +{
-> +	clk_disable_unprepare(__scm->core_clk);
-> +	if (__scm->iface_clk)
-
-and here
-
-> +		clk_disable_unprepare(__scm->iface_clk);
-> +	if (__scm->bus_clk)
-
-and here
-
-> +		clk_disable_unprepare(__scm->bus_clk);
-> +}
-> +
->  /**
->   * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
->   * @entry: Entry point function for the cpus
-> @@ -72,11 +121,17 @@ EXPORT_SYMBOL(qcom_scm_cpu_power_down);
->   */
->  bool qcom_scm_hdcp_available(void)
->  {
-> -	int ret;
-> +	int ret = qcom_scm_clk_enable();
-> +
-> +	if (ret)
-> +		goto clk_err;
-
-Just return here.
-
->  
->  	ret = __qcom_scm_is_call_available(QCOM_SCM_SVC_HDCP,
-> -		QCOM_SCM_CMD_HDCP);
-> +						QCOM_SCM_CMD_HDCP);
-> +
-> +	qcom_scm_clk_disable();
->  
-> +clk_err:
->  	return (ret > 0) ? true : false;
-
-Unnecessary parenthesis.
-
->  }
->  EXPORT_SYMBOL(qcom_scm_hdcp_available);
-> @@ -91,6 +146,89 @@ EXPORT_SYMBOL(qcom_scm_hdcp_available);
->   */
->  int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
->  {
-> -	return __qcom_scm_hdcp_req(req, req_cnt, resp);
-> +	int ret = qcom_scm_clk_enable();
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = __qcom_scm_hdcp_req(req, req_cnt, resp);
-> +	qcom_scm_clk_disable();
-> +	return ret;
->  }
->  EXPORT_SYMBOL(qcom_scm_hdcp_req);
-> +
-> +/**
-> + * qcom_scm_is_available() - Checks if SCM is available
-> + */
-> +bool qcom_scm_is_available(void)
-> +{
-> +	return !!__scm;
-> +}
-> +EXPORT_SYMBOL(qcom_scm_is_available);
-> +
-> +static int qcom_scm_probe(struct platform_device *pdev)
-> +{
-> +	struct qcom_scm *scm;
-> +	long rate;
-> +	int ret;
-> +
-> +	scm = devm_kzalloc(&pdev->dev, sizeof(*scm), GFP_KERNEL);
-> +	if (!scm)
-> +		return -ENOMEM;
-> +
-> +	scm->core_clk = devm_clk_get(&pdev->dev, "core");
-> +	if (IS_ERR(scm->core_clk)) {
-> +		if (PTR_ERR(scm->core_clk) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "failed to acquire core clk\n");
-> +		return PTR_ERR(scm->core_clk);
-> +	}
-> +
-> +	if (of_device_is_compatible(pdev->dev.of_node, "qcom,scm-apq8064")) {
-
-Shouldn't this be reversed?
-
-> +		scm->iface_clk = devm_clk_get(&pdev->dev, "iface");
-> +		if (IS_ERR(scm->iface_clk)) {
-> +			if (PTR_ERR(scm->iface_clk) != -EPROBE_DEFER)
-> +				dev_err(&pdev->dev, "failed to acquire iface clk\n");
-> +			return PTR_ERR(scm->iface_clk);
-> +		}
-> +
-> +		scm->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> +		if (IS_ERR(scm->bus_clk)) {
-> +			if (PTR_ERR(scm->bus_clk) != -EPROBE_DEFER)
-> +				dev_err(&pdev->dev, "failed to acquire bus clk\n");
-> +			return PTR_ERR(scm->bus_clk);
-> +		}
-> +	}
-> +
-> +	/* vote for max clk rate for highest performance */
-> +	rate = clk_round_rate(scm->core_clk, INT_MAX);
-> +	ret = clk_set_rate(scm->core_clk, rate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	__scm = scm;
-> +	__scm->dev = &pdev->dev;
-> +
-> +	return 0;
-> +}
-> +
+Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Regards,
 Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
