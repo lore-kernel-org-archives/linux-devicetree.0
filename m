@@ -1,397 +1,126 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v6 3/7] ARM: dts: am437x/am33xx/da850: Add new ECAP and EPWM
- bindings
-Date: Fri, 22 Apr 2016 11:40:34 -0500
-Message-ID: <1461343238-29274-4-git-send-email-fcooper@ti.com>
-References: <1461343238-29274-1-git-send-email-fcooper@ti.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v6 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+ device tree binding documentation
+Date: Fri, 22 Apr 2016 16:48:42 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57A0EB@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1460710374-25077-1-git-send-email-appanad@xilinx.com>
+ <20160421134226.GA10399@rob-hp-laptop>
+ <C246CAC1457055469EF09E3A7AC4E11A4A579D5E@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <CAL_JsqJMqze+ZRcRVJJUq_Ocs=YVKm2kcJ4g8is0shf5GjTZ5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461343238-29274-1-git-send-email-fcooper@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: thierry.reding@gmail.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJMqze+ZRcRVJJUq_Ocs=YVKm2kcJ4g8is0shf5GjTZ5A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmae>
 List-Id: devicetree@vger.kernel.org
 
-Switch to a new ECAP and EPWM bindings that doesn't depend on hwmod to
-provide the various required clocks.
-
-For AM437 and AM335x, add the required clocks explicitly to DT. The
-hwmod entries for ECAP and EPWM will be removed and this will prevent
-anything from breaking.
-
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
- .../devicetree/bindings/pwm/pwm-tiecap.txt         | 12 +++--
- .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       | 12 +++--
- arch/arm/boot/dts/am33xx.dtsi                      | 30 +++++++++---
- arch/arm/boot/dts/am4372.dtsi                      | 54 ++++++++++++++++++----
- arch/arm/boot/dts/da850.dtsi                       | 15 ++++--
- 5 files changed, 95 insertions(+), 28 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-index fb81179..5c7a116 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-@@ -2,8 +2,8 @@ TI SOC ECAP based APWM controller
- 
- Required properties:
- - compatible: Must be "ti,<soc>-ecap".
--  for am33xx - compatible = "ti,am33xx-ecap";
--  for da850  - compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+  for am33xx - compatible = "ti,am3352-ecap", "ti,am33xx-ecap";
-+  for da850  - compatible = "ti,da850-ecap", "ti,am3352-ecap", "ti,am33xx-ecap";
- - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-   the cells format. The PWM channel index ranges from 0 to 4. The only third
-   cell flag supported by this binding is PWM_POLARITY_INVERTED.
-@@ -12,18 +12,22 @@ Required properties:
- Optional properties:
- - ti,hwmods: Name of the hwmod associated to the ECAP:
-   "ecap<x>", <x> being the 0-based instance number from the HW spec
-+- clocks: Handle to the ECAP's functional clock.
-+- clock-names: Must be set to "fck".
- 
- Example:
- 
- ecap0: ecap@0 { /* ECAP on am33xx */
--	compatible = "ti,am33xx-ecap";
-+	compatible = "ti,am3352-ecap", "ti,am33xx-ecap";
- 	#pwm-cells = <3>;
- 	reg = <0x48300100 0x80>;
- 	ti,hwmods = "ecap0";
-+	clocks = <&l4ls_gclk>;
-+	clock-names = "fck";
- };
- 
- ecap0: ecap@0 { /* ECAP on da850 */
--	compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+	compatible = "ti,da850-ecap", "ti,am3352-ecap", "ti,am33xx-ecap";
- 	#pwm-cells = <3>;
- 	reg = <0x306000 0x80>;
- };
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
-index 0f9ba50..a82e249 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
-@@ -2,8 +2,8 @@ TI SOC EHRPWM based PWM controller
- 
- Required properties:
- - compatible: Must be "ti,<soc>-ehrpwm".
--  for am33xx - compatible = "ti,am33xx-ehrpwm";
--  for da850  - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+  for am33xx - compatible = "ti,am3352-ehrpwm", "ti,am33xx-ehrpwm";
-+  for da850  - compatible = "ti,da850-ehrpwm", "ti-am3352-ehrpwm", "ti,am33xx-ehrpwm";
- - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-   the cells format. The only third cell flag supported by this binding is
-   PWM_POLARITY_INVERTED.
-@@ -12,18 +12,22 @@ Required properties:
- Optional properties:
- - ti,hwmods: Name of the hwmod associated to the EHRPWM:
-   "ehrpwm<x>", <x> being the 0-based instance number from the HW spec
-+- clocks: Handle to the PWM's time-base and functional clock.
-+- clock-names: Must be set to "tbclk" and "fck".
- 
- Example:
- 
- ehrpwm0: pwm@48300200 { /* EHRPWM on am33xx */
--	compatible = "ti,am33xx-ehrpwm";
-+	compatible = "ti,am3352-ehrpwm", "ti,am33xx-ehrpwm";
- 	#pwm-cells = <3>;
- 	reg = <0x48300200 0x100>;
-+	clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
-+	clock-names = "tbclk", "fck";
- 	ti,hwmods = "ehrpwm0";
- };
- 
- ehrpwm0: pwm@300000 { /* EHRPWM on da850 */
--	compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+	compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm", "ti,am33xx-ehrpwm";
- 	#pwm-cells = <3>;
- 	reg = <0x300000 0x2000>;
- };
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 52be48b..999ba2f 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -679,9 +679,12 @@
- 				  0x48300200 0x48300200 0x80>; /* EHRPWM */
- 
- 			ecap0: ecap@48300100 {
--				compatible = "ti,am33xx-ecap";
-+				compatible = "ti,am3352-ecap",
-+					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48300100 0x80>;
-+				clocks = <&l4ls_gclk>;
-+				clock-names = "fck";
- 				interrupts = <31>;
- 				interrupt-names = "ecap0";
- 				ti,hwmods = "ecap0";
-@@ -689,10 +692,13 @@
- 			};
- 
- 			ehrpwm0: pwm@48300200 {
--				compatible = "ti,am33xx-ehrpwm";
-+				compatible = "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48300200 0x80>;
- 				ti,hwmods = "ehrpwm0";
-+				clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-@@ -709,9 +715,12 @@
- 				  0x48302200 0x48302200 0x80>; /* EHRPWM */
- 
- 			ecap1: ecap@48302100 {
--				compatible = "ti,am33xx-ecap";
-+				compatible = "ti,am3352-ecap",
-+					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48302100 0x80>;
-+				clocks = <&l4ls_gclk>;
-+				clock-names = "fck";
- 				interrupts = <47>;
- 				interrupt-names = "ecap1";
- 				ti,hwmods = "ecap1";
-@@ -719,10 +728,13 @@
- 			};
- 
- 			ehrpwm1: pwm@48302200 {
--				compatible = "ti,am33xx-ehrpwm";
-+				compatible = "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48302200 0x80>;
- 				ti,hwmods = "ehrpwm1";
-+				clocks = <&ehrpwm1_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-@@ -739,9 +751,12 @@
- 				  0x48304200 0x48304200 0x80>; /* EHRPWM */
- 
- 			ecap2: ecap@48304100 {
--				compatible = "ti,am33xx-ecap";
-+				compatible = "ti,am3352-ecap",
-+					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48304100 0x80>;
-+				clocks = <&l4ls_gclk>;
-+				clock-names = "fck";
- 				interrupts = <61>;
- 				interrupt-names = "ecap2";
- 				ti,hwmods = "ecap2";
-@@ -749,10 +764,13 @@
- 			};
- 
- 			ehrpwm2: pwm@48304200 {
--				compatible = "ti,am33xx-ehrpwm";
-+				compatible = "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48304200 0x80>;
- 				ti,hwmods = "ehrpwm2";
-+				clocks = <&ehrpwm2_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 12fcde4..e858460 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -672,18 +672,26 @@
- 			status = "disabled";
- 
- 			ecap0: ecap@48300100 {
--				compatible = "ti,am4372-ecap","ti,am33xx-ecap";
-+				compatible = "ti,am4372-ecap",
-+					     "ti,am3352-ecap",
-+					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48300100 0x80>;
- 				ti,hwmods = "ecap0";
-+				clocks = <&l4ls_gclk>;
-+				clock-names = "fck";
- 				status = "disabled";
- 			};
- 
- 			ehrpwm0: pwm@48300200 {
--				compatible = "ti,am4372-ehrpwm","ti,am33xx-ehrpwm";
-+				compatible = "ti,am4372-ehrpwm",
-+					     "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48300200 0x80>;
- 				ti,hwmods = "ehrpwm0";
-+				clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-@@ -698,18 +706,26 @@
- 			status = "disabled";
- 
- 			ecap1: ecap@48302100 {
--				compatible = "ti,am4372-ecap","ti,am33xx-ecap";
-+				compatible = "ti,am4372-ecap",
-+					     "ti,am3352-ecap",
-+					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48302100 0x80>;
- 				ti,hwmods = "ecap1";
-+				clocks = <&l4ls_gclk>;
-+				clock-names = "fck";
- 				status = "disabled";
- 			};
- 
- 			ehrpwm1: pwm@48302200 {
--				compatible = "ti,am4372-ehrpwm","ti,am33xx-ehrpwm";
-+				compatible = "ti,am4372-ehrpwm",
-+					     "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48302200 0x80>;
- 				ti,hwmods = "ehrpwm1";
-+				clocks = <&ehrpwm1_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-@@ -724,18 +740,26 @@
- 			status = "disabled";
- 
- 			ecap2: ecap@48304100 {
--				compatible = "ti,am4372-ecap","ti,am33xx-ecap";
-+				compatible = "ti,am4372-ecap",
-+					     "ti,am3352-ecap",
-+					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48304100 0x80>;
-+				clocks = <&l4ls_gclk>;
-+				clock-names = "fck";
- 				ti,hwmods = "ecap2";
- 				status = "disabled";
- 			};
- 
- 			ehrpwm2: pwm@48304200 {
--				compatible = "ti,am4372-ehrpwm","ti,am33xx-ehrpwm";
-+				compatible = "ti,am4372-ehrpwm",
-+					     "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48304200 0x80>;
- 				ti,hwmods = "ehrpwm2";
-+				clocks = <&ehrpwm2_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-@@ -750,10 +774,14 @@
- 			status = "disabled";
- 
- 			ehrpwm3: pwm@48306200 {
--				compatible = "ti,am4372-ehrpwm","ti,am33xx-ehrpwm";
-+				compatible = "ti,am4372-ehrpwm",
-+					     "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48306200 0x80>;
- 				ti,hwmods = "ehrpwm3";
-+				clocks = <&ehrpwm3_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-@@ -768,10 +796,14 @@
- 			status = "disabled";
- 
- 			ehrpwm4: pwm@48308200 {
--				compatible = "ti,am4372-ehrpwm","ti,am33xx-ehrpwm";
-+				compatible = "ti,am4372-ehrpwm",
-+					     "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48308200 0x80>;
- 				ti,hwmods = "ehrpwm4";
-+				clocks = <&ehrpwm4_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				status = "disabled";
- 			};
- 		};
-@@ -786,9 +818,13 @@
- 			status = "disabled";
- 
- 			ehrpwm5: pwm@4830a200 {
--				compatible = "ti,am4372-ehrpwm","ti,am33xx-ehrpwm";
-+				compatible = "ti,am4372-ehrpwm",
-+					     "ti,am3352-ehrpwm",
-+					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x4830a200 0x80>;
-+				clocks = <&ehrpwm5_tbclk>, <&l4ls_gclk>;
-+				clock-names = "tbclk", "fck";
- 				ti,hwmods = "ehrpwm5";
- 				status = "disabled";
- 			};
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index c3910e2..28a1064 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -248,31 +248,36 @@
- 			status = "disabled";
- 		};
- 		ehrpwm0: pwm@01f00000 {
--			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
-+				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x300000 0x2000>;
- 			status = "disabled";
- 		};
- 		ehrpwm1: pwm@01f02000 {
--			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
-+				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x302000 0x2000>;
- 			status = "disabled";
- 		};
- 		ecap0: ecap@01f06000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x306000 0x80>;
- 			status = "disabled";
- 		};
- 		ecap1: ecap@01f07000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x307000 0x80>;
- 			status = "disabled";
- 		};
- 		ecap2: ecap@01f08000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x308000 0x80>;
- 			status = "disabled";
--- 
-2.7.0
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGRtYWVuZ2lu
+ZS1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpkbWFlbmdpbmUtDQo+IG93bmVyQHZnZXIu
+a2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFJvYiBIZXJyaW5nDQo+IFNlbnQ6IEZyaWRheSwgQXBy
+aWwgMjIsIDIwMTYgOTo0MyBQTQ0KPiBUbzogQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbyA8
+YXBwYW5hZEB4aWxpbnguY29tPg0KPiBDYzogcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxh
+bmRAYXJtLmNvbTsNCj4gaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVh
+dXJvcmEub3JnOyBNaWNoYWwgU2ltZWsNCj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IFNvcmVuIEJy
+aW5rbWFubiA8c29yZW5iQHhpbGlueC5jb20+Ow0KPiB2aW5vZC5rb3VsQGludGVsLmNvbTsgZGFu
+Lmoud2lsbGlhbXNAaW50ZWwuY29tOyBtb3JpdHouZmlzY2hlckBldHR1cy5jb207DQo+IGxhdXJl
+bnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbTsgbHVpc0BkZWJldGhlbmNvdXJ0LmNvbTsgQW5p
+cnVkaGENCj4gU2FyYW5naSA8YW5pcnVkaEB4aWxpbnguY29tPjsgUHVubmFpYWggQ2hvdWRhcnkg
+S2FsbHVyaQ0KPiA8cHVubmFpYUB4aWxpbnguY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2NiAxLzJdIERvY3VtZW50YXRpb246IERUOiBkbWE6IEFkZCBYaWxpbngg
+enlucW1wIGRtYQ0KPiBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24NCj4gDQo+IE9u
+IEZyaSwgQXByIDIyLCAyMDE2IGF0IDEyOjM2IEFNLCBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEg
+UmFvDQo+IDxhcHBhbmEuZHVyZ2EucmFvQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+IEhpIFJvYiwN
+Cj4gPg0KPiA+ICAgICAgICAgVGhhbmtzIGZvciB0aGUgcmV2aWV3Li4uDQo+ID4NCj4gPj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpy
+b2JoQGtlcm5lbC5vcmddDQo+ID4+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAyMSwgMjAxNiA3OjEy
+IFBNDQo+ID4+IFRvOiBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgUmFvIDxhcHBhbmFkQHhpbGlu
+eC5jb20+DQo+ID4+IENjOiBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29t
+Ow0KPiA+PiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1cm9yYS5v
+cmc7IE1pY2hhbCBTaW1law0KPiA+PiA8bWljaGFsc0B4aWxpbnguY29tPjsgU29yZW4gQnJpbmtt
+YW5uIDxzb3JlbmJAeGlsaW54LmNvbT47DQo+ID4+IHZpbm9kLmtvdWxAaW50ZWwuY29tOyBkYW4u
+ai53aWxsaWFtc0BpbnRlbC5jb207IEFwcGFuYSBEdXJnYQ0KPiA+PiBLZWRhcmVzd2FyYSBSYW8g
+PGFwcGFuYWRAeGlsaW54LmNvbT47IG1vcml0ei5maXNjaGVyQGV0dHVzLmNvbTsNCj4gPj4gbGF1
+cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tOyBsdWlzQGRlYmV0aGVuY291cnQuY29tOyBB
+bmlydWRoYQ0KPiA+PiBTYXJhbmdpIDxhbmlydWRoQHhpbGlueC5jb20+OyBQdW5uYWlhaCBDaG91
+ZGFyeSBLYWxsdXJpDQo+ID4+IDxwdW5uYWlhQHhpbGlueC5jb20+OyBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+PiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPj4gZG1hZW5naW5lQHZnZXIua2VybmVs
+Lm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDEvMl0gRG9jdW1lbnRhdGlvbjogRFQ6
+IGRtYTogQWRkIFhpbGlueCB6eW5xbXANCj4gPj4gZG1hIGRldmljZSB0cmVlIGJpbmRpbmcgZG9j
+dW1lbnRhdGlvbg0KPiA+Pg0KPiA+PiBPbiBGcmksIEFwciAxNSwgMjAxNiBhdCAwMjoyMjo1M1BN
+ICswNTMwLCBLZWRhcmVzd2FyYSByYW8gQXBwYW5hIHdyb3RlOg0KPiA+PiA+IERldmljZS10cmVl
+IGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgWGlsaW54IHp5bnFtcCBkbWEgZW5naW5lIHVzZWQN
+Cj4gPj4gPiBpbiBaeW5xIFVsdHJhU2NhbGUrIE1QU29DLg0KPiA+PiA+DQo+ID4+ID4gU2lnbmVk
+LW9mZi1ieTogUHVubmFpYWggQ2hvdWRhcnkgS2FsbHVyaSA8cHVubmFpYUB4aWxpbnguY29tPg0K
+PiA+PiA+IFNpZ25lZC1vZmYtYnk6IEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgPGFwcGFuYWRAeGls
+aW54LmNvbT4NCj4gPj4gPiAtLS0NCj4gPj4gPiBDaGFuZ2VzIGluIHY2Og0KPiA+PiA+IC0gUmVt
+b3ZlZCBkZXNjLWF4aS1jYWNoZS9kc3QtYXhpLWNhY2hlL3NyYy1heGktY2FjaGUgcHJvcGVydGll
+cw0KPiA+PiA+ICAgZnJvbSB0aGUgYmluZGluZyBkb2MgYXMgaXQgYWxsb3cgYnJva2VuIGNvbWJp
+bmF0aW9ucyB3aGVuIGRtYS1jb2hlcmVudA0KPiA+PiA+ICAgaXMgc2V0IGFzIHN1Z2dlc3RlZCBi
+eSBSb2IuDQo+ID4+ID4gLSBGaXhlZCBtaW5vciBjb21tZW50cyBnaXZlbiBieSBSb2IgcmVsYXRl
+ZCBjb2RpbmcobG93ZXIgY2FzZSBEVA0KPiA+PiA+IG5vZGUNCj4gPj4gbmFtZSkuDQo+ID4+ID4g
+Q2hhbmdlcyBpbiB2NToNCj4gPj4gPiAtIFVzZSBkbWEtY29oZXJlbnQgZmxhZyBmb3IgY29oZXJl
+bnQgdHJhbnNmZXJzIGFzIHN1Z2dlc3RlZCBieSByb2IuDQo+ID4+ID4gLSBSZW1vdmVkIHVubmVj
+ZXNzYXJ5IHByb3BlcnRpZXMgZnJvbSBiaW5kaW5nIGRvYyBhcyBzdWdnZXN0ZWQgYnkgUm9iLg0K
+PiA+PiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4+ID4gLSBOb25lDQo+ID4+ID4gQ2hhbmdlcyBpbiB2
+MzoNCj4gPj4gPiAtIE5vbmUNCj4gPj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+PiA+IC0gTm9uZS4N
+Cj4gPj4gPg0KPiA+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFt
+cF9kbWEudHh0ICB8IDQ0DQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKykNCj4gPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+DQo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFt
+cF9kbWEudHh0DQo+ID4+ID4NCj4gPj4gPiBkaWZmIC0tZ2l0DQo+ID4+ID4gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlueC96eW5xbXBfZG1hLnR4dA0KPiA+PiBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFtcF9kbWEu
+dHh0DQo+ID4+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4gPiBpbmRleCAwMDAwMDAwLi5m
+MGYwYjU0DQo+ID4+ID4gLS0tIC9kZXYvbnVsbA0KPiA+PiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFtcF9kbWEudHh0DQo+ID4+ID4gQEAg
+LTAsMCArMSw0NCBAQA0KPiA+PiA+ICtYaWxpbnggWnlucU1QIERNQSBlbmdpbmUsIGl0IGRvZXMg
+c3VwcG9ydCBtZW1vcnkgdG8gbWVtb3J5DQo+ID4+ID4gK3RyYW5zZmVycywgbWVtb3J5IHRvIGRl
+dmljZSBhbmQgZGV2aWNlIHRvIG1lbW9yeSB0cmFuc2ZlcnMuIEl0DQo+ID4+ID4gK2Fsc28gaGFz
+IGZsb3cgY29udHJvbCBhbmQgcmF0ZSBjb250cm9sIHN1cHBvcnQgZm9yIHNsYXZlL3BlcmlwaGVy
+YWwgZG1hDQo+IGFjY2Vzcy4NCj4gPj4gPiArDQo+ID4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+ID4+ID4gKy0gY29tcGF0aWJsZSAgICAgICAgICAgICAgIDogU2hvdWxkIGJlICJ4bG54LHp5
+bnFtcC1kbWEtMS4wIg0KPiA+PiA+ICstIHJlZyAgICAgICAgICAgICAgICAgICAgICA6IE1lbW9y
+eSBtYXAgZm9yIGdkbWEvYWRtYSBtb2R1bGUgYWNjZXNzLg0KPiA+PiA+ICstIGludGVycnVwdC1w
+YXJlbnQgOiBJbnRlcnJ1cHQgY29udHJvbGxlciB0aGUgaW50ZXJydXB0IGlzIHJvdXRlZCB0aHJv
+dWdoDQo+ID4+ID4gKy0gaW50ZXJydXB0cyAgICAgICAgICAgICAgIDogU2hvdWxkIGNvbnRhaW4g
+RE1BIGNoYW5uZWwgaW50ZXJydXB0Lg0KPiA+PiA+ICstIHhsbngsYnVzLXdpZHRoICAgOiBBeGkg
+YnVzd2lkdGggaW4gYml0cy4gU2hvdWxkIGNvbnRhaW4gMTI4IG9yIDY0DQo+ID4+DQo+ID4+IEkg
+dGhpbmsgaG93IHRoaXMgaXMgZ2V0dGluZyB1c2VkIGJ5IHRoZSBkcml2ZXIgaXMgd3JvbmcuDQo+
+ID4+IHtzcmMsZHN0fV9hZGRyX3dpZHRocyBhcmUgc3VwcG9zZWQgdG8gYmUgYSBiaXRtYXNrIG9m
+IHN1cHBvcnRlZCBzbGF2ZQ0KPiA+PiBkZXZpY2UgcmVnaXN0ZXIgd2lkdGhzLiBZb3UgYXJlbid0
+IGRvaW5nIGEgYml0bWFzayBhbmQgeW91IGFyZSBhbHNvDQo+ID4+IHNheWluZyB5b3Ugb25seSBz
+dXBwb3J0IHNsYXZlcyB3aXRoIDggb3IgMTYgYnl0ZSBkYXRhIHJlZ2lzdGVycyB3aGljaA0KPiA+
+PiBpcyBzb21ld2hhdCByYXJlLiBJdCBtYXkgaGFwcGVuIHRvIHdvcmsgYmVjYXVzZSAxMjgvOCA9
+PSBCSVQoNCkuDQo+ID4+IEhvd2V2ZXIsIHRoZSBkb2N1bWVudGF0aW9uIGZvciB0aGUgZmllbGQg
+aXMgY29udHJhZGljdG9yeSBpbiB0aGF0IGl0DQo+ID4+IHNheXMgMSwyLDQgb3IgOCBieXRlIHdp
+ZHRocyBhcmUgc3VwcG9ydGVkLCBidXQgdGhlIGVudW0gaGFzIG1vcmUgc2l6ZXMuDQo+ID4NCj4g
+Pg0KPiA+IFRoZSBETUEgc3VwcG9ydHMgYW4gQVhJIGJ1cyB3aWR0aCBvZiAxMjgvNjQgYml0cyBv
+bmx5Lg0KPiA+IFBsZWFzZSByZWZlciBJUCBkYXRhIHNoZWV0Lg0KPiBodHRwOi8vd3d3LnhpbGlu
+eC5jb20vc3VwcG9ydC9kb2N1bWVudGF0aW9uL3VzZXJfZ3VpZGVzL3VnMTA4NS16eW5xLQ0KPiB1
+bHRyYXNjYWxlLXRybS5wZGYgUGFnZSBObzogMzU5KERNQSBPdmVyIGZldGNoIHNlY3Rpb24pLg0K
+PiANCj4gSSB1bmRlcnN0YW5kIHRoYXQuIFRoYXQgc2hvdWxkIG5vdCByZWFsbHkgbWF0dGVyIGlm
+IHRoZSBBWEkgbWFzdGVyIHByb3Blcmx5IHNldHMNCj4gYnl0ZSBsYW5lIHN0cm9iZXMgb3RoZXIg
+dGhhbiBkZWZpbmluZyBtYXggYnVyc3QgbGVuZ3RoIHdoaWNoIHlvdSBhbHJlYWR5IGhhdmUNCj4g
+ZGVmaW5lZCBlbHNld2hlcmUuDQo+IA0KPiA+IFRoYXQncyB3aHkgZHVyaW5nIHByb2JlIHdlIGFy
+ZSBtYWtpbmcgdGhlIGRtYV9kZXZpY2Ugc3VwcG9ydGVkIHNvdXJjZSBhbmQNCj4gZGVzdGluYXRp
+b24gYWRkcmVzcyB3aWR0aHMgYWNjb3JkaW5nbHkgYmFzZWQgb24gdGhlIERUIHByb3BlcnR5Lg0K
+PiA+DQo+ID4gU25hcCBzaG90IG9mIGRyaXZlciBjb2RlIGZyb20gdGhlIHByb2JlOg0KPiA+ICAg
+ICAgICBzdHJ1Y3QgZG1hX2RldmljZSAqcDsNCj4gPiAgICAgICAgcC0+ZHN0X2FkZHJfd2lkdGhz
+ID0gemRldi0+Y2hhbi0+YnVzX3dpZHRoIC8gODsNCj4gPiAgICAgICAgcC0+c3JjX2FkZHJfd2lk
+dGhzID0gemRldi0+Y2hhbi0+YnVzX3dpZHRoIC8gODsNCj4gDQo+IFJlYWQgd2hhdCBJIHdyb3Rl
+IGJlZm9yZSBhbmQgcmVhZCB0aGUgZG9jdW1lbnRhdGlvbiBmb3IgdGhlc2UgZmllbGRzLg0KPiBU
+aGV5IGFyZSBiaXRtYXNrcy4NCg0KSSBtaXN1bmRlcnN0b29kIHRoZSBxdWVzdGlvbiB0aGF0IHlv
+dSBhc2tlZCB5ZXN0ZXJkYXkuDQpOb3cgSSBnb3QgY2xhcmlmaWVkLiBXaWxsIGZpeCBpdCBpbiB0
+aGUgbmV4dCB2ZXJzaW9uIG9mIHRoZSBwYXRjaC4uLg0KVGhhbmtzIGZvciB0aGUgZGV0YWlsZWQg
+ZXhwbGFuYXRpb24uDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KPiANCj4gUm9iDQo+IC0tDQo+IFRv
+IHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBk
+bWFlbmdpbmUiIGluIHRoZSBib2R5DQo+IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5r
+ZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vIGluZm8gYXQNCj4gaHR0cDovL3ZnZXIua2VybmVsLm9y
+Zy9tYWpvcmRvbW8taW5mby5odG1sDQo=
