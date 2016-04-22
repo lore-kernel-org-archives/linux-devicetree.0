@@ -1,76 +1,90 @@
-From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v7 1/8] dt-bindings: Add a binding for Mediatek Video Processor
-Date: Fri, 22 Apr 2016 12:25:24 +0800
-Message-ID: <1461299131-57851-2-git-send-email-tiffany.lin@mediatek.com>
+From: Tiffany Lin <tiffany.lin@mediatek.com>
+Subject: [PATCH v7 8/8] arm64: dts: mediatek: Add Video Encoder for MT8173
+Date: Fri, 22 Apr 2016 12:25:31 +0800
+Message-ID: <1461299131-57851-9-git-send-email-tiffany.lin@mediatek.com>
 References: <1461299131-57851-1-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-2-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-3-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-4-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-5-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-6-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-7-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-8-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1461299131-57851-1-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461299131-57851-8-git-send-email-tiffany.lin@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: devicetree@vger.kernel.org, Tiffany Lin <tiffany.lin@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Add video encoder node for MT8173
 
-Add a DT binding documentation of Video Processor Unit for the
-MT8173 SoC from Mediatek.
-
-Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
 
 ---
- .../devicetree/bindings/media/mediatek-vpu.txt     |   31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   39 ++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-vpu.txt b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
-new file mode 100644
-index 0000000..2a5bac3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
-@@ -0,0 +1,31 @@
-+* Mediatek Video Processor Unit
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index ae147bb..348ce0e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -717,6 +717,45 @@
+ 			clock-names = "apb", "smi";
+ 		};
+ 
++		vcodec_enc: vcodec@18002000 {
++			compatible = "mediatek,mt8173-vcodec-enc";
++			reg = <0 0x18002000 0 0x1000>,	/* VENC_SYS */
++			      <0 0x19002000 0 0x1000>;	/* VENC_LT_SYS */
++			interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
++				     <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
++			mediatek,larb = <&larb3>,
++					<&larb5>;
++			iommus = <&iommu M4U_PORT_VENC_RCPU>,
++				 <&iommu M4U_PORT_VENC_REC>,
++				 <&iommu M4U_PORT_VENC_BSDMA>,
++				 <&iommu M4U_PORT_VENC_SV_COMV>,
++				 <&iommu M4U_PORT_VENC_RD_COMV>,
++				 <&iommu M4U_PORT_VENC_CUR_LUMA>,
++				 <&iommu M4U_PORT_VENC_CUR_CHROMA>,
++				 <&iommu M4U_PORT_VENC_REF_LUMA>,
++				 <&iommu M4U_PORT_VENC_REF_CHROMA>,
++				 <&iommu M4U_PORT_VENC_NBM_RDMA>,
++				 <&iommu M4U_PORT_VENC_NBM_WDMA>,
++				 <&iommu M4U_PORT_VENC_RCPU_SET2>,
++				 <&iommu M4U_PORT_VENC_REC_FRM_SET2>,
++				 <&iommu M4U_PORT_VENC_BSDMA_SET2>,
++				 <&iommu M4U_PORT_VENC_SV_COMA_SET2>,
++				 <&iommu M4U_PORT_VENC_RD_COMA_SET2>,
++				 <&iommu M4U_PORT_VENC_CUR_LUMA_SET2>,
++				 <&iommu M4U_PORT_VENC_CUR_CHROMA_SET2>,
++				 <&iommu M4U_PORT_VENC_REF_LUMA_SET2>,
++				 <&iommu M4U_PORT_VENC_REC_CHROMA_SET2>;
++			mediatek,vpu = <&vpu>;
++			clocks = <&topckgen CLK_TOP_VENCPLL_D2>,
++				 <&topckgen CLK_TOP_VENC_SEL>,
++				 <&topckgen CLK_TOP_UNIVPLL1_D2>,
++				 <&topckgen CLK_TOP_VENC_LT_SEL>;
++			clock-names = "venc_sel_src",
++				      "venc_sel",
++				      "venc_lt_sel_src",
++				      "venc_lt_sel";
++		};
 +
-+Video Processor Unit is a HW video controller. It controls HW Codec including
-+H.264/VP8/VP9 Decode, H.264/VP8 Encode and Image Processor (scale/rotate/color convert).
-+
-+Required properties:
-+  - compatible: "mediatek,mt8173-vpu"
-+  - reg: Must contain an entry for each entry in reg-names.
-+  - reg-names: Must include the following entries:
-+    "tcm": tcm base
-+    "cfg_reg": Main configuration registers base
-+  - interrupts: interrupt number to the cpu.
-+  - clocks : clock name from clock manager
-+  - clock-names: must be main. It is the main clock of VPU
-+
-+Optional properties:
-+  - memory-region: phandle to a node describing memory (see
-+    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
-+    to be used for VPU extended memory; if not present, VPU may be located
-+    anywhere in the memory
-+
-+Example:
-+	vpu: vpu@10020000 {
-+		compatible = "mediatek,mt8173-vpu";
-+		reg = <0 0x10020000 0 0x30000>,
-+		      <0 0x10050000 0 0x100>;
-+		reg-names = "tcm", "cfg_reg";
-+		interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&topckgen TOP_SCP_SEL>;
-+		clock-names = "main";
-+	};
+ 		vencltsys: clock-controller@19000000 {
+ 			compatible = "mediatek,mt8173-vencltsys", "syscon";
+ 			reg = <0 0x19000000 0 0x1000>;
 -- 
 1.7.9.5
