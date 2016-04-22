@@ -1,7 +1,7 @@
 From: Andy Gross <andy.gross@linaro.org>
-Subject: [PATCH 8/8] arm64: dts: msm8916: Add SCM firmware node
-Date: Fri, 22 Apr 2016 17:17:12 -0500
-Message-ID: <1461363432-5730-9-git-send-email-andy.gross@linaro.org>
+Subject: [PATCH 6/8] firmware: qcom: scm: Add memory allocation API
+Date: Fri, 22 Apr 2016 17:17:10 -0500
+Message-ID: <1461363432-5730-7-git-send-email-andy.gross@linaro.org>
 References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
@@ -10,33 +10,64 @@ To: linux-arm-msm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the devicetree node for the SCM firmware.
+This patch adds APIs for the scm-32 and scm-64 to use for coherent memory
+allocation.
 
 Signed-off-by: Andy Gross <andy.gross@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/firmware/qcom_scm.c | 17 +++++++++++++++++
+ drivers/firmware/qcom_scm.h |  4 ++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9681200..d912cd7 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -122,6 +122,16 @@
- 		hwlocks = <&tcsr_mutex 3>;
- 	};
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 7d7b12b..6e3defb 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -19,6 +19,7 @@
+ #include <linux/qcom_scm.h>
+ #include <linux/of.h>
+ #include <linux/clk.h>
++#include <linux/dma-mapping.h>
  
-+	firmware {
-+		compatible = "simple-bus";
+ #include "qcom_scm.h"
+ 
+@@ -171,6 +172,22 @@ static void qcom_scm_init(void)
+ 	__qcom_scm_init();
+ }
+ 
++void *qcom_scm_alloc_buffer(size_t size, dma_addr_t *dma_addr,
++				      gfp_t gfp)
++{
++	if (__scm)
++		return dma_alloc_writecombine(__scm->dev, size, dma_addr, gfp);
++	else
++		return ERR_PTR(-ENODEV);
++}
 +
-+		scm {
-+			compatible = "qcom,scm-msm8916";
-+			clocks = <&gcc GCC_CRYPTO_CLK>, <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
-+			clock-names = "core", "bus", "iface";
-+		};
-+	};
++void qcom_scm_free_buffer(size_t size, void *cpu_addr,
++				 dma_addr_t dma_addr)
++{
++	if (__scm)
++		dma_free_writecombine(__scm->dev, size, cpu_addr, dma_addr);
++}
 +
- 	soc: soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ static int qcom_scm_probe(struct platform_device *pdev)
+ {
+ 	struct qcom_scm *scm;
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index d3f1f0a..33215b4 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -37,6 +37,10 @@ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+ 		u32 *resp);
+ 
+ extern void __qcom_scm_init(void);
++extern void *qcom_scm_alloc_buffer(size_t size, dma_addr_t *dma_addr,
++				    gfp_t gfp);
++extern void qcom_scm_free_buffer(size_t size, void *virt_addr,
++				 dma_addr_t dma_addr);
+ /* common error codes */
+ #define QCOM_SCM_V2_EBUSY	-12
+ #define QCOM_SCM_ENOMEM		-5
 -- 
 1.9.1
