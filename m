@@ -1,76 +1,66 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2] drivers: firmware: psci: unify enable-method binding on ARM {64,32}-bit systems
-Date: Fri, 22 Apr 2016 16:18:02 +0100
-Message-ID: <1461338282-19509-1-git-send-email-sudeep.holla@arm.com>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 2/5] serial: imx: Use generic uart-has-rtscts DT property
+Date: Fri, 22 Apr 2016 17:22:21 +0200
+Message-ID: <1461338544-29568-3-git-send-email-geert+renesas@glider.be>
+References: <1461338544-29568-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461338544-29568-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>
+Cc: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Qipan Li <Qipan.Li-kQvG35nSl+M@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently ARM CPUs DT bindings allows different enable-method value for
-PSCI based systems. On ARM 64-bit this property is required and must be
-"psci" while on ARM 32-bit systems this property is optional and must
-be "arm,psci" if present.
+Convert the Freescale IMX UART driver from using the vendor-specific
+"fsl,uart-has-rtscts" to the generic "uart-has-rtscts" DT property, as
+documented by the Generic Serial DT Bindings.
 
-However, "arm,psci" has always been the compatible string for the PSCI
-node, and was never intended to be the enable-method. So this is a bug
-in the binding and not a deliberate attempt at specifying 32-bit
-differently.
+The old vendor-specific property is still recognized by the driver for
+backwards compatibility, but deprecated.
 
-This is problematic if 32-bit OS is run on 64-bit system which has
-"psci" as enable-method rather than the expected "arm,psci".
-
-So let's unify the value into "psci" and remove support for "arm,psci"
-before it finds any users.
-
-Reported-by: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 -
- drivers/firmware/psci.c                        | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
+v2:
+  - No changes.
 
-v2->v1:
-	- Added Mark and Lorenzo's ACKs
-	- Updated commit message to specify that it also conflicts with
-	  PSCI compatible(from Mark's reply on the thread)
+ Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 4 ++--
+ drivers/tty/serial/imx.c                                  | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Hi ARM-SoC guys,
-
-Can you please pick up this single fix for PSCI binding/driver for v4.6 ?
-
-Regards,
-Sudeep
-
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index ccc62f145306..3f0cbbb8395f 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -192,7 +192,6 @@ nodes to be present and contain the properties described below.
- 			  can be one of:
- 			    "allwinner,sun6i-a31"
- 			    "allwinner,sun8i-a23"
--			    "arm,psci"
- 			    "arm,realview-smp"
- 			    "brcm,bcm-nsp-smp"
- 			    "brcm,brahma-b15"
-diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
-index 11bfee8b79a9..b5d05807e6ec 100644
---- a/drivers/firmware/psci.c
-+++ b/drivers/firmware/psci.c
-@@ -360,7 +360,7 @@ static struct cpuidle_ops psci_cpuidle_ops __initdata = {
- 	.init = psci_dt_cpu_init_idle,
+diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+index ed94c217c98d18a6..1e82802d8e322db5 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+@@ -6,7 +6,7 @@ Required properties:
+ - interrupts : Should contain uart interrupt
+ 
+ Optional properties:
+-- fsl,uart-has-rtscts : Indicate the uart has rts and cts
++- uart-has-rtscts : Indicate the uart has rts and cts
+ - fsl,irda-mode : Indicate the uart supports irda mode
+ - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+                   in DCE mode by default.
+@@ -24,6 +24,6 @@ uart1: serial@73fbc000 {
+ 	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
+ 	reg = <0x73fbc000 0x4000>;
+ 	interrupts = <31>;
+-	fsl,uart-has-rtscts;
++	uart-has-rtscts;
+ 	fsl,dte-mode;
  };
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 231e7d5caf6c1845..9fc09d3de1e2428b 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -1927,7 +1927,8 @@ static int serial_imx_probe_dt(struct imx_port *sport,
+ 	}
+ 	sport->port.line = ret;
  
--CPUIDLE_METHOD_OF_DECLARE(psci, "arm,psci", &psci_cpuidle_ops);
-+CPUIDLE_METHOD_OF_DECLARE(psci, "psci", &psci_cpuidle_ops);
- #endif
- #endif
+-	if (of_get_property(np, "fsl,uart-has-rtscts", NULL))
++	if (of_get_property(np, "uart-has-rtscts", NULL) ||
++	    of_get_property(np, "fsl,uart-has-rtscts", NULL) /* deprecated */)
+ 		sport->have_rtscts = 1;
  
+ 	if (of_get_property(np, "fsl,dte-mode", NULL))
 -- 
 1.9.1
 
