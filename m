@@ -1,75 +1,72 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
- Tegra210 AGIC
-Date: Fri, 22 Apr 2016 15:57:12 +0100
-Message-ID: <571A3BC8.90906@nvidia.com>
-References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
- <1461150237-15580-14-git-send-email-jonathanh@nvidia.com>
- <20160422100052.GA10606@leverpostej> <571A0739.3090502@nvidia.com>
- <20160422112239.GF10606@leverpostej>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] drivers: firmware: psci: unify enable-method binding on
+ ARM {64,32}-bit systems
+Date: Fri, 22 Apr 2016 15:59:21 +0100
+Message-ID: <20160422145921.GA14353@red-moon>
+References: <1461335911-13233-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160422112239.GF10606@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461335911-13233-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 22/04/16 12:22, Mark Rutland wrote:
-> On Fri, Apr 22, 2016 at 12:12:57PM +0100, Jon Hunter wrote:
->>
->> On 22/04/16 11:00, Mark Rutland wrote:
->>> On Wed, Apr 20, 2016 at 12:03:56PM +0100, Jon Hunter wrote:
->>>> The Tegra AGIC interrupt controller is compatible with the ARM GIC-400
->>>> interrupt controller.
->>>
->>> The cover letter says it _is_ a GIC-400, just used in a slightly unusual
->>> manner (i.e. not directly connected to CPUs).
->>
->> Correct.
->>
->>>> The Tegra AGIC requires two clocks, namely the
->>>> "ape" (functional) and "apb2ape" (interface) clocks, to operate. Add
->>>> the compatible string and clock information for the AGIC to the GIC
->>>> device-tree binding documentation.
->>>
->>> The GIC-400 spec only describes "CLK" (which is what I imagine "ape" is.
->>> There isn't an APB clock described, and the manual seems to show GIC-400
->>> directly connected to AXI rather than APB, so that doesn't seem to even
->>> be the usual "apb_pclk".
->>>
->>> Is there some wrapper logic around a GIC-400 to giove it an APB
->>> interface? Or am I misudnerstanding the spec?
->>
->> Looking at the Tegra documentation what we have is ...
->>
->> APB --> AXI switch --> AGIC (GIC400)
->>
->> I am not sure how such a switch would typically be modeled in DT but we
->> need the apb clock to interface to the GIC registers. I am not sure if
->> something like simple-pm-bus is appropriate here.
+On Fri, Apr 22, 2016 at 03:38:31PM +0100, Sudeep Holla wrote:
+> Currently ARM CPUs DT bindings allows different enable-method value for
+> PSCI based systems. On ARM 64-bit this property is required and must be
+> "psci" while on ARM 32-bit systems this property is optional and must
+> be "arm,psci".
 > 
-> I think we need some representation of that AXI switch in the DT;
-> whether simple-pm-bus is appropriate is another question. We probably
-> need a specific compatible string / binding regardless.
-
-OK, I will have a look at that.
-
->>> The clock-names don't seem right to me, as they sound like provide names
->>> or global clock line names rather than consumer-side names ("clk" and
->>> "apb_pclk").
->>
->> Yes that would be fine with me.
+> This is problematic if 32-bit OS is run on 64-bit system which has
+> "psci" as enable-method rather than the expected "arm,psci".
 > 
-> Ok; if we model the apb_pclk as owned by the AXI switch (which it is),
-> then there's no change for the GIC binding, short of the additional
-> compatible string as an extension of "arm,gic-400", as we already model
-> that clock in the GIC-400 binding.
+> So let's unify the value into "psci" and remove support for "arm,psci"
+> before it finds any users.
+> 
+> Reported-by: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 -
+>  drivers/firmware/psci.c                        | 2 +-
+>  2 files changed, 1 insertion(+), 2 deletions(-)
 
-Yes that makes sense.
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 
-Thanks
-Jon
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index ccc62f145306..3f0cbbb8395f 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -192,7 +192,6 @@ nodes to be present and contain the properties described below.
+>  			  can be one of:
+>  			    "allwinner,sun6i-a31"
+>  			    "allwinner,sun8i-a23"
+> -			    "arm,psci"
+>  			    "arm,realview-smp"
+>  			    "brcm,bcm-nsp-smp"
+>  			    "brcm,brahma-b15"
+> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+> index 11bfee8b79a9..b5d05807e6ec 100644
+> --- a/drivers/firmware/psci.c
+> +++ b/drivers/firmware/psci.c
+> @@ -360,7 +360,7 @@ static struct cpuidle_ops psci_cpuidle_ops __initdata = {
+>  	.init = psci_dt_cpu_init_idle,
+>  };
+>  
+> -CPUIDLE_METHOD_OF_DECLARE(psci, "arm,psci", &psci_cpuidle_ops);
+> +CPUIDLE_METHOD_OF_DECLARE(psci, "psci", &psci_cpuidle_ops);
+>  #endif
+>  #endif
+>  
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
