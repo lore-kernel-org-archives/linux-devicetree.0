@@ -1,54 +1,307 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH net v2 0/3] drivers: net: cpsw: phy-handle fixes
-Date: Fri, 22 Apr 2016 12:25:29 +0530
-Message-ID: <5719CAE1.40801@ti.com>
-References: <1461261035-5578-1-git-send-email-drivshin.allworx@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH resend v2 3/9] mfd: axp20x: Add support for
+ AXP809 PMIC
+Date: Fri, 22 Apr 2016 14:58:25 +0800
+Message-ID: <CAGb2v65oT8NwWp2nx9_qc-YcR1W8WteBh7zn6a3q4snHoXRfhg@mail.gmail.com>
+References: <1459243352-23344-1-git-send-email-wens@csie.org>
+ <1459243352-23344-4-git-send-email-wens@csie.org> <20160411082409.GG4592@x1>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461261035-5578-1-git-send-email-drivshin.allworx@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>, netdev@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Markus Brunner <systemprogrammierung.brunner@gmail.com>, Nicolas Chauvet <kwizart@gmail.com>, linux-kernel@vger.kernel.org, Andrew Goodbody <andrew.goodbody@cambrionix.com>, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBKMX464AKGQEN637XWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160411082409.GG4592@x1>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 April 2016 11:20 PM, David Rivshin (Allworx) wrote:
-> From: David Rivshin <drivshin@allworx.com>
-> 
-> The first patch fixes a bug that makes dual_emac mode break if
-> either slave uses the phy-handle property in the devicetree.
-> 
-> The second patch fixes some cosmetic problems with error messages,
-> and also makes the binding documentation more explicit.
-> 
-> The third patch cleans up the fixed-link case to work like
-> the now-fixed phy-handle case.
-> 
-> I have tested on the following hardware configurations:
->  - (EVMSK) dual emac, phy_id property in both slaves
->  - (EVMSK) dual emac, phy-handle property in both slaves
->  - (BeagleBoneBlack) single emac, phy_id property
->  - (custom) single emac, fixed-link subnode
-> 
-> Nicolas Chauvet reported testing on an HP t410 (dm8148).
-> 
-> Markus Brunner reported testing v1 on the following [1]:
->  - emac0 with phy_id and emac1 with fixed phy
->  - emac0 with phy-handle and emac1 with fixed phy
->  - emac0 with fixed phy and emac1 with fixed phy
-> 
-> 
+Hi Lee,
 
-Reviewed-by: Mugunthan V N <mugunthanvnm@ti.com>
+On Mon, Apr 11, 2016 at 4:24 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 29 Mar 2016, Chen-Yu Tsai wrote:
+>
+>> The X-Powers AXP809 is a new PMIC that is paired with Allwinner's A80
+>> SoC, along with a slave AXP806 PMIC.
+>>
+>> This PMIC is quite similar to the earlier AXP223, though the interrupts
+>> and regulator have changed a bit.
+>>
+>> This patch adds support for the interrupts and power button of the PMIC.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  drivers/mfd/axp20x-rsb.c   |  1 +
+>>  drivers/mfd/axp20x.c       | 79 +++++++++++++++++++++++++++++++++++++++=
++++++++
+>>  include/linux/mfd/axp20x.h | 59 ++++++++++++++++++++++++++++++++++
+>>  3 files changed, 139 insertions(+)
+>
+> Applied, thanks.
 
-Regards
-Mugunthan V N
+Could you also merge the MAINTAINERS patch ("MAINTAINERS: Add entry for
+X-Powers AXP family PMIC drivers") and push an immutable tree for Mark
+to merge the regulator patch?
+
+Thanks again.
+
+ChenYu
+
+>
+>> diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
+>> index 28c20247c112..a407527bcd09 100644
+>> --- a/drivers/mfd/axp20x-rsb.c
+>> +++ b/drivers/mfd/axp20x-rsb.c
+>> @@ -61,6 +61,7 @@ static int axp20x_rsb_remove(struct sunxi_rsb_device *=
+rdev)
+>>
+>>  static const struct of_device_id axp20x_rsb_of_match[] =3D {
+>>       { .compatible =3D "x-powers,axp223", .data =3D (void *)AXP223_ID }=
+,
+>> +     { .compatible =3D "x-powers,axp809", .data =3D (void *)AXP809_ID }=
+,
+>>       { },
+>>  };
+>>  MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
+>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>> index a57d6e940610..1ce923277cc8 100644
+>> --- a/drivers/mfd/axp20x.c
+>> +++ b/drivers/mfd/axp20x.c
+>> @@ -37,6 +37,7 @@ static const char * const axp20x_model_names[] =3D {
+>>       "AXP221",
+>>       "AXP223",
+>>       "AXP288",
+>> +     "AXP809",
+>>  };
+>>
+>>  static const struct regmap_range axp152_writeable_ranges[] =3D {
+>> @@ -85,6 +86,7 @@ static const struct regmap_access_table axp20x_volatil=
+e_table =3D {
+>>       .n_yes_ranges   =3D ARRAY_SIZE(axp20x_volatile_ranges),
+>>  };
+>>
+>> +/* AXP22x ranges are shared with the AXP809, as they cover the same ran=
+ge */
+>>  static const struct regmap_range axp22x_writeable_ranges[] =3D {
+>>       regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_IRQ5_STATE),
+>>       regmap_reg_range(AXP20X_DCDC_MODE, AXP22X_BATLOW_THRES1),
+>> @@ -211,6 +213,20 @@ static struct resource axp288_fuel_gauge_resources[=
+] =3D {
+>>       },
+>>  };
+>>
+>> +static struct resource axp809_pek_resources[] =3D {
+>> +     {
+>> +             .name   =3D "PEK_DBR",
+>> +             .start  =3D AXP809_IRQ_PEK_RIS_EDGE,
+>> +             .end    =3D AXP809_IRQ_PEK_RIS_EDGE,
+>> +             .flags  =3D IORESOURCE_IRQ,
+>> +     }, {
+>> +             .name   =3D "PEK_DBF",
+>> +             .start  =3D AXP809_IRQ_PEK_FAL_EDGE,
+>> +             .end    =3D AXP809_IRQ_PEK_FAL_EDGE,
+>> +             .flags  =3D IORESOURCE_IRQ,
+>> +     },
+>> +};
+>> +
+>>  static const struct regmap_config axp152_regmap_config =3D {
+>>       .reg_bits       =3D 8,
+>>       .val_bits       =3D 8,
+>> @@ -378,6 +394,41 @@ static const struct regmap_irq axp288_regmap_irqs[]=
+ =3D {
+>>       INIT_REGMAP_IRQ(AXP288, BC_USB_CHNG,            5, 1),
+>>  };
+>>
+>> +static const struct regmap_irq axp809_regmap_irqs[] =3D {
+>> +     INIT_REGMAP_IRQ(AXP809, ACIN_OVER_V,            0, 7),
+>> +     INIT_REGMAP_IRQ(AXP809, ACIN_PLUGIN,            0, 6),
+>> +     INIT_REGMAP_IRQ(AXP809, ACIN_REMOVAL,           0, 5),
+>> +     INIT_REGMAP_IRQ(AXP809, VBUS_OVER_V,            0, 4),
+>> +     INIT_REGMAP_IRQ(AXP809, VBUS_PLUGIN,            0, 3),
+>> +     INIT_REGMAP_IRQ(AXP809, VBUS_REMOVAL,           0, 2),
+>> +     INIT_REGMAP_IRQ(AXP809, VBUS_V_LOW,             0, 1),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_PLUGIN,            1, 7),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_REMOVAL,           1, 6),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_ENT_ACT_MODE,      1, 5),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_EXIT_ACT_MODE,     1, 4),
+>> +     INIT_REGMAP_IRQ(AXP809, CHARG,                  1, 3),
+>> +     INIT_REGMAP_IRQ(AXP809, CHARG_DONE,             1, 2),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_HIGH,     2, 7),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_HIGH_END, 2, 6),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_LOW,      2, 5),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_CHG_TEMP_LOW_END,  2, 4),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_HIGH,     2, 3),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_HIGH_END, 2, 2),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_LOW,      2, 1),
+>> +     INIT_REGMAP_IRQ(AXP809, BATT_ACT_TEMP_LOW_END,  2, 0),
+>> +     INIT_REGMAP_IRQ(AXP809, DIE_TEMP_HIGH,          3, 7),
+>> +     INIT_REGMAP_IRQ(AXP809, LOW_PWR_LVL1,           3, 1),
+>> +     INIT_REGMAP_IRQ(AXP809, LOW_PWR_LVL2,           3, 0),
+>> +     INIT_REGMAP_IRQ(AXP809, TIMER,                  4, 7),
+>> +     INIT_REGMAP_IRQ(AXP809, PEK_RIS_EDGE,           4, 6),
+>> +     INIT_REGMAP_IRQ(AXP809, PEK_FAL_EDGE,           4, 5),
+>> +     INIT_REGMAP_IRQ(AXP809, PEK_SHORT,              4, 4),
+>> +     INIT_REGMAP_IRQ(AXP809, PEK_LONG,               4, 3),
+>> +     INIT_REGMAP_IRQ(AXP809, PEK_OVER_OFF,           4, 2),
+>> +     INIT_REGMAP_IRQ(AXP809, GPIO1_INPUT,            4, 1),
+>> +     INIT_REGMAP_IRQ(AXP809, GPIO0_INPUT,            4, 0),
+>> +};
+>> +
+>>  static const struct regmap_irq_chip axp152_regmap_irq_chip =3D {
+>>       .name                   =3D "axp152_irq_chip",
+>>       .status_base            =3D AXP152_IRQ1_STATE,
+>> @@ -428,6 +479,18 @@ static const struct regmap_irq_chip axp288_regmap_i=
+rq_chip =3D {
+>>
+>>  };
+>>
+>> +static const struct regmap_irq_chip axp809_regmap_irq_chip =3D {
+>> +     .name                   =3D "axp809",
+>> +     .status_base            =3D AXP20X_IRQ1_STATE,
+>> +     .ack_base               =3D AXP20X_IRQ1_STATE,
+>> +     .mask_base              =3D AXP20X_IRQ1_EN,
+>> +     .mask_invert            =3D true,
+>> +     .init_ack_masked        =3D true,
+>> +     .irqs                   =3D axp809_regmap_irqs,
+>> +     .num_irqs               =3D ARRAY_SIZE(axp809_regmap_irqs),
+>> +     .num_regs               =3D 5,
+>> +};
+>> +
+>>  static struct mfd_cell axp20x_cells[] =3D {
+>>       {
+>>               .name           =3D "axp20x-pek",
+>> @@ -572,6 +635,16 @@ static struct mfd_cell axp288_cells[] =3D {
+>>       },
+>>  };
+>>
+>> +static struct mfd_cell axp809_cells[] =3D {
+>> +     {
+>> +             .name                   =3D "axp20x-pek",
+>> +             .num_resources          =3D ARRAY_SIZE(axp809_pek_resource=
+s),
+>> +             .resources              =3D axp809_pek_resources,
+>> +     }, {
+>> +             .name                   =3D "axp20x-regulator",
+>> +     },
+>> +};
+>> +
+>>  static struct axp20x_dev *axp20x_pm_power_off;
+>>  static void axp20x_power_off(void)
+>>  {
+>> @@ -631,6 +704,12 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
+>>               axp20x->regmap_cfg =3D &axp288_regmap_config;
+>>               axp20x->regmap_irq_chip =3D &axp288_regmap_irq_chip;
+>>               break;
+>> +     case AXP809_ID:
+>> +             axp20x->nr_cells =3D ARRAY_SIZE(axp809_cells);
+>> +             axp20x->cells =3D axp809_cells;
+>> +             axp20x->regmap_cfg =3D &axp22x_regmap_config;
+>> +             axp20x->regmap_irq_chip =3D &axp809_regmap_irq_chip;
+>> +             break;
+>>       default:
+>>               dev_err(dev, "unsupported AXP20X ID %lu\n", axp20x->varian=
+t);
+>>               return -EINVAL;
+>> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+>> index d82e7d51372b..0be4982f08fe 100644
+>> --- a/include/linux/mfd/axp20x.h
+>> +++ b/include/linux/mfd/axp20x.h
+>> @@ -20,6 +20,7 @@ enum {
+>>       AXP221_ID,
+>>       AXP223_ID,
+>>       AXP288_ID,
+>> +     AXP809_ID,
+>>       NR_AXP20X_VARIANTS,
+>>  };
+>>
+>> @@ -264,6 +265,29 @@ enum {
+>>       AXP22X_REG_ID_MAX,
+>>  };
+>>
+>> +enum {
+>> +     AXP809_DCDC1 =3D 0,
+>> +     AXP809_DCDC2,
+>> +     AXP809_DCDC3,
+>> +     AXP809_DCDC4,
+>> +     AXP809_DCDC5,
+>> +     AXP809_DC1SW,
+>> +     AXP809_DC5LDO,
+>> +     AXP809_ALDO1,
+>> +     AXP809_ALDO2,
+>> +     AXP809_ALDO3,
+>> +     AXP809_ELDO1,
+>> +     AXP809_ELDO2,
+>> +     AXP809_ELDO3,
+>> +     AXP809_DLDO1,
+>> +     AXP809_DLDO2,
+>> +     AXP809_RTC_LDO,
+>> +     AXP809_LDO_IO0,
+>> +     AXP809_LDO_IO1,
+>> +     AXP809_SW,
+>> +     AXP809_REG_ID_MAX,
+>> +};
+>> +
+>>  /* IRQs */
+>>  enum {
+>>       AXP152_IRQ_LDO0IN_CONNECT =3D 1,
+>> @@ -390,6 +414,41 @@ enum axp288_irqs {
+>>       AXP288_IRQ_BC_USB_CHNG,
+>>  };
+>>
+>> +enum axp809_irqs {
+>> +     AXP809_IRQ_ACIN_OVER_V =3D 1,
+>> +     AXP809_IRQ_ACIN_PLUGIN,
+>> +     AXP809_IRQ_ACIN_REMOVAL,
+>> +     AXP809_IRQ_VBUS_OVER_V,
+>> +     AXP809_IRQ_VBUS_PLUGIN,
+>> +     AXP809_IRQ_VBUS_REMOVAL,
+>> +     AXP809_IRQ_VBUS_V_LOW,
+>> +     AXP809_IRQ_BATT_PLUGIN,
+>> +     AXP809_IRQ_BATT_REMOVAL,
+>> +     AXP809_IRQ_BATT_ENT_ACT_MODE,
+>> +     AXP809_IRQ_BATT_EXIT_ACT_MODE,
+>> +     AXP809_IRQ_CHARG,
+>> +     AXP809_IRQ_CHARG_DONE,
+>> +     AXP809_IRQ_BATT_CHG_TEMP_HIGH,
+>> +     AXP809_IRQ_BATT_CHG_TEMP_HIGH_END,
+>> +     AXP809_IRQ_BATT_CHG_TEMP_LOW,
+>> +     AXP809_IRQ_BATT_CHG_TEMP_LOW_END,
+>> +     AXP809_IRQ_BATT_ACT_TEMP_HIGH,
+>> +     AXP809_IRQ_BATT_ACT_TEMP_HIGH_END,
+>> +     AXP809_IRQ_BATT_ACT_TEMP_LOW,
+>> +     AXP809_IRQ_BATT_ACT_TEMP_LOW_END,
+>> +     AXP809_IRQ_DIE_TEMP_HIGH,
+>> +     AXP809_IRQ_LOW_PWR_LVL1,
+>> +     AXP809_IRQ_LOW_PWR_LVL2,
+>> +     AXP809_IRQ_TIMER,
+>> +     AXP809_IRQ_PEK_RIS_EDGE,
+>> +     AXP809_IRQ_PEK_FAL_EDGE,
+>> +     AXP809_IRQ_PEK_SHORT,
+>> +     AXP809_IRQ_PEK_LONG,
+>> +     AXP809_IRQ_PEK_OVER_OFF,
+>> +     AXP809_IRQ_GPIO1_INPUT,
+>> +     AXP809_IRQ_GPIO0_INPUT,
+>> +};
+>> +
+>>  #define AXP288_TS_ADC_H              0x58
+>>  #define AXP288_TS_ADC_L              0x59
+>>  #define AXP288_GP_ADC_H              0x5a
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
