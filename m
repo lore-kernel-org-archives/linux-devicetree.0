@@ -1,126 +1,324 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v6 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
- device tree binding documentation
-Date: Fri, 22 Apr 2016 16:48:42 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57A0EB@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1460710374-25077-1-git-send-email-appanad@xilinx.com>
- <20160421134226.GA10399@rob-hp-laptop>
- <C246CAC1457055469EF09E3A7AC4E11A4A579D5E@XAP-PVEXMBX01.xlnx.xilinx.com>
- <CAL_JsqJMqze+ZRcRVJJUq_Ocs=YVKm2kcJ4g8is0shf5GjTZ5A@mail.gmail.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 1/3] iio: mxs-lradc: Add regulators for current sources
+Date: Fri, 22 Apr 2016 17:50:09 +0200
+Message-ID: <571A4831.2020604@denx.de>
+References: <1461333147-11873-1-git-send-email-harald@ccbib.org> <1461333147-11873-2-git-send-email-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJMqze+ZRcRVJJUq_Ocs=YVKm2kcJ4g8is0shf5GjTZ5A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmae>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461333147-11873-2-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGRtYWVuZ2lu
-ZS1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpkbWFlbmdpbmUtDQo+IG93bmVyQHZnZXIu
-a2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFJvYiBIZXJyaW5nDQo+IFNlbnQ6IEZyaWRheSwgQXBy
-aWwgMjIsIDIwMTYgOTo0MyBQTQ0KPiBUbzogQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbyA8
-YXBwYW5hZEB4aWxpbnguY29tPg0KPiBDYzogcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxh
-bmRAYXJtLmNvbTsNCj4gaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVh
-dXJvcmEub3JnOyBNaWNoYWwgU2ltZWsNCj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IFNvcmVuIEJy
-aW5rbWFubiA8c29yZW5iQHhpbGlueC5jb20+Ow0KPiB2aW5vZC5rb3VsQGludGVsLmNvbTsgZGFu
-Lmoud2lsbGlhbXNAaW50ZWwuY29tOyBtb3JpdHouZmlzY2hlckBldHR1cy5jb207DQo+IGxhdXJl
-bnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbTsgbHVpc0BkZWJldGhlbmNvdXJ0LmNvbTsgQW5p
-cnVkaGENCj4gU2FyYW5naSA8YW5pcnVkaEB4aWxpbnguY29tPjsgUHVubmFpYWggQ2hvdWRhcnkg
-S2FsbHVyaQ0KPiA8cHVubmFpYUB4aWxpbnguY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2NiAxLzJdIERvY3VtZW50YXRpb246IERUOiBkbWE6IEFkZCBYaWxpbngg
-enlucW1wIGRtYQ0KPiBkZXZpY2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24NCj4gDQo+IE9u
-IEZyaSwgQXByIDIyLCAyMDE2IGF0IDEyOjM2IEFNLCBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEg
-UmFvDQo+IDxhcHBhbmEuZHVyZ2EucmFvQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+IEhpIFJvYiwN
-Cj4gPg0KPiA+ICAgICAgICAgVGhhbmtzIGZvciB0aGUgcmV2aWV3Li4uDQo+ID4NCj4gPj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpy
-b2JoQGtlcm5lbC5vcmddDQo+ID4+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAyMSwgMjAxNiA3OjEy
-IFBNDQo+ID4+IFRvOiBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgUmFvIDxhcHBhbmFkQHhpbGlu
-eC5jb20+DQo+ID4+IENjOiBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29t
-Ow0KPiA+PiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1cm9yYS5v
-cmc7IE1pY2hhbCBTaW1law0KPiA+PiA8bWljaGFsc0B4aWxpbnguY29tPjsgU29yZW4gQnJpbmtt
-YW5uIDxzb3JlbmJAeGlsaW54LmNvbT47DQo+ID4+IHZpbm9kLmtvdWxAaW50ZWwuY29tOyBkYW4u
-ai53aWxsaWFtc0BpbnRlbC5jb207IEFwcGFuYSBEdXJnYQ0KPiA+PiBLZWRhcmVzd2FyYSBSYW8g
-PGFwcGFuYWRAeGlsaW54LmNvbT47IG1vcml0ei5maXNjaGVyQGV0dHVzLmNvbTsNCj4gPj4gbGF1
-cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tOyBsdWlzQGRlYmV0aGVuY291cnQuY29tOyBB
-bmlydWRoYQ0KPiA+PiBTYXJhbmdpIDxhbmlydWRoQHhpbGlueC5jb20+OyBQdW5uYWlhaCBDaG91
-ZGFyeSBLYWxsdXJpDQo+ID4+IDxwdW5uYWlhQHhpbGlueC5jb20+OyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+PiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPj4gZG1hZW5naW5lQHZnZXIua2VybmVs
-Lm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDEvMl0gRG9jdW1lbnRhdGlvbjogRFQ6
-IGRtYTogQWRkIFhpbGlueCB6eW5xbXANCj4gPj4gZG1hIGRldmljZSB0cmVlIGJpbmRpbmcgZG9j
-dW1lbnRhdGlvbg0KPiA+Pg0KPiA+PiBPbiBGcmksIEFwciAxNSwgMjAxNiBhdCAwMjoyMjo1M1BN
-ICswNTMwLCBLZWRhcmVzd2FyYSByYW8gQXBwYW5hIHdyb3RlOg0KPiA+PiA+IERldmljZS10cmVl
-IGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgWGlsaW54IHp5bnFtcCBkbWEgZW5naW5lIHVzZWQN
-Cj4gPj4gPiBpbiBaeW5xIFVsdHJhU2NhbGUrIE1QU29DLg0KPiA+PiA+DQo+ID4+ID4gU2lnbmVk
-LW9mZi1ieTogUHVubmFpYWggQ2hvdWRhcnkgS2FsbHVyaSA8cHVubmFpYUB4aWxpbnguY29tPg0K
-PiA+PiA+IFNpZ25lZC1vZmYtYnk6IEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgPGFwcGFuYWRAeGls
-aW54LmNvbT4NCj4gPj4gPiAtLS0NCj4gPj4gPiBDaGFuZ2VzIGluIHY2Og0KPiA+PiA+IC0gUmVt
-b3ZlZCBkZXNjLWF4aS1jYWNoZS9kc3QtYXhpLWNhY2hlL3NyYy1heGktY2FjaGUgcHJvcGVydGll
-cw0KPiA+PiA+ICAgZnJvbSB0aGUgYmluZGluZyBkb2MgYXMgaXQgYWxsb3cgYnJva2VuIGNvbWJp
-bmF0aW9ucyB3aGVuIGRtYS1jb2hlcmVudA0KPiA+PiA+ICAgaXMgc2V0IGFzIHN1Z2dlc3RlZCBi
-eSBSb2IuDQo+ID4+ID4gLSBGaXhlZCBtaW5vciBjb21tZW50cyBnaXZlbiBieSBSb2IgcmVsYXRl
-ZCBjb2RpbmcobG93ZXIgY2FzZSBEVA0KPiA+PiA+IG5vZGUNCj4gPj4gbmFtZSkuDQo+ID4+ID4g
-Q2hhbmdlcyBpbiB2NToNCj4gPj4gPiAtIFVzZSBkbWEtY29oZXJlbnQgZmxhZyBmb3IgY29oZXJl
-bnQgdHJhbnNmZXJzIGFzIHN1Z2dlc3RlZCBieSByb2IuDQo+ID4+ID4gLSBSZW1vdmVkIHVubmVj
-ZXNzYXJ5IHByb3BlcnRpZXMgZnJvbSBiaW5kaW5nIGRvYyBhcyBzdWdnZXN0ZWQgYnkgUm9iLg0K
-PiA+PiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4+ID4gLSBOb25lDQo+ID4+ID4gQ2hhbmdlcyBpbiB2
-MzoNCj4gPj4gPiAtIE5vbmUNCj4gPj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+PiA+IC0gTm9uZS4N
-Cj4gPj4gPg0KPiA+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFt
-cF9kbWEudHh0ICB8IDQ0DQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gPiAgMSBm
-aWxlIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKykNCj4gPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-DQo+ID4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFt
-cF9kbWEudHh0DQo+ID4+ID4NCj4gPj4gPiBkaWZmIC0tZ2l0DQo+ID4+ID4gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlueC96eW5xbXBfZG1hLnR4dA0KPiA+PiBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFtcF9kbWEu
-dHh0DQo+ID4+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4gPiBpbmRleCAwMDAwMDAwLi5m
-MGYwYjU0DQo+ID4+ID4gLS0tIC9kZXYvbnVsbA0KPiA+PiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3p5bnFtcF9kbWEudHh0DQo+ID4+ID4gQEAg
-LTAsMCArMSw0NCBAQA0KPiA+PiA+ICtYaWxpbnggWnlucU1QIERNQSBlbmdpbmUsIGl0IGRvZXMg
-c3VwcG9ydCBtZW1vcnkgdG8gbWVtb3J5DQo+ID4+ID4gK3RyYW5zZmVycywgbWVtb3J5IHRvIGRl
-dmljZSBhbmQgZGV2aWNlIHRvIG1lbW9yeSB0cmFuc2ZlcnMuIEl0DQo+ID4+ID4gK2Fsc28gaGFz
-IGZsb3cgY29udHJvbCBhbmQgcmF0ZSBjb250cm9sIHN1cHBvcnQgZm9yIHNsYXZlL3BlcmlwaGVy
-YWwgZG1hDQo+IGFjY2Vzcy4NCj4gPj4gPiArDQo+ID4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+ID4+ID4gKy0gY29tcGF0aWJsZSAgICAgICAgICAgICAgIDogU2hvdWxkIGJlICJ4bG54LHp5
-bnFtcC1kbWEtMS4wIg0KPiA+PiA+ICstIHJlZyAgICAgICAgICAgICAgICAgICAgICA6IE1lbW9y
-eSBtYXAgZm9yIGdkbWEvYWRtYSBtb2R1bGUgYWNjZXNzLg0KPiA+PiA+ICstIGludGVycnVwdC1w
-YXJlbnQgOiBJbnRlcnJ1cHQgY29udHJvbGxlciB0aGUgaW50ZXJydXB0IGlzIHJvdXRlZCB0aHJv
-dWdoDQo+ID4+ID4gKy0gaW50ZXJydXB0cyAgICAgICAgICAgICAgIDogU2hvdWxkIGNvbnRhaW4g
-RE1BIGNoYW5uZWwgaW50ZXJydXB0Lg0KPiA+PiA+ICstIHhsbngsYnVzLXdpZHRoICAgOiBBeGkg
-YnVzd2lkdGggaW4gYml0cy4gU2hvdWxkIGNvbnRhaW4gMTI4IG9yIDY0DQo+ID4+DQo+ID4+IEkg
-dGhpbmsgaG93IHRoaXMgaXMgZ2V0dGluZyB1c2VkIGJ5IHRoZSBkcml2ZXIgaXMgd3JvbmcuDQo+
-ID4+IHtzcmMsZHN0fV9hZGRyX3dpZHRocyBhcmUgc3VwcG9zZWQgdG8gYmUgYSBiaXRtYXNrIG9m
-IHN1cHBvcnRlZCBzbGF2ZQ0KPiA+PiBkZXZpY2UgcmVnaXN0ZXIgd2lkdGhzLiBZb3UgYXJlbid0
-IGRvaW5nIGEgYml0bWFzayBhbmQgeW91IGFyZSBhbHNvDQo+ID4+IHNheWluZyB5b3Ugb25seSBz
-dXBwb3J0IHNsYXZlcyB3aXRoIDggb3IgMTYgYnl0ZSBkYXRhIHJlZ2lzdGVycyB3aGljaA0KPiA+
-PiBpcyBzb21ld2hhdCByYXJlLiBJdCBtYXkgaGFwcGVuIHRvIHdvcmsgYmVjYXVzZSAxMjgvOCA9
-PSBCSVQoNCkuDQo+ID4+IEhvd2V2ZXIsIHRoZSBkb2N1bWVudGF0aW9uIGZvciB0aGUgZmllbGQg
-aXMgY29udHJhZGljdG9yeSBpbiB0aGF0IGl0DQo+ID4+IHNheXMgMSwyLDQgb3IgOCBieXRlIHdp
-ZHRocyBhcmUgc3VwcG9ydGVkLCBidXQgdGhlIGVudW0gaGFzIG1vcmUgc2l6ZXMuDQo+ID4NCj4g
-Pg0KPiA+IFRoZSBETUEgc3VwcG9ydHMgYW4gQVhJIGJ1cyB3aWR0aCBvZiAxMjgvNjQgYml0cyBv
-bmx5Lg0KPiA+IFBsZWFzZSByZWZlciBJUCBkYXRhIHNoZWV0Lg0KPiBodHRwOi8vd3d3LnhpbGlu
-eC5jb20vc3VwcG9ydC9kb2N1bWVudGF0aW9uL3VzZXJfZ3VpZGVzL3VnMTA4NS16eW5xLQ0KPiB1
-bHRyYXNjYWxlLXRybS5wZGYgUGFnZSBObzogMzU5KERNQSBPdmVyIGZldGNoIHNlY3Rpb24pLg0K
-PiANCj4gSSB1bmRlcnN0YW5kIHRoYXQuIFRoYXQgc2hvdWxkIG5vdCByZWFsbHkgbWF0dGVyIGlm
-IHRoZSBBWEkgbWFzdGVyIHByb3Blcmx5IHNldHMNCj4gYnl0ZSBsYW5lIHN0cm9iZXMgb3RoZXIg
-dGhhbiBkZWZpbmluZyBtYXggYnVyc3QgbGVuZ3RoIHdoaWNoIHlvdSBhbHJlYWR5IGhhdmUNCj4g
-ZGVmaW5lZCBlbHNld2hlcmUuDQo+IA0KPiA+IFRoYXQncyB3aHkgZHVyaW5nIHByb2JlIHdlIGFy
-ZSBtYWtpbmcgdGhlIGRtYV9kZXZpY2Ugc3VwcG9ydGVkIHNvdXJjZSBhbmQNCj4gZGVzdGluYXRp
-b24gYWRkcmVzcyB3aWR0aHMgYWNjb3JkaW5nbHkgYmFzZWQgb24gdGhlIERUIHByb3BlcnR5Lg0K
-PiA+DQo+ID4gU25hcCBzaG90IG9mIGRyaXZlciBjb2RlIGZyb20gdGhlIHByb2JlOg0KPiA+ICAg
-ICAgICBzdHJ1Y3QgZG1hX2RldmljZSAqcDsNCj4gPiAgICAgICAgcC0+ZHN0X2FkZHJfd2lkdGhz
-ID0gemRldi0+Y2hhbi0+YnVzX3dpZHRoIC8gODsNCj4gPiAgICAgICAgcC0+c3JjX2FkZHJfd2lk
-dGhzID0gemRldi0+Y2hhbi0+YnVzX3dpZHRoIC8gODsNCj4gDQo+IFJlYWQgd2hhdCBJIHdyb3Rl
-IGJlZm9yZSBhbmQgcmVhZCB0aGUgZG9jdW1lbnRhdGlvbiBmb3IgdGhlc2UgZmllbGRzLg0KPiBU
-aGV5IGFyZSBiaXRtYXNrcy4NCg0KSSBtaXN1bmRlcnN0b29kIHRoZSBxdWVzdGlvbiB0aGF0IHlv
-dSBhc2tlZCB5ZXN0ZXJkYXkuDQpOb3cgSSBnb3QgY2xhcmlmaWVkLiBXaWxsIGZpeCBpdCBpbiB0
-aGUgbmV4dCB2ZXJzaW9uIG9mIHRoZSBwYXRjaC4uLg0KVGhhbmtzIGZvciB0aGUgZGV0YWlsZWQg
-ZXhwbGFuYXRpb24uDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KPiANCj4gUm9iDQo+IC0tDQo+IFRv
-IHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBk
-bWFlbmdpbmUiIGluIHRoZSBib2R5DQo+IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5r
-ZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vIGluZm8gYXQNCj4gaHR0cDovL3ZnZXIua2VybmVsLm9y
-Zy9tYWpvcmRvbW8taW5mby5odG1sDQo=
+On 04/22/2016 03:52 PM, Harald Geyer wrote:
+> The hardware has two current sources ISRC0 and ISRC1 to allow measuring
+> resistors without additional circuitry. This commit makes them available
+> as regulators.
+> 
+> Tested on an imx233-olinuxino board.
+> 
+> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+> ---
+> The current regulator API doesn't fit this type of device very well: Typically
+> consumers will want to set a defined current, ie. min_uA == max_uA, but they
+> can't without help from configuration data, because the valid values aren't
+> reported by the API for current regulators. I have been thinking about
+> extending the API, but currently AFAIK no such consumers exist and most
+> users, like myself, will force the regulator to a defined value in
+> devicetree anyway.
+
+I am tempted to block this patch and ask you to properly split the
+mxs-lradc driver into MFD with touchscreen and IIO part and only then
+add the regulator bits. The lradc is becoming a katamari of ad-hoc
+misplaced functionality.
+
+>  .../bindings/staging/iio/adc/mxs-lradc.txt         |  29 ++++
+>  drivers/iio/adc/Kconfig                            |   1 +
+>  drivers/iio/adc/mxs-lradc.c                        | 152 +++++++++++++++++++++
+>  3 files changed, 182 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> index 555fb11..983952c 100644
+> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> @@ -19,6 +19,15 @@ Optional properties:
+>  - fsl,settling: delay between plate switch to next sample. Allowed value is
+>                  1 ... 2047. It counts at 2 kHz and its default is
+>                  10 (= 5 ms)
+> +- ISRC0: A node describing the regulator of internal current source 0
+> +- ISRC1: A node describing the regulator of internal current source 1
+> +
+> +Required properties for the ISRCx sub-nodes:
+> +- regulator-max-microamp: See standard regulator binding documentation.
+> +                          Valid values are from 0 to 300 in steps of 20.
+> +
+> +Optional properties for the ISRCx sub-nodes:
+> +Any standard regulator properties that apply to current regulators.
+>  
+>  Example for i.MX23 SoC:
+>  
+> @@ -31,6 +40,16 @@ Example for i.MX23 SoC:
+>  		fsl,ave-ctrl = <4>;
+>  		fsl,ave-delay = <2>;
+>  		fsl,settling = <10>;
+> +
+> +		isrc_lradc0: ISRC0 {
+> +			regulator-max-microamp = <300>;
+> +		};
+> +
+> +		isrc_lradc1: ISRC1 {
+> +			regulator-max-microamp = <120>;
+> +			regulator-min-microamp = <120>;
+> +			regulator-always-on;
+> +		};
+>  	};
+>  
+>  Example for i.MX28 SoC:
+> @@ -44,4 +63,14 @@ Example for i.MX28 SoC:
+>  		fsl,ave-ctrl = <4>;
+>  		fsl,ave-delay = <2>;
+>  		fsl,settling = <10>;
+> +
+> +		isrc_lradc0: ISRC0 {
+> +			regulator-max-microamp = <300>;
+> +		};
+> +
+> +		isrc_lradc6: ISRC1 {
+> +			regulator-max-microamp = <120>;
+> +			regulator-min-microamp = <120>;
+> +			regulator-always-on;
+> +		};
+>  	};
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 5937030..1968d1c 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -319,6 +319,7 @@ config MXS_LRADC
+>          tristate "Freescale i.MX23/i.MX28 LRADC"
+>          depends on (ARCH_MXS || COMPILE_TEST) && HAS_IOMEM
+>          depends on INPUT
+> +        depends on REGULATOR
+>          select STMP_DEVICE
+>          select IIO_BUFFER
+>          select IIO_TRIGGERED_BUFFER
+> diff --git a/drivers/iio/adc/mxs-lradc.c b/drivers/iio/adc/mxs-lradc.c
+> index 33051b8..f22f339 100644
+> --- a/drivers/iio/adc/mxs-lradc.c
+> +++ b/drivers/iio/adc/mxs-lradc.c
+> @@ -40,6 +40,10 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/sysfs.h>
+>  
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/of_regulator.h>
+> +
+>  #define DRIVER_NAME		"mxs-lradc"
+>  
+>  #define LRADC_MAX_DELAY_CHANS	4
+> @@ -261,6 +265,9 @@ struct mxs_lradc {
+>  	unsigned		over_sample_delay;
+>  	/* time in clocks to wait after the plates where switched */
+>  	unsigned		settling_delay;
+> +
+> +	struct regulator_desc isrc0;
+> +	struct regulator_desc isrc1;
+>  };
+>  
+>  #define	LRADC_CTRL0				0x00
+> @@ -305,6 +312,11 @@ struct mxs_lradc {
+>  #define	LRADC_CTRL2				0x20
+>  #define	LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET	24
+>  #define	LRADC_CTRL2_TEMPSENSE_PWD		BIT(15)
+> +#define	LRADC_CTRL2_TEMP_SENSOR_IENABLE1	BIT(9)
+> +#define	LRADC_CTRL2_TEMP_SENSOR_IENABLE0	BIT(8)
+> +#define	LRADC_CTRL2_TEMP_ISRC1_OFFSET		4
+> +#define	LRADC_CTRL2_TEMP_ISRC0_OFFSET		0
+> +#define	LRADC_CTRL2_TEMP_ISRC_MASK		0x0f
+>  
+>  #define	LRADC_STATUS				0x40
+>  #define	LRADC_STATUS_TOUCH_DETECT_RAW		BIT(0)
+> @@ -1383,6 +1395,109 @@ static const struct iio_buffer_setup_ops mxs_lradc_buffer_ops = {
+>  	.validate_scan_mask = &mxs_lradc_validate_scan_mask,
+>  };
+>  
+> +static int mxs_lradc_regulator_is_enabled(struct regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +	int reg = readl(lradc->base + LRADC_CTRL2);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		return reg & LRADC_CTRL2_TEMP_SENSOR_IENABLE0;
+> +	else if (dev->desc == &lradc->isrc1)
+> +		return reg & LRADC_CTRL2_TEMP_SENSOR_IENABLE1;
+> +
+> +	/* This should never happen */
+> +	return -ENODEV;
+> +}
+> +
+> +#define LRADC_REGVALUE2uA(regval, offset) \
+> +	(20 * ((regval >> offset) & LRADC_CTRL2_TEMP_ISRC_MASK))
+> +
+> +static int mxs_lradc_regulator_get_current_limit(struct regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +	int reg = readl(lradc->base + LRADC_CTRL2);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		return LRADC_REGVALUE2uA(reg, LRADC_CTRL2_TEMP_ISRC0_OFFSET);
+> +	else if (dev->desc == &lradc->isrc1)
+> +		return LRADC_REGVALUE2uA(reg, LRADC_CTRL2_TEMP_ISRC1_OFFSET);
+> +
+> +	/* This should never happen */
+> +	return -ENODEV;
+> +}
+> +
+> +static int mxs_lradc_regulator_enable(struct regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		mxs_lradc_reg_set(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE0,
+> +				  LRADC_CTRL2);
+> +	else if (dev->desc == &lradc->isrc1)
+> +		mxs_lradc_reg_set(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE1,
+> +				  LRADC_CTRL2);
+> +	else
+> +		/* This should never happen */
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxs_lradc_regulator_disable(struct regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE0,
+> +				    LRADC_CTRL2);
+> +	else if (dev->desc == &lradc->isrc1)
+> +		mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE1,
+> +				    LRADC_CTRL2);
+> +	else
+> +		/* This should never happen */
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxs_lradc_regulator_set_current_limit(struct regulator_dev *dev,
+> +						 int min_uA, int max_uA)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +	int offset, value;
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		offset = LRADC_CTRL2_TEMP_ISRC0_OFFSET;
+> +	else if (dev->desc == &lradc->isrc1)
+> +		offset = LRADC_CTRL2_TEMP_ISRC1_OFFSET;
+> +	else
+> +		/* This should never happen */
+> +		return -ENODEV;
+> +
+> +	value = min_uA / 20;
+> +	if (min_uA % 20)
+> +		value++;
+> +	if (value * 20 > max_uA)
+> +		return -EINVAL;
+> +	if (value & ~LRADC_CTRL2_TEMP_ISRC_MASK)
+> +		/* This should never happen */
+> +		return -EPERM;
+> +
+> +	mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_ISRC_MASK << offset,
+> +			    LRADC_CTRL2);
+> +	mxs_lradc_reg_set(lradc, value << offset, LRADC_CTRL2);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct regulator_ops mxs_lradc_regulator_current_ops = {
+> +	.enable = mxs_lradc_regulator_enable,
+> +	.is_enabled = mxs_lradc_regulator_is_enabled,
+> +	.disable = mxs_lradc_regulator_disable,
+> +	.get_current_limit = mxs_lradc_regulator_get_current_limit,
+> +	.set_current_limit = mxs_lradc_regulator_set_current_limit,
+> +};
+> +
+>  /*
+>   * Driver initialization
+>   */
+> @@ -1519,6 +1634,10 @@ static void mxs_lradc_hw_stop(struct mxs_lradc *lradc)
+>  
+>  	for (i = 0; i < LRADC_MAX_DELAY_CHANS; i++)
+>  		mxs_lradc_reg_wrt(lradc, 0, LRADC_DELAY(i));
+> +
+> +	mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE0 |
+> +					LRADC_CTRL2_TEMP_SENSOR_IENABLE1,
+> +			    LRADC_CTRL2);
+>  }
+>  
+>  static const struct of_device_id mxs_lradc_dt_ids[] = {
+> @@ -1592,6 +1711,32 @@ static int mxs_lradc_probe_touchscreen(struct mxs_lradc *lradc,
+>  	return 0;
+>  }
+>  
+> +static void mxs_lradc_reg_helper(struct device_node *np, const char *name,
+> +				 struct regulator_config *conf,
+> +				 struct regulator_desc *desc)
+> +{
+> +	struct regulator_dev *ret;
+> +
+> +	conf->of_node = of_get_child_by_name(np, name);
+> +	if (!conf->of_node)
+> +		return;
+> +
+> +	desc->name = name;
+> +	desc->owner = THIS_MODULE;
+> +	desc->type = REGULATOR_CURRENT;
+> +	desc->ops = &mxs_lradc_regulator_current_ops;
+> +
+> +	conf->init_data = of_get_regulator_init_data(conf->dev, conf->of_node,
+> +						     desc);
+> +	ret = devm_regulator_register(conf->dev, desc, conf);
+> +	if (IS_ERR(ret))
+> +		/* Just pretend the regulator isn't there */
+> +		dev_err(conf->dev, "Failed to register regulator %s: %ld\n",
+> +			desc->name, PTR_ERR(ret));
+> +
+> +	of_node_put(conf->of_node);
+> +}
+> +
+>  static int mxs_lradc_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *of_id =
+> @@ -1603,6 +1748,7 @@ static int mxs_lradc_probe(struct platform_device *pdev)
+>  	struct mxs_lradc *lradc;
+>  	struct iio_dev *iio;
+>  	struct resource *iores;
+> +	struct regulator_config regconf;
+>  	int ret = 0, touch_ret;
+>  	int i, s;
+>  	u64 scale_uv;
+> @@ -1727,6 +1873,12 @@ static int mxs_lradc_probe(struct platform_device *pdev)
+>  		goto err_ts;
+>  	}
+>  
+> +	/* Setup regulator devices for current source. */
+> +	regconf.dev = dev;
+> +	regconf.driver_data = lradc;
+> +	mxs_lradc_reg_helper(node, "ISRC0", &regconf, &lradc->isrc0);
+> +	mxs_lradc_reg_helper(node, "ISRC1", &regconf, &lradc->isrc1);
+> +
+>  	return 0;
+>  
+>  err_ts:
+> 
+
+
+-- 
+Best regards,
+Marek Vasut
