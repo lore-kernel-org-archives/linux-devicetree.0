@@ -1,36 +1,141 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] iio:imu:mpu6050: enhance mounting matrix support
-Date: Fri, 22 Apr 2016 15:05:08 -0500
-Message-ID: <20160422200508.GA28036@rob-hp-laptop>
-References: <cover.1461170293.git.gregor.boirie@parrot.com>
- <09429500c3879ba07731ce170d0a2242a0399422.1461170293.git.gregor.boirie@parrot.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/6] Documentation: DT binding doc for iProc Shared MDIO
+ Controller.
+Date: Fri, 22 Apr 2016 15:10:45 -0500
+Message-ID: <20160422201045.GA32303@rob-hp-laptop>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+ <1461230323-27891-3-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <09429500c3879ba07731ce170d0a2242a0399422.1461170293.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Cristina Opriceana <cristina.opriceana-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Leonard Crestez <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1461230323-27891-3-git-send-email-pramod.kumar@broadcom.com>
+Sender: netdev-owner@vger.kernel.org
+To: Pramod Kumar <pramod.kumar@broadcom.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 07:23:45PM +0200, Gregor Boirie wrote:
-> Add a new rotation matrix sysfs attribute compliant with IIO core
-> mounting matrix API.
-> Matrix is retrieved from "in_anglvel_mount_matrix" and
-> "in_accel_mount_matrix" sysfs attributes. It is declared into mpu6050 DTS
-> entry as a "mount-matrix" property.
+On Thu, Apr 21, 2016 at 02:48:39PM +0530, Pramod Kumar wrote:
+> Add DT binding doc for iProc Shared MDIO Controller which
+> populate all masters to Shared MDIO framework.
 > 
-> Old interface is kept for backward userspace compatibility and may be
-> retrieved from legacy platform_data mechanism only.
-> 
-> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 > ---
->  Documentation/ABI/testing/sysfs-bus-iio            |  2 ++
->  .../devicetree/bindings/iio/imu/inv_mpu6050.txt    | 13 ++++++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         | 36 ++++++++++++++++++++--
->  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h          |  4 ++-
->  include/linux/platform_data/invensense_mpu6050.h   |  5 ++-
->  5 files changed, 55 insertions(+), 5 deletions(-)
+>  .../bindings/bus/brcm,iproc-shared-mdio.txt        | 76 ++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt b/Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt
+> new file mode 100644
+> index 0000000..f455f3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/brcm,iproc-shared-mdio.txt
+> @@ -0,0 +1,76 @@
+> +Broadcom iProc Shared MDIO Controller
+> +
+> +Required properties:
+> +- compatible:
+> +    "brcm,iproc-shared-mdio" for shared MDIO controller.
+> +- reg: specifies the base physical address and size of the registers
+> +- reg-names: should be "mdio"
+> +- #address-cells: must be 1.
+> +- #size-cells: must be 0.
+> +
+> +optional:
+> +child nodes: Masters are represented as a child node of shared MDIO controller
+> +and all the PHYs handled by this master are represented as its child node.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Seems kind of useless if child nodes are optional.
+
+> +
+> +Master nodes properties are defined as-
+> +
+> +Required properties:
+> +- compatible: Used to match driver of this PHY.
+> +- reg: MDIO master ID.
+> +- #address-cells: must be 1.
+> +- #size-cells: must be 0.
+> +
+> +optional:
+> +-brcm,phy-internal: if presents, PHYs are internal. Absence shows phy is
+> +external.
+> +-brcm,is-c45: if presents, Controller uses Clause-45 to issue MDIO transaction.
+> +else Controller uses Clause-22 for transactions.
+
+Isn't this a property of the phy? IIRC, there is a standard property or 
+compatible string for this.
+
+> +
+> +PHY nodes are represented as the child node of Master. Child nodes properties
+> +are defined as-
+> +
+> +Required properties:
+> +-reg: phy id of attached PHY.
+> +
+> +optional:
+> +There could be additional properties required to configure the specific phy like
+> +phy-mode in case of gpphy node below. These should be defined here and used by
+> +respective drivers.
+> +
+> +Example:
+> +iproc_mdio: iproc_mdio@663f0000 {
+> +	compatible = "brcm,iproc-shared-mdio";
+> +	reg = <0x6602023c 0x14>;
+> +	reg-names = "mdio";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	sata-master@6 {
+
+mdio@6
+
+> +		compatible = "brcm,iproc-ns2-sata-phy";
+> +		reg = <0x6>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		brcm,phy-internal;
+> +
+> +		sata_phy0: sata-phy@1 {
+
+phy@1
+
+> +			reg = <0x1>;
+> +			#phy-cells = <0>;
+> +		};
+> +
+> +		sata_phy1: sata-phy@2 {
+
+phy@2
+
+> +			reg = <0x2>;
+> +			#phy-cells = <0>;
+> +		};
+> +	};
+> +
+> +	eth-master@0 {
+
+mdio@0
+
+> +		compatible = "brcm,iproc-mdio-master-eth";
+> +		reg = <0x0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		gphy0: eth-phy@10 {
+
+phy@10
+
+> +			reg = <0x10>;
+> +			phy-mode = "mii";
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
