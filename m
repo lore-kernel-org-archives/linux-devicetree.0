@@ -1,116 +1,174 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v6 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
- device tree binding documentation
-Date: Fri, 22 Apr 2016 05:36:29 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A579D5E@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1460710374-25077-1-git-send-email-appanad@xilinx.com>
- <20160421134226.GA10399@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 4/4] ARM64: dts: rockchip: add dts file for RK3399 evaluation board
+Date: Fri, 22 Apr 2016 13:36:56 +0800
+Message-ID: <1461303416-13731-1-git-send-email-jay.xu@rock-chips.com>
+References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160421134226.GA10399@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1461122150-9042-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmae>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patch add rk3399-evb.dts for RK3399 evaluation board.
+Tested on RK3399 evb.
 
-	Thanks for the review...
+Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+changes in v2:
+- remove rk808 since without i2c, which will upstream independently
+- remove es8316 since without i2c, which will upstream independently
+- fix codingstyle issues
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, April 21, 2016 7:12 PM
-> To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek
-> <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
-> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Appana Durga Kedareswara
-> Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org;
-> laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org; luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org; Anirudha
-> Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Punnaiah Choudary Kalluri
-> <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH v6 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
-> device tree binding documentation
-> 
-> On Fri, Apr 15, 2016 at 02:22:53PM +0530, Kedareswara rao Appana wrote:
-> > Device-tree binding documentation for Xilinx zynqmp dma engine used in
-> > Zynq UltraScale+ MPSoC.
-> >
-> > Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Changes in v6:
-> > - Removed desc-axi-cache/dst-axi-cache/src-axi-cache properties
-> >   from the binding doc as it allow broken combinations when dma-coherent
-> >   is set as suggested by Rob.
-> > - Fixed minor comments given by Rob related coding(lower case DT node
-> name).
-> > Changes in v5:
-> > - Use dma-coherent flag for coherent transfers as suggested by rob.
-> > - Removed unnecessary properties from binding doc as suggested by Rob.
-> > Changes in v4:
-> > - None
-> > Changes in v3:
-> > - None
-> > Changes in v2:
-> > - None.
-> >
-> >  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  | 44
-> ++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-> b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-> > new file mode 100644
-> > index 0000000..f0f0b54
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
-> > @@ -0,0 +1,44 @@
-> > +Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
-> > +memory to device and device to memory transfers. It also has flow
-> > +control and rate control support for slave/peripheral dma access.
-> > +
-> > +Required properties:
-> > +- compatible		: Should be "xlnx,zynqmp-dma-1.0"
-> > +- reg			: Memory map for gdma/adma module access.
-> > +- interrupt-parent	: Interrupt controller the interrupt is routed through
-> > +- interrupts		: Should contain DMA channel interrupt.
-> > +- xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
-> 
-> I think how this is getting used by the driver is wrong.
-> {src,dst}_addr_widths are supposed to be a bitmask of supported slave
-> device register widths. You aren't doing a bitmask and you are also
-> saying you only support slaves with 8 or 16 byte data registers which is
-> somewhat rare. It may happen to work because 128/8 == BIT(4). However,
-> the documentation for the field is contradictory in that it says 1,2,4
-> or 8 byte widths are supported, but the enum has more sizes.
+ arch/arm64/boot/dts/rockchip/Makefile       |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 122 ++++++++++++++++++++++++++++
+ 2 files changed, 123 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index df37865..7037a16 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -1,6 +1,7 @@
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+new file mode 100644
+index 0000000..309f870
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+@@ -0,0 +1,122 @@
++/*
++ * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include <dt-bindings/pwm/pwm.h>
++#include "rk3399.dtsi"
++
++/ {
++	compatible = "rockchip,rk3399-evb", "rockchip,rk3399";
++
++	vdd_center: vdd-center {
++		compatible = "pwm-regulator";
++		pwms = <&pwm3 0 25000 0>;
++		regulator-name = "vdd_center";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-always-on;
++		regulator-boot-on;
++		status = "okay";
++	};
++
++	vcc3v3_sys: vcc3v3-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vcc_phy: vcc-phy-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_phy";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&pwm0 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&pwm3 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&pinctrl {
++	pmic {
++		pmic_int_l: pmic-int-l {
++			rockchip,pins =
++				<1 21 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		pmic_dvs2: pmic-dvs2 {
++			rockchip,pins =
++				<1 18 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++};
+-- 
+1.9.1
 
 
-The DMA supports an AXI bus width of 128/64 bits only.
-Please refer IP data sheet. http://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf Page No: 359(DMA Over fetch section).
-
-That's why during probe we are making the dma_device supported source and destination address widths accordingly based on the DT property.
-
-Snap shot of driver code from the probe:
-       struct dma_device *p; 
-       p->dst_addr_widths = zdev->chan->bus_width / 8;
-       p->src_addr_widths = zdev->chan->bus_width / 8;
-
-Where bus_width property is read from the probe.
-err = of_property_read_u32(node, "xlnx,bus-width", &chan->bus_width)
-
-Cheers!,
-Kedar...
-
-> 
-> Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
