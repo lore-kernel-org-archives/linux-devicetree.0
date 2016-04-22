@@ -1,116 +1,75 @@
-From: Alistair Popple <alistair@popple.id.au>
-Subject: Re: [PATCH v8 36/45] powerpc/powernv: Support PCI slot ID
-Date: Fri, 22 Apr 2016 14:23:54 +1000
-Message-ID: <5008269.vZDqGUuHuL@new-mexico>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com> <20160420022840.GC28594@gwshan> <57170215.7080405@ozlabs.ru>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 3/8] arm64: dts: mediatek: Add node for Mediatek Video Processor Unit
+Date: Fri, 22 Apr 2016 12:25:26 +0800
+Message-ID: <1461299131-57851-4-git-send-email-tiffany.lin@mediatek.com>
+References: <1461299131-57851-1-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-2-git-send-email-tiffany.lin@mediatek.com>
+ <1461299131-57851-3-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <57170215.7080405@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Alexey Kardashevskiy <aik@ozlabs.ru>, Gavin Shan <gwshan@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461299131-57851-3-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Apr 2016 14:14:13 Alexey Kardashevskiy wrote:
+From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-<snip>
+Add VPU drivers for MT8173
 
-> >
-> >>
-> >> btw how will new OPAL react if old kernel is running, i.e. not passing @state
-> >> at all? If it is initialized to NULL somewher - fine but what exactly does
-> >> this initialization and makes sure that OPAL won't see garbage as a second
-> >> parameter?
-> >>
-> >
-> > @state is always NULL for old kernel + new OPAL.
-> 
-> What piece of code writes NULL to "state"? Old kernel will do 
-> opal_pci_poll(id) and omit the "state" so something has to take care of it 
-> and write NULL where OPAL expects to see a pointer to "state" (which we set 
-> to NULL) and that place would be some GPR which may have garbage.
-> 
-> I am looking at
-> #define OPAL_CALL(name, token)
-> 
-> and cannot see where the second parameter (which old kernel omits) is 
-> reset, i.e. gpr4 (or gpr5?) is cleared.
+Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Gavin walked me through the code here and he's right that this won't cause a
-problem at the moment. Not because @state is NULL on old kernels (as you point
-out it isn't) but because old kernels call a specific sequence of OPAL calls 
-which mean that the new Skiboot wont check @state when an old kernel is running.
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-However this is more a side-effect and is very brittle. It would need far more
-commenting on the OPAL side and there's still a good chance someone will break
-it by accident. Far easier just to add another OPAL call - eg. opal_pci_poll2().
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index eab7efc..ae147bb 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -125,6 +125,18 @@
+ 		clock-output-names = "cpum_ck";
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		vpu_dma_reserved: vpu_dma_mem_region {
++			compatible = "shared-dma-pool";
++			reg = <0 0xb7000000 0 0x500000>;
++			alignment = <0x1000>;
++			no-map;
++		};
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupt-parent = <&gic>;
+@@ -269,6 +281,17 @@
+ 			clock-names = "spi", "wrap";
+ 		};
+ 
++		vpu: vpu@10020000 {
++			compatible = "mediatek,mt8173-vpu";
++			reg = <0 0x10020000 0 0x30000>,
++			      <0 0x10050000 0 0x100>;
++			reg-names = "tcm", "cfg_reg";
++			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&topckgen CLK_TOP_SCP_SEL>;
++			clock-names = "main";
++			memory-region = <&vpu_dma_reserved>;
++		};
++
+ 		sysirq: intpol-controller@10200620 {
+ 			compatible = "mediatek,mt8173-sysirq",
+ 				     "mediatek,mt6577-sysirq";
+-- 
+1.7.9.5
 
-> > @state is used in
-> > PCI hotplug functionality in OPAL only. As old kernel doesn't support
-> > PCI hotplug, @state is never used. I'm not sure it's the answer you
-> > want?
-> 
-> No, it is not :)
-> 
-> >> When ABI like this changes, I expect to see opal_pci_poll2() or
-> >> opal_pci_poll_ex() rather than just an additional parameter to
-> >> opal_pci_poll()...
-> >>
-> >
-> > It's a good suggestion but it would be nicer if you raised this
-> > early. One question I have: current opal_pci_poll() is enough
-> > to cover all cases, why we need introduce and maintain another
-> > similar one? Sorry that I don't see the reason from your context
-> > and could you please provide more details?
-
-Because @state will be some non-NULL random number when opal_pci_poll() is
-called on older kernels and if OPAL ever dereferences it you will at best get
-a machine check and at worst random memory corruption. It would be far easier
-to maintain a new OPAL call than to deal with these kind of problems in the
-future.
-
-Also it is an important suggestion that has potentially saved some difficult
-debugging. Whilst it is *preferable* for reviewers to notice things earlier in
-the review process it is also *preferable* for developers to not write bugs in
-the first place. Unfortunately we all miss things and make mistakes. It's far
-more important that we catch and correct these problems even if they are noticed
-later than we would desire.
-
-- Alistair
-
-> >>> +
-> >>> +	return (rval == OPAL_SUCCESS) ? 0 : -EIO;
-> >>> +}
-> >>> +
-> >>>   #ifdef CONFIG_PCI_MSI
-> >>>   int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
-> >>>   {
-> >>> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> >>> index 0cddde3..6857703 100644
-> >>> --- a/arch/powerpc/platforms/powernv/pci.h
-> >>> +++ b/arch/powerpc/platforms/powernv/pci.h
-> >>> @@ -192,6 +192,7 @@ extern int pnv_tce_xchg(struct iommu_table *tbl, long index,
-> >>>   		unsigned long *hpa, enum dma_data_direction *direction);
-> >>>   extern unsigned long pnv_tce_get(struct iommu_table *tbl, long index);
-> >>>
-> >>> +int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *state);
-> >>>   void pnv_pci_dump_phb_diag_data(struct pci_controller *hose,
-> >>>   				unsigned char *log_buff);
-> >>>   int pnv_pci_cfg_read(struct pci_dn *pdn,
-> >>>
-> >>
-> >>
-> >> --
-> >> Alexey
-> >>
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >
-> 
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
