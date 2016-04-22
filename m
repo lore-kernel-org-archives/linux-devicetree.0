@@ -1,7 +1,7 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCH 07/11] ARM: socfpga: dts: Add LED framework to A10-SR GPIO
-Date: Fri, 22 Apr 2016 10:33:35 -0500
-Message-ID: <1461339219-15255-8-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCH 06/11] ARM: socfpga: dts: Add Devkit A10-SR fields for Arria10
+Date: Fri, 22 Apr 2016 10:33:34 -0500
+Message-ID: <1461339219-15255-7-git-send-email-tthayer@opensource.altera.com>
 References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,48 +14,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the LED framework to the Arria10 System Resource chip GPIO hooks.
+Add the Altera Arria10 System Resource node. This is a Multi-Function
+device with GPIO expander support.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index 9eb1e3e..e2addf9 100644
+index 567df98..9eb1e3e 100644
 --- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
 +++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -31,6 +31,30 @@
- 		reg = <0x0 0x40000000>; /* 1GB */
- 	};
+@@ -70,6 +70,22 @@
+ 	status = "okay";
+ };
  
-+	a10leds {
-+		compatible = "gpio-leds";
++&spi1 {
++	status = "okay";
 +
-+		a10sr_led0 {
-+			label = "a10sr-led0";
-+			gpios = <&a10sr_gpio 0 1>;
-+		};
++	resource-manager@0 {
++		compatible = "altr,a10sr";
++		reg = <0>;
++		spi-max-frequency = <100000>;
 +
-+		a10sr_led1 {
-+			label = "a10sr-led1";
-+			gpios = <&a10sr_gpio 1 1>;
-+		};
-+
-+		a10sr_led2 {
-+			label = "a10sr-led2";
-+			gpios = <&a10sr_gpio 2 1>;
-+		};
-+
-+		a10sr_led3 {
-+			label = "a10sr-led3";
-+			gpios = <&a10sr_gpio 3 1>;
++		a10sr_gpio: gpio-controller {
++			compatible = "altr,a10sr-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
 +		};
 +	};
++};
 +
- 	soc {
- 		clkmgr@ffd04000 {
- 			clocks {
+ &i2c1 {
+ 	speed-mode = <0>;
+ 	status = "okay";
 -- 
 1.7.9.5
 
