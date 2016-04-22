@@ -1,66 +1,69 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] regulator: rk808: Migrate to regulator core's
- simplified DT parsing code
-Date: Fri, 22 Apr 2016 10:41:37 +0100
-Message-ID: <20160422094137.GB3217@sirena.org.uk>
-References: <1461244361-45686-1-git-send-email-w.egorov@phytec.de>
- <1461244361-45686-4-git-send-email-w.egorov@phytec.de>
- <20160421160120.GT3217@sirena.org.uk>
- <5719E8CD.1070304@phytec.de>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
+ Tegra210 AGIC
+Date: Fri, 22 Apr 2016 10:48:36 +0100
+Message-ID: <5719F374.6080403@arm.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+ <1461150237-15580-14-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0TJQK8JvXJ+EbTps"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5719E8CD.1070304-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461150237-15580-14-git-send-email-jonathanh@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 20/04/16 12:03, Jon Hunter wrote:
+> The Tegra AGIC interrupt controller is compatible with the ARM GIC-400
+> interrupt controller. The Tegra AGIC requires two clocks, namely the
+> "ape" (functional) and "apb2ape" (interface) clocks, to operate. Add
+> the compatible string and clock information for the AGIC to the GIC
+> device-tree binding documentation.
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> 
+> I am not sure if it will be popular to add Tegra specific clock names
+> to the GIC DT docs. However, in that case, then possibly the only
+> alternative is to move the Tegra AGIC driver into its own file and
+> expose the GIC APIs for it to use. Then we could add our own DT doc
+> for the Tegra AGIC as well (based upon the ARM GIC).
 
---0TJQK8JvXJ+EbTps
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mark, Rob: any input on this? That would work for me, but I'd like an
+ack from one of you.
 
-On Fri, Apr 22, 2016 at 11:03:09AM +0200, Wadim Egorov wrote:
-> On 21.04.2016 18:01, Mark Brown wrote:
+Thanks,
 
-> >> +static int rk808_set_suspend_voltage(struct regulator_dev *rdev, int uv)
-> >> +{
+	M.
 
-> > This is fine but is adding a new feature and not part of the refactoring
-> > that the changelog talked about so should be in a separate commit.
+> 
+>  Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+> index 793c20ff8fcc..6f34267f1438 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+> @@ -21,6 +21,7 @@ Main node required properties:
+>  	"arm,pl390"
+>  	"arm,tc11mp-gic"
+>  	"brcm,brahma-b15-gic"
+> +	"nvidia,tegra210-agic"
+>  	"qcom,msm-8660-qgic"
+>  	"qcom,msm-qgic2"
+>  - interrupt-controller : Identifies the node as an interrupt controller
+> @@ -70,6 +71,7 @@ Optional
+>  	"PERIPHCLK", "PERIPHCLKEN" (for "arm,cortex-a9-gic")
+>  	"clk" (for "arm,gic-400")
+>  	"gclk" (for "arm,pl390")
+> +	"ape" and "apb2ape" (for "nvidia,tegra,agic")
+>  
+>  - power-domains : A phandle and PM domain specifier as defined by bindings of
+>  		  the power controller specified by phandle, used when the GIC
+> 
 
-> This is not really a new feature.
-> rk808_set_suspend_voltage() was using regulator_map_voltage_linear_range().
-> I have just renamed the function to rk808_set_suspend_voltage_range()
-> and added an ops struct for ranges.
-> Yes, I have also added rk808_set_suspend_voltage(), but this is just a split
-> for the two types of ops that the driver needs now.
-> This was needed, because the driver used only linear ranges.
-> IMO it should be a part of the refactoring.
 
-If that's the case then split this into multiple refactorings each doing
-one change so this can be more easily reviewed.
-
---0TJQK8JvXJ+EbTps
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXGfHQAAoJECTWi3JdVIfQ9PYH/juXorEZfekYWBQuYa0LChNX
-KZFbpGU/TXrPqbkGquD536ZzJZTeEKlKta0HlLMz4sMIZX/NyGx60eVHCWzU57rx
-Tf2pUhVP7nmOIin//5psLXhgmYp95OUmJTJScNmpSvwaKpcDt9ye4O1xWVr8hjej
-CUz88/GaJXKGLTvEg/9F/RMKFoKsiVQQpX2n9UVm2hDqa60dB/BcQah4JPbTOfJ7
-G699Bis4ygsbmUDRkCHotb1v0kvjDLpKDEUoPDDiVGksGnPcVV9rQ/1mudv1RSUi
-icDvoYg+7HsxTulJPHZJQzEzBzgm5GTqv9YIhvjzNuLiyTjrahVVfVmhrxQrB2A=
-=wVTn
------END PGP SIGNATURE-----
-
---0TJQK8JvXJ+EbTps--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Jazz is not dead. It just smells funny...
