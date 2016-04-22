@@ -1,192 +1,349 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: Re: [PATCH net v2 2/3] drivers: net: cpsw: fix error messages when
- using phy-handle DT property
-Date: Fri, 22 Apr 2016 11:45:45 -0400
-Message-ID: <20160422114545.57b477ad.drivshin.allworx@gmail.com>
-References: <1461261035-5578-1-git-send-email-drivshin.allworx@gmail.com>
-	<1461263172-10428-1-git-send-email-drivshin.allworx@gmail.com>
-	<571A2126.2060708@ti.com>
+From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH 1/3] iio: mxs-lradc: Add regulators for current sources
+Date: Fri, 22 Apr 2016 18:11:02 +0200
+Message-ID: <a9431e81a361a19254bbcceae8930d22@ccbib.org>
+References: <1461333147-11873-1-git-send-email-harald@ccbib.org>
+ <1461333147-11873-2-git-send-email-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <571A2126.2060708@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>, Mugunthan V N <mugunthanvnm@ti.com>, Andrew Goodbody <andrew.goodbody@cambrionix.com>, Markus Brunner <systemprogrammierung.brunner@gmail.com>, Nicolas Chauvet <kwizart@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461333147-11873-2-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Apr 2016 16:03:34 +0300
-Grygorii Strashko <grygorii.strashko@ti.com> wrote:
+CCing Mark and Liam.
 
-> On 04/21/2016 09:26 PM, David Rivshin (Allworx) wrote:
-> > From: David Rivshin <drivshin@allworx.com>
-> > 
-> > The phy-handle, phy_id, and fixed-link properties are mutually exclusive,
-> > and only one need be specified. However if phy-handle was specified, an
-> > error message would complain about the lack of phy_id or fixed-link.
-> > 
-> > Also, if phy-handle was specified and the subsequent of_phy_connect()
-> > failed, the error message still referenced slaved->data->phy_id, which
-> > would be empty. Instead, use the name of the device_node as a useful
-> > identifier.
-> > 
-> > Fixes: 9e42f715264f ("drivers: net: cpsw: add phy-handle parsing")
-> > Signed-off-by: David Rivshin <drivshin@allworx.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Tested-by: Nicolas Chauvet <kwizart@gmail.com>
-> > ---
-> > If would like this for -stable it should apply cleanly as far back
-> > as 4.5. It failes on 4.4 due to some context differences, but can be
-> > applied with 'git am -C2'. Or, I can produce a separate patch against
-> > linux-4.4.y if preferred.
-> > 
-> > Changes since v1 [1]:
-> > - Rebased (no conflicts)
-> > - Added Tested-by from Nicolas Chauvet
-> > - Added Acked-by from Rob Herring for the binding change
-> > 
-> > [1] https://patchwork.ozlabs.org/patch/560324/
-> > 
-> >   Documentation/devicetree/bindings/net/cpsw.txt |  4 ++--
-> >   drivers/net/ethernet/ti/cpsw.c                 | 17 +++++++++++++----
-> >   2 files changed, 15 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-> > index 28a4781..3033c0f 100644
-> > --- a/Documentation/devicetree/bindings/net/cpsw.txt
-> > +++ b/Documentation/devicetree/bindings/net/cpsw.txt
-> > @@ -46,16 +46,16 @@ Optional properties:
-> >   - dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
-> >   - mac-address		: See ethernet.txt file in the same directory
-> >   - phy_id		: Specifies slave phy id  
-> 
-> May be the "phy_id" can be marked as deprecated? (while here)
-> The recommended property now is "phy-handle".
+I guess I shouldn't rely blindly on get_maintainer.pl ...
 
-I can certainly do that. Perhaps something like this?
- - phy_id		: Specifies slave phy id (deprecated, use phy-handle)
+On 22.04.2016 15:52, Harald Geyer wrote:
+> The hardware has two current sources ISRC0 and ISRC1 to allow 
+> measuring
+> resistors without additional circuitry. This commit makes them 
+> available
+> as regulators.
+>
+> Tested on an imx233-olinuxino board.
+>
+> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+> ---
+> The current regulator API doesn't fit this type of device very well:
+> Typically
+> consumers will want to set a defined current, ie. min_uA == max_uA, 
+> but they
+> can't without help from configuration data, because the valid values 
+> aren't
+> reported by the API for current regulators. I have been thinking 
+> about
+> extending the API, but currently AFAIK no such consumers exist and 
+> most
+> users, like myself, will force the regulator to a defined value in
+> devicetree anyway.
+>
+>  .../bindings/staging/iio/adc/mxs-lradc.txt         |  29 ++++
+>  drivers/iio/adc/Kconfig                            |   1 +
+>  drivers/iio/adc/mxs-lradc.c                        | 152
+> +++++++++++++++++++++
+>  3 files changed, 182 insertions(+)
+>
+> diff --git
+> a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> index 555fb11..983952c 100644
+> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> @@ -19,6 +19,15 @@ Optional properties:
+>  - fsl,settling: delay between plate switch to next sample. Allowed 
+> value is
+>                  1 ... 2047. It counts at 2 kHz and its default is
+>                  10 (= 5 ms)
+> +- ISRC0: A node describing the regulator of internal current source 
+> 0
+> +- ISRC1: A node describing the regulator of internal current source 
+> 1
+> +
+> +Required properties for the ISRCx sub-nodes:
+> +- regulator-max-microamp: See standard regulator binding 
+> documentation.
+> +                          Valid values are from 0 to 300 in steps of 
+> 20.
+> +
+> +Optional properties for the ISRCx sub-nodes:
+> +Any standard regulator properties that apply to current regulators.
+>
+>  Example for i.MX23 SoC:
+>
+> @@ -31,6 +40,16 @@ Example for i.MX23 SoC:
+>  		fsl,ave-ctrl = <4>;
+>  		fsl,ave-delay = <2>;
+>  		fsl,settling = <10>;
+> +
+> +		isrc_lradc0: ISRC0 {
+> +			regulator-max-microamp = <300>;
+> +		};
+> +
+> +		isrc_lradc1: ISRC1 {
+> +			regulator-max-microamp = <120>;
+> +			regulator-min-microamp = <120>;
+> +			regulator-always-on;
+> +		};
+>  	};
+>
+>  Example for i.MX28 SoC:
+> @@ -44,4 +63,14 @@ Example for i.MX28 SoC:
+>  		fsl,ave-ctrl = <4>;
+>  		fsl,ave-delay = <2>;
+>  		fsl,settling = <10>;
+> +
+> +		isrc_lradc0: ISRC0 {
+> +			regulator-max-microamp = <300>;
+> +		};
+> +
+> +		isrc_lradc6: ISRC1 {
+> +			regulator-max-microamp = <120>;
+> +			regulator-min-microamp = <120>;
+> +			regulator-always-on;
+> +		};
+>  	};
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 5937030..1968d1c 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -319,6 +319,7 @@ config MXS_LRADC
+>          tristate "Freescale i.MX23/i.MX28 LRADC"
+>          depends on (ARCH_MXS || COMPILE_TEST) && HAS_IOMEM
+>          depends on INPUT
+> +        depends on REGULATOR
+>          select STMP_DEVICE
+>          select IIO_BUFFER
+>          select IIO_TRIGGERED_BUFFER
+> diff --git a/drivers/iio/adc/mxs-lradc.c 
+> b/drivers/iio/adc/mxs-lradc.c
+> index 33051b8..f22f339 100644
+> --- a/drivers/iio/adc/mxs-lradc.c
+> +++ b/drivers/iio/adc/mxs-lradc.c
+> @@ -40,6 +40,10 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/sysfs.h>
+>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/of_regulator.h>
+> +
+>  #define DRIVER_NAME		"mxs-lradc"
+>
+>  #define LRADC_MAX_DELAY_CHANS	4
+> @@ -261,6 +265,9 @@ struct mxs_lradc {
+>  	unsigned		over_sample_delay;
+>  	/* time in clocks to wait after the plates where switched */
+>  	unsigned		settling_delay;
+> +
+> +	struct regulator_desc isrc0;
+> +	struct regulator_desc isrc1;
+>  };
+>
+>  #define	LRADC_CTRL0				0x00
+> @@ -305,6 +312,11 @@ struct mxs_lradc {
+>  #define	LRADC_CTRL2				0x20
+>  #define	LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET	24
+>  #define	LRADC_CTRL2_TEMPSENSE_PWD		BIT(15)
+> +#define	LRADC_CTRL2_TEMP_SENSOR_IENABLE1	BIT(9)
+> +#define	LRADC_CTRL2_TEMP_SENSOR_IENABLE0	BIT(8)
+> +#define	LRADC_CTRL2_TEMP_ISRC1_OFFSET		4
+> +#define	LRADC_CTRL2_TEMP_ISRC0_OFFSET		0
+> +#define	LRADC_CTRL2_TEMP_ISRC_MASK		0x0f
+>
+>  #define	LRADC_STATUS				0x40
+>  #define	LRADC_STATUS_TOUCH_DETECT_RAW		BIT(0)
+> @@ -1383,6 +1395,109 @@ static const struct iio_buffer_setup_ops
+> mxs_lradc_buffer_ops = {
+>  	.validate_scan_mask = &mxs_lradc_validate_scan_mask,
+>  };
+>
+> +static int mxs_lradc_regulator_is_enabled(struct regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +	int reg = readl(lradc->base + LRADC_CTRL2);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		return reg & LRADC_CTRL2_TEMP_SENSOR_IENABLE0;
+> +	else if (dev->desc == &lradc->isrc1)
+> +		return reg & LRADC_CTRL2_TEMP_SENSOR_IENABLE1;
+> +
+> +	/* This should never happen */
+> +	return -ENODEV;
+> +}
+> +
+> +#define LRADC_REGVALUE2uA(regval, offset) \
+> +	(20 * ((regval >> offset) & LRADC_CTRL2_TEMP_ISRC_MASK))
+> +
+> +static int mxs_lradc_regulator_get_current_limit(struct 
+> regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +	int reg = readl(lradc->base + LRADC_CTRL2);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		return LRADC_REGVALUE2uA(reg, LRADC_CTRL2_TEMP_ISRC0_OFFSET);
+> +	else if (dev->desc == &lradc->isrc1)
+> +		return LRADC_REGVALUE2uA(reg, LRADC_CTRL2_TEMP_ISRC1_OFFSET);
+> +
+> +	/* This should never happen */
+> +	return -ENODEV;
+> +}
+> +
+> +static int mxs_lradc_regulator_enable(struct regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		mxs_lradc_reg_set(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE0,
+> +				  LRADC_CTRL2);
+> +	else if (dev->desc == &lradc->isrc1)
+> +		mxs_lradc_reg_set(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE1,
+> +				  LRADC_CTRL2);
+> +	else
+> +		/* This should never happen */
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxs_lradc_regulator_disable(struct regulator_dev *dev)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE0,
+> +				    LRADC_CTRL2);
+> +	else if (dev->desc == &lradc->isrc1)
+> +		mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE1,
+> +				    LRADC_CTRL2);
+> +	else
+> +		/* This should never happen */
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxs_lradc_regulator_set_current_limit(struct 
+> regulator_dev *dev,
+> +						 int min_uA, int max_uA)
+> +{
+> +	struct mxs_lradc *lradc = rdev_get_drvdata(dev);
+> +	int offset, value;
+> +
+> +	if (dev->desc == &lradc->isrc0)
+> +		offset = LRADC_CTRL2_TEMP_ISRC0_OFFSET;
+> +	else if (dev->desc == &lradc->isrc1)
+> +		offset = LRADC_CTRL2_TEMP_ISRC1_OFFSET;
+> +	else
+> +		/* This should never happen */
+> +		return -ENODEV;
+> +
+> +	value = min_uA / 20;
+> +	if (min_uA % 20)
+> +		value++;
+> +	if (value * 20 > max_uA)
+> +		return -EINVAL;
+> +	if (value & ~LRADC_CTRL2_TEMP_ISRC_MASK)
+> +		/* This should never happen */
+> +		return -EPERM;
+> +
+> +	mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_ISRC_MASK << offset,
+> +			    LRADC_CTRL2);
+> +	mxs_lradc_reg_set(lradc, value << offset, LRADC_CTRL2);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct regulator_ops mxs_lradc_regulator_current_ops = {
+> +	.enable = mxs_lradc_regulator_enable,
+> +	.is_enabled = mxs_lradc_regulator_is_enabled,
+> +	.disable = mxs_lradc_regulator_disable,
+> +	.get_current_limit = mxs_lradc_regulator_get_current_limit,
+> +	.set_current_limit = mxs_lradc_regulator_set_current_limit,
+> +};
+> +
+>  /*
+>   * Driver initialization
+>   */
+> @@ -1519,6 +1634,10 @@ static void mxs_lradc_hw_stop(struct mxs_lradc 
+> *lradc)
+>
+>  	for (i = 0; i < LRADC_MAX_DELAY_CHANS; i++)
+>  		mxs_lradc_reg_wrt(lradc, 0, LRADC_DELAY(i));
+> +
+> +	mxs_lradc_reg_clear(lradc, LRADC_CTRL2_TEMP_SENSOR_IENABLE0 |
+> +					LRADC_CTRL2_TEMP_SENSOR_IENABLE1,
+> +			    LRADC_CTRL2);
+>  }
+>
+>  static const struct of_device_id mxs_lradc_dt_ids[] = {
+> @@ -1592,6 +1711,32 @@ static int mxs_lradc_probe_touchscreen(struct
+> mxs_lradc *lradc,
+>  	return 0;
+>  }
+>
+> +static void mxs_lradc_reg_helper(struct device_node *np, const char 
+> *name,
+> +				 struct regulator_config *conf,
+> +				 struct regulator_desc *desc)
+> +{
+> +	struct regulator_dev *ret;
+> +
+> +	conf->of_node = of_get_child_by_name(np, name);
+> +	if (!conf->of_node)
+> +		return;
+> +
+> +	desc->name = name;
+> +	desc->owner = THIS_MODULE;
+> +	desc->type = REGULATOR_CURRENT;
+> +	desc->ops = &mxs_lradc_regulator_current_ops;
+> +
+> +	conf->init_data = of_get_regulator_init_data(conf->dev, 
+> conf->of_node,
+> +						     desc);
+> +	ret = devm_regulator_register(conf->dev, desc, conf);
+> +	if (IS_ERR(ret))
+> +		/* Just pretend the regulator isn't there */
+> +		dev_err(conf->dev, "Failed to register regulator %s: %ld\n",
+> +			desc->name, PTR_ERR(ret));
+> +
+> +	of_node_put(conf->of_node);
+> +}
+> +
+>  static int mxs_lradc_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *of_id =
+> @@ -1603,6 +1748,7 @@ static int mxs_lradc_probe(struct
+> platform_device *pdev)
+>  	struct mxs_lradc *lradc;
+>  	struct iio_dev *iio;
+>  	struct resource *iores;
+> +	struct regulator_config regconf;
+>  	int ret = 0, touch_ret;
+>  	int i, s;
+>  	u64 scale_uv;
+> @@ -1727,6 +1873,12 @@ static int mxs_lradc_probe(struct
+> platform_device *pdev)
+>  		goto err_ts;
+>  	}
+>
+> +	/* Setup regulator devices for current source. */
+> +	regconf.dev = dev;
+> +	regconf.driver_data = lradc;
+> +	mxs_lradc_reg_helper(node, "ISRC0", &regconf, &lradc->isrc0);
+> +	mxs_lradc_reg_helper(node, "ISRC1", &regconf, &lradc->isrc1);
+> +
+>  	return 0;
+>
+>  err_ts:
 
-Rob, would you have any issues with bundling that?
-
-> 
-> >   - phy-handle		: See ethernet.txt file in the same directory
-> >   
-> >   Slave sub-nodes:
-> >   - fixed-link		: See fixed-link.txt file in the same directory
-> > -			  Either the property phy_id, or the sub-node
-> > -			  fixed-link can be specified
-> > +
-> > +Note: Exactly one of phy_id, phy-handle, or fixed-link must be specified.
-> >   
-> >   Note: "ti,hwmods" field is used to fetch the base address and irq
-> >   resources from TI, omap hwmod data base during device registration.
-> >   Future plan is to migrate hwmod data base contents into device tree
-> >   blob so that, all the required data will be used from device tree dts
-> >   file.
-> >   
-> > diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-> > index d69cb3f..3c81413 100644
-> > --- a/drivers/net/ethernet/ti/cpsw.c
-> > +++ b/drivers/net/ethernet/ti/cpsw.c
-> > @@ -1150,16 +1150,19 @@ static void cpsw_slave_open(struct cpsw_slave *slave, struct cpsw_priv *priv)
-> >   	if (slave->data->phy_node)
-> >   		slave->phy = of_phy_connect(priv->ndev, slave->data->phy_node,
-> >   				 &cpsw_adjust_link, 0, slave->data->phy_if);
-> >   	else
-> >   		slave->phy = phy_connect(priv->ndev, slave->data->phy_id,
-> >   				 &cpsw_adjust_link, slave->data->phy_if);
-> >   	if (IS_ERR(slave->phy)) {
-> > -		dev_err(priv->dev, "phy %s not found on slave %d\n",
-> > -			slave->data->phy_id, slave->slave_num);
-> > +		dev_err(priv->dev, "phy \"%s\" not found on slave %d\n",
-> > +			slave->data->phy_node ?
-> > +				slave->data->phy_node->full_name :
-> > +				slave->data->phy_id,
-> > +			slave->slave_num);  
-> 
-> Unfortunately,  there are some inconsistency between legacy and FDT API :(
-> of_phy_connect() will return valid phy_device or NULL, but phy_connect()
-> can return valid phy_device or ERR_PTR().
-
-Good catch, I hadn't noticed that. It looks like that's actually a more 
-serious (pre-existing) bug: if of_phy_connect() returns NULL, we'd end 
-up dereferencing it and pagefaulting.
-
-How about moving the IS_ERR() check into the phy_connect() case like this:
-	if (slave->data->phy_node) {
-		slave->phy = of_phy_connect(priv->ndev, slave->data->phy_node,
-				 &cpsw_adjust_link, 0, slave->data->phy_if);
-	} else {
-		slave->phy = phy_connect(priv->ndev, slave->data->phy_id,
-				 &cpsw_adjust_link, slave->data->phy_if);
-		if (IS_ERR(slave->phy))
-			slave->phy = NULL;
-	}
-	if (!slave->phy) {
-		dev_err(priv->dev, "phy \"%s\" not found on slave %d\n",
-			slave->data->phy_node ?
-				slave->data->phy_node->full_name :
-				slave->data->phy_id,
-			slave->slave_num);  
-	} else {
-
-Since you say the phy_id case is deprecated anyways, I'm not too concerned
-about not printing the error code returned by phy_connect() in that case
-(especially since it never did so in the past). That lets us still avoid
-duplicating the dev_err() itself.
-
-
-> 
-> 
-> 
-> >   		slave->phy = NULL;
-> >   	} else {
-> >   		phy_attached_info(slave->phy);
-> >   
-> >   		phy_start(slave->phy);
-> >   
-> >   		/* Configure GMII_SEL register */
-> > @@ -2030,15 +2033,19 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
-> >   		/* This is no slave child node, continue */
-> >   		if (strcmp(slave_node->name, "slave"))
-> >   			continue;
-> >   
-> >   		slave_data->phy_node = of_parse_phandle(slave_node,
-> >   							"phy-handle", 0);
-> >   		parp = of_get_property(slave_node, "phy_id", &lenp);
-> > -		if (of_phy_is_fixed_link(slave_node)) {
-> > +		if (slave_data->phy_node) {
-> > +			dev_dbg(&pdev->dev,
-> > +				"slave[%d] using phy-handle=\"%s\"\n",
-> > +				i, slave_data->phy_node->full_name);
-> > +		} else if (of_phy_is_fixed_link(slave_node)) {
-> >   			struct device_node *phy_node;
-> >   			struct phy_device *phy_dev;
-> >   
-> >   			/* In the case of a fixed PHY, the DT node associated
-> >   			 * to the PHY is the Ethernet MAC DT node.
-> >   			 */
-> >   			ret = of_phy_register_fixed_link(slave_node);
-> > @@ -2067,15 +2074,17 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
-> >   			if (!mdio) {
-> >   				dev_err(&pdev->dev, "Missing mdio platform device\n");
-> >   				return -EINVAL;
-> >   			}
-> >   			snprintf(slave_data->phy_id, sizeof(slave_data->phy_id),
-> >   				 PHY_ID_FMT, mdio->name, phyid);
-> >   		} else {
-> > -			dev_err(&pdev->dev, "No slave[%d] phy_id or fixed-link property\n", i);
-> > +			dev_err(&pdev->dev,
-> > +				"No slave[%d] phy_id, phy-handle, or fixed-link property\n",
-> > +				i);
-> >   			goto no_phy_slave;
-> >   		}
-> >   		slave_data->phy_if = of_get_phy_mode(slave_node);
-> >   		if (slave_data->phy_if < 0) {
-> >   			dev_err(&pdev->dev, "Missing or malformed slave[%d] phy-mode property\n",
-> >   				i);
-> >   			return slave_data->phy_if;
-> >   
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
