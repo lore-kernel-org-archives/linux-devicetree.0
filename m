@@ -1,64 +1,95 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 01/13] dt-bindings: Add Renesas R-Car FCP DT bindings
-Date: Sun, 24 Apr 2016 02:49:48 +0300
-Message-ID: <1461455400-28767-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Subject: [PATCH 00/13] R-Car VSP improvements for v4.7 - Round 2
+Date: Sun, 24 Apr 2016 02:49:47 +0300
+Message-ID: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-The FCP is a companion module of video processing modules in the Renesas
-R-Car Gen3 SoCs. It provides data compression and decompression, data
-caching, and conversion of AXI transaction in order to reduce the memory
-bandwidth.
-
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../devicetree/bindings/media/renesas,fcp.txt      | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/renesas,fcp.txt
-
-Cc: devicetree@vger.kernel.org
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-new file mode 100644
-index 000000000000..46beec97d625
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-@@ -0,0 +1,31 @@
-+Renesas R-Car Frame Compression Processor (FCP)
-+-----------------------------------------------
-+
-+The FCP is a companion module of video processing modules in the Renesas R-Car
-+Gen3 SoCs. It provides data compression and decompression, data caching, and
-+conversion of AXI transaction in order to reduce the memory bandwidth.
-+
-+There are three types of FCP whose configuration and behaviour highly depend
-+on the module they are paired with.
-+
-+ - compatible: Must be one or more of the following
-+
-+   - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
-+   - "renesas,fcpv" for generic compatible 'FCP for VSP'
-+
-+   When compatible with the generic version, nodes must list the
-+   SoC-specific version corresponding to the platform first, followed by the
-+   family-specific and/or generic versions.
-+
-+ - reg: the register base and size for the device registers
-+ - clocks: Reference to the functional clock
-+
-+
-+Device node example
-+-------------------
-+
-+	fcpvd1: fcp@fea2f000 {
-+		compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
-+		reg = <0 0xfea2f000 0 0x200>;
-+		clocks = <&cpg CPG_MOD 602>;
-+	};
--- 
-2.7.3
+SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBpcyB0aGUgc2Vjb25kIChhbmQgbW9zdCBwcm9iYWJs
+eSBsYXN0KSByb3VuZCBvZiB2c3AxIGRyaXZlcgppbXByb3ZlbWVudHMgZm9yIHY0LjcuIEluIHBh
+cnRpY3VsYXIsIGl0IGVuYWJsZXMgcnVudGltZSBQTSBzdXBwb3J0ICgwMy8xMyBhbmQKMDQvMTMp
+LCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBGQ1AgKDAxLzEzLCAwMi8xMyBhbmQgMDUvMTMpLCBwcmVw
+YXJlIGZvciBIR08KKGhpc3RvZ3JhbSkgc3VwcG9ydCAoMDYvMTMgdG8gMDkvMTMpIGFuZCB1cGRh
+dGUgdGhlIEFQSSB0b3dhcmRzIHRoZSBEUk0gZHJpdmVyCigxMC8xMyB0byAxMy8xMykuCgpUaGUg
+RkNQIGlzIGEgY29tcGFuaW9uIG1vZHVsZSBvZiB2aWRlbyBwcm9jZXNzaW5nIG1vZHVsZXMgaW4g
+dGhlIFJlbmVzYXMgUi1DYXIKR2VuMyBTb0NzLiBJdCBwcm92aWRlcyBkYXRhIGNvbXByZXNzaW9u
+IGFuZCBkZWNvbXByZXNzaW9uLCBkYXRhIGNhY2hpbmcsIGFuZApjb252ZXJzaW9uIG9mIEFYSSB0
+cmFuc2FjdGlvbiBpbiBvcmRlciB0byByZWR1Y2UgdGhlIG1lbW9yeSBiYW5kd2lkdGguIFRoZSBG
+Q1AKZHJpdmVyIGlzIG5vdCBtZWFudCB0byBiZSB1c2VkIHN0YW5kYWxvbmUgYnV0IHByb3ZpZGVz
+IGFuIEFQSSB0byB0aGUgdmlkZW8KcHJvY2Vzc2luZyBtb2R1bGVzIHRvIGNvbnRyb2wgdGhlIEZD
+UC4KClRoZSBBUEkgdG93YXJkcyB0aGUgRFJNIGRyaXZlciBpcyB1cGRhdGVkIHRvIHN0b3JlIGFs
+bCBjb25maWd1cmF0aW9uCnBhcmFtZXRlcnMgaW4gYSBzdHJ1Y3R1cmUgaW4gb3JkZXIgdG8gaW1w
+cm92ZSByZWFkYWJpbGl0eSBhbmQgbWFrZSBmdXR1cmUKdXBkYXRlcyBlYXNpZXIuIFRoaXMgc2Vy
+aWVzIGNvbnRhaW4gdHdvIFItQ2FyIERVIERSTSBwYXRjaGVzIHRoYXQgdXBkYXRlIHRoZQpEVSBE
+Uk0gZHJpdmVyIHRvIHRoZSBuZXcgQVBJLiBUaGV5IHdvdWxkIG5vcm1hbGx5IGJlIG1lcmdlZCB0
+aHJvdWdoIERhdmUKQWlybGllJ3MgdHJlZSwgYnV0IGR1ZSB0byBkZXBlbmRlbmNpZXMgb24gVlNQ
+MSBwYXRjaGVzIHF1ZXVlZCB1cCBmb3IgdjQuNyBEYXZlCmFncmVlZCB0byBnZXQgdGhlbSBtZXJn
+ZWQgdGhyb3VnaCB0aGUgbGludXgtbWVkaWEgdHJlZSAoaGVuY2UgaGlzIEFja2VkLWJ5IGZvcgp0
+aGUgdHdvIHBhdGNoZXMpLiBUaGV5IHNob3VsZCBub3QgY29uZmxpY3Qgd2l0aCBhbnkgcGF0Y2gg
+cXVldWVkIHVwIGZvciB2NC43CnRocm91Z2ggRGF2ZSdzIHRyZWUuCgpOb3RlIHRoYXQgcGF0Y2gg
+MTAvMTMgYWRkcyBzb21lIG1hY3JvIG1hZ2ljIHRvIG1ha2UgdGhlIEFQSSB0cmFuc2l0aW9uIGVh
+c2llci4KRGVwZW5kaW5nIG9uIHlvdXIgdGFzdGUgeW91IHdpbGwgZmluZCB0aGUgaW1wbGVtZW50
+YXRpb24gYmVhdXRpZnVsIG9yIHVnbHksCmJ1dCBpbiBhbnkgY2FzZSBwYXRjaCAxMy8xMyByZW1v
+dmVzIHRoZSBtYWNyb3MgYW5kIGlubGluZSB3cmFwcGVyLgoKVGhlIGNvZGUgaXMgYmFzZWQgb24g
+dG9wIG9mIHRoZSBsYXRlc3QgbGludXgtbWVkaWEgbWFzdGVyIGJyYW5jaC4gRm9yCmNvbnZlbmll
+bmNlIEkndmUgcHVzaGVkIHRoZSBwYXRjaGVzIHRvIHRoZSBmb2xsb3dpbmcgZ2l0IHRyZWUgYnJh
+bmNoLgpwYXRjaGVzIG9uIHRvcCBvZiB0aGUgbGF0ZXN0IExpbnV4IG1lZGlhIG1hc3RlciBicmFu
+Y2ggdG8KCiAgICAgICAgZ2l0Oi8vbGludXh0di5vcmcvcGluY2hhcnRsL21lZGlhLmdpdCB2c3Ax
+L25leHQKCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpDYzogZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpDYzogRGF2ZSBBaXJsaWUgPGFpcmxpZWRAcmVkaGF0LmNvbT4KCkxh
+dXJlbnQgUGluY2hhcnQgKDEzKToKICBkdC1iaW5kaW5nczogQWRkIFJlbmVzYXMgUi1DYXIgRkNQ
+IERUIGJpbmRpbmdzCiAgdjRsOiBBZGQgUmVuZXNhcyBSLUNhciBGQ1AgZHJpdmVyCiAgdjRsOiB2
+c3AxOiBJbXBsZW1lbnQgcnVudGltZSBQTSBzdXBwb3J0CiAgdjRsOiB2c3AxOiBEb24ndCBoYW5k
+bGUgY2xvY2tzIG1hbnVhbGx5CiAgdjRsOiB2c3AxOiBBZGQgRkNQIHN1cHBvcnQKICB2NGw6IHZz
+cDE6IEFkZCBvdXRwdXQgbm9kZSB2YWx1ZSB0byByb3V0aW5nIHRhYmxlCiAgdjRsOiB2c3AxOiBS
+ZXBsYWNlIGNvbnRhaW5lcl9vZigpIHdpdGggZGVkaWNhdGVkIG1hY3JvCiAgdjRsOiB2c3AxOiBN
+YWtlIHZzcDFfZW50aXR5X2dldF9wYWRfY29tcG9zZSgpIG1vcmUgZ2VuZXJpYwogIHY0bDogdnNw
+MTogTW92ZSBmcmFtZSBzZXF1ZW5jZSBudW1iZXIgZnJvbSB2aWRlbyBub2RlIHRvIHBpcGVsaW5l
+CiAgdjRsOiB2c3AxOiBHcm91cCBEUk0gUlBGIHBhcmFtZXRlcnMgaW4gYSBzdHJ1Y3R1cmUKICBk
+cm06IHJjYXItZHU6IEFkZCBhbHBoYSBzdXBwb3J0IGZvciBWU1AgcGxhbmVzCiAgZHJtOiByY2Fy
+LWR1OiBBZGQgWi1vcmRlciBzdXBwb3J0IGZvciBWU1AgcGxhbmVzCiAgdjRsOiB2c3AxOiBSZW1v
+dmUgZGVwcmVjYXRlZCBEUk0gQVBJCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvcmVu
+ZXNhcyxmY3AudHh0ICAgICAgfCAgMzEgKysrKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVk
+aWEvcmVuZXNhcyx2c3AxLnR4dCAgICAgfCAgIDUgKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKysKIGRyaXZlcnMvZ3B1L2RybS9yY2Fy
+LWR1L3JjYXJfZHVfdnNwLmMgICAgICAgICAgICAgIHwgIDQ1ICsrKy0tLQogZHJpdmVycy9ncHUv
+ZHJtL3JjYXItZHUvcmNhcl9kdV92c3AuaCAgICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgMTUgKysKIGRyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRy
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vcmNhci1mY3AuYyAgICAgICAgICAgICAgICAgIHwgMTc2ICsr
+KysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDEuaCAg
+ICAgICAgICAgICAgICAgfCAgIDYgKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdnNwMS92c3Ax
+X2RybS5jICAgICAgICAgICAgIHwgIDY4ICsrKystLS0tCiBkcml2ZXJzL21lZGlhL3BsYXRmb3Jt
+L3ZzcDEvdnNwMV9kcnYuYyAgICAgICAgICAgICB8IDExOSArKysrKysrLS0tLS0tLQogZHJpdmVy
+cy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDFfZW50aXR5LmMgICAgICAgICAgfCAgODYgKysrKysr
+Ky0tLQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDFfZW50aXR5LmggICAgICAgICAg
+fCAgMTIgKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdnNwMS92c3AxX3BpcGUuYyAgICAgICAg
+ICAgIHwgICA0ICstCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3ZzcDEvdnNwMV9waXBlLmggICAg
+ICAgICAgICB8ICAgMiArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3ZzcDEvdnNwMV9ycGYuYyAg
+ICAgICAgICAgICB8ICAgNyArLQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDFfdmlk
+ZW8uYyAgICAgICAgICAgfCAgIDQgKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdnNwMS92c3Ax
+X3ZpZGVvLmggICAgICAgICAgIHwgICAxIC0KIGluY2x1ZGUvbWVkaWEvcmNhci1mY3AuaCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDM0ICsrKysKIGluY2x1ZGUvbWVkaWEvdnNwMS5oICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI5ICsrLS0KIDIwIGZpbGVzIGNoYW5nZWQs
+IDQ4NyBpbnNlcnRpb25zKCspLCAxNzAgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3JlbmVzYXMsZmNwLnR4dAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vcmNhci1mY3AuYwogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbWVkaWEvcmNhci1mY3AuaAoKLS0gClJlZ2FyZHMsCgpM
+YXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
