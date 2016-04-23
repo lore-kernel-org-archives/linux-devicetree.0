@@ -1,92 +1,57 @@
-From: =?ISO-8859-1?Q?J=F6rg?= Krause <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: strange dtc errors after adding sram node
-Date: Sat, 23 Apr 2016 10:18:34 +0200
-Message-ID: <1461399514.2205.20.camel@embedded.rocks>
+Date: Sat, 23 Apr 2016 10:24:22 +0200
+Message-ID: <5929251.U2lOfbMTgH@wuerfel>
 References: <571B283F.8010707@lategoodbye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <571B283F.8010707-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>, kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Cc: kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?J=F6rg?= Krause <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
-
-On Sa, 2016-04-23 at 09:46 +0200, Stefan Wahren wrote:
-> Hi,
->=20
-> i want to add an sram node to arch/arm/boot/dts/imx28.dtsi. According
-> to=C2=A0
-> the reference manual [1] the On-Chip RAM is connected to AHB, start=C2=
-=A0
-> address 0 and has a size of 128 KB.
->=20
-> So i modified the imx28.dtsi based on the patch below. Unfortunately
-> the=C2=A0
-> dtc give me some strang errors:
->=20
-> ERROR (duplicate_label): Duplicate label 'mac0' on=C2=A0
-> /ahb@80080000/ethernet@800f0000 and /ahb@00000000/ethernet@800f0000
-> ERROR: Input tree has errors, aborting (use -f to force output)
->=20
-> What's wrong with my patch or does it reveal another issue?
->=20
-> Regards
-> Stefan
->=20
-> [1] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM.p
-> df
-> i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013
-> Chapter 4.1 Memory Map Overview
->=20
-> -------------------------->8---------------------------------------
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -1311,13 +1311,18 @@
-> =C2=A0=C2=A0		};
-> =C2=A0=C2=A0	};
->=20
-> -	ahb@80080000 {
-> +	ahb@00000000 {
-> =C2=A0=C2=A0		compatible =3D "simple-bus";
-> =C2=A0=C2=A0		#address-cells =3D <1>;
-> =C2=A0=C2=A0		#size-cells =3D <1>;
-> -		reg =3D <0x80080000 0x80000>;
-> +		reg =3D <0x00000000 0x20000>, <0x80080000 0x80000>;
-> =C2=A0=C2=A0		ranges;
->=20
-> +		ocram: sram@00000000 {
-> +			compatible =3D "mmio-sram";
-> +			reg =3D <0x00000000 0x20000>;
-> +		};
+On Saturday 23 April 2016 09:46:07 Stefan Wahren wrote:
+> -       ahb@80080000 {
+> +       ahb@00000000 {
+>                 compatible = "simple-bus";
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+> -               reg = <0x80080000 0x80000>;
+> +               reg = <0x00000000 0x20000>, <0x80080000 0x80000>;
+>                 ranges;
+> 
+> +               ocram: sram@00000000 {
+> +                       compatible = "mmio-sram";
+> +                       reg = <0x00000000 0x20000>;
+> +               };
 > +
-> =C2=A0=C2=A0		usb0: usb@80080000 {
-> =C2=A0=C2=A0			compatible =3D "fsl,imx28-usb", "fsl,imx27-
-> usb";
-> =C2=A0=C2=A0			reg =3D <0x80080000 0x10000>;
+>                 usb0: usb@80080000 {
+>                         compatible = "fsl,imx28-usb", "fsl,imx27-usb";
+>                         reg = <0x80080000 0x10000>;
 
-=46ollwing the address map for the i.MX28 (p. 125ff) the AHB is mapped =
-to
-different start addresses:
+Something odd about this is that you have duplicated addresses:
+The sram node has the same "reg" property as the "ahb" node, 
+and also the  existing address (0x80080000) overlaps with that of
+the usb node.
 
-Bus	MNEMONIC	START ADDRESS
---------------------------------------
-AHB	OCRAM=C2=A0		0x00000000
-AHB	USBCTRL0	0x80080000
-AHB	OCROM		0xC0000000
+The registers of a device should generally be non-overlapping
+with registers of other devices.
 
-So instead of replacing=C2=A0ahb@80080000=C2=A0by=C2=A0ahb@00000000=C2=A0=
-a new node should
-be created. However, I am not sure if this is really necessary, I
-haven't seen it for all device trees using "mmio-sram".
+Further, the binding of "simple-bus" doesn't specify any particular
+register layout for its internal register set.
 
-Best regards
-J=C3=B6rg Krause
+My best guess is that the author of the original dts file confused
+the 'reg' property of the ahb node with a 'ranges' property that should
+list which address range gets translated into what child addresses.
+
+I don't see how that could lead to the dtc error you get, but it's
+probably worth fixing anyway.
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
