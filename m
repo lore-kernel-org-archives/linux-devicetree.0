@@ -1,49 +1,67 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Sat, 23 Apr 2016 10:51:18 +0300
-Message-ID: <571B2976.9070106@linaro.org>
-References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
- <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
+From: Stefan Wahren <info@lategoodbye.de>
+Subject: strange dtc errors after adding sram node
+Date: Sat, 23 Apr 2016 09:46:07 +0200
+Message-ID: <571B283F.8010707@lategoodbye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>
+Return-path: <kernelnewbies-bounces@kernelnewbies.org>
+List-Unsubscribe: <http://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
+	<mailto:kernelnewbies-request@kernelnewbies.org?subject=unsubscribe>
+List-Archive: <http://lists.kernelnewbies.org/pipermail/kernelnewbies>
+List-Post: <mailto:kernelnewbies@kernelnewbies.org>
+List-Help: <mailto:kernelnewbies-request@kernelnewbies.org?subject=help>
+List-Subscribe: <http://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
+	<mailto:kernelnewbies-request@kernelnewbies.org?subject=subscribe>
+Sender: kernelnewbies-bounces@kernelnewbies.org
+Errors-To: kernelnewbies-bounces@kernelnewbies.org
+To: kernelnewbies@kernelnewbies.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause@embedded.rocks>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi,
 
-On 04/23/2016 01:17 AM, Andy Gross wrote:
-> This patch adds the device tree support for the Qualcomm SCM firmware.
-> 
-> Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> ---
->  .../devicetree/bindings/firmware/qcom,scm.txt      | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> new file mode 100644
-> index 0000000..57b9b3a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> @@ -0,0 +1,31 @@
-> +QCOM Secure Channel Manager (SCM)
-> +
-> +Qualcomm processors include an interface to communicate to the secure firmware.
-> +This interface allows for clients to request different types of actions.  These
-> +can include CPU power up/down, HDCP requests, loading of firmware, and other
-> +assorted actions.
-> +
-> +Required properties:
-> +- compatible: must contain one of the following:
-> + * "qcom,scm-apq8064" for APQ8064
-> + * "qcom,scm-apq8084" for MSM8084
+i want to add an sram node to arch/arm/boot/dts/imx28.dtsi. According to 
+the reference manual [1] the On-Chip RAM is connected to AHB, start 
+address 0 and has a size of 128 KB.
 
-s/MSM8084/APQ8084
+So i modified the imx28.dtsi based on the patch below. Unfortunately the 
+dtc give me some strang errors:
 
-regards,
-Stan
+ERROR (duplicate_label): Duplicate label 'mac0' on 
+/ahb@80080000/ethernet@800f0000 and /ahb@00000000/ethernet@800f0000
+ERROR: Input tree has errors, aborting (use -f to force output)
+
+What's wrong with my patch or does it reveal another issue?
+
+Regards
+Stefan
+
+[1] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM.pdf
+i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013
+Chapter 4.1 Memory Map Overview
+
+-------------------------->8---------------------------------------
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -1311,13 +1311,18 @@
+  		};
+  	};
+
+-	ahb@80080000 {
++	ahb@00000000 {
+  		compatible = "simple-bus";
+  		#address-cells = <1>;
+  		#size-cells = <1>;
+-		reg = <0x80080000 0x80000>;
++		reg = <0x00000000 0x20000>, <0x80080000 0x80000>;
+  		ranges;
+
++		ocram: sram@00000000 {
++			compatible = "mmio-sram";
++			reg = <0x00000000 0x20000>;
++		};
++
+  		usb0: usb@80080000 {
+  			compatible = "fsl,imx28-usb", "fsl,imx27-usb";
+  			reg = <0x80080000 0x10000>;
