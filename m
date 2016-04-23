@@ -1,55 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
-Date: Sun, 24 Apr 2016 01:43:04 +0200
-Message-ID: <201604240143.04330.arnd@arndb.de>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Vladimir Murzin <vladimir.murzin@arm.com>, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mark.rutland@arm.com, gnomes@lxorguk.ukuu.org.uk, peter@hurleysoftware.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, linux-serial@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 01/13] dt-bindings: Add Renesas R-Car FCP DT bindings
+Date: Sun, 24 Apr 2016 02:49:48 +0300
+Message-ID: <1461455400-28767-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 01 April 2016, Vladimir Murzin wrote:
-> Hi,
-> 
-> This patch series provides the basic support for running ucLinux on V2M-MPS2
-> platform.
-> 
-> With these patches applied ucLinux can be run on both HW and FVP models
-> with Cortex-M3/M4/M7 configurations.
-> 
-> Board description:
-> 
-> http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_versatile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_manual_100112_0100_03_en.pdf
-> 
-> Application notes (cover Cortex-M3/M4/M7):
-> 
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m3_on_v2m_mps2.pdf
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m4_on_v2m_mps2.pdf
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m7_on_v2m_mps2.pdf
-> http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m7_on_v2m_mps2.pdf
-> 
-> Cortex-M System Design Kit (referenced as CMDK from documents above):
-> 
-> http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf
-> 
-> I'd be happy to hear any feedback/comments on this series!
-> 
+The FCP is a companion module of video processing modules in the Renesas
+R-Car Gen3 SoCs. It provides data compression and decompression, data
+caching, and conversion of AXI transaction in order to reduce the memory
+bandwidth.
 
-The whole series looks good to me, please submit the patches to the
-appropriate maintainers for inclusion separately:
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../devicetree/bindings/media/renesas,fcp.txt      | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,fcp.txt
 
-* patches 1-2 to the clocksource maintainers
-* patches 3-5 to the serial driver maintainers
-* patches 6-10 to the vexpress maintainers
+Cc: devicetree@vger.kernel.org
 
-I think everyone is already on Cc here, but they don't want to pick the
-patches out of the series separately. I expect to get the patches for
-arm-soc as part of the vexpress pull requests (dt, defconfig, and core).
-
-	Arnd
+diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+new file mode 100644
+index 000000000000..46beec97d625
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+@@ -0,0 +1,31 @@
++Renesas R-Car Frame Compression Processor (FCP)
++-----------------------------------------------
++
++The FCP is a companion module of video processing modules in the Renesas R-Car
++Gen3 SoCs. It provides data compression and decompression, data caching, and
++conversion of AXI transaction in order to reduce the memory bandwidth.
++
++There are three types of FCP whose configuration and behaviour highly depend
++on the module they are paired with.
++
++ - compatible: Must be one or more of the following
++
++   - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
++   - "renesas,fcpv" for generic compatible 'FCP for VSP'
++
++   When compatible with the generic version, nodes must list the
++   SoC-specific version corresponding to the platform first, followed by the
++   family-specific and/or generic versions.
++
++ - reg: the register base and size for the device registers
++ - clocks: Reference to the functional clock
++
++
++Device node example
++-------------------
++
++	fcpvd1: fcp@fea2f000 {
++		compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
++		reg = <0 0xfea2f000 0 0x200>;
++		clocks = <&cpg CPG_MOD 602>;
++	};
+-- 
+2.7.3
