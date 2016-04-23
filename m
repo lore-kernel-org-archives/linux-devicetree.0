@@ -1,87 +1,35 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Sat, 23 Apr 2016 12:33:51 -0500
-Message-ID: <20160423173351.GA3246@hector.attlocal.net>
-References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
- <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
- <CAL_JsqK0LYCozBohs5QCvuPRR-3s2SMHf7DgwSyVe4Vyeyw9ew@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] arm64: dts: uniphier: fix I2C nodes of PH1-LD20
+Date: Sat, 23 Apr 2016 22:09:21 +0200
+Message-ID: <4326944.O9ELFsuto4@wuerfel>
+References: <1460716247-28049-1-git-send-email-yamada.masahiro@socionext.com> <1460716247-28049-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK0LYCozBohs5QCvuPRR-3s2SMHf7DgwSyVe4Vyeyw9ew@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460716247-28049-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: arm@kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 23, 2016 at 11:56:50AM -0500, Rob Herring wrote:
-> On Fri, Apr 22, 2016 at 5:17 PM, Andy Gross <andy.gross@linaro.org> wrote:
-> > This patch adds the device tree support for the Qualcomm SCM firmware.
-> >
-> > Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> > ---
-> >  .../devicetree/bindings/firmware/qcom,scm.txt      | 31 ++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> > new file mode 100644
-> > index 0000000..57b9b3a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> > @@ -0,0 +1,31 @@
-> > +QCOM Secure Channel Manager (SCM)
-> > +
-> > +Qualcomm processors include an interface to communicate to the secure firmware.
-> > +This interface allows for clients to request different types of actions.  These
-> > +can include CPU power up/down, HDCP requests, loading of firmware, and other
-> > +assorted actions.
-> > +
-> > +Required properties:
-> > +- compatible: must contain one of the following:
-> > + * "qcom,scm-apq8064" for APQ8064
-> > + * "qcom,scm-apq8084" for MSM8084
-> > + * "qcom,scm-msm8916" for MSM8916
-> > + * "qcom,scm-msm8974" for MSM8974
-> > +- clocks: One to three clocks may be required based on compatible.
-> > + * Only core clock required for "qcom,scm-apq8064"
-> > + * Core, iface, and bus clocks required for all other compatibles.
-> > +- clock-names: Must contain "core" for the core clock, "iface" for the interface
-> > +  clock and "bus" for the bus clock per the requirements of the compatible.
-> > +
-> > +Example for MSM8916:
-> > +
-> > +       firmware {
-> > +               compatible = "simple-bus";
+On Friday 15 April 2016 19:30:46 Masahiro Yamada wrote:
+> The I2C hardware blocks on this SoC are connected as follows:
 > 
-> Firmware is a bus? Really? Let's not put hacks in the DT just so you
-> get automatic probing.
-
-So something like:
-
-        firmware {
-                compatible = "qcom,scm-apq8084";
-                clocks = <&gcc GCC_CE1_CLK> , <&gcc GCC_CE1_AXI_CLK>, <&gcc GCC_CE1_AHB_CLK>;
-                clock-names = "core", "bus", "iface";
-        };
-
-Seems to work fine.
-
-> > +
-> > +               scm {
-> > +                       compatible = "qcom,scm-msm8916";
-> > +                       clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
-> > +                       clock-names = "core", "bus", "iface";
+>   I2C0: external connection
+>   I2C1: external connection
+>   I2C2: internal connection
+>   I2C3: external connection
+>   I2C4: external connection
+>   I2C5: internal connection
+>   I2C6: no connection (not accessible)
 > 
-> Generally, /firmware defines an interface to firmware. I don't think
-> clocks belong here. This implies that non-secure world can turn off
-> clocks to secure world?
+> Delete pinctrl from Ch2, add pinctrl to Ch4, and remove the Ch6 node.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> 
 
-The caller into the SCM is on the hook for making sure the clocks are turned on.
-The firmware people decided to not manage the clocks.  In a perfect world, they
-would turn on their own clocks and it would all be self contained.  Sadly, it
-isn't going to change.
 
-The alternative is every device that makes scm calls needs to manage the clocks
-for the firmware.
+Applied patch 1/2 to the fixes branch now, thanks!
+
+	Arnd
