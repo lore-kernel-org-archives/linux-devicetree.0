@@ -1,56 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: strange dtc errors after adding sram node
-Date: Sat, 23 Apr 2016 10:24:22 +0200
-Message-ID: <5929251.U2lOfbMTgH@wuerfel>
-References: <571B283F.8010707@lategoodbye.de>
+From: Yisen Zhuang <Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 net-next 05/13] net: hns: add syscon operation for dsaf
+Date: Sat, 23 Apr 2016 17:05:09 +0800
+Message-ID: <1461402317-136499-6-git-send-email-Yisen.Zhuang@huawei.com>
+References: <1461402317-136499-1-git-send-email-Yisen.Zhuang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571B283F.8010707-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+In-Reply-To: <1461402317-136499-1-git-send-email-Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Cc: kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?J=F6rg?= Krause <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieqianqian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 23 April 2016 09:46:07 Stefan Wahren wrote:
-> -       ahb@80080000 {
-> +       ahb@00000000 {
->                 compatible = "simple-bus";
->                 #address-cells = <1>;
->                 #size-cells = <1>;
-> -               reg = <0x80080000 0x80000>;
-> +               reg = <0x00000000 0x20000>, <0x80080000 0x80000>;
->                 ranges;
-> 
-> +               ocram: sram@00000000 {
-> +                       compatible = "mmio-sram";
-> +                       reg = <0x00000000 0x20000>;
-> +               };
-> +
->                 usb0: usb@80080000 {
->                         compatible = "fsl,imx28-usb", "fsl,imx27-usb";
->                         reg = <0x80080000 0x10000>;
+This patch provides the read/write function for dsaf to
+access the registers through syscon methods.
 
-Something odd about this is that you have duplicated addresses:
-The sram node has the same "reg" property as the "ahb" node, 
-and also the  existing address (0x80080000) overlaps with that of
-the usb node.
+Signed-off-by: Daode Huang <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Yisen Zhuang <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-The registers of a device should generally be non-overlapping
-with registers of other devices.
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+index ed0043a..6a03c94 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+@@ -10,6 +10,7 @@
+ #ifndef _DSAF_REG_H_
+ #define _DSAF_REG_H_
+ 
++#include <linux/regmap.h>
+ #define HNS_DEBUG_RING_IRQ_IDX 0
+ #define HNS_SERVICE_RING_IRQ_IDX 59
+ #define HNSV2_SERVICE_RING_IRQ_IDX 25
+@@ -989,6 +990,19 @@ static inline u32 dsaf_read_reg(u8 __iomem *base, u32 reg)
+ 	return readl(reg_addr + reg);
+ }
+ 
++static inline void dsaf_write_syscon(struct regmap *base, u32 reg, u32 value)
++{
++	regmap_write(base, reg, value);
++}
++
++static inline u32 dsaf_read_syscon(struct regmap *base, u32 reg)
++{
++	unsigned int val;
++
++	regmap_read(base, reg, &val);
++	return val;
++}
++
+ #define dsaf_read_dev(a, reg) \
+ 	dsaf_read_reg((a)->io_base, (reg))
+ 
+-- 
+1.9.1
 
-Further, the binding of "simple-bus" doesn't specify any particular
-register layout for its internal register set.
-
-My best guess is that the author of the original dts file confused
-the 'reg' property of the ahb node with a 'ranges' property that should
-list which address range gets translated into what child addresses.
-
-I don't see how that could lead to the dtc error you get, but it's
-probably worth fixing anyway.
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
