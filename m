@@ -1,52 +1,67 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v4 4/5] dt-bindings: arm: add DT binding for Marvell
- CP110 system controller
-Date: Sat, 23 Apr 2016 16:22:23 +0200
-Message-ID: <20160423162223.16e3ca28@free-electrons.com>
-References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1459070777-18049-5-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160328194756.GA28967@rob-hp-laptop>
-	<20160413180122.4f997a9a@free-electrons.com>
-	<CAMuHMdVYtXEZF0+G3W+Q8cDcBFB55s1ru6N6J3tgFy9BcGZiXw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Sat, 23 Apr 2016 11:56:50 -0500
+Message-ID: <CAL_JsqK0LYCozBohs5QCvuPRR-3s2SMHf7DgwSyVe4Vyeyw9ew@mail.gmail.com>
+References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org> <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVYtXEZF0+G3W+Q8cDcBFB55s1ru6N6J3tgFy9BcGZiXw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Apr 22, 2016 at 5:17 PM, Andy Gross <andy.gross@linaro.org> wrote:
+> This patch adds the device tree support for the Qualcomm SCM firmware.
+>
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> ---
+>  .../devicetree/bindings/firmware/qcom,scm.txt      | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> new file mode 100644
+> index 0000000..57b9b3a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> @@ -0,0 +1,31 @@
+> +QCOM Secure Channel Manager (SCM)
+> +
+> +Qualcomm processors include an interface to communicate to the secure firmware.
+> +This interface allows for clients to request different types of actions.  These
+> +can include CPU power up/down, HDCP requests, loading of firmware, and other
+> +assorted actions.
+> +
+> +Required properties:
+> +- compatible: must contain one of the following:
+> + * "qcom,scm-apq8064" for APQ8064
+> + * "qcom,scm-apq8084" for MSM8084
+> + * "qcom,scm-msm8916" for MSM8916
+> + * "qcom,scm-msm8974" for MSM8974
+> +- clocks: One to three clocks may be required based on compatible.
+> + * Only core clock required for "qcom,scm-apq8064"
+> + * Core, iface, and bus clocks required for all other compatibles.
+> +- clock-names: Must contain "core" for the core clock, "iface" for the interface
+> +  clock and "bus" for the bus clock per the requirements of the compatible.
+> +
+> +Example for MSM8916:
+> +
+> +       firmware {
+> +               compatible = "simple-bus";
 
-On Thu, 14 Apr 2016 21:19:54 +0200, Geert Uytterhoeven wrote:
+Firmware is a bus? Really? Let's not put hacks in the DT just so you
+get automatic probing.
 
-> From my experience with clock drivers for Renesas SoCs, life is much easier
-> when handling all of this (clock names, parents, ...) in C. The same is true
-> BTW for PM Domains.
-> 
-> The clock controllers of r8a7791 and r8a7795 are very similar, and could
-> be handled similarly.
-> Compare the DT hierarchy for CPG and MSTP/MSSR in
-> arch/arm/boot/dts/r8a7791.dtsi and arch/arm64/boot/dts/renesas/r8a7795.dtsi.
+> +
+> +               scm {
+> +                       compatible = "qcom,scm-msm8916";
+> +                       clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
+> +                       clock-names = "core", "bus", "iface";
 
-Thanks for your feedback. However in practice, there will ultimately be
-two instances of this clock controller, as some variants of the SoC
-will contain two CP parts. Due to this, it is going to be quite
-convenient to have the clock names configurable from the DT, as I will
-be able to give the same clock on the master CP and the slave CP a
-different name.
+Generally, /firmware defines an interface to firmware. I don't think
+clocks belong here. This implies that non-secure world can turn off
+clocks to secure world?
 
-That's actually why my binding documentation uses names like
-"cpm-<foo>" for all the clocks, where "cpm" stands for "CP Master". In
-the future, another instance will have clocks named "cps-<foo>" for "CP
-Slave".
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Rob
