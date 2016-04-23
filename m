@@ -1,83 +1,49 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v2 1/2] Documentation: DT: vdma: Add clock support for
- vdma
-Date: Sat, 23 Apr 2016 05:37:57 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57A1D8@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1461152599-28858-1-git-send-email-appanad@xilinx.com>
- <20160422193707.GA16116@rob-hp-laptop>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Sat, 23 Apr 2016 10:51:18 +0300
+Message-ID: <571B2976.9070106@linaro.org>
+References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
+ <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160422193707.GA16116@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kern>
+To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Andy,
 
-	Thanks for the review...
+On 04/23/2016 01:17 AM, Andy Gross wrote:
+> This patch adds the device tree support for the Qualcomm SCM firmware.
+> 
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> ---
+>  .../devicetree/bindings/firmware/qcom,scm.txt      | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> new file mode 100644
+> index 0000000..57b9b3a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> @@ -0,0 +1,31 @@
+> +QCOM Secure Channel Manager (SCM)
+> +
+> +Qualcomm processors include an interface to communicate to the secure firmware.
+> +This interface allows for clients to request different types of actions.  These
+> +can include CPU power up/down, HDCP requests, loading of firmware, and other
+> +assorted actions.
+> +
+> +Required properties:
+> +- compatible: must contain one of the following:
+> + * "qcom,scm-apq8064" for APQ8064
+> + * "qcom,scm-apq8084" for MSM8084
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Saturday, April 23, 2016 1:07 AM
-> To: Appana Durga Kedareswara Rao <appanad@xilinx.com>
-> Cc: pawel.moll@arm.com; mark.rutland@arm.com;
-> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
-> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
-> vinod.koul@intel.com; dan.j.williams@intel.com; Appana Durga Kedareswara
-> Rao <appanad@xilinx.com>; moritz.fischer@ettus.com;
-> laurent.pinchart@ideasonboard.com; luis@debethencourt.com; Anirudha
-> Sarangi <anirudh@xilinx.com>; Punnaiah Choudary Kalluri
-> <punnaia@xilinx.com>; Shubhrajyoti Datta <shubhraj@xilinx.com>;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; dmaengine@vger.kernel.org
-> Subject: Re: [PATCH v2 1/2] Documentation: DT: vdma: Add clock support for
-> vdma
-> 
-> On Wed, Apr 20, 2016 at 05:13:18PM +0530, Kedareswara rao Appana wrote:
-> > This patch updates the binding doc with clock description for vdma.
-> >
-> > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> > ---
-> > Changes for v2:
-> > --> Listed down all the clocks supported by the h/w
-> >     as suggested by the Datta.
-> > --> Used IP clock names instead of shortcut clock names.
-> >
-> >  Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 8
-> > ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > index fcc2b65..afe9eb7 100644
-> > --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > @@ -21,6 +21,11 @@ Required properties:
-> >  - dma-channel child node: Should have at least one channel and can have up
-> to
-> >  	two channels per device. This node specifies the properties of each
-> >  	DMA channel (see child node properties below).
-> > +- clocks: Input clock specifier. Refer to common clock bindings.
-> > +- clock-names: List of input clocks "s_axi_lite_aclk", "m_axi_mm2s_aclk"
-> > +	       "m_axi_s2mm_aclk", "m_axis_mm2s_aclk", "s_axis_s2mm_aclk"
-> > +	       (list of input cloks may vary based on the ip configuration.
-> 
-> s/cloks/clocks/
-> 
-> > +		see clock bindings for more info).
-> 
-> This does not make sense. The common clock binding is going to tell me more
-> about how the clocks vary?
+s/MSM8084/APQ8084
 
-I have fixed these comments in the other version (v4) you acked that patch...
-
-Regards,
-Kedar.
-
-> 
-> You need to define here how the clocks can vary.
+regards,
+Stan
