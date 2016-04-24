@@ -1,62 +1,40 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 4/5] dt-bindings: arm: add DT binding for Marvell CP110
- system controller
-Date: Sun, 24 Apr 2016 11:15:16 +0200
-Message-ID: <CAMuHMdUPMcuQVd-5Gw7Be5eL24yoM_uN-1NBp-0JCcbcipAVig@mail.gmail.com>
-References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1459070777-18049-5-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160328194756.GA28967@rob-hp-laptop>
-	<20160413180122.4f997a9a@free-electrons.com>
-	<CAMuHMdVYtXEZF0+G3W+Q8cDcBFB55s1ru6N6J3tgFy9BcGZiXw@mail.gmail.com>
-	<20160423162223.16e3ca28@free-electrons.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v1] ARM: dts: omap3-n900: Specify peripherals LDO
+ regulators initial mode
+Date: Sun, 24 Apr 2016 12:08:30 +0200
+Message-ID: <20160424100830.GC23015@amd>
+References: <20160417122933.GA8093@earth>
+ <1460903363-2197-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160423162223.16e3ca28@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460903363-2197-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: tony@atomide.com, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Sun 2016-04-17 17:29:23, Ivaylo Dimitrov wrote:
+> Without that, regulators are left in the mode last set by the bootloader or
+> by the kernel the device was rebooted from. This leads to various problems,
+> like non-working peripherals.
+> 
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 
-On Sat, Apr 23, 2016 at 4:22 PM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
-> On Thu, 14 Apr 2016 21:19:54 +0200, Geert Uytterhoeven wrote:
->> From my experience with clock drivers for Renesas SoCs, life is much easier
->> when handling all of this (clock names, parents, ...) in C. The same is true
->> BTW for PM Domains.
->>
->> The clock controllers of r8a7791 and r8a7795 are very similar, and could
->> be handled similarly.
->> Compare the DT hierarchy for CPG and MSTP/MSSR in
->> arch/arm/boot/dts/r8a7791.dtsi and arch/arm64/boot/dts/renesas/r8a7795.dtsi.
->
-> Thanks for your feedback. However in practice, there will ultimately be
-> two instances of this clock controller, as some variants of the SoC
-> will contain two CP parts. Due to this, it is going to be quite
-> convenient to have the clock names configurable from the DT, as I will
-> be able to give the same clock on the master CP and the slave CP a
-> different name.
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
 
-You could still prefix the names by e.g. an instance number.
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -329,6 +329,7 @@
+>  	regulator-name = "V28";
+>  	regulator-min-microvolt = <2800000>;
+>  	regulator-max-microvolt = <2800000>;
+> +	regulator-initial-mode = <0x0e>; /* RES_STATE_ACTIVE */
+>  	regulator-always-on; /* due to battery cover sensor */
+>  };
+>  
 
-> That's actually why my binding documentation uses names like
-> "cpm-<foo>" for all the clocks, where "cpm" stands for "CP Master". In
-> the future, another instance will have clocks named "cps-<foo>" for "CP
-> Slave".
-
-So the names are actually part of the binding, while nothing really relies
-on the actual names, right? Clocks are referred to by clock specifier (phandle
-+ some optonal bits).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
