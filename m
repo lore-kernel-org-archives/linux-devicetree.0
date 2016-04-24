@@ -1,117 +1,40 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH 1/2] extcon: arizona: Add device bindings for the micd
- configurations
-Date: Sun, 24 Apr 2016 17:49:28 +0200
-Message-ID: <20160424154928.GB8880@amd>
-References: <1449767299-29691-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Sun, 24 Apr 2016 14:18:06 -0400 (EDT)
+Message-ID: <20160424.141806.786009616301278103.davem@davemloft.net>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+	<1461230323-27891-2-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449767299-29691-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <1461230323-27891-2-git-send-email-pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2015-12-10 17:08:18, Charles Keepax wrote:
-> Add device bindings to support configuring the jack detection
-> configurations. Each configuration needs to specify the connection of
-> the mic det pins, which micbias should be used and the value of the
-> micd polarity GPIO required to activate that configuration.
-> 
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+From: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Date: Thu, 21 Apr 2016 14:48:38 +0530
 
-
-Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-
-> ---
->  drivers/extcon/extcon-arizona.c | 53 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 51 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-> index 8647533..edbf2e1 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1201,7 +1201,54 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
->  	regmap_update_bits(arizona->regmap, reg, mask, level);
->  }
->  
-> -static int arizona_extcon_device_get_pdata(struct arizona *arizona)
-> +static int arizona_extcon_get_micd_configs(struct device *dev,
-> +					   struct arizona *arizona)
+> +struct shared_mdio_master *shared_mdio_alloc_master(struct device *parent,
+> +						    struct device_node *node)
 > +{
-> +	const char * const prop = "wlf,micd-configs";
+> +	int ret = 0;
+> +	struct shared_mdio_master *master;
 
-> +	const int entries_per_config = 3;
-> +	struct arizona_micd_config *micd_configs;
-> +	int nconfs, ret;
-> +	int i, j;
-> +	u32 *vals;
-> +
-> +	nconfs = device_property_read_u32_array(arizona->dev, prop, NULL, 0);
-> +	if (nconfs <= 0)
-> +		return 0;
-> +
-> +	vals = kcalloc(nconfs, sizeof(u32), GFP_KERNEL);
-> +	if (!vals)
-> +		return -ENOMEM;
-> +
-> +	ret = device_property_read_u32_array(arizona->dev, prop, vals, nconfs);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	nconfs /= entries_per_config;
-> +
-> +	micd_configs = devm_kzalloc(dev,
-> +				    nconfs * sizeof(struct arizona_micd_range),
-> +				    GFP_KERNEL);
-> +	if (!micd_configs) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	for (i = 0, j = 0; i < nconfs; ++i) {
-> +		micd_configs[i].src = vals[j++] ? ARIZONA_ACCDET_SRC : 0;
-> +		micd_configs[i].bias = vals[j++];
-> +		micd_configs[i].gpio = vals[j++];
-> +	}
-> +
-> +	arizona->pdata.micd_configs = micd_configs;
-> +	arizona->pdata.num_micd_configs = nconfs;
-> +
-> +out:
-> +	kfree(vals);
-> +	return ret;
-> +}
-> +
-> +static int arizona_extcon_device_get_pdata(struct device *dev,
-> +					   struct arizona *arizona)
->  {
->  	struct arizona_pdata *pdata = &arizona->pdata;
->  	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
-> @@ -1249,6 +1296,8 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
->  	pdata->jd_gpio5_nopull = device_property_read_bool(arizona->dev,
->  						"wlf,use-jd2-nopull");
->  
-> +	arizona_extcon_get_micd_configs(dev, arizona);
-> +
->  	return 0;
->  }
->  
-> @@ -1270,7 +1319,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	if (!dev_get_platdata(arizona->dev))
-> -		arizona_extcon_device_get_pdata(arizona);
-> +		arizona_extcon_device_get_pdata(&pdev->dev, arizona);
->  
->  	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
->  	if (IS_ERR(info->micvdd)) {
+Always order local variable declarations in reverse christmas tree
+(longest to shortest line) order.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> +static int shared_mdio_driver_probe(struct device *dev)
+> +{
+> +	int rc;
+> +	struct shared_mdio_master *master = to_shared_mdio_master(dev);
+> +	struct shared_mdio_driver *drv = to_shared_mdio_driver(dev->driver);
+
+Likewise.
+
+Please audit your entire submission for this issue.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
