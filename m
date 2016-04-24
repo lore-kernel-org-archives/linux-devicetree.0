@@ -1,95 +1,62 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 00/13] R-Car VSP improvements for v4.7 - Round 2
-Date: Sun, 24 Apr 2016 02:49:47 +0300
-Message-ID: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 4/5] dt-bindings: arm: add DT binding for Marvell CP110
+ system controller
+Date: Sun, 24 Apr 2016 11:15:16 +0200
+Message-ID: <CAMuHMdUPMcuQVd-5Gw7Be5eL24yoM_uN-1NBp-0JCcbcipAVig@mail.gmail.com>
+References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1459070777-18049-5-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160328194756.GA28967@rob-hp-laptop>
+	<20160413180122.4f997a9a@free-electrons.com>
+	<CAMuHMdVYtXEZF0+G3W+Q8cDcBFB55s1ru6N6J3tgFy9BcGZiXw@mail.gmail.com>
+	<20160423162223.16e3ca28@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160423162223.16e3ca28@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBpcyB0aGUgc2Vjb25kIChhbmQgbW9zdCBwcm9iYWJs
-eSBsYXN0KSByb3VuZCBvZiB2c3AxIGRyaXZlcgppbXByb3ZlbWVudHMgZm9yIHY0LjcuIEluIHBh
-cnRpY3VsYXIsIGl0IGVuYWJsZXMgcnVudGltZSBQTSBzdXBwb3J0ICgwMy8xMyBhbmQKMDQvMTMp
-LCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBGQ1AgKDAxLzEzLCAwMi8xMyBhbmQgMDUvMTMpLCBwcmVw
-YXJlIGZvciBIR08KKGhpc3RvZ3JhbSkgc3VwcG9ydCAoMDYvMTMgdG8gMDkvMTMpIGFuZCB1cGRh
-dGUgdGhlIEFQSSB0b3dhcmRzIHRoZSBEUk0gZHJpdmVyCigxMC8xMyB0byAxMy8xMykuCgpUaGUg
-RkNQIGlzIGEgY29tcGFuaW9uIG1vZHVsZSBvZiB2aWRlbyBwcm9jZXNzaW5nIG1vZHVsZXMgaW4g
-dGhlIFJlbmVzYXMgUi1DYXIKR2VuMyBTb0NzLiBJdCBwcm92aWRlcyBkYXRhIGNvbXByZXNzaW9u
-IGFuZCBkZWNvbXByZXNzaW9uLCBkYXRhIGNhY2hpbmcsIGFuZApjb252ZXJzaW9uIG9mIEFYSSB0
-cmFuc2FjdGlvbiBpbiBvcmRlciB0byByZWR1Y2UgdGhlIG1lbW9yeSBiYW5kd2lkdGguIFRoZSBG
-Q1AKZHJpdmVyIGlzIG5vdCBtZWFudCB0byBiZSB1c2VkIHN0YW5kYWxvbmUgYnV0IHByb3ZpZGVz
-IGFuIEFQSSB0byB0aGUgdmlkZW8KcHJvY2Vzc2luZyBtb2R1bGVzIHRvIGNvbnRyb2wgdGhlIEZD
-UC4KClRoZSBBUEkgdG93YXJkcyB0aGUgRFJNIGRyaXZlciBpcyB1cGRhdGVkIHRvIHN0b3JlIGFs
-bCBjb25maWd1cmF0aW9uCnBhcmFtZXRlcnMgaW4gYSBzdHJ1Y3R1cmUgaW4gb3JkZXIgdG8gaW1w
-cm92ZSByZWFkYWJpbGl0eSBhbmQgbWFrZSBmdXR1cmUKdXBkYXRlcyBlYXNpZXIuIFRoaXMgc2Vy
-aWVzIGNvbnRhaW4gdHdvIFItQ2FyIERVIERSTSBwYXRjaGVzIHRoYXQgdXBkYXRlIHRoZQpEVSBE
-Uk0gZHJpdmVyIHRvIHRoZSBuZXcgQVBJLiBUaGV5IHdvdWxkIG5vcm1hbGx5IGJlIG1lcmdlZCB0
-aHJvdWdoIERhdmUKQWlybGllJ3MgdHJlZSwgYnV0IGR1ZSB0byBkZXBlbmRlbmNpZXMgb24gVlNQ
-MSBwYXRjaGVzIHF1ZXVlZCB1cCBmb3IgdjQuNyBEYXZlCmFncmVlZCB0byBnZXQgdGhlbSBtZXJn
-ZWQgdGhyb3VnaCB0aGUgbGludXgtbWVkaWEgdHJlZSAoaGVuY2UgaGlzIEFja2VkLWJ5IGZvcgp0
-aGUgdHdvIHBhdGNoZXMpLiBUaGV5IHNob3VsZCBub3QgY29uZmxpY3Qgd2l0aCBhbnkgcGF0Y2gg
-cXVldWVkIHVwIGZvciB2NC43CnRocm91Z2ggRGF2ZSdzIHRyZWUuCgpOb3RlIHRoYXQgcGF0Y2gg
-MTAvMTMgYWRkcyBzb21lIG1hY3JvIG1hZ2ljIHRvIG1ha2UgdGhlIEFQSSB0cmFuc2l0aW9uIGVh
-c2llci4KRGVwZW5kaW5nIG9uIHlvdXIgdGFzdGUgeW91IHdpbGwgZmluZCB0aGUgaW1wbGVtZW50
-YXRpb24gYmVhdXRpZnVsIG9yIHVnbHksCmJ1dCBpbiBhbnkgY2FzZSBwYXRjaCAxMy8xMyByZW1v
-dmVzIHRoZSBtYWNyb3MgYW5kIGlubGluZSB3cmFwcGVyLgoKVGhlIGNvZGUgaXMgYmFzZWQgb24g
-dG9wIG9mIHRoZSBsYXRlc3QgbGludXgtbWVkaWEgbWFzdGVyIGJyYW5jaC4gRm9yCmNvbnZlbmll
-bmNlIEkndmUgcHVzaGVkIHRoZSBwYXRjaGVzIHRvIHRoZSBmb2xsb3dpbmcgZ2l0IHRyZWUgYnJh
-bmNoLgpwYXRjaGVzIG9uIHRvcCBvZiB0aGUgbGF0ZXN0IExpbnV4IG1lZGlhIG1hc3RlciBicmFu
-Y2ggdG8KCiAgICAgICAgZ2l0Oi8vbGludXh0di5vcmcvcGluY2hhcnRsL21lZGlhLmdpdCB2c3Ax
-L25leHQKCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpDYzogZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpDYzogRGF2ZSBBaXJsaWUgPGFpcmxpZWRAcmVkaGF0LmNvbT4KCkxh
-dXJlbnQgUGluY2hhcnQgKDEzKToKICBkdC1iaW5kaW5nczogQWRkIFJlbmVzYXMgUi1DYXIgRkNQ
-IERUIGJpbmRpbmdzCiAgdjRsOiBBZGQgUmVuZXNhcyBSLUNhciBGQ1AgZHJpdmVyCiAgdjRsOiB2
-c3AxOiBJbXBsZW1lbnQgcnVudGltZSBQTSBzdXBwb3J0CiAgdjRsOiB2c3AxOiBEb24ndCBoYW5k
-bGUgY2xvY2tzIG1hbnVhbGx5CiAgdjRsOiB2c3AxOiBBZGQgRkNQIHN1cHBvcnQKICB2NGw6IHZz
-cDE6IEFkZCBvdXRwdXQgbm9kZSB2YWx1ZSB0byByb3V0aW5nIHRhYmxlCiAgdjRsOiB2c3AxOiBS
-ZXBsYWNlIGNvbnRhaW5lcl9vZigpIHdpdGggZGVkaWNhdGVkIG1hY3JvCiAgdjRsOiB2c3AxOiBN
-YWtlIHZzcDFfZW50aXR5X2dldF9wYWRfY29tcG9zZSgpIG1vcmUgZ2VuZXJpYwogIHY0bDogdnNw
-MTogTW92ZSBmcmFtZSBzZXF1ZW5jZSBudW1iZXIgZnJvbSB2aWRlbyBub2RlIHRvIHBpcGVsaW5l
-CiAgdjRsOiB2c3AxOiBHcm91cCBEUk0gUlBGIHBhcmFtZXRlcnMgaW4gYSBzdHJ1Y3R1cmUKICBk
-cm06IHJjYXItZHU6IEFkZCBhbHBoYSBzdXBwb3J0IGZvciBWU1AgcGxhbmVzCiAgZHJtOiByY2Fy
-LWR1OiBBZGQgWi1vcmRlciBzdXBwb3J0IGZvciBWU1AgcGxhbmVzCiAgdjRsOiB2c3AxOiBSZW1v
-dmUgZGVwcmVjYXRlZCBEUk0gQVBJCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvcmVu
-ZXNhcyxmY3AudHh0ICAgICAgfCAgMzEgKysrKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVk
-aWEvcmVuZXNhcyx2c3AxLnR4dCAgICAgfCAgIDUgKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKysKIGRyaXZlcnMvZ3B1L2RybS9yY2Fy
-LWR1L3JjYXJfZHVfdnNwLmMgICAgICAgICAgICAgIHwgIDQ1ICsrKy0tLQogZHJpdmVycy9ncHUv
-ZHJtL3JjYXItZHUvcmNhcl9kdV92c3AuaCAgICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9t
-ZWRpYS9wbGF0Zm9ybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgMTUgKysKIGRyaXZl
-cnMvbWVkaWEvcGxhdGZvcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRy
-aXZlcnMvbWVkaWEvcGxhdGZvcm0vcmNhci1mY3AuYyAgICAgICAgICAgICAgICAgIHwgMTc2ICsr
-KysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDEuaCAg
-ICAgICAgICAgICAgICAgfCAgIDYgKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdnNwMS92c3Ax
-X2RybS5jICAgICAgICAgICAgIHwgIDY4ICsrKystLS0tCiBkcml2ZXJzL21lZGlhL3BsYXRmb3Jt
-L3ZzcDEvdnNwMV9kcnYuYyAgICAgICAgICAgICB8IDExOSArKysrKysrLS0tLS0tLQogZHJpdmVy
-cy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDFfZW50aXR5LmMgICAgICAgICAgfCAgODYgKysrKysr
-Ky0tLQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDFfZW50aXR5LmggICAgICAgICAg
-fCAgMTIgKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdnNwMS92c3AxX3BpcGUuYyAgICAgICAg
-ICAgIHwgICA0ICstCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3ZzcDEvdnNwMV9waXBlLmggICAg
-ICAgICAgICB8ICAgMiArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3ZzcDEvdnNwMV9ycGYuYyAg
-ICAgICAgICAgICB8ICAgNyArLQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS92c3AxL3ZzcDFfdmlk
-ZW8uYyAgICAgICAgICAgfCAgIDQgKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdnNwMS92c3Ax
-X3ZpZGVvLmggICAgICAgICAgIHwgICAxIC0KIGluY2x1ZGUvbWVkaWEvcmNhci1mY3AuaCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgIDM0ICsrKysKIGluY2x1ZGUvbWVkaWEvdnNwMS5oICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI5ICsrLS0KIDIwIGZpbGVzIGNoYW5nZWQs
-IDQ4NyBpbnNlcnRpb25zKCspLCAxNzAgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3JlbmVzYXMsZmNwLnR4dAog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vcmNhci1mY3AuYwogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbWVkaWEvcmNhci1mY3AuaAoKLS0gClJlZ2FyZHMsCgpM
-YXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hi Thomas,
+
+On Sat, Apr 23, 2016 at 4:22 PM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
+> On Thu, 14 Apr 2016 21:19:54 +0200, Geert Uytterhoeven wrote:
+>> From my experience with clock drivers for Renesas SoCs, life is much easier
+>> when handling all of this (clock names, parents, ...) in C. The same is true
+>> BTW for PM Domains.
+>>
+>> The clock controllers of r8a7791 and r8a7795 are very similar, and could
+>> be handled similarly.
+>> Compare the DT hierarchy for CPG and MSTP/MSSR in
+>> arch/arm/boot/dts/r8a7791.dtsi and arch/arm64/boot/dts/renesas/r8a7795.dtsi.
+>
+> Thanks for your feedback. However in practice, there will ultimately be
+> two instances of this clock controller, as some variants of the SoC
+> will contain two CP parts. Due to this, it is going to be quite
+> convenient to have the clock names configurable from the DT, as I will
+> be able to give the same clock on the master CP and the slave CP a
+> different name.
+
+You could still prefix the names by e.g. an instance number.
+
+> That's actually why my binding documentation uses names like
+> "cpm-<foo>" for all the clocks, where "cpm" stands for "CP Master". In
+> the future, another instance will have clocks named "cps-<foo>" for "CP
+> Slave".
+
+So the names are actually part of the binding, while nothing really relies
+on the actual names, right? Clocks are referred to by clock specifier (phandle
++ some optonal bits).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
