@@ -1,62 +1,87 @@
 From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
- addresses
-Date: Sun, 24 Apr 2016 22:14:37 +0200
-Message-ID: <20160424201437.GA2123@katana>
-References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
- <20160415080111.GD1714@lahna.fi.intel.com>
- <1460992811.8946.22.camel@linux.intel.com>
- <5714FCBE.3060009@metafoo.de>
- <20160419124028.GF1725@lahna.fi.intel.com>
- <57162C4E.9090904@metafoo.de>
- <20160419131631.GG1725@lahna.fi.intel.com>
- <5716333D.1040106@metafoo.de>
- <20160419144027.GH1725@lahna.fi.intel.com>
+Subject: Re: [PATCH] i2c: designware-platdrv: get fast/std speed scl high/low
+ count from DT
+Date: Sun, 24 Apr 2016 22:39:23 +0200
+Message-ID: <20160424203922.GC4317@katana>
+References: <1459927680-5480-1-git-send-email-jszhang@marvell.com>
+ <20160407175759.GO32257@rob-hp-laptop>
+ <20160413201147.5621a17c@xhacker>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+	protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160419144027.GH1725-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160413201147.5621a17c@xhacker>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean-Michel Hautbois <jhautbois-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-JiVWUdsMzBtWk0Htik3J/w@public.gmane.org>
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---SLDf9lqlvOQaIe6s
+--DIOMP1UsTsWJauNi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 13, 2016 at 08:11:47PM +0800, Jisheng Zhang wrote:
+> Dear Rob,
+>=20
+> On Thu, 7 Apr 2016 12:57:59 -0500 Rob Herring wrote:
+>=20
+> > On Wed, Apr 06, 2016 at 03:28:00PM +0800, Jisheng Zhang wrote:
+> > > Sometimes, it's convenient to define the scl's high/low count directl=
+y,
+> > > e.g HW people would do some measurement then directly give out the
+> > > optimum counts. Previously, we solved the sda falling time and scl
+> > > falling time by i2c_dw_scl_hcnt() and i2c_dw_scl_lcnt(), then put them
+> > > into dt, but what we really care isn't the sda/scl falling time. =20
+> >=20
+> > This is just so you can put specific clock count instead of converting=
+=20
+> > from nanoseconds with standard properties or you gain some additional=
+=20
+> > control of the timing. If only the former, then I prefer we stick with=
+=20
+> > the common properties.
+>=20
+> To be honest, both. Let me show how I gain additional control of the timi=
+ng
+> with this patch while I can't do this w/o it.
+>=20
+> I want the similar high percent of SCL high for both standard-mode and
+> fast-mode. Before this patch, this is not achievable because the paramete=
+rs
+> to cal the hcnt/lcnt via i2c_dw_scl_hcnt() and i2c_dw_scl_lcnt() are diff=
+erent
+> for standard-mode and fast-mode.
+
+If there is something you can't describe currently, then we can add
+additional properties to allow you to do what you want. But they should
+be generic bindings and not a plain value which is custom to this driver.
 
 
-> The above should work with both DT and ACPI so I'm OK with the current
-> patch. We can add ACPI parts later when needed.
-
-Just to make sure, I read this as an ack for the original patch?
-
-
---SLDf9lqlvOQaIe6s
+--DIOMP1UsTsWJauNi
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXHSktAAoJEBQN5MwUoCm2A6YP/jv9Z6pHjkrxQTlgrMGqq+DQ
-shbwlymDIo9zHPpZ+qclW2284O6Z4fA40smaDDS4MvEzKNaGX+Gkg16kL9QyhgkS
-fV2kEnNZSol//UpyE7F84tPz6PYlySubkV3xBakjuj2YTN21xXedF1AldTxlO1vd
-Xe3CLBvd+dMPVbqNvgvQ0ntueG4rDcDXM5RM0Rp7M8v5ss8YOU2HORICP1VrEK6h
-0ngK3SN2FOMAg6Nxzlb/t0W5QSLed2GEWB45HSJSudeM8bkuPDpvtbrajZRS48e+
-T6ic4a//7uNV/36KTp1WzadKpUW8S1GwzK+5onLChd29PN3hW0nRKIS0M1IBO8c9
-EZlZWShrzhw/LfroybD/Xn5Xu+POimov2cCKQI2UPk87Pdo53QfFCbetA++obMk4
-MBoOE3yQERiuzESPANpc2NkFg5+vw5F6p7ZZ0z3Cz/Y3lmZX8YrxXgybLPv5gtL/
-DzBCJwZ+XqHsHRV5/dLxNGO4RLI+UoAlzACfi099bL17ogTYcPQ7hDzWA1A/P9+F
-1ZyX93empAkelZR7x2dxQXxG1OjEvRPPRPFwqWx3V7KhXXgJolr+yEYYKE1XWLzi
-wBv2KPe2zZ8c4ZR9+2amdlLCKMaure38KOxA6mMYAgDOlfzAU9T/gyFZe9CJ1kFP
-AGC0uD1uxoJWUXqjstyp
-=ZNi4
+iQIcBAEBAgAGBQJXHS76AAoJEBQN5MwUoCm2C78P/R8ahfoIxSpEMtC6XHd1LXmc
+ZB/TXqtB2llMLRR0umlTwgzticDSWLWXQ3LkWLI/XnofxYhiRquakpIqEuIfsqME
+DAo3Vdr1TrLHIVmZFMDQEZO3Wj/yzEQIpJf+uWkcjzIulQbHLfLybagfJX1JNNnb
+sxM++07ybQ37QkXb3Yj7YxU1iUmTKa26JPWAl6uBXjLwCvlIz2o26LFyDxuclaOe
+J5z3ij5m2EQeNjlZ/MzXf4fGBsdlHcs7A+qomuB1P7P8POZ8fqivhH6+gaBG1P/J
+jtrpcolECKfJM8K+3RE3XFPTlhPCQRuMHLu0xe0WlpG8AZxoV+N+cobx+rQNLa4E
+X86AK5poUkV7l5UI49nQ6Z18WLYoh+KT+EQdYutw5y59KiCPx+N7FBI7bGQ9sojW
+v9uhuzPLaT3xpL6rvwZhPIenb2n025bFRVoabDkZQZqB1siBPrTA1wbHX/cALwG5
+V4mykeBQvGJbsggW3Aio1x7bX8SUdzkG5AtBKguh2ZGM37kWWghPhjDfNDeFV+Wn
+pYLw21W8IRBEvdzUczEUwTSqL+KwxxhNhwGTz99+ERvFytQrMi8wtUJ/0FoUd5XC
+jW4Fvh8S1PGtgD/v9I2VAS+oz4xzt/XcJpZahJ3sumf2sxPLVsFZaY6PcWvlKkD2
++wYm1hciZn+E/lPrl97P
+=z6p2
 -----END PGP SIGNATURE-----
 
---SLDf9lqlvOQaIe6s--
+--DIOMP1UsTsWJauNi--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
