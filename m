@@ -1,88 +1,148 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: designware-platdrv: get fast/std speed scl high/low
- count from DT
-Date: Sun, 24 Apr 2016 22:39:23 +0200
-Message-ID: <20160424203922.GC4317@katana>
-References: <1459927680-5480-1-git-send-email-jszhang@marvell.com>
- <20160407175759.GO32257@rob-hp-laptop>
- <20160413201147.5621a17c@xhacker>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160413201147.5621a17c@xhacker>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Michael Heimpold <mhei@heimpold.de>
+Subject: [PATCH v2 net-next] net: ethernet: enc28j60: add device tree support
+Date: Sun, 24 Apr 2016 23:28:03 +0200
+Message-ID: <1461533283-24852-1-git-send-email-mhei@heimpold.de>
+References: <31567588.rB9VrggOb6@wuerfel>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <31567588.rB9VrggOb6@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Michael Heimpold <mhei@heimpold.de>
 List-Id: devicetree@vger.kernel.org
 
+The following patch adds the required match table for device tree support
+(and while at, fix the indent). It's also possible to specify the
+MAC address in the DT blob.
 
---DIOMP1UsTsWJauNi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Also add the corresponding binding documentation file.
 
-On Wed, Apr 13, 2016 at 08:11:47PM +0800, Jisheng Zhang wrote:
-> Dear Rob,
->=20
-> On Thu, 7 Apr 2016 12:57:59 -0500 Rob Herring wrote:
->=20
-> > On Wed, Apr 06, 2016 at 03:28:00PM +0800, Jisheng Zhang wrote:
-> > > Sometimes, it's convenient to define the scl's high/low count directl=
-y,
-> > > e.g HW people would do some measurement then directly give out the
-> > > optimum counts. Previously, we solved the sda falling time and scl
-> > > falling time by i2c_dw_scl_hcnt() and i2c_dw_scl_lcnt(), then put them
-> > > into dt, but what we really care isn't the sda/scl falling time. =20
-> >=20
-> > This is just so you can put specific clock count instead of converting=
-=20
-> > from nanoseconds with standard properties or you gain some additional=
-=20
-> > control of the timing. If only the former, then I prefer we stick with=
-=20
-> > the common properties.
->=20
-> To be honest, both. Let me show how I gain additional control of the timi=
-ng
-> with this patch while I can't do this w/o it.
->=20
-> I want the similar high percent of SCL high for both standard-mode and
-> fast-mode. Before this patch, this is not achievable because the paramete=
-rs
-> to cal the hcnt/lcnt via i2c_dw_scl_hcnt() and i2c_dw_scl_lcnt() are diff=
-erent
-> for standard-mode and fast-mode.
+Signed-off-by: Michael Heimpold <mhei@heimpold.de>
+---
 
-If there is something you can't describe currently, then we can add
-additional properties to allow you to do what you want. But they should
-be generic bindings and not a plain value which is custom to this driver.
+v2: * took care of Arnd Bergmann's review comments
+      - allow to specify MAC address via DT
+      - unconditionally define DT id table
+    * increased the driver version minor number
+    * driver author's email address bounces, removed from address list
 
+ .../devicetree/bindings/net/microchip-enc28j60.txt | 50 ++++++++++++++++++++++
+ drivers/net/ethernet/microchip/enc28j60.c          | 20 +++++++--
+ 2 files changed, 67 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/microchip-enc28j60.txt
 
---DIOMP1UsTsWJauNi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXHS76AAoJEBQN5MwUoCm2C78P/R8ahfoIxSpEMtC6XHd1LXmc
-ZB/TXqtB2llMLRR0umlTwgzticDSWLWXQ3LkWLI/XnofxYhiRquakpIqEuIfsqME
-DAo3Vdr1TrLHIVmZFMDQEZO3Wj/yzEQIpJf+uWkcjzIulQbHLfLybagfJX1JNNnb
-sxM++07ybQ37QkXb3Yj7YxU1iUmTKa26JPWAl6uBXjLwCvlIz2o26LFyDxuclaOe
-J5z3ij5m2EQeNjlZ/MzXf4fGBsdlHcs7A+qomuB1P7P8POZ8fqivhH6+gaBG1P/J
-jtrpcolECKfJM8K+3RE3XFPTlhPCQRuMHLu0xe0WlpG8AZxoV+N+cobx+rQNLa4E
-X86AK5poUkV7l5UI49nQ6Z18WLYoh+KT+EQdYutw5y59KiCPx+N7FBI7bGQ9sojW
-v9uhuzPLaT3xpL6rvwZhPIenb2n025bFRVoabDkZQZqB1siBPrTA1wbHX/cALwG5
-V4mykeBQvGJbsggW3Aio1x7bX8SUdzkG5AtBKguh2ZGM37kWWghPhjDfNDeFV+Wn
-pYLw21W8IRBEvdzUczEUwTSqL+KwxxhNhwGTz99+ERvFytQrMi8wtUJ/0FoUd5XC
-jW4Fvh8S1PGtgD/v9I2VAS+oz4xzt/XcJpZahJ3sumf2sxPLVsFZaY6PcWvlKkD2
-+wYm1hciZn+E/lPrl97P
-=z6p2
------END PGP SIGNATURE-----
-
---DIOMP1UsTsWJauNi--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/microchip-enc28j60.txt b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
+new file mode 100644
+index 0000000..847a97b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
+@@ -0,0 +1,50 @@
++* Microchip ENC28J60
++
++This is a standalone 10 MBit ethernet controller with SPI interface.
++
++For each device connected to a SPI bus, define a child node within
++the SPI master node.
++
++Required properties:
++- compatible: Should be "microchip,enc28j60"
++- reg: Specify the SPI chip select the ENC28J60 is wired to
++- interrupts: Specify the interrupt and interrupt type (usually falling edge)
++
++Optional properties:
++- interrupt-parent: Specify the pHandle of the source interrupt
++- spi-max-frequency: Maximum frequency of the SPI bus when accessing the ENC28J60.
++  According to the ENC28J80 datasheet, the chip allows a maximum of 20 MHz, however,
++  board designs may need to limit this value.
++- local-mac-address: See ethernet.txt in the same directory.
++
++
++Example (for NXP i.MX28 with pin control stuff for GPIO irq):
++
++        ssp2: ssp@80014000 {
++                compatible = "fsl,imx28-spi";
++                pinctrl-names = "default";
++                pinctrl-0 = <&spi2_pins_b &spi2_sck_cfg>;
++                status = "okay";
++
++                enc28j60: ethernet@0 {
++                        compatible = "microchip,enc28j60";
++                        pinctrl-names = "default";
++                        pinctrl-0 = <&enc28j60_pins>;
++                        reg = <0>;
++                        interrupt-parent = <&gpio3>;
++                        interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
++                        spi-max-frequency = <12000000>;
++                };
++        };
++
++        pinctrl@80018000 {
++                enc28j60_pins: enc28j60_pins@0 {
++                        reg = <0>;
++                        fsl,pinmux-ids = <
++                                MX28_PAD_AUART0_RTS__GPIO_3_3    /* Interrupt */
++                        >;
++                        fsl,drive-strength = <MXS_DRIVE_4mA>;
++                        fsl,voltage = <MXS_VOLTAGE_HIGH>;
++                        fsl,pull-up = <MXS_PULL_DISABLE>;
++                };
++        };
+diff --git a/drivers/net/ethernet/microchip/enc28j60.c b/drivers/net/ethernet/microchip/enc28j60.c
+index b723622..7066954 100644
+--- a/drivers/net/ethernet/microchip/enc28j60.c
++++ b/drivers/net/ethernet/microchip/enc28j60.c
+@@ -28,11 +28,12 @@
+ #include <linux/skbuff.h>
+ #include <linux/delay.h>
+ #include <linux/spi/spi.h>
++#include <linux/of_net.h>
+ 
+ #include "enc28j60_hw.h"
+ 
+ #define DRV_NAME	"enc28j60"
+-#define DRV_VERSION	"1.01"
++#define DRV_VERSION	"1.02"
+ 
+ #define SPI_OPLEN	1
+ 
+@@ -1548,6 +1549,7 @@ static int enc28j60_probe(struct spi_device *spi)
+ {
+ 	struct net_device *dev;
+ 	struct enc28j60_net *priv;
++	const void *macaddr;
+ 	int ret = 0;
+ 
+ 	if (netif_msg_drv(&debug))
+@@ -1579,7 +1581,12 @@ static int enc28j60_probe(struct spi_device *spi)
+ 		ret = -EIO;
+ 		goto error_irq;
+ 	}
+-	eth_hw_addr_random(dev);
++
++	macaddr = of_get_mac_address(spi->dev.of_node);
++	if (macaddr)
++		ether_addr_copy(dev->dev_addr, macaddr);
++	else
++		eth_hw_addr_random(dev);
+ 	enc28j60_set_hw_macaddr(dev);
+ 
+ 	/* Board setup must set the relevant edge trigger type;
+@@ -1634,9 +1641,16 @@ static int enc28j60_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static const struct of_device_id enc28j60_dt_ids[] = {
++	{ .compatible = "microchip,enc28j60" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, enc28j60_dt_ids);
++
+ static struct spi_driver enc28j60_driver = {
+ 	.driver = {
+-		   .name = DRV_NAME,
++		.name = DRV_NAME,
++		.of_match_table = enc28j60_dt_ids,
+ 	 },
+ 	.probe = enc28j60_probe,
+ 	.remove = enc28j60_remove,
+-- 
+2.5.0
