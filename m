@@ -1,74 +1,81 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 2/7] EDAC, altera: Add panic flag check to A10 IRQ
-Date: Mon, 25 Apr 2016 12:52:43 -0500
-Message-ID: <1461606768-14404-3-git-send-email-tthayer@opensource.altera.com>
-References: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add entry for Mali-DP driver
+Date: Mon, 25 Apr 2016 18:53:26 +0100
+Message-ID: <CACvgo50nqzcSbJVSBx_dk+yUTxKpNLXs0hbdOjX_X3OYwt2+Tg@mail.gmail.com>
+References: <1461593964-27722-1-git-send-email-Liviu.Dudau@arm.com>
+	<1461593964-27722-4-git-send-email-Liviu.Dudau@arm.com>
+	<CACvgo51obFzx05SWUPZYbEj-LcNGq_NaCvF_iYsg9gpyLPj48Q@mail.gmail.com>
+	<20160425170811.GC28464@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160425170811.GC28464-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Brian Starkey <Brian.Starkey-5wv7dgnIgG8@public.gmane.org>, David Brown <David.Brown-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+On 25 April 2016 at 18:08, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Mon, Apr 25, 2016 at 05:00:02PM +0100, Emil Velikov wrote:
+>> On 25 April 2016 at 15:19, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > Add MAINTAINERS entry for ARM Mali-DP driver and update the
+>> > HDLCD file matching pattern to cover only HDLCD rather than
+>> > the whole drivers/gpu/drm/arm directory.
+>> >
+>> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+>> > ---
+>> >  MAINTAINERS | 10 +++++++++-
+>> >  1 file changed, 9 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/MAINTAINERS b/MAINTAINERS
+>> > index 1d5b4be..a5a4346 100644
+>> > --- a/MAINTAINERS
+>> > +++ b/MAINTAINERS
+>> > @@ -850,9 +850,17 @@ F: include/uapi/linux/if_arcnet.h
+>> >  ARM HDLCD DRM DRIVER
+>> >  M:     Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+>> >  S:     Supported
+>> > -F:     drivers/gpu/drm/arm/
+>> > +F:     drivers/gpu/drm/arm/hdlcd_*
+>> >  F:     Documentation/devicetree/bindings/display/arm,hdlcd.txt
+>> >
+>> > +ARM MALI-DP DRM DRIVER
+>> > +M:     Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+>> > +M:     Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+>> > +M:     Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>
+>> > +S:     Supported
+>> > +F:     drivers/gpu/drm/arm/
+>> Woohoo. Thanks Liviu !
+>>
+>> Note that having both drivers' sources in the same folder will cause
+>> some grief wrt getting the correct maintainer. If you want to avoid
+>> that the easiest way is to move things in subdirectories roughly like:
+>>
+>> drivers/gpu/arm/hdlcd/
+>> drivers/gpu/arm/mapidp/
+>
+> I'm surprised to hear that there might be problems. All HDLCD files start
+> with hdlcd_ and the rest will go to the Mali-DP DRM maintainers (which includes
+> me as well).
+>
+You're absolutely right. I read things the wrong way - the MaliDP
+maintainers will be added for the HDLCD patches. Which obviously isn't
+the case.
 
-In preparation for additional memory module ECCs, the
-IRQ function will check a panic flag before doing a
-kernel panic on double bit errors. ECCs on buffers
-will not cause a kernel panic on DBERRs.
+> I understand your suggestion and I thank for it, but I really hate to have
+> to navigate too many directories (for now). Lets see how things evolve and then
+> we can move stuff around.
+>
+IIRC DRM had the same structure (all drivers living in a single a
+folder) before 2008, before people got fed up.
+Feel free to do as you wish, just pointing out some historical observations ;-)
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
-v2  New patch. Add panic flag to IRQ function.
----
- drivers/edac/altera_edac.c |    4 +++-
- drivers/edac/altera_edac.h |    1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Regardless of my suggestions/nitpicks, thanks for all the work Liviu !
+It's really nice to see more vendors contributing to DRM.
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index b127e77..d4afecc 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -895,7 +895,8 @@ static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
- 		writel(ALTR_A10_ECC_DERRPENA,
- 		       base + ALTR_A10_ECC_INTSTAT_OFST);
- 		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
--		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
-+		if (dci->data->panic)
-+			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
- 	}
- 	return IRQ_HANDLED;
- }
-@@ -929,6 +930,7 @@ const struct edac_device_prv_data a10_ocramecc_data = {
- 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
- 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
- 	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.panic = true,
- };
- 
- #endif	/* CONFIG_EDAC_ALTERA_OCRAM */
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index 42090f3..83e621e 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -299,6 +299,7 @@ struct edac_device_prv_data {
- 				       bool sb);
- 	int trig_alloc_sz;
- 	const struct file_operations *inject_fops;
-+	bool panic;
- };
- 
- struct altr_edac_device_dev {
--- 
-1.7.9.5
+Regards,
+Emil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
