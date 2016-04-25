@@ -1,54 +1,44 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 3/4] ARM: davinci: disable mdio and eth0 in da850.dtsi
-Date: Mon, 25 Apr 2016 19:00:59 +0530
-Message-ID: <571E1C13.9050204@ti.com>
-References: <1460826020-1256-1-git-send-email-david@lechnology.com>
- <1460826020-1256-4-git-send-email-david@lechnology.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 10/14] misc: sram: DT spelling
+ s/#adress-cells/#address-cells/
+Date: Mon, 25 Apr 2016 08:44:09 -0500
+Message-ID: <20160425134409.GA4060@rob-hp-laptop>
+References: <1461166339-11109-1-git-send-email-geert+renesas@glider.be>
+ <1461166339-11109-11-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460826020-1256-4-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461166339-11109-11-git-send-email-geert+renesas@glider.be>
+Sender: linux-pci-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, Tony Lindgren <tony@atomide.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Wed, Apr 20, 2016 at 05:32:15PM +0200, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Saturday 16 April 2016 10:30 PM, David Lechner wrote:
-> All other devices are disabled by default and not all boards will use
-> these devices, so these should be disabled too..
+Applied, thanks.
+
+Rob
+
+> ---
+>  Documentation/devicetree/bindings/sram/sram.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> da850-evm.dtb already had status = "okay" for these devices.
-> da850-enbw-cmc.dts did not, so they were added.
+> diff --git a/Documentation/devicetree/bindings/sram/sram.txt b/Documentation/devicetree/bindings/sram/sram.txt
+> index 227e3a341af1e2b5..add48f09015e212e 100644
+> --- a/Documentation/devicetree/bindings/sram/sram.txt
+> +++ b/Documentation/devicetree/bindings/sram/sram.txt
+> @@ -51,7 +51,7 @@ sram: sram@5c000000 {
+>  	compatible = "mmio-sram";
+>  	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
+>  
+> -	#adress-cells = <1>;
+> +	#address-cells = <1>;
+>  	#size-cells = <1>;
+>  	ranges = <0 0x5c000000 0x40000>;
+>  
+> -- 
+> 1.9.1
 > 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-
-I applied this and other patches in this series. One nit-pick though.
-The commit description should be independently readable and not only as
-continuation of the headline. Even if this means repeating portion of
-the headline. I fixed this for most of the patches in this series. For
-example, for this patch, I have:
-
-    ARM: dts: da850: disable mdio and eth0 in da850.dtsi
-
-    Disable mdio and eth0 in da850.dtsi file. All other
-    devices are disabled by default and not all boards
-    will use these devices, so these should be disabled too.
-
-    da850-evm.dtb already had status = "okay" for these devices.
-    da850-enbw-cmc.dts did not, so they were added.
-
-    Signed-off-by: David Lechner <david@lechnology.com>
-    Tested-by: Kevin Hilman <khilman@baylibre.com>
-    [nsekhar@ti.com: commit description updates]
-    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-
-Its a minor change and I wont reply to all the patches with the changes
-I made. But I pushed the updated v4.7/dt branch in my tree. Do take a
-look at the commit description there.
-
-Thanks,
-Sekhar
