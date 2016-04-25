@@ -1,104 +1,106 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/3] mtd: nand: add support for "nand-ecc-algo" DT
- property
-Date: Mon, 25 Apr 2016 12:11:53 +0200
-Message-ID: <20160425121153.7c56ad87@bbrezillon>
-References: <1461324197-1333-1-git-send-email-zajec5@gmail.com>
+From: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 12/17] ARM64: ACPI: Check if it runs on Xen to enable
+ or disable ACPI
+Date: Mon, 25 Apr 2016 11:15:29 +0100 (BST)
+Message-ID: <alpine.DEB.2.10.1604251111290.4855@sstabellini-ThinkPad-X260>
+References: <1460030614-16112-1-git-send-email-zhaoshenglong@huawei.com> <1460030614-16112-13-git-send-email-zhaoshenglong@huawei.com> <alpine.DEB.2.10.1604201033140.25611@sstabellini-ThinkPad-X260> <20160422103250.GC10606@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461324197-1333-1-git-send-email-zajec5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mtd@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160422103250.GC10606@leverpostej>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, julien.grall-5wv7dgnIgG8@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Apr 2016 13:23:13 +0200
-Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> wrote:
+On Fri, 22 Apr 2016, Mark Rutland wrote:
+> On Wed, Apr 20, 2016 at 10:34:41AM +0100, Stefano Stabellini wrote:
+> > Hello Mark,
+> > 
+> > do you think that this patch addresses your previous comments
+> > (http://marc.info/?l=devicetree&m=145926913008544&w=2) appropriately?
+> > 
+> > Thanks,
+> > 
+> > Stefano
+> > 
+> > On Thu, 7 Apr 2016, Shannon Zhao wrote:
+> > > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > 
+> > > When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
+> > > a /hypervisor node in DT. So check if it needs to enable ACPI.
+> > > 
+> > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> > > Acked-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  arch/arm64/kernel/acpi.c | 14 ++++++++++----
+> > >  1 file changed, 10 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+> > > index d1ce8e2..57ee317 100644
+> > > --- a/arch/arm64/kernel/acpi.c
+> > > +++ b/arch/arm64/kernel/acpi.c
+> > > @@ -67,10 +67,15 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
+> > >  {
+> > >  	/*
+> > >  	 * Return 1 as soon as we encounter a node at depth 1 that is
+> > > -	 * not the /chosen node.
+> > > +	 * not the /chosen node, or /hypervisor node with compatible
+> > > +	 * string "xen,xen".
+> > >  	 */
+> > > -	if (depth == 1 && (strcmp(uname, "chosen") != 0))
+> > > -		return 1;
+> > > +	if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
+> > > +		if (strcmp(uname, "hypervisor") != 0 ||
+> > > +		    !of_flat_dt_is_compatible(node, "xen,xen"))
+> > > +			return 1;
+> > > +	}
+> > > +
+> > >  	return 0;
+> > >  }
+> 
+> Is the duplicate node checking logic I mentioned in that review gone?
+> i.e. do we not need an is_xen_node() helper?
 
-> So far it was only possible to specify ECC algorithm using "soft" and
-> "soft_bch" values of nand-ecc-mode prop. There wasn't a way to specif=
-y
-> it for a hardware ECC mode.
->=20
-> Now that we have independent field in NAND subsystem for storing info
-> about ECC algorithm we may also add support for this new DT property.
->=20
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
-> ---
->  Documentation/devicetree/bindings/mtd/nand.txt |  2 ++
->  drivers/mtd/nand/nand_base.c                   | 20 +++++++++++++---=
-----
->  2 files changed, 15 insertions(+), 7 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documen=
-tation/devicetree/bindings/mtd/nand.txt
-> index a17662b..5ac4ab7 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> @@ -22,6 +22,8 @@ Optional NAND chip properties:
->  - nand-ecc-mode : String, operation mode of the NAND ecc mode.
->    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob=
-_first",
->    "soft_bch".
-> +- nand-ecc-algo: string, algorithm of NAND ECC.
-> +		 Supported values are: "hamming", "bch".
-
-Rob, any objection to this binding change (and the one in patch 3).
-Please note that everything is backward compatible.
-
-Thanks,
-
-Boris
-
->  - nand-bus-width : 8 or 16 bus width if not present 8
->  - nand-on-flash-bbt: boolean to enable on flash bbt option if not pr=
-esent false
-> =20
-> diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_bas=
-e.c
-> index 7bc37b4..a5417a0 100644
-> --- a/drivers/mtd/nand/nand_base.c
-> +++ b/drivers/mtd/nand/nand_base.c
-> @@ -4003,17 +4003,23 @@ static int of_get_nand_ecc_mode(struct device=
-_node *np)
->  	return -ENODEV;
->  }
-> =20
-> +static const char * const nand_ecc_algos[] =3D {
-> +	[NAND_ECC_HAMMING]	=3D "hamming",
-> +	[NAND_ECC_BCH]		=3D "bch",
-> +};
-> +
->  static int of_get_nand_ecc_algo(struct device_node *np)
->  {
->  	const char *pm;
-> -	int err;
-> +	int err, i;
-> =20
-> -	/*
-> -	 * TODO: Read ECC algo OF property and map it to enum nand_ecc_algo=
-=2E
-> -	 * It's not implemented yet as currently NAND subsystem ignores
-> -	 * algorithm explicitly set this way. Once it's handled we should
-> -	 * document & support new property.
-> -	 */
-> +	err =3D of_property_read_string(np, "nand-ecc-algo", &pm);
-> +	if (!err) {
-> +		for (i =3D 0; i < ARRAY_SIZE(nand_ecc_algos); i++)
-> +			if (!strcasecmp(pm, nand_ecc_algos[i]))
-> +				return i;
-> +		return -ENODEV;
-> +	}
-> =20
->  	/*
->  	 * For backward compatibility we also read "nand-ecc-mode" checking
+Given the simplicity of just calling of_flat_dt_is_compatible(node,
+"xen,xen"), I think we can do without the helper. Also the function in
+the previous patch also checks for the Xen version which is not needed
+here.
 
 
+> Additionally, IMO, this would be easier to follow without the nested
+> conditionals, e.g.
+> 
+> static int __init dt_scan_depth1_nodes(unsigned long node,
+> 				       const char *uname, int depth,
+> 				       void *data)
+> {
+> 	/*
+> 	 * Ignore anything not directly under the root node; we'll
+> 	 * catch its parent instead.
+> 	 */
+> 	if (depth != 1)
+> 		return 0;
+> 
+> 	if (strcmp(uname, "chosen") == 0)
+> 		return 0;
+> 
+> 	if (strcmp(uname, "hypervisor") == 0 &&
+> 	    of_flat_dt_is_compatible(node, "xen,xen"))
+> 		return 0;
+> 
+> 	/*
+> 	 * This node at depth 1 is neither a chosen node nor a xen node,
+> 	 * which we do not expect.
+> 	 */
+> 	return 1;
+> }
+> 
+> Otherwise, this looks fine to me. FWIW, either way:
+> 
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+That is easier to read. For simplicity, I'll submit a patch with you as
+author, on top of the existing, to make this change. I'll use your
+Signed-off-by, if that's OK.
