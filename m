@@ -1,65 +1,65 @@
-From: Alexandre TORGUE <alexandre.torgue@gmail.com>
-Subject: [PATCH v6 2/6] Documentation: Bindings: Add STM32 DWMAC glue
-Date: Mon, 25 Apr 2016 13:53:58 +0200
-Message-ID: <1461585242-32401-3-git-send-email-alexandre.torgue@gmail.com>
-References: <1461585242-32401-1-git-send-email-alexandre.torgue@gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: AM335x ICE board Linux support
+Date: Mon, 25 Apr 2016 14:59:22 +0300
+Message-ID: <571E069A.20700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461585242-32401-1-git-send-email-alexandre.torgue@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: manabian@gmail.com, wens@csie.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-new file mode 100644
-index 0000000..c35afb7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-@@ -0,0 +1,32 @@
-+STMicroelectronics STM32 / MCU DWMAC glue layer controller
-+
-+This file documents platform glue layer for stmmac.
-+Please see stmmac.txt for the other unchanged properties.
-+
-+The device node has following properties.
-+
-+Required properties:
-+- compatible:  Should be "st,stm32-dwmac" to select glue, and
-+	       "snps,dwmac-3.50a" to select IP version.
-+- clocks: Must contain a phandle for each entry in clock-names.
-+- clock-names: Should be "stmmaceth" for the host clock.
-+	       Should be "mac-clk-tx" for the MAC TX clock.
-+	       Should be "mac-clk-rx" for the MAC RX clock.
-+- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-+	      encompases the glue register, and the offset of the control register.
-+Example:
-+
-+	ethernet@40028000 {
-+		compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-+		status = "disabled";
-+		reg = <0x40028000 0x8000>;
-+		reg-names = "stmmaceth";
-+		interrupts = <0 61 0>, <0 62 0>;
-+		interrupt-names = "macirq", "eth_wake_irq";
-+		clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
-+		clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-+		st,syscon = <&syscfg 0x4>;
-+		snps,pbl = <8>;
-+		snps,mixed-burst;
-+		dma-ranges;
-+	};
--- 
-1.9.1
+We are working on getting Linux on AM335X Industrial Communication Engine board (ICE) [1].
+
+This board has 2 Ethernet ports and each of them can be used either in RMII mode connected to
+the CPSW Ethernet MAC *or* in MII mode connected to the PRU Ethernet MAC.
+
+The decision about the Ethernet port's mode is made by the user by setting a jumper near the
+Ethernet port before power up. This is a boot time configurable setting and doesn't need to
+change at runtime.
+
+So 4 configurations are possible:
+    ETH0	ETH1
+    ----	----
+    RMII	RMII
+    RMII	MII
+    MII		RMII	(probably redundant and not needed)
+    MII		MII
+
+Based on the port configuration, software (u-boot or Linux) needs to set the right pinmux,
+set a GPIOs (that controls external Mux), configure an external clock generator
+and enable the right device driver for the respective Ethernet port.
+
+Clock generator needs to be configured because different clock rates are required
+for RMII vs MII mode.
+
+Now question is how all this can be done on u-boot + Linux?
+
+I already have a working solution where I create different DT blobs for the 3 configurations
+and have u-boot detect the mode and load the correct DT blob and also configure the clock.
+
+You can see how the kernel patches look like here [2]
+
+Is this approach acceptable? If not is there any better way to do this? Thanks.
+
+cheers,
+-roger
+
+[1] AM3359 ICE board
+http://www.ti.com/tool/tmdsice3359
+http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_%28ICE%29_EVM_HW_User_Guide
+
+[2] Device tree patches
+https://github.com/rogerq/linux/commit/9a9cf6a15f779fddf91dba2370627aabf19aeff5
+https://github.com/rogerq/linux/commit/c87e8fa5b14f156a91883fd506e9dd8f7ccf95cf
+https://github.com/rogerq/linux/commit/d9cdd25e8c3878292d7f4180af8d3ac42b9645c4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
