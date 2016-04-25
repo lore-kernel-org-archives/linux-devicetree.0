@@ -1,50 +1,61 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 3/3] MAINTAINERS: Add entry for Mali-DP driver
-Date: Mon, 25 Apr 2016 15:19:24 +0100
-Message-ID: <1461593964-27722-4-git-send-email-Liviu.Dudau@arm.com>
-References: <1461593964-27722-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461593964-27722-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Brian Starkey <Brian.Starkey-5wv7dgnIgG8@public.gmane.org>, David Brown <David.Brown-5wv7dgnIgG8@public.gmane.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v2 0/3] Add support for ARM Mali Display Processors
+Date: Mon, 25 Apr 2016 15:19:21 +0100
+Message-ID: <1461593964-27722-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Brian Starkey <Brian.Starkey@arm.com>, David Brown <David.Brown@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for ARM Mali-DP driver and update the
-HDLCD file matching pattern to cover only HDLCD rather than
-the whole drivers/gpu/drm/arm directory.
+Hello,
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
----
- MAINTAINERS | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+This is the second revision of the driver for the Mali Display Processors (Mali DP).
+Currently, the driver supports the Display Engine found in Mali DP500, DP550
+and DP650, with up to 3 planes that can be rotated by the hardware. There are
+features that the hardware supports that are not currently implemented in the
+driver, but in the current form it is capable of supporting X11 using fbdev
+emulation as well as Wayland with pixman rendering.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d5b4be..a5a4346 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -850,9 +850,17 @@ F:	include/uapi/linux/if_arcnet.h
- ARM HDLCD DRM DRIVER
- M:	Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
- S:	Supported
--F:	drivers/gpu/drm/arm/
-+F:	drivers/gpu/drm/arm/hdlcd_*
- F:	Documentation/devicetree/bindings/display/arm,hdlcd.txt
- 
-+ARM MALI-DP DRM DRIVER
-+M:	Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-+M:	Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
-+M:	Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>
-+S:	Supported
-+F:	drivers/gpu/drm/arm/
-+F:	Documentation/devicetree/bindings/display/arm,malidp.txt
-+
- ARM MFM AND FLOPPY DRIVERS
- M:	Ian Molton <spyro-pTmfFsKkaRw@public.gmane.org>
- S:	Maintained
+Changes in v2 vs initial RFC:
+ - merged malidp_crtc_mode_set_nofb into malidp_crtc_enable and removed the
+   mode_set hooks. This removed the need for a custom destroy hook as well,
+   switched to using drm_crtc_cleanup for that.
+ - implemented proper async support for atomic page flip.
+ - removed un-necessary checks and empty hooks.
+ - clarifications in the bindings document for the use of interrupt-names.
+ - removed the MALIDP_HW_FEATURE_DS (display split) from this version pending
+   further development
+ - Renamed module from malidp to mali-dp.
+ - Added MAINTAINERS update
+
+Many thanks,
+Liviu
+
+Liviu Dudau (3):
+  dt/bindings: display: Add DT bindings for Mali Display Processors.
+  drm/arm: Add support for Mali Display Processors
+  MAINTAINERS: Add entry for Mali-DP driver
+
+ .../devicetree/bindings/display/arm,malidp.txt     |  65 ++
+ drivers/gpu/drm/arm/Kconfig                        |  16 +
+ drivers/gpu/drm/arm/Makefile                       |   2 +
+ drivers/gpu/drm/arm/malidp_crtc.c                  | 259 +++++++
+ drivers/gpu/drm/arm/malidp_drv.c                   | 538 ++++++++++++++
+ drivers/gpu/drm/arm/malidp_drv.h                   |  54 ++
+ drivers/gpu/drm/arm/malidp_hw.c                    | 774 +++++++++++++++++++++
+ drivers/gpu/drm/arm/malidp_hw.h                    | 189 +++++
+ drivers/gpu/drm/arm/malidp_planes.c                | 337 +++++++++
+ drivers/gpu/drm/arm/malidp_regs.h                  | 172 +++++
+ MAINTAINERS                                        | 10 +++++++++-
+ 11 files changed, 2415 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/arm,malidp.txt
+ create mode 100644 drivers/gpu/drm/arm/malidp_crtc.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_drv.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_drv.h
+ create mode 100644 drivers/gpu/drm/arm/malidp_hw.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_hw.h
+ create mode 100644 drivers/gpu/drm/arm/malidp_planes.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_regs.h
+
 -- 
 2.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
