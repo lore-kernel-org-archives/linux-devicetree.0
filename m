@@ -1,105 +1,77 @@
-From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 6/8] mfd: dt-bindings: Add RK818 device tree bindings
- document
-Date: Mon, 25 Apr 2016 15:20:46 +0200
-Message-ID: <1461590448-47685-7-git-send-email-w.egorov@phytec.de>
-References: <1461590448-47685-1-git-send-email-w.egorov@phytec.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 01/13] dt-bindings: Add Renesas R-Car FCP DT bindings
+Date: Mon, 25 Apr 2016 16:27:19 +0300
+Message-ID: <2291064.PDKHfW7Am5@avalon>
+References: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1461455400-28767-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdVaoD7gU0_WvSN0mFSCRyeWntZ1PHtkZ5ccFzCS-H-HUg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1461590448-47685-1-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVaoD7gU0_WvSN0mFSCRyeWntZ1PHtkZ5ccFzCS-H-HUg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Rockchip's RK818 PMIC.
+Hi Geert,
 
-Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Changes since v2:
-- Added Acked-by
----
- Documentation/devicetree/bindings/mfd/rk808.txt | 37 +++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 3 deletions(-)
+Thank you for the review.
 
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 4ca6aab..9636ae8 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -1,7 +1,11 @@
--RK808 Power Management Integrated Circuit
-+RK8XX Power Management Integrated Circuit
-+
-+The rk8xx family current members:
-+rk808
-+rk818
+On Monday 25 Apr 2016 09:32:04 Geert Uytterhoeven wrote:
+> On Sun, Apr 24, 2016 at 1:49 AM, Laurent Pinchart wrote:
+> > The FCP is a companion module of video processing modules in the Renesas
+> > R-Car Gen3 SoCs. It provides data compression and decompression, data
+> > caching, and conversion of AXI transaction in order to reduce the memory
+> 
+> transactions
+> 
+> > bandwidth.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> > 
+> >  .../devicetree/bindings/media/renesas,fcp.txt      | 31 +++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/media/renesas,fcp.txt
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> > b/Documentation/devicetree/bindings/media/renesas,fcp.txt new file mode
+> > 100644
+> > index 000000000000..46beec97d625
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> > @@ -0,0 +1,31 @@
+> > +Renesas R-Car Frame Compression Processor (FCP)
+> > +-----------------------------------------------
+> > +
+> > +The FCP is a companion module of video processing modules in the Renesas
+> > R-Car +Gen3 SoCs. It provides data compression and decompression, data
+> > caching, and +conversion of AXI transaction in order to reduce the memory
+> > bandwidth.
+>
+> transactions
+
+I'll fix the typos.
  
- Required properties:
--- compatible: "rockchip,rk808"
-+- compatible: "rockchip,rk808", "rockchip,rk818"
- - reg: I2C slave address
- - interrupt-parent: The parent interrupt controller.
- - interrupts: the interrupt outputs of the controller.
-@@ -13,6 +17,8 @@ Optional properties:
-   default output clock name
- - rockchip,system-power-controller: Telling whether or not this pmic is controlling
-   the system power.
-+
-+Optional RK808 properties:
- - vcc1-supply:  The input supply for DCDC_REG1
- - vcc2-supply:  The input supply for DCDC_REG2
- - vcc3-supply:  The input supply for DCDC_REG3
-@@ -29,7 +35,20 @@ Optional properties:
-   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
-   very quickly with no slow ramp time.
- 
--Regulators: All the regulators of RK808 to be instantiated shall be
-+Optional RK818 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- boost-supply: The input supply for DCDC_BOOST
-+- vcc6-supply:  The input supply for LDO_REG1 and LDO_REG2
-+- vcc7-supply:  The input supply for LDO_REG3, LDO_REG5 and LDO_REG7
-+- vcc8-supply:  The input supply for LDO_REG4, LDO_REG6 and LDO_REG8
-+- vcc9-supply:  The input supply for LDO_REG9 and SWITCH_REG
-+- h_5v-supply:  The input supply for HDMI_SWITCH
-+- usb-supply:   The input supply for OTG_SWITCH
-+
-+Regulators: All the regulators of RK8XX to be instantiated shall be
- listed in a child node named 'regulators'. Each regulator is represented
- by a child node of the 'regulators' node.
- 
-@@ -48,6 +67,18 @@ number as described in RK808 datasheet.
- 	- SWITCH_REGn
- 		- valid values for n are 1 to 2
- 
-+Following regulators of the RK818 PMIC block are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK818 datasheet.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 4.
-+	- LDO_REGn
-+		- valid values for n are 1 to 9.
-+	- SWITCH_REG
-+	- HDMI_SWITCH
-+	- OTG_SWITCH
-+
- Standard regulator bindings are used inside regulator subnodes. Check
-   Documentation/devicetree/bindings/regulator/regulator.txt
- for more details
+> > +There are three types of FCP whose configuration and behaviour highly
+> > depend +on the module they are paired with.
+> 
+> + - compatible: Must be one or more of the following
+> +
+> +   - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
+> +   - "renesas,fcpv" for generic compatible 'FCP for VSP'
+> 
+> As you list only one compatible value, I guess the type is determined
+> automatically at run-time?
+
+No, it's just that the bindings only support the FCPV at the moment, the other 
+two variants are not supported yet.
+
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
