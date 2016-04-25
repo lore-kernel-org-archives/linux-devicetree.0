@@ -1,39 +1,52 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v5 0/5] clk: mvebu: clock drivers for Marvell Armada
- 7K/8K
-Date: Mon, 25 Apr 2016 15:44:38 +0200
-Message-ID: <20160425154438.07cca521@free-electrons.com>
-References: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 11/14] PCI: hisi: DT spelling s/interrupts-*/interrupt-*/
+Date: Mon, 25 Apr 2016 08:44:42 -0500
+Message-ID: <20160425134442.GA5097@rob-hp-laptop>
+References: <1461166339-11109-1-git-send-email-geert+renesas@glider.be>
+ <1461166339-11109-12-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1460648013-31320-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461166339-11109-12-git-send-email-geert+renesas@glider.be>
+Sender: linux-input-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, Tony Lindgren <tony@atomide.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen, Michael,
+On Wed, Apr 20, 2016 at 05:32:16PM +0200, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Thu, 14 Apr 2016 17:33:28 +0200, Thomas Petazzoni wrote:
+Applied, thanks.
 
->   clk: mvebu: new driver for Armada AP806 system controller
->   dt-bindings: arm: add DT binding for Marvell CP110 system controller
->   clk: mvebu: new driver for Armada CP110 system controller
+Rob
 
-Do you have any comments on those three patches? Rob Herring gave his
-Acked-by on the DT binding for both drivers and as you can imagine,
-those drivers are essential to making this new platform work in
-mainline.
-
-Do not hesitate to let me know if anything still needs some
-adaptations/changes in the clock drivers.
-
-Thanks!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> ---
+>  Documentation/devicetree/bindings/pci/hisilicon-pcie.txt | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> index b721beacfe4dae6c..59c2f47aa303ae24 100644
+> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+> @@ -34,11 +34,11 @@ Hip05 Example (note that Hip06 is the same except compatible):
+>  		ranges = <0x82000000 0 0x00000000 0x220 0x00000000 0 0x10000000>;
+>  		num-lanes = <8>;
+>  		port-id = <1>;
+> -		#interrupts-cells = <1>;
+> -		interrupts-map-mask = <0xf800 0 0 7>;
+> -		interrupts-map = <0x0 0 0 1 &mbigen_pcie 1 10
+> -				  0x0 0 0 2 &mbigen_pcie 2 11
+> -				  0x0 0 0 3 &mbigen_pcie 3 12
+> -				  0x0 0 0 4 &mbigen_pcie 4 13>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0xf800 0 0 7>;
+> +		interrupt-map = <0x0 0 0 1 &mbigen_pcie 1 10
+> +				 0x0 0 0 2 &mbigen_pcie 2 11
+> +				 0x0 0 0 3 &mbigen_pcie 3 12
+> +				 0x0 0 0 4 &mbigen_pcie 4 13>;
+>  		status = "ok";
+>  	};
+> -- 
+> 1.9.1
+> 
