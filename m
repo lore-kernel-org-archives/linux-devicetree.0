@@ -1,44 +1,71 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 06/14] dmaengine: bcm2835: DT spelling s/interrupts-names/interrupt-names/
-Date: Mon, 25 Apr 2016 18:30:58 +0200
-Message-ID: <CAMuHMdWsAj2Tmp3hQQAwZaB39j0KM=kcsobf+NtnrAG-aX5ohg@mail.gmail.com>
-References: <1461166339-11109-1-git-send-email-geert+renesas@glider.be>
-	<1461166339-11109-7-git-send-email-geert+renesas@glider.be>
-	<20160425152643.GZ2274@localhost>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
+Date: Mon, 25 Apr 2016 17:58:30 +0100
+Message-ID: <20160425165830.GP2713@dell>
+References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+ <1461543878-3639-16-git-send-email-eric@engestrom.ch>
+ <20160425135017.GA8656@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160425152643.GZ2274@localhost>
+Content-Disposition: inline
+In-Reply-To: <20160425135017.GA8656@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Mon, 25 Apr 2016, Rob Herring wrote:
 
-On Mon, Apr 25, 2016 at 5:26 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 20, 2016 at 05:32:11PM +0200, Geert Uytterhoeven wrote:
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/sound/davinci-mcbsp.txt | 2 +-
->
-> This change does not apply for me, can you please split it up and send the
-> sound ones thru sound tree
+> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
+> > Signed-off-by: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+>=20
+> Applied, thanks.
 
-Sorry, I seem to have mixed two unrelated drivers.
-Will split and resend...
+I'd prefer to continue taking these if you don't mind Rob.  It'd limit
+on the amount of immutable branch pull requests I have to send/handle.
 
-Gr{oetje,eeting}s,
+> > ---
+> >  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/D=
+ocumentation/devicetree/bindings/mfd/qcom-rpm.txt
+> > index 5e97a95..b98b291 100644
+> > --- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> > @@ -178,7 +178,7 @@ see regulator.txt - with additional custom prop=
+erties described below:
+> >  - qcom,force-mode:
+> >  	Usage: optional (default if no other qcom,force-mode is specified=
+)
+> >  	Value type: <u32>
+> > -	Defintion: indicates that the regulator should be forced to a
+> > +	Definition: indicates that the regulator should be forced to a
+> >  		   particular mode, valid values are:
+> >  		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+> >  		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+> > @@ -204,7 +204,7 @@ see regulator.txt - with additional custom prop=
+erties described below:
+> >  - qcom,force-mode:
+> >  	Usage: optional
+> >  	Value type: <u32>
+> > -	Defintion: indicates that the regulator should not be forced to a=
+ny
+> > +	Definition: indicates that the regulator should not be forced to =
+any
+> >  		   particular mode, valid values are:
+> >  		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+> >  		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
 
-                        Geert
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
