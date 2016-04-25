@@ -1,68 +1,70 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v2 0/2] pci: host: new driver for Marvell Armada 7K/8K
- PCIe controller
-Date: Mon, 25 Apr 2016 21:21:03 +0200
-Message-ID: <20160425212103.0f646a3a@free-electrons.com>
-References: <1460648177-31473-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160425154611.3e7e9dc9@free-electrons.com>
-	<20160425172846.GB1759@localhost>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: [PATCH v3 1/2] ASoC: codecs: add TA5720 digital
+	amplifier DT bindings
+Date: Mon, 25 Apr 2016 15:17:35 -0500
+Message-ID: <1461615456-19510-2-git-send-email-dannenberg@ti.com>
+References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160425172846.GB1759@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The Texas Instruments TAS5720L/M device is a high-efficiency mono
+Class-D audio power amplifier optimized for high transient power
+capability to use the dynamic power headroom of small loudspeakers.
+Its digital time division multiplexed (TDM) interface enables up to
+16 devices to share the same bus.
 
-On Mon, 25 Apr 2016 12:28:46 -0500, Bjorn Helgaas wrote:
+Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+---
+ .../devicetree/bindings/sound/tas5720.txt          | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas5720.txt
 
-> It *is* pretty trivial.  The reason I'm hesitating is because we have
-> all these DesignWare-based drivers (dra7xx, exynos, imx6, ks, ls,
-> dw_plat, hisi, qcom, spear13xx, and now armada8k), and they're
-> *mostly* similar, but they differ in minor, annoying ways.  This is
-> becoming a significant maintenance burden for me, and I'd like to
-> figure out how to mitigate that.
-
-Understood.
-
-> For now, I don't have any great ideas except that it would be nice to
-> remove needless variations.  The following is a typical code
-> structure, but it's not universally followed:
-> 
->   XXX_pcie_probe
->     XXX_add_pcie_port
->       dw_pcie_host_init
->         XXX_pcie_host_init
-> 	  dw_pcie_setup_rc
-> 	  XXX_pcie_establish_link
-
-Indeed, the first step towards having more common code is to make the
-code to be factorized look as similar as possible.
-
-> There's a hodge-podge of ways to get related resources (clocks and
-> PHYs) and initialize them.  IRQ setup is not really consistent across
-> all the drivers.  It's sort of disappointing that most of these
-> drivers have a "dbi_base" resource, but they use different DT property
-> names for it.
-> 
-> The armada8k driver doesn't have a DRV_add_pcie_port() function or a
-> DRV_pcie_establish_link() function, and it has its own "wait for link"
-> timeout loop instead of using dw_pcie_wait_for_link().
-> 
-> How about if you just shuffle those bits around into
-> an armada8k_add_pcie_port() and an armada8k_pcie_establish_link(), and
-> we'll call that good for now?
-
-I'll take a stab at that tomorrow and send an updated version.
-
-Thanks for the feedback!
-
-Thomas
+diff --git a/Documentation/devicetree/bindings/sound/tas5720.txt b/Documentation/devicetree/bindings/sound/tas5720.txt
+new file mode 100644
+index 0000000..439451e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas5720.txt
+@@ -0,0 +1,26 @@
++Texas Instruments TAS5720 Mono Audio amplifier
++
++The TAS5720 serial control bus communicates through the I2C protocol only. The
++serial bus is also used for periodic codec fault checking/reporting during
++audio playback. For more product information please see the links below:
++
++http://www.ti.com/product/TAS5720L
++http://www.ti.com/product/TAS5720M
++
++Required properties:
++
++- compatible : "ti,tas5720"
++- reg : I2C slave address
++
++Optional properties:
++
++- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
++- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
++
++Example:
++
++tas5720: tas5720@6c {
++	status = "okay";
++	compatible = "ti,tas5720";
++	reg = <0x6c>;
++};
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+2.6.4
