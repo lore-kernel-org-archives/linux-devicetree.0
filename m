@@ -1,37 +1,62 @@
-From: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-Subject: [PATCH 17/41] Documentation: dt: mtd: fix spelling mistake
-Date: Mon, 25 Apr 2016 01:24:14 +0100
-Message-ID: <1461543878-3639-18-git-send-email-eric@engestrom.ch>
+From: Eric Engestrom <eric@engestrom.ch>
+Subject: [PATCH 18/41] Documentation: dt: net: fix spelling mistakes
+Date: Mon, 25 Apr 2016 01:24:15 +0100
+Message-ID: <1461543878-3639-19-git-send-email-eric@engestrom.ch>
 References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461543878-3639-1-git-send-email-eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Eric Engestrom <eric@engestrom.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yisen Zhuang <yisen.zhuang@huawei.com>, "David S. Miller" <davem@davemloft.net>, Kenneth Lee <liguozhu@huawei.com>, huangdaode <huangdaode@hisilicon.com>, yankejian <yankejian@huawei.com>, Phil Reid <preid@electromag.com.au>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Dan Murphy <dmurphy@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+Signed-off-by: Eric Engestrom <eric@engestrom.ch>
 ---
- Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt | 2 +-
+ Documentation/devicetree/bindings/net/stmmac.txt            | 4 ++--
+ Documentation/devicetree/bindings/net/ti,dp83867.txt        | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index c2546ce..0f6985b 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -52,7 +52,7 @@ Optional properties:
-                               v7.0. Use this property to describe the rare
-                               earlier versions of this core that include WP
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+index e6a9d1c..e911a63 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+@@ -8,7 +8,7 @@ Required properties:
+   specifies a reference to the associating hardware driver node.
+   see Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+ - port-id: is the index of port provided by DSAF (the accelerator). DSAF can
+-  connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose. They
++  connect to 8 PHYs. Port 0 to 1 are both used for administration purpose. They
+   are called debug ports.
  
-- -- Additonal SoC-specific NAND controller properties --
-+ -- Additional SoC-specific NAND controller properties --
+   The remaining 6 PHYs are taken according to the mode of DSAF.
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index 6605d19..9651dfd 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -51,8 +51,8 @@ Optional properties:
+ 			   AXI register inside the DMA module:
+ 	- snps,lpi_en: enable Low Power Interface
+ 	- snps,xit_frm: unlock on WoL
+-	- snps,wr_osr_lmt: max write oustanding req. limit
+-	- snps,rd_osr_lmt: max read oustanding req. limit
++	- snps,wr_osr_lmt: max write outstanding req. limit
++	- snps,rd_osr_lmt: max read outstanding req. limit
+ 	- snps,kbbe: do not cross 1KiB boundary.
+ 	- snps,axi_all: align address
+ 	- snps,blen: this is a vector of supported burst length.
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+index 58d935b..5d21141 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
++++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+@@ -2,7 +2,7 @@
  
- The NAND controller is integrated differently on the variety of SoCs on which it
- is found. Part of this integration involves providing status and enable bits
+ Required properties:
+ 	- reg - The ID number for the phy, usually a small integer
+-	- ti,rx-internal-delay - RGMII Recieve Clock Delay - see dt-bindings/net/ti-dp83867.h
++	- ti,rx-internal-delay - RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83867.h
+ 		for applicable values
+ 	- ti,tx-internal-delay - RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83867.h
+ 		for applicable values
 -- 
 2.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
