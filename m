@@ -1,259 +1,50 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mfd: da8xx-cfgchip: New header file for CFGCHIP
- registers.
-Date: Mon, 25 Apr 2016 15:08:05 +0100
-Message-ID: <20160425140805.GF2713@dell>
-References: <1460658919-4965-1-git-send-email-david@lechnology.com>
- <1460658919-4965-2-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460658919-4965-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 3/3] MAINTAINERS: Add entry for Mali-DP driver
+Date: Mon, 25 Apr 2016 15:19:24 +0100
+Message-ID: <1461593964-27722-4-git-send-email-Liviu.Dudau@arm.com>
+References: <1461593964-27722-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461593964-27722-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Brian Starkey <Brian.Starkey-5wv7dgnIgG8@public.gmane.org>, David Brown <David.Brown-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Apr 2016, David Lechner wrote:
+Add MAINTAINERS entry for ARM Mali-DP driver and update the
+HDLCD file matching pattern to cover only HDLCD rather than
+the whole drivers/gpu/drm/arm directory.
 
-> We will be using a generic syscon device for the TI DA8XX SoC CFGCHIP=
-x
-> retisters. This will be used by a number of planned drivers including=
- a
-> new USB PHY driver and common clock framework drivers.
->=20
-> The same defines are removed from the platform_data header file since=
- they
-> are now redundant and they didn't really belong there anyway.
->=20
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
->=20
-> v4 changes:
->=20
-> * dropped individual CFGCHIPn_REG defines in favor of CFGCHIP(n)
->=20
->=20
->  include/linux/mfd/da8xx-cfgchip.h         | 153 ++++++++++++++++++++=
-++++++++++
->  include/linux/platform_data/usb-davinci.h |  22 -----
+Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+---
+ MAINTAINERS | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Works for me.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1d5b4be..a5a4346 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -850,9 +850,17 @@ F:	include/uapi/linux/if_arcnet.h
+ ARM HDLCD DRM DRIVER
+ M:	Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+ S:	Supported
+-F:	drivers/gpu/drm/arm/
++F:	drivers/gpu/drm/arm/hdlcd_*
+ F:	Documentation/devicetree/bindings/display/arm,hdlcd.txt
+ 
++ARM MALI-DP DRM DRIVER
++M:	Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
++M:	Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
++M:	Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>
++S:	Supported
++F:	drivers/gpu/drm/arm/
++F:	Documentation/devicetree/bindings/display/arm,malidp.txt
++
+ ARM MFM AND FLOPPY DRIVERS
+ M:	Ian Molton <spyro-pTmfFsKkaRw@public.gmane.org>
+ S:	Maintained
+-- 
+2.8.0
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Since this is a new file, I'm happy for it to be taken in via another
-tree.
-
->  2 files changed, 153 insertions(+), 22 deletions(-)
->  create mode 100644 include/linux/mfd/da8xx-cfgchip.h
->=20
-> diff --git a/include/linux/mfd/da8xx-cfgchip.h b/include/linux/mfd/da=
-8xx-cfgchip.h
-> new file mode 100644
-> index 0000000..799e575
-> --- /dev/null
-> +++ b/include/linux/mfd/da8xx-cfgchip.h
-> @@ -0,0 +1,153 @@
-> +/*
-> + * TI DaVinci DA8xx CHIPCFGx registers for syscon consumers.
-> + *
-> + * Copyright (C) 2016 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License as published=
- by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __LINUX_MFD_DA8XX_CFGCHIP_H
-> +#define __LINUX_MFD_DA8XX_CFGCHIP_H
-> +
-> +#include <linux/bitops.h>
-> +
-> +/* register offset (32-bit registers) */
-> +#define CFGCHIP(n)				(n * 4)
-> +
-> +/* CFGCHIP0 (PLL0/EDMA3_0) register bits */
-> +#define CFGCHIP0_PLL_MASTER_LOCK		BIT(4)
-> +#define CFGCHIP0_EDMA30TC1DBS(n)		(n << 2)
-> +#define CFGCHIP0_EDMA30TC1DBS_MASK		CFGCHIP0_EDMA30TC1DBS(0x3)
-> +#define CFGCHIP0_EDMA30TC1DBS_16		CFGCHIP0_EDMA30TC1DBS(0x0)
-> +#define CFGCHIP0_EDMA30TC1DBS_32		CFGCHIP0_EDMA30TC1DBS(0x1)
-> +#define CFGCHIP0_EDMA30TC1DBS_64		CFGCHIP0_EDMA30TC1DBS(0x2)
-> +#define CFGCHIP0_EDMA30TC0DBS(n)		(n << 0)
-> +#define CFGCHIP0_EDMA30TC0DBS_MASK		CFGCHIP0_EDMA30TC0DBS(0x3)
-> +#define CFGCHIP0_EDMA30TC0DBS_16		CFGCHIP0_EDMA30TC0DBS(0x0)
-> +#define CFGCHIP0_EDMA30TC0DBS_32		CFGCHIP0_EDMA30TC0DBS(0x1)
-> +#define CFGCHIP0_EDMA30TC0DBS_64		CFGCHIP0_EDMA30TC0DBS(0x2)
-> +
-> +/* CFGCHIP1 (eCAP/HPI/EDMA3_1/eHRPWM TBCLK/McASP0 AMUTEIN) register =
-bits */
-> +#define CFGCHIP1_CAP2SRC(n)			(n << 27)
-> +#define CFGCHIP1_CAP2SRC_MASK			CFGCHIP1_CAP2SRC(0x1f)
-> +#define CFGCHIP1_CAP2SRC_ECAP_PIN		CFGCHIP1_CAP2SRC(0x0)
-> +#define CFGCHIP1_CAP2SRC_MCASP0_TX		CFGCHIP1_CAP2SRC(0x1)
-> +#define CFGCHIP1_CAP2SRC_MCASP0_RX		CFGCHIP1_CAP2SRC(0x2)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0x7)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C0_RX		CFGCHIP1_CAP2SRC(0x8)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C0_TX		CFGCHIP1_CAP2SRC(0x9)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C0_MISC		CFGCHIP1_CAP2SRC(0xa)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0xb)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C1_RX		CFGCHIP1_CAP2SRC(0xc)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C1_TX		CFGCHIP1_CAP2SRC(0xd)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C1_MISC		CFGCHIP1_CAP2SRC(0xe)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0xf)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C2_RX		CFGCHIP1_CAP2SRC(0x10)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C2_TX		CFGCHIP1_CAP2SRC(0x11)
-> +#define CFGCHIP1_CAP2SRC_EMAC_C2_MISC		CFGCHIP1_CAP2SRC(0x12)
-> +#define CFGCHIP1_CAP1SRC(n)			(n << 22)
-> +#define CFGCHIP1_CAP1SRC_MASK			CFGCHIP1_CAP1SRC(0x1f)
-> +#define CFGCHIP1_CAP1SRC_ECAP_PIN		CFGCHIP1_CAP1SRC(0x0)
-> +#define CFGCHIP1_CAP1SRC_MCASP0_TX		CFGCHIP1_CAP1SRC(0x1)
-> +#define CFGCHIP1_CAP1SRC_MCASP0_RX		CFGCHIP1_CAP1SRC(0x2)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0x7)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C0_RX		CFGCHIP1_CAP1SRC(0x8)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C0_TX		CFGCHIP1_CAP1SRC(0x9)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C0_MISC		CFGCHIP1_CAP1SRC(0xa)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0xb)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C1_RX		CFGCHIP1_CAP1SRC(0xc)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C1_TX		CFGCHIP1_CAP1SRC(0xd)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C1_MISC		CFGCHIP1_CAP1SRC(0xe)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0xf)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C2_RX		CFGCHIP1_CAP1SRC(0x10)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C2_TX		CFGCHIP1_CAP1SRC(0x11)
-> +#define CFGCHIP1_CAP1SRC_EMAC_C2_MISC		CFGCHIP1_CAP1SRC(0x12)
-> +#define CFGCHIP1_CAP0SRC(n)			(n << 17)
-> +#define CFGCHIP1_CAP0SRC_MASK			CFGCHIP1_CAP0SRC(0x1f)
-> +#define CFGCHIP1_CAP0SRC_ECAP_PIN		CFGCHIP1_CAP0SRC(0x0)
-> +#define CFGCHIP1_CAP0SRC_MCASP0_TX		CFGCHIP1_CAP0SRC(0x1)
-> +#define CFGCHIP1_CAP0SRC_MCASP0_RX		CFGCHIP1_CAP0SRC(0x2)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0x7)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C0_RX		CFGCHIP1_CAP0SRC(0x8)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C0_TX		CFGCHIP1_CAP0SRC(0x9)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C0_MISC		CFGCHIP1_CAP0SRC(0xa)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0xb)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C1_RX		CFGCHIP1_CAP0SRC(0xc)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C1_TX		CFGCHIP1_CAP0SRC(0xd)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C1_MISC		CFGCHIP1_CAP0SRC(0xe)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0xf)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C2_RX		CFGCHIP1_CAP0SRC(0x10)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C2_TX		CFGCHIP1_CAP0SRC(0x11)
-> +#define CFGCHIP1_CAP0SRC_EMAC_C2_MISC		CFGCHIP1_CAP0SRC(0x12)
-> +#define CFGCHIP1_HPIBYTEAD			BIT(16)
-> +#define CFGCHIP1_HPIENA				BIT(15)
-> +#define CFGCHIP0_EDMA31TC0DBS(n)		(n << 13)
-> +#define CFGCHIP0_EDMA31TC0DBS_MASK		CFGCHIP0_EDMA31TC0DBS(0x3)
-> +#define CFGCHIP0_EDMA31TC0DBS_16		CFGCHIP0_EDMA31TC0DBS(0x0)
-> +#define CFGCHIP0_EDMA31TC0DBS_32		CFGCHIP0_EDMA31TC0DBS(0x1)
-> +#define CFGCHIP0_EDMA31TC0DBS_64		CFGCHIP0_EDMA31TC0DBS(0x2)
-> +#define CFGCHIP1_TBCLKSYNC			BIT(12)
-> +#define CFGCHIP1_AMUTESEL0(n)			(n << 0)
-> +#define CFGCHIP1_AMUTESEL0_MASK			CFGCHIP1_AMUTESEL0(0xf)
-> +#define CFGCHIP1_AMUTESEL0_LOW			CFGCHIP1_AMUTESEL0(0x0)
-> +#define CFGCHIP1_AMUTESEL0_BANK_0		CFGCHIP1_AMUTESEL0(0x1)
-> +#define CFGCHIP1_AMUTESEL0_BANK_1		CFGCHIP1_AMUTESEL0(0x2)
-> +#define CFGCHIP1_AMUTESEL0_BANK_2		CFGCHIP1_AMUTESEL0(0x3)
-> +#define CFGCHIP1_AMUTESEL0_BANK_3		CFGCHIP1_AMUTESEL0(0x4)
-> +#define CFGCHIP1_AMUTESEL0_BANK_4		CFGCHIP1_AMUTESEL0(0x5)
-> +#define CFGCHIP1_AMUTESEL0_BANK_5		CFGCHIP1_AMUTESEL0(0x6)
-> +#define CFGCHIP1_AMUTESEL0_BANK_6		CFGCHIP1_AMUTESEL0(0x7)
-> +#define CFGCHIP1_AMUTESEL0_BANK_7		CFGCHIP1_AMUTESEL0(0x8)
-> +
-> +/* CFGCHIP2 (USB PHY) register bits */
-> +#define CFGCHIP2_PHYCLKGD			BIT(17)
-> +#define CFGCHIP2_VBUSSENSE			BIT(16)
-> +#define CFGCHIP2_RESET				BIT(15)
-> +#define CFGCHIP2_OTGMODE(n)			(n << 13)
-> +#define CFGCHIP2_OTGMODE_MASK			CFGCHIP2_OTGMODE(0x3)
-> +#define CFGCHIP2_OTGMODE_NO_OVERRIDE		CFGCHIP2_OTGMODE(0x0)
-> +#define CFGCHIP2_OTGMODE_FORCE_HOST		CFGCHIP2_OTGMODE(0x1)
-> +#define CFGCHIP2_OTGMODE_FORCE_DEVICE		CFGCHIP2_OTGMODE(0x2)
-> +#define CFGCHIP2_OTGMODE_FORCE_HOST_VBUS_LOW	CFGCHIP2_OTGMODE(0x3)
-> +#define CFGCHIP2_USB1PHYCLKMUX			BIT(12)
-> +#define CFGCHIP2_USB2PHYCLKMUX			BIT(11)
-> +#define CFGCHIP2_PHYPWRDN			BIT(10)
-> +#define CFGCHIP2_OTGPWRDN			BIT(9)
-> +#define CFGCHIP2_DATPOL				BIT(8)
-> +#define CFGCHIP2_USB1SUSPENDM			BIT(7)
-> +#define CFGCHIP2_PHY_PLLON			BIT(6)
-> +#define CFGCHIP2_SESENDEN			BIT(5)
-> +#define CFGCHIP2_VBDTCTEN			BIT(4)
-> +#define CFGCHIP2_REFFREQ(n)			(n << 0)
-> +#define CFGCHIP2_REFFREQ_MASK			CFGCHIP2_REFFREQ(0xf)
-> +#define CFGCHIP2_REFFREQ_12MHZ			CFGCHIP2_REFFREQ(0x1)
-> +#define CFGCHIP2_REFFREQ_24MHZ			CFGCHIP2_REFFREQ(0x2)
-> +#define CFGCHIP2_REFFREQ_48MHZ			CFGCHIP2_REFFREQ(0x3)
-> +#define CFGCHIP2_REFFREQ_19_2MHZ		CFGCHIP2_REFFREQ(0x4)
-> +#define CFGCHIP2_REFFREQ_38_4MHZ		CFGCHIP2_REFFREQ(0x5)
-> +#define CFGCHIP2_REFFREQ_13MHZ			CFGCHIP2_REFFREQ(0x6)
-> +#define CFGCHIP2_REFFREQ_26MHZ			CFGCHIP2_REFFREQ(0x7)
-> +#define CFGCHIP2_REFFREQ_20MHZ			CFGCHIP2_REFFREQ(0x8)
-> +#define CFGCHIP2_REFFREQ_40MHZ			CFGCHIP2_REFFREQ(0x9)
-> +
-> +/* CFGCHIP3 (EMAC/uPP/PLL1/ASYNC3/PRU/DIV4.5/EMIFA) register bits */
-> +#define CFGCHIP3_RMII_SEL			BIT(8)
-> +#define CFGCHIP3_UPP_TX_CLKSRC			BIT(6)
-> +#define CFGCHIP3_PLL1_MASTER_LOCK		BIT(5)
-> +#define CFGCHIP3_ASYNC3_CLKSRC			BIT(4)
-> +#define CFGCHIP3_PRUEVTSEL			BIT(3)
-> +#define CFGCHIP3_DIV45PENA			BIT(2)
-> +#define CFGCHIP3_EMA_CLKSRC			BIT(1)
-> +
-> +/* CFGCHIP4 (McASP0 AMUNTEIN) register bits */
-> +#define CFGCHIP4_AMUTECLR0			BIT(0)
-> +
-> +#endif /* __LINUX_MFD_DA8XX_CFGCHIP_H */
-> diff --git a/include/linux/platform_data/usb-davinci.h b/include/linu=
-x/platform_data/usb-davinci.h
-> index e0bc4ab..629b703 100644
-> --- a/include/linux/platform_data/usb-davinci.h
-> +++ b/include/linux/platform_data/usb-davinci.h
-> @@ -11,28 +11,6 @@
->  #ifndef __ASM_ARCH_USB_H
->  #define __ASM_ARCH_USB_H
-> =20
-> -/* DA8xx CFGCHIP2 (USB 2.0 PHY Control) register bits */
-> -#define CFGCHIP2_PHYCLKGD	(1 << 17)
-> -#define CFGCHIP2_VBUSSENSE	(1 << 16)
-> -#define CFGCHIP2_RESET		(1 << 15)
-> -#define CFGCHIP2_OTGMODE	(3 << 13)
-> -#define CFGCHIP2_NO_OVERRIDE	(0 << 13)
-> -#define CFGCHIP2_FORCE_HOST	(1 << 13)
-> -#define CFGCHIP2_FORCE_DEVICE 	(2 << 13)
-> -#define CFGCHIP2_FORCE_HOST_VBUS_LOW (3 << 13)
-> -#define CFGCHIP2_USB1PHYCLKMUX	(1 << 12)
-> -#define CFGCHIP2_USB2PHYCLKMUX	(1 << 11)
-> -#define CFGCHIP2_PHYPWRDN	(1 << 10)
-> -#define CFGCHIP2_OTGPWRDN	(1 << 9)
-> -#define CFGCHIP2_DATPOL 	(1 << 8)
-> -#define CFGCHIP2_USB1SUSPENDM	(1 << 7)
-> -#define CFGCHIP2_PHY_PLLON	(1 << 6)	/* override PLL suspend */
-> -#define CFGCHIP2_SESENDEN	(1 << 5)	/* Vsess_end comparator */
-> -#define CFGCHIP2_VBDTCTEN	(1 << 4)	/* Vbus comparator */
-> -#define CFGCHIP2_REFFREQ	(0xf << 0)
-> -#define CFGCHIP2_REFFREQ_12MHZ	(1 << 0)
-> -#define CFGCHIP2_REFFREQ_24MHZ	(2 << 0)
-> -#define CFGCHIP2_REFFREQ_48MHZ	(3 << 0)
-> =20
->  struct	da8xx_ohci_root_hub;
-> =20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
