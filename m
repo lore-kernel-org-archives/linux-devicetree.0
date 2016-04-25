@@ -1,256 +1,257 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] power: reset: add reboot mode driver
-Date: Mon, 25 Apr 2016 19:29:52 +0800
-Message-ID: <571DFFB0.4010409@rock-chips.com>
-References: <1461567051-21734-1-git-send-email-andy.yan@rock-chips.com>
- <1461567336-21834-1-git-send-email-andy.yan@rock-chips.com>
- <571DF49F.6000706@samsung.com>
+From: "Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: rockchip: add core dtsi file for RK3399 SoCs
+Date: Mon, 25 Apr 2016 19:50:33 +0800
+Message-ID: <571E0489.3030401@rock-chips.com>
+References: <1461122150-9042-1-git-send-email-jay.xu@rock-chips.com>
+ <1461211092-26331-1-git-send-email-jay.xu@rock-chips.com>
+ <20160421101930.GG6879@leverpostej> <5718AFB8.5070004@rock-chips.com>
+ <20160421123018.096d4a75@arm.com> <571DE803.3010902@rock-chips.com>
+ <571DEC3C.9070209@arm.com> <571DF3CB.3030904@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571DF49F.6000706-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <571DF3CB.3030904-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof:
-
-On 2016=E5=B9=B404=E6=9C=8825=E6=97=A5 18:42, Krzysztof Kozlowski wrote=
-:
-> On 04/25/2016 08:55 AM, Andy Yan wrote:
->> This driver parses the reboot commands like "reboot bootloader"
->> and "reboot recovery" to get a boot mode described in the
->> device tree , then call the write interfae to store the boot
->> mode in some place like special register or sram, which can
->> be read by the bootloader after system reboot, then the bootloader
->> can take different action according to the mode stored.
+Hi, Marc:
+On 2016=E5=B9=B404=E6=9C=8825=E6=97=A5 18:39, Marc Zyngier wrote:
+> On 25/04/16 11:06, Marc Zyngier wrote:
+>> On 25/04/16 10:48, Huang, Tao wrote:
+>>> Hi, Marc:
+>>> On 2016=E5=B9=B404=E6=9C=8821=E6=97=A5 19:30, Marc Zyngier wrote:
+>>>> On Thu, 21 Apr 2016 18:47:20 +0800
+>>>> "Huang, Tao" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>>>>
+>>>>> Hi, Mark:
+>>>>> On 2016=E5=B9=B404=E6=9C=8821=E6=97=A5 18:19, Mark Rutland wrote:
+>>>>>> On Thu, Apr 21, 2016 at 11:58:12AM +0800, Jianqun Xu wrote:
+>>>>>>> +		cpu_l0: cpu@0 {
+>>>>>>> +			device_type =3D "cpu";
+>>>>>>> +			compatible =3D "arm,cortex-a53", "arm,armv8";
+>>>>>>> +			reg =3D <0x0 0x0>;
+>>>>>>> +			enable-method =3D "psci";
+>>>>>>> +			#cooling-cells =3D <2>; /* min followed by max */
+>>>>>>> +			clocks =3D <&cru ARMCLKL>;
+>>>>>>> +		};
+>>>>>>> +		cpu_b0: cpu@100 {
+>>>>>>> +			device_type =3D "cpu";
+>>>>>>> +			compatible =3D "arm,cortex-a72", "arm,armv8";
+>>>>>>> +			reg =3D <0x0 0x100>;
+>>>>>>> +			enable-method =3D "psci";
+>>>>>>> +			#cooling-cells =3D <2>; /* min followed by max */
+>>>>>>> +			clocks =3D <&cru ARMCLKB>;
+>>>>>>> +		};
+>>>>>>> +
+>>>>>>> +	arm-pmu {
+>>>>>>> +		compatible =3D "arm,armv8-pmuv3";
+>>>>>>> +		interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>>>>>>> +	};
+>>>>>> This is wrong, and must go. There should be a separate node for =
+the PMU
+>>>>>> of each microarchitecture, with the appropriate compatible strin=
+g to
+>>>>>> represent that (see the juno dts).
+>>>>> You are right. The first version we wrote is:
+>>>>>     pmu_a53 {
+>>>>>         compatible =3D "arm,cortex-a53-pmu";
+>>>>>         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>>>>>         interrupt-affinity =3D <&cpu_l0>,
+>>>>>                      <&cpu_l1>,
+>>>>>                      <&cpu_l2>,
+>>>>>                      <&cpu_l3>;
+>>>>>     };
+>>>>>
+>>>>>     pmu_a72 {
+>>>>>         compatible =3D "arm,cortex-a72-pmu";
+>>>>>         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>>>>>         interrupt-affinity =3D <&cpu_b0>,
+>>>>>                      <&cpu_b1>;
+>>>>>     };
+>>>>> but unfortunately, the arm pmu driver do not support PPI in two c=
+luster
+>>>>> well,
+>>>>> so we have to replace with this implementation.
+>>>>>> In this case things are messier as the same PPI number is being =
+used
+>>>>>> across clusters. Marc (Cc'd) has been working on PPI partitions,=
+ which
+>>>>>> should allow us to support that.
+>>>>> Great! So what we can do right now? Wait this feature, and delete
+>>>>> arm-pmu node?
+>>>> I'd rather you have a look at the patches, test them with your HW,
+>>>> and comment on what doesn't work!
+>>>>
+>>>> You can find the patches over there:
+>>>>
+>>>> https://lkml.org/lkml/2016/4/11/182
+>>>>
+>>>> and on the following branch:
+>>>>
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.gi=
+t
+>>>> irq/percpu-partition
+>>> I tested these patches. Because our kernel is based on v4.4, so I b=
+ack
+>>> port most changes about
+>>> include/linux/irqdomain.h
+>>> kernel/irq/irqdomain.c
+>>> drivers/irqchip/irq-gic-v3.c
+>>> and change rk3399.dtsi base on your arm,gic-v3.txt:
+>>>
+>>>      gic: interrupt-controller@fee00000 {
+>>>          compatible =3D "arm,gic-v3";
+>>> -        #interrupt-cells =3D <3>;
+>>> +        #interrupt-cells =3D <4>;
+>>>          #address-cells =3D <2>;
+>>>          #size-cells =3D <2>;
+>>> ...
+>>> +
+>>> +        ppi-partitions {
+>>> +            part0: interrupt-partition-0 {
+>>> +                affinity =3D <&cpu_l0 &cpu_l1 &cpu_l2 &cpu_l3>;
+>>> +            };
+>>> +
+>>> +            part1: interrupt-partition-1 {
+>>> +                affinity =3D <&cpu_b0 &cpu_b1>;
+>>> +            };
+>>> +        };
+>>>
+>>> and change every interrupts from three cells to four cells, such as
+>>>      saradc: saradc@ff100000 {
+>>>          compatible =3D "rockchip,rk3399-saradc";
+>>>          reg =3D <0x0 0xff100000 0x0 0x100>;
+>>> -        interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+>>> +        interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH 0>;
+>>>          #io-channel-cells =3D <1>;
+>>>          clocks =3D <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+>>>          clock-names =3D "saradc", "apb_pclk";
+>>>
+>>> and pmu define as:
+>>>     pmu_a53 {
+>>>         compatible =3D "arm,cortex-a53-pmu";
+>>>         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part0>;
+>>>         interrupt-affinity =3D <&cpu_l0>,
+>>>                      <&cpu_l1>,
+>>>                      <&cpu_l2>,
+>>>                      <&cpu_l3>;
+>>>     };
+>>>
+>>>     pmu_a72 {
+>>>         compatible =3D "arm,cortex-a72-pmu", "arm,cortex-a57-pmu";
+>>>         interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part1>;
+>>>         interrupt-affinity =3D <&cpu_b0>,
+>>>                      <&cpu_b1>;
+>>>     };
+>>>
+>>> It can boot. And I test with Android simpleperf stat and perf top, =
+it works!
+>>> So these patches work on RK3399.
+>> Good, thanks for testing.
 >>
->> This is commonly used on Android based devices, in order to
->> reboot the device into fastboot or recovery mode.
+>>> But as I mentioned, we must change every interrupt in dts, do you t=
+hink
+>>> this is acceptable?
+>> I can't see why not.
 >>
->> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Reviewed-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
->> Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> ---
->>
->> Changes in v8:
->> - do some cleanup when driver ubind
->>
->> Changes in v7:
->> - address some suggestions from Krzysztof, make syscon-reboot-mode d=
-river data self-contained.
->>
->> Changes in v6: None
->> Changes in v5:
->> - use two blank space under help in Kconfig
->> - use unsigned int instead of int for member magic in struct mode_in=
-fo
->>
->> Changes in v4:
->> - make this driver depends on OF to avoid kbuild test error
->>
->> Changes in v3:
->> - scan multi properities
->> - add mask value for some platform which only use some bits of the r=
-egister
->>    to store boot mode magic value
->>
->> Changes in v2:
->> - move to dir drivers/power/reset/
->> - make syscon-reboot-mode a generic driver
->>
->> Changes in v1:
->> - fix the embarrassed compile warning
->> - correct the maskrom magic number
->> - check for the normal reboot
->>
->>   drivers/power/reset/Kconfig              |  13 ++++
->>   drivers/power/reset/Makefile             |   2 +
->>   drivers/power/reset/reboot-mode.c        | 118 +++++++++++++++++++=
-++++++++++++
->>   drivers/power/reset/reboot-mode.h        |  14 ++++
->>   drivers/power/reset/syscon-reboot-mode.c |  99 +++++++++++++++++++=
-+++++++
->>   5 files changed, 246 insertions(+)
->>   create mode 100644 drivers/power/reset/reboot-mode.c
->>   create mode 100644 drivers/power/reset/reboot-mode.h
->>   create mode 100644 drivers/power/reset/syscon-reboot-mode.c
->>
->> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconf=
-ig
->> index 1131cf7..cf50630 100644
->> --- a/drivers/power/reset/Kconfig
->> +++ b/drivers/power/reset/Kconfig
->> @@ -173,5 +173,18 @@ config POWER_RESET_ZX
->>   	help
->>   	  Reboot support for ZTE SoCs.
->>  =20
->> +config REBOOT_MODE
->> +	tristate
->> +
->> +config SYSCON_REBOOT_MODE
->> +	bool "Generic SYSCON regmap reboot mode driver"
->> +	depends on OF
->> +	select REBOOT_MODE
->> +	help
->> +	  Say y here will enable reboot mode driver. This will
->> +	  get reboot mode arguments and store it in SYSCON mapped
->> +	  register, then the bootloader can read it to take different
->> +	  action according to the mode.
->> +
->>   endif
->>  =20
->> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Make=
-file
->> index 096fa67..a63865b 100644
->> --- a/drivers/power/reset/Makefile
->> +++ b/drivers/power/reset/Makefile
->> @@ -20,3 +20,5 @@ obj-$(CONFIG_POWER_RESET_SYSCON) +=3D syscon-reboo=
-t.o
->>   obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) +=3D syscon-poweroff.o
->>   obj-$(CONFIG_POWER_RESET_RMOBILE) +=3D rmobile-reset.o
->>   obj-$(CONFIG_POWER_RESET_ZX) +=3D zx-reboot.o
->> +obj-$(CONFIG_REBOOT_MODE) +=3D reboot-mode.o
->> +obj-$(CONFIG_SYSCON_REBOOT_MODE) +=3D syscon-reboot-mode.o
->> diff --git a/drivers/power/reset/reboot-mode.c b/drivers/power/reset=
-/reboot-mode.c
->> new file mode 100644
->> index 0000000..cdc4d72
->> --- /dev/null
->> +++ b/drivers/power/reset/reboot-mode.c
->> @@ -0,0 +1,118 @@
->> +/*
->> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
->> + *
->> + * This program is free software; you can redistribute it and/or mo=
-dify
->> + * it under the terms of the GNU General Public License as publishe=
-d by
->> + * the Free Software Foundation; either version 2 of the License, o=
-r
->> + * (at your option) any later version.
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/init.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/reboot.h>
->> +#include "reboot-mode.h"
->> +
->> +#define PREFIX "mode-"
->> +
->> +struct mode_info {
->> +	const char *mode;
->> +	unsigned int magic;
->> +	struct list_head list;
->> +};
->> +
->> +static int get_reboot_mode_magic(struct reboot_mode_driver *reboot,
->> +				 const char *cmd)
->> +{
->> +	const char *normal =3D "normal";
->> +	int magic =3D 0;
->> +	struct mode_info *info;
->> +
->> +	if (!cmd)
->> +		cmd =3D normal;
->> +
->> +	list_for_each_entry(info, &reboot->head, list) {
->> +		if (!strcmp(info->mode, cmd)) {
->> +			magic =3D info->magic;
->> +			break;
->> +		}
->> +	}
->> +
->> +	return magic;
->> +}
->> +
->> +static int reboot_mode_notify(struct notifier_block *this,
->> +			      unsigned long mode, void *cmd)
->> +{
->> +	struct reboot_mode_driver *reboot;
->> +	int magic;
->> +
->> +	reboot =3D container_of(this, struct reboot_mode_driver, reboot_no=
-tifier);
->> +	magic =3D get_reboot_mode_magic(reboot, cmd);
->> +	if (magic)
->> +		reboot->write(reboot, magic);
->> +
->> +	return NOTIFY_DONE;
->> +}
->> +
->> +int reboot_mode_register(struct reboot_mode_driver *reboot)
->> +{
->> +	struct mode_info *info;
->> +	struct property *prop;
->> +	struct device_node *np =3D reboot->dev->of_node;
->> +	size_t len =3D strlen(PREFIX);
->> +	int ret;
->> +
->> +	INIT_LIST_HEAD(&reboot->head);
->> +
->> +	for_each_property_of_node(np, prop) {
->> +		if (len > strlen(prop->name) || strncmp(prop->name, PREFIX, len))
->> +			continue;
->> +
->> +		info =3D devm_kzalloc(reboot->dev, sizeof(*info), GFP_KERNEL);
->> +		if (!info) {
->> +			ret =3D -ENOMEM;
->> +			goto error;
->> +		}
->> +
->> +		info->mode =3D kstrdup_const(prop->name + len, GFP_KERNEL);
->> +		if (of_property_read_u32(np, prop->name, &info->magic)) {
->> +			dev_err(reboot->dev, "reboot mode %s without magic number\n",
->> +				info->mode);
->> +			devm_kfree(reboot->dev, info);
-> kfree_const(). The duplicated string won't be added to the list so it
-> won't be freed in error path or in unregister().
-
-    Each mode has a mode_info,  if one of them gets an error whith=20
-devm_kzalloc, they other mode_info add to the list before should be fre=
-ed.
+>>>> Of course, you'll have to hack a bit in the PMU code to make it
+>>>> understand per-PMU affinity together with percpu interrupts, but i=
+t
+>>>> wouldn't be fun if there was nothing to do...
+>>> I don't change drivers/perf/arm_pmu.c, it just work.
+>> Having had a look with Mark, it may work, but it is rather unsafe. I=
+ may
+>> have a go at it, but I'm going to have to rely on you to test it (or=
+ you
+>> can send me a board ;-).
+> I came up with the following (untested) patch. Please let me know if =
+this
+> works for you.
 >
->> +			continue;
->> +		}
->> +		list_add_tail(&info->list, &reboot->head);
->> +	}
->> +
->> +	reboot->reboot_notifier.notifier_call =3D reboot_mode_notify;
->> +	ret =3D register_reboot_notifier(&reboot->reboot_notifier);
->> +	if (ret)
->> +		dev_err(reboot->dev, "can't register reboot notifier\n");
-> I don't understand your error paths. In previous patches they were
-> buggy... they still look buggy, I think. It's 8th iteration and such
-> basic things are still present.
+> Thanks,
 >
-> If this is an error then shouldn't everything be cleaned up? You are
-> returning error code thus the reboot_mode_register() caller will fail=
-=2E
-> This means the probe will fail. So you need to clean up - go to error=
-?
-
-     If this is an error, I think only the duplicated string should be=20
-clean up,because other resources allocated by devm. If there is=20
-something else, please let me know.
-
-  thanks.
-
-
-> Best regards,
-> Krzysztof
+> 	M.
 >
+> >From b88c08bb689d3fe40c46788453a07ba22dae9220 Mon Sep 17 00:00:00 20=
+01
+> From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Date: Mon, 25 Apr 2016 11:23:54 +0100
+> Subject: [PATCH] drivers/perf: arm-pmu: Handle per-interrupt affinity=
+ mask
 >
+> On a big-little system, PMUs can be wired to CPUs using per CPU
+> interrups (PPI). In this case, it is important to make sure that
+> the enable/disable do happen on the right set of CPUs.
 >
+> Do this by querying the corresponding cpumask on the corresponding
+> paths
+>
+> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/perf/arm_pmu.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index f700908..3de5e1c 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -603,7 +603,11 @@ static void cpu_pmu_free_irq(struct arm_pmu *cpu=
+_pmu)
+> =20
+>  	irq =3D platform_get_irq(pmu_device, 0);
+>  	if (irq >=3D 0 && irq_is_percpu(irq)) {
+> -		on_each_cpu(cpu_pmu_disable_percpu_irq, &irq, 1);
+> +		struct cpumask ppi_cpumask;
+> +
+> +		irq_get_percpu_devid_partition(irq, &ppi_cpumask);
+> +		on_each_cpu_mask(&ppi_cpumask, cpu_pmu_disable_percpu_irq,
+> +				 &irq, 1);
+>  		free_percpu_irq(irq, &hw_events->percpu_pmu);
+>  	} else {
+>  		for (i =3D 0; i < irqs; ++i) {
+> @@ -638,6 +642,8 @@ static int cpu_pmu_request_irq(struct arm_pmu *cp=
+u_pmu, irq_handler_t handler)
+> =20
+>  	irq =3D platform_get_irq(pmu_device, 0);
+>  	if (irq >=3D 0 && irq_is_percpu(irq)) {
+> +		struct cpumask ppi_cpumask;
+> +
+>  		err =3D request_percpu_irq(irq, handler, "arm-pmu",
+>  					 &hw_events->percpu_pmu);
+>  		if (err) {
+> @@ -645,7 +651,10 @@ static int cpu_pmu_request_irq(struct arm_pmu *c=
+pu_pmu, irq_handler_t handler)
+>  				irq);
+>  			return err;
+>  		}
+> -		on_each_cpu(cpu_pmu_enable_percpu_irq, &irq, 1);
+> +
+> +		irq_get_percpu_devid_partition(irq, &ppi_cpumask);
+> +		on_each_cpu_mask(&ppi_cpumask, cpu_pmu_enable_percpu_irq,
+> +				 &irq, 1);
+>  	} else {
+>  		for (i =3D 0; i < irqs; ++i) {
+>  			int cpu =3D i;
+This patch reduce the count call cpu_pmu_enable/disable_percpu_irq. For
+example, if I call
+perf.android top --cpu 0
+only cpus 0~3 will enable and disable.
+
+But the original code is work too because reference count is right too.
+We just enable the irq we do not want, but there is not side effects.
+
+Anyway, this patch work.
+
+I believe the really  wrong thing is we have to set interrupt-affinity
+on device tree, but we also set interrupt-partition too. The informatio=
+n
+is duplicated.
+
+Thanks,
+Huang Tao
 
 
 --
