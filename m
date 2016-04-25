@@ -1,13 +1,13 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 01/11] clk: sunxi: Add display and TCON0
- clocks driver
-Date: Mon, 25 Apr 2016 15:22:42 +0200
-Message-ID: <1461590572-4027-2-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 10/11] ARM: sun5i: r8: Add display blocks to
+ the DTSI
+Date: Mon, 25 Apr 2016 15:22:51 +0200
+Message-ID: <1461590572-4027-11-git-send-email-maxime.ripard@free-electrons.com>
 References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOVU7C4AKGQEA3VLW7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBONU7C4AKGQEU7D3LBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1461590572-4027-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,319 +20,163 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A10 SoCs and its relatives has a special clock controller to drive the
-display engines (both frontend and backend), that have a lot in common with
-the clock to drive the first TCON channel.
+The TCON, tv-encoder and display engine backends and frontends are combined
+to create our display pipeline.
 
-Add a driver to support both.
+Add them to the R8 DTSI. It's supposed to be perfectly compatible with the
+A10s and A13, but since we haven't tested it on them yet, it's safer to
+just enable it on the R8. Eventually, it should be moved to sun5i.dtsi
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
- drivers/clk/sunxi/Makefile                        |   1 +
- drivers/clk/sunxi/clk-sun4i-display.c             | 261 ++++++++++++++++++++++
- 3 files changed, 264 insertions(+)
- create mode 100644 drivers/clk/sunxi/clk-sun4i-display.c
+ arch/arm/boot/dts/sun5i-r8.dtsi | 137 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 137 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index f70f500256bb..8f7619d8c8d8 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -64,6 +64,7 @@ Required properties:
- 	"allwinner,sun8i-a83t-bus-gates-clk" - for the bus gates on A83T
- 	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
- 	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
-+	"allwinner,sun4i-a10-display-clk" - for the display clocks on the A10
- 	"allwinner,sun4i-a10-dram-gates-clk" - for the DRAM gates on A10
- 	"allwinner,sun5i-a13-dram-gates-clk" - for the DRAM gates on A13
- 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
-@@ -75,6 +76,7 @@ Required properties:
- 	"allwinner,sun8i-a23-mbus-clk" - for the MBUS clock on A23
- 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
- 	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
-+	"allwinner,sun4i-a10-tcon-ch0-clk" - for the TCON channel 0 clock on the A10
- 	"allwinner,sun4i-a10-tcon-ch1-clk" - for the TCON channel 1 clock on the A10
- 	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
- 	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index 2d77407a0037..39d2044a1f49 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -11,6 +11,7 @@ obj-y += clk-a10-ve.o
- obj-y += clk-a20-gmac.o
- obj-y += clk-mod0.o
- obj-y += clk-simple-gates.o
-+obj-y += clk-sun4i-display.o
- obj-y += clk-sun4i-pll3.o
- obj-y += clk-sun4i-tcon-ch1.o
- obj-y += clk-sun8i-bus-gates.o
-diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-sun4i-display.c
-new file mode 100644
-index 000000000000..f02e250e64ed
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-sun4i-display.c
-@@ -0,0 +1,261 @@
-+/*
-+ * Copyright 2015 Maxime Ripard
-+ *
-+ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
+diff --git a/arch/arm/boot/dts/sun5i-r8.dtsi b/arch/arm/boot/dts/sun5i-r8.dtsi
+index 691d3de75b35..a42b5404893e 100644
+--- a/arch/arm/boot/dts/sun5i-r8.dtsi
++++ b/arch/arm/boot/dts/sun5i-r8.dtsi
+@@ -57,4 +57,141 @@
+ 			status = "disabled";
+ 		};
+ 	};
 +
-+#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/of_address.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
++	soc@01c00000 {
++		tve0: tv-encoder@01c0a000 {
++			compatible = "allwinner,sun4i-a10-tv-encoder";
++			reg = <0x01c0a000 0x1000>;
++			clocks = <&ahb_gates 34>;
++			resets = <&tcon_ch0_clk 0>;
++			status = "disabled";
 +
-+struct sun4i_a10_display_clk_data {
-+	bool	has_div;
-+	u8	num_rst;
-+	u8	parents;
++			port {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+	u8	offset_en;
-+	u8	offset_div;
-+	u8	offset_mux;
-+	u8	offset_rst;
++				tve0_in_tcon0: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&tcon0_out_tve0>;
++				};
++			};
++		};
 +
-+	u8	width_div;
-+	u8	width_mux;
-+};
++		tcon0: lcd-controller@01c0c000 {
++			compatible = "allwinner,sun5i-a13-tcon";
++			reg = <0x01c0c000 0x1000>;
++			interrupts = <44>;
++			resets = <&tcon_ch0_clk 1>;
++			reset-names = "lcd";
++			clocks = <&ahb_gates 36>,
++				 <&tcon_ch0_clk>,
++				 <&tcon_ch1_clk>;
++			clock-names = "ahb",
++				      "tcon-ch0",
++				      "tcon-ch1";
++			clock-output-names = "tcon-pixel-clock";
++			status = "disabled";
 +
-+struct reset_data {
-+	void __iomem			*reg;
-+	spinlock_t			*lock;
-+	struct reset_controller_dev	rcdev;
-+	u8				offset;
-+};
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+static DEFINE_SPINLOCK(sun4i_a10_display_lock);
++				tcon0_in: port@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
 +
-+static inline struct reset_data *rcdev_to_reset_data(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct reset_data, rcdev);
-+};
++					tcon0_in_be0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&be0_out_tcon0>;
++					};
++				};
 +
-+static int sun4i_a10_display_assert(struct reset_controller_dev *rcdev,
-+				    unsigned long id)
-+{
-+	struct reset_data *data = rcdev_to_reset_data(rcdev);
-+	unsigned long flags;
-+	u32 reg;
++				tcon0_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
 +
-+	spin_lock_irqsave(data->lock, flags);
++					tcon0_out_tve0: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&tve0_in_tcon0>;
++					};
++				};
++			};
++		};
 +
-+	reg = readl(data->reg);
-+	writel(reg & ~BIT(data->offset + id), data->reg);
++		fe0: display-frontend@01e00000 {
++			compatible = "allwinner,sun5i-a13-display-frontend";
++			reg = <0x01e00000 0x20000>;
++			interrupts = <47>;
++			clocks = <&ahb_gates 46>, <&de_fe_clk>,
++				 <&dram_gates 25>;
++			clock-names = "ahb", "mod",
++				      "ram";
++			resets = <&de_fe_clk>;
++			status = "disabled";
 +
-+	spin_unlock_irqrestore(data->lock, flags);
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+	return 0;
-+}
++				fe0_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
 +
-+static int sun4i_a10_display_deassert(struct reset_controller_dev *rcdev,
-+				      unsigned long id)
-+{
-+	struct reset_data *data = rcdev_to_reset_data(rcdev);
-+	unsigned long flags;
-+	u32 reg;
++					fe0_out_be0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&be0_in_fe0>;
++					};
++				};
++			};
++		};
 +
-+	spin_lock_irqsave(data->lock, flags);
++		be0: display-backend@01e60000 {
++			compatible = "allwinner,sun5i-a13-display-backend";
++			reg = <0x01e60000 0x10000>;
++			clocks = <&ahb_gates 44>, <&de_be_clk>,
++				 <&dram_gates 26>;
++			clock-names = "ahb", "mod",
++				      "ram";
++			resets = <&de_be_clk>;
++			status = "disabled";
 +
-+	reg = readl(data->reg);
-+	writel(reg | BIT(data->offset + id), data->reg);
++			assigned-clocks = <&de_be_clk>;
++			assigned-clock-rates = <300000000>;
 +
-+	spin_unlock_irqrestore(data->lock, flags);
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+	return 0;
-+}
++				be0_in: port@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
 +
-+static int sun4i_a10_display_status(struct reset_controller_dev *rcdev,
-+				    unsigned long id)
-+{
-+	struct reset_data *data = rcdev_to_reset_data(rcdev);
++					be0_in_fe0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&fe0_out_be0>;
++					};
++				};
 +
-+	return !(readl(data->reg) & BIT(data->offset + id));
-+}
++				be0_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
 +
-+static const struct reset_control_ops sun4i_a10_display_reset_ops = {
-+	.assert		= sun4i_a10_display_assert,
-+	.deassert	= sun4i_a10_display_deassert,
-+	.status		= sun4i_a10_display_status,
-+};
++					be0_out_tcon0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&tcon0_in_be0>;
++					};
++				};
++			};
++		};
++	};
 +
-+static int sun4i_a10_display_reset_xlate(struct reset_controller_dev *rcdev,
-+					 const struct of_phandle_args *spec)
-+{
-+	/* We only have a single reset signal */
-+	return 0;
-+}
-+
-+static void __init sun4i_a10_display_init(struct device_node *node,
-+					  const struct sun4i_a10_display_clk_data *data)
-+{
-+	const char *parents[data->parents];
-+	const char *clk_name = node->name;
-+	struct reset_data *reset_data;
-+	struct clk_divider *div = NULL;
-+	struct clk_gate *gate;
-+	struct resource res;
-+	struct clk_mux *mux;
-+	void __iomem *reg;
-+	struct clk *clk;
-+	int ret;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(reg)) {
-+		pr_err("%s: Could not map the clock registers\n", clk_name);
-+		return;
-+	}
-+
-+	ret = of_clk_parent_fill(node, parents, data->parents);
-+	if (ret != data->parents) {
-+		pr_err("%s: Could not retrieve the parents\n", clk_name);
-+		goto unmap;
-+	}
-+
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		goto unmap;
-+
-+	mux->reg = reg;
-+	mux->shift = data->offset_mux;
-+	mux->mask = (1 << data->width_mux) - 1;
-+	mux->lock = &sun4i_a10_display_lock;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		goto free_mux;
-+
-+	gate->reg = reg;
-+	gate->bit_idx = data->offset_en;
-+	gate->lock = &sun4i_a10_display_lock;
-+
-+	if (data->has_div) {
-+		div = kzalloc(sizeof(*div), GFP_KERNEL);
-+		if (!div)
-+			goto free_gate;
-+
-+		div->reg = reg;
-+		div->shift = data->offset_div;
-+		div->width = data->width_div;
-+		div->lock = &sun4i_a10_display_lock;
-+	}
-+
-+	clk = clk_register_composite(NULL, clk_name,
-+				     parents, data->parents,
-+				     &mux->hw, &clk_mux_ops,
-+				     data->has_div ? &div->hw : NULL,
-+				     data->has_div ? &clk_divider_ops : NULL,
-+				     &gate->hw, &clk_gate_ops,
-+				     0);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: Couldn't register the clock\n", clk_name);
-+		goto free_div;
-+	}
-+
-+	ret = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	if (ret) {
-+		pr_err("%s: Couldn't register DT provider\n", clk_name);
-+		goto free_clk;
-+	}
-+
-+	if (!data->num_rst)
-+		return;
-+
-+	reset_data = kzalloc(sizeof(*reset_data), GFP_KERNEL);
-+	if (!reset_data)
-+		goto free_of_clk;
-+
-+	reset_data->reg = reg;
-+	reset_data->offset = data->offset_rst;
-+	reset_data->lock = &sun4i_a10_display_lock;
-+	reset_data->rcdev.nr_resets = data->num_rst;
-+	reset_data->rcdev.ops = &sun4i_a10_display_reset_ops;
-+	reset_data->rcdev.of_node = node;
-+
-+	if (data->num_rst == 1) {
-+		reset_data->rcdev.of_reset_n_cells = 0;
-+		reset_data->rcdev.of_xlate = &sun4i_a10_display_reset_xlate;
-+	} else {
-+		reset_data->rcdev.of_reset_n_cells = 1;
-+	}
-+
-+	if (reset_controller_register(&reset_data->rcdev)) {
-+		pr_err("%s: Couldn't register the reset controller\n",
-+		       clk_name);
-+		goto free_reset;
-+	}
-+
-+	return;
-+
-+free_reset:
-+	kfree(reset_data);
-+free_of_clk:
-+	of_clk_del_provider(node);
-+free_clk:
-+	clk_unregister_composite(clk);
-+free_div:
-+	kfree(div);
-+free_gate:
-+	kfree(gate);
-+free_mux:
-+	kfree(mux);
-+unmap:
-+	iounmap(reg);
-+	of_address_to_resource(node, 0, &res);
-+	release_mem_region(res.start, resource_size(&res));
-+}
-+
-+static const struct sun4i_a10_display_clk_data sun4i_a10_tcon_ch0_data __initconst = {
-+	.num_rst	= 2,
-+	.parents	= 4,
-+	.offset_en	= 31,
-+	.offset_rst	= 29,
-+	.offset_mux	= 24,
-+	.width_mux	= 2,
-+};
-+
-+static void __init sun4i_a10_tcon_ch0_setup(struct device_node *node)
-+{
-+	sun4i_a10_display_init(node, &sun4i_a10_tcon_ch0_data);
-+}
-+CLK_OF_DECLARE(sun4i_a10_tcon_ch0, "allwinner,sun4i-a10-tcon-ch0-clk",
-+	       sun4i_a10_tcon_ch0_setup);
-+
-+static const struct sun4i_a10_display_clk_data sun4i_a10_display_data __initconst = {
-+	.has_div	= true,
-+	.num_rst	= 1,
-+	.parents	= 3,
-+	.offset_en	= 31,
-+	.offset_rst	= 30,
-+	.offset_mux	= 24,
-+	.offset_div	= 0,
-+	.width_mux	= 2,
-+	.width_div	= 4,
-+};
-+
-+static void __init sun4i_a10_display_setup(struct device_node *node)
-+{
-+	sun4i_a10_display_init(node, &sun4i_a10_display_data);
-+}
-+CLK_OF_DECLARE(sun4i_a10_display, "allwinner,sun4i-a10-display-clk",
-+	       sun4i_a10_display_setup);
++	display-engine {
++		compatible = "allwinner,sun5i-a13-display-engine";
++		pipelines = <&fe0>;
++	};
+ };
 -- 
 2.8.1
