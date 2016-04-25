@@ -1,42 +1,30 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH RESEND v2 4/4] ARM64: dts: rockchip: add dts file for
- RK3399 evaluation board
-Date: Mon, 25 Apr 2016 15:23:20 -0700
-Message-ID: <CAD=FV=UQxoGYsrw8C2VT_-oYs3ZuJQ6eM1HAFemoGrcDJoOHfw@mail.gmail.com>
-References: <1461304307-14113-1-git-send-email-jay.xu@rock-chips.com>
-	<1461304307-14113-5-git-send-email-jay.xu@rock-chips.com>
-	<571D7723.1020707@gmail.com>
-	<4687144.rPskt7YEHJ@diego>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
+Date: Mon, 25 Apr 2016 17:56:15 -0500
+Message-ID: <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
+References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+ <1461543878-3639-16-git-send-email-eric@engestrom.ch> <20160425135017.GA8656@rob-hp-laptop>
+ <20160425165830.GP2713@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4687144.rPskt7YEHJ@diego>
+In-Reply-To: <20160425165830.GP2713@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Caesar Wang <caesar.upstream@gmail.com>, Jianqun Xu <jay.xu@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Tao Huang <huangtao@rock-chips.com>, David Riley <davidriley@chromium.org>, Julius Werner <jwerner@chromium.org>, smbarber@chromium.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Eric Engestrom <eric@engestrom.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Apr 25, 2016 at 12:37 AM, Heiko St=C3=BCbner <heiko@sntech.de> =
-wrote:
->> Can we add the following strings to match the loader (coreboot)?
->>   No matter, we can match the loader(coreboot) to bring up the evb b=
-oard
->> on now or in the future.
->>
->> ...,"google,rk3399evb-rev3",
->> google,rk3399evb-rev2",google,rk3399evb-rev1","google,rk3399evb-rev0=
-"
+On Mon, Apr 25, 2016 at 11:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 25 Apr 2016, Rob Herring wrote:
 >
-> Yep, that should be no problem ... i.e. we also have this longer list=
- of board
-> matches for the previous veyron boards (both in the dts files as well=
- as the
-> board-binding document)
+>> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
+>> > Signed-off-by: Eric Engestrom <eric@engestrom.ch>
+>>
+>> Applied, thanks.
+>
+> I'd prefer to continue taking these if you don't mind Rob.  It'd limit
+> on the amount of immutable branch pull requests I have to send/handle.
 
-Just to make sure we're on the same page: I presume we're expecting
-the Jay spin with this change?
+Why? Do you really expect to have a dependency here?
 
--Doug
+Rob
