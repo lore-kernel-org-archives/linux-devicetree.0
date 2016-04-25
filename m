@@ -1,72 +1,85 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/10] Support for Cortex-M Prototyping System
-Date: Mon, 25 Apr 2016 09:58:41 +0100
-Message-ID: <571DDC41.5020302@arm.com>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
- <201604240143.04330.arnd@arndb.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ engine driver support
+Date: Mon, 25 Apr 2016 10:04:15 +0100
+Message-ID: <20160425090415.GB20365@dell>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-4-git-send-email-peter.griffin@linaro.org>
+ <C246CAC1457055469EF09E3A7AC4E11A4A57989B@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201604240143.04330.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A57989B-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maxime.coquelin-qxv4g6HH51o@public.gmane.org" <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, "patrice.chotard-qxv4g6HH51o@public.gmane.org" <patrice.chotard-qxv4g6HH51o@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ludovic.barre-qxv4g6HH51o@public.gmane.org" <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/04/16 00:43, Arnd Bergmann wrote:
-> On Friday 01 April 2016, Vladimir Murzin wrote:
->> Hi,
->>
->> This patch series provides the basic support for running ucLinux on V2M-MPS2
->> platform.
->>
->> With these patches applied ucLinux can be run on both HW and FVP models
->> with Cortex-M3/M4/M7 configurations.
->>
->> Board description:
->>
->> http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_versatile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_manual_100112_0100_03_en.pdf
->>
->> Application notes (cover Cortex-M3/M4/M7):
->>
->> http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m3_on_v2m_mps2.pdf
->> http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m4_on_v2m_mps2.pdf
->> http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m7_on_v2m_mps2.pdf
->> http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m7_on_v2m_mps2.pdf
->>
->> Cortex-M System Design Kit (referenced as CMDK from documents above):
->>
->> http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf
->>
->> I'd be happy to hear any feedback/comments on this series!
->>
-> 
-> The whole series looks good to me, please submit the patches to the
-> appropriate maintainers for inclusion separately:
-> 
-> * patches 1-2 to the clocksource maintainers
-> * patches 3-5 to the serial driver maintainers
-> * patches 6-10 to the vexpress maintainers
-> 
-> I think everyone is already on Cc here, but they don't want to pick the
-> patches out of the series separately. I expect to get the patches for
-> arm-soc as part of the vexpress pull requests (dt, defconfig, and core).
+On Thu, 21 Apr 2016, Appana Durga Kedareswara Rao wrote:
+> > -----Original Message-----
+> > From: dmaengine-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:dmaengine-
+> > owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Peter Griffin
+> > Sent: Thursday, April 21, 2016 4:34 PM
+> > To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TasMV2rI37PzA@public.gmane.org=
+org;
+> > srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; maxime.coquelin-qxv4g6HH51o@public.gmane.org;
+> > patrice.chotard-qxv4g6HH51o@public.gmane.org; vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> > Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org;
+> > dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; arnd@arndb.d=
+e;
+> > broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; ludovic.barre-qxv4g6HH51o@public.gmane.org
+> > Subject: [PATCH 03/18] dmaengine: st_fdma: Add STMicroelectronics F=
+DMA
+> > engine driver support
 
-Thanks Arnd!
+What is this text?  If you wish to contribute to upstream mailing
+lists, please fix your email client.  Also, please read:
 
-I've just split patches per your request and sent them to appropriate
-maintainers.
+  Documentation/email-clients.txt
 
-Cheers
-Vladimir
+> > This patch adds support for the Flexible Direct Memory Access (FDMA=
+) core
+> > driver. The FDMA is a slim core CPU with a dedicated firmware.
+> > It is a general purpose DMA controller capable of supporting 16
+> > independent DMA channels. Data moves maybe from memory to memory
+> > or between memory and paced latency critical real time targets and =
+it
+> > is found on al STi based chipsets.
+> >=20
+> > Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/dma/Kconfig   |  12 +
+> >  drivers/dma/Makefile  |   1 +
+> >  drivers/dma/st_fdma.c | 967
+> > ++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 980 insertions(+)
+> >  create mode 100644 drivers/dma/st_fdma.c
 
-> 
-> 	Arnd
-> 
-> 
+[...]
+> > +static int st_fdma_clk_enable(struct st_fdma_dev *fdev)
+> > +{
+> > +	int i, ret;
+> > +
+> > +	for (i =3D 0; i < CLK_MAX_NUM; i++) {
+> > +		ret =3D clk_prepare_enable(fdev->clks[i]);
+> > +		if (ret < 0)
+>=20
+> You should disable and unprepared the other clocks...
 
+Replying to a 1000 line email and not snipping (especially for a one
+single-line comment), it considered bad etiquette.  Please remove all
+unrelated text in future.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
