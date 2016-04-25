@@ -1,74 +1,46 @@
-From: <christopher.spinrath@rwth-aachen.de>
-Subject: [PATCH] ARM: dts: sun7i: Enable S/PDIF on the Cubietruck
-Date: Mon, 25 Apr 2016 01:02:58 +0200
-Message-ID: <1461538978-3137-1-git-send-email-christopher.spinrath@rwth-aachen.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@free-electrons.com, wens@csie.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, Christopher Spinrath <christopher.spinrath@rwth-aachen.de>, linux-arm-kernel@lists.infradead.org
+From: Eric Engestrom <eric@engestrom.ch>
+Subject: [PATCH 07/41] Documentation: dt: arc: fix spelling mistakes
+Date: Mon, 25 Apr 2016 01:24:04 +0100
+Message-ID: <1461543878-3639-8-git-send-email-eric@engestrom.ch>
+References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Eric Engestrom <eric@engestrom.ch>, Vineet Gupta <vgupta@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
-
-Enable the S/PDIF transmitter present on the Cubietruck.
-
-Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+Signed-off-by: Eric Engestrom <eric@engestrom.ch>
 ---
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ Documentation/devicetree/bindings/arc/archs-pct.txt | 2 +-
+ Documentation/devicetree/bindings/arc/pct.txt       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 8da939a..83f39b0 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -94,6 +94,24 @@
- 		pinctrl-0 = <&mmc3_pwrseq_pin_cubietruck>;
- 		reset-gpios = <&pio 7 9 GPIO_ACTIVE_LOW>; /* PH9 WIFI_EN */
- 	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "On-board SPDIF";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&spdif>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&spdif_out>;
-+		};
-+	};
-+
-+	spdif_out: spdif-out {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/arc/archs-pct.txt b/Documentation/devicetree/bindings/arc/archs-pct.txt
+index 1ae98b87..e4b9dce 100644
+--- a/Documentation/devicetree/bindings/arc/archs-pct.txt
++++ b/Documentation/devicetree/bindings/arc/archs-pct.txt
+@@ -2,7 +2,7 @@
  
- &ahci {
-@@ -301,6 +319,12 @@
- 	status = "okay";
- };
+ The ARC HS can be configured with a pipeline performance monitor for counting
+ CPU and cache events like cache misses and hits. Like conventional PCT there
+-are 100+ hardware conditions dynamically mapped to upto 32 counters.
++are 100+ hardware conditions dynamically mapped to up to 32 counters.
+ It also supports overflow interrupts.
  
-+&spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spdif_tx_pins_a>;
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+ Required properties:
+diff --git a/Documentation/devicetree/bindings/arc/pct.txt b/Documentation/devicetree/bindings/arc/pct.txt
+index 7b95884..4e874d9 100644
+--- a/Documentation/devicetree/bindings/arc/pct.txt
++++ b/Documentation/devicetree/bindings/arc/pct.txt
+@@ -2,7 +2,7 @@
+ 
+ The ARC700 can be configured with a pipeline performance monitor for counting
+ CPU and cache events like cache misses and hits. Like conventional PCT there
+-are 100+ hardware conditions dynamically mapped to upto 32 counters
++are 100+ hardware conditions dynamically mapped to up to 32 counters
+ 
+ Note that:
+  * The ARC 700 PCT does not support interrupts; although HW events may be
 -- 
 2.8.0
