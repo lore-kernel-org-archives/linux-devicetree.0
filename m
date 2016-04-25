@@ -1,161 +1,98 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 net-next] net: ethernet: enc28j60: add device tree
- support
-Date: Mon, 25 Apr 2016 10:39:41 -0500
-Message-ID: <571E3A3D.5080602@ti.com>
-References: <31567588.rB9VrggOb6@wuerfel>
- <1461533283-24852-1-git-send-email-mhei@heimpold.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] i2c: device-tree: Handling child nodes which are not i2c
+ devices
+Date: Mon, 25 Apr 2016 09:51:35 -0600
+Message-ID: <571E3D07.9040503@wwwdotorg.org>
+References: <57110A35.2070509@nvidia.com> <571E2EE4.90104@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461533283-24852-1-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <571E2EE4.90104-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2016 04:28 PM, Michael Heimpold wrote:
-> The following patch adds the required match table for device tree support
-> (and while at, fix the indent). It's also possible to specify the
-> MAC address in the DT blob.
-> 
-> Also add the corresponding binding documentation file.
-> 
-> Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-> ---
-> 
-> v2: * took care of Arnd Bergmann's review comments
->       - allow to specify MAC address via DT
->       - unconditionally define DT id table
->     * increased the driver version minor number
->     * driver author's email address bounces, removed from address list
-> 
->  .../devicetree/bindings/net/microchip-enc28j60.txt | 50 ++++++++++++++++++++++
->  drivers/net/ethernet/microchip/enc28j60.c          | 20 +++++++--
->  2 files changed, 67 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/microchip-enc28j60.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/microchip-enc28j60.txt b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
-> new file mode 100644
-> index 0000000..847a97b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
-> @@ -0,0 +1,50 @@
-> +* Microchip ENC28J60
-> +
-> +This is a standalone 10 MBit ethernet controller with SPI interface.
-> +
-> +For each device connected to a SPI bus, define a child node within
-> +the SPI master node.
-> +
-> +Required properties:
-> +- compatible: Should be "microchip,enc28j60"
-> +- reg: Specify the SPI chip select the ENC28J60 is wired to
-> +- interrupts: Specify the interrupt and interrupt type (usually falling edge)
-> +
-> +Optional properties:
-> +- interrupt-parent: Specify the pHandle of the source interrupt
-> +- spi-max-frequency: Maximum frequency of the SPI bus when accessing the ENC28J60.
-> +  According to the ENC28J80 datasheet, the chip allows a maximum of 20 MHz, however,
-> +  board designs may need to limit this value.
-> +- local-mac-address: See ethernet.txt in the same directory.
-> +
-> +
-> +Example (for NXP i.MX28 with pin control stuff for GPIO irq):
-> +
-> +        ssp2: ssp@80014000 {
-> +                compatible = "fsl,imx28-spi";
-> +                pinctrl-names = "default";
-> +                pinctrl-0 = <&spi2_pins_b &spi2_sck_cfg>;
-> +                status = "okay";
-> +
-> +                enc28j60: ethernet@0 {
-> +                        compatible = "microchip,enc28j60";
-> +                        pinctrl-names = "default";
-> +                        pinctrl-0 = <&enc28j60_pins>;
-> +                        reg = <0>;
-> +                        interrupt-parent = <&gpio3>;
-> +                        interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-> +                        spi-max-frequency = <12000000>;
-> +                };
-> +        };
-> +
-> +        pinctrl@80018000 {
-> +                enc28j60_pins: enc28j60_pins@0 {
-> +                        reg = <0>;
-> +                        fsl,pinmux-ids = <
-> +                                MX28_PAD_AUART0_RTS__GPIO_3_3    /* Interrupt */
-> +                        >;
-> +                        fsl,drive-strength = <MXS_DRIVE_4mA>;
-> +                        fsl,voltage = <MXS_VOLTAGE_HIGH>;
-> +                        fsl,pull-up = <MXS_PULL_DISABLE>;
-> +                };
-> +        };
-> diff --git a/drivers/net/ethernet/microchip/enc28j60.c b/drivers/net/ethernet/microchip/enc28j60.c
-> index b723622..7066954 100644
-> --- a/drivers/net/ethernet/microchip/enc28j60.c
-> +++ b/drivers/net/ethernet/microchip/enc28j60.c
-> @@ -28,11 +28,12 @@
->  #include <linux/skbuff.h>
->  #include <linux/delay.h>
->  #include <linux/spi/spi.h>
-> +#include <linux/of_net.h>
->  
->  #include "enc28j60_hw.h"
->  
->  #define DRV_NAME	"enc28j60"
-> -#define DRV_VERSION	"1.01"
-> +#define DRV_VERSION	"1.02"
->  
->  #define SPI_OPLEN	1
->  
-> @@ -1548,6 +1549,7 @@ static int enc28j60_probe(struct spi_device *spi)
->  {
->  	struct net_device *dev;
->  	struct enc28j60_net *priv;
-> +	const void *macaddr;
->  	int ret = 0;
->  
->  	if (netif_msg_drv(&debug))
-> @@ -1579,7 +1581,12 @@ static int enc28j60_probe(struct spi_device *spi)
->  		ret = -EIO;
->  		goto error_irq;
->  	}
-> -	eth_hw_addr_random(dev);
-> +
-> +	macaddr = of_get_mac_address(spi->dev.of_node);
-> +	if (macaddr)
+On 04/25/2016 08:51 AM, Jon Hunter wrote:
+> Hi all,
+>
+> Any thoughts on this? Let me know if this is not clear in anyway.
 
-You should also check if it is a valid MAC for Ethernet, recommend:
+I'm not sure if you're expecting comment from me since I suggested 
+option (1) below. For the record though I do think that's the better 
+option; it's very general/explicit, should apply well to any OS 
+environment, and relying on OF_POPULATED implies an order that the 
+driver must initialize things in, so that it ensures OF_POPULATED is set 
+before any I2C children are handled.
 
-if (macaddr && is_valid_ether_addr(macaddr))
-
-> +		ether_addr_copy(dev->dev_addr, macaddr);
-> +	else
-> +		eth_hw_addr_random(dev);
->  	enc28j60_set_hw_macaddr(dev);
->  
->  	/* Board setup must set the relevant edge trigger type;
-> @@ -1634,9 +1641,16 @@ static int enc28j60_remove(struct spi_device *spi)
->  	return 0;
->  }
->  
-> +static const struct of_device_id enc28j60_dt_ids[] = {
-> +	{ .compatible = "microchip,enc28j60" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, enc28j60_dt_ids);
-> +
->  static struct spi_driver enc28j60_driver = {
->  	.driver = {
-> -		   .name = DRV_NAME,
-> +		.name = DRV_NAME,
-> +		.of_match_table = enc28j60_dt_ids,
->  	 },
->  	.probe = enc28j60_probe,
->  	.remove = enc28j60_remove,
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 15/04/16 16:35, Jon Hunter wrote:
+>> Hi all,
+>>
+>> For Tegra we have an i2c device for display port, namely the display
+>> port auxiliary channel (or dpaux) as specified by the display port
+>> standard. If an design using Tegra does not utilise the display port
+>> interface, then the pads assigned to the dpaux can be re-assigned to
+>> another generic i2c controller (i2c6 for Tegra124/210). In other words,
+>> the pads can be re-used for a generic i2c interface.
+>>
+>> The registers that control whether the pads are mapped to the dpaux or
+>> i2c6 are located in the dpaux register space. Therefore, I am looking at
+>> adding pin controller support for dpaux so that i2c6 can request these
+>> pads if it is enabled and I was hoping to add a pinmux node the to dpaux
+>> device in device-tree to do this. For example, something like ...
+>>
+>> 	dpaux@0,545c0000 {
+>> 		...
+>>
+>> 		/* pinctrl node */
+>> 		pinmux {
+>> 			...
+>> 		};
+>> 	};
+>>
+>> Although the above works, when doing this I noticed that when the device
+>> booted, I would seeing the following error messages on boot ...
+>>
+>>   i2c i2c-5: of_i2c: modalias failure on ...
+>>
+>> These error messages being caused by the new pinmux node because it is
+>> not recognised as an i2c device. To avoid this error messages we have
+>> come up with a couple solutions but wanted to get some feedback on the
+>> best approach.
+>>
+>> 1. Add a i2c-bus sub-node to the dpaux binding (suggested by Stephen
+>>     Warren), so we would have something like the below. Then i2c devices
+>>     for dpaux would be place in the i2c-bus sub-node.
+>>
+>> 	dpaux@0,545c0000 {
+>> 		...
+>>
+>> 		/* pinctrl node */
+>> 		pinmux {
+>> 			...
+>> 		};
+>>
+>> 		/* place-holder for i2c devices */
+>> 		i2c-bus {
+>> 			...
+>> 		};
+>> 	};	
+>>
+>>     To make the above work ideally we would like to make the 'i2c-bus'
+>>     node a generic solution for all i2c devices, so the i2c core would
+>>     check for the presence of this node and if it is found then would
+>>     default to this node for looking for i2c-devices.
+>>
+>> 2. When registering i2c devices via device-tree, the function
+>>     of_i2c_register_devices() checks to see if OF_POPULATED flag is set
+>>     for a given node. If it is set, then the node is skipped. I believe
+>>     this was added for device-tree overlays (commit 4f001fd30145 i2c:
+>>     Mark instantiated device nodes with OF_POPULATE). Another option is
+>>     for the dpaux driver to mark the pinmux node as populated before
+>>     registering the i2c adapter and this will prevent the i2c core from
+>>     trying to parse the pinmux node. I am not sure if this would be
+>>     frowned upon in anyway or if we can guarantee that no future changes
+>>     to DT overlays would change this in a way where it would not work.
+>>
+>> Let me know your thoughts.
