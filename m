@@ -1,53 +1,50 @@
-From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: interrupt-controllers: add
- description of SIC1 and SIC2
-Date: Mon, 25 Apr 2016 11:56:22 -0400
-Message-ID: <1461599782.6934.0.camel@localhost>
-References: <1461545990-25560-1-git-send-email-vz@mleia.com>
-	 <1461546023-25614-1-git-send-email-vz@mleia.com>
-	 <20160425145124.GA23792@rob-hp-laptop>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add entry for Mali-DP driver
+Date: Mon, 25 Apr 2016 17:00:02 +0100
+Message-ID: <CACvgo51obFzx05SWUPZYbEj-LcNGq_NaCvF_iYsg9gpyLPj48Q@mail.gmail.com>
+References: <1461593964-27722-1-git-send-email-Liviu.Dudau@arm.com>
+ <1461593964-27722-4-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160425145124.GA23792@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1461593964-27722-4-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-04-25 at 09:51 -0500, Rob Herring wrote:
-> On Mon, Apr 25, 2016 at 04:00:23AM +0300, Vladimir Zapolskiy wrote:
-> > NXP LPC32xx has three interrupt controllers, namely root Main
-> > Interrupt Controller (MIC) and two supplementary Sub Interrupt
-> > Controllers (SIC1 and SIC2), four interrupt outputs from SIC1 and SIC2
-> > are connected to MIC.
-> > 
-> > Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> > ---
-> > Changes from v1 to v2:
-> > * removed introduced optional "interrupt-controller-name" property,
-> >   for users the name of a controller will be constructed from mic/sic
-> >   and controller physical address,
-> > * removed introduced optional "wakeup-sources" property, a list of
-> >   mappings between a hardware interrupt and its correspondent wakeup source
-> >   to exit CPU STOP mode will be discussed later on,
-> > * other negligible changes (rewording, small letters in unit address etc.)
-> > 
-> >  .../interrupt-controller/nxp,lpc3220-mic.txt       | 70 ++++++++++++++--------
-> >  1 file changed, 46 insertions(+), 24 deletions(-)
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Acked-by: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjUgQXByaWwgMjAxNiBhdCAxNToxOSwgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5j
+b20+IHdyb3RlOgo+IEFkZCBNQUlOVEFJTkVSUyBlbnRyeSBmb3IgQVJNIE1hbGktRFAgZHJpdmVy
+IGFuZCB1cGRhdGUgdGhlCj4gSERMQ0QgZmlsZSBtYXRjaGluZyBwYXR0ZXJuIHRvIGNvdmVyIG9u
+bHkgSERMQ0QgcmF0aGVyIHRoYW4KPiB0aGUgd2hvbGUgZHJpdmVycy9ncHUvZHJtL2FybSBkaXJl
+Y3RvcnkuCj4KPiBTaWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNv
+bT4KPiAtLS0KPiAgTUFJTlRBSU5FUlMgfCAxMCArKysrKysrKystCj4gIDEgZmlsZSBjaGFuZ2Vk
+LCA5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPgo+IGRpZmYgLS1naXQgYS9NQUlOVEFJ
+TkVSUyBiL01BSU5UQUlORVJTCj4gaW5kZXggMWQ1YjRiZS4uYTVhNDM0NiAxMDA2NDQKPiAtLS0g
+YS9NQUlOVEFJTkVSUwo+ICsrKyBiL01BSU5UQUlORVJTCj4gQEAgLTg1MCw5ICs4NTAsMTcgQEAg
+RjogaW5jbHVkZS91YXBpL2xpbnV4L2lmX2FyY25ldC5oCj4gIEFSTSBIRExDRCBEUk0gRFJJVkVS
+Cj4gIE06ICAgICBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KPiAgUzogICAgIFN1
+cHBvcnRlZAo+IC1GOiAgICAgZHJpdmVycy9ncHUvZHJtL2FybS8KPiArRjogICAgIGRyaXZlcnMv
+Z3B1L2RybS9hcm0vaGRsY2RfKgo+ICBGOiAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYXJtLGhkbGNkLnR4dAo+Cj4gK0FSTSBNQUxJLURQIERSTSBEUklWRVIK
+PiArTTogICAgIExpdml1IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPgo+ICtNOiAgICAgQnJp
+YW4gU3RhcmtleSA8YnJpYW4uc3RhcmtleUBhcm0uY29tPgo+ICtNOiAgICAgTWFsaSBEUCBNYWlu
+dGFpbmVycyA8bWFsaWRwQGZvc3MuYXJtLmNvbT4KPiArUzogICAgIFN1cHBvcnRlZAo+ICtGOiAg
+ICAgZHJpdmVycy9ncHUvZHJtL2FybS8KV29vaG9vLiBUaGFua3MgTGl2aXUgIQoKTm90ZSB0aGF0
+IGhhdmluZyBib3RoIGRyaXZlcnMnIHNvdXJjZXMgaW4gdGhlIHNhbWUgZm9sZGVyIHdpbGwgY2F1
+c2UKc29tZSBncmllZiB3cnQgZ2V0dGluZyB0aGUgY29ycmVjdCBtYWludGFpbmVyLiBJZiB5b3Ug
+d2FudCB0byBhdm9pZAp0aGF0IHRoZSBlYXNpZXN0IHdheSBpcyB0byBtb3ZlIHRoaW5ncyBpbiBz
+dWJkaXJlY3RvcmllcyByb3VnaGx5IGxpa2U6Cgpkcml2ZXJzL2dwdS9hcm0vaGRsY2QvCmRyaXZl
+cnMvZ3B1L2FybS9tYXBpZHAvCgpSZWdhcmRzLApFbWlsCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
