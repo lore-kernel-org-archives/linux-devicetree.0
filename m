@@ -1,59 +1,52 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 00/11] drm: Add Allwinner A10 display engine support
-Date: Mon, 25 Apr 2016 16:56:27 +0100
-Message-ID: <CACvgo50CDGL1jdP4kkbnNtnLGrgSa-b74RJu6NnPuq1=Q9Zsmg@mail.gmail.com>
-References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: interrupt-controllers: add
+ description of SIC1 and SIC2
+Date: Mon, 25 Apr 2016 11:56:22 -0400
+Message-ID: <1461599782.6934.0.camel@localhost>
+References: <1461545990-25560-1-git-send-email-vz@mleia.com>
+	 <1461546023-25614-1-git-send-email-vz@mleia.com>
+	 <20160425145124.GA23792@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461590572-4027-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160425145124.GA23792@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Mon, 2016-04-25 at 09:51 -0500, Rob Herring wrote:
+> On Mon, Apr 25, 2016 at 04:00:23AM +0300, Vladimir Zapolskiy wrote:
+> > NXP LPC32xx has three interrupt controllers, namely root Main
+> > Interrupt Controller (MIC) and two supplementary Sub Interrupt
+> > Controllers (SIC1 and SIC2), four interrupt outputs from SIC1 and SIC2
+> > are connected to MIC.
+> > 
+> > Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> > ---
+> > Changes from v1 to v2:
+> > * removed introduced optional "interrupt-controller-name" property,
+> >   for users the name of a controller will be constructed from mic/sic
+> >   and controller physical address,
+> > * removed introduced optional "wakeup-sources" property, a list of
+> >   mappings between a hardware interrupt and its correspondent wakeup source
+> >   to exit CPU STOP mode will be discussed later on,
+> > * other negligible changes (rewording, small letters in unit address etc.)
+> > 
+> >  .../interrupt-controller/nxp,lpc3220-mic.txt       | 70 ++++++++++++++--------
+> >  1 file changed, 46 insertions(+), 24 deletions(-)
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-On 25 April 2016 at 14:22, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Acked-by: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
->  Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
->  .../bindings/display/sunxi/sun4i-drm.txt           | 258 ++++++++
->  arch/arm/boot/dts/sun5i-a13.dtsi                   |  39 +-
->  arch/arm/boot/dts/sun5i-r8-chip.dts                |  12 +
->  arch/arm/boot/dts/sun5i-r8.dtsi                    | 142 ++++-
->  drivers/clk/sunxi/Makefile                         |   1 +
->  drivers/clk/sunxi/clk-sun4i-display.c              | 261 ++++++++
->  drivers/gpu/drm/Kconfig                            |   2 +
->  drivers/gpu/drm/Makefile                           |   3 +-
->  drivers/gpu/drm/sun4i/Kconfig                      |  14 +
->  drivers/gpu/drm/sun4i/Makefile                     |  13 +
->  drivers/gpu/drm/sun4i/sun4i_backend.c              | 364 +++++++++++
->  drivers/gpu/drm/sun4i/sun4i_backend.h              | 165 +++++
->  drivers/gpu/drm/sun4i/sun4i_crtc.c                 | 120 ++++
->  drivers/gpu/drm/sun4i/sun4i_crtc.h                 |  30 +
->  drivers/gpu/drm/sun4i/sun4i_dotclock.c             | 160 +++++
->  drivers/gpu/drm/sun4i/sun4i_dotclock.h             |  21 +
->  drivers/gpu/drm/sun4i/sun4i_drv.c                  | 357 +++++++++++
->  drivers/gpu/drm/sun4i/sun4i_drv.h                  |  30 +
->  drivers/gpu/drm/sun4i/sun4i_framebuffer.c          |  54 ++
->  drivers/gpu/drm/sun4i/sun4i_framebuffer.h          |  19 +
->  drivers/gpu/drm/sun4i/sun4i_layer.c                | 161 +++++
->  drivers/gpu/drm/sun4i/sun4i_layer.h                |  30 +
->  drivers/gpu/drm/sun4i/sun4i_rgb.c                  | 250 ++++++++
->  drivers/gpu/drm/sun4i/sun4i_rgb.h                  |  18 +
->  drivers/gpu/drm/sun4i/sun4i_tcon.c                 | 561 ++++++++++++++++
->  drivers/gpu/drm/sun4i/sun4i_tcon.h                 | 186 ++++++
->  drivers/gpu/drm/sun4i/sun4i_tv.c                   | 708 +++++++++++++++++++++
->  include/drm/drm_fb_cma_helper.h                    |   2 +
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Having a look at the diff stat, can we please have an entry in
-MAINTAINERS for this driver ? Don't bother re-spinning the whole
-series just for that and add the patch on top [for the pull request].
 
-Thank you !
-
--Emil
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
