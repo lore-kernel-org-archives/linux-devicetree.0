@@ -1,81 +1,271 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add entry for Mali-DP driver
-Date: Mon, 25 Apr 2016 18:53:26 +0100
-Message-ID: <CACvgo50nqzcSbJVSBx_dk+yUTxKpNLXs0hbdOjX_X3OYwt2+Tg@mail.gmail.com>
-References: <1461593964-27722-1-git-send-email-Liviu.Dudau@arm.com>
-	<1461593964-27722-4-git-send-email-Liviu.Dudau@arm.com>
-	<CACvgo51obFzx05SWUPZYbEj-LcNGq_NaCvF_iYsg9gpyLPj48Q@mail.gmail.com>
-	<20160425170811.GC28464@e106497-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160425170811.GC28464-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Brian Starkey <Brian.Starkey-5wv7dgnIgG8@public.gmane.org>, David Brown <David.Brown-5wv7dgnIgG8@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: rk808: remove linear range definitions with a single range" to the regulator tree
+Date: Mon, 25 Apr 2016 18:56:54 +0100
+Message-ID: <E1aukkg-0007km-6s@debutante>
+References: <1461590448-47685-4-git-send-email-w.egorov@phytec.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461590448-47685-4-git-send-email-w.egorov@phytec.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wadim Egorov <w.egorov@phytec.de>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.combroonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 25 April 2016 at 18:08, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Mon, Apr 25, 2016 at 05:00:02PM +0100, Emil Velikov wrote:
->> On 25 April 2016 at 15:19, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
->> > Add MAINTAINERS entry for ARM Mali-DP driver and update the
->> > HDLCD file matching pattern to cover only HDLCD rather than
->> > the whole drivers/gpu/drm/arm directory.
->> >
->> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
->> > ---
->> >  MAINTAINERS | 10 +++++++++-
->> >  1 file changed, 9 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/MAINTAINERS b/MAINTAINERS
->> > index 1d5b4be..a5a4346 100644
->> > --- a/MAINTAINERS
->> > +++ b/MAINTAINERS
->> > @@ -850,9 +850,17 @@ F: include/uapi/linux/if_arcnet.h
->> >  ARM HDLCD DRM DRIVER
->> >  M:     Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
->> >  S:     Supported
->> > -F:     drivers/gpu/drm/arm/
->> > +F:     drivers/gpu/drm/arm/hdlcd_*
->> >  F:     Documentation/devicetree/bindings/display/arm,hdlcd.txt
->> >
->> > +ARM MALI-DP DRM DRIVER
->> > +M:     Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
->> > +M:     Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
->> > +M:     Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>
->> > +S:     Supported
->> > +F:     drivers/gpu/drm/arm/
->> Woohoo. Thanks Liviu !
->>
->> Note that having both drivers' sources in the same folder will cause
->> some grief wrt getting the correct maintainer. If you want to avoid
->> that the easiest way is to move things in subdirectories roughly like:
->>
->> drivers/gpu/arm/hdlcd/
->> drivers/gpu/arm/mapidp/
->
-> I'm surprised to hear that there might be problems. All HDLCD files start
-> with hdlcd_ and the rest will go to the Mali-DP DRM maintainers (which includes
-> me as well).
->
-You're absolutely right. I read things the wrong way - the MaliDP
-maintainers will be added for the HDLCD patches. Which obviously isn't
-the case.
+The patch
 
-> I understand your suggestion and I thank for it, but I really hate to have
-> to navigate too many directories (for now). Lets see how things evolve and then
-> we can move stuff around.
->
-IIRC DRM had the same structure (all drivers living in a single a
-folder) before 2008, before people got fed up.
-Feel free to do as you wish, just pointing out some historical observations ;-)
+   regulator: rk808: remove linear range definitions with a single range
 
-Regardless of my suggestions/nitpicks, thanks for all the work Liviu !
-It's really nice to see more vendors contributing to DRM.
+has been applied to the regulator tree at
 
-Regards,
-Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From afcd666d9db0ebfbf2751cce1e07b548547ca82e Mon Sep 17 00:00:00 2001
+From: Wadim Egorov <w.egorov@phytec.de>
+Date: Mon, 25 Apr 2016 15:20:43 +0200
+Subject: [PATCH] regulator: rk808: remove linear range definitions with a
+ single range
+
+The driver was using only linear ranges. Now we remove linear range
+definitions with a single range. So we have to add an ops struct for
+ranges and adjust all other ops functions accordingly.
+
+Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/rk808-regulator.c | 90 +++++++++++++++++++++----------------
+ 1 file changed, 51 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index d86a3dcd61e2..964b95eed271 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -66,27 +66,11 @@ static const int rk808_buck_config_regs[] = {
+ 	RK808_BUCK4_CONFIG_REG,
+ };
+ 
+-static const struct regulator_linear_range rk808_buck_voltage_ranges[] = {
+-	REGULATOR_LINEAR_RANGE(712500, 0, 63, 12500),
+-};
+-
+-static const struct regulator_linear_range rk808_buck4_voltage_ranges[] = {
+-	REGULATOR_LINEAR_RANGE(1800000, 0, 15, 100000),
+-};
+-
+-static const struct regulator_linear_range rk808_ldo_voltage_ranges[] = {
+-	REGULATOR_LINEAR_RANGE(1800000, 0, 16, 100000),
+-};
+-
+ static const struct regulator_linear_range rk808_ldo3_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(800000, 0, 13, 100000),
+ 	REGULATOR_LINEAR_RANGE(2500000, 15, 15, 0),
+ };
+ 
+-static const struct regulator_linear_range rk808_ldo6_voltage_ranges[] = {
+-	REGULATOR_LINEAR_RANGE(800000, 0, 17, 100000),
+-};
+-
+ static int rk808_buck1_2_get_voltage_sel_regmap(struct regulator_dev *rdev)
+ {
+ 	struct rk808_regulator_data *pdata = rdev_get_drvdata(rdev);
+@@ -242,6 +226,21 @@ static int rk808_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
+ static int rk808_set_suspend_voltage(struct regulator_dev *rdev, int uv)
+ {
+ 	unsigned int reg;
++	int sel = regulator_map_voltage_linear(rdev, uv, uv);
++
++	if (sel < 0)
++		return -EINVAL;
++
++	reg = rdev->desc->vsel_reg + RK808_SLP_REG_OFFSET;
++
++	return regmap_update_bits(rdev->regmap, reg,
++				  rdev->desc->vsel_mask,
++				  sel);
++}
++
++static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
++{
++	unsigned int reg;
+ 	int sel = regulator_map_voltage_linear_range(rdev, uv, uv);
+ 
+ 	if (sel < 0)
+@@ -277,8 +276,8 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
+ }
+ 
+ static struct regulator_ops rk808_buck1_2_ops = {
+-	.list_voltage		= regulator_list_voltage_linear_range,
+-	.map_voltage		= regulator_map_voltage_linear_range,
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
+ 	.get_voltage_sel	= rk808_buck1_2_get_voltage_sel_regmap,
+ 	.set_voltage_sel	= rk808_buck1_2_set_voltage_sel,
+ 	.set_voltage_time_sel	= rk808_buck1_2_set_voltage_time_sel,
+@@ -292,6 +291,19 @@ static struct regulator_ops rk808_buck1_2_ops = {
+ };
+ 
+ static struct regulator_ops rk808_reg_ops = {
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= regulator_is_enabled_regmap,
++	.set_suspend_voltage	= rk808_set_suspend_voltage,
++	.set_suspend_enable	= rk808_set_suspend_enable,
++	.set_suspend_disable	= rk808_set_suspend_disable,
++};
++
++static struct regulator_ops rk808_reg_ops_ranges = {
+ 	.list_voltage		= regulator_list_voltage_linear_range,
+ 	.map_voltage		= regulator_map_voltage_linear_range,
+ 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+@@ -299,7 +311,7 @@ static struct regulator_ops rk808_reg_ops = {
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
+ 	.is_enabled		= regulator_is_enabled_regmap,
+-	.set_suspend_voltage	= rk808_set_suspend_voltage,
++	.set_suspend_voltage	= rk808_set_suspend_voltage_range,
+ 	.set_suspend_enable	= rk808_set_suspend_enable,
+ 	.set_suspend_disable	= rk808_set_suspend_disable,
+ };
+@@ -319,9 +331,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_DCDC1,
+ 		.ops = &rk808_buck1_2_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 712500,
++		.uV_step = 12500,
+ 		.n_voltages = 64,
+-		.linear_ranges = rk808_buck_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_buck_voltage_ranges),
+ 		.vsel_reg = RK808_BUCK1_ON_VSEL_REG,
+ 		.vsel_mask = RK808_BUCK_VSEL_MASK,
+ 		.enable_reg = RK808_DCDC_EN_REG,
+@@ -333,9 +345,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_DCDC2,
+ 		.ops = &rk808_buck1_2_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 712500,
++		.uV_step = 12500,
+ 		.n_voltages = 64,
+-		.linear_ranges = rk808_buck_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_buck_voltage_ranges),
+ 		.vsel_reg = RK808_BUCK2_ON_VSEL_REG,
+ 		.vsel_mask = RK808_BUCK_VSEL_MASK,
+ 		.enable_reg = RK808_DCDC_EN_REG,
+@@ -357,9 +369,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_DCDC4,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 1800000,
++		.uV_step = 100000,
+ 		.n_voltages = 16,
+-		.linear_ranges = rk808_buck4_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_buck4_voltage_ranges),
+ 		.vsel_reg = RK808_BUCK4_ON_VSEL_REG,
+ 		.vsel_mask = RK808_BUCK4_VSEL_MASK,
+ 		.enable_reg = RK808_DCDC_EN_REG,
+@@ -371,9 +383,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_LDO1,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 1800000,
++		.uV_step = 100000,
+ 		.n_voltages = 17,
+-		.linear_ranges = rk808_ldo_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_ldo_voltage_ranges),
+ 		.vsel_reg = RK808_LDO1_ON_VSEL_REG,
+ 		.vsel_mask = RK808_LDO_VSEL_MASK,
+ 		.enable_reg = RK808_LDO_EN_REG,
+@@ -386,9 +398,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_LDO2,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 1800000,
++		.uV_step = 100000,
+ 		.n_voltages = 17,
+-		.linear_ranges = rk808_ldo_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_ldo_voltage_ranges),
+ 		.vsel_reg = RK808_LDO2_ON_VSEL_REG,
+ 		.vsel_mask = RK808_LDO_VSEL_MASK,
+ 		.enable_reg = RK808_LDO_EN_REG,
+@@ -416,9 +428,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_LDO4,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 1800000,
++		.uV_step = 100000,
+ 		.n_voltages = 17,
+-		.linear_ranges = rk808_ldo_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_ldo_voltage_ranges),
+ 		.vsel_reg = RK808_LDO4_ON_VSEL_REG,
+ 		.vsel_mask = RK808_LDO_VSEL_MASK,
+ 		.enable_reg = RK808_LDO_EN_REG,
+@@ -431,9 +443,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_LDO5,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 1800000,
++		.uV_step = 100000,
+ 		.n_voltages = 17,
+-		.linear_ranges = rk808_ldo_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_ldo_voltage_ranges),
+ 		.vsel_reg = RK808_LDO5_ON_VSEL_REG,
+ 		.vsel_mask = RK808_LDO_VSEL_MASK,
+ 		.enable_reg = RK808_LDO_EN_REG,
+@@ -446,9 +458,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_LDO6,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 800000,
++		.uV_step = 100000,
+ 		.n_voltages = 18,
+-		.linear_ranges = rk808_ldo6_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_ldo6_voltage_ranges),
+ 		.vsel_reg = RK808_LDO6_ON_VSEL_REG,
+ 		.vsel_mask = RK808_LDO_VSEL_MASK,
+ 		.enable_reg = RK808_LDO_EN_REG,
+@@ -461,9 +473,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_LDO7,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 800000,
++		.uV_step = 100000,
+ 		.n_voltages = 18,
+-		.linear_ranges = rk808_ldo6_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_ldo6_voltage_ranges),
+ 		.vsel_reg = RK808_LDO7_ON_VSEL_REG,
+ 		.vsel_mask = RK808_LDO_VSEL_MASK,
+ 		.enable_reg = RK808_LDO_EN_REG,
+@@ -476,9 +488,9 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.id = RK808_ID_LDO8,
+ 		.ops = &rk808_reg_ops,
+ 		.type = REGULATOR_VOLTAGE,
++		.min_uV = 1800000,
++		.uV_step = 100000,
+ 		.n_voltages = 17,
+-		.linear_ranges = rk808_ldo_voltage_ranges,
+-		.n_linear_ranges = ARRAY_SIZE(rk808_ldo_voltage_ranges),
+ 		.vsel_reg = RK808_LDO8_ON_VSEL_REG,
+ 		.vsel_mask = RK808_LDO_VSEL_MASK,
+ 		.enable_reg = RK808_LDO_EN_REG,
+-- 
+2.8.0.rc3
