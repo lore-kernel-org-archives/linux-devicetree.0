@@ -1,81 +1,33 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: dra7xx: Fix compatible string for PCF8575 chip
-Date: Mon, 25 Apr 2016 15:53:54 +0300
-Message-ID: <1461588834-20908-1-git-send-email-rogerq@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 01/11] dt-bindings: mfd: Add Altera Arria10 System
+ Resource Chip bindings
+Date: Mon, 25 Apr 2016 07:55:14 -0500
+Message-ID: <20160425125514.GA5100@rob-hp-laptop>
+References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
+ <1461339219-15255-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461339219-15255-2-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The boards use a TI variant of the PCF8575 so specify that
-in the compatible string.
+On Fri, Apr 22, 2016 at 10:33:29AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> The Altera Arria10 Devkit System Resource chip is a Multi-Function
+> Device with a GPIO expander and power supply alarm.
 
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7-evm.dts          | 6 +++---
- arch/arm/boot/dts/dra72-evm-common.dtsi | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index d272cf1..4fb0ff4 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -556,7 +556,7 @@
- 	};
+An alarm with no interrupt? Are the GPIOs interrupt capable?
  
- 	pcf_lcd: gpio@20 {
--		compatible = "nxp,pcf8575";
-+		compatible = "ti,pcf8575", "nxp,pcf8575";
- 		reg = <0x20>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-@@ -567,7 +567,7 @@
- 	};
- 
- 	pcf_gpio_21: gpio@21 {
--		compatible = "nxp,pcf8575";
-+		compatible = "ti,pcf8575", "nxp,pcf8575";
- 		reg = <0x21>;
- 		lines-initial-states = <0x1408>;
- 		gpio-controller;
-@@ -601,7 +601,7 @@
- 	clock-frequency = <400000>;
- 
- 	pcf_hdmi: gpio@26 {
--		compatible = "nxp,pcf8575";
-+		compatible = "ti,pcf8575", "nxp,pcf8575";
- 		reg = <0x26>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
-index 2c88050..90a827d 100644
---- a/arch/arm/boot/dts/dra72-evm-common.dtsi
-+++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
-@@ -408,7 +408,7 @@
- 	};
- 
- 	pcf_gpio_21: gpio@21 {
--		compatible = "nxp,pcf8575";
-+		compatible = "ti,pcf8575", "nxp,pcf8575";
- 		reg = <0x21>;
- 		lines-initial-states = <0x1408>;
- 		gpio-controller;
-@@ -440,7 +440,7 @@
- 	clock-frequency = <400000>;
- 
- 	pcf_hdmi: pcf8575@26 {
--		compatible = "nxp,pcf8575";
-+		compatible = "ti,pcf8575", "nxp,pcf8575";
- 		reg = <0x26>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
--- 
-2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This patch adds documentation for the Altera A10-SR DT bindings.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> 
