@@ -1,46 +1,116 @@
-From: Jeremy McDermond <nh6z-fFIq/eER6g8@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 2/3] ASoC: simple-card: Add support jack detection via codec
-Date: Mon, 25 Apr 2016 11:17:21 -0700
-Message-ID: <9CA36836-11FE-4A7B-8DBC-5A4842D004C6@nh6z.net>
-References: <1460967452-24574-1-git-send-email-zhengxing@rock-chips.com> <1460967452-24574-3-git-send-email-zhengxing@rock-chips.com> <20160421141921.GA25900@rob-hp-laptop> <57197BBA.50304@rock-chips.com> <20160422092250.GA3217@sirena.org.uk> <3C927D46-BC52-4B5C-B5B4-CCBA3AAE6F87@xenotropic.com> <20160425125504.GL3217@sirena.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 9.1 \(3096.5\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160425125504.GL3217-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mengdong Lin <mengdong.lin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adam.Thomson-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Michael Heimpold <mhei@heimpold.de>
+Subject: Re: [PATCH v2 net-next] net: ethernet: enc28j60: add device tree support
+Date: Mon, 25 Apr 2016 20:41:43 +0200
+Message-ID: <3251118.0hjDSTMnSh@kerker>
+References: <31567588.rB9VrggOb6@wuerfel> <1461533283-24852-1-git-send-email-mhei@heimpold.de> <20160425132326.GA17445@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160425132326.GA17445@rob-hp-laptop>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-> On Apr 25, 2016, at 5:55 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->=20
-> If the clock code is worth splitting off into a separate driver that'=
-s
-> what drivers/mfd is for.
+Am Monday 25 April 2016, 08:23:26 schrieb Rob Herring:
+> On Sun, Apr 24, 2016 at 11:28:03PM +0200, Michael Heimpold wrote:
+> > The following patch adds the required match table for device tree support
+> > (and while at, fix the indent). It's also possible to specify the
+> > MAC address in the DT blob.
+> > 
+> > Also add the corresponding binding documentation file.
+> > 
+> > Signed-off-by: Michael Heimpold <mhei@heimpold.de>
+> > ---
+> > 
+> > v2: * took care of Arnd Bergmann's review comments
+> > 
+> >       - allow to specify MAC address via DT
+> >       - unconditionally define DT id table
+> >     
+> >     * increased the driver version minor number
+> >     * driver author's email address bounces, removed from address list
+> >  
+> >  .../devicetree/bindings/net/microchip-enc28j60.txt | 50
+> >  ++++++++++++++++++++++
+> Matching the compatible string is preferred here: microchip,enc28j60.txt
+> 
 
-I have my doubts that it=E2=80=99s worth splitting off into a separate
-driver.  There=E2=80=99s not a lot of use for it outside of the interna=
-ls of
-the tlv320aic3204.  There is a provision for putting the PLL output
-on a GPIO pin of the chip, but I=E2=80=99m not sure that=E2=80=99s a ju=
-stification
-for breaking out the clock stuff into its own driver.  Nobody=E2=80=99s=
- going
-to put a tlv320aic3204 chip on their boards because of the clocking;
-they=E2=80=99re going to put it there to be a codec.
+Ok, will change in next round.
 
---
-Jeremy McDermond (NH6Z)
-Xenotropic Systems
-mcdermj-MdGE8NL7F62ukZHgTAicrQ@public.gmane.org
+> >  drivers/net/ethernet/microchip/enc28j60.c          | 20 +++++++--
+> >  2 files changed, 67 insertions(+), 3 deletions(-)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/net/microchip-enc28j60.txt> 
+> > diff --git a/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
+> > b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt new file
+> > mode 100644
+> > index 0000000..847a97b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
+> > @@ -0,0 +1,50 @@
+> > +* Microchip ENC28J60
+> > +
+> > +This is a standalone 10 MBit ethernet controller with SPI interface.
+> > +
+> > +For each device connected to a SPI bus, define a child node within
+> > +the SPI master node.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "microchip,enc28j60"
+> > +- reg: Specify the SPI chip select the ENC28J60 is wired to
+> > +- interrupts: Specify the interrupt and interrupt type (usually falling
+> > edge) +
+> > +Optional properties:
+> > +- interrupt-parent: Specify the pHandle of the source interrupt
+> 
+> This is required in the sense that either the node or a parent node must
+> define it. In this case, since the SPI controller likely has a different
+> parent, you will pretty much always need it defined in this node.
 
+Understand. I think I should then move it to the required properties?
+BTW: I orientated on the qca-qca7000-spi.txt as this is a SPI ethernet
+device, too. Maybe we should also clarify this topic for this binding...
 
+> > +- spi-max-frequency: Maximum frequency of the SPI bus when accessing the
+> > ENC28J60. +  According to the ENC28J80 datasheet, the chip allows a
+> > maximum of 20 MHz, however, +  board designs may need to limit this
+> > value.
+> > +- local-mac-address: See ethernet.txt in the same directory.
+> > +
+> > +
+> > +Example (for NXP i.MX28 with pin control stuff for GPIO irq):
+> > +
+> > +        ssp2: ssp@80014000 {
+> > +                compatible = "fsl,imx28-spi";
+> > +                pinctrl-names = "default";
+> > +                pinctrl-0 = <&spi2_pins_b &spi2_sck_cfg>;
+> > +                status = "okay";
+> > +
+> > +                enc28j60: ethernet@0 {
+> > +                        compatible = "microchip,enc28j60";
+> > +                        pinctrl-names = "default";
+> > +                        pinctrl-0 = <&enc28j60_pins>;
+> 
+> Need to document using the pinctrl binding.
 
+Would it be enough, when I list both properties above and refer to
+the pinctrl binding?
+I wondered whether there are other possibilities to wire the irq,
+but I guess that using GPIO line is the usual way to do, so I'd add
+this to required properties, too.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for your feedback, regards
+
+Michael
+> 
+> > +                        reg = <0>;
+> > +                        interrupt-parent = <&gpio3>;
+> > +                        interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
+> > +                        spi-max-frequency = <12000000>;
+> > +                };
+> > +        };
+> > +
