@@ -1,93 +1,102 @@
-From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: devicetree: avoid duplicated matching code (was: Re: [PATCH 1/3] xhci: plat: adapt to unified device property interface)
-Date: Mon, 25 Apr 2016 09:38:41 +0300
-Message-ID: <87mvoiry4u.fsf@intel.com>
-References: <1461064246-27350-1-git-send-email-heikki.krogerus@linux.intel.com> <1461064246-27350-2-git-send-email-heikki.krogerus@linux.intel.com> <87fuuf9pip.fsf@intel.com> <CAL_JsqLVAN_dEcGUbNyiBjFJTSPSPjMKzWG9QBoJ71whpfmBiA@mail.gmail.com> <874mav9i9z.fsf@intel.com> <CAL_JsqLh76fPT0CWo6r=5TGJebXO5sLZ-BOtGZ=-fd1+n5S5eA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLh76fPT0CWo6r=5TGJebXO5sLZ-BOtGZ=-fd1+n5S5eA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v8 0/4] add reboot mode driver
+Date: Mon, 25 Apr 2016 14:50:51 +0800
+Message-ID: <1461567051-21734-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+
+This driver parses the reboot commands like "reboot bootloader"
+and "reboot recovery" to get a boot mode described in the
+device tree , then call the corresponding  write interfae
+to store the boot mode in some place like special register
+or ram , which can be read by the bootloader after system
+reboot.
+
+This is commonly done on Android based devices, in order to
+reboot the device into fastboot or recovery mode.
 
 
-Hi,
+Changes in v8:
+- do some cleanup when driver ubind
 
-Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
-> On Thu, Apr 21, 2016 at 8:57 AM, Felipe Balbi
-> <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->>
->> Hi,
->>
->> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
->>> On Thu, Apr 21, 2016 at 6:20 AM, Felipe Balbi
->>> <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->>>>
->>>> Hi,
->>>>
->>>> Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> writes:
->>>>> @@ -197,7 +196,7 @@ static int xhci_plat_probe(struct platform_device=
- *pdev)
->>>>>       }
->>>>>
->>>>>       xhci =3D hcd_to_xhci(hcd);
->>>>> -     match =3D of_match_node(usb_xhci_of_match, node);
->>>>> +     match =3D of_match_node(usb_xhci_of_match, pdev->dev.of_node);
->>>>
->>>> Rob, it's weird that OF-based drivers have to redo the same matching
->>>> which was already done by drivers/base/platform.c::platform_match() ju=
-st
->>>> to get match->data. If we know we matched, couldn't we just cache a
->>>> pointer to match->data in struct device_node.data ? Something like
->>>> below? (completely untested)
->>>
->>> Yes, it is. AIUI, there is some sort of race condition in doing what
->>> you suggest though. IIRC, Grant did that and reverted it if you look
->>> at the git history.
->>
->> looking at drivers/base/platform.c I can't find anything along these
->> lines. Adding Grant.
->>
->> Grant, any memory left of this race ?
->
-> https://lkml.org/lkml/2011/5/18/384
->
-> tl;dr: matching and probe is not atomic.
+Changes in v7:
+- fix some spelling mistakes
+- declare that the mode magic should be none-zero value
+- address some suggestions from Krzysztof, make syscon-reboot-mode driver data self-contained.
 
-cool, thanks
+Changes in v6:
+- fix a typo with "property"
+- describe property "mask" more clear
 
-=2D-=20
-balbi
+Changes in v5:
+- delete a unnecessary blank line in syscon-reboot-mode.txt
+- rename mode-fastoboot to mode-bootloader in syscon-reboot-mode.txt
+- rename macro BOOT_LOADER to BOOT_BL_DOWNLOAD, which gives a more clear mean
+- use two blank space under help in Kconfig
+- use unsigned int instead of int for member magic in struct mode_info
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v4:
+- remove mode-maskrom
+- rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
+- make this driver depends on OF to avoid kbuild test error
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Changes in v3:
+- descirbe all reboot mode as properity instead of subnode
+- scan multi properities
+- add mask value for some platform which only use some bits of the register
+  to store boot mode magic value
+- descirbe all reboot mode as property instead of subnode
+- add rk3036 support
+- descirbe all reboot mode as property instead of subnode
 
-iQIcBAEBAgAGBQJXHbtyAAoJEIaOsuA1yqRE2CMP/0Dti7Hr1bzh7r//GU+3a0ip
-nRT6ubLX5HJRDKwblEyk3bpdCsiI/uZYPDVcB2YhL7z1/C09o1NnAPnsE180HTd3
-wRY95TmoAYpXZzXmR0qg1HEHG5uCILNCnafdACWpsIE395YHlYdYeR0tP73Rr7oY
-KvSYu3Afto5hTinar+iz9Cp59ArWzAErHz8IMNOPdpVOP1WlIPFkcUcE9LDwvjTF
-rxt+LbswUCeLDwNKU+uSjBFavOOPTecwmfd8VUhoVhDZ2kcIgor8k6Ue2zblzF4K
-Bss33kc+cA+1miXVXpZ7Vrj+GYI79asWqH+2DQVW7JFu3OJc5UpheeefVqg0zSpR
-vBUj5Oe4+6wJlk1a/YdFjmcGyChzM0KI6mxfwOLcL/YbzZv8AR4jjdclYGEfOA3Y
-vNwlRImaP71U0053I9Apq5Yy9RYvNzyoG6k173+hSMtSnkfjCnjayjEtwBP1/m6h
-uo90ekdq8egldYSBosOwjv4/URMvowgUcmD2sGdBNjRPuMY0Td3OFW2LxQh409Gn
-lGOO8wPki6J+oghS39hoZejhxz2EBz09D2pg3j+8zIYuVquDbC963XImjmdAgwBk
-9dibO695flhNVMZfA4pl73HdU3EA/oIHM9t3yYZbRIYUTP+WwYdm9+LSbkIECEs0
-w9srkfVmWtTp52jzpd29
-=UjAJ
------END PGP SIGNATURE-----
---=-=-=--
+Changes in v2:
+- move to dir drivers/power/reset/
+- make syscon-reboot-mode a generic driver
+- make this node as a subnode of PMU
+- make this node as a subnode of pmugrf
+
+Changes in v1:
+- fix the embarrassed compile warning
+- correct the maskrom magic number
+- check for the normal reboot
+- correct the maskrom magic number
+- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
+
+Andy Yan (4):
+  dt-bindings: power: reset: add document for reboot-mode driver
+  power: reset: add reboot mode driver
+  ARM: dts: rockchip: add syscon-reboot-mode DT node
+  ARM64: dts: rockchip: add syscon-reboot-mode DT node
+
+ .../bindings/power/reset/reboot-mode.txt           |  25 +++++
+ .../bindings/power/reset/syscon-reboot-mode.txt    |  35 ++++++
+ arch/arm/boot/dts/rk3036.dtsi                      |  11 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |  10 ++
+ arch/arm/boot/dts/rk3xxx.dtsi                      |  12 ++-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  12 ++-
+ drivers/power/reset/Kconfig                        |  13 +++
+ drivers/power/reset/Makefile                       |   2 +
+ drivers/power/reset/reboot-mode.c                  | 118 +++++++++++++++++++++
+ drivers/power/reset/reboot-mode.h                  |  14 +++
+ drivers/power/reset/syscon-reboot-mode.c           |  99 +++++++++++++++++
+ include/dt-bindings/soc/rockchip_boot-mode.h       |  15 +++
+ 12 files changed, 363 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+ create mode 100644 drivers/power/reset/reboot-mode.c
+ create mode 100644 drivers/power/reset/reboot-mode.h
+ create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+ create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
+
+-- 
+1.9.1
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
