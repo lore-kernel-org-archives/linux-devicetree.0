@@ -1,36 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 7/7] ARM: dts: DRA7: Add dt nodes for PWMSS
-Date: Mon, 25 Apr 2016 08:05:57 -0500
-Message-ID: <20160425130557.GA11485@rob-hp-laptop>
-References: <1461343238-29274-1-git-send-email-fcooper@ti.com>
- <1461343238-29274-8-git-send-email-fcooper@ti.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 5/7] arm64/perf: Access pmu register using
+ <read/write>_sys_reg
+Date: Mon, 25 Apr 2016 14:06:37 +0100
+Message-ID: <20160425130637.GA29160@arm.com>
+References: <1461243525-13603-1-git-send-email-ashoks@broadcom.com>
+ <1461243525-13603-6-git-send-email-ashoks@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1461343238-29274-8-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1461243525-13603-6-git-send-email-ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 22, 2016 at 11:40:38AM -0500, Franklin S Cooper Jr wrote:
-> From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+On Thu, Apr 21, 2016 at 05:58:43AM -0700, Ashok Kumar wrote:
+> changed pmu register access to make use of <read/write>_sys_reg
+> from sysreg.h instead of accessing them directly.
 > 
-> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
-> for dt bindings.
-> 
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-> [fcooper-l0cyMroinI0@public.gmane.org: Add eCAP and use updated bindings for PWMSS and ePWM]
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 > ---
->  .../devicetree/bindings/pwm/pwm-tiecap.txt         |  9 +++
->  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |  9 +++
->  .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 15 +++-
->  arch/arm/boot/dts/dra7.dtsi                        | 90 ++++++++++++++++++++++
->  4 files changed, 122 insertions(+), 1 deletion(-)
+>  arch/arm64/kernel/perf_event.c | 33 ++++++++++++++++-----------------
+>  1 file changed, 16 insertions(+), 17 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This doesn't apply on top of -rc1 + the first four patches in your series.
+What am I missing?
+
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
