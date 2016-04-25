@@ -1,103 +1,49 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] arm: dts: lpc32xx: reparent SIC1 and SIC2
- interrupts from MIC
-Date: Mon, 25 Apr 2016 23:55:21 +0300
-Message-ID: <571E8439.7080400@mleia.com>
-References: <1461545990-25560-1-git-send-email-vz@mleia.com>
- <1461546041-25713-1-git-send-email-vz@mleia.com>
- <1461600301.6934.5.camel@localhost>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Mon, 25 Apr 2016 22:56:50 +0200
+Message-ID: <20160425205650.GA31129@lunn.ch>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+ <1461230323-27891-2-git-send-email-pramod.kumar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461600301.6934.5.camel@localhost>
+Content-Disposition: inline
+In-Reply-To: <1461230323-27891-2-git-send-email-pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylvain,
+Hi Pramod
 
-On 25.04.2016 19:05, Sylvain Lemieux wrote:
-> Hi Vladimir,
-> 
-> On Mon, 2016-04-25 at 04:00 +0300, Vladimir Zapolskiy wrote:
->> The change adds separate device nodes for SIC1 and SIC2 interrupt
->> controllers and reparents all defined SIC1 and SIC2 interrupt
->> producers to the correspondent interrupt controller, this is needed to
->> perform switching to a new LPC32xx MIC/SIC interrupt controller driver.
->>
->> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
->> ---
->> Changes from v1 to v2:
->> * squashed two step change in lpc32xx.dtsi - new irqchip driver can be
->>   used (i.e. board boots with access to userspace) with old DTS file,
->>   so there is no need to fix DTS firstly and then switch to a new driver,
->> * removed "interrupt-controller-name" and "wakeup-sources" properties
->>   from all interrupt controllers,
->> * removed outdated comment.
->>
->>  arch/arm/boot/dts/lpc32xx.dtsi | 58 +++++++++++++++++++++++++++++-------------
->>  1 file changed, 41 insertions(+), 17 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
->> index 73c4746..4570ddc 100644
->> --- a/arch/arm/boot/dts/lpc32xx.dtsi
->> +++ b/arch/arm/boot/dts/lpc32xx.dtsi
->> @@ -92,7 +92,8 @@
-> 
-> ...
->>  
->> -			/*
->> -			 * MIC Interrupt controller includes:
->> -			 *   MIC @40008000
->> -			 *   SIC1 @4000C000
->> -			 *   SIC2 @40010000
->> -			 */
->>  			mic: interrupt-controller@40008000 {
->>  				compatible = "nxp,lpc3220-mic";
->>  				interrupt-controller;
->> @@ -327,6 +326,28 @@
-> 
-> I think your are missing one change in your patch,
-> the mic register range should be 0x4000, not 0xC000.
-> 
-> Everything else is OK.
+I took a closer look. I don't see why the current MDIO code should not
+be used, rather than adding a new framework.
 
-Good catch, thank you for pointing it out, and let me fix it
-immediately. Fortunately it is corrected in an example from v2 1/4.
+What you need for your Non Ethernet PHYs is that they are somehow
+probed. The current MDIO code will do that, based on the compatible
+string. An mdio device gets passed a struct mdio_device * to its probe
+function, giving you the bus and address on the bus for the
+device. Your PHY driver can then register itself using
+devm_of_phy_provider_register(). The user of the PHY then needs to use
+devm_phy_get() to get a handle on the phy, and can then use
+phy_power_on()/phy_power_off().
 
->>  				#interrupt-cells = <2>;
->>  			};
->>  
->> +			sic1: interrupt-controller@4000c000 {
->> +				compatible = "nxp,lpc3220-sic";
->> +				reg = <0x4000c000 0x4000>;
->> +				interrupt-controller;
->> +				#interrupt-cells = <2>;
->> +
->> +				interrupt-parent = <&mic>;
->> +				interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
->> +					     <30 IRQ_TYPE_LEVEL_LOW>;
->> +				};
->> +
->> +			sic2: interrupt-controller@40010000 {
->> +				compatible = "nxp,lpc3220-sic";
->> +				reg = <0x40010000 0x4000>;
->> +				interrupt-controller;
->> +				#interrupt-cells = <2>;
->> +
->> +				interrupt-parent = <&mic>;
->> +				interrupts = <1 IRQ_TYPE_LEVEL_LOW>,
->> +					     <31 IRQ_TYPE_LEVEL_LOW>;
->> +			};
->> +
-> ...
-> 
+There is a very simple example here for an MDIO device driver:
 
---
-With best wishes,
-Vladimir
+http://thread.gmane.org/gmane.linux.network/393532
+
+The muxing of the MDIO busses looks a little tricky. At the moment you have:
+
+    writel(cmd, base + MDIO_PARAM_OFFSET);
+
+which mixes together the muxing parameters and the write value. Can
+this register be accessed as two 16 bit registers? If it can be, you
+can cleanly separate out the muxing.
+
+Take a look at mdio-mux-gpio.c and mdio-mux-mmioreg.c for examples of
+MDIO muxes.
+
+     Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
