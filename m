@@ -1,175 +1,117 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/4] arm: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC
-Date: Tue, 26 Apr 2016 00:02:23 +0300
-Message-ID: <1461618143-12310-1-git-send-email-vz@mleia.com>
-References: <1461546041-25713-1-git-send-email-vz@mleia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461546041-25713-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 3/5] Input: zforce_ts: Add device tree support for
+ scanning frequency
+Date: Mon, 25 Apr 2016 14:11:22 -0700
+Message-ID: <20160425211122.GD26059@dtor-ws>
+References: <1461135285-17582-1-git-send-email-dirk.behme@de.bosch.com>
+ <1461135285-17582-3-git-send-email-dirk.behme@de.bosch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461135285-17582-3-git-send-email-dirk.behme@de.bosch.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-input@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Knut Wohlrab <Knut.Wohlrab@de.bosch.com>, Oleksij Rempel <linux@rempel-privat.de>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The change adds separate device nodes for SIC1 and SIC2 interrupt
-controllers and reparents all defined SIC1 and SIC2 interrupt
-producers to the correspondent interrupt controller, this is needed to
-perform switching to a new LPC32xx MIC/SIC interrupt controller driver.
+Adding devicetree overlords...
 
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
----
-Changes from v2 to v3:
-* fix io region size for MIC controller after moving SIC1/SIC2
-  controllers out,
-* move MIC 'reg' property up to follow 'compatible' property.
+On Wed, Apr 20, 2016 at 08:54:43AM +0200, Dirk Behme wrote:
+> From: Knut Wohlrab <Knut.Wohlrab@de.bosch.com>
+> 
+> Add device tree support for idle and finger scanning frequency.
+> 
+> Signed-off-by: Knut Wohlrab <Knut.Wohlrab@de.bosch.com>
+> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> ---
+>  .../devicetree/bindings/input/touchscreen/zforce_ts.txt   |  4 ++++
+>  drivers/input/touchscreen/zforce_ts.c                     | 15 ++++++++++++++-
+>  include/linux/platform_data/zforce_ts.h                   |  2 ++
+>  3 files changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
+> index e3c27c4..09ead84 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
+> @@ -11,6 +11,8 @@ Required properties:
+>  Optional properties:
+>  - irq-gpios : interrupt gpio the chip is connected to
+>  - vdd-supply: Regulator controlling the controller supply
+> +- scan-freq-idle: idle scanning frequency in Hz (0 - 65535 Hz; default 10 Hz)
+> +- scan-freq-finger: touch scanning frequeny in Hz (0 - 65535 Hz; default 50 Hz)
 
-Changes from v1 to v2:
-* squashed two step change in lpc32xx.dtsi - new irqchip driver can be
-  used (i.e. board boots with access to userspace) with old DTS file,
-  so there is no need to fix DTS firstly and then switch to a new driver,
-* removed "interrupt-controller-name" and "wakeup-sources" properties
-  from all interrupt controllers,
-* removed outdated comment.
+Should we cal it scan-freq-active instead?
 
- arch/arm/boot/dts/lpc32xx.dtsi | 60 +++++++++++++++++++++++++++++-------------
- 1 file changed, 42 insertions(+), 18 deletions(-)
+>  
+>  Example:
+>  
+> @@ -28,6 +30,8 @@ Example:
+>  
+>  			x-size = <800>;
+>  			y-size = <600>;
+> +			scan-freq-idle = <50>;
+> +			scan-freq-finger = <250>;
+>  		};
+>  
+>  		/* ... */
+> diff --git a/drivers/input/touchscreen/zforce_ts.c b/drivers/input/touchscreen/zforce_ts.c
+> index ddfc120..51fe2de 100644
+> --- a/drivers/input/touchscreen/zforce_ts.c
+> +++ b/drivers/input/touchscreen/zforce_ts.c
+> @@ -87,6 +87,9 @@
+>  
+>  #define SETCONFIG_DUALTOUCH		(1 << 0)
+>  
+> +#define SCAN_FREQ_DEFAULT_IDLE		10
+> +#define SCAN_FREQ_DEFAULT_FINGER	50
+> +
+>  struct zforce_point {
+>  	int coord_x;
+>  	int coord_y;
+> @@ -304,7 +307,9 @@ static int zforce_start(struct zforce_ts *ts)
+>  		goto error;
+>  	}
+>  
+> -	ret = zforce_scan_frequency(ts, 10, 50, 50);
+> +	ret = zforce_scan_frequency(ts, pdata->scan_freq_idle,
+> +				    pdata->scan_freq_finger,
+> +				    pdata->scan_freq_finger);
+>  	if (ret) {
+>  		dev_err(&client->dev, "Unable to set scan frequency, %d\n",
+>  			ret);
+> @@ -839,6 +844,14 @@ static struct zforce_ts_platdata *zforce_parse_dt(struct device *dev)
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> +	if (of_property_read_u16(np, "scan-freq-idle",
+> +				 &pdata->scan_freq_idle))
+> +		pdata->scan_freq_idle = SCAN_FREQ_DEFAULT_IDLE;
+> +
+> +	if (of_property_read_u16(np, "scan-freq-finger",
+> +				 &pdata->scan_freq_finger))
+> +		pdata->scan_freq_finger = SCAN_FREQ_DEFAULT_FINGER;
+> +
+>  	return pdata;
+>  }
+>  
+> diff --git a/include/linux/platform_data/zforce_ts.h b/include/linux/platform_data/zforce_ts.h
+> index 7bdece8..90a1181 100644
+> --- a/include/linux/platform_data/zforce_ts.h
+> +++ b/include/linux/platform_data/zforce_ts.h
+> @@ -18,6 +18,8 @@
+>  struct zforce_ts_platdata {
+>  	unsigned int x_max;
+>  	unsigned int y_max;
+> +	u16 scan_freq_idle;
+> +	u16 scan_freq_finger;
+>  };
+>  
+>  #endif /* _LINUX_INPUT_ZFORCE_TS_H */
+> -- 
+> 2.8.0
+> 
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 73c4746..e295e1e 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -92,7 +92,8 @@
- 			ohci: ohci@0 {
- 				compatible = "nxp,ohci-nxp", "usb-ohci";
- 				reg = <0x0 0x300>;
--				interrupts = <59 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&usbclk LPC32XX_USB_CLK_HOST>;
- 				status = "disabled";
- 			};
-@@ -100,10 +101,11 @@
- 			usbd: usbd@0 {
- 				compatible = "nxp,lpc3220-udc";
- 				reg = <0x0 0x300>;
--				interrupts = <61 IRQ_TYPE_LEVEL_HIGH>,
--					     <62 IRQ_TYPE_LEVEL_HIGH>,
--					     <60 IRQ_TYPE_LEVEL_HIGH>,
--					     <58 IRQ_TYPE_LEVEL_LOW>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <29 IRQ_TYPE_LEVEL_HIGH>,
-+					     <30 IRQ_TYPE_LEVEL_HIGH>,
-+					     <28 IRQ_TYPE_LEVEL_HIGH>,
-+					     <26 IRQ_TYPE_LEVEL_LOW>;
- 				clocks = <&usbclk LPC32XX_USB_CLK_DEVICE>;
- 				status = "disabled";
- 			};
-@@ -111,7 +113,8 @@
- 			i2cusb: i2c@300 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x300 0x100>;
--				interrupts = <63 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <31 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&usbclk LPC32XX_USB_CLK_I2C>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -263,7 +266,8 @@
- 			i2c1: i2c@400A0000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A0000 0x100>;
--				interrupts = <51 IRQ_TYPE_LEVEL_LOW>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				pnx,timeout = <0x64>;
-@@ -273,7 +277,8 @@
- 			i2c2: i2c@400A8000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A8000 0x100>;
--				interrupts = <50 IRQ_TYPE_LEVEL_LOW>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <18 IRQ_TYPE_LEVEL_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				pnx,timeout = <0x64>;
-@@ -314,19 +319,35 @@
- 				};
- 			};
- 
--			/*
--			 * MIC Interrupt controller includes:
--			 *   MIC @40008000
--			 *   SIC1 @4000C000
--			 *   SIC2 @40010000
--			 */
- 			mic: interrupt-controller@40008000 {
- 				compatible = "nxp,lpc3220-mic";
-+				reg = <0x40008000 0x4000>;
- 				interrupt-controller;
--				reg = <0x40008000 0xC000>;
- 				#interrupt-cells = <2>;
- 			};
- 
-+			sic1: interrupt-controller@4000c000 {
-+				compatible = "nxp,lpc3220-sic";
-+				reg = <0x4000c000 0x4000>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+
-+				interrupt-parent = <&mic>;
-+				interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
-+					     <30 IRQ_TYPE_LEVEL_LOW>;
-+				};
-+
-+			sic2: interrupt-controller@40010000 {
-+				compatible = "nxp,lpc3220-sic";
-+				reg = <0x40010000 0x4000>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+
-+				interrupt-parent = <&mic>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_LOW>,
-+					     <31 IRQ_TYPE_LEVEL_LOW>;
-+			};
-+
- 			uart1: serial@40014000 {
- 				compatible = "nxp,lpc3220-hsuart";
- 				reg = <0x40014000 0x1000>;
-@@ -351,7 +372,8 @@
- 			rtc: rtc@40024000 {
- 				compatible = "nxp,lpc3220-rtc";
- 				reg = <0x40024000 0x1000>;
--				interrupts = <52 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk LPC32XX_CLK_RTC>;
- 			};
- 
-@@ -404,7 +426,8 @@
- 			adc: adc@40048000 {
- 				compatible = "nxp,lpc3220-adc";
- 				reg = <0x40048000 0x1000>;
--				interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk LPC32XX_CLK_ADC>;
- 				status = "disabled";
- 			};
-@@ -412,7 +435,8 @@
- 			tsc: tsc@40048000 {
- 				compatible = "nxp,lpc3220-tsc";
- 				reg = <0x40048000 0x1000>;
--				interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk LPC32XX_CLK_ADC>;
- 				status = "disabled";
- 			};
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
