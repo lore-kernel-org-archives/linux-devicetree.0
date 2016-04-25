@@ -1,33 +1,68 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [RESEND PATCH 8/8] arm64: dts: rockchip: move the rk3368 thermal data into rk3368.dtsi
-Date: Mon, 25 Apr 2016 09:57:56 +0200
-Message-ID: <1669183.h99KHesK9J@diego>
-References: <1461319374-10024-1-git-send-email-wxt@rock-chips.com> <1461319374-10024-9-git-send-email-wxt@rock-chips.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: clk: bcm2835: what is the best way to limit the selection of parent
+ clocks in the device-tree
+Date: Mon, 25 Apr 2016 10:01:20 +0200
+Message-ID: <571DCED0.9010008@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461319374-10024-9-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: edubezval@gmail.com, dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <mbrugger@suse.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Eric Anholt <eric@anholt.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 22. April 2016, 18:02:54 schrieb Caesar Wang:
-> In order to be standard to manage for rockchip SoCs,  move the thermal
-> data into rk3368 dtsi, we needn't to add a new file for thermal.
-> 
-> Fixes commit f990238f859e
-> ("arm64: dts: rockchip: Add main thermal info to rk3368.dtsi")
-> 
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
+Hi!
 
-completely independent of the thermal changes above, so I've picked this one 
-up for 4.7
+On the raspberry pi the pcm (and other) clock has multiple parent
+clocks that the driver may select from to get the "best fit" clock.
 
+This list of parents of valid for each clock is hard-coded in the driver.
 
-Thanks
-Heiko
+But this "standard" list of parents includes some clocks that are
+independently controlled by the firmware with - unfortunately for
+now - no notification of changes going back to the linux kernel.
+This is mostly needed for powermanagement and ARM clock
+modifications as well as to avoid overheating.
+
+So how is the best way to define those parent clocks one wants to
+use for an individual clock?
+
+As far as I can tell none of the default dt-properties really fit.
+
+So I wonder if something like the following would be acceptable:
+cprman: cprman@7e101000 {
+     compatible = "brcm,bcm2835-cprman";
+     #clock-cells = <1>;
+     reg = <0x7e101000 0x2000>;
+     clocks = <&clk_osc>;
+     /* limit parent clock selection for the PCM clock */
+     pcm_clk@BCM2835_CLOCK_PCM {
+         reg = <BCM2835_CLOCK_PCM>;
+         clock-parent-names = "gnd", "xosc", "plla_per", "plld_per";
+     };
+};
+
+As an alternative it could also be defined on the consumer side:
+i2s: i2s@7e203000 {
+     compatible = "brcm,bcm2835-i2s";
+     reg = <0x7e203000 0x24>;
+     clocks = <&cprman BCM2835_CLOCK_PCM>;
+     clock-parent-names = "gnd", "xosc", "plla_per", "plld_per";
+};
+This variant might need to be made "clock-parent-names-0",
+"clock-parent-names-1", ... (analogous to "pinctrl-0") to allow
+distinct parents for distinct clocks.
+
+Is something like this acceptable?
+
+If not, what approach could be taken to achieve the required
+(except for hard-coding the selection it in the driver)?
+
+If it is the second, then I guess the implementation would need
+to go into the core framework while for the first the logic could
+also stay within the driver.
+
+Thanks,
+                 Martin
+
