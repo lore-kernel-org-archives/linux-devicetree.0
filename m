@@ -1,50 +1,39 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: strange dtc errors after adding sram node
-Date: Mon, 25 Apr 2016 15:06:46 +0200
-Message-ID: <10749204.4vhK495hJd@wuerfel>
-References: <571B283F.8010707@lategoodbye.de> <1461407589.1986.3.camel@embedded.rocks> <571DB385.9010305@lategoodbye.de>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 5/7] arm64/perf: Access pmu register using
+ <read/write>_sys_reg
+Date: Mon, 25 Apr 2016 14:12:39 +0100
+Message-ID: <20160425131238.GA30830@arm.com>
+References: <1461243525-13603-1-git-send-email-ashoks@broadcom.com>
+ <1461243525-13603-6-git-send-email-ashoks@broadcom.com>
+ <20160425130637.GA29160@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571DB385.9010305-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160425130637.GA29160-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Cc: =?ISO-8859-1?Q?J=F6rg?= Krause <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 25 April 2016 08:04:53 Stefan Wahren wrote:
-> >>>                     reg = <0x80080000 0x10000>;
-> >>
-> >> Follwing the address map for the i.MX28 (p. 125ff) the AHB is mapped
-> >> to
-> >> different start addresses:
-> >>
-> >> Bus  MNEMONIC        START ADDRESS
-> >> --------------------------------------
-> >> AHB  OCRAM           0x00000000
-> >> AHB  USBCTRL0        0x80080000
-> >> AHB  OCROM           0xC0000000
-> >>
-> >> So instead of replacing ahb@80080000 by ahb@00000000 a new node
-> >> should
-> >> be created. However, I am not sure if this is really necessary, I
-> >> haven't seen it for all device trees using "mmio-sram".
-> >
-> > Sorry, for not looking carefully enough at your patch. Haven't seen you
-> > adjusted the 'reg' property. I tried with an additional ahb@00000000 no
-> > de and this did work.
-> >
-> > So, there is really something odd here...
+On Mon, Apr 25, 2016 at 02:06:37PM +0100, Will Deacon wrote:
+> On Thu, Apr 21, 2016 at 05:58:43AM -0700, Ashok Kumar wrote:
+> > changed pmu register access to make use of <read/write>_sys_reg
+> > from sysreg.h instead of accessing them directly.
+> > 
+> > Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  arch/arm64/kernel/perf_event.c | 33 ++++++++++++++++-----------------
+> >  1 file changed, 16 insertions(+), 17 deletions(-)
 > 
-> i've found reason for these errors. I missed to adjust the affected dts 
-> files which refer to the ahb node.
+> This doesn't apply on top of -rc1 + the first four patches in your series.
+> What am I missing?
 
-Makes sense. Maybe you can just remove the address and 'reg' property from
-the ahb node? That should solve the dtc problem and make the contents
-more like what we have elsewhere.
+... the kvm changes, which we merged for -rc2. Sorry for the noise, I'll
+base this on -rc3 (to match the for-next/core branch).
 
-	Arnd
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
