@@ -1,41 +1,46 @@
-From: Eric Engestrom <eric@engestrom.ch>
-Subject: [PATCH 13/41] Documentation: dt: interrupt-controller: fix spelling mistakes
-Date: Mon, 25 Apr 2016 01:24:10 +0100
-Message-ID: <1461543878-3639-14-git-send-email-eric@engestrom.ch>
+From: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+Subject: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
+Date: Mon, 25 Apr 2016 01:24:12 +0100
+Message-ID: <1461543878-3639-16-git-send-email-eric@engestrom.ch>
 References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Eric Engestrom <eric@engestrom.ch>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461543878-3639-1-git-send-email-eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Engestrom <eric@engestrom.ch>
+Signed-off-by: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
 ---
- .../devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu       | 4 ++--
+ Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu b/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu
-index 43effa0..18d4f40 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu
-@@ -4,7 +4,7 @@ All TI OMAP4/5 (and their derivatives) an interrupt controller that
- routes interrupts to the GIC, and also serves as a wakeup source. It
- is also referred to as "WUGEN-MPU", hence the name of the binding.
- 
--Reguired properties:
-+Required properties:
- 
- - compatible : should contain at least "ti,omap4-wugen-mpu" or
-   "ti,omap5-wugen-mpu"
-@@ -20,7 +20,7 @@ Notes:
- - Because this HW ultimately routes interrupts to the GIC, the
-   interrupt specifier must be that of the GIC.
- - Only SPIs can use the WUGEN as an interrupt parent. SGIs and PPIs
--  are explicitly forbiden.
-+  are explicitly forbidden.
- 
- Example:
- 
+diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+index 5e97a95..b98b291 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+@@ -178,7 +178,7 @@ see regulator.txt - with additional custom properties described below:
+ - qcom,force-mode:
+ 	Usage: optional (default if no other qcom,force-mode is specified)
+ 	Value type: <u32>
+-	Defintion: indicates that the regulator should be forced to a
++	Definition: indicates that the regulator should be forced to a
+ 		   particular mode, valid values are:
+ 		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+ 		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+@@ -204,7 +204,7 @@ see regulator.txt - with additional custom properties described below:
+ - qcom,force-mode:
+ 	Usage: optional
+ 	Value type: <u32>
+-	Defintion: indicates that the regulator should not be forced to any
++	Definition: indicates that the regulator should not be forced to any
+ 		   particular mode, valid values are:
+ 		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
+ 		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
 -- 
 2.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
