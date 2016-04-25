@@ -1,43 +1,65 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
- addresses
-Date: Mon, 25 Apr 2016 10:41:26 +0300
-Message-ID: <20160425074126.GL1725@lahna.fi.intel.com>
-References: <1460992811.8946.22.camel@linux.intel.com>
- <5714FCBE.3060009@metafoo.de>
- <20160419124028.GF1725@lahna.fi.intel.com>
- <57162C4E.9090904@metafoo.de>
- <20160419131631.GG1725@lahna.fi.intel.com>
- <5716333D.1040106@metafoo.de>
- <20160419144027.GH1725@lahna.fi.intel.com>
- <20160424201437.GA2123@katana>
- <20160425072553.GK1725@lahna.fi.intel.com>
- <20160425073940.GD1541@katana>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable S/PDIF on the Cubietruck
+Date: Mon, 25 Apr 2016 09:56:54 +0200
+Message-ID: <20160425075654.GI25817@lukather>
+References: <1461538978-3137-1-git-send-email-christopher.spinrath@rwth-aachen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k9xkV0rc9XGsukaG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160425073940.GD1541@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+In-Reply-To: <1461538978-3137-1-git-send-email-christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 25, 2016 at 09:39:41AM +0200, Wolfram Sang wrote:
-> On Mon, Apr 25, 2016 at 10:25:53AM +0300, Mika Westerberg wrote:
-> > On Sun, Apr 24, 2016 at 10:14:37PM +0200, Wolfram Sang wrote:
-> > > 
-> > > > The above should work with both DT and ACPI so I'm OK with the current
-> > > > patch. We can add ACPI parts later when needed.
-> > > 
-> > > Just to make sure, I read this as an ack for the original patch?
-> > 
-> > Yes :)
-> 
-> Thanks! Could you use the formal tag for that in the future please?
-> Patchwork automatically collects them and that saves me some work. (I
-> even have a keyboard macro for that and use it a lot)
 
-Sure, sorry about that.
+--k9xkV0rc9XGsukaG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Mon, Apr 25, 2016 at 01:02:58AM +0200, christopher.spinrath@rwth-aachen.=
+de wrote:
+> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+>=20
+> Enable the S/PDIF transmitter present on the Cubietruck.
+>=20
+> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--k9xkV0rc9XGsukaG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXHc3GAAoJEBx+YmzsjxAgWvcP/1kYLNnQa1neJRau1Zc6nYw5
+1MFP/nbqF5MU5ZF1KOZ2PJuYWZS2eIsLEmlUZrDbHD4PyK8qwlPBJg0YNQue4n6S
+QgT1AGHdzJxUHPrTxs6X3GP4QMsBUrcGUnATv0EjeBohcuOt0OZf9J5ttulq/mtw
+NEW99Cs/l1n0G/95yl24VTiE+iJz7BNVjvT1+IGf688G8M/Ie30RzSNFg0knX4R+
+nLVWt/5qCyMYNayVEx9uqyC1ODfK4/R+usytmlfDIltMq/8YS6WMfxQppfR3Lrnf
+LhCXcTUCmz0c1d1mXrljHUBYRlDqxKOneC6StDdvmKuNMH0vH5OGgz7HHtX6ku+H
+oJXQAHJxakiAains3ItLsPqHiwFr6giLoMgJixQTXW7EWhHuY0H6fN8EKvZ/LNjG
+Cfrkg+gCodkk+OFGu1pE2LZ+dIlOMqt0fypjGB/mG4DjIautK+ZG0iWWApFtHqMs
+6vkp6IjFTPlPaSxeFwc1XcWL/3cXdrcShxRTh1ck40DvGgJk0Rwl9WYutHKg3wgi
+9xYfb+Uob4UCuhqYXph+j3lznNAymyyql8zBAEVTNW+PBiuYj+g9ozV6wAlOIJ9E
+af+3XIzwrzpQYEwJ/97F+uzCZjdtYuCOMPz2elTLIHtvJfYDq4kBDkyPbHenWXIV
+uqfmuHq4/Dyfk/mJ+MQL
+=pV4t
+-----END PGP SIGNATURE-----
+
+--k9xkV0rc9XGsukaG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
