@@ -1,121 +1,93 @@
-From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Subject: Re: strange dtc errors after adding sram node
-Date: Mon, 25 Apr 2016 08:04:53 +0200
-Message-ID: <571DB385.9010305@lategoodbye.de>
-References: <571B283F.8010707@lategoodbye.de>
- <1461399514.2205.20.camel@embedded.rocks>
- <1461407589.1986.3.camel@embedded.rocks>
+From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: devicetree: avoid duplicated matching code (was: Re: [PATCH 1/3] xhci: plat: adapt to unified device property interface)
+Date: Mon, 25 Apr 2016 09:38:41 +0300
+Message-ID: <87mvoiry4u.fsf@intel.com>
+References: <1461064246-27350-1-git-send-email-heikki.krogerus@linux.intel.com> <1461064246-27350-2-git-send-email-heikki.krogerus@linux.intel.com> <87fuuf9pip.fsf@intel.com> <CAL_JsqLVAN_dEcGUbNyiBjFJTSPSPjMKzWG9QBoJ71whpfmBiA@mail.gmail.com> <874mav9i9z.fsf@intel.com> <CAL_JsqLh76fPT0CWo6r=5TGJebXO5sLZ-BOtGZ=-fd1+n5S5eA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461407589.1986.3.camel-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLh76fPT0CWo6r=5TGJebXO5sLZ-BOtGZ=-fd1+n5S5eA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi J=C3=B6rg,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Am 23.04.2016 um 12:33 schrieb J=C3=B6rg Krause:
-> Hi Stefan,
->
-> On Sa, 2016-04-23 at 10:18 +0200, J=C3=B6rg Krause wrote:
->> Hi Stefan,
+
+Hi,
+
+Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> On Thu, Apr 21, 2016 at 8:57 AM, Felipe Balbi
+> <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
 >>
->> On Sa, 2016-04-23 at 09:46 +0200, Stefan Wahren wrote:
->>> Hi,
->>>
->>> i want to add an sram node to arch/arm/boot/dts/imx28.dtsi.
->>> According
->>> to
->>> the reference manual [1] the On-Chip RAM is connected to AHB,
->>> start
->>> address 0 and has a size of 128 KB.
->>>
->>> So i modified the imx28.dtsi based on the patch below.
->>> Unfortunately
->>> the
->>> dtc give me some strang errors:
->>>
->>> ERROR (duplicate_label): Duplicate label 'mac0' on
->>> /ahb@80080000/ethernet@800f0000 and /ahb@00000000/ethernet@800f0000
->>> ERROR: Input tree has errors, aborting (use -f to force output)
->>>
->>> What's wrong with my patch or does it reveal another issue?
->>>
->>> Regards
->>> Stefan
->>>
->>> [1] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM
->>> .p
->>> df
->>> i.MX28 Applications Processor Reference Manual, Rev. 2, 08/2013
->>> Chapter 4.1 Memory Map Overview
->>>
->>> -------------------------->8---------------------------------------
->>> --- a/arch/arm/boot/dts/imx28.dtsi
->>> +++ b/arch/arm/boot/dts/imx28.dtsi
->>> @@ -1311,13 +1311,18 @@
->>>    		};
->>>    	};
->>>
->>> -	ahb@80080000 {
->>> +	ahb@00000000 {
->>>    		compatible =3D "simple-bus";
->>>    		#address-cells =3D <1>;
->>>    		#size-cells =3D <1>;
->>> -		reg =3D <0x80080000 0x80000>;
->>> +		reg =3D <0x00000000 0x20000>, <0x80080000 0x80000>;
->>>    		ranges;
->>>
->>> +		ocram: sram@00000000 {
->>> +			compatible =3D "mmio-sram";
->>> +			reg =3D <0x00000000 0x20000>;
->>> +		};
->>> +
->>>    		usb0: usb@80080000 {
->>>    			compatible =3D "fsl,imx28-usb", "fsl,imx27-
->>> usb";
->>>    			reg =3D <0x80080000 0x10000>;
+>> Hi,
 >>
->> Follwing the address map for the i.MX28 (p. 125ff) the AHB is mapped
->> to
->> different start addresses:
+>> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>>> On Thu, Apr 21, 2016 at 6:20 AM, Felipe Balbi
+>>> <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> writes:
+>>>>> @@ -197,7 +196,7 @@ static int xhci_plat_probe(struct platform_device=
+ *pdev)
+>>>>>       }
+>>>>>
+>>>>>       xhci =3D hcd_to_xhci(hcd);
+>>>>> -     match =3D of_match_node(usb_xhci_of_match, node);
+>>>>> +     match =3D of_match_node(usb_xhci_of_match, pdev->dev.of_node);
+>>>>
+>>>> Rob, it's weird that OF-based drivers have to redo the same matching
+>>>> which was already done by drivers/base/platform.c::platform_match() ju=
+st
+>>>> to get match->data. If we know we matched, couldn't we just cache a
+>>>> pointer to match->data in struct device_node.data ? Something like
+>>>> below? (completely untested)
+>>>
+>>> Yes, it is. AIUI, there is some sort of race condition in doing what
+>>> you suggest though. IIRC, Grant did that and reverted it if you look
+>>> at the git history.
 >>
->> Bus	MNEMONIC	START ADDRESS
->> --------------------------------------
->> AHB	OCRAM 		0x00000000
->> AHB	USBCTRL0	0x80080000
->> AHB	OCROM		0xC0000000
+>> looking at drivers/base/platform.c I can't find anything along these
+>> lines. Adding Grant.
 >>
->> So instead of replacing ahb@80080000 by ahb@00000000 a new node
->> should
->> be created. However, I am not sure if this is really necessary, I
->> haven't seen it for all device trees using "mmio-sram".
+>> Grant, any memory left of this race ?
 >
-> Sorry, for not looking carefully enough at your patch. Haven't seen y=
-ou
-> adjusted the 'reg' property. I tried with an additional ahb@00000000 =
-no
-> de and this did work.
+> https://lkml.org/lkml/2011/5/18/384
 >
-> So, there is really something odd here...
+> tl;dr: matching and probe is not atomic.
 
-i've found reason for these errors. I missed to adjust the affected dts=
-=20
-files which refer to the ahb node.
+cool, thanks
 
-Stefan
+=2D-=20
+balbi
 
->
-> Best regards
-> J=C3=B6rg Krause
->
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXHbtyAAoJEIaOsuA1yqRE2CMP/0Dti7Hr1bzh7r//GU+3a0ip
+nRT6ubLX5HJRDKwblEyk3bpdCsiI/uZYPDVcB2YhL7z1/C09o1NnAPnsE180HTd3
+wRY95TmoAYpXZzXmR0qg1HEHG5uCILNCnafdACWpsIE395YHlYdYeR0tP73Rr7oY
+KvSYu3Afto5hTinar+iz9Cp59ArWzAErHz8IMNOPdpVOP1WlIPFkcUcE9LDwvjTF
+rxt+LbswUCeLDwNKU+uSjBFavOOPTecwmfd8VUhoVhDZ2kcIgor8k6Ue2zblzF4K
+Bss33kc+cA+1miXVXpZ7Vrj+GYI79asWqH+2DQVW7JFu3OJc5UpheeefVqg0zSpR
+vBUj5Oe4+6wJlk1a/YdFjmcGyChzM0KI6mxfwOLcL/YbzZv8AR4jjdclYGEfOA3Y
+vNwlRImaP71U0053I9Apq5Yy9RYvNzyoG6k173+hSMtSnkfjCnjayjEtwBP1/m6h
+uo90ekdq8egldYSBosOwjv4/URMvowgUcmD2sGdBNjRPuMY0Td3OFW2LxQh409Gn
+lGOO8wPki6J+oghS39hoZejhxz2EBz09D2pg3j+8zIYuVquDbC963XImjmdAgwBk
+9dibO695flhNVMZfA4pl73HdU3EA/oIHM9t3yYZbRIYUTP+WwYdm9+LSbkIECEs0
+w9srkfVmWtTp52jzpd29
+=UjAJ
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
