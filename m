@@ -1,79 +1,39 @@
-From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH 09/41] Documentation: dt: clock: fix spelling mistakes
-Date: Sun, 24 Apr 2016 20:00:51 -0700
-Message-ID: <571D8863.3030202@infradead.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 19/41] Documentation: dt: opp: fix spelling mistake
+Date: Mon, 25 Apr 2016 08:32:56 +0530
+Message-ID: <20160425030256.GG22726@vireshk-i7>
 References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
- <1461543878-3639-10-git-send-email-eric@engestrom.ch>
+ <1461543878-3639-20-git-send-email-eric@engestrom.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1461543878-3639-10-git-send-email-eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461543878-3639-20-git-send-email-eric@engestrom.ch>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eric Engestrom <eric@engestrom.ch>
+Cc: linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/16 17:24, Eric Engestrom wrote:
-> Signed-off-by: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+On 25-04-16, 01:24, Eric Engestrom wrote:
+> Signed-off-by: Eric Engestrom <eric@engestrom.ch>
 > ---
->  Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt | 2 +-
->  Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt | 2 +-
->  Documentation/devicetree/bindings/clock/st/st,clkgen.txt        | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/opp/opp.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-> index 0c2bf5e..7f36853 100644
-> --- a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-> @@ -16,7 +16,7 @@ Required Properties:
->  Optional Properties:
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 601256f..ee91cbd 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -45,7 +45,7 @@ Devices supporting OPPs must set their "operating-points-v2" property with
+>  phandle to a OPP table in their DT node. The OPP core will use this phandle to
+>  find the operating points for the device.
 >  
->  - rockchip,grf: phandle to the syscon managing the "general register files"
-> -  If missing pll rates are not changable, due to the missing pll lock status.
-> +  If missing pll rates are not changeable, due to the missing pll lock status.
->  
->  Each clock is assigned an identifier and client nodes can use this identifier
->  to specify the clock which they consume. All available clocks are defined as
-> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-> index c9fbb76..8cb47c3 100644
-> --- a/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-> @@ -15,7 +15,7 @@ Required Properties:
->  Optional Properties:
->  
->  - rockchip,grf: phandle to the syscon managing the "general register files"
-> -  If missing pll rates are not changable, due to the missing pll lock status.
-> +  If missing pll rates are not changeable, due to the missing pll lock status.
->  
->  Each clock is assigned an identifier and client nodes can use this identifier
->  to specify the clock which they consume. All available clocks are defined as
-> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-> index 78978f1..426bdda 100644
-> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-> @@ -40,7 +40,7 @@ address is common of all subnode.
->  	};
->  
->  This binding uses the common clock binding[1].
-> -Each subnode should use the binding discribe in [2]..[7]
-> +Each subnode should use the binding describe in [2]..[7]
+> -If required, this can be extended for SoC vendor specfic bindings. Such bindings
+> +If required, this can be extended for SoC vendor specific bindings. Such bindings
+>  should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
+>  and should have a compatible description like: "operating-points-v2-<vendor>".
 
-described ?
-
->  
->  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->  [2] Documentation/devicetree/bindings/clock/st,clkgen-divmux.txt
-> 
-
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-~Randy
+viresh
