@@ -1,69 +1,42 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 4/7] Documentation: dt: socfpga: Add Arria10 Ethernet binding
-Date: Mon, 25 Apr 2016 12:52:45 -0500
-Message-ID: <1461606768-14404-5-git-send-email-tthayer@opensource.altera.com>
-References: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
+From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv2 0/7]  Add EDAC peripheral init functions & Ethernet EDAC
+Date: Mon, 25 Apr 2016 12:52:41 -0500
+Message-ID: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add the device tree bindings needed to support the Altera Ethernet
-FIFO buffers on the Arria10 chip.
+This patch set adds the memory initialization functions for Altera's
+Arria10 peripherals, the first of which is the Ethernet EDAC. The
+ECC memory init functions are common to all the peripheral memory
+buffers.
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
-v2  No Change
----
- .../bindings/arm/altera/socfpga-eccmgr.txt         |   24 ++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Thor Thayer (7):
+  EDAC, altera: Check parent status for Arria10 EDAC block
+  EDAC, altera: Add panic flag check to A10 IRQ
+  EDAC, altera: Move Arria10 IRQ function
+  Documentation: dt: socfpga: Add Arria10 Ethernet binding
+  EDAC, altera: Add Arria10 ECC memory init functions
+  EDAC, altera: Add Arria10 Ethernet EDAC support
+  ARM: dts: Add Arria10 Ethernet EDAC devicetree entry
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-index 5a6b160..aa1c593 100644
---- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-@@ -76,6 +76,18 @@ Required Properties:
- - compatible : Should be "altr,socfpga-a10-ocram-ecc"
- - reg        : Address and size for ECC block registers.
- 
-+Ethernet FIFO ECC
-+Required Properties:
-+- compatible : Should be "altr,socfpga-a10-emac0-rx-ecc" for the 1st EMAC
-+	Receive	buffer
-+	or "altr,socfpga-a10-emac0-tx-ecc" for the 1st EMAC Transmit buffer
-+	or "altr,socfpga-a10-emac1-rx-ecc" for the 2nd EMAC Receive buffer
-+	or "altr,socfpga-a10-emac1-tx-ecc" for the 2nd EMAC Transmit buffer
-+	or "altr,socfpga-a10-emac2-rx-ecc" for the 3rd EMAC Receive buffer
-+	or "altr,socfpga-a10-emac2-tx-ecc" for the 3rd EMAC Transmit buffer
-+- reg        : Address and size for ECC block registers.
-+- parent     : phandle to parent Ethernet node.
-+
- Example:
- 
- 	eccmgr: eccmgr@ffd06000 {
-@@ -96,4 +108,16 @@ Example:
- 			compatible = "altr,socfpga-a10-ocram-ecc";
- 			reg = <0xff8c3000 0x90>;
- 		};
-+
-+		emac0-rx-ecc@ff8c0800 {
-+			compatible = "altr,socfpga-a10-emac0-rx-ecc";
-+			reg = <0xff8c0800 0x400>;
-+			parent = <&gmac0>;
-+		};
-+
-+		emac0-tx-ecc@ff8c0c00 {
-+			compatible = "altr,socfpga-a10-emac0-tx-ecc";
-+			reg = <0xff8c0c00 0x400>;
-+			parent = <&gmac0>;
-+		};
- 	};
+ .../bindings/arm/altera/socfpga-eccmgr.txt         |   24 ++
+ arch/arm/boot/dts/socfpga_arria10.dtsi             |   36 ++
+ drivers/edac/Kconfig                               |    7 +
+ drivers/edac/altera_edac.c                         |  373 ++++++++++++++++++--
+ drivers/edac/altera_edac.h                         |   23 ++
+ 5 files changed, 443 insertions(+), 20 deletions(-)
+
 -- 
 1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
