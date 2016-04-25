@@ -1,27 +1,42 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: document refcount incrementation of of_get_cpu_node()
-Date: Mon, 25 Apr 2016 10:10:41 -0500
-Message-ID: <CAL_Jsq+GCnxcJ+zP-Ujk5nMtPZRXH8bmHrc7emm2E-GiyAqqkQ@mail.gmail.com>
-References: <1461115126-2648-1-git-send-email-yamada.masahiro@socionext.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCH 01/11] dt-bindings: mfd: Add Altera Arria10 System
+ Resource Chip bindings
+Date: Mon, 25 Apr 2016 10:01:52 -0500
+Message-ID: <571E3160.60702@opensource.altera.com>
+References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
+ <1461339219-15255-2-git-send-email-tthayer@opensource.altera.com>
+ <20160425125514.GA5100@rob-hp-laptop>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461115126-2648-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20160425125514.GA5100@rob-hp-laptop>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 19, 2016 at 8:18 PM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> This function increments refcount.  This is worth noting.
+
+
+On 04/25/2016 07:55 AM, Rob Herring wrote:
+> On Fri, Apr 22, 2016 at 10:33:29AM -0500, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> The Altera Arria10 Devkit System Resource chip is a Multi-Function
+>> Device with a GPIO expander and power supply alarm.
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> An alarm with no interrupt? Are the GPIOs interrupt capable?
 
-Applied, thanks.
+The alarms have no interrupt but the GPIOs are interrupt capable (not 
+implemented with interrupt capability in this patch series).
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> This patch adds documentation for the Altera A10-SR DT bindings.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> ---
+>>   .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>>
