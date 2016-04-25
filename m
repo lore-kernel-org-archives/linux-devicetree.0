@@ -1,43 +1,27 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 08/11] dt-bindings: mfd: Add Altera A10-SR power supply
- alarm
-Date: Mon, 25 Apr 2016 10:04:09 -0500
-Message-ID: <571E31E9.1000309@opensource.altera.com>
-References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
- <1461339219-15255-9-git-send-email-tthayer@opensource.altera.com>
- <20160425125713.GA6578@rob-hp-laptop>
-Reply-To: <tthayer@opensource.altera.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: document refcount incrementation of of_get_cpu_node()
+Date: Mon, 25 Apr 2016 10:10:41 -0500
+Message-ID: <CAL_Jsq+GCnxcJ+zP-Ujk5nMtPZRXH8bmHrc7emm2E-GiyAqqkQ@mail.gmail.com>
+References: <1461115126-2648-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160425125713.GA6578@rob-hp-laptop>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461115126-2648-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 19, 2016 at 8:18 PM, Masahiro Yamada
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> This function increments refcount.  This is worth noting.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
+Applied, thanks.
 
-On 04/25/2016 07:57 AM, Rob Herring wrote:
-> On Fri, Apr 22, 2016 at 10:33:36AM -0500, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> Add power supply alarm from the hwmon framework.
->
-> hwmon framework is a Linuxism that has nothing to do with the h/w
-> description.
->
-OK. I was careful to remove it in the binding and will remove it from 
-the description as well.
-
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->>   .../devicetree/bindings/mfd/altera-a10sr.txt       |    8 ++++++++
->>   1 file changed, 8 insertions(+)
->
-> Just squash this into the 1st patch.
->
-> Rob
->
-OK. Thank you for reviewing.
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
