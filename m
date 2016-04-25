@@ -1,97 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Mon, 25 Apr 2016 08:14:07 -0500
-Message-ID: <20160425131407.GA12241@rob-hp-laptop>
-References: <1461363432-5730-1-git-send-email-andy.gross@linaro.org>
- <1461363432-5730-2-git-send-email-andy.gross@linaro.org>
- <CAL_JsqK0LYCozBohs5QCvuPRR-3s2SMHf7DgwSyVe4Vyeyw9ew@mail.gmail.com>
- <20160423173351.GA3246@hector.attlocal.net>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Mon, 25 Apr 2016 15:16:40 +0200
+Message-ID: <20160425131640.GD6575@lunn.ch>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com>
+ <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com>
+ <571915F5.5070504@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160423173351.GA3246@hector.attlocal.net>
+In-Reply-To: <571915F5.5070504@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, jilai wang <jilaiw@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Timur Tabi <timur@codeaurora.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 23, 2016 at 12:33:51PM -0500, Andy Gross wrote:
-> On Sat, Apr 23, 2016 at 11:56:50AM -0500, Rob Herring wrote:
-> > On Fri, Apr 22, 2016 at 5:17 PM, Andy Gross <andy.gross@linaro.org> wrote:
-> > > This patch adds the device tree support for the Qualcomm SCM firmware.
-> > >
-> > > Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> > > ---
-> > >  .../devicetree/bindings/firmware/qcom,scm.txt      | 31 ++++++++++++++++++++++
-> > >  1 file changed, 31 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> > > new file mode 100644
-> > > index 0000000..57b9b3a
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> > > @@ -0,0 +1,31 @@
-> > > +QCOM Secure Channel Manager (SCM)
-> > > +
-> > > +Qualcomm processors include an interface to communicate to the secure firmware.
-> > > +This interface allows for clients to request different types of actions.  These
-> > > +can include CPU power up/down, HDCP requests, loading of firmware, and other
-> > > +assorted actions.
-> > > +
-> > > +Required properties:
-> > > +- compatible: must contain one of the following:
-> > > + * "qcom,scm-apq8064" for APQ8064
-> > > + * "qcom,scm-apq8084" for MSM8084
-> > > + * "qcom,scm-msm8916" for MSM8916
-> > > + * "qcom,scm-msm8974" for MSM8974
-> > > +- clocks: One to three clocks may be required based on compatible.
-> > > + * Only core clock required for "qcom,scm-apq8064"
-> > > + * Core, iface, and bus clocks required for all other compatibles.
-> > > +- clock-names: Must contain "core" for the core clock, "iface" for the interface
-> > > +  clock and "bus" for the bus clock per the requirements of the compatible.
-> > > +
-> > > +Example for MSM8916:
-> > > +
-> > > +       firmware {
-> > > +               compatible = "simple-bus";
-> > 
-> > Firmware is a bus? Really? Let's not put hacks in the DT just so you
-> > get automatic probing.
+> Does the compatible property of the phy node (for the external phy)
+> need to list the actual external phy?  That is, should it look like
+> this:
 > 
-> So something like:
+> 	phy0: ethernet-phy@0 {
+> 		compatible = "qcom,fsm9900-emac-phy";
+> 		reg = <0>;
+> 	}
 > 
->         firmware {
->                 compatible = "qcom,scm-apq8084";
->                 clocks = <&gcc GCC_CE1_CLK> , <&gcc GCC_CE1_AXI_CLK>, <&gcc GCC_CE1_AHB_CLK>;
->                 clock-names = "core", "bus", "iface";
->         };
+> or this:
 > 
-> Seems to work fine.
-
-Yes, because the top level nodes are probed. But then you can't have any 
-other firmware nodes. You are going to have to call of_platform_populate 
-on the /firmware node or create the device yourself. If there are other 
-users of /firmware needing to probe, then we can perhaps do it 
-generically.
-
-
-> > > +
-> > > +               scm {
-> > > +                       compatible = "qcom,scm-msm8916";
-> > > +                       clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
-> > > +                       clock-names = "core", "bus", "iface";
-> > 
-> > Generally, /firmware defines an interface to firmware. I don't think
-> > clocks belong here. This implies that non-secure world can turn off
-> > clocks to secure world?
+> 	phy0: ethernet-phy@0 {
+> 		compatible = "athr,whatever-phy";
+> 		reg = <0>;
+> 	}
 > 
-> The caller into the SCM is on the hook for making sure the clocks are turned on.
-> The firmware people decided to not manage the clocks.  In a perfect world, they
-> would turn on their own clocks and it would all be self contained.  Sadly, it
-> isn't going to change.
 
-Okay. Seems like a security problem to me though.
+Documentation/devicetree/bindings/net/phy.txt says:
 
-Rob
+Optional Properties:
+
+- compatible: Compatible list, may contain
+  "ethernet-phy-ieee802.3-c22" or "ethernet-phy-ieee802.3-c45" for
+  PHYs that implement IEEE802.3 clause 22 or IEEE802.3 clause 45
+  specifications. If neither of these are specified, the default is to
+  assume clause 22.
+
+  If the phy's identifier is known then the list may contain an entry
+  of the form: "ethernet-phy-idAAAA.BBBB" where
+     AAAA - The value of the 16 bit Phy Identifier 1 register as
+            4 hex digits. This is the chip vendor OUI bits 3:18
+     BBBB - The value of the 16 bit Phy Identifier 2 register as
+            4 hex digits. This is the chip vendor OUI bits 19:24,
+            followed by 10 bits of a vendor specific ID.
+
+  The compatible list should not contain other values than those
+  listed here.
+
+  Andrew
