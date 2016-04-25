@@ -1,123 +1,165 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/4] dt-bindings: interrupt-controllers: add description of SIC1 and SIC2
-Date: Mon, 25 Apr 2016 04:00:23 +0300
-Message-ID: <1461546023-25614-1-git-send-email-vz@mleia.com>
+Subject: [PATCH v2 3/4] arm: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC
+Date: Mon, 25 Apr 2016 04:00:41 +0300
+Message-ID: <1461546041-25713-1-git-send-email-vz@mleia.com>
 References: <1461545990-25560-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1461545990-25560-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-NXP LPC32xx has three interrupt controllers, namely root Main
-Interrupt Controller (MIC) and two supplementary Sub Interrupt
-Controllers (SIC1 and SIC2), four interrupt outputs from SIC1 and SIC2
-are connected to MIC.
+The change adds separate device nodes for SIC1 and SIC2 interrupt
+controllers and reparents all defined SIC1 and SIC2 interrupt
+producers to the correspondent interrupt controller, this is needed to
+perform switching to a new LPC32xx MIC/SIC interrupt controller driver.
 
 Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 ---
 Changes from v1 to v2:
-* removed introduced optional "interrupt-controller-name" property,
-  for users the name of a controller will be constructed from mic/sic
-  and controller physical address,
-* removed introduced optional "wakeup-sources" property, a list of
-  mappings between a hardware interrupt and its correspondent wakeup source
-  to exit CPU STOP mode will be discussed later on,
-* other negligible changes (rewording, small letters in unit address etc.)
+* squashed two step change in lpc32xx.dtsi - new irqchip driver can be
+  used (i.e. board boots with access to userspace) with old DTS file,
+  so there is no need to fix DTS firstly and then switch to a new driver,
+* removed "interrupt-controller-name" and "wakeup-sources" properties
+  from all interrupt controllers,
+* removed outdated comment.
 
- .../interrupt-controller/nxp,lpc3220-mic.txt       | 70 ++++++++++++++--------
- 1 file changed, 46 insertions(+), 24 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 58 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 41 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
-index 539adca..38211f3 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
-@@ -1,38 +1,60 @@
--* NXP LPC32xx Main Interrupt Controller
--  (MIC, including SIC1 and SIC2 secondary controllers)
-+* NXP LPC32xx MIC, SIC1 and SIC2 Interrupt Controllers
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index 73c4746..4570ddc 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -92,7 +92,8 @@
+ 			ohci: ohci@0 {
+ 				compatible = "nxp,ohci-nxp", "usb-ohci";
+ 				reg = <0x0 0x300>;
+-				interrupts = <59 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&sic1>;
++				interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&usbclk LPC32XX_USB_CLK_HOST>;
+ 				status = "disabled";
+ 			};
+@@ -100,10 +101,11 @@
+ 			usbd: usbd@0 {
+ 				compatible = "nxp,lpc3220-udc";
+ 				reg = <0x0 0x300>;
+-				interrupts = <61 IRQ_TYPE_LEVEL_HIGH>,
+-					     <62 IRQ_TYPE_LEVEL_HIGH>,
+-					     <60 IRQ_TYPE_LEVEL_HIGH>,
+-					     <58 IRQ_TYPE_LEVEL_LOW>;
++				interrupt-parent = <&sic1>;
++				interrupts = <29 IRQ_TYPE_LEVEL_HIGH>,
++					     <30 IRQ_TYPE_LEVEL_HIGH>,
++					     <28 IRQ_TYPE_LEVEL_HIGH>,
++					     <26 IRQ_TYPE_LEVEL_LOW>;
+ 				clocks = <&usbclk LPC32XX_USB_CLK_DEVICE>;
+ 				status = "disabled";
+ 			};
+@@ -111,7 +113,8 @@
+ 			i2cusb: i2c@300 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x300 0x100>;
+-				interrupts = <63 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&sic1>;
++				interrupts = <31 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&usbclk LPC32XX_USB_CLK_I2C>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -263,7 +266,8 @@
+ 			i2c1: i2c@400A0000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A0000 0x100>;
+-				interrupts = <51 IRQ_TYPE_LEVEL_LOW>;
++				interrupt-parent = <&sic1>;
++				interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				pnx,timeout = <0x64>;
+@@ -273,7 +277,8 @@
+ 			i2c2: i2c@400A8000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A8000 0x100>;
+-				interrupts = <50 IRQ_TYPE_LEVEL_LOW>;
++				interrupt-parent = <&sic1>;
++				interrupts = <18 IRQ_TYPE_LEVEL_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				pnx,timeout = <0x64>;
+@@ -314,12 +319,6 @@
+ 				};
+ 			};
  
- Required properties:
--- compatible: Should be "nxp,lpc3220-mic"
--- interrupt-controller: Identifies the node as an interrupt controller.
--- interrupt-parent: Empty for the interrupt controller itself
--- #interrupt-cells: The number of cells to define the interrupts. Should be 2.
--  The first cell is the IRQ number
--  The second cell is used to specify mode:
--      1 = low-to-high edge triggered
--      2 = high-to-low edge triggered
--      4 = active high level-sensitive
--      8 = active low level-sensitive
--      Default for internal sources should be set to 4 (active high).
--- reg: Should contain MIC registers location and length
-+- compatible: "nxp,lpc3220-mic" or "nxp,lpc3220-sic".
-+- reg: should contain IC registers location and length.
-+- interrupt-controller: identifies the node as an interrupt controller.
-+- #interrupt-cells: the number of cells to define an interrupt, should be 2.
-+  The first cell is the IRQ number, the second cell is used to specify
-+  one of the supported IRQ types:
-+      IRQ_TYPE_EDGE_RISING = low-to-high edge triggered,
-+      IRQ_TYPE_EDGE_FALLING = high-to-low edge triggered,
-+      IRQ_TYPE_LEVEL_HIGH = active high level-sensitive,
-+      IRQ_TYPE_LEVEL_LOW = active low level-sensitive.
-+  Reset value is IRQ_TYPE_LEVEL_LOW.
-+
-+Optional properties:
-+- interrupt-parent: empty for MIC interrupt controller, link to parent
-+  MIC interrupt controller for SIC1 and SIC2
-+- interrupts: empty for MIC interrupt controller, cascaded MIC
-+  hardware interrupts for SIC1 and SIC2
+-			/*
+-			 * MIC Interrupt controller includes:
+-			 *   MIC @40008000
+-			 *   SIC1 @4000C000
+-			 *   SIC2 @40010000
+-			 */
+ 			mic: interrupt-controller@40008000 {
+ 				compatible = "nxp,lpc3220-mic";
+ 				interrupt-controller;
+@@ -327,6 +326,28 @@
+ 				#interrupt-cells = <2>;
+ 			};
  
- Examples:
--	/*
--	 * MIC
--	 */
++			sic1: interrupt-controller@4000c000 {
++				compatible = "nxp,lpc3220-sic";
++				reg = <0x4000c000 0x4000>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
 +
-+	/* LPC32xx MIC, SIC1 and SIC2 interrupt controllers */
- 	mic: interrupt-controller@40008000 {
- 		compatible = "nxp,lpc3220-mic";
-+		reg = <0x40008000 0x4000>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
++				interrupt-parent = <&mic>;
++				interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
++					     <30 IRQ_TYPE_LEVEL_LOW>;
++				};
 +
-+	sic1: interrupt-controller@4000c000 {
-+		compatible = "nxp,lpc3220-sic";
-+		reg = <0x4000c000 0x4000>;
- 		interrupt-controller;
--		interrupt-parent;
- 		#interrupt-cells = <2>;
--		reg = <0x40008000 0xC000>;
++			sic2: interrupt-controller@40010000 {
++				compatible = "nxp,lpc3220-sic";
++				reg = <0x40010000 0x4000>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
 +
-+		interrupt-parent = <&mic>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
-+			     <30 IRQ_TYPE_LEVEL_LOW>;
- 	};
++				interrupt-parent = <&mic>;
++				interrupts = <1 IRQ_TYPE_LEVEL_LOW>,
++					     <31 IRQ_TYPE_LEVEL_LOW>;
++			};
++
+ 			uart1: serial@40014000 {
+ 				compatible = "nxp,lpc3220-hsuart";
+ 				reg = <0x40014000 0x1000>;
+@@ -351,7 +372,8 @@
+ 			rtc: rtc@40024000 {
+ 				compatible = "nxp,lpc3220-rtc";
+ 				reg = <0x40024000 0x1000>;
+-				interrupts = <52 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&sic1>;
++				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk LPC32XX_CLK_RTC>;
+ 			};
  
--	/*
--	 * ADC
--	 */
-+	sic2: interrupt-controller@40010000 {
-+		compatible = "nxp,lpc3220-sic";
-+		reg = <0x40010000 0x4000>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		interrupt-parent = <&mic>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>,
-+			     <31 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	/* ADC */
- 	adc@40048000 {
- 		compatible = "nxp,lpc3220-adc";
- 		reg = <0x40048000 0x1000>;
--		interrupt-parent = <&mic>;
--		interrupts = <39 4>;
-+		interrupt-parent = <&sic1>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
- 	};
+@@ -404,7 +426,8 @@
+ 			adc: adc@40048000 {
+ 				compatible = "nxp,lpc3220-adc";
+ 				reg = <0x40048000 0x1000>;
+-				interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&sic1>;
++				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk LPC32XX_CLK_ADC>;
+ 				status = "disabled";
+ 			};
+@@ -412,7 +435,8 @@
+ 			tsc: tsc@40048000 {
+ 				compatible = "nxp,lpc3220-tsc";
+ 				reg = <0x40048000 0x1000>;
+-				interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-parent = <&sic1>;
++				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk LPC32XX_CLK_ADC>;
+ 				status = "disabled";
+ 			};
 -- 
 2.1.4
 
