@@ -1,77 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 01/13] dt-bindings: Add Renesas R-Car FCP DT bindings
-Date: Mon, 25 Apr 2016 16:27:19 +0300
-Message-ID: <2291064.PDKHfW7Am5@avalon>
-References: <1461455400-28767-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1461455400-28767-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdVaoD7gU0_WvSN0mFSCRyeWntZ1PHtkZ5ccFzCS-H-HUg@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 3/4] ARM: davinci: disable mdio and eth0 in da850.dtsi
+Date: Mon, 25 Apr 2016 19:00:59 +0530
+Message-ID: <571E1C13.9050204@ti.com>
+References: <1460826020-1256-1-git-send-email-david@lechnology.com>
+ <1460826020-1256-4-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVaoD7gU0_WvSN0mFSCRyeWntZ1PHtkZ5ccFzCS-H-HUg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460826020-1256-4-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi David,
 
-Thank you for the review.
-
-On Monday 25 Apr 2016 09:32:04 Geert Uytterhoeven wrote:
-> On Sun, Apr 24, 2016 at 1:49 AM, Laurent Pinchart wrote:
-> > The FCP is a companion module of video processing modules in the Renesas
-> > R-Car Gen3 SoCs. It provides data compression and decompression, data
-> > caching, and conversion of AXI transaction in order to reduce the memory
+On Saturday 16 April 2016 10:30 PM, David Lechner wrote:
+> All other devices are disabled by default and not all boards will use
+> these devices, so these should be disabled too..
 > 
-> transactions
+> da850-evm.dtb already had status = "okay" for these devices.
+> da850-enbw-cmc.dts did not, so they were added.
 > 
-> > bandwidth.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  .../devicetree/bindings/media/renesas,fcp.txt      | 31 +++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/media/renesas,fcp.txt
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> > b/Documentation/devicetree/bindings/media/renesas,fcp.txt new file mode
-> > 100644
-> > index 000000000000..46beec97d625
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> > @@ -0,0 +1,31 @@
-> > +Renesas R-Car Frame Compression Processor (FCP)
-> > +-----------------------------------------------
-> > +
-> > +The FCP is a companion module of video processing modules in the Renesas
-> > R-Car +Gen3 SoCs. It provides data compression and decompression, data
-> > caching, and +conversion of AXI transaction in order to reduce the memory
-> > bandwidth.
->
-> transactions
+> Signed-off-by: David Lechner <david@lechnology.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
 
-I'll fix the typos.
- 
-> > +There are three types of FCP whose configuration and behaviour highly
-> > depend +on the module they are paired with.
-> 
-> + - compatible: Must be one or more of the following
-> +
-> +   - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
-> +   - "renesas,fcpv" for generic compatible 'FCP for VSP'
-> 
-> As you list only one compatible value, I guess the type is determined
-> automatically at run-time?
+I applied this and other patches in this series. One nit-pick though.
+The commit description should be independently readable and not only as
+continuation of the headline. Even if this means repeating portion of
+the headline. I fixed this for most of the patches in this series. For
+example, for this patch, I have:
 
-No, it's just that the bindings only support the FCPV at the moment, the other 
-two variants are not supported yet.
+    ARM: dts: da850: disable mdio and eth0 in da850.dtsi
 
--- 
-Regards,
+    Disable mdio and eth0 in da850.dtsi file. All other
+    devices are disabled by default and not all boards
+    will use these devices, so these should be disabled too.
 
-Laurent Pinchart
+    da850-evm.dtb already had status = "okay" for these devices.
+    da850-enbw-cmc.dts did not, so they were added.
+
+    Signed-off-by: David Lechner <david@lechnology.com>
+    Tested-by: Kevin Hilman <khilman@baylibre.com>
+    [nsekhar@ti.com: commit description updates]
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+Its a minor change and I wont reply to all the patches with the changes
+I made. But I pushed the updated v4.7/dt branch in my tree. Do take a
+look at the commit description there.
+
+Thanks,
+Sekhar
