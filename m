@@ -1,159 +1,43 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v7 2/8] [media] VPU: mediatek: support Mediatek VPU
-Date: Mon, 25 Apr 2016 09:40:52 +0200
-Message-ID: <571DCA04.8000703@xs4all.nl>
-References: <1461299131-57851-1-git-send-email-tiffany.lin@mediatek.com>
- <1461299131-57851-2-git-send-email-tiffany.lin@mediatek.com>
- <1461299131-57851-3-git-send-email-tiffany.lin@mediatek.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices
+ addresses
+Date: Mon, 25 Apr 2016 10:41:26 +0300
+Message-ID: <20160425074126.GL1725@lahna.fi.intel.com>
+References: <1460992811.8946.22.camel@linux.intel.com>
+ <5714FCBE.3060009@metafoo.de>
+ <20160419124028.GF1725@lahna.fi.intel.com>
+ <57162C4E.9090904@metafoo.de>
+ <20160419131631.GG1725@lahna.fi.intel.com>
+ <5716333D.1040106@metafoo.de>
+ <20160419144027.GH1725@lahna.fi.intel.com>
+ <20160424201437.GA2123@katana>
+ <20160425072553.GK1725@lahna.fi.intel.com>
+ <20160425073940.GD1541@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461299131-57851-3-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160425073940.GD1541@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/22/2016 06:25 AM, Tiffany Lin wrote:
-> From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Mon, Apr 25, 2016 at 09:39:41AM +0200, Wolfram Sang wrote:
+> On Mon, Apr 25, 2016 at 10:25:53AM +0300, Mika Westerberg wrote:
+> > On Sun, Apr 24, 2016 at 10:14:37PM +0200, Wolfram Sang wrote:
+> > > 
+> > > > The above should work with both DT and ACPI so I'm OK with the current
+> > > > patch. We can add ACPI parts later when needed.
+> > > 
+> > > Just to make sure, I read this as an ack for the original patch?
+> > 
+> > Yes :)
 > 
-> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
-> It is able to handle video decoding/encoding of in a range of formats.
-> The driver provides with VPU firmware download, memory management and
-> the communication interface between CPU and VPU.
-> For VPU initialization, it will create virtual memory for CPU access and
-> IOMMU address for vcodec hw device access. When a decode/encode instance
-> opens a device node, vpu driver will download vpu firmware to the device.
-> A decode/encode instant will decode/encode a frame using VPU
-> interface to interrupt vpu to handle decoding/encoding jobs.
-> 
-> Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> ---
->  drivers/media/platform/Kconfig           |   13 +
->  drivers/media/platform/Makefile          |    2 +
->  drivers/media/platform/mtk-vpu/Makefile  |    3 +
->  drivers/media/platform/mtk-vpu/mtk_vpu.c |  950 ++++++++++++++++++++++++++++++
->  drivers/media/platform/mtk-vpu/mtk_vpu.h |  162 +++++
->  5 files changed, 1130 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-vpu/Makefile
->  create mode 100755 drivers/media/platform/mtk-vpu/mtk_vpu.c
->  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.h
-> 
+> Thanks! Could you use the formal tag for that in the future please?
+> Patchwork automatically collects them and that saves me some work. (I
+> even have a keyboard macro for that and use it a lot)
 
+Sure, sorry about that.
 
-> +int vpu_load_firmware(struct platform_device *pdev)
-> +{
-> +	struct mtk_vpu *vpu = platform_get_drvdata(pdev);
-> +	struct device *dev = &pdev->dev;
-> +	struct vpu_run *run = &vpu->run;
-> +	const struct firmware *vpu_fw;
-> +	int ret;
-> +
-> +	if (!pdev) {
-> +		dev_err(dev, "VPU platform device is invalid\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = vpu_clock_enable(vpu);
-> +	if (ret) {
-> +		dev_err(dev, "enable clock failed %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	mutex_lock(&vpu->vpu_mutex);
-> +
-> +	if (vpu_running(vpu)) {
-> +		mutex_unlock(&vpu->vpu_mutex);
-> +		vpu_clock_disable(vpu);
-> +		dev_warn(dev, "vpu is running already\n");
-
-This warning should be dropped. Currently vpu_load_firmware is called
-every time the video device is opened and no one else has the video device
-open. So calling this multiple times is perfectly normal and the log shouldn't
-be spammed with warnings.
-
-I would recommend adding a fw_loaded bool to struct mtk_vpu and just
-check that at the beginning of this function and just return 0 if it is true.
-
-Then you don't need to enable the vpu clock either.
-
-I hope I understand the hw correctly, though.
-
-Assuming you can do this, then this code from the v4l driver needs an
-additional comment:
-
->>> +	if (v4l2_fh_is_singular(&ctx->fh)) {
-
-Add a comment here that says that vpu_load_firmware checks if it was
-loaded already and does nothing in that case.
-
->>> +		ret = vpu_load_firmware(dev->vpu_plat_dev);
->>> +		if (ret < 0) {
->>> +			/*
->>> +			  * Return 0 if downloading firmware successfully,
->>> +			  * otherwise it is failed
->>> +			  */
->>> +			mtk_v4l2_err("vpu_load_firmware failed!");
->>> +			goto err_load_fw;
->>> +		}
-
-That makes it clear to the reader (i.e. me :-) ) that you can safely call
-vpu_load_firmware multiple times.
-
-Regards,
-
-	Hans
-
-> +		return 0;
-> +	}
-> +
-> +	run->signaled = false;
-> +	dev_dbg(vpu->dev, "firmware request\n");
-> +	/* Downloading program firmware to device*/
-> +	ret = load_requested_vpu(vpu, vpu_fw, P_FW);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to request %s, %d\n", VPU_P_FW, ret);
-> +		goto OUT_LOAD_FW;
-> +	}
-> +
-> +	/* Downloading data firmware to device */
-> +	ret = load_requested_vpu(vpu, vpu_fw, D_FW);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to request %s, %d\n", VPU_D_FW, ret);
-> +		goto OUT_LOAD_FW;
-> +	}
-> +
-> +	/* boot up vpu */
-> +	vpu_cfg_writel(vpu, 0x1, VPU_RESET);
-> +
-> +	ret = wait_event_interruptible_timeout(run->wq,
-> +					       run->signaled,
-> +					       msecs_to_jiffies(INIT_TIMEOUT_MS)
-> +					       );
-> +	if (ret == 0) {
-> +		ret = -ETIME;
-> +		dev_err(dev, "wait vpu initialization timout!\n");
-> +		goto OUT_LOAD_FW;
-> +	} else if (-ERESTARTSYS == ret) {
-> +		dev_err(dev, "wait vpu interrupted by a signal!\n");
-> +		goto OUT_LOAD_FW;
-> +	}
-> +
-> +	ret = 0;
-> +	dev_info(dev, "vpu is ready. Fw version %s\n", run->fw_ver);
-> +
-> +OUT_LOAD_FW:
-> +	mutex_unlock(&vpu->vpu_mutex);
-> +	vpu_clock_disable(vpu);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(vpu_load_firmware);
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
