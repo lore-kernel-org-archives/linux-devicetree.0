@@ -1,169 +1,85 @@
-From: andrew-ct chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 2/8] [media] VPU: mediatek: support Mediatek VPU
-Date: Mon, 25 Apr 2016 17:22:03 +0800
-Message-ID: <1461576123.15167.3.camel@mtksdaap41>
-References: <1461299131-57851-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1461299131-57851-2-git-send-email-tiffany.lin@mediatek.com>
-	 <1461299131-57851-3-git-send-email-tiffany.lin@mediatek.com>
-	 <571DCA04.8000703@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571DCA04.8000703-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Enable PRNG and SSS for all Exynos4 devices
+Date: Mon, 25 Apr 2016 11:29:56 +0200
+Message-ID: <1461576596-27844-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: vz@mleia.com, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-04-25 at 09:40 +0200, Hans Verkuil wrote:
-> On 04/22/2016 06:25 AM, Tiffany Lin wrote:
-> > From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
-> > It is able to handle video decoding/encoding of in a range of formats.
-> > The driver provides with VPU firmware download, memory management and
-> > the communication interface between CPU and VPU.
-> > For VPU initialization, it will create virtual memory for CPU access and
-> > IOMMU address for vcodec hw device access. When a decode/encode instance
-> > opens a device node, vpu driver will download vpu firmware to the device.
-> > A decode/encode instant will decode/encode a frame using VPU
-> > interface to interrupt vpu to handle decoding/encoding jobs.
-> > 
-> > Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > ---
-> >  drivers/media/platform/Kconfig           |   13 +
-> >  drivers/media/platform/Makefile          |    2 +
-> >  drivers/media/platform/mtk-vpu/Makefile  |    3 +
-> >  drivers/media/platform/mtk-vpu/mtk_vpu.c |  950 ++++++++++++++++++++++++++++++
-> >  drivers/media/platform/mtk-vpu/mtk_vpu.h |  162 +++++
-> >  5 files changed, 1130 insertions(+)
-> >  create mode 100644 drivers/media/platform/mtk-vpu/Makefile
-> >  create mode 100755 drivers/media/platform/mtk-vpu/mtk_vpu.c
-> >  create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.h
-> > 
-> 
-> 
-> > +int vpu_load_firmware(struct platform_device *pdev)
-> > +{
-> > +	struct mtk_vpu *vpu = platform_get_drvdata(pdev);
-> > +	struct device *dev = &pdev->dev;
-> > +	struct vpu_run *run = &vpu->run;
-> > +	const struct firmware *vpu_fw;
-> > +	int ret;
-> > +
-> > +	if (!pdev) {
-> > +		dev_err(dev, "VPU platform device is invalid\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ret = vpu_clock_enable(vpu);
-> > +	if (ret) {
-> > +		dev_err(dev, "enable clock failed %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	mutex_lock(&vpu->vpu_mutex);
-> > +
-> > +	if (vpu_running(vpu)) {
-> > +		mutex_unlock(&vpu->vpu_mutex);
-> > +		vpu_clock_disable(vpu);
-> > +		dev_warn(dev, "vpu is running already\n");
-> 
-> This warning should be dropped. Currently vpu_load_firmware is called
-> every time the video device is opened and no one else has the video device
-> open. So calling this multiple times is perfectly normal and the log shouldn't
-> be spammed with warnings.
-> 
-> I would recommend adding a fw_loaded bool to struct mtk_vpu and just
-> check that at the beginning of this function and just return 0 if it is true.
-> 
-> Then you don't need to enable the vpu clock either.
-> 
-> I hope I understand the hw correctly, though.
-> 
-> Assuming you can do this, then this code from the v4l driver needs an
-> additional comment:
+There is no external dependency for Security SubSystem (SSS) block so
+the nodes for Pseudo Random Number Generator and AES hardware
+acceleration can be enabled always for all Exynos4 devices.
 
-We will change this in next version.
+Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi                  | 2 --
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 4 ----
+ arch/arm/boot/dts/exynos4412-trats2.dts         | 8 --------
+ 3 files changed, 14 deletions(-)
 
-> 
-> >>> +	if (v4l2_fh_is_singular(&ctx->fh)) {
-> 
-> Add a comment here that says that vpu_load_firmware checks if it was
-> loaded already and does nothing in that case.
-
-We will change this in next version. Thanks
-
-> 
-> >>> +		ret = vpu_load_firmware(dev->vpu_plat_dev);
-> >>> +		if (ret < 0) {
-> >>> +			/*
-> >>> +			  * Return 0 if downloading firmware successfully,
-> >>> +			  * otherwise it is failed
-> >>> +			  */
-> >>> +			mtk_v4l2_err("vpu_load_firmware failed!");
-> >>> +			goto err_load_fw;
-> >>> +		}
-> 
-> That makes it clear to the reader (i.e. me :-) ) that you can safely call
-> vpu_load_firmware multiple times.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > +		return 0;
-> > +	}
-> > +
-> > +	run->signaled = false;
-> > +	dev_dbg(vpu->dev, "firmware request\n");
-> > +	/* Downloading program firmware to device*/
-> > +	ret = load_requested_vpu(vpu, vpu_fw, P_FW);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Failed to request %s, %d\n", VPU_P_FW, ret);
-> > +		goto OUT_LOAD_FW;
-> > +	}
-> > +
-> > +	/* Downloading data firmware to device */
-> > +	ret = load_requested_vpu(vpu, vpu_fw, D_FW);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Failed to request %s, %d\n", VPU_D_FW, ret);
-> > +		goto OUT_LOAD_FW;
-> > +	}
-> > +
-> > +	/* boot up vpu */
-> > +	vpu_cfg_writel(vpu, 0x1, VPU_RESET);
-> > +
-> > +	ret = wait_event_interruptible_timeout(run->wq,
-> > +					       run->signaled,
-> > +					       msecs_to_jiffies(INIT_TIMEOUT_MS)
-> > +					       );
-> > +	if (ret == 0) {
-> > +		ret = -ETIME;
-> > +		dev_err(dev, "wait vpu initialization timout!\n");
-> > +		goto OUT_LOAD_FW;
-> > +	} else if (-ERESTARTSYS == ret) {
-> > +		dev_err(dev, "wait vpu interrupted by a signal!\n");
-> > +		goto OUT_LOAD_FW;
-> > +	}
-> > +
-> > +	ret = 0;
-> > +	dev_info(dev, "vpu is ready. Fw version %s\n", run->fw_ver);
-> > +
-> > +OUT_LOAD_FW:
-> > +	mutex_unlock(&vpu->vpu_mutex);
-> > +	vpu_clock_disable(vpu);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(vpu_load_firmware);
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index ffaceea74d79..5495b2bbc006 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -987,7 +987,6 @@
+ 		interrupts = <0 112 0>;
+ 		clocks = <&clock CLK_SSS>;
+ 		clock-names = "secss";
+-		status = "disabled";
+ 	};
+ 
+ 	prng: rng@10830400 {
+@@ -995,7 +994,6 @@
+ 		reg = <0x10830400 0x200>;
+ 		clocks = <&clock CLK_SSS>;
+ 		clock-names = "secss";
+-		status = "disabled";
+ 	};
+ 
+ 	register-debug {
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index acd7e7b5fd13..cab0f07d7d28 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -496,10 +496,6 @@
+ 	status = "okay";
+ };
+ 
+-&sss {
+-	status = "okay";
+-};
+-
+ &tmu {
+ 	vtmu-supply = <&ldo10_reg>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index 27dbf1687754..5d1eaea3f778 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -1234,10 +1234,6 @@
+ 	status = "okay";
+ };
+ 
+-&prng {
+-	status = "okay";
+-};
+-
+ &rtc {
+ 	status = "okay";
+ 	clocks = <&clock CLK_RTC>, <&max77686 MAX77686_CLK_AP>;
+@@ -1286,10 +1282,6 @@
+ 	};
+ };
+ 
+-&sss {
+-	status = "okay";
+-};
+-
+ &tmu {
+ 	vtmu-supply = <&ldo10_reg>;
+ 	status = "okay";
+-- 
+1.9.1
