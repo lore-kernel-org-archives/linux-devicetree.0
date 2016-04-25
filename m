@@ -1,69 +1,90 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
-Date: Mon, 25 Apr 2016 17:58:30 +0100
-Message-ID: <20160425165830.GP2713@dell>
-References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
- <1461543878-3639-16-git-send-email-eric@engestrom.ch>
- <20160425135017.GA8656@rob-hp-laptop>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add entry for Mali-DP driver
+Date: Mon, 25 Apr 2016 18:08:11 +0100
+Message-ID: <20160425170811.GC28464@e106497-lin.cambridge.arm.com>
+References: <1461593964-27722-1-git-send-email-Liviu.Dudau@arm.com>
+ <1461593964-27722-4-git-send-email-Liviu.Dudau@arm.com>
+ <CACvgo51obFzx05SWUPZYbEj-LcNGq_NaCvF_iYsg9gpyLPj48Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160425135017.GA8656@rob-hp-laptop>
+In-Reply-To: <CACvgo51obFzx05SWUPZYbEj-LcNGq_NaCvF_iYsg9gpyLPj48Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Brian Starkey <Brian.Starkey-5wv7dgnIgG8@public.gmane.org>, David Brown <David.Brown-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Apr 2016, Rob Herring wrote:
-
-> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
-> > Signed-off-by: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
->=20
-> Applied, thanks.
-
-I'd prefer to continue taking these if you don't mind Rob.  It'd limit
-on the amount of immutable branch pull requests I have to send/handle.
-
+On Mon, Apr 25, 2016 at 05:00:02PM +0100, Emil Velikov wrote:
+> On 25 April 2016 at 15:19, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+> > Add MAINTAINERS entry for ARM Mali-DP driver and update the
+> > HDLCD file matching pattern to cover only HDLCD rather than
+> > the whole drivers/gpu/drm/arm directory.
+> >
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
 > > ---
-> >  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/D=
-ocumentation/devicetree/bindings/mfd/qcom-rpm.txt
-> > index 5e97a95..b98b291 100644
-> > --- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-> > @@ -178,7 +178,7 @@ see regulator.txt - with additional custom prop=
-erties described below:
-> >  - qcom,force-mode:
-> >  	Usage: optional (default if no other qcom,force-mode is specified=
-)
-> >  	Value type: <u32>
-> > -	Defintion: indicates that the regulator should be forced to a
-> > +	Definition: indicates that the regulator should be forced to a
-> >  		   particular mode, valid values are:
-> >  		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
-> >  		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
-> > @@ -204,7 +204,7 @@ see regulator.txt - with additional custom prop=
-erties described below:
-> >  - qcom,force-mode:
-> >  	Usage: optional
-> >  	Value type: <u32>
-> > -	Defintion: indicates that the regulator should not be forced to a=
-ny
-> > +	Definition: indicates that the regulator should not be forced to =
-any
-> >  		   particular mode, valid values are:
-> >  		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
-> >  		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+> >  MAINTAINERS | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 1d5b4be..a5a4346 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -850,9 +850,17 @@ F: include/uapi/linux/if_arcnet.h
+> >  ARM HDLCD DRM DRIVER
+> >  M:     Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+> >  S:     Supported
+> > -F:     drivers/gpu/drm/arm/
+> > +F:     drivers/gpu/drm/arm/hdlcd_*
+> >  F:     Documentation/devicetree/bindings/display/arm,hdlcd.txt
+> >
+> > +ARM MALI-DP DRM DRIVER
+> > +M:     Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+> > +M:     Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+> > +M:     Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>
+> > +S:     Supported
+> > +F:     drivers/gpu/drm/arm/
+> Woohoo. Thanks Liviu !
+>=20
+> Note that having both drivers' sources in the same folder will cause
+> some grief wrt getting the correct maintainer. If you want to avoid
+> that the easiest way is to move things in subdirectories roughly like=
+:
+>=20
+> drivers/gpu/arm/hdlcd/
+> drivers/gpu/arm/mapidp/
+
+I'm surprised to hear that there might be problems. All HDLCD files sta=
+rt
+with hdlcd_ and the rest will go to the Mali-DP DRM maintainers (which =
+includes
+me as well).
+
+I understand your suggestion and I thank for it, but I really hate to h=
+ave
+to navigate too many directories (for now). Lets see how things evolve =
+and then
+we can move stuff around.
+
+Best regards,
+Liviu
+
+
+>=20
+> Regards,
+> Emil
+>=20
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
