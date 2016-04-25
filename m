@@ -1,348 +1,102 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 10/11] hwmon: Add Altera A10-SR power supply alarms
-Date: Mon, 25 Apr 2016 09:41:38 -0500
-Message-ID: <571E2CA2.3000900@opensource.altera.com>
-References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
- <1461339219-15255-11-git-send-email-tthayer@opensource.altera.com>
- <20160422222402.GA22294@roeck-us.net>
-Reply-To: <tthayer@opensource.altera.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC] i2c: device-tree: Handling child nodes which are not i2c
+ devices
+Date: Mon, 25 Apr 2016 15:51:16 +0100
+Message-ID: <571E2EE4.90104@nvidia.com>
+References: <57110A35.2070509@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160422222402.GA22294@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <57110A35.2070509@nvidia.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Thierry Reding <treding@nvidia.com>, Stephen Warren <swarren@nvidia.com>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, linux-i2c@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
+Any thoughts on this? Let me know if this is not clear in anyway.
 
-On 04/22/2016 05:24 PM, Guenter Roeck wrote:
-> On Fri, Apr 22, 2016 at 10:33:38AM -0500, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> This patch adds the power supply alarms of the hwmon framework
->> to the Arria10 System Resource chip.
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->
-> Please read and follow Documentation/hwmon/sysfs-interface
-> as well as Documentation/hwmon/submitting-patches. At the very least,
-> you are expected to document your driver, and you are expected to
-> use standard attribute names.
->
+Cheers
+Jon
 
-OK. I misunderstood. The standard attribute names would be 
-power[1-*]_alarm and the binding documentation the a10sr-hwmon portion 
-for MFD doesn't cover this.
-
->>   drivers/hwmon/Kconfig              |    9 ++
->>   drivers/hwmon/Makefile             |    1 +
->>   drivers/hwmon/altera-a10sr-hwmon.c |  215 ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 225 insertions(+)
->>   create mode 100644 drivers/hwmon/altera-a10sr-hwmon.c
->>
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index ff94007..af08846 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -248,6 +248,15 @@ config SENSORS_ADT7475
->>   	  This driver can also be build as a module.  If so, the module
->>   	  will be called adt7475.
->>
->> +config SENSORS_ALTERA_A10SR
->> +	bool "Altera Arria10 System Status"
->> +	depends on MFD_ALTERA_A10SR
->> +	help
->> +	  If you say yes here you get support for the power ready status
->> +	  for the Arria10's external power supplies on the Arria10 DevKit.
->> +	  These values are read over the SPI bus from the Arria10 System
->> +	  Resource chip.
->> +
->>   config SENSORS_ASC7621
->>   	tristate "Andigilog aSC7621"
->>   	depends on I2C
->> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->> index 2ef5b7c..17d72a7 100644
->> --- a/drivers/hwmon/Makefile
->> +++ b/drivers/hwmon/Makefile
->> @@ -43,6 +43,7 @@ obj-$(CONFIG_SENSORS_ADT7411)	+= adt7411.o
->>   obj-$(CONFIG_SENSORS_ADT7462)	+= adt7462.o
->>   obj-$(CONFIG_SENSORS_ADT7470)	+= adt7470.o
->>   obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
->> +obj-$(CONFIG_SENSORS_ALTERA_A10SR) += altera-a10sr-hwmon.o
->>   obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
->>   obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
->>   obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
->> diff --git a/drivers/hwmon/altera-a10sr-hwmon.c b/drivers/hwmon/altera-a10sr-hwmon.c
->> new file mode 100644
->> index 0000000..1eecc6b
->> --- /dev/null
->> +++ b/drivers/hwmon/altera-a10sr-hwmon.c
->> @@ -0,0 +1,215 @@
->> +/*
->> + *  Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
->> + *
->> + * HW Monitor driver for  Altera Arria10 MAX5 System Resource Chip
->> + * Adapted from DA9052
->> + */
->> +
->> +#include <linux/hwmon.h>
->> +#include <linux/hwmon-sysfs.h>
->> +#include <linux/mfd/altera-a10sr.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->
-> Please list include files in alphabetic order.
->
-
-OK. I thought this was in alphabetical order. I'll update this after 
-figuring out where I was wrong.
-
->> +
->> +#define ALTR_A10SR_1V0_BIT_POS          ALTR_A10SR_PG1_1V0_SHIFT
->> +#define ALTR_A10SR_0V95_BIT_POS         ALTR_A10SR_PG1_0V95_SHIFT
->> +#define ALTR_A10SR_0V9_BIT_POS          ALTR_A10SR_PG1_0V9_SHIFT
->> +#define ALTR_A10SR_10V_BIT_POS          ALTR_A10SR_PG1_10V_SHIFT
->> +#define ALTR_A10SR_5V0_BIT_POS          ALTR_A10SR_PG1_5V0_SHIFT
->> +#define ALTR_A10SR_3V3_BIT_POS          ALTR_A10SR_PG1_3V3_SHIFT
->> +#define ALTR_A10SR_2V5_BIT_POS          ALTR_A10SR_PG1_2V5_SHIFT
->> +#define ALTR_A10SR_1V8_BIT_POS          ALTR_A10SR_PG1_1V8_SHIFT
->> +#define ALTR_A10SR_OP_FLAG_BIT_POS      ALTR_A10SR_PG1_OP_FLAG_SHIFT
->> +/* 2nd register needs an offset of 8 to get to 2nd register */
->> +#define ALTR_A10SR_FBC2MP_BIT_POS       (8 + ALTR_A10SR_PG2_FBC2MP_SHIFT)
->> +#define ALTR_A10SR_FAC2MP_BIT_POS       (8 + ALTR_A10SR_PG2_FAC2MP_SHIFT)
->> +#define ALTR_A10SR_FMCBVADJ_BIT_POS     (8 + ALTR_A10SR_PG2_FMCBVADJ_SHIFT)
->> +#define ALTR_A10SR_FMCAVADJ_BIT_POS     (8 + ALTR_A10SR_PG2_FMCAVADJ_SHIFT)
->> +#define ALTR_A10SR_HL_VDDQ_BIT_POS      (8 + ALTR_A10SR_PG2_HL_VDDQ_SHIFT)
->> +#define ALTR_A10SR_HL_VDD_BIT_POS       (8 + ALTR_A10SR_PG2_HL_VDD_SHIFT)
->> +#define ALTR_A10SR_HL_HPS_BIT_POS       (8 + ALTR_A10SR_PG2_HL_HPS_SHIFT)
->> +#define ALTR_A10SR_HPS_BIT_POS          (8 + ALTR_A10SR_PG2_HPS_SHIFT)
->> +/* 3rd register needs an offset of 16 to get to 3rd register */
->> +#define ALTR_A10SR_10V_FAIL_BIT_POS     (16 + ALTR_A10SR_PG3_10V_FAIL_SHIFT)
->> +#define ALTR_A10SR_FAM2C_BIT_POS        (16 + ALTR_A10SR_PG3_FAM2C_SHIFT)
->> +
->> +/**
->> + * struct altr_a10sr_hwmon - Altera Max5 HWMON device private data structure
->> + * @device: hwmon class.
->> + * @regmap: the regmap from the parent device.
->> + */
->> +struct altr_a10sr_hwmon {
->> +	struct device		*class_device;
->> +	struct regmap		*regmap;
->> +};
->> +
->> +static ssize_t altr_a10sr_read_status(struct device *dev,
->> +				      struct device_attribute *devattr,
->> +				      char *buf)
->> +{
->> +	struct altr_a10sr_hwmon *hwmon = dev_get_drvdata(dev);
->> +	int val, ret, index = to_sensor_dev_attr(devattr)->index;
->> +	int mask = ALTR_A10SR_REG_BIT_MASK(index);
->> +	unsigned char reg = ALTR_A10SR_PWR_GOOD1_REG +
->> +			    ALTR_A10SR_REG_OFFSET(index);
->> +
->> +	ret = regmap_read(hwmon->regmap, reg, &val);
->
-> The pointer parameter to regmap_read() is unsigned int. I would suggest
-> to use the same variable type to avoid surprises.
->
-Understood. Thanks.
-
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return sprintf(buf, "%d\n", !!(~val & mask));
->
-> Are alarms all active low ?
->
-Yes, They are actually Power Good signals (Good = high) so I'm inverting.
-
->> +}
->> +
->> +static ssize_t altr_a10sr_hwmon_show_name(struct device *dev,
->> +					  struct device_attribute *devattr,
->> +					  char *buf)
->> +{
->> +	return sprintf(buf, "altr_a10sr\n");
->> +}
->> +
->> +/* First Power Good Register Bits */
->> +static SENSOR_DEVICE_ATTR(1v0_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_1V0_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(0v95_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_0V95_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(0v9_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_0V9_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(5v0_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_5V0_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(3v3_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_3V3_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(2v5_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_2V5_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(1v8_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_1V8_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(opflag_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_OP_FLAG_BIT_POS);
->> +/* Second Power Good Register Bits */
->> +static SENSOR_DEVICE_ATTR(fbc2mp_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_FBC2MP_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(fac2mp_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_FAC2MP_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(fmcbvadj_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_FMCBVADJ_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(fmcavadj_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_FMCAVADJ_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(hl_vddq_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_HL_VDDQ_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(hl_vdd_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_HL_VDD_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(hlhps_vdd_alarm, S_IRUGO, altr_a10sr_read_status,
->> +			  NULL, ALTR_A10SR_HL_HPS_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(hps_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_HPS_BIT_POS);
->> +/* Third Power Good Register Bits */
->> +static SENSOR_DEVICE_ATTR(10v_alarm, S_IRUGO, altr_a10sr_read_status,
->> +			  NULL, ALTR_A10SR_10V_FAIL_BIT_POS);
->> +static SENSOR_DEVICE_ATTR(fam2c_alarm, S_IRUGO, altr_a10sr_read_status, NULL,
->> +			  ALTR_A10SR_FAM2C_BIT_POS);
->> +
->> +static DEVICE_ATTR(name, S_IRUGO, altr_a10sr_hwmon_show_name, NULL);
->> +
->> +static struct attribute *altr_a10sr_attr[] = {
->> +	&dev_attr_name.attr,
->> +	/* First Power Good Register */
->> +	&sensor_dev_attr_opflag_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_1v8_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_2v5_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_1v0_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_3v3_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_5v0_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_0v9_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_0v95_alarm.dev_attr.attr,
->> +	/* Second Power Good Register */
->> +	&sensor_dev_attr_hps_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_hlhps_vdd_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_hl_vdd_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_hl_vddq_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_fmcavadj_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_fmcbvadj_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_fac2mp_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_fbc2mp_alarm.dev_attr.attr,
->> +	/* Third Power Good Register */
->> +	&sensor_dev_attr_10v_alarm.dev_attr.attr,
->> +	&sensor_dev_attr_fam2c_alarm.dev_attr.attr,
->
-> Ultimately, this doesn't really make much sense, even with standard attribute
-> names. The ABI assumes that _input attrributes exist. Not sure if that could
-> be solved by providing 'dummy' unreadable input attributes (permission 0);
-> that might be worth a try. If you want to attach names to the attributes,
-> you would need to provide label attributes. Specifically you would need
->
-> 	inX_input (with permission 0) - not sure if that is even possible
-> 	inX_alarm
-> 	inX_label
->
-Hmm. OK. I may need to rethink this.
-
->> +	NULL
->> +};
->> +
->> +static const struct attribute_group altr_a10sr_attr_group = {
->> +	.attrs = altr_a10sr_attr
->> +};
->> +
->> +static int altr_a10sr_hwmon_probe(struct platform_device *pdev)
->> +{
->> +	struct altr_a10sr_hwmon *hwmon;
->> +	int ret;
->> +	struct altr_a10sr *a10sr = dev_get_drvdata(pdev->dev.parent);
->> +
->
-> What if someone creates a stand-alone devicetree property for this driver,
-> and there is no parent (or parent driver data) ?
->
-I agree if this was a commercially available part. However, this is a 
-specific driver for a programmable logic device (PLD) that will always 
-be part of an MFD parent. The PLD only supports the Altera Development Kit.
-
->> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
->> +	if (!hwmon)
->> +		return -ENOMEM;
->> +
->> +	hwmon->regmap = a10sr->regmap;
->> +
->> +	platform_set_drvdata(pdev, hwmon);
->> +
->> +	ret = sysfs_create_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
->> +	if (ret)
->> +		goto err_mem;
->> +
->> +	hwmon->class_device = hwmon_device_register(&pdev->dev);
->> +	if (IS_ERR(hwmon->class_device)) {
->> +		ret = PTR_ERR(hwmon->class_device);
->> +		goto err_sysfs;
->> +	}
->
-> Please use devm_hwmon_device_register_with_groups().
->
-Understood. Thanks.
-
-Thanks for reviewing.
-
->> +
->> +	return 0;
->> +
->> +err_sysfs:
->> +	sysfs_remove_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
->> +err_mem:
->> +	return ret;
->> +}
->> +
->> +static int altr_a10sr_hwmon_remove(struct platform_device *pdev)
->> +{
->> +	struct altr_a10sr_hwmon *hwmon = platform_get_drvdata(pdev);
->> +
->> +	hwmon_device_unregister(hwmon->class_device);
->> +	sysfs_remove_group(&pdev->dev.kobj, &altr_a10sr_attr_group);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id altr_a10sr_hwmon_of_match[] = {
->> +	{ .compatible = "altr,a10sr-hwmon" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, altr_a10sr_hwmon_of_match);
->> +
->> +static struct platform_driver altr_a10sr_hwmon_driver = {
->> +	.probe = altr_a10sr_hwmon_probe,
->> +	.remove = altr_a10sr_hwmon_remove,
->> +	.driver = {
->> +		.name = "altr_a10sr_hwmon",
->> +		.of_match_table = of_match_ptr(altr_a10sr_hwmon_of_match),
->> +	},
->> +};
->> +
->> +module_platform_driver(altr_a10sr_hwmon_driver);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("Thor Thayer <tthayer@opensource.altera.com>");
->> +MODULE_DESCRIPTION("HW Monitor driver for Altera Arria10 System Resource Chip");
->> --
->> 1.7.9.5
->>
+On 15/04/16 16:35, Jon Hunter wrote:
+> Hi all,
+> 
+> For Tegra we have an i2c device for display port, namely the display
+> port auxiliary channel (or dpaux) as specified by the display port
+> standard. If an design using Tegra does not utilise the display port
+> interface, then the pads assigned to the dpaux can be re-assigned to
+> another generic i2c controller (i2c6 for Tegra124/210). In other words,
+> the pads can be re-used for a generic i2c interface.
+> 
+> The registers that control whether the pads are mapped to the dpaux or
+> i2c6 are located in the dpaux register space. Therefore, I am looking at
+> adding pin controller support for dpaux so that i2c6 can request these
+> pads if it is enabled and I was hoping to add a pinmux node the to dpaux
+> device in device-tree to do this. For example, something like ...
+> 
+> 	dpaux@0,545c0000 {
+> 		...
+> 
+> 		/* pinctrl node */
+> 		pinmux {
+> 			...
+> 		};
+> 	};
+> 
+> Although the above works, when doing this I noticed that when the device
+> booted, I would seeing the following error messages on boot ...
+> 
+>  i2c i2c-5: of_i2c: modalias failure on ...
+> 
+> These error messages being caused by the new pinmux node because it is
+> not recognised as an i2c device. To avoid this error messages we have
+> come up with a couple solutions but wanted to get some feedback on the
+> best approach.
+> 
+> 1. Add a i2c-bus sub-node to the dpaux binding (suggested by Stephen
+>    Warren), so we would have something like the below. Then i2c devices
+>    for dpaux would be place in the i2c-bus sub-node.
+> 
+> 	dpaux@0,545c0000 {
+> 		...
+> 
+> 		/* pinctrl node */
+> 		pinmux {
+> 			...
+> 		};
+> 
+> 		/* place-holder for i2c devices */
+> 		i2c-bus {
+> 			...
+> 		};
+> 	};	
+> 
+>    To make the above work ideally we would like to make the 'i2c-bus'
+>    node a generic solution for all i2c devices, so the i2c core would
+>    check for the presence of this node and if it is found then would
+>    default to this node for looking for i2c-devices.
+> 
+> 2. When registering i2c devices via device-tree, the function
+>    of_i2c_register_devices() checks to see if OF_POPULATED flag is set
+>    for a given node. If it is set, then the node is skipped. I believe
+>    this was added for device-tree overlays (commit 4f001fd30145 i2c:
+>    Mark instantiated device nodes with OF_POPULATE). Another option is
+>    for the dpaux driver to mark the pinmux node as populated before
+>    registering the i2c adapter and this will prevent the i2c core from
+>    trying to parse the pinmux node. I am not sure if this would be
+>    frowned upon in anyway or if we can guarantee that no future changes
+>    to DT overlays would change this in a way where it would not work.
+> 
+> Let me know your thoughts.
+> 
+> Cheers
+> Jon
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
