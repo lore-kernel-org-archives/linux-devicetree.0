@@ -1,39 +1,66 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 19/41] Documentation: dt: opp: fix spelling mistake
-Date: Mon, 25 Apr 2016 08:32:56 +0530
-Message-ID: <20160425030256.GG22726@vireshk-i7>
-References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
- <1461543878-3639-20-git-send-email-eric@engestrom.ch>
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: RE: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Mon, 25 Apr 2016 09:39:38 +0530
+Message-ID: <5876c521a46dbb4bd1b0c22bc64ec1a5@mail.gmail.com>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+	<1461230323-27891-2-git-send-email-pramod.kumar@broadcom.com> <20160424.141806.786009616301278103.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461543878-3639-20-git-send-email-eric@engestrom.ch>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eric Engestrom <eric@engestrom.ch>
-Cc: linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160424.141806.786009616301278103.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, yamada.masahiro@socionext.com, wens@csie.org, bcm-kernel-feedback-list@broadcom.com, pawel.moll@arm.com, mark.rutland@arm.com, arnd@arndb.de, suzuki.poulose@arm.com, punit.agrawal@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25-04-16, 01:24, Eric Engestrom wrote:
-> Signed-off-by: Eric Engestrom <eric@engestrom.ch>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 601256f..ee91cbd 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -45,7 +45,7 @@ Devices supporting OPPs must set their "operating-points-v2" property with
->  phandle to a OPP table in their DT node. The OPP core will use this phandle to
->  find the operating points for the device.
->  
-> -If required, this can be extended for SoC vendor specfic bindings. Such bindings
-> +If required, this can be extended for SoC vendor specific bindings. Such bindings
->  should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
->  and should have a compatible description like: "operating-points-v2-<vendor>".
+Hi David,
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Thanks for providing input over the patch.  Will address the comment as
+described below.
 
--- 
-viresh
+> -----Original Message-----
+> From: David Miller [mailto:davem@davemloft.net]
+> Sent: 24 April 2016 23:48
+> To: pramod.kumar@broadcom.com
+> Cc: robh+dt@kernel.org; catalin.marinas@arm.com; will.deacon@arm.com;
+> yamada.masahiro@socionext.com; wens@csie.org; bcm-kernel-feedback-
+> list@broadcom.com; pawel.moll@arm.com; mark.rutland@arm.com;
+> arnd@arndb.de; suzuki.poulose@arm.com; punit.agrawal@arm.com;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org; anup.patel@broadcom.com
+> Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+>
+> From: Pramod Kumar <pramod.kumar@broadcom.com>
+> Date: Thu, 21 Apr 2016 14:48:38 +0530
+>
+> > +struct shared_mdio_master *shared_mdio_alloc_master(struct device
+> *parent,
+> > +						    struct device_node
+*node)
+> > +{
+> > +	int ret = 0;
+> > +	struct shared_mdio_master *master;
+>
+> Always order local variable declarations in reverse christmas tree
+(longest to
+> shortest line) order.
+>
+
+Sure. Next patch will address this.
+
+> > +static int shared_mdio_driver_probe(struct device *dev) {
+> > +	int rc;
+> > +	struct shared_mdio_master *master = to_shared_mdio_master(dev);
+> > +	struct shared_mdio_driver *drv =
+to_shared_mdio_driver(dev->driver);
+>
+> Likewise.
+
+Sure.
+
+> Please audit your entire submission for this issue.
+
+Sure. I'll audit the entire patch set for above issue.
+
+Regards,
+Pramod
