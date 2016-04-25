@@ -1,50 +1,27 @@
-From: Eric Engestrom <eric@engestrom.ch>
-Subject: [PATCH 22/41] Documentation: dt: soc: fix spelling mistakes
-Date: Mon, 25 Apr 2016 01:24:19 +0100
-Message-ID: <1461543878-3639-23-git-send-email-eric@engestrom.ch>
-References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Eric Engestrom <eric@engestrom.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Murali Karicheri <m-karicheri2@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, devicetree@vger.kernel.org
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] ARM: lpc32xx: updates to lpc32xx_defconfig
+Date: Mon, 25 Apr 2016 03:57:25 +0300
+Message-ID: <1461545845-25338-1-git-send-email-vz@mleia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Engestrom <eric@engestrom.ch>
----
- .../devicetree/bindings/soc/ti/keystone-navigator-qmss.txt          | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The changeset updates lpc32xx_defconfig to match savedefconfig
+and adds ARM PrimeCell PL175 memory controller driver to a build.
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-index d1ce21a..64c66a5 100644
---- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-+++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-@@ -42,7 +42,7 @@ Required properties:
- - queue-pools	: child node classifying the queue ranges into pools.
- 		  Queue ranges are grouped into 3 type of pools:
- 		  - qpend	    : pool of qpend(interruptible) queues
--		  - general-purpose : pool of general queues, primarly used
-+		  - general-purpose : pool of general queues, primarily used
- 				      as free descriptor queues or the
- 				      transmit DMA queues.
- 		  - accumulator	    : pool of queues on PDSP accumulator channel
-@@ -50,7 +50,7 @@ Required properties:
-   -- qrange		: number of queues to use per queue range, specified as
- 			  <"base queue #" "# of queues">.
-   -- interrupts		: Optional property to specify the interrupt mapping
--			  for interruptible queues. The driver additionaly sets
-+			  for interruptible queues. The driver additionally sets
- 			  the interrupt affinity hint based on the cpu mask.
-   -- qalloc-by-id	: Optional property to specify that the queues in this
- 			  range can only be allocated by queue id.
-@@ -80,7 +80,7 @@ Required properties:
- 			  latency     : time to delay the interrupt, specified
- 					in microseconds.
-   -- multi-queue	: Optional property to specify that the channel has to
--			  monitor upto 32 queues starting at the base queue #.
-+			  monitor up to 32 queues starting at the base queue #.
- - descriptor-regions	: child node describing the memory regions for keystone
- 			  navigator packet DMA descriptors. The memory for
- 			  descriptors will be allocated by the driver.
+Vladimir Zapolskiy (2):
+  ARM: LPC32xx: defconfig update
+  ARM: LPC32xx: add PL175 memory controller driver to defconfig
+
+ arch/arm/configs/lpc32xx_defconfig | 29 +++++++++++------------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
+
 -- 
-2.8.0
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
