@@ -1,144 +1,83 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [Patch v2 6/8] firmware: qcom: scm: Use atomic SCM for cold boot
-Date: Mon, 25 Apr 2016 18:08:43 -0500
-Message-ID: <1461625725-32425-7-git-send-email-andy.gross@linaro.org>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: [Patch v2 4/8] firmware: qcom: scm: Add memory allocation API
+Date: Mon, 25 Apr 2016 18:08:41 -0500
+Message-ID: <1461625725-32425-5-git-send-email-andy.gross@linaro.org>
 References: <1461625725-32425-1-git-send-email-andy.gross@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461625725-32425-1-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461625725-32425-1-git-send-email-andy.gross@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch changes the cold_set_boot_addr function to use atomic SCM
-calls.  This removes the need for memory allocation and instead places
-all arguments in registers.
+This patch adds APIs for the scm-32 and scm-64 to use for coherent memory
+allocation.
 
-Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 ---
- drivers/firmware/qcom_scm-32.c | 47 ++++++++++++++++++++----------------------
- 1 file changed, 22 insertions(+), 25 deletions(-)
+ drivers/firmware/qcom_scm.c | 16 ++++++++++++++++
+ drivers/firmware/qcom_scm.h |  4 ++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 0d2a3f8..419df4d 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -294,34 +294,39 @@ out:
- 				(n & 0xf))
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index d4e9145..8f78938 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -20,6 +20,7 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/clk.h>
++#include <linux/dma-mapping.h>
  
- /**
-- * qcom_scm_call_atomic1() - Send an atomic SCM command with one argument
-+ * qcom_scm_call_atomic() - Send an atomic SCM command with one argument
-  * @svc_id: service identifier
-  * @cmd_id: command identifier
-+ * @arglen: number of arguments
-  * @arg1: first argument
-+ * @arg2: second argument (optional - fill with 0 if unused)
-  *
-  * This shall only be used with commands that are guaranteed to be
-  * uninterruptable, atomic and SMP safe.
-  */
--static s32 qcom_scm_call_atomic1(u32 svc, u32 cmd, u32 arg1)
-+static s32 qcom_scm_call_atomic(u32 svc, u32 cmd, u32 arglen, u32 arg1,
-+				u32 arg2)
+ #include "qcom_scm.h"
+ 
+@@ -158,6 +159,21 @@ bool qcom_scm_is_available(void)
+ }
+ EXPORT_SYMBOL(qcom_scm_is_available);
+ 
++void *qcom_scm_alloc_buffer(size_t size, dma_addr_t *dma_addr,
++				      gfp_t gfp)
++{
++	if (__scm)
++		return dma_alloc_writecombine(__scm->dev, size, dma_addr, gfp);
++	else
++		return ERR_PTR(-ENODEV);
++}
++
++void qcom_scm_free_buffer(size_t size, void *cpu_addr,
++				 dma_addr_t dma_addr)
++{
++	dma_free_writecombine(__scm->dev, size, cpu_addr, dma_addr);
++}
++
+ static int qcom_scm_probe(struct platform_device *pdev)
  {
- 	int context_id;
+ 	struct qcom_scm *scm;
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index 7dcc733..848c7de 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -36,6 +36,10 @@ extern int __qcom_scm_is_call_available(u32 svc_id, u32 cmd_id);
+ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+ 		u32 *resp);
  
--	register u32 r0 asm("r0") = SCM_ATOMIC(svc, cmd, 1);
-+	register u32 r0 asm("r0") = SCM_ATOMIC(svc, cmd, arglen);
- 	register u32 r1 asm("r1") = (u32)&context_id;
- 	register u32 r2 asm("r2") = arg1;
-+	register u32 r3 asm("r3") = arg2;
- 
- 	asm volatile(
- 			__asmeq("%0", "r0")
- 			__asmeq("%1", "r0")
- 			__asmeq("%2", "r1")
- 			__asmeq("%3", "r2")
-+			__asmeq("%4", "r3")
- #ifdef REQUIRES_SEC
- 			".arch_extension sec\n"
- #endif
- 			"smc    #0      @ switch to secure world\n"
- 			: "=r" (r0)
--			: "r" (r0), "r" (r1), "r" (r2)
--			: "r3");
-+			: "r" (r0), "r" (r1), "r" (r2), "r" (r3)
-+			);
- 	return r0;
- }
- 
-@@ -361,22 +366,6 @@ u32 qcom_scm_get_version(void)
- }
- EXPORT_SYMBOL(qcom_scm_get_version);
- 
--/*
-- * Set the cold/warm boot address for one of the CPU cores.
-- */
--static int qcom_scm_set_boot_addr(u32 addr, int flags)
--{
--	struct {
--		__le32 flags;
--		__le32 addr;
--	} cmd;
--
--	cmd.addr = cpu_to_le32(addr);
--	cmd.flags = cpu_to_le32(flags);
--	return qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
--			&cmd, sizeof(cmd), NULL, 0);
--}
--
- /**
-  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-  * @entry: Entry point function for the cpus
-@@ -406,7 +395,8 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- 			set_cpu_present(cpu, false);
- 	}
- 
--	return qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
-+	return qcom_scm_call_atomic(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR, 2,
-+				    flags, virt_to_phys(entry));
- }
- 
- /**
-@@ -422,6 +412,10 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
- 	int ret;
- 	int flags = 0;
- 	int cpu;
-+	struct {
-+		__le32 flags;
-+		__le32 addr;
-+	} cmd;
- 
- 	/*
- 	 * Reassign only if we are switching from hotplug entry point
-@@ -437,7 +431,10 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
- 	if (!flags)
- 		return 0;
- 
--	ret = qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
-+	cmd.addr = cpu_to_le32(virt_to_phys(entry));
-+	cmd.flags = cpu_to_le32(flags);
-+	ret = qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
-+			    &cmd, sizeof(cmd), NULL, 0);
- 	if (!ret) {
- 		for_each_cpu(cpu, cpus)
- 			qcom_scm_wb[cpu].entry = entry;
-@@ -456,8 +453,8 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
-  */
- void __qcom_scm_cpu_power_down(u32 flags)
- {
--	qcom_scm_call_atomic1(QCOM_SCM_SVC_BOOT, QCOM_SCM_CMD_TERMINATE_PC,
--			flags & QCOM_SCM_FLUSH_FLAG_MASK);
-+	qcom_scm_call_atomic(QCOM_SCM_SVC_BOOT, QCOM_SCM_CMD_TERMINATE_PC, 1,
-+			flags & QCOM_SCM_FLUSH_FLAG_MASK, 0);
- }
- 
- int __qcom_scm_is_call_available(u32 svc_id, u32 cmd_id)
++extern void *qcom_scm_alloc_buffer(size_t size, dma_addr_t *dma_addr,
++				    gfp_t gfp);
++extern void qcom_scm_free_buffer(size_t size, void *virt_addr,
++				 dma_addr_t dma_addr);
+ /* common error codes */
+ #define QCOM_SCM_ENOMEM		-5
+ #define QCOM_SCM_EOPNOTSUPP	-4
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
