@@ -1,276 +1,112 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 6/7] EDAC, altera: Add Arria10 Ethernet EDAC support
-Date: Mon, 25 Apr 2016 12:52:47 -0500
-Message-ID: <1461606768-14404-7-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 3/7] EDAC, altera: Move Arria10 IRQ function
+Date: Mon, 25 Apr 2016 12:52:44 -0500
+Message-ID: <1461606768-14404-4-git-send-email-tthayer@opensource.altera.com>
 References: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add Altera Arria10 Ethernet FIFO memory EDAC support.
+In preparation for additional memory module ECCs, the IRQ and
+check_deps() functions are being made available to all the
+memory buffers. Move it outside of the OCRAM only area.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2  Remove (void *) cast from altr_edac_device_of_match[]
-    Addition of panic flag to private data.
+v2  New patch. Move shared functions outside OCRAM only area.
 ---
- drivers/edac/Kconfig       |    7 ++
- drivers/edac/altera_edac.c |  159 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/edac/altera_edac.h |   14 ++++
- 3 files changed, 180 insertions(+)
+ drivers/edac/altera_edac.c |   48 +++++++++++++++++++++++++-------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 6ca7474..d0c1dab 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -391,6 +391,13 @@ config EDAC_ALTERA_OCRAM
- 	  Support for error detection and correction on the
- 	  Altera On-Chip RAM Memory for Altera SoCs.
- 
-+config EDAC_ALTERA_ETHERNET
-+	bool "Altera Ethernet FIFO ECC"
-+	depends on EDAC_ALTERA=y
-+	help
-+	  Support for error detection and correction on the
-+	  Altera Ethernet FIFO Memory for Altera SoCs.
-+
- config EDAC_SYNOPSYS
- 	tristate "Synopsys DDR Memory Controller"
- 	depends on EDAC_MM_EDAC && ARCH_ZYNQ
 diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 49a5239..3860880 100644
+index d4afecc..dc09627 100644
 --- a/drivers/edac/altera_edac.c
 +++ b/drivers/edac/altera_edac.c
-@@ -553,6 +553,12 @@ const struct edac_device_prv_data ocramecc_data;
- const struct edac_device_prv_data l2ecc_data;
- const struct edac_device_prv_data a10_ocramecc_data;
- const struct edac_device_prv_data a10_l2ecc_data;
-+const struct edac_device_prv_data a10_enet0rxecc_data;
-+const struct edac_device_prv_data a10_enet0txecc_data;
-+const struct edac_device_prv_data a10_enet1rxecc_data;
-+const struct edac_device_prv_data a10_enet1txecc_data;
-+const struct edac_device_prv_data a10_enet2rxecc_data;
-+const struct edac_device_prv_data a10_enet2txecc_data;
- 
- static irqreturn_t altr_edac_device_handler(int irq, void *dev_id)
- {
-@@ -693,6 +699,20 @@ static const struct of_device_id altr_edac_device_of_match[] = {
- 	{ .compatible = "altr,socfpga-ocram-ecc", .data = &ocramecc_data },
- 	{ .compatible = "altr,socfpga-a10-ocram-ecc", .data = &a10_ocramecc_data },
- #endif
-+#ifdef CONFIG_EDAC_ALTERA_ETHERNET
-+	{ .compatible = "altr,socfpga-a10-emac0-rx-ecc",
-+	  .data = &a10_enet0rxecc_data },
-+	{ .compatible = "altr,socfpga-a10-emac0-tx-ecc",
-+	  .data = &a10_enet0txecc_data },
-+	{ .compatible = "altr,socfpga-a10-emac1-rx-ecc",
-+	  .data = &a10_enet1rxecc_data },
-+	{ .compatible = "altr,socfpga-a10-emac1-tx-ecc",
-+	  .data = &a10_enet1txecc_data },
-+	{ .compatible = "altr,socfpga-a10-emac2-rx-ecc",
-+	  .data = &a10_enet2rxecc_data },
-+	{ .compatible = "altr,socfpga-a10-emac2-tx-ecc",
-+	  .data = &a10_enet2txecc_data },
-+#endif
- 	{},
+@@ -825,9 +825,9 @@ static struct platform_driver altr_edac_device_driver = {
  };
- MODULE_DEVICE_TABLE(of, altr_edac_device_of_match);
-@@ -1205,6 +1225,132 @@ const struct edac_device_prv_data a10_l2ecc_data = {
+ module_platform_driver(altr_edac_device_driver);
  
- #endif	/* CONFIG_EDAC_ALTERA_L2C */
+-/*********************** OCRAM EDAC Device Functions *********************/
++/*********************** Arria10 Shared ECC Functions ********************/
  
-+/********************* Ethernet Device Functions ********************/
-+
-+#ifdef CONFIG_EDAC_ALTERA_ETHERNET
-+
-+const struct edac_device_prv_data a10_enet0rxecc_data = {
-+	.setup = altr_check_ecc_deps,
-+	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
-+	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
-+	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_EMAC0RX,
-+	.dbgfs_name = "altr_emac0rx_trigger",
-+	.ecc_enable_mask = ALTR_A10_ETHERNET_ECC_EN_CTL,
-+	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
-+	.ce_set_mask = ALTR_A10_ECC_TSERRA,
-+	.ue_set_mask = ALTR_A10_ECC_TDERRA,
-+	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
-+	.ecc_irq_handler = altr_edac_a10_ecc_irq,
-+	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.panic = false,
-+};
-+
-+const struct edac_device_prv_data a10_enet0txecc_data = {
-+	.setup = altr_check_ecc_deps,
-+	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
-+	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
-+	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_EMAC0TX,
-+	.dbgfs_name = "altr_emac0tx_trigger",
-+	.ecc_enable_mask = ALTR_A10_ETHERNET_ECC_EN_CTL,
-+	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
-+	.ce_set_mask = ALTR_A10_ECC_TSERRA,
-+	.ue_set_mask = ALTR_A10_ECC_TDERRA,
-+	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
-+	.ecc_irq_handler = altr_edac_a10_ecc_irq,
-+	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.panic = false,
-+};
-+
-+const struct edac_device_prv_data a10_enet1rxecc_data = {
-+	.setup = altr_check_ecc_deps,
-+	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
-+	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
-+	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_EMAC1RX,
-+	.dbgfs_name = "altr_emac1rx_trigger",
-+	.ecc_enable_mask = ALTR_A10_ETHERNET_ECC_EN_CTL,
-+	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
-+	.ce_set_mask = ALTR_A10_ECC_TSERRA,
-+	.ue_set_mask = ALTR_A10_ECC_TDERRA,
-+	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
-+	.ecc_irq_handler = altr_edac_a10_ecc_irq,
-+	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.panic = false,
-+};
-+
-+const struct edac_device_prv_data a10_enet1txecc_data = {
-+	.setup = altr_check_ecc_deps,
-+	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
-+	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
-+	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_EMAC1TX,
-+	.dbgfs_name = "altr_emac1tx_trigger",
-+	.ecc_enable_mask = ALTR_A10_ETHERNET_ECC_EN_CTL,
-+	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
-+	.ce_set_mask = ALTR_A10_ECC_TSERRA,
-+	.ue_set_mask = ALTR_A10_ECC_TDERRA,
-+	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
-+	.ecc_irq_handler = altr_edac_a10_ecc_irq,
-+	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.panic = false,
-+};
-+
-+const struct edac_device_prv_data a10_enet2rxecc_data = {
-+	.setup = altr_check_ecc_deps,
-+	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
-+	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
-+	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_EMAC2RX,
-+	.dbgfs_name = "altr_emac2rx_trigger",
-+	.ecc_enable_mask = ALTR_A10_ETHERNET_ECC_EN_CTL,
-+	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
-+	.ce_set_mask = ALTR_A10_ECC_TSERRA,
-+	.ue_set_mask = ALTR_A10_ECC_TDERRA,
-+	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
-+	.ecc_irq_handler = altr_edac_a10_ecc_irq,
-+	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.panic = false,
-+};
-+
-+const struct edac_device_prv_data a10_enet2txecc_data = {
-+	.setup = altr_check_ecc_deps,
-+	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
-+	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
-+	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_EMAC2TX,
-+	.dbgfs_name = "altr_emac2tx_trigger",
-+	.ecc_enable_mask = ALTR_A10_ETHERNET_ECC_EN_CTL,
-+	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
-+	.ce_set_mask = ALTR_A10_ECC_TSERRA,
-+	.ue_set_mask = ALTR_A10_ECC_TDERRA,
-+	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
-+	.ecc_irq_handler = altr_edac_a10_ecc_irq,
-+	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.panic = false,
-+};
-+
-+static const struct a10_ecc_init_vars a10_enet_ecc_init[] = {
-+	{"altr,socfpga-a10-emac0-rx-ecc", A10_SYSMGR_ECC_INTSTAT_EMAC0RX},
-+	{"altr,socfpga-a10-emac0-tx-ecc", A10_SYSMGR_ECC_INTSTAT_EMAC0TX},
-+	{"altr,socfpga-a10-emac1-rx-ecc", A10_SYSMGR_ECC_INTSTAT_EMAC1RX},
-+	{"altr,socfpga-a10-emac1-tx-ecc", A10_SYSMGR_ECC_INTSTAT_EMAC1TX},
-+	{"altr,socfpga-a10-emac2-rx-ecc", A10_SYSMGR_ECC_INTSTAT_EMAC2RX},
-+	{"altr,socfpga-a10-emac2-tx-ecc", A10_SYSMGR_ECC_INTSTAT_EMAC2TX},
-+};
-+
-+static int __init socfpga_init_ethernet_ecc(void)
+-#ifdef CONFIG_EDAC_ALTERA_OCRAM
++#if defined(CONFIG_EDAC_ALTERA_OCRAM) || defined(CONFIG_EDAC_ALTERA_ETHERNET)
+ /*
+  *  Test for memory's ECC dependencies upon entry because platform specific
+  *  startup should have initialized the memory and enabled the ECC.
+@@ -848,6 +848,31 @@ static int altr_check_ecc_deps(struct altr_edac_device_dev *device)
+ 	return -ENODEV;
+ }
+ 
++static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
++					 bool sberr)
 +{
-+	int i;
++	void __iomem  *base = dci->base;
 +
-+	for (i = 0; i < ARRAY_SIZE(a10_enet_ecc_init); i++) {
-+		altr_init_a10_ecc_block(a10_enet_ecc_init[i].ecc_str,
-+					a10_enet_ecc_init[i].irq_mask,
-+					ALTR_A10_ETHERNET_ECC_EN_CTL, 0);
++	if (sberr) {
++		writel(ALTR_A10_ECC_SERRPENA,
++		       base + ALTR_A10_ECC_INTSTAT_OFST);
++		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
++	} else {
++		writel(ALTR_A10_ECC_DERRPENA,
++		       base + ALTR_A10_ECC_INTSTAT_OFST);
++		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
++		if (dci->data->panic)
++			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
 +	}
-+
-+	return 0;
++	return IRQ_HANDLED;
 +}
 +
-+early_initcall(socfpga_init_ethernet_ecc);
++#endif	/* CONFIG_EDAC_ALTERA_OCRAM || CONFIG_EDAC_ALTERA_ETHERNET */
 +
-+#endif	/* CONFIG_EDAC_ALTERA_ETHERNET */
++/*********************** OCRAM EDAC Device Functions *********************/
 +
- /********************* Arria10 EDAC Device Functions *************************/
- 
- /*
-@@ -1416,6 +1562,19 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
- 		else if (of_device_is_compatible(child,
- 						 "altr,socfpga-a10-ocram-ecc"))
- 			altr_edac_a10_device_add(edac, child);
-+		else if ((of_device_is_compatible(child,
-+					"altr,socfpga-a10-emac0-rx-ecc")) ||
-+			 (of_device_is_compatible(child,
-+					"altr,socfpga-a10-emac0-tx-ecc")) ||
-+			 (of_device_is_compatible(child,
-+					"altr,socfpga-a10-emac1-rx-ecc")) ||
-+			 (of_device_is_compatible(child,
-+					"altr,socfpga-a10-emac1-tx-ecc")) ||
-+			 (of_device_is_compatible(child,
-+					"altr,socfpga-a10-emac2-rx-ecc")) ||
-+			 (of_device_is_compatible(child,
-+					"altr,socfpga-a10-emac2-tx-ecc")))
-+			altr_edac_a10_device_add(edac, child);
- 	}
- 
- 	return 0;
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index a4f1539..fa0fe19 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -260,6 +260,12 @@ struct altr_sdram_mc_data {
- #define A10_SYSMGR_ECC_INTSTAT_DERR_OFST  0xA0
- #define A10_SYSMGR_ECC_INTSTAT_L2         BIT(0)
- #define A10_SYSMGR_ECC_INTSTAT_OCRAM      BIT(1)
-+#define A10_SYSMGR_ECC_INTSTAT_EMAC0RX    BIT(4)
-+#define A10_SYSMGR_ECC_INTSTAT_EMAC0TX    BIT(5)
-+#define A10_SYSMGR_ECC_INTSTAT_EMAC1RX    BIT(6)
-+#define A10_SYSMGR_ECC_INTSTAT_EMAC1TX    BIT(7)
-+#define A10_SYSMGR_ECC_INTSTAT_EMAC2RX    BIT(8)
-+#define A10_SYSMGR_ECC_INTSTAT_EMAC2TX    BIT(9)
- 
- #define A10_SYSGMR_MPU_CLEAR_L2_ECC_OFST  0xA8
- #define A10_SYSGMR_MPU_CLEAR_L2_ECC_SB    BIT(15)
-@@ -285,6 +291,9 @@ struct altr_sdram_mc_data {
- /* Arria 10 OCRAM ECC Management Group Defines */
- #define ALTR_A10_OCRAM_ECC_EN_CTL       (BIT(1) | BIT(0))
- 
-+/* Arria 10 Ethernet ECC Management Group Defines */
-+#define ALTR_A10_ETHERNET_ECC_EN_CTL    BIT(0)
++#ifdef CONFIG_EDAC_ALTERA_OCRAM
 +
- /* A10 ECC Controller memory initialization timeout */
- #define ALTR_A10_ECC_INIT_WATCHDOG_10US      10000
+ static void *ocram_alloc_mem(size_t size, void **other)
+ {
+ 	struct device_node *np;
+@@ -882,25 +907,6 @@ static void ocram_free_mem(void *p, size_t size, void *other)
+ 	gen_pool_free((struct gen_pool *)other, (u32)p, size);
+ }
  
-@@ -332,4 +341,9 @@ struct altr_arria10_edac {
- 	struct list_head	a10_ecc_devices;
- };
- 
-+struct a10_ecc_init_vars {
-+	u8 ecc_str[32];
-+	u32 irq_mask;
-+};
-+
- #endif	/* #ifndef _ALTERA_EDAC_H */
+-static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
+-					 bool sberr)
+-{
+-	void __iomem  *base = dci->base;
+-
+-	if (sberr) {
+-		writel(ALTR_A10_ECC_SERRPENA,
+-		       base + ALTR_A10_ECC_INTSTAT_OFST);
+-		edac_device_handle_ce(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-	} else {
+-		writel(ALTR_A10_ECC_DERRPENA,
+-		       base + ALTR_A10_ECC_INTSTAT_OFST);
+-		edac_device_handle_ue(dci->edac_dev, 0, 0, dci->edac_dev_name);
+-		if (dci->data->panic)
+-			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
+-	}
+-	return IRQ_HANDLED;
+-}
+-
+ const struct edac_device_prv_data ocramecc_data = {
+ 	.setup = altr_check_ecc_deps,
+ 	.ce_clear_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_SERR),
 -- 
 1.7.9.5
