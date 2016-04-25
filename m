@@ -1,46 +1,32 @@
-From: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-Subject: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
-Date: Mon, 25 Apr 2016 01:24:12 +0100
-Message-ID: <1461543878-3639-16-git-send-email-eric@engestrom.ch>
+From: Eric Engestrom <eric@engestrom.ch>
+Subject: [PATCH 16/41] Documentation: dt: mmc: fix spelling mistake
+Date: Mon, 25 Apr 2016 01:24:13 +0100
+Message-ID: <1461543878-3639-17-git-send-email-eric@engestrom.ch>
 References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461543878-3639-1-git-send-email-eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Eric Engestrom <eric@engestrom.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+Signed-off-by: Eric Engestrom <eric@engestrom.ch>
 ---
- Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-index 5e97a95..b98b291 100644
---- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-@@ -178,7 +178,7 @@ see regulator.txt - with additional custom properties described below:
- - qcom,force-mode:
- 	Usage: optional (default if no other qcom,force-mode is specified)
- 	Value type: <u32>
--	Defintion: indicates that the regulator should be forced to a
-+	Definition: indicates that the regulator should be forced to a
- 		   particular mode, valid values are:
- 		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
- 		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
-@@ -204,7 +204,7 @@ see regulator.txt - with additional custom properties described below:
- - qcom,force-mode:
- 	Usage: optional
- 	Value type: <u32>
--	Defintion: indicates that the regulator should not be forced to any
-+	Definition: indicates that the regulator should not be forced to any
- 		   particular mode, valid values are:
- 		   QCOM_RPM_FORCE_MODE_NONE - do not force any mode
- 		   QCOM_RPM_FORCE_MODE_LPM - force into low power mode
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
+index 0cb827b..3d965d5 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
+@@ -1,7 +1,7 @@
+ * The simple eMMC hardware reset provider
+ 
+ The purpose of this driver is to perform standard eMMC hw reset
+-procedure, as descibed by Jedec 4.4 specification. This procedure is
++procedure, as described by Jedec 4.4 specification. This procedure is
+ performed just after MMC core enabled power to the given mmc host (to
+ fix possible issues if bootloader has left eMMC card in initialized or
+ unknown state), and before performing complete system reboot (also in
 -- 
 2.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
