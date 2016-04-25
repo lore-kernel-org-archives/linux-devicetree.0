@@ -1,60 +1,32 @@
 From: Eric Engestrom <eric@engestrom.ch>
-Subject: [PATCH 09/41] Documentation: dt: clock: fix spelling mistakes
-Date: Mon, 25 Apr 2016 01:24:06 +0100
-Message-ID: <1461543878-3639-10-git-send-email-eric@engestrom.ch>
+Subject: [PATCH 11/41] Documentation: dt: dma: fix spelling mistake
+Date: Mon, 25 Apr 2016 01:24:08 +0100
+Message-ID: <1461543878-3639-12-git-send-email-eric@engestrom.ch>
 References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Eric Engestrom <eric@engestrom.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: Eric Engestrom <eric@engestrom.ch>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Eric Engestrom <eric@engestrom.ch>
 ---
- Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt | 2 +-
- Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt | 2 +-
- Documentation/devicetree/bindings/clock/st/st,clkgen.txt        | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-index 0c2bf5e..7f36853 100644
---- a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-@@ -16,7 +16,7 @@ Required Properties:
- Optional Properties:
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+index 2291c40..3cf0072d 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+@@ -7,7 +7,7 @@ Required properties:
+ - compatible: Should be "xlnx,axi-dma-1.00.a"
+ - #dma-cells: Should be <1>, see "dmas" property below
+ - reg: Should contain DMA registers location and length.
+-- dma-channel child node: Should have atleast one channel and can have upto
++- dma-channel child node: Should have at least one channel and can have up to
+ 	two channels per device. This node specifies the properties of each
+ 	DMA channel (see child node properties below).
  
- - rockchip,grf: phandle to the syscon managing the "general register files"
--  If missing pll rates are not changable, due to the missing pll lock status.
-+  If missing pll rates are not changeable, due to the missing pll lock status.
- 
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. All available clocks are defined as
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-index c9fbb76..8cb47c3 100644
---- a/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-@@ -15,7 +15,7 @@ Required Properties:
- Optional Properties:
- 
- - rockchip,grf: phandle to the syscon managing the "general register files"
--  If missing pll rates are not changable, due to the missing pll lock status.
-+  If missing pll rates are not changeable, due to the missing pll lock status.
- 
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. All available clocks are defined as
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-index 78978f1..426bdda 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-@@ -40,7 +40,7 @@ address is common of all subnode.
- 	};
- 
- This binding uses the common clock binding[1].
--Each subnode should use the binding discribe in [2]..[7]
-+Each subnode should use the binding describe in [2]..[7]
- 
- [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
- [2] Documentation/devicetree/bindings/clock/st,clkgen-divmux.txt
 -- 
 2.8.0
