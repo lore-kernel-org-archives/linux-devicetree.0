@@ -1,76 +1,244 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 7/7] ARM: dts: Add Arria10 Ethernet EDAC devicetree entry
-Date: Mon, 25 Apr 2016 12:52:48 -0500
-Message-ID: <1461606768-14404-8-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 5/7] EDAC, altera: Add Arria10 ECC memory init functions
+Date: Mon, 25 Apr 2016 12:52:46 -0500
+Message-ID: <1461606768-14404-6-git-send-email-tthayer@opensource.altera.com>
 References: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the device tree entries needed to support the Altera Ethernet
-FIFO buffer EDAC on the Arria10 chip.
+In preparation for additional memory module ECCs, add the
+memory initialization functions.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2  No change
+v2: Specify INTMODE selection -> IRQ on each ECC error.
+    Insert functions above memory-specific functions so that function
+    declarations are not required.
+    Use ERRINTENS & ERRINTENR registers instead of read/modify/write.
 ---
- arch/arm/boot/dts/socfpga_arria10.dtsi |   36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ drivers/edac/altera_edac.c |  157 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/edac/altera_edac.h |    8 +++
+ 2 files changed, 165 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 27cc497..6195ade 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -617,6 +617,42 @@
- 				compatible = "altr,socfpga-a10-ocram-ecc";
- 				reg = <0xff8c3000 0x400>;
- 			};
-+
-+			emac0-rx-ecc@ff8c0800 {
-+				compatible = "altr,socfpga-a10-emac0-rx-ecc";
-+				reg = <0xff8c0800 0x400>;
-+				parent = <&gmac0>;
-+			};
-+
-+			emac0-tx-ecc@ff8c0c00 {
-+				compatible = "altr,socfpga-a10-emac0-tx-ecc";
-+				reg = <0xff8c0c00 0x400>;
-+				parent = <&gmac0>;
-+			};
-+
-+			emac1-rx-ecc@ff8c1000 {
-+				compatible = "altr,socfpga-a10-emac1-rx-ecc";
-+				reg = <0xff8c1000 0x400>;
-+				parent = <&gmac1>;
-+			};
-+
-+			emac1-tx-ecc@ff8c1400 {
-+				compatible = "altr,socfpga-a10-emac1-tx-ecc";
-+				reg = <0xff8c1400 0x400>;
-+				parent = <&gmac1>;
-+			};
-+
-+			emac2-rx-ecc@ff8c1800 {
-+				compatible = "altr,socfpga-a10-emac2-rx-ecc";
-+				reg = <0xff8c1800 0x400>;
-+				parent = <&gmac2>;
-+			};
-+
-+			emac2-tx-ecc@ff8c1c00 {
-+				compatible = "altr,socfpga-a10-emac2-tx-ecc";
-+				reg = <0xff8c1c00 0x400>;
-+				parent = <&gmac2>;
-+			};
- 		};
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index dc09627..49a5239 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -19,6 +19,7 @@
  
- 		rst: rstmgr@ffd05000 {
+ #include <asm/cacheflush.h>
+ #include <linux/ctype.h>
++#include <linux/delay.h>
+ #include <linux/edac.h>
+ #include <linux/genalloc.h>
+ #include <linux/interrupt.h>
+@@ -869,6 +870,162 @@ static irqreturn_t altr_edac_a10_ecc_irq(struct altr_edac_device_dev *dci,
+ 
+ #endif	/* CONFIG_EDAC_ALTERA_OCRAM || CONFIG_EDAC_ALTERA_ETHERNET */
+ 
++/******************* Arria10 Memory Buffer Functions *********************/
++
++#if defined(CONFIG_EDAC_ALTERA_ETHERNET)
++static inline void ecc_set_bits(u32 bit_mask, void __iomem *ioaddr)
++{
++	u32 value = readl(ioaddr);
++
++	value |= bit_mask;
++	writel(value, ioaddr);
++}
++
++static inline void ecc_clear_bits(u32 bit_mask, void __iomem *ioaddr)
++{
++	u32 value = readl(ioaddr);
++
++	value &= ~bit_mask;
++	writel(value, ioaddr);
++}
++
++static inline int ecc_test_bits(u32 bit_mask, void __iomem *ioaddr)
++{
++	u32 value = readl(ioaddr);
++
++	return (value & bit_mask) ? 1 : 0;
++}
++
++/*
++ * This function uses the memory initialization block in the Arria10 ECC
++ * controller to initialize/clear the entire memory data and ECC data.
++ */
++static int altr_init_memory_port(void __iomem *ioaddr, int port)
++{
++	int limit = ALTR_A10_ECC_INIT_WATCHDOG_10US;
++	u32 init_mask = ALTR_A10_ECC_INITA;
++	u32 stat_mask = ALTR_A10_ECC_INITCOMPLETEA;
++	u32 clear_mask = ALTR_A10_ECC_ERRPENA_MASK;
++	int ret = 0;
++
++	if (port) {
++		init_mask = ALTR_A10_ECC_INITB;
++		stat_mask = ALTR_A10_ECC_INITCOMPLETEB;
++		clear_mask = ALTR_A10_ECC_ERRPENB_MASK;
++	}
++
++	ecc_set_bits(init_mask, (ioaddr + ALTR_A10_ECC_CTRL_OFST));
++	while (limit--) {
++		if (ecc_test_bits(stat_mask,
++				  (ioaddr + ALTR_A10_ECC_INITSTAT_OFST)))
++			break;
++		udelay(1);
++	}
++	if (limit < 0)
++		ret = -EBUSY;
++
++	/* Clear any pending ECC interrupts */
++	writel(clear_mask, (ioaddr + ALTR_A10_ECC_INTSTAT_OFST));
++
++	return ret;
++}
++
++/*
++ * Aside from the L2 ECC, the Arria10 ECC memories have a common register
++ * layout so the following functions can be shared between all peripherals.
++ */
++static int altr_init_a10_ecc_block(const char *compat, u32 irq_mask,
++				   u32 ecc_ctrl_en_mask, bool dual_port)
++{
++	int ret = 0;
++	void __iomem *ecc_block_base;
++	struct regmap *ecc_mgr_map;
++	char *ecc_name;
++	struct device_node *np, *parent, *np_eccmgr;
++
++	np = of_find_compatible_node(NULL, NULL, compat);
++	if (!np) {
++		pr_err("SOCFPGA: Unable to find %s in dtb\n", compat);
++		ret = -ENODEV;
++		goto out;
++	}
++	ecc_name = (char *)np->name;
++
++	/* Ensure device is enabled before calling init, otherwise exit */
++	parent = of_parse_phandle(np, "parent", 0);
++	if (!parent || !of_device_is_available(parent)) {
++		ret = -ENODEV;
++		goto out1;
++	}
++
++	/* Get the ECC Manager - parent of the device EDACs */
++	np_eccmgr = of_get_parent(np);
++	ecc_mgr_map = syscon_regmap_lookup_by_phandle(np_eccmgr,
++						      "altr,sysmgr-syscon");
++	of_node_put(np_eccmgr);
++	if (IS_ERR(ecc_mgr_map)) {
++		edac_printk(KERN_ERR, EDAC_DEVICE,
++			    "Unable to get syscon altr,sysmgr-syscon\n");
++		ret = -ENODEV;
++		goto out1;
++	}
++
++	/* Map the ECC Block */
++	ecc_block_base = of_iomap(np, 0);
++	if (!ecc_block_base) {
++		edac_printk(KERN_ERR, EDAC_DEVICE,
++			    "Unable to map %s ECC block\n", ecc_name);
++		ret = -ENODEV;
++		goto out1;
++	}
++
++	/* Disable ECC */
++	regmap_write(ecc_mgr_map, A10_SYSMGR_ECC_INTMASK_SET_OFST, irq_mask);
++	writel(ALTR_A10_ECC_SERRINTEN,
++	       (ecc_block_base + ALTR_A10_ECC_ERRINTENR_OFST));
++	ecc_clear_bits(ecc_ctrl_en_mask,
++		       (ecc_block_base + ALTR_A10_ECC_CTRL_OFST));
++	/* Ensure all writes complete */
++	wmb();
++	/* Use HW initialization block to initialize memory for ECC */
++	ret = altr_init_memory_port(ecc_block_base, 0);
++	if (ret) {
++		edac_printk(KERN_ERR, EDAC_DEVICE,
++			    "ECC: cannot init %s PORTA memory\n", ecc_name);
++		goto out2;
++	}
++
++	if (dual_port) {
++		ret = altr_init_memory_port(ecc_block_base, 1);
++		if (ret) {
++			edac_printk(KERN_ERR, EDAC_DEVICE,
++				    "ECC: cannot init %s PORTB memory\n",
++				    ecc_name);
++			goto out2;
++		}
++	}
++
++	/* Interrupt mode set to every SBERR */
++	regmap_write(ecc_mgr_map, ALTR_A10_ECC_INTMODE_OFST,
++		     ALTR_A10_ECC_INTMODE);
++	/* Enable ECC */
++	ecc_set_bits(ecc_ctrl_en_mask, (ecc_block_base +
++					ALTR_A10_ECC_CTRL_OFST));
++	writel(ALTR_A10_ECC_SERRINTEN,
++	       (ecc_block_base + ALTR_A10_ECC_ERRINTENS_OFST));
++	regmap_write(ecc_mgr_map, A10_SYSMGR_ECC_INTMASK_CLR_OFST, irq_mask);
++	/* Ensure all writes complete */
++	wmb();
++out2:
++	iounmap(ecc_block_base);
++out1:
++	of_node_put(parent);
++out:
++	of_node_put(np);
++	return ret;
++}
++#endif	/* CONFIG_EDAC_ALTERA_ETHERNET */
++
+ /*********************** OCRAM EDAC Device Functions *********************/
+ 
+ #ifdef CONFIG_EDAC_ALTERA_OCRAM
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index 83e621e..a4f1539 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -230,8 +230,13 @@ struct altr_sdram_mc_data {
+ #define ALTR_A10_ECC_INITCOMPLETEB      BIT(8)
+ 
+ #define ALTR_A10_ECC_ERRINTEN_OFST      0x10
++#define ALTR_A10_ECC_ERRINTENS_OFST     0x14
++#define ALTR_A10_ECC_ERRINTENR_OFST     0x18
+ #define ALTR_A10_ECC_SERRINTEN          BIT(0)
+ 
++#define ALTR_A10_ECC_INTMODE_OFST       0x1C
++#define ALTR_A10_ECC_INTMODE            BIT(0)
++
+ #define ALTR_A10_ECC_INTSTAT_OFST       0x20
+ #define ALTR_A10_ECC_SERRPENA           BIT(0)
+ #define ALTR_A10_ECC_DERRPENA           BIT(8)
+@@ -280,6 +285,9 @@ struct altr_sdram_mc_data {
+ /* Arria 10 OCRAM ECC Management Group Defines */
+ #define ALTR_A10_OCRAM_ECC_EN_CTL       (BIT(1) | BIT(0))
+ 
++/* A10 ECC Controller memory initialization timeout */
++#define ALTR_A10_ECC_INIT_WATCHDOG_10US      10000
++
+ struct altr_edac_device_dev;
+ 
+ struct edac_device_prv_data {
 -- 
 1.7.9.5
-
