@@ -1,61 +1,80 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V17 1/3] dmaengine: qcom_hidma: implement lower level
- hardware interface
-Date: Tue, 26 Apr 2016 18:10:00 +0300
-Message-ID: <CAHp75VeZQnhaiSDuGJtgcKtek7yUwgQWd3J5QSJbdisehmBGqA@mail.gmail.com>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
-	<1460384473-5775-2-git-send-email-okaya@codeaurora.org>
-	<20160426032805.GA2274@localhost>
-	<571F8397.5000803@codeaurora.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: AM335x ICE board Linux support
+Date: Tue, 26 Apr 2016 08:10:46 -0700
+Message-ID: <20160426151046.GQ5995@atomide.com>
+References: <571E069A.20700@ti.com>
+ <571F2982.2080702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571F8397.5000803-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <571F2982.2080702-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 6:04 PM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 4/25/2016 11:28 PM, Vinod Koul wrote:
->> On Mon, Apr 11, 2016 at 10:21:11AM -0400, Sinan Kaya wrote:
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160426 01:42]:
+> On 25/04/16 14:59, Roger Quadros wrote:
+> > We are working on getting Linux on AM335X Industrial Communication Engine board (ICE) [1].
+> > 
+> > This board has 2 Ethernet ports and each of them can be used either in RMII mode connected to
+> > the CPSW Ethernet MAC *or* in MII mode connected to the PRU Ethernet MAC.
+> > 
+> > The decision about the Ethernet port's mode is made by the user by setting a jumper near the
+> > Ethernet port before power up. This is a boot time configurable setting and doesn't need to
+> > change at runtime.
+> > 
+> > So 4 configurations are possible:
+> >     ETH0	ETH1
+> >     ----	----
+> >     RMII	RMII
+> >     RMII	MII
+> >     MII		RMII	(probably redundant and not needed)
+> >     MII		MII
+> > 
+> > Based on the port configuration, software (u-boot or Linux) needs to set the right pinmux,
+> > set a GPIOs (that controls external Mux), configure an external clock generator
+> > and enable the right device driver for the respective Ethernet port.
 
->>> +    while (cause) {
->>> +            if ((cause & BIT(HIDMA_IRQ_TR_CH_INVALID_TRE_BIT_POS)) ||
->>> +                (cause & BIT(HIDMA_IRQ_TR_CH_TRE_RD_RSP_ER_BIT_POS)) ||
->>> +                (cause & BIT(HIDMA_IRQ_EV_CH_WR_RESP_BIT_POS)) ||
->>> +                (cause & BIT(HIDMA_IRQ_TR_CH_DATA_RD_ER_BIT_POS)) ||
->>> +                (cause & BIT(HIDMA_IRQ_TR_CH_DATA_WR_ER_BIT_POS))) {
->>
->> Switch please
->
-> Cause is a combined status register. Let's say it contains 0x41. I need to check
-> if bit 0 or bit 6 is set in this value for each case condition. The value is not 0x40
-> or 0x1.
->
-> I created macro like this instead.
->
-> +#define HIDMA_IS_ERR_INTERRUPT(cause)                          \
-> +       (cause & BIT(HIDMA_IRQ_TR_CH_INVALID_TRE_BIT_POS))   || \
-> +       (cause & BIT(HIDMA_IRQ_TR_CH_TRE_RD_RSP_ER_BIT_POS)) || \
-> +       (cause & BIT(HIDMA_IRQ_EV_CH_WR_RESP_BIT_POS))       || \
-> +       (cause & BIT(HIDMA_IRQ_TR_CH_DATA_RD_ER_BIT_POS))    || \
-> +       (cause & BIT(HIDMA_IRQ_TR_CH_DATA_WR_ER_BIT_POS))
+Ideally this would be runtime detected..
 
-This looks overheaded.
+> > Clock generator needs to be configured because different clock rates are required
+> > for RMII vs MII mode.
+> > 
+> > Now question is how all this can be done on u-boot + Linux?
+> > 
+> > I already have a working solution where I create different DT blobs for the 3 configurations
+> > and have u-boot detect the mode and load the correct DT blob and also configure the clock.
 
-#define HIDMA_XXX (BIT(a) | BIT (b) ... BIT(n))
+If u-boot can detect the mode, can kernel also detect the mode?
 
->
-> and replaced the if statement as follows
->
-> if (HIDMA_IS_ERR_INTERRUPT(cause)) {
+You can have multiple named pinctrl states no problem that you
+could select from based on the detection. Not sure if that solves
+all the configuration issues though.
 
-if (cause & HIDMA_XXX) {
+> > You can see how the kernel patches look like here [2]
+> > 
+> > Is this approach acceptable? If not is there any better way to do this? Thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I guess for now if no runtime detection is possible in the kernel.
+
+Regards,
+
+Tony
+
+> > [1] AM3359 ICE board
+> > http://www.ti.com/tool/tmdsice3359
+> > http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_%28ICE%29_EVM_HW_User_Guide
+> 
+> There are 2 ICE board version. v1 and v2. The above wiki link is wrong.
+> We are dealing with the v2 board below
+> http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_EVM_Rev2_1_HW_User_Guide
+> > 
+> > [2] Device tree patches
+> > https://github.com/rogerq/linux/commit/9a9cf6a15f779fddf91dba2370627aabf19aeff5
+> > https://github.com/rogerq/linux/commit/c87e8fa5b14f156a91883fd506e9dd8f7ccf95cf
+> > https://github.com/rogerq/linux/commit/d9cdd25e8c3878292d7f4180af8d3ac42b9645c4
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
