@@ -1,74 +1,36 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 7/7] pinctrl: tegra: Add driver to configure voltage and
- power state of io pads
-Date: Tue, 26 Apr 2016 09:31:47 -0600
-Message-ID: <571F89E3.1040907@wwwdotorg.org>
-References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>
- <1460473007-11535-8-git-send-email-ldewangan@nvidia.com>
- <CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>
- <5710A8A4.90309@nvidia.com>
- <CACRpkdZLEozAmv6REcb7ubCNSLxGsYj1whZEKUkdiodZoS=vzg@mail.gmail.com>
- <5710BA75.2010503@nvidia.com>
- <CACRpkdbr-9Z1JKMVmwNFyMq+Pg+3hT5c9rKZ1y4wZecnidW9Cg@mail.gmail.com>
- <5710D4E2.2030801@nvidia.com> <571F6DE5.5020605@nvidia.com>
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: lpc32xx: ea3250: add SoC name prefix to
+ board dts file
+Date: Tue, 26 Apr 2016 11:36:37 -0400
+Message-ID: <1461684997.9433.4.camel@localhost>
+References: <1461631050-10479-1-git-send-email-vz@mleia.com>
+	 <1461631050-10479-5-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <571F6DE5.5020605@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461631050-10479-5-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2016 07:32 AM, Laxman Dewangan wrote:
->
-> On Friday 15 April 2016 05:17 PM, Laxman Dewangan wrote:
->>
->> On Friday 15 April 2016 04:45 PM, Linus Walleij wrote:
->>> On Fri, Apr 15, 2016 at 11:55 AM, Laxman Dewangan
->>> <ldewangan@nvidia.com> wrote:
->>>> On Friday 15 April 2016 02:55 PM, Linus Walleij wrote:
->>>>> If the pin could actually set a voltage level it would have a
->>>>> regulator.
->>>>> I don't believe that. I think it is selecting one of two rails which
->>>>> could theoretically hold two totally different voltages.
->>>>>
->>>>> And that is what power-source is about.
->>>> The IO rails connected to PMIC rail and connection does not get change.
->>>> We change the voltage of PMIC rails via regulator calls. And then
->>>> configure
->>>> pads for the new voltage.
->>> Aha I get it! So you adjust something in the I/O-cell so that it is
->>> adapted
->>> for the new voltage.
->>>
->>> OK that seems to be something new. I suspect
->>> power-voltage-select = <n>; where N i in uV would solve this?
->>> (We should use uV since regulators use this.)
->>
->> Thanks for new property. I will make the unit and type same as the
->> regulator framework.
->
-> We have the ops for configuring the pin config as
->
->          int (*pin_config_group_set) (struct pinctrl_dev *pctldev,
->                                       unsigned selector,
->                                       unsigned long *configs,
->                                       unsigned num_configs);
->
->
-> The config is 32 bit, upper 16 for config argument and  and lower 16 for
-> the config param.
->
-> So we can not accommodate 3300000uV until we change it to mV i.e. 3300mV.
->
-> So on interface, we can read uV from DT but when making config, we can
-> translate it to mV before passing to pin_config_group_set.
+On Tue, 2016-04-26 at 03:37 +0300, Vladimir Zapolskiy wrote:
+> To simplify matching of DTS files of all NXP LPC32xx powered boards by
+> a file name add 'lpc3250' prefix to Embedded Artists LPC3250 board dts
+> file.
+> 
+> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                           | 3 ++-
+>  arch/arm/boot/dts/{ea3250.dts => lpc3250-ea3250.dts} | 0
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>  rename arch/arm/boot/dts/{ea3250.dts => lpc3250-ea3250.dts} (100%)
+> 
+Acked-by: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-A SoC-specific enum would make more sense. It would avoid any 
-translation. There's no need for a generic value since the available set 
-of options is SoC-specific, the data source is SoC-specific, and there's 
-no need for any code besides the SoC-specific driver to interpret the 
-value in any way at all.
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
