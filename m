@@ -1,152 +1,117 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 net-next 11/13] Documentation: Bindings: Update DT
- binding for separating dsaf dev support
-Date: Tue, 26 Apr 2016 07:48:47 -0500
-Message-ID: <20160426124847.GA26682@rob-hp-laptop>
-References: <1461402317-136499-1-git-send-email-Yisen.Zhuang@huawei.com>
- <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yisen Zhuang <Yisen.Zhuang@huawei.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, will.deacon@arm.com, catalin.marinas@arm.com, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com
+From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: [PATCH 3/3] ARM: dts: add DTS for Baltos IR2110
+Date: Tue, 26 Apr 2016 15:00:26 +0200
+Message-ID: <1461675626-5818-4-git-send-email-yegorslists@googlemail.com>
+References: <1461675626-5818-1-git-send-email-yegorslists@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461675626-5818-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 23, 2016 at 05:05:15PM +0800, Yisen Zhuang wrote:
-> Because debug dsaf port was separated from service dsaf port, this patch
-> updates the related information of DT binding.
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-Separated when? New version of the h/w? If so, where's the new 
-compatible string? This is quite a big binding change. 
+Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                 |  1 +
+ arch/arm/boot/dts/am335x-baltos-ir2110.dts | 71 ++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am335x-baltos-ir2110.dts
 
-> Signed-off-by: Yisen Zhuang <yisen.zhuang@huawei.com>
-> 
-> ---
->  .../devicetree/bindings/net/hisilicon-hns-dsaf.txt | 59 ++++++++++++++++++----
->  1 file changed, 49 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> index ecacfa4..5ccd4f0 100644
-> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> @@ -7,19 +7,47 @@ Required properties:
->  - mode: dsa fabric mode string. only support one of dsaf modes like these:
->  		"2port-64vf",
->  		"6port-16rss",
-> -		"6port-16vf".
-> +		"6port-16vf",
-> +		"single-port".
->  - interrupt-parent: the interrupt parent of this device.
->  - interrupts: should contain the DSA Fabric and rcb interrupt.
->  - reg: specifies base physical address(es) and size of the device registers.
-> -  The first region is external interface control register base and size.
-> -  The second region is SerDes base register and size.
-> +  The first region is external interface control register base and size(optional,
-> +  only be used when subctrl-syscon is not exists). It is recommended using
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 2c19cd9..64a2bc6 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -485,6 +485,7 @@ dtb-$(CONFIG_SOC_TI81XX) += \
+ 	dm8168-evm.dtb \
+ 	dra62x-j5eco-evm.dtb
+ dtb-$(CONFIG_SOC_AM33XX) += \
++	am335x-baltos-ir2110.dtb \
+ 	am335x-baltos-ir3220.dtb \
+ 	am335x-baltos-ir5221.dtb \
+ 	am335x-base0033.dtb \
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir2110.dts b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
+new file mode 100644
+index 0000000..a9a9730
+--- /dev/null
++++ b/arch/arm/boot/dts/am335x-baltos-ir2110.dts
+@@ -0,0 +1,71 @@
++/*
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/*
++ * VScom OnRISC
++ * http://www.vscom.de
++ */
++
++/dts-v1/;
++
++#include "am335x-baltos.dtsi"
++
++/ {
++	model = "OnRISC Baltos iR 2110";
++};
++
++&am33xx_pinmux {
++	uart1_pins: pinmux_uart1_pins {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x980, PIN_INPUT | MUX_MODE0)      /* uart1_rxd */
++			AM33XX_IOPAD(0x984, PIN_INPUT | MUX_MODE0)      /* uart1_txd */
++			AM33XX_IOPAD(0x978, PIN_INPUT_PULLDOWN | MUX_MODE0)      /* uart1_ctsn */
++			AM33XX_IOPAD(0x97c, PIN_OUTPUT_PULLDOWN | MUX_MODE0)      /* uart1_rtsn */
++			AM33XX_IOPAD(0x8e0, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* lcd_vsync.gpio2[22] DTR */
++			AM33XX_IOPAD(0x8e4, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_hsync.gpio2[23] DSR */
++			AM33XX_IOPAD(0x8e8, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_pclk.gpio2[24] DCD */
++			AM33XX_IOPAD(0x8ec, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_ac_bias_en.gpio2[25] RI */
++		>;
++	};
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++	dtr-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
++	dsr-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
++	dcd-gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
++	rng-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
++
++	status = "okay";
++};
++
++&usb0_phy {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++};
++
++&cpsw_emac0 {
++	phy_id = <&davinci_mdio>, <1>;
++	phy-mode = "rmii";
++	dual_emac_res_vlan = <1>;
++};
++
++&cpsw_emac1 {
++	phy_id = <&davinci_mdio>, <7>;
++	phy-mode = "rgmii-txid";
++	dual_emac_res_vlan = <2>;
++};
++
++&phy_sel {
++	rmii-clock-ext = <1>;
++};
+-- 
+2.1.4
 
-only used when subctrl-syscon does not exist
-
-> +  subctrl-syscon rather than this address.
-> +  The second region is SerDes base register and size(optional, only be used when
-> +  serdes-syscon in port node is not exists. It is recommended using
-
-similar rewording needed here.
-
-> +  serdes-syscon rather than this address.
->    The third region is the PPE register base and size.
-> -  The fourth region is dsa fabric base register and size.
-> -  The fifth region is cpld base register and size, it is not required if do not use cpld.
-> -- phy-handle: phy handle of physicl port, 0 if not any phy device. see ethernet.txt [1].
-> +  The fourth region is dsa fabric base register and size. It is not required for
-> +  single-port mode.
-> +- reg-names: may be ppe-base and(or) dsaf-base. It is used to find the
-> +  corresponding reg's index.
-
-But you have up to 5 regions.
-
-The variable nature of what regions you have tells me you need more 
-specific compatible strings for each chip.
-
-> +
-> +- phy-handle: phy handle of physicl port, 0 if not any phy device. It is optional
-
-s/physicl/physical/
-
-> +  attribute. If port node is exists, phy-handle in each port node will be used.
-> +  see ethernet.txt [1].
-> +- subctrl-syscon: is syscon handle for external interface control register.
-> +- reset-field-offset: is offset of reset field. Its value depends on the hardware
-> +  user manual.
->  - buf-size: rx buffer size, should be 16-1024.
->  - desc-num: number of description in TX and RX queue, should be 512, 1024, 2048 or 4096.
->  
-> +- port: subnodes of dsaf. A dsaf node may contain several port nodes(Depending
-> +  on mode of dsaf). Port node contain some attributes listed below:
-> +- port-id: is physical port index in one dsaf.
-
-Indexes should generally be avoided. What does the number correspond 
-to in h/w (if anything)?
-
-> +- phy-handle: phy handle of physicl port. It is not required if there isn't
-> +  phy device. see ethernet.txt [1].
-> +- serdes-syscon: is syscon handle for SerDes register.
-> +- cpld-syscon: is syscon handle for cpld register. It is not required if there
-> +  isn't cpld device.
-> +- cpld-ctrl-reg: is cpld register offset. It is not required if there isn't
-> +  cpld-syscon.
-
-This would usually be a cell in the cpld-syscon property.
-
-> +- port-rst-offset: is offset of reset field for each port in dsaf. Its value
-> +  depends on the hardware user manual.
-> +- port-mode-offset: is offset of port mode field for each port in dsaf. Its
-> +  value depends on the hardware user manual.
-
-Again, sounds like you need more specific compatible strings that imply 
-this information.
-
-> +
->  [1] Documentation/devicetree/bindings/net/phy.txt
->  
->  Example:
-> @@ -28,11 +56,11 @@ dsaf0: dsa@c7000000 {
->  	compatible = "hisilicon,hns-dsaf-v1";
->  	mode = "6port-16rss";
->  	interrupt-parent = <&mbigen_dsa>;
-> -	reg = <0x0 0xC0000000 0x0 0x420000
-> -	       0x0 0xC2000000 0x0 0x300000
-> -	       0x0 0xc5000000 0x0 0x890000
-> +	reg = <0x0 0xc5000000 0x0 0x890000
->  	       0x0 0xc7000000 0x0 0x60000>;
-> -	phy-handle = <0 0 0 0 &soc0_phy4 &soc0_phy5 0 0>;
-> +	reg-names = "ppe-base", "dsaf-base";
-> +	subctrl-syscon = <&subctrl>;
-> +	reset-field-offset = 0;
->  	interrupts = <131 4>,<132 4>, <133 4>,<134 4>,
->  		     <135 4>,<136 4>, <137 4>,<138 4>,
->  		     <139 4>,<140 4>, <141 4>,<142 4>,
-> @@ -43,4 +71,15 @@ dsaf0: dsa@c7000000 {
->  	buf-size = <4096>;
->  	desc-num = <1024>;
->  	dma-coherent;
-> +
-> +	prot@0 {
-
-port?
-
-> +		port-id = 0;
-> +		phy-handle = <&phy0>;
-> +		serdes-syscon = <&serdes>;
-> +	};
-> +
-> +	prot@1 {
-> +                port-id = 1;
-> +                serdes-syscon = <&serdes>;
-> +        };
->  };
-> -- 
-> 1.9.1
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
