@@ -1,145 +1,463 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [RFC v3.1 2/3] gpio: generic: add DT support for basic memory-mapped GPIOs
-Date: Wed, 27 Apr 2016 01:03:28 +0200
-Message-ID: <ad474a207787625ddc242cfc9124e0245a945c0d.1461710785.git.chunkeey@googlemail.com>
-References: <ad474a207787625ddc242cfc9124e0245a945c0d.1461710784.git.chunkeey@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <ad474a207787625ddc242cfc9124e0245a945c0d.1461710784.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Christian Lamparter <chunkeey@googlemail.com>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: [PATCH v4] ARM: dts: imx6: Add dts for Embest MarS Board
+Date: Tue, 26 Apr 2016 20:38:22 -0300
+Message-ID: <1461713902-10804-1-git-send-email-sergio.prado@e-labworks.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, shawnguo@kernel.org, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+Embest MarS Board [1] is a multi-core platform based on Freescale i.MX6
+Cortex-A9 Dual Core, running up to 1GHz with 1 GB of RAM, 4GB of eMMC
+and with a 4MB SPI flash.
 
-This patch adds support for defining basic memory-mapped
-GPIOs within the device tree framework.
+[1] http://www.embest-tech.com/shop/star/marsboard.html
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
----
-fixed bgpio_>>P<<data typo.
+Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
 ---
 
- drivers/gpio/gpio-generic.c | 70 +++++++++++++++++++++++++++++++++++++=
-++++++--
- 1 file changed, 68 insertions(+), 2 deletions(-)
+Changes v3 -> v4:
+- nodes sorted alphabetically in label names
+- pinctrl entries sorted alphabetically
 
-diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
-index 54cddfa..f535299 100644
---- a/drivers/gpio/gpio-generic.c
-+++ b/drivers/gpio/gpio-generic.c
-@@ -61,6 +61,8 @@ o        `                     ~~~~\___/~~~~    ` con=
-troller in FPGA is ,.`
- #include <linux/bitops.h>
- #include <linux/platform_device.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-=20
- static void bgpio_write8(void __iomem *reg, unsigned long data)
- {
-@@ -569,6 +571,59 @@ static void __iomem *bgpio_map(struct platform_dev=
-ice *pdev,
- 	return devm_ioremap_resource(&pdev->dev, r);
- }
-=20
-+#ifdef CONFIG_OF
-+static const struct of_device_id  bgpio_of_match[] =3D {
-+	{ .compatible =3D "basic-mmio-gpio" },
-+	{ }
+Changes v2 -> v3:
+- change board compatible string to fsl,imx6q
+- the ethernet reset pin is active low
+- remove artificial simple-bus for regulators
+- add enable-active-high to usb otg vbus regulator node
+- remove @1 and @2 from leds node
+- remove the unnecessary imx6-riotboard node from iomuxc
+
+Changes v1 -> v2:
+- Makefile entry added
+
+---
+ arch/arm/boot/dts/Makefile            |   1 +
+ arch/arm/boot/dts/imx6q-marsboard.dts | 403 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 404 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-marsboard.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 95c1923ce6fa..04b87ea75f2f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -346,6 +346,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw552x.dtb \
+ 	imx6q-hummingboard.dtb \
+ 	imx6q-icore-rqs.dtb \
++	imx6q-marsboard.dtb \
+ 	imx6q-nitrogen6x.dtb \
+ 	imx6q-nitrogen6_max.dtb \
+ 	imx6q-novena.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+new file mode 100644
+index 000000000000..3f8013c85fb9
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+@@ -0,0 +1,403 @@
++/*
++ * Copyright (C) 2016 Sergio Prado (sergio.prado@e-labworks.com)
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6q.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Embest MarS Board i.MX6Dual";
++	compatible = "embest,imx6q-marsboard", "fsl,imx6q";
++
++	memory {
++		reg = <0x10000000 0x40000000>;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_led>;
++
++		user1 {
++			label = "imx6:green:user1";
++			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++			linux,default-trigger = "heartbeat";
++		};
++
++		user2 {
++			label = "imx6:green:user2";
++			gpios = <&gpio3 28 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++	};
 +};
-+MODULE_DEVICE_TABLE(of, bgpio_of_match);
 +
-+static struct bgpio_pdata *bgpio_parse_dt(struct device *dev,
-+					  unsigned long *flags)
-+{
-+	struct bgpio_pdata *pdata;
-+	int err;
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
++};
 +
-+	if (!of_match_node(bgpio_of_match, dev->of_node))
-+		return NULL;
++&ecspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	cs-gpios = <&gpio2 30 GPIO_ACTIVE_LOW>;
++	fsl,spi-num-chipselects = <1>;
++	status = "okay";
 +
-+	pdata =3D devm_kzalloc(dev, sizeof(struct bgpio_pdata),
-+			     GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
++	m25p80@0 {
++		compatible = "microchip,sst25vf016b";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++	};
++};
 +
-+	err =3D of_property_read_u32(dev->of_node, "ngpio", &pdata->ngpio);
-+	if (err && err !=3D -EINVAL)
-+		return ERR_PTR(err);
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii";
++	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
 +
-+	if (of_device_is_big_endian(dev->of_node))
-+		*flags |=3D BGPIOF_BIG_ENDIAN_BYTE_ORDER;
++&hdmi {
++	ddc-i2c-bus = <&i2c2>;
++	status = "okay";
++};
 +
-+	if (of_property_read_bool(dev->of_node, "unreadable-reg-set"))
-+		*flags |=3D BGPIOF_UNREADABLE_REG_SET;
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
 +
-+	if (of_property_read_bool(dev->of_node, "unreadable-reg-dir"))
-+		*flags |=3D BGPIOF_UNREADABLE_REG_DIR;
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
 +
-+	if (of_property_read_bool(dev->of_node, "big-endian-byte-order"))
-+		*flags |=3D BGPIOF_BIG_ENDIAN;
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
 +
-+	if (of_property_read_bool(dev->of_node, "read-output-reg-set"))
-+		*flags |=3D BGPIOF_READ_OUTPUT_REG_SET;
++&pwm1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm1>;
++	status = "okay";
++};
 +
-+	if (of_property_read_bool(dev->of_node, "no-output"))
-+		*flags |=3D BGPIOF_NO_OUTPUT;
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>;
++	status = "okay";
++};
 +
-+	return pdata;
-+}
-+#else
-+static struct bgpio_pdata *bgpio_parse_dt(struct device *dev,
-+					  unsigned long *flags)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>;
++	status = "okay";
++};
 +
- static int bgpio_pdev_probe(struct platform_device *pdev)
- {
- 	struct device *dev =3D &pdev->dev;
-@@ -579,10 +634,18 @@ static int bgpio_pdev_probe(struct platform_devic=
-e *pdev)
- 	void __iomem *dirout;
- 	void __iomem *dirin;
- 	unsigned long sz;
--	unsigned long flags =3D pdev->id_entry->driver_data;
-+	unsigned long flags =3D 0;
- 	int err;
- 	struct gpio_chip *gc;
--	struct bgpio_pdata *pdata =3D dev_get_platdata(dev);
-+	struct bgpio_pdata *pdata;
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>;
++	status = "okay";
++};
 +
-+	pdata =3D bgpio_parse_dt(dev, &flags);
-+	if (IS_ERR(pdata)) {
-+		return PTR_ERR(pdata);
-+	} else if (!pdata) {
-+		pdata =3D dev_get_platdata(dev);
-+		flags =3D pdev->id_entry->driver_data;
-+	}
-=20
- 	r =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
- 	if (!r)
-@@ -646,6 +709,9 @@ MODULE_DEVICE_TABLE(platform, bgpio_id_table);
- static struct platform_driver bgpio_driver =3D {
- 	.driver =3D {
- 		.name =3D "basic-mmio-gpio",
-+#ifdef CONFIG_OF
-+		.of_match_table =3D of_match_ptr(bgpio_of_match),
-+#endif
- 	},
- 	.id_table =3D bgpio_id_table,
- 	.probe =3D bgpio_pdev_probe,
---=20
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	status = "okay";
++};
++
++&usbh1 {
++	dr_mode = "host";
++	disable-over-current;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	dr_mode = "otg";
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	vmmc-supply = <&reg_3p3v>;
++	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	vmmc-supply = <&reg_3p3v>;
++	non-removable;
++	status = "okay";
++};
++
++&iomuxc {
++
++	pinctrl_audmux: audmuxgrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
++			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
++			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
++			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
++			MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0	/* CAM_MCLK */
++		>;
++	};
++
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
++			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
++			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
++			MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x000b1	/* CS0 */
++		>;
++	};
++
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
++			/* AR8035 CLK_25M --> ENET_REF_CLK (V22) */
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1
++			/* AR8035 pin strapping: IO voltage: pull up */
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
++			/* AR8035 pin strapping: PHYADDR#0: pull down */
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x130b0
++			/* AR8035 pin strapping: PHYADDR#1: pull down */
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x130b0
++			/* AR8035 pin strapping: MODE#1: pull up */
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
++			/* AR8035 pin strapping: MODE#3: pull up */
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
++			/* AR8035 pin strapping: MODE#0: pull down */
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x130b0
++			/* GPIO16 -> AR8035 25MHz */
++			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
++			/* RGMII_nRST */
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31		0x130b0
++			/* AR8035 interrupt */
++			MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x180b0
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__I2C3_SCL		0x4001b8b1
++			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_led: ledgrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x1b0b1	/* LED1 */
++			MX6QDL_PAD_EIM_D28__GPIO3_IO28		0x1b0b1	/* LED2 */
++		>;
++	};
++
++	pinctrl_pwm1: pwm1grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm2: pwm2grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT9__PWM2_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm3: pwm3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm4: pwm4grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
++			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D26__UART2_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D27__UART2_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x17059
++			MX6QDL_PAD_EIM_D21__USB_OTG_OC		0x1b0b0
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x000b0	/* USB OTG POWER ENABLE */
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
++			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
++			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
++			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
++			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
++			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x1b0b0	/* CD */
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1f0b0	/* WP */
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17009
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10009
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17009
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17009
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17009
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17009
++			MX6QDL_PAD_SD3_RST__SD3_RESET		0x17009
++		>;
++	};
++};
+-- 
+1.9.1
