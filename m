@@ -1,47 +1,32 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 2/2] device-tree: nexus7: Add bq27541 battery interface to dts
-Date: Tue, 26 Apr 2016 10:44:14 -0700
-Message-ID: <1461692654-27448-2-git-send-email-john.stultz@linaro.org>
-References: <1461692654-27448-1-git-send-email-john.stultz@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1461692654-27448-1-git-send-email-john.stultz@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Tue, 26 Apr 2016 19:45:05 +0200
+Message-ID: <20160426174505.GD11668@lunn.ch>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+ <1461230323-27891-2-git-send-email-pramod.kumar@broadcom.com>
+ <20160425205650.GA31129@lunn.ch>
+ <666dffb41a922b0c8638f2f002a2de08@mail.gmail.com>
+ <20160426121335.GC11668@lunn.ch>
+ <571FA3F6.7000903@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <571FA3F6.7000903@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Pramod Kumar <pramod.kumar@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for battery level reading on the Nexus7 by
-enabling the bq27541 driver in the nexus7 dts
+> I am not clear on how common a shared MDIO bus is on other SoCs, but the
+> other Broadcom SoCs I am familiar with have dedicated MDIO buses
+> instances per type of PHY (PCIe, BUSB, Ethernet), thus making the split
+> a ton easier.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Andy Gross <agross@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+I don't actually see this shared bus being an issue, once the mux it
+implemented. With the mux, you see N MDIO busses, each acting like a
+normal MDIO bus. I've used the GPIO variety and had no issues:
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-index 751aded..7b05f07 100644
---- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-@@ -218,6 +218,12 @@
- 					reg = <0x52>;
- 					pagesize = <32>;
- 				};
-+
-+				bq27541@55 {
-+					compatible = "ti,bq27541";
-+					reg = <0x55>;
-+				};
-+
- 			};
- 		};
- 
--- 
-1.9.1
+http://marc.info/?l=linux-arm-kernel&m=145910090401796&w=2
+
+	Andrew
