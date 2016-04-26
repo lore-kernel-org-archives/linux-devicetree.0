@@ -1,82 +1,53 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v6 3/7] ARM: dts: am437x/am33xx/da850: Add new ECAP and
- EPWM bindings
-Date: Tue, 26 Apr 2016 08:22:45 -0500
-Message-ID: <571F6BA5.4010004@ti.com>
-References: <1461343238-29274-1-git-send-email-fcooper@ti.com>
- <1461343238-29274-4-git-send-email-fcooper@ti.com>
- <20160425130308.GA7802@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
+Date: Tue, 26 Apr 2016 08:35:49 -0500
+Message-ID: <CAL_JsqLn7cZqqWzOT97QPaMyiPsTJRsp=_oNRDAjWtPo5fvngw@mail.gmail.com>
+References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+ <1461543878-3639-16-git-send-email-eric@engestrom.ch> <20160425135017.GA8656@rob-hp-laptop>
+ <20160425165830.GP2713@dell> <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
+ <20160426063516.GQ2713@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160425130308.GA7802@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: thierry.reding@gmail.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160426063516.GQ2713@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Eric Engestrom <eric@engestrom.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/25/2016 08:03 AM, Rob Herring wrote:
-> On Fri, Apr 22, 2016 at 11:40:34AM -0500, Franklin S Cooper Jr wrote:
->> Switch to a new ECAP and EPWM bindings that doesn't depend on hwmod to
->> provide the various required clocks.
+On Tue, Apr 26, 2016 at 1:35 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 25 Apr 2016, Rob Herring wrote:
+>
+>> On Mon, Apr 25, 2016 at 11:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> > On Mon, 25 Apr 2016, Rob Herring wrote:
+>> >
+>> >> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
+>> >> > Signed-off-by: Eric Engestrom <eric@engestrom.ch>
+>> >>
+>> >> Applied, thanks.
+>> >
+>> > I'd prefer to continue taking these if you don't mind Rob.  It'd limit
+>> > on the amount of immutable branch pull requests I have to send/handle.
 >>
->> For AM437 and AM335x, add the required clocks explicitly to DT. The
->> hwmod entries for ECAP and EPWM will be removed and this will prevent
->> anything from breaking.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> ---
->>  .../devicetree/bindings/pwm/pwm-tiecap.txt         | 12 +++--
->>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       | 12 +++--
->>  arch/arm/boot/dts/am33xx.dtsi                      | 30 +++++++++---
->>  arch/arm/boot/dts/am4372.dtsi                      | 54 ++++++++++++++++++----
->>  arch/arm/boot/dts/da850.dtsi                       | 15 ++++--
->>  5 files changed, 95 insertions(+), 28 deletions(-)
-> 
-> [...]
-> 
->> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
->> index 12fcde4..e858460 100644
->> --- a/arch/arm/boot/dts/am4372.dtsi
->> +++ b/arch/arm/boot/dts/am4372.dtsi
->> @@ -672,18 +672,26 @@
->>  			status = "disabled";
->>  
->>  			ecap0: ecap@48300100 {
->> -				compatible = "ti,am4372-ecap","ti,am33xx-ecap";
->> +				compatible = "ti,am4372-ecap",
-> 
-> This doesn't appear to be documented.
-> 
->> +					     "ti,am3352-ecap",
->> +					     "ti,am33xx-ecap";
->>  				#pwm-cells = <3>;
->>  				reg = <0x48300100 0x80>;
->>  				ti,hwmods = "ecap0";
->> +				clocks = <&l4ls_gclk>;
->> +				clock-names = "fck";
->>  				status = "disabled";
->>  			};
->>  
->>  			ehrpwm0: pwm@48300200 {
->> -				compatible = "ti,am4372-ehrpwm","ti,am33xx-ehrpwm";
->> +				compatible = "ti,am4372-ehrpwm",
-> 
-> ditto.
+>> Why? Do you really expect to have a dependency here?
+>
+> Because the file is in ".*/mfd/.*", which normally goes through the MFD
+> tree.
+>
+> $ git log --committer="Rob Herring" --oneline -- Documentation/devicetree/bindings/mfd/ | wc -l
+> 6
+> $ git log --committer="Lee Jones" --oneline -- Documentation/devicetree/bindings/mfd/ | wc -l
+> 99
 
+That is because most changes are coupled with drivers. For changes
+that are standalone without any dependency, they go thru my tree. If
+we're getting any merge conflicts beyond which Linus can/wants to fix,
+then there is a problem because bindings shouldn't be changing that
+much.
 
-Will fix
-> 
->> +					     "ti,am3352-ehrpwm",
->> +					     "ti,am33xx-ehrpwm";
->>  				#pwm-cells = <3>;
->>  				reg = <0x48300200 0x80>;
->>  				ti,hwmods = "ehrpwm0";
->> +				clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
->> +				clock-names = "tbclk", "fck";
->>  				status = "disabled";
->>  			};
->>  		};
+Eventually, I think we need to merge all the bindings thru a single
+tree. Otherwise, we'll never move toward moving bindings out of the
+kernel (unless we just sync from the kernel tree to a standalone
+repo).
+
+Rob
