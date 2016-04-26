@@ -1,53 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
-Date: Tue, 26 Apr 2016 08:35:49 -0500
-Message-ID: <CAL_JsqLn7cZqqWzOT97QPaMyiPsTJRsp=_oNRDAjWtPo5fvngw@mail.gmail.com>
-References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
- <1461543878-3639-16-git-send-email-eric@engestrom.ch> <20160425135017.GA8656@rob-hp-laptop>
- <20160425165830.GP2713@dell> <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
- <20160426063516.GQ2713@dell>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 7/7] pinctrl: tegra: Add driver to configure voltage and
+ power state of io pads
+Date: Tue, 26 Apr 2016 19:02:21 +0530
+Message-ID: <571F6DE5.5020605@nvidia.com>
+References: <1460473007-11535-1-git-send-email-ldewangan@nvidia.com>	<1460473007-11535-8-git-send-email-ldewangan@nvidia.com>	<CACRpkdZyYiNJfuiTPeivvgVTZwdwh64nkf=f8JczSAVvnT7QeA@mail.gmail.com>	<5710A8A4.90309@nvidia.com>	<CACRpkdZLEozAmv6REcb7ubCNSLxGsYj1whZEKUkdiodZoS=vzg@mail.gmail.com>	<5710BA75.2010503@nvidia.com> <CACRpkdbr-9Z1JKMVmwNFyMq+Pg+3hT5c9rKZ1y4wZecnidW9Cg@mail.gmail.com> <5710D4E2.2030801@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160426063516.GQ2713@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Eric Engestrom <eric@engestrom.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5710D4E2.2030801@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 1:35 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Mon, 25 Apr 2016, Rob Herring wrote:
+
+On Friday 15 April 2016 05:17 PM, Laxman Dewangan wrote:
 >
->> On Mon, Apr 25, 2016 at 11:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
->> > On Mon, 25 Apr 2016, Rob Herring wrote:
->> >
->> >> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
->> >> > Signed-off-by: Eric Engestrom <eric@engestrom.ch>
->> >>
->> >> Applied, thanks.
->> >
->> > I'd prefer to continue taking these if you don't mind Rob.  It'd limit
->> > on the amount of immutable branch pull requests I have to send/handle.
+> On Friday 15 April 2016 04:45 PM, Linus Walleij wrote:
+>> On Fri, Apr 15, 2016 at 11:55 AM, Laxman Dewangan 
+>> <ldewangan@nvidia.com> wrote:
+>>> On Friday 15 April 2016 02:55 PM, Linus Walleij wrote:
+>>>> If the pin could actually set a voltage level it would have a 
+>>>> regulator.
+>>>> I don't believe that. I think it is selecting one of two rails which
+>>>> could theoretically hold two totally different voltages.
+>>>>
+>>>> And that is what power-source is about.
+>>> The IO rails connected to PMIC rail and connection does not get change.
+>>> We change the voltage of PMIC rails via regulator calls. And then 
+>>> configure
+>>> pads for the new voltage.
+>> Aha I get it! So you adjust something in the I/O-cell so that it is 
+>> adapted
+>> for the new voltage.
 >>
->> Why? Do you really expect to have a dependency here?
+>> OK that seems to be something new. I suspect
+>> power-voltage-select = <n>; where N i in uV would solve this?
+>> (We should use uV since regulators use this.)
 >
-> Because the file is in ".*/mfd/.*", which normally goes through the MFD
-> tree.
->
-> $ git log --committer="Rob Herring" --oneline -- Documentation/devicetree/bindings/mfd/ | wc -l
-> 6
-> $ git log --committer="Lee Jones" --oneline -- Documentation/devicetree/bindings/mfd/ | wc -l
-> 99
+> Thanks for new property. I will make the unit and type same as the 
+> regulator framework.
 
-That is because most changes are coupled with drivers. For changes
-that are standalone without any dependency, they go thru my tree. If
-we're getting any merge conflicts beyond which Linus can/wants to fix,
-then there is a problem because bindings shouldn't be changing that
-much.
+We have the ops for configuring the pin config as
 
-Eventually, I think we need to merge all the bindings thru a single
-tree. Otherwise, we'll never move toward moving bindings out of the
-kernel (unless we just sync from the kernel tree to a standalone
-repo).
+         int (*pin_config_group_set) (struct pinctrl_dev *pctldev,
+                                      unsigned selector,
+                                      unsigned long *configs,
+                                      unsigned num_configs);
 
-Rob
+
+The config is 32 bit, upper 16 for config argument and  and lower 16 for 
+the config param.
+
+So we can not accommodate 3300000uV until we change it to mV i.e. 3300mV.
+
+So on interface, we can read uV from DT but when making config, we can 
+translate it to mV before passing to pin_config_group_set.
+
+
+
+
+
