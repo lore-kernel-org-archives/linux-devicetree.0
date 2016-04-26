@@ -1,23 +1,36 @@
-From: "J.D. Schroeder" <Linux.HWI@garmin.com>
-Subject: Re: [PATCH 0/3] AM57/DRA7 Clock Tree DTSI Fix-ups
-Date: Tue, 26 Apr 2016 14:18:52 -0500
-Message-ID: <571FBF1C.1060804@garmin.com>
-References: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
- <20160426181318.GM5995@atomide.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Tue, 26 Apr 2016 21:24:34 +0200
+Message-ID: <9424602.Vqb0FY56gH@wuerfel>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com> <5167289.0a4LBoWhyX@wuerfel> <20160426182335.GE30107@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160426181318.GM5995@atomide.com>
+In-Reply-To: <20160426182335.GE30107@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "J.D. Schroeder" <jay.schroeder@garmin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org, Anup Patel <anup.patel@broadcom.com>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2016 01:13 PM, Tony Lindgren wrote:
-> Are any of these needed for the v4.6-rc cycle?
+On Tuesday 26 April 2016 20:23:35 Andrew Lunn wrote:
+> > A more complex problem would be having a PHY driver for a device
+> > that can be either an ethernet phy or some other phy.
+> 
+> I doubt that ever happens. You can have up to 32 different devices on
+> an MDIO bus. Since an Ethernet PHY and a "some other sort of PHY" are
+> completely different things, why would a hardware engineer place them
+> on the same address? It is like saying your ATA controller and VGA
+> controller share the same slot on the PCI bus...
 
-I understand that these are arriving a little late especially if we don't get to rc7. However, it would be great if these could get in the v4.6 kernel release. They shouldn't be too risky to anyone, but I understand if the logistics prevent that from happening.
+To clarify: what I meant is a device that is designed as a PHY for
+similar hardware (e.g. SATA, USB3 and PCIe) and that has a common
+register set and a single driver, but that driver can operate
+in multiple modes. You typically have multiple instances of
+such hardware, with each instance linked to exactly one host
+device, but one driver for all of them.
 
-Thanks,
-JD
+See Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
+and drivers/phy/phy-xgene.c for one such example.
+
+	Arnd
