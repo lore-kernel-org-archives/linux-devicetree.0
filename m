@@ -1,31 +1,39 @@
-From: Jeppe Ledet-Pedersen <jlp-jTq9jD7AHYRWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] rtc: add Cypress FM33256B RTC driver
-Date: Tue, 26 Apr 2016 14:17:26 +0200
-Message-ID: <571F5C56.9080209@gomspace.com>
-References: <1461150471-23163-1-git-send-email-jlp@gomspace.com>
- <1461150471-23163-4-git-send-email-jlp@gomspace.com>
- <20160421234400.GG29844@piout.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 01/11] dt-bindings: mfd: Add Altera Arria10 System
+ Resource Chip bindings
+Date: Tue, 26 Apr 2016 07:33:32 -0500
+Message-ID: <20160426123332.GA25487@rob-hp-laptop>
+References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
+ <1461339219-15255-2-git-send-email-tthayer@opensource.altera.com>
+ <20160425125514.GA5100@rob-hp-laptop>
+ <571E3160.60702@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160421234400.GG29844-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <571E3160.60702@opensource.altera.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/04/16 01:44, Alexandre Belloni wrote:
-> Hi,
+On Mon, Apr 25, 2016 at 10:01:52AM -0500, Thor Thayer wrote:
+> 
+> 
+> On 04/25/2016 07:55 AM, Rob Herring wrote:
+> >On Fri, Apr 22, 2016 at 10:33:29AM -0500, tthayer@opensource.altera.com wrote:
+> >>From: Thor Thayer <tthayer@opensource.altera.com>
+> >>
+> >>The Altera Arria10 Devkit System Resource chip is a Multi-Function
+> >>Device with a GPIO expander and power supply alarm.
+> >
+> >An alarm with no interrupt? Are the GPIOs interrupt capable?
+> 
+> The alarms have no interrupt but the GPIOs are interrupt capable (not
+> implemented with interrupt capability in this patch series).
 
-Hi Alexandre,
+Please make the binding as complete as possible even if you don't 
+support features in the driver yet. Driver features may evolve, but a 
+specific h/w doesn't.
 
-> Looks mostly good, a few comments below
-
-Thanks for the review. I'll add your fixes and send a v2 patch.
-
--Jeppe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
