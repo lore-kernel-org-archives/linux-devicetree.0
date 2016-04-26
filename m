@@ -1,64 +1,81 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] drivers: firmware: psci: unify enable-method binding on ARM {64,32}-bit systems
-Date: Tue, 26 Apr 2016 12:49 +0200
-Message-ID: <31757054.8aSO57qemx@wuerfel>
-References: <1461338282-19509-1-git-send-email-sudeep.holla@arm.com> <571F4632.6090003@arm.com>
+Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver code
+Date: Tue, 26 Apr 2016 12:58:35 +0200
+Message-ID: <6161197.8XCk69TI60@wuerfel>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org> <4337545.DyleYAUzIV@wuerfel> <20160426101136.GA2984@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571F4632.6090003-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20160426101136.GA2984@griffinp-ThinkPad-X1-Carbon-2nd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 April 2016 11:42:58 Sudeep Holla wrote:
-> On 22/04/16 16:18, Sudeep Holla wrote:
-> > Currently ARM CPUs DT bindings allows different enable-method value for
-> > PSCI based systems. On ARM 64-bit this property is required and must be
-> > "psci" while on ARM 32-bit systems this property is optional and must
-> > be "arm,psci" if present.
-> >
-> > However, "arm,psci" has always been the compatible string for the PSCI
-> > node, and was never intended to be the enable-method. So this is a bug
-> > in the binding and not a deliberate attempt at specifying 32-bit
-> > differently.
-> >
-> > This is problematic if 32-bit OS is run on 64-bit system which has
-> > "psci" as enable-method rather than the expected "arm,psci".
-> >
-> > So let's unify the value into "psci" and remove support for "arm,psci"
-> > before it finds any users.
-> >
-> > Reported-by: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >   Documentation/devicetree/bindings/arm/cpus.txt | 1 -
-> >   drivers/firmware/psci.c                        | 2 +-
-> >   2 files changed, 1 insertion(+), 2 deletions(-)
-> >
-> > v2->v1:
-> >       - Added Mark and Lorenzo's ACKs
-> >       - Updated commit message to specify that it also conflicts with
-> >         PSCI compatible(from Mark's reply on the thread)
-> >
-> > Hi ARM-SoC guys,
-> >
-> > Can you please pick up this single fix for PSCI binding/driver for v4.6 ?
-> >
+On Tuesday 26 April 2016 11:11:36 Peter Griffin wrote:
+> Hi Arnd,
 > 
-> Gentle ping to include this in next round of arm-soc fixes. It would be
-> good to get this fixed before v4.6 as we don't want to have user of the
-> binding which we want to remove in the release.
+> On Thu, 21 Apr 2016, Arnd Bergmann wrote:
+> 
+> > On Thursday 21 April 2016 12:04:26 Peter Griffin wrote:
+> > > uniperiph-id, version and mode are ST specific bindings and
+> > > need the 'st,' prefix. Update the examples, as otherwise copying
+> > > them yields a runtime error parsing the DT node.
+> > > 
+> > > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Cc: arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+> > > ---
+> > >  .../devicetree/bindings/sound/st,sti-asoc-card.txt         | 14 +++++++-------
+> > >  1 file changed, 7 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+> > > index 028fa1c..ef2e0c6 100644
+> > > --- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+> > > +++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+> > > @@ -67,9 +67,9 @@ Example:
+> > >                 dmas = <&fdma0 4 0 1>;
+> > >                 dai-name = "Uni Player #1 (DAC)";
+> > >                 dma-names = "tx";
+> > > -               uniperiph-id = <2>;
+> > > -               version = <5>;
+> > > -               mode = "PCM";
+> > > +               st,uniperiph-id = <2>;
+> > > +               st,version = <5>;
+> > > +               st,mode = "PCM";
+> > >         };
+> > 
+> > You don't change the binding desciption here, only the example,
+> > so they no longer match.
+> 
+> Whoops. Will fix that in v4.
+> 
+> > 
+> > What is st,uniperiph-id needed for anyway? It's often an indication
+> > that you are doing something wrong if you need this.
+> 
+> From looking at the code in sound/soc/sti/uniperif_player.c, there is
+> one sysconf register called "Audio glue config" which is shared by all
+> of the uniperif IP instances. This binding is being used to generate a
+> bitoffset into this shared register based on the instance of the IP.
+> 
+> I guess the alternative is to have an explosion of compatibles?
+> 
+> st,sti-uni-player-1
+> st,sti-uni-player-2
+> st,sti-uni-player-3
 > 
 
-Applied to the fixes branch. I have to admit that I don't understand
-how the compatible string is really used here, so I have to trust that
-this cannot break any existing machine.
+That would certainly be worse: if the devices are actually identical,
+they should have the same compatible string.
+
+> If not what would you recommend instead? :-)
+
+It's still not clear to me what that bit in the syscfg register
+is for. Given the error message about "sti-audio-clk-glue",
+I suspect that this is actually a clock controller and that
+it should be using the clock binding with a separate driver
+instead of manipulating the regmap directly from the audio driver.
 
 	Arnd
 --
