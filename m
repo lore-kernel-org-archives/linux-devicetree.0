@@ -1,190 +1,152 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 4/4] ARM64: dts: rockchip: add dts file for RK3399 evaluation board
-Date: Tue, 26 Apr 2016 14:37 +0200
-Message-ID: <9945516.Q6LYCrkl5z@diego>
-References: <1461638206-20473-1-git-send-email-jay.xu@rock-chips.com> <1461638206-20473-5-git-send-email-jay.xu@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 net-next 11/13] Documentation: Bindings: Update DT
+ binding for separating dsaf dev support
+Date: Tue, 26 Apr 2016 07:48:47 -0500
+Message-ID: <20160426124847.GA26682@rob-hp-laptop>
+References: <1461402317-136499-1-git-send-email-Yisen.Zhuang@huawei.com>
+ <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461638206-20473-5-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianqun Xu <jay.xu@rock-chips.com>
-Cc: lintao@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Yisen Zhuang <Yisen.Zhuang@huawei.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, will.deacon@arm.com, catalin.marinas@arm.com, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 26. April 2016, 10:36:46 schrieb Jianqun Xu:
-> This patch add rk3399-evb.dts for RK3399 evaluation board.
-> Tested on RK3399 evb.
+On Sat, Apr 23, 2016 at 05:05:15PM +0800, Yisen Zhuang wrote:
+> Because debug dsaf port was separated from service dsaf port, this patch
+> updates the related information of DT binding.
+
+Separated when? New version of the h/w? If so, where's the new 
+compatible string? This is quite a big binding change. 
+
+> Signed-off-by: Yisen Zhuang <yisen.zhuang@huawei.com>
 > 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 > ---
-> changes in v3:
-> - add more compatible (Doug)
-> - add modle
+>  .../devicetree/bindings/net/hisilicon-hns-dsaf.txt | 59 ++++++++++++++++++----
+>  1 file changed, 49 insertions(+), 10 deletions(-)
 > 
->  arch/arm64/boot/dts/rockchip/Makefile       |   1 +
->  arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 125
-> ++++++++++++++++++++++++++++ 2 files changed, 126 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+> index ecacfa4..5ccd4f0 100644
+> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+> @@ -7,19 +7,47 @@ Required properties:
+>  - mode: dsa fabric mode string. only support one of dsaf modes like these:
+>  		"2port-64vf",
+>  		"6port-16rss",
+> -		"6port-16vf".
+> +		"6port-16vf",
+> +		"single-port".
+>  - interrupt-parent: the interrupt parent of this device.
+>  - interrupts: should contain the DSA Fabric and rcb interrupt.
+>  - reg: specifies base physical address(es) and size of the device registers.
+> -  The first region is external interface control register base and size.
+> -  The second region is SerDes base register and size.
+> +  The first region is external interface control register base and size(optional,
+> +  only be used when subctrl-syscon is not exists). It is recommended using
+
+only used when subctrl-syscon does not exist
+
+> +  subctrl-syscon rather than this address.
+> +  The second region is SerDes base register and size(optional, only be used when
+> +  serdes-syscon in port node is not exists. It is recommended using
+
+similar rewording needed here.
+
+> +  serdes-syscon rather than this address.
+>    The third region is the PPE register base and size.
+> -  The fourth region is dsa fabric base register and size.
+> -  The fifth region is cpld base register and size, it is not required if do not use cpld.
+> -- phy-handle: phy handle of physicl port, 0 if not any phy device. see ethernet.txt [1].
+> +  The fourth region is dsa fabric base register and size. It is not required for
+> +  single-port mode.
+> +- reg-names: may be ppe-base and(or) dsaf-base. It is used to find the
+> +  corresponding reg's index.
+
+But you have up to 5 regions.
+
+The variable nature of what regions you have tells me you need more 
+specific compatible strings for each chip.
+
+> +
+> +- phy-handle: phy handle of physicl port, 0 if not any phy device. It is optional
+
+s/physicl/physical/
+
+> +  attribute. If port node is exists, phy-handle in each port node will be used.
+> +  see ethernet.txt [1].
+> +- subctrl-syscon: is syscon handle for external interface control register.
+> +- reset-field-offset: is offset of reset field. Its value depends on the hardware
+> +  user manual.
+>  - buf-size: rx buffer size, should be 16-1024.
+>  - desc-num: number of description in TX and RX queue, should be 512, 1024, 2048 or 4096.
+>  
+> +- port: subnodes of dsaf. A dsaf node may contain several port nodes(Depending
+> +  on mode of dsaf). Port node contain some attributes listed below:
+> +- port-id: is physical port index in one dsaf.
+
+Indexes should generally be avoided. What does the number correspond 
+to in h/w (if anything)?
+
+> +- phy-handle: phy handle of physicl port. It is not required if there isn't
+> +  phy device. see ethernet.txt [1].
+> +- serdes-syscon: is syscon handle for SerDes register.
+> +- cpld-syscon: is syscon handle for cpld register. It is not required if there
+> +  isn't cpld device.
+> +- cpld-ctrl-reg: is cpld register offset. It is not required if there isn't
+> +  cpld-syscon.
+
+This would usually be a cell in the cpld-syscon property.
+
+> +- port-rst-offset: is offset of reset field for each port in dsaf. Its value
+> +  depends on the hardware user manual.
+> +- port-mode-offset: is offset of port mode field for each port in dsaf. Its
+> +  value depends on the hardware user manual.
+
+Again, sounds like you need more specific compatible strings that imply 
+this information.
+
+> +
+>  [1] Documentation/devicetree/bindings/net/phy.txt
+>  
+>  Example:
+> @@ -28,11 +56,11 @@ dsaf0: dsa@c7000000 {
+>  	compatible = "hisilicon,hns-dsaf-v1";
+>  	mode = "6port-16rss";
+>  	interrupt-parent = <&mbigen_dsa>;
+> -	reg = <0x0 0xC0000000 0x0 0x420000
+> -	       0x0 0xC2000000 0x0 0x300000
+> -	       0x0 0xc5000000 0x0 0x890000
+> +	reg = <0x0 0xc5000000 0x0 0x890000
+>  	       0x0 0xc7000000 0x0 0x60000>;
+> -	phy-handle = <0 0 0 0 &soc0_phy4 &soc0_phy5 0 0>;
+> +	reg-names = "ppe-base", "dsaf-base";
+> +	subctrl-syscon = <&subctrl>;
+> +	reset-field-offset = 0;
+>  	interrupts = <131 4>,<132 4>, <133 4>,<134 4>,
+>  		     <135 4>,<136 4>, <137 4>,<138 4>,
+>  		     <139 4>,<140 4>, <141 4>,<142 4>,
+> @@ -43,4 +71,15 @@ dsaf0: dsa@c7000000 {
+>  	buf-size = <4096>;
+>  	desc-num = <1024>;
+>  	dma-coherent;
+> +
+> +	prot@0 {
+
+port?
+
+> +		port-id = 0;
+> +		phy-handle = <&phy0>;
+> +		serdes-syscon = <&serdes>;
+> +	};
+> +
+> +	prot@1 {
+> +                port-id = 1;
+> +                serdes-syscon = <&serdes>;
+> +        };
+>  };
+> -- 
+> 1.9.1
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
-> b/arch/arm64/boot/dts/rockchip/Makefile index df37865..7037a16 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -1,6 +1,7 @@
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
-> 
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-> b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts new file mode 100644
-> index 0000000..c3370bd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-> @@ -0,0 +1,125 @@
-> +/*
-> + * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/pwm/pwm.h>
-> +#include "rk3399.dtsi"
-> +
-> +/ {
-> +	model = "Rockchip RK3399 Evaluation Board";
-> +	compatible = "rockchip,rk3399-evb", "rockchip,rk3399",
-> +		     "google,rk3399evb-rev2", google,rk3399evb-rev1",
-> +		     "google,rk3399evb-rev0" ;
-
-can you check against which compatibles that coreboot really matches?
-
-As we said that the evb changed between rev1 and rev2, I would expect the 
-compatible to be something like
-
-	compatible = "rockchip,rk3399-evb",  "google,rk3399evb-rev2", 
-			"rockchip,rk3399";
-
-leaving out the rev1 and rev0
-
-> +
-> +	vdd_center: vdd-center {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm3 0 25000 0>;
-> +		regulator-name = "vdd_center";
-> +		regulator-min-microvolt = <800000>;
-> +		regulator-max-microvolt = <1400000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		status = "okay";
-> +	};
-
-Can you check if this runs stable with the pwm-regulator in mainline please?
-I.e. Boris' rework series hasn't landed yet and at least on Veyron I remember 
-the pwm-regulator having reliability issues or something like that.
-
-
-> +
-> +	vcc3v3_sys: vcc3v3-sys {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc3v3_sys";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	vcc_phy: vcc-phy-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_phy";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&pwm0 {
-> +	status = "okay";
-> +};
-> +
-> +&pwm2 {
-> +	status = "okay";
-> +};
-> +
-> +&pwm3 {
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host1_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host1_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&pinctrl {
-> +	pmic {
-> +		pmic_int_l: pmic-int-l {
-> +			rockchip,pins =
-> +				<1 21 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +
-> +		pmic_dvs2: pmic-dvs2 {
-> +			rockchip,pins =
-> +				<1 18 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-> +	};
-> +};
