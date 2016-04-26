@@ -1,165 +1,53 @@
-From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Subject: [PATCH 2/3] ARM: dts: add DTS for Baltos IR3220
-Date: Tue, 26 Apr 2016 15:00:25 +0200
-Message-ID: <1461675626-5818-3-git-send-email-yegorslists@googlemail.com>
-References: <1461675626-5818-1-git-send-email-yegorslists@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461675626-5818-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/3] mmc: dt: usdhi6rol0: add optional pinctrl binding
+Date: Tue, 26 Apr 2016 08:19:52 -0500
+Message-ID: <CAL_JsqLxVDoOma+CfvoxSyDK5gybFWX3cSWBH2BWiyaAC85+gw@mail.gmail.com>
+References: <cover.1461246772.git.larper@axis.com> <a96281244b55d55e36b72a40cd061d7ffd70b88e.1461246772.git.larper@axis.com>
+ <20160422202733.GA11270@rob-hp-laptop> <571F5DB4.7090303@axis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <571F5DB4.7090303@axis.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: Lars Persson <larper@axis.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Tue, Apr 26, 2016 at 7:23 AM, Lars Persson <lars.persson@axis.com> wrote:
+>
+>
+> On 04/22/2016 10:27 PM, Rob Herring wrote:
+>>
+>> On Thu, Apr 21, 2016 at 03:55:42PM +0200, Lars Persson wrote:
+>>>
+>>> Add a pinctrl binding to specify different pin settings for high speed
+>>> modes and UHS modes.
+>>>
+>>> Signed-off-by: Lars Persson <larper@axis.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/mmc/usdhi6rol0.txt | 6 ++++++
+>>>   1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+>>> b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+>>> index 8babdaa..6d1b797 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+>>> +++ b/Documentation/devicetree/bindings/mmc/usdhi6rol0.txt
+>>> @@ -12,6 +12,12 @@ Optional properties:
+>>>
+>>>   - vmmc-supply:        a phandle of a regulator, supplying Vcc to the
+>>> card
+>>>   - vqmmc-supply:       a phandle of a regulator, supplying VccQ to the
+>>> card
+>>> +- pinctrl-names: Can contain a "default" entry and a "state_uhs"
+>>
+>>
+>> Don't use underscores. Just "uhs" should be sufficient, right?
+>
+>
+> I do not object to this, but for consistency it seems better with state_uhs
+> that existing bindings use.
 
-Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/am335x-baltos-ir3220.dts | 119 +++++++++++++++++++++++++++++
- 2 files changed, 120 insertions(+)
- create mode 100644 arch/arm/boot/dts/am335x-baltos-ir3220.dts
+Okay. Consistency is better.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e323922..2c19cd9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -485,6 +485,7 @@ dtb-$(CONFIG_SOC_TI81XX) += \
- 	dm8168-evm.dtb \
- 	dra62x-j5eco-evm.dtb
- dtb-$(CONFIG_SOC_AM33XX) += \
-+	am335x-baltos-ir3220.dtb \
- 	am335x-baltos-ir5221.dtb \
- 	am335x-base0033.dtb \
- 	am335x-bone.dtb \
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-new file mode 100644
-index 0000000..fe002a1
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-@@ -0,0 +1,119 @@
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * VScom OnRISC
-+ * http://www.vscom.de
-+ */
-+
-+/dts-v1/;
-+
-+#include "am335x-baltos.dtsi"
-+
-+/ {
-+	model = "OnRISC Baltos iR 3220";
-+};
-+
-+&am33xx_pinmux {
-+	tca6416_pins: pinmux_tca6416_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x9b4, PIN_INPUT_PULLUP | MUX_MODE7)      /* xdma_event_intr1.gpio0[20] tca6416 stuff */
-+		>;
-+	};
-+
-+	uart1_pins: pinmux_uart1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x980, PIN_INPUT | MUX_MODE0)      /* uart1_rxd */
-+			AM33XX_IOPAD(0x984, PIN_INPUT | MUX_MODE0)      /* uart1_txd */
-+			AM33XX_IOPAD(0x978, PIN_INPUT_PULLDOWN | MUX_MODE0)      /* uart1_ctsn */
-+			AM33XX_IOPAD(0x97c, PIN_OUTPUT_PULLDOWN | MUX_MODE0)      /* uart1_rtsn */
-+			AM33XX_IOPAD(0x8e0, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* lcd_vsync.gpio2[22] DTR */
-+			AM33XX_IOPAD(0x8e4, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_hsync.gpio2[23] DSR */
-+			AM33XX_IOPAD(0x8e8, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_pclk.gpio2[24] DCD */
-+			AM33XX_IOPAD(0x8ec, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_ac_bias_en.gpio2[25] RI */
-+		>;
-+	};
-+
-+	uart2_pins: pinmux_uart2_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x950, PIN_INPUT | MUX_MODE1)      /* spi0_sclk.uart2_rxd_mux3 */
-+			AM33XX_IOPAD(0x954, PIN_OUTPUT | MUX_MODE1)      /* spi0_d0.uart2_txd_mux3 */
-+			AM33XX_IOPAD(0x988, PIN_INPUT_PULLDOWN | MUX_MODE2)      /* i2c0_sda.uart2_ctsn_mux0 */
-+			AM33XX_IOPAD(0x98c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)      /* i2c0_scl.uart2_rtsn_mux0 */
-+			AM33XX_IOPAD(0x830, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad12.gpio1[12] DTR */
-+			AM33XX_IOPAD(0x834, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad13.gpio1[13] DSR */
-+			AM33XX_IOPAD(0x838, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad14.gpio1[14] DCD */
-+			AM33XX_IOPAD(0x83c, PIN_INPUT_PULLDOWN | MUX_MODE7)     /* gpmc_ad15.gpio1[15] RI */
-+
-+			AM33XX_IOPAD(0x9a0, PIN_INPUT_PULLUP | MUX_MODE7)      /* mcasp0_aclkr.gpio3[18], INPUT_PULLDOWN | MODE7 */
-+		>;
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	dtr-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>;
-+	dsr-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-+	dcd-gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
-+	rng-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
-+
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	dtr-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-+	dsr-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-+	dcd-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-+	rng-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-+
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	tca6416: gpio@20 {
-+		compatible = "ti,tca6416";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <20 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tca6416_pins>;
-+	};
-+};
-+
-+&usb0_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&cpsw_emac0 {
-+	phy-mode = "rmii";
-+	dual_emac_res_vlan = <1>;
-+	fixed-link {
-+		speed = <100>;
-+		full-duplex;
-+	};
-+};
-+
-+&cpsw_emac1 {
-+	phy_id = <&davinci_mdio>, <7>;
-+	phy-mode = "rgmii-txid";
-+	dual_emac_res_vlan = <2>;
-+};
-+
-+&phy_sel {
-+	rmii-clock-ext = <1>;
-+};
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
