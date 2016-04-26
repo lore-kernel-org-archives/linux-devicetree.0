@@ -1,75 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 3/8] regulator: rk808: remove linear range definitions
- with a single range
-Date: Tue, 26 Apr 2016 11:46:45 +0100
-Message-ID: <20160426104645.GU3217@sirena.org.uk>
-References: <1461590448-47685-1-git-send-email-w.egorov@phytec.de>
- <1461590448-47685-4-git-send-email-w.egorov@phytec.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2] drivers: firmware: psci: unify enable-method binding on ARM {64,32}-bit systems
+Date: Tue, 26 Apr 2016 12:49 +0200
+Message-ID: <31757054.8aSO57qemx@wuerfel>
+References: <1461338282-19509-1-git-send-email-sudeep.holla@arm.com> <571F4632.6090003@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UDCjyp4MAF5V3Huu"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461590448-47685-4-git-send-email-w.egorov@phytec.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Wadim Egorov <w.egorov@phytec.de>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <571F4632.6090003-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 26 April 2016 11:42:58 Sudeep Holla wrote:
+> On 22/04/16 16:18, Sudeep Holla wrote:
+> > Currently ARM CPUs DT bindings allows different enable-method value for
+> > PSCI based systems. On ARM 64-bit this property is required and must be
+> > "psci" while on ARM 32-bit systems this property is optional and must
+> > be "arm,psci" if present.
+> >
+> > However, "arm,psci" has always been the compatible string for the PSCI
+> > node, and was never intended to be the enable-method. So this is a bug
+> > in the binding and not a deliberate attempt at specifying 32-bit
+> > differently.
+> >
+> > This is problematic if 32-bit OS is run on 64-bit system which has
+> > "psci" as enable-method rather than the expected "arm,psci".
+> >
+> > So let's unify the value into "psci" and remove support for "arm,psci"
+> > before it finds any users.
+> >
+> > Reported-by: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >   Documentation/devicetree/bindings/arm/cpus.txt | 1 -
+> >   drivers/firmware/psci.c                        | 2 +-
+> >   2 files changed, 1 insertion(+), 2 deletions(-)
+> >
+> > v2->v1:
+> >       - Added Mark and Lorenzo's ACKs
+> >       - Updated commit message to specify that it also conflicts with
+> >         PSCI compatible(from Mark's reply on the thread)
+> >
+> > Hi ARM-SoC guys,
+> >
+> > Can you please pick up this single fix for PSCI binding/driver for v4.6 ?
+> >
+> 
+> Gentle ping to include this in next round of arm-soc fixes. It would be
+> good to get this fixed before v4.6 as we don't want to have user of the
+> binding which we want to remove in the release.
+> 
 
---UDCjyp4MAF5V3Huu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to the fixes branch. I have to admit that I don't understand
+how the compatible string is really used here, so I have to trust that
+this cannot break any existing machine.
 
-On Mon, Apr 25, 2016 at 03:20:43PM +0200, Wadim Egorov wrote:
-> The driver was using only linear ranges. Now we remove linear range
-> definitions with a single range. So we have to add an ops struct for
-> ranges and adjust all other ops functions accordingly.
-
-This and some other cleanups are now available as a signed tag from my
-repository:
-
-The following changes since commit f55532a0c0b8bb6148f4e07853b876ef73bc69ca:
-
-  Linux 4.6-rc1 (2016-03-26 16:03:24 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-rk808-cleanups
-
-for you to fetch changes up to 4a5ed8c1adc39f86a2887183c71b007bc962fdce:
-
-  regulator: rk808: remove unused rk808_reg_ops_ranges (2016-04-26 11:11:29 +0100)
-
-----------------------------------------------------------------
-regulator: rk808: Some cleanups for the rk808 driver
-
-These are tagged to facilitate the addition of support for the rk818
-which may end up overlapping with some of these cleanups.
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      regulator: rk808: remove unused rk808_reg_ops_ranges
-
-Wadim Egorov (1):
-      regulator: rk808: remove linear range definitions with a single range
-
- drivers/regulator/rk808-regulator.c | 66 ++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 41 deletions(-)
-
---UDCjyp4MAF5V3Huu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXH0cUAAoJECTWi3JdVIfQ6aoH/AmnClPzC9wF7fbnXCseYz8O
-87ecgxRazLhU3fasgfIH8m6+Gj2P7Go+UgHWq9f3ewfdpdU1bFbmGVcCp5hhYscq
-N2X+QdPdcP8FlkqxXzsJP3RI8dCUXofhnVkfX6c5VpjvtT1eUXRyFlNM3fvH3Jpz
-c6mzb41jxOehCGNvnlYwKiYL/ADwa54y0XF8aLbSHjm2OKiA3TbcS0sAjsVAE529
-Eu3jxf9IoxEfVpd7nR5VjSUxjRKZtr8Q9/E8LMdnK9sFiDsWZ97LmaBdyP7II5Eq
-N7W5PmrxqnPo5Y4WBh6zMCvNWm92Wx/D1fkZrN+qQKLqA+ETkpsSIQ6tx0Yik2Q=
-=l/MP
------END PGP SIGNATURE-----
-
---UDCjyp4MAF5V3Huu--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
