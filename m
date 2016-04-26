@@ -1,30 +1,25 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
-Date: Tue, 26 Apr 2016 09:00:30 +0530
-Message-ID: <20160426033029.GB2274@localhost>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
- <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2 v3] fsl-mc binding and device tree updates
+Date: Tue, 26 Apr 2016 11:26:46 +0800
+Message-ID: <20160426032645.GG8870@tiger>
+References: <1461102207-13263-1-git-send-email-stuart.yoder@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <1461102207-13263-1-git-send-email-stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, german.rivera-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 11, 2016 at 10:21:12AM -0400, Sinan Kaya wrote:
+On Tue, Apr 19, 2016 at 04:43:27PM -0500, Stuart Yoder wrote:
+> Stuart Yoder (2):
+>   Documentation: fsl-mc: binding updates for MSIs, ranges, PHYs
+>   arm64: dts: ls2080a: fsl-mc dt node updates
 
-> +static int hidma_chan_stats(struct seq_file *s, void *unused)
-> +{
-> +	struct hidma_chan *mchan = s->private;
-> +	struct hidma_desc *mdesc;
-> +	struct hidma_dev *dmadev = mchan->dmadev;
-> +
-> +	pm_runtime_get_sync(dmadev->ddev.dev);
-
-debug shouldn't power up device, why do you want to do that
-
--- 
-~Vinod
+Applied both, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
