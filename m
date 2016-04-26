@@ -1,106 +1,50 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 6/7] ARM: dts: lpc32xx: phy3250: add NAND partitions device node
-Date: Wed, 27 Apr 2016 00:10:33 +0300
-Message-ID: <1461705034-355-7-git-send-email-vz@mleia.com>
-References: <1461705034-355-1-git-send-email-vz@mleia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461705034-355-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3 0/2] pci: host: new driver for Marvell Armada 7K/8K
+ PCIe controller
+Date: Tue, 26 Apr 2016 16:45:10 -0500
+Message-ID: <20160426214510.GA6789@localhost>
+References: <1461659506-10387-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160426173144.GB27803@localhost>
+ <20160426210850.13cc8a0e@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160426210850.13cc8a0e@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-To declare MTD OF partitions NAND controller device node should have
-a special 'partitions' subnode, the change removes a debug message
-from mtd/ofpart on boot:
+On Tue, Apr 26, 2016 at 09:08:50PM +0200, Thomas Petazzoni wrote:
+> Hello,
+> 
+> On Tue, 26 Apr 2016 12:31:44 -0500, Bjorn Helgaas wrote:
+> 
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
+> > >  create mode 100644 drivers/pci/host/pcie-armada8k.c
+> > 
+> > Thanks, Thomas, I applied these to pci/host-armada for v4.7.
+> 
+> Thanks!
+> 
+> > I added the tweaks below to use dev_dbg() instead of pr_debug(), use
+> > dw_pcie_wait_for_link() instead of another hand-coded timeout loop,
+> > and fix a typo and remove unused constants.
+> 
+> Looks all good, thanks for applying! Just one tiny question below.
+> 
+> >  	/*
+> >  	 * Interrupts are directly handled by the device driver of the
+> > -	 * PCI device. However, there are also latched into the PCIe
+> > +	 * PCI device.  However, they are also latched into the PCIe
+> 
+> Any reason to have two spaces after the dot here?
 
-  nxp_lpc3220_slc: 'partitions' subnode not found on /ahb/flash@20020000.
-  Trying to parse direct subnodes as partitions.
+Only habit because my eighth-grade typing teacher in 1979 did it that
+way, and (I think) vim does it that way by default.  Poor reasons,
+both, and definitely trumped by consistency with the rest of the file,
+which does use a single space in both other instances.  I removed the
+extra space :)
 
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
----
-* on conversion added missing 'compatible = "fixed-partitions";',
-  thanks to Sylvain for finding
-
- arch/arm/boot/dts/phy3250.dts | 50 +++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 23 deletions(-)
-
-diff --git a/arch/arm/boot/dts/phy3250.dts b/arch/arm/boot/dts/phy3250.dts
-index c1a6e62..fd95e2b 100644
---- a/arch/arm/boot/dts/phy3250.dts
-+++ b/arch/arm/boot/dts/phy3250.dts
-@@ -136,8 +136,6 @@
- 
- /* 64MB Flash via SLC NAND controller */
- &slc {
--	#address-cells = <1>;
--	#size-cells = <1>;
- 	status = "okay";
- 
- 	nxp,wdr-clks = <14>;
-@@ -151,31 +149,37 @@
- 	nand-on-flash-bbt;
- 	gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
- 
--	mtd0@00000000 {
--		label = "phy3250-boot";
--		reg = <0x00000000 0x00064000>;
--		read-only;
--	};
-+	partitions {
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
- 
--	mtd1@00064000 {
--		label = "phy3250-uboot";
--		reg = <0x00064000 0x00190000>;
--		read-only;
--	};
-+		mtd0@00000000 {
-+			label = "phy3250-boot";
-+			reg = <0x00000000 0x00064000>;
-+			read-only;
-+		};
- 
--	mtd2@001f4000 {
--		label = "phy3250-ubt-prms";
--		reg = <0x001f4000 0x00010000>;
--	};
-+		mtd1@00064000 {
-+			label = "phy3250-uboot";
-+			reg = <0x00064000 0x00190000>;
-+			read-only;
-+		};
- 
--	mtd3@00204000 {
--		label = "phy3250-kernel";
--		reg = <0x00204000 0x00400000>;
--	};
-+		mtd2@001f4000 {
-+			label = "phy3250-ubt-prms";
-+			reg = <0x001f4000 0x00010000>;
-+		};
- 
--	mtd4@00604000 {
--		label = "phy3250-rootfs";
--		reg = <0x00604000 0x039fc000>;
-+		mtd3@00204000 {
-+			label = "phy3250-kernel";
-+			reg = <0x00204000 0x00400000>;
-+		};
-+
-+		mtd4@00604000 {
-+			label = "phy3250-rootfs";
-+			reg = <0x00604000 0x039fc000>;
-+		};
- 	};
- };
- 
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
