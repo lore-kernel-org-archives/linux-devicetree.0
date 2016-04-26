@@ -1,57 +1,72 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [Patch v2 4/8] firmware: qcom: scm: Add memory allocation API
-Date: Mon, 25 Apr 2016 18:50:18 -0700
-Message-ID: <20160426015018.GI29990@codeaurora.org>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [Patch v2 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Mon, 25 Apr 2016 21:14:59 -0500
+Message-ID: <CAPBZ5QceWcTCTJSnp-OpoeK_YdV8DOWe+569+6yXpSWhR243Og@mail.gmail.com>
 References: <1461625725-32425-1-git-send-email-andy.gross@linaro.org>
- <1461625725-32425-5-git-send-email-andy.gross@linaro.org>
+	<1461625725-32425-2-git-send-email-andy.gross@linaro.org>
+	<20160426014906.GH29990@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461625725-32425-5-git-send-email-andy.gross@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160426014906.GH29990@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/25, Andy Gross wrote:
-> This patch adds APIs for the scm-32 and scm-64 to use for coherent memory
-> allocation.
-> 
-> Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> ---
->  drivers/firmware/qcom_scm.c | 16 ++++++++++++++++
->  drivers/firmware/qcom_scm.h |  4 ++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index d4e9145..8f78938 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -20,6 +20,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
->  
->  #include "qcom_scm.h"
->  
-> @@ -158,6 +159,21 @@ bool qcom_scm_is_available(void)
->  }
->  EXPORT_SYMBOL(qcom_scm_is_available);
->  
-> +void *qcom_scm_alloc_buffer(size_t size, dma_addr_t *dma_addr,
-> +				      gfp_t gfp)
-> +{
-> +	if (__scm)
-> +		return dma_alloc_writecombine(__scm->dev, size, dma_addr, gfp);
-> +	else
-> +		return ERR_PTR(-ENODEV);
+On 25 April 2016 at 20:49, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 04/25, Andy Gross wrote:
+>> This patch adds the device tree support for the Qualcomm SCM firmware.
+>>
+>> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+>> ---
+>>  .../devicetree/bindings/firmware/qcom,scm.txt      | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+>> new file mode 100644
+>> index 0000000..a679a87
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+>> @@ -0,0 +1,28 @@
+>> +QCOM Secure Channel Manager (SCM)
+>> +
+>> +Qualcomm processors include an interface to communicate to the secure firmware.
+>> +This interface allows for clients to request different types of actions.  These
+>> +can include CPU power up/down, HDCP requests, loading of firmware, and other
+>> +assorted actions.
+>> +
+>> +Required properties:
+>> +- compatible: must contain one of the following:
+>> + * "qcom,scm-apq8064" for APQ8064
+>> + * "qcom,scm-apq8084" for APQ8084
+>> + * "qcom,scm-msm8916" for MSM8916
+>> + * "qcom,scm-msm8974" for MSM8974
+>
+> Do we need to keep adding these into the driver for every SoC
+> that we support? My understanding is apq8064 can be the one that
+> requires one clk, and msm8974 can be the one that requires three.
+> The driver can just have those two compatibles for now, and we
+> can keep adding compatibles here for the different SoCs, but
+> really we don't care, that's just to save ourselves if something
+> pops up and needs a workaround.
+>
+> It will certainly look weird if it's firmware that's compatible
+> with qcom,scm-msm8974 but on an apq8084, so perhaps something
+> more generic like, qcom-scm-v1 and qcom,scm-v2 can be used as the
+> generic compatible in the driver:
+>
+>         compatible = "qcom,scm-apq8064", "qcom,scm-v1";
+>
+>         vs.
+>
+>         compatible = "qcom,scm-apq8084", "qcom,scm-v2";
+>
+> ?
+>
+> I just want to avoid the constant SoC churn update here if we can.
 
-Any reason we can't use the streaming APIs? That's pretty much
-how we were doing things before. This changes it to be a
-different memory type buffer which may be slower to read/write to.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Right.  We can certainly do it that way.  Its just that the v1/v2
+aren't the real versions.  What if we did qcom,scm vs
+qcom,scm-apq8064?
