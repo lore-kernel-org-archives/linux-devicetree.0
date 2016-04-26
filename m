@@ -1,49 +1,231 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: RE: [PATCH 1/2] powerpc/85xx: adapt QorIQ eSDHC to the new clocking
- model
-Date: Tue, 26 Apr 2016 06:19:18 +0000
-Message-ID: <HE1PR04MB08892307F28380E4096AA730F8630@HE1PR04MB0889.eurprd04.prod.outlook.com>
-References: <1461147644-18041-1-git-send-email-yangbo.lu@nxp.com>
- <1461280096.32510.213.camel@buserror.net>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v8 5/8] [media] vcodec: mediatek: Add Mediatek V4L2 Video
+ Encoder Driver
+Date: Tue, 26 Apr 2016 08:20:47 +0200
+Message-ID: <571F08BF.4020106@xs4all.nl>
+References: <1461587438-59886-1-git-send-email-tiffany.lin@mediatek.com>
+ <1461587438-59886-2-git-send-email-tiffany.lin@mediatek.com>
+ <1461587438-59886-3-git-send-email-tiffany.lin@mediatek.com>
+ <1461587438-59886-4-git-send-email-tiffany.lin@mediatek.com>
+ <1461587438-59886-5-git-send-email-tiffany.lin@mediatek.com>
+ <1461587438-59886-6-git-send-email-tiffany.lin@mediatek.com>
+ <571E1809.3060100@xs4all.nl> <1461637063.11415.24.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1461280096.32510.213.camel@buserror.net>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <scott.wood@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461637063.11415.24.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tiffany lin <tiffany.lin@mediatek.com>
+Cc: Andrew-CT.Chen@mediatek.com, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY290dCBXb29kIFttYWlsdG86
-b3NzQGJ1c2Vycm9yLm5ldF0NCj4gU2VudDogRnJpZGF5LCBBcHJpbCAyMiwgMjAxNiA3OjA4IEFN
-DQo+IFRvOiBZYW5nYm8gTHU7IGxpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRl
-dkBsaXN0cy5vemxhYnMub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBDYzog
-dWxmLmhhbnNzb25AbGluYXJvLm9yZzsgUm9iIEhlcnJpbmc7IFNjb3R0IFdvb2QNCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCAxLzJdIHBvd2VycGMvODV4eDogYWRhcHQgUW9ySVEgZVNESEMgdG8gdGhl
-IG5ldw0KPiBjbG9ja2luZyBtb2RlbA0KPiANCj4gT24gV2VkLCAyMDE2LTA0LTIwIGF0IDE4OjIw
-ICswODAwLCBZYW5nYm8gTHUgd3JvdGU6DQo+ID4gUHJvdmlkZSBjbG9ja3MgcHJvcGVydHkgaW5z
-dGVhZCBvZiBjbG9jay1mcmVxdWVuY3kgZm9yIFFvcklRIGVTREhDIGR0cw0KPiA+IG5vZGUgdG8g
-YWRhcHQgdG8gdGhlIG5ldyBjbG9ja2luZyBtb2RlbCwgc28gdGhhdCB0aGUgZHJpdmVyIGNvdWxk
-IGdldA0KPiA+IGNsb2NrIHZhbHVlIGJ5IHRoZSBjb21tb24gY2xrIEFQSSBhbmQgdGhlIHUtYm9v
-dCBjb3VsZCByZW1vdmUgdGhlDQo+ID4gY2xvY2sgZml4dXAuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBZYW5nYm8gTHUgPHlhbmdiby5sdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWVzZGhjLTAuZHRzaSB8IDIgKy0NCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0t
-Z2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1lc2RoYy0wLmR0c2kNCj4gPiBi
-L2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtZXNkaGMtMC5kdHNpDQo+ID4gaW5kZXgg
-MjA4MzVhZS4uZGRiZTU2MiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
-ZnNsL3FvcmlxLWVzZGhjLTAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvcW9yaXEtZXNkaGMtMC5kdHNpDQo+ID4gQEAgLTM2LDUgKzM2LDUgQEAgc2RoYzogc2RoY0Ax
-MTQwMDAgew0KPiA+ICAJY29tcGF0aWJsZSA9ICJmc2wsZXNkaGMiOw0KPiA+ICAJcmVnID0gPDB4
-MTE0MDAwIDB4MTAwMD47DQo+ID4gIAlpbnRlcnJ1cHRzID0gPDQ4IDIgMCAwPjsNCj4gPiAtCWNs
-b2NrLWZyZXF1ZW5jeSA9IDwwPjsNCj4gPiArCWNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxPjsNCj4g
-PiAgfTsNCj4gDQo+IEJpbmRpbmcgdXBkYXRlPw0KPiANCj4gLVNjb3R0DQoNCltMdSBZYW5nYm8t
-QjQ3MDkzXSBTb3JyeSwgZGlkIHlvdSBtZWFuIHRoZSBkb2MgdXBkYXRlPyAuLi4NCkl0IGhhcyBh
-bHJlYWR5IGhhZCBhIGRlc2NyaXB0aW9uIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9jbG9jay9xb3JpcS1jbG9jay50eHQNCg0KLSBjbG9jay1mcmVxdWVuY3k6IElucHV0IHN5
-c3RlbSBjbG9jayBmcmVxdWVuY3kgKFNZU0NMSykNCi0gY2xvY2tzOiBJZiBjbG9jay1mcmVxdWVu
-Y3kgaXMgbm90IHNwZWNpZmllZCwgc3lzY2xrIG1heSBiZSBwcm92aWRlZA0KICAgICAgICBhcyBh
-biBpbnB1dCBjbG9jay4gIEVpdGhlciBjbG9jay1mcmVxdWVuY3kgb3IgY2xvY2tzIG11c3QgYmUN
-CiAgICAgICAgcHJvdmlkZWQuDQoNCg==
+On 04/26/2016 04:17 AM, tiffany lin wrote:
+> Hi Hans,
+> 
+> On Mon, 2016-04-25 at 15:13 +0200, Hans Verkuil wrote:
+>> On 04/25/2016 02:30 PM, Tiffany Lin wrote:
+>>> Add v4l2 layer encoder driver for MT8173
+>>>
+>>> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+>>>
+>>> ---
+>>>  drivers/media/platform/Kconfig                     |   16 +
+>>>  drivers/media/platform/Makefile                    |    2 +
+>>>  drivers/media/platform/mtk-vcodec/Makefile         |   14 +
+>>>  drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  339 +++++
+>>>  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 1303 ++++++++++++++++++++
+>>>  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.h |   58 +
+>>>  .../media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c |  456 +++++++
+>>>  .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  |  137 ++
+>>>  .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.h  |   26 +
+>>>  .../media/platform/mtk-vcodec/mtk_vcodec_intr.c    |   56 +
+>>>  .../media/platform/mtk-vcodec/mtk_vcodec_intr.h    |   27 +
+>>>  .../media/platform/mtk-vcodec/mtk_vcodec_util.c    |   96 ++
+>>>  .../media/platform/mtk-vcodec/mtk_vcodec_util.h    |   87 ++
+>>>  drivers/media/platform/mtk-vcodec/venc_drv_base.h  |   62 +
+>>>  drivers/media/platform/mtk-vcodec/venc_drv_if.c    |  107 ++
+>>>  drivers/media/platform/mtk-vcodec/venc_drv_if.h    |  165 +++
+>>>  drivers/media/platform/mtk-vcodec/venc_ipi_msg.h   |  210 ++++
+>>>  17 files changed, 3161 insertions(+)
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/Makefile
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.h
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.h
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.c
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.h
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_util.c
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/venc_drv_base.h
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/venc_drv_if.c
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/venc_drv_if.h
+>>>  create mode 100644 drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
+>>>
+>>
+>> ...
+>>
+>>> +static int fops_vcodec_open(struct file *file)
+>>> +{
+>>> +	struct mtk_vcodec_dev *dev = video_drvdata(file);
+>>> +	struct mtk_vcodec_ctx *ctx = NULL;
+>>> +	int ret = 0;
+>>> +
+>>> +	mutex_lock(&dev->dev_mutex);
+>>
+>> I would move this to after the kzalloc, since that doesn't need to be
+>> called with the mutex held.
+>>
+> Will fix this in next version.
+> 
+>>> +
+>>> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+>>> +	if (!ctx) {
+>>
+>> And then you can just do return -ENOMEM here.
+>>
+> Got it.
+>>> +		ret = -ENOMEM;
+>>> +		goto err_alloc;
+>>> +	}
+>>> +
+>>> +	ctx->idx = dev->curr_max_idx;
+>>
+>> I'd do:
+>>
+>> 	/*
+>> 	 * Use simple counter to uniquely identify this context. Only
+>> 	 * used for logging.
+>> 	 */
+>> 	ctx->idx = dev->curr_max_idx++;
+>>
+>> I would also prefer that it is call 'id' instead of idx, since that's really
+>> what it is, just an ID.
+>>
+>> And the counter is then id_counter instead of curr_max_idx.
+>>
+> Got it, will fix this in next version.
+> 
+>>> +	v4l2_fh_init(&ctx->fh, video_devdata(file));
+>>> +	file->private_data = &ctx->fh;
+>>> +	v4l2_fh_add(&ctx->fh);
+>>> +	INIT_LIST_HEAD(&ctx->list);
+>>> +	ctx->dev = dev;
+>>> +	init_waitqueue_head(&ctx->queue);
+>>> +
+>>> +	ctx->type = MTK_INST_ENCODER;
+>>> +	ret = mtk_vcodec_enc_ctrls_setup(ctx);
+>>> +	if (ret) {
+>>> +		mtk_v4l2_err("Failed to setup controls() (%d)",
+>>> +				ret);
+>>> +		goto err_ctrls_setup;
+>>> +	}
+>>> +	ctx->m2m_ctx = v4l2_m2m_ctx_init(dev->m2m_dev_enc, ctx,
+>>> +				&mtk_vcodec_enc_queue_init);
+>>> +	if (IS_ERR(ctx->m2m_ctx)) {
+>>> +		ret = PTR_ERR(ctx->m2m_ctx);
+>>> +		mtk_v4l2_err("Failed to v4l2_m2m_ctx_init() (%d)",
+>>> +				ret);
+>>> +		goto err_m2m_ctx_init;
+>>> +	}
+>>> +	mtk_vcodec_enc_set_default_params(ctx);
+>>> +
+>>> +	if (v4l2_fh_is_singular(&ctx->fh)) {
+>>> +		/*
+>>> +		 * vpu_load_firmware checks if it was loaded already and
+>>> +		 * does nothing in that case
+>>> +		 */
+>>> +		ret = vpu_load_firmware(dev->vpu_plat_dev);
+>>> +		if (ret < 0) {
+>>> +			/*
+>>> +			 * Return 0 if downloading firmware successfully,
+>>> +			 * otherwise it is failed
+>>> +			 */
+>>> +			mtk_v4l2_err("vpu_load_firmware failed!");
+>>> +			goto err_load_fw;
+>>> +		}
+>>> +
+>>> +		dev->enc_capability =
+>>> +			vpu_get_venc_hw_capa(dev->vpu_plat_dev);
+>>> +		mtk_v4l2_debug(0, "encoder capability %x", dev->enc_capability);
+>>> +	}
+>>> +
+>>> +	mtk_v4l2_debug(2, "Create instance [%d]@%p m2m_ctx=%p ",
+>>> +			ctx->idx, ctx, ctx->m2m_ctx);
+>>> +	dev->curr_max_idx = (dev->curr_max_idx + 1) & 0xffffffffffffffff;
+>>
+>> and drop this line.
+>>
+> Got it.
+> 
+>>> +	dev->num_instances++;
+>>> +	list_add(&ctx->list, &dev->ctx_list);
+>>> +
+>>> +	mutex_unlock(&dev->dev_mutex);
+>>> +	mtk_v4l2_debug(0, "%s encoder [%d]", dev_name(&dev->plat_dev->dev),
+>>> +			ctx->idx);
+>>> +	return ret;
+>>> +
+>>> +	/* Deinit when failure occurred */
+>>> +err_load_fw:
+>>> +	v4l2_m2m_ctx_release(ctx->m2m_ctx);
+>>> +err_m2m_ctx_init:
+>>> +	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
+>>> +err_ctrls_setup:
+>>> +	v4l2_fh_del(&ctx->fh);
+>>> +	v4l2_fh_exit(&ctx->fh);
+>>> +	kfree(ctx);
+>>> +err_alloc:
+>>> +	mutex_unlock(&dev->dev_mutex);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int fops_vcodec_release(struct file *file)
+>>> +{
+>>> +	struct mtk_vcodec_dev *dev = video_drvdata(file);
+>>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(file->private_data);
+>>> +
+>>> +	mtk_v4l2_debug(1, "[%d] encoder", ctx->idx);
+>>> +	mutex_lock(&dev->dev_mutex);
+>>> +
+>>> +	mtk_vcodec_enc_release(ctx);
+>>> +	v4l2_fh_del(&ctx->fh);
+>>> +	v4l2_fh_exit(&ctx->fh);
+>>> +	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
+>>> +	v4l2_m2m_ctx_release(ctx->m2m_ctx);
+>>> +
+>>> +	list_del_init(&ctx->list);
+>>> +	dev->num_instances--;
+>>> +	kfree(ctx);
+>>> +	mutex_unlock(&dev->dev_mutex);
+>>> +	return 0;
+>>> +}
+>>
+>> Tiffany, besides these very small items here is there anything else you are waiting for?
+>> I'm thinking that if you fix these small issues, merge Julia Lawall's fixes and repost,
+>> then I can make a pull request. Mauro will still have to review it as well, but I have no
+>> more comments.
+>>
+> For Julia Lawall's fixes, do you mean we need merge 
+> 1.[PATCH] VPU: mediatek: fix simple_open.cocci warnings
+> 2.[PATCH] VPU: mediatek: fix platform_no_drv_owner.cocci warnings 
+> to "[PATCH v8 2/8] [media] VPU: mediatek: support Mediatek VPU"
+
+Yes.
+
+> or add these two patches to this patch series?
+> We are ready for our encoder patch series, I will fix these issues and
+> repost patches today.
+
+Great! Please make sure it is rebased to the latest media_tree master branch.
+I'll likely make a pull request for Mauro on Friday.
+
+The driver will probably not make it for 4.7 as it looks likely that the
+4.7 merge window will open soon. But 4.8 shouldn't be a problem at all.
+
+Regards,
+
+	Hans
