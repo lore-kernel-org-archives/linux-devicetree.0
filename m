@@ -1,116 +1,86 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 09/11] drm: sun4i: tv: Add NTSC output standard
-Date: Tue, 26 Apr 2016 11:59:41 +0200
-Message-ID: <20160426115941.14e2b0fb@bbrezillon>
-References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
-	<1461590572-4027-10-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver
+ code
+Date: Tue, 26 Apr 2016 11:11:36 +0100
+Message-ID: <20160426101136.GA2984@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-10-git-send-email-peter.griffin@linaro.org>
+ <4337545.DyleYAUzIV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBD7Y7S4AKGQEJZI4EKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1461590572-4027-10-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4337545.DyleYAUzIV@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org, ludovic.barre@st.com, arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Apr 2016 15:22:50 +0200
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hi Arnd,
 
-> Add the settings to support the NTSC standard.
+On Thu, 21 Apr 2016, Arnd Bergmann wrote:
+
+> On Thursday 21 April 2016 12:04:26 Peter Griffin wrote:
+> > uniperiph-id, version and mode are ST specific bindings and
+> > need the 'st,' prefix. Update the examples, as otherwise copying
+> > them yields a runtime error parsing the DT node.
+> > 
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > Cc: arnaud.pouliquen@st.com
+> > ---
+> >  .../devicetree/bindings/sound/st,sti-asoc-card.txt         | 14 +++++++-------
+> >  1 file changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+> > index 028fa1c..ef2e0c6 100644
+> > --- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+> > +++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+> > @@ -67,9 +67,9 @@ Example:
+> >                 dmas = <&fdma0 4 0 1>;
+> >                 dai-name = "Uni Player #1 (DAC)";
+> >                 dma-names = "tx";
+> > -               uniperiph-id = <2>;
+> > -               version = <5>;
+> > -               mode = "PCM";
+> > +               st,uniperiph-id = <2>;
+> > +               st,version = <5>;
+> > +               st,mode = "PCM";
+> >         };
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> You don't change the binding desciption here, only the example,
+> so they no longer match.
 
-Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Whoops. Will fix that in v4.
 
-> ---
->  drivers/gpu/drm/sun4i/sun4i_tv.c | 45 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
-> index ccf275a90132..bc047f923508 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
-> @@ -178,24 +178,69 @@ struct sun4i_tv {
->  	struct sun4i_drv	*drv;
->  };
->  
-> +struct video_levels ntsc_video_levels = {
-> +	.black = 282,	.blank = 240,
-> +};
-> +
->  struct video_levels pal_video_levels = {
->  	.black = 252,	.blank = 252,
->  };
->  
-> +struct burst_levels ntsc_burst_levels = {
-> +	.cb = 79,	.cr = 0,
-> +};
-> +
->  struct burst_levels pal_burst_levels = {
->  	.cb = 40,	.cr = 40,
->  };
->  
-> +struct color_gains ntsc_color_gains = {
-> +	.cb = 160,	.cr = 160,
-> +};
-> +
->  struct color_gains pal_color_gains = {
->  	.cb = 224,	.cr = 224,
->  };
->  
-> +struct resync_parameters ntsc_resync_parameters = {
-> +	.field = false,	.line = 14,	.pixel = 12,
-> +};
-> +
->  struct resync_parameters pal_resync_parameters = {
->  	.field = true,	.line = 13,	.pixel = 12,
->  };
->  
->  struct tv_mode tv_modes[] = {
->  	{
-> +		.name		= "NTSC",
-> +		.mode		= SUN4I_TVE_CFG0_RES_480i,
-> +		.chroma_freq	= 0x21f07c1f,
-> +		.yc_en		= true,
-> +		.dac3_en	= true,
-> +		.dac_bit25_en	= true,
-> +
-> +		.back_porch	= 118,
-> +		.front_porch	= 32,
-> +		.line_number	= 525,
-> +
-> +		.hdisplay	= 720,
-> +		.hfront_porch	= 18,
-> +		.hsync_len	= 2,
-> +		.hback_porch	= 118,
-> +
-> +		.vdisplay	= 480,
-> +		.vfront_porch	= 26,
-> +		.vsync_len	= 2,
-> +		.vback_porch	= 17,
-> +
-> +		.vblank_level	= 240,
-> +
-> +		.color_gains	= &ntsc_color_gains,
-> +		.burst_levels	= &ntsc_burst_levels,
-> +		.video_levels	= &ntsc_video_levels,
-> +		.resync_params	= &ntsc_resync_parameters,
-> +	},
-> +	{
->  		.name		= "PAL",
->  		.mode		= SUN4I_TVE_CFG0_RES_576i,
->  		.chroma_freq	= 0x2a098acb,
+> What is st,uniperiph-id needed for anyway? It's often an indication
+> that you are doing something wrong if you need this.
 
+>From looking at the code in sound/soc/sti/uniperif_player.c, there is
+one sysconf register called "Audio glue config" which is shared by all
+of the uniperif IP instances. This binding is being used to generate a
+bitoffset into this shared register based on the instance of the IP.
 
+I guess the alternative is to have an explosion of compatibles?
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+st,sti-uni-player-1
+st,sti-uni-player-2
+st,sti-uni-player-3
+
+If not what would you recommend instead? :-)
+
+I don't currently have access to the functional spec for this
+IP block, but I have asked ST to send it to me to see if there is any
+other way to derive this information (although I suspect there won't
+be).
+
+FYI I didn't actually write or upstream that driver. However fdma is
+a depedency of the ASoC driver and it is required to get working audio
+upstream. It's also worth pointing out that this ASoC driver has been
+merged for a while, so I'm not sure what your opinion is of now changing
+the DT bindings? Obviously it is currently not used by anyone upstream
+due to the missing fdma depedency.
+
+regards,
+
+Peter.
