@@ -1,94 +1,165 @@
-From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [v8, 1/7] Documentation: DT: update Freescale DCFG compatible
-Date: Tue, 26 Apr 2016 02:43:10 +0000
-Message-ID: <HE1PR04MB0889A68C6D275D3102382D8BF8630@HE1PR04MB0889.eurprd04.prod.outlook.com>
-References: <1461306464-19521-1-git-send-email-yangbo.lu@nxp.com>
-	<1461306464-19521-2-git-send-email-yangbo.lu@nxp.com>
-	<20160422131151.GJ10606@leverpostej>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V17 1/3] dmaengine: qcom_hidma: implement lower level
+ hardware interface
+Date: Tue, 26 Apr 2016 08:58:06 +0530
+Message-ID: <20160426032805.GA2274@localhost>
+References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
+ <1460384473-5775-2-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160422131151.GJ10606@leverpostej>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Qiang <qiang.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEmw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1460384473-5775-2-git-send-email-okaya@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Apr 11, 2016 at 10:21:11AM -0400, Sinan Kaya wrote:
+
+> + * HIDMA is not aware of IOMMU presence since it follows the DMA API. All
+> + * IOMMU latency will be built into the data movement time. By the time
+> + * interrupt happens, IOMMU lookups + data movement has already taken place.
+
+Do you mean dmaengine API or dma mapping API here? Where is you IOMMU
+located wrt to dma controller?
+
+> + *
+> + * While the first read in a typical PCI endpoint ISR flushes all outstanding
+> + * requests traditionally to the destination, this concept does not apply
+> + * here for this HW.
+> + */
+> +static void hidma_ll_int_handler_internal(struct hidma_lldev *lldev)
+> +{
+> +	u32 status;
+> +	u32 enable;
+> +	u32 cause;
+> +
+> +	/*
+> +	 * Fine tuned for this HW...
+> +	 *
+> +	 * This ISR has been designed for this particular hardware. Relaxed
+> +	 * read and write accessors are used for performance reasons due to
+> +	 * interrupt delivery guarantees. Do not copy this code blindly and
+> +	 * expect that to work.
+> +	 */
+> +	status = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_STAT_REG);
+> +	enable = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
+> +	cause = status & enable;
+> +
+> +	while (cause) {
+> +		if ((cause & BIT(HIDMA_IRQ_TR_CH_INVALID_TRE_BIT_POS)) ||
+> +		    (cause & BIT(HIDMA_IRQ_TR_CH_TRE_RD_RSP_ER_BIT_POS)) ||
+> +		    (cause & BIT(HIDMA_IRQ_EV_CH_WR_RESP_BIT_POS)) ||
+> +		    (cause & BIT(HIDMA_IRQ_TR_CH_DATA_RD_ER_BIT_POS)) ||
+> +		    (cause & BIT(HIDMA_IRQ_TR_CH_DATA_WR_ER_BIT_POS))) {
+
+Switch please
+
+> +			u8 err_code = HIDMA_EVRE_STATUS_ERROR;
+> +			u8 err_info = 0xFF;
+> +
+> +			/* Clear out pending interrupts */
+> +			writel(cause, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
+> +
+> +			dev_err(lldev->dev, "error 0x%x, resetting...\n",
+> +				cause);
+> +
+> +			hidma_cleanup_pending_tre(lldev, err_info, err_code);
+> +
+> +			/* reset the channel for recovery */
+> +			if (hidma_ll_setup(lldev)) {
+
+should this be done in ISR?
+
+> +int hidma_ll_resume(struct hidma_lldev *lldev)
+> +{
+> +	return hidma_ll_enable(lldev);
+> +}
+
+why do we need this empty function, use hidma_ll_enable.
+
+> +bool hidma_ll_isenabled(struct hidma_lldev *lldev)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(lldev->trca + HIDMA_TRCA_CTRLSTS_REG);
+> +	lldev->trch_state = HIDMA_CH_STATE(val);
+> +	val = readl(lldev->evca + HIDMA_EVCA_CTRLSTS_REG);
+> +	lldev->evch_state = HIDMA_CH_STATE(val);
+> +
+> +	/* both channels have to be enabled before calling this function */
+> +	if (((lldev->trch_state == HIDMA_CH_ENABLED) ||
+> +	     (lldev->trch_state == HIDMA_CH_RUNNING)) &&
+> +	    ((lldev->evch_state == HIDMA_CH_ENABLED) ||
+> +	     (lldev->evch_state == HIDMA_CH_RUNNING)))
+> +		return true;
+
+hmmm this looks hard to read, why not do:
+
+is_chan_enabled(state)
+{
+	switch (state) {
+	case HIDMA_CH_ENABLED:
+	case HIDMA_CH_RUNNING:
+		return true;
+	default:
+		return false;
+}
+
+and then :
+
+	if (is_chan_enabled(lldev->trch_state) &&
+			is_chan_enabled(lldev->evch_state))
 
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> Sent: Friday, April 22, 2016 9:12 PM
-> To: Yangbo Lu
-> Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org;
-> netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Scott Wood; Rob Herring;
-> Russell King; Jochen Friedrich; Joerg Roedel; Claudiu Manoil; Bhupesh
-> Sharma; Zhao Qiang; Kumar Gala; Santosh Shilimkar; Yang-Leo Li; Xiaobo
-> Xie
-> Subject: Re: [v8, 1/7] Documentation: DT: update Freescale DCFG
-> compatible
-> 
-> On Fri, Apr 22, 2016 at 02:27:38PM +0800, Yangbo Lu wrote:
-> > Update Freescale DCFG compatible with 'fsl,<chip>-dcfg' instead of
-> > 'fsl,ls1021a-dcfg' to include more chips.
-> >
-> > Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> > Changes for v8:
-> > 	- Added this patch
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
-> > b/Documentation/devicetree/bindings/arm/fsl.txt
-> > index 752a685..1d5f512 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> > @@ -119,7 +119,7 @@ Freescale DCFG
-> >  configuration and status for the device. Such as setting the
-> > secondary  core start address and release the secondary core from
-> holdoff and startup.
-> >    Required properties:
-> > -  - compatible: should be "fsl,ls1021a-dcfg"
-> > +  - compatible: should be "fsl,<chip>-dcfg"
-> 
-> Please list specific values expected for <chip>, while jusy saying <chip>
-> may be more generic, it makes it practically impossible to search for the
-> correct binding given a compatible string, and it's vague as to exaclty
-> what <chip> should be.
+> +void hidma_ll_start(struct hidma_lldev *lldev)
+> +{
+> +	hidma_ll_hw_start(lldev);
+> +}
 
-[Lu Yangbo-B47093] Thanks for your comment. I will list the possible chips.
+Another dummy :(
 
-> 
-> Thanks,
-> Mark.
-> 
-> 
-> 
-> >    - reg : should contain base address and length of DCFG
-> > memory-mapped registers
-> >
-> >  Example:
-> > --
-> > 2.1.0.27.g96db324
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree"
-> > in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo
-> > info at  http://vger.kernel.org/majordomo-info.html
-> >
+> +/*
+> + * Note that even though we stop this channel
+> + * if there is a pending transaction in flight
+> + * it will complete and follow the callback.
+> + * This request will prevent further requests
+> + * to be made.
+
+Why the odd formating?
+
+> +int hidma_ll_uninit(struct hidma_lldev *lldev)
+> +{
+> +	int rc = 0;
+> +	u32 val;
+> +
+> +	if (!lldev)
+> +		return -ENODEV;
+> +
+> +	if (lldev->initialized) {
+> +		u32 required_bytes;
+> +
+> +		lldev->initialized = 0;
+> +
+> +		required_bytes = sizeof(struct hidma_tre) * lldev->nr_tres;
+> +		tasklet_kill(&lldev->task);
+> +		memset(lldev->trepool, 0, required_bytes);
+> +		lldev->trepool = NULL;
+> +		lldev->pending_tre_count = 0;
+> +		lldev->tre_write_offset = 0;
+> +
+> +		rc = hidma_ll_reset(lldev);
+> +
+> +		/*
+> +		 * Clear all pending interrupts again.
+> +		 * Otherwise, we observe reset complete interrupts.
+> +		 */
+> +		val = readl(lldev->evca + HIDMA_EVCA_IRQ_STAT_REG);
+> +		writel(val, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
+> +		hidma_ll_enable_irq(lldev, 0);
+
+uninit enables irq?
+
+-- 
+~Vinod
