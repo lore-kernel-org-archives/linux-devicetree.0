@@ -1,100 +1,169 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3] gpio: of: make it possible to name GPIO lines
-Date: Tue, 26 Apr 2016 09:53:40 -0700
-Message-ID: <20160426165340.GD30010@dtor-ws>
-References: <1461236901-28626-1-git-send-email-linus.walleij@linaro.org>
- <20160421170615.GA25466@dtor-ws>
- <CACRpkdYZuRGvFf1kjy3E4=1hSfVaqFTk6qENyaJjEdTgZ8uVGQ@mail.gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/18] dmaengine: st_fdma: Add xp70 firmware loading
+ mechanism.
+Date: Tue, 26 Apr 2016 22:30:48 +0530
+Message-ID: <20160426170048.GS2274@localhost>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-5-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYZuRGvFf1kjy3E4=1hSfVaqFTk6qENyaJjEdTgZ8uVGQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Lee Campbell <leecam@google.com>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Mandala <david.mandala@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1461236675-10176-5-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 01:03:45PM +0200, Linus Walleij wrote:
-> On Thu, Apr 21, 2016 at 7:06 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > On Thu, Apr 21, 2016 at 01:08:21PM +0200, Linus Walleij wrote:
-> >>  /**
-> >> + * of_gpiochip_set_names() - set up the names of the lines
-> >> + * @chip: GPIO chip whose lines should be named, if possible
-> >> + */
-> >> +static void of_gpiochip_set_names(struct gpio_chip *gc)
-> >> +{
-> >> +     struct gpio_device *gdev = gc->gpiodev;
-> >> +     struct device_node *np = gc->of_node;
-> >> +     int i;
-> >> +     int nstrings;
-> >> +
-> >> +     /* Do we even have the "gpio-line-names" property */
-> >> +     if (!of_property_read_bool(np, "gpio-line-names"))
-> >> +             return;
-> >> +
-> >> +     nstrings = of_property_count_strings(np, "gpio-line-names");
-> >> +     /*
-> >> +      * Make sure to not index beyond either the end of the
-> >> +      * "gpio-names" array nor the number of descriptors of
-> >> +      * the GPIO device.
-> >> +      */
-> >
-> > I know you mentioned that it already been discussed much, but I am not
-> > sure why we need to count the string (and validate that strings are
-> > present by treating the property as boolean?),
-> 
-> I validate the property to be present to bail out quickly on controllers
-> that have no names set (i.e. all currently deployed device trees).
-> I can skip that part if you think it's too much optimization.
+On Thu, Apr 21, 2016 at 12:04:21PM +0100, Peter Griffin wrote:
+> +static int
+> +st_fdma_elf_sanity_check(struct st_fdma_dev *fdev, const struct firmware *fw)
+> +{
+> +	const char *fw_name = fdev->fw_name;
+> +	struct elf32_hdr *ehdr;
+> +	char class;
+> +
+> +	if (!fw) {
+> +		dev_err(fdev->dev, "failed to load %s\n", fw_name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (fw->size < sizeof(*ehdr)) {
+> +		dev_err(fdev->dev, "Image is too small\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ehdr = (struct elf32_hdr *)fw->data;
+> +
+> +	/* We only support ELF32 at this point */
+> +	class = ehdr->e_ident[EI_CLASS];
+> +	if (class != ELFCLASS32) {
+> +		dev_err(fdev->dev, "Unsupported class: %d\n", class);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (ehdr->e_ident[EI_DATA] != ELFDATA2LSB) {
+> +		dev_err(fdev->dev, "Unsupported firmware endianness"
+> +			"(%d) expected (%d)\n", ehdr->e_ident[EI_DATA],
+> +			ELFDATA2LSB);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (fw->size < ehdr->e_shoff + sizeof(struct elf32_shdr)) {
+> +		dev_err(fdev->dev, "Image is too small (%u)\n", fw->size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG)) {
+> +		dev_err(fdev->dev, "Image is corrupted (bad magic)\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (ehdr->e_phnum != fdev->drvdata->num_mem) {
+> +		dev_err(fdev->dev, "spurious nb of segments (%d) expected (%d)"
+> +			"\n", ehdr->e_phnum, fdev->drvdata->num_mem);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (ehdr->e_type != ET_EXEC) {
+> +		dev_err(fdev->dev, "Unsupported ELF header type (%d) expected"
+> +			" (%d)\n", ehdr->e_type, ET_EXEC);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (ehdr->e_machine != EM_SLIM) {
+> +		dev_err(fdev->dev, "Unsupported ELF header machine (%d) "
+> +			"expected (%d)\n", ehdr->e_machine, EM_SLIM);
+> +		return -EINVAL;
+> +	}
+> +	if (ehdr->e_phoff > fw->size) {
+> +		dev_err(fdev->dev, "Firmware size is too small\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +st_fdma_elf_load_segments(struct st_fdma_dev *fdev, const struct firmware *fw)
+> +{
+> +	struct device *dev = fdev->dev;
+> +	struct elf32_hdr *ehdr;
+> +	struct elf32_phdr *phdr;
+> +	int i, mem_loaded = 0;
+> +	const u8 *elf_data = fw->data;
+> +
+> +	ehdr = (struct elf32_hdr *)elf_data;
+> +	phdr = (struct elf32_phdr *)(elf_data + ehdr->e_phoff);
+> +
+> +	/*
+> +	 * go through the available ELF segments
+> +	 * the program header's paddr member to contain device addresses.
+> +	 * We then go through the physically contiguous memory regions which we
+> +	 * allocated (and mapped) earlier on the probe,
+> +	 * and "translate" device address to kernel addresses,
+> +	 * so we can copy the segments where they are expected.
+> +	 */
+> +	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
+> +		u32 da = phdr->p_paddr;
+> +		u32 memsz = phdr->p_memsz;
+> +		u32 filesz = phdr->p_filesz;
+> +		u32 offset = phdr->p_offset;
+> +		void *dst;
+> +
+> +		if (phdr->p_type != PT_LOAD)
+> +			continue;
+> +
+> +		dev_dbg(dev, "phdr: type %d da %#x ofst:%#x memsz %#x filesz %#x\n",
+> +			phdr->p_type, da, offset, memsz, filesz);
+> +
+> +		if (filesz > memsz) {
+> +			dev_err(dev, "bad phdr filesz 0x%x memsz 0x%x\n",
+> +				filesz, memsz);
+> +			break;
+> +		}
+> +
+> +		if (offset + filesz > fw->size) {
+> +			dev_err(dev, "truncated fw: need 0x%x avail 0x%zx\n",
+> +				offset + filesz, fw->size);
+> +			break;
+> +		}
+> +
+> +		dst = st_fdma_seg_to_mem(fdev, da, memsz);
+> +		if (!dst) {
+> +			dev_err(dev, "bad phdr da 0x%x mem 0x%x\n", da, memsz);
+> +			break;
+> +		}
+> +
+> +		if (phdr->p_filesz)
+> +			memcpy(dst, elf_data + phdr->p_offset, filesz);
+> +
+> +		if (memsz > filesz)
+> +			memset(dst + filesz, 0, memsz - filesz);
+> +
+> +		mem_loaded++;
+> +	}
+> +
+> +	return (mem_loaded != fdev->drvdata->num_mem) ? -EIO : 0;
+> +}
 
-My main objection is use of of_property_read_bool() call to validate
-presence of a property that is not really a boolean property.
+Above two seem to be generic code and should be moved to core, this way
+other drivers using ELF firmware binaries can reuse...
 
-But you are the maintainer so it is your decision.
+> @@ -738,6 +925,15 @@ static int st_fdma_slave_config(struct dma_chan *chan,
+>  				struct dma_slave_config *slave_cfg)
+>  {
+>  	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
+> +	int ret;
+> +
+> +	if (!atomic_read(&fchan->fdev->fw_loaded)) {
+> +		ret = st_fdma_get_fw(fchan->fdev);
 
-> 
-> However:
-> 
-> > I am not
-> > sure why we need to count the string
-> > when we could do
-> > something like this (relying on the fact that
-> > of_property_read_string_index() returns 0 or negative error, no positive
-> > return codes):
-> >
-> >         for (i = 0; i < gdev->ngpio; i++) {
-> >                 const char *name;
-> >                 int error;
-> >
-> >                 error = of_property_read_string_index(np,
-> >                                                       "gpio-line-names",
-> >                                                       i,
-> >                                                       &name);
-> >                 if (error) {
-> >                         if (error != -ENODATA)
-> >                                 dev_err(&gdev->dev,
-> >                                         "unable to name line %d: %d\n",
-> >                                         i, error);
-> >                         /*
-> >                          * Either no more strings (-ENODATA), or
-> >                          * other error, in any case we are done naming.
-> >                          */
-> >                         break;
-> >                 }
-> >
-> >                 gdev->descs[i].name = name;
-> >         }
-> 
-> Yeah I can do that, thanks I didn't look close enough at the semantics.
-> 
-> The big question whether the DT people are OK with naming producer
-> names like this remains however.
-
-Right, I was just commenting on the implementation.
-
-Thanks.
+this seems quite an odd place to load firmware, can you explain why
 
 -- 
-Dmitry
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
