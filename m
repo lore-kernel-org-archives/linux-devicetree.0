@@ -1,38 +1,54 @@
 From: "jay.xu" <jay.xu@rock-chips.com>
-Subject: Re: [PATCH RESEND v2 3/4] ARM64: dts: rockchip: add RK3399 evaluation
- board
-Date: Tue, 26 Apr 2016 09:22:54 +0800
-Message-ID: <571EC2EE.7050101@rock-chips.com>
+Subject: Re: [PATCH RESEND v2 4/4] ARM64: dts: rockchip: add dts file for
+ RK3399 evaluation board
+Date: Tue, 26 Apr 2016 09:27:16 +0800
+Message-ID: <571EC3F4.2070703@rock-chips.com>
 References: <1461304307-14113-1-git-send-email-jay.xu@rock-chips.com>
- <1461304307-14113-4-git-send-email-jay.xu@rock-chips.com>
- <20160425232223.GA59576@google.com>
+ <1461304307-14113-5-git-send-email-jay.xu@rock-chips.com>
+ <571D7723.1020707@gmail.com> <4687144.rPskt7YEHJ@diego>
+ <CAD=FV=UQxoGYsrw8C2VT_-oYs3ZuJQ6eM1HAFemoGrcDJoOHfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
+Content-Type: text/plain; charset=utf-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160425232223.GA59576@google.com>
+In-Reply-To: <CAD=FV=UQxoGYsrw8C2VT_-oYs3ZuJQ6eM1HAFemoGrcDJoOHfw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, heiko@sntech.de, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+To: Doug Anderson <dianders@chromium.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Caesar Wang <caesar.upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Tao Huang <huangtao@rock-chips.com>, David Riley <davidriley@chromium.org>, Julius Werner <jwerner@chromium.org>, smbarber@chromium.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian:
+Hi Doug:
 
-On 2016=E5=B9=B404=E6=9C=8826=E6=97=A5 07:22, Brian Norris wrote:
-> On Fri, Apr 22, 2016 at 01:51:46PM +0800, Jianqun Xu wrote:
->> The RK3399 evaluation board is designed with pmic
->> rk808 on top board.
+On 2016=E5=B9=B404=E6=9C=8826=E6=97=A5 06:23, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Apr 25, 2016 at 12:37 AM, Heiko St=C3=BCbner <heiko@sntech.de=
+> wrote:
+>>> Can we add the following strings to match the loader (coreboot)?
+>>>    No matter, we can match the loader(coreboot) to bring up the evb=
+ board
+>>> on now or in the future.
+>>>
+>>> ...,"google,rk3399evb-rev3",
+>>> google,rk3399evb-rev2",google,rk3399evb-rev1","google,rk3399evb-rev=
+0"
 >>
->> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
->> ---
->> changes in v2:
->> - new add patch
+>> Yep, that should be no problem ... i.e. we also have this longer lis=
+t of board
+>> matches for the previous veyron boards (both in the dts files as wel=
+l as the
+>> board-binding document)
 >
-> FWIW, the $subject is a bit confusing. Probaly should be "Documentati=
-on:
-> ...". But otherwise, LGTM.
+> Just to make sure we're on the same page: I presume we're expecting
+> the Jay spin with this change?
+>
+Got it, and do you think it's better to use rk3399-evb-rev1 but=20
+rk3399evb-rev1, since the dts use rk3399-evb ?
+
+Anyway I just want to point out that we needn't to fix in the future.
+
+> -Doug
 >
 >
-ok, I will fix it in next version, thanks ~
 >
