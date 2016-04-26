@@ -1,35 +1,80 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v1] ARM: dts: omap3-n900: Specify peripherals LDO
- regulators initial mode
-Date: Tue, 26 Apr 2016 10:14:39 -0700
-Message-ID: <20160426171439.GF5995@atomide.com>
-References: <20160417122933.GA8093@earth>
- <1460903363-2197-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160424100830.GC23015@amd>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for
+ TAS5720 digital amplifier
+Date: Tue, 26 Apr 2016 12:19:05 -0500
+Message-ID: <571FA309.7080809@ti.com>
+References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
+ <1461615456-19510-3-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160424100830.GC23015@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1461615456-19510-3-git-send-email-dannenberg@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Andreas Dannenberg <dannenberg@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [160424 03:09]:
-> On Sun 2016-04-17 17:29:23, Ivaylo Dimitrov wrote:
-> > Without that, regulators are left in the mode last set by the bootloader or
-> > by the kernel the device was rebooted from. This leads to various problems,
-> > like non-working peripherals.
-> > 
-> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 04/25/2016 03:17 PM, Andreas Dannenberg wrote:
+> The Texas Instruments TAS5720L/M device is a high-efficiency mono
+> Class-D audio power amplifier optimized for high transient power
+> capability to use the dynamic power headroom of small loudspeakers.
+> Its digital time division multiplexed (TDM) interface enables up to
+> 16 devices to share the same bus.
 > 
-> Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> ---
+>  sound/soc/codecs/Kconfig   |  10 +
+>  sound/soc/codecs/Makefile  |   2 +
+>  sound/soc/codecs/tas5720.c | 638 +++++++++++++++++++++++++++++++++++++++++++++
+>  sound/soc/codecs/tas5720.h |  90 +++++++
+>  4 files changed, 740 insertions(+)
+>  create mode 100644 sound/soc/codecs/tas5720.c
+>  create mode 100644 sound/soc/codecs/tas5720.h
+> 
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index 290f921..3949dae 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -125,6 +125,7 @@ config SND_SOC_ALL_CODECS
+>  	select SND_SOC_TAS2552 if I2C
+>  	select SND_SOC_TAS5086 if I2C
+>  	select SND_SOC_TAS571X if I2C
+> +	select SND_SOC_TAS5720 if I2C
+>  	select SND_SOC_TFA9879 if I2C
+>  	select SND_SOC_TLV320AIC23_I2C if I2C
+>  	select SND_SOC_TLV320AIC23_SPI if SPI_MASTER
+> @@ -748,6 +749,15 @@ config SND_SOC_TAS571X
+>  	tristate "Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 power amplifiers"
+>  	depends on I2C
+>  
+> +config SND_SOC_TAS5720
+> +	tristate "Texas Instruments TAS5720 Mono Audio amplifier"
+> +	depends on I2C
+> +	help
+> +	  Enable support for Texas Instruments TAS5720L/M high-efficiency mono
+> +	  Class-D audio power amplifiers. The devices use an I2C interface for
+> +	  setup/control and support an optional GPIO interrupt signal for fault
+> +	  reporting.
 
-Thanks applying into omap-for-v4.6/fixes-rc5.
+If fault reporting is no longer interrupt based could this be re-worded?
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> +
+> +static struct i2c_driver tas5720_i2c_driver = {
+> +	.driver = {
+> +		.name = "tas5720",
+> +		.owner = THIS_MODULE,
+
+This shouldn't be needed.
+
+Andrew
