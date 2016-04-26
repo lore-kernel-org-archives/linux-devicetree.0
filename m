@@ -1,39 +1,23 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v2 0/2] pci: host: new driver for Marvell Armada 7K/8K
- PCIe controller
-Date: Tue, 26 Apr 2016 21:09:26 +0200
-Message-ID: <20160426210926.7028d15d@free-electrons.com>
-References: <1460648177-31473-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160425154611.3e7e9dc9@free-electrons.com>
-	<20160425172846.GB1759@localhost>
-	<20160426104208.150cbbd0@free-electrons.com>
-	<20160426170004.GA27803@localhost>
+From: "J.D. Schroeder" <Linux.HWI@garmin.com>
+Subject: Re: [PATCH 0/3] AM57/DRA7 Clock Tree DTSI Fix-ups
+Date: Tue, 26 Apr 2016 14:18:52 -0500
+Message-ID: <571FBF1C.1060804@garmin.com>
+References: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
+ <20160426181318.GM5995@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160426170004.GA27803@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160426181318.GM5995@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "J.D. Schroeder" <jay.schroeder@garmin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 04/26/2016 01:13 PM, Tony Lindgren wrote:
+> Are any of these needed for the v4.6-rc cycle?
 
-On Tue, 26 Apr 2016 12:00:04 -0500, Bjorn Helgaas wrote:
+I understand that these are arriving a little late especially if we don't get to rc7. However, it would be great if these could get in the v4.6 kernel release. They shouldn't be too risky to anyone, but I understand if the logistics prevent that from happening.
 
-> > So my v3 implements what you suggested, and creates a
-> > armada8k_add_pcie_port() to make it consistent with the other drivers,
-> > but long term, I'm not sure this particular function is really useful.
-> 
-> I agree completely with everything you said.  I would be thrilled if
-> somebody were to make this more sensible, as long as we did it to
-> *all* the drivers, not just one.
-
-OK. I'll see if I can come up with a few patches. Thanks!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Thanks,
+JD
