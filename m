@@ -1,54 +1,119 @@
-From: "jay.xu" <jay.xu@rock-chips.com>
-Subject: Re: [PATCH RESEND v2 4/4] ARM64: dts: rockchip: add dts file for
- RK3399 evaluation board
-Date: Tue, 26 Apr 2016 09:27:16 +0800
-Message-ID: <571EC3F4.2070703@rock-chips.com>
-References: <1461304307-14113-1-git-send-email-jay.xu@rock-chips.com>
- <1461304307-14113-5-git-send-email-jay.xu@rock-chips.com>
- <571D7723.1020707@gmail.com> <4687144.rPskt7YEHJ@diego>
- <CAD=FV=UQxoGYsrw8C2VT_-oYs3ZuJQ6eM1HAFemoGrcDJoOHfw@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [Patch v2 2/8] firmware: qcom: scm: Convert SCM to platform
+ driver
+Date: Mon, 25 Apr 2016 18:29:35 -0700
+Message-ID: <20160426012935.GE29990@codeaurora.org>
+References: <1461625725-32425-1-git-send-email-andy.gross@linaro.org>
+ <1461625725-32425-3-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UQxoGYsrw8C2VT_-oYs3ZuJQ6eM1HAFemoGrcDJoOHfw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Caesar Wang <caesar.upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Tao Huang <huangtao@rock-chips.com>, David Riley <davidriley@chromium.org>, Julius Werner <jwerner@chromium.org>, smbarber@chromium.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461625725-32425-3-git-send-email-andy.gross@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug:
+On 04/25, Andy Gross wrote:
+> This patch converts the Qualcomm SCM firmware driver into a platform
+> driver.
+> 
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> ---
+>  arch/arm64/Kconfig.platforms |   1 +
+>  drivers/firmware/qcom_scm.c  | 163 ++++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 155 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index efa77c1..6f0876f 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -76,6 +76,7 @@ config ARCH_MVEBU
+>  config ARCH_QCOM
+>  	bool "Qualcomm Platforms"
+>  	select PINCTRL
+> +	select QCOM_SCM
 
-On 2016=E5=B9=B404=E6=9C=8826=E6=97=A5 06:23, Doug Anderson wrote:
-> Hi,
->
-> On Mon, Apr 25, 2016 at 12:37 AM, Heiko St=C3=BCbner <heiko@sntech.de=
-> wrote:
->>> Can we add the following strings to match the loader (coreboot)?
->>>    No matter, we can match the loader(coreboot) to bring up the evb=
- board
->>> on now or in the future.
->>>
->>> ...,"google,rk3399evb-rev3",
->>> google,rk3399evb-rev2",google,rk3399evb-rev1","google,rk3399evb-rev=
-0"
->>
->> Yep, that should be no problem ... i.e. we also have this longer lis=
-t of board
->> matches for the previous veyron boards (both in the dts files as wel=
-l as the
->> board-binding document)
->
-> Just to make sure we're on the same page: I presume we're expecting
-> the Jay spin with this change?
->
-Got it, and do you think it's better to use rk3399-evb-rev1 but=20
-rk3399evb-rev1, since the dts use rk3399-evb ?
+So far we've left this selection up to the consumer drivers of
+the qcom_scm_*() APIs. Any reason why that's changing here? I
+don't see mention in the commit text.
 
-Anyway I just want to point out that we needn't to fix in the future.
+>  	help
+>  	  This enables support for the ARMv8 based Qualcomm chipsets.
+>  
+> +
+> +/**
+> + * qcom_scm_is_available() - Checks if SCM is available
+> + */
+> +bool qcom_scm_is_available(void)
+> +{
+> +	return !!__scm;
+> +}
+> +EXPORT_SYMBOL(qcom_scm_is_available);
 
-> -Doug
->
->
->
+What's the planned user of this? If we need it can we bury it
+inside the qcom_scm_*() functions?
+
+> +
+> +static int qcom_scm_probe(struct platform_device *pdev)
+> +{
+[...]
+> +
+> +	/* vote for max clk rate for highest performance */
+> +	rate = clk_round_rate(scm->core_clk, INT_MAX);
+> +	ret = clk_set_rate(scm->core_clk, rate);
+
+You can just do clk_set_rate(scm->core_clk, INT_MAX) and it will
+round internally for you and do the right thing. 
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	__scm = scm;
+> +	__scm->dev = &pdev->dev;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_scm_dt_match[] = {
+> +	{ .compatible = "qcom,scm-apq8064",},
+> +	{ .compatible = "qcom,scm-apq8084",},
+> +	{ .compatible = "qcom,scm-msm8916",},
+> +	{ .compatible = "qcom,scm-msm8974",},
+> +	{},
+
+Nitpick: drop , here because it's always going to be the last
+entry.
+
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
+> +
+> +static struct platform_driver qcom_scm_driver = {
+> +	.driver = {
+> +		.name	= "qcom_scm",
+> +		.of_match_table = qcom_scm_dt_match,
+> +	},
+> +	.probe = qcom_scm_probe,
+> +};
+> +
+> +builtin_platform_driver(qcom_scm_driver);
+> +
+> +static int __init qcom_scm_init(void)
+> +{
+> +	struct device_node *np;
+> +
+> +	np = of_find_node_by_name(NULL, "firmware");
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	return of_platform_populate(np, qcom_scm_dt_match, NULL, NULL);
+> +
+
+Weird newline and also we need an of_node_put() on the firmware
+node at the end of this function.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
