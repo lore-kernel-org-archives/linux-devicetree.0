@@ -1,83 +1,53 @@
-From: Scott Wood <scott.wood@nxp.com>
-Subject: Re: [PATCH 1/2] powerpc/85xx: adapt QorIQ eSDHC to the new clocking
- model
-Date: Tue, 26 Apr 2016 06:31:14 +0000
-Message-ID: <DB5PR0401MB1928ABB01CEAF524071C851591630@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-References: <1461147644-18041-1-git-send-email-yangbo.lu@nxp.com>
- <1461280096.32510.213.camel@buserror.net>
- <HE1PR04MB0889A9EA3955E0723146A2A9F8630@HE1PR04MB0889.eurprd04.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
+Date: Tue, 26 Apr 2016 07:35:16 +0100
+Message-ID: <20160426063516.GQ2713@dell>
+References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
+ <1461543878-3639-16-git-send-email-eric@engestrom.ch>
+ <20160425135017.GA8656@rob-hp-laptop>
+ <20160425165830.GP2713@dell>
+ <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Yangbo Lu <yangbo.lu@nxp.com>, Scott Wood <oss@buserror.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Eric Engestrom <eric@engestrom.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2016 01:29 AM, Yangbo Lu wrote:
-> 
-> 
->> -----Original Message-----
->> From: Yangbo Lu
->> Sent: Tuesday, April 26, 2016 2:19 PM
->> To: 'Scott Wood'; linux-mmc@vger.kernel.org; linuxppc-
->> dev@lists.ozlabs.org; devicetree@vger.kernel.org
->> Cc: ulf.hansson@linaro.org; Rob Herring; Scott Wood
->> Subject: RE: [PATCH 1/2] powerpc/85xx: adapt QorIQ eSDHC to the new
->> clocking model
->>
->>> -----Original Message-----
->>> From: Scott Wood [mailto:oss@buserror.net]
->>> Sent: Friday, April 22, 2016 7:08 AM
->>> To: Yangbo Lu; linux-mmc@vger.kernel.org;
->>> linuxppc-dev@lists.ozlabs.org; devicetree@vger.kernel.org
->>> Cc: ulf.hansson@linaro.org; Rob Herring; Scott Wood
->>> Subject: Re: [PATCH 1/2] powerpc/85xx: adapt QorIQ eSDHC to the new
->>> clocking model
->>>
->>> On Wed, 2016-04-20 at 18:20 +0800, Yangbo Lu wrote:
->>>> Provide clocks property instead of clock-frequency for QorIQ eSDHC
->>>> dts node to adapt to the new clocking model, so that the driver
->>>> could get clock value by the common clk API and the u-boot could
->>>> remove the clock fixup.
->>>>
->>>> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
->>>> ---
->>>>  arch/powerpc/boot/dts/fsl/qoriq-esdhc-0.dtsi | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-esdhc-0.dtsi
->>>> b/arch/powerpc/boot/dts/fsl/qoriq-esdhc-0.dtsi
->>>> index 20835ae..ddbe562 100644
->>>> --- a/arch/powerpc/boot/dts/fsl/qoriq-esdhc-0.dtsi
->>>> +++ b/arch/powerpc/boot/dts/fsl/qoriq-esdhc-0.dtsi
->>>> @@ -36,5 +36,5 @@ sdhc: sdhc@114000 {
->>>>  	compatible = "fsl,esdhc";
->>>>  	reg = <0x114000 0x1000>;
->>>>  	interrupts = <48 2 0 0>;
->>>> -	clock-frequency = <0>;
->>>> +	clocks = <&clockgen 4 1>;
->>>>  };
->>>
->>> Binding update?
->>>
->>> -Scott
->>
->> [Lu Yangbo-B47093] Sorry, did you mean the doc update? ...
->> It has already had a description in
->> Documentation/devicetree/bindings/clock/qoriq-clock.txt
->>
->> - clock-frequency: Input system clock frequency (SYSCLK)
->> - clocks: If clock-frequency is not specified, sysclk may be provided
->>         as an input clock.  Either clock-frequency or clocks must be
->>         provided.
-> 
-> [Lu Yangbo-B47093] Or update mmc doc?
+On Mon, 25 Apr 2016, Rob Herring wrote:
 
-Yes, mmc.  This patch has nothing to do with the clockgen node's input
-clock...
+> On Mon, Apr 25, 2016 at 11:58 AM, Lee Jones <lee.jones@linaro.org> wr=
+ote:
+> > On Mon, 25 Apr 2016, Rob Herring wrote:
+> >
+> >> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
+> >> > Signed-off-by: Eric Engestrom <eric@engestrom.ch>
+> >>
+> >> Applied, thanks.
+> >
+> > I'd prefer to continue taking these if you don't mind Rob.  It'd li=
+mit
+> > on the amount of immutable branch pull requests I have to send/hand=
+le.
+>=20
+> Why? Do you really expect to have a dependency here?
 
--Scott
+Because the file is in ".*/mfd/.*", which normally goes through the MFD
+tree.
 
+$ git log --committer=3D"Rob Herring" --oneline -- Documentation/device=
+tree/bindings/mfd/ | wc -l
+6
+$ git log --committer=3D"Lee Jones" --oneline -- Documentation/devicetr=
+ee/bindings/mfd/ | wc -l
+99
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
