@@ -1,76 +1,54 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: AM335x ICE board Linux support
-Date: Tue, 26 Apr 2016 11:40:34 +0300
-Message-ID: <571F2982.2080702@ti.com>
-References: <571E069A.20700@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] pci: host: new driver for Marvell Armada 7K/8K
+ PCIe controller
+Date: Tue, 26 Apr 2016 10:42:08 +0200
+Message-ID: <20160426104208.150cbbd0@free-electrons.com>
+References: <1460648177-31473-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160425154611.3e7e9dc9@free-electrons.com>
+	<20160425172846.GB1759@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <571E069A.20700-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20160425172846.GB1759@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+Rob
+Hello Bjorn,
 
-On 25/04/16 14:59, Roger Quadros wrote:
-> Hi,
-> 
-> We are working on getting Linux on AM335X Industrial Communication Engine board (ICE) [1].
-> 
-> This board has 2 Ethernet ports and each of them can be used either in RMII mode connected to
-> the CPSW Ethernet MAC *or* in MII mode connected to the PRU Ethernet MAC.
-> 
-> The decision about the Ethernet port's mode is made by the user by setting a jumper near the
-> Ethernet port before power up. This is a boot time configurable setting and doesn't need to
-> change at runtime.
-> 
-> So 4 configurations are possible:
->     ETH0	ETH1
->     ----	----
->     RMII	RMII
->     RMII	MII
->     MII		RMII	(probably redundant and not needed)
->     MII		MII
-> 
-> Based on the port configuration, software (u-boot or Linux) needs to set the right pinmux,
-> set a GPIOs (that controls external Mux), configure an external clock generator
-> and enable the right device driver for the respective Ethernet port.
-> 
-> Clock generator needs to be configured because different clock rates are required
-> for RMII vs MII mode.
-> 
-> Now question is how all this can be done on u-boot + Linux?
-> 
-> I already have a working solution where I create different DT blobs for the 3 configurations
-> and have u-boot detect the mode and load the correct DT blob and also configure the clock.
-> 
-> You can see how the kernel patches look like here [2]
-> 
-> Is this approach acceptable? If not is there any better way to do this? Thanks.
-> 
-> cheers,
-> -roger
-> 
-> [1] AM3359 ICE board
-> http://www.ti.com/tool/tmdsice3359
-> http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_%28ICE%29_EVM_HW_User_Guide
+On Mon, 25 Apr 2016 12:28:46 -0500, Bjorn Helgaas wrote:
 
-There are 2 ICE board version. v1 and v2. The above wiki link is wrong.
-We are dealing with the v2 board below
-http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_EVM_Rev2_1_HW_User_Guide
-> 
-> [2] Device tree patches
-> https://github.com/rogerq/linux/commit/9a9cf6a15f779fddf91dba2370627aabf19aeff5
-> https://github.com/rogerq/linux/commit/c87e8fa5b14f156a91883fd506e9dd8f7ccf95cf
-> https://github.com/rogerq/linux/commit/d9cdd25e8c3878292d7f4180af8d3ac42b9645c4
-> 
-> 
+> How about if you just shuffle those bits around into
+> an armada8k_add_pcie_port() and an armada8k_pcie_establish_link(), and
+> we'll call that good for now?
 
-cheers,
--roger
+I just sent a v3 which implements this.
+
+However, to be honest, after looking at the other drivers, I found the
+XYZ_add_pcie_port() function to not be very useful: it simply
+continues the work done by the probe function, and there is really no
+reason to split the remaining work of the probe() in a separate
+function. The XYZ_add_pcie_port() is called only one time for each
+probe() call, so having a separate function is somewhat useless. In
+addition, the separation of work between probe() and
+XYZ_add_pcie_port() is not very consistent accross drivers. In
+pci-imx6, XYZ_add_pcie_port() only sets up the interrupt handler and
+calls dw_pcie_host_init(). In pci-dra7xx, XYZ_add_pcie_port() sets up
+the interrupt, maps some registers and calls dw_pcie_host_init().
+
+So my v3 implements what you suggested, and creates a
+armada8k_add_pcie_port() to make it consistent with the other drivers,
+but long term, I'm not sure this particular function is really useful.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
