@@ -1,16 +1,13 @@
 From: Tiffany Lin <tiffany.lin@mediatek.com>
-Subject: [PATCH v9 3/8] arm64: dts: mediatek: Add node for Mediatek Video
- Processor Unit
-Date: Tue, 26 Apr 2016 16:58:32 +0800
-Message-ID: <1461661117-4657-4-git-send-email-tiffany.lin@mediatek.com>
+Subject: [PATCH v9 1/8] dt-bindings: Add a binding for Mediatek Video Processor
+Date: Tue, 26 Apr 2016 16:58:30 +0800
+Message-ID: <1461661117-4657-2-git-send-email-tiffany.lin@mediatek.com>
 References: <1461661117-4657-1-git-send-email-tiffany.lin@mediatek.com>
- <1461661117-4657-2-git-send-email-tiffany.lin@mediatek.com>
- <1461661117-4657-3-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461661117-4657-3-git-send-email-tiffany.lin@mediatek.com>
+In-Reply-To: <1461661117-4657-1-git-send-email-tiffany.lin@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,55 +23,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 
-Add VPU drivers for MT8173
+Add a DT binding documentation of Video Processor Unit for the
+MT8173 SoC from Mediatek.
 
 Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
 
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |   23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ .../devicetree/bindings/media/mediatek-vpu.txt     |   31 ++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index eab7efc..ae147bb 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -125,6 +125,18 @@
- 		clock-output-names = "cpum_ck";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		vpu_dma_reserved: vpu_dma_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0xb7000000 0 0x500000>;
-+			alignment = <0x1000>;
-+			no-map;
-+		};
+diff --git a/Documentation/devicetree/bindings/media/mediatek-vpu.txt b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
+new file mode 100644
+index 0000000..2a5bac3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
+@@ -0,0 +1,31 @@
++* Mediatek Video Processor Unit
++
++Video Processor Unit is a HW video controller. It controls HW Codec including
++H.264/VP8/VP9 Decode, H.264/VP8 Encode and Image Processor (scale/rotate/color convert).
++
++Required properties:
++  - compatible: "mediatek,mt8173-vpu"
++  - reg: Must contain an entry for each entry in reg-names.
++  - reg-names: Must include the following entries:
++    "tcm": tcm base
++    "cfg_reg": Main configuration registers base
++  - interrupts: interrupt number to the cpu.
++  - clocks : clock name from clock manager
++  - clock-names: must be main. It is the main clock of VPU
++
++Optional properties:
++  - memory-region: phandle to a node describing memory (see
++    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
++    to be used for VPU extended memory; if not present, VPU may be located
++    anywhere in the memory
++
++Example:
++	vpu: vpu@10020000 {
++		compatible = "mediatek,mt8173-vpu";
++		reg = <0 0x10020000 0 0x30000>,
++		      <0 0x10050000 0 0x100>;
++		reg-names = "tcm", "cfg_reg";
++		interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&topckgen TOP_SCP_SEL>;
++		clock-names = "main";
 +	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupt-parent = <&gic>;
-@@ -269,6 +281,17 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		vpu: vpu@10020000 {
-+			compatible = "mediatek,mt8173-vpu";
-+			reg = <0 0x10020000 0 0x30000>,
-+			      <0 0x10050000 0 0x100>;
-+			reg-names = "tcm", "cfg_reg";
-+			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&topckgen CLK_TOP_SCP_SEL>;
-+			clock-names = "main";
-+			memory-region = <&vpu_dma_reserved>;
-+		};
-+
- 		sysirq: intpol-controller@10200620 {
- 			compatible = "mediatek,mt8173-sysirq",
- 				     "mediatek,mt6577-sysirq";
 -- 
 1.7.9.5
