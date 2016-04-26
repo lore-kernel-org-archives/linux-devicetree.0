@@ -1,154 +1,89 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] pci: host: new driver for Marvell Armada 7K/8K
- PCIe controller
-Date: Tue, 26 Apr 2016 12:31:44 -0500
-Message-ID: <20160426173144.GB27803@localhost>
-References: <1461659506-10387-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for
+ TAS5720 digital amplifier
+Date: Tue, 26 Apr 2016 12:37:43 -0500
+Message-ID: <20160426173743.GE2885@borg.dal.design.ti.com>
+References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
+ <1461615456-19510-3-git-send-email-dannenberg@ti.com>
+ <571FA309.7080809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1461659506-10387-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <571FA309.7080809@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 10:31:44AM +0200, Thomas Petazzoni wrote:
-> Hello,
+On Tue, Apr 26, 2016 at 12:19:05PM -0500, Andrew F. Davis wrote:
+> On 04/25/2016 03:17 PM, Andreas Dannenberg wrote:
+> > The Texas Instruments TAS5720L/M device is a high-efficiency mono
+> > Class-D audio power amplifier optimized for high transient power
+> > capability to use the dynamic power headroom of small loudspeakers.
+> > Its digital time division multiplexed (TDM) interface enables up to
+> > 16 devices to share the same bus.
+> > 
+> > Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> > ---
+> >  sound/soc/codecs/Kconfig   |  10 +
+> >  sound/soc/codecs/Makefile  |   2 +
+> >  sound/soc/codecs/tas5720.c | 638 +++++++++++++++++++++++++++++++++++++++++++++
+> >  sound/soc/codecs/tas5720.h |  90 +++++++
+> >  4 files changed, 740 insertions(+)
+> >  create mode 100644 sound/soc/codecs/tas5720.c
+> >  create mode 100644 sound/soc/codecs/tas5720.h
+> > 
+> > diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> > index 290f921..3949dae 100644
+> > --- a/sound/soc/codecs/Kconfig
+> > +++ b/sound/soc/codecs/Kconfig
+> > @@ -125,6 +125,7 @@ config SND_SOC_ALL_CODECS
+> >  	select SND_SOC_TAS2552 if I2C
+> >  	select SND_SOC_TAS5086 if I2C
+> >  	select SND_SOC_TAS571X if I2C
+> > +	select SND_SOC_TAS5720 if I2C
+> >  	select SND_SOC_TFA9879 if I2C
+> >  	select SND_SOC_TLV320AIC23_I2C if I2C
+> >  	select SND_SOC_TLV320AIC23_SPI if SPI_MASTER
+> > @@ -748,6 +749,15 @@ config SND_SOC_TAS571X
+> >  	tristate "Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 power amplifiers"
+> >  	depends on I2C
+> >  
+> > +config SND_SOC_TAS5720
+> > +	tristate "Texas Instruments TAS5720 Mono Audio amplifier"
+> > +	depends on I2C
+> > +	help
+> > +	  Enable support for Texas Instruments TAS5720L/M high-efficiency mono
+> > +	  Class-D audio power amplifiers. The devices use an I2C interface for
+> > +	  setup/control and support an optional GPIO interrupt signal for fault
+> > +	  reporting.
 > 
-> Here is the third iteration of the PCIe host controller driver needed
-> for the ARM64 Marvell Armada 7K/8K platform.
-> 
-> Changes since v2:
-> 
->  - Added Rob Herring's Acked-by on the Device Tree binding patch.
-> 
->  - Reworked the PCIe host driver following the suggestion of Bjorn
->    Helgaas: creation of armada8k_add_pcie_port() and
->    armada8k_pcie_establish_link() in order to follow the convention of
->    other Designware based drivers.
-> 
-> Thanks!
-> 
-> Thomas
-> 
-> Thomas Petazzoni (2):
->   dt-bindings: pci: add DT binding for Marvell Armada 7K/8K PCIe
->     controller
->   pci: host: new driver for Marvell Armada 7K/8K PCIe controller
-> 
->  .../devicetree/bindings/pci/pci-armada8k.txt       |  38 +++
->  drivers/pci/host/Kconfig                           |  11 +
->  drivers/pci/host/Makefile                          |   1 +
->  drivers/pci/host/pcie-armada8k.c                   | 276 +++++++++++++++++++++
->  4 files changed, 326 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
->  create mode 100644 drivers/pci/host/pcie-armada8k.c
+> If fault reporting is no longer interrupt based could this be re-worded?
 
-Thanks, Thomas, I applied these to pci/host-armada for v4.7.
+Good catch! Thanks Andrew.
 
-I added the tweaks below to use dev_dbg() instead of pr_debug(), use
-dw_pcie_wait_for_link() instead of another hand-coded timeout loop,
-and fix a typo and remove unused constants.
+> 
+> [...]
+> 
+> > +
+> > +static struct i2c_driver tas5720_i2c_driver = {
+> > +	.driver = {
+> > +		.name = "tas5720",
+> > +		.owner = THIS_MODULE,
+> 
+> This shouldn't be needed.
 
-Bjorn
+Yes. I recall your recent mass-optimizations. Will remove.
 
-
-diff --git a/drivers/pci/host/pcie-armada8k.c b/drivers/pci/host/pcie-armada8k.c
-index 7302de2..811ddf8 100644
---- a/drivers/pci/host/pcie-armada8k.c
-+++ b/drivers/pci/host/pcie-armada8k.c
-@@ -10,8 +10,6 @@
-  * warranty of any kind, whether express or implied.
-  */
- 
--#define pr_fmt(fmt) "armada-8k-pcie: " fmt
--
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
-@@ -39,8 +37,6 @@ struct armada8k_pcie {
- #define PCIE_APP_LTSSM_EN		BIT(2)
- #define PCIE_DEVICE_TYPE_SHIFT		4
- #define PCIE_DEVICE_TYPE_MASK		0xF
--#define PCIE_DEVICE_TYPE_EP		0x0 /* Endpoint */
--#define PCIE_DEVICE_TYPE_LEP		0x1 /* Legacy endpoint */
- #define PCIE_DEVICE_TYPE_RC		0x4 /* Root complex */
- 
- #define PCIE_GLOBAL_STATUS_REG		0x8
-@@ -69,14 +65,12 @@ struct armada8k_pcie {
- #define AX_USER_DOMAIN_MASK		0x3
- #define AX_USER_DOMAIN_SHIFT		4
- 
--
--
- #define to_armada8k_pcie(x)	container_of(x, struct armada8k_pcie, pp)
- 
- static int armada8k_pcie_link_up(struct pcie_port *pp)
- {
--	u32 reg;
- 	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
-+	u32 reg;
- 	u32 mask = PCIE_GLB_STS_RDLH_LINK_UP | PCIE_GLB_STS_PHY_LINK_UP;
- 
- 	reg = readl(pcie->base + PCIE_GLOBAL_STATUS_REG);
-@@ -84,7 +78,7 @@ static int armada8k_pcie_link_up(struct pcie_port *pp)
- 	if ((reg & mask) == mask)
- 		return 1;
- 
--	pr_debug("No link detected (Global-Status: 0x%08x).\n", reg);
-+	dev_dbg(pp->dev, "No link detected (Global-Status: 0x%08x).\n", reg);
- 	return 0;
- }
- 
-@@ -92,10 +86,9 @@ static void armada8k_pcie_establish_link(struct pcie_port *pp)
- {
- 	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
- 	void __iomem *base = pcie->base;
--	int timeout = 1000;
- 	u32 reg;
- 
--	if (!armada8k_pcie_link_up(pp)) {
-+	if (!dw_pcie_link_up(pp)) {
- 		/* Disable LTSSM state machine to enable configuration */
- 		reg = readl(base + PCIE_GLOBAL_CONTROL_REG);
- 		reg &= ~(PCIE_APP_LTSSM_EN);
-@@ -129,7 +122,7 @@ static void armada8k_pcie_establish_link(struct pcie_port *pp)
- 	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
- 	writel(reg, base + PCIE_GLOBAL_INT_MASK1_REG);
- 
--	if (!armada8k_pcie_link_up(pp)) {
-+	if (!dw_pcie_link_up(pp)) {
- 		/* Configuration done. Start LTSSM */
- 		reg = readl(base + PCIE_GLOBAL_CONTROL_REG);
- 		reg |= PCIE_APP_LTSSM_EN;
-@@ -137,14 +130,7 @@ static void armada8k_pcie_establish_link(struct pcie_port *pp)
- 	}
- 
- 	/* Wait until the link becomes active again */
--	while (timeout) {
--		if (armada8k_pcie_link_up(pp))
--			break;
--		msleep(1);
--		timeout--;
--	}
--
--	if (timeout == 0)
-+	if (dw_pcie_wait_for_link(pp))
- 		dev_err(pp->dev, "Link not up after reconfiguration\n");
- }
- 
-@@ -163,7 +149,7 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
- 
- 	/*
- 	 * Interrupts are directly handled by the device driver of the
--	 * PCI device. However, there are also latched into the PCIe
-+	 * PCI device.  However, they are also latched into the PCIe
- 	 * controller, so we simply discard them.
- 	 */
- 	val = readl(base + PCIE_GLOBAL_INT_CAUSE1_REG);
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Andreas
