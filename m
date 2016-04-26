@@ -1,89 +1,58 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for
- TAS5720 digital amplifier
-Date: Tue, 26 Apr 2016 12:37:43 -0500
-Message-ID: <20160426173743.GE2885@borg.dal.design.ti.com>
-References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
- <1461615456-19510-3-git-send-email-dannenberg@ti.com>
- <571FA309.7080809@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <571FA309.7080809@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 1/2 v3] device-tree: nexus7: Remove power gpio key entry and use pmic8xxx-pwrkey
+Date: Tue, 26 Apr 2016 10:44:13 -0700
+Message-ID: <1461692654-27448-1-git-send-email-john.stultz@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 12:19:05PM -0500, Andrew F. Davis wrote:
-> On 04/25/2016 03:17 PM, Andreas Dannenberg wrote:
-> > The Texas Instruments TAS5720L/M device is a high-efficiency mono
-> > Class-D audio power amplifier optimized for high transient power
-> > capability to use the dynamic power headroom of small loudspeakers.
-> > Its digital time division multiplexed (TDM) interface enables up to
-> > 16 devices to share the same bus.
-> > 
-> > Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> > ---
-> >  sound/soc/codecs/Kconfig   |  10 +
-> >  sound/soc/codecs/Makefile  |   2 +
-> >  sound/soc/codecs/tas5720.c | 638 +++++++++++++++++++++++++++++++++++++++++++++
-> >  sound/soc/codecs/tas5720.h |  90 +++++++
-> >  4 files changed, 740 insertions(+)
-> >  create mode 100644 sound/soc/codecs/tas5720.c
-> >  create mode 100644 sound/soc/codecs/tas5720.h
-> > 
-> > diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> > index 290f921..3949dae 100644
-> > --- a/sound/soc/codecs/Kconfig
-> > +++ b/sound/soc/codecs/Kconfig
-> > @@ -125,6 +125,7 @@ config SND_SOC_ALL_CODECS
-> >  	select SND_SOC_TAS2552 if I2C
-> >  	select SND_SOC_TAS5086 if I2C
-> >  	select SND_SOC_TAS571X if I2C
-> > +	select SND_SOC_TAS5720 if I2C
-> >  	select SND_SOC_TFA9879 if I2C
-> >  	select SND_SOC_TLV320AIC23_I2C if I2C
-> >  	select SND_SOC_TLV320AIC23_SPI if SPI_MASTER
-> > @@ -748,6 +749,15 @@ config SND_SOC_TAS571X
-> >  	tristate "Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 power amplifiers"
-> >  	depends on I2C
-> >  
-> > +config SND_SOC_TAS5720
-> > +	tristate "Texas Instruments TAS5720 Mono Audio amplifier"
-> > +	depends on I2C
-> > +	help
-> > +	  Enable support for Texas Instruments TAS5720L/M high-efficiency mono
-> > +	  Class-D audio power amplifiers. The devices use an I2C interface for
-> > +	  setup/control and support an optional GPIO interrupt signal for fault
-> > +	  reporting.
-> 
-> If fault reporting is no longer interrupt based could this be re-worded?
+Since the pmic8xxx-pwrkey driver is already supported in the
+qcom-apq8064.dtsi, and the pmic8xxx-pwrkey supports logic to
+configure proper device shutdown when ps_hold goes low, it is
+better to use that driver then a generic gpio button.
 
-Good catch! Thanks Andrew.
+Thus this patch remove the gpio power key entry here, so we
+don't get double input events from having two drivers enabled.
 
-> 
-> [...]
-> 
-> > +
-> > +static struct i2c_driver tas5720_i2c_driver = {
-> > +	.driver = {
-> > +		.name = "tas5720",
-> > +		.owner = THIS_MODULE,
-> 
-> This shouldn't be needed.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <agross@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+v2:
+- Added wakeup-source entry as suggested by
+   Sudeep Holla <sudeep.holla@arm.com>
+v3:
+- Dropped the entire debounce override, as
+  that was found to be a bug in the driver
+  that Stephen has since fixed
 
-Yes. I recall your recent mass-optimizations. Will remove.
+ arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Regards,
-Andreas
+diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+index c535b3f..751aded 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+@@ -29,12 +29,6 @@
+ 
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+-		power {
+-			label = "Power";
+-			gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
+-			linux,code = <KEY_POWER>;
+-			gpio-key,wakeup;
+-		};
+ 		volume_up {
+ 			label = "Volume Up";
+ 			gpios = <&pm8921_gpio 4 GPIO_ACTIVE_HIGH>;
+-- 
+1.9.1
