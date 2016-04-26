@@ -1,112 +1,154 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for
- TAS5720 digital amplifier
-Date: Tue, 26 Apr 2016 18:29:36 +0100
-Message-ID: <20160426172936.GE3217@sirena.org.uk>
-References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
- <1461615456-19510-3-git-send-email-dannenberg@ti.com>
- <20160426154313.GA3217@sirena.org.uk>
- <20160426162240.GB2885@borg.dal.design.ti.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] pci: host: new driver for Marvell Armada 7K/8K
+ PCIe controller
+Date: Tue, 26 Apr 2016 12:31:44 -0500
+Message-ID: <20160426173144.GB27803@localhost>
+References: <1461659506-10387-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8574773340170613259=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160426162240.GB2885@borg.dal.design.ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461659506-10387-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 26, 2016 at 10:31:44AM +0200, Thomas Petazzoni wrote:
+> Hello,
+> 
+> Here is the third iteration of the PCIe host controller driver needed
+> for the ARM64 Marvell Armada 7K/8K platform.
+> 
+> Changes since v2:
+> 
+>  - Added Rob Herring's Acked-by on the Device Tree binding patch.
+> 
+>  - Reworked the PCIe host driver following the suggestion of Bjorn
+>    Helgaas: creation of armada8k_add_pcie_port() and
+>    armada8k_pcie_establish_link() in order to follow the convention of
+>    other Designware based drivers.
+> 
+> Thanks!
+> 
+> Thomas
+> 
+> Thomas Petazzoni (2):
+>   dt-bindings: pci: add DT binding for Marvell Armada 7K/8K PCIe
+>     controller
+>   pci: host: new driver for Marvell Armada 7K/8K PCIe controller
+> 
+>  .../devicetree/bindings/pci/pci-armada8k.txt       |  38 +++
+>  drivers/pci/host/Kconfig                           |  11 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pcie-armada8k.c                   | 276 +++++++++++++++++++++
+>  4 files changed, 326 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
+>  create mode 100644 drivers/pci/host/pcie-armada8k.c
 
---===============8574773340170613259==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tt8NzeIytnj46EAf"
-Content-Disposition: inline
+Thanks, Thomas, I applied these to pci/host-armada for v4.7.
 
+I added the tweaks below to use dev_dbg() instead of pr_debug(), use
+dw_pcie_wait_for_link() instead of another hand-coded timeout loop,
+and fix a typo and remove unused constants.
 
---tt8NzeIytnj46EAf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Apr 26, 2016 at 11:22:40AM -0500, Andreas Dannenberg wrote:
-> On Tue, Apr 26, 2016 at 04:43:13PM +0100, Mark Brown wrote:
-
-> > If the driver doesn't do anything just remove the code.
-
-> Well it's doing something which is making sure the nobody passes in a
-> sample size that's not supported. Wouldn't we want to catch this?
-
-Is the device actually going to mess up if someone sends it something
-else or is it just going to ignore the extra bits (given that it's doing
-autodetection anyway).
-
-> > > +	if ((curr_fault & TAS5720_OCE) && !(tas5720->last_fault & TAS5720_OCE))
-> > > +		dev_warn(dev, "The Class-D output stage has experienced an over current event\n");
-
-> > "Class D over current".  The verbosity is making the line over long and
-> > the phrasing is a bit unclear (and makes it seem less critical than it
-> > really is).  These should probably be dev_crit() or somthing too, over
-> > current and similar events on a speaker output are generally extremely
-> > serious.
-
-> The overlong line goes through checkpatch --strict and looks like an
-> accepted practice to prevent breaking "grep" for example. The text is
-> more or less from the datasheet to give people something they can
-> cross-associate. But I can try to short this a bit.
-
-It's not just the fact that it's wrapping round to the next line, it's
-also the fact that it's very weakly phrased for something which might
-reasonably indicate an actual fire risk.  I'm pretty sure people will
-not struggle excessively to find the reference to over current in the
-datasheet.
-
-> conditions.  For the "over temp" error condition (which is actually
-> really hard to create on the bench, I've to get the EVM up to like 150C
-> and things start smelling a bit) this should probably be dev_crit() as
-
-If the silicon is flagging an over temperature condition that tends to
-indicate a catastrophic physical failure in the system, it is likely
-that the speaker itself has failed or there's otherwise a short in the
-speaker output path and potentially other physical damage especially in
-smaller systems where you might find that for example there's thermal
-damage to the case (and possibly even the user).
-
-> well. And then, maybe leave the "DC error" as a warning, since it's less
-> critical than the other two conditions. Thoughts?
-
-If you're pushing DC through a speaker that will generally mean that you
-will shortly see one or both of the over current and over temperature
-errors, it's really not something they're designed for.
-
---tt8NzeIytnj46EAf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXH6V/AAoJECTWi3JdVIfQ8rMH/AkBGsNYhMKhsIiAXerYlMnz
-8iY6SDU4oLi1//2mRrmCq1W9cQWgStzYszm5PxHZteTV1ZTNIK/UKJ+ZjO9d+V9i
-iUNW0rQ8yD3wQ5Ih6P/sMRNXqfY4Kg+bz+6NMvCl6tfZF+pyko2g6kvKblSbKpp9
-njUFS2iZahyUM1qcPL/M5O7eK3DsVRiCtkLElWRZMqWj1vP2gK2MllEQVWKIdtcr
-SKBUUwFmmZXIe+NH3WNvBdfyEc6X9yTFGl0hRb8tJg45oT5ptyoXlX1MqY/R2BFV
-+5wgQy2oKmTpXRVPMGuIWaA5kfSFicsdTE1vpXssR/AXIbzKMcD7P2GS27gCajc=
-=xo8q
------END PGP SIGNATURE-----
-
---tt8NzeIytnj46EAf--
-
---===============8574773340170613259==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Bjorn
 
 
---===============8574773340170613259==--
+diff --git a/drivers/pci/host/pcie-armada8k.c b/drivers/pci/host/pcie-armada8k.c
+index 7302de2..811ddf8 100644
+--- a/drivers/pci/host/pcie-armada8k.c
++++ b/drivers/pci/host/pcie-armada8k.c
+@@ -10,8 +10,6 @@
+  * warranty of any kind, whether express or implied.
+  */
+ 
+-#define pr_fmt(fmt) "armada-8k-pcie: " fmt
+-
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+@@ -39,8 +37,6 @@ struct armada8k_pcie {
+ #define PCIE_APP_LTSSM_EN		BIT(2)
+ #define PCIE_DEVICE_TYPE_SHIFT		4
+ #define PCIE_DEVICE_TYPE_MASK		0xF
+-#define PCIE_DEVICE_TYPE_EP		0x0 /* Endpoint */
+-#define PCIE_DEVICE_TYPE_LEP		0x1 /* Legacy endpoint */
+ #define PCIE_DEVICE_TYPE_RC		0x4 /* Root complex */
+ 
+ #define PCIE_GLOBAL_STATUS_REG		0x8
+@@ -69,14 +65,12 @@ struct armada8k_pcie {
+ #define AX_USER_DOMAIN_MASK		0x3
+ #define AX_USER_DOMAIN_SHIFT		4
+ 
+-
+-
+ #define to_armada8k_pcie(x)	container_of(x, struct armada8k_pcie, pp)
+ 
+ static int armada8k_pcie_link_up(struct pcie_port *pp)
+ {
+-	u32 reg;
+ 	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
++	u32 reg;
+ 	u32 mask = PCIE_GLB_STS_RDLH_LINK_UP | PCIE_GLB_STS_PHY_LINK_UP;
+ 
+ 	reg = readl(pcie->base + PCIE_GLOBAL_STATUS_REG);
+@@ -84,7 +78,7 @@ static int armada8k_pcie_link_up(struct pcie_port *pp)
+ 	if ((reg & mask) == mask)
+ 		return 1;
+ 
+-	pr_debug("No link detected (Global-Status: 0x%08x).\n", reg);
++	dev_dbg(pp->dev, "No link detected (Global-Status: 0x%08x).\n", reg);
+ 	return 0;
+ }
+ 
+@@ -92,10 +86,9 @@ static void armada8k_pcie_establish_link(struct pcie_port *pp)
+ {
+ 	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
+ 	void __iomem *base = pcie->base;
+-	int timeout = 1000;
+ 	u32 reg;
+ 
+-	if (!armada8k_pcie_link_up(pp)) {
++	if (!dw_pcie_link_up(pp)) {
+ 		/* Disable LTSSM state machine to enable configuration */
+ 		reg = readl(base + PCIE_GLOBAL_CONTROL_REG);
+ 		reg &= ~(PCIE_APP_LTSSM_EN);
+@@ -129,7 +122,7 @@ static void armada8k_pcie_establish_link(struct pcie_port *pp)
+ 	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
+ 	writel(reg, base + PCIE_GLOBAL_INT_MASK1_REG);
+ 
+-	if (!armada8k_pcie_link_up(pp)) {
++	if (!dw_pcie_link_up(pp)) {
+ 		/* Configuration done. Start LTSSM */
+ 		reg = readl(base + PCIE_GLOBAL_CONTROL_REG);
+ 		reg |= PCIE_APP_LTSSM_EN;
+@@ -137,14 +130,7 @@ static void armada8k_pcie_establish_link(struct pcie_port *pp)
+ 	}
+ 
+ 	/* Wait until the link becomes active again */
+-	while (timeout) {
+-		if (armada8k_pcie_link_up(pp))
+-			break;
+-		msleep(1);
+-		timeout--;
+-	}
+-
+-	if (timeout == 0)
++	if (dw_pcie_wait_for_link(pp))
+ 		dev_err(pp->dev, "Link not up after reconfiguration\n");
+ }
+ 
+@@ -163,7 +149,7 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+ 
+ 	/*
+ 	 * Interrupts are directly handled by the device driver of the
+-	 * PCI device. However, there are also latched into the PCIe
++	 * PCI device.  However, they are also latched into the PCIe
+ 	 * controller, so we simply discard them.
+ 	 */
+ 	val = readl(base + PCIE_GLOBAL_INT_CAUSE1_REG);
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
