@@ -1,47 +1,77 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 10/18] ASoC: sti: Update example to include
- assigned-clocks and mclk-fs
-Date: Tue, 26 Apr 2016 15:51:29 +0100
-Message-ID: <20160426145129.GA11946@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <1461236675-10176-11-git-send-email-peter.griffin@linaro.org>
- <20160421154933.GR3217@sirena.org.uk>
- <20160426115210.GB5457@griffinp-ThinkPad-X1-Carbon-2nd>
- <20160426142357.GW3217@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Wadim Egorov <w.egorov@phytec.de>
+Subject: [PATCH v4 1/7] regulator: rk808: Add rk808_reg_ops_ranges for LDO3
+Date: Tue, 26 Apr 2016 16:54:04 +0200
+Message-ID: <1461682450-22173-2-git-send-email-w.egorov@phytec.de>
+References: <1461682450-22173-1-git-send-email-w.egorov@phytec.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160426142357.GW3217@sirena.org.uk>
+In-Reply-To: <1461682450-22173-1-git-send-email-w.egorov@phytec.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, ludovic.barre@st.com, arnaud.pouliquen@st.com
+To: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, lee.jones@linaro.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+LDO_REG3 descriptor is using linear_ranges.
+Add and use proper ops for LDO_REG3.
 
-On Tue, 26 Apr 2016, Mark Brown wrote:
+Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+---
+ drivers/regulator/rk808-regulator.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-> On Tue, Apr 26, 2016 at 12:52:10PM +0100, Peter Griffin wrote:
-> > On Thu, 21 Apr 2016, Mark Brown wrote:
-> 
-> > > This one is more relevant though I'm still a bit concerned that there's
-> > > an expectation that the examples can just be pasted in...
-> 
-> > So although I would only consider copying an example as the starting
-> > point for getting something working (and indeed it was the case here). On STi
-> > arch there *should* be a very high probability that copying the exanple 
-> > is all that will be required.
-> 
-> If there are never going to be any new users why bother at all, why
-> would anyone paste it in when all the SoCs that ever use this are
-> already upstream?
-
-Generally if I come across documentation which is incorrect, I like to fix it.
-
-Currently the DT ASoC documentation doesn't match the driver and the example
-doesn't work, which is not ideal. I could well be the last person who needs
-to read it & use the example, but deliberately leaving it with mistakes in
-seemed like a bad idea.
-
-Peter. 
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index 67f72fe..6601ab5 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -238,6 +238,21 @@ static int rk808_set_suspend_voltage(struct regulator_dev *rdev, int uv)
+ 				  sel);
+ }
+ 
++static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
++{
++	unsigned int reg;
++	int sel = regulator_map_voltage_linear_range(rdev, uv, uv);
++
++	if (sel < 0)
++		return -EINVAL;
++
++	reg = rdev->desc->vsel_reg + RK808_SLP_REG_OFFSET;
++
++	return regmap_update_bits(rdev->regmap, reg,
++				  rdev->desc->vsel_mask,
++				  sel);
++}
++
+ static int rk808_set_suspend_enable(struct regulator_dev *rdev)
+ {
+ 	unsigned int reg;
+@@ -288,6 +303,19 @@ static struct regulator_ops rk808_reg_ops = {
+ 	.set_suspend_disable	= rk808_set_suspend_disable,
+ };
+ 
++static struct regulator_ops rk808_reg_ops_ranges = {
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.map_voltage		= regulator_map_voltage_linear_range,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.enable			= regulator_enable_regmap,
++	.disable		= regulator_disable_regmap,
++	.is_enabled		= regulator_is_enabled_regmap,
++	.set_suspend_voltage	= rk808_set_suspend_voltage_range,
++	.set_suspend_enable	= rk808_set_suspend_enable,
++	.set_suspend_disable	= rk808_set_suspend_disable,
++};
++
+ static struct regulator_ops rk808_switch_ops = {
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
+@@ -383,7 +411,7 @@ static const struct regulator_desc rk808_reg[] = {
+ 		.name = "LDO_REG3",
+ 		.supply_name = "vcc7",
+ 		.id = RK808_ID_LDO3,
+-		.ops = &rk808_reg_ops,
++		.ops = &rk808_reg_ops_ranges,
+ 		.type = REGULATOR_VOLTAGE,
+ 		.n_voltages = 16,
+ 		.linear_ranges = rk808_ldo3_voltage_ranges,
+-- 
+1.9.1
