@@ -1,87 +1,147 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
-Date: Tue, 26 Apr 2016 14:49:54 +0100
-Message-ID: <20160426134954.GA4892@dell>
-References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
- <1461543878-3639-16-git-send-email-eric@engestrom.ch>
- <20160425135017.GA8656@rob-hp-laptop>
- <20160425165830.GP2713@dell>
- <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
- <20160426063516.GQ2713@dell>
- <CAL_JsqLn7cZqqWzOT97QPaMyiPsTJRsp=_oNRDAjWtPo5fvngw@mail.gmail.com>
+From: Amitkumar Karwar <akarwar@marvell.com>
+Subject: [PATCH v8 1/2] dt: bindings: add MARVELL's bt-sd8xxx wireless device
+Date: Tue, 26 Apr 2016 06:57:26 -0700
+Message-ID: <1461679047-22631-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLn7cZqqWzOT97QPaMyiPsTJRsp=_oNRDAjWtPo5fvngw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-bluetooth@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, Amitkumar Karwar <akarwar@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Apr 2016, Rob Herring wrote:
+From: Xinming Hu <huxm@marvell.com>
 
-> On Tue, Apr 26, 2016 at 1:35 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
-te:
-> > On Mon, 25 Apr 2016, Rob Herring wrote:
-> >
-> >> On Mon, Apr 25, 2016 at 11:58 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
- wrote:
-> >> > On Mon, 25 Apr 2016, Rob Herring wrote:
-> >> >
-> >> >> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
-> >> >> > Signed-off-by: Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-> >> >>
-> >> >> Applied, thanks.
-> >> >
-> >> > I'd prefer to continue taking these if you don't mind Rob.  It'd=
- limit
-> >> > on the amount of immutable branch pull requests I have to send/h=
-andle.
-> >>
-> >> Why? Do you really expect to have a dependency here?
-> >
-> > Because the file is in ".*/mfd/.*", which normally goes through the=
- MFD
-> > tree.
-> >
-> > $ git log --committer=3D"Rob Herring" --oneline -- Documentation/de=
-vicetree/bindings/mfd/ | wc -l
-> > 6
-> > $ git log --committer=3D"Lee Jones" --oneline -- Documentation/devi=
-cetree/bindings/mfd/ | wc -l
-> > 99
->=20
-> That is because most changes are coupled with drivers. For changes
-> that are standalone without any dependency, they go thru my tree. If
-> we're getting any merge conflicts beyond which Linus can/wants to fix=
-,
-> then there is a problem because bindings shouldn't be changing that
-> much.
+Add device tree binding documentation for MARVELL's bluetooth sdio
+(sd8897 and sd8997) chip.
 
-That's certainly the first I've heard about it.  It makes far less
-sense for changes pertaining to a single directory to go in via 2
-separate trees.  IMO that's asking for trouble.
+Signed-off-by: Xinming Hu <huxm@marvell.com>
+Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
+---
+Listing changelist for both 1/2 and 2/2 here
+v2: Fixed build error reported by kbuild test robot
+drivers/bluetooth/btmrvl_platform.c:141:22: error:
+'btmrvl_plt_pm_ops' undeclared here (not in a function)
 
-> Eventually, I think we need to merge all the bindings thru a single
-> tree. Otherwise, we'll never move toward moving bindings out of the
-> kernel (unless we just sync from the kernel tree to a standalone
-> repo).
+v3: Add NULL check for 'btmrvl_plt_dev'
 
-Once (if they ever) move out from the kernel tree, then I agree with
-you, they should be dealt with as completely separate entities and be
-merged though different trees, but until then we need to make a
-decision; either you take them all or I take them all.  I thought we
-were doing the latter already.=20
+v4: Moved the bindings file to bindings/net/
+    Corrected the name of 'name' and 'compatible' properties(Rob Herring)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v5: Comments for wlan patches were applicable here as well. Like all binding
+    changes in single file, specifying node as a child of SDIO controller.
+
+v6: a)Use <chip>-bt order for compatible attribute(Rob Herring)
+    b)Split wakeuppin-gap to wakeup-pin and wakeup-gap(Rob Herring) 
+    c)Use sdio function number for both the unit address and reg(Rob Herring)
+
+v7: a)Use suggested vendor name and generic node name(Rob Herring)
+v8: a)Nodes are renamed as per suggestions from Rob Herring
+      btmrvl,* -> marvell,*
+      "wakeup-gap-msec" -> "wakeup-gap-ms"
+---
+ Documentation/devicetree/bindings/btmrvl.txt       | 29 -----------
+ .../devicetree/bindings/net/marvell-bt-sd8xxx.txt  | 56 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/btmrvl.txt
+ create mode 100644 Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+
+diff --git a/Documentation/devicetree/bindings/btmrvl.txt b/Documentation/devicetree/bindings/btmrvl.txt
+deleted file mode 100644
+index 58f964b..0000000
+--- a/Documentation/devicetree/bindings/btmrvl.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-btmrvl
+-------
+-
+-Required properties:
+-
+-  - compatible : must be "btmrvl,cfgdata"
+-
+-Optional properties:
+-
+-  - btmrvl,cal-data : Calibration data downloaded to the device during
+-		      initialization. This is an array of 28 values(u8).
+-
+-  - btmrvl,gpio-gap : gpio and gap (in msecs) combination to be
+-		      configured.
+-
+-Example:
+-
+-GPIO pin 13 is configured as a wakeup source and GAP is set to 100 msecs
+-in below example.
+-
+-btmrvl {
+-	compatible = "btmrvl,cfgdata";
+-
+-	btmrvl,cal-data = /bits/ 8 <
+-		0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
+-		0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
+-		0x00 0x00 0xf0 0x00>;
+-	btmrvl,gpio-gap = <0x0d64>;
+-};
+diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+new file mode 100644
+index 0000000..14aa6cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+@@ -0,0 +1,56 @@
++Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
++------
++
++Required properties:
++
++  - compatible : should be one of the following:
++	* "marvell,sd8897-bt"
++	* "marvell,sd8997-bt"
++
++Optional properties:
++
++  - marvell,cal-data: Calibration data downloaded to the device during
++		      initialization. This is an array of 28 values(u8).
++
++  - marvell,wakeup-pin: It represents wakeup pin number of the bluetooth chip.
++		        firmware will use the pin to wakeup host system.
++  - marvell,wakeup-gap-ms: wakeup gap represents wakeup latency of the host
++		      platform. The value will be configured to firmware. This
++		      is needed to work chip's sleep feature as expected.
++  - interrupt-parent: phandle of the parent interrupt controller
++  - interrupts : interrupt pin number to the cpu. Driver will request an irq based
++		 on this interrupt number. During system suspend, the irq will be
++		 enabled so that the bluetooth chip can wakeup host platform under
++		 certain condition. During system resume, the irq will be disabled
++		 to make sure unnecessary interrupt is not received.
++
++Example:
++
++IRQ pin 119 is used as system wakeup source interrupt.
++wakeup pin 13 and gap 100ms are configured so that firmware can wakeup host
++using this device side pin and wakeup latency.
++calibration data is also available in below example.
++
++&mmc3 {
++	status = "okay";
++	vmmc-supply = <&wlan_en_reg>;
++	bus-width = <4>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	btmrvl: bluetooth@2 {
++		compatible = "marvell,sd8897-bt";
++		reg = <2>;
++		interrupt-parent = <&pio>;
++		interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
++
++		marvell,cal-data = /bits/ 8 <
++			0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
++			0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
++			0x00 0x00 0xf0 0x00>;
++		marvell,wakeup-pin = <0x0d>;
++		marvell,wakeup-gap-ms = <0x64>;
++	};
++};
+-- 
+1.8.1.4
