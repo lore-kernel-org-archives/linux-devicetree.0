@@ -1,42 +1,93 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH RESEND v2 2/4] ARM64: dts: rockchip: add core dtsi file
- for RK3399 SoCs
-Date: Mon, 25 Apr 2016 16:24:51 -0700
-Message-ID: <20160425232451.GB59576@google.com>
-References: <1461304307-14113-1-git-send-email-jay.xu@rock-chips.com>
- <1461304307-14113-3-git-send-email-jay.xu@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461304307-14113-3-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianqun Xu <jay.xu@rock-chips.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, heiko@sntech.de, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/7] ARM: dts: lpc32xx: ea3250: add NAND partitions device node
+Date: Tue, 26 Apr 2016 03:37:25 +0300
+Message-ID: <1461631050-10479-3-git-send-email-vz@mleia.com>
+References: <1461631050-10479-1-git-send-email-vz@mleia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461631050-10479-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 22, 2016 at 01:51:45PM +0800, Jianqun Xu wrote:
-> This patch adds core dtsi file for Rockchip RK3399 SoCs.
-> 
-> The RK3399 has big/little architecture, which needs a separate
-> node for the PMU of each microarchitecture, for now it missing
-> the pmu node since the old one could not work well.
-> 
-> Marc is working on it with:
-> https://lkml.org/lkml/2016/4/11/182
-> 
-> and on the following branch:
-> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git
-> irq/percpu-partition
-> 
-> That will to be tested on RK3399 evb.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> changes in v2:
-> - remove arm-pmu at first. (Marc, Heiko, Mark)
-> - remove rga, emmc, usb3, mipi, edp, pd, i2c, gpu, thermal, tsadc, saradc, which will upstream independently
+To declare MTD OF partitions NAND controller device node should have
+a special 'partitions' subnode, the change removes a debug message
+from mtd/ofpart on boot:
 
-Tested (a non EVB board) and can boot to prompt:
+  nxp_lpc3220_slc: 'partitions' subnode not found on /ahb/flash@20020000.
+  Trying to parse direct subnodes as partitions.
 
-Tested-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/ea3250.dts | 41 ++++++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 19 deletions(-)
+
+diff --git a/arch/arm/boot/dts/ea3250.dts b/arch/arm/boot/dts/ea3250.dts
+index 7cf815a..58bcda9 100644
+--- a/arch/arm/boot/dts/ea3250.dts
++++ b/arch/arm/boot/dts/ea3250.dts
+@@ -213,8 +213,6 @@
+ 
+ /* 128MB Flash via SLC NAND controller */
+ &slc {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+ 	status = "okay";
+ 
+ 	nxp,wdr-clks = <14>;
+@@ -228,26 +226,31 @@
+ 	nand-on-flash-bbt;
+ 	gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
+ 
+-	mtd0@00000000 {
+-		label = "ea3250-boot";
+-		reg = <0x00000000 0x00080000>;
+-		read-only;
+-	};
++	partitions {
++		#address-cells = <1>;
++		#size-cells = <1>;
+ 
+-	mtd1@00080000 {
+-		label = "ea3250-uboot";
+-		reg = <0x00080000 0x000c0000>;
+-		read-only;
+-	};
++		mtd0@00000000 {
++			label = "ea3250-boot";
++			reg = <0x00000000 0x00080000>;
++			read-only;
++		};
+ 
+-	mtd2@00140000 {
+-		label = "ea3250-kernel";
+-		reg = <0x00140000 0x00400000>;
+-	};
++		mtd1@00080000 {
++			label = "ea3250-uboot";
++			reg = <0x00080000 0x000c0000>;
++			read-only;
++		};
+ 
+-	mtd3@00540000 {
+-		label = "ea3250-rootfs";
+-		reg = <0x00540000 0x07ac0000>;
++		mtd2@00140000 {
++			label = "ea3250-kernel";
++			reg = <0x00140000 0x00400000>;
++		};
++
++		mtd3@00540000 {
++			label = "ea3250-rootfs";
++			reg = <0x00540000 0x07ac0000>;
++		};
+ 	};
+ };
+ 
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
