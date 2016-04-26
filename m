@@ -1,128 +1,100 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 03/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Tue, 26 Apr 2016 22:26:22 +0530
-Message-ID: <20160426165622.GR2274@localhost>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <1461236675-10176-4-git-send-email-peter.griffin@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3] gpio: of: make it possible to name GPIO lines
+Date: Tue, 26 Apr 2016 09:53:40 -0700
+Message-ID: <20160426165340.GD30010@dtor-ws>
+References: <1461236901-28626-1-git-send-email-linus.walleij@linaro.org>
+ <20160421170615.GA25466@dtor-ws>
+ <CACRpkdYZuRGvFf1kjy3E4=1hSfVaqFTk6qENyaJjEdTgZ8uVGQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461236675-10176-4-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com
+In-Reply-To: <CACRpkdYZuRGvFf1kjy3E4=1hSfVaqFTk6qENyaJjEdTgZ8uVGQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Lee Campbell <leecam@google.com>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Mandala <david.mandala@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 21, 2016 at 12:04:20PM +0100, Peter Griffin wrote:
+On Tue, Apr 26, 2016 at 01:03:45PM +0200, Linus Walleij wrote:
+> On Thu, Apr 21, 2016 at 7:06 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > On Thu, Apr 21, 2016 at 01:08:21PM +0200, Linus Walleij wrote:
+> >>  /**
+> >> + * of_gpiochip_set_names() - set up the names of the lines
+> >> + * @chip: GPIO chip whose lines should be named, if possible
+> >> + */
+> >> +static void of_gpiochip_set_names(struct gpio_chip *gc)
+> >> +{
+> >> +     struct gpio_device *gdev = gc->gpiodev;
+> >> +     struct device_node *np = gc->of_node;
+> >> +     int i;
+> >> +     int nstrings;
+> >> +
+> >> +     /* Do we even have the "gpio-line-names" property */
+> >> +     if (!of_property_read_bool(np, "gpio-line-names"))
+> >> +             return;
+> >> +
+> >> +     nstrings = of_property_count_strings(np, "gpio-line-names");
+> >> +     /*
+> >> +      * Make sure to not index beyond either the end of the
+> >> +      * "gpio-names" array nor the number of descriptors of
+> >> +      * the GPIO device.
+> >> +      */
+> >
+> > I know you mentioned that it already been discussed much, but I am not
+> > sure why we need to count the string (and validate that strings are
+> > present by treating the property as boolean?),
+> 
+> I validate the property to be present to bail out quickly on controllers
+> that have no names set (i.e. all currently deployed device trees).
+> I can skip that part if you think it's too much optimization.
 
-> +	if (!atomic_read(&fchan->fdev->fw_loaded)) {
-> +		dev_err(fchan->fdev->dev, "%s: fdma fw not loaded\n", __func__);
-> +		return NULL;
-> +	}
+My main objection is use of of_property_read_bool() call to validate
+presence of a property that is not really a boolean property.
 
-so who is loading the fw and setting fw_loaded, it is not set in this patch?
+But you are the maintainer so it is your decision.
 
-> +	if (direction == DMA_DEV_TO_MEM) {
-> +		fchan->cfg.req_ctrl &= ~REQ_CTRL_WNR;
-> +		maxburst = fchan->scfg.src_maxburst;
-> +		width = fchan->scfg.src_addr_width;
-> +		addr = fchan->scfg.src_addr;
-> +	} else if (direction == DMA_MEM_TO_DEV) {
-> +		fchan->cfg.req_ctrl |= REQ_CTRL_WNR;
-> +		maxburst = fchan->scfg.dst_maxburst;
-> +		width = fchan->scfg.dst_addr_width;
-> +		addr = fchan->scfg.dst_addr;
-> +	} else {
-> +		return -EINVAL;
-> +	}
+> 
+> However:
+> 
+> > I am not
+> > sure why we need to count the string
+> > when we could do
+> > something like this (relying on the fact that
+> > of_property_read_string_index() returns 0 or negative error, no positive
+> > return codes):
+> >
+> >         for (i = 0; i < gdev->ngpio; i++) {
+> >                 const char *name;
+> >                 int error;
+> >
+> >                 error = of_property_read_string_index(np,
+> >                                                       "gpio-line-names",
+> >                                                       i,
+> >                                                       &name);
+> >                 if (error) {
+> >                         if (error != -ENODATA)
+> >                                 dev_err(&gdev->dev,
+> >                                         "unable to name line %d: %d\n",
+> >                                         i, error);
+> >                         /*
+> >                          * Either no more strings (-ENODATA), or
+> >                          * other error, in any case we are done naming.
+> >                          */
+> >                         break;
+> >                 }
+> >
+> >                 gdev->descs[i].name = name;
+> >         }
+> 
+> Yeah I can do that, thanks I didn't look close enough at the semantics.
+> 
+> The big question whether the DT people are OK with naming producer
+> names like this remains however.
 
-switch please
+Right, I was just commenting on the implementation.
 
-> +
-> +	fchan->cfg.req_ctrl &= ~REQ_CTRL_OPCODE_MASK;
-> +	if (width == DMA_SLAVE_BUSWIDTH_1_BYTE)
-> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST1;
-> +	else if (width == DMA_SLAVE_BUSWIDTH_2_BYTES)
-> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST2;
-> +	else if (width == DMA_SLAVE_BUSWIDTH_4_BYTES)
-> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST4;
-> +	else if (width == DMA_SLAVE_BUSWIDTH_8_BYTES)
-> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST8;
-> +	else
-> +		return -EINVAL;
-
-here as well
-
-> +static void fill_hw_node(struct st_fdma_hw_node *hw_node,
-> +			struct st_fdma_chan *fchan,
-> +			enum dma_transfer_direction direction)
-> +{
-> +
-> +	if (direction == DMA_MEM_TO_DEV) {
-> +		hw_node->control |= NODE_CTRL_SRC_INCR;
-> +		hw_node->control |= NODE_CTRL_DST_STATIC;
-> +		hw_node->daddr = fchan->cfg.dev_addr;
-> +	} else {
-> +		hw_node->control |= NODE_CTRL_SRC_STATIC;
-> +		hw_node->control |= NODE_CTRL_DST_INCR;
-> +		hw_node->saddr = fchan->cfg.dev_addr;
-> +	}
-
-empty line here at other places too. The code looks very compressed and bit
-harder to read overall
-
-> +	fdesc = st_fdma_alloc_desc(fchan, sg_len);
-> +	if (!fdesc) {
-> +		dev_err(fchan->fdev->dev, "no memory for desc\n");
-> +		return NULL;
-> +	}
-> +
-> +	fdesc->iscyclic = false;
-> +
-> +	for_each_sg(sgl, sg, sg_len, i) {
-> +		hw_node = fdesc->node[i].desc;
-> +
-> +		hw_node->next = fdesc->node[(i + 1) % sg_len].pdesc;
-> +		hw_node->control = NODE_CTRL_REQ_MAP_DREQ(fchan->dreq_line);
-> +
-> +		fill_hw_node(hw_node, fchan, direction);
-> +
-> +		if (direction == DMA_MEM_TO_DEV)
-> +			hw_node->saddr = sg_dma_address(sg);
-> +		else
-> +			hw_node->daddr = sg_dma_address(sg);
-> +
-> +		hw_node->nbytes = sg_dma_len(sg);
-> +		hw_node->generic.length = sg_dma_len(sg);
-> +	}
-> +
-> +	/* interrupt at end of last node */
-> +	hw_node->control |= NODE_CTRL_INT_EON;
-> +
-> +	return vchan_tx_prep(&fchan->vchan, &fdesc->vdesc, flags);
-
-bunch of this seems similar to cyclic case, can you create common setup
-routine for these, anyway cyclic is a special cases of slave_sg
-
-> +
-> +	ret = dma_cookie_status(chan, cookie, txstate);
-> +	if (ret == DMA_COMPLETE)
-> +		return ret;
-> +
-> +	if (!txstate)
-> +		return fchan->status;
-
-why channel status, query is for descriptor
-
-> +static int st_fdma_remove(struct platform_device *pdev)
-> +{
-> +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
-> +
-> +	st_fdma_clk_disable(fdev);
-
-and you irq is still enabled and tasklets can be scheduled!!
+Thanks.
 
 -- 
-~Vinod
+Dmitry
