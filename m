@@ -1,57 +1,47 @@
-From: Jeppe Ledet-Pedersen <jlp-jTq9jD7AHYRWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: add Cypress FM33256B Processor Companion driver
-Date: Tue, 26 Apr 2016 16:42:40 +0200
-Message-ID: <571F7E60.9040106@gomspace.com>
-References: <1461150471-23163-1-git-send-email-jlp@gomspace.com>
- <1461150471-23163-2-git-send-email-jlp@gomspace.com>
- <20160422193232.GA9737@rob-hp-laptop>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 10/18] ASoC: sti: Update example to include
+ assigned-clocks and mclk-fs
+Date: Tue, 26 Apr 2016 15:51:29 +0100
+Message-ID: <20160426145129.GA11946@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-11-git-send-email-peter.griffin@linaro.org>
+ <20160421154933.GR3217@sirena.org.uk>
+ <20160426115210.GB5457@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20160426142357.GW3217@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160422193232.GA9737@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160426142357.GW3217@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, ludovic.barre@st.com, arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-On 22/04/16 21:32, Rob Herring wrote:
-> On Wed, Apr 20, 2016 at 01:07:49PM +0200, Jeppe Ledet-Pedersen wrote:
-[snip]
->> +
->> +The MFD exposes two subdevices:
->> +- The FRAM: "cypress,fm33256b-fram"
->> +- The RTC: "cypress,fm33256b-rtc"
->> +
->> +Example:
->> +
->> +spi1: spi@f800800 {
->> +	status = "okay";
->> +	cs-gpios = <&pioC 25 0>;
->> +
->> +	fm33256b@0 {
->> +		compatible = "cypress,fm33256b";
->> +		spi-max-frequency = <10000000>;
->> +		cypress,charge-enabled;
->> +		cypress,charge-fast;
->> +		reg = <0>;
->> +	};
+Hi Mark,
+
+On Tue, 26 Apr 2016, Mark Brown wrote:
+
+> On Tue, Apr 26, 2016 at 12:52:10PM +0100, Peter Griffin wrote:
+> > On Thu, 21 Apr 2016, Mark Brown wrote:
 > 
-> Where's the 2nd sub device?
+> > > This one is more relevant though I'm still a bit concerned that there's
+> > > an expectation that the examples can just be pasted in...
+> 
+> > So although I would only consider copying an example as the starting
+> > point for getting something working (and indeed it was the case here). On STi
+> > arch there *should* be a very high probability that copying the exanple 
+> > is all that will be required.
+> 
+> If there are never going to be any new users why bother at all, why
+> would anyone paste it in when all the SoCs that ever use this are
+> already upstream?
 
-Hi Rob,
+Generally if I come across documentation which is incorrect, I like to fix it.
 
-Right now I just add the two sub-devices using mfd_add_devices in the
-fm33256b_probe function in my MFD driver. Would it be better to check
-for compatible child nodes before adding each sub-device, like it's done
-in drivers/mfd/tc3589x.c?
+Currently the DT ASoC documentation doesn't match the driver and the example
+doesn't work, which is not ideal. I could well be the last person who needs
+to read it & use the example, but deliberately leaving it with mistakes in
+seemed like a bad idea.
 
-Thanks,
-
--Jeppe
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peter. 
