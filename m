@@ -1,65 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
-Date: Tue, 26 Apr 2016 19:53:39 +0200
-Message-ID: <5167289.0a4LBoWhyX@wuerfel>
-References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
- <20160426121335.GC11668@lunn.ch> <571FA3F6.7000903@gmail.com>
+From: "J.D. Schroeder" <Linux.HWI@garmin.com>
+Subject: [PATCH 1/3] DRA7: Fix clock data for gmac_gmii_ref_clk_div
+Date: Tue, 26 Apr 2016 12:54:27 -0500
+Message-ID: <1461693269-19436-2-git-send-email-Linux.HWI@garmin.com>
+References: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <571FA3F6.7000903@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Punit Agrawal <punit.agrawal@arm.com>, Anup Patel <anup.patel@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, netdev@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: "J.D. Schroeder" <jay.schroeder@garmin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 April 2016 10:23:02 Florian Fainelli wrote:
-> On 26/04/16 05:13, Andrew Lunn wrote:
-> >> 4. Apart from these, by using MDIO mux framework we are making our
-> >> non-ethernet PHYs dependent on Linux network drivers which is not
-> >> acceptable. What if some product line does not need network subsystem at
-> >> all?
-> > 
-> > This is your only valid point. However, does Broadcom have a product
-> > line which does not include networking? Is not Broadcom a network SoC
-> > vendor?
-> 
-> But even with that, there is no reason why we could not decouple the
-> PHYLIB MDIO framework from PHYLIB and make it available as a more
-> standalone subsystem which can be utilized when you have a mix of MDIO
-> devices like here.
+From: "J.D. Schroeder" <jay.schroeder@garmin.com>
 
-[adding Kishon Vijay Abraham]
+This commit fixes the clock data inside the DRA7xx clocks device tree
+structure for the gmac_gmii_ref_clk_div clock. This clock is actually
+the GMAC_MAIN_CLK and has nothing to do with the register at address
+0x4a0093d0. If CLKSEL_REF bit 24 inside of CM_GMAC_GMAC_CLKCTRL, is
+set to 1 in order to use the GMAC_RMII_CLK instead of the
+GMAC_RMII_HS_CLK, the kernel generates a clock divider warning:
+    WARNING: CPU: 0 PID: 0 at drivers/clk/clk-divider.c:129 clk_divider_recalc_rate+0xa8/0xe0()
+    gmac_gmii_ref_clk_div: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
 
-We should also consider how this fits in with drivers/phy/, which is
-the generic framework for all PHY devices that are not for ethernet.
+By properly configuring the gmac_gmii_ref_clk_div (GMAC_MAIN_CLK) to
+have the parent of dpll_gmac_m2_ck always divided by 2 the warning is
+resolved and the clock tree is fixed up.
 
-The most straightforward way that you mention would be to allow
-generic PHY devices to be probed on an MIO bus or mux. This should
-just work using mdio_module_driver(), as Andrew already explained.
+Additionally, a new clock called rmii_50mhz_clk_mux is defined that
+does utilize CM_GMAC_GMAC_CLKCTRL[24] CLKSEL_REF to configure the
+source clock for the RMII_50MHZ_CLK.
 
-A more complex problem would be having a PHY driver for a device
-that can be either an ethernet phy or some other phy. With today's
-frameworks that would require two separate drivers, one in drivers/phy
-and one in drivers/net/phy/. If that turns out to be a common problem,
-we might want to come up with a way to nest one on top of the other,
-or merge two two device structures (struct phy_device and struct phy).
+Signed-off-by: J.D. Schroeder <jay.schroeder@garmin.com>
+Reviewed-by: Trenton Andres <trenton.andres@garmin.com>
+---
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-> I am not clear on how common a shared MDIO bus is on other SoCs, but the
-> other Broadcom SoCs I am familiar with have dedicated MDIO buses
-> instances per type of PHY (PCIe, BUSB, Ethernet), thus making the split
-> a ton easier.
-
-I think most commonly, the other PHYs are not on MDIO at all, but are
-integrated inside of the SoC as an MMIO based device.
-
-	Arnd
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index d0bae06..9d1a583 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1710,13 +1710,20 @@
+ 		reg = <0x0c00>;
+ 	};
+ 
+-	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
++	rmii_50mhz_clk_mux: rmii_50mhz_clk_mux {
+ 		#clock-cells = <0>;
+-		compatible = "ti,divider-clock";
+-		clocks = <&dpll_gmac_m2_ck>;
++		compatible = "ti,mux-clock";
++		clocks = <&dpll_gmac_h11x2_ck>, <&rmii_clk_ck>;
+ 		ti,bit-shift = <24>;
+ 		reg = <0x13d0>;
+-		ti,dividers = <2>;
++	};
++
++	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
++		#clock-cells = <0>;
++		compatible = "fixed-factor-clock";
++		clocks = <&dpll_gmac_m2_ck>;
++		clock-mult = <1>;
++		clock-div = <2>;
+ 	};
+ 
+ 	gmac_rft_clk_mux: gmac_rft_clk_mux {
+-- 
+1.9.1
