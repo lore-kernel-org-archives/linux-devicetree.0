@@ -1,46 +1,82 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
-Date: Tue, 26 Apr 2016 21:55:30 +0530
-Message-ID: <20160426162529.GK2274@localhost>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
- <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
- <20160426033029.GB2274@localhost>
- <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for
+ TAS5720 digital amplifier
+Date: Tue, 26 Apr 2016 11:22:40 -0500
+Message-ID: <20160426162240.GB2885@borg.dal.design.ti.com>
+References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
+ <1461615456-19510-3-git-send-email-dannenberg@ti.com>
+ <20160426154313.GA3217@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <b068ead6474f2ffee5acef9ea799aba3-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160426154313.GA3217@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 08:08:16AM -0400, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
-> On 2016-04-25 23:30, Vinod Koul wrote:
-> >On Mon, Apr 11, 2016 at 10:21:12AM -0400, Sinan Kaya wrote:
-> >
-> >>+static int hidma_chan_stats(struct seq_file *s, void *unused)
-> >>+{
-> >>+	struct hidma_chan *mchan =3D s->private;
-> >>+	struct hidma_desc *mdesc;
-> >>+	struct hidma_dev *dmadev =3D mchan->dmadev;
-> >>+
-> >>+	pm_runtime_get_sync(dmadev->ddev.dev);
-> >
-> >debug shouldn't power up device, why do you want to do that
->=20
->=20
-> Clocks are turned off while the hw is idle. I can=E2=80=99t reach hw
-> registers without restoring power.
+Hi Mark, thanks for the continued feedback, please see below...
 
-Hmm, have you thought about using regmap?
+On Tue, Apr 26, 2016 at 04:43:13PM +0100, Mark Brown wrote:
+> On Mon, Apr 25, 2016 at 03:17:36PM -0500, Andreas Dannenberg wrote:
+> 
+> This looks mostly good, a few small things below.
+> 
+> > +	switch (width) {
+> > +	case 16:
+> > +	case 18:
+> > +	case 20:
+> > +	case 24:
+> > +		/*
+> > +		 * We only support the different left-justified serial audio
+> > +		 * formats in which case there is nothing to configure in the
+> > +		 * TAS5720.
+> > +		 */
+> > +		break;
+> > +	default:
+> > +		dev_err(codec->dev, "unsupported sample size: %d\n", width);
+> > +		return -EINVAL;
+> > +	}
+> 
+> If the driver doesn't do anything just remove the code.
 
---=20
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Well it's doing something which is making sure the nobody passes in a
+sample size that's not supported. Wouldn't we want to catch this?
+
+> 
+> > +	if ((curr_fault & TAS5720_OCE) && !(tas5720->last_fault & TAS5720_OCE))
+> > +		dev_warn(dev, "The Class-D output stage has experienced an over current event\n");
+> 
+> "Class D over current".  The verbosity is making the line over long and
+> the phrasing is a bit unclear (and makes it seem less critical than it
+> really is).  These should probably be dev_crit() or somthing too, over
+> current and similar events on a speaker output are generally extremely
+> serious.
+
+The overlong line goes through checkpatch --strict and looks like an
+accepted practice to prevent breaking "grep" for example. The text is
+more or less from the datasheet to give people something they can
+cross-associate. But I can try to short this a bit.
+
+You made a good point with the dev_crit(), I can certainly promote this
+over current condition.  It happens for example if I drive too big of a
+load (a heavy-duty jumper wire in my case, simulating a short of the
+output stage).  If so, we should also consider the other two fault
+conditions.  For the "over temp" error condition (which is actually
+really hard to create on the bench, I've to get the EVM up to like 150C
+and things start smelling a bit) this should probably be dev_crit() as
+well. And then, maybe leave the "DC error" as a warning, since it's less
+critical than the other two conditions. Thoughts?
+
+Regards,
+Andreas
