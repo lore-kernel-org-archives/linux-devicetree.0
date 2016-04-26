@@ -1,79 +1,55 @@
-From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: dts: lpc32xx: ea3250: add NAND partitions
- device node
-Date: Tue, 26 Apr 2016 12:58:45 -0400
-Message-ID: <1461689925.9433.14.camel@localhost>
-References: <1461631050-10479-1-git-send-email-vz@mleia.com>
-	 <1461631050-10479-3-git-send-email-vz@mleia.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 0/2] pci: host: new driver for Marvell Armada 7K/8K
+ PCIe controller
+Date: Tue, 26 Apr 2016 12:00:04 -0500
+Message-ID: <20160426170004.GA27803@localhost>
+References: <1460648177-31473-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160425154611.3e7e9dc9@free-electrons.com>
+ <20160425172846.GB1759@localhost>
+ <20160426104208.150cbbd0@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461631050-10479-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160426104208.150cbbd0@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-On Tue, 2016-04-26 at 03:37 +0300, Vladimir Zapolskiy wrote:
-> To declare MTD OF partitions NAND controller device node should have
-> a special 'partitions' subnode, the change removes a debug message
-> from mtd/ofpart on boot:
+On Tue, Apr 26, 2016 at 10:42:08AM +0200, Thomas Petazzoni wrote:
+> Hello Bjorn,
 > 
->   nxp_lpc3220_slc: 'partitions' subnode not found on /ahb/flash@20020000.
->   Trying to parse direct subnodes as partitions.
+> On Mon, 25 Apr 2016 12:28:46 -0500, Bjorn Helgaas wrote:
 > 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/ea3250.dts | 41 ++++++++++++++++++++++-------------------
->  1 file changed, 22 insertions(+), 19 deletions(-)
+> > How about if you just shuffle those bits around into
+> > an armada8k_add_pcie_port() and an armada8k_pcie_establish_link(), and
+> > we'll call that good for now?
 > 
-> diff --git a/arch/arm/boot/dts/ea3250.dts b/arch/arm/boot/dts/ea3250.dts
-> index 7cf815a..58bcda9 100644
-> --- a/arch/arm/boot/dts/ea3250.dts
-> +++ b/arch/arm/boot/dts/ea3250.dts
-> @@ -213,8 +213,6 @@
->  
->  /* 128MB Flash via SLC NAND controller */
->  &slc {
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
->  	status = "okay";
->  
->  	nxp,wdr-clks = <14>;
-> @@ -228,26 +226,31 @@
->  	nand-on-flash-bbt;
->  	gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
->  
-> -	mtd0@00000000 {
-> -		label = "ea3250-boot";
-> -		reg = <0x00000000 0x00080000>;
-> -		read-only;
-> -	};
-> +	partitions {
+> I just sent a v3 which implements this.
+> 
+> However, to be honest, after looking at the other drivers, I found the
+> XYZ_add_pcie_port() function to not be very useful: it simply
+> continues the work done by the probe function, and there is really no
+> reason to split the remaining work of the probe() in a separate
+> function. The XYZ_add_pcie_port() is called only one time for each
+> probe() call, so having a separate function is somewhat useless. In
+> addition, the separation of work between probe() and
+> XYZ_add_pcie_port() is not very consistent accross drivers. In
+> pci-imx6, XYZ_add_pcie_port() only sets up the interrupt handler and
+> calls dw_pcie_host_init(). In pci-dra7xx, XYZ_add_pcie_port() sets up
+> the interrupt, maps some registers and calls dw_pcie_host_init().
+> 
+> So my v3 implements what you suggested, and creates a
+> armada8k_add_pcie_port() to make it consistent with the other drivers,
+> but long term, I'm not sure this particular function is really useful.
 
-You may want to add the compatible property to the partitions here:
-+		compatible = "fixed-partitions";
+I agree completely with everything you said.  I would be thrilled if
+somebody were to make this more sensible, as long as we did it to
+*all* the drivers, not just one.
 
-Refer to commit e488ca9f8d4f62c2dc36bfa5c32f68e7f05ab381 for details.
+I think things started out fairly simple, then diverged over time as
+we added clocks, PHYs, MSI, etc.  It looks like we're going to have
+more divergence for power management, suspend, hotplug, modules, etc.
 
-This suggestion is also valid for patch #6.
-
-Note:
-This change was required to use the "partitions" subnode
-on my custom LPC3250 board definition.
-
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
->  
-...
-Sylvain
- 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
