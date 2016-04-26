@@ -1,53 +1,41 @@
-From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 6/7] clk: Kconfig: Name RK818 in Kconfig for
- COMMON_CLK_RK808
-Date: Tue, 26 Apr 2016 16:54:09 +0200
-Message-ID: <1461682450-22173-7-git-send-email-w.egorov@phytec.de>
-References: <1461682450-22173-1-git-send-email-w.egorov@phytec.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 0/5] DT Fixes for OMAP4 and OMAP5 boards
+Date: Tue, 26 Apr 2016 17:00:33 +0200
+Message-ID: <1F57045F-FCD1-45F1-865B-E2324FACB581@goldelico.com>
+References: <cover.1461003660.git.hns@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1461682450-22173-1-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1461003660.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-The RK808 and RK818 PMICs are using a similar register map.
-We can reuse the clk driver for the RK818 PMIC. So let's add
-the RK818 in the Kconfig description.
+ping.
 
-Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/clk/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 16f7d33..64b4daa 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -49,10 +49,10 @@ config COMMON_CLK_MAX77802
- 	  This driver supports Maxim 77802 crystal oscillator clock.
- 
- config COMMON_CLK_RK808
--	tristate "Clock driver for RK808"
-+	tristate "Clock driver for RK808/RK818"
- 	depends on MFD_RK808
- 	---help---
--	  This driver supports RK808 crystal oscillator clock. These
-+	  This driver supports RK808 and RK818 crystal oscillator clock. These
- 	  multi-function devices have two fixed-rate oscillators,
- 	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
- 	  by control register.
--- 
-1.9.1
+> Am 18.04.2016 um 20:20 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> 
+> This patch series adds DT nodes for:
+> * twl6030 gpadc for omap4 based boards (Pandaboard ES)
+> * twl6037 gpadc for omap5 based board (OMAP5EVM)
+> * omap5-board-common: ckobuffer (needed for high quality twl6040 audio)
+> * fix range problem with omap5 pinmux
+> 
+> 
+> H. Nikolaus Schaller (5):
+>  ARM: dts: twl6030: describe gpadc
+>  ARM: dts: omap5-board-common: describe gpadc for Palmas
+>  ARM: dts: omap5: fix range of permitted wakeup pinmux registers
+>  ARM: dts: omap5: describe control for ckobuffer
+>  ARM: dts: omap5-board-common: set up ckobuffer for twl6040
+> 
+> arch/arm/boot/dts/omap5-board-common.dtsi | 24 ++++++++++++++++++++++++
+> arch/arm/boot/dts/omap5.dtsi              | 12 +++++++++++-
+> arch/arm/boot/dts/twl6030.dtsi            |  6 ++++++
+> 3 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 2.7.3
+> 
