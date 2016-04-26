@@ -1,78 +1,78 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
-Date: Tue, 26 Apr 2016 12:55:18 -0400
-Message-ID: <571F9D76.2060809@codeaurora.org>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
- <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
- <20160426033029.GB2274@localhost>
- <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
- <20160426162529.GK2274@localhost>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] arm64: tegra: fix DT definitions for GM20B GPU
+Date: Tue, 26 Apr 2016 18:58:55 +0200
+Message-ID: <20160426165855.GA2388@ulmo.ba.sec>
+References: <1459156984-32644-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160426162529.GK2274@localhost>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459156984-32644-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4/26/2016 12:25 PM, Vinod Koul wrote:
-> On Tue, Apr 26, 2016 at 08:08:16AM -0400, okaya@codeaurora.org wrote:
->> On 2016-04-25 23:30, Vinod Koul wrote:
->>> On Mon, Apr 11, 2016 at 10:21:12AM -0400, Sinan Kaya wrote:
->>>
->>>> +static int hidma_chan_stats(struct seq_file *s, void *unused)
->>>> +{
->>>> +	struct hidma_chan *mchan =3D s->private;
->>>> +	struct hidma_desc *mdesc;
->>>> +	struct hidma_dev *dmadev =3D mchan->dmadev;
->>>> +
->>>> +	pm_runtime_get_sync(dmadev->ddev.dev);
->>>
->>> debug shouldn't power up device, why do you want to do that
->>
->>
->> Clocks are turned off while the hw is idle. I can=E2=80=99t reach hw
->> registers without restoring power.
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 28, 2016 at 06:22:59PM +0900, Alexandre Courbot wrote:
+> Small series that fixes/completes DT bindings for Tegra GPUs and add two
+> missing entries required for the Tegra210 GPU to operate properly.
 >=20
-> Hmm, have you thought about using regmap?
+> Without these fixes, GM20B will crash during probe on 4.6 because a
+> required clock is not activated.
 >=20
+> Changes since v2:
+> - Fixed device address in DT examples
+> - Carried Acked-bys
+>=20
+> Changes since v1:
+> - Renamed "pllg_ref" clock to "ref" in DT bindings
+>=20
+> Alexandre Courbot (5):
+>   dt-bindings: gk20a: Fix typo in compatible name
+>   dt-bindings: gk20a: Document iommus property
+>   dt-bindings: Add documentation for GM20B GPU
+>   arm64: tegra210: Add reference clock to GM20B
+>   arm64: tegra210: Add IOMMU node to GM20B
+>=20
+>  .../devicetree/bindings/gpu/nvidia,gk20a.txt       | 37 ++++++++++++++++=
++++---
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  8 +++--
+>  2 files changed, 38 insertions(+), 7 deletions(-)
 
-To be honest, I didn't know what regmap is but I just read some code
-and looked at how it is used. Feel free to correct me if I got it=20
-wrong.=20
+Applied, thanks.
 
-Regmap seems to be designed for *slow* speed peripherals to improve fre=
-quent
-accesses by the SW. It looks like it is used by MFD, SPI and I2C driver=
-s.
+Thierry
 
-It seems to cache the register contents and flush/invalidate them only =
-when
-needed.
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The MMIO version seems to be assuming the presence of device-tree like =
-CLK
-API which doesn't exist on ACPI systems and is not portable.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-My reaction is that it is a lot of code with no added functionality to =
-what
-HIDMA driver is trying to achieve.=20
+iQIcBAABCAAGBQJXH55PAAoJEN0jrNd/PrOhmlwP/ReNvShAryeIt5rm4ZKQTFxH
+v2xT3FexDr7tFmK9PwF0BXWQ8H6bTrCrlkBcl7giuLODwSXiIIz7hvjawcrZ6VnW
+d5tT/QfDm7RXg/3YaLBx+Um3VXr+H4dkDqvmoJ+UA5DCJdh7IA6epB0pzqKHSxLr
+9YCvyfYfORdsM+d11j/QafFmcQlcasrrqFhoHIw2dpmeJKy+9qbQbyXUmhAsAv9j
+uEu9HLP+A6Hci8UdCfgHwzKbPsFWB5n3cz4mm4cdZvbabdDGqB/g/q8fYS5MDOo1
+P2vhoZeexwz5/iH2rxOi+7oZtcW8zW30nDVjr9GwXp9+LUxY/L7W+Tafv4xw0SGS
+x9HJB8t8F6FY5GX8LjWfUfVsilRPGQzHN92QwA/mwDxGkdglObYUvdOZw4Oh+crr
+0a87zFCgpIlKvjSm6BMRvDDEUT8ekvw1mbQ0M1IyXCvU56vWEGu0jpQ+6aPw4lgs
+QZZ0kT3c60hEL1YZkJToEM1oBf66+QiIaxfKJxOjwPayK4zIe6ZQxeo4BcSEUpOX
+syPny+plNaXZrmx68cJJDIELk02ZbgJK8x6i2UqoRVVyRwGVuq5ZIJL6xUYIRmgc
+Y7MpCba15ocfdC84BGoq2FpC3JjWKdtjhMTHrFAxW6CLNzB1pY05K2fvZE2f/XOs
+IN8rQkzJtOTdkvGD5OFP
+=Er54
+-----END PGP SIGNATURE-----
 
-Given that the use case here is only for debug purposes; I think it is =
-OK=20
-to keep this runtime call here. I don't want to add any overhead into t=
-he
-existing code just to support the debug use case. =20
-
-None of my register read/writes are slow. This file will only be used t=
-o=20
-troubleshoot customer issues.
-
---=20
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, In=
-c.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Li=
-nux Foundation Collaborative Project
+--Dxnq1zWXvFF0Q93v--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
