@@ -1,93 +1,128 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] ASoC: codecs: add TA5720 digital
- amplifier DT bindings
-Date: Tue, 26 Apr 2016 17:50:06 +0100
-Message-ID: <20160426165006.GD3217@sirena.org.uk>
-References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
- <1461615456-19510-2-git-send-email-dannenberg@ti.com>
- <20160426153707.GZ3217@sirena.org.uk>
- <20160426161425.GA2885@borg.dal.design.ti.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 03/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ engine driver support
+Date: Tue, 26 Apr 2016 22:26:22 +0530
+Message-ID: <20160426165622.GR2274@localhost>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-4-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0665123988728155634=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160426161425.GA2885@borg.dal.design.ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461236675-10176-4-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 21, 2016 at 12:04:20PM +0100, Peter Griffin wrote:
 
---===============0665123988728155634==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="an18TTCYBDxQZRot"
-Content-Disposition: inline
+> +	if (!atomic_read(&fchan->fdev->fw_loaded)) {
+> +		dev_err(fchan->fdev->dev, "%s: fdma fw not loaded\n", __func__);
+> +		return NULL;
+> +	}
 
+so who is loading the fw and setting fw_loaded, it is not set in this patch?
 
---an18TTCYBDxQZRot
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +	if (direction == DMA_DEV_TO_MEM) {
+> +		fchan->cfg.req_ctrl &= ~REQ_CTRL_WNR;
+> +		maxburst = fchan->scfg.src_maxburst;
+> +		width = fchan->scfg.src_addr_width;
+> +		addr = fchan->scfg.src_addr;
+> +	} else if (direction == DMA_MEM_TO_DEV) {
+> +		fchan->cfg.req_ctrl |= REQ_CTRL_WNR;
+> +		maxburst = fchan->scfg.dst_maxburst;
+> +		width = fchan->scfg.dst_addr_width;
+> +		addr = fchan->scfg.dst_addr;
+> +	} else {
+> +		return -EINVAL;
+> +	}
 
-On Tue, Apr 26, 2016 at 11:14:25AM -0500, Andreas Dannenberg wrote:
-> On Tue, Apr 26, 2016 at 04:37:07PM +0100, Mark Brown wrote:
-> > On Mon, Apr 25, 2016 at 03:17:35PM -0500, Andreas Dannenberg wrote:
+switch please
 
-> > > +Optional properties:
+> +
+> +	fchan->cfg.req_ctrl &= ~REQ_CTRL_OPCODE_MASK;
+> +	if (width == DMA_SLAVE_BUSWIDTH_1_BYTE)
+> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST1;
+> +	else if (width == DMA_SLAVE_BUSWIDTH_2_BYTES)
+> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST2;
+> +	else if (width == DMA_SLAVE_BUSWIDTH_4_BYTES)
+> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST4;
+> +	else if (width == DMA_SLAVE_BUSWIDTH_8_BYTES)
+> +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST8;
+> +	else
+> +		return -EINVAL;
 
-> > > +- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
-> > > +- pvdd-supply : phandle to a supply used for the Class-D amp and the=
- analog
+here as well
 
-> > This suggests that the device doesn't need power... =20
+> +static void fill_hw_node(struct st_fdma_hw_node *hw_node,
+> +			struct st_fdma_chan *fchan,
+> +			enum dma_transfer_direction direction)
+> +{
+> +
+> +	if (direction == DMA_MEM_TO_DEV) {
+> +		hw_node->control |= NODE_CTRL_SRC_INCR;
+> +		hw_node->control |= NODE_CTRL_DST_STATIC;
+> +		hw_node->daddr = fchan->cfg.dev_addr;
+> +	} else {
+> +		hw_node->control |= NODE_CTRL_SRC_STATIC;
+> +		hw_node->control |= NODE_CTRL_DST_INCR;
+> +		hw_node->saddr = fchan->cfg.dev_addr;
+> +	}
 
-> no power, now that would be nice! :)  What this was supposed to mean is
-> that the properties are optional, the power of course is not. The DT has
+empty line here at other places too. The code looks very compressed and bit
+harder to read overall
 
-They should only be optional if they may really be missing.  We may
-attempt to be liberal in the DTs we accept but we should not encourage
-sloppily written DTs.
+> +	fdesc = st_fdma_alloc_desc(fchan, sg_len);
+> +	if (!fdesc) {
+> +		dev_err(fchan->fdev->dev, "no memory for desc\n");
+> +		return NULL;
+> +	}
+> +
+> +	fdesc->iscyclic = false;
+> +
+> +	for_each_sg(sgl, sg, sg_len, i) {
+> +		hw_node = fdesc->node[i].desc;
+> +
+> +		hw_node->next = fdesc->node[(i + 1) % sg_len].pdesc;
+> +		hw_node->control = NODE_CTRL_REQ_MAP_DREQ(fchan->dreq_line);
+> +
+> +		fill_hw_node(hw_node, fchan, direction);
+> +
+> +		if (direction == DMA_MEM_TO_DEV)
+> +			hw_node->saddr = sg_dma_address(sg);
+> +		else
+> +			hw_node->daddr = sg_dma_address(sg);
+> +
+> +		hw_node->nbytes = sg_dma_len(sg);
+> +		hw_node->generic.length = sg_dma_len(sg);
+> +	}
+> +
+> +	/* interrupt at end of last node */
+> +	hw_node->control |= NODE_CTRL_INT_EON;
+> +
+> +	return vchan_tx_prep(&fchan->vchan, &fdesc->vdesc, flags);
 
-> really no control over how I wire up my HW and I'd argue most folks just
-> permanently power the TAS5720 since the shutdown current is just a few
-> uAs IIRC in order to save some BOM cost. But I suppose the DT description
-> is such that the Kernel can more intelligently handle things based on
-> what the driver is doing if somebody choses and implements additional
-> regulator/power switch HW. Or did I misunderstand your point?
+bunch of this seems similar to cyclic case, can you create common setup
+routine for these, anyway cyclic is a special cases of slave_sg
 
-It doesn't really matter if a given system ends up controlling things
-actively, we still want to be consistent in describing them since it is
-less error prone when it does become relevant.
+> +
+> +	ret = dma_cookie_status(chan, cookie, txstate);
+> +	if (ret == DMA_COMPLETE)
+> +		return ret;
+> +
+> +	if (!txstate)
+> +		return fchan->status;
 
---an18TTCYBDxQZRot
-Content-Type: application/pgp-signature; name="signature.asc"
+why channel status, query is for descriptor
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +static int st_fdma_remove(struct platform_device *pdev)
+> +{
+> +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
+> +
+> +	st_fdma_clk_disable(fdev);
 
-iQEcBAEBCAAGBQJXH5w9AAoJECTWi3JdVIfQEQYH/367gpPyBFVghsejyDRuOOZr
-8CqQ61D9Y5/f1dSdVhMErNaPTVqiaRRPrxS/7tMEEuh18HR2XiRkgt9rzrxySlwT
-lRP1DCParRrhFBVOd751vXkKClGgRveIk+CXc07JZ5OLjXBfyTSjFrqFAGxoKQB1
-57vt+uae4Ox3ANqEyp7DZoV/U43HyIjSeI7zidorWlYyTX0y9AjLExmmArR4ei6V
-ivVowBd/V2n+KHlokBop5zn9KeCxadvIqcpaq12FBbsJPTkMtPUynBtAAvtyc+vO
-Bh+3fRZrOXWwy9hjHZj9W6wkXwGL7xrxHiHSj3YO8wrAiCym3Fj2e7qtb36vqRY=
-=dhQW
------END PGP SIGNATURE-----
+and you irq is still enabled and tasklets can be scheduled!!
 
---an18TTCYBDxQZRot--
-
---===============0665123988728155634==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0665123988728155634==--
+-- 
+~Vinod
