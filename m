@@ -1,53 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 15/41] Documentation: dt: mfd: fix spelling mistakes
-Date: Tue, 26 Apr 2016 07:35:16 +0100
-Message-ID: <20160426063516.GQ2713@dell>
-References: <1461543878-3639-1-git-send-email-eric@engestrom.ch>
- <1461543878-3639-16-git-send-email-eric@engestrom.ch>
- <20160425135017.GA8656@rob-hp-laptop>
- <20160425165830.GP2713@dell>
- <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] arm64: dts: marvell: add XOR node for Armada
+ 3700 SoC
+Date: Tue, 26 Apr 2016 09:28:11 +0200
+Message-ID: <20160426092811.62d092bf@free-electrons.com>
+References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
+	<1460652818-14647-6-git-send-email-gregory.clement@free-electrons.com>
+	<20160426033536.GD2274@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJC1epdP_RBm4fSz2ouYPy40NuFzfj6M1qB0rxV7H4S=Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Eric Engestrom <eric@engestrom.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160426033536.GD2274@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Apr 2016, Rob Herring wrote:
+Hello Vinod,
 
-> On Mon, Apr 25, 2016 at 11:58 AM, Lee Jones <lee.jones@linaro.org> wr=
-ote:
-> > On Mon, 25 Apr 2016, Rob Herring wrote:
-> >
-> >> On Mon, Apr 25, 2016 at 01:24:12AM +0100, Eric Engestrom wrote:
-> >> > Signed-off-by: Eric Engestrom <eric@engestrom.ch>
-> >>
-> >> Applied, thanks.
-> >
-> > I'd prefer to continue taking these if you don't mind Rob.  It'd li=
-mit
-> > on the amount of immutable branch pull requests I have to send/hand=
-le.
->=20
-> Why? Do you really expect to have a dependency here?
+On Tue, 26 Apr 2016 09:05:36 +0530, Vinod Koul wrote:
+> On Thu, Apr 14, 2016 at 06:53:38PM +0200, Gregory CLEMENT wrote:
+> > From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+> > 
+> > Armada 3700 SoC comprise one dual-channel XOR engine and this
+> > patch adds its according representation.
+> 
+> This need an ACK from ARM folks..
 
-Because the file is in ".*/mfd/.*", which normally goes through the MFD
-tree.
+Well, this patch has the SoB from Gregory Clement, who is one of the
+maintainers of the ARM Marvell Armada platforms. And he should be the
+one taking this patch in his tree (especially since a lot of others
+Armada 3700 DT changes are going to be made).
 
-$ git log --committer=3D"Rob Herring" --oneline -- Documentation/device=
-tree/bindings/mfd/ | wc -l
-6
-$ git log --committer=3D"Lee Jones" --oneline -- Documentation/devicetr=
-ee/bindings/mfd/ | wc -l
-99
+So I guess that the intent is that you take patches 1 to 4, and patch 5
+will be taken by Gregory.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
