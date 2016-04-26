@@ -1,39 +1,190 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/11] dt-bindings: mfd: Add Altera Arria10 System
- Resource Chip bindings
-Date: Tue, 26 Apr 2016 07:33:32 -0500
-Message-ID: <20160426123332.GA25487@rob-hp-laptop>
-References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
- <1461339219-15255-2-git-send-email-tthayer@opensource.altera.com>
- <20160425125514.GA5100@rob-hp-laptop>
- <571E3160.60702@opensource.altera.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 4/4] ARM64: dts: rockchip: add dts file for RK3399 evaluation board
+Date: Tue, 26 Apr 2016 14:37 +0200
+Message-ID: <9945516.Q6LYCrkl5z@diego>
+References: <1461638206-20473-1-git-send-email-jay.xu@rock-chips.com> <1461638206-20473-5-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <571E3160.60702@opensource.altera.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461638206-20473-5-git-send-email-jay.xu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: lintao@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 25, 2016 at 10:01:52AM -0500, Thor Thayer wrote:
+Am Dienstag, 26. April 2016, 10:36:46 schrieb Jianqun Xu:
+> This patch add rk3399-evb.dts for RK3399 evaluation board.
+> Tested on RK3399 evb.
 > 
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+> changes in v3:
+> - add more compatible (Doug)
+> - add modle
 > 
-> On 04/25/2016 07:55 AM, Rob Herring wrote:
-> >On Fri, Apr 22, 2016 at 10:33:29AM -0500, tthayer@opensource.altera.com wrote:
-> >>From: Thor Thayer <tthayer@opensource.altera.com>
-> >>
-> >>The Altera Arria10 Devkit System Resource chip is a Multi-Function
-> >>Device with a GPIO expander and power supply alarm.
-> >
-> >An alarm with no interrupt? Are the GPIOs interrupt capable?
+>  arch/arm64/boot/dts/rockchip/Makefile       |   1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 125
+> ++++++++++++++++++++++++++++ 2 files changed, 126 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb.dts
 > 
-> The alarms have no interrupt but the GPIOs are interrupt capable (not
-> implemented with interrupt capability in this patch series).
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
+> b/arch/arm64/boot/dts/rockchip/Makefile index df37865..7037a16 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -1,6 +1,7 @@
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
+> 
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts new file mode 100644
+> index 0000000..c3370bd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> @@ -0,0 +1,125 @@
+> +/*
+> + * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include "rk3399.dtsi"
+> +
+> +/ {
+> +	model = "Rockchip RK3399 Evaluation Board";
+> +	compatible = "rockchip,rk3399-evb", "rockchip,rk3399",
+> +		     "google,rk3399evb-rev2", google,rk3399evb-rev1",
+> +		     "google,rk3399evb-rev0" ;
 
-Please make the binding as complete as possible even if you don't 
-support features in the driver yet. Driver features may evolve, but a 
-specific h/w doesn't.
+can you check against which compatibles that coreboot really matches?
 
-Rob
+As we said that the evb changed between rev1 and rev2, I would expect the 
+compatible to be something like
+
+	compatible = "rockchip,rk3399-evb",  "google,rk3399evb-rev2", 
+			"rockchip,rk3399";
+
+leaving out the rev1 and rev0
+
+> +
+> +	vdd_center: vdd-center {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm3 0 25000 0>;
+> +		regulator-name = "vdd_center";
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		status = "okay";
+> +	};
+
+Can you check if this runs stable with the pwm-regulator in mainline please?
+I.e. Boris' rework series hasn't landed yet and at least on Veyron I remember 
+the pwm-regulator having reliability issues or something like that.
+
+
+> +
+> +	vcc3v3_sys: vcc3v3-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	vcc_phy: vcc-phy-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_phy";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&pwm0 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm3 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&pinctrl {
+> +	pmic {
+> +		pmic_int_l: pmic-int-l {
+> +			rockchip,pins =
+> +				<1 21 RK_FUNC_GPIO &pcfg_pull_up>;
+> +		};
+> +
+> +		pmic_dvs2: pmic-dvs2 {
+> +			rockchip,pins =
+> +				<1 18 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
+> +	};
+> +};
