@@ -1,47 +1,32 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] arm64: dts: marvell: add XOR node for Armada 3700
- SoC
-Date: Tue, 26 Apr 2016 22:02:04 +0530
-Message-ID: <20160426163204.GN2274@localhost>
-References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
- <1460652818-14647-6-git-send-email-gregory.clement@free-electrons.com>
- <20160426033536.GD2274@localhost>
- <20160426092811.62d092bf@free-electrons.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Tue, 26 Apr 2016 12:26:24 -0400 (EDT)
+Message-ID: <20160426.122624.967268334782802268.davem@davemloft.net>
+References: <20160425205650.GA31129@lunn.ch>
+	<666dffb41a922b0c8638f2f002a2de08@mail.gmail.com>
+	<20160426121335.GC11668@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160426092811.62d092bf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160426121335.GC11668-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+To: andrew-g2DYL2Zd6BY@public.gmane.org
+Cc: pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, suzuki.poulose-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 09:28:11AM +0200, Thomas Petazzoni wrote:
-> Hello Vinod,
-> 
-> On Tue, 26 Apr 2016 09:05:36 +0530, Vinod Koul wrote:
-> > On Thu, Apr 14, 2016 at 06:53:38PM +0200, Gregory CLEMENT wrote:
-> > > From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-> > > 
-> > > Armada 3700 SoC comprise one dual-channel XOR engine and this
-> > > patch adds its according representation.
-> > 
-> > This need an ACK from ARM folks..
-> 
-> Well, this patch has the SoB from Gregory Clement, who is one of the
-> maintainers of the ARM Marvell Armada platforms. And he should be the
-> one taking this patch in his tree (especially since a lot of others
-> Armada 3700 DT changes are going to be made).
-> 
-> So I guess that the intent is that you take patches 1 to 4, and patch 5
-> will be taken by Gregory.
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Date: Tue, 26 Apr 2016 14:13:35 +0200
 
-sounds good to me then
+> On Tue, Apr 26, 2016 at 02:03:27PM +0530, Pramod Kumar wrote:
+>> As you can see from above points, trying to re-use Linux Ethernet MDIO mux
+>> framework for non-Ethernet PHYs is not the right way.
+> 
+> And as i pointed out, all your arguments are wrong, bar one. And i
+> doubt that one argument is sufficient to duplicate a lot of code which
+> already exists and does 95% of what you need.
 
-thanks
--- 
-~Vinod
++1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
