@@ -1,41 +1,48 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 4/8] regulator: rk808: Migrate to regulator core's simplified DT parsing code
-Date: Tue, 26 Apr 2016 10:17:59 +0200
-Message-ID: <2669414.IKg01zC8vG@diego>
-References: <1461590448-47685-1-git-send-email-w.egorov@phytec.de> <20160425173911.GQ3217@sirena.org.uk> <571F1CB4.10200@phytec.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <571F1CB4.10200@phytec.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Wadim Egorov <w.egorov@phytec.de>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/2] pci: host: new driver for Marvell Armada 7K/8K PCIe controller
+Date: Tue, 26 Apr 2016 10:31:44 +0200
+Message-ID: <1461659506-10387-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 26. April 2016, 09:45:56 schrieb Wadim Egorov:
-> On 25.04.2016 19:39, Mark Brown wrote:
-> > On Mon, Apr 25, 2016 at 03:20:44PM +0200, Wadim Egorov wrote:
-> >> A common simplified DT parsing code for regulators was introduced in
-> >> commit a0c7b164ad11 ("regulator: of: Provide simplified DT parsing
-> >> method")
-> > 
-> > This doesn't apply against current code, please check and resend.
-> 
-> Hm, for me all patches apply to the current code.
-> This patch depends on the first rename patch. Maybe this is the problem?
+Hello,
 
-which is the reason why renaming stuff makes everything just more complicated 
-without providing additional value ;-) 
+Here is the third iteration of the PCIe host controller driver needed
+for the ARM64 Marvell Armada 7K/8K platform.
 
-The first patch would go through the mfd-tree (if accepted by Lee and Acked by 
-the other involved subsystem maintainers) which would then need a stable 
-branch merged into the regulator tree - or after the first patch goes in you 
-simply wait for a kernel release.
+Changes since v2:
 
-Normally I would expect the reasonable kernel developer to be able to simply 
-read code, kconfig, docs stating the drivers being for rk808 and rk818 without 
-getting "confused" by some structs mentioning the rk808.
+ - Added Rob Herring's Acked-by on the Device Tree binding patch.
 
+ - Reworked the PCIe host driver following the suggestion of Bjorn
+   Helgaas: creation of armada8k_add_pcie_port() and
+   armada8k_pcie_establish_link() in order to follow the convention of
+   other Designware based drivers.
 
-Heiko
+Thanks!
+
+Thomas
+
+Thomas Petazzoni (2):
+  dt-bindings: pci: add DT binding for Marvell Armada 7K/8K PCIe
+    controller
+  pci: host: new driver for Marvell Armada 7K/8K PCIe controller
+
+ .../devicetree/bindings/pci/pci-armada8k.txt       |  38 +++
+ drivers/pci/host/Kconfig                           |  11 +
+ drivers/pci/host/Makefile                          |   1 +
+ drivers/pci/host/pcie-armada8k.c                   | 276 +++++++++++++++++++++
+ 4 files changed, 326 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
+ create mode 100644 drivers/pci/host/pcie-armada8k.c
+
+-- 
+2.6.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
