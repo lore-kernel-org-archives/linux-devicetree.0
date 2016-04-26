@@ -1,52 +1,64 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 08/18] ARM: multi_v7_defconfig: Enable STi FDMA driver
-Date: Tue, 26 Apr 2016 11:42:53 +0100
-Message-ID: <20160426104253.GB2984@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <1461236675-10176-9-git-send-email-peter.griffin@linaro.org>
- <5937696.Zdx8BrBD6K@wuerfel>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] drivers: firmware: psci: unify enable-method binding
+ on ARM {64,32}-bit systems
+Date: Tue, 26 Apr 2016 11:42:58 +0100
+Message-ID: <571F4632.6090003@arm.com>
+References: <1461338282-19509-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5937696.Zdx8BrBD6K@wuerfel>
+In-Reply-To: <1461338282-19509-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On Thu, 21 Apr 2016, Arnd Bergmann wrote:
+On 22/04/16 16:18, Sudeep Holla wrote:
+> Currently ARM CPUs DT bindings allows different enable-method value for
+> PSCI based systems. On ARM 64-bit this property is required and must be
+> "psci" while on ARM 32-bit systems this property is optional and must
+> be "arm,psci" if present.
+>
+> However, "arm,psci" has always been the compatible string for the PSCI
+> node, and was never intended to be the enable-method. So this is a bug
+> in the binding and not a deliberate attempt at specifying 32-bit
+> differently.
+>
+> This is problematic if 32-bit OS is run on 64-bit system which has
+> "psci" as enable-method rather than the expected "arm,psci".
+>
+> So let's unify the value into "psci" and remove support for "arm,psci"
+> before it finds any users.
+>
+> Reported-by: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/arm/cpus.txt | 1 -
+>   drivers/firmware/psci.c                        | 2 +-
+>   2 files changed, 1 insertion(+), 2 deletions(-)
+>
+> v2->v1:
+> 	- Added Mark and Lorenzo's ACKs
+> 	- Updated commit message to specify that it also conflicts with
+> 	  PSCI compatible(from Mark's reply on the thread)
+>
+> Hi ARM-SoC guys,
+>
+> Can you please pick up this single fix for PSCI binding/driver for v4.6 ?
+>
 
-> On Thursday 21 April 2016 12:04:25 Peter Griffin wrote:
-> > This DMA controller is found on all STi chipsets.
-> > 
-> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm/configs/multi_v7_defconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> > index 2823490..61008a0 100644
-> > --- a/arch/arm/configs/multi_v7_defconfig
-> > +++ b/arch/arm/configs/multi_v7_defconfig
-> > @@ -727,6 +727,7 @@ CONFIG_DMA_OMAP=y
-> >  CONFIG_QCOM_BAM_DMA=y
-> >  CONFIG_XILINX_VDMA=y
-> >  CONFIG_DMA_SUN6I=y
-> > +CONFIG_ST_FDMA=y
-> >  CONFIG_STAGING=y
-> >  CONFIG_SENSORS_ISL29018=y
-> >  CONFIG_SENSORS_ISL29028=y
-> > -- 
-> 
-> Is this needed for booting? If not, make it a loadable module.
+Gentle ping to include this in next round of arm-soc fixes. It would be
+good to get this fixed before v4.6 as we don't want to have user of the
+binding which we want to remove in the release.
 
-No it isn't required for booting. Will fix in v4.
-
-Peter
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
