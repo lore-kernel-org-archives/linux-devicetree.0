@@ -1,50 +1,69 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 0/2] pci: host: new driver for Marvell Armada 7K/8K
- PCIe controller
-Date: Tue, 26 Apr 2016 16:45:10 -0500
-Message-ID: <20160426214510.GA6789@localhost>
-References: <1461659506-10387-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20160426173144.GB27803@localhost>
- <20160426210850.13cc8a0e@free-electrons.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: [PATCH v4 1/2] ASoC: codecs: add TA5720 digital
+	amplifier DT bindings
+Date: Tue, 26 Apr 2016 17:15:56 -0500
+Message-ID: <1461708957-7616-2-git-send-email-dannenberg@ti.com>
+References: <1461708957-7616-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160426210850.13cc8a0e@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1461708957-7616-1-git-send-email-dannenberg@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 09:08:50PM +0200, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Tue, 26 Apr 2016 12:31:44 -0500, Bjorn Helgaas wrote:
-> 
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
-> > >  create mode 100644 drivers/pci/host/pcie-armada8k.c
-> > 
-> > Thanks, Thomas, I applied these to pci/host-armada for v4.7.
-> 
-> Thanks!
-> 
-> > I added the tweaks below to use dev_dbg() instead of pr_debug(), use
-> > dw_pcie_wait_for_link() instead of another hand-coded timeout loop,
-> > and fix a typo and remove unused constants.
-> 
-> Looks all good, thanks for applying! Just one tiny question below.
-> 
-> >  	/*
-> >  	 * Interrupts are directly handled by the device driver of the
-> > -	 * PCI device. However, there are also latched into the PCIe
-> > +	 * PCI device.  However, they are also latched into the PCIe
-> 
-> Any reason to have two spaces after the dot here?
+The Texas Instruments TAS5720L/M device is a high-efficiency mono
+Class-D audio power amplifier optimized for high transient power
+capability to use the dynamic power headroom of small loudspeakers.
+Its digital time division multiplexed (TDM) interface enables up to
+16 devices to share the same bus.
 
-Only habit because my eighth-grade typing teacher in 1979 did it that
-way, and (I think) vim does it that way by default.  Poor reasons,
-both, and definitely trumped by consistency with the rest of the file,
-which does use a single space in both other instances.  I removed the
-extra space :)
+Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+---
+ .../devicetree/bindings/sound/tas5720.txt          | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas5720.txt
 
-Bjorn
+diff --git a/Documentation/devicetree/bindings/sound/tas5720.txt b/Documentation/devicetree/bindings/sound/tas5720.txt
+new file mode 100644
+index 0000000..806ea73
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas5720.txt
+@@ -0,0 +1,25 @@
++Texas Instruments TAS5720 Mono Audio amplifier
++
++The TAS5720 serial control bus communicates through the I2C protocol only. The
++serial bus is also used for periodic codec fault checking/reporting during
++audio playback. For more product information please see the links below:
++
++http://www.ti.com/product/TAS5720L
++http://www.ti.com/product/TAS5720M
++
++Required properties:
++
++- compatible : "ti,tas5720"
++- reg : I2C slave address
++- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
++- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
++
++Example:
++
++tas5720: tas5720@6c {
++	status = "okay";
++	compatible = "ti,tas5720";
++	reg = <0x6c>;
++	dvdd-supply = <&vdd_3v3_reg>;
++	pvdd-supply = <&amp_supply_reg>;
++};
+-- 
+2.6.4
