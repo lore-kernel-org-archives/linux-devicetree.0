@@ -1,99 +1,52 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver
- code
-Date: Tue, 26 Apr 2016 12:15:32 +0100
-Message-ID: <20160426111532.GA5457@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <4337545.DyleYAUzIV@wuerfel>
- <20160426101136.GA2984@griffinp-ThinkPad-X1-Carbon-2nd>
- <6161197.8XCk69TI60@wuerfel>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] drivers: firmware: psci: unify enable-method binding
+ on ARM {64, 32}-bit systems
+Date: Tue, 26 Apr 2016 12:22:49 +0100
+Message-ID: <571F4F89.70006@arm.com>
+References: <1461338282-19509-1-git-send-email-sudeep.holla@arm.com>
+ <571F4632.6090003@arm.com> <31757054.8aSO57qemx@wuerfel>
+ <20160426190257.7b2e6a9a@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6161197.8XCk69TI60@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org, ludovic.barre@st.com, arnaud.pouliquen@st.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160426190257.7b2e6a9a@xhacker>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Jisheng,
 
-On Tue, 26 Apr 2016, Arnd Bergmann wrote:
+On 26/04/16 12:02, Jisheng Zhang wrote:
+> Dear Arnd, Sudeep,
+>
+> On Tue, 26 Apr 2016 12:49:00 +0200 Arnd Bergmann wrote:
+>
 
-> On Tuesday 26 April 2016 11:11:36 Peter Griffin wrote:
-> > Hi Arnd,
-> > 
-> > On Thu, 21 Apr 2016, Arnd Bergmann wrote:
-> > 
-> > > On Thursday 21 April 2016 12:04:26 Peter Griffin wrote:
-> > > > uniperiph-id, version and mode are ST specific bindings and
-> > > > need the 'st,' prefix. Update the examples, as otherwise copying
-> > > > them yields a runtime error parsing the DT node.
-> > > > 
-> > > > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > > > Cc: arnaud.pouliquen@st.com
-> > > > ---
-> > > >  .../devicetree/bindings/sound/st,sti-asoc-card.txt         | 14 +++++++-------
-> > > >  1 file changed, 7 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> > > > index 028fa1c..ef2e0c6 100644
-> > > > --- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> > > > +++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> > > > @@ -67,9 +67,9 @@ Example:
-> > > >                 dmas = <&fdma0 4 0 1>;
-> > > >                 dai-name = "Uni Player #1 (DAC)";
-> > > >                 dma-names = "tx";
-> > > > -               uniperiph-id = <2>;
-> > > > -               version = <5>;
-> > > > -               mode = "PCM";
-> > > > +               st,uniperiph-id = <2>;
-> > > > +               st,version = <5>;
-> > > > +               st,mode = "PCM";
-> > > >         };
-> > > 
-> > > You don't change the binding desciption here, only the example,
-> > > so they no longer match.
-> > 
-> > Whoops. Will fix that in v4.
-> > 
-> > > 
-> > > What is st,uniperiph-id needed for anyway? It's often an indication
-> > > that you are doing something wrong if you need this.
-> > 
-> > From looking at the code in sound/soc/sti/uniperif_player.c, there is
-> > one sysconf register called "Audio glue config" which is shared by all
-> > of the uniperif IP instances. This binding is being used to generate a
-> > bitoffset into this shared register based on the instance of the IP.
-> > 
-> > I guess the alternative is to have an explosion of compatibles?
-> > 
-> > st,sti-uni-player-1
-> > st,sti-uni-player-2
-> > st,sti-uni-player-3
-> > 
-> 
-> That would certainly be worse: if the devices are actually identical,
-> they should have the same compatible string.
-> 
-> > If not what would you recommend instead? :-)
-> 
-> It's still not clear to me what that bit in the syscfg register
-> is for. Given the error message about "sti-audio-clk-glue",
-> I suspect that this is actually a clock controller and that
-> it should be using the clock binding with a separate driver
-> instead of manipulating the regmap directly from the audio driver.
+[...]
 
-Luckily I do have the datasheet for the audio-glue sysconf register.
+>>
+>> Applied to the fixes branch. I have to admit that I don't understand
+>> how the compatible string is really used here, so I have to trust that
+>> this cannot break any existing machine.
+>
+> To be honest, this breaks some Marvell DEBU's 32 bit SoCs' kernel, but these
 
-It says: -
+Sorry for that, but it's better to fix it in the firmware/DT.
+As I mentioned earlier it was never honored in the kernel before v4.6,
+so technically nothing is broken yet :)
 
-[11:8] PCM_CLK_SEL: Selects the frequency synthesizer clock or the external
-PCM clock for each channel.
+> SoCs' support are not mainlined yet, so it's fine to fix it as early as
+> possible.
+>
 
-The driver only ever sets this to 1 which selects the frequency synthesizer
-clock. So the bitfield of the register which the driver is using (PCM_CLK_SEL)
-is a clock mux.
+Good to hear that. Thanks indeed.
 
-Peter.
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
