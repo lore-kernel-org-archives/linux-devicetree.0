@@ -1,42 +1,70 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] dmaengine: mv_xor: add support for Armada 3700 SoC
-Date: Tue, 26 Apr 2016 22:07:58 +0530
-Message-ID: <20160426163758.GP2274@localhost>
-References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
- <1460652818-14647-4-git-send-email-gregory.clement@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 10/18] ASoC: sti: Update example to include
+ assigned-clocks and mclk-fs
+Date: Tue, 26 Apr 2016 17:41:04 +0100
+Message-ID: <20160426164104.GC3217@sirena.org.uk>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-11-git-send-email-peter.griffin@linaro.org>
+ <20160421154933.GR3217@sirena.org.uk>
+ <20160426115210.GB5457@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20160426142357.GW3217@sirena.org.uk>
+ <20160426145129.GA11946@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20160426150319.GY3217@sirena.org.uk>
+ <20160426161432.GA12088@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="79m9KipKW65BQbRT"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1460652818-14647-4-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20160426161432.GA12088@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, ludovic.barre@st.com, arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 14, 2016 at 06:53:36PM +0200, Gregory CLEMENT wrote:
-> From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-> 
-> Armada 3700 SoC comprise a single XOR engine compliant with the ones used
-> in older Marvell SoC's like Armada XP or 38x. The only thing that needs
-> modification is the Mbus configuration, which has to be done on two
-> levels: global and in device. The first one is inherited from the
-> bootlader.  The latter can be opened in a default way, leaving
 
-s/bootlader/bootloader
+--79m9KipKW65BQbRT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> arbitration to the bus controller. Hence filled mbus_dram_target_info
-> structure is not needed.
-> 
-> Patch "dmaengine: mv_xor: optimize performance by using a subset
-> of the XOR channels" introduced limitation for using XOR engines and
-> channels vs number of available CPU's. Those contstraints do not however
+On Tue, Apr 26, 2016 at 05:14:32PM +0100, Peter Griffin wrote:
+> On Tue, 26 Apr 2016, Mark Brown wrote:
 
-s/contstraints/constraints
+> > A lot of this is details of the system integration for this SoC, not
+> > actual errors.
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This particular clock patch yes, but the other ASoC dt doc update is fixing
+> bindings which haven't progressed in lockstep with the driver code. Presumably
+> this happened during the review process when they were changed to being st,
+> prefixed in the driver, but the doc wasn't also updated.
+
+The bits where you are correcting the names of the properties are not
+details of the system integration and are therefore fine.  The bits
+where you're documenting the particular clocking arrangements for the
+SoC you happen to be using less so.
+
+> > it's fairly routine
+> > to have to explain to people that just because some old driver did
+> > something that doesn't mean it's something we want in new drivers.
+
+> I'm sure it is. Although I fail to see why leaving the documentation with
+> mistakes in is helpful to anybody.
+
+Fixing actual mistakes is fine.
+
+--79m9KipKW65BQbRT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXH5ofAAoJECTWi3JdVIfQZuYH/RfKp5QmiD+i+RpNev+dSIlp
+HBfag+AQCZMN5+wqHZ87r9dEy508WJPtQCViG9Fpglw/k+Otcj2JSt/T+HoCwl8L
+KY+5kkYUWAXeA7Ps8tR+a4RjXGsN23EThCheWlMsihqb1gljIDNI/AFFthU6pCD0
+Lafx+xRDlSbkYyvChrC8521HQ0NsQU3CVKOlwRIfOy6eG3iHsWRGbEZFzKr7jm+Y
+YSdPUKIqBkrMKQPzU66+FJ4f3Q7fH04bBl3/xxFxHD600W7ii4vsej7EnrUvgHKB
+fySe1SBxO0n0q9N/r0+Br/sApBd6iGSUBH6ewVPOxf8OcleCdscZb978ClAzPj4=
+=OV1p
+-----END PGP SIGNATURE-----
+
+--79m9KipKW65BQbRT--
