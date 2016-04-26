@@ -1,40 +1,47 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
-Date: Tue, 26 Apr 2016 10:23:02 -0700
-Message-ID: <571FA3F6.7000903@gmail.com>
-References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
- <1461230323-27891-2-git-send-email-pramod.kumar@broadcom.com>
- <20160425205650.GA31129@lunn.ch>
- <666dffb41a922b0c8638f2f002a2de08@mail.gmail.com>
- <20160426121335.GC11668@lunn.ch>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ARM: dts: twl6030: describe gpadc
+Date: Tue, 26 Apr 2016 10:26:00 -0700
+Message-ID: <20160426172559.GH5995@atomide.com>
+References: <cover.1461003660.git.hns@goldelico.com>
+ <279e70c9badea0356944093f9493e09922c6974b.1461003660.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160426121335.GC11668@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Pramod Kumar <pramod.kumar@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org, Anup Patel <anup.patel@broadcom.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <279e70c9badea0356944093f9493e09922c6974b.1461003660.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/04/16 05:13, Andrew Lunn wrote:
->> 4. Apart from these, by using MDIO mux framework we are making our
->> non-ethernet PHYs dependent on Linux network drivers which is not
->> acceptable. What if some product line does not need network subsystem at
->> all?
+* H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160418 11:23]:
+> tested on Pandaboard ES.
 > 
-> This is your only valid point. However, does Broadcom have a product
-> line which does not include networking? Is not Broadcom a network SoC
-> vendor?
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/twl6030.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/twl6030.dtsi b/arch/arm/boot/dts/twl6030.dtsi
+> index 55eb35f..c45f97f 100644
+> --- a/arch/arm/boot/dts/twl6030.dtsi
+> +++ b/arch/arm/boot/dts/twl6030.dtsi
+> @@ -99,4 +99,10 @@
+>  		compatible = "ti,twl6030-pwmled";
+>  		#pwm-cells = <2>;
+>  	};
+> +
+> +	gpadc {
+> +		compatible = "ti,twl6030-gpadc";
+> +		interrupts = <3>;
+> +		#io-channel-cells = <1>;
+> +	};
+>  };
 
-But even with that, there is no reason why we could not decouple the
-PHYLIB MDIO framework from PHYLIB and make it available as a more
-standalone subsystem which can be utilized when you have a mix of MDIO
-devices like here.
+Applying patches 1 & 2 into omap-for-v4.7/dt thanks.
 
-I am not clear on how common a shared MDIO bus is on other SoCs, but the
-other Broadcom SoCs I am familiar with have dedicated MDIO buses
-instances per type of PHY (PCIe, BUSB, Ethernet), thus making the split
-a ton easier.
--- 
-Florian
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
