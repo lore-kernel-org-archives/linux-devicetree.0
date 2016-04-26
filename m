@@ -1,47 +1,58 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
-Date: Tue, 26 Apr 2016 21:41:02 +0200
-Message-ID: <20160426194102.GF30107@lunn.ch>
-References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
- <5167289.0a4LBoWhyX@wuerfel>
- <20160426182335.GE30107@lunn.ch>
- <9424602.Vqb0FY56gH@wuerfel>
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Wed, 27 Apr 2016 04:53:18 +0900
+Message-ID: <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+	<20160410151237.GD5377@piout.net>
+	<1460301781.17404.171.camel@gmail.com>
+	<20160410153855.GG5377@piout.net>
+	<20160412012518.GQ3351@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9424602.Vqb0FY56gH@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org, Anup Patel <anup.patel@broadcom.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160412012518.GQ3351-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 09:24:34PM +0200, Arnd Bergmann wrote:
-> On Tuesday 26 April 2016 20:23:35 Andrew Lunn wrote:
-> > > A more complex problem would be having a PHY driver for a device
-> > > that can be either an ethernet phy or some other phy.
-> > 
-> > I doubt that ever happens. You can have up to 32 different devices on
-> > an MDIO bus. Since an Ethernet PHY and a "some other sort of PHY" are
-> > completely different things, why would a hardware engineer place them
-> > on the same address? It is like saying your ATA controller and VGA
-> > controller share the same slot on the PCI bus...
-> 
-> To clarify: what I meant is a device that is designed as a PHY for
-> similar hardware (e.g. SATA, USB3 and PCIe) and that has a common
-> register set and a single driver, but that driver can operate
-> in multiple modes. You typically have multiple instances of
-> such hardware, with each instance linked to exactly one host
-> device, but one driver for all of them.
-> 
-> See Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
-> and drivers/phy/phy-xgene.c for one such example.
+Sorry for the late reply.
 
-Interesting. Also, that this lists SGMII. I assume this is a phy in
-the MAC in order to talk to the Ethernet PHY.
+2016-04-12 10:25 GMT+09:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Sun, Apr 10, 2016 at 05:38:55PM +0200, Alexandre Belloni wrote:
+>> On 10/04/2016 at 18:23:01 +0300, Sergei Ianovich wrote :
+>
+>> > No, unfortunately. I've investigated this possibility for my platform.
+>> > spi-gpio doesn't support LSB-first and 3-wire options. Adding support
+>> > there is a very big change. The best way to add GPIO support is to
+>> > create spi-gpio-3wire with LSB-first support.
+>
+>> Mark, do you have nay opinion on that?
+>
+> Three wire doesn't seem like it should be invasive, LSB is going to be a
+> lot more invasive though it seems reasonable to just do the reversal in
+> the driver for whatever device this is and let the SPI controller run
+> normally.  Or we could do that in the core with a pass over the data.
 
-I still don't see it being a big problem if a phy driver implements an
-Ethernet PHY. It just needs to call phy_device_create() and
-phy_device_register().
+I've added 3wire support to spi-gpio and added the bit reversal logic
+to ds1302 driver if the spi mode is not LSB first.  But the register
+read command doesn't work.  I think there is no suitable SPI mode that
+can communicate with DS1302.  The reason is as follows.
 
-	Andrew
+For the read data transfer, the address/command byte is sent on the
+rising edge of the first eight SCLK cycles and the read data byte is
+transmitted on the falling edge of the next eight SCL cycles.
+
+But in the latter read data byte data phase, I/O pin is tri-stated
+upon each rising edge of SCLK.
+(Please see DATA OUTPUT section and Figure 6. Timing Diagram: Read Data
+Transfer in https://datasheets.maximintegrated.com/en/ds/DS1302.pdf)
+
+So if the SPI mode 0 (CPOL=0 CPHA=0) is selected, the address/command
+byte phase is ok but the read data byte is unavailable because each
+bit is retrieved while SCLK is high.  Similarly there is no suitable
+SPI mode for DS1302.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
