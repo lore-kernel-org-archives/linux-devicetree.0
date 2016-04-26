@@ -1,68 +1,109 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v3 1/2] dt-bindings: pci: add DT binding for Marvell Armada 7K/8K PCIe controller
-Date: Tue, 26 Apr 2016 10:31:45 +0200
-Message-ID: <1461659506-10387-2-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1461659506-10387-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1461659506-10387-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Pramod Kumar <pramod.kumar@broadcom.com>
+Subject: RE: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Tue, 26 Apr 2016 14:03:27 +0530
+Message-ID: <666dffb41a922b0c8638f2f002a2de08@mail.gmail.com>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+ <1461230323-27891-2-git-send-email-pramod.kumar@broadcom.com> <20160425205650.GA31129@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160425205650.GA31129@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the Device Tree binding documentation that allows to
-describe the PCIe controller found in Marvell Armada 7K/8K SoCs.
+Hi Andrew,
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Rob Herring <rob@kernel.org>
----
- .../devicetree/bindings/pci/pci-armada8k.txt       | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.txt
+Thanks for reviewing. I really appreciate your effort it.
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-new file mode 100644
-index 0000000..598533a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-@@ -0,0 +1,38 @@
-+* Marvell Armada 7K/8K PCIe interface
-+
-+This PCIe host controller is based on the Synopsis Designware PCIe IP
-+and thus inherits all the common properties defined in designware-pcie.txt.
-+
-+Required properties:
-+- compatible: "marvell,armada8k-pcie"
-+- reg: must contain two register regions
-+   - the control register region
-+   - the config space region
-+- reg-names:
-+   - "ctrl" for the control register region
-+   - "config" for the config space region
-+- interrupts: Interrupt specifier for the PCIe controler
-+- clocks: reference to the PCIe controller clock
-+
-+Example:
-+
-+	pcie@f2600000 {
-+		compatible = "marvell,armada8k-pcie", "snps,dw-pcie";
-+		reg = <0 0xf2600000 0 0x10000>, <0 0xf6f00000 0 0x80000>;
-+		reg-names = "ctrl", "config";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		device_type = "pci";
-+		dma-coherent;
-+
-+		bus-range = <0 0xff>;
-+		ranges = <0x81000000 0 0xf9000000 0  0xf9000000 0 0x10000	/* downstream I/O */
-+			  0x82000000 0 0xf6000000 0  0xf6000000 0 0xf00000>;	/* non-prefetchable memory */
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		num-lanes = <1>;
-+		clocks = <&cpm_syscon0 1 13>;
-+		status = "disabled";
-+	};
--- 
-2.6.4
+I am already aware of MDIO mux framework but did not see it fit for our
+use case due to below limitations:
+
+1.  Current MDIO mux framework is Ethernet centric and it is only meant to
+mux multiple MII buses using same MDIO controller.  This means it is only
+meant for MII-compliant PHY devices (i.e. PHY devices having registers
+as-per MII specs). This is not the case with Broadcom SATA PHYs, PCIe
+PHYs, and USB PHYs even if we are sharing same MDIO controller for
+accessing these PHYs.
+
+2.  The MDIO mux framework registers each child bus as MII bus. The Linux
+Ethernet MDIO framework will scan for all attached PHY devices on given
+MII bus and try to read MII PHY_ID register which is not present in all
+Broadcom non-ethernet PHYs.
+
+3. Let's say we ignore point1 and point2 above and go ahead and use MDIO
+mux framework then we will still have to emulated MII PHY_ID read for
+non-ethernet PHYs. Let's say we also emulate MII PHY_ID read in
+non-ethernet PHYs then next thing is non-ethernet PHYs don't follow MII
+state machine so all other MII PHY register read/write will not work.
+
+4. Apart from these, by using MDIO mux framework we are making our
+non-ethernet PHYs dependent on Linux network drivers which is not
+acceptable. What if some product line does not need network subsystem at
+all?
+
+As you can see from above points, trying to re-use Linux Ethernet MDIO mux
+framework for non-Ethernet PHYs is not the right way. The sole reason
+being Linux MDIO mux framework is not generic enough to be shared across
+IO subsystems. Due to this reason we had to come-up with "Shared MDIO
+framework" which is very simple, generic  and independent of I/O
+subsystems.
+
+I'll add PCIe PHYs driver based on Shared MDIO framework in next patch
+revision to get a feel of its need.
+
+Regards,
+Pramod
+
+> -----Original Message-----
+> From: Andrew Lunn [mailto:andrew@lunn.ch]
+> Sent: 26 April 2016 02:27
+> To: Pramod Kumar
+> Cc: Rob Herring; Catalin Marinas; Will Deacon; Masahiro Yamada; Chen-Yu
+Tsai;
+> Mark Rutland; devicetree@vger.kernel.org; Pawel Moll; Arnd Bergmann;
+Suzuki
+> K Poulose; netdev@vger.kernel.org; Punit Agrawal; linux-
+> kernel@vger.kernel.org; BCM Kernel Feedback; linux-arm-
+> kernel@lists.infradead.org; Anup Patel
+> Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+>
+> Hi Pramod
+>
+> I took a closer look. I don't see why the current MDIO code should not
+be used,
+> rather than adding a new framework.
+>
+> What you need for your Non Ethernet PHYs is that they are somehow
+probed.
+> The current MDIO code will do that, based on the compatible string. An
+mdio
+> device gets passed a struct mdio_device * to its probe function, giving
+you the
+> bus and address on the bus for the device. Your PHY driver can then
+register
+> itself using devm_of_phy_provider_register(). The user of the PHY then
+needs to
+> use
+> devm_phy_get() to get a handle on the phy, and can then use
+> phy_power_on()/phy_power_off().
+>
+> There is a very simple example here for an MDIO device driver:
+>
+> http://thread.gmane.org/gmane.linux.network/393532
+>
+> The muxing of the MDIO busses looks a little tricky. At the moment you
+have:
+>
+>     writel(cmd, base + MDIO_PARAM_OFFSET);
+>
+> which mixes together the muxing parameters and the write value. Can this
+> register be accessed as two 16 bit registers? If it can be, you can
+cleanly
+> separate out the muxing.
+>
+> Take a look at mdio-mux-gpio.c and mdio-mux-mmioreg.c for examples of
+> MDIO muxes.
+>
+>      Andrew
