@@ -1,66 +1,43 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v3 1/2] ASoC: codecs: add TA5720 digital
- amplifier DT bindings
-Date: Tue, 26 Apr 2016 12:00:51 -0500
-Message-ID: <20160426170051.GD2885@borg.dal.design.ti.com>
-References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
- <1461615456-19510-2-git-send-email-dannenberg@ti.com>
- <20160426153707.GZ3217@sirena.org.uk>
- <20160426161425.GA2885@borg.dal.design.ti.com>
- <20160426165006.GD3217@sirena.org.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: AM57xx/DRA7: Update SoC voltage rail limits to
+ match data sheet
+Date: Tue, 26 Apr 2016 10:03:01 -0700
+Message-ID: <20160426170300.GC5995@atomide.com>
+References: <1461140319-32026-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160426165006.GD3217@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <1461140319-32026-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 05:50:06PM +0100, Mark Brown wrote:
-> On Tue, Apr 26, 2016 at 11:14:25AM -0500, Andreas Dannenberg wrote:
-> > On Tue, Apr 26, 2016 at 04:37:07PM +0100, Mark Brown wrote:
-> > > On Mon, Apr 25, 2016 at 03:17:35PM -0500, Andreas Dannenberg wrote:
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [160420 01:20]:
+> As per the data sheet starting from SPRUHQ0H (Nov 2015 - Latest[1]),
+> VDD_CORE can vary from 0.85v to 1.15v for AVS class0. VDD GPU/DSP
+> et.al. can range from 0.85v to 1.25V with AVS class0
 > 
-> > > > +Optional properties:
+> Since dynamic voltage scaling is disabled for DRA7/AM57xx SoCs for
+> all SoC rails other than MPU, the bootloader is responsible for
+> setting up the AVS class0 voltage, however, with wrong voltage machine
+> constraints in dtb, regulator framework will lower the voltage below
+> the required voltage levels for certain samples in production flow.
+> This can cause catastrophic failures which can be pretty hard to
+> identify.
 > 
-> > > > +- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
-> > > > +- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
+> Update board files which don't match required specification.
 > 
-> > > This suggests that the device doesn't need power...  
-> 
-> > no power, now that would be nice! :)  What this was supposed to mean is
-> > that the properties are optional, the power of course is not. The DT has
-> 
-> They should only be optional if they may really be missing.  We may
-> attempt to be liberal in the DTs we accept but we should not encourage
-> sloppily written DTs.
+> [1] http://www.ti.com/product/AM5728/datasheet/specifications#SPRT637-7340
 
-Thanks for the guidance and the background. Will move them to "required"
-but I'll wait a few more days before re-submitting in case there is
-additional feedback on the patch series.
+Applying into omap-for-v4.7/dt thanks. This does not apply to
+v4.6-rc, so assuming this is not an urgent fix.
 
 Regards,
-Andreas
 
-> 
-> > really no control over how I wire up my HW and I'd argue most folks just
-> > permanently power the TAS5720 since the shutdown current is just a few
-> > uAs IIRC in order to save some BOM cost. But I suppose the DT description
-> > is such that the Kernel can more intelligently handle things based on
-> > what the driver is doing if somebody choses and implements additional
-> > regulator/power switch HW. Or did I misunderstand your point?
-> 
-> It doesn't really matter if a given system ends up controlling things
-> actively, we still want to be consistent in describing them since it is
-> less error prone when it does become relevant.
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
