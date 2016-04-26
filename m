@@ -1,70 +1,93 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 10/18] ASoC: sti: Update example to include
- assigned-clocks and mclk-fs
-Date: Tue, 26 Apr 2016 17:41:04 +0100
-Message-ID: <20160426164104.GC3217@sirena.org.uk>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <1461236675-10176-11-git-send-email-peter.griffin@linaro.org>
- <20160421154933.GR3217@sirena.org.uk>
- <20160426115210.GB5457@griffinp-ThinkPad-X1-Carbon-2nd>
- <20160426142357.GW3217@sirena.org.uk>
- <20160426145129.GA11946@griffinp-ThinkPad-X1-Carbon-2nd>
- <20160426150319.GY3217@sirena.org.uk>
- <20160426161432.GA12088@griffinp-ThinkPad-X1-Carbon-2nd>
+Subject: Re: [PATCH v3 1/2] ASoC: codecs: add TA5720 digital
+ amplifier DT bindings
+Date: Tue, 26 Apr 2016 17:50:06 +0100
+Message-ID: <20160426165006.GD3217@sirena.org.uk>
+References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
+ <1461615456-19510-2-git-send-email-dannenberg@ti.com>
+ <20160426153707.GZ3217@sirena.org.uk>
+ <20160426161425.GA2885@borg.dal.design.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="79m9KipKW65BQbRT"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160426161432.GA12088@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, ludovic.barre@st.com, arnaud.pouliquen@st.com
+Content-Type: multipart/mixed; boundary="===============0665123988728155634=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160426161425.GA2885@borg.dal.design.ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---79m9KipKW65BQbRT
-Content-Type: text/plain; charset=us-ascii
+--===============0665123988728155634==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="an18TTCYBDxQZRot"
 Content-Disposition: inline
 
-On Tue, Apr 26, 2016 at 05:14:32PM +0100, Peter Griffin wrote:
-> On Tue, 26 Apr 2016, Mark Brown wrote:
 
-> > A lot of this is details of the system integration for this SoC, not
-> > actual errors.
+--an18TTCYBDxQZRot
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> This particular clock patch yes, but the other ASoC dt doc update is fixing
-> bindings which haven't progressed in lockstep with the driver code. Presumably
-> this happened during the review process when they were changed to being st,
-> prefixed in the driver, but the doc wasn't also updated.
+On Tue, Apr 26, 2016 at 11:14:25AM -0500, Andreas Dannenberg wrote:
+> On Tue, Apr 26, 2016 at 04:37:07PM +0100, Mark Brown wrote:
+> > On Mon, Apr 25, 2016 at 03:17:35PM -0500, Andreas Dannenberg wrote:
 
-The bits where you are correcting the names of the properties are not
-details of the system integration and are therefore fine.  The bits
-where you're documenting the particular clocking arrangements for the
-SoC you happen to be using less so.
+> > > +Optional properties:
 
-> > it's fairly routine
-> > to have to explain to people that just because some old driver did
-> > something that doesn't mean it's something we want in new drivers.
+> > > +- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
+> > > +- pvdd-supply : phandle to a supply used for the Class-D amp and the=
+ analog
 
-> I'm sure it is. Although I fail to see why leaving the documentation with
-> mistakes in is helpful to anybody.
+> > This suggests that the device doesn't need power... =20
 
-Fixing actual mistakes is fine.
+> no power, now that would be nice! :)  What this was supposed to mean is
+> that the properties are optional, the power of course is not. The DT has
 
---79m9KipKW65BQbRT
+They should only be optional if they may really be missing.  We may
+attempt to be liberal in the DTs we accept but we should not encourage
+sloppily written DTs.
+
+> really no control over how I wire up my HW and I'd argue most folks just
+> permanently power the TAS5720 since the shutdown current is just a few
+> uAs IIRC in order to save some BOM cost. But I suppose the DT description
+> is such that the Kernel can more intelligently handle things based on
+> what the driver is doing if somebody choses and implements additional
+> regulator/power switch HW. Or did I misunderstand your point?
+
+It doesn't really matter if a given system ends up controlling things
+actively, we still want to be consistent in describing them since it is
+less error prone when it does become relevant.
+
+--an18TTCYBDxQZRot
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXH5ofAAoJECTWi3JdVIfQZuYH/RfKp5QmiD+i+RpNev+dSIlp
-HBfag+AQCZMN5+wqHZ87r9dEy508WJPtQCViG9Fpglw/k+Otcj2JSt/T+HoCwl8L
-KY+5kkYUWAXeA7Ps8tR+a4RjXGsN23EThCheWlMsihqb1gljIDNI/AFFthU6pCD0
-Lafx+xRDlSbkYyvChrC8521HQ0NsQU3CVKOlwRIfOy6eG3iHsWRGbEZFzKr7jm+Y
-YSdPUKIqBkrMKQPzU66+FJ4f3Q7fH04bBl3/xxFxHD600W7ii4vsej7EnrUvgHKB
-fySe1SBxO0n0q9N/r0+Br/sApBd6iGSUBH6ewVPOxf8OcleCdscZb978ClAzPj4=
-=OV1p
+iQEcBAEBCAAGBQJXH5w9AAoJECTWi3JdVIfQEQYH/367gpPyBFVghsejyDRuOOZr
+8CqQ61D9Y5/f1dSdVhMErNaPTVqiaRRPrxS/7tMEEuh18HR2XiRkgt9rzrxySlwT
+lRP1DCParRrhFBVOd751vXkKClGgRveIk+CXc07JZ5OLjXBfyTSjFrqFAGxoKQB1
+57vt+uae4Ox3ANqEyp7DZoV/U43HyIjSeI7zidorWlYyTX0y9AjLExmmArR4ei6V
+ivVowBd/V2n+KHlokBop5zn9KeCxadvIqcpaq12FBbsJPTkMtPUynBtAAvtyc+vO
+Bh+3fRZrOXWwy9hjHZj9W6wkXwGL7xrxHiHSj3YO8wrAiCym3Fj2e7qtb36vqRY=
+=dhQW
 -----END PGP SIGNATURE-----
 
---79m9KipKW65BQbRT--
+--an18TTCYBDxQZRot--
+
+--===============0665123988728155634==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0665123988728155634==--
