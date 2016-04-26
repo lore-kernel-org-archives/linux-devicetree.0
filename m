@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/7] ARM: dts: lpc32xx: ea3250: add NAND partitions device node
-Date: Tue, 26 Apr 2016 03:37:25 +0300
-Message-ID: <1461631050-10479-3-git-send-email-vz@mleia.com>
+Subject: [PATCH 5/7] ARM: dts: lpc32xx: phy3250: avoid extension of device nodes by absolute path
+Date: Tue, 26 Apr 2016 03:37:28 +0300
+Message-ID: <1461631050-10479-6-git-send-email-vz@mleia.com>
 References: <1461631050-10479-1-git-send-email-vz@mleia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1461631050-10479-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
@@ -10,80 +10,323 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <p
 Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To declare MTD OF partitions NAND controller device node should have
-a special 'partitions' subnode, the change removes a debug message
-from mtd/ofpart on boot:
+The change simplifies layout of PHY3250 board description by
+referencing device nodes of LPC32xx controllers by label.
 
-  nxp_lpc3220_slc: 'partitions' subnode not found on /ahb/flash@20020000.
-  Trying to parse direct subnodes as partitions.
+No functional change intended.
 
 Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/ea3250.dts | 41 ++++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
+ arch/arm/boot/dts/phy3250.dts | 282 +++++++++++++++++++++---------------------
+ 1 file changed, 138 insertions(+), 144 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ea3250.dts b/arch/arm/boot/dts/ea3250.dts
-index 7cf815a..58bcda9 100644
---- a/arch/arm/boot/dts/ea3250.dts
-+++ b/arch/arm/boot/dts/ea3250.dts
-@@ -213,8 +213,6 @@
+diff --git a/arch/arm/boot/dts/phy3250.dts b/arch/arm/boot/dts/phy3250.dts
+index 26e070f..c1a6e62 100644
+--- a/arch/arm/boot/dts/phy3250.dts
++++ b/arch/arm/boot/dts/phy3250.dts
+@@ -56,147 +56,6 @@
+ 		};
+ 	};
  
- /* 128MB Flash via SLC NAND controller */
- &slc {
--	#address-cells = <1>;
--	#size-cells = <1>;
- 	status = "okay";
- 
- 	nxp,wdr-clks = <14>;
-@@ -228,26 +226,31 @@
- 	nand-on-flash-bbt;
- 	gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
- 
--	mtd0@00000000 {
--		label = "ea3250-boot";
--		reg = <0x00000000 0x00080000>;
--		read-only;
+-	ahb {
+-		mac: ethernet@31060000 {
+-			phy-mode = "rmii";
+-			use-iram;
+-		};
+-
+-		clcd@31040000 {
+-			status = "okay";
+-		};
+-
+-		/* 64MB Flash via SLC NAND controller */
+-		slc: flash@20020000 {
+-			status = "okay";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-
+-			nxp,wdr-clks = <14>;
+-			nxp,wwidth = <40000000>;
+-			nxp,whold = <100000000>;
+-			nxp,wsetup = <100000000>;
+-			nxp,rdr-clks = <14>;
+-			nxp,rwidth = <40000000>;
+-			nxp,rhold = <66666666>;
+-			nxp,rsetup = <100000000>;
+-			nand-on-flash-bbt;
+-			gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
+-
+-			mtd0@00000000 {
+-				label = "phy3250-boot";
+-				reg = <0x00000000 0x00064000>;
+-				read-only;
+-			};
+-
+-			mtd1@00064000 {
+-				label = "phy3250-uboot";
+-				reg = <0x00064000 0x00190000>;
+-				read-only;
+-			};
+-
+-			mtd2@001f4000 {
+-				label = "phy3250-ubt-prms";
+-				reg = <0x001f4000 0x00010000>;
+-			};
+-
+-			mtd3@00204000 {
+-				label = "phy3250-kernel";
+-				reg = <0x00204000 0x00400000>;
+-			};
+-
+-			mtd4@00604000 {
+-				label = "phy3250-rootfs";
+-				reg = <0x00604000 0x039fc000>;
+-			};
+-		};
+-
+-		apb {
+-			uart5: serial@40090000 {
+-				status = "okay";
+-			};
+-
+-			uart3: serial@40080000 {
+-				status = "okay";
+-			};
+-
+-			i2c1: i2c@400A0000 {
+-				clock-frequency = <100000>;
+-
+-				pcf8563: rtc@51 {
+-					compatible = "nxp,pcf8563";
+-					reg = <0x51>;
+-				};
+-
+-				uda1380: uda1380@18 {
+-					compatible = "nxp,uda1380";
+-					reg = <0x18>;
+-					power-gpio = <&gpio 0x59 0>;
+-					reset-gpio = <&gpio 0x51 0>;
+-					dac-clk = "wspll";
+-				};
+-			};
+-
+-			i2c2: i2c@400A8000 {
+-				clock-frequency = <100000>;
+-			};
+-
+-			ssp0: ssp@20084000 {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				num-cs = <1>;
+-				cs-gpios = <&gpio 3 5 0>;
+-				status = "okay";
+-
+-				eeprom: at25@0 {
+-					pl022,interface = <0>;
+-					pl022,com-mode = <0>;
+-					pl022,rx-level-trig = <1>;
+-					pl022,tx-level-trig = <1>;
+-					pl022,ctrl-len = <11>;
+-					pl022,wait-state = <0>;
+-					pl022,duplex = <0>;
+-
+-					at25,byte-len = <0x8000>;
+-					at25,addr-mode = <2>;
+-					at25,page-size = <64>;
+-
+-					compatible = "atmel,at25";
+-					reg = <0>;
+-					spi-max-frequency = <5000000>;
+-				};
+-			};
+-
+-			sd@20098000 {
+-				wp-gpios = <&gpio 3 0 0>;
+-				cd-gpios = <&gpio 3 1 0>;
+-				cd-inverted;
+-				bus-width = <4>;
+-				vmmc-supply = <&sd_reg>;
+-				status = "okay";
+-			};
+-		};
+-
+-		fab {
+-			uart2: serial@40018000 {
+-				status = "okay";
+-			};
+-
+-			tsc@40048000 {
+-				status = "okay";
+-			};
+-
+-			key@40050000 {
+-				status = "okay";
+-				keypad,num-rows = <1>;
+-				keypad,num-columns = <1>;
+-				nxp,debounce-delay-ms = <3>;
+-				nxp,scan-delay-ms = <34>;
+-				linux,keymap = <0x00000002>;
+-			};
+-		};
 -	};
-+	partitions {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
+-
+ 	leds {
+ 		compatible = "gpio-leds";
  
--	mtd1@00080000 {
--		label = "ea3250-uboot";
--		reg = <0x00080000 0x000c0000>;
--		read-only;
--	};
-+		mtd0@00000000 {
-+			label = "ea3250-boot";
-+			reg = <0x00000000 0x00080000>;
-+			read-only;
-+		};
- 
--	mtd2@00140000 {
--		label = "ea3250-kernel";
--		reg = <0x00140000 0x00400000>;
--	};
-+		mtd1@00080000 {
-+			label = "ea3250-uboot";
-+			reg = <0x00080000 0x000c0000>;
-+			read-only;
-+		};
- 
--	mtd3@00540000 {
--		label = "ea3250-rootfs";
--		reg = <0x00540000 0x07ac0000>;
-+		mtd2@00140000 {
-+			label = "ea3250-kernel";
-+			reg = <0x00140000 0x00400000>;
-+		};
-+
-+		mtd3@00540000 {
-+			label = "ea3250-rootfs";
-+			reg = <0x00540000 0x07ac0000>;
-+		};
+@@ -212,12 +71,31 @@
  	};
  };
  
+-/* Here, choose exactly one from: ohci, usbd */
+-&ohci /* &usbd */ {
+-	transceiver = <&isp1301>;
++&clcd {
+ 	status = "okay";
+ };
+ 
++&i2c1 {
++	clock-frequency = <100000>;
++
++	uda1380: uda1380@18 {
++		compatible = "nxp,uda1380";
++		reg = <0x18>;
++		power-gpio = <&gpio 0x59 0>;
++		reset-gpio = <&gpio 0x51 0>;
++		dac-clk = "wspll";
++	};
++
++	pcf8563: rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++};
++
+ &i2cusb {
+ 	clock-frequency = <100000>;
+ 
+@@ -226,3 +104,119 @@
+ 		reg = <0x2c>;
+ 	};
+ };
++
++&key {
++	keypad,num-rows = <1>;
++	keypad,num-columns = <1>;
++	nxp,debounce-delay-ms = <3>;
++	nxp,scan-delay-ms = <34>;
++	linux,keymap = <0x00000002>;
++	status = "okay";
++};
++
++&mac {
++	phy-mode = "rmii";
++	use-iram;
++};
++
++/* Here, choose exactly one from: ohci, usbd */
++&ohci /* &usbd */ {
++	transceiver = <&isp1301>;
++	status = "okay";
++};
++
++&sd {
++	wp-gpios = <&gpio 3 0 0>;
++	cd-gpios = <&gpio 3 1 0>;
++	cd-inverted;
++	bus-width = <4>;
++	vmmc-supply = <&sd_reg>;
++	status = "okay";
++};
++
++/* 64MB Flash via SLC NAND controller */
++&slc {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	status = "okay";
++
++	nxp,wdr-clks = <14>;
++	nxp,wwidth = <40000000>;
++	nxp,whold = <100000000>;
++	nxp,wsetup = <100000000>;
++	nxp,rdr-clks = <14>;
++	nxp,rwidth = <40000000>;
++	nxp,rhold = <66666666>;
++	nxp,rsetup = <100000000>;
++	nand-on-flash-bbt;
++	gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
++
++	mtd0@00000000 {
++		label = "phy3250-boot";
++		reg = <0x00000000 0x00064000>;
++		read-only;
++	};
++
++	mtd1@00064000 {
++		label = "phy3250-uboot";
++		reg = <0x00064000 0x00190000>;
++		read-only;
++	};
++
++	mtd2@001f4000 {
++		label = "phy3250-ubt-prms";
++		reg = <0x001f4000 0x00010000>;
++	};
++
++	mtd3@00204000 {
++		label = "phy3250-kernel";
++		reg = <0x00204000 0x00400000>;
++	};
++
++	mtd4@00604000 {
++		label = "phy3250-rootfs";
++		reg = <0x00604000 0x039fc000>;
++	};
++};
++
++&ssp0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	num-cs = <1>;
++	cs-gpios = <&gpio 3 5 0>;
++	status = "okay";
++
++	eeprom: at25@0 {
++		compatible = "atmel,at25";
++		reg = <0>;
++		spi-max-frequency = <5000000>;
++
++		pl022,interface = <0>;
++		pl022,com-mode = <0>;
++		pl022,rx-level-trig = <1>;
++		pl022,tx-level-trig = <1>;
++		pl022,ctrl-len = <11>;
++		pl022,wait-state = <0>;
++		pl022,duplex = <0>;
++
++		at25,byte-len = <0x8000>;
++		at25,addr-mode = <2>;
++		at25,page-size = <64>;
++	};
++};
++
++&tsc {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&uart5 {
++	status = "okay";
++};
 -- 
 2.1.4
 
