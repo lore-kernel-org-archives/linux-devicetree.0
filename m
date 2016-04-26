@@ -1,82 +1,48 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for
- TAS5720 digital amplifier
-Date: Tue, 26 Apr 2016 11:22:40 -0500
-Message-ID: <20160426162240.GB2885@borg.dal.design.ti.com>
-References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
- <1461615456-19510-3-git-send-email-dannenberg@ti.com>
- <20160426154313.GA3217@sirena.org.uk>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] arm64: dts: marvell: add XOR node for Armada 3700
+ SoC
+Date: Tue, 26 Apr 2016 22:02:04 +0530
+Message-ID: <20160426163204.GN2274@localhost>
+References: <1460652818-14647-1-git-send-email-gregory.clement@free-electrons.com>
+ <1460652818-14647-6-git-send-email-gregory.clement@free-electrons.com>
+ <20160426033536.GD2274@localhost>
+ <20160426092811.62d092bf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160426154313.GA3217@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <20160426092811.62d092bf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark, thanks for the continued feedback, please see below...
-
-On Tue, Apr 26, 2016 at 04:43:13PM +0100, Mark Brown wrote:
-> On Mon, Apr 25, 2016 at 03:17:36PM -0500, Andreas Dannenberg wrote:
+On Tue, Apr 26, 2016 at 09:28:11AM +0200, Thomas Petazzoni wrote:
+> Hello Vinod,
 > 
-> This looks mostly good, a few small things below.
+> On Tue, 26 Apr 2016 09:05:36 +0530, Vinod Koul wrote:
+> > On Thu, Apr 14, 2016 at 06:53:38PM +0200, Gregory CLEMENT wrote:
+> > > From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+> > > 
+> > > Armada 3700 SoC comprise one dual-channel XOR engine and this
+> > > patch adds its according representation.
+> > 
+> > This need an ACK from ARM folks..
 > 
-> > +	switch (width) {
-> > +	case 16:
-> > +	case 18:
-> > +	case 20:
-> > +	case 24:
-> > +		/*
-> > +		 * We only support the different left-justified serial audio
-> > +		 * formats in which case there is nothing to configure in the
-> > +		 * TAS5720.
-> > +		 */
-> > +		break;
-> > +	default:
-> > +		dev_err(codec->dev, "unsupported sample size: %d\n", width);
-> > +		return -EINVAL;
-> > +	}
+> Well, this patch has the SoB from Gregory Clement, who is one of the
+> maintainers of the ARM Marvell Armada platforms. And he should be the
+> one taking this patch in his tree (especially since a lot of others
+> Armada 3700 DT changes are going to be made).
 > 
-> If the driver doesn't do anything just remove the code.
+> So I guess that the intent is that you take patches 1 to 4, and patch 5
+> will be taken by Gregory.
 
-Well it's doing something which is making sure the nobody passes in a
-sample size that's not supported. Wouldn't we want to catch this?
+sounds good to me then
 
-> 
-> > +	if ((curr_fault & TAS5720_OCE) && !(tas5720->last_fault & TAS5720_OCE))
-> > +		dev_warn(dev, "The Class-D output stage has experienced an over current event\n");
-> 
-> "Class D over current".  The verbosity is making the line over long and
-> the phrasing is a bit unclear (and makes it seem less critical than it
-> really is).  These should probably be dev_crit() or somthing too, over
-> current and similar events on a speaker output are generally extremely
-> serious.
-
-The overlong line goes through checkpatch --strict and looks like an
-accepted practice to prevent breaking "grep" for example. The text is
-more or less from the datasheet to give people something they can
-cross-associate. But I can try to short this a bit.
-
-You made a good point with the dev_crit(), I can certainly promote this
-over current condition.  It happens for example if I drive too big of a
-load (a heavy-duty jumper wire in my case, simulating a short of the
-output stage).  If so, we should also consider the other two fault
-conditions.  For the "over temp" error condition (which is actually
-really hard to create on the bench, I've to get the EVM up to like 150C
-and things start smelling a bit) this should probably be dev_crit() as
-well. And then, maybe leave the "DC error" as a warning, since it's less
-critical than the other two conditions. Thoughts?
-
-Regards,
-Andreas
+thanks
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
