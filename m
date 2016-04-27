@@ -1,82 +1,94 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V10 1/6] mfd: add device-tree binding doc for PMIC
- max77620/max20024
-Date: Wed, 27 Apr 2016 13:49:59 +0100
-Message-ID: <20160427124959.GC4892@dell>
-References: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
- <1459348188-11726-2-git-send-email-ldewangan@nvidia.com>
+From: okaya@codeaurora.org
+Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
+Date: Wed, 27 Apr 2016 08:51:18 -0400
+Message-ID: <2c7ac0732fb16f952db24b7c70065318@codeaurora.org>
+References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
+ <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
+ <20160426033029.GB2274@localhost>
+ <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
+ <20160426162529.GK2274@localhost> <571F9D76.2060809@codeaurora.org>
+ <20160427081501.GV2274@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459348188-11726-2-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <20160427081501.GV2274@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, treding@nvidia.com
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Mar 2016, Laxman Dewangan wrote:
+On 2016-04-27 04:15, Vinod Koul wrote:
+> On Tue, Apr 26, 2016 at 12:55:18PM -0400, Sinan Kaya wrote:
+>> On 4/26/2016 12:25 PM, Vinod Koul wrote:
+>> > On Tue, Apr 26, 2016 at 08:08:16AM -0400, okaya@codeaurora.org wro=
+te:
+>> >> On 2016-04-25 23:30, Vinod Koul wrote:
+>> >>> On Mon, Apr 11, 2016 at 10:21:12AM -0400, Sinan Kaya wrote:
+>> >>>
+>> >>>> +static int hidma_chan_stats(struct seq_file *s, void *unused)
+>> >>>> +{
+>> >>>> +	struct hidma_chan *mchan =3D s->private;
+>> >>>> +	struct hidma_desc *mdesc;
+>> >>>> +	struct hidma_dev *dmadev =3D mchan->dmadev;
+>> >>>> +
+>> >>>> +	pm_runtime_get_sync(dmadev->ddev.dev);
+>> >>>
+>> >>> debug shouldn't power up device, why do you want to do that
+>> >>
+>> >>
+>> >> Clocks are turned off while the hw is idle. I can=E2=80=99t reach=
+ hw
+>> >> registers without restoring power.
+>> >
+>> > Hmm, have you thought about using regmap?
+>> >
+>>=20
+>> To be honest, I didn't know what regmap is but I just read some code
+>> and looked at how it is used. Feel free to correct me if I got it
+>> wrong.
+>>=20
+>> Regmap seems to be designed for *slow* speed peripherals to improve=20
+>> frequent
+>> accesses by the SW. It looks like it is used by MFD, SPI and I2C=20
+>> drivers.
+>>=20
+>> It seems to cache the register contents and flush/invalidate them on=
+ly=20
+>> when
+>> needed.
+>>=20
+>> The MMIO version seems to be assuming the presence of device-tree li=
+ke=20
+>> CLK
+>> API which doesn't exist on ACPI systems and is not portable.
+>>=20
+>> My reaction is that it is a lot of code with no added functionality =
+to=20
+>> what
+>> HIDMA driver is trying to achieve.
+>>=20
+>> Given that the use case here is only for debug purposes; I think it =
+is=20
+>> OK
+>> to keep this runtime call here. I don't want to add any overhead int=
+o=20
+>> the
+>> existing code just to support the debug use case.
+>>=20
+>> None of my register read/writes are slow. This file will only be use=
+d=20
+>> to
+>> troubleshoot customer issues.
+>=20
+> $ is always faster than MMIO. This way you can give reg contents to=20
+> users
+> without waking up hw.
+>=20
+> Also we at Intel use regmap on ACPI systems without CLK API
 
-> The MAXIM PMIC MAX77620 and MAX20024 are power management IC
-> which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
-> watchdog etc.
->=20
-> Add DT binding document for the different functionality of
-> this device.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Acked-by: Rob Herring <robh@kernel.org>
->=20
-> ---
-> Changes from V1:
-> - Added units in some of properties.
-> - Change the boolean property to tristate type and detail some of
->   properties.
->=20
-> Change from V2:
-> - added unit in period related dt property.
->=20
-> Change from V3: None
-> - Added Rob's ack.
->=20
-> Changes from V4:
-> - A- Provide more details in the dt binding doc.
-> - Take care of fps nodes.
-> - Split the submodule's DT binding doc on respective folder.
-> - Drop the battery charger and low battery binding and related code a=
-s
->   it need to go on power driver.
->=20
-> Change from V5:
-> - None
->=20
-> Change from V6:
-> -start the patch title with mfd instead of DT: mfd:
->=20
-> Change from V7:
-> - Better describe the FPS to make more clear.
->=20
-> Changes from V8:
-> None
->=20
-> Changes from V9:
-> None
->=20
->  Documentation/devicetree/bindings/mfd/max77620.txt | 143 +++++++++++=
-++++++++++
->  include/dt-bindings/mfd/max77620.h                 |  39 ++++++
->  2 files changed, 182 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.tx=
-t
->  create mode 100644 include/dt-bindings/mfd/max77620.h
-
-=46or my own reference:
-
-  Acked-by: Lee Jones <lee.jones@linaro.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I can try and see the performance impact is. What happens to registers=20
+that hw updates like status registers. Those will be most interesting=20
+during debug. How does remap get updated for those? Is there a way to=20
+tell it not to cache certain registers
