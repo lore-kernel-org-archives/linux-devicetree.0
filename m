@@ -1,86 +1,111 @@
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] of: Add stub for of_get_next_parent()
-Date: Wed, 27 Apr 2016 17:00:40 +0200
-Message-ID: <20160427150039.GB4176@ulmo.ba.sec>
-References: <1461755500-889-1-git-send-email-heikki.krogerus@linux.intel.com>
- <5345757.9RfGSJE06M@wuerfel>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH V10 1/6] mfd: add device-tree binding doc for PMIC
+ max77620/max20024
+Date: Wed, 27 Apr 2016 17:04:44 +0200
+Message-ID: <20160427150443.GC4176@ulmo.ba.sec>
+References: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
+ <1459348188-11726-2-git-send-email-ldewangan@nvidia.com>
+ <20160427124959.GC4892@dell>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5345757.9RfGSJE06M@wuerfel>
+	protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160427124959.GC4892@dell>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
---GRPZ8SYKNexpdSJ7
-Content-Type: text/plain; charset=utf-8
+--eRtJSFbw+EEWtPj3
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 27, 2016 at 01:13:33PM +0200, Arnd Bergmann wrote:
-> On Wednesday 27 April 2016 14:11:40 Heikki Krogerus wrote:
-> > Fixes a compiler error:
+On Wed, Apr 27, 2016 at 01:49:59PM +0100, Lee Jones wrote:
+> On Wed, 30 Mar 2016, Laxman Dewangan wrote:
+>=20
+> > The MAXIM PMIC MAX77620 and MAX20024 are power management IC
+> > which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
+> > watchdog etc.
 > >=20
-> > drivers/phy/phy-core.c: In function =E2=80=98__of_phy_provider_register=
-=E2=80=99:
-> > drivers/phy/phy-core.c:848:13: error: implicit declaration of function
-> > =E2=80=98of_get_next_parent=E2=80=99 [-Werror=3Dimplicit-function-decla=
-ration]
-> >     parent =3D of_get_next_parent(parent);
-> >                  ^
+> > Add DT binding document for the different functionality of
+> > this device.
 > >=20
-> > Fixes: 2f7600bc981c ("phy: core: Allow children node to be overridden")
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >=20
+> > ---
+> > Changes from V1:
+> > - Added units in some of properties.
+> > - Change the boolean property to tristate type and detail some of
+> >   properties.
+> >=20
+> > Change from V2:
+> > - added unit in period related dt property.
+> >=20
+> > Change from V3: None
+> > - Added Rob's ack.
+> >=20
+> > Changes from V4:
+> > - A- Provide more details in the dt binding doc.
+> > - Take care of fps nodes.
+> > - Split the submodule's DT binding doc on respective folder.
+> > - Drop the battery charger and low battery binding and related code as
+> >   it need to go on power driver.
+> >=20
+> > Change from V5:
+> > - None
+> >=20
+> > Change from V6:
+> > -start the patch title with mfd instead of DT: mfd:
+> >=20
+> > Change from V7:
+> > - Better describe the FPS to make more clear.
+> >=20
+> > Changes from V8:
+> > None
+> >=20
+> > Changes from V9:
+> > None
+> >=20
+> >  Documentation/devicetree/bindings/mfd/max77620.txt | 143 +++++++++++++=
+++++++++
+> >  include/dt-bindings/mfd/max77620.h                 |  39 ++++++
+> >  2 files changed, 182 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+> >  create mode 100644 include/dt-bindings/mfd/max77620.h
 >=20
-> Yes, this works. I have submitted an alternative patch to fix the
-> build error, changing the PHY core to not use any of the OF interfaces
-> if CONFIG_OF is disabled.
+> For my own reference:
 >=20
-> We can also have both.
->=20
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>   Acked-by: Lee Jones <lee.jones@linaro.org>
 
-I'm thinking of simply open-coding this for now, to avoid the use of
-of_get_next_parent(). This is part of a set of patches that has gone
-through countless revisions over the past two years and the timing
-is such that adding yet another dependency will likely make it miss
-the next cycle again. I'd really like to avoid that.
+Hi Lee,
 
-If nobody objects I'll volunteer to refactor this after v4.7-rc1.
-
-Alternatively, perhaps Rob can give a very quick Acked-by on the
-of_get_next_parent() addition, then I might still have time to take
-this through one or two linux-next releases before sending out the
-pull requests around the end of the week.
+I'm confused now. Were you going to pick this up, or are you waiting for
+someone else to do it?
 
 Thierry
 
---GRPZ8SYKNexpdSJ7
+--eRtJSFbw+EEWtPj3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJXINQUAAoJEN0jrNd/PrOhBJQQAJVK7Llj+KTYH1RddC8Mcw47
-G8SNI2ZYddTki+cS5bJ03qwwYfQHBr55FKkgID6YE709JWIK1TRW+6uMPZBZYuw+
-qYch3adpbQLZYu4I84OIsSJYQRBKXsYFnxmNmTH550xDqSAbJREwiyIa/u54zGbE
-1sfd5hNQhlh4LTFotCLOIRtcTgI+b/HLACdSuYIhjWF3h/T2FxTYhQ/BPwPM5Gz7
-HgyabvfAVCgisB6maPvY7k6i4kxwdNjZFbotCnleRyu8i3wPrljaR/QwYMqdekcw
-IGS3ySCO1BxgT9lmrd3MUfUYE/sgjGZURfr+9EvSVLEPV5ETPCQFYaw+MjWgFAds
-QTO09vzPUnd7NEnrl6wL108ORtMqBYVgsk5+z01qVWJMqSNiX10UaYvzfinxcmr3
-W8Ur/eY9Z69eqd5jzJAigrox0zKjhilpcsbazZJGHaWeaHg/yK3MUyebo2mEus1f
-W7pRwWeAPHAtMNmFpqFSKnd2VKyhD2QJI9EHTzbYO4/Ftu4rJSgRgkGc6NjjqAGx
-NrJfJaRpedhv1hvLJhi3NHQR7J4rLx87iD6KRe7aJ+ObOPCdbzr9EQ1RvUHkALuR
-mzxM0YD330JCf1uI9LzpIH6Er3PVPhmYg2ZBoDEX2Nl1qpW6t2bG/xQNLT4js5aW
-daw/C2JahrGnxSbnGY0p
-=IF5M
+iQIcBAABCAAGBQJXINULAAoJEN0jrNd/PrOh1WsP/3vEotfvBXQtacOPhsy0qrlM
++/zYqDQfzwFx0Sy3ZlAh+BNuG0zc76ljwxB8rXfQXVsGLZWmIibuGksXeBAuGuaq
+MQay94ksBHe/NmccWMXVA2DqUXgE1nv3A37suqSP/4YEX2pzf5PzYtwT5zX/zWeB
+lHL9h+AOyL798ifY3GjeldyJfjcFlB05c5pfoFpswEdfas8I9bW7ZS86vzgyO414
+JUpgLLazT84yD6f6mN0MvsCWfpdpOMgM2raA1W0TkEKqm10PG/SAuvl+mLER4KPW
+0wdRPr1bMZlbu+S3tI03FgpkTicy4n8JLokpnkDC0ks8qKKht06+iNsRphSoPXI/
+jrFuWCT/449vpSkv/25orQfzOubLcZJteTZnSxxXq/O/KI5+NbmF55DFILQbzBL2
+NEJg+rppr/td1ACDayHMvQY1SOdY3pRO4Po+sohc4WEuA4RQv9tbeitMWh5PQhNg
+1PfJIKb2tm0TNUOX5T6/myKMV4CKvHvgwUlvZQIT2Oh1pZv2/XTnQ7DnfrUAzwER
+Ri2v1IzU+WD29TvRncAp+0I8z72bAEu20sMVpkjl9Ab0YE1/zrRxrvBdlYqL3bo/
+SH44fKYXk/bt1lN4oRixq1M2+jAGdAqrqMxIkbQ33/z4pxxWObHiBcWu0uqnf2gx
+MJnWf0rmuJf6JkNTWJrB
+=Lk/M
 -----END PGP SIGNATURE-----
 
---GRPZ8SYKNexpdSJ7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--eRtJSFbw+EEWtPj3--
