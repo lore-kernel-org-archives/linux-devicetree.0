@@ -1,33 +1,37 @@
-From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] thermal: tegra: add Tegra132 specific SOC_THERM
- driver
-Date: Wed, 27 Apr 2016 16:39:22 -0700
-Message-ID: <20160427233921.GA2590@localhost.localdomain>
-References: <1461727554-15065-1-git-send-email-wni@nvidia.com>
- <1461727554-15065-2-git-send-email-wni@nvidia.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 0/9] thermal: rockchip: Support rk3366/rk3399 SoCS and
+ fixes the driver
+Date: Wed, 27 Apr 2016 16:52:46 -0700
+Message-ID: <20160427235245.GC2590@localhost.localdomain>
+References: <1460950562-20652-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461727554-15065-2-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1460950562-20652-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, briannorris@google.com, smbarber@google.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pm@vger.kernel.org, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Matthias Brugger <mbrugger@suse.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 27, 2016 at 11:25:46AM +0800, Wei Ni wrote:
-> add Tegra132 specific SOC_THERM driver.
-
-Applied this one. You may also add my
-
-Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-for patches 2 and 3. Remaining of the patches need to be further
-discussed.
-
+On Mon, Apr 18, 2016 at 11:35:52AM +0800, Caesar Wang wrote:
+> Hello Eduardo, Heiko
+> This series pacthes to support the rk3366/rk3399 SoCs thermal, and fixes the driver.
 > 
-> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 65ae684 thermal: rockchip: disable thermal->clk in err case
+> 31e6d69 thermal: rockchip: fixes the code_to_temp for tsadc driver
+> 6e2d6fb thermal: rockchip: update the tsadc table for rk3399
+> 49f6ccf thermal: rockchip: handle the power sequence for tsadc controller
+> 9f8bd52 thermal: rockchip: Support RK3366 SoCs in the thermal driver
+> a959e42 thermal: rockchip: add the notes for better reading
+
+Applied patches 1-6. But please, consider sending a patch to use
+usleep_range.
+
+> e5cbc6a thermal: of: Add support for hardware-tracked trip points
+> 7f613e4 thermal: rockchip: add the set_trips function
+> 94cc571 arm64: dts: rockchip: move the rk3368 thermal data into rk3368.dtsi
+> 
+
+These patches, though, will need further discussion. I believe you would
+probaly refresh them once we agree on Sascha's patchset.
