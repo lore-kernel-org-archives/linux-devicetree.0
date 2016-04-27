@@ -1,111 +1,106 @@
-From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH V10 1/6] mfd: add device-tree binding doc for PMIC
- max77620/max20024
-Date: Wed, 27 Apr 2016 17:04:44 +0200
-Message-ID: <20160427150443.GC4176@ulmo.ba.sec>
-References: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
- <1459348188-11726-2-git-send-email-ldewangan@nvidia.com>
- <20160427124959.GC4892@dell>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v15 0/8] MT8173 DRM support
+Date: Wed, 27 Apr 2016 17:05:44 +0200
+Message-ID: <1461769552-2752-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160427124959.GC4892@dell>
-Content-Disposition: inline
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---eRtJSFbw+EEWtPj3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 27, 2016 at 01:49:59PM +0100, Lee Jones wrote:
-> On Wed, 30 Mar 2016, Laxman Dewangan wrote:
->=20
-> > The MAXIM PMIC MAX77620 and MAX20024 are power management IC
-> > which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
-> > watchdog etc.
-> >=20
-> > Add DT binding document for the different functionality of
-> > this device.
-> >=20
-> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> >=20
-> > ---
-> > Changes from V1:
-> > - Added units in some of properties.
-> > - Change the boolean property to tristate type and detail some of
-> >   properties.
-> >=20
-> > Change from V2:
-> > - added unit in period related dt property.
-> >=20
-> > Change from V3: None
-> > - Added Rob's ack.
-> >=20
-> > Changes from V4:
-> > - A- Provide more details in the dt binding doc.
-> > - Take care of fps nodes.
-> > - Split the submodule's DT binding doc on respective folder.
-> > - Drop the battery charger and low battery binding and related code as
-> >   it need to go on power driver.
-> >=20
-> > Change from V5:
-> > - None
-> >=20
-> > Change from V6:
-> > -start the patch title with mfd instead of DT: mfd:
-> >=20
-> > Change from V7:
-> > - Better describe the FPS to make more clear.
-> >=20
-> > Changes from V8:
-> > None
-> >=20
-> > Changes from V9:
-> > None
-> >=20
-> >  Documentation/devicetree/bindings/mfd/max77620.txt | 143 +++++++++++++=
-++++++++
-> >  include/dt-bindings/mfd/max77620.h                 |  39 ++++++
-> >  2 files changed, 182 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
-> >  create mode 100644 include/dt-bindings/mfd/max77620.h
->=20
-> For my own reference:
->=20
->   Acked-by: Lee Jones <lee.jones@linaro.org>
-
-Hi Lee,
-
-I'm confused now. Were you going to pick this up, or are you waiting for
-someone else to do it?
-
-Thierry
-
---eRtJSFbw+EEWtPj3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXINULAAoJEN0jrNd/PrOh1WsP/3vEotfvBXQtacOPhsy0qrlM
-+/zYqDQfzwFx0Sy3ZlAh+BNuG0zc76ljwxB8rXfQXVsGLZWmIibuGksXeBAuGuaq
-MQay94ksBHe/NmccWMXVA2DqUXgE1nv3A37suqSP/4YEX2pzf5PzYtwT5zX/zWeB
-lHL9h+AOyL798ifY3GjeldyJfjcFlB05c5pfoFpswEdfas8I9bW7ZS86vzgyO414
-JUpgLLazT84yD6f6mN0MvsCWfpdpOMgM2raA1W0TkEKqm10PG/SAuvl+mLER4KPW
-0wdRPr1bMZlbu+S3tI03FgpkTicy4n8JLokpnkDC0ks8qKKht06+iNsRphSoPXI/
-jrFuWCT/449vpSkv/25orQfzOubLcZJteTZnSxxXq/O/KI5+NbmF55DFILQbzBL2
-NEJg+rppr/td1ACDayHMvQY1SOdY3pRO4Po+sohc4WEuA4RQv9tbeitMWh5PQhNg
-1PfJIKb2tm0TNUOX5T6/myKMV4CKvHvgwUlvZQIT2Oh1pZv2/XTnQ7DnfrUAzwER
-Ri2v1IzU+WD29TvRncAp+0I8z72bAEu20sMVpkjl9Ab0YE1/zrRxrvBdlYqL3bo/
-SH44fKYXk/bt1lN4oRixq1M2+jAGdAqrqMxIkbQ33/z4pxxWObHiBcWu0uqnf2gx
-MJnWf0rmuJf6JkNTWJrB
-=Lk/M
------END PGP SIGNATURE-----
-
---eRtJSFbw+EEWtPj3--
+UmViYXNlZCBvbnRvIGRybS1uZXh0LCBmaXhlZCBidWlsZGluZyBhcyBhIG1vZHVsZSwgcmVtb3Zl
+ZCB0aGUKZHJpdmVyIHVubG9hZCBob29rLCBjdXN0b20gdm1fb3BzLCBhbmQgdGhlIGR0cyBwYXRj
+aC4KCkNoYW5nZXMgc2luY2UgdjE0OgogLSBGaXhlZCBtb2R1bGUgYnVpbGQKIC0gU2VsZWN0IERS
+TV9HRU1fQ01BX0hFTFBFUiBhbmQgdXNlIGRybV9nZW1fY21hX3ZtX29wcwogLSBTZWxlY3QgTUVN
+T1JZIHNvIHRoYXQgc2VsZWN0IE1US19TTUkgd29ya3MgcHJvcGVybHkKIC0gUmViYXNlIG9udG8g
+ZHJtLW5leHQgc28gd2UgY2FuIHVzZSBkcm1fY29ubmVjdG9yX3VucmVnaXN0ZXJfYWxsKCkKIC0g
+UmVtb3ZlIGRlcHJlY2F0ZWQgdW5sb2FkIGhvb2sKIC0gdXNlIGRpdl91NjQgdG8gYXZvaWQgIl9f
+YWVhYmlfdWxkaXZtb2QgdW5kZWZpbmVkIiBlcnJvciB3aGVuCiAgIGJ1aWxkaW5nIGFzIG1vZHVs
+ZQogLSBEcm9wcGVkIHRoZSBkdHMgcGF0Y2gsIE1hdHRoaWFzIHdpbGwgcGljayBpdCB1cCBzZXBh
+cmF0ZWx5CiAtIEFkZGVkIGEgcGF0Y2ggdG8gZXhwb3J0IG10a19zbWlfbGFyYl9nZXQvcHV0Cgpy
+ZWdhcmRzClBoaWxpcHAKCkNLIEh1ICgzKToKICBkdC1iaW5kaW5nczogZHJtL21lZGlhdGVrOiBB
+ZGQgTWVkaWF0ZWsgZGlzcGxheSBzdWJzeXN0ZW0gZHRzIGJpbmRpbmcKICBkcm0vbWVkaWF0ZWs6
+IEFkZCBEUk0gRHJpdmVyIGZvciBNZWRpYXRlayBTb0MgTVQ4MTczLgogIGRybS9tZWRpYXRlazog
+QWRkIERTSSBzdWIgZHJpdmVyCgpKaWUgUWl1ICgxKToKICBkcm0vbWVkaWF0ZWs6IEFkZCBEUEkg
+c3ViIGRyaXZlcgoKUGhpbGlwcCBaYWJlbCAoNCk6CiAgY2xrOiBtZWRpYXRlazogbWFrZSBkcGkw
+X3NlbCBwcm9wYWdhdGUgcmF0ZSBjaGFuZ2VzCiAgY2xrOiBtZWRpYXRlazogQWRkIGhkbWlfcmVm
+IEhETUkgUEhZIFBMTCByZWZlcmVuY2UgY2xvY2sgb3V0cHV0CiAgY2xrOiBtZWRpYXRlazogcmVt
+b3ZlIGhkbWl0eF9kaWdfY3RzIGZyb20gVE9QIGNsb2NrcwogIG1lbW9yeTogbXRrLXNtaTogZXhw
+b3J0IG10a19zbWlfbGFyYl9nZXQvcHV0CgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsv
+bWVkaWF0ZWssZGlzcC50eHQgICAgfCAyMDMgKysrKysKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L21l
+ZGlhdGVrL21lZGlhdGVrLGRwaS50eHQgICAgIHwgIDM1ICsKIC4uLi9iaW5kaW5ncy9kaXNwbGF5
+L21lZGlhdGVrL21lZGlhdGVrLGRzaS50eHQgICAgIHwgIDYwICsrCiBkcml2ZXJzL2Nsay9tZWRp
+YXRlay9jbGstbXQ4MTczLmMgICAgICAgICAgICAgICAgICB8ICAxMiArLQogZHJpdmVycy9jbGsv
+bWVkaWF0ZWsvY2xrLW10ay5oICAgICAgICAgICAgICAgICAgICAgfCAgMTUgKy0KIGRyaXZlcnMv
+Z3B1L2RybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZl
+cnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRy
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgIDE2ICsK
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgIDE0
+ICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAgICAgICAgIHwg
+MzAyICsrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgICAg
+ICAgICAgIHwgMjQwICsrKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYyAg
+ICAgICAgICAgICAgICAgfCA3NjkgKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHBpX3JlZ3MuaCAgICAgICAgICAgIHwgMjI4ICsrKysrCiBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgICAgICAgICAgICB8IDU4MiArKysrKysrKysr
+KysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmggICAgICAgICAgICB8
+ICAzMiArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgICAgICAgICAg
+ICB8IDM1MyArKysrKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmgg
+ICAgICAgICAgICAgfCAgNDEgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
+X2NvbXAuYyAgICAgICAgfCAyMjUgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2RkcF9jb21wLmggICAgICAgIHwgMTUwICsrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2Rydi5jICAgICAgICAgICAgIHwgNTYxICsrKysrKysrKysrKysKIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICAgICAgICAgICAgIHwgIDYwICsrCiBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5jICAgICAgICAgICAgICB8IDE2NSArKysr
+CiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9mYi5oICAgICAgICAgICAgICB8ICAy
+MyArCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYyAgICAgICAgICAgICB8
+IDI2OSArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oICAgICAg
+ICAgICAgIHwgIDU5ICsrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9wbGFuZS5j
+ICAgICAgICAgICB8IDI0MCArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X3BsYW5lLmggICAgICAgICAgIHwgIDU5ICsrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2RzaS5jICAgICAgICAgICAgICAgICB8IDkyNyArKysrKysrKysrKysrKysrKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5jICAgICAgICAgICAgIHwgNDYzICsrKysr
+KysrKysKIGRyaXZlcnMvbWVtb3J5L210ay1zbWkuYyAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAyICsKIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ4MTczLWNsay5oICAgICAgICAg
+ICAgIHwgICAzICstCiAzMSBmaWxlcyBjaGFuZ2VkLCA2MTA2IGluc2VydGlvbnMoKyksIDUgZGVs
+ZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
+ZWRpYXRlayxkcGkudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dAogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9LY29uZmlnCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYwogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaV9yZWdzLmgKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmgKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5o
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
+X2NvbXAuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2RkcF9jb21wLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kcnYuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZHJtX2Rydi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZmIuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2ZiLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9nZW0uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fcGxhbmUuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX3BsYW5lLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMKCi0tIAoyLjguMC5yYzMKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
