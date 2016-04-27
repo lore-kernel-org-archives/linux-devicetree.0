@@ -1,22 +1,21 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: rk808: Add rk808_reg_ops_ranges for LDO3" to the regulator tree
-Date: Wed, 27 Apr 2016 17:35:12 +0100
-Message-ID: <E1avSQi-0004XP-Kn@debutante>
-References: <1461682450-22173-2-git-send-email-w.egorov@phytec.de>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1461682450-22173-2-git-send-email-w.egorov@phytec.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Wadim Egorov <w.egorov@phytec.de>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lgirdwood@gmail.combroonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "spi: spi-fsl-dspi: Update DT binding documentation" to the spi tree
+Date: Wed, 27 Apr 2016 17:35:29 +0100
+Message-ID: <E1avSQz-0004dl-En@debutante>
+References: <1461744756-31481-3-git-send-email-yao.yuan@freescale.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461744756-31481-3-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yao.yuan-3arQi8VN3Tc@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: rk808: Add rk808_reg_ops_ranges for LDO3
+   spi: spi-fsl-dspi: Update DT binding documentation
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,75 +36,39 @@ to this mail.
 Thanks,
 Mark
 
->From 129d7cf98f5c739014ae5aa0311e48f6a64b0758 Mon Sep 17 00:00:00 2001
-From: Wadim Egorov <w.egorov@phytec.de>
-Date: Tue, 26 Apr 2016 16:54:04 +0200
-Subject: [PATCH] regulator: rk808: Add rk808_reg_ops_ranges for LDO3
+>From c145344763192042135ef6172b779baaf4a16c1e Mon Sep 17 00:00:00 2001
+From: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Date: Wed, 27 Apr 2016 16:12:36 +0800
+Subject: [PATCH] spi: spi-fsl-dspi: Update DT binding documentation
 
-LDO_REG3 descriptor is using linear_ranges.
-Add and use proper ops for LDO_REG3.
+DSPI driver support the register on the controller with big endian
+mode R/W. But not use the regmap API.
+So update the binding documentation for "big-endian".
 
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/regulator/rk808-regulator.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index 67f72feed815..6601ab5fcc2d 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -238,6 +238,21 @@ static int rk808_set_suspend_voltage(struct regulator_dev *rdev, int uv)
- 				  sel);
- }
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+index fa77f874e321..d2969d2ceb4b 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+@@ -13,8 +13,7 @@ Required properties:
  
-+static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
-+{
-+	unsigned int reg;
-+	int sel = regulator_map_voltage_linear_range(rdev, uv, uv);
-+
-+	if (sel < 0)
-+		return -EINVAL;
-+
-+	reg = rdev->desc->vsel_reg + RK808_SLP_REG_OFFSET;
-+
-+	return regmap_update_bits(rdev->regmap, reg,
-+				  rdev->desc->vsel_mask,
-+				  sel);
-+}
-+
- static int rk808_set_suspend_enable(struct regulator_dev *rdev)
- {
- 	unsigned int reg;
-@@ -288,6 +303,19 @@ static struct regulator_ops rk808_reg_ops = {
- 	.set_suspend_disable	= rk808_set_suspend_disable,
- };
+ Optional property:
+ - big-endian: If present the dspi device's registers are implemented
+-  in big endian mode, otherwise in native mode(same with CPU), for more
+-  detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
++  in big endian mode.
  
-+static struct regulator_ops rk808_reg_ops_ranges = {
-+	.list_voltage		= regulator_list_voltage_linear_range,
-+	.map_voltage		= regulator_map_voltage_linear_range,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_suspend_voltage	= rk808_set_suspend_voltage_range,
-+	.set_suspend_enable	= rk808_set_suspend_enable,
-+	.set_suspend_disable	= rk808_set_suspend_disable,
-+};
-+
- static struct regulator_ops rk808_switch_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
-@@ -383,7 +411,7 @@ static const struct regulator_desc rk808_reg[] = {
- 		.name = "LDO_REG3",
- 		.supply_name = "vcc7",
- 		.id = RK808_ID_LDO3,
--		.ops = &rk808_reg_ops,
-+		.ops = &rk808_reg_ops_ranges,
- 		.type = REGULATOR_VOLTAGE,
- 		.n_voltages = 16,
- 		.linear_ranges = rk808_ldo3_voltage_ranges,
+ Optional SPI slave node properties:
+ - fsl,spi-cs-sck-delay: a delay in nanoseconds between activating chip
 -- 
 2.8.0.rc3
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
