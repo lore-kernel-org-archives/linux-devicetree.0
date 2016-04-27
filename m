@@ -1,176 +1,65 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [RFC v3 1/3] gpio: dt-bindings: add basic-mmio-gpio bindings
-Date: Wed, 27 Apr 2016 12:15:46 +0200
-Message-ID: <1838530.usypLq5u4X@debian64>
-References: <cover.1461710784.git.chunkeey@googlemail.com> <7e8845e6b6384c6b5673532ebef79c8730ed7748.1461710784.git.chunkeey@googlemail.com> <CAL_Jsq+OrkudQwxqfSvuqW=HWm6B74pE9bec0QBh5xNbF+s2Hw@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v14 2/8] drm/mediatek: Add DRM Driver for Mediatek SoC
+ MT8173.
+Date: Wed, 27 Apr 2016 12:29:05 +0200
+Message-ID: <1461752945.4044.25.camel@pengutronix.de>
+References: <1460387376-11799-1-git-send-email-p.zabel@pengutronix.de>
+ <1460387376-11799-3-git-send-email-p.zabel@pengutronix.de>
+ <1461657922.3599.27.camel@pengutronix.de>
+ <20160426084800.GZ2510@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+OrkudQwxqfSvuqW=HWm6B74pE9bec0QBh5xNbF+s2Hw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160426084800.GZ2510@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, Mao Huang <littlecvr@chromium.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, YT Shen <yt.shen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, dri-devel@lists.freedesktop.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, April 26, 2016 09:06:14 PM Rob Herring wrote:
-> On Tue, Apr 26, 2016 at 5:51 PM, Christian Lamparter
-> <chunkeey@googlemail.com> wrote:
-> > From: =C1lvaro Fern=E1ndez Rojas <noltari@gmail.com>
-> >
-> > This patch adds the device tree bindings for the basic-mmio-gpio.
-> > The basic-mmio-gpio is already part of a the GPIO generic library
-> > and shares its compatible with the platform device.
->=20
-> These things always start out "simple", "basic" or "generic". Then
-> people extend them a property or 2 at a time until they are no longer
-> basic. Make a bunch of GPIO drivers use a generic driver then maybe
-> I'll be convinced this is a good idea.
-Well, I mentioned brcm63xx (MIPS) and MyBook Live (PPC). But OK, if you
-want me to look at the existing code in the kernel. I found the followi=
-ng
-candidates.
-
-1. MOXA ART: "moxa,moxart-gpio"=20
-http://lxr.free-electrons.com/source/drivers/gpio/gpio-moxart.c
-This driver is used by the:
-arch/arm/boot/dts/moxart.dtsi
-
----
-diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.d=
-tsi
-index 1fd27ed..26707d0 100644
---- a/arch/arm/boot/dts/moxart.dtsi
-+++ b/arch/arm/boot/dts/moxart.dtsi
-@@ -66,8 +66,11 @@
- 		gpio: gpio@98700000 {
- 			gpio-controller;
- 			#gpio-cells =3D <2>;
--			compatible =3D "moxa,moxart-gpio";
--			reg =3D <0x98700000 0xC>;
-+			compatible =3D "basic-mmio-gpio";
-+			reg =3D <0x98700000 0x4
-+			       0x98700004 0x4
-+			       0x98700008 0x4>;
-+			reg-names =3D "set dat dirout";
- 		};
-=20
- 		rtc: rtc {
----
-
-2. GE FPGA based GPIO: "ge,imp3a-gpio", "gef,sbc310-gpio", "gef,sbc610-=
-gpio"
-http://lxr.free-electrons.com/source/drivers/gpio/gpio-ge.c
-
-This driver is used by the:
-arch/powerpc/boot/dts/fsl/ge_imp3a.dts
-arch/powerpc/boot/dts/fsl/gef_ppc9a.dts
-arch/powerpc/boot/dts/fsl/gef_sbc610.dts
-arch/powerpc/boot/dts/fsl/gef_sbc310.dts
-
----
-diff --git a/arch/powerpc/boot/dts/fsl/gef_ppc9a.dts b/arch/powerpc/boo=
-t/dts/fsl/gef_ppc9a.dts
-index 0424fc2..20dd084 100644
---- a/arch/powerpc/boot/dts/fsl/gef_ppc9a.dts
-+++ b/arch/powerpc/boot/dts/fsl/gef_ppc9a.dts
-@@ -112,9 +112,14 @@
- 		};
- 		gef_gpio: gpio@7,14000 {
- 			#gpio-cells =3D <2>;
--			compatible =3D "gef,ppc9a-gpio", "gef,sbc610-gpio";
--			reg =3D <0x7 0x14000 0x24>;
-+			compatible =3D "basic-mmio-gpio";
-+			reg =3D <0x7 0x14000 0x4
-+			       0x7 0x14004 0x4
-+			       0x7 0x14008 0x4>;
-+			reg-names =3D "dirout dat set";
-+			ngpio =3D <19>;
- 			gpio-controller;
-+			big-endian;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/ge_imp3a.dts b/arch/powerpc/boot=
-/dts/fsl/ge_imp3a.dts
-index a2bb47f..ac5855a 100644
---- a/arch/powerpc/boot/dts/fsl/ge_imp3a.dts
-+++ b/arch/powerpc/boot/dts/fsl/ge_imp3a.dts
-@@ -93,9 +93,13 @@
-=20
- 		gef_gpio: gpio@4,400 {
- 			#gpio-cells =3D <2>;
--			compatible =3D "ge,imp3a-gpio";
--			reg =3D <0x4 0x400 0x24>;
-+			compatible =3D "basic-mmio-gpio";
-+			reg =3D <0x4 0x400 0x02
-+			       0x4 0x404 0x02
-+			       0x4 0x408 0x02>;
-+			reg-names =3D "dirin dat set";
- 			gpio-controller;
-+			big-endian;
- 		};
-=20
- 		wdt@4,800 {
-diff --git a/arch/powerpc/boot/dts/fsl/gef_sbc310.dts b/arch/powerpc/bo=
-ot/dts/fsl/gef_sbc310.dts
-index 84b3d38..f09528f 100644
---- a/arch/powerpc/boot/dts/fsl/gef_sbc310.dts
-+++ b/arch/powerpc/boot/dts/fsl/gef_sbc310.dts
-@@ -113,9 +113,14 @@
- 		};
- 		gef_gpio: gpio@4,8000 {
- 			#gpio-cells =3D <2>;
--			compatible =3D "gef,sbc310-gpio";
--			reg =3D <0x4 0x8000 0x24>;
-+			compatible =3D "basic-mmio-gpio";
-+			reg =3D <0x4 0x8000 0x4
-+			       0x4 0x8004 0x4
-+			       0x4 0x8008 0x4>;
-+			reg-names =3D "dirout dat set";
-+			ngpio =3D <6>;
- 			gpio-controller;
-+			big-endian;
- 		};
- 	};
-=20
-diff --git a/arch/powerpc/boot/dts/fsl/gef_sbc610.dts b/arch/powerpc/bo=
-ot/dts/fsl/gef_sbc610.dts
-index 974446a..a9d740a 100644
---- a/arch/powerpc/boot/dts/fsl/gef_sbc610.dts
-+++ b/arch/powerpc/boot/dts/fsl/gef_sbc610.dts
-@@ -110,9 +110,14 @@
- 		};
- 		gef_gpio: gpio@7,14000 {
- 			#gpio-cells =3D <2>;
--			compatible =3D "gef,sbc610-gpio";
--			reg =3D <0x7 0x14000 0x24>;
-+			compatible =3D "basic-mmio-gpio";
-+			reg =3D <0x7 0x14000 0x4
-+			       0x7 0x14004 0x4
-+			       0x7 0x14008 0x4>;
-+			reg-names =3D "dirout dat set";
-+			ngpio =3D <19>;
- 			gpio-controller;
-+			big-endian;
- 		};
- 	};
----
-
-3. CLPS711X GPIO driver: "cirrus,clps711x-gpio"
-http://lxr.free-electrons.com/source/drivers/gpio/gpio-clps711x.c
-(But there is no DTS which uses the in the kernel)
-
-4. GPIO driver for the TS-4800 board: "technologic,ts4800-gpio"
-(Again no DTS in kernel)
-
-What do you think. There's a total of six devices that can make use
-of the "basic-mmio-gpio". If this gives me your go-ahead, I'll include
-them in the series as proper patches.
-
-Regards,
-Christian
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRGFuaWVsLAoKQW0gRGllbnN0YWcsIGRlbiAyNi4wNC4yMDE2LCAxMDo0OCArMDIwMCBzY2hy
+aWViIERhbmllbCBWZXR0ZXI6ClsuLi5dCj4gPiArc3RhdGljIGludCBtdGtfZHJtX3VubG9hZChz
+dHJ1Y3QgZHJtX2RldmljZSAqZHJtKQo+ID4gK3sKPiA+ICsJbXRrX2RybV9rbXNfZGVpbml0KGRy
+bSk7Cj4gPiArCWRybS0+ZGV2X3ByaXZhdGUgPSBOVUxMOwo+ID4gKwo+ID4gKwlyZXR1cm4gMDsK
+PiA+ICt9Cj4gCj4gTGlrZSBsb2FkLCB0aGUgdW5sb2FkIGhvb2sgaXMgZGVwcmVjYXRlZC4gQW5k
+IGluIGRybS1uZXh0IHdlIG5vdyBoYXZlIHNvbWUKPiBuaWNlIGhlbHBlcnMgdG8gbWFrZSBub3Qg
+dXNpbmcgYW4gdW5sb2FkIGhvb2sgZWFzaWVyLiBQbGVhc2UgcmVmYWN0b3IgcGVyCj4gZXhpc3Rp
+bmcgZXhhbXBsZXMgYW5kIGdldCByaWQgb2YgeW91ciB1bmxvYWQgaG9vay4KClRoYW5rcywgZG9l
+cyB0aGlzIGNoYW5nZSBsb29rIGFib3V0IHJpZ2h0OgoKLS0tLS0tLS04PC0tLS0tLS0tCi0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCkBAIC0yMjIsMTQgKzIyMiw2IEBAIHN0YXRpYyB2
+b2lkIG10a19kcm1fa21zX2RlaW5pdChzdHJ1Y3QgZHJtX2RldmljZQoqZHJtKQogCWRybV9tb2Rl
+X2NvbmZpZ19jbGVhbnVwKGRybSk7CiB9CiAKLXN0YXRpYyBpbnQgbXRrX2RybV91bmxvYWQoc3Ry
+dWN0IGRybV9kZXZpY2UgKmRybSkKLXsKLQltdGtfZHJtX2ttc19kZWluaXQoZHJtKTsKLQlkcm0t
+PmRldl9wcml2YXRlID0gTlVMTDsKLQotCXJldHVybiAwOwotfQotCiBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IGZpbGVfb3BlcmF0aW9ucyBtdGtfZHJtX2ZvcHMgPSB7CiAJLm93bmVyID0gVEhJU19NT0RV
+TEUsCiAJLm9wZW4gPSBkcm1fb3BlbiwKQEAgLTI0Niw3ICsyMzgsNiBAQCBzdGF0aWMgY29uc3Qg
+c3RydWN0IGZpbGVfb3BlcmF0aW9ucyBtdGtfZHJtX2ZvcHMgPSB7CiBzdGF0aWMgc3RydWN0IGRy
+bV9kcml2ZXIgbXRrX2RybV9kcml2ZXIgPSB7CiAJLmRyaXZlcl9mZWF0dXJlcyA9IERSSVZFUl9N
+T0RFU0VUIHwgRFJJVkVSX0dFTSB8IERSSVZFUl9QUklNRSB8CiAJCQkgICBEUklWRVJfQVRPTUlD
+LAotCS51bmxvYWQgPSBtdGtfZHJtX3VubG9hZCwKIAogCS5nZXRfdmJsYW5rX2NvdW50ZXIgPSBk
+cm1fdmJsYW5rX2NvdW50LAogCS5lbmFibGVfdmJsYW5rID0gbXRrX2RybV9jcnRjX2VuYWJsZV92
+YmxhbmssCkBAIC00NTUsOCArNDQ2LDE0IEBAIGVycl9ub2RlOgogc3RhdGljIGludCBtdGtfZHJt
+X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogewogCXN0cnVjdCBtdGtfZHJt
+X3ByaXZhdGUgKnByaXZhdGUgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsKKwlzdHJ1Y3Qg
+ZHJtX2RldmljZSAqZHJtID0gcHJpdmF0ZS0+ZHJtOwogCWludCBpOwogCisJZHJtX2Nvbm5lY3Rv
+cl91bnJlZ2lzdGVyX2FsbChkcm0pOworCWRybV9kZXZfdW5yZWdpc3Rlcihkcm0pOworCW10a19k
+cm1fa21zX2RlaW5pdChkcm0pOworCWRybV9kZXZfdW5yZWYoZHJtKTsKKwogCWNvbXBvbmVudF9t
+YXN0ZXJfZGVsKCZwZGV2LT5kZXYsICZtdGtfZHJtX29wcyk7CiAJcG1fcnVudGltZV9kaXNhYmxl
+KCZwZGV2LT5kZXYpOwogCW9mX25vZGVfcHV0KHByaXZhdGUtPm11dGV4X25vZGUpOwotLS0tLS0t
+LT44LS0tLS0tLS0KCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCB2bV9vcGVyYXRpb25zX3N0cnVj
+dCBtdGtfZHJtX2dlbV92bV9vcHMgPSB7Cj4gPiArCS5vcGVuID0gZHJtX2dlbV92bV9vcGVuLAo+
+ID4gKwkuY2xvc2UgPSBkcm1fZ2VtX3ZtX2Nsb3NlLAo+ID4gK307Cj4gCj4gRHJpdmUtYnkgcmV2
+aWV3IEkganVzdCBzcG90dGVkOiBQbGVhc2UgdXNlIGRybV9nZW1fY21hX3ZtX29wcyBpbnN0ZWFk
+IG9mCj4gcm9sbGluZyB5b3VyIG93bi4KCkdvb2QgY2F0Y2gsIHdpbGwgcmVtb3ZlLgoKcmVnYXJk
+cwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
