@@ -1,145 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 net-next 11/13] Documentation: Bindings: Update DT
- binding for separating dsaf dev support
-Date: Wed, 27 Apr 2016 10:25:56 -0500
-Message-ID: <CAL_JsqLHrHWtiikSt7F39LoExoL2aep5Pqax5cGWWBw-yhz79g@mail.gmail.com>
-References: <1461402317-136499-1-git-send-email-Yisen.Zhuang@huawei.com>
- <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
- <20160426124847.GA26682@rob-hp-laptop> <57203309.1090501@huawei.com>
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] ARM: dts: lpc32xx: ea3250: add NAND partitions
+ device node
+Date: Wed, 27 Apr 2016 11:29:09 -0400
+Message-ID: <1461770949.31696.0.camel@localhost>
+References: <1461705034-355-1-git-send-email-vz@mleia.com>
+	 <1461705034-355-3-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57203309.1090501@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yisen Zhuang <Yisen.zhuang@huawei.com>
-Cc: David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, yankejian <yankejian@huawei.com>, huangdaode <huangdaode@hisilicon.com>, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, Wei Xu <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461705034-355-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 10:33 PM, Yisen Zhuang <Yisen.zhuang@huawei.com=
-> wrote:
-> Hi Rob and David,
->
-> Please see my comments inline.
->
-> David have merged this series to net-next, but we need to modify some=
- codes according
-> to Rob's comments. I am not sure if i need to send V3 for this series=
-, or separate
-> patches of documentation to independent series and generate a new pat=
-ch for hns base
-> on current net-next?
+On Wed, 2016-04-27 at 00:10 +0300, Vladimir Zapolskiy wrote:
+> To declare MTD OF partitions NAND controller device node should have
+> a special 'partitions' subnode, the change removes a debug message
+> from mtd/ofpart on boot:
+> 
+>   nxp_lpc3220_slc: 'partitions' subnode not found on /ahb/flash@20020000.
+>   Trying to parse direct subnodes as partitions.
+> 
+> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> ---
+> * on conversion added missing 'compatible = "fixed-partitions";',
+>   thanks to Sylvain for finding
+> 
+>  arch/arm/boot/dts/ea3250.dts | 42 +++++++++++++++++++++++-------------------
+>  1 file changed, 23 insertions(+), 19 deletions(-)
+> 
+Acked-by: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-That's David's call. I'm guessing he wants follow-up patches on top of =
-these.
-
-> =E5=9C=A8 2016/4/26 20:48, Rob Herring =E5=86=99=E9=81=93:
->> On Sat, Apr 23, 2016 at 05:05:15PM +0800, Yisen Zhuang wrote:
->>> Because debug dsaf port was separated from service dsaf port, this =
-patch
->>> updates the related information of DT binding.
->>
->> Separated when? New version of the h/w? If so, where's the new
->> compatible string? This is quite a big binding change.
->
-> There isn't any change of h/w. I separated debug dsaf port from sevic=
-e dsaf
-> port to make the code more simple and readability.
-
-Okay.
-
-[...]
-
->>> +  serdes-syscon rather than this address.
->>>    The third region is the PPE register base and size.
->>> -  The fourth region is dsa fabric base register and size.
->>> -  The fifth region is cpld base register and size, it is not requi=
-red if do not use cpld.
->>> -- phy-handle: phy handle of physicl port, 0 if not any phy device.=
- see ethernet.txt [1].
->>> +  The fourth region is dsa fabric base register and size. It is no=
-t required for
->>> +  single-port mode.
->>> +- reg-names: may be ppe-base and(or) dsaf-base. It is used to find=
- the
->>> +  corresponding reg's index.
->>
->> But you have up to 5 regions.
->>
->> The variable nature of what regions you have tells me you need more
->> specific compatible strings for each chip.
->
-> we didn't add support of new h/w. We added these regions to make code=
- simple and readability.
-> If we need to add support of next h/w version next time, we don't nee=
-d to add many branches
-> for these attributes. So we didn't add a new compatible here.
-
-Not sure what you mean by branches. It's fine to put properties for
-things that vary among h/w versions, but new compatible strings will
-be needed for any new versions.
-
-
->>> +- port: subnodes of dsaf. A dsaf node may contain several port nod=
-es(Depending
->>> +  on mode of dsaf). Port node contain some attributes listed below=
-:
->>> +- port-id: is physical port index in one dsaf.
->>
->> Indexes should generally be avoided. What does the number correspond
->> to in h/w (if anything)?
->
-> port-id is index for a port in dsaf, it is correspond to index of PHY=
- showed below.
-
-Okay, you should use reg property here instead.
-
->
->                                                          CPU
->                                                           |
->                                     ---------------------------------=
 --
->                                     |                     |          =
- |
->     ----------------------------------------------    ---------   ---=
-------
->     |                         |                  |    |       |   |  =
- |   |
->     |                        PPE                 |    |  PPE  |   |  =
-PPE  |
->     |                         |                  |    |   |   |   |  =
- |   |
->     |                         |                  |    |   |   |   |  =
- |   |
->     |                      crossbar              |    |   |   |   |  =
- |   |
->     |                         |                  |    |   |   |   |  =
- |   |
->     |   ----------------------------------       |    |   |   |   |  =
- |   |
->     |   |     |     |      |      |      |       |    |   |   |   |  =
- |   |
->     |   |     |     |      |      |      |       |    |   |   |   |  =
- |   |
->     |  MAC   MAC   MAC    MAC    MAC    MAC      |    |  MAC  |   |  =
-MAC  |
->     |   |     |     |      |      |      |       |    |   |   |   |  =
- |   |
->     ----------------------------------------------    ---------   ---=
-------
->         |     |     |      |      |      |    \        /  |        / =
- |
->        PHY   PHY   PHY    PHY    PHY    PHY    \      /  PHY      /  =
-PHY
->                                                 \    /           /
->                                                  \  /           /
->                                              DSAF(three platform devi=
-ce)
->
->>
->>> +- phy-handle: phy handle of physicl port. It is not required if th=
-ere isn't
-
-Another typo here.
-
-Rob
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
