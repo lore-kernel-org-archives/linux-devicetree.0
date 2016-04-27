@@ -1,175 +1,124 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Wed, 27 Apr 2016 13:59:23 +0100
-Message-ID: <20160427125923.GA12756@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
- <1461236675-10176-4-git-send-email-peter.griffin@linaro.org>
- <20160426165622.GR2274@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160426165622.GR2274@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: omap5: describe control for ckobuffer
+Date: Wed, 27 Apr 2016 15:10:03 +0200
+Message-ID: <A90F1BFC-A834-4EC0-81F9-2C8222AAA010@goldelico.com>
+References: <cover.1461003660.git.hns@goldelico.com> <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com> <20160426172710.GI5995@atomide.com> <70572DA1-BEB4-4681-BA6C-2E1C9002D730@goldelico.com> <5720B107.4000907@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5720B107.4000907@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Laxman Dewangan <ldewangan@nvidia.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
 
-Thanks for reviewing.
+> Am 27.04.2016 um 14:31 schrieb Tero Kristo <t-kristo@ti.com>:
+> 
+> On 27/04/16 09:04, H. Nikolaus Schaller wrote:
+>> 
+>>> Am 26.04.2016 um 19:27 schrieb Tony Lindgren <tony@atomide.com>:
+>>> 
+>>> Tero,
+>>> 
+>>> * H. Nikolaus Schaller <hns@goldelico.com> [160418 11:23]:
+>>>> OMAP5 has a register to control if the ckobuffer is enabled
+>>>> and defines the polarity. ckobuffer is required to drive a twl6040
+>>>> with the system clock. Hence, add the pinctrl,single to the
+>>>> OMAP5 SoC description so that omap5-board-common can
+>>>> set up the ckobuffer as required.
+>>> 
+>>> Is this really a mux or should it be a mux clock?
+>> 
+>> It is a pinmux setting for the clock out buffer to choose what signal
+>> (and polarity) is presented on the fref_xtal_clk pad.
+>> 
+>> The register is part of the CTRL_MODULE_WKUP.
+>> The clock signal is the xtal master clock of the whole SoC.
+>> 
+>> Although there is a bit to choose an alternate clock, there is no
+>> alternate in the OMAP5 silicon.
+>> 
+>> Therefore I would say it is about padconf and not clock or clock mux
+>> related.
+>> 
+>> It just happens to be a clock signal which can be routed to this
+>> pad.
+> 
+> The two could very well be implemented as clock nodes, a mux and a gate. This would describe the hardware functionality better imo, if the assumptions made here are correct. Implementing the control as pinctrl hacks looks rather weird to me.
 
-On Tue, 26 Apr 2016, Vinod Koul wrote:
+Why do you consider it a "pinctrl hack"? IMHO it is not a hack, but 100% proper use of pinctrl.
 
-> On Thu, Apr 21, 2016 at 12:04:20PM +0100, Peter Griffin wrote:
-> 
-> > +	if (!atomic_read(&fchan->fdev->fw_loaded)) {
-> > +		dev_err(fchan->fdev->dev, "%s: fdma fw not loaded\n", __func__);
-> > +		return NULL;
-> > +	}
-> 
-> so who is loading the fw and setting fw_loaded, it is not set in this patch?
+The control register for the clock output buffer is part of the CTRL_MODULE_WKUP, which includes the well known pin controls of gpio1_wk but also this ckobuffer control. So it is grouped with these in a single control register block of the SoC. See "19.6.5.1 CTRL_MODULE_WKUP_PAD" of the TRM.
 
-This shouldn't be in this patch. It should have been added as part of the
-"dmaengine: st_fdma: Add xp70 firmware loading mechanism" patch.
+And IMHO, the naming "buffer" indicates that it controls the pad buffer (like all pinmux) and not the clock.
 
-> 
-> > +	if (direction == DMA_DEV_TO_MEM) {
-> > +		fchan->cfg.req_ctrl &= ~REQ_CTRL_WNR;
-> > +		maxburst = fchan->scfg.src_maxburst;
-> > +		width = fchan->scfg.src_addr_width;
-> > +		addr = fchan->scfg.src_addr;
-> > +	} else if (direction == DMA_MEM_TO_DEV) {
-> > +		fchan->cfg.req_ctrl |= REQ_CTRL_WNR;
-> > +		maxburst = fchan->scfg.dst_maxburst;
-> > +		width = fchan->scfg.dst_addr_width;
-> > +		addr = fchan->scfg.dst_addr;
-> > +	} else {
-> > +		return -EINVAL;
-> > +	}
-> 
-> switch please
+Yes, of course if can be described differently, as you propose. And one might argue that the twl6040 might want to request its master clock input (19.2 MHz) which could turn on the buffer on demand.
 
-Ok, will fix in v4
-> 
-> > +
-> > +	fchan->cfg.req_ctrl &= ~REQ_CTRL_OPCODE_MASK;
-> > +	if (width == DMA_SLAVE_BUSWIDTH_1_BYTE)
-> > +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST1;
-> > +	else if (width == DMA_SLAVE_BUSWIDTH_2_BYTES)
-> > +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST2;
-> > +	else if (width == DMA_SLAVE_BUSWIDTH_4_BYTES)
-> > +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST4;
-> > +	else if (width == DMA_SLAVE_BUSWIDTH_8_BYTES)
-> > +		fchan->cfg.req_ctrl |= REQ_CTRL_OPCODE_LD_ST8;
-> > +	else
-> > +		return -EINVAL;
-> 
-> here as well
-
-Ok, will fix in v4.
-> 
-> > +static void fill_hw_node(struct st_fdma_hw_node *hw_node,
-> > +			struct st_fdma_chan *fchan,
-> > +			enum dma_transfer_direction direction)
-> > +{
-> > +
-> > +	if (direction == DMA_MEM_TO_DEV) {
-> > +		hw_node->control |= NODE_CTRL_SRC_INCR;
-> > +		hw_node->control |= NODE_CTRL_DST_STATIC;
-> > +		hw_node->daddr = fchan->cfg.dev_addr;
-> > +	} else {
-> > +		hw_node->control |= NODE_CTRL_SRC_STATIC;
-> > +		hw_node->control |= NODE_CTRL_DST_INCR;
-> > +		hw_node->saddr = fchan->cfg.dev_addr;
-> > +	}
-> 
-> empty line here at other places too. The code looks very compressed and bit
-> harder to read overall
-
-Ok, will fix in v4.
+The question it raises to me are:
+* isn't it "overkill" to describe a static pinmux register setup (it does not need to be turned on/off during operation) as mux (without function in OMAP5 SoC) + gate?
+* does it require new driver code to correctly write to the control register?
+* does it work if the twl6040 is hooked up differently?
 
 > 
-> > +	fdesc = st_fdma_alloc_desc(fchan, sg_len);
-> > +	if (!fdesc) {
-> > +		dev_err(fchan->fdev->dev, "no memory for desc\n");
-> > +		return NULL;
-> > +	}
-> > +
-> > +	fdesc->iscyclic = false;
-> > +
-> > +	for_each_sg(sgl, sg, sg_len, i) {
-> > +		hw_node = fdesc->node[i].desc;
-> > +
-> > +		hw_node->next = fdesc->node[(i + 1) % sg_len].pdesc;
-> > +		hw_node->control = NODE_CTRL_REQ_MAP_DREQ(fchan->dreq_line);
-> > +
-> > +		fill_hw_node(hw_node, fchan, direction);
-> > +
-> > +		if (direction == DMA_MEM_TO_DEV)
-> > +			hw_node->saddr = sg_dma_address(sg);
-> > +		else
-> > +			hw_node->daddr = sg_dma_address(sg);
-> > +
-> > +		hw_node->nbytes = sg_dma_len(sg);
-> > +		hw_node->generic.length = sg_dma_len(sg);
-> > +	}
-> > +
-> > +	/* interrupt at end of last node */
-> > +	hw_node->control |= NODE_CTRL_INT_EON;
-> > +
-> > +	return vchan_tx_prep(&fchan->vchan, &fdesc->vdesc, flags);
-> 
-> bunch of this seems similar to cyclic case, can you create common setup
-> routine for these, anyway cyclic is a special cases of slave_sg
+> I could not find any documentation related to the ckobuffer usage though,
 
-In v4 I've made a st_fdma_prep_common() which abstracts out all the common
-checks at the beginning of the *_prep*() functions.
+On the EVM it is the FREF_XTAL_OUT (Ball L33) which goes as signal H_SYSCLK through a jumper (R87) and then as signal P_SYSCLK to the MCLK (Ball K7) of the twl6040.
 
-In v3 fill_fw_node() is already (from one of your previous reviews)
-abstracting out all the common parts from these loops. So everything
-that is now left is actually differences between the two setups.
+Description of FREF_XTAL_OUT is in section 3.3.1 of the TRM. 
 
-Is that Ok?
+> maybe Peter can provide some insight?
+> I think you spent some considerable time bringing up twl6040 a few years back...
+
+Yes, that would certainly help to decide how to proceed.
 
 > 
-> > +
-> > +	ret = dma_cookie_status(chan, cookie, txstate);
-> > +	if (ret == DMA_COMPLETE)
-> > +		return ret;
-> > +
-> > +	if (!txstate)
-> > +		return fchan->status;
-> 
-> why channel status, query is for descriptor
-
-Ok, will fix in v4.
 
 > 
-> > +static int st_fdma_remove(struct platform_device *pdev)
-> > +{
-> > +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
-> > +
-> > +	st_fdma_clk_disable(fdev);
+> -Tero
+
+BR and thanks,
+NIkolaus
+
 > 
-> and you irq is still enabled and tasklets can be scheduled!!
+>> 
+>> BR,
+>> Nikolaus
+>> 
+>>> 
+>>> Regards,
+>>> 
+>>> Tony
+>>> 
+>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>> ---
+>>>> arch/arm/boot/dts/omap5.dtsi | 10 ++++++++++
+>>>> 1 file changed, 10 insertions(+)
+>>>> 
+>>>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+>>>> index 120b6b8..1d9050f 100644
+>>>> --- a/arch/arm/boot/dts/omap5.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap5.dtsi
+>>>> @@ -277,6 +277,16 @@
+>>>> 				pinctrl-single,register-width = <16>;
+>>>> 				pinctrl-single,function-mask = <0x7fff>;
+>>>> 			};
+>>>> +
+>>>> +			omap5_control_ckobuffer: pinmux@cdb4 {
+>>>> +				compatible = "ti,omap5-padconf",
+>>>> +					     "pinctrl-single";
+>>>> +				reg = <0xcdb4 4>;
+>>>> +				#address-cells = <1>;
+>>>> +				#size-cells = <0>;
+>>>> +				pinctrl-single,register-width = <32>;
+>>>> +				pinctrl-single,function-mask = <0xf0000000>;
+>>>> +			};
+>>>> 		};
+>>>> 
+>>>> 		ocmcram: ocmcram@40300000 {
+>>>> --
+>>>> 2.7.3
+>>>> 
+>> 
 > 
-Eeek! Very good point. Also looking at some other drivers we
-should be doing a of_dma_controller_free() and
-dma_async_device_unregister().
-
-So something like this: -
-
-  st_fdma_disable(); /*disables irqs*/
-  of_dma_controller_free(pdev->dev.of_node);
-  dma_async_device_unregister(&priv->slave);
-  st_fdma_clk_disable(fdev);
-
-regards,
-
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
