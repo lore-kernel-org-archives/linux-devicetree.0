@@ -1,36 +1,85 @@
-From: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] devicetree/bindings: Add binding for operator
- panel on FSP machines
-Date: Wed, 27 Apr 2016 18:00:43 +1000
-Message-ID: <572071AB.1010307@gmail.com>
-References: <1460423107-7270-1-git-send-email-sjitindarsingh@gmail.com>
- <87mvofiqxr.fsf@linux.vnet.ibm.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
+Date: Wed, 27 Apr 2016 13:45:01 +0530
+Message-ID: <20160427081501.GV2274@localhost>
+References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
+ <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
+ <20160426033029.GB2274@localhost>
+ <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
+ <20160426162529.GK2274@localhost>
+ <571F9D76.2060809@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87mvofiqxr.fsf-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, andrew.donnellan-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <571F9D76.2060809@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/04/16 15:03, Stewart Smith wrote:
-> Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> Add a binding to Documentation/devicetree/bindings/powerpc/opal
->> (oppanel-opal.txt) for the operator panel which is present on IBM
->> pseries machines with FSPs.
-> It's not pseries (as that implies PowerVM / PAPR) - while here we're all
-> about OPAL.
+On Tue, Apr 26, 2016 at 12:55:18PM -0400, Sinan Kaya wrote:
+> On 4/26/2016 12:25 PM, Vinod Koul wrote:
+> > On Tue, Apr 26, 2016 at 08:08:16AM -0400, okaya@codeaurora.org wrot=
+e:
+> >> On 2016-04-25 23:30, Vinod Koul wrote:
+> >>> On Mon, Apr 11, 2016 at 10:21:12AM -0400, Sinan Kaya wrote:
+> >>>
+> >>>> +static int hidma_chan_stats(struct seq_file *s, void *unused)
+> >>>> +{
+> >>>> +	struct hidma_chan *mchan =3D s->private;
+> >>>> +	struct hidma_desc *mdesc;
+> >>>> +	struct hidma_dev *dmadev =3D mchan->dmadev;
+> >>>> +
+> >>>> +	pm_runtime_get_sync(dmadev->ddev.dev);
+> >>>
+> >>> debug shouldn't power up device, why do you want to do that
+> >>
+> >>
+> >> Clocks are turned off while the hw is idle. I can=E2=80=99t reach =
+hw
+> >> registers without restoring power.
+> >=20
+> > Hmm, have you thought about using regmap?
+> >=20
+>=20
+> To be honest, I didn't know what regmap is but I just read some code
+> and looked at how it is used. Feel free to correct me if I got it=20
+> wrong.=20
+>=20
+> Regmap seems to be designed for *slow* speed peripherals to improve f=
+requent
+> accesses by the SW. It looks like it is used by MFD, SPI and I2C driv=
+ers.
+>=20
+> It seems to cache the register contents and flush/invalidate them onl=
+y when
+> needed.
+>=20
+> The MMIO version seems to be assuming the presence of device-tree lik=
+e CLK
+> API which doesn't exist on ACPI systems and is not portable.
+>=20
+> My reaction is that it is a lot of code with no added functionality t=
+o what
+> HIDMA driver is trying to achieve.=20
+>=20
+> Given that the use case here is only for debug purposes; I think it i=
+s OK=20
+> to keep this runtime call here. I don't want to add any overhead into=
+ the
+> existing code just to support the debug use case. =20
+>=20
+> None of my register read/writes are slow. This file will only be used=
+ to=20
+> troubleshoot customer issues.
 
-Thanks, will fix that up.
+$ is always faster than MMIO. This way you can give reg contents to use=
+rs
+without waking up hw.
 
-> With a slight change to the commit message,
-> Acked-by: Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->
->
+Also we at Intel use regmap on ACPI systems without CLK API
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+~Vinod
