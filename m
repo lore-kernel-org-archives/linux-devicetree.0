@@ -1,33 +1,48 @@
-From: "J.D. Schroeder" <Linux.HWI@garmin.com>
-Subject: Re: [PATCH 2/3] ARM: DRA7x: dts: Fix the 32kHz clock calculation
-Date: Wed, 27 Apr 2016 15:13:30 -0500
-Message-ID: <57211D6A.407@garmin.com>
-References: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
- <1461693269-19436-3-git-send-email-Linux.HWI@garmin.com>
- <5720A51E.2000900@ti.com> <5720C77A.3020708@garmin.com>
- <5721175B.8030904@ti.com>
+From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Subject: Re: strange dtc errors after adding sram node
+Date: Wed, 27 Apr 2016 22:16:42 +0200
+Message-ID: <57211E2A.5060807@lategoodbye.de>
+References: <571B283F.8010707@lategoodbye.de>
+ <1461407589.1986.3.camel@embedded.rocks> <571DB385.9010305@lategoodbye.de>
+ <10749204.4vhK495hJd@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5721175B.8030904@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: "J.D. Schroeder" <jay.schroeder@garmin.com>, "J, Keerthy" <j-keerthy@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <10749204.4vhK495hJd@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: =?UTF-8?Q?J=c3=b6rg_Krause?= <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/27/2016 02:47 PM, Tero Kristo wrote:
-> The patch is merged already in 4.6-rc3.
-> 
-> Which repo / version are you using as baseline?
+Hi Arnd,
 
-I'm using git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git. I
-can see eea08802f586acd6aef377d1b4a541821013cc0b as of now. However, I don't
-think it was included in -rc3 or even -rc5 which is what I was basing my
-changes on. It looks like it got merged in late last night in Linus tree. No
-big deal. The change is nearly identical to my solution so no need to pursue mine.
+Am 25.04.2016 um 15:06 schrieb Arnd Bergmann:
+> On Monday 25 April 2016 08:04:53 Stefan Wahren wrote:
+>>
+>> i've found reason for these errors. I missed to adjust the affected dts
+>> files which refer to the ahb node.
+>
+> Makes sense. Maybe you can just remove the address and 'reg' property from
+> the ahb node?
 
-Please disregard this patch.
+is this a proposal for a patch set?
 
-Thanks,
-JD
+Does it apply to all top-level nodes like apb?
+
+> That should solve the dtc problem and make the contents
+> more like what we have elsewhere.
+
+Does it refer to a specific patch / discussion or something?
+
+Regards
+Stefan
+
+>
+> 	Arnd
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
