@@ -1,95 +1,100 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
-Date: Wed, 27 Apr 2016 10:39:17 +0200
-Message-ID: <6ab228db-9695-ac22-9c65-fd15c4837c45@axentia.se>
-References: <5b1937140558514b3e43ed2c21ee860ecbac61ec.1461172603.git.leonard.crestez@intel.com>
- <a978ad85-8191-7506-8090-809f89d0b2e2@kernel.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
+Date: Wed, 27 Apr 2016 09:47:45 +0100
+Message-ID: <57207CB1.4040307@arm.com>
+References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
+ <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
+ <20160426033029.GB2274@localhost>
+ <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
+ <20160426162529.GK2274@localhost> <571F9D76.2060809@codeaurora.org>
+ <20160427081501.GV2274@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <a978ad85-8191-7506-8090-809f89d0b2e2@kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Crestez Dan Leonard <leonard.crestez@intel.com>, linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160427081501.GV2274@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On 2016-04-23 23:32, Jonathan Cameron wrote:
-> On 20/04/16 18:17, Crestez Dan Leonard wrote:
->> The MPU has an auxiliary I2C bus for connecting external
->> sensors. This bus has two operating modes:
->> * pass-through, which connects the primary and auxiliary busses
->> together. This is already supported via an i2c mux.
->> * I2C master mode, where the mpu60x0 acts as a master to any external
->> connected sensors. This is implemented by this patch.
+On 27/04/16 09:15, Vinod Koul wrote:
+> On Tue, Apr 26, 2016 at 12:55:18PM -0400, Sinan Kaya wrote:
+>> On 4/26/2016 12:25 PM, Vinod Koul wrote:
+>>> On Tue, Apr 26, 2016 at 08:08:16AM -0400, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrot=
+e:
+>>>> On 2016-04-25 23:30, Vinod Koul wrote:
+>>>>> On Mon, Apr 11, 2016 at 10:21:12AM -0400, Sinan Kaya wrote:
+>>>>>
+>>>>>> +static int hidma_chan_stats(struct seq_file *s, void *unused)
+>>>>>> +{
+>>>>>> +	struct hidma_chan *mchan =3D s->private;
+>>>>>> +	struct hidma_desc *mdesc;
+>>>>>> +	struct hidma_dev *dmadev =3D mchan->dmadev;
+>>>>>> +
+>>>>>> +	pm_runtime_get_sync(dmadev->ddev.dev);
+>>>>>
+>>>>> debug shouldn't power up device, why do you want to do that
+>>>>
+>>>>
+>>>> Clocks are turned off while the hw is idle. I can=E2=80=99t reach =
+hw
+>>>> registers without restoring power.
+>>>
+>>> Hmm, have you thought about using regmap?
+>>>
 >>
->> This I2C master mode also works when the MPU itself is connected via
->> SPI.
+>> To be honest, I didn't know what regmap is but I just read some code
+>> and looked at how it is used. Feel free to correct me if I got it=20
+>> wrong.=20
 >>
->> I2C master supports up to 5 slaves. Slaves 0-3 have a common operating
->> mode while slave 4 is different. This patch implements an i2c adapter
->> using slave 4 because it has a cleaner interface and it has an
->> interrupt that signals when data from slave to master arrived.
+>> Regmap seems to be designed for *slow* speed peripherals to improve =
+frequent
+>> accesses by the SW. It looks like it is used by MFD, SPI and I2C dri=
+vers.
 >>
->> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
-> This one needs acks from:
->
-> Device tree maintainer (odd binding ;)
-> Peter Rosin (odd binding interacting with the mux support)
-> Wolfram (it has a whole i2c master driver in here).
->
-> (just thought I'd list these for the avoidance of doubt).
+>> It seems to cache the register contents and flush/invalidate them on=
+ly when
+>> needed.
+>>
+>> The MMIO version seems to be assuming the presence of device-tree li=
+ke CLK
+>> API which doesn't exist on ACPI systems and is not portable.
+>>
+>> My reaction is that it is a lot of code with no added functionality =
+to what
+>> HIDMA driver is trying to achieve.=20
+>>
+>> Given that the use case here is only for debug purposes; I think it =
+is OK=20
+>> to keep this runtime call here. I don't want to add any overhead int=
+o the
+>> existing code just to support the debug use case. =20
+>>
+>> None of my register read/writes are slow. This file will only be use=
+d to=20
+>> troubleshoot customer issues.
 
-I spot some overlap with the questions in "[RFC] i2c: device-tree:
-Handling child nodes which are not i2c devices"
-http://marc.info/?l=linux-i2c&m=146073452819116&w=2
+I'd recommend you actually run perf on a a few of your MMIO accesses. I
+believe the result will be eye opening. On the KVM side, we've trimmed
+our MMIO access as much as possible, using a memory-based cache (simila=
+r
+to regmap in concept). This has made some code paths about 40% faster.
 
-And I think I agree with Stephen Warren that an intermediate placeholder
-node would make sense. I.e.
+> $ is always faster than MMIO. This way you can give reg contents to u=
+sers
+> without waking up hw.
 
-    mpu6050@68 {
-        compatible = "...";
-        reg = <0x68>;
-        ...
-        i2c-aux-mux {
-            i2c@0 {
-                #address-cells = <1>;
-                #size-cells = <0>;
-                reg = <0>;
+Indeed. MMIO access sucks rocks, even on a very fast box. Actually, the
+faster the box is, the slower MMIO feels (compared to memory).
 
-                foo@44 {
-                    compatible = "bar";
-                    reg = <0x44>;
-                    ...
-                }
-            }
-        }
-    }
+Thanks,
 
-Or
-
-    mpu6050@68 {
-        compatible = "...";
-        reg = <0x68>;
-        ...
-        i2c-aux-master {
-            #address-cells = <1>;
-            #size-cells = <0>;
-
-            gazonk@44 {
-                compatible = "baz";
-                reg = <0x44>;
-                ...
-            }
-        }
-    }
-
-depending on if you want an aux-mux or an aux-master.
-
-But I don't know if that intermediate i2c-aux-mux node causes any
-problems?
-
-Cheers,
-Peter
+	M.
+--=20
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
