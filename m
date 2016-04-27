@@ -1,110 +1,55 @@
-From: okaya@codeaurora.org
-Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
-Date: Wed, 27 Apr 2016 09:25:06 -0400
-Message-ID: <64be6f181a4c5b712fc3893e9ecd19df@codeaurora.org>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
- <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
- <20160426033029.GB2274@localhost>
- <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
- <20160426162529.GK2274@localhost> <571F9D76.2060809@codeaurora.org>
- <20160427081501.GV2274@localhost> <57207CB1.4040307@arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Wed, 27 Apr 2016 14:50:12 +0100
+Message-ID: <20160427135012.GP3217@sirena.org.uk>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+ <20160410151237.GD5377@piout.net>
+ <1460301781.17404.171.camel@gmail.com>
+ <20160410153855.GG5377@piout.net>
+ <20160412012518.GQ3351@sirena.org.uk>
+ <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <57207CB1.4040307@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2NUUivEUh6/D4/qT"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-04-27 04:47, Marc Zyngier wrote:
-> On 27/04/16 09:15, Vinod Koul wrote:
->> On Tue, Apr 26, 2016 at 12:55:18PM -0400, Sinan Kaya wrote:
->>> On 4/26/2016 12:25 PM, Vinod Koul wrote:
->>>> On Tue, Apr 26, 2016 at 08:08:16AM -0400, okaya@codeaurora.org=20
->>>> wrote:
->>>>> On 2016-04-25 23:30, Vinod Koul wrote:
->>>>>> On Mon, Apr 11, 2016 at 10:21:12AM -0400, Sinan Kaya wrote:
->>>>>>=20
->>>>>>> +static int hidma_chan_stats(struct seq_file *s, void *unused)
->>>>>>> +{
->>>>>>> +	struct hidma_chan *mchan =3D s->private;
->>>>>>> +	struct hidma_desc *mdesc;
->>>>>>> +	struct hidma_dev *dmadev =3D mchan->dmadev;
->>>>>>> +
->>>>>>> +	pm_runtime_get_sync(dmadev->ddev.dev);
->>>>>>=20
->>>>>> debug shouldn't power up device, why do you want to do that
->>>>>=20
->>>>>=20
->>>>> Clocks are turned off while the hw is idle. I can=E2=80=99t reach=
- hw
->>>>> registers without restoring power.
->>>>=20
->>>> Hmm, have you thought about using regmap?
->>>>=20
->>>=20
->>> To be honest, I didn't know what regmap is but I just read some cod=
-e
->>> and looked at how it is used. Feel free to correct me if I got it
->>> wrong.
->>>=20
->>> Regmap seems to be designed for *slow* speed peripherals to improve=
-=20
->>> frequent
->>> accesses by the SW. It looks like it is used by MFD, SPI and I2C=20
->>> drivers.
->>>=20
->>> It seems to cache the register contents and flush/invalidate them=20
->>> only when
->>> needed.
->>>=20
->>> The MMIO version seems to be assuming the presence of device-tree=20
->>> like CLK
->>> API which doesn't exist on ACPI systems and is not portable.
->>>=20
->>> My reaction is that it is a lot of code with no added functionality=
-=20
->>> to what
->>> HIDMA driver is trying to achieve.
->>>=20
->>> Given that the use case here is only for debug purposes; I think it=
-=20
->>> is OK
->>> to keep this runtime call here. I don't want to add any overhead in=
-to=20
->>> the
->>> existing code just to support the debug use case.
->>>=20
->>> None of my register read/writes are slow. This file will only be us=
-ed=20
->>> to
->>> troubleshoot customer issues.
->=20
-> I'd recommend you actually run perf on a a few of your MMIO accesses.=
- I
-> believe the result will be eye opening. On the KVM side, we've trimme=
-d
-> our MMIO access as much as possible, using a memory-based cache=20
-> (similar
-> to regmap in concept). This has made some code paths about 40% faster=
-=2E
->=20
->> $ is always faster than MMIO. This way you can give reg contents to=20
->> users
->> without waking up hw.
->=20
-> Indeed. MMIO access sucks rocks, even on a very fast box. Actually, t=
-he
-> faster the box is, the slower MMIO feels (compared to memory).
->=20
-> Thanks,
->=20
-> 	M.
 
+--2NUUivEUh6/D4/qT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Agreed. However, I need to understand how regmap really works under the=
-=20
-covers and whether it is compatible with the hardware.
+On Wed, Apr 27, 2016 at 04:53:18AM +0900, Akinobu Mita wrote:
+
+> For the read data transfer, the address/command byte is sent on the
+> rising edge of the first eight SCLK cycles and the read data byte is
+> transmitted on the falling edge of the next eight SCL cycles.
+
+That's an innovative and exciting hardware design :/  Definitely doesn't
+seem to correspond too closely to any SPI mode I can think of.
+
+--2NUUivEUh6/D4/qT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXIMOUAAoJECTWi3JdVIfQSdUH/jFLq+UE3JQuAprUW68kzyK6
+7apF+0wyC5vc+5HGoJqhHrqqTEFh9bMfMbmEUrsNAz3pj5hV7gDmw8D3QKBE3JAN
+ZMHAZFInMZ0v5iOBhU5bAlsmj24krdTjUwSN4+ApQNEAJ/AJSnr514WThUxNiXP0
+sUV4fKM06FYWiM4t4pZnvR0ksUgL7aASKdwoQfkLOfi6kGrCtliAjBJhNRk2waxF
+/OD+8+DGniJ6RA2Y53DXyKtAt7Fqov9fNtBrqGDc8UlMV/VP9RZSpjGeJAx3L7dB
+E7Kq1Zw1oFdCE+sMmPgXVv3lJVobaqsL/SvETgmqKRS8I1bZ7Nt3K2UufDe4hM8=
+=2PZU
+-----END PGP SIGNATURE-----
+
+--2NUUivEUh6/D4/qT--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
