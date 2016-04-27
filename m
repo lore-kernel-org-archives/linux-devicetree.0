@@ -1,210 +1,98 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Wed, 27 Apr 2016 16:07:38 +0100
-Message-ID: <20160427150738.GA7359@leverpostej>
-References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
- <1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC v3 1/3] gpio: dt-bindings: add basic-mmio-gpio bindings
+Date: Wed, 27 Apr 2016 10:08:49 -0500
+Message-ID: <CAL_JsqKYU=W8DhVjgihgPiu2B_QgLnFqDqX-soghHDFVUGtAOQ@mail.gmail.com>
+References: <cover.1461710784.git.chunkeey@googlemail.com> <7e8845e6b6384c6b5673532ebef79c8730ed7748.1461710784.git.chunkeey@googlemail.com>
+ <CAL_Jsq+OrkudQwxqfSvuqW=HWm6B74pE9bec0QBh5xNbF+s2Hw@mail.gmail.com> <1838530.usypLq5u4X@debian64>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1461767754-12189-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1838530.usypLq5u4X@debian64>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 27, 2016 at 04:35:54PM +0200, Boris Brezillon wrote:
-> The EBI (External Bus Interface) is used to access external peripherals
-> (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> Each device is assigned a CS line and an address range and can have its
-> own configuration (timings, access mode, bus width, ...).
-> This driver provides a generic DT binding to configure a device according
-> to its requirements.
-> For specific device controllers (like the NAND one) the SMC timings
-> should be configured by the controller driver through the matrix and smc
-> syscon regmaps.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Wed, Apr 27, 2016 at 5:15 AM, Christian Lamparter
+<chunkeey@googlemail.com> wrote:
+> On Tuesday, April 26, 2016 09:06:14 PM Rob Herring wrote:
+>> On Tue, Apr 26, 2016 at 5:51 PM, Christian Lamparter
+>> <chunkeey@googlemail.com> wrote:
+>> > From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>> >
+>> > This patch adds the device tree bindings for the basic-mmio-gpio.
+>> > The basic-mmio-gpio is already part of a the GPIO generic library
+>> > and shares its compatible with the platform device.
+>>
+>> These things always start out "simple", "basic" or "generic". Then
+>> people extend them a property or 2 at a time until they are no longe=
+r
+>> basic. Make a bunch of GPIO drivers use a generic driver then maybe
+>> I'll be convinced this is a good idea.
+> Well, I mentioned brcm63xx (MIPS) and MyBook Live (PPC). But OK, if y=
+ou
+> want me to look at the existing code in the kernel. I found the follo=
+wing
+> candidates.
+
+What I meant was convert the drivers, not the dts files to a generic
+driver. There is no benefit here from a dts perspective. It is driver
+consolidation that would make all this worthwhile.
+
+> 1. MOXA ART: "moxa,moxart-gpio"
+> http://lxr.free-electrons.com/source/drivers/gpio/gpio-moxart.c
+> This driver is used by the:
+> arch/arm/boot/dts/moxart.dtsi
+>
 > ---
->  .../bindings/memory-controllers/atmel,ebi.txt      | 146 +++++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> new file mode 100644
-> index 0000000..0f332d2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> @@ -0,0 +1,146 @@
-> +* Device tree bindings for Atmel EBI
-> +
-> +The External Bus Interface (EBI) controller is a bus where you can connect
-> +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
-> +The EBI provides a glue-less interface to asynchronous memories though the SMC
-> +(Static Memory Controller).
-> +Synchronous memories (and some asynchronous memories like NANDs) can be
-> +attached to specialized controllers which are responsible for configuring the
-> +bus appropriately according to the connected device.
-> +In the other hand, the bus interface can be automated for simple asynchronous
-> +devices.
-> +
-> +Required properties:
-> +
-> +- compatible:		"atmel,at91sam9260-ebi"
-> +			"atmel,at91sam9261-ebi"
-> +			"atmel,at91sam9263-ebi0"
-> +			"atmel,at91sam9263-ebi1"
-> +			"atmel,at91sam9rl-ebi"
-> +			"atmel,at91sam9g45-ebi"
-> +			"atmel,at91sam9x5-ebi"
-> +			"atmel,sama5d3-ebi"
-> +
-> +- reg:			Contains offset/length value for EBI memory mapping.
-> +			This property might contain several entries if the EBI
-> +			memory range is not contiguous
-> +
-> +- #address-cells:	Must be 2.
-> +			The first cell encodes the CS.
-> +			The second cell encode the offset into the CS memory
-> +			range.
-> +
-> +- #size-cells:		Must be set to 1.
-> +
-> +- ranges:		Encodes CS to memory region association.
-> +
-> +- clocks:		Clock feeding the EBI controller.
-> +			See clock-bindings.txt
-> +
-> +Child chip-select (cs) nodes contain the memory devices nodes connected to
-> +such as NOR (e.g. cfi-flash) and NAND.
-> +There might be board specific devices like FPGAs.
-> +You'll define you device requirements in these child nodes.
-> +
-> +Required child cs node properties:
-> +
-> +- #address-cells:	Must be 2.
-> +
-> +- #size-cells:		Must be 1.
-> +
-> +- ranges:		Empty property indicating that child nodes can inherit
-> +			memory layout.
-> +
-> +Optional child cs node properties:
-> +- atmel,bus-width:		width of the asynchronous device's data bus
-> +				8, 16 or 32.
-> +				8 if not present.
-> +
-> +- atmel,byte-access-type	"write" or "select" (see Atmel datasheet).
-> +				"select" if not present.
-> +
-> +- atmel,read-mode		"nrd" or "ncs".
-> +				"ncs" is not present.
-> +
-> +- atmel,write-mode		"nwe" or "ncs".
-> +				"ncs" is not present.
-> +
-> +- atmel,exnw-mode		"disabled", "frozen" or "ready".
-> +				"disabled" if not present.
-> +
-> +- atmel,page-mode		enable page mode if present. The provided value
-> +				defines the page size (supported values: 4, 8,
-> +				16 and 32).
-> +
-> +Optional device timings expressed in nanoseconds (if the property is not
-> +present 0 is assumed):
-> +
-> +- atmel,ncs-rd-setup-ns
-> +- atmel,nrd-setup-ns
-> +- atmel,ncs-wr-setup-ns
-> +- atmel,nwe-setup-ns
-> +- atmel,ncs-rd-pulse-ns
-> +- atmel,nrd-pulse-ns
-> +- atmel,ncs-wr-pulse-ns
-> +- atmel,nwe-pulse-ns
-> +- atmel,nwe-cycle-ns
-> +- atmel,nrd-cycle-ns
-> +- atmel,tdf-ns
+> diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart=
+=2Edtsi
+> index 1fd27ed..26707d0 100644
+> --- a/arch/arm/boot/dts/moxart.dtsi
+> +++ b/arch/arm/boot/dts/moxart.dtsi
+> @@ -66,8 +66,11 @@
+>                 gpio: gpio@98700000 {
+>                         gpio-controller;
+>                         #gpio-cells =3D <2>;
+> -                       compatible =3D "moxa,moxart-gpio";
+> -                       reg =3D <0x98700000 0xC>;
+> +                       compatible =3D "basic-mmio-gpio";
+> +                       reg =3D <0x98700000 0x4
+> +                              0x98700004 0x4
+> +                              0x98700008 0x4>;
+> +                       reg-names =3D "set dat dirout";
 
-I assume that these are defined in a datasheet. It may be worth noting
-"see datasheet" above this collection of properties.
+This is not a compatible change. You can't remove the old drivers as
+they are needed to work with old dtbs, so there is no gain.
 
-> +
-> +- atmel,tdf-mode:		"normal" or "optimized". If set to "optimized"
-> +				the data float time is optimized depending on
-> +				the next device being accessed (next device
-> +				setup time is subtracted to the current device
-> +				data float time).
-> +
-> +
-> +
-> +Example:
-> +
-> +	ebi: ebi@10000000 {
-> +		compatible = "atmel,sama5d3-ebi", "simple-bus";
+You would need to match on existing compatibles such as
+moxa,moxart-gpio and provide a match data struct that has all the info
+you are adding here (e.g. data register offset). Then additionally you
+could add "basic-mmio-gpio" (I would drop "basic" part) and the
+additional data associated with it. But it has to be new properties,
+not changing properties. Changing the reg values doesn't work.
 
-I don't believe that "simple-bus" should be here.
 
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		atmel,smc = <&hsmc>;
-> +		atmel,matrix = <&matrix>;
-> +		reg = <0x10000000 0x10000000
-> +		       0x40000000 0x30000000>;
-> +		ranges = <0x0 0x0 0x10000000 0x10000000
-> +			  0x1 0x0 0x40000000 0x10000000
-> +			  0x2 0x0 0x50000000 0x10000000
-> +			  0x3 0x0 0x60000000 0x10000000>;
-> +		clocks = <&mck>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_ebi_addr>;
-> +
-> +		cs@0 {
+> 2. GE FPGA based GPIO: "ge,imp3a-gpio", "gef,sbc310-gpio", "gef,sbc61=
+0-gpio"
+> 3. CLPS711X GPIO driver: "cirrus,clps711x-gpio"
+> 4. GPIO driver for the TS-4800 board: "technologic,ts4800-gpio"
+>
+> What do you think. There's a total of six devices that can make use
+> of the "basic-mmio-gpio". If this gives me your go-ahead, I'll includ=
+e
+> them in the series as proper patches.
 
-I suspect recent DTC will warn here, as the unit-address should match
-the reg for the node (and no reg is defined). Here the reg would have to
-be two cells, which means we have to make up an address, no?
+Those are a good start. My other worry about this is next someone will
+want to add interrupt registers which is probably a majority of GPIO
+controllers.
 
-We can either give the node a name without a unit-address (e.g. cs_0),
-or define some reg format.
+Of course, I'm sure Linus has an opinion on all of this.
 
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			atmel,generic-dev;
-
-The cover letter mentioned this should go.
-
-> +			atmel,read-mode = "nrd";
-> +			atmel,write-mode = "nwe";
-> +			atmel,bus-width = <16>;
-> +			atmel,ncs-rd-setup-ns = <0>;
-> +			atmel,ncs-wr-setup-ns = <0>;
-> +			atmel,nwe-setup-ns = <8>;
-> +			atmel,nrd-setup-ns = <16>;
-> +			atmel,ncs-rd-pulse-ns = <84>;
-> +			atmel,ncs-wr-pulse-ns = <84>;
-> +			atmel,nrd-pulse-ns = <76>;
-> +			atmel,nwe-pulse-ns = <76>;
-> +			atmel,nrd-cycle-ns = <107>;
-> +			atmel,nwe-cycle-ns = <84>;
-> +			atmel,tdf-ns = <16>;
-> +
-> +			nor: flash@0,0 {
-> +				compatible = "cfi-flash";
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				reg = <0x0 0x0 0x1000000>;
-
-It feels odd that in the node for chipselect N, sub-devices have to
-encode the chipselect number in their reg, when it's obvious from their
-container. It may make more sense for the cs node to have a non-empty
-reg (or somehow to make that translation/truncation implicit).
-
-Thanks,
-Mark,
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
