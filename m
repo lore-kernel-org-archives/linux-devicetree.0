@@ -1,58 +1,40 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v2 1/3] ARM: dts: exynos: Define vqmmc for SD card and allow
- disabling regulators on Odroid X/X2/U3
-Date: Wed, 27 Apr 2016 16:00:18 +0200
-Message-ID: <1461765620-6833-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-mmc@vger.kernel.org, linux.amoon@gmail.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Wed, 27 Apr 2016 17:03:19 +0300
+Message-ID: <1461765799.2957.4.camel@gmail.com>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+	 <20160410151237.GD5377@piout.net> <1460301781.17404.171.camel@gmail.com>
+	 <20160410153855.GG5377@piout.net> <20160412012518.GQ3351@sirena.org.uk>
+	 <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
+	 <20160427135012.GP3217@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160427135012.GP3217-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SD-card vmmc-supply contained incorrectly two regulators. The second
-one is ignored. Fix this by defining proper vmmc and vqmmc supplies.
-Additionally these regulators do not have to be always on, so allow
-disabling them to reduce energy consumption.
+On Wed, 2016-04-27 at 14:50 +0100, Mark Brown wrote:
+> On Wed, Apr 27, 2016 at 04:53:18AM +0900, Akinobu Mita wrote:
+>=20
+> >=20
+> > For the read data transfer, the address/command byte is sent on the
+> > rising edge of the first eight SCLK cycles and the read data byte
+> > is
+> > transmitted on the falling edge of the next eight SCL cycles.
+> That's an innovative and exciting hardware design :/=C2=A0=C2=A0Defin=
+itely
+> doesn't
+> seem to correspond too closely to any SPI mode I can think of.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
----
-
-Changes since v1:
-1. None
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index cab0f07d7d28..3d0d44581fbd 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -249,7 +249,6 @@
- 				regulator-name = "VDDQ_MMC2_2.8V";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
--				regulator-always-on;
- 				regulator-boot-on;
- 			};
- 
-@@ -345,7 +344,6 @@
- 				regulator-name = "LDO21_3.3V";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
- 				regulator-boot-on;
- 			};
- 
-@@ -482,7 +480,8 @@
- 	bus-width = <4>;
- 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
- 	pinctrl-names = "default";
--	vmmc-supply = <&ldo4_reg &ldo21_reg>;
-+	vmmc-supply = <&ldo21_reg>;
-+	vqmmc-supply = <&ldo4_reg>;
- 	cd-gpios = <&gpk2 2 GPIO_ACTIVE_HIGH>;
- 	cd-inverted;
- 	status = "okay";
--- 
-1.9.1
+DS1302 uses the standard MicroWire half-duplex transfer timing. The
+timing can be handled by eg. PXA270 built-in SPI controller with proper
+configuration.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
