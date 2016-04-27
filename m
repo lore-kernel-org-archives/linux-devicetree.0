@@ -1,49 +1,44 @@
 From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 5/5] ARM: dts: k2g-evm: Add pinmuxing for UART0
-Date: Wed, 27 Apr 2016 09:11:48 -0500
-Message-ID: <1461766308-27669-6-git-send-email-fcooper@ti.com>
+Subject: [PATCH 3/5] ARM: dts: k2g: Add pinctrl support
+Date: Wed, 27 Apr 2016 09:11:46 -0500
+Message-ID: <1461766308-27669-4-git-send-email-fcooper@ti.com>
 References: <1461766308-27669-1-git-send-email-fcooper@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1461766308-27669-1-git-send-email-fcooper@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>, Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Cc: Vitaly Andrianov <vitalya@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lokesh Vutla <lokeshvutla@ti.com>
+From: Vitaly Andrianov <vitalya@ti.com>
 
-Avoid depending on the bootloader or the ROM for configuring the pinmux by
-explicitly setting the pinmux here.
+Add pinctrl support.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
 Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2g-evm.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/keystone-k2g.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
-index 5bfd9e7..692fcbb 100644
---- a/arch/arm/boot/dts/keystone-k2g-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
-@@ -27,6 +27,17 @@
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 7ff2796..b99e879 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -75,6 +75,13 @@
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
+ 		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
  
- };
- 
-+&k2g_pinctrl {
-+	uart0_pins: pinmux_uart0_pins {
-+		pinctrl-single,pins = <
-+			K2G_CORE_IOPAD(0x11cc) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-+			K2G_CORE_IOPAD(0x11d0) (BUFFER_CLASS_B | PIN_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-+		>;
-+	};
-+};
++		k2g_pinctrl: pinmux@02621000 {
++			compatible = "pinctrl-single";
++			reg = <0x02621000 0x410>;
++			pinctrl-single,register-width = <32>;
++			pinctrl-single,function-mask = <0x001b0007>;
++		};
 +
- &uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
- 	status = "okay";
- };
+ 		uart0: serial@02530c00 {
+ 			compatible = "ns16550a";
+ 			current-speed = <115200>;
 -- 
 2.7.0
