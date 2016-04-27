@@ -1,41 +1,82 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: strange dtc errors after adding sram node
-Date: Wed, 27 Apr 2016 22:20:44 +0200
-Message-ID: <14005771.qheL7zp8t0@wuerfel>
-References: <571B283F.8010707@lategoodbye.de> <10749204.4vhK495hJd@wuerfel> <57211E2A.5060807@lategoodbye.de>
+From: Akshay Bhat <akshay.bhat@timesys.com>
+Subject: [PATCH v3 1/2] drm/imx: imx-ldb: Add DDC support
+Date: Wed, 27 Apr 2016 16:23:33 -0400
+Message-ID: <1461788614-7784-1-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57211E2A.5060807-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Cc: =?ISO-8859-1?Q?J=F6rg?= Krause <joerg.krause-L1vi/lXTdtsfGbAt6QbQcg@public.gmane.org>, kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org, steve_longerbeam@mentor.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 April 2016 22:16:42 Stefan Wahren wrote:
-> Am 25.04.2016 um 15:06 schrieb Arnd Bergmann:
-> > On Monday 25 April 2016 08:04:53 Stefan Wahren wrote:
-> >>
-> >> i've found reason for these errors. I missed to adjust the affected dts
-> >> files which refer to the ahb node.
-> >
-> > Makes sense. Maybe you can just remove the address and 'reg' property from
-> > the ahb node?
-> 
-> is this a proposal for a patch set?
-
-Yes.
-
-> Does it apply to all top-level nodes like apb?
-
-Only those that have a fake "reg" property. A bus device node
-can of course have its own registers, it just shouldn't list as
-its "reg" the registers of its child devices.
-
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogU3RldmUgTG9uZ2VyYmVhbSA8c3RldmVfbG9uZ2VyYmVhbUBtZW50b3IuY29tPgoKQWRk
+IHN1cHBvcnQgZm9yIHJlYWRpbmcgRURJRCBvdmVyIERpc3BsYXkgRGF0YSBDaGFubmVsLiBJZiBu
+byBEREMKYWRhcHRlciBpcyBhdmFpbGFibGUsIGZhbGxzIGJhY2sgdG8gaGFyZGNvZGVkIEVESUQg
+b3IgZGlzcGxheS10aW1pbmdzCm5vZGUgYXMgYmVmb3JlLgoKU2lnbmVkLW9mZi1ieTogU3RldmUg
+TG9uZ2VyYmVhbSA8c3RldmVfbG9uZ2VyYmVhbUBtZW50b3IuY29tPgpTaWduZWQtb2ZmLWJ5OiBB
+a3NoYXkgQmhhdCA8YWtzaGF5LmJoYXRAdGltZXN5cy5jb20+CkFja2VkLWJ5OiBQaGlsaXBwIFph
+YmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgotLS0KCkhpIFBoaWxpcHAsCgpJIGhhdmUgYWRk
+cmVzc2VkIGFsbCB5b3VyIGNvbW1lbnRzIG9uIHYyIFBhdGNoLgoKVGhhbmtzLApBa3NoYXkKCnYz
+OgpNb3ZlIGRkY19ub2RlIHBvaW50ZXIgZGVmaW5pdGlvbiAKV2FybiBhbmQgcGVyZm9ybSBhIHBy
+b2JlIGRlZmVycmFsIG9uIGZhaWxpbmcgdG8gZ2V0IGRkYyBpMmMgYWRhcHRlciBieSBub2RlCgp2
+MjoKUmViYXNlIHRvIDQuNi1yYzUKQWRkIGNoZWNrIGZvciBjaGFubmVsLT5wYW5lbCBiZWZvcmUg
+ZmFsbGJhY2sgdG8gZGlzcGxheS10aW1pbmdzIG5vZGUgCgogZHJpdmVycy9ncHUvZHJtL2lteC9p
+bXgtbGRiLmMgfCA0MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0K
+IDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQoKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9pbXgvaW14LWxkYi5jIGIvZHJpdmVycy9ncHUvZHJtL2lt
+eC9pbXgtbGRiLmMKaW5kZXggYTU4ZWVlNS4uZjUwNmU4ZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL2lteC9pbXgtbGRiLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtbGRiLmMK
+QEAgLTU5LDYgKzU5LDcgQEAgc3RydWN0IGlteF9sZGJfY2hhbm5lbCB7CiAJc3RydWN0IGRybV9l
+bmNvZGVyIGVuY29kZXI7CiAJc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7CiAJc3RydWN0IGRldmlj
+ZV9ub2RlICpjaGlsZDsKKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmRkYzsKIAlpbnQgY2hubzsKIAl2
+b2lkICplZGlkOwogCWludCBlZGlkX2xlbjsKQEAgLTEwNyw2ICsxMDgsOSBAQCBzdGF0aWMgaW50
+IGlteF9sZGJfY29ubmVjdG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVj
+dG9yKQogCQkJcmV0dXJuIG51bV9tb2RlczsKIAl9CiAKKwlpZiAoIWlteF9sZGJfY2gtPmVkaWQg
+JiYgaW14X2xkYl9jaC0+ZGRjKQorCQlpbXhfbGRiX2NoLT5lZGlkID0gZHJtX2dldF9lZGlkKGNv
+bm5lY3RvciwgaW14X2xkYl9jaC0+ZGRjKTsKKwogCWlmIChpbXhfbGRiX2NoLT5lZGlkKSB7CiAJ
+CWRybV9tb2RlX2Nvbm5lY3Rvcl91cGRhdGVfZWRpZF9wcm9wZXJ0eShjb25uZWN0b3IsCiAJCQkJ
+CQkJaW14X2xkYl9jaC0+ZWRpZCk7CkBAIC01NTMsNiArNTU3LDcgQEAgc3RhdGljIGludCBpbXhf
+bGRiX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQg
+KmRhdGEpCiAKIAlmb3JfZWFjaF9jaGlsZF9vZl9ub2RlKG5wLCBjaGlsZCkgewogCQlzdHJ1Y3Qg
+aW14X2xkYl9jaGFubmVsICpjaGFubmVsOworCQlzdHJ1Y3QgZGV2aWNlX25vZGUgKmRkY19ub2Rl
+OwogCQlzdHJ1Y3QgZGV2aWNlX25vZGUgKnBvcnQ7CiAKIAkJcmV0ID0gb2ZfcHJvcGVydHlfcmVh
+ZF91MzIoY2hpbGQsICJyZWciLCAmaSk7CkBAIC01OTUsMTQgKzYwMCwzNCBAQCBzdGF0aWMgaW50
+IGlteF9sZGJfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwg
+dm9pZCAqZGF0YSkKIAkJCX0KIAkJfQogCi0JCWVkaWRwID0gb2ZfZ2V0X3Byb3BlcnR5KGNoaWxk
+LCAiZWRpZCIsICZjaGFubmVsLT5lZGlkX2xlbik7Ci0JCWlmIChlZGlkcCkgewotCQkJY2hhbm5l
+bC0+ZWRpZCA9IGttZW1kdXAoZWRpZHAsIGNoYW5uZWwtPmVkaWRfbGVuLAotCQkJCQkJR0ZQX0tF
+Uk5FTCk7Ci0JCX0gZWxzZSBpZiAoIWNoYW5uZWwtPnBhbmVsKSB7Ci0JCQlyZXQgPSBvZl9nZXRf
+ZHJtX2Rpc3BsYXlfbW9kZShjaGlsZCwgJmNoYW5uZWwtPm1vZGUsIDApOwotCQkJaWYgKCFyZXQp
+Ci0JCQkJY2hhbm5lbC0+bW9kZV92YWxpZCA9IDE7CisJCWRkY19ub2RlID0gb2ZfcGFyc2VfcGhh
+bmRsZShjaGlsZCwgImRkYy1pMmMtYnVzIiwgMCk7CisJCWlmIChkZGNfbm9kZSkgeworCQkJY2hh
+bm5lbC0+ZGRjID0gb2ZfZmluZF9pMmNfYWRhcHRlcl9ieV9ub2RlKGRkY19ub2RlKTsKKwkJCW9m
+X25vZGVfcHV0KGRkY19ub2RlKTsKKwkJCWlmICghY2hhbm5lbC0+ZGRjKSB7CisJCQkJZGV2X3dh
+cm4oZGV2LCAiZmFpbGVkIHRvIGdldCBkZGMgaTJjIGFkYXB0ZXJcbiIpOworCQkJCXJldHVybiAt
+RVBST0JFX0RFRkVSOworCQkJfQorCQl9CisKKwkJaWYgKCFjaGFubmVsLT5kZGMpIHsKKwkJCS8q
+IGlmIG5vIEREQyBhdmFpbGFibGUsIGZhbGxiYWNrIHRvIGhhcmRjb2RlZCBFRElEICovCisJCQlk
+ZXZfZGJnKGRldiwgIm5vIGRkYyBhdmFpbGFibGVcbiIpOworCisJCQllZGlkcCA9IG9mX2dldF9w
+cm9wZXJ0eShjaGlsZCwgImVkaWQiLAorCQkJCQkJJmNoYW5uZWwtPmVkaWRfbGVuKTsKKwkJCWlm
+IChlZGlkcCkgeworCQkJCWNoYW5uZWwtPmVkaWQgPSBrbWVtZHVwKGVkaWRwLAorCQkJCQkJCWNo
+YW5uZWwtPmVkaWRfbGVuLAorCQkJCQkJCUdGUF9LRVJORUwpOworCQkJfSBlbHNlIGlmICghY2hh
+bm5lbC0+cGFuZWwpIHsKKwkJCQkvKiBmYWxsYmFjayB0byBkaXNwbGF5LXRpbWluZ3Mgbm9kZSAq
+LworCQkJCXJldCA9IG9mX2dldF9kcm1fZGlzcGxheV9tb2RlKGNoaWxkLAorCQkJCQkJCSAgICAg
+ICZjaGFubmVsLT5tb2RlLAorCQkJCQkJCSAgICAgIDApOworCQkJCWlmICghcmV0KQorCQkJCQlj
+aGFubmVsLT5tb2RlX3ZhbGlkID0gMTsKKwkJCX0KIAkJfQogCiAJCWNoYW5uZWwtPmJ1c19mb3Jt
+YXQgPSBvZl9nZXRfYnVzX2Zvcm1hdChkZXYsIGNoaWxkKTsKQEAgLTY0Nyw2ICs2NzIsNyBAQCBz
+dGF0aWMgdm9pZCBpbXhfbGRiX3VuYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZp
+Y2UgKm1hc3RlciwKIAkJY2hhbm5lbC0+ZW5jb2Rlci5mdW5jcy0+ZGVzdHJveSgmY2hhbm5lbC0+
+ZW5jb2Rlcik7CiAKIAkJa2ZyZWUoY2hhbm5lbC0+ZWRpZCk7CisJCWkyY19wdXRfYWRhcHRlcihj
+aGFubmVsLT5kZGMpOwogCX0KIH0KIAotLSAKMi44LjEKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
