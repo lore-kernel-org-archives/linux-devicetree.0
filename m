@@ -1,257 +1,90 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v10] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Wed, 27 Apr 2016 09:38:50 -0600
-Message-ID: <20160427153850.GE25981@localhost>
-References: <1461050839-24644-1-git-send-email-xuejiancheng@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: add TA5720 digital amplifier DT bindings" to the asoc tree
+Date: Wed, 27 Apr 2016 17:34:51 +0100
+Message-ID: <E1avSQN-0004Mh-Ip@debutante>
+References: <1461708957-7616-2-git-send-email-dannenberg@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461050839-24644-1-git-send-email-xuejiancheng@hisilicon.com>
+In-Reply-To: <1461708957-7616-2-git-send-email-dannenberg@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Cc: dwmw2@infradead.org, boris.brezillon@free-electrons.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar, juhosg@openwrt.org, furquan@google.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, hermit.wangheming@hisilicon.com, jiangheng@hisilicon.com
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jiancheng,
+The patch
 
-Cyrille hit on one of my concerns; if posible we'd like not to have you
-sniffing the opcodes in read_reg()/write_reg(). But let's keep the
-discussion on that thread.
+   ASoC: add TA5720 digital amplifier DT bindings
 
-Two other comments below.
+has been applied to the asoc tree at
 
-On Tue, Apr 19, 2016 at 03:27:19PM +0800, Jiancheng Xue wrote:
-> From: Jiancheng Xue <xuejiancheng@huawei.com>
-> 
-> Add hisilicon spi-nor flash controller driver
-> 
-> Signed-off-by: Binquan Peng <pengbinquan@hisilicon.com>
-> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-> ---
-> change log
-> v10:
-> Fixed issues pointed by Marek Vasut.
-> 1)Droped the underscores in the argument names of some macros' definition.
-> 2)Changed some varibles to correct type.
-> 3)Rewrote hisi_spi_nor_read/write for readability.
-> 4)Added new functions hisi_spi_nor_register/unregister_all
-> 5)Changed to dynamically allocation for spi_nor embeded in hifmc_host.
-> Fixed issues pointed by Brian Norris.
-> 1)Replaced some headers with more accurate ones.
-> v9:
-> Fixed issues pointed by Jagan Teki.
-> v8:
-> Fixed issues pointed by Ezequiel Garcia and Brian Norris.
-> Moved dts binding file to mtd directory.
-> Changed the compatible string more specific.
-> v7:
-> Rebased to v4.5-rc3.
-> Fixed issues pointed by Ezequiel Garcia.
-> v6:
-> Based on v4.5-rc2
-> Fixed issues pointed by Ezequiel Garcia.
-> v5:
-> Fixed a compile error.
-> v4:
-> Rebased to v4.5-rc1
-> v3:
-> Added a compatible string "hisilicon,hi3519-sfc".
-> v2:
-> Fixed some compiling warings.
-> 
->  .../bindings/mtd/hisilicon,fmc-spi-nor.txt         |  24 +
->  drivers/mtd/spi-nor/Kconfig                        |   7 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/hisi-sfc.c                     | 539 +++++++++++++++++++++
->  4 files changed, 571 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
->  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt b/Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
-> new file mode 100644
-> index 0000000..7498152
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
-> @@ -0,0 +1,24 @@
-> +HiSilicon SPI-NOR Flash Controller
-> +
-> +Required properties:
-> +- compatible : Should be "hisilicon,fmc-spi-nor" and one of the following strings:
-> +		"hisilicon,hi3519-spi-nor"
-> +- address-cells : Should be 1.
-> +- size-cells : Should be 0.
-> +- reg : Offset and length of the register set for the controller device.
-> +- reg-names : Must include the following two entries: "control", "memory".
-> +- clocks : handle to spi-nor flash controller clock.
-> +
-> +Example:
-> +spi-nor-controller@10000000 {
-> +	compatible = "hisilicon,hi3519-spi-nor", "hisilicon,fmc-spi-nor";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
-> +	reg-names = "control", "memory";
-> +	clocks = <&clock HI3519_FMC_CLK>;
-> +	spi-nor@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +	};
-> +};
-> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-> index d42c98e..b9ff675 100644
-> --- a/drivers/mtd/spi-nor/Kconfig
-> +++ b/drivers/mtd/spi-nor/Kconfig
-> @@ -38,6 +38,13 @@ config SPI_FSL_QUADSPI
->  	  This controller does not support generic SPI. It only supports
->  	  SPI NOR.
->  
-> +config SPI_HISI_SFC
-> +	tristate "Hisilicon SPI-NOR Flash Controller(SFC)"
-> +	depends on ARCH_HISI || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	help
-> +	  This enables support for hisilicon SPI-NOR flash controller.
-> +
->  config SPI_NXP_SPIFI
->  	tristate "NXP SPI Flash Interface (SPIFI)"
->  	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-> index 0bf3a7f8..8a6fa69 100644
-> --- a/drivers/mtd/spi-nor/Makefile
-> +++ b/drivers/mtd/spi-nor/Makefile
-> @@ -1,4 +1,5 @@
->  obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
->  obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
-> +obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
->  obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
->  obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
-> diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
-> new file mode 100644
-> index 0000000..942dafd
-> --- /dev/null
-> +++ b/drivers/mtd/spi-nor/hisi-sfc.c
-> @@ -0,0 +1,539 @@
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-[...]
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> +static void hisi_spi_nor_dma_transfer(struct spi_nor *nor, loff_t start_off,
-> +		dma_addr_t dma_buf, size_t len, u8 op_type)
-> +{
-> +	struct hifmc_priv *priv = nor->priv;
-> +	struct hifmc_host *host = priv->host;
-> +	u8 if_type = 0, dummy = 0;
-> +	u8 w_cmd = 0, r_cmd = 0;
-> +	u32 reg;
-> +
-> +	writel(start_off, host->regbase + FMC_ADDRL);
-> +
-> +	if (op_type == FMC_OP_READ) {
-> +		if_type = get_if_type(nor->flash_read);
-> +		dummy = nor->read_dummy >> 3;
-> +		r_cmd = nor->read_opcode;
-> +	} else {
-> +		w_cmd = nor->program_opcode;
-> +	}
-> +
-> +	reg = OP_CFG_FM_CS(priv->chipselect)
-> +		| OP_CFG_MEM_IF_TYPE(if_type)
-> +		| OP_CFG_ADDR_NUM(nor->addr_width)
-> +		| OP_CFG_DUMMY_NUM(dummy);
-> +	writel(reg, host->regbase + FMC_OP_CFG);
-> +
-> +	reg = FMC_DMA_LEN_SET(len);
-> +	writel(reg, host->regbase + FMC_DMA_LEN);
-> +	writel(dma_buf, host->regbase + FMC_DMA_SADDR_D0);
-> +
-> +	reg = OP_CTRL_RD_OPCODE(r_cmd)
-> +		| OP_CTRL_WR_OPCODE(w_cmd)
-> +		| OP_CTRL_RW_OP(op_type)
-> +		| OP_CTRL_DMA_OP_READY;
-> +	writel(0xff, host->regbase + FMC_INT_CLR);
-> +	writel(reg, host->regbase + FMC_OP_DMA);
-> +	wait_op_finish(host);
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Do you want to return the status here, so we can handle errors?
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +}
-> +
-> +static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
-> +		size_t *retlen, u_char *read_buf)
-> +{
-> +	struct hifmc_priv *priv = nor->priv;
-> +	struct hifmc_host *host = priv->host;
-> +	int offset;
-> +
-> +	/* read all bytes in only one read */
-> +	if (len <= HIFMC_DMA_MAX_LEN) {
-> +		hisi_spi_nor_dma_transfer(nor, from, host->dma_buffer,
-> +				len, FMC_OP_READ);
-> +		memcpy(read_buf, host->buffer, len);
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Why do you have a special case for "all in one read"? This is just a
-basic loop...
+Thanks,
+Mark
 
-> +	} else {
-> +		/* read HIFMC_DMA_MAX_LEN bytes at a time */
-> +		for (offset = 0; offset < len; offset += HIFMC_DMA_MAX_LEN) {
-> +			hisi_spi_nor_dma_transfer(nor, from + offset,
-> +				host->dma_buffer,
-> +				HIFMC_DMA_MAX_LEN, FMC_OP_READ);
-> +			memcpy(read_buf + offset,
-> +				host->buffer, HIFMC_DMA_MAX_LEN);
-> +		}
-> +		/* read remaining bytes */
-> +		offset -= HIFMC_DMA_MAX_LEN;
-> +		hisi_spi_nor_dma_transfer(nor, from + offset, host->dma_buffer,
-> +				len - offset, FMC_OP_READ);
-> +		memcpy(read_buf + offset, host->buffer, len - offset);
-> +	}
+>From 4e2f17be8f63a6ad9ebd4cdfce627e3dd25d80bb Mon Sep 17 00:00:00 2001
+From: Andreas Dannenberg <dannenberg@ti.com>
+Date: Tue, 26 Apr 2016 17:15:56 -0500
+Subject: [PATCH] ASoC: add TA5720 digital amplifier DT bindings
 
-I think the entire if/else can be rewritten as:
+The Texas Instruments TAS5720L/M device is a high-efficiency mono
+Class-D audio power amplifier optimized for high transient power
+capability to use the dynamic power headroom of small loudspeakers.
+Its digital time division multiplexed (TDM) interface enables up to
+16 devices to share the same bus.
 
-	for (offset = 0; offset < len; offset += HIFMC_DMA_MAX_LEN) {
-		size_t trans = min(HIFMC_DMA_MAX_LEN, len - offset);
+Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/tas5720.txt          | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas5720.txt
 
-		hisi_spi_nor_dma_transfer(nor, from + offset, host->dma_buffer,
-					  trans, FMC_OP_READ);
-		memcpy(read_buf + offset, host->buffer, trans);
-	}
-
-> +	*retlen = len;
-> +
-> +	return 0;
-> +}
-> +
-> +static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
-> +			size_t len, size_t *retlen, const u_char *write_buf)
-> +{
-> +	struct hifmc_priv *priv = nor->priv;
-> +	struct hifmc_host *host = priv->host;
-> +
-> +	/* len is smaller than HIFMC_DMA_MAX_LEN*/
-
-Where do you get that assumption? This function must handle whatever
-'len' is passed to it, and that may be large. (I suspect your error is
-inspired by the fact that mtd-utils *usually* does smaller write
-transfers.)
-
-By the way, you might be helped by this series:
-
-http://lists.infradead.org/pipermail/linux-mtd/2015-December/063865.html
-
-It got dropped on the floor, but I'm rewriting it to resend soon.
-
-> +	memcpy(host->buffer, write_buf, len);
-> +	hisi_spi_nor_dma_transfer(nor, to, host->dma_buffer, len,
-> +					FMC_OP_WRITE);
-> +
-> +	*retlen = len;
-> +}
-
-[...]
-
-Brian
+diff --git a/Documentation/devicetree/bindings/sound/tas5720.txt b/Documentation/devicetree/bindings/sound/tas5720.txt
+new file mode 100644
+index 000000000000..806ea7381483
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas5720.txt
+@@ -0,0 +1,25 @@
++Texas Instruments TAS5720 Mono Audio amplifier
++
++The TAS5720 serial control bus communicates through the I2C protocol only. The
++serial bus is also used for periodic codec fault checking/reporting during
++audio playback. For more product information please see the links below:
++
++http://www.ti.com/product/TAS5720L
++http://www.ti.com/product/TAS5720M
++
++Required properties:
++
++- compatible : "ti,tas5720"
++- reg : I2C slave address
++- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
++- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
++
++Example:
++
++tas5720: tas5720@6c {
++	status = "okay";
++	compatible = "ti,tas5720";
++	reg = <0x6c>;
++	dvdd-supply = <&vdd_3v3_reg>;
++	pvdd-supply = <&amp_supply_reg>;
++};
+-- 
+2.8.0.rc3
