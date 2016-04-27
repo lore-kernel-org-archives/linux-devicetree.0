@@ -1,79 +1,94 @@
 From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/3] DRA7: Fix clock data for gmac_gmii_ref_clk_div
-Date: Wed, 27 Apr 2016 14:21:03 +0300
-Message-ID: <5720A09F.2060701@ti.com>
+Subject: Re: [PATCH 2/3] ARM: DRA7x: dts: Fix the 32kHz clock calculation
+Date: Wed, 27 Apr 2016 14:40:14 +0300
+Message-ID: <5720A51E.2000900@ti.com>
 References: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
- <1461693269-19436-2-git-send-email-Linux.HWI@garmin.com>
+ <1461693269-19436-3-git-send-email-Linux.HWI@garmin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461693269-19436-2-git-send-email-Linux.HWI@garmin.com>
+In-Reply-To: <1461693269-19436-3-git-send-email-Linux.HWI@garmin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "J.D. Schroeder" <Linux.HWI@garmin.com>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: "J.D. Schroeder" <jay.schroeder@garmin.com>
+Cc: "J.D. Schroeder" <jay.schroeder@garmin.com>, "J, Keerthy" <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 On 26/04/16 20:54, J.D. Schroeder wrote:
 > From: "J.D. Schroeder" <jay.schroeder@garmin.com>
 >
-> This commit fixes the clock data inside the DRA7xx clocks device tree
-> structure for the gmac_gmii_ref_clk_div clock. This clock is actually
-> the GMAC_MAIN_CLK and has nothing to do with the register at address
-> 0x4a0093d0. If CLKSEL_REF bit 24 inside of CM_GMAC_GMAC_CLKCTRL, is
-> set to 1 in order to use the GMAC_RMII_CLK instead of the
-> GMAC_RMII_HS_CLK, the kernel generates a clock divider warning:
->      WARNING: CPU: 0 PID: 0 at drivers/clk/clk-divider.c:129 clk_divider_recalc_rate+0xa8/0xe0()
->      gmac_gmii_ref_clk_div: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
->
-> By properly configuring the gmac_gmii_ref_clk_div (GMAC_MAIN_CLK) to
-> have the parent of dpll_gmac_m2_ck always divided by 2 the warning is
-> resolved and the clock tree is fixed up.
->
-> Additionally, a new clock called rmii_50mhz_clk_mux is defined that
-> does utilize CM_GMAC_GMAC_CLKCTRL[24] CLKSEL_REF to configure the
-> source clock for the RMII_50MHZ_CLK.
+> This commit fixes the 32kHz clock (sys_32k_ck) calculation to be
+> correctly based on the SYS_CLK1 (sys_clkin1) frequency. Based on the
+> TRM CTRL_CORE_BOOTSTRAP[9:8] SPEEDSELECT, set by the SYSBOOT[9:8]
+> board jumpers according to the SYS_CLK1 frequency, the frequency of
+> the 32kHz FUNC_32K_CLK is set to SYS_CLK1/610. The following
+> sys_32k_ck frequencies get used for different SYS_CLK1 frequencies:
+>          0b00: Unknown  -> 32768 Hz crystal from CLKIN_32K pin
+>          0b01: 20   MHz -> 32787 Hz clock (SYS_CLK1/610)
+>          0b10: 27   MHz -> 44262 Hz clock (SYS_CLK1/610)
+>          0b11: 19.2 MHz -> 31475 Hz clock (SYS_CLK1/610)
 >
 > Signed-off-by: J.D. Schroeder <jay.schroeder@garmin.com>
-> Reviewed-by: Trenton Andres <trenton.andres@garmin.com>
+> Reviewed-by: Ben McCauley <ben.mccauley@garmin.com>
 
-Looks like something weird happened with the clock data conversion tool 
-with this specific clock. Seems to be the only buggy instance in our 
-clock data across SoCs. Good catch.
+A patch doing the same thing is already in mainline, see:
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
+commit eea08802f586acd6aef377d1b4a541821013cc0b
+Author: Keerthy <j-keerthy@ti.com>
+Date:   Mon Apr 4 11:07:15 2016 +0530
+
+     ARM: dts: dra7: Correct clock tree for sys_32k_ck
+
+So, this one can be ignored.
+
+-Tero
 
 > ---
->   arch/arm/boot/dts/dra7xx-clocks.dtsi | 15 +++++++++++----
->   1 file changed, 11 insertions(+), 4 deletions(-)
+>   arch/arm/boot/dts/dra7xx-clocks.dtsi | 28 ++++++++++++++++++++++------
+>   1 file changed, 22 insertions(+), 6 deletions(-)
 >
 > diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> index d0bae06..9d1a583 100644
+> index 9d1a583..a514fc3 100644
 > --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
 > +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> @@ -1710,13 +1710,20 @@
->   		reg = <0x0c00>;
+> @@ -98,12 +98,6 @@
+>   		clock-frequency = <32768>;
 >   	};
 >
-> -	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
-> +	rmii_50mhz_clk_mux: rmii_50mhz_clk_mux {
+> -	sys_32k_ck: sys_32k_ck {
+> -		#clock-cells = <0>;
+> -		compatible = "fixed-clock";
+> -		clock-frequency = <32768>;
+> -	};
+> -
+>   	virt_12000000_ck: virt_12000000_ck {
 >   		#clock-cells = <0>;
-> -		compatible = "ti,divider-clock";
-> -		clocks = <&dpll_gmac_m2_ck>;
-> +		compatible = "ti,mux-clock";
-> +		clocks = <&dpll_gmac_h11x2_ck>, <&rmii_clk_ck>;
->   		ti,bit-shift = <24>;
->   		reg = <0x13d0>;
-> -		ti,dividers = <2>;
+>   		compatible = "fixed-clock";
+> @@ -2177,4 +2171,26 @@
+>   		ti,bit-shift = <22>;
+>   		reg = <0x0558>;
+>   	};
+> +
+> +	sys_32kin: sys_32kin {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <32768>;
 > +	};
 > +
-> +	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
+> +	sys_clkin1_32k_div: sys_clkin1_32k_div {
 > +		#clock-cells = <0>;
 > +		compatible = "fixed-factor-clock";
-> +		clocks = <&dpll_gmac_m2_ck>;
+> +		clocks = <&sys_clkin1>;
 > +		clock-mult = <1>;
-> +		clock-div = <2>;
->   	};
->
->   	gmac_rft_clk_mux: gmac_rft_clk_mux {
+> +		clock-div = <610>;
+> +	};
+> +
+> +	sys_32k_ck: sys_32k_ck {
+> +		#clock-cells = <0>;
+> +		compatible = "ti,mux-clock";
+> +		clocks = <&sys_32kin>, <&sys_clkin1_32k_div>, <&sys_clkin1_32k_div>, <&sys_clkin1_32k_div>;
+> +		ti,bit-shift = <8>;
+> +		reg = <0x06c4>;
+> +	};
+>   };
 >
