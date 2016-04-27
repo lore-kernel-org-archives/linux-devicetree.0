@@ -1,35 +1,25 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: exynos: Lower SD card interface voltage
- to 2.8v on Odroid X/X2/U3
-Date: Wed, 27 Apr 2016 17:30:50 -0400
-Message-ID: <4691605f-545d-b721-af7d-e4b7669bcd79@osg.samsung.com>
-References: <1461765620-6833-1-git-send-email-k.kozlowski@samsung.com>
- <1461765620-6833-3-git-send-email-k.kozlowski@samsung.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 4/4] ARM64: dts: rockchip: add dts file for RK3399 evaluation board
+Date: Wed, 27 Apr 2016 23:31:03 +0200
+Message-ID: <4419038.ZuKFqUcQX9@diego>
+References: <1461743693-10671-1-git-send-email-jay.xu@rock-chips.com> <1461743693-10671-5-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461765620-6833-3-git-send-email-k.kozlowski@samsung.com>
+In-Reply-To: <1461743693-10671-5-git-send-email-jay.xu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-mmc@vger.kernel.org, linux.amoon@gmail.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: lintao@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello 
-
-On 04/27/2016 10:00 AM, Krzysztof Kozlowski wrote:
-> Odroid X/X2/U3 schematics say that SD card vmmc regulator
-> (LDO21/TFLASH) operates on 2.8 V. Mainline U-Boot uses that value as
-> well. 2.8 V is common on Exynos-based boards. Additionally use some
-> descriptive name for this regulator.
+Am Mittwoch, 27. April 2016, 15:54:53 schrieb Jianqun Xu:
+> This patch add rk3399-evb.dts for RK3399 evaluation board.
+> Tested on RK3399 evb.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+applied to my dts64-branch for 4.7
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Thanks
+Heiko
