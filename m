@@ -1,55 +1,78 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] support control with using GPIO lines
-Date: Wed, 27 Apr 2016 14:50:12 +0100
-Message-ID: <20160427135012.GP3217@sirena.org.uk>
-References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
- <20160410151237.GD5377@piout.net>
- <1460301781.17404.171.camel@gmail.com>
- <20160410153855.GG5377@piout.net>
- <20160412012518.GQ3351@sirena.org.uk>
- <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
+Subject: Re: Applied "regulator: rk808: remove linear range definitions with
+ a single range" to the regulator tree
+Date: Wed, 27 Apr 2016 14:50:48 +0100
+Message-ID: <20160427135048.GQ3217@sirena.org.uk>
+References: <E1aukkg-0007km-6s@debutante> <2754883.PYP7KbpM33@diego>
+ <57205DC2.7070506@phytec.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2NUUivEUh6/D4/qT"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============7572936211496085418=="
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <57205DC2.7070506-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---2NUUivEUh6/D4/qT
-Content-Type: text/plain; charset=us-ascii
+--===============7572936211496085418==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lC5mtDCkBY9vM1au"
 Content-Disposition: inline
 
-On Wed, Apr 27, 2016 at 04:53:18AM +0900, Akinobu Mita wrote:
 
-> For the read data transfer, the address/command byte is sent on the
-> rising edge of the first eight SCLK cycles and the read data byte is
-> transmitted on the falling edge of the next eight SCL cycles.
+--lC5mtDCkBY9vM1au
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's an innovative and exciting hardware design :/  Definitely doesn't
-seem to correspond too closely to any SPI mode I can think of.
+On Wed, Apr 27, 2016 at 08:35:46AM +0200, Wadim Egorov wrote:
+> On 26.04.2016 21:33, Heiko St=FCbner wrote:
 
---2NUUivEUh6/D4/qT
+> > with this patch applied, 4.6.0-rc5-next-20160426 fails to boot on=20
+> > rk3288-veyron devices with the bug below. Reverting this one patch
+> > results in the system booting again:
+
+> This is because I missed to add the correct ops for LDO_REG3 in this patc=
+h.
+
+Any ETA on a fix or should I revert?
+
+--lC5mtDCkBY9vM1au
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXIMOUAAoJECTWi3JdVIfQSdUH/jFLq+UE3JQuAprUW68kzyK6
-7apF+0wyC5vc+5HGoJqhHrqqTEFh9bMfMbmEUrsNAz3pj5hV7gDmw8D3QKBE3JAN
-ZMHAZFInMZ0v5iOBhU5bAlsmj24krdTjUwSN4+ApQNEAJ/AJSnr514WThUxNiXP0
-sUV4fKM06FYWiM4t4pZnvR0ksUgL7aASKdwoQfkLOfi6kGrCtliAjBJhNRk2waxF
-/OD+8+DGniJ6RA2Y53DXyKtAt7Fqov9fNtBrqGDc8UlMV/VP9RZSpjGeJAx3L7dB
-E7Kq1Zw1oFdCE+sMmPgXVv3lJVobaqsL/SvETgmqKRS8I1bZ7Nt3K2UufDe4hM8=
-=2PZU
+iQEcBAEBCAAGBQJXIMO3AAoJECTWi3JdVIfQP58H/RIYe7XJNA5kA1cOquaaWbau
+mPhq2KRpFNvY3jYlkmYkJ4kIDJogO1Ma0XjzCYqijsWQSDTRCoJGKX7cWpoWgNai
+FJ8xeSP2aY6ma9Slc61DTFhg0XcPaj7DdORfwb9eMCnSa2anMcba7L14kpfV7JSN
+tdxN/xe6xACfrs0P60m0CaIrPXxyfHY3Yr8tu1qOxE/IeOmVVDockzXT9pbiWui4
+mftziiHYq0Gm1W6V4JcPw24h89rMyTyY2R5qPiqz0ASODqg76W/Ap/wlJ7lSzGKS
+I5/hkegCu81rl4MWRNJ+HVe+9XPILq+289VcEgLULRPE76q18aXuofsDHShXHvE=
+=eQgw
 -----END PGP SIGNATURE-----
 
---2NUUivEUh6/D4/qT--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--lC5mtDCkBY9vM1au--
+
+
+--===============7572936211496085418==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-rockchip mailing list
+Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+--===============7572936211496085418==--
