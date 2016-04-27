@@ -1,182 +1,86 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Wed, 27 Apr 2016 16:35:54 +0200
-Message-ID: <1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
-References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: omap5: describe control for ckobuffer
+Date: Wed, 27 Apr 2016 16:35:01 +0200
+Message-ID: <40536322-073F-48BD-9D07-32B9A9F07AF2@goldelico.com>
+References: <cover.1461003660.git.hns@goldelico.com> <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com> <20160426172710.GI5995@atomide.com> <70572DA1-BEB4-4681-BA6C-2E1C9002D730@goldelico.com> <5720B107.4000907@ti.com> <A90F1BFC-A834-4EC0-81F9-2C8222AAA010@goldelico.com> <5720C85B.9010701@ti.com> <ce9a7840-e86f-0d0c-3ed6-a571eec6659d@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
+In-Reply-To: <ce9a7840-e86f-0d0c-3ed6-a571eec6659d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Laxman Dewangan <ldewangan@nvidia.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-The EBI (External Bus Interface) is used to access external peripherals
-(NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-Each device is assigned a CS line and an address range and can have its
-own configuration (timings, access mode, bus width, ...).
-This driver provides a generic DT binding to configure a device according
-to its requirements.
-For specific device controllers (like the NAND one) the SMC timings
-should be configured by the controller driver through the matrix and smc
-syscon regmaps.
+HI,
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
----
- .../bindings/memory-controllers/atmel,ebi.txt      | 146 +++++++++++++++++++++
- 1 file changed, 146 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> Am 27.04.2016 um 16:23 schrieb Peter Ujfalusi <peter.ujfalusi@ti.com>:
+> 
+> On 04/27/2016 05:10 PM, Tero Kristo wrote:
+>> On 27/04/16 16:10, H. Nikolaus Schaller wrote:
+>>> 
+>>>> Am 27.04.2016 um 14:31 schrieb Tero Kristo <t-kristo@ti.com>:
+>>>> 
+>>>> On 27/04/16 09:04, H. Nikolaus Schaller wrote:
+>>>>> 
+>>>>>> Am 26.04.2016 um 19:27 schrieb Tony Lindgren <tony@atomide.com>:
+>>>>>> 
+>>>>>> Tero,
+>>>>>> 
+>>>>>> * H. Nikolaus Schaller <hns@goldelico.com> [160418 11:23]:
+>>>>>>> OMAP5 has a register to control if the ckobuffer is enabled
+>>>>>>> and defines the polarity. ckobuffer is required to drive a twl6040
+>>>>>>> with the system clock. Hence, add the pinctrl,single to the
+>>>>>>> OMAP5 SoC description so that omap5-board-common can
+>>>>>>> set up the ckobuffer as required.
+>>>>>> 
+>>>>>> Is this really a mux or should it be a mux clock?
+>>>>> 
+>>>>> It is a pinmux setting for the clock out buffer to choose what signal
+>>>>> (and polarity) is presented on the fref_xtal_clk pad.
+>>>>> 
+>>>>> The register is part of the CTRL_MODULE_WKUP.
+>>>>> The clock signal is the xtal master clock of the whole SoC.
+>>>>> 
+>>>>> Although there is a bit to choose an alternate clock, there is no
+>>>>> alternate in the OMAP5 silicon.
+>>>>> 
+>>>>> Therefore I would say it is about padconf and not clock or clock mux
+>>>>> related.
+>>>>> 
+>>>>> It just happens to be a clock signal which can be routed to this
+>>>>> pad.
+>>>> 
+>>>> The two could very well be implemented as clock nodes, a mux and a gate.
+>>>> This would describe the hardware functionality better imo, if the
+>>>> assumptions made here are correct. Implementing the control as pinctrl
+>>>> hacks looks rather weird to me.
+>>> 
+>>> Why do you consider it a "pinctrl hack"? IMHO it is not a hack, but 100%
+>>> proper use of pinctrl.
+>> 
+>> It is just the level of abstraction we are talking about here. If it is a
+>> clock we are controlling, we should rather control it as a clock (higher level
+>> abstraction), not a pin.
+> 
+> I second this. I think it is better to have a simple gate clock and handle
+> only CONTROL_CKOBUFFER:CKOBUFFER_CLK_EN (bit 28) only as the other bits does
+> not have real use.
+> 
+> Then we can add clk API support for this. On most OMAP4 devices the clock is
+> always on,
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-new file mode 100644
-index 0000000..0f332d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-@@ -0,0 +1,146 @@
-+* Device tree bindings for Atmel EBI
-+
-+The External Bus Interface (EBI) controller is a bus where you can connect
-+asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
-+The EBI provides a glue-less interface to asynchronous memories though the SMC
-+(Static Memory Controller).
-+Synchronous memories (and some asynchronous memories like NANDs) can be
-+attached to specialized controllers which are responsible for configuring the
-+bus appropriately according to the connected device.
-+In the other hand, the bus interface can be automated for simple asynchronous
-+devices.
-+
-+Required properties:
-+
-+- compatible:		"atmel,at91sam9260-ebi"
-+			"atmel,at91sam9261-ebi"
-+			"atmel,at91sam9263-ebi0"
-+			"atmel,at91sam9263-ebi1"
-+			"atmel,at91sam9rl-ebi"
-+			"atmel,at91sam9g45-ebi"
-+			"atmel,at91sam9x5-ebi"
-+			"atmel,sama5d3-ebi"
-+
-+- reg:			Contains offset/length value for EBI memory mapping.
-+			This property might contain several entries if the EBI
-+			memory range is not contiguous
-+
-+- #address-cells:	Must be 2.
-+			The first cell encodes the CS.
-+			The second cell encode the offset into the CS memory
-+			range.
-+
-+- #size-cells:		Must be set to 1.
-+
-+- ranges:		Encodes CS to memory region association.
-+
-+- clocks:		Clock feeding the EBI controller.
-+			See clock-bindings.txt
-+
-+Child chip-select (cs) nodes contain the memory devices nodes connected to
-+such as NOR (e.g. cfi-flash) and NAND.
-+There might be board specific devices like FPGAs.
-+You'll define you device requirements in these child nodes.
-+
-+Required child cs node properties:
-+
-+- #address-cells:	Must be 2.
-+
-+- #size-cells:		Must be 1.
-+
-+- ranges:		Empty property indicating that child nodes can inherit
-+			memory layout.
-+
-+Optional child cs node properties:
-+- atmel,bus-width:		width of the asynchronous device's data bus
-+				8, 16 or 32.
-+				8 if not present.
-+
-+- atmel,byte-access-type	"write" or "select" (see Atmel datasheet).
-+				"select" if not present.
-+
-+- atmel,read-mode		"nrd" or "ncs".
-+				"ncs" is not present.
-+
-+- atmel,write-mode		"nwe" or "ncs".
-+				"ncs" is not present.
-+
-+- atmel,exnw-mode		"disabled", "frozen" or "ready".
-+				"disabled" if not present.
-+
-+- atmel,page-mode		enable page mode if present. The provided value
-+				defines the page size (supported values: 4, 8,
-+				16 and 32).
-+
-+Optional device timings expressed in nanoseconds (if the property is not
-+present 0 is assumed):
-+
-+- atmel,ncs-rd-setup-ns
-+- atmel,nrd-setup-ns
-+- atmel,ncs-wr-setup-ns
-+- atmel,nwe-setup-ns
-+- atmel,ncs-rd-pulse-ns
-+- atmel,nrd-pulse-ns
-+- atmel,ncs-wr-pulse-ns
-+- atmel,nwe-pulse-ns
-+- atmel,nwe-cycle-ns
-+- atmel,nrd-cycle-ns
-+- atmel,tdf-ns
-+
-+- atmel,tdf-mode:		"normal" or "optimized". If set to "optimized"
-+				the data float time is optimized depending on
-+				the next device being accessed (next device
-+				setup time is subtracted to the current device
-+				data float time).
-+
-+
-+
-+Example:
-+
-+	ebi: ebi@10000000 {
-+		compatible = "atmel,sama5d3-ebi", "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		atmel,smc = <&hsmc>;
-+		atmel,matrix = <&matrix>;
-+		reg = <0x10000000 0x10000000
-+		       0x40000000 0x30000000>;
-+		ranges = <0x0 0x0 0x10000000 0x10000000
-+			  0x1 0x0 0x40000000 0x10000000
-+			  0x2 0x0 0x50000000 0x10000000
-+			  0x3 0x0 0x60000000 0x10000000>;
-+		clocks = <&mck>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ebi_addr>;
-+
-+		cs@0 {
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges;
-+			atmel,generic-dev;
-+			atmel,read-mode = "nrd";
-+			atmel,write-mode = "nwe";
-+			atmel,bus-width = <16>;
-+			atmel,ncs-rd-setup-ns = <0>;
-+			atmel,ncs-wr-setup-ns = <0>;
-+			atmel,nwe-setup-ns = <8>;
-+			atmel,nrd-setup-ns = <16>;
-+			atmel,ncs-rd-pulse-ns = <84>;
-+			atmel,ncs-wr-pulse-ns = <84>;
-+			atmel,nrd-pulse-ns = <76>;
-+			atmel,nwe-pulse-ns = <76>;
-+			atmel,nrd-cycle-ns = <107>;
-+			atmel,nwe-cycle-ns = <84>;
-+			atmel,tdf-ns = <16>;
-+
-+			nor: flash@0,0 {
-+				compatible = "cfi-flash";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0x0 0x0 0x1000000>;
-+				bank-width = <2>;
-+			};
-+		};
-+	};
-+
--- 
-2.7.4
+this is why I am raising the question if we really want to control it on the omap5 or just 
+turn it on for all omap5 boards like the omap4 appears to do... I.e. if turning the pin on
+as a pinctrl is IMHO sufficient for all practical purposes.
+
+> so the board DTS file need to provide a dummy clock, or we can make
+> the high precision clock also as optional (on panda both OMAP4 and twl6040
+> uses the same reference clock).
+
+Hm. It looks as if implementing this (and clock gating) is beyond my experiences.
+But I am happy to test a proposal on our omap5 board.
+
+BR and thanks,
+Nikolaus
