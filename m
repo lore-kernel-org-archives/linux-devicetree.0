@@ -1,72 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/2 v6] Add I2S audio support for ARC AXS10x boards
-Date: Wed, 27 Apr 2016 17:54:45 +0100
-Message-ID: <20160427165445.GG3217@sirena.org.uk>
-References: <cover.1461749984.git.joabreu@synopsys.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/7] regulator: rk808: Migrate to regulator core's
+ simplified DT parsing code
+Date: Wed, 27 Apr 2016 17:57:07 +0100
+Message-ID: <20160427165707.GH3217@sirena.org.uk>
+References: <1461682450-22173-1-git-send-email-w.egorov@phytec.de>
+ <1461682450-22173-3-git-send-email-w.egorov@phytec.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3440786355351607202=="
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1461749984.git.joabreu@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, linux-snps-arc@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bTTI3rp5igVUz0aj"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461682450-22173-3-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============3440786355351607202==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="77juosrL+unDT9wJ"
-Content-Disposition: inline
-
-
---77juosrL+unDT9wJ
+--bTTI3rp5igVUz0aj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 27, 2016 at 11:05:18AM +0100, Jose Abreu wrote:
-> ARC AXS10x platforms consist of a mainboard with several peripherals.
-> One of those peripherals is an HDMI output port controlled by the ADV7511
-> transmitter.
->=20
-> This patch set adds I2S audio for the AXS10x platform.
+On Tue, Apr 26, 2016 at 04:54:05PM +0200, Wadim Egorov wrote:
+> A common simplified DT parsing code for regulators was introduced in
+> commit a0c7b164ad11 ("regulator: of: Provide simplified DT parsing
+> method")
 
-I don't seem to have the second patch here.
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
---77juosrL+unDT9wJ
+
+--bTTI3rp5igVUz0aj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXIO7UAAoJECTWi3JdVIfQ2aMH+QF9Ros/E1uRxnR7uOVUX5Zc
-OOUKNlzY3ks2RB0Vv1ApGp6+SDeM5rZJzId2oYlZhBxtP0M7IYGBBDrNyH9uK5dW
-XbseEpLgiQ+KwEnZCND/vZpnz6r7X6vu80zPiRhmO7Krha9vtLCpvyIMzu9jshGF
-MpAxslfwCRdvKYuwlX6QuTOsowqRJ+7xwH/dOstl1POxQCP0288/6PbOS+dpx3qX
-tEm++3OM67JAAjXpaNywYbNdAd3azl8a8/4D/8TvtBcPLSMW6i0LGt9OlKiDp6oT
-MfQjzDpqzM9NBe7VmiqewERcPEl6kCm+mW+TEpqKboZSGuvmygKA/yrfDRznH1c=
-=Tags
+iQEcBAEBCAAGBQJXIO9jAAoJECTWi3JdVIfQaS4H/3PrjVpssZwNq60JvPllMf5F
+Q/RxqhBYC82obh9ORIV0YTkmLa459p/iWzp3umzbtYVrhfkj1LWM1wcyQ66R7H8L
+ma1Gf7riiKz+7xonXuFrrlpNT+0NsLAhBTLwVF8QXnWbYgYDMIkp+L0+MZ2VBO5P
+CQcGmVFyaeNjbvzQviJZ7nI+uHRzhyZDUQvlVPg0mweQjdxEoLTAYYMY6VyCf8xZ
+2wBsCdeDmUTXCfIxng3+/s6eAfmDy7e7Vue0HdXgacrpozkaa9FFWJq7R9vBFFDF
+pCvyQUVA3uigLhUo9FpSErp7SlGaXte7OSfx5fv7YIMZFsK00lER/uBAv74A0Z0=
+=/aTg
 -----END PGP SIGNATURE-----
 
---77juosrL+unDT9wJ--
-
-
---===============3440786355351607202==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-snps-arc mailing list
-linux-snps-arc@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-snps-arc
---===============3440786355351607202==--
+--bTTI3rp5igVUz0aj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
