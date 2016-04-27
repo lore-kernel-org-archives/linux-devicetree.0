@@ -1,43 +1,79 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] of: Add stub for of_get_next_parent()
-Date: Wed, 27 Apr 2016 13:13:33 +0200
-Message-ID: <5345757.9RfGSJE06M@wuerfel>
-References: <1461755500-889-1-git-send-email-heikki.krogerus@linux.intel.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 1/3] DRA7: Fix clock data for gmac_gmii_ref_clk_div
+Date: Wed, 27 Apr 2016 14:21:03 +0300
+Message-ID: <5720A09F.2060701@ti.com>
+References: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
+ <1461693269-19436-2-git-send-email-Linux.HWI@garmin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461755500-889-1-git-send-email-heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461693269-19436-2-git-send-email-Linux.HWI@garmin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "J.D. Schroeder" <Linux.HWI@garmin.com>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: "J.D. Schroeder" <jay.schroeder@garmin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 April 2016 14:11:40 Heikki Krogerus wrote:
-> Fixes a compiler error:
->=20
-> drivers/phy/phy-core.c: In function =E2=80=98__of_phy_provider_regist=
-er=E2=80=99:
-> drivers/phy/phy-core.c:848:13: error: implicit declaration of functio=
-n
-> =E2=80=98of_get_next_parent=E2=80=99 [-Werror=3Dimplicit-function-dec=
-laration]
->     parent =3D of_get_next_parent(parent);
->                  ^
->=20
-> Fixes: 2f7600bc981c ("phy: core: Allow children node to be overridden=
-")
-> Signed-off-by: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On 26/04/16 20:54, J.D. Schroeder wrote:
+> From: "J.D. Schroeder" <jay.schroeder@garmin.com>
+>
+> This commit fixes the clock data inside the DRA7xx clocks device tree
+> structure for the gmac_gmii_ref_clk_div clock. This clock is actually
+> the GMAC_MAIN_CLK and has nothing to do with the register at address
+> 0x4a0093d0. If CLKSEL_REF bit 24 inside of CM_GMAC_GMAC_CLKCTRL, is
+> set to 1 in order to use the GMAC_RMII_CLK instead of the
+> GMAC_RMII_HS_CLK, the kernel generates a clock divider warning:
+>      WARNING: CPU: 0 PID: 0 at drivers/clk/clk-divider.c:129 clk_divider_recalc_rate+0xa8/0xe0()
+>      gmac_gmii_ref_clk_div: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
+>
+> By properly configuring the gmac_gmii_ref_clk_div (GMAC_MAIN_CLK) to
+> have the parent of dpll_gmac_m2_ck always divided by 2 the warning is
+> resolved and the clock tree is fixed up.
+>
+> Additionally, a new clock called rmii_50mhz_clk_mux is defined that
+> does utilize CM_GMAC_GMAC_CLKCTRL[24] CLKSEL_REF to configure the
+> source clock for the RMII_50MHZ_CLK.
+>
+> Signed-off-by: J.D. Schroeder <jay.schroeder@garmin.com>
+> Reviewed-by: Trenton Andres <trenton.andres@garmin.com>
 
-Yes, this works. I have submitted an alternative patch to fix the
-build error, changing the PHY core to not use any of the OF interfaces
-if CONFIG_OF is disabled.
+Looks like something weird happened with the clock data conversion tool 
+with this specific clock. Seems to be the only buggy instance in our 
+clock data across SoCs. Good catch.
 
-We can also have both.
+Acked-by: Tero Kristo <t-kristo@ti.com>
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>   arch/arm/boot/dts/dra7xx-clocks.dtsi | 15 +++++++++++----
+>   1 file changed, 11 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> index d0bae06..9d1a583 100644
+> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> @@ -1710,13 +1710,20 @@
+>   		reg = <0x0c00>;
+>   	};
+>
+> -	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
+> +	rmii_50mhz_clk_mux: rmii_50mhz_clk_mux {
+>   		#clock-cells = <0>;
+> -		compatible = "ti,divider-clock";
+> -		clocks = <&dpll_gmac_m2_ck>;
+> +		compatible = "ti,mux-clock";
+> +		clocks = <&dpll_gmac_h11x2_ck>, <&rmii_clk_ck>;
+>   		ti,bit-shift = <24>;
+>   		reg = <0x13d0>;
+> -		ti,dividers = <2>;
+> +	};
+> +
+> +	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-factor-clock";
+> +		clocks = <&dpll_gmac_m2_ck>;
+> +		clock-mult = <1>;
+> +		clock-div = <2>;
+>   	};
+>
+>   	gmac_rft_clk_mux: gmac_rft_clk_mux {
+>
