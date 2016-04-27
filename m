@@ -1,86 +1,55 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 4/5] ARM: dts: keystone: Header file for pinctrl constants
-Date: Wed, 27 Apr 2016 09:11:47 -0500
-Message-ID: <1461766308-27669-5-git-send-email-fcooper@ti.com>
-References: <1461766308-27669-1-git-send-email-fcooper@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461766308-27669-1-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>, Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+From: "J.D. Schroeder" <Linux.HWI-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: DRA7x: dts: Update the OSC_32K_CLK frequency
+Date: Wed, 27 Apr 2016 09:20:13 -0500
+Message-ID: <5720CA9D.4010103@garmin.com>
+References: <1461693269-19436-1-git-send-email-Linux.HWI@garmin.com>
+ <1461693269-19436-4-git-send-email-Linux.HWI@garmin.com>
+ <5720A73B.6050408@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5720A73B.6050408-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: "J.D. Schroeder" <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lokesh Vutla <lokeshvutla@ti.com>
+On 04/27/2016 06:49 AM, Tero Kristo wrote:
+> On 26/04/16 20:54, J.D. Schroeder wrote:
+>> From: "J.D. Schroeder" <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
+>>
+>> This commit updates the OSC_32K_CLK (secure_32k_clk_src_ck) frequency
+>> from the precise 32kHz frequency (i.e., 32.768 kHz) to the more
+>> accurate frequency of ~34.6 kHz. Actual measured frequencies of the
+>> clock vary from board to board anywhere from 34.4 kHz up to 34.8 kHz.
+> 
+> Uhm, if you have a board specific, accurate value for this clock, you should
+> update it in the board file itself. This definition is going to be used across
+> all the DRA7 / AM57xx boards, which can very likely have different crystal
+> accuracies.
+> 
+> So, NAK.
 
-The pinctrl IP used in some of the Keystone 2 devices differ vs other
-TI SoCs. Therefore, create a Keystone specific pinctrl header.
+The source of this clock is internal to the processor and not specific to how
+the processor is configured or what clocks are coming in. The approximate
+frequency of 34.4-34.8 kHz is generated internal to the processor through some
+type of oscillator, not external. The problem is that the clock tree gives the
+impression that this is a 32.768 kHz clock source, when in fact it is *not*
+that. Both the name and the frequency are misleading. My change is an attempt
+to clarify the actual behavior of the clock and keep someone else from using
+the clock as a true 32.768 kHz clock when it is more than 5% off that
+particular frequency. I would even consider changing the name of the clock as
+that too is misleading, but opted not to since that would be more disruptive.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- arch/arm/boot/dts/keystone-k2g.dtsi    |  1 +
- include/dt-bindings/pinctrl/keystone.h | 39 ++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
- create mode 100644 include/dt-bindings/pinctrl/keystone.h
+If you are seeing 32.768 kHz come out of this clock source then I must have an
+issue with my silicon and we can discuss off line. However, if you configure
+this as one of the clock out sources and see something in the range of ~34
+kHz, I still think the change is a valid change as it clarifies the true
+behavior of the hardware. Am I missing something?
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index b99e879..3372615 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -14,6 +14,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/pinctrl/keystone.h>
- #include "skeleton.dtsi"
- 
- / {
-diff --git a/include/dt-bindings/pinctrl/keystone.h b/include/dt-bindings/pinctrl/keystone.h
-new file mode 100644
-index 0000000..7f97d77
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/keystone.h
-@@ -0,0 +1,39 @@
-+/*
-+ * This header provides constants for Keystone pinctrl bindings.
-+ *
-+ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DT_BINDINGS_PINCTRL_KEYSTONE_H
-+#define _DT_BINDINGS_PINCTRL_KEYSTONE_H
-+
-+#define MUX_MODE0	0
-+#define MUX_MODE1	1
-+#define MUX_MODE2	2
-+#define MUX_MODE3	3
-+#define MUX_MODE4	4
-+#define MUX_MODE5	5
-+
-+#define BUFFER_CLASS_B	(0 << 19)
-+#define BUFFER_CLASS_C	(1 << 19)
-+#define BUFFER_CLASS_D	(2 << 19)
-+#define BUFFER_CLASS_E	(3 << 19)
-+
-+#define PULL_DISABLE	(1 << 16)
-+#define PIN_PULLUP	(1 << 17)
-+#define PIN_PULLDOWN	(0 << 17)
-+
-+#define KEYSTONE_IOPAD_OFFSET(pa, offset) (((pa) & 0xffff) - (offset))
-+
-+#define K2G_CORE_IOPAD(pa) KEYSTONE_IOPAD_OFFSET((pa), 0x1000)
-+
-+#endif
--- 
-2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
