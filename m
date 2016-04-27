@@ -1,170 +1,113 @@
-From: Yisen Zhuang <Yisen.zhuang@huawei.com>
-Subject: Re: [PATCH v2 net-next 11/13] Documentation: Bindings: Update DT
- binding for separating dsaf dev support
-Date: Wed, 27 Apr 2016 11:33:29 +0800
-Message-ID: <57203309.1090501@huawei.com>
-References: <1461402317-136499-1-git-send-email-Yisen.Zhuang@huawei.com>
- <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
- <20160426124847.GA26682@rob-hp-laptop>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH 1/6] bus: Add shared MDIO bus framework
+Date: Wed, 27 Apr 2016 10:16:40 +0530
+Message-ID: <CAALAos_bPnT96xA883mkkjwUTut=_NJymUZKM=-0ZujdDxNEkA@mail.gmail.com>
+References: <1461230323-27891-1-git-send-email-pramod.kumar@broadcom.com>
+	<5167289.0a4LBoWhyX@wuerfel>
+	<20160426182335.GE30107@lunn.ch>
+	<9424602.Vqb0FY56gH@wuerfel>
+	<20160426194102.GF30107@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160426124847.GA26682@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, davem@davemloft.net
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, salil.mehta@huawei.com, catalin.marinas@arm.com, xieqianqian@huawei.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, netdev@vger.kernel.org, lipeng321@huawei.com, will.deacon@arm.com, linuxarm@huawei.com, xuwei5@hisilicon.com, huangdaode@hisilicon.com, galak@codeaurora.org, yankejian@huawei.com, linux-arm-kernel@lists.infradead.org, liguozhu@huawei.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160426194102.GF30107@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Device Tree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, netdev@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iIGFuZCBEYXZpZCwKClBsZWFzZSBzZWUgbXkgY29tbWVudHMgaW5saW5lLgoKRGF2aWQg
-aGF2ZSBtZXJnZWQgdGhpcyBzZXJpZXMgdG8gbmV0LW5leHQsIGJ1dCB3ZSBuZWVkIHRvIG1vZGlm
-eSBzb21lIGNvZGVzIGFjY29yZGluZwp0byBSb2IncyBjb21tZW50cy4gSSBhbSBub3Qgc3VyZSBp
-ZiBpIG5lZWQgdG8gc2VuZCBWMyBmb3IgdGhpcyBzZXJpZXMsIG9yIHNlcGFyYXRlCnBhdGNoZXMg
-b2YgZG9jdW1lbnRhdGlvbiB0byBpbmRlcGVuZGVudCBzZXJpZXMgYW5kIGdlbmVyYXRlIGEgbmV3
-IHBhdGNoIGZvciBobnMgYmFzZQpvbiBjdXJyZW50IG5ldC1uZXh0PwoKVGhhbmtzLAoKWWlzZW4K
-CuWcqCAyMDE2LzQvMjYgMjA6NDgsIFJvYiBIZXJyaW5nIOWGmemBkzoKPiBPbiBTYXQsIEFwciAy
-MywgMjAxNiBhdCAwNTowNToxNVBNICswODAwLCBZaXNlbiBaaHVhbmcgd3JvdGU6Cj4+IEJlY2F1
-c2UgZGVidWcgZHNhZiBwb3J0IHdhcyBzZXBhcmF0ZWQgZnJvbSBzZXJ2aWNlIGRzYWYgcG9ydCwg
-dGhpcyBwYXRjaAo+PiB1cGRhdGVzIHRoZSByZWxhdGVkIGluZm9ybWF0aW9uIG9mIERUIGJpbmRp
-bmcuCj4gCj4gU2VwYXJhdGVkIHdoZW4/IE5ldyB2ZXJzaW9uIG9mIHRoZSBoL3c/IElmIHNvLCB3
-aGVyZSdzIHRoZSBuZXcgCj4gY29tcGF0aWJsZSBzdHJpbmc/IFRoaXMgaXMgcXVpdGUgYSBiaWcg
-YmluZGluZyBjaGFuZ2UuIAoKVGhlcmUgaXNuJ3QgYW55IGNoYW5nZSBvZiBoL3cuIEkgc2VwYXJh
-dGVkIGRlYnVnIGRzYWYgcG9ydCBmcm9tIHNldmljZSBkc2FmCnBvcnQgdG8gbWFrZSB0aGUgY29k
-ZSBtb3JlIHNpbXBsZSBhbmQgcmVhZGFiaWxpdHkuCgo+IAo+PiBTaWduZWQtb2ZmLWJ5OiBZaXNl
-biBaaHVhbmcgPHlpc2VuLnpodWFuZ0BodWF3ZWkuY29tPgo+Pgo+PiAtLS0KPj4gIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL25ldC9oaXNpbGljb24taG5zLWRzYWYudHh0IHwgNTkgKysrKysrKysr
-KysrKysrKysrLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDQ5IGluc2VydGlvbnMoKyksIDEwIGRl
-bGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL25ldC9oaXNpbGljb24taG5zLWRzYWYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL25ldC9oaXNpbGljb24taG5zLWRzYWYudHh0Cj4+IGluZGV4IGVjYWNmYTQu
-LjVjY2Q0ZjAgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9uZXQvaGlzaWxpY29uLWhucy1kc2FmLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbmV0L2hpc2lsaWNvbi1obnMtZHNhZi50eHQKPj4gQEAgLTcsMTkgKzcs
-NDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4gIC0gbW9kZTogZHNhIGZhYnJpYyBtb2RlIHN0
-cmluZy4gb25seSBzdXBwb3J0IG9uZSBvZiBkc2FmIG1vZGVzIGxpa2UgdGhlc2U6Cj4+ICAJCSIy
-cG9ydC02NHZmIiwKPj4gIAkJIjZwb3J0LTE2cnNzIiwKPj4gLQkJIjZwb3J0LTE2dmYiLgo+PiAr
-CQkiNnBvcnQtMTZ2ZiIsCj4+ICsJCSJzaW5nbGUtcG9ydCIuCj4+ICAtIGludGVycnVwdC1wYXJl
-bnQ6IHRoZSBpbnRlcnJ1cHQgcGFyZW50IG9mIHRoaXMgZGV2aWNlLgo+PiAgLSBpbnRlcnJ1cHRz
-OiBzaG91bGQgY29udGFpbiB0aGUgRFNBIEZhYnJpYyBhbmQgcmNiIGludGVycnVwdC4KPj4gIC0g
-cmVnOiBzcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBhZGRyZXNzKGVzKSBhbmQgc2l6ZSBvZiB0aGUg
-ZGV2aWNlIHJlZ2lzdGVycy4KPj4gLSAgVGhlIGZpcnN0IHJlZ2lvbiBpcyBleHRlcm5hbCBpbnRl
-cmZhY2UgY29udHJvbCByZWdpc3RlciBiYXNlIGFuZCBzaXplLgo+PiAtICBUaGUgc2Vjb25kIHJl
-Z2lvbiBpcyBTZXJEZXMgYmFzZSByZWdpc3RlciBhbmQgc2l6ZS4KPj4gKyAgVGhlIGZpcnN0IHJl
-Z2lvbiBpcyBleHRlcm5hbCBpbnRlcmZhY2UgY29udHJvbCByZWdpc3RlciBiYXNlIGFuZCBzaXpl
-KG9wdGlvbmFsLAo+PiArICBvbmx5IGJlIHVzZWQgd2hlbiBzdWJjdHJsLXN5c2NvbiBpcyBub3Qg
-ZXhpc3RzKS4gSXQgaXMgcmVjb21tZW5kZWQgdXNpbmcKPiAKPiBvbmx5IHVzZWQgd2hlbiBzdWJj
-dHJsLXN5c2NvbiBkb2VzIG5vdCBleGlzdAoKQWdyZWUsIHRoYW5rcy4KCj4gCj4+ICsgIHN1YmN0
-cmwtc3lzY29uIHJhdGhlciB0aGFuIHRoaXMgYWRkcmVzcy4KPj4gKyAgVGhlIHNlY29uZCByZWdp
-b24gaXMgU2VyRGVzIGJhc2UgcmVnaXN0ZXIgYW5kIHNpemUob3B0aW9uYWwsIG9ubHkgYmUgdXNl
-ZCB3aGVuCj4+ICsgIHNlcmRlcy1zeXNjb24gaW4gcG9ydCBub2RlIGlzIG5vdCBleGlzdHMuIEl0
-IGlzIHJlY29tbWVuZGVkIHVzaW5nCj4gCj4gc2ltaWxhciByZXdvcmRpbmcgbmVlZGVkIGhlcmUu
-CgpBZ3JlZSwgdGhhbmtzLgoKPiAKPj4gKyAgc2VyZGVzLXN5c2NvbiByYXRoZXIgdGhhbiB0aGlz
-IGFkZHJlc3MuCj4+ICAgIFRoZSB0aGlyZCByZWdpb24gaXMgdGhlIFBQRSByZWdpc3RlciBiYXNl
-IGFuZCBzaXplLgo+PiAtICBUaGUgZm91cnRoIHJlZ2lvbiBpcyBkc2EgZmFicmljIGJhc2UgcmVn
-aXN0ZXIgYW5kIHNpemUuCj4+IC0gIFRoZSBmaWZ0aCByZWdpb24gaXMgY3BsZCBiYXNlIHJlZ2lz
-dGVyIGFuZCBzaXplLCBpdCBpcyBub3QgcmVxdWlyZWQgaWYgZG8gbm90IHVzZSBjcGxkLgo+PiAt
-LSBwaHktaGFuZGxlOiBwaHkgaGFuZGxlIG9mIHBoeXNpY2wgcG9ydCwgMCBpZiBub3QgYW55IHBo
-eSBkZXZpY2UuIHNlZSBldGhlcm5ldC50eHQgWzFdLgo+PiArICBUaGUgZm91cnRoIHJlZ2lvbiBp
-cyBkc2EgZmFicmljIGJhc2UgcmVnaXN0ZXIgYW5kIHNpemUuIEl0IGlzIG5vdCByZXF1aXJlZCBm
-b3IKPj4gKyAgc2luZ2xlLXBvcnQgbW9kZS4KPj4gKy0gcmVnLW5hbWVzOiBtYXkgYmUgcHBlLWJh
-c2UgYW5kKG9yKSBkc2FmLWJhc2UuIEl0IGlzIHVzZWQgdG8gZmluZCB0aGUKPj4gKyAgY29ycmVz
-cG9uZGluZyByZWcncyBpbmRleC4KPiAKPiBCdXQgeW91IGhhdmUgdXAgdG8gNSByZWdpb25zLgo+
-IAo+IFRoZSB2YXJpYWJsZSBuYXR1cmUgb2Ygd2hhdCByZWdpb25zIHlvdSBoYXZlIHRlbGxzIG1l
-IHlvdSBuZWVkIG1vcmUgCj4gc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmdzIGZvciBlYWNoIGNo
-aXAuCgp3ZSBkaWRuJ3QgYWRkIHN1cHBvcnQgb2YgbmV3IGgvdy4gV2UgYWRkZWQgdGhlc2UgcmVn
-aW9ucyB0byBtYWtlIGNvZGUgc2ltcGxlIGFuZCByZWFkYWJpbGl0eS4KSWYgd2UgbmVlZCB0byBh
-ZGQgc3VwcG9ydCBvZiBuZXh0IGgvdyB2ZXJzaW9uIG5leHQgdGltZSwgd2UgZG9uJ3QgbmVlZCB0
-byBhZGQgbWFueSBicmFuY2hlcwpmb3IgdGhlc2UgYXR0cmlidXRlcy4gU28gd2UgZGlkbid0IGFk
-ZCBhIG5ldyBjb21wYXRpYmxlIGhlcmUuCgo+IAo+PiArCj4+ICstIHBoeS1oYW5kbGU6IHBoeSBo
-YW5kbGUgb2YgcGh5c2ljbCBwb3J0LCAwIGlmIG5vdCBhbnkgcGh5IGRldmljZS4gSXQgaXMgb3B0
-aW9uYWwKPiAKPiBzL3BoeXNpY2wvcGh5c2ljYWwvCgpBZ3JlZSwgdGhhbmtzLgoKPiAKPj4gKyAg
-YXR0cmlidXRlLiBJZiBwb3J0IG5vZGUgaXMgZXhpc3RzLCBwaHktaGFuZGxlIGluIGVhY2ggcG9y
-dCBub2RlIHdpbGwgYmUgdXNlZC4KPj4gKyAgc2VlIGV0aGVybmV0LnR4dCBbMV0uCj4+ICstIHN1
-YmN0cmwtc3lzY29uOiBpcyBzeXNjb24gaGFuZGxlIGZvciBleHRlcm5hbCBpbnRlcmZhY2UgY29u
-dHJvbCByZWdpc3Rlci4KPj4gKy0gcmVzZXQtZmllbGQtb2Zmc2V0OiBpcyBvZmZzZXQgb2YgcmVz
-ZXQgZmllbGQuIEl0cyB2YWx1ZSBkZXBlbmRzIG9uIHRoZSBoYXJkd2FyZQo+PiArICB1c2VyIG1h
-bnVhbC4KPj4gIC0gYnVmLXNpemU6IHJ4IGJ1ZmZlciBzaXplLCBzaG91bGQgYmUgMTYtMTAyNC4K
-Pj4gIC0gZGVzYy1udW06IG51bWJlciBvZiBkZXNjcmlwdGlvbiBpbiBUWCBhbmQgUlggcXVldWUs
-IHNob3VsZCBiZSA1MTIsIDEwMjQsIDIwNDggb3IgNDA5Ni4KPj4gIAo+PiArLSBwb3J0OiBzdWJu
-b2RlcyBvZiBkc2FmLiBBIGRzYWYgbm9kZSBtYXkgY29udGFpbiBzZXZlcmFsIHBvcnQgbm9kZXMo
-RGVwZW5kaW5nCj4+ICsgIG9uIG1vZGUgb2YgZHNhZikuIFBvcnQgbm9kZSBjb250YWluIHNvbWUg
-YXR0cmlidXRlcyBsaXN0ZWQgYmVsb3c6Cj4+ICstIHBvcnQtaWQ6IGlzIHBoeXNpY2FsIHBvcnQg
-aW5kZXggaW4gb25lIGRzYWYuCj4gCj4gSW5kZXhlcyBzaG91bGQgZ2VuZXJhbGx5IGJlIGF2b2lk
-ZWQuIFdoYXQgZG9lcyB0aGUgbnVtYmVyIGNvcnJlc3BvbmQgCj4gdG8gaW4gaC93IChpZiBhbnl0
-aGluZyk/Cgpwb3J0LWlkIGlzIGluZGV4IGZvciBhIHBvcnQgaW4gZHNhZiwgaXQgaXMgY29ycmVz
-cG9uZCB0byBpbmRleCBvZiBQSFkgc2hvd2VkIGJlbG93LgoKICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1BVCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8CiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAg
-ICB8ICAgICAgICAgICB8CiAgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tICAgIC0tLS0tLS0tLSAgIC0tLS0tLS0tLQogICAgfCAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgICAgICAgICAgICAgICAgfCAgICB8ICAgICAgIHwgICB8ICAgfCAgIHwKICAg
-IHwgICAgICAgICAgICAgICAgICAgICAgICBQUEUgICAgICAgICAgICAgICAgIHwgICAgfCAgUFBF
-ICB8ICAgfCAgUFBFICB8CiAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAg
-ICAgICAgICB8ICAgIHwgICB8ICAgfCAgIHwgICB8ICAgfAogICAgfCAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgICAgICAgICAgICAgICAgfCAgICB8ICAgfCAgIHwgICB8ICAgfCAgIHwKICAg
-IHwgICAgICAgICAgICAgICAgICAgICAgY3Jvc3NiYXIgICAgICAgICAgICAgIHwgICAgfCAgIHwg
-ICB8ICAgfCAgIHwgICB8CiAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAg
-ICAgICAgICB8ICAgIHwgICB8ICAgfCAgIHwgICB8ICAgfAogICAgfCAgIC0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0gICAgICAgfCAgICB8ICAgfCAgIHwgICB8ICAgfCAgIHwKICAg
-IHwgICB8ICAgICB8ICAgICB8ICAgICAgfCAgICAgIHwgICAgICB8ICAgICAgIHwgICAgfCAgIHwg
-ICB8ICAgfCAgIHwgICB8CiAgICB8ICAgfCAgICAgfCAgICAgfCAgICAgIHwgICAgICB8ICAgICAg
-fCAgICAgICB8ICAgIHwgICB8ICAgfCAgIHwgICB8ICAgfAogICAgfCAgTUFDICAgTUFDICAgTUFD
-ICAgIE1BQyAgICBNQUMgICAgTUFDICAgICAgfCAgICB8ICBNQUMgIHwgICB8ICBNQUMgIHwKICAg
-IHwgICB8ICAgICB8ICAgICB8ICAgICAgfCAgICAgIHwgICAgICB8ICAgICAgIHwgICAgfCAgIHwg
-ICB8ICAgfCAgIHwgICB8CiAgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tICAgIC0tLS0tLS0tLSAgIC0tLS0tLS0tLQogICAgICAgIHwgICAgIHwgICAgIHwg
-ICAgICB8ICAgICAgfCAgICAgIHwgICAgXCAgICAgICAgLyAgfCAgICAgICAgLyAgfAogICAgICAg
-UEhZICAgUEhZICAgUEhZICAgIFBIWSAgICBQSFkgICAgUEhZICAgIFwgICAgICAvICBQSFkgICAg
-ICAvICBQSFkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-XCAgICAvICAgICAgICAgICAvCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBcICAvICAgICAgICAgICAvCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIERTQUYodGhyZWUgcGxhdGZvcm0gZGV2aWNlKQoKPiAKPj4gKy0gcGh5
-LWhhbmRsZTogcGh5IGhhbmRsZSBvZiBwaHlzaWNsIHBvcnQuIEl0IGlzIG5vdCByZXF1aXJlZCBp
-ZiB0aGVyZSBpc24ndAo+PiArICBwaHkgZGV2aWNlLiBzZWUgZXRoZXJuZXQudHh0IFsxXS4KPj4g
-Ky0gc2VyZGVzLXN5c2NvbjogaXMgc3lzY29uIGhhbmRsZSBmb3IgU2VyRGVzIHJlZ2lzdGVyLgo+
-PiArLSBjcGxkLXN5c2NvbjogaXMgc3lzY29uIGhhbmRsZSBmb3IgY3BsZCByZWdpc3Rlci4gSXQg
-aXMgbm90IHJlcXVpcmVkIGlmIHRoZXJlCj4+ICsgIGlzbid0IGNwbGQgZGV2aWNlLgo+PiArLSBj
-cGxkLWN0cmwtcmVnOiBpcyBjcGxkIHJlZ2lzdGVyIG9mZnNldC4gSXQgaXMgbm90IHJlcXVpcmVk
-IGlmIHRoZXJlIGlzbid0Cj4+ICsgIGNwbGQtc3lzY29uLgo+IAo+IFRoaXMgd291bGQgdXN1YWxs
-eSBiZSBhIGNlbGwgaW4gdGhlIGNwbGQtc3lzY29uIHByb3BlcnR5LgoKQWdyZWUsIHRoYW5rcy4K
-Cj4gCj4+ICstIHBvcnQtcnN0LW9mZnNldDogaXMgb2Zmc2V0IG9mIHJlc2V0IGZpZWxkIGZvciBl
-YWNoIHBvcnQgaW4gZHNhZi4gSXRzIHZhbHVlCj4+ICsgIGRlcGVuZHMgb24gdGhlIGhhcmR3YXJl
-IHVzZXIgbWFudWFsLgo+PiArLSBwb3J0LW1vZGUtb2Zmc2V0OiBpcyBvZmZzZXQgb2YgcG9ydCBt
-b2RlIGZpZWxkIGZvciBlYWNoIHBvcnQgaW4gZHNhZi4gSXRzCj4+ICsgIHZhbHVlIGRlcGVuZHMg
-b24gdGhlIGhhcmR3YXJlIHVzZXIgbWFudWFsLgo+IAo+IEFnYWluLCBzb3VuZHMgbGlrZSB5b3Ug
-bmVlZCBtb3JlIHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5ncyB0aGF0IGltcGx5IAo+IHRoaXMg
-aW5mb3JtYXRpb24uCj4gCj4+ICsKPj4gIFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbmV0L3BoeS50eHQKPj4gIAo+PiAgRXhhbXBsZToKPj4gQEAgLTI4LDExICs1NiwxMSBA
-QCBkc2FmMDogZHNhQGM3MDAwMDAwIHsKPj4gIAljb21wYXRpYmxlID0gImhpc2lsaWNvbixobnMt
-ZHNhZi12MSI7Cj4+ICAJbW9kZSA9ICI2cG9ydC0xNnJzcyI7Cj4+ICAJaW50ZXJydXB0LXBhcmVu
-dCA9IDwmbWJpZ2VuX2RzYT47Cj4+IC0JcmVnID0gPDB4MCAweEMwMDAwMDAwIDB4MCAweDQyMDAw
-MAo+PiAtCSAgICAgICAweDAgMHhDMjAwMDAwMCAweDAgMHgzMDAwMDAKPj4gLQkgICAgICAgMHgw
-IDB4YzUwMDAwMDAgMHgwIDB4ODkwMDAwCj4+ICsJcmVnID0gPDB4MCAweGM1MDAwMDAwIDB4MCAw
-eDg5MDAwMAo+PiAgCSAgICAgICAweDAgMHhjNzAwMDAwMCAweDAgMHg2MDAwMD47Cj4+IC0JcGh5
-LWhhbmRsZSA9IDwwIDAgMCAwICZzb2MwX3BoeTQgJnNvYzBfcGh5NSAwIDA+Owo+PiArCXJlZy1u
-YW1lcyA9ICJwcGUtYmFzZSIsICJkc2FmLWJhc2UiOwo+PiArCXN1YmN0cmwtc3lzY29uID0gPCZz
-dWJjdHJsPjsKPj4gKwlyZXNldC1maWVsZC1vZmZzZXQgPSAwOwo+PiAgCWludGVycnVwdHMgPSA8
-MTMxIDQ+LDwxMzIgND4sIDwxMzMgND4sPDEzNCA0PiwKPj4gIAkJICAgICA8MTM1IDQ+LDwxMzYg
-ND4sIDwxMzcgND4sPDEzOCA0PiwKPj4gIAkJICAgICA8MTM5IDQ+LDwxNDAgND4sIDwxNDEgND4s
-PDE0MiA0PiwKPj4gQEAgLTQzLDQgKzcxLDE1IEBAIGRzYWYwOiBkc2FAYzcwMDAwMDAgewo+PiAg
-CWJ1Zi1zaXplID0gPDQwOTY+Owo+PiAgCWRlc2MtbnVtID0gPDEwMjQ+Owo+PiAgCWRtYS1jb2hl
-cmVudDsKPj4gKwo+PiArCXByb3RAMCB7Cj4gCj4gcG9ydD8KCkFncmVlLCBpIGFtIHNvcnJ5IGZv
-ciBteSBjYXJlbGVzc25lc3MgYW5kIHdpbGwgcGF5IG1vcmUgYXR0ZW50aW9uIHRvIGl0IG5leHQg
-dGltZS4KdGhhbmsgeW91IHZlcnkgbXVjaC4KCj4gCj4+ICsJCXBvcnQtaWQgPSAwOwo+PiArCQlw
-aHktaGFuZGxlID0gPCZwaHkwPjsKPj4gKwkJc2VyZGVzLXN5c2NvbiA9IDwmc2VyZGVzPjsKPj4g
-Kwl9Owo+PiArCj4+ICsJcHJvdEAxIHsKPj4gKyAgICAgICAgICAgICAgICBwb3J0LWlkID0gMTsK
-Pj4gKyAgICAgICAgICAgICAgICBzZXJkZXMtc3lzY29uID0gPCZzZXJkZXM+Owo+PiArICAgICAg
-ICB9Owo+PiAgfTsKPj4gLS0gCj4+IDEuOS4xCj4+Cj4gCj4gLgo+IAoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Apr 27, 2016 at 1:11 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+> On Tue, Apr 26, 2016 at 09:24:34PM +0200, Arnd Bergmann wrote:
+>> On Tuesday 26 April 2016 20:23:35 Andrew Lunn wrote:
+>> > > A more complex problem would be having a PHY driver for a device
+>> > > that can be either an ethernet phy or some other phy.
+>> >
+>> > I doubt that ever happens. You can have up to 32 different devices on
+>> > an MDIO bus. Since an Ethernet PHY and a "some other sort of PHY" are
+>> > completely different things, why would a hardware engineer place them
+>> > on the same address? It is like saying your ATA controller and VGA
+>> > controller share the same slot on the PCI bus...
+>>
+>> To clarify: what I meant is a device that is designed as a PHY for
+>> similar hardware (e.g. SATA, USB3 and PCIe) and that has a common
+>> register set and a single driver, but that driver can operate
+>> in multiple modes. You typically have multiple instances of
+>> such hardware, with each instance linked to exactly one host
+>> device, but one driver for all of them.
+>>
+>> See Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
+>> and drivers/phy/phy-xgene.c for one such example.
+>
+> Interesting. Also, that this lists SGMII. I assume this is a phy in
+> the MAC in order to talk to the Ethernet PHY.
+>
+> I still don't see it being a big problem if a phy driver implements an
+> Ethernet PHY. It just needs to call phy_device_create() and
+> phy_device_register().
+>
+>         Andrew
+
+It is really interesting to see the evolution of MDIO bus:
+
+1. Traditionally, MDIO controller used to be part of each ethernet controller
+itself so each ethernet controller used to have it's own 2 wire MDIO bus
+
+2. Next, we saw SoC with multiple ethernet controllers sharing same MDIO
+bus. In other words, we saw multiple MDIO bus being muxed over single
+MDIO bus with additional bus select lines (I think this is when
+drivers/net/phy/mdio-mux.c APIs were implemented but at this point all
+PHYs on muxed MDIO bus were ethernet PHYs).
+
+3. Then, we saw SoC with ethernet switch devices also accessible over
+shared MDIO bus (or Muxed MDIO bus) along with ethernet PHYs (I guess
+this is why we have drivers/net/phy/mdio_device.c which adds
+"mdio_device" for non-ethernet-PHY devices on MDIO bus).
+
+4. Now, we have SoC with SATA PHYs, PCIe PHYs, USB PHYs, and Ethernet
+PHYs all accessible over same shared MDIO bus (or Muxed MDIO bus). The
+SATA PHYs and PCIe PHYs are registered to "Generic PHY framework". For
+USB PHYs, we can either register to "Generic PHY framework" or "USB PHY
+framework". For Ethernet PHYs, we register MDIO bus instance to "Ethernet
+MDIO framework".
+
+The devices on ARM64 SoC has to be within first 4GB and RAM has to start
+from first 4GB to be ARM compliant because ARM64 CPUs have 32bit mode and
+all devices and RAM should be available to 32bit mode with MMU disabled.
+This means that we only have 4GB to fit all devices registers and some
+portion of RAM. Some of these non-Ethernet PHYs have tons of registers so
+as number of PHYs increase in a SoC they will eat-up lot of first 4GB
+address space. Using same MDIO bus for all types of PHYs (SATA, PCIe, USB,
+and Ethernet) is actually a good approach because it actually saves lot of
+first 4GB address space. In future, more devices will be moved to a shared
+MDIO bus which are less frequently accessed.
+
+For Broadcom iProc SoCs, the design choice has already been made to use
+shared MDIO bus for all PHYs. In fact, Broadcom iProc NS2 SoC already has
+a shared MDIO bus for SATA PHYs, USB PHYs, PCIe PHYs, and Ethernet
+PHYs and more Broadcom iProc SoCs are on their way. Of course, there are
+few exceptions in iProc SoCs such as SATA PHYs where we also have memory
+mapped registers to access PHYs but other PHYs don't have such memory
+mapped registers.
+
+Clearly from above, the traditional 2 wire MDIO bus is now a shared MDIO
+bus with 2-wire plus additional select lines. Also, now we have SoCs (such
+as Broadcom iProc SoCs) which has such shared MDIO bus and I think
+in-future we will have SoCs with a shared MDIO bus for variety of devices.
+
+For long term, we really need a clean solution to fit shared MDIO based
+PHY drivers in Linux kernel. Also, shared MDIO based PHY drivers should
+not be dependent on any particular IO subsystem (such as Linux Ethernet)
+because there are lot of use-cases where people want strip down kernel
+image by not-compiling IO subsystems which are not required.
+
+IMHO, we have several options in front of us:
+1. Use some light-weight framework (such as shared_mdio.c implemented
+by this patchset) under drivers/bus
+2. Extend "Generic PHY framework" to allow something like shared MDIO
+bus (as-per Arnd's suggestion)
+3. Move-out "MDIO-mux APIs" from drivers/net/phy to something like
+drivers/mdio-mux and make it independent of "Linux Ethernet subsystem".
+(... may be more options ...)
+
+Regards,
+Anup
