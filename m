@@ -1,102 +1,95 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V10 2/6] mfd: max77620: add core driver for
- MAX77620/MAX20024
-Date: Wed, 27 Apr 2016 16:29:37 +0100
-Message-ID: <20160427152937.GE4892@dell>
+Subject: Re: [PATCH V10 1/6] mfd: add device-tree binding doc for PMIC
+ max77620/max20024
+Date: Wed, 27 Apr 2016 16:30:57 +0100
+Message-ID: <20160427153057.GF4892@dell>
 References: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
- <1459348188-11726-3-git-send-email-ldewangan@nvidia.com>
- <20160427150559.GD4176@ulmo.ba.sec>
+ <1459348188-11726-2-git-send-email-ldewangan@nvidia.com>
+ <20160427124959.GC4892@dell>
+ <20160427150443.GC4176@ulmo.ba.sec>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160427150559.GD4176@ulmo.ba.sec>
+In-Reply-To: <20160427150443.GC4176@ulmo.ba.sec>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <treding@nvidia.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
 On Wed, 27 Apr 2016, Thierry Reding wrote:
 
-> On Wed, Mar 30, 2016 at 07:59:44PM +0530, Laxman Dewangan wrote:
-> > MAX77620/MAX20024 are Power Management IC from the MAXIM.
-> > It supports RTC, multiple GPIOs, multiple DCDC and LDOs,
-> > watchdog, clock etc.
+> On Wed, Apr 27, 2016 at 01:49:59PM +0100, Lee Jones wrote:
+> > On Wed, 30 Mar 2016, Laxman Dewangan wrote:
 > >=20
-> > Add MFD drier to provides common support for accessing the
-> > device; additional drivers is developed on respected subsystem
-> > in order to use the functionality of the device.
+> > > The MAXIM PMIC MAX77620 and MAX20024 are power management IC
+> > > which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
+> > > watchdog etc.
+> > >=20
+> > > Add DT binding document for the different functionality of
+> > > this device.
+> > >=20
+> > > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > >=20
+> > > ---
+> > > Changes from V1:
+> > > - Added units in some of properties.
+> > > - Change the boolean property to tristate type and detail some of
+> > >   properties.
+> > >=20
+> > > Change from V2:
+> > > - added unit in period related dt property.
+> > >=20
+> > > Change from V3: None
+> > > - Added Rob's ack.
+> > >=20
+> > > Changes from V4:
+> > > - A- Provide more details in the dt binding doc.
+> > > - Take care of fps nodes.
+> > > - Split the submodule's DT binding doc on respective folder.
+> > > - Drop the battery charger and low battery binding and related co=
+de as
+> > >   it need to go on power driver.
+> > >=20
+> > > Change from V5:
+> > > - None
+> > >=20
+> > > Change from V6:
+> > > -start the patch title with mfd instead of DT: mfd:
+> > >=20
+> > > Change from V7:
+> > > - Better describe the FPS to make more clear.
+> > >=20
+> > > Changes from V8:
+> > > None
+> > >=20
+> > > Changes from V9:
+> > > None
+> > >=20
+> > >  Documentation/devicetree/bindings/mfd/max77620.txt | 143 +++++++=
+++++++++++++++
+> > >  include/dt-bindings/mfd/max77620.h                 |  39 ++++++
+> > >  2 files changed, 182 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/max7762=
+0.txt
+> > >  create mode 100644 include/dt-bindings/mfd/max77620.h
 > >=20
-> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> > Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
-> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > For my own reference:
 > >=20
-> > ---
-> > Changes from V1:
-> > - Code cleanups per review from V1.
-> > - Move register acccess APIs from header to c file.
-> > - Remove some of non required variable, remove duplication in error=
- message
-> >  and simplify some of function implementation.
-> > - Register RTC driver such that it can get the regmap handle form p=
-arent device
-> >=20
-> > Changes from V2:
-> > - Run coccicheck and checkpatch in strict mode for the alignment.
-> > - Drop RTC driver and its i2c client registration.
-> >=20
-> > Changes from V3:
-> > - Change all sys initcall to module driver.
-> > - change the max77620_read argument to unisgned int from u8.
-> >=20
-> > Changes from V4:
-> > - Take care of fps nodes.
-> > - Drop the battery charger and low battery binding and related code=
- as
-> >   it need to go on power driver.
-> >=20
-> > Changes from V5:
-> > -None
-> >=20
-> > Changes from V6:
-> > - Taken care of Lee's comment like used defines for irqs, remove ma=
-x77620
-> >   register accesss abstractions, remove DTof module and use ID tabl=
-e only,
-> >   reduce the copyright lines.
-> > - Drop configuration for hard power off time chnage as it will be i=
-n
-> >   power driver.
-> > - Use direct regmap from all drivers instead of using abstractions.
-> > - This depends on patch
-> >=20
-> > Change from V7:
-> > - Use MFD defines for making mfd cells.
-> > - Use new property name.
-> >=20
-> > Changes from V8:
-> > - Remove the usage of MFD defines. Remove mutex_config as not neede=
-d.
-> >=20
-> > Changes from V9:
-> > - Use the devm_regmap_add_irq_chip() for irq registration.
-> >=20
-> >  drivers/mfd/Kconfig          |  15 ++
-> >  drivers/mfd/Makefile         |   1 +
-> >  drivers/mfd/max77620.c       | 544 +++++++++++++++++++++++++++++++=
-++++++++++++
-> >  include/linux/mfd/max77620.h | 337 +++++++++++++++++++++++++++
-> >  4 files changed, 897 insertions(+)
-> >  create mode 100644 drivers/mfd/max77620.c
-> >  create mode 100644 include/linux/mfd/max77620.h
+> >   Acked-by: Lee Jones <lee.jones@linaro.org>
 >=20
-> Lee,
+> Hi Lee,
 >=20
-> Were you going to pick this up along with the corresponding DT bindin=
-gs?
+> I'm confused now. Were you going to pick this up, or are you waiting =
+for
+> someone else to do it?
 
-I will, once I'm happy with the driver.
+I will pick it up once I'm good with the driver.
+
+The "For my own reference" tags are just to let me know not to waste
+my time and re-review.
 
 --=20
 Lee Jones
