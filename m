@@ -1,54 +1,145 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal
- implementation
-Date: Wed, 27 Apr 2016 16:25:32 +0100
-Message-ID: <20160427152532.GX3217@sirena.org.uk>
-References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
- <1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 net-next 11/13] Documentation: Bindings: Update DT
+ binding for separating dsaf dev support
+Date: Wed, 27 Apr 2016 10:25:56 -0500
+Message-ID: <CAL_JsqLHrHWtiikSt7F39LoExoL2aep5Pqax5cGWWBw-yhz79g@mail.gmail.com>
+References: <1461402317-136499-1-git-send-email-Yisen.Zhuang@huawei.com>
+ <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
+ <20160426124847.GA26682@rob-hp-laptop> <57203309.1090501@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ootmdsr3EpGRXR2m"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1461744756-31481-2-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yao.yuan-3arQi8VN3Tc@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57203309.1090501@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Yisen Zhuang <Yisen.zhuang@huawei.com>
+Cc: David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, yankejian <yankejian@huawei.com>, huangdaode <huangdaode@hisilicon.com>, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, Wei Xu <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 26, 2016 at 10:33 PM, Yisen Zhuang <Yisen.zhuang@huawei.com=
+> wrote:
+> Hi Rob and David,
+>
+> Please see my comments inline.
+>
+> David have merged this series to net-next, but we need to modify some=
+ codes according
+> to Rob's comments. I am not sure if i need to send V3 for this series=
+, or separate
+> patches of documentation to independent series and generate a new pat=
+ch for hns base
+> on current net-next?
 
---ootmdsr3EpGRXR2m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That's David's call. I'm guessing he wants follow-up patches on top of =
+these.
 
-On Wed, Apr 27, 2016 at 04:12:35PM +0800, Yuan Yao wrote:
+> =E5=9C=A8 2016/4/26 20:48, Rob Herring =E5=86=99=E9=81=93:
+>> On Sat, Apr 23, 2016 at 05:05:15PM +0800, Yisen Zhuang wrote:
+>>> Because debug dsaf port was separated from service dsaf port, this =
+patch
+>>> updates the related information of DT binding.
+>>
+>> Separated when? New version of the h/w? If so, where's the new
+>> compatible string? This is quite a big binding change.
+>
+> There isn't any change of h/w. I separated debug dsaf port from sevic=
+e dsaf
+> port to make the code more simple and readability.
 
-> At first we use regmap to cover this issue.
-> But the regmap is designed too large and complex.
-> The issue for regmap often effect the DSPI's stability.
+Okay.
 
-I'm not convinced that open coding things is going to make life much
-easier here.  If there's problems in the underlying code then fixing
-those seems like a more generally useful approach to things.  What are
-the actual problems this is intended to fix?
+[...]
 
---ootmdsr3EpGRXR2m
-Content-Type: application/pgp-signature; name="signature.asc"
+>>> +  serdes-syscon rather than this address.
+>>>    The third region is the PPE register base and size.
+>>> -  The fourth region is dsa fabric base register and size.
+>>> -  The fifth region is cpld base register and size, it is not requi=
+red if do not use cpld.
+>>> -- phy-handle: phy handle of physicl port, 0 if not any phy device.=
+ see ethernet.txt [1].
+>>> +  The fourth region is dsa fabric base register and size. It is no=
+t required for
+>>> +  single-port mode.
+>>> +- reg-names: may be ppe-base and(or) dsaf-base. It is used to find=
+ the
+>>> +  corresponding reg's index.
+>>
+>> But you have up to 5 regions.
+>>
+>> The variable nature of what regions you have tells me you need more
+>> specific compatible strings for each chip.
+>
+> we didn't add support of new h/w. We added these regions to make code=
+ simple and readability.
+> If we need to add support of next h/w version next time, we don't nee=
+d to add many branches
+> for these attributes. So we didn't add a new compatible here.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Not sure what you mean by branches. It's fine to put properties for
+things that vary among h/w versions, but new compatible strings will
+be needed for any new versions.
 
-iQEcBAEBCAAGBQJXINnqAAoJECTWi3JdVIfQnxQH+gK813tyzo7pKrDoMvVQLKSc
-Wra2q+IRKTb4F4XfRlvAMmVnHgl1LKn1lXgMWyuBgC2bzYKHPIxdzC7hqSAhvUQs
-BQGUGIPkBvgdubFKTWQTG6ZLevfW7bGW7UYeL/B8y4T4bRiK6CkDvJH5rr2/PHdS
-i6KLIoaQklAOAysknTZBMcbe9ZzGGpf8SdqR0UQ/B+LlcBS0mGXAgIlSOdF/V2NV
-BAVsTDqtNoi2QlfyQIeQh09uEwMdn2mtheKyMfVMmejVN18rgR/uJuu2cI+L9Zdq
-AokfA+B9TN+gKhMetDJfT4EHV3IKbnI2Rr52JeSsd9IOpc1p+GGngd3TWVzir7Y=
-=hoqu
------END PGP SIGNATURE-----
 
---ootmdsr3EpGRXR2m--
+>>> +- port: subnodes of dsaf. A dsaf node may contain several port nod=
+es(Depending
+>>> +  on mode of dsaf). Port node contain some attributes listed below=
+:
+>>> +- port-id: is physical port index in one dsaf.
+>>
+>> Indexes should generally be avoided. What does the number correspond
+>> to in h/w (if anything)?
+>
+> port-id is index for a port in dsaf, it is correspond to index of PHY=
+ showed below.
+
+Okay, you should use reg property here instead.
+
+>
+>                                                          CPU
+>                                                           |
+>                                     ---------------------------------=
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>                                     |                     |          =
+ |
+>     ----------------------------------------------    ---------   ---=
+------
+>     |                         |                  |    |       |   |  =
+ |   |
+>     |                        PPE                 |    |  PPE  |   |  =
+PPE  |
+>     |                         |                  |    |   |   |   |  =
+ |   |
+>     |                         |                  |    |   |   |   |  =
+ |   |
+>     |                      crossbar              |    |   |   |   |  =
+ |   |
+>     |                         |                  |    |   |   |   |  =
+ |   |
+>     |   ----------------------------------       |    |   |   |   |  =
+ |   |
+>     |   |     |     |      |      |      |       |    |   |   |   |  =
+ |   |
+>     |   |     |     |      |      |      |       |    |   |   |   |  =
+ |   |
+>     |  MAC   MAC   MAC    MAC    MAC    MAC      |    |  MAC  |   |  =
+MAC  |
+>     |   |     |     |      |      |      |       |    |   |   |   |  =
+ |   |
+>     ----------------------------------------------    ---------   ---=
+------
+>         |     |     |      |      |      |    \        /  |        / =
+ |
+>        PHY   PHY   PHY    PHY    PHY    PHY    \      /  PHY      /  =
+PHY
+>                                                 \    /           /
+>                                                  \  /           /
+>                                              DSAF(three platform devi=
+ce)
+>
+>>
+>>> +- phy-handle: phy handle of physicl port. It is not required if th=
+ere isn't
+
+Another typo here.
+
+Rob
