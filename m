@@ -1,50 +1,43 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH] of: Add stub for of_get_next_parent()
-Date: Wed, 27 Apr 2016 14:11:40 +0300
-Message-ID: <1461755500-889-1-git-send-email-heikki.krogerus@linux.intel.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] of: Add stub for of_get_next_parent()
+Date: Wed, 27 Apr 2016 13:13:33 +0200
+Message-ID: <5345757.9RfGSJE06M@wuerfel>
+References: <1461755500-889-1-git-send-email-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461755500-889-1-git-send-email-heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=46ixes a compiler error:
-
-drivers/phy/phy-core.c: In function =E2=80=98__of_phy_provider_register=
-=E2=80=99:
-drivers/phy/phy-core.c:848:13: error: implicit declaration of function
-=E2=80=98of_get_next_parent=E2=80=99 [-Werror=3Dimplicit-function-decla=
-ration]
-    parent =3D of_get_next_parent(parent);
-                 ^
-
-=46ixes: 2f7600bc981c ("phy: core: Allow children node to be overridden=
+On Wednesday 27 April 2016 14:11:40 Heikki Krogerus wrote:
+> Fixes a compiler error:
+>=20
+> drivers/phy/phy-core.c: In function =E2=80=98__of_phy_provider_regist=
+er=E2=80=99:
+> drivers/phy/phy-core.c:848:13: error: implicit declaration of functio=
+n
+> =E2=80=98of_get_next_parent=E2=80=99 [-Werror=3Dimplicit-function-dec=
+laration]
+>     parent =3D of_get_next_parent(parent);
+>                  ^
+>=20
+> Fixes: 2f7600bc981c ("phy: core: Allow children node to be overridden=
 ")
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- include/linux/of.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+> Signed-off-by: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index c7292e8..00ab231 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -468,6 +468,12 @@ static inline struct device_node *of_get_parent(co=
-nst struct device_node *node)
- 	return NULL;
- }
-=20
-+static inline struct device_node *of_get_next_parent(
-+	const struct device_node *node)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *of_get_next_child(
- 	const struct device_node *node, struct device_node *prev)
- {
---=20
-2.8.0.rc3
+Yes, this works. I have submitted an alternative patch to fix the
+build error, changing the PHY core to not use any of the OF interfaces
+if CONFIG_OF is disabled.
+
+We can also have both.
+
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
