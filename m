@@ -1,40 +1,38 @@
-From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] support control with using GPIO lines
-Date: Wed, 27 Apr 2016 17:03:19 +0300
-Message-ID: <1461765799.2957.4.camel@gmail.com>
-References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
-	 <20160410151237.GD5377@piout.net> <1460301781.17404.171.camel@gmail.com>
-	 <20160410153855.GG5377@piout.net> <20160412012518.GQ3351@sirena.org.uk>
-	 <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
-	 <20160427135012.GP3217@sirena.org.uk>
+From: Wadim Egorov <w.egorov@phytec.de>
+Subject: Re: Applied "regulator: rk808: remove linear range definitions with a
+ single range" to the regulator tree
+Date: Wed, 27 Apr 2016 16:06:08 +0200
+Message-ID: <5720C750.3050104@phytec.de>
+References: <E1aukkg-0007km-6s@debutante> <2754883.PYP7KbpM33@diego>
+ <57205DC2.7070506@phytec.de> <20160427135048.GQ3217@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160427135012.GP3217-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160427135048.GQ3217@sirena.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, a.zummo@towertech.it, pawel.moll@arm.com, rtc-linux@googlegroups.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, alexandre.belloni@free-electrons.com, dianders@chromium.org, galak@codeaurora.org, zyw@rock-chips.com, lee.jones@linaro.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-04-27 at 14:50 +0100, Mark Brown wrote:
-> On Wed, Apr 27, 2016 at 04:53:18AM +0900, Akinobu Mita wrote:
->=20
-> >=20
-> > For the read data transfer, the address/command byte is sent on the
-> > rising edge of the first eight SCLK cycles and the read data byte
-> > is
-> > transmitted on the falling edge of the next eight SCL cycles.
-> That's an innovative and exciting hardware design :/=C2=A0=C2=A0Defin=
-itely
-> doesn't
-> seem to correspond too closely to any SPI mode I can think of.
 
-DS1302 uses the standard MicroWire half-duplex transfer timing. The
-timing can be handled by eg. PXA270 built-in SPI controller with proper
-configuration.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 27.04.2016 15:50, Mark Brown wrote:
+> On Wed, Apr 27, 2016 at 08:35:46AM +0200, Wadim Egorov wrote:
+>> On 26.04.2016 21:33, Heiko St=FCbner wrote:
+>>> with this patch applied, 4.6.0-rc5-next-20160426 fails to boot on=20
+>>> rk3288-veyron devices with the bug below. Reverting this one patch
+>>> results in the system booting again:
+>> This is because I missed to add the correct ops for LDO_REG3 in this=
+ patch.
+> Any ETA on a fix or should I revert?
+this patch
+
+http://lists.infradead.org/pipermail/linux-rockchip/2016-April/008674.h=
+tml
+
+will fix the issue.
+
+The regulator patches from v4 are based on top of
+commit 4a5ed8c1adc3 ("regulator: rk808: remove unused rk808_reg_ops_ran=
+ges")
