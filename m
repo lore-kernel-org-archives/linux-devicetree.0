@@ -1,96 +1,88 @@
-From: Yisen Zhuang <Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH net-next 3/4] Documentation: Bindings: Update DT binding for hns dsaf node
-Date: Thu, 28 Apr 2016 15:09:03 +0800
-Message-ID: <1461827344-52230-4-git-send-email-Yisen.Zhuang@huawei.com>
-References: <1461827344-52230-1-git-send-email-Yisen.Zhuang@huawei.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH] clk: renesas: r8a7795: Move MODEMR to DT
+Date: Thu, 28 Apr 2016 08:58:05 +0200
+Message-ID: <5721B47D.9030206@de.bosch.com>
+References: <1461823717-22517-1-git-send-email-dirk.behme@de.bosch.com>
+ <CAMuHMdVYtdr8wzm91CH-TAhpbS3E=Jzy67TcjOBC1Q4G9f2bAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461827344-52230-1-git-send-email-Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieqianqian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVYtdr8wzm91CH-TAhpbS3E=Jzy67TcjOBC1Q4G9f2bAA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, linux-renesas-soc@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Oleksij Rempel <linux@rempel-privat.de>, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch changes property port-id to reg in dsaf port node,
-removes property cpld-ctrl-reg, and fixes some typos.
+Hi Geert,
 
-Signed-off-by: Yisen Zhuang <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/net/hisilicon-hns-dsaf.txt | 28 ++++++++++------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+On 28.04.2016 08:52, Geert Uytterhoeven wrote:
+> Hi Dirk,
+>
+> On Thu, Apr 28, 2016 at 8:08 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+>> From: Oleksij Rempel <linux@rempel-privat.de>
+>>
+>> Map the Mode Monitor Register via the device tree instead of
+>> hard coding it in the code. This makes the mapping known to the
+>> device tree.
+>>
+>> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+>> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
+>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+>> ---
+>>   .../devicetree/bindings/clock/renesas,cpg-mssr.txt |  9 ++++++---
+>>   arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  4 +++-
+>>   drivers/clk/renesas/r8a7795-cpg-mssr.c             | 22 +++-------------------
+>>   drivers/clk/renesas/renesas-cpg-mssr.c             | 19 ++++++++++++++-----
+>>   drivers/clk/renesas/renesas-cpg-mssr.h             |  2 +-
+>>   5 files changed, 27 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+>> index fefb802..7984485 100644
+>> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+>> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+>> @@ -15,8 +15,10 @@ Required Properties:
+>>     - compatible: Must be one of:
+>>         - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC
+>>
+>> -  - reg: Base address and length of the memory resource used by the CPG/MSSR
+>> -    block
+>> +  - reg:
+>> +    - 0: Base address and length of the memory resource used by the CPG/MSSR
+>> +         block.
+>> +    - 1: Mode Monitor Register.
+>>
+>>     - clocks: References to external parent clocks, one entry for each entry in
+>>       clock-names
+>> @@ -46,7 +48,8 @@ Examples
+>>
+>>          cpg: clock-controller@e6150000 {
+>>                  compatible = "renesas,r8a7795-cpg-mssr";
+>> -               reg = <0 0xe6150000 0 0x1000>;
+>> +               reg = <0 0xe6150000 0 0x1000>,
+>> +                     <0 0xe6160060 0 0x4>;
+>
+> The MODEMR register is not part of the CPG block, but of the RST block.
+> So IMHO it doesn't belong in the clock-controller node.
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-index 5ccd4f0..d4b7f2e 100644
---- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-@@ -13,10 +13,10 @@ Required properties:
- - interrupts: should contain the DSA Fabric and rcb interrupt.
- - reg: specifies base physical address(es) and size of the device registers.
-   The first region is external interface control register base and size(optional,
--  only be used when subctrl-syscon is not exists). It is recommended using
-+  only used when subctrl-syscon does not exist). It is recommended using
-   subctrl-syscon rather than this address.
--  The second region is SerDes base register and size(optional, only be used when
--  serdes-syscon in port node is not exists. It is recommended using
-+  The second region is SerDes base register and size(optional, only used when
-+  serdes-syscon in port node does not exist). It is recommended using
-   serdes-syscon rather than this address.
-   The third region is the PPE register base and size.
-   The fourth region is dsa fabric base register and size. It is not required for
-@@ -24,8 +24,8 @@ Required properties:
- - reg-names: may be ppe-base and(or) dsaf-base. It is used to find the
-   corresponding reg's index.
- 
--- phy-handle: phy handle of physicl port, 0 if not any phy device. It is optional
--  attribute. If port node is exists, phy-handle in each port node will be used.
-+- phy-handle: phy handle of physical port, 0 if not any phy device. It is optional
-+  attribute. If port node exists, phy-handle in each port node will be used.
-   see ethernet.txt [1].
- - subctrl-syscon: is syscon handle for external interface control register.
- - reset-field-offset: is offset of reset field. Its value depends on the hardware
-@@ -35,14 +35,12 @@ Required properties:
- 
- - port: subnodes of dsaf. A dsaf node may contain several port nodes(Depending
-   on mode of dsaf). Port node contain some attributes listed below:
--- port-id: is physical port index in one dsaf.
--- phy-handle: phy handle of physicl port. It is not required if there isn't
-+- reg: is physical port index in one dsaf.
-+- phy-handle: phy handle of physical port. It is not required if there isn't
-   phy device. see ethernet.txt [1].
- - serdes-syscon: is syscon handle for SerDes register.
--- cpld-syscon: is syscon handle for cpld register. It is not required if there
--  isn't cpld device.
--- cpld-ctrl-reg: is cpld register offset. It is not required if there isn't
--  cpld-syscon.
-+- cpld-syscon: is syscon handle + register offset pair for cpld register. It is
-+  not required if there isn't cpld device.
- - port-rst-offset: is offset of reset field for each port in dsaf. Its value
-   depends on the hardware user manual.
- - port-mode-offset: is offset of port mode field for each port in dsaf. Its
-@@ -72,14 +70,14 @@ dsaf0: dsa@c7000000 {
- 	desc-num = <1024>;
- 	dma-coherent;
- 
--	prot@0 {
--		port-id = 0;
-+	port@0 {
-+		reg = 0;
- 		phy-handle = <&phy0>;
- 		serdes-syscon = <&serdes>;
- 	};
- 
--	prot@1 {
--                port-id = 1;
-+	port@1 {
-+                reg = 1;
-                 serdes-syscon = <&serdes>;
-         };
- };
--- 
-1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, fine.
+
+So we agree hat this ugly hard coded register address stuff has to be 
+removed and replaced by a device tree based solution. Correct?
+
+
+> BTW, I still prefer something like
+> "[PATCH 0/6] arm64: renesas: Obtain MD pin values using syscon/regmap"
+> (http://www.spinics.net/lists/linux-sh/msg44757.html).
+
+
+What's the status of this? I see there a date "1 Sep 2015" ;)
+
+Is this available in any testing tree we could try?
+
+
+Best regards
+
+Dirk
