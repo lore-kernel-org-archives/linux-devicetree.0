@@ -1,71 +1,58 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Thu, 28 Apr 2016 14:46:07 +0200
-Message-ID: <20160428144607.191a29f2@bbrezillon>
-References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
-	<CACh+v5OO+UQ_EiWVyewdMHnMB-p3nd6N=R5P7K4V_4=ymy-YuQ@mail.gmail.com>
-	<20160428104925.7eb12ca2@bbrezillon>
-	<CACh+v5Mi2Qd58SZkwW0mZ3ZJx3Rv3mwSkRqzgHwBTxpUbwjVFQ@mail.gmail.com>
+From: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device
+ trees
+Date: Thu, 28 Apr 2016 14:52:13 +0200
+Message-ID: <m3wpnhrj42.fsf@euphor.blino.org>
+References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
+ <1454571364-24708-2-git-send-email-lkundrak@v3.sk>
+ <56B572D8.9030701@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACh+v5Mi2Qd58SZkwW0mZ3ZJx3Rv3mwSkRqzgHwBTxpUbwjVFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <56B572D8.9030701-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> (Stephen Warren's message of
+ "Fri, 5 Feb 2016 21:13:12 -0700")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
+List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Apr 2016 14:18:25 +0200
-Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org> wrote:
-> >> > +
-> >> > +- atmel,ncs-rd-setup-ns
-> >> > +- atmel,nrd-setup-ns
-> >> > +- atmel,ncs-wr-setup-ns
-> >> > +- atmel,nwe-setup-ns
-> >> > +- atmel,ncs-rd-pulse-ns
-> >> > +- atmel,nrd-pulse-ns
-> >> > +- atmel,ncs-wr-pulse-ns
-> >> > +- atmel,nwe-pulse-ns
-> >> > +- atmel,nwe-cycle-ns
-> >> > +- atmel,nrd-cycle-ns
-> >> > +- atmel,tdf-ns  
-> >>
-> >> One thought about the configuration in 'ns' unit: Some devices may
-> >> have requirements expressed in clock cycles (I'm thinking of FPGA
-> >> here). At  a fixed frequency one can always convert manually from 'ns'
-> >> to 'clocks' but it's a bit tedious and prone to rounding errors. And
-> >> It 'll  break when the EBI frequency is changed  
-> >
-> > If you don't mind, I'd like to first get this version accepted, and
-> > we'll extend it with timings expressed in clock cycles afterward.
-> >
-> > BTW, could you describe a real use case where timings should be
-> > expressed in clock cycles? I mean, usually the devices have some timing
-> > constraints (tXX_min = Y ns), and I don't see why it would differ for
-> > FPGA interfaces, but I'm clearly not an FPGA expert.  
-> 
-> I'm not either, I only toyed with FPGA. That's just what experienced
-> FPGA designer told me.
-> I guess that it boils down to: FPGA are more suited for a synchronous
-> design than an asynchronous one.
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 
-The thing is, all the timings are based on the master clock, and,
-AFAICS, this clk signal is not exposed, so you're basing your clk-cycle
-based timings on something that can change depending on how the
-bootstrap/bootloader decided to configure the master clk.
+> On 02/04/2016 12:36 AM, Lubomir Rintel wrote:
+>> The hub and the ethernet in its port 1 are hardwired on the board.
+>> 
+>> Compared to the adapters that can be plugged into the USB ports, this
+>> one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+>> has the MAC address for this adapter in its ROM, accessible from its
+>> firmware.
+>> 
+>> U-Boot can read out the address and set the local-mac-address property of the
+>> node with "ethernet" alias. Let's add the node so that U-Boot can do its
+>> business.
+>> 
+>> Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+>> pid/vid pair for the Version 2 was provided by Olivier Blin. Original
+>> Model B is a blind short, though very likely correct.
+>
+> The series,
+> Tested-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>
+> A few nits though...
+[...]
 
-One option would be to define one of the timing as the reference,
-define this one in nanosecond, and define the other ones as multiple of
-the reference timing. But I'm not sure it's easier to do that than
-defining all the timings directly in nanoseconds.
+Is this still being queued in some tree?
+Or does it need more fixes and a resubmit?
+
+Without this, Raspberry Pi devices boot with a random MAC address.
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Olivier Blin - blino
