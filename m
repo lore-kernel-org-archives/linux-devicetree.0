@@ -1,44 +1,61 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v4 2/4] ARM64: dts: rockchip: add core dtsi file for
- RK3399 SoCs
-Date: Thu, 28 Apr 2016 09:03:53 -0700
-Message-ID: <20160428160353.GA95284@google.com>
-References: <1461743693-10671-1-git-send-email-jay.xu@rock-chips.com>
- <1461743693-10671-3-git-send-email-jay.xu@rock-chips.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device
+ trees
+Date: Thu, 28 Apr 2016 18:26:12 +0200
+Message-ID: <572239A4.3030100@i2se.com>
+References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
+ <1454571364-24708-2-git-send-email-lkundrak@v3.sk>
+ <56B572D8.9030701@wwwdotorg.org> <m3wpnhrj42.fsf@euphor.blino.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461743693-10671-3-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianqun Xu <jay.xu@rock-chips.com>
-Cc: lintao@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, heiko@sntech.de, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <m3wpnhrj42.fsf-sb2orAewljU5LtT840wCHw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko, Jianqun,
+Hi Olivier
 
-On Wed, Apr 27, 2016 at 03:54:51PM +0800, Jianqun Xu wrote:
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> new file mode 100644
-> index 0000000..5a8a915
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -0,0 +1,1022 @@
-[...]
-> +	sdhci: sdhci@fe330000 {
-> +		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
+Am 28.04.2016 um 14:52 schrieb Olivier Blin:
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+>
+>> On 02/04/2016 12:36 AM, Lubomir Rintel wrote:
+>>> The hub and the ethernet in its port 1 are hardwired on the board.
+>>>
+>>> Compared to the adapters that can be plugged into the USB ports, this
+>>> one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+>>> has the MAC address for this adapter in its ROM, accessible from its
+>>> firmware.
+>>>
+>>> U-Boot can read out the address and set the local-mac-address property of the
+>>> node with "ethernet" alias. Let's add the node so that U-Boot can do its
+>>> business.
+>>>
+>>> Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+>>> pid/vid pair for the Version 2 was provided by Olivier Blin. Original
+>>> Model B is a blind short, though very likely correct.
+>> The series,
+>> Tested-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>
+>> A few nits though...
+> [...]
+>
+> Is this still being queued in some tree?
+> Or does it need more fixes and a resubmit?
 
-Not to rain on the parade too much, as this is already applied, but is
-the "rockchip,rk3399-sdhci-5.1" string documented anywhere? I don't see
-it.
+Yes, a V3 should address the comments from Peter and Stephen.
 
-> +		reg = <0x0 0xfe330000 0x0 0x10000>;
-> +		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
-> +		clock-names = "clk_xin", "clk_ahb";
-> +		status = "disabled";
-> +	};
+Regards
+Stefan
 
-[...]
+>
+> Without this, Raspberry Pi devices boot with a random MAC address.
+>
 
-Brian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
