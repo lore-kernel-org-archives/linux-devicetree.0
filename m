@@ -1,7 +1,7 @@
 From: Yisen Zhuang <Yisen.Zhuang@huawei.com>
-Subject: [PATCH net-next 1/4] net: hns: remove cpld-ctrl-reg and add cell in the cpld-syscon property
-Date: Thu, 28 Apr 2016 15:09:01 +0800
-Message-ID: <1461827344-52230-2-git-send-email-Yisen.Zhuang@huawei.com>
+Subject: [PATCH net-next 2/4] net: hns: change port-id property to reg property in dsaf port node
+Date: Thu, 28 Apr 2016 15:09:02 +0800
+Message-ID: <1461827344-52230-3-git-send-email-Yisen.Zhuang@huawei.com>
 References: <1461827344-52230-1-git-send-email-Yisen.Zhuang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,61 +12,36 @@ To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.i
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, will.deacon@arm.com, catalin.marinas@arm.com, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Because cpld-ctrl-reg property is offset base on cpld-syscon property,
-we make it as a cell in the cpld-syscon property.
+Indexes should generally be avoided. So we use reg rather than port-id to
+index ports.
 
 Signed-off-by: Yisen Zhuang <yisen.zhuang@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c | 26 ++++++++++++-----------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
-index 1c8fdd3..210ba89 100644
+index 210ba89..611581f 100644
 --- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
 +++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
-@@ -647,6 +647,7 @@ static int  hns_mac_get_info(struct hns_mac_cb *mac_cb)
- {
- 	struct device_node *np = mac_cb->dev->of_node;
- 	struct regmap *syscon;
-+	struct of_phandle_args cpld_args;
- 	u32 ret;
+@@ -834,15 +834,15 @@ int hns_mac_init(struct dsaf_device *dsaf_dev)
+ 	struct fwnode_handle *child;
  
- 	mac_cb->link = false;
-@@ -713,22 +714,23 @@ static int  hns_mac_get_info(struct hns_mac_cb *mac_cb)
- 			mac_cb->mac_id);
- 	}
- 
--	syscon = syscon_node_to_regmap(
--			of_parse_phandle(to_of_node(mac_cb->fw_port),
--					 "cpld-syscon", 0));
--	if (IS_ERR_OR_NULL(syscon)) {
--		dev_dbg(mac_cb->dev, "no cpld-syscon found!\n");
-+	ret = of_parse_phandle_with_fixed_args(to_of_node(mac_cb->fw_port),
-+					       "cpld-syscon", 1, 0, &cpld_args);
-+	if (ret) {
-+		dev_dbg(mac_cb->dev, "mac%d no cpld-syscon found.\n",
-+			mac_cb->mac_id);
- 		mac_cb->cpld_ctrl = NULL;
- 	} else {
--		mac_cb->cpld_ctrl = syscon;
--		ret = fwnode_property_read_u32(mac_cb->fw_port,
--					       "cpld-ctrl-reg",
--					       &mac_cb->cpld_ctrl_reg);
--		if (ret) {
--			dev_err(mac_cb->dev, "get cpld-ctrl-reg fail!\n");
--			return ret;
-+		syscon = syscon_node_to_regmap(cpld_args.np);
-+		if (IS_ERR_OR_NULL(syscon)) {
-+			dev_dbg(mac_cb->dev, "no cpld-syscon found!\n");
-+			mac_cb->cpld_ctrl = NULL;
-+		} else {
-+			mac_cb->cpld_ctrl = syscon;
-+			mac_cb->cpld_ctrl_reg = cpld_args.args[0];
+ 	device_for_each_child_node(dsaf_dev->dev, child) {
+-		ret = fwnode_property_read_u32(child, "port-id", &port_id);
++		ret = fwnode_property_read_u32(child, "reg", &port_id);
+ 		if (ret) {
+ 			dev_err(dsaf_dev->dev,
+-				"get port-id fail, ret=%d!\n", ret);
++				"get reg fail, ret=%d!\n", ret);
+ 			return ret;
  		}
- 	}
-+
- 	return 0;
- }
- 
+ 		if (port_id >= max_port_num) {
+ 			dev_err(dsaf_dev->dev,
+-				"port-id(%u) out of range!\n", port_id);
++				"reg(%u) out of range!\n", port_id);
+ 			return -EINVAL;
+ 		}
+ 		mac_cb = devm_kzalloc(dsaf_dev->dev, sizeof(*mac_cb),
 -- 
 1.9.1
