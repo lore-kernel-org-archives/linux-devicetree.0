@@ -1,41 +1,46 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: am57xx-beagle-x15: Include the commercial grade thresholds
-Date: Thu, 28 Apr 2016 15:20:01 +0530
-Message-ID: <1461837002-10393-4-git-send-email-j-keerthy@ti.com>
-References: <1461837002-10393-1-git-send-email-j-keerthy@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 3/6] slimbus: Add messaging APIs to slimbus framework
+Date: Thu, 28 Apr 2016 11:52:40 +0200
+Message-ID: <3946038.VbkgOjgKu3@wuerfel>
+References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org> <1461801489-16254-4-git-send-email-sdharia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461837002-10393-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461801489-16254-4-git-send-email-sdharia@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sagar Dharia <sdharia@codeaurora.org>
+Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-am57xx-beagle-x15 have commercial grade samples whose
-thermal thresholds lower than dra7. Hence correcting the same.
+On Wednesday 27 April 2016 17:58:06 Sagar Dharia wrote:
 
-Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am57xx-beagle-x15.dts | 1 +
- 1 file changed, 1 insertion(+)
+> +	ctrl->tx.base = dma_alloc_coherent(ctrl->dev.parent,
+> +					   (ctrl->tx.sl_sz * ctrl->tx.n),
+> +					   &ctrl->tx.phy, GFP_KERNEL);
+> +	if (!ctrl->tx.base) {
+> +		ret = -ENOMEM;
+> +		goto tx_alloc_failed;
+> +	}
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index f0a0efb..f6904f6 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include "dra74x.dtsi"
-+#include "am57xx-commercial-grade.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
--- 
-1.9.1
+This looks controller specific, and hints that some parts of the "common"
+framework should actually be part of the controller driver instead.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In particular, the use of "ctrl->dev.parent" suggests that this should
+have been allocated by the controller.
+
+> @@ -162,6 +279,15 @@ struct slim_controller {
+>  	struct slim_addrt	*addrt;
+>  	u8			num_dev;
+>  	struct workqueue_struct *wq;
+> +	struct slim_val_inf	*tid_tbl[SLIM_MAX_TIDS];
+> +	u8			last_tid;
+> +	spinlock_t		txn_lock;
+> +	struct slim_ctrl_buf	tx;
+> +	struct slim_ctrl_buf	rx;
+> +	struct slim_pending	*pending_wr;
+> +	struct semaphore	tx_sem;
+
+Please try to avoid the use of semaphores in new code.
+
+	Arnd
