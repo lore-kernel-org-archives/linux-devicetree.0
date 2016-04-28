@@ -1,45 +1,71 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARC: [axs10x] Specify reserved memory for frame
- buffer
-Date: Thu, 28 Apr 2016 14:38:18 +0000
-Message-ID: <1461854287.3673.50.camel@synopsys.com>
-References: <1461767701-12208-1-git-send-email-abrodkin@synopsys.com>
-	 <1461767701-12208-3-git-send-email-abrodkin@synopsys.com>
-	 <572190F3.3020709@synopsys.com> <1461851171.3673.30.camel@synopsys.com>
-	 <57221693.50401@synopsys.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
+Date: Thu, 28 Apr 2016 15:38:01 +0100
+Message-ID: <20160428143801.GO3217@sirena.org.uk>
+References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
+ <2692115.H6acsZmTjn@wuerfel>
+ <20160428115337.GN3217@sirena.org.uk>
+ <7478716.z4vdp0mVTA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-7"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57221693.50401-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <F74F07A8709EE74DA042D6BC2E076308-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CIaS999JRh1EGVx5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7478716.z4vdp0mVTA@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sagar Dharia <sdharia@codeaurora.org>, gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vineet,
 
-On Thu, 2016-04-28 at 19:26 +-0530, Vineet Gupta wrote:
-+AD4- On Thursday 28 April 2016 07:16 PM, Alexey Brodkin wrote:
-+AD4- +AD4- 
-+AD4- +AD4- +AD4- 
-+AD4- +AD4- +AD4- +AD4- 
-+AD4- +AD4- +AD4- +AD4- Note that the IOC start alignment needs to follow
-+AD4- +AD4- +AD4- +AD4- max(4k, size). What will be maximum size of frame buffer - 16M always +ACE-
-+AD4- +AD4- What do you mean by that?
-+AD4- For HS38, we intend to bypass the frame buffer traffic from IOC port. So the frame
-+AD4- buffer start needs to be inside the IOC aperture base address. That value can't be
-+AD4- arbitrary - it is atleast 4K aligned value and further also needs to be aligned to
-+AD4- the size of aperture. So if the size is 16M it needs to be 16M aligned etc...
+--CIaS999JRh1EGVx5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The point is we want to put frame buffer memory OUTSIDE IOC aperture.
-So we allocate FB memory in the very end of DDR which is far away from IOC.
+On Thu, Apr 28, 2016 at 02:33:41PM +0200, Arnd Bergmann wrote:
+> On Thursday 28 April 2016 12:53:37 Mark Brown wrote:
+> > On Thu, Apr 28, 2016 at 12:00:26PM +0200, Arnd Bergmann wrote:
 
-And in that case IOC alignment issues are out of the question here.
+> > > This looks like an artifact of ancient pre-DT times. I'd say kill it off before
+> > > someone starts using it.
 
--Alexey--
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Not every architecture uses DT, and even on architectures with DT
+> > support it isn't always the only firmware.  In this specific case it's
+> > questionable how many people are going to implement Slimbus at this
+> > point but in general insisting that we go DT only doesn't seem great.
+
+> Nothing wrong with adding support for manual board files later if
+> we have a good reason for it, but at the moment, this seems completely
+> ARM/ARM64 specific.
+
+It's not in theory, but in practice nobody other that Qualcomm is ever
+likely to release a controller.
+
+> I don't foresee mobile phones with ACPI using this subsystem, but even
+> if we got them, it would be a horrible idea to use hardcoded board
+> specific tables in a platform file, and we should insist that whatever
+> firmware is present has a way to describe the slimbus devices.
+
+Right, in this particular case I don't think it makes a huge difference
+but what you were talking about was "ancient pre-DT times" rather than
+something specific to this particular case.  That's definitely a thing
+that people keep thinking and it's good to push back on it since we do
+have non-DT cases to worry about (some architectures, other firmwares,
+things like PCI cards with other components on them and so on).
+
+--CIaS999JRh1EGVx5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXIiBIAAoJECTWi3JdVIfQeJoH/3zXqbIT+UR/hgabRS5CoAH1
+hqewVtNkBcDbY9EE/6OEcbiXQbj2hU7HYqgjG/1HIH0U17DC4gURqhslB/5PNl9r
+Ejq1Z7eGI/7tYKy0VxtVrojzGDQ6u8CknvxsBHDuXwCtCGV2W17I+wAEBdw00J6A
+i89eBpChQmgIlqNUKVhMBNNHZj7zIBvq1ywGWSjr5xmAlA2OXqe6hHdTfgsHhmuv
+1ngQ7CXwCq1j3EnrdPQ1oML5uUsBbNaB9L7A/v2qDoza0PC0wyrDbx8ej0HJVyYP
+CcYvMo3nylPSsf4cguKO1IvGqjOuft4T8OPMfH/1Dnh+G0vpwd3eMTAQoVzBAn4=
+=oejk
+-----END PGP SIGNATURE-----
+
+--CIaS999JRh1EGVx5--
