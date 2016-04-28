@@ -1,84 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [Patch v2 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Thu, 28 Apr 2016 15:47:49 -0500
-Message-ID: <20160428204749.GA12941@rob-hp-laptop>
-References: <1461625725-32425-1-git-send-email-andy.gross@linaro.org>
- <1461625725-32425-2-git-send-email-andy.gross@linaro.org>
- <20160426014906.GH29990@codeaurora.org>
- <CAPBZ5QceWcTCTJSnp-OpoeK_YdV8DOWe+569+6yXpSWhR243Og@mail.gmail.com>
+Subject: Re: [PATCH v8 1/2] dt: bindings: add MARVELL's bt-sd8xxx wireless
+ device
+Date: Thu, 28 Apr 2016 15:50:14 -0500
+Message-ID: <20160428205014.GA4893@rob-hp-laptop>
+References: <1461679047-22631-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPBZ5QceWcTCTJSnp-OpoeK_YdV8DOWe+569+6yXpSWhR243Og@mail.gmail.com>
+In-Reply-To: <1461679047-22631-1-git-send-email-akarwar@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>
+To: Amitkumar Karwar <akarwar@marvell.com>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 25, 2016 at 09:14:59PM -0500, Andy Gross wrote:
-> On 25 April 2016 at 20:49, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > On 04/25, Andy Gross wrote:
-> >> This patch adds the device tree support for the Qualcomm SCM firmware.
-> >>
-> >> Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> >> ---
-> >>  .../devicetree/bindings/firmware/qcom,scm.txt      | 28 ++++++++++++++++++++++
-> >>  1 file changed, 28 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> >> new file mode 100644
-> >> index 0000000..a679a87
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> >> @@ -0,0 +1,28 @@
-> >> +QCOM Secure Channel Manager (SCM)
-> >> +
-> >> +Qualcomm processors include an interface to communicate to the secure firmware.
-> >> +This interface allows for clients to request different types of actions.  These
-> >> +can include CPU power up/down, HDCP requests, loading of firmware, and other
-> >> +assorted actions.
-> >> +
-> >> +Required properties:
-> >> +- compatible: must contain one of the following:
-> >> + * "qcom,scm-apq8064" for APQ8064
-> >> + * "qcom,scm-apq8084" for APQ8084
-> >> + * "qcom,scm-msm8916" for MSM8916
-> >> + * "qcom,scm-msm8974" for MSM8974
-> >
-> > Do we need to keep adding these into the driver for every SoC
-> > that we support? My understanding is apq8064 can be the one that
-> > requires one clk, and msm8974 can be the one that requires three.
-> > The driver can just have those two compatibles for now, and we
-> > can keep adding compatibles here for the different SoCs, but
-> > really we don't care, that's just to save ourselves if something
-> > pops up and needs a workaround.
-> >
-> > It will certainly look weird if it's firmware that's compatible
-> > with qcom,scm-msm8974 but on an apq8084, so perhaps something
-
-Not if the first string has apq8084.
-
-> > more generic like, qcom-scm-v1 and qcom,scm-v2 can be used as the
-> > generic compatible in the driver:
-> >
-> >         compatible = "qcom,scm-apq8064", "qcom,scm-v1";
-> >
-> >         vs.
-> >
-> >         compatible = "qcom,scm-apq8084", "qcom,scm-v2";
-> >
-> > ?
-> >
-> > I just want to avoid the constant SoC churn update here if we can.
+On Tue, Apr 26, 2016 at 06:57:26AM -0700, Amitkumar Karwar wrote:
+> From: Xinming Hu <huxm@marvell.com>
 > 
-> Right.  We can certainly do it that way.  Its just that the v1/v2
-> aren't the real versions.  What if we did qcom,scm vs
-> qcom,scm-apq8064?
+> Add device tree binding documentation for MARVELL's bluetooth sdio
+> (sd8897 and sd8997) chip.
+> 
+> Signed-off-by: Xinming Hu <huxm@marvell.com>
+> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
+> ---
+> Listing changelist for both 1/2 and 2/2 here
+> v2: Fixed build error reported by kbuild test robot
+> drivers/bluetooth/btmrvl_platform.c:141:22: error:
+> 'btmrvl_plt_pm_ops' undeclared here (not in a function)
+> 
+> v3: Add NULL check for 'btmrvl_plt_dev'
+> 
+> v4: Moved the bindings file to bindings/net/
+>     Corrected the name of 'name' and 'compatible' properties(Rob Herring)
+> 
+> v5: Comments for wlan patches were applicable here as well. Like all binding
+>     changes in single file, specifying node as a child of SDIO controller.
+> 
+> v6: a)Use <chip>-bt order for compatible attribute(Rob Herring)
+>     b)Split wakeuppin-gap to wakeup-pin and wakeup-gap(Rob Herring) 
+>     c)Use sdio function number for both the unit address and reg(Rob Herring)
+> 
+> v7: a)Use suggested vendor name and generic node name(Rob Herring)
+> v8: a)Nodes are renamed as per suggestions from Rob Herring
+>       btmrvl,* -> marvell,*
+>       "wakeup-gap-msec" -> "wakeup-gap-ms"
+> ---
+>  Documentation/devicetree/bindings/btmrvl.txt       | 29 -----------
+>  .../devicetree/bindings/net/marvell-bt-sd8xxx.txt  | 56 ++++++++++++++++++++++
+>  2 files changed, 56 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/btmrvl.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
 
-I'd prefer this over fake version numbers.
+Thanks for getting this old binding fixed.
 
-Is there any sane versioning of the firmware itself that could be used?
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
