@@ -1,74 +1,62 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 1/2] ARM: bcm2835: dt: Add the ethernet to the device
- trees
-Date: Thu, 28 Apr 2016 18:29:47 +0200
-Message-ID: <1461860987.3780.24.camel@v3.sk>
-References: <1454571364-24708-1-git-send-email-lkundrak@v3.sk>
-	 <1454571364-24708-2-git-send-email-lkundrak@v3.sk>
-	 <56B572D8.9030701@wwwdotorg.org> <m3wpnhrj42.fsf@euphor.blino.org>
-	 <572239A4.3030100@i2se.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
+Date: Thu, 28 Apr 2016 17:39:20 +0100
+Message-ID: <20160428163919.GP3217@sirena.org.uk>
+References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
+ <7478716.z4vdp0mVTA@wuerfel>
+ <20160428143801.GO3217@sirena.org.uk>
+ <5047442.UXEhPc2Isi@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <572239A4.3030100@i2se.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Olivier Blin <dev@blino.org>, eric@anholt.net
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Peter Chen <peter.chen@freescale.com>, linux-rpi-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="G2OYmj9cSczDaGGa"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5047442.UXEhPc2Isi@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sagar Dharia <sdharia@codeaurora.org>, gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-04-28 at 18:26 +0200, Stefan Wahren wrote:
-> Hi Olivier
-> 
-> Am 28.04.2016 um 14:52 schrieb Olivier Blin:
-> > 
-> > Stephen Warren <swarren@wwwdotorg.org> writes:
-> > 
-> > > 
-> > > On 02/04/2016 12:36 AM, Lubomir Rintel wrote:
-> > > > 
-> > > > The hub and the ethernet in its port 1 are hardwired on the
-> > > > board.
-> > > > 
-> > > > Compared to the adapters that can be plugged into the USB
-> > > > ports, this
-> > > > one has no serial EEPROM to store its MAC. Nevertheless, the
-> > > > Raspberry Pi
-> > > > has the MAC address for this adapter in its ROM, accessible
-> > > > from its
-> > > > firmware.
-> > > > 
-> > > > U-Boot can read out the address and set the local-mac-address
-> > > > property of the
-> > > > node with "ethernet" alias. Let's add the node so that U-Boot
-> > > > can do its
-> > > > business.
-> > > > 
-> > > > Model B rev2 and Model B+ entries were verified by me, the
-> > > > hierarchy and
-> > > > pid/vid pair for the Version 2 was provided by Olivier Blin.
-> > > > Original
-> > > > Model B is a blind short, though very likely correct.
-> > > The series,
-> > > Tested-by: Stephen Warren <swarren@wwwdotorg.org>
-> > > 
-> > > A few nits though...
-> > [...]
-> > 
-> > Is this still being queued in some tree?
-> > Or does it need more fixes and a resubmit?
-> Yes, a V3 should address the comments from Peter and Stephen.
 
-I'll follow up with an updated patch set.
+--G2OYmj9cSczDaGGa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sorry for the delay.
+On Thu, Apr 28, 2016 at 04:59:02PM +0200, Arnd Bergmann wrote:
 
-> 
-> Regards
-> Stefan
-> 
-> > 
-> > 
-> > Without this, Raspberry Pi devices boot with a random MAC address.
-> > 
-> 
+> My comment this time was for the particular driver, but I'd
+> still also maintain that a new subsystem in general should not
+> start out by addressing the needs of traditional board files.
+
+I certainly wouldn't insist that people add it but equally pushing to
+remove it too strongly seems like the wrong thing, at least as a general
+comment rather than a specific one.
+
+> I don't think we have merge new platform support on any
+> architecture that would need this in the past years and
+> stuff like spi_board_info and i2c_board_info is only really
+> used on really old machines (but not going away any time soon
+> either).
+
+It's not just platforms that use these things though - there's things
+like the SolarFlare NICs where the firmware update mechanism essentially
+involves exposing a SPI flash as part of a PCI device and we just merged
+an ASoC driver for a video card which was reusing some existing IPs and
+chips.
+
+--G2OYmj9cSczDaGGa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXIjy2AAoJECTWi3JdVIfQpX0H/2/k7KR977h4R+3jQpwnFVa/
+b7gzMID4BqGqc9kU4yW4K7Q7JSMnDn1XEi20Nz5W7qisuDYCRUUgql3pTBuNJswE
+deV0Srlclz/3G1aSIb7XvKlNb4eG819RQ2dfZqpjiQJbYHE9K0ZiL+A3EED/vigm
+JwTEqr4vQz7dwkuVLbLGTz/A7AxSsQivNTbpbdjaGBEfPuuFzu/neyjHJB0YDQaP
+ZClj73ghlTST8G5ZiaNJR36ZVG1JVG/vlwR0FM1hSLe281I/fpVt4RdWmg59KSFC
+kPX4fwctZmv2d85me+v9ojCQrbRjpNHwDbucCMHJXUvs+utnH4nr6FAlhiYNxf0=
+=Dzq9
+-----END PGP SIGNATURE-----
+
+--G2OYmj9cSczDaGGa--
