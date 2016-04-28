@@ -1,81 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
-Date: Thu, 28 Apr 2016 12:00:26 +0200
-Message-ID: <2692115.H6acsZmTjn@wuerfel>
-References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org> <1461801489-16254-2-git-send-email-sdharia@codeaurora.org>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH RESEND 1/4] ARM: dts: am57xx: Introduce commercial grade thermal thresholds
+Date: Thu, 28 Apr 2016 15:35:46 +0530
+Message-ID: <1461837949-11116-2-git-send-email-j-keerthy@ti.com>
+References: <1461837949-11116-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1461801489-16254-2-git-send-email-sdharia@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sagar Dharia <sdharia@codeaurora.org>
-Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461837949-11116-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 April 2016 17:58:04 Sagar Dharia wrote:
+The silicon versions which are non ES2.0 are commercial grade silicon
+and have lower thermal thresholds.
 
-> +/**
-> + * slim_driver_register: Client driver registration with slimbus
-> + * @drv:Client driver to be associated with client-device.
-> + * This API will register the client driver with the slimbus
-> + * It is called from the driver's module-init function.
-> + */
-> +int slim_driver_register(struct slim_driver *drv)
-> +{
-> +	drv->driver.bus = &slimbus_type;
-> +
-> +	return driver_register(&drv->driver);
-> +}
-> +EXPORT_SYMBOL_GPL(slim_driver_register);
+Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am57xx-commercial-grade.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am57xx-commercial-grade.dtsi
 
-Please make this use the same trick as platform_driver_register() to implicitly
-set the .owner field of the driver to THIS_MODULE.
+diff --git a/arch/arm/boot/dts/am57xx-commercial-grade.dtsi b/arch/arm/boot/dts/am57xx-commercial-grade.dtsi
+new file mode 100644
+index 0000000..c183654
+--- /dev/null
++++ b/arch/arm/boot/dts/am57xx-commercial-grade.dtsi
+@@ -0,0 +1,23 @@
++&cpu_alert0 {
++	temperature = <80000>; /* milliCelsius */
++};
++
++&cpu_crit {
++	temperature = <90000>; /* milliCelsius */
++};
++
++&gpu_crit {
++	temperature = <90000>; /* milliCelsius */
++};
++
++&core_crit {
++	temperature = <90000>; /* milliCelsius */
++};
++
++&dspeve_crit {
++	temperature = <90000>; /* milliCelsius */
++};
++
++&iva_crit {
++	temperature = <90000>; /* milliCelsius */
++};
+-- 
+1.9.1
 
-> +/**
-> + * slim_add_device: Add a new device without register board info.
-> + * @ctrl: Controller to which this device is to be added to.
-> + * Called when device doesn't have an explicit client-driver to be probed, or
-> + * the client-driver is a module installed dynamically.
-> + */
-> +int slim_add_device(struct slim_controller *ctrl, struct slim_device *sbdev)
-
-This looks like an artifact of ancient pre-DT times. I'd say kill it off before
-someone starts using it.
-
-> +struct sbi_boardinfo {
-> +	struct list_head	list;
-> +	struct slim_boardinfo	board_info;
-> +};
-> +
-> +static LIST_HEAD(board_list);
-> +static LIST_HEAD(slim_ctrl_list);
-> +static DEFINE_MUTEX(board_lock);
-> +
-
-> +/**
-> + * slim_register_board_info: Board-initialization routine.
-> + * @info: List of all devices on all controllers present on the board.
-> + * @n: number of entries.
-> + * API enumerates respective devices on corresponding controller.
-> + * Called from board-init function.
-> + */
-> +int slim_register_board_info(struct slim_boardinfo const *info, unsigned n)
-> +{
-
-Same for all of this.
-
-> +struct slim_device_id {
-> +	__u16 manf_id, prod_code;
-> +	__u8 dev_index, instance;
-> +
-> +	/* Data private to the driver */
-> +	kernel_ulong_t driver_data;
-> +};
-
-Can you add explicit padding here to avoid having the anonymous two bytes in the middle?
-
-Also, I think a void pointer instead of a kernel_ulong_t makes it more useful,
-but there are always cases where one or the other fits better.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
