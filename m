@@ -1,260 +1,69 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: omap5: describe control for ckobuffer
-Date: Thu, 28 Apr 2016 16:23:41 +0300
-Message-ID: <57220EDD.7080903@ti.com>
-References: <cover.1461003660.git.hns@goldelico.com>
- <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com>
- <20160426172710.GI5995@atomide.com>
- <70572DA1-BEB4-4681-BA6C-2E1C9002D730@goldelico.com>
- <5720B107.4000907@ti.com>
- <A90F1BFC-A834-4EC0-81F9-2C8222AAA010@goldelico.com>
- <5720C85B.9010701@ti.com> <ce9a7840-e86f-0d0c-3ed6-a571eec6659d@ti.com>
- <40536322-073F-48BD-9D07-32B9A9F07AF2@goldelico.com>
- <5721C3D4.7040401@ti.com>
- <2A9D82CD-9ACA-49F6-9D2B-9EACFC517914@goldelico.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V11 4/6] pinctrl: max77620: add pincontrol driver for
+ MAX77620/MAX20024
+Date: Thu, 28 Apr 2016 18:52:26 +0530
+Message-ID: <57220E92.90105@nvidia.com>
+References: <1461837540-17071-1-git-send-email-ldewangan@nvidia.com> <1461837540-17071-5-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2A9D82CD-9ACA-49F6-9D2B-9EACFC517914@goldelico.com>
+In-Reply-To: <1461837540-17071-5-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Laxman Dewangan <ldewangan@nvidia.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: lee.jones@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: gnurou@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, irina.tirdea@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/04/16 12:12, H. Nikolaus Schaller wrote:
-> Hi Tero,
->
->> Am 28.04.2016 um 10:03 schrieb Tero Kristo <t-kristo@ti.com>:
->>
->> On 27/04/16 17:35, H. Nikolaus Schaller wrote:
->>> HI,
->>>
->>>> Am 27.04.2016 um 16:23 schrieb Peter Ujfalusi <peter.ujfalusi@ti.com>:
->>>>
->>>> On 04/27/2016 05:10 PM, Tero Kristo wrote:
->>>>> On 27/04/16 16:10, H. Nikolaus Schaller wrote:
->>>>>>
->>>>>>> Am 27.04.2016 um 14:31 schrieb Tero Kristo <t-kristo@ti.com>:
->>>>>>>
->>>>>>> On 27/04/16 09:04, H. Nikolaus Schaller wrote:
->>>>>>>>
->>>>>>>>> Am 26.04.2016 um 19:27 schrieb Tony Lindgren <tony@atomide.com>:
->>>>>>>>>
->>>>>>>>> Tero,
->>>>>>>>>
->>>>>>>>> * H. Nikolaus Schaller <hns@goldelico.com> [160418 11:23]:
->>>>>>>>>> OMAP5 has a register to control if the ckobuffer is enabled
->>>>>>>>>> and defines the polarity. ckobuffer is required to drive a twl6040
->>>>>>>>>> with the system clock. Hence, add the pinctrl,single to the
->>>>>>>>>> OMAP5 SoC description so that omap5-board-common can
->>>>>>>>>> set up the ckobuffer as required.
->>>>>>>>>
->>>>>>>>> Is this really a mux or should it be a mux clock?
->>>>>>>>
->>>>>>>> It is a pinmux setting for the clock out buffer to choose what signal
->>>>>>>> (and polarity) is presented on the fref_xtal_clk pad.
->>>>>>>>
->>>>>>>> The register is part of the CTRL_MODULE_WKUP.
->>>>>>>> The clock signal is the xtal master clock of the whole SoC.
->>>>>>>>
->>>>>>>> Although there is a bit to choose an alternate clock, there is no
->>>>>>>> alternate in the OMAP5 silicon.
->>>>>>>>
->>>>>>>> Therefore I would say it is about padconf and not clock or clock mux
->>>>>>>> related.
->>>>>>>>
->>>>>>>> It just happens to be a clock signal which can be routed to this
->>>>>>>> pad.
->>>>>>>
->>>>>>> The two could very well be implemented as clock nodes, a mux and a gate.
->>>>>>> This would describe the hardware functionality better imo, if the
->>>>>>> assumptions made here are correct. Implementing the control as pinctrl
->>>>>>> hacks looks rather weird to me.
->>>>>>
->>>>>> Why do you consider it a "pinctrl hack"? IMHO it is not a hack, but 100%
->>>>>> proper use of pinctrl.
->>>>>
->>>>> It is just the level of abstraction we are talking about here. If it is a
->>>>> clock we are controlling, we should rather control it as a clock (higher level
->>>>> abstraction), not a pin.
->>>>
->>>> I second this. I think it is better to have a simple gate clock and handle
->>>> only CONTROL_CKOBUFFER:CKOBUFFER_CLK_EN (bit 28) only as the other bits does
->>>> not have real use.
->>>>
->>>> Then we can add clk API support for this. On most OMAP4 devices the clock is
->>>> always on,
->>>
->>> this is why I am raising the question if we really want to control it on the omap5 or just
->>> turn it on for all omap5 boards like the omap4 appears to do... I.e. if turning the pin on
->>> as a pinctrl is IMHO sufficient for all practical purposes.
->>>
->>>> so the board DTS file need to provide a dummy clock, or we can make
->>>> the high precision clock also as optional (on panda both OMAP4 and twl6040
->>>> uses the same reference clock).
->>>
->>> Hm. It looks as if implementing this (and clock gating) is beyond my experiences.
->>> But I am happy to test a proposal on our omap5 board.
->>>
->>> BR and thanks,
->>> Nikolaus
->>
->> See the inline patch, this implements the fref_xtal_ck. I had to add some kernel code also to cope with the new SCM area, but the same area can now be accessed via syscon also if needed.
->
-> Looks interesting, although quite complex to enable a single SoC pad at boot time...
+Hi Lee,
 
-Yea it gives plenty of other things for you also. syscon, integration 
-with clock framework, etc.
+On Thursday 28 April 2016 03:28 PM, Laxman Dewangan wrote:
+> MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO pins
+> which also act as the special function in alternate mode. Also
+> there is configuration like push-pull, open drain, FPS timing
+> etc for these pins.
+>
+> Add pin control driver to configure these parameters through
+> pin control APIs.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
->
-> Will asap study how it works and test. And of course report results.
+It seems there is some mismatches on kernel-next and the mfd/for-next 
+for one of patch for generic function name.
 
-Thanks, Tero.
+/**
+2016-04-01    pinctrl: Rename pinctrl_utils_dt_free_map to 
+pinctrl_utils_free_map    Irina Tirdea    1    -1/+1
 
->
-> Thanks and BR,
-> Nikolaus
->
->>
->> From: Tero Kristo <t-kristo@ti.com>
->> Date: Thu, 28 Apr 2016 11:00:57 +0300
->> Subject: [PATCH] ARM: omap5: add support for fref_xtal_ck
->>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->> arch/arm/boot/dts/omap5.dtsi           | 22 ++++++++++++++++++++++
->> arch/arm/boot/dts/omap54xx-clocks.dtsi | 10 ++++++++++
->> arch/arm/mach-omap2/control.c          | 20 ++++++++++++++++----
->> include/linux/clk/ti.h                 |  1 +
->> 4 files changed, 49 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
->> index 38805eb..bdc6528 100644
->> --- a/arch/arm/boot/dts/omap5.dtsi
->> +++ b/arch/arm/boot/dts/omap5.dtsi
->> @@ -277,6 +277,28 @@
->> 				pinctrl-single,register-width = <16>;
->> 				pinctrl-single,function-mask = <0x7fff>;
->> 			};
->> +
->> +			omap5_scm_wkup_pad_conf: omap5_scm_wkup_pad_conf@cda0 {
->> +				compatible = "ti,omap5-scm-wkup-pad-conf",
->> +					     "simple-bus";
->> +				reg = <0xcda0 0x60>;
->> +				#address-cells = <1>;
->> +				#size-cells = <1>;
->> +				ranges = <0 0xcda0 0x60>;
->> +
->> +				scm_wkup_pad_conf: scm_conf@0 {
->> +					compatible = "syscon", "simple-bus";
->> +					reg = <0x0 0x60>;
->> +					#address-cells = <1>;
->> +					#size-cells = <1>;
->> +					ranges = <0 0x0 0x60>;
->> +
->> +					scm_wkup_pad_conf_clocks: clocks@0 {
->> +						#address-cells = <1>;
->> +						#size-cells = <0>;
->> +					};
->> +				};
->> +			};
->> 		};
->>
->> 		ocmcram: ocmcram@40300000 {
->> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->> index 83b425f..f970dac 100644
->> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
->> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->> @@ -1388,3 +1388,13 @@
->> 		reg = <0x021c>;
->> 	};
->> };
->> +
->> +&scm_wkup_pad_conf_clocks {
->> +	fref_xtal_ck: fref_xtal_ck {
->> +		#clocks-cells = <0>;
->> +		compatible = "ti,gate-clock";
->> +		clocks = <&sys_clkin>;
->> +		ti,bit-shift = <28>;
->> +		reg = <0x14>;
->> +	};
->> +};
->> diff --git a/arch/arm/mach-omap2/control.c b/arch/arm/mach-omap2/control.c
->> index 1662071..5956641 100644
->> --- a/arch/arm/mach-omap2/control.c
->> +++ b/arch/arm/mach-omap2/control.c
->> @@ -623,6 +623,7 @@ void __init omap3_ctrl_init(void)
->>
->> struct control_init_data {
->> 	int index;
->> +	void __iomem *mem;
->> 	s16 offset;
->> };
->>
->> @@ -635,6 +636,10 @@ static const struct control_init_data omap2_ctrl_data = {
->> 	.offset = -OMAP2_CONTROL_GENERAL,
->> };
->>
->> +static const struct control_init_data ctrl_aux_data = {
->> +	.index = TI_CLKM_CTRL_AUX,
->> +};
->> +
->> static const struct of_device_id omap_scrm_dt_match_table[] = {
->> 	{ .compatible = "ti,am3-scm", .data = &ctrl_data },
->> 	{ .compatible = "ti,am4-scm", .data = &ctrl_data },
->> @@ -644,6 +649,7 @@ static const struct of_device_id omap_scrm_dt_match_table[] = {
->> 	{ .compatible = "ti,dm816-scrm", .data = &ctrl_data },
->> 	{ .compatible = "ti,omap4-scm-core", .data = &ctrl_data },
->> 	{ .compatible = "ti,omap5-scm-core", .data = &ctrl_data },
->> +	{ .compatible = "ti,omap5-scm-wkup-pad-conf", .data = &ctrl_aux_data },
->> 	{ .compatible = "ti,dra7-scm-core", .data = &ctrl_data },
->> 	{ }
->> };
->> @@ -660,15 +666,21 @@ int __init omap2_control_base_init(void)
->> 	struct device_node *np;
->> 	const struct of_device_id *match;
->> 	struct control_init_data *data;
->> +	void __iomem *mem;
->>
->> 	for_each_matching_node_and_match(np, omap_scrm_dt_match_table, &match) {
->> 		data = (struct control_init_data *)match->data;
->>
->> -		omap2_ctrl_base = of_iomap(np, 0);
->> -		if (!omap2_ctrl_base)
->> +		mem = of_iomap(np, 0);
->> +		if (!mem)
->> 			return -ENOMEM;
->>
->> -		omap2_ctrl_offset = data->offset;
->> +		if (data->index == TI_CLKM_CTRL) {
->> +			omap2_ctrl_base = mem;
->> +			omap2_ctrl_offset = data->offset;
->> +		}
->> +
->> +		data->mem = mem;
->> 	}
->>
->> 	return 0;
->> @@ -713,7 +725,7 @@ int __init omap_control_init(void)
->> 		} else {
->> 			/* No scm_conf found, direct access */
->> 			ret = omap2_clk_provider_init(np, data->index, NULL,
->> -						      omap2_ctrl_base);
->> +						      data->mem);
->> 			if (ret)
->> 				return ret;
->> 		}
->> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
->> index dc5164a..be25aa8 100644
->> --- a/include/linux/clk/ti.h
->> +++ b/include/linux/clk/ti.h
->> @@ -195,6 +195,7 @@ enum {
->> 	TI_CLKM_PRM,
->> 	TI_CLKM_SCRM,
->> 	TI_CLKM_CTRL,
->> +	TI_CLKM_CTRL_AUX,
->> 	TI_CLKM_PLLSS,
->> 	CLK_MAX_MEMMAPS
->> };
->
+d32f7fd3bbc32732b094d938b95169521503a9fb (patch)
+
+pinctrl: Rename pinctrl_utils_dt_free_map to pinctrl_utils_free_map
+
+Rename pinctrl_utils_dt_free_map to pinctrl_utils_free_map, since
+it does not depend on device tree despite the current name. This
+will enforce a consistent naming in pinctr-utils.c and will make
+it clear it can be called from outside device tree (e.g. from
+ACPI handling code).
+**/
+
+But this is not there in MFD sub system.
+
+In mfd tree
+.dt_free_map = pinctrl_utils_dt_free_map,
+
+In kernel next
+.dt_free_map = pinctrl_utils_free_map,
+
+
+  I used APIs from the kernel-next.
+> +static const struct pinctrl_ops max77620_pinctrl_ops = {
+> +	.get_groups_count = max77620_pinctrl_get_groups_count,
+> +	.get_group_name = max77620_pinctrl_get_group_name,
+> +	.get_group_pins = max77620_pinctrl_get_group_pins,
+> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+> +	.dt_free_map = pinctrl_utils_free_map,
+> +};
+
+
+If you see any issue on this patch, please drop this patch and we will 
+fix this later once the renamed change available all the places.
