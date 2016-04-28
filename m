@@ -1,89 +1,212 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
- registers
-Date: Thu, 28 Apr 2016 07:41:57 +0200
-Message-ID: <5721A2A5.9010908@de.bosch.com>
-References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
- <20160427233028.GA5155@verge.net.au>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: exynos: Define vqmmc for eMMC card on
+ Odroid X/X2/U3
+Date: Thu, 28 Apr 2016 07:50:18 +0200
+Message-ID: <5721A49A.1020401@samsung.com>
+References: <1461765620-6833-1-git-send-email-k.kozlowski@samsung.com>
+ <1461765620-6833-2-git-send-email-k.kozlowski@samsung.com>
+ <bca8c1c9-41ac-c7e8-9313-ff96058376be@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160427233028.GA5155@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, julien.grall@arm.com
-Cc: geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <bca8c1c9-41ac-c7e8-9313-ff96058376be@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-mmc@vger.kernel.org, linux.amoon@gmail.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On 28.04.2016 01:30, Simon Horman wrote:
-> Hi Dirk,
->
-> I understand that there is an issue here but I'm not yet able
-> to convince myself that this is the correct solution.
->
-> In revision r0p1 of the CoreLink GIC-400 Generic Interrupt Controller
-> Technical Reference Manual[1] I see in Section 3.2. "GIC-400 register map"
-> that the size of both the CPU interfaces and Virtual CPU interfaces are
-> 0x2000 bytes. And assuming that the hardware follows the specification it
-> appears that DT is correctly describing the hardware.
-
-
-I think you are missing the details described by ARM in
-
-http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
-
-
-Maybe Julien could help if you have some more doubts?
-
-
-Best regards
-
-Dirk
-
-
-> [1] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/index.html
->
-> On Tue, Apr 19, 2016 at 08:29:55AM +0200, Dirk Behme wrote:
->> From: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+On 04/27/2016 11:29 PM, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
+> 
+> On 04/27/2016 10:00 AM, Krzysztof Kozlowski wrote:
+>> The eMMC card vmmc-supply contained incorrectly two regulators: LDO20
+>> and buck8. The second one is ignored. Additionally the buck8 is a vqmmc
+>> supply only on X and X2. On U3 the buck8 is providing power to the LAN
+>> (SMSC95xx) so instead the LDO22 should be used.
 >>
->> There are some requirements about the GIC-400 memory layout and its
->> mapping if using 64k aligned base addresses like on r8a7795.
+>> Fix this by defining proper vmmc and vqmmc supplies for respective
+>> boards.
 >>
->> See e.g.
+>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 >>
->> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
->>
->> Map the whole memory range instead of only 0x2000. This will fix
->> the issue that some hypervisors, e.g. Xen, fail to handle the
->> interrupts correctly.
->>
->> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
->> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
 >> ---
->> Note: This patch is against renesas-drivers-2016-04-12-v4.6-rc3
 >>
->>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
+>> Changes since v1:
+>> 1. buck8 is used on X/X2 so differentiate the configuration (hint by
+>>    Tobias Jakobi).
+>> ---
+>>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 13 ++++++++++---
+>>  arch/arm/boot/dts/exynos4412-odroidu3.dts       | 18 ++++++++++++++++++
+>>  arch/arm/boot/dts/exynos4412-odroidx.dts        | 11 +++++++++++
+>>  arch/arm/boot/dts/exynos4412-odroidx2.dts       | 11 +++++++++++
+>>  4 files changed, 50 insertions(+), 3 deletions(-)
 >>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> index 8be9424..d880fd4 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> @@ -160,9 +160,9 @@
->>   			#address-cells = <0>;
->>   			interrupt-controller;
->>   			reg = <0x0 0xf1010000 0 0x1000>,
->> -			      <0x0 0xf1020000 0 0x2000>,
->> +			      <0x0 0xf1020000 0 0x20000>,
->>   			      <0x0 0xf1040000 0 0x20000>,
->> -			      <0x0 0xf1060000 0 0x2000>;
->> +			      <0x0 0xf1060000 0 0x20000>;
->>   			interrupts = <GIC_PPI 9
->>   					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->>   		};
->> --
->> 2.8.0
+>> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> index 3d0d44581fbd..34a5b3daced0 100644
+>> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> @@ -347,6 +347,13 @@
+>>  				regulator-boot-on;
+>>  			};
+>>  
+>> +			ldo22_reg: LDO22 {
+>> +				regulator-name = "LDO22";
+>> +				regulator-min-microvolt = <800000>;
+>> +				regulator-max-microvolt = <3950000>;
+>> +				regulator-boot-on;
+>> +			};
+>> +
+> 
+> I don't have a datasheet for the max77686 but I guess these min and max
+> values are the actual voltage range that the ldo22 regulator can support?
+
+Yes.
+
+> If that's the case, then I don't think setting these are correct since the
+> DT binding says that the regulator-{min,max}-microvolt properties describe
+> the voltage range that consumers may set. I've seen Mark mention this many
+> times, the last one I remember is at [0].
+
+For LDO22 there is no consumer so these are the constraints. Leaving
+them undefined (here and in DTS for X/X2) would result in the same
+effect. The point is that these values are valid constraints. Please
+have in mind that the binding describe this as "smallest/largest voltage
+consumer may set" which is true for the code above.
+
+> 
+> Probably would be better to leave the ldo22_reg definition to odroidu3.dts
+> to avoid setting these constraint in a .dtsi file.
+
+What about X/X2?
+
+>>  			ldo25_reg: LDO25 {
+>>  				regulator-name = "VDDQ_LCD_1.8V";
+>>  				regulator-min-microvolt = <1800000>;
+>> @@ -411,8 +418,8 @@
+>>  
+>>  			buck8_reg: BUCK8 {
+>>  				regulator-name = "BUCK8_2.8V";
+>> -				regulator-min-microvolt = <2800000>;
+>> -				regulator-max-microvolt = <2800000>;
+>> +				regulator-min-microvolt = <750000>;
+>> +				regulator-max-microvolt = <3900000>;
+> 
+> Same here, since not all boards have the same constraint for this regulator,
+> it would be better to remove it from the .dtsi and let each dts to define it.
+
+Since all of the boards define them, it does not bring any difference
+having it here... so I can remove them.
+
+
+>>  			};
+>>  		};
+>>  	};
+>> @@ -456,7 +463,7 @@
+>>  &mshc_0 {
+>>  	pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
+>>  	pinctrl-names = "default";
+>> -	vmmc-supply = <&ldo20_reg &buck8_reg>;
+>> +	vmmc-supply = <&ldo20_reg>;
+>>  	mmc-pwrseq = <&emmc_pwrseq>;
+>>  	status = "okay";
+>>  
+>> diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+>> index dd89f7b37c9f..d73aa6c58fe3 100644
+>> --- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
+>> +++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
+>> @@ -69,6 +69,24 @@
+>>  	};
+>>  };
+>>  
+>> +/* Supply for LAN9730/SMSC95xx */
+>> +&buck8_reg {
+>> +	regulator-name = "BUCK8_P3V3";
+> 
+> I think it would be better to name it "BUCK8_3.3V" for consistency. 
+
+Consistency of naming is nice but in the same time we want the regulator
+names to match the hardware because it is easier to read the code and
+check the schematics. On the schematics this is unfortunately called
+P3V3. :)
+
+> 
+>> +	regulator-min-microvolt = <3300000>;
+>> +	regulator-max-microvolt = <3300000>;
+>> +};
+>> +
+>> +/* VDDQ for MSHC (eMMC card) */
+>> +&ldo22_reg {
+>> +	regulator-name = "LDO22_VDDQ_MMC4_2.8V";
+>> +	regulator-min-microvolt = <2800000>;
+>> +	regulator-max-microvolt = <2800000>;
+>> +};
+>> +
+>> +&mshc_0 {
+>> +	vqmmc-supply = <&ldo22_reg>;
+>> +};
+>> +
+>>  &pwm {
+>>  	pinctrl-0 = <&pwm0_out>;
+>>  	pinctrl-names = "default";
+>> diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
+>> index bf7b21b817e4..2af235151301 100644
+>> --- a/arch/arm/boot/dts/exynos4412-odroidx.dts
+>> +++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
+>> @@ -63,12 +63,23 @@
+>>  	};
+>>  };
+>>  
+>> +/* VDDQ for MSHC (eMMC card) */
+>> +&buck8_reg {
+>> +	regulator-name = "BUCK8_VDDQ_MMC4_2.8V";
+>> +	regulator-min-microvolt = <2800000>;
+>> +	regulator-max-microvolt = <2800000>;
+>> +};
+>> +
+>>  &ehci {
+>>  	port@1 {
+>>  		status = "okay";
+>>  	};
+>>  };
+>>  
+>> +&mshc_0 {
+>> +	vqmmc-supply = <&buck8_reg>;
+>> +};
+>> +
+>>  &pinctrl_1 {
+>>  	gpio_home_key: home_key {
+>>  		samsung,pins = "gpx2-2";
+>> diff --git a/arch/arm/boot/dts/exynos4412-odroidx2.dts b/arch/arm/boot/dts/exynos4412-odroidx2.dts
+>> index 6e33678562ae..3e3584270e00 100644
+>> --- a/arch/arm/boot/dts/exynos4412-odroidx2.dts
+>> +++ b/arch/arm/boot/dts/exynos4412-odroidx2.dts
+>> @@ -22,6 +22,17 @@
+>>  	};
+>>  };
+>>  
+>> +/* VDDQ for MSHC (eMMC card) */
+>> +&buck8_reg {
+>> +	regulator-name = "BUCK8_VDDQ_MMC4_2.8V";
+>> +	regulator-min-microvolt = <2800000>;
+>> +	regulator-max-microvolt = <2800000>;
+>> +};
+>> +
+>> +&mshc_0 {
+>> +	vqmmc-supply = <&buck8_reg>;
+>> +};
+>> +
+>>  &sound {
+>>  	simple-audio-card,name = "Odroid-X2";
+>>  	simple-audio-card,widgets =
 >>
->
+> 
+> Rest looks good, so if you do those changes feel free to add:
+> 
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
+> [0]: http://www.spinics.net/lists/linux-omap/msg127035.html
+
+Thanks for feedback!
+
+Krzysztof
