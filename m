@@ -1,112 +1,39 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v7 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
- device tree binding documentation
-Date: Thu, 28 Apr 2016 09:00:48 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57C2E2@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1461740729-30715-1-git-send-email-appanad@xilinx.com>
- <57206632.7010508@metafoo.de>
- <C246CAC1457055469EF09E3A7AC4E11A4A57B840@XAP-PVEXMBX01.xlnx.xilinx.com>
- <5720B333.4000804@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5720B333.4000804-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: [RFC v4 1/8] gpio: generic: fix GPIO_GENERIC_PLATFORM is set to module case
+Date: Thu, 28 Apr 2016 11:05:11 +0200
+Message-ID: <5891890cfc1c8ce45c310e3876485011518aeba9.1461806071.git.chunkeey@googlemail.com>
+References: <cover.1461806071.git.chunkeey@googlemail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
+In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
+References: <cover.1461806071.git.chunkeey@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Christian Lamparter <chunkeey@googlemail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars,
+GPIO_GENERIC_PLATFORM is a tristate. If the module option is
+selected the resulting gpio-generic.ko will lack most of the
+module initialzation and probe code.
 
-	Thanks for the review...
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ drivers/gpio/gpio-generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> -----Original Message-----
-> From: Lars-Peter Clausen [mailto:lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org]
-> Sent: Wednesday, April 27, 2016 6:10 PM
-> To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
-> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek
-> <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
-> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org;
-> laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org; luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org; Anirudha
-> Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Punnaiah Choudary Kalluri
-> <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH v7 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
-> device tree binding documentation
-> 
-> On 04/27/2016 09:33 AM, Appana Durga Kedareswara Rao wrote:
-> > Hi Lars,
-> >
-> >> -----Original Message-----
-> >> From: Lars-Peter Clausen [mailto:lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org]
-> >> Sent: Wednesday, April 27, 2016 12:42 PM
-> >> To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
-> >> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> >> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek
-> >> <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
-> >> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Appana Durga
-> >> Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org;
-> >> laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org; luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org; Anirudha
-> >> Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Punnaiah Choudary Kalluri
-> >> <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> >> linux- kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> Subject: Re: [PATCH v7 1/2] Documentation: DT: dma: Add Xilinx zynqmp
-> >> dma device tree binding documentation
-> >>
-> >> On 04/27/2016 09:05 AM, Kedareswara rao Appana wrote:
-> >> [...]
-> >>> +- xlnx,include-sg	: Indicates the controller to operate in simple or
-> >>> +			  scatter gather dma mode
-> >>> +- xlnx,ratectrl		: Scheduling interval in terms of clock cycles for
-> >>> +			  source AXI transaction
-> >>> +- xlnx,overfetch	: Tells whether the channel is allowed to over
-> >>> +			  fetch the data
-> >>> +- xlnx,src-issue	: Number of AXI outstanding transactions on source
-> >> side
-> >>> +- xlnx,src-burst-len	: AXI length for data read. Support only power of
-> >>> +			  2 byte values.
-> >>> +- xlnx,dst-burst-len	: AXI length for data write. Support only power of
-> >>
-> >> These are all software runtime configuration parameters that you'd
-> >> want to change at runtime depending on which peripheral you are
-> >> targeting with a specific DMA transfer. These really do not belong into the
-> devicetree.
-> >
-> > You mean to have a separate config structure in the driver and handle
-> > the above parameters Through that structure???
-> >
-> > I understand that above will work for slave dma transfer types what
-> > about memory to memory Transfers where we don't have provision to the use
-> this parameters...
-> 
-> These parameters are just as application specific as e.g. the DMA
-> source/destination address or the DMA transfer length. If you want to use the
-> DMA controller in a different configuration you'd have to re-compile the DTB
-> and reboot your board, that is not really practical. Especially considering that
-> you'd typically have multiple applications using the DMA controller in different
-> configurations concurrently. In general if I have to reconfigure the DT depending
-> on what application software is running something is fundamentally broken.
-> 
-> Derive these parameters at runtime depending on the requested transfer. E.g.
-> some transfer types only work in SG mode, others only work in non-SG modes.
-> For those which can work in both modes choose the one that is more efficient.
-> Similar for the other parameters.
+diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
+index 54cddfa..6c1cb3b 100644
+--- a/drivers/gpio/gpio-generic.c
++++ b/drivers/gpio/gpio-generic.c
+@@ -549,7 +549,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(bgpio_init);
+ 
+-#ifdef CONFIG_GPIO_GENERIC_PLATFORM
++#if IS_ENABLED(CONFIG_GPIO_GENERIC_PLATFORM)
+ 
+ static void __iomem *bgpio_map(struct platform_device *pdev,
+ 			       const char *name,
+-- 
+2.8.1
 
-Ok will fix in the next version...
-Will use module_params for the above properties.
-
-Regards,
-Kedar.
-
-> 
-> - Lars
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
