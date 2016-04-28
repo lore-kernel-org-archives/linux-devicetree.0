@@ -1,78 +1,62 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Thu, 28 Apr 2016 15:17:58 +0200
-Message-ID: <20160428151758.7fe54037@bbrezillon>
-References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
-	<CACh+v5OO+UQ_EiWVyewdMHnMB-p3nd6N=R5P7K4V_4=ymy-YuQ@mail.gmail.com>
-	<20160428104925.7eb12ca2@bbrezillon>
-	<CACh+v5Mi2Qd58SZkwW0mZ3ZJx3Rv3mwSkRqzgHwBTxpUbwjVFQ@mail.gmail.com>
-	<20160428144607.191a29f2@bbrezillon>
-	<CACh+v5ObRAf=7D3tbQdAzef+QRVObF_9eHJEreXwxVyrV8THcA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACh+v5ObRAf=7D3tbQdAzef+QRVObF_9eHJEreXwxVyrV8THcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 3/5] dt-bindings: document the MPS2 timer bindings
+Date: Thu, 28 Apr 2016 15:20:46 +0200
+Message-ID: <1461849648-12751-3-git-send-email-daniel.lezcano@linaro.org>
+References: <20160428131908.GC5197@linaro.org>
+ <1461849648-12751-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461849648-12751-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, mingo@kernel.org
+Cc: Vladimir Murzin <vladimir.murzin@arm.com>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Apr 2016 14:54:39 +0200
-Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org> wrote:
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-> 2016-04-28 14:46 GMT+02:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > On Thu, 28 Apr 2016 14:18:25 +0200
-> > Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org> wrote:  
-> >> >> > +
-> >> >> > +- atmel,ncs-rd-setup-ns
-> >> >> > +- atmel,nrd-setup-ns
-> >> >> > +- atmel,ncs-wr-setup-ns
-> >> >> > +- atmel,nwe-setup-ns
-> >> >> > +- atmel,ncs-rd-pulse-ns
-> >> >> > +- atmel,nrd-pulse-ns
-> >> >> > +- atmel,ncs-wr-pulse-ns
-> >> >> > +- atmel,nwe-pulse-ns
-> >> >> > +- atmel,nwe-cycle-ns
-> >> >> > +- atmel,nrd-cycle-ns
-> >> >> > +- atmel,tdf-ns  
-> >> >>
-> >> >> One thought about the configuration in 'ns' unit: Some devices may
-> >> >> have requirements expressed in clock cycles (I'm thinking of FPGA
-> >> >> here). At  a fixed frequency one can always convert manually from 'ns'
-> >> >> to 'clocks' but it's a bit tedious and prone to rounding errors. And
-> >> >> It 'll  break when the EBI frequency is changed  
-> >> >
-> >> > If you don't mind, I'd like to first get this version accepted, and
-> >> > we'll extend it with timings expressed in clock cycles afterward.
-> >> >
-> >> > BTW, could you describe a real use case where timings should be
-> >> > expressed in clock cycles? I mean, usually the devices have some timing
-> >> > constraints (tXX_min = Y ns), and I don't see why it would differ for
-> >> > FPGA interfaces, but I'm clearly not an FPGA expert.  
-> >>
-> >> I'm not either, I only toyed with FPGA. That's just what experienced
-> >> FPGA designer told me.
-> >> I guess that it boils down to: FPGA are more suited for a synchronous
-> >> design than an asynchronous one.  
-> >
-> > The thing is, all the timings are based on the master clock, and,
-> > AFAICS, this clk signal is not exposed, so you're basing your clk-cycle  
-> while EBI itself is asynchronous, the clk can be exposed through one
-> of the PCK. I've seen this in real projects.
+This adds documentation of device tree bindings for the
+timers found on ARM MPS2 platform.
 
-Okay, then it makes sense. But if you need such a complex thing it
-would probably be better to create a new driver and let this driver
-adapt the timings dynamically (I plan to expose an few fonctions for
-the NAND controller, so it would be possible to create an FPGA driver
-referencing the PCK clk and adapting the EBI timings).
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ .../devicetree/bindings/timer/arm,mps2-timer.txt   | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/arm,mps2-timer.txt
 
+diff --git a/Documentation/devicetree/bindings/timer/arm,mps2-timer.txt b/Documentation/devicetree/bindings/timer/arm,mps2-timer.txt
+new file mode 100644
+index 0000000..48f84d7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/arm,mps2-timer.txt
+@@ -0,0 +1,28 @@
++ARM MPS2 timer
++
++The MPS2 platform has simple general-purpose 32 bits timers.
++
++Required properties:
++- compatible	: Should be "arm,mps2-timer"
++- reg		: Address and length of the register set
++- interrupts	: Reference to the timer interrupt
++
++Required clocking property, have to be one of:
++- clocks	  : The input clock of the timer
++- clock-frequency : The rate in HZ in input of the ARM MPS2 timer
++
++Examples:
++
++timer1: mps2-timer@40000000 {
++	compatible = "arm,mps2-timer";
++	reg = <0x40000000 0x1000>;
++	interrupts = <8>;
++	clocks = <&sysclk>;
++};
++
++timer2: mps2-timer@40001000 {
++	compatible = "arm,mps2-timer";
++	reg = <0x40001000 0x1000>;
++	interrupts = <9>;
++	clock-frequency = <25000000>;
++};
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
