@@ -1,62 +1,41 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 1/3] Documentation: mmc: Document mmc aliases
-Date: Thu, 28 Apr 2016 16:06:43 -0700
-Message-ID: <1461884805-29466-2-git-send-email-dianders@chromium.org>
-References: <1461884805-29466-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1461884805-29466-1-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, jh80.chung@samsung.com
-Cc: shawn.lin@rock-chips.com, adrian.hunter@intel.com, stefan@agner.ch, linux-mmc@vger.kernel.org, computersforpeace@gmail.com, dmitry.torokhov@gmail.com, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, chaotian.jing@mediatek.com, sudeep.holla@arm.com, lars@metafoo.de, huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next] of: of_mdio: Check if MDIO bus controller is
+ available
+Date: Thu, 28 Apr 2016 16:12:18 -0700
+Message-ID: <572298D2.3060809@gmail.com>
+References: <1461880510-27132-1-git-send-email-f.fainelli@gmail.com>
+ <20160428221211.GE12753@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160428221211.GE12753@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, nathan.sullivan@ni.com, nicolas.ferre@atmel.com, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jaehoon Chung <jh80.chung@samsung.com>
+On 28/04/16 15:12, Andrew Lunn wrote:
+> On Thu, Apr 28, 2016 at 02:55:10PM -0700, Florian Fainelli wrote:
+>> Add a check whether the 'struct device_node' pointer passed to
+>> of_mdiobus_register() is an available (aka enabled) node in the Device
+>> Tree.
+>>
+>> Rationale for doing this are cases where an Ethernet MAC provides a MDIO
+>> bus controller and node, and an additional Ethernet MAC might be
+>> connecting its PHY/switches to that first MDIO bus controller, while
+>> still embedding one internally which is therefore marked as "disabled".
+>>
+>> Instead of sprinkling checks like these in callers of
+>> of_mdiobus_register(), do this in a central location.
+> 
+> I think this discussion has shown there is no documented best
+> practices for MDIO bus drivers and how PHYs nodes are placed within
+> device tree. Maybe you could document the generic MDIO binding, both
+> as integrated into a MAC device node, and as a separate device?
 
-Now, index of mmc/mmcblk devices is allocated in accordance with probing
-time.  If want to use the mmcblk1 for some device, it can use alias.
-
-aliases {
-	mmc0 = &mmc0;	/* mmc0/mmcblk0 for eMMC */
-	mmc1 = &mmc2;	/* mmc1/mmcblk1 for SD */
-	mmc2 = &mmc1;	/* mmc2/mmcblk2 for SDIO*/
-};
-
-If there are no corresponding values, it might be allocated with
-existing scheme.
-
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-[dianders: just bindings now; mention mmc not just mmcblk]
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
- Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index a1ed9c4e7235..d225a7fb3849 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -72,6 +72,10 @@ Optional SDIO properties:
- - wakeup-source: Enables wake up of host system on SDIO IRQ assertion
- 		 (Legacy property supported: "enable-sdio-wakeup")
- 
-+Aliases (Optional):
-+- If you want to use the fixed index for devices like mmcX / mmcblkX, should
-+be represented in the aliases node using following format "mmc(X)".
-+(X is an unique number for the alias.)
- 
- MMC power sequences:
- --------------------
-@@ -146,3 +150,10 @@ mmc3: mmc@01c12000 {
- 		interrupt-names = "host-wake";
- 	};
- };
-+
-+Example with aliases nodes:
-+
-+aliases {
-+	mmc0 = &mmc0;	/* Fixed to mmc0/mmcblk0 for &mmc0 */
-+	mmc1 = &mmc2;	/* Fixed to mmc1/mmcblk1 for &mmc2 */
-+};
+Fair enough, I will submit something after re-spining this patch to use
+-ENODEV, which I agree is a better return code. Did you want me to
+remove that blurb from the commit message?
 -- 
-2.8.0.rc3.226.g39d4020
-
+Florian
