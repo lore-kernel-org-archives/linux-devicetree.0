@@ -1,147 +1,234 @@
-From: Yisen Zhuang <Yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH net-next 00/10] net: hns: add support of debug dsaf device
-Date: Thu, 28 Apr 2016 14:47:52 +0800
-Message-ID: <5721B218.7060000@huawei.com>
+From: Yisen Zhuang <Yisen.Zhuang@huawei.com>
+Subject: [PATCH net-next 03/10] net: hns: add attribute port-idx-in-ae in enet node.
+Date: Thu, 28 Apr 2016 15:01:35 +0800
+Message-ID: <1461826902-51368-4-git-send-email-Yisen.Zhuang@huawei.com>
 References: <1461826902-51368-1-git-send-email-Yisen.Zhuang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461826902-51368-1-git-send-email-Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1461826902-51368-1-git-send-email-Yisen.Zhuang@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, will.deacon@arm.com, catalin.marinas@arm.com, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-I am sorry for my misoperation, please ignore this series, thanks.
+This patch parse port-idx-in-ae in enet node.
+port-idx-in-ae: is the index of port provided by AE.
+In NIC mode of DSAF, all 6 PHYs of service DSAF are taken as ethernet
+ports to the CPU. The port-idx-in-ae can be 0 to 5. Here is the diagram:
+            +-----+---------------+
+            |            CPU      |
+            +-+-+-+---+-+-+-+-+-+-+
+              |    |   | | | | | |
+           debug debug   service
+           port  port     port
+           (0)   (0)     (0-5)
 
-=E5=9C=A8 2016/4/28 15:01, Yisen Zhuang =E5=86=99=E9=81=93:
-> There are two kinds of dsaf device in hns, one is for service ports,
-> contains crossbar in it, can work under different mode. Another is fo=
-r
-> debug port, only can work under single port mode. The current code on=
-ly
-> declared a dsaf device for both service ports and debug ports.It is n=
-ot so
-> readability. This patch separate it to three platform devices to make=
- the
-> code simple and more readability.
->=20
-> all port in one platform device(old):
->                                         CPU
->                                          |
->                                          |        DSAF(one platform d=
-evice)
->     --------------------------------------------------------------   =
-   /
->     |                           |                  |      |      |   =
-  /
->     |                          PPE                PPE    PPE     |   =
- /
->     |                           |                  |      |      |   =
-/
->     |                           |                  |      |      |  /
->     |                        crossbar              |      |      | /
->     |                           |                  |      |      |/
->     |    -----------------------------------       |      |      |
->     |    |      |      |      |      |      |      |      |      |
->     |    |      |      |      |      |      |      |      |      |
->     |   MAC    MAC    MAC    MAC    MAC    MAC    MAC    MAC     |
->     |    |      |      |      |      |      |      |      |      |
->     --------------------------------------------------------------
->          |      |      |      |      |      |      |      |
->         PHY    PHY    PHY    PHY    PHY    PHY    PHY    PHY
->=20
-> separate all ports to three platform(new):
->                                                          CPU
->                                                           |
->                                     ---------------------------------=
---
->                                     |                     |          =
- |
->     ----------------------------------------------    ---------   ---=
-------
->     |                         |                  |    |       |   |  =
- |   |
->     |                        PPE                 |    |  PPE  |   |  =
-PPE  |
->     |                         |                  |    |   |   |   |  =
- |   |
->     |                         |                  |    |   |   |   |  =
- |   |
->     |                      crossbar              |    |   |   |   |  =
- |   |
->     |                         |                  |    |   |   |   |  =
- |   |
->     |   ----------------------------------       |    |   |   |   |  =
- |   |
->     |   |     |     |      |      |      |       |    |   |   |   |  =
- |   |
->     |   |     |     |      |      |      |       |    |   |   |   |  =
- |   |
->     |  MAC   MAC   MAC    MAC    MAC    MAC      |    |  MAC  |   |  =
-MAC  |
->     |   |     |     |      |      |      |       |    |   |   |   |  =
- |   |
->     ----------------------------------------------    ---------   ---=
-------
->         |     |     |      |      |      |    \        /  |        / =
- |
->        PHY   PHY   PHY    PHY    PHY    PHY    \      /  PHY      /  =
-PHY
->                                                 \    /           /
->                                                  \  /           /
->                                              DSAF(three platform devi=
-ce)
->=20
-> I have tested this patchset on d02 board, it is compatible with the d=
-ts in
-> d02 board.
->=20
-> For more details, please see individual patches.
->=20
-> MBR.
->=20
-> Daode Huang (3):
->   net: hns: set debug port irq index to 0
->   net: hns: add syscon operation for dsaf
->   net: hns: sort the header file by alphabetical order
->=20
-> Yisen Zhuang (6):
->   net: hns: add attribute port-idx-in-ae in enet node.
->   net: hns: add attribute reset-field-offset for dsaf node
->   net: hns: separate debug dsaf device from service dsaf device
->   net: hns: add attribute cpld_ctrl for dsaf port node
->   net: hns: add attribute port-rst-offset for dsaf port node
->   net: hns: add attribute port-mode-offset for dsaf port node
->=20
-> huangdaode (1):
->   net: hns: add a new dsaf mode for debug port
->=20
->  .../devicetree/bindings/net/hisilicon-hns-dsaf.txt |  60 +++++-
->  .../devicetree/bindings/net/hisilicon-hns-nic.txt  |  30 ++-
->  drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c  |  73 ++-----
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c  | 231 +++++++++++=
-+++-------
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h  |  12 +-
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 141 ++++++++---=
---
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h |  16 +-
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c | 173 +++++++++--=
-----
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c  |  51 +----
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h  |   1 -
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c  | 187 +++++++----=
-------
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h  |   2 +-
->  drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h  |  38 ++--
->  drivers/net/ethernet/hisilicon/hns/hns_enet.c      |  17 +-
->  drivers/net/ethernet/hisilicon/hns/hns_enet.h      |   3 +
->  15 files changed, 584 insertions(+), 451 deletions(-)
->=20
+In Switch mode of DSAF, all 6 PHYs of service DSAF are taken as physical
+ports connect to a LAN Switch while the CPU side assume itself have one
+single NIC connect to this switch. In this case, the port-idx-in-ae will
+be 0 only.
+            +-----+-----+------+------+
+            |                CPU      |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+
+              |    |     service| port(0)
+            debug debug  +------------+
+            port  port   |   switch   |
+            (0)   (0)    +-+-+-+-+-+-++
+                          | | | | | |
+                         external port
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+when port-idx-in-ae is not exists, old attribute port-id will be used
+(only for compatible purpose, not recommended to use port-id in new code).
+
+Signed-off-by: Daode Huang <huangdaode@hisilicon.com>
+Signed-off-by: Yuzeng Zhuang <yisen.zhuang@huawei.com>
+---
+ .../devicetree/bindings/net/hisilicon-hns-nic.txt  | 30 +++++++++++++++++++-
+ drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c  | 33 ++++------------------
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h  |  1 -
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c      | 17 ++++++++---
+ drivers/net/ethernet/hisilicon/hns/hns_enet.h      |  3 ++
+ 5 files changed, 51 insertions(+), 33 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+index e6a9d1c..965f6be 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+@@ -36,6 +36,34 @@ Required properties:
+                        | | | | | |
+                       external port
+ 
++  This attribute is remained for compatible purpose. It is not recommended to
++  use it in new code.
++
++- port-idx-in-ae: is the index of port provided by AE.
++  In NIC mode of DSAF, all 6 PHYs of service DSAF are taken as ethernet ports
++  to the CPU. The port-idx-in-ae can be 0 to 5. Here is the diagram:
++            +-----+---------------+
++            |            CPU      |
++            +-+-+-+---+-+-+-+-+-+-+
++              |    |   | | | | | |
++           debug debug   service
++           port  port     port
++           (0)   (0)     (0-5)
++
++  In Switch mode of DSAF, all 6 PHYs of service DSAF are taken as physical
++  ports connect to a LAN Switch while the CPU side assume itself have one
++  single NIC connect to this switch. In this case, the port-idx-in-ae will
++  be 0 only.
++            +-----+-----+------+------+
++            |                CPU      |
++            +-+-+-+-+-+-+-+-+-+-+-+-+-+
++              |    |     service| port(0)
++            debug debug  +------------+
++            port  port   |   switch   |
++            (0)   (0)    +-+-+-+-+-+-++
++                          | | | | | |
++                         external port
++
+ - local-mac-address: mac addr of the ethernet interface
+ 
+ Example:
+@@ -43,6 +71,6 @@ Example:
+ 	ethernet@0{
+ 		compatible = "hisilicon,hns-nic-v1";
+ 		ae-handle = <&dsaf0>;
+-		port-id = <0>;
++		port-idx-in-ae = <0>;
+ 		local-mac-address = [a2 14 e4 4b 56 76];
+ 	};
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+index 1e8bf22..1c86336 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
+@@ -29,25 +29,6 @@ static struct hns_mac_cb *hns_get_mac_cb(struct hnae_handle *handle)
+ 	return vf_cb->mac_cb;
+ }
+ 
+-/**
+- * hns_ae_map_eport_to_dport - translate enet port id to dsaf port id
+- * @port_id: enet port id
+- *: debug port 0-1, service port 2 -7 (dsaf mode only 2)
+- * return: dsaf port id
+- *: service ports 0 - 5, debug port 6-7
+- **/
+-static int hns_ae_map_eport_to_dport(u32 port_id)
+-{
+-	int port_index;
+-
+-	if (port_id < DSAF_DEBUG_NW_NUM)
+-		port_index = port_id + DSAF_SERVICE_PORT_NUM_PER_DSAF;
+-	else
+-		port_index = port_id - DSAF_DEBUG_NW_NUM;
+-
+-	return port_index;
+-}
+-
+ static struct dsaf_device *hns_ae_get_dsaf_dev(struct hnae_ae_dev *dev)
+ {
+ 	return container_of(dev, struct dsaf_device, ae_dev);
+@@ -110,7 +91,6 @@ static struct ring_pair_cb *hns_ae_get_ring_pair(struct hnae_queue *q)
+ struct hnae_handle *hns_ae_get_handle(struct hnae_ae_dev *dev,
+ 				      u32 port_id)
+ {
+-	int port_idx;
+ 	int vfnum_per_port;
+ 	int qnum_per_vf;
+ 	int i;
+@@ -120,11 +100,10 @@ struct hnae_handle *hns_ae_get_handle(struct hnae_ae_dev *dev,
+ 	struct hnae_vf_cb *vf_cb;
+ 
+ 	dsaf_dev = hns_ae_get_dsaf_dev(dev);
+-	port_idx = hns_ae_map_eport_to_dport(port_id);
+ 
+-	ring_pair_cb = hns_ae_get_base_ring_pair(dsaf_dev, port_idx);
+-	vfnum_per_port = hns_ae_get_vf_num_per_port(dsaf_dev, port_idx);
+-	qnum_per_vf = hns_ae_get_q_num_per_vf(dsaf_dev, port_idx);
++	ring_pair_cb = hns_ae_get_base_ring_pair(dsaf_dev, port_id);
++	vfnum_per_port = hns_ae_get_vf_num_per_port(dsaf_dev, port_id);
++	qnum_per_vf = hns_ae_get_q_num_per_vf(dsaf_dev, port_id);
+ 
+ 	vf_cb = kzalloc(sizeof(*vf_cb) +
+ 			qnum_per_vf * sizeof(struct hnae_queue *), GFP_KERNEL);
+@@ -163,14 +142,14 @@ struct hnae_handle *hns_ae_get_handle(struct hnae_ae_dev *dev,
+ 	}
+ 
+ 	vf_cb->dsaf_dev = dsaf_dev;
+-	vf_cb->port_index = port_idx;
+-	vf_cb->mac_cb = &dsaf_dev->mac_cb[port_idx];
++	vf_cb->port_index = port_id;
++	vf_cb->mac_cb = &dsaf_dev->mac_cb[port_id];
+ 
+ 	ae_handle->phy_if = vf_cb->mac_cb->phy_if;
+ 	ae_handle->phy_node = vf_cb->mac_cb->phy_node;
+ 	ae_handle->if_support = vf_cb->mac_cb->if_support;
+ 	ae_handle->port_type = vf_cb->mac_cb->mac_type;
+-	ae_handle->dport_id = port_idx;
++	ae_handle->dport_id = port_id;
+ 
+ 	return ae_handle;
+ vf_id_err:
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+index 8782608..ed0043a 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h
+@@ -24,7 +24,6 @@
+ #define DSAF_SERVICE_NW_NUM	6
+ #define DSAF_COMM_CHN		DSAF_SERVICE_NW_NUM
+ #define DSAF_GE_NUM		((DSAF_SERVICE_NW_NUM) + (DSAF_DEBUG_NW_NUM))
+-#define DSAF_PORT_NUM		((DSAF_SERVICE_NW_NUM) + (DSAF_DEBUG_NW_NUM))
+ #define DSAF_XGE_NUM		DSAF_SERVICE_NW_NUM
+ #define DSAF_PORT_TYPE_NUM 3
+ #define DSAF_NODE_NUM		18
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 687204b..e47aff2 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -1873,6 +1873,7 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ 	struct net_device *ndev;
+ 	struct hns_nic_priv *priv;
+ 	struct device_node *node = dev->of_node;
++	u32 port_id;
+ 	int ret;
+ 
+ 	ndev = alloc_etherdev_mq(sizeof(struct hns_nic_priv), NIC_MAX_Q_PER_VF);
+@@ -1896,10 +1897,18 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ 		dev_err(dev, "not find ae-handle\n");
+ 		goto out_read_prop_fail;
+ 	}
+-
+-	ret = of_property_read_u32(node, "port-id", &priv->port_id);
+-	if (ret)
+-		goto out_read_prop_fail;
++	/* try to find port-idx-in-ae first */
++	ret = of_property_read_u32(node, "port-idx-in-ae", &port_id);
++	if (ret) {
++		/* only for old code compatible */
++		ret = of_property_read_u32(node, "port-id", &port_id);
++		if (ret)
++			goto out_read_prop_fail;
++		/* for old dts, we need to caculate the port offset */
++		port_id = port_id < HNS_SRV_OFFSET ? port_id + HNS_DEBUG_OFFSET
++			: port_id - HNS_SRV_OFFSET;
++	}
++	priv->port_id = port_id;
+ 
+ 	hns_init_mac_addr(ndev);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.h b/drivers/net/ethernet/hisilicon/hns/hns_enet.h
+index c68ab3d..337efa5 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.h
+@@ -18,6 +18,9 @@
+ 
+ #include "hnae.h"
+ 
++#define HNS_DEBUG_OFFSET	6
++#define HNS_SRV_OFFSET		2
++
+ enum hns_nic_state {
+ 	NIC_STATE_TESTING = 0,
+ 	NIC_STATE_RESETTING,
+-- 
+1.9.1
