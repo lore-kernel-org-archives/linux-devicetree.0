@@ -1,62 +1,51 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 22/24] [media] rtl2832: change the i2c gate to be
- mux-locked
-Date: Thu, 28 Apr 2016 23:47:58 +0200
-Message-ID: <20160428214758.GA4531@katana>
-References: <1461165484-2314-1-git-send-email-peda@axentia.se>
- <1461165484-2314-23-git-send-email-peda@axentia.se>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: imx: ldb: Add ddc-i2c-bus property
+Date: Thu, 28 Apr 2016 16:48:23 -0500
+Message-ID: <20160428214823.GA841@rob-hp-laptop>
+References: <1461788614-7784-1-git-send-email-akshay.bhat@timesys.com>
+ <1461788614-7784-2-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1461165484-2314-23-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.kozlo>
+In-Reply-To: <1461788614-7784-2-git-send-email-akshay.bhat@timesys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Akshay Bhat <akshay.bhat@timesys.com>
+Cc: devicetree@vger.kernel.org, steve_longerbeam@mentor.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 20, 2016 at 05:18:02PM +0200, Peter Rosin wrote:
-> The root i2c adapter lock is then no longer held by the i2c mux during
-> accesses behind the i2c gate, and such accesses need to take that lock
-> just like any other ordinary i2c accesses do.
->=20
-> So, declare the i2c gate mux-locked, and zap the regmap overrides
-> that makes the i2c accesses unlocked and use plain old regmap
-> accesses. This also removes the need for the regmap wrappers used by
-> rtl2832_sdr, so deconvolute the code further and provide the regmap
-> handle directly instead of the wrapper functions.
->=20
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-
-Antti, I'd need some tag from you since this is not the i2c realm.
-
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXIoUOAAoJEBQN5MwUoCm2jusP/j3ToNlZQahVV1UtMvPujy94
-AF3AWGq+Gn1OWavfKFBdJXxQHsqAydIuu5lsxX5+sZALJgR7KjOX3mGRdBS5Nle2
-xDVL5vQzm8QsXHHJ5r4CKL8nKTFxZaDZZ51i+CeuBuuOVVwR/nzUK8Kdgth0s1az
-leYSe8gc7znMcipW5+5JeaCsFOkUX/gHZHcORur5g5vXYHoHjhMvCxbO+KqhTrFc
-VHFhGAMN8ltRlayIHpFMvTW3s4chO5/cONVILcTS3uMpV1VftovuwV2fC9TKaUq5
-NqB2heSPeEAYboNk4cG6FC2LxOkpsl6ux11HrODI/YkMz2he2bbQG7qod6AT0RW2
-yTSPH2Wr0gxlJPBq0JOX4XQF+l0Arx7KY3iR//1H5cCNbBHVE1ABVM7wwTRMhJAF
-9mYON8A1OTmWHyaJ/QRVevdU/0jt2iCvrerctBCljkjRtQZGBSNQyhqwS23HIL+0
-RDSWK7H/L9Hv0lbzNEUPiUpupDxu5HLveu4oYivrTrt6RCN4HWnVr3sIsaa4x7TD
-o0p1LiUew+g2mx0SzGzAy8oXiGxZ6WwYP06GY7jrbqIYwvD180zr+VoFdoKARPzs
-GY7gUsgh87x4fQrQ4XYVRqarp4xMuyzhTUYOD8AAbGbaFCiLPEKK58ytDLqoRctO
-vGQQGn0rRRdpd3Zq8Fn+
-=3zSS
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
+T24gV2VkLCBBcHIgMjcsIDIwMTYgYXQgMDQ6MjM6MzRQTSAtMDQwMCwgQWtzaGF5IEJoYXQgd3Jv
+dGU6Cj4gRG9jdW1lbnQgdGhlIGRkYy1pMmMtYnVzIHByb3BlcnR5IHVzZWQgYnkgaW14LWxkYiBk
+cml2ZXIgdG8gcmVhZCBFRElECj4gaW5mb3JtYXRpb24gdmlhIEkyQyBpbnRlcmZhY2UuCj4gCj4g
+U2lnbmVkLW9mZi1ieTogQWtzaGF5IEJoYXQgPGFrc2hheS5iaGF0QHRpbWVzeXMuY29tPgo+IC0t
+LQo+IAo+IHYzOgo+IE5ld2x5IGFkZGVkLgo+IAo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9pbXgvbGRiLnR4dCB8IDEgKwo+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
+bnNlcnRpb24oKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvaW14L2xkYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9pbXgvbGRiLnR4dAo+IGluZGV4IDBhMTc1ZDkuLmE0MDc0NjIgMTAwNjQ0
+Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2xk
+Yi50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9p
+bXgvbGRiLnR4dAo+IEBAIC02Miw2ICs2Miw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gICAg
+IGRpc3BsYXktdGltaW5ncyBhcmUgdXNlZCBpbnN0ZWFkLgo+ICAKPiAgT3B0aW9uYWwgcHJvcGVy
+dGllcyAocmVxdWlyZWQgaWYgZGlzcGxheS10aW1pbmdzIGFyZSB1c2VkKToKClRoZSByZXF1aXJl
+ZCBwYXJ0IGRvZXNuJ3QgbWFrZSBzZW5zZSBpZiB5b3UgYWRkIHRoaXMsIGJ1dC4uLgoKPiArIC0g
+ZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVE
+SUQgcHJvYmluZwoKUmVhbGx5LCB0aGlzIHNob3VsZCBiZSBwYXJ0IG9mIGEgY29ubmVjdG9yIG5v
+ZGUgc2luY2UgaTJjIGdvZXMgZnJvbSB0aGUgCmkyYyBjb250cm9sbGVyIHRvIGEgY29ubmVjdG9y
+IGFuZCBpcyBub3QgcGFydCBvZiB0aGUgZGlzcGxheSBjb250cm9sbGVyLgoKPiAgIC0gZGlzcGxh
+eS10aW1pbmdzIDogQSBub2RlIHRoYXQgZGVzY3JpYmVzIHRoZSBkaXNwbGF5IHRpbWluZ3MgYXMg
+ZGVmaW5lZCBpbgo+ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9kaXNwbGF5LXRpbWluZy50eHQuCj4gICAtIGZzbCxkYXRhLW1hcHBpbmcgOiBzaG91bGQgYmUg
+InNwd2ciIG9yICJqZWlkYSIKPiAtLSAKPiAyLjguMQo+IApfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
