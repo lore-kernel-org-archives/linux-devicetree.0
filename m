@@ -1,66 +1,124 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] clk: renesas: r8a7795: Move MODEMR to DT
-Date: Thu, 28 Apr 2016 10:07:59 +0200
-Message-ID: <CAMuHMdUNt_yyLwPwDoQwMAGgeFrL9trH=-YvZ339ObnOPPvOPQ@mail.gmail.com>
-References: <1461823717-22517-1-git-send-email-dirk.behme@de.bosch.com>
-	<CAMuHMdVYtdr8wzm91CH-TAhpbS3E=Jzy67TcjOBC1Q4G9f2bAA@mail.gmail.com>
-	<5721B47D.9030206@de.bosch.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
+ Tegra210 AGIC
+Date: Thu, 28 Apr 2016 09:11:03 +0100
+Message-ID: <5721C597.1010105@nvidia.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+ <1461150237-15580-14-git-send-email-jonathanh@nvidia.com>
+ <20160422100052.GA10606@leverpostej> <571A0739.3090502@nvidia.com>
+ <20160422112239.GF10606@leverpostej> <5720DC1D.1080802@nvidia.com>
+ <20160427173810.GC7359@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <5721B47D.9030206@de.bosch.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, linux-renesas-soc@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Oleksij Rempel <linux@rempel-privat.de>, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160427173810.GC7359@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
 
-On Thu, Apr 28, 2016 at 8:58 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
-> On 28.04.2016 08:52, Geert Uytterhoeven wrote:
->> On Thu, Apr 28, 2016 at 8:08 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
->>> @@ -46,7 +48,8 @@ Examples
+On 27/04/16 18:38, Mark Rutland wrote:
+> On Wed, Apr 27, 2016 at 04:34:53PM +0100, Jon Hunter wrote:
+>>
+>> On 22/04/16 12:22, Mark Rutland wrote:
+>>
+>> [snip]
+>>
+>>>>>> I am not sure if it will be popular to add Tegra specific clock names
+>>>>>> to the GIC DT docs. However, in that case, then possibly the only
+>>>>>> alternative is to move the Tegra AGIC driver into its own file and
+>>>>>> expose the GIC APIs for it to use. Then we could add our own DT doc
+>>>>>> for the Tegra AGIC as well (based upon the ARM GIC).
+>>>>>
+>>>>> The clock-names don't seem right to me, as they sound like provide names
+>>>>> or global clock line names rather than consumer-side names ("clk" and
+>>>>> "apb_pclk").
+>>>>
+>>>> Yes that would be fine with me.
 >>>
->>>          cpg: clock-controller@e6150000 {
->>>                  compatible = "renesas,r8a7795-cpg-mssr";
->>> -               reg = <0 0xe6150000 0 0x1000>;
->>> +               reg = <0 0xe6150000 0 0x1000>,
->>> +                     <0 0xe6160060 0 0x4>;
+>>> Ok; if we model the apb_pclk as owned by the AXI switch (which it is),
+>>> then there's no change for the GIC binding, short of the additional
+>>> compatible string as an extension of "arm,gic-400", as we already model
+>>> that clock in the GIC-400 binding.
+>>
+>> I have been re-working this based upon the feedback received. In the GIC
+>> driver we have the following definitions ...
+>>
+>>  IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
+>>  IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", gic_of_init);
+>>  IRQCHIP_DECLARE(arm1176jzf_dc_gic, "arm,arm1176jzf-devchip-gic", gic_of_init);
+>>  IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+>>  IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
+>>  IRQCHIP_DECLARE(cortex_a7_gic, "arm,cortex-a7-gic", gic_of_init);
+>>  IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
+>>  IRQCHIP_DECLARE(msm_qgic2, "qcom,msm-qgic2", gic_of_init);
+>>  IRQCHIP_DECLARE(pl390, "arm,pl390", gic_of_init);
 >>
 >>
->> The MODEMR register is not part of the CPG block, but of the RST block.
->> So IMHO it doesn't belong in the clock-controller node.
->
-> Ok, fine.
->
-> So we agree hat this ugly hard coded register address stuff has to be
-> removed and replaced by a device tree based solution. Correct?
+>> If I have something like the following in my dts ...
+>>
+>> 	agic: interrupt-controller@702f9000 {
+>> 		compatible = "nvidia,tegra210-agic", "arm,gic-400";
+>> 		...
+>> 	};
+>>
+>> The problem with this is that it tries to register the interrupt controller
+>> early during of_irq_init() before the platform driver has chance to
+>> initialise it.
+> 
+> Probe order strikes again...
+> 
+>> To avoid this I got rid of the "nvidia,tegra210-agic" string and added
+>> the following for the platform driver ...
+>>
+>> static const struct of_device_id gic_match[] = {
+>>        { .compatible = "arm,arm11mp-gic-pm",    .data = &arm11mp_gic_data   },
+>>        { .compatible = "arm,cortex-a15-gic-pm", .data = &cortexa15_gic_data },
+>>        { .compatible = "arm,cortex-a9-gic-pm",  .data = &cortexa9_gic_data  },
+>>        { .compatible = "arm,gic400-pm",         .data = &gic400_data        },
+>>        { .compatible = "arm,pl390-pm",          .data = &pl390_data         },
+>>        {},
+>> };
+>>
+>> It is not ideal as now we have a *-pm variant of each compatible string :-(
+> 
+> Yeah, that's a non-starter. :(
 
-Yes we agree.
+That is what I feared. Understood.
 
->> BTW, I still prefer something like
->> "[PATCH 0/6] arm64: renesas: Obtain MD pin values using syscon/regmap"
->> (http://www.spinics.net/lists/linux-sh/msg44757.html).
->
-> What's the status of this? I see there a date "1 Sep 2015" ;)
+>> Another option would be to add some code in gic_of_init() to check for the
+>> presence of a "clocks" node in the DT binding and bail out of the early 
+>> initialisation if found but may be that is a bit of a hack.
+> 
+> I fear that someone may validly have a clocks property in their root GIC
+> node, at which point things would fall apart. I was under the impression
+> this was the case for some Renesas boards (though I didn't find an
+> example in tree).
+> 
+> So I suspect that using the clocks property in that way isn't going to
+> work out well.
+> 
+>> Mark, what are your thoughts on this?
+> 
+> Collectively: "aargh", "oh no".
 
-We were considering alternative solutions, cfr. "[PATCH/RFC 0/6] boot-mode-reg:
-Add core" (http://www.spinics.net/lists/linux-sh/msg45969.html).
-To avoid delaying upstream r8a7795, we settled for the ugly hard coded
-register access as an interim solution.
+Yes, exactly :-(
 
-> Is this available in any testing tree we could try?
+> We could instead explicitly match "nvidia,tegra210-agic", bailing out if
+> we see that. Otherwise, if we can't handle it like a GIC-400, then we
+> can just drop the GIC-400 compatible string from the fallback list.
 
-It used to be part of older renesas-drivers releases.
-The patches may still apply, though.
+Would it also be a none-starter to have "arm,gic-pm" instead of
+"nvidia,tegra210-agic"? At this point it is not really specific to tegra
+any more and so I was hoping to get rid of that. For example, ...
 
-Gr{oetje,eeting}s,
+	compatible = "arm,gic-pm", "arm,gic-400";
 
-                        Geert
-
+Cheers
+Jon
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
