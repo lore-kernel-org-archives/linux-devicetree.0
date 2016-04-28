@@ -1,77 +1,33 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] clk: renesas: r8a7795: Move MODEMR to DT
-Date: Thu, 28 Apr 2016 08:52:18 +0200
-Message-ID: <CAMuHMdVYtdr8wzm91CH-TAhpbS3E=Jzy67TcjOBC1Q4G9f2bAA@mail.gmail.com>
-References: <1461823717-22517-1-git-send-email-dirk.behme@de.bosch.com>
+From: Yisen Zhuang <Yisen.Zhuang@huawei.com>
+Subject: [PATCH net-next 0/4] net: hns: update DT properties according to Rob's comments
+Date: Thu, 28 Apr 2016 15:09:00 +0800
+Message-ID: <1461827344-52230-1-git-send-email-Yisen.Zhuang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1461823717-22517-1-git-send-email-dirk.behme@de.bosch.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, linux-renesas-soc@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Oleksij Rempel <linux@rempel-privat.de>, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davem@davemloft.net, will.deacon@arm.com, catalin.marinas@arm.com, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
+There are some inappropriate properties definition in hns DT. We update the definition
+according to Rob's review comments and fix some typos in binding.
 
-On Thu, Apr 28, 2016 at 8:08 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
-> From: Oleksij Rempel <linux@rempel-privat.de>
->
-> Map the Mode Monitor Register via the device tree instead of
-> hard coding it in the code. This makes the mapping known to the
-> device tree.
->
-> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
-> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
-> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
-> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-> ---
->  .../devicetree/bindings/clock/renesas,cpg-mssr.txt |  9 ++++++---
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  4 +++-
->  drivers/clk/renesas/r8a7795-cpg-mssr.c             | 22 +++-------------------
->  drivers/clk/renesas/renesas-cpg-mssr.c             | 19 ++++++++++++++-----
->  drivers/clk/renesas/renesas-cpg-mssr.h             |  2 +-
->  5 files changed, 27 insertions(+), 29 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> index fefb802..7984485 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> @@ -15,8 +15,10 @@ Required Properties:
->    - compatible: Must be one of:
->        - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC
->
-> -  - reg: Base address and length of the memory resource used by the CPG/MSSR
-> -    block
-> +  - reg:
-> +    - 0: Base address and length of the memory resource used by the CPG/MSSR
-> +         block.
-> +    - 1: Mode Monitor Register.
->
->    - clocks: References to external parent clocks, one entry for each entry in
->      clock-names
-> @@ -46,7 +48,8 @@ Examples
->
->         cpg: clock-controller@e6150000 {
->                 compatible = "renesas,r8a7795-cpg-mssr";
-> -               reg = <0 0xe6150000 0 0x1000>;
-> +               reg = <0 0xe6150000 0 0x1000>,
-> +                     <0 0xe6160060 0 0x4>;
+For more details, please see individual patches.
 
-The MODEMR register is not part of the CPG block, but of the RST block.
-So IMHO it doesn't belong in the clock-controller node.
+MBR.
 
-BTW, I still prefer something like
-"[PATCH 0/6] arm64: renesas: Obtain MD pin values using syscon/regmap"
-(http://www.spinics.net/lists/linux-sh/msg44757.html).
+Yisen Zhuang (4):
+  net: hns: remove cpld-ctrl-reg and add cell in the cpld-syscon
+    property
+  net: hns: change port-id property to reg property in dsaf port node
+  Documentation: Bindings: Update DT binding for hns dsaf node
+  dts: hisi: update hns dst for changing property port-id to reg
 
-Gr{oetje,eeting}s,
+ .../devicetree/bindings/net/hisilicon-hns-dsaf.txt | 28 +++++++++----------
+ arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi       | 10 ++++---
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c  | 32 ++++++++++++----------
+ 3 files changed, 36 insertions(+), 34 deletions(-)
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+1.9.1
