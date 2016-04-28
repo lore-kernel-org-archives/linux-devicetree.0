@@ -1,38 +1,62 @@
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: [PATCH v3 2/3] devicetree: leds: Introduce "panic-indicator" optional property
-Date: Thu, 28 Apr 2016 19:03:39 -0300
-Message-ID: <1461881020-13964-3-git-send-email-ezequiel@vanguardiasur.com.ar>
-References: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH net-next] of: of_mdio: Check if MDIO bus controller is
+ available
+Date: Fri, 29 Apr 2016 00:07:40 +0200
+Message-ID: <20160428220740.GD12753@lunn.ch>
+References: <1461880510-27132-1-git-send-email-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1461880510-27132-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, nathan.sullivan-acOepvfBmUk@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It's desirable to specify which LEDs are to be blinked on a kernel
-panic. Therefore, introduce a devicetree boolean property to mark
-which LEDs should be treated this way, if possible.
+On Thu, Apr 28, 2016 at 02:55:10PM -0700, Florian Fainelli wrote:
+> Add a check whether the 'struct device_node' pointer passed to
+> of_mdiobus_register() is an available (aka enabled) node in the Device
+> Tree.
+> 
+> Rationale for doing this are cases where an Ethernet MAC provides a MDIO
+> bus controller and node, and an additional Ethernet MAC might be
+> connecting its PHY/switches to that first MDIO bus controller, while
+> still embedding one internally which is therefore marked as "disabled".
+> 
+> Instead of sprinkling checks like these in callers of
+> of_mdiobus_register(), do this in a central location.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> ---
+>  drivers/of/of_mdio.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index b622b33dbf93..2f497790be1b 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -209,6 +209,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  	bool scanphys = false;
+>  	int addr, rc;
+>  
+> +	/* Do not continue if the node is disabled */
+> +	if (!of_device_is_available(np))
+> +		return -EINVAL;
 
-Acked-by: Rob Herring <rob@kernel.org>
-Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
----
- Documentation/devicetree/bindings/leds/common.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Could be bike shedding, but would ENODEV be better?
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 68419843e32f..af10678ea2f6 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -37,6 +37,9 @@ Optional properties for child nodes:
-                      property is mandatory for the LEDs in the non-flash modes
-                      (e.g. torch or indicator).
- 
-+- panic-indicator : This property specifies that the LED should be used,
-+		    if at all possible, as a panic indicator.
-+
- Required properties for flash LED child nodes:
- - flash-max-microamp : Maximum flash LED supply current in microamperes.
- - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
--- 
-2.7.0
+Some callers are going to have to look at the return value and decide
+if it is a fatal error, and fail the whole probe, or a non-fatal error
+and they should keep going. ENODEV seems less fatal...
+
+Other than that,
+
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
