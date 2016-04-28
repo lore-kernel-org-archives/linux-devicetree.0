@@ -1,41 +1,29 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: [PATCH net-next] of: of_mdio: Check if MDIO bus controller is
  available
-Date: Thu, 28 Apr 2016 16:12:18 -0700
-Message-ID: <572298D2.3060809@gmail.com>
+Date: Fri, 29 Apr 2016 01:20:58 +0200
+Message-ID: <20160428232058.GC17679@lunn.ch>
 References: <1461880510-27132-1-git-send-email-f.fainelli@gmail.com>
  <20160428221211.GE12753@lunn.ch>
+ <572298D2.3060809@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160428221211.GE12753@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, nathan.sullivan@ni.com, nicolas.ferre@atmel.com, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <572298D2.3060809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, nathan.sullivan-acOepvfBmUk@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/04/16 15:12, Andrew Lunn wrote:
-> On Thu, Apr 28, 2016 at 02:55:10PM -0700, Florian Fainelli wrote:
->> Add a check whether the 'struct device_node' pointer passed to
->> of_mdiobus_register() is an available (aka enabled) node in the Device
->> Tree.
->>
->> Rationale for doing this are cases where an Ethernet MAC provides a MDIO
->> bus controller and node, and an additional Ethernet MAC might be
->> connecting its PHY/switches to that first MDIO bus controller, while
->> still embedding one internally which is therefore marked as "disabled".
->>
->> Instead of sprinkling checks like these in callers of
->> of_mdiobus_register(), do this in a central location.
-> 
-> I think this discussion has shown there is no documented best
-> practices for MDIO bus drivers and how PHYs nodes are placed within
-> device tree. Maybe you could document the generic MDIO binding, both
-> as integrated into a MAC device node, and as a separate device?
+> Fair enough, I will submit something after re-spining this patch to use
+> -ENODEV, which I agree is a better return code. Did you want me to
+> remove that blurb from the commit message?
 
-Fair enough, I will submit something after re-spining this patch to use
--ENODEV, which I agree is a better return code. Did you want me to
-remove that blurb from the commit message?
--- 
-Florian
+Blurb looks good. More blurb is better than less...
+
+      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
