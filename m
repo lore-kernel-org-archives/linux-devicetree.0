@@ -1,175 +1,115 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Thu, 28 Apr 2016 10:49:25 +0200
-Message-ID: <20160428104925.7eb12ca2@bbrezillon>
-References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
-	<CACh+v5OO+UQ_EiWVyewdMHnMB-p3nd6N=R5P7K4V_4=ymy-YuQ@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V10 2/6] mfd: max77620: add core driver for
+ MAX77620/MAX20024
+Date: Thu, 28 Apr 2016 09:51:55 +0100
+Message-ID: <20160428085155.GL4892@dell>
+References: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
+ <1459348188-11726-3-git-send-email-ldewangan@nvidia.com>
+ <20160427151947.GD4892@dell>
+ <572104AA.7080500@nvidia.com>
+ <20160428072559.GK4892@dell>
+ <5721B962.4090503@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACh+v5OO+UQ_EiWVyewdMHnMB-p3nd6N=R5P7K4V_4=ymy-YuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5721B962.4090503@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Jacques,
-
-On Thu, 28 Apr 2016 10:32:49 +0200
-Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org> wrote:
-
-> Hi Boris,
-> 
-> i haven't seen this code in a while :) I'm glad you're working on it
-> 
-> 2016-04-27 16:35 GMT+02:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > The EBI (External Bus Interface) is used to access external peripherals
-> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> > Each device is assigned a CS line and an address range and can have its
-> > own configuration (timings, access mode, bus width, ...).
-> > This driver provides a generic DT binding to configure a device according
-> > to its requirements.
-> > For specific device controllers (like the NAND one) the SMC timings
-> > should be configured by the controller driver through the matrix and smc
-> > syscon regmaps.
+On Thu, 28 Apr 2016, Laxman Dewangan wrote:
+> On Thursday 28 April 2016 12:55 PM, Lee Jones wrote:
+> >On Wed, 27 Apr 2016, Laxman Dewangan wrote:
 > >
-> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  .../bindings/memory-controllers/atmel,ebi.txt      | 146 +++++++++++++++++++++
-> >  1 file changed, 146 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> >>On Wednesday 27 April 2016 08:49 PM, Lee Jones wrote:
+> >>>On Wed, 30 Mar 2016, Laxman Dewangan wrote:
+> >>>
+> >>>>+#define MAX77620_MFD_CELL_RES(_name, _res)			\
+> >>>>+	{							\
+> >>>>+		.name =3D (_name),				\
+> >>>>+		.resources =3D (_res),				\
+> >>>>+		.num_resources =3D ARRAY_SIZE((_res)),		\
+> >>>>+	}
+> >>>I'm *still* not accepting this.
+> >>>
+> >>>>+
+> >>>>+static struct mfd_cell max20024_children[] =3D {
+> >>>>+	MAX77620_MFD_CELL_NAME("max20024-pinctrl"),
+> >>>>+	MAX77620_MFD_CELL_RES("max20024-gpio", gpio_resources),
+> >>>>+	MAX77620_MFD_CELL_NAME("max20024-pmic"),
+> >>>>+	MAX77620_MFD_CELL_RES("max77620-rtc", rtc_resources),
+> >>>>+	MAX77620_MFD_CELL_RES("max20024-power", power_resources),
+> >>>>+	MAX77620_MFD_CELL_NAME("max20024-watchdog"),
+> >>>>+	MAX77620_MFD_CELL_NAME("max20024-clock"),
+> >>>>+};
+> >>>If you want this submission to be accepted this cycle, you're goin=
+g to
+> >>>have to convert this to the traditional way of defining MFD childr=
+en.
+> >>Yaah, I want to have this in current cycle.
+> >>Will it be fine as follows? (To have quick agreement)
+> >>
+> >>static const struct mfd_cell max77620_children[] =3D {
+> >>         {
+> >>                 .name =3D "max77620-pinctrl",
+> >>         }, {
+> >>                 .name =3D "max77620-gpio",
+> >>                 .resource =3D gpio_resources,
+> >>                 .num_resources =3D ARRAY_SIZE(gpio_resources),
+> >>         }, {
+> >>         /* and so on */
+> >>         },
+> >>};
+> >Yes.  Although, if there are no run-time ordering dependencies, I
+> >usually like to a) have the one line entries on one line i.e.
 > >
-> > diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> > new file mode 100644
-> > index 0000000..0f332d2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> > @@ -0,0 +1,146 @@
-> > +* Device tree bindings for Atmel EBI
-> > +
-> > +The External Bus Interface (EBI) controller is a bus where you can connect
-> > +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
-> > +The EBI provides a glue-less interface to asynchronous memories though the SMC
-> > +(Static Memory Controller).
-> > +Synchronous memories (and some asynchronous memories like NANDs) can be
-> > +attached to specialized controllers which are responsible for configuring the
-> > +bus appropriately according to the connected device.
-> > +In the other hand, the bus interface can be automated for simple asynchronous
-> > +devices.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible:          "atmel,at91sam9260-ebi"
-> > +                       "atmel,at91sam9261-ebi"
-> > +                       "atmel,at91sam9263-ebi0"
-> > +                       "atmel,at91sam9263-ebi1"
-> > +                       "atmel,at91sam9rl-ebi"
-> > +                       "atmel,at91sam9g45-ebi"
-> > +                       "atmel,at91sam9x5-ebi"
-> > +                       "atmel,sama5d3-ebi"
-> > +
-> > +- reg:                 Contains offset/length value for EBI memory mapping.
-> > +                       This property might contain several entries if the EBI
-> > +                       memory range is not contiguous
-> > +
-> > +- #address-cells:      Must be 2.
-> > +                       The first cell encodes the CS.
-> > +                       The second cell encode the offset into the CS memory
-> > +                       range.
-> > +
-> > +- #size-cells:         Must be set to 1.
-> > +
-> > +- ranges:              Encodes CS to memory region association.
-> > +
-> > +- clocks:              Clock feeding the EBI controller.
-> > +                       See clock-bindings.txt
-> > +
-> > +Child chip-select (cs) nodes contain the memory devices nodes connected to
-> > +such as NOR (e.g. cfi-flash) and NAND.
-> > +There might be board specific devices like FPGAs.
-> > +You'll define you device requirements in these child nodes.
-> > +
-> > +Required child cs node properties:
-> > +
-> > +- #address-cells:      Must be 2.
-> > +
-> > +- #size-cells:         Must be 1.
-> > +
-> > +- ranges:              Empty property indicating that child nodes can inherit
-> > +                       memory layout.
-> > +
-> > +Optional child cs node properties:
-> > +- atmel,bus-width:             width of the asynchronous device's data bus
-> > +                               8, 16 or 32.
-> > +                               8 if not present.
-> > +
-> > +- atmel,byte-access-type       "write" or "select" (see Atmel datasheet).
-> > +                               "select" if not present.
-> > +
-> > +- atmel,read-mode              "nrd" or "ncs".
-> > +                               "ncs" is not present.
-> > +
-> > +- atmel,write-mode             "nwe" or "ncs".
-> > +                               "ncs" is not present.
-> > +
-> > +- atmel,exnw-mode              "disabled", "frozen" or "ready".
-> > +                               "disabled" if not present.
-> > +
-> > +- atmel,page-mode              enable page mode if present. The provided value
-> > +                               defines the page size (supported values: 4, 8,
-> > +                               16 and 32).
-> > +
-> > +Optional device timings expressed in nanoseconds (if the property is not
-> > +present 0 is assumed):  
-> 
-> IMO If no timing information is provided, it's probably better not to
-> change it. It may have been configured by the bootloader or romboot.
-> It may not be the perfect timings but at least it could work, whereas
-> filling up with 0 is most probably going to break the access: it's a
-> kind of very agressive timing optimization
+> >          { .name =3D "max77620-pinctrl" }
+> >
+> >... and b) for all the one line entries to be grouped together and
+> >the multi line ones grouped together as well.
+> >
+>=20
+>=20
+> It is turning like as follows:
+>=20
+> static const struct mfd_cell max77620_children[] =3D {
+>         { .name =3D "max77620-pinctrl", },
+>         { .name =3D "max77620-clock", },
+>         { .name =3D "max77620-pmic", },
+>         { .name =3D "max77620-watchdog", },
+>         {
+>                 .name =3D "max77620-gpio",
+>                 .resources =3D gpio_resources,
+>                 .num_resources =3D ARRAY_SIZE(gpio_resources),
+>         }, {
+>                 .name =3D "max77620-rtc",
+>                 .resources =3D rtc_resources,
+>                 .num_resources =3D ARRAY_SIZE(rtc_resources),
+>         }, {
+>                 .name =3D "max77620-power",
+>                 .resources =3D power_resources,
+>                 .num_resources =3D ARRAY_SIZE(power_resources),
+>         }, {
+>                 .name =3D "max77620-thermal",
+>                 .resources =3D thermal_resources,
+>                 .num_resources =3D ARRAY_SIZE(thermal_resources),
+>         },
+> };
+>=20
+> Will it be fine?
 
-Yes, probably. I'll make all those timings mandatory in the next
-version.
+Yes, looks good.
 
-> 
-> > +
-> > +- atmel,ncs-rd-setup-ns
-> > +- atmel,nrd-setup-ns
-> > +- atmel,ncs-wr-setup-ns
-> > +- atmel,nwe-setup-ns
-> > +- atmel,ncs-rd-pulse-ns
-> > +- atmel,nrd-pulse-ns
-> > +- atmel,ncs-wr-pulse-ns
-> > +- atmel,nwe-pulse-ns
-> > +- atmel,nwe-cycle-ns
-> > +- atmel,nrd-cycle-ns
-> > +- atmel,tdf-ns  
-> 
-> One thought about the configuration in 'ns' unit: Some devices may
-> have requirements expressed in clock cycles (I'm thinking of FPGA
-> here). At  a fixed frequency one can always convert manually from 'ns'
-> to 'clocks' but it's a bit tedious and prone to rounding errors. And
-> It 'll  break when the EBI frequency is changed
-
-If you don't mind, I'd like to first get this version accepted, and
-we'll extend it with timings expressed in clock cycles afterward.
-
-BTW, could you describe a real use case where timings should be
-expressed in clock cycles? I mean, usually the devices have some timing
-constraints (tXX_min = Y ns), and I don't see why it would differ for
-FPGA interfaces, but I'm clearly not an FPGA expert.
-
-Thanks,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
