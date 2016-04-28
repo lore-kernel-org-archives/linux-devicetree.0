@@ -1,164 +1,125 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: [PATCH] clk: renesas: r8a7795: Move MODEMR to DT
-Date: Thu, 28 Apr 2016 08:08:37 +0200
-Message-ID: <1461823717-22517-1-git-send-email-dirk.behme@de.bosch.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [RFC v3 1/3] gpio: dt-bindings: add basic-mmio-gpio bindings
+Date: Thu, 28 Apr 2016 15:20:39 +0900
+Message-ID: <CAAVeFuLeQRLReHQbwM5mBtoUG7zKcuw8ScNaV_0-MLw48QZsOw@mail.gmail.com>
+References: <cover.1461710784.git.chunkeey@googlemail.com> <7e8845e6b6384c6b5673532ebef79c8730ed7748.1461710784.git.chunkeey@googlemail.com>
+ <CAL_Jsq+OrkudQwxqfSvuqW=HWm6B74pE9bec0QBh5xNbF+s2Hw@mail.gmail.com>
+ <1838530.usypLq5u4X@debian64> <CAL_JsqKYU=W8DhVjgihgPiu2B_QgLnFqDqX-soghHDFVUGtAOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, linux-renesas-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Oleksij Rempel <linux@rempel-privat.de>, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>, Dirk Behme <dirk.behme@de.bosch.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKYU=W8DhVjgihgPiu2B_QgLnFqDqX-soghHDFVUGtAOQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Christian Lamparter <chunkeey@googlemail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Oleksij Rempel <linux@rempel-privat.de>
+On Thu, Apr 28, 2016 at 12:08 AM, Rob Herring <robh+dt@kernel.org> wrot=
+e:
+> On Wed, Apr 27, 2016 at 5:15 AM, Christian Lamparter
+> <chunkeey@googlemail.com> wrote:
+>> On Tuesday, April 26, 2016 09:06:14 PM Rob Herring wrote:
+>>> On Tue, Apr 26, 2016 at 5:51 PM, Christian Lamparter
+>>> <chunkeey@googlemail.com> wrote:
+>>> > From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>>> >
+>>> > This patch adds the device tree bindings for the basic-mmio-gpio.
+>>> > The basic-mmio-gpio is already part of a the GPIO generic library
+>>> > and shares its compatible with the platform device.
+>>>
+>>> These things always start out "simple", "basic" or "generic". Then
+>>> people extend them a property or 2 at a time until they are no long=
+er
+>>> basic. Make a bunch of GPIO drivers use a generic driver then maybe
+>>> I'll be convinced this is a good idea.
+>> Well, I mentioned brcm63xx (MIPS) and MyBook Live (PPC). But OK, if =
+you
+>> want me to look at the existing code in the kernel. I found the foll=
+owing
+>> candidates.
+>
+> What I meant was convert the drivers, not the dts files to a generic
+> driver. There is no benefit here from a dts perspective. It is driver
+> consolidation that would make all this worthwhile.
+>
+>> 1. MOXA ART: "moxa,moxart-gpio"
+>> http://lxr.free-electrons.com/source/drivers/gpio/gpio-moxart.c
+>> This driver is used by the:
+>> arch/arm/boot/dts/moxart.dtsi
+>>
+>> ---
+>> diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxar=
+t.dtsi
+>> index 1fd27ed..26707d0 100644
+>> --- a/arch/arm/boot/dts/moxart.dtsi
+>> +++ b/arch/arm/boot/dts/moxart.dtsi
+>> @@ -66,8 +66,11 @@
+>>                 gpio: gpio@98700000 {
+>>                         gpio-controller;
+>>                         #gpio-cells =3D <2>;
+>> -                       compatible =3D "moxa,moxart-gpio";
+>> -                       reg =3D <0x98700000 0xC>;
+>> +                       compatible =3D "basic-mmio-gpio";
+>> +                       reg =3D <0x98700000 0x4
+>> +                              0x98700004 0x4
+>> +                              0x98700008 0x4>;
+>> +                       reg-names =3D "set dat dirout";
+>
+> This is not a compatible change. You can't remove the old drivers as
+> they are needed to work with old dtbs, so there is no gain.
+>
+> You would need to match on existing compatibles such as
+> moxa,moxart-gpio and provide a match data struct that has all the inf=
+o
+> you are adding here (e.g. data register offset). Then additionally yo=
+u
+> could add "basic-mmio-gpio" (I would drop "basic" part) and the
+> additional data associated with it. But it has to be new properties,
+> not changing properties. Changing the reg values doesn't work.
+>
+>
+>> 2. GE FPGA based GPIO: "ge,imp3a-gpio", "gef,sbc310-gpio", "gef,sbc6=
+10-gpio"
+>> 3. CLPS711X GPIO driver: "cirrus,clps711x-gpio"
+>> 4. GPIO driver for the TS-4800 board: "technologic,ts4800-gpio"
+>>
+>> What do you think. There's a total of six devices that can make use
+>> of the "basic-mmio-gpio". If this gives me your go-ahead, I'll inclu=
+de
+>> them in the series as proper patches.
+>
+> Those are a good start. My other worry about this is next someone wil=
+l
+> want to add interrupt registers which is probably a majority of GPIO
+> controllers.
+>
+> Of course, I'm sure Linus has an opinion on all of this.
 
-Map the Mode Monitor Register via the device tree instead of
-hard coding it in the code. This makes the mapping known to the
-device tree.
+I'm not Linus, but after a quick look at the drivers mentioned by
+Christian I see little room for improvement (but still some - see
+below). Like Rob mentioned we want the DT's compatible property to
+describe the hardware as precisely as possible. "basic-mmio-gpio" is
+not precise and not backward-compatible. The examples listed by
+Christian are already all using the generic MMIO driver and are thus
+already quite short.
 
-Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
-Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
-Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
----
- .../devicetree/bindings/clock/renesas,cpg-mssr.txt |  9 ++++++---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  4 +++-
- drivers/clk/renesas/r8a7795-cpg-mssr.c             | 22 +++-------------------
- drivers/clk/renesas/renesas-cpg-mssr.c             | 19 ++++++++++++++-----
- drivers/clk/renesas/renesas-cpg-mssr.h             |  2 +-
- 5 files changed, 27 insertions(+), 29 deletions(-)
+However, they all repeat the same basic sequence to initialize the
+generic IOMMU driver, and maybe this could be consolidated in a single
+file, with each matching chip having the arguments passed to
+bgpio_init() encoded as data (a bit like the simple-panel driver does
+- see the platform_of_match member of
+drivers/gpu/drm/panel/panel-simple.c)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-index fefb802..7984485 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-@@ -15,8 +15,10 @@ Required Properties:
-   - compatible: Must be one of:
-       - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC
- 
--  - reg: Base address and length of the memory resource used by the CPG/MSSR
--    block
-+  - reg:
-+    - 0: Base address and length of the memory resource used by the CPG/MSSR
-+         block.
-+    - 1: Mode Monitor Register.
- 
-   - clocks: References to external parent clocks, one entry for each entry in
-     clock-names
-@@ -46,7 +48,8 @@ Examples
- 
- 	cpg: clock-controller@e6150000 {
- 		compatible = "renesas,r8a7795-cpg-mssr";
--		reg = <0 0xe6150000 0 0x1000>;
-+		reg = <0 0xe6150000 0 0x1000>,
-+		      <0 0xe6160060 0 0x4>;
- 		clocks = <&extal_clk>, <&extalr_clk>;
- 		clock-names = "extal", "extalr";
- 		#clock-cells = <2>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 8be9424..3e5d5b0 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -305,7 +305,9 @@
- 
- 		cpg: clock-controller@e6150000 {
- 			compatible = "renesas,r8a7795-cpg-mssr";
--			reg = <0 0xe6150000 0 0x1000>;
-+			reg = <0 0xe6150000 0 0x1000>,
-+			      /* MODEMR - Mode Monitor Register */
-+			      <0 0xe6160060 0 0x4>;
- 			clocks = <&extal_clk>, <&extalr_clk>;
- 			clock-names = "extal", "extalr";
- 			#clock-cells = <2>;
-diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-index 6af7f5b..ac34c11 100644
---- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
-@@ -612,26 +612,10 @@ struct clk * __init r8a7795_cpg_clk_register(struct device *dev,
- 					 __clk_get_name(parent), 0, mult, div);
- }
- 
--/*
-- * Reset register definitions.
-- */
--#define MODEMR	0xe6160060
--
--static u32 rcar_gen3_read_mode_pins(void)
--{
--	void __iomem *modemr = ioremap_nocache(MODEMR, 4);
--	u32 mode;
--
--	BUG_ON(!modemr);
--	mode = ioread32(modemr);
--	iounmap(modemr);
--
--	return mode;
--}
--
--static int __init r8a7795_cpg_mssr_init(struct device *dev)
-+static int __init r8a7795_cpg_mssr_init(struct device *dev,
-+					void __iomem *modemr_base)
- {
--	u32 cpg_mode = rcar_gen3_read_mode_pins();
-+	u32 cpg_mode = ioread32(modemr_base);
- 
- 	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
- 	if (!cpg_pll_config->extal_div) {
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index 1f2dc362..b455b14 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -107,6 +107,7 @@ static const u16 srcr[] = {
- struct cpg_mssr_priv {
- 	struct device *dev;
- 	void __iomem *base;
-+	void __iomem *modemr_base; /* Mode Monitor Register */
- 	spinlock_t mstp_lock;
- 
- 	struct clk **clks;
-@@ -529,17 +530,25 @@ static int __init cpg_mssr_probe(struct platform_device *pdev)
- 	int error;
- 
- 	info = of_match_node(cpg_mssr_match, np)->data;
--	if (info->init) {
--		error = info->init(dev);
--		if (error)
--			return error;
--	}
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
- 	priv->dev = dev;
-+
-+	if (info->init) {
-+		/* get Mode Monitor Register */
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		priv->modemr_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(priv->modemr_base))
-+			return PTR_ERR(priv->modemr_base);
-+
-+		error = info->init(dev, priv->modemr_base);
-+		if (error)
-+			return error;
-+	}
-+
- 	spin_lock_init(&priv->mstp_lock);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.h b/drivers/clk/renesas/renesas-cpg-mssr.h
-index 0d1e3e8..3ec7e2d 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.h
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.h
-@@ -123,7 +123,7 @@ struct cpg_mssr_info {
- 	unsigned int num_core_pm_clks;
- 
- 	/* Callbacks */
--	int (*init)(struct device *dev);
-+	int (*init)(struct device *dev, void __iomem *modemr_base);
- 	struct clk *(*cpg_clk_register)(struct device *dev,
- 					const struct cpg_core_clk *core,
- 					const struct cpg_mssr_info *info,
--- 
-2.8.0
+This would reduce the amount of code that basically does the same
+thing, and remove a few files from drivers/gpio. Even there I see that
+gpio-clps711x.c has some specifics compared to the other drivers, but
+maybe Christian can iron them out.
+
+So without touching the DT I think consolidating the bgpio users in a
+fashion similar to what simple-panel does would be worthwhile.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
