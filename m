@@ -1,115 +1,56 @@
-From: Yisen Zhuang <Yisen.zhuang@huawei.com>
-Subject: Re: [PATCH v2 net-next 11/13] Documentation: Bindings: Update DT
- binding for separating dsaf dev support
-Date: Thu, 28 Apr 2016 09:45:31 +0800
-Message-ID: <57216B3B.8000306@huawei.com>
-References: <1461402317-136499-1-git-send-email-Yisen.Zhuang@huawei.com>
- <1461402317-136499-12-git-send-email-Yisen.Zhuang@huawei.com>
- <20160426124847.GA26682@rob-hp-laptop> <57203309.1090501@huawei.com>
- <CAL_JsqLHrHWtiikSt7F39LoExoL2aep5Pqax5cGWWBw-yhz79g@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 04/11] drm: sun4i: Add DT bindings documentation
+Date: Wed, 27 Apr 2016 21:37:30 -0500
+Message-ID: <20160428023730.GA1514@rob-hp-laptop>
+References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1461590572-4027-5-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLHrHWtiikSt7F39LoExoL2aep5Pqax5cGWWBw-yhz79g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, salil.mehta@huawei.com, Catalin Marinas <catalin.marinas@arm.com>, xieqianqian@huawei.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev <netdev@vger.kernel.org>, lipeng321@huawei.com, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, Wei Xu <xuwei5@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>, Kumar Gala <galak@codeaurora.org>, yankejian <yankejian@huawei.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, liguozhu@huawei.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERB4HOQW4QKGQEYDQSVWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1461590572-4027-5-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKVGhhbmtzIGZvciB5b3UgY29tbWVudHMuCgrlnKggMjAxNi80LzI3IDIzOjI1LCBS
-b2IgSGVycmluZyDlhpnpgZM6Cj4gT24gVHVlLCBBcHIgMjYsIDIwMTYgYXQgMTA6MzMgUE0sIFlp
-c2VuIFpodWFuZyA8WWlzZW4uemh1YW5nQGh1YXdlaS5jb20+IHdyb3RlOgo+PiBIaSBSb2IgYW5k
-IERhdmlkLAo+Pgo+PiBQbGVhc2Ugc2VlIG15IGNvbW1lbnRzIGlubGluZS4KPj4KPj4gRGF2aWQg
-aGF2ZSBtZXJnZWQgdGhpcyBzZXJpZXMgdG8gbmV0LW5leHQsIGJ1dCB3ZSBuZWVkIHRvIG1vZGlm
-eSBzb21lIGNvZGVzIGFjY29yZGluZwo+PiB0byBSb2IncyBjb21tZW50cy4gSSBhbSBub3Qgc3Vy
-ZSBpZiBpIG5lZWQgdG8gc2VuZCBWMyBmb3IgdGhpcyBzZXJpZXMsIG9yIHNlcGFyYXRlCj4+IHBh
-dGNoZXMgb2YgZG9jdW1lbnRhdGlvbiB0byBpbmRlcGVuZGVudCBzZXJpZXMgYW5kIGdlbmVyYXRl
-IGEgbmV3IHBhdGNoIGZvciBobnMgYmFzZQo+PiBvbiBjdXJyZW50IG5ldC1uZXh0Pwo+IAo+IFRo
-YXQncyBEYXZpZCdzIGNhbGwuIEknbSBndWVzc2luZyBoZSB3YW50cyBmb2xsb3ctdXAgcGF0Y2hl
-cyBvbiB0b3Agb2YgdGhlc2UuCgpPa2F5LCBJIHdpbGwgc2VuZCBhIG5ldyBzZXJpZXMgYmFzZSBv
-biBjdXJyZW50IG5ldC1uZXh0LgoKPiAKPj4g5ZyoIDIwMTYvNC8yNiAyMDo0OCwgUm9iIEhlcnJp
-bmcg5YaZ6YGTOgo+Pj4gT24gU2F0LCBBcHIgMjMsIDIwMTYgYXQgMDU6MDU6MTVQTSArMDgwMCwg
-WWlzZW4gWmh1YW5nIHdyb3RlOgo+Pj4+IEJlY2F1c2UgZGVidWcgZHNhZiBwb3J0IHdhcyBzZXBh
-cmF0ZWQgZnJvbSBzZXJ2aWNlIGRzYWYgcG9ydCwgdGhpcyBwYXRjaAo+Pj4+IHVwZGF0ZXMgdGhl
-IHJlbGF0ZWQgaW5mb3JtYXRpb24gb2YgRFQgYmluZGluZy4KPj4+Cj4+PiBTZXBhcmF0ZWQgd2hl
-bj8gTmV3IHZlcnNpb24gb2YgdGhlIGgvdz8gSWYgc28sIHdoZXJlJ3MgdGhlIG5ldwo+Pj4gY29t
-cGF0aWJsZSBzdHJpbmc/IFRoaXMgaXMgcXVpdGUgYSBiaWcgYmluZGluZyBjaGFuZ2UuCj4+Cj4+
-IFRoZXJlIGlzbid0IGFueSBjaGFuZ2Ugb2YgaC93LiBJIHNlcGFyYXRlZCBkZWJ1ZyBkc2FmIHBv
-cnQgZnJvbSBzZXZpY2UgZHNhZgo+PiBwb3J0IHRvIG1ha2UgdGhlIGNvZGUgbW9yZSBzaW1wbGUg
-YW5kIHJlYWRhYmlsaXR5Lgo+IAo+IE9rYXkuCj4gCj4gWy4uLl0KPiAKPj4+PiArICBzZXJkZXMt
-c3lzY29uIHJhdGhlciB0aGFuIHRoaXMgYWRkcmVzcy4KPj4+PiAgICBUaGUgdGhpcmQgcmVnaW9u
-IGlzIHRoZSBQUEUgcmVnaXN0ZXIgYmFzZSBhbmQgc2l6ZS4KPj4+PiAtICBUaGUgZm91cnRoIHJl
-Z2lvbiBpcyBkc2EgZmFicmljIGJhc2UgcmVnaXN0ZXIgYW5kIHNpemUuCj4+Pj4gLSAgVGhlIGZp
-ZnRoIHJlZ2lvbiBpcyBjcGxkIGJhc2UgcmVnaXN0ZXIgYW5kIHNpemUsIGl0IGlzIG5vdCByZXF1
-aXJlZCBpZiBkbyBub3QgdXNlIGNwbGQuCj4+Pj4gLS0gcGh5LWhhbmRsZTogcGh5IGhhbmRsZSBv
-ZiBwaHlzaWNsIHBvcnQsIDAgaWYgbm90IGFueSBwaHkgZGV2aWNlLiBzZWUgZXRoZXJuZXQudHh0
-IFsxXS4KPj4+PiArICBUaGUgZm91cnRoIHJlZ2lvbiBpcyBkc2EgZmFicmljIGJhc2UgcmVnaXN0
-ZXIgYW5kIHNpemUuIEl0IGlzIG5vdCByZXF1aXJlZCBmb3IKPj4+PiArICBzaW5nbGUtcG9ydCBt
-b2RlLgo+Pj4+ICstIHJlZy1uYW1lczogbWF5IGJlIHBwZS1iYXNlIGFuZChvcikgZHNhZi1iYXNl
-LiBJdCBpcyB1c2VkIHRvIGZpbmQgdGhlCj4+Pj4gKyAgY29ycmVzcG9uZGluZyByZWcncyBpbmRl
-eC4KPj4+Cj4+PiBCdXQgeW91IGhhdmUgdXAgdG8gNSByZWdpb25zLgo+Pj4KPj4+IFRoZSB2YXJp
-YWJsZSBuYXR1cmUgb2Ygd2hhdCByZWdpb25zIHlvdSBoYXZlIHRlbGxzIG1lIHlvdSBuZWVkIG1v
-cmUKPj4+IHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgZWFjaCBjaGlwLgo+Pgo+PiB3
-ZSBkaWRuJ3QgYWRkIHN1cHBvcnQgb2YgbmV3IGgvdy4gV2UgYWRkZWQgdGhlc2UgcmVnaW9ucyB0
-byBtYWtlIGNvZGUgc2ltcGxlIGFuZCByZWFkYWJpbGl0eS4KPj4gSWYgd2UgbmVlZCB0byBhZGQg
-c3VwcG9ydCBvZiBuZXh0IGgvdyB2ZXJzaW9uIG5leHQgdGltZSwgd2UgZG9uJ3QgbmVlZCB0byBh
-ZGQgbWFueSBicmFuY2hlcwo+PiBmb3IgdGhlc2UgYXR0cmlidXRlcy4gU28gd2UgZGlkbid0IGFk
-ZCBhIG5ldyBjb21wYXRpYmxlIGhlcmUuCj4gCj4gTm90IHN1cmUgd2hhdCB5b3UgbWVhbiBieSBi
-cmFuY2hlcy4gSXQncyBmaW5lIHRvIHB1dCBwcm9wZXJ0aWVzIGZvcgo+IHRoaW5ncyB0aGF0IHZh
-cnkgYW1vbmcgaC93IHZlcnNpb25zLCBidXQgbmV3IGNvbXBhdGlibGUgc3RyaW5ncyB3aWxsCj4g
-YmUgbmVlZGVkIGZvciBhbnkgbmV3IHZlcnNpb25zLgoKSSBtZWFuIHRoYW4gd2UgcHV0IHByb3Bl
-cnRpZXMgZm9yIHRoaW5ncyB0aGF0IHZhcnkgYW1vbmcgaC93IHZlcnNpb25zLiBJZiB3ZSBhZGQg
-c3VwcG9ydCBmb3IKbmV3IGgvdyB2ZXJzaW9ucyBuZXh0IHRpbWUsIHdlIHdpbGwgYWRkIG5ldyBj
-b21wYXRpYmxlIHN0cmluZ3MuCgo+IAo+IAo+Pj4+ICstIHBvcnQ6IHN1Ym5vZGVzIG9mIGRzYWYu
-IEEgZHNhZiBub2RlIG1heSBjb250YWluIHNldmVyYWwgcG9ydCBub2RlcyhEZXBlbmRpbmcKPj4+
-PiArICBvbiBtb2RlIG9mIGRzYWYpLiBQb3J0IG5vZGUgY29udGFpbiBzb21lIGF0dHJpYnV0ZXMg
-bGlzdGVkIGJlbG93Ogo+Pj4+ICstIHBvcnQtaWQ6IGlzIHBoeXNpY2FsIHBvcnQgaW5kZXggaW4g
-b25lIGRzYWYuCj4+Pgo+Pj4gSW5kZXhlcyBzaG91bGQgZ2VuZXJhbGx5IGJlIGF2b2lkZWQuIFdo
-YXQgZG9lcyB0aGUgbnVtYmVyIGNvcnJlc3BvbmQKPj4+IHRvIGluIGgvdyAoaWYgYW55dGhpbmcp
-Pwo+Pgo+PiBwb3J0LWlkIGlzIGluZGV4IGZvciBhIHBvcnQgaW4gZHNhZiwgaXQgaXMgY29ycmVz
-cG9uZCB0byBpbmRleCBvZiBQSFkgc2hvd2VkIGJlbG93Lgo+IAo+IE9rYXksIHlvdSBzaG91bGQg
-dXNlIHJlZyBwcm9wZXJ0eSBoZXJlIGluc3RlYWQuCgpBZ3JlZSwgdGhhbmtzLgoKPiAKPj4KPj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Q1BVCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICB8Cj4+ICAgICAtLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tICAgIC0tLS0tLS0tLSAg
-IC0tLS0tLS0tLQo+PiAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAg
-ICAgICAgfCAgICB8ICAgICAgIHwgICB8ICAgfCAgIHwKPj4gICAgIHwgICAgICAgICAgICAgICAg
-ICAgICAgICBQUEUgICAgICAgICAgICAgICAgIHwgICAgfCAgUFBFICB8ICAgfCAgUFBFICB8Cj4+
-ICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICB8ICAgIHwg
-ICB8ICAgfCAgIHwgICB8ICAgfAo+PiAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-ICAgICAgICAgICAgICAgfCAgICB8ICAgfCAgIHwgICB8ICAgfCAgIHwKPj4gICAgIHwgICAgICAg
-ICAgICAgICAgICAgICAgY3Jvc3NiYXIgICAgICAgICAgICAgIHwgICAgfCAgIHwgICB8ICAgfCAg
-IHwgICB8Cj4+ICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAg
-ICB8ICAgIHwgICB8ICAgfCAgIHwgICB8ICAgfAo+PiAgICAgfCAgIC0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0gICAgICAgfCAgICB8ICAgfCAgIHwgICB8ICAgfCAgIHwKPj4gICAg
-IHwgICB8ICAgICB8ICAgICB8ICAgICAgfCAgICAgIHwgICAgICB8ICAgICAgIHwgICAgfCAgIHwg
-ICB8ICAgfCAgIHwgICB8Cj4+ICAgICB8ICAgfCAgICAgfCAgICAgfCAgICAgIHwgICAgICB8ICAg
-ICAgfCAgICAgICB8ICAgIHwgICB8ICAgfCAgIHwgICB8ICAgfAo+PiAgICAgfCAgTUFDICAgTUFD
-ICAgTUFDICAgIE1BQyAgICBNQUMgICAgTUFDICAgICAgfCAgICB8ICBNQUMgIHwgICB8ICBNQUMg
-IHwKPj4gICAgIHwgICB8ICAgICB8ICAgICB8ICAgICAgfCAgICAgIHwgICAgICB8ICAgICAgIHwg
-ICAgfCAgIHwgICB8ICAgfCAgIHwgICB8Cj4+ICAgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tICAgIC0tLS0tLS0tLSAgIC0tLS0tLS0tLQo+PiAgICAgICAg
-IHwgICAgIHwgICAgIHwgICAgICB8ICAgICAgfCAgICAgIHwgICAgXCAgICAgICAgLyAgfCAgICAg
-ICAgLyAgfAo+PiAgICAgICAgUEhZICAgUEhZICAgUEhZICAgIFBIWSAgICBQSFkgICAgUEhZICAg
-IFwgICAgICAvICBQSFkgICAgICAvICBQSFkKPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgXCAgICAvICAgICAgICAgICAvCj4+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcICAvICAgICAgICAgICAvCj4+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIERTQUYodGhyZWUgcGxh
-dGZvcm0gZGV2aWNlKQo+Pgo+Pj4KPj4+PiArLSBwaHktaGFuZGxlOiBwaHkgaGFuZGxlIG9mIHBo
-eXNpY2wgcG9ydC4gSXQgaXMgbm90IHJlcXVpcmVkIGlmIHRoZXJlIGlzbid0Cj4gCj4gQW5vdGhl
-ciB0eXBvIGhlcmUuCgpBZ3JlZSwgdGhhbmtzLgoKPiAKPiBSb2IKPiAKPiAuCj4gCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Mon, Apr 25, 2016 at 03:22:45PM +0200, Maxime Ripard wrote:
+> The display pipeline of the Allwinner A10 is involving several loosely
+> coupled components.
+> 
+> Add a documentation for the bindings.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../bindings/display/sunxi/sun4i-drm.txt           | 258 +++++++++++++++++++++
+>  1 file changed, 258 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+
+> +The display engine pipeline (and its entry point, since it can be
+> +either directly the backend or the frontend) is represented as an
+> +extra node.
+> +
+> +Required properties:
+> +  - compatible: value must be one of:
+> +    * allwinner,sun5i-a13-display-engine
+> +
+> +  - allwinner,pipelines: list of phandle to the display engine
+> +    frontends available.
+
+
+> +display-engine {
+> +	compatible = "allwinner,sun5i-a13-display-engine";
+> +	pipelines = <&fe0>;
+
+Missing allwinner prefix.
+
+Otherwise,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
