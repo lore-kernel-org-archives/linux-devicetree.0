@@ -1,64 +1,270 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 01/13] dt-bindings: Add Renesas R-Car FCP DT bindings
-Date: Thu, 28 Apr 2016 09:36:08 +0300
-Message-ID: <7242073.I0M81bb6ct@avalon>
-References: <1461620198-13428-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1461620198-13428-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20160428025429.GA11679@rob-hp-laptop>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
+Date: Thu, 28 Apr 2016 08:44:05 +0200
+Message-ID: <20160428084405.4d71efbc@bbrezillon>
+References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
+	<20160427150738.GA7359@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20160428025429.GA11679@rob-hp-laptop>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160427150738.GA7359@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Mark,
 
-On Wednesday 27 Apr 2016 21:54:29 Rob Herring wrote:
-> On Tue, Apr 26, 2016 at 12:36:26AM +0300, Laurent Pinchart wrote:
-> > The FCP is a companion module of video processing modules in the Renesas
-> > R-Car Gen3 SoCs. It provides data compression and decompression, data
-> > caching, and conversion of AXI transactions in order to reduce the
-> > memory bandwidth.
+On Wed, 27 Apr 2016 16:07:38 +0100
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+
+> On Wed, Apr 27, 2016 at 04:35:54PM +0200, Boris Brezillon wrote:
+> > The EBI (External Bus Interface) is used to access external peripherals
+> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> > Each device is assigned a CS line and an address range and can have its
+> > own configuration (timings, access mode, bus width, ...).
+> > This driver provides a generic DT binding to configure a device according
+> > to its requirements.
+> > For specific device controllers (like the NAND one) the SMC timings
+> > should be configured by the controller driver through the matrix and smc
+> > syscon regmaps.
 > > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
+> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > > ---
+> >  .../bindings/memory-controllers/atmel,ebi.txt      | 146 +++++++++++++++++++++
+> >  1 file changed, 146 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
 > > 
-> >  .../devicetree/bindings/media/renesas,fcp.txt      | 31
-> >  ++++++++++++++++++++++ 1 file changed, 31 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/media/renesas,fcp.txt
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> > b/Documentation/devicetree/bindings/media/renesas,fcp.txt new file mode
-> > 100644
-> > index 000000000000..0c72ca24379f
+> > diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> > new file mode 100644
+> > index 0000000..0f332d2
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> > @@ -0,0 +1,31 @@
-> > +Renesas R-Car Frame Compression Processor (FCP)
-> > +-----------------------------------------------
+> > +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> > @@ -0,0 +1,146 @@
+> > +* Device tree bindings for Atmel EBI
 > > +
-> > +The FCP is a companion module of video processing modules in the Renesas
-> > R-Car +Gen3 SoCs. It provides data compression and decompression, data
-> > caching, and +conversion of AXI transactions in order to reduce the
-> > memory bandwidth. +
-> > +There are three types of FCP whose configuration and behaviour highly
-> > depend +on the module they are paired with.
+> > +The External Bus Interface (EBI) controller is a bus where you can connect
+> > +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
+> > +The EBI provides a glue-less interface to asynchronous memories though the SMC
+> > +(Static Memory Controller).
+> > +Synchronous memories (and some asynchronous memories like NANDs) can be
+> > +attached to specialized controllers which are responsible for configuring the
+> > +bus appropriately according to the connected device.
+> > +In the other hand, the bus interface can be automated for simple asynchronous
+> > +devices.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible:		"atmel,at91sam9260-ebi"
+> > +			"atmel,at91sam9261-ebi"
+> > +			"atmel,at91sam9263-ebi0"
+> > +			"atmel,at91sam9263-ebi1"
+> > +			"atmel,at91sam9rl-ebi"
+> > +			"atmel,at91sam9g45-ebi"
+> > +			"atmel,at91sam9x5-ebi"
+> > +			"atmel,sama5d3-ebi"
+> > +
+> > +- reg:			Contains offset/length value for EBI memory mapping.
+> > +			This property might contain several entries if the EBI
+> > +			memory range is not contiguous
+> > +
+> > +- #address-cells:	Must be 2.
+> > +			The first cell encodes the CS.
+> > +			The second cell encode the offset into the CS memory
+> > +			range.
+> > +
+> > +- #size-cells:		Must be set to 1.
+> > +
+> > +- ranges:		Encodes CS to memory region association.
+> > +
+> > +- clocks:		Clock feeding the EBI controller.
+> > +			See clock-bindings.txt
+> > +
+> > +Child chip-select (cs) nodes contain the memory devices nodes connected to
+> > +such as NOR (e.g. cfi-flash) and NAND.
+> > +There might be board specific devices like FPGAs.
+> > +You'll define you device requirements in these child nodes.
+> > +
+> > +Required child cs node properties:
+> > +
+> > +- #address-cells:	Must be 2.
+> > +
+> > +- #size-cells:		Must be 1.
+> > +
+> > +- ranges:		Empty property indicating that child nodes can inherit
+> > +			memory layout.
+> > +
+> > +Optional child cs node properties:
+> > +- atmel,bus-width:		width of the asynchronous device's data bus
+> > +				8, 16 or 32.
+> > +				8 if not present.
+> > +
+> > +- atmel,byte-access-type	"write" or "select" (see Atmel datasheet).
+> > +				"select" if not present.
+> > +
+> > +- atmel,read-mode		"nrd" or "ncs".
+> > +				"ncs" is not present.
+> > +
+> > +- atmel,write-mode		"nwe" or "ncs".
+> > +				"ncs" is not present.
+> > +
+> > +- atmel,exnw-mode		"disabled", "frozen" or "ready".
+> > +				"disabled" if not present.
+> > +
+> > +- atmel,page-mode		enable page mode if present. The provided value
+> > +				defines the page size (supported values: 4, 8,
+> > +				16 and 32).
+> > +
+> > +Optional device timings expressed in nanoseconds (if the property is not
+> > +present 0 is assumed):
+> > +
+> > +- atmel,ncs-rd-setup-ns
+> > +- atmel,nrd-setup-ns
+> > +- atmel,ncs-wr-setup-ns
+> > +- atmel,nwe-setup-ns
+> > +- atmel,ncs-rd-pulse-ns
+> > +- atmel,nrd-pulse-ns
+> > +- atmel,ncs-wr-pulse-ns
+> > +- atmel,nwe-pulse-ns
+> > +- atmel,nwe-cycle-ns
+> > +- atmel,nrd-cycle-ns
+> > +- atmel,tdf-ns  
 > 
-> 3 types?, but I only see one compatible and no relationship with said
-> module described.
+> I assume that these are defined in a datasheet. It may be worth noting
+> "see datasheet" above this collection of properties.
+> 
+> > +
+> > +- atmel,tdf-mode:		"normal" or "optimized". If set to "optimized"
+> > +				the data float time is optimized depending on
+> > +				the next device being accessed (next device
+> > +				setup time is subtracted to the current device
+> > +				data float time).
+> > +
+> > +
+> > +
+> > +Example:
+> > +
+> > +	ebi: ebi@10000000 {
+> > +		compatible = "atmel,sama5d3-ebi", "simple-bus";  
+> 
+> I don't believe that "simple-bus" should be here.
+> 
+> > +		#address-cells = <2>;
+> > +		#size-cells = <1>;
+> > +		atmel,smc = <&hsmc>;
+> > +		atmel,matrix = <&matrix>;
+> > +		reg = <0x10000000 0x10000000
+> > +		       0x40000000 0x30000000>;
+> > +		ranges = <0x0 0x0 0x10000000 0x10000000
+> > +			  0x1 0x0 0x40000000 0x10000000
+> > +			  0x2 0x0 0x50000000 0x10000000
+> > +			  0x3 0x0 0x60000000 0x10000000>;
+> > +		clocks = <&mck>;
+> > +
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_ebi_addr>;
+> > +
+> > +		cs@0 {  
+> 
+> I suspect recent DTC will warn here, as the unit-address should match
+> the reg for the node (and no reg is defined). Here the reg would have to
+> be two cells, which means we have to make up an address, no?
+> 
+> We can either give the node a name without a unit-address (e.g. cs_0),
+> or define some reg format.
+> 
+> > +			#address-cells = <2>;
+> > +			#size-cells = <1>;
+> > +			ranges;
+> > +			atmel,generic-dev;  
+> 
+> The cover letter mentioned this should go.
+> 
+> > +			atmel,read-mode = "nrd";
+> > +			atmel,write-mode = "nwe";
+> > +			atmel,bus-width = <16>;
+> > +			atmel,ncs-rd-setup-ns = <0>;
+> > +			atmel,ncs-wr-setup-ns = <0>;
+> > +			atmel,nwe-setup-ns = <8>;
+> > +			atmel,nrd-setup-ns = <16>;
+> > +			atmel,ncs-rd-pulse-ns = <84>;
+> > +			atmel,ncs-wr-pulse-ns = <84>;
+> > +			atmel,nrd-pulse-ns = <76>;
+> > +			atmel,nwe-pulse-ns = <76>;
+> > +			atmel,nrd-cycle-ns = <107>;
+> > +			atmel,nwe-cycle-ns = <84>;
+> > +			atmel,tdf-ns = <16>;
+> > +
+> > +			nor: flash@0,0 {
+> > +				compatible = "cfi-flash";
+> > +				#address-cells = <1>;
+> > +				#size-cells = <1>;
+> > +				reg = <0x0 0x0 0x1000000>;  
+> 
+> It feels odd that in the node for chipselect N, sub-devices have to
+> encode the chipselect number in their reg, when it's obvious from their
+> container. It may make more sense for the cs node to have a non-empty
+> reg (or somehow to make that translation/truncation implicit).
 
-The bindings currently support a single type, as that's all the driver 
-currently supports and I'm not comfortable merging bindings without at least 
-one test implementation. Should I clarify that with something as "These DT 
-bindings currently support the "FCP for Video" type only" ?
+Would you agree with the following representation?
 
--- 
+	ebi: ebi@10000000 {
+		compatible = "atmel,sama5d3-ebi";
+		#address-cells = <2>;
+		#size-cells = <1>;
+		atmel,smc = <&hsmc>;
+		atmel,matrix = <&matrix>;
+		reg = <0x10000000 0x10000000
+		       0x40000000 0x30000000>;
+		ranges = <0x0 0x0 0x10000000 0x10000000
+			  0x1 0x0 0x40000000 0x10000000
+			  0x2 0x0 0x50000000 0x10000000
+			  0x3 0x0 0x60000000 0x10000000>;
+		clocks = <&mck>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_ebi_addr>;
+
+		configs {
+			config-0 {
+				atmel,read-mode = "nrd";
+				atmel,write-mode = "nwe";
+				atmel,bus-width = <16>;
+				atmel,ncs-rd-setup-ns = <0>;
+				atmel,ncs-wr-setup-ns = <0>;
+				atmel,nwe-setup-ns = <8>;
+				atmel,nrd-setup-ns = <16>;
+				atmel,ncs-rd-pulse-ns = <84>;
+				atmel,ncs-wr-pulse-ns = <84>;
+				atmel,nrd-pulse-ns = <76>;
+				atmel,nwe-pulse-ns = <76>;
+				atmel,nrd-cycle-ns = <107>;
+				atmel,nwe-cycle-ns = <84>;
+				atmel,tdf-ns = <16>;
+			};
+		};
+
+		nor: flash@0,0 {
+			compatible = "cfi-flash";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x0 0x0 0x1000000>;
+			bank-width = <2>;
+		};
+	};
+
+
 Regards,
 
-Laurent Pinchart
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
