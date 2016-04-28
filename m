@@ -1,54 +1,102 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v7 16/24] i2c: allow adapter drivers to override the
- adapter locking
-Date: Thu, 28 Apr 2016 23:08:26 +0200
-Message-ID: <470abe38-ab5f-2d0a-305b-e1a3253ce5a9@axentia.se>
-References: <1461165484-2314-1-git-send-email-peda@axentia.se>
- <1461165484-2314-17-git-send-email-peda@axentia.se>
- <20160428205018.GA3553@katana>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH v7 2/9] ARM: dts: am437x: Add missing compatibles to PWM
+ binding documents
+Date: Thu, 28 Apr 2016 16:11:59 -0500
+Message-ID: <57227C9F.6080705@ti.com>
+References: <1461710209-6563-1-git-send-email-fcooper@ti.com>
+ <1461710209-6563-3-git-send-email-fcooper@ti.com>
+ <20160428210716.GA12508@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160428205018.GA3553@katana>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.koz>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160428210716.GA12508@rob-hp-laptop>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: thierry.reding@gmail.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
+Rob,
+On 04/28/2016 04:07 PM, Rob Herring wrote:
+> On Tue, Apr 26, 2016 at 05:36:42PM -0500, Franklin S Cooper Jr wrote:
+>> There are several SOC specific compatibles for ECAP, EHRPWM and PWMMS
+>> that are in use but aren't properly documented. Therefore, fix this
+>> by adding the compatibles to the appropriate binding documents.
+>>
+>> While at it make minor corrections to the binding document.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> ---
+>>  .../devicetree/bindings/pwm/pwm-tiecap.txt          | 12 ++++++++++--
+>>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt        | 12 ++++++++++--
+>>  .../devicetree/bindings/pwm/pwm-tipwmss.txt         | 21 +++++++++++++++++++--
+>>  3 files changed, 39 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+>> index fb81179..788da6c 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+>> @@ -2,8 +2,9 @@ TI SOC ECAP based APWM controller
+>>  
+>>  Required properties:
+>>  - compatible: Must be "ti,<soc>-ecap".
+>> -  for am33xx - compatible = "ti,am33xx-ecap";
+>> -  for da850  - compatible = "ti,da850-ecap", "ti,am33xx-ecap";
+>> +  for am33xx  - compatible = "ti,am33xx-ecap";
+>> +  for am4372  - compatible = "ti,am4372-ecap", "ti,am33xx-ecap";
+>> +  for da850   - compatible = "ti,da850-ecap", "ti,am33xx-ecap";
+>>  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>>    the cells format. The PWM channel index ranges from 0 to 4. The only third
+>>    cell flag supported by this binding is PWM_POLARITY_INVERTED.
+>> @@ -22,6 +23,13 @@ ecap0: ecap@0 { /* ECAP on am33xx */
+>>  	ti,hwmods = "ecap0";
+>>  };
+>>  
+>> +ecap0: ecap@0 { /* ECAP on am4372 */
+> 
+> The unit address is wrong.
+> 
+>> +	compatible = "ti,am4372-ecap", "ti,am33xx-ecap";
+>> +	#pwm-cells = <3>;
+>> +	reg = <0x48300100 0x80>;
+>> +	ti,hwmods = "ecap0";
+>> +};
+>> +
+>>  ecap0: ecap@0 { /* ECAP on da850 */
+>>  	compatible = "ti,da850-ecap", "ti,am33xx-ecap";
+>>  	#pwm-cells = <3>;
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> index 9c100b2..99b544f 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> @@ -2,8 +2,9 @@ TI SOC EHRPWM based PWM controller
+>>  
+>>  Required properties:
+>>  - compatible: Must be "ti,<soc>-ehrpwm".
+>> -  for am33xx - compatible = "ti,am33xx-ehrpwm";
+>> -  for da850  - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
+>> +  for am33xx  - compatible = "ti,am33xx-ehrpwm";
+>> +  for am4372  - compatible = "ti,am4372-ehrpwm", "ti,am33xx-ehrpwm";
+>> +  for da850   - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
+>>  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>>    the cells format. The only third cell flag supported by this binding is
+>>    PWM_POLARITY_INVERTED.
+>> @@ -22,6 +23,13 @@ ehrpwm0: ehrpwm@0 { /* EHRPWM on am33xx */
+>>  	ti,hwmods = "ehrpwm0";
+>>  };
+>>  
+>> +ehrpwm0: ehrpwm@0 { /* EHRPWM on am4372 */
+> 
+> ditto
+> 
+> Otherwise,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
 
-On 2016-04-28 22:50, Wolfram Sang wrote:
-> On Wed, Apr 20, 2016 at 05:17:56PM +0200, Peter Rosin wrote:
->> Add i2c_lock_bus() and i2c_unlock_bus(), which call the new lock_bus and
->> unlock_bus ops in the adapter. These funcs/ops take an additional flags
->> argument that indicates for what purpose the adapter is locked.
->>
->> There are two flags, I2C_LOCK_ADAPTER and I2C_LOCK_SEGMENT, but they are
->> both implemented the same. For now. Locking the adapter means that the
->> whole bus is locked, locking the segment means that only the current bus
->> segment is locked (i.e. i2c traffic on the parent side of mux is still
->> allowed even if the child side of the mux is locked.
->>
->> Also support a trylock_bus op (but no function to call it, as it is not
->> expected to be needed outside of the i2c core).
->>
->> Implement i2c_lock_adapter/i2c_unlock_adapter in terms of the new locking
->> scheme (i.e. lock with the I2C_LOCK_ADAPTER flag).
->>
->> Annotate some of the locking with explicit I2C_LOCK_SEGMENT flags.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
-> Letting you know that I start reviewing the 2nd part of your series. Did
-> the first glimpse today. Will hopefully do the in-depth part this
-> weekend. One thing already:
->
->> +static void i2c_adapter_lock_bus(struct i2c_adapter *adapter, int flags)
-> Shouldn't flags be unsigned?
->
 
-Yes, obviously... I'll make that change locally and wait for the rest.
-
-Cheers,
-Peter
-
+Yes, the unit address is wrong but it is wrong in several places. I
+added it like that to match what the other bindings are doing. However,
+patches 3 and 4 fixes these unit address problems for all the bindings
+all together to make things clear.
