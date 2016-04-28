@@ -1,74 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 00/12] Fixing TI Keystone2 kexec
-Date: Fri, 29 Apr 2016 09:04:06 +1000
-Message-ID: <20160428230406.GA18128@verge.net.au>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ia64-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160428092644.GX19428@n2100.arm.linux.org.uk>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 0/3] Patches to allow consistent mmc / mmcblk numbering
+Date: Thu, 28 Apr 2016 16:06:42 -0700
+Message-ID: <1461884805-29466-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, jh80.chung@samsung.com
+Cc: shawn.lin@rock-chips.com, adrian.hunter@intel.com, stefan@agner.ch, linux-mmc@vger.kernel.org, computersforpeace@gmail.com, dmitry.torokhov@gmail.com, Douglas Anderson <dianders@chromium.org>, mark.rutland@arm.com, vbyravarasu@nvidia.com, justin.wang@spreadtrum.com, ksumrall@android.com, lars@metafoo.de, dtor@chromium.org, jonathanh@nvidia.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lporzio@micron.com, robh+dt@kernel.org, chuanxiao.dong@intel.com, chaotian.jing@mediatek.com, sergei.shtylyov@cogentembedded.com, linux-kernel@vger.kernel.org, sudeep.holla@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+This series picks patches from various different places to produce what
+I consider the best solution to getting consistent mmc and mmcblk
+ordering.
 
-On Thu, Apr 28, 2016 at 10:26:44AM +0100, Russell King - ARM Linux wrote:
-> These changes are required for TI Keystone2 kexec to be functional.  TI
-> Keystone2 has the run-time view of physical memory above 4GiB, but with
-> a boot time alias below 4GiB which can only be used during the early
-> boot.
-> 
-> This means we need to translate run-time physical addresses (which the
-> kernel uses) to boot-time physical addresses, which, having discussed
-> with Eric, is what the kexec tools and kexec kernel API requires.
-> 
-> We publish a special set of boot time resources in /proc/iomem, which
-> the (modified) kexec tools look for in preference to the normal resources.
-> Hence, if these are found, the kexec tools make use of these resources,
-> and thus kexec tools use the boot-time view of physical memory.
-> 
-> The first three patches have been sitting in linux-next for a while.
-> I'm going to put the next ARM specific three into linux-next next week.
-> 
-> I've sent Eric over a month ago all the patches, including the kexec
-> tools patches, but I've heard nothing back.  I'm at a loss how to
-> make progress on these patches - and as I'm being hassled about this,
-> I'm going to be hassling the community about it, possibly with regular
-> re-posts until there is some progress.
+Why consistent ordering and why not just use UUIDs?  IMHO consistent
+ordering solves a few different problems:
 
-My experience is that usually Andrew Morton takes kexec patches
-and that this has been the situation for many years now.
+1. For poor, feeble-minded humans like me, have sane numbering for
+   devices helps a lot.  When grepping through dmesg it's terribly handy
+   if a given SDMMC device has a consistent number.  I know that I can
+   do "dmesg | grep mmc0" or "dmesg | grep mmcblk0" to find info about
+   the eMMC.  I know that I can do "dmesg | grep mmc1" to find info
+   about the SD card slot.  I don't want it to matter which one probed
+   first, I don't want it to matter if I'm working on a variant of the
+   hardware that has the SD card slot disabled, and I don't want to care
+   what my boot device was.  Worrying about what device number I got
+   increases my cognitive load.
 
-With regards to any kexec-tools patches that are appropriate for upstream:
-please send them to the kexec mailing list with me CCed and I will see
-about including them in the next release. If you have done so already then
-I apologise for having missed them.
+2. There are cases where it's not trivially easy during development to
+   use the UUID.  Specifically I work a lot with coreboot / depthcharge
+   as a BIOS.  When configured properly, that BIOS has a nice feature to
+   allow you to fetch the kernel and kernel command line from TFTP by
+   pressing Ctrl-N.  In this particular case the BIOS doesn't actually
+   know which disk I'd like for my root filesystem, so it's not so easy
+   for it to put the right UUID into the command line.  For this
+   purpose, knowing that "mmcblk0" will always refer to eMMC is handy.
 
->  Documentation/kdump/kdump.txt     | 13 ++------
->  arch/arm/boot/dts/keystone.dtsi   |  8 +++++
->  arch/arm/include/asm/kexec.h      | 24 +++++++++++++++
->  arch/arm/include/asm/memory.h     | 38 ++++++++++++++++++-----
->  arch/arm/kernel/machine_kexec.c   |  2 +-
->  arch/arm/kernel/setup.c           | 65 +++++++++++++++++++++++++++++++++++++--
->  arch/arm/mach-keystone/keystone.c |  7 +----
->  arch/arm/mm/idmap.c               |  2 +-
->  arch/ia64/kernel/machine_kexec.c  |  2 +-
->  include/linux/kexec.h             | 42 +++++++++++++++++++++++--
->  kernel/kexec.c                    |  3 +-
->  kernel/kexec_core.c               | 30 +++++++++---------
->  kernel/ksysfs.c                   |  4 +--
->  13 files changed, 193 insertions(+), 47 deletions(-)
-> 
-> -- 
-> RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+
+Jaehoon Chung (1):
+  Documentation: mmc: Document mmc aliases
+
+Stefan Agner (2):
+  mmc: read mmc alias from device tree
+  mmc: use SD/MMC host ID for block device name ID
+
+ Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
+ drivers/mmc/card/block.c                      |  3 ++-
+ drivers/mmc/core/host.c                       | 25 ++++++++++++++++++++-----
+ 3 files changed, 33 insertions(+), 6 deletions(-)
+
+-- 
+2.8.0.rc3.226.g39d4020
