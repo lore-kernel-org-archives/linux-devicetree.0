@@ -1,80 +1,44 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH net v3 0/5] drivers: net: cpsw: phy-handle fixes
-Date: Thu, 28 Apr 2016 18:55:34 +0300
-Message-ID: <57223276.8070603@ti.com>
-References: <1461805808-4102-1-git-send-email-drivshin.allworx@gmail.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v4 2/4] ARM64: dts: rockchip: add core dtsi file for
+ RK3399 SoCs
+Date: Thu, 28 Apr 2016 09:03:53 -0700
+Message-ID: <20160428160353.GA95284@google.com>
+References: <1461743693-10671-1-git-send-email-jay.xu@rock-chips.com>
+ <1461743693-10671-3-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1461805808-4102-1-git-send-email-drivshin.allworx@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>, netdev@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>, Mugunthan V N <mugunthanvnm@ti.com>, Andrew Goodbody <andrew.goodbody@cambrionix.com>, Markus Brunner <systemprogrammierung.brunner@gmail.com>, Nicolas Chauvet <kwizart@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461743693-10671-3-git-send-email-jay.xu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: lintao@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, heiko@sntech.de, huangtao@rock-chips.com, davidriley@chromium.org, dianders@chromium.org, jwerner@chromium.org, smbarber@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/28/2016 04:10 AM, David Rivshin (Allworx) wrote:
-> From: David Rivshin <drivshin@allworx.com>
->
-> This series fixes a number of related issues around using phy-handle
-> properties in cpsw emac nodes.
->
-> Patch 1 fixes a bug if more than one slave is used, and either
-> slave uses the phy-handle property in the devicetree.
->
-> Patch 2 fixes a NULL pointer dereference which can occur if a
-> phy-handle property is used and of_phy_connect() return NULL,
-> such as with a bad devicetree.
->
-> Patch 3 fixes an issue where the phy-mode property would be ignored
-> if a phy-handle property was used. This also fixes a bogus error
-> message that would be emitted.
->
-> Patch 4 fixes makes the binding documentation more explicit that
-> exactly one PHY property should be used, and also marks phy_id as
-> deprecated.
->
-> Patch 5 cleans up the fixed-link case to work like the now-fixed
-> phy-handle case.
->
-> I have tested on the following hardware configurations:
->   - (EVMSK) dual emac, phy_id property in both slaves
->   - (EVMSK) dual emac, phy-handle property in both slaves
->   - (EVMSK) a bad phy-handle property pointing to &mmc1
->   - (EVMSK) phy_id property with incorrect PHY address
->   - (BeagleBoneBlack) single emac, phy_id property
->   - (custom) single emac, fixed-link subnode
->
-> Andrew Goodbody reported testing v2 on a board that doesn't use
-> dual_emac mode, but with 2 PHYs using phy-handle properties [1].
->
-> Nicolas Chauvet reported testing v2 on an HP t410 (dm8148).
->
-> Markus Brunner reported testing v1 on the following [2]:
->   - emac0 with phy_id and emac1 with fixed phy
->   - emac0 with phy-handle and emac1 with fixed phy
->   - emac0 with fixed phy and emac1 with fixed phy
->
-> [1] https://lkml.org/lkml/2016/4/22/537
-> [2] http://www.spinics.net/lists/netdev/msg357890.html
->
-> David Rivshin (5):
->    drivers: net: cpsw: fix parsing of phy-handle DT property in dual_emac
->      config
->    drivers: net: cpsw: fix segfault in case of bad phy-handle
->    drivers: net: cpsw: don't ignore phy-mode if phy-handle is used
->    dt: cpsw: phy-handle, phy_id, and fixed-link are mutually exclusive
->    drivers: net: cpsw: use of_phy_connect() in fixed-link case
->
->   Documentation/devicetree/bindings/net/cpsw.txt |  6 +--
->   drivers/net/ethernet/ti/cpsw.c                 | 69 ++++++++++++++------------
->   drivers/net/ethernet/ti/cpsw.h                 |  1 +
->   3 files changed, 41 insertions(+), 35 deletions(-)
->
+Hi Heiko, Jianqun,
 
-Thanks a lot.
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+On Wed, Apr 27, 2016 at 03:54:51PM +0800, Jianqun Xu wrote:
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> new file mode 100644
+> index 0000000..5a8a915
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -0,0 +1,1022 @@
+[...]
+> +	sdhci: sdhci@fe330000 {
+> +		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
 
--- 
-regards,
--grygorii
+Not to rain on the parade too much, as this is already applied, but is
+the "rockchip,rk3399-sdhci-5.1" string documented anywhere? I don't see
+it.
+
+> +		reg = <0x0 0xfe330000 0x0 0x10000>;
+> +		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
+> +		clock-names = "clk_xin", "clk_ahb";
+> +		status = "disabled";
+> +	};
+
+[...]
+
+Brian
