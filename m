@@ -1,127 +1,90 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Thu, 28 Apr 2016 10:29:34 +0100
-Message-ID: <20160428092843.GA21145@leverpostej>
-References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
- <1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
- <20160427150738.GA7359@leverpostej>
- <20160428084405.4d71efbc@bbrezillon>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to return
+ phys_addr_t
+Date: Thu, 28 Apr 2016 10:28:35 +0100
+Message-ID: <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-ia64-owner@vger.kernel.org>
+In-Reply-To: <20160428092644.GX19428@n2100.arm.linux.org.uk>
 Content-Disposition: inline
-In-Reply-To: <20160428084405.4d71efbc@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Sender: linux-ia64-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On PAE systems (eg, ARM LPAE) the vmcore note may be located above
+4GB physical on 32-bit architectures, so we need a wider type than
+"unsigned long" here.  Arrange for paddr_vmcoreinfo_note() to return
+a phys_addr_t, thereby allowing it to be located above 4GB.
 
-On Thu, Apr 28, 2016 at 08:44:05AM +0200, Boris Brezillon wrote:
-> On Wed, 27 Apr 2016 16:07:38 +0100
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Wed, Apr 27, 2016 at 04:35:54PM +0200, Boris Brezillon wrote:
-> > > +	ebi: ebi@10000000 {
-> > > +		compatible = "atmel,sama5d3-ebi", "simple-bus";  
-> > > +		#address-cells = <2>;
-> > > +		#size-cells = <1>;
-> > > +		atmel,smc = <&hsmc>;
-> > > +		atmel,matrix = <&matrix>;
-> > > +		reg = <0x10000000 0x10000000
-> > > +		       0x40000000 0x30000000>;
-> > > +		ranges = <0x0 0x0 0x10000000 0x10000000
-> > > +			  0x1 0x0 0x40000000 0x10000000
-> > > +			  0x2 0x0 0x50000000 0x10000000
-> > > +			  0x3 0x0 0x60000000 0x10000000>;
-> > > +		clocks = <&mck>;
-> > > +
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_ebi_addr>;
-> > > +
-> > > +		cs@0 {  
-> > > +			#address-cells = <2>;
-> > > +			#size-cells = <1>;
-> > > +			ranges;
-> > > +			atmel,generic-dev;  
-> > > +			atmel,read-mode = "nrd";
-> > > +			atmel,write-mode = "nwe";
-> > > +			atmel,bus-width = <16>;
-> > > +			atmel,ncs-rd-setup-ns = <0>;
-> > > +			atmel,ncs-wr-setup-ns = <0>;
-> > > +			atmel,nwe-setup-ns = <8>;
-> > > +			atmel,nrd-setup-ns = <16>;
-> > > +			atmel,ncs-rd-pulse-ns = <84>;
-> > > +			atmel,ncs-wr-pulse-ns = <84>;
-> > > +			atmel,nrd-pulse-ns = <76>;
-> > > +			atmel,nwe-pulse-ns = <76>;
-> > > +			atmel,nrd-cycle-ns = <107>;
-> > > +			atmel,nwe-cycle-ns = <84>;
-> > > +			atmel,tdf-ns = <16>;
-> > > +
-> > > +			nor: flash@0,0 {
-> > > +				compatible = "cfi-flash";
-> > > +				#address-cells = <1>;
-> > > +				#size-cells = <1>;
-> > > +				reg = <0x0 0x0 0x1000000>;  
-> > 
-> > It feels odd that in the node for chipselect N, sub-devices have to
-> > encode the chipselect number in their reg, when it's obvious from their
-> > container. It may make more sense for the cs node to have a non-empty
-> > reg (or somehow to make that translation/truncation implicit).
-> 
-> Would you agree with the following representation?
-> 
-> 	ebi: ebi@10000000 {
-> 		compatible = "atmel,sama5d3-ebi";
-> 		#address-cells = <2>;
-> 		#size-cells = <1>;
-> 		atmel,smc = <&hsmc>;
-> 		atmel,matrix = <&matrix>;
-> 		reg = <0x10000000 0x10000000
-> 		       0x40000000 0x30000000>;
-> 		ranges = <0x0 0x0 0x10000000 0x10000000
-> 			  0x1 0x0 0x40000000 0x10000000
-> 			  0x2 0x0 0x50000000 0x10000000
-> 			  0x3 0x0 0x60000000 0x10000000>;
-> 		clocks = <&mck>;
-> 
-> 		pinctrl-names = "default";
-> 		pinctrl-0 = <&pinctrl_ebi_addr>;
-> 
-> 		configs {
-> 			config-0 {
-> 				atmel,read-mode = "nrd";
-> 				atmel,write-mode = "nwe";
-> 				atmel,bus-width = <16>;
-> 				atmel,ncs-rd-setup-ns = <0>;
-> 				atmel,ncs-wr-setup-ns = <0>;
-> 				atmel,nwe-setup-ns = <8>;
-> 				atmel,nrd-setup-ns = <16>;
-> 				atmel,ncs-rd-pulse-ns = <84>;
-> 				atmel,ncs-wr-pulse-ns = <84>;
-> 				atmel,nrd-pulse-ns = <76>;
-> 				atmel,nwe-pulse-ns = <76>;
-> 				atmel,nrd-cycle-ns = <107>;
-> 				atmel,nwe-cycle-ns = <84>;
-> 				atmel,tdf-ns = <16>;
-> 			};
-> 		};
-> 
-> 		nor: flash@0,0 {
-> 			compatible = "cfi-flash";
-> 			#address-cells = <1>;
-> 			#size-cells = <1>;
-> 			reg = <0x0 0x0 0x1000000>;
-> 			bank-width = <2>;
-> 		};
-> 	};
+This makes no difference for kexec-tools, as they already assume a
+64-bit type when reading from this file.
 
-Something of that sort looks good to me, yes.
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ arch/ia64/kernel/machine_kexec.c | 2 +-
+ include/linux/kexec.h            | 2 +-
+ kernel/kexec_core.c              | 2 +-
+ kernel/ksysfs.c                  | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+index b72cd7a07222..599507bcec91 100644
+--- a/arch/ia64/kernel/machine_kexec.c
++++ b/arch/ia64/kernel/machine_kexec.c
+@@ -163,7 +163,7 @@ void arch_crash_save_vmcoreinfo(void)
+ #endif
+ }
+ 
+-unsigned long paddr_vmcoreinfo_note(void)
++phys_addr_t paddr_vmcoreinfo_note(void)
+ {
+ 	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
+ }
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 1b32ab587f66..52a3a221bcb2 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -235,7 +235,7 @@ void crash_unmap_reserved_pages(void);
+ void arch_crash_save_vmcoreinfo(void);
+ __printf(1, 2)
+ void vmcoreinfo_append_str(const char *fmt, ...);
+-unsigned long paddr_vmcoreinfo_note(void);
++phys_addr_t paddr_vmcoreinfo_note(void);
+ 
+ #define VMCOREINFO_OSRELEASE(value) \
+ 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d719a4d0ef55..f9847e5822e6 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1377,7 +1377,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+ void __weak arch_crash_save_vmcoreinfo(void)
+ {}
+ 
+-unsigned long __weak paddr_vmcoreinfo_note(void)
++phys_addr_t __weak paddr_vmcoreinfo_note(void)
+ {
+ 	return __pa((unsigned long)(char *)&vmcoreinfo_note);
+ }
+diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+index 152da4a48867..9f1920d2d0c6 100644
+--- a/kernel/ksysfs.c
++++ b/kernel/ksysfs.c
+@@ -128,8 +128,8 @@ KERNEL_ATTR_RW(kexec_crash_size);
+ static ssize_t vmcoreinfo_show(struct kobject *kobj,
+ 			       struct kobj_attribute *attr, char *buf)
+ {
+-	return sprintf(buf, "%lx %x\n",
+-		       paddr_vmcoreinfo_note(),
++	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
++	return sprintf(buf, "%pa %x\n", &vmcore_base,
+ 		       (unsigned int)sizeof(vmcoreinfo_note));
+ }
+ KERNEL_ATTR_RO(vmcoreinfo);
+-- 
+2.1.0
+
