@@ -1,64 +1,165 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V17 1/3] dmaengine: qcom_hidma: implement lower level
- hardware interface
-Date: Thu, 28 Apr 2016 15:30:07 -0400
-Message-ID: <572264BF.5010703@codeaurora.org>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
- <1460384473-5775-2-git-send-email-okaya@codeaurora.org>
- <20160426032805.GA2274@localhost> <571F8397.5000803@codeaurora.org>
- <20160426162441.GJ2274@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160426162441.GJ2274@localhost>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+From: Michael Heimpold <mhei@heimpold.de>
+Subject: [PATCH v3 net-next 2/2] net: ethernet: enc28j60: add device tree support
+Date: Thu, 28 Apr 2016 22:06:15 +0200
+Message-ID: <1461873975-6368-3-git-send-email-mhei@heimpold.de>
+References: <1461873975-6368-1-git-send-email-mhei@heimpold.de>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1461873975-6368-1-git-send-email-mhei@heimpold.de>
+Sender: netdev-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Michael Heimpold <mhei@heimpold.de>
 List-Id: devicetree@vger.kernel.org
 
-On 4/26/2016 12:24 PM, Vinod Koul wrote:
->> +
->> > +       dev_err(lldev->dev, "error 0x%x, resetting...\n",
->> > +               cause);
-> right justify this and others as well please
-> 
+The following patch adds the required match table for device tree support
+(and while at, fix the indent). It's also possible to specify the
+MAC address in the DT blob.
 
-Can you please point me to other lines that need to be fixed please? It looks good
-to me though it doesn't to you. I want to make sure that I'm touching the right ones.
-You seem to prefer a tab following an open parenthesis in your code. Do you want me to
-add a tab for every single multi-line such that it comes this for instance?
+Also add the corresponding binding documentation file.
+
+Signed-off-by: Michael Heimpold <mhei@heimpold.de>
+---
+
+Changelog:
+
+v3: * renamed and improved binding documentation as
+      suggested by Rob Herring
+
+v2: * took care of Arnd Bergmann's review comments
+      - allow to specify MAC address via DT
+      - unconditionally define DT id table
+    * increased the driver version minor number
+    * driver author's email address bounces, removed from address list
+
+v1: * Initial submission
 
 
-	ret = readl_poll_timeout(lldev->trca + HIDMA_TRCA_CTRLSTS_REG, val,
-				 	HIDMA_CH_STATE(val) == HIDMA_CH_DISABLED, 
-					1000, 10000); 
+ .../devicetree/bindings/net/microchip,enc28j60.txt | 59 ++++++++++++++++++++++
+ drivers/net/ethernet/microchip/enc28j60.c          | 20 ++++++--
+ 2 files changed, 76 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/microchip,enc28j60.txt
 
-instead of
-
-	ret = readl_poll_timeout(lldev->trca + HIDMA_TRCA_CTRLSTS_REG, val,
-				 HIDMA_CH_STATE(val) == HIDMA_CH_DISABLED, 1000,
-				 10000); 
-
-
->>>> > >> +int hidma_ll_resume(struct hidma_lldev *lldev)
->>>> > >> +{
->>>> > >> +	return hidma_ll_enable(lldev);
->>>> > >> +}
->>> > > 
->>> > > why do we need this empty function, use hidma_ll_enable.
->> > 
->> > hidma_ll_enable is a common function that gets called from multiple places. 
->> > hidma_ll_resume and hidma_ll_pause is used by the OS interface for pausing
->> > and resuming the DMA channel. 
-> is there a reason why we can't have the code in resume and that being called
-> internally as well as externally?
-> 
-
-I'll have the pause code in OS layer call hidma_ll_enable and get rid of pause
-function here.
-
+diff --git a/Documentation/devicetree/bindings/net/microchip,enc28j60.txt b/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
+new file mode 100644
+index 0000000..1dc3bc7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
+@@ -0,0 +1,59 @@
++* Microchip ENC28J60
++
++This is a standalone 10 MBit ethernet controller with SPI interface.
++
++For each device connected to a SPI bus, define a child node within
++the SPI master node.
++
++Required properties:
++- compatible: Should be "microchip,enc28j60"
++- reg: Specify the SPI chip select the ENC28J60 is wired to
++- interrupt-parent: Specify the phandle of the source interrupt, see interrupt
++                    binding documentation for details. Usually this is the GPIO bank
++                    the interrupt line is wired to.
++- interrupts: Specify the interrupt index within the interrupt controller (referred
++              to above in interrupt-parent) and interrupt type. The ENC28J60 natively
++              generates falling edge interrupts, however, additional board logic
++              might invert the signal.
++- pinctrl-names: List of assigned state names, see pinctrl binding documentation.
++- pinctrl-0: List of phandles to configure the GPIO pin used as interrupt line,
++             see also generic and your platform specific pinctrl binding
++             documentation.
++
++Optional properties:
++- spi-max-frequency: Maximum frequency of the SPI bus when accessing the ENC28J60.
++  According to the ENC28J80 datasheet, the chip allows a maximum of 20 MHz, however,
++  board designs may need to limit this value.
++- local-mac-address: See ethernet.txt in the same directory.
++
++
++Example (for NXP i.MX28 with pin control stuff for GPIO irq):
++
++        ssp2: ssp@80014000 {
++                compatible = "fsl,imx28-spi";
++                pinctrl-names = "default";
++                pinctrl-0 = <&spi2_pins_b &spi2_sck_cfg>;
++                status = "okay";
++
++                enc28j60: ethernet@0 {
++                        compatible = "microchip,enc28j60";
++                        pinctrl-names = "default";
++                        pinctrl-0 = <&enc28j60_pins>;
++                        reg = <0>;
++                        interrupt-parent = <&gpio3>;
++                        interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
++                        spi-max-frequency = <12000000>;
++                };
++        };
++
++        pinctrl@80018000 {
++                enc28j60_pins: enc28j60_pins@0 {
++                        reg = <0>;
++                        fsl,pinmux-ids = <
++                                MX28_PAD_AUART0_RTS__GPIO_3_3    /* Interrupt */
++                        >;
++                        fsl,drive-strength = <MXS_DRIVE_4mA>;
++                        fsl,voltage = <MXS_VOLTAGE_HIGH>;
++                        fsl,pull-up = <MXS_PULL_DISABLE>;
++                };
++        };
+diff --git a/drivers/net/ethernet/microchip/enc28j60.c b/drivers/net/ethernet/microchip/enc28j60.c
+index b723622..7066954 100644
+--- a/drivers/net/ethernet/microchip/enc28j60.c
++++ b/drivers/net/ethernet/microchip/enc28j60.c
+@@ -28,11 +28,12 @@
+ #include <linux/skbuff.h>
+ #include <linux/delay.h>
+ #include <linux/spi/spi.h>
++#include <linux/of_net.h>
+ 
+ #include "enc28j60_hw.h"
+ 
+ #define DRV_NAME	"enc28j60"
+-#define DRV_VERSION	"1.01"
++#define DRV_VERSION	"1.02"
+ 
+ #define SPI_OPLEN	1
+ 
+@@ -1548,6 +1549,7 @@ static int enc28j60_probe(struct spi_device *spi)
+ {
+ 	struct net_device *dev;
+ 	struct enc28j60_net *priv;
++	const void *macaddr;
+ 	int ret = 0;
+ 
+ 	if (netif_msg_drv(&debug))
+@@ -1579,7 +1581,12 @@ static int enc28j60_probe(struct spi_device *spi)
+ 		ret = -EIO;
+ 		goto error_irq;
+ 	}
+-	eth_hw_addr_random(dev);
++
++	macaddr = of_get_mac_address(spi->dev.of_node);
++	if (macaddr)
++		ether_addr_copy(dev->dev_addr, macaddr);
++	else
++		eth_hw_addr_random(dev);
+ 	enc28j60_set_hw_macaddr(dev);
+ 
+ 	/* Board setup must set the relevant edge trigger type;
+@@ -1634,9 +1641,16 @@ static int enc28j60_remove(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static const struct of_device_id enc28j60_dt_ids[] = {
++	{ .compatible = "microchip,enc28j60" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, enc28j60_dt_ids);
++
+ static struct spi_driver enc28j60_driver = {
+ 	.driver = {
+-		   .name = DRV_NAME,
++		.name = DRV_NAME,
++		.of_match_table = enc28j60_dt_ids,
+ 	 },
+ 	.probe = enc28j60_probe,
+ 	.remove = enc28j60_remove,
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.5.0
