@@ -1,58 +1,127 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 07/12] ARM: keystone: dts: add psci command definition
-Date: Thu, 28 Apr 2016 10:28:19 +0100
-Message-ID: <E1aviF9-0000jM-Qs@rmk-PC.arm.linux.org.uk>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
+Date: Thu, 28 Apr 2016 10:29:34 +0100
+Message-ID: <20160428092843.GA21145@leverpostej>
+References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
+ <20160427150738.GA7359@leverpostej>
+ <20160428084405.4d71efbc@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>
+In-Reply-To: <20160428084405.4d71efbc@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Vitaly Andrianov <vitalya@ti.com>
+Hi,
 
-This commit adds definition for cpu_on, cpu_off and cpu_suspend commands.
-These definitions must match the corresponding PSCI definitions in
-boot monitor.
+On Thu, Apr 28, 2016 at 08:44:05AM +0200, Boris Brezillon wrote:
+> On Wed, 27 Apr 2016 16:07:38 +0100
+> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Wed, Apr 27, 2016 at 04:35:54PM +0200, Boris Brezillon wrote:
+> > > +	ebi: ebi@10000000 {
+> > > +		compatible = "atmel,sama5d3-ebi", "simple-bus";  
+> > > +		#address-cells = <2>;
+> > > +		#size-cells = <1>;
+> > > +		atmel,smc = <&hsmc>;
+> > > +		atmel,matrix = <&matrix>;
+> > > +		reg = <0x10000000 0x10000000
+> > > +		       0x40000000 0x30000000>;
+> > > +		ranges = <0x0 0x0 0x10000000 0x10000000
+> > > +			  0x1 0x0 0x40000000 0x10000000
+> > > +			  0x2 0x0 0x50000000 0x10000000
+> > > +			  0x3 0x0 0x60000000 0x10000000>;
+> > > +		clocks = <&mck>;
+> > > +
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&pinctrl_ebi_addr>;
+> > > +
+> > > +		cs@0 {  
+> > > +			#address-cells = <2>;
+> > > +			#size-cells = <1>;
+> > > +			ranges;
+> > > +			atmel,generic-dev;  
+> > > +			atmel,read-mode = "nrd";
+> > > +			atmel,write-mode = "nwe";
+> > > +			atmel,bus-width = <16>;
+> > > +			atmel,ncs-rd-setup-ns = <0>;
+> > > +			atmel,ncs-wr-setup-ns = <0>;
+> > > +			atmel,nwe-setup-ns = <8>;
+> > > +			atmel,nrd-setup-ns = <16>;
+> > > +			atmel,ncs-rd-pulse-ns = <84>;
+> > > +			atmel,ncs-wr-pulse-ns = <84>;
+> > > +			atmel,nrd-pulse-ns = <76>;
+> > > +			atmel,nwe-pulse-ns = <76>;
+> > > +			atmel,nrd-cycle-ns = <107>;
+> > > +			atmel,nwe-cycle-ns = <84>;
+> > > +			atmel,tdf-ns = <16>;
+> > > +
+> > > +			nor: flash@0,0 {
+> > > +				compatible = "cfi-flash";
+> > > +				#address-cells = <1>;
+> > > +				#size-cells = <1>;
+> > > +				reg = <0x0 0x0 0x1000000>;  
+> > 
+> > It feels odd that in the node for chipselect N, sub-devices have to
+> > encode the chipselect number in their reg, when it's obvious from their
+> > container. It may make more sense for the cs node to have a non-empty
+> > reg (or somehow to make that translation/truncation implicit).
+> 
+> Would you agree with the following representation?
+> 
+> 	ebi: ebi@10000000 {
+> 		compatible = "atmel,sama5d3-ebi";
+> 		#address-cells = <2>;
+> 		#size-cells = <1>;
+> 		atmel,smc = <&hsmc>;
+> 		atmel,matrix = <&matrix>;
+> 		reg = <0x10000000 0x10000000
+> 		       0x40000000 0x30000000>;
+> 		ranges = <0x0 0x0 0x10000000 0x10000000
+> 			  0x1 0x0 0x40000000 0x10000000
+> 			  0x2 0x0 0x50000000 0x10000000
+> 			  0x3 0x0 0x60000000 0x10000000>;
+> 		clocks = <&mck>;
+> 
+> 		pinctrl-names = "default";
+> 		pinctrl-0 = <&pinctrl_ebi_addr>;
+> 
+> 		configs {
+> 			config-0 {
+> 				atmel,read-mode = "nrd";
+> 				atmel,write-mode = "nwe";
+> 				atmel,bus-width = <16>;
+> 				atmel,ncs-rd-setup-ns = <0>;
+> 				atmel,ncs-wr-setup-ns = <0>;
+> 				atmel,nwe-setup-ns = <8>;
+> 				atmel,nrd-setup-ns = <16>;
+> 				atmel,ncs-rd-pulse-ns = <84>;
+> 				atmel,ncs-wr-pulse-ns = <84>;
+> 				atmel,nrd-pulse-ns = <76>;
+> 				atmel,nwe-pulse-ns = <76>;
+> 				atmel,nrd-cycle-ns = <107>;
+> 				atmel,nwe-cycle-ns = <84>;
+> 				atmel,tdf-ns = <16>;
+> 			};
+> 		};
+> 
+> 		nor: flash@0,0 {
+> 			compatible = "cfi-flash";
+> 			#address-cells = <1>;
+> 			#size-cells = <1>;
+> 			reg = <0x0 0x0 0x1000000>;
+> 			bank-width = <2>;
+> 		};
+> 	};
 
-Having those command and corresponding PSCI support in boot monitor allows
-run time CPU hot plugin.
+Something of that sort looks good to me, yes.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
-
-This patch is already queued by Santosh, and only exists as part of this
-series for completeness.
-
- arch/arm/boot/dts/keystone.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 3f272826f537..007648971744 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -59,6 +59,14 @@
- 			     <GIC_SPI 23 IRQ_TYPE_EDGE_RISING>;
- 	};
- 
-+	psci {
-+		compatible	= "arm,psci";
-+		method		= "smc";
-+		cpu_suspend	= <0x84000001>;
-+		cpu_off		= <0x84000002>;
-+		cpu_on		= <0x84000003>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-2.1.0
-
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
