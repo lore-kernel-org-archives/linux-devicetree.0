@@ -1,115 +1,229 @@
 From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [RFC v4 8/8] gpio: dt-bindings: add gpio-mmio bindings
-Date: Thu, 28 Apr 2016 11:05:18 +0200
-Message-ID: <262d58824524c19917e6bf760da1c8ea2b6a616c.1461806071.git.chunkeey@googlemail.com>
+Subject: [RFC v4 6/8] gpio: moxart: integrate MOXA ART GPIO driver into
+ gpio-mmio
+Date: Thu, 28 Apr 2016 11:05:16 +0200
+Message-ID: <47faa5ebc21fc12688a2b2a009967150f5ecf2ce.1461806071.git.chunkeey@googlemail.com>
 References: <cover.1461806071.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
 In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
 References: <cover.1461806071.git.chunkeey@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Christian Lamparter <chunkeey@googlemail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Christian Lamparter <chunkeey@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+This patch integrates the GPIO driver for the MOXA ART SoC into
+the gpio-mmio framework.
 
-This patch adds the device tree bindings for the gpio-mmio.
-The gpio-mmio is already part of a the GPIO generic library.
-
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
- .../devicetree/bindings/gpio/gpio-mmio.txt         | 73 ++++++++++++++=
-++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.tx=
-t
+ drivers/gpio/Kconfig            | 15 ++++----
+ drivers/gpio/Makefile           |  2 +-
+ drivers/gpio/gpio-mmio-compat.h | 12 ++++++
+ drivers/gpio/gpio-mmio.c        |  1 +
+ drivers/gpio/gpio-moxart.c      | 81 +++++++++++------------------------------
+ 5 files changed, 42 insertions(+), 69 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.txt b/Doc=
-umentation/devicetree/bindings/gpio/gpio-mmio.txt
-new file mode 100644
-index 0000000..cc7f0b1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.txt
-@@ -0,0 +1,73 @@
-+Bindings for the generic driver for memory-mapped GPIO controllers.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index a0e140d..487297f 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -213,6 +213,13 @@ config GPIO_GE_FPGA
+ 	  and write pin state) for GPIO implemented in a number of GE single
+ 	  board computers.
+ 
++config GPIO_MOXART
++	bool "MOXART GPIO support"
++	depends on ARCH_MOXART || COMPILE_TEST
++	select GPIO_GENERIC
++	help
++	  Select this option to enable GPIO driver for
++	  MOXA ART SoC devices.
+ endif
+ 
+ config GPIO_GRGPIO
+@@ -289,14 +296,6 @@ config GPIO_MM_LANTIQ
+ 	  (EBU) found on Lantiq SoCs. The gpios are output only as they are
+ 	  created by attaching a 16bit latch to the bus.
+ 
+-config GPIO_MOXART
+-	bool "MOXART GPIO support"
+-	depends on ARCH_MOXART || COMPILE_TEST
+-	select GPIO_GENERIC
+-	help
+-	  Select this option to enable GPIO driver for
+-	  MOXA ART SoC devices.
+-
+ config GPIO_MPC5200
+ 	def_bool y
+ 	depends on PPC_MPC52xx
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index a76b13d..32ad5fe 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
+ gpio-generic-$(CONFIG_GPIO_GENERIC)	+= gpio-mmio.o
+ gpio-generic-$(CONFIG_GPIO_CLPS711X)	+= gpio-clps711x.o
+ gpio-generic-$(CONFIG_GPIO_GE_FPGA)	+= gpio-ge.o
++gpio-generic-$(CONFIG_GPIO_MOXART)	+= gpio-moxart.o
+ 
+ obj-$(CONFIG_GPIO_104_DIO_48E)	+= gpio-104-dio-48e.o
+ obj-$(CONFIG_GPIO_104_IDIO_16)	+= gpio-104-idio-16.o
+@@ -68,7 +69,6 @@ obj-$(CONFIG_GPIO_MC9S08DZ60)	+= gpio-mc9s08dz60.o
+ obj-$(CONFIG_GPIO_MCP23S08)	+= gpio-mcp23s08.o
+ obj-$(CONFIG_GPIO_ML_IOH)	+= gpio-ml-ioh.o
+ obj-$(CONFIG_GPIO_MM_LANTIQ)	+= gpio-mm-lantiq.o
+-obj-$(CONFIG_GPIO_MOXART)	+= gpio-moxart.o
+ obj-$(CONFIG_GPIO_MPC5200)	+= gpio-mpc5200.o
+ obj-$(CONFIG_GPIO_MPC8XXX)	+= gpio-mpc8xxx.o
+ obj-$(CONFIG_GPIO_MSIC)		+= gpio-msic.o
+diff --git a/drivers/gpio/gpio-mmio-compat.h b/drivers/gpio/gpio-mmio-compat.h
+index 63863da..702a384 100644
+--- a/drivers/gpio/gpio-mmio-compat.h
++++ b/drivers/gpio/gpio-mmio-compat.h
+@@ -30,6 +30,18 @@ int ge_parse_dt(struct platform_device *pdev,
+ #define GPIO_GE_FPGA_COMPATIBLE
+ #endif /* CONFIG_CONFIG_GPIO_GE_FPGA */
+ 
++#if IS_ENABLED(CONFIG_GPIO_MOXART)
++int moxart_parse_dt(struct platform_device *pdev,
++		    struct bgpio_pdata *pdata,
++		    unsigned long *flags);
 +
-+Required properties:
-+	- compatible: should be "linux,gpio-mmio"
-+	- reg-names: must contain
-+		"dat" - data register
-+		may contain
-+		"set" - data set register
-+		"clr" - data clear register
-+		"dirout" - direction output register
-+		"dirin" - direction input register
-+	- reg: address + size pairs describing the GPIO register sets;
-+		order must correspond with the order of entries in reg-names
-+	- #gpio-cells =3D must be set to 2
-+	- gpio-controller: Marks the device node as a gpio controller.
++#define GPIO_MOXART_COMPATIBLE				\
++	ADD("moxa,moxart-gpio", moxart_parse_dt),
 +
-+Optional properties:
-+	- ngpio: specifies the number of gpio mapped in the register.
-+	- big-endian: force big endian register accesses.
-+	- big-endian-byte-order: assign GPIOs in reverse order.
-+	- unreadable-reg-set: data set register is not readable.
-+	- read-output-reg-set: cache value set for reads.
-+	- unreadable-reg-dir: dirout/dirin register is not readable.
-+	- no-output: GPIOs are read-only.
++#else
++#define GPIO_MOXART_COMPATIBLE
++#endif /* CONFIG_GPIO_MOXART */
 +
-+The GPIO generic library provides support for memory-mapped GPIO
-+controllers. The configuration is detected by which resources are pres=
-ent.
-+The simplest form of a GPIO controller that the driver support is just=
- a
-+single "dat" register, where GPIO state can be read and/or written.
-+However, the driver supports far more:
-+	- 8/16/32/64 bits registers. The number of GPIOs is automatically
-+	  determined by the width of the registers.
-+	- GPIO controllers with clear/set registers.
-+	- GPIO controllers with a single "dat" register.
-+	- Big endian bits/GPIOs ordering.
-+
-+For setting GPIO's there are three configurations:
-+	1. single input/output register resource (named "dat"),
-+	2. set/clear pair (named "set" and "clr"),
-+	3. single output register resource and single input resource
-+	   ("set" and dat").
-+
-+For setting the GPIO direction, there are three configurations:
-+	a. simple bidirectional GPIOs that requires no configuration.
-+	b. an output direction register (named "dirout")
-+	   where a 1 bit indicates the GPIO is an output.
-+	c. an input direction register (named "dirin")
-+	   where a 1 bit indicates the GPIO is an input.
-+
-+Examples:
-+
-+	/* Configuration for single input/output register
-+	 * for eight simple bidirectional GPIOs.
-+	 */
-+	gpio_a_1 {
-+		compatible =3D "linux,gpio-mmio";
-+		reg =3D <0x18000000 0x1>;
-+		reg-names =3D "dat";
-+		#gpio-cells =3D <2>;
-+		gpio-controller;
+ #undef ADD
+ 
+ static inline void set_resource_address(struct resource *res,
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index 81af498..fdaf701 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -610,6 +610,7 @@ static const struct of_device_id bgpio_of_match[] = {
+ 	ADD("linux,gpio-mmio", bgpio_basic_mmio_parse_dt),
+ 	GPIO_CLPS711X_COMPATIBLE
+ 	GPIO_GE_FPGA_COMPATIBLE
++	GPIO_MOXART_COMPATIBLE
+ 
+ 	{ }
+ };
+diff --git a/drivers/gpio/gpio-moxart.c b/drivers/gpio/gpio-moxart.c
+index d58d389..812b86a 100644
+--- a/drivers/gpio/gpio-moxart.c
++++ b/drivers/gpio/gpio-moxart.c
+@@ -10,75 +10,36 @@
+  * warranty of any kind, whether express or implied.
+  */
+ 
++#include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/err.h>
+-#include <linux/init.h>
+-#include <linux/irq.h>
+-#include <linux/io.h>
+-#include <linux/platform_device.h>
+-#include <linux/of_address.h>
+-#include <linux/of_gpio.h>
+-#include <linux/pinctrl/consumer.h>
+-#include <linux/delay.h>
+-#include <linux/timer.h>
+-#include <linux/bitops.h>
++#include <linux/ioport.h>
+ #include <linux/gpio/driver.h>
++#include <linux/platform_device.h>
++#include "gpio-mmio-compat.h"
+ 
+ #define GPIO_DATA_OUT		0x00
+ #define GPIO_DATA_IN		0x04
+ #define GPIO_PIN_DIRECTION	0x08
+ 
+-static int moxart_gpio_probe(struct platform_device *pdev)
++int moxart_parse_dt(struct platform_device *pdev,
++		    struct bgpio_pdata *pdata,
++		    unsigned long *flags)
+ {
+-	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+-	struct gpio_chip *gc;
+-	void __iomem *base;
+-	int ret;
+-
+-	gc = devm_kzalloc(dev, sizeof(*gc), GFP_KERNEL);
+-	if (!gc)
+-		return -ENOMEM;
++	struct resource nres[] = {
++		DEFINE_RES_MEM_NAMED(0, 1, "dat"),
++		DEFINE_RES_MEM_NAMED(0, 1, "set"),
++		DEFINE_RES_MEM_NAMED(0, 1, "dirout"),
 +	};
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
+-
+-	ret = bgpio_init(gc, dev, 4, base + GPIO_DATA_IN,
+-			 base + GPIO_DATA_OUT, NULL,
+-			 base + GPIO_PIN_DIRECTION, NULL,
+-			 BGPIOF_READ_OUTPUT_REG_SET);
+-	if (ret) {
+-		dev_err(&pdev->dev, "bgpio_init failed\n");
+-		return ret;
+-	}
+-
+-	gc->label = "moxart-gpio";
+-	gc->request = gpiochip_generic_request;
+-	gc->free = gpiochip_generic_free;
+-	gc->base = 0;
+-	gc->owner = THIS_MODULE;
+-
+-	ret = devm_gpiochip_add_data(dev, gc, NULL);
+-	if (ret) {
+-		dev_err(dev, "%s: gpiochip_add failed\n",
+-			dev->of_node->full_name);
+-		return ret;
+-	}
+-
+-	return ret;
++	if (!res || resource_size(res) != 12)
++		return -EINVAL;
 +
-+	/* Configuration for set/clear pair registers with
-+	 * 32 output direction register GPIOs.
-+	 */
-+	gpio_b_2 {
-+		compatible =3D "linux,gpio-mmio";
-+		reg =3D <0x18000000 0x4>, <0x18000010 0x4>,
-+		      <0x18000004 0x4>, <0x18000008 0x4>;
-+		reg-names =3D "dat", "set", "clr", "dirout";
-+		#gpio-cells =3D <2>;
-+		gpio-controller;
-+	};
---=20
++	*flags |= BGPIOF_READ_OUTPUT_REG_SET;
++	set_resource_address(&nres[0], res->start + GPIO_DATA_IN, 0x4);
++	set_resource_address(&nres[1], res->start + GPIO_DATA_OUT, 0x4);
++	set_resource_address(&nres[2], res->start + GPIO_PIN_DIRECTION, 0x4);
++	return platform_device_add_resources(pdev, nres, ARRAY_SIZE(nres));
+ }
+-
+-static const struct of_device_id moxart_gpio_match[] = {
+-	{ .compatible = "moxa,moxart-gpio" },
+-	{ }
+-};
+-
+-static struct platform_driver moxart_gpio_driver = {
+-	.driver	= {
+-		.name		= "moxart-gpio",
+-		.of_match_table	= moxart_gpio_match,
+-	},
+-	.probe	= moxart_gpio_probe,
+-};
+-builtin_platform_driver(moxart_gpio_driver);
+-- 
 2.8.1
