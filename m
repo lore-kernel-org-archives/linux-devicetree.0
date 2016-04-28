@@ -1,46 +1,88 @@
 From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [RFC v4 2/8] gpio: rename gpio-generic.c into gpio-mmio.c
-Date: Thu, 28 Apr 2016 11:05:12 +0200
-Message-ID: <5d6d06726e8ed05aea6cae0aaa9166b10c408dd0.1461806071.git.chunkeey@googlemail.com>
-References: <cover.1461806071.git.chunkeey@googlemail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
-In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
-References: <cover.1461806071.git.chunkeey@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [RFC v4 0/8] gpio: add DT support for generic memory-mapped GPIOs
+Date: Thu, 28 Apr 2016 11:05:10 +0200
+Message-ID: <cover.1461806071.git.chunkeey@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christian Lamparter <chunkeey@googlemail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Christian Lamparter <chunkeey@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch renames the gpio-generic.c into gpio-mmio.c.
-This is because currently the file only contains code
-for a memory-mapped GPIO driver. There isn't any support
-for ioports or other resource type.
-
-Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
----
- drivers/gpio/Makefile                        | 3 +++
- drivers/gpio/{gpio-generic.c => gpio-mmio.c} | 0
- 2 files changed, 3 insertions(+)
- rename drivers/gpio/{gpio-generic.c => gpio-mmio.c} (100%)
-
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 74eb1a7..991598e 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -12,6 +12,9 @@ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
- # Device drivers. Generally keep list sorted alphabetically
- obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
- 
-+# directly supported by gpio-generic
-+gpio-generic-$(CONFIG_GPIO_GENERIC)	+= gpio-mmio.o
-+
- obj-$(CONFIG_GPIO_104_DIO_48E)	+= gpio-104-dio-48e.o
- obj-$(CONFIG_GPIO_104_IDIO_16)	+= gpio-104-idio-16.o
- obj-$(CONFIG_GPIO_104_IDI_48)	+= gpio-104-idi-48.o
-diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-mmio.c
-similarity index 100%
-rename from drivers/gpio/gpio-generic.c
-rename to drivers/gpio/gpio-mmio.c
--- 
-2.8.1
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBkZXZpY2UgdHJlZSBzdXBwb3J0IGZvciBnZW5lcmljIG1l
+bW9yeS1tYXBwZWQgR1BJT3MuClRoZSBHUElPIGxpYnJhcnkgYWxyZWFkeSBhbGxvd3MgZHJpdmVy
+cyBhbmQgYXJjaGl0ZWN0dXJlIHN1cHBvcnQgY29kZSB0bwpyZXVzZSBnZW5lcmljIGNvZGUgZm9y
+IG1hbmFnaW5nIGEgR1BJTyBjaGlwLiBDdXJyZW50bHksIGEgZGV2ZWxvcGVyIGhhcwp0byBjcmVh
+dGUgYSBwbGF0Zm9ybSBkZXZpY2UgImJhc2ljLW1taW8tZ3BpbyIgYW5kIGF0dGFjaCBhIGJncGlv
+X3BkYXRhCnBsYXRmb3JtIGRhdGEgc3RydWN0dXJlIHRvIG1ha2UgdXNlIG9mIGl0LiBIb3dldmVy
+LCBmb3IgYXJjaGl0ZWN0dXJlcwp3aGljaCByZWx5IG9uIHRoZSBkZXZpY2UgdHJlZSB0byBlbnVt
+ZXJhdGUgZGV2aWNlcywgY3JlYXRpbmcgY3VzdG9tCnBsYXRmb3JtIGRldmljZXMgaXMgYW5vdGhl
+ciBleHRyYSBzdGVwIHRoYXQgY2FuIGJlIGF2b2lkZWQgYnkgaGF2aW5nCmRpcmVjdCBzdXBwb3J0
+IHZpYSBhIGRldmljZSB0cmVlIGJpbmRpbmcuCgpJIGluaXRpYWxseSBjYW1lIGFjcm9zcyB0aGlz
+IHBhdGNoIFswXSBmcm9tIMOBbHZhcm8gRmVybsOhbmRleiBSb2phcywKd2hpbGUgbG9va2luZyBm
+b3IgYW4gZWFzeSB3YXkgdG8gYWRkIHN1cHBvcnQgZm9yIHRoZSBHUElPIG9mIG15CldEIE15Qm9v
+ayBMaXZlIFsxXSAoQVBNODIxODEgLSBwcGM0NjQpLiBUaGlzIGdlbmVyaWMgYXBwcm9hY2ggcGF0
+Y2gKYWxsb3dlZCBtZSB0byBlYXNpbHkgZ2V0IHRoZSBHUElPIChhbmQgdGhlIGNvbm5lY3RlZCBM
+RURzLApidXR0b25zLCBncGlvaG9ncywgZXRjLikgdXAgYW5kIHJ1bm5pbmcuIEV2ZW4gdG91Z2h0
+LCBNci4gRmVybmFuZGV6CmluaXRpYWxseSBkZXZlbG9wZWQgaXQgZm9yIGhpcyB3b3JrIG9uIHRo
+ZSBicmNtNjN4eCBbMl0uCgpbMF0gPGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gv
+NDIyMTIxLz4KWzFdIDxodHRwczovL2dpdGh1Yi5jb20vY2h1bmtlZXkvTUJMLW9wZW53cnQ+Clsy
+XSA8aHR0cHM6Ly93aWtpLm9wZW53cnQub3JnL2RvYy9oYXJkd2FyZS9zb2Mvc29jLmJyb2FkY29t
+LmJjbTYzeHg+CgpDdXJyZW50bHksIHRoZSBkZXZpY2UgdHJlZSBwYXJzZXMgZm9yIHRoZSBpbnRl
+Z3JhdGVkIGRyaXZlcnMKKGdwaW8tY2xwczcxMXgsIGdwaW8tZ2UsIGdwaW8tbW94YXJ0IGFuZCBn
+cGlvLXRzNDgwMCkgYXJlIHN0aWxsCnJlc2lkaW5nIGluIHRoZWlyIG9yaWdpbmFsIGRyaXZlciAu
+YyBmaWxlLiBUaGlzIHdheSwgdGhlc2UKZHJpdmVycyBkb24ndCBjbHV0dGVyIHRoZSBncGlvLWdl
+bmVyaWMuYyB3aXRoIHRoZWlyIG93biBoYXJkd2FyZQpkZWZpbml0aW9ucyBhbmQgTU9EVUxFXyog
+c3RhdGVtZW50cy4gSSBob3BlZCB0aGlzIHdvdWxkIG1ha2UgdGhlCnRyYW5zaXRpb24gZnJvbSB0
+aGUgX3Byb2JlIHRvIHRoZSBwYXJzZXIgbGVzcyBwYWlubGVzcyBidXQgdGhlIGRpZmYKaXMgcmV0
+dHkgbXVjaCB1bnJlYWRhYmxlLiBTbyB0aGUgbmV4dCBzZXJpZXMgd2lsbCBjb25zb2xpZGF0ZSB0
+aGVtCmludG8gZ3Bpby1nZW5lcmljLmMgYW5kIHRoZW4gSSBjYW4gZHJvcCB0aGUgZ3Bpby1nZW5l
+cmljIC0+IGdwaW8tbW1pbwpjaGFuZ2UuIEkgdGhpbmsgdGhpcyBpcyBub3cgbW9zdGx5IGEgbWF0
+dGVyIG9mIGhvdyB0byBvcmdhbml6ZSB0aGluZ3MKYW5kIHdoeSBub3QgdHJ5IGl0IGp1c3Qgb25j
+ZSBqdXN0IHNvIGl0IHdhcyB0ZXN0ZWQuCgpjaGFuZ2Vsb2c6Cgp2MyAtPiB2NDoKCS0gcmVuYW1l
+ZCBncGlvLWdlbmVyaWMuYyB0byBncGlvLW1taW8uYwoJICAoVGhlIGdwaW8tZ2VuZXJpYyBvbmx5
+IGNvbnRhaW5zIGEgZ2VuZXJpYyBtbWlvIGRyaXZlciwKCSAgdGhpcyBjb25mdXNlcyBhbmQgYW5n
+ZXJzIHBlb3BsZSEpCgktIGNoYW5nZWQgY29tcGF0LiBzdHJpbmcgdG8gImxpbnV4LGdwaW8tbW1p
+byIKCS0gaW50ZWdyYXRlZCBDaXJydXMgY2xwczcxMXggZHJpdmVyCgktIGludGVncmF0ZWQgR0Ug
+RkdQQSBncGlvLWdlIGRyaXZlcgoJLSBpbnRlZ3JhdGVkIE1PWEEgQVJUIEdQSU8gZHJpdmVyCgkt
+IGludGVncmF0ZWQgVFM0ODAwIGdwaW8gZHJpdmVyCgktIHJlc2h1ZmZsZWQgcGF0Y2hlcywgcmV3
+b3JkZWQgY29tbWl0cywgZml4ZWQgc3BlbGxpbmcgZXJyb3JzLCBldGMuCgpUaGFua3MhIChQbGVh
+c2Uga2VlcCBtZSBpbiB0aGUgQ0MpCi0tLQpDaHJpc3RpYW4gTGFtcGFydGVyICg2KToKICBncGlv
+OiBnZW5lcmljOiBmaXggR1BJT19HRU5FUklDX1BMQVRGT1JNIGlzIHNldCB0byBtb2R1bGUgY2Fz
+ZQogIGdwaW86IHJlbmFtZSBncGlvLWdlbmVyaWMuYyBpbnRvIGdwaW8tbW1pby5jCiAgZ3Bpbzog
+Y2xwczcxMXg6IGludGVncmF0ZSBjaXJydXMgY2xwczcxMXggaW50byBncGlvLW1taW8KICBncGlv
+OiBnZTogaW50ZWdyYXRlIEdFJ3MgRlBHQSBHUElPIGludG8gZ3Bpby1tbWlvCiAgZ3BpbzogbW94
+YXJ0OiBpbnRlZ3JhdGUgTU9YQSBBUlQgR1BJTyBkcml2ZXIgaW50byBncGlvLW1taW8KICBncGlv
+OiB0czQ4MDA6IGludGVncmF0ZSBUUzQ4MDAgaW50byBncGlvLW1taW8KCsOBbHZhcm8gRmVybsOh
+bmRleiBSb2phcyAoMik6CiAgZ3BpbzogZ2VuZXJpYzogYWRkIERUIHN1cHBvcnQgZm9yIGdlbmVy
+aWMgbWVtb3J5LW1hcHBlZCBHUElPcwogIGdwaW86IGR0LWJpbmRpbmdzOiBhZGQgZ3Bpby1tbWlv
+IGJpbmRpbmdzCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLW1taW8udHh0ICAg
+ICAgICAgfCAgNzMgKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwaW8vS2NvbmZpZyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICA1NyArKysrKystLS0tLS0KIGRyaXZlcnMvZ3Bpby9N
+YWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDExICsrLQogZHJpdmVycy9n
+cGlvL2dwaW8tY2xwczcxMXguYyAgICAgICAgICAgICAgICAgICAgICAgfCAgODQgKysrKysrLS0t
+LS0tLS0tLS0KIGRyaXZlcnMvZ3Bpby9ncGlvLWdlLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgMTAxICsrKysrKy0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9ncGlvL2dwaW8tbW1pby1j
+b21wYXQuaCAgICAgICAgICAgICAgICAgICAgfCAgNjUgKysrKysrKysrKysrKwogZHJpdmVycy9n
+cGlvL3tncGlvLWdlbmVyaWMuYyA9PiBncGlvLW1taW8uY30gICAgICAgfCAxMDEgKysrKysrKysr
+KysrKysrKysrKystCiBkcml2ZXJzL2dwaW8vZ3Bpby1tb3hhcnQuYyAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICA4MSArKysrKy0tLS0tLS0tLS0tLQogZHJpdmVycy9ncGlvL2dwaW8tdHM0ODAw
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNzYgKysrKystLS0tLS0tLS0tLQogOSBmaWxl
+cyBjaGFuZ2VkLCAzNzYgaW5zZXJ0aW9ucygrKSwgMjczIGRlbGV0aW9ucygtKQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8tbW1p
+by50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwaW8vZ3Bpby1tbWlvLWNvbXBhdC5o
+CiByZW5hbWUgZHJpdmVycy9ncGlvL3tncGlvLWdlbmVyaWMuYyA9PiBncGlvLW1taW8uY30gKDg2
+JSkKCi0tIAoyLjguMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
