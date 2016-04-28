@@ -1,59 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 4/7] Documentation: dt: socfpga: Add Arria10 Ethernet
- binding
-Date: Wed, 27 Apr 2016 21:51:44 -0500
-Message-ID: <20160428025144.GA5837@rob-hp-laptop>
-References: <1461606768-14404-1-git-send-email-tthayer@opensource.altera.com>
- <1461606768-14404-5-git-send-email-tthayer@opensource.altera.com>
+Subject: Re: [PATCH v2 01/13] dt-bindings: Add Renesas R-Car FCP DT bindings
+Date: Wed, 27 Apr 2016 21:54:29 -0500
+Message-ID: <20160428025429.GA11679@rob-hp-laptop>
+References: <1461620198-13428-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1461620198-13428-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461606768-14404-5-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+In-Reply-To: <1461620198-13428-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 25, 2016 at 12:52:45PM -0500, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
+On Tue, Apr 26, 2016 at 12:36:26AM +0300, Laurent Pinchart wrote:
+> The FCP is a companion module of video processing modules in the Renesas
+> R-Car Gen3 SoCs. It provides data compression and decompression, data
+> caching, and conversion of AXI transactions in order to reduce the
+> memory bandwidth.
 > 
-> Add the device tree bindings needed to support the Altera Ethernet
-> FIFO buffers on the Arria10 chip.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > ---
-> v2  No Change
-> ---
->  .../bindings/arm/altera/socfpga-eccmgr.txt         |   24 ++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  .../devicetree/bindings/media/renesas,fcp.txt      | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,fcp.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-> index 5a6b160..aa1c593 100644
-> --- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-> @@ -76,6 +76,18 @@ Required Properties:
->  - compatible : Should be "altr,socfpga-a10-ocram-ecc"
->  - reg        : Address and size for ECC block registers.
->  
-> +Ethernet FIFO ECC
-> +Required Properties:
-> +- compatible : Should be "altr,socfpga-a10-emac0-rx-ecc" for the 1st EMAC
-> +	Receive	buffer
-> +	or "altr,socfpga-a10-emac0-tx-ecc" for the 1st EMAC Transmit buffer
-> +	or "altr,socfpga-a10-emac1-rx-ecc" for the 2nd EMAC Receive buffer
-> +	or "altr,socfpga-a10-emac1-tx-ecc" for the 2nd EMAC Transmit buffer
-> +	or "altr,socfpga-a10-emac2-rx-ecc" for the 3rd EMAC Receive buffer
-> +	or "altr,socfpga-a10-emac2-tx-ecc" for the 3rd EMAC Transmit buffer
+> Cc: devicetree@vger.kernel.org
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> new file mode 100644
+> index 000000000000..0c72ca24379f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> @@ -0,0 +1,31 @@
+> +Renesas R-Car Frame Compression Processor (FCP)
+> +-----------------------------------------------
+> +
+> +The FCP is a companion module of video processing modules in the Renesas R-Car
+> +Gen3 SoCs. It provides data compression and decompression, data caching, and
+> +conversion of AXI transactions in order to reduce the memory bandwidth.
+> +
+> +There are three types of FCP whose configuration and behaviour highly depend
+> +on the module they are paired with.
 
-These blocks don't really appear to be different other than the 
-interrupt mask (which is in another block?). I think they should be the 
-same compatible with a property for the interrupt (perhaps a full 
-interrupt-controller binding). 
-
-> +- reg        : Address and size for ECC block registers.
-> +- parent     : phandle to parent Ethernet node.
-
-Needs a better name and altr prefix. Maybe altr,eth-mac?
+3 types?, but I only see one compatible and no relationship with said 
+module described.
 
 Rob
