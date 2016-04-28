@@ -1,152 +1,89 @@
-From: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] powerpc: Update of_remove_property() call sites to remove null checking
-Date: Thu, 28 Apr 2016 15:34:55 +1000
-Message-ID: <1461821695-19204-2-git-send-email-sjitindarsingh@gmail.com>
-References: <1461821695-19204-1-git-send-email-sjitindarsingh@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461821695-19204-1-git-send-email-sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
+ registers
+Date: Thu, 28 Apr 2016 07:41:57 +0200
+Message-ID: <5721A2A5.9010908@de.bosch.com>
+References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
+ <20160427233028.GA5155@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160427233028.GA5155@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, julien.grall@arm.com
+Cc: geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-After obtaining a property from of_find_property() and before calling
-of_remove_property() most code checks to ensure that the property
-returned from of_find_property() is not null. The previous patch
-moved this check to the start of the function of_remove_property() in
-order to avoid the case where this check isn't done and a null value is
-passed. This ensures the check is always conducted before taking locks
-and attempting to remove the property. Thus it is no longer necessary
-to perform a check for null values before invoking of_remove_property().
+Hi Simon,
 
-Update of_remove_property() call sites in order to remove redundant
-checking for null property value as check is now performed within the
-of_remove_property function().
+On 28.04.2016 01:30, Simon Horman wrote:
+> Hi Dirk,
+>
+> I understand that there is an issue here but I'm not yet able
+> to convince myself that this is the correct solution.
+>
+> In revision r0p1 of the CoreLink GIC-400 Generic Interrupt Controller
+> Technical Reference Manual[1] I see in Section 3.2. "GIC-400 register map"
+> that the size of both the CPU interfaces and Virtual CPU interfaces are
+> 0x2000 bytes. And assuming that the hardware follows the specification it
+> appears that DT is correctly describing the hardware.
 
-Signed-off-by: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/powerpc/kernel/machine_kexec.c       | 19 ++++++-------------
- arch/powerpc/kernel/machine_kexec_64.c    | 11 ++++-------
- arch/powerpc/platforms/pseries/mobility.c |  4 ++--
- arch/powerpc/platforms/pseries/reconfig.c |  5 +----
- 4 files changed, 13 insertions(+), 26 deletions(-)
 
-diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
-index 015ae55..55744a8 100644
---- a/arch/powerpc/kernel/machine_kexec.c
-+++ b/arch/powerpc/kernel/machine_kexec.c
-@@ -228,17 +228,12 @@ static struct property memory_limit_prop = {
- 
- static void __init export_crashk_values(struct device_node *node)
- {
--	struct property *prop;
--
- 	/* There might be existing crash kernel properties, but we can't
- 	 * be sure what's in them, so remove them. */
--	prop = of_find_property(node, "linux,crashkernel-base", NULL);
--	if (prop)
--		of_remove_property(node, prop);
--
--	prop = of_find_property(node, "linux,crashkernel-size", NULL);
--	if (prop)
--		of_remove_property(node, prop);
-+	of_remove_property(node, of_find_property(node,
-+				"linux,crashkernel-base", NULL));
-+	of_remove_property(node, of_find_property(node,
-+				"linux,crashkernel-size", NULL));
- 
- 	if (crashk_res.start != 0) {
- 		crashk_base = cpu_to_be_ulong(crashk_res.start),
-@@ -258,16 +253,14 @@ static void __init export_crashk_values(struct device_node *node)
- static int __init kexec_setup(void)
- {
- 	struct device_node *node;
--	struct property *prop;
- 
- 	node = of_find_node_by_path("/chosen");
- 	if (!node)
- 		return -ENOENT;
- 
- 	/* remove any stale properties so ours can be found */
--	prop = of_find_property(node, kernel_end_prop.name, NULL);
--	if (prop)
--		of_remove_property(node, prop);
-+	of_remove_property(node, of_find_property(node, kernel_end_prop.name,
-+				NULL));
- 
- 	/* information needed by userspace when using default_machine_kexec */
- 	kernel_end = cpu_to_be_ulong(__pa(_end));
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 0fbd75d..2608192 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -401,7 +401,6 @@ static struct property htab_size_prop = {
- static int __init export_htab_values(void)
- {
- 	struct device_node *node;
--	struct property *prop;
- 
- 	/* On machines with no htab htab_address is NULL */
- 	if (!htab_address)
-@@ -412,12 +411,10 @@ static int __init export_htab_values(void)
- 		return -ENODEV;
- 
- 	/* remove any stale propertys so ours can be found */
--	prop = of_find_property(node, htab_base_prop.name, NULL);
--	if (prop)
--		of_remove_property(node, prop);
--	prop = of_find_property(node, htab_size_prop.name, NULL);
--	if (prop)
--		of_remove_property(node, prop);
-+	of_remove_property(node, of_find_property(node, htab_base_prop.name,
-+				NULL));
-+	of_remove_property(node, of_find_property(node, htab_size_prop.name,
-+				NULL));
- 
- 	htab_base = cpu_to_be64(__pa(htab_address));
- 	of_add_property(node, &htab_base_prop);
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index ceb18d3..a560a98 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -191,8 +191,8 @@ static int update_dt_node(__be32 phandle, s32 scope)
- 				break;
- 
- 			case 0x80000000:
--				prop = of_find_property(dn, prop_name, NULL);
--				of_remove_property(dn, prop);
-+				of_remove_property(dn, of_find_property(dn,
-+							prop_name, NULL));
- 				prop = NULL;
- 				break;
- 
-diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-index 7c7fcc0..cc66c49 100644
---- a/arch/powerpc/platforms/pseries/reconfig.c
-+++ b/arch/powerpc/platforms/pseries/reconfig.c
-@@ -303,7 +303,6 @@ static int do_remove_property(char *buf, size_t bufsize)
- {
- 	struct device_node *np;
- 	char *tmp;
--	struct property *prop;
- 	buf = parse_node(buf, bufsize, &np);
- 
- 	if (!np)
-@@ -316,9 +315,7 @@ static int do_remove_property(char *buf, size_t bufsize)
- 	if (strlen(buf) == 0)
- 		return -EINVAL;
- 
--	prop = of_find_property(np, buf, NULL);
--
--	return of_remove_property(np, prop);
-+	return of_remove_property(np, of_find_property(np, buf, NULL));
- }
- 
- static int do_update_property(char *buf, size_t bufsize)
--- 
-2.5.0
+I think you are missing the details described by ARM in
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
+
+
+Maybe Julien could help if you have some more doubts?
+
+
+Best regards
+
+Dirk
+
+
+> [1] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/index.html
+>
+> On Tue, Apr 19, 2016 at 08:29:55AM +0200, Dirk Behme wrote:
+>> From: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+>>
+>> There are some requirements about the GIC-400 memory layout and its
+>> mapping if using 64k aligned base addresses like on r8a7795.
+>>
+>> See e.g.
+>>
+>> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
+>>
+>> Map the whole memory range instead of only 0x2000. This will fix
+>> the issue that some hypervisors, e.g. Xen, fail to handle the
+>> interrupts correctly.
+>>
+>> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+>> ---
+>> Note: This patch is against renesas-drivers-2016-04-12-v4.6-rc3
+>>
+>>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> index 8be9424..d880fd4 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> @@ -160,9 +160,9 @@
+>>   			#address-cells = <0>;
+>>   			interrupt-controller;
+>>   			reg = <0x0 0xf1010000 0 0x1000>,
+>> -			      <0x0 0xf1020000 0 0x2000>,
+>> +			      <0x0 0xf1020000 0 0x20000>,
+>>   			      <0x0 0xf1040000 0 0x20000>,
+>> -			      <0x0 0xf1060000 0 0x2000>;
+>> +			      <0x0 0xf1060000 0 0x20000>;
+>>   			interrupts = <GIC_PPI 9
+>>   					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>>   		};
+>> --
+>> 2.8.0
+>>
+>
