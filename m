@@ -1,71 +1,93 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
-Date: Thu, 28 Apr 2016 15:38:01 +0100
-Message-ID: <20160428143801.GO3217@sirena.org.uk>
-References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
- <2692115.H6acsZmTjn@wuerfel>
- <20160428115337.GN3217@sirena.org.uk>
- <7478716.z4vdp0mVTA@wuerfel>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/5] Partitioning per-cpu interrupts
+Date: Thu, 28 Apr 2016 15:48:16 +0100
+Message-ID: <572222B0.8010608@arm.com>
+References: <1460365075-7316-1-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CIaS999JRh1EGVx5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7478716.z4vdp0mVTA@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sagar Dharia <sdharia@codeaurora.org>, gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460365075-7316-1-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/04/16 09:57, Marc Zyngier wrote:
+> We've unfortunately started seeing a situation where percpu interrupts
+> are partitioned in the system: one arbitrary set of CPUs has an
+> interrupt connected to a type of device, while another disjoint set of
+> CPUs has the same interrupt connected to another type of device.
+>     
+> This makes it impossible to have a device driver requesting this
+> interrupt using the current percpu-interrupt abstraction, as the same
+> interrupt number is now potentially claimed by at least two drivers,
+> and we forbid interrupt sharing on per-cpu interrupt.
+> 
+> A potential solution to this has been proposed by Will Deacon,
+> expanding the handling in the core code:
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/388800.html
+> 
+> followed by a counter-proposal from Thomas Gleixner, which Will tried
+> to implement, but ran into issues where the probing code was running
+> in preemptible context, making the percpu-ness of interrupts difficult
+> to guarantee.
+>     
+> Another approach to this is to turn things upside down. Let's assume
+> that our system describes all the possible partitions for a given
+> interrupt, and give each of them a unique identifier. It is then
+> possible to create a namespace where the affinity identifier itself is
+> a form of interrupt number. At this point, it becomes easy to
+> implement a set of partitions as a cascaded irqchip, each affinity
+> identifier being the secondary HW irq, as outlined in the following
+> example:
+> 
+> 	Aff-0: { cpu0 cpu3 }
+> 	Aff-1: { cpu1 cpu2 }
+> 	Aff-2: { cpu4 cpu5 cpu6 cpu7 }
+> 
+> Let's assume that HW interrupt 1 is partitioned over these 3
+> affinities. When HW interrupt 1 fires on a given CPU, all it takes is
+> to find out which affinity this CPU belongs to, which gives us a new
+> HW interrupt number. Bingo. Of course, this only works as long as you
+> don't have overlapping affinities (but if you do your system is broken
+> anyway).
+>     
+> This allows us to keep a number of nice properties:
+> 
+> - Each partition results in a separate percpu-interrupt (with a
+>   restricted affinity), which keeps drivers happy. This alone
+>   garantees that we do not have to change the programming model for
+>   per-cpu interrupts.
+> 
+> - Because the underlying interrupt is still per-cpu, the overhead of
+>   the indirection can be kept pretty minimal.
+> 
+> - The core code can ignore most of that crap.
+>     
+> For that purpose, we implement a small library that deals with some of
+> the boilerplate code, relying on platform-specific drivers to provide
+> a description of the affinity sets and a set of callbacks. This also
+> relies on a small change in the irqdomain layer, and now offers a way
+> for the affinity of a percpu interrupt to be retrieved by a driver.
+> 
+> As an example, the GICv3 driver has been adapted to use this new
+> feature. Patches on top of v4.6-r3, tested on an arm64 FVP model.
 
---CIaS999JRh1EGVx5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Any comment on this? The Rockchip dudes have confirmed that this solves
+their problems (big-little system with PMUs using the same PPI).
 
-On Thu, Apr 28, 2016 at 02:33:41PM +0200, Arnd Bergmann wrote:
-> On Thursday 28 April 2016 12:53:37 Mark Brown wrote:
-> > On Thu, Apr 28, 2016 at 12:00:26PM +0200, Arnd Bergmann wrote:
+I've also posted a proof of concept patch for the ARM PMU over there:
 
-> > > This looks like an artifact of ancient pre-DT times. I'd say kill it off before
-> > > someone starts using it.
+https://lkml.org/lkml/2016/4/25/227
 
-> > Not every architecture uses DT, and even on architectures with DT
-> > support it isn't always the only firmware.  In this specific case it's
-> > questionable how many people are going to implement Slimbus at this
-> > point but in general insisting that we go DT only doesn't seem great.
+Thanks,
 
-> Nothing wrong with adding support for manual board files later if
-> we have a good reason for it, but at the moment, this seems completely
-> ARM/ARM64 specific.
-
-It's not in theory, but in practice nobody other that Qualcomm is ever
-likely to release a controller.
-
-> I don't foresee mobile phones with ACPI using this subsystem, but even
-> if we got them, it would be a horrible idea to use hardcoded board
-> specific tables in a platform file, and we should insist that whatever
-> firmware is present has a way to describe the slimbus devices.
-
-Right, in this particular case I don't think it makes a huge difference
-but what you were talking about was "ancient pre-DT times" rather than
-something specific to this particular case.  That's definitely a thing
-that people keep thinking and it's good to push back on it since we do
-have non-DT cases to worry about (some architectures, other firmwares,
-things like PCI cards with other components on them and so on).
-
---CIaS999JRh1EGVx5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXIiBIAAoJECTWi3JdVIfQeJoH/3zXqbIT+UR/hgabRS5CoAH1
-hqewVtNkBcDbY9EE/6OEcbiXQbj2hU7HYqgjG/1HIH0U17DC4gURqhslB/5PNl9r
-Ejq1Z7eGI/7tYKy0VxtVrojzGDQ6u8CknvxsBHDuXwCtCGV2W17I+wAEBdw00J6A
-i89eBpChQmgIlqNUKVhMBNNHZj7zIBvq1ywGWSjr5xmAlA2OXqe6hHdTfgsHhmuv
-1ngQ7CXwCq1j3EnrdPQ1oML5uUsBbNaB9L7A/v2qDoza0PC0wyrDbx8ej0HJVyYP
-CcYvMo3nylPSsf4cguKO1IvGqjOuft4T8OPMfH/1Dnh+G0vpwd3eMTAQoVzBAn4=
-=oejk
------END PGP SIGNATURE-----
-
---CIaS999JRh1EGVx5--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
