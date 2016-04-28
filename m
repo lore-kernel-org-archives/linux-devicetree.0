@@ -1,145 +1,216 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
- Tegra210 AGIC
-Date: Thu, 28 Apr 2016 10:31:32 +0200
-Message-ID: <CAMuHMdXGdkViRUffCcOqd5zVVPN51DiJqWAqSQr=AapsLnkQ0w@mail.gmail.com>
-References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
-	<1461150237-15580-14-git-send-email-jonathanh@nvidia.com>
-	<20160422100052.GA10606@leverpostej>
-	<571A0739.3090502@nvidia.com>
-	<20160422112239.GF10606@leverpostej>
-	<5720DC1D.1080802@nvidia.com>
-	<20160427173810.GC7359@leverpostej>
-	<5721C597.1010105@nvidia.com>
+From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Subject: Re: [PATCH v6 2/2] memory: atmel-ebi: add DT bindings documentation
+Date: Thu, 28 Apr 2016 10:32:49 +0200
+Message-ID: <CACh+v5OO+UQ_EiWVyewdMHnMB-p3nd6N=R5P7K4V_4=ymy-YuQ@mail.gmail.com>
+References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5721C597.1010105@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461767754-12189-3-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+Hi Boris,
 
-On Thu, Apr 28, 2016 at 10:11 AM, Jon Hunter <jonathanh@nvidia.com> wrote:
-> On 27/04/16 18:38, Mark Rutland wrote:
->> On Wed, Apr 27, 2016 at 04:34:53PM +0100, Jon Hunter wrote:
->>> On 22/04/16 12:22, Mark Rutland wrote:
->>> [snip]
->>>>>>> I am not sure if it will be popular to add Tegra specific clock names
->>>>>>> to the GIC DT docs. However, in that case, then possibly the only
->>>>>>> alternative is to move the Tegra AGIC driver into its own file and
->>>>>>> expose the GIC APIs for it to use. Then we could add our own DT doc
->>>>>>> for the Tegra AGIC as well (based upon the ARM GIC).
->>>>>>
->>>>>> The clock-names don't seem right to me, as they sound like provide names
->>>>>> or global clock line names rather than consumer-side names ("clk" and
->>>>>> "apb_pclk").
->>>>>
->>>>> Yes that would be fine with me.
->>>>
->>>> Ok; if we model the apb_pclk as owned by the AXI switch (which it is),
->>>> then there's no change for the GIC binding, short of the additional
->>>> compatible string as an extension of "arm,gic-400", as we already model
->>>> that clock in the GIC-400 binding.
->>>
->>> I have been re-working this based upon the feedback received. In the GIC
->>> driver we have the following definitions ...
->>>
->>>  IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);
->>>  IRQCHIP_DECLARE(arm11mp_gic, "arm,arm11mp-gic", gic_of_init);
->>>  IRQCHIP_DECLARE(arm1176jzf_dc_gic, "arm,arm1176jzf-devchip-gic", gic_of_init);
->>>  IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
->>>  IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
->>>  IRQCHIP_DECLARE(cortex_a7_gic, "arm,cortex-a7-gic", gic_of_init);
->>>  IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
->>>  IRQCHIP_DECLARE(msm_qgic2, "qcom,msm-qgic2", gic_of_init);
->>>  IRQCHIP_DECLARE(pl390, "arm,pl390", gic_of_init);
->>>
->>>
->>> If I have something like the following in my dts ...
->>>
->>>      agic: interrupt-controller@702f9000 {
->>>              compatible = "nvidia,tegra210-agic", "arm,gic-400";
->>>              ...
->>>      };
->>>
->>> The problem with this is that it tries to register the interrupt controller
->>> early during of_irq_init() before the platform driver has chance to
->>> initialise it.
->>
->> Probe order strikes again...
->>
->>> To avoid this I got rid of the "nvidia,tegra210-agic" string and added
->>> the following for the platform driver ...
->>>
->>> static const struct of_device_id gic_match[] = {
->>>        { .compatible = "arm,arm11mp-gic-pm",    .data = &arm11mp_gic_data   },
->>>        { .compatible = "arm,cortex-a15-gic-pm", .data = &cortexa15_gic_data },
->>>        { .compatible = "arm,cortex-a9-gic-pm",  .data = &cortexa9_gic_data  },
->>>        { .compatible = "arm,gic400-pm",         .data = &gic400_data        },
->>>        { .compatible = "arm,pl390-pm",          .data = &pl390_data         },
->>>        {},
->>> };
->>>
->>> It is not ideal as now we have a *-pm variant of each compatible string :-(
->>
->> Yeah, that's a non-starter. :(
+i haven't seen this code in a while :) I'm glad you're working on it
+
+2016-04-27 16:35 GMT+02:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
+> The EBI (External Bus Interface) is used to access external peripherals
+> (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> Each device is assigned a CS line and an address range and can have its
+> own configuration (timings, access mode, bus width, ...).
+> This driver provides a generic DT binding to configure a device according
+> to its requirements.
+> For specific device controllers (like the NAND one) the SMC timings
+> should be configured by the controller driver through the matrix and smc
+> syscon regmaps.
 >
-> That is what I feared. Understood.
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>  .../bindings/memory-controllers/atmel,ebi.txt      | 146 +++++++++++++++++++++
+>  1 file changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
 >
->>> Another option would be to add some code in gic_of_init() to check for the
->>> presence of a "clocks" node in the DT binding and bail out of the early
->>> initialisation if found but may be that is a bit of a hack.
->>
->> I fear that someone may validly have a clocks property in their root GIC
->> node, at which point things would fall apart. I was under the impression
->> this was the case for some Renesas boards (though I didn't find an
->> example in tree).
->>
->> So I suspect that using the clocks property in that way isn't going to
->> work out well.
->>
->>> Mark, what are your thoughts on this?
->>
->> Collectively: "aargh", "oh no".
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> new file mode 100644
+> index 0000000..0f332d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> @@ -0,0 +1,146 @@
+> +* Device tree bindings for Atmel EBI
+> +
+> +The External Bus Interface (EBI) controller is a bus where you can connect
+> +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
+> +The EBI provides a glue-less interface to asynchronous memories though the SMC
+> +(Static Memory Controller).
+> +Synchronous memories (and some asynchronous memories like NANDs) can be
+> +attached to specialized controllers which are responsible for configuring the
+> +bus appropriately according to the connected device.
+> +In the other hand, the bus interface can be automated for simple asynchronous
+> +devices.
+> +
+> +Required properties:
+> +
+> +- compatible:          "atmel,at91sam9260-ebi"
+> +                       "atmel,at91sam9261-ebi"
+> +                       "atmel,at91sam9263-ebi0"
+> +                       "atmel,at91sam9263-ebi1"
+> +                       "atmel,at91sam9rl-ebi"
+> +                       "atmel,at91sam9g45-ebi"
+> +                       "atmel,at91sam9x5-ebi"
+> +                       "atmel,sama5d3-ebi"
+> +
+> +- reg:                 Contains offset/length value for EBI memory mapping.
+> +                       This property might contain several entries if the EBI
+> +                       memory range is not contiguous
+> +
+> +- #address-cells:      Must be 2.
+> +                       The first cell encodes the CS.
+> +                       The second cell encode the offset into the CS memory
+> +                       range.
+> +
+> +- #size-cells:         Must be set to 1.
+> +
+> +- ranges:              Encodes CS to memory region association.
+> +
+> +- clocks:              Clock feeding the EBI controller.
+> +                       See clock-bindings.txt
+> +
+> +Child chip-select (cs) nodes contain the memory devices nodes connected to
+> +such as NOR (e.g. cfi-flash) and NAND.
+> +There might be board specific devices like FPGAs.
+> +You'll define you device requirements in these child nodes.
+> +
+> +Required child cs node properties:
+> +
+> +- #address-cells:      Must be 2.
+> +
+> +- #size-cells:         Must be 1.
+> +
+> +- ranges:              Empty property indicating that child nodes can inherit
+> +                       memory layout.
+> +
+> +Optional child cs node properties:
+> +- atmel,bus-width:             width of the asynchronous device's data bus
+> +                               8, 16 or 32.
+> +                               8 if not present.
+> +
+> +- atmel,byte-access-type       "write" or "select" (see Atmel datasheet).
+> +                               "select" if not present.
+> +
+> +- atmel,read-mode              "nrd" or "ncs".
+> +                               "ncs" is not present.
+> +
+> +- atmel,write-mode             "nwe" or "ncs".
+> +                               "ncs" is not present.
+> +
+> +- atmel,exnw-mode              "disabled", "frozen" or "ready".
+> +                               "disabled" if not present.
+> +
+> +- atmel,page-mode              enable page mode if present. The provided value
+> +                               defines the page size (supported values: 4, 8,
+> +                               16 and 32).
+> +
+> +Optional device timings expressed in nanoseconds (if the property is not
+> +present 0 is assumed):
+
+IMO If no timing information is provided, it's probably better not to
+change it. It may have been configured by the bootloader or romboot.
+It may not be the perfect timings but at least it could work, whereas
+filling up with 0 is most probably going to break the access: it's a
+kind of very agressive timing optimization
+
+> +
+> +- atmel,ncs-rd-setup-ns
+> +- atmel,nrd-setup-ns
+> +- atmel,ncs-wr-setup-ns
+> +- atmel,nwe-setup-ns
+> +- atmel,ncs-rd-pulse-ns
+> +- atmel,nrd-pulse-ns
+> +- atmel,ncs-wr-pulse-ns
+> +- atmel,nwe-pulse-ns
+> +- atmel,nwe-cycle-ns
+> +- atmel,nrd-cycle-ns
+> +- atmel,tdf-ns
+
+One thought about the configuration in 'ns' unit: Some devices may
+have requirements expressed in clock cycles (I'm thinking of FPGA
+here). At  a fixed frequency one can always convert manually from 'ns'
+to 'clocks' but it's a bit tedious and prone to rounding errors. And
+It 'll  break when the EBI frequency is changed
+
+JJ
+
+> +
+> +- atmel,tdf-mode:              "normal" or "optimized". If set to "optimized"
+> +                               the data float time is optimized depending on
+> +                               the next device being accessed (next device
+> +                               setup time is subtracted to the current device
+> +                               data float time).
+> +
+> +
+> +
+> +Example:
+> +
+> +       ebi: ebi@10000000 {
+> +               compatible = "atmel,sama5d3-ebi", "simple-bus";
+> +               #address-cells = <2>;
+> +               #size-cells = <1>;
+> +               atmel,smc = <&hsmc>;
+> +               atmel,matrix = <&matrix>;
+> +               reg = <0x10000000 0x10000000
+> +                      0x40000000 0x30000000>;
+> +               ranges = <0x0 0x0 0x10000000 0x10000000
+> +                         0x1 0x0 0x40000000 0x10000000
+> +                         0x2 0x0 0x50000000 0x10000000
+> +                         0x3 0x0 0x60000000 0x10000000>;
+> +               clocks = <&mck>;
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_ebi_addr>;
+> +
+> +               cs@0 {
+> +                       #address-cells = <2>;
+> +                       #size-cells = <1>;
+> +                       ranges;
+> +                       atmel,generic-dev;
+> +                       atmel,read-mode = "nrd";
+> +                       atmel,write-mode = "nwe";
+> +                       atmel,bus-width = <16>;
+> +                       atmel,ncs-rd-setup-ns = <0>;
+> +                       atmel,ncs-wr-setup-ns = <0>;
+> +                       atmel,nwe-setup-ns = <8>;
+> +                       atmel,nrd-setup-ns = <16>;
+> +                       atmel,ncs-rd-pulse-ns = <84>;
+> +                       atmel,ncs-wr-pulse-ns = <84>;
+> +                       atmel,nrd-pulse-ns = <76>;
+> +                       atmel,nwe-pulse-ns = <76>;
+> +                       atmel,nrd-cycle-ns = <107>;
+> +                       atmel,nwe-cycle-ns = <84>;
+> +                       atmel,tdf-ns = <16>;
+> +
+> +                       nor: flash@0,0 {
+> +                               compatible = "cfi-flash";
+> +                               #address-cells = <1>;
+> +                               #size-cells = <1>;
+> +                               reg = <0x0 0x0 0x1000000>;
+> +                               bank-width = <2>;
+> +                       };
+> +               };
+> +       };
+> +
+> --
+> 2.7.4
 >
-> Yes, exactly :-(
->
->> We could instead explicitly match "nvidia,tegra210-agic", bailing out if
->> we see that. Otherwise, if we can't handle it like a GIC-400, then we
->> can just drop the GIC-400 compatible string from the fallback list.
->
-> Would it also be a none-starter to have "arm,gic-pm" instead of
-> "nvidia,tegra210-agic"? At this point it is not really specific to tegra
-> any more and so I was hoping to get rid of that. For example, ...
->
->         compatible = "arm,gic-pm", "arm,gic-400";
-
-The "-pm" is not a property of the GIC, but of the SoC. So IMHO the compatible
-value should be plain "arm,gic-400".
-
-If a device node has "clocks", "interrupts", "power-domains"[*], ...
-properties, and the corresponding providers are not yet available, a driver
-typically returns -EPROBE_DEFER, and will be retried later by the driver core.
-
-[*] For "power-domains" this is handled by the device core. I.e. .probe()
-     won't even be called before the dependency has been fulfilled.
-
-With IRQCHIP_DECLARE(), you don't have the retrying, and probe order (w.r.t.
-to other subsystems) is fixed.
-
-But as you said, gic_of_init() could just bail out if it "clocks" and/or
-"power-domains" properties are present, but their providers aren't.
-Later, the remaining GICs can be initialized from the platform driver.
-You just have to make sure no GIC is initialized twice (I believe that's what
-was plaguing me last time I tried your series).
-
-That's probably the closest you can get to normal platform_driver
-behavior, without converting the whole GIC driver to a normal platform_driver,
-which may cause problems on platforms that are currently working fine.
-
-Gr{oetje,eeting}s,
-
-                        Geert
