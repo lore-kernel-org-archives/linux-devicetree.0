@@ -1,35 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 5/9] ARM: dts: am437x/am33xx/da850: Add new ECAP and
- EPWM bindings
-Date: Thu, 28 Apr 2016 16:35:45 -0500
-Message-ID: <20160428213545.GA28119@rob-hp-laptop>
-References: <1461710209-6563-1-git-send-email-fcooper@ti.com>
- <1461710209-6563-6-git-send-email-fcooper@ti.com>
+Subject: Re: [PATCH v5 1/4] mmc: dt: usdhi6rol0: add optional pinctrl binding
+Date: Thu, 28 Apr 2016 16:40:38 -0500
+Message-ID: <20160428214038.GA32220@rob-hp-laptop>
+References: <cover.1461770066.git.larper@axis.com>
+ <a96281244b55d55e36b72a40cd061d7ffd70b88e.1461770066.git.larper@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461710209-6563-6-git-send-email-fcooper@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: thierry.reding@gmail.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
+In-Reply-To: <a96281244b55d55e36b72a40cd061d7ffd70b88e.1461770066.git.larper@axis.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, g.liakhovetski@gmx.de, ulf.hansson@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 26, 2016 at 05:36:45PM -0500, Franklin S Cooper Jr wrote:
-> Switch to a new ECAP and EPWM bindings that doesn't depend on hwmod to
-> provide the various required clocks.
+On Wed, Apr 27, 2016 at 05:21:26PM +0200, Lars Persson wrote:
+> Add a pinctrl binding to specify different pin settings for high speed
+> modes and UHS modes.
 > 
-> For AM437 and AM335x, add the required clocks explicitly to DT. The
-> hwmod entries for ECAP and EPWM will be removed and this will prevent
-> anything from breaking.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> Signed-off-by: Lars Persson <larper@axis.com>
 > ---
->  .../devicetree/bindings/pwm/pwm-tiecap.txt         | 18 +++++---
->  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       | 18 +++++---
->  arch/arm/boot/dts/am33xx.dtsi                      | 30 +++++++++---
->  arch/arm/boot/dts/am4372.dtsi                      | 54 ++++++++++++++++++----
->  arch/arm/boot/dts/da850.dtsi                       | 15 ++++--
->  5 files changed, 103 insertions(+), 32 deletions(-)
+>  Documentation/devicetree/bindings/mmc/usdhi6rol0.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
