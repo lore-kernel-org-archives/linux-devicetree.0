@@ -1,132 +1,52 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V5 4/6] slim: qcom: Add Qualcomm Slimbus controller driver
-Date: Thu, 28 Apr 2016 12:28:59 +0100
-Message-ID: <20160428112859.GE21145@leverpostej>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
+Date: Thu, 28 Apr 2016 12:53:37 +0100
+Message-ID: <20160428115337.GN3217@sirena.org.uk>
 References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
- <1461801489-16254-5-git-send-email-sdharia@codeaurora.org>
+ <1461801489-16254-2-git-send-email-sdharia@codeaurora.org>
+ <2692115.H6acsZmTjn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="idCnhAV0S4n5U/Zz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461801489-16254-5-git-send-email-sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kheitke-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, mlocke-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sheetal.tigadoli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <2692115.H6acsZmTjn@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sagar Dharia <sdharia@codeaurora.org>, gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 27, 2016 at 05:58:07PM -0600, Sagar Dharia wrote:
-> This controller driver programs manager, interface, and framer
-> devices for Qualcomm's slimbus HW block.
-> Manager component currently implements logical address setting,
-> and messaging interface.
-> Interface device reports bus synchronization information, and framer
-> device clocks the bus from the time it's woken up, until clock-pause
-> is executed by the manager device.
-> 
-> Signed-off-by: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt |  45 ++
->  drivers/slimbus/Kconfig                            |   9 +
->  drivers/slimbus/Makefile                           |   1 +
->  drivers/slimbus/slim-qcom-ctrl.c                   | 563 +++++++++++++++++++++
->  drivers/slimbus/slim-qcom.h                        |  63 +++
->  5 files changed, 681 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
->  create mode 100644 drivers/slimbus/slim-qcom-ctrl.c
->  create mode 100644 drivers/slimbus/slim-qcom.h
-> 
-> diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-> new file mode 100644
-> index 0000000..bc05f44
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-> @@ -0,0 +1,45 @@
-> +Qualcomm SLIMBUS controller
-> +"qcom,slim-msm": This controller is used if applications processor
-> +	driver controls slimbus master component (SoCs 8960, 8064).
 
-I would strongly recommend using a more specific name, e.g.
-"qcom,8960-slim", so that there's less confusion when some future SoC
-inevitably has an incompatible SLIMbus controller.
+--idCnhAV0S4n5U/Zz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The DT should contain the specific variant to account for any
-integration quirks, though the device can simply have one string and
-require a fallback entry for now.
+On Thu, Apr 28, 2016 at 12:00:26PM +0200, Arnd Bergmann wrote:
+> On Wednesday 27 April 2016 17:58:04 Sagar Dharia wrote:
 
-> +	This driver is responsible for communicating with slave HW
-> +	directly using messaging interface, and doing data channel
-> +	management, and power management.
+> > +int slim_add_device(struct slim_controller *ctrl, struct slim_device *sbdev)
 
-Drvier details don't belong in the DT binding, which should describe the
-device independent of any particular driver.
+> This looks like an artifact of ancient pre-DT times. I'd say kill it off before
+> someone starts using it.
 
-> +
-> +Required properties:
-> +
-> +- #address-cells - should be 4 (number of cells required to define
-> +		4 fields of the enumeration address for the SLIMbus
-> +		slave device)
-> +- #size-cells	- should be 0
+Not every architecture uses DT, and even on architectures with DT
+support it isn't always the only firmware.  In this specific case it's
+questionable how many people are going to implement Slimbus at this
+point but in general insisting that we go DT only doesn't seem great.
 
-Perhaps refer to the generic SLIMbus binding document for these?
+--idCnhAV0S4n5U/Zz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> + - reg : Offset and length of the register region(s) for the device
-> + - reg-names : Register region name(s) referenced in reg above
-> +	 Required register resource entries are:
-> +	 "slimbus_physical": Physical adderss of controller register blocks
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-That name seems odd. We _always_ use physical addresses. Surely there's
-some name in a datasheet for the controller, or if there isn't, then we
-can just not require a name?
+iQEcBAEBCAAGBQJXIfm/AAoJECTWi3JdVIfQ2xwH/RU4fceV7llxqkWBdwp+VnsC
+xcmChWPwsYP3/vGi9pqCLp25b8CE3qF0AER/BguF1yDUGdbre1KuwG2flPezAjQf
+knOUPgJIyRd4HGX/AT3cbmAhNg4pkqgzaDgfcEpMx+/7DuPgj5zR2XJ8AZGeCnyG
+1KE4xcGtbKKvV5cbaI8yi4BOEnv1vIvrBG9vl5Z0eQbvRT4P5zfyDZWyJaFWVd+z
+IxN0vdyAGojohkU2l6l4LW9FsAdRlTKvSeaN4l97/RYE4U0LkxL0x0qcJ3PDO6Dh
+mCOJo7Owe3mciJsZiX/LdzLnuDuLxy+PqPVYbn+BRHONZ0Z0cyS531JymzWRErw=
+=YeW9
+-----END PGP SIGNATURE-----
 
-Nit: s/adderss/address/
-
-> + - compatible : should be "qcom,slim-msm" if this is master component driver
-
-As above, olease remove mentions of the driver.
-
-> + - interrupts : Interrupt number used by this controller
-> + - clocks : Interface and core clocks used by this slimbus controller
-> + - clock-names : Required clock-name entries are:
-> +	"iface_clk" : Interface clock for this controller
-> +	"core_clk" : Interrupt for controller core's BAM
-> +
-> +Optional property:
-> + - reg entry for slew rate : If slew rate control register is provided, this
-> +	entry should be used.
-> + - reg-name for slew rate: "slimbus_slew_reg"
-
-Per the example below, this looks like an element in a separate system
-controller block, or part of some other controller that's not modelled
-here.
-
-What is this, exactly?
-
-> +
-> +Example:
-> +	slim@28080000 {
-> +		compatible = "qcom,slim-msm";
-> +		#address-cells = <4>;
-> +		#size-cells = <0>;
-> +		reg = <0x28080000 0x2000>, <0x80207C 4>;
-> +		reg-names = "slimbus_physical", "slimbus_slew_reg";
-> +		interrupts = <0 33 0>;
-> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
-> +		clock-names = "iface_clk", "core_clk";
-> +
-> +		codec-+jySZXB+v0i9EGZKw7sf2Q@public.gmane.org {
-> +			compatible = "qcom,wcdv1", "slim";
-
-As mentioned on the generic binding, please drop the "slim" fallback
-here.
-
-> +			reg = <0x217 0x60 0x1 0x0>;
-> +		};
-> +	};
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--idCnhAV0S4n5U/Zz--
