@@ -1,12 +1,11 @@
 From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [RFC v4 3/8] gpio: generic: add DT support for generic memory-mapped
- GPIOs
-Date: Thu, 28 Apr 2016 11:05:13 +0200
-Message-ID: <a5d6bb7bb73ff9396c9e8053a8e8e0975b857934.1461806071.git.chunkeey@googlemail.com>
+Subject: [RFC v4 4/8] gpio: clps711x: integrate cirrus clps711x into gpio-mmio
+Date: Thu, 28 Apr 2016 11:05:14 +0200
+Message-ID: <79a6a3bb50a02320cc90690df9ad2b1e91c5c5c3.1461806071.git.chunkeey@googlemail.com>
 References: <cover.1461806071.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
 In-Reply-To: <cover.1461806071.git.chunkeey@googlemail.com>
@@ -21,101 +20,222 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Alexander Shiyan <shc_work@mail.ru>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Christian Lamparter <chunkeey@googlemail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Christian Lamparter <chunkeey@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogw4FsdmFybyBGZXJuw6FuZGV6IFJvamFzIDxub2x0YXJpQGdtYWlsLmNvbT4KClRoaXMg
-cGF0Y2ggYWRkcyBzdXBwb3J0IGZvciBkZWZpbmluZyBtZW1vcnktbWFwcGVkIEdQSU9zCndoaWNo
-IHByb3ZpZGUgYSBjb21wYXRpYmxlIGludGVyZmFjZSBmb3IgdGhlIGV4aXN0aW5nCmdlbmVyaWMt
-Z3BpbyBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiDDgWx2YXJvIEZlcm7DoW5kZXogUm9qYXMgPG5v
-bHRhcmlAZ21haWwuY29tPgpTaWduZWQtb2ZmLWJ5OiBDaHJpc3RpYW4gTGFtcGFydGVyIDxjaHVu
-a2VleUBnb29nbGVtYWlsLmNvbT4KLS0tCiBkcml2ZXJzL2dwaW8vS2NvbmZpZyAgICAgICAgICAg
-IHwgIDMgKysKIGRyaXZlcnMvZ3Bpby9ncGlvLW1taW8tY29tcGF0LmggfCAxNyArKysrKysrKwog
-ZHJpdmVycy9ncGlvL2dwaW8tbW1pby5jICAgICAgICB8IDk1ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKystCiAzIGZpbGVzIGNoYW5nZWQsIDExMyBpbnNlcnRpb25zKCsp
-LCAyIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3Bpby9ncGlvLW1t
-aW8tY29tcGF0LmgKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vS2NvbmZpZyBiL2RyaXZlcnMv
-Z3Bpby9LY29uZmlnCmluZGV4IGY3M2YyNmIuLmQxZjEyNGUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3Bpby9LY29uZmlnCisrKyBiL2RyaXZlcnMvZ3Bpby9LY29uZmlnCkBAIC0yMTIsNiArMjEyLDkg
-QEAgY29uZmlnIEdQSU9fR0VORVJJQ19QTEFURk9STQogCWhlbHAKIAkgIFNheSB5ZXMgaGVyZSB0
-byBzdXBwb3J0IGJhc2ljIHBsYXRmb3JtX2RldmljZSBtZW1vcnktbWFwcGVkIEdQSU8gY29udHJv
-bGxlcnMuCiAKK2lmIEdQSU9fR0VORVJJQ19QTEFURk9STQorZW5kaWYKKwogY29uZmlnIEdQSU9f
-R1JHUElPCiAJdHJpc3RhdGUgIkFlcm9mbGV4IEdhaXNsZXIgR1JHUElPIHN1cHBvcnQiCiAJZGVw
-ZW5kcyBvbiBPRgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncGlvL2dwaW8tbW1pby1jb21wYXQuaCBi
-L2RyaXZlcnMvZ3Bpby9ncGlvLW1taW8tY29tcGF0LmgKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
-ZXggMDAwMDAwMC4uNzNjNDhiYwotLS0gL2Rldi9udWxsCisrKyBiL2RyaXZlcnMvZ3Bpby9ncGlv
-LW1taW8tY29tcGF0LmgKQEAgLTAsMCArMSwxNyBAQAorI2lmbmRlZiBHUElPX01NSU9fQ09NUEFU
-X0gKKyNkZWZpbmUgR1BJT19NTUlPX0NPTVBBVF9ICisKKyNpbmNsdWRlIDxsaW51eC9pb3BvcnQu
-aD4KKworI2RlZmluZSBBREQoX25hbWUsIF9mdW5jKSB7IC5jb21wYXRpYmxlID0gX25hbWUsIC5k
-YXRhID0gX2Z1bmMgfQorCisjdW5kZWYgQURECisKK3N0YXRpYyBpbmxpbmUgdm9pZCBzZXRfcmVz
-b3VyY2VfYWRkcmVzcyhzdHJ1Y3QgcmVzb3VyY2UgKnJlcywKKwkJCQkJcmVzb3VyY2Vfc2l6ZV90
-IHN0YXJ0LAorCQkJCQlyZXNvdXJjZV9zaXplX3QgbGVuKQoreworCXJlcy0+c3RhcnQgPSBzdGFy
-dDsKKwlyZXMtPmVuZCA9IHN0YXJ0ICsgbGVuIC0gMTsKK30KKyNlbmRpZiAvKiBHUElPX01NSU9f
-Q09NUEFUX0ggKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLW1taW8uYyBiL2RyaXZl
-cnMvZ3Bpby9ncGlvLW1taW8uYwppbmRleCA2YzFjYjNiLi40ZGU5ODQ2IDEwMDY0NAotLS0gYS9k
-cml2ZXJzL2dwaW8vZ3Bpby1tbWlvLmMKKysrIGIvZHJpdmVycy9ncGlvL2dwaW8tbW1pby5jCkBA
-IC02MSw2ICs2MSw5IEBAIG8gICAgICAgIGAgICAgICAgICAgICAgICAgICAgICB+fn5+XF9fXy9+
-fn5+ICAgIGAgY29udHJvbGxlciBpbiBGUEdBIGlzICwuYAogI2luY2x1ZGUgPGxpbnV4L2JpdG9w
-cy5oPgogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgogI2luY2x1ZGUgPGxpbnV4
-L21vZF9kZXZpY2V0YWJsZS5oPgorI2luY2x1ZGUgPGxpbnV4L29mLmg+CisjaW5jbHVkZSA8bGlu
-dXgvb2ZfZGV2aWNlLmg+CisjaW5jbHVkZSAiZ3Bpby1tbWlvLWNvbXBhdC5oIgogCiBzdGF0aWMg
-dm9pZCBiZ3Bpb193cml0ZTgodm9pZCBfX2lvbWVtICpyZWcsIHVuc2lnbmVkIGxvbmcgZGF0YSkK
-IHsKQEAgLTU2OSw2ICs1NzIsODMgQEAgc3RhdGljIHZvaWQgX19pb21lbSAqYmdwaW9fbWFwKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCiAJcmV0dXJuIGRldm1faW9yZW1hcF9yZXNvdXJj
-ZSgmcGRldi0+ZGV2LCByKTsKIH0KIAorI2lmZGVmIENPTkZJR19PRgorc3RhdGljIGludCBiZ3Bp
-b19iYXNpY19tbWlvX3BhcnNlX2R0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCisJCQkJ
-ICAgICBzdHJ1Y3QgYmdwaW9fcGRhdGEgKnBkYXRhLAorCQkJCSAgICAgdW5zaWduZWQgbG9uZyAq
-ZmxhZ3MpCit7CisJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsKKwlpbnQgZXJyOwor
-CisJZXJyID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAibmdwaW8iLCAmcGRh
-dGEtPm5ncGlvKTsKKwlpZiAoZXJyICYmIGVyciAhPSAtRUlOVkFMKQorCQlyZXR1cm4gZXJyOwor
-CisJaWYgKG9mX2RldmljZV9pc19iaWdfZW5kaWFuKGRldi0+b2Zfbm9kZSkpCisJCSpmbGFncyB8
-PSBCR1BJT0ZfQklHX0VORElBTl9CWVRFX09SREVSOworCisJaWYgKG9mX3Byb3BlcnR5X3JlYWRf
-Ym9vbChkZXYtPm9mX25vZGUsICJ1bnJlYWRhYmxlLXJlZy1zZXQiKSkKKwkJKmZsYWdzIHw9IEJH
-UElPRl9VTlJFQURBQkxFX1JFR19TRVQ7CisKKwlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKGRl
-di0+b2Zfbm9kZSwgInVucmVhZGFibGUtcmVnLWRpciIpKQorCQkqZmxhZ3MgfD0gQkdQSU9GX1VO
-UkVBREFCTEVfUkVHX0RJUjsKKworCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2woZGV2LT5vZl9u
-b2RlLCAiYmlnLWVuZGlhbi1ieXRlLW9yZGVyIikpCisJCSpmbGFncyB8PSBCR1BJT0ZfQklHX0VO
-RElBTjsKKworCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2woZGV2LT5vZl9ub2RlLCAicmVhZC1v
-dXRwdXQtcmVnLXNldCIpKQorCQkqZmxhZ3MgfD0gQkdQSU9GX1JFQURfT1VUUFVUX1JFR19TRVQ7
-CisKKwlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKGRldi0+b2Zfbm9kZSwgIm5vLW91dHB1dCIp
-KQorCQkqZmxhZ3MgfD0gQkdQSU9GX05PX09VVFBVVDsKKwlyZXR1cm4gMDsKK30KKworI2RlZmlu
-ZSBBREQoX25hbWUsIF9mdW5jKSB7IC5jb21wYXRpYmxlID0gX25hbWUsIC5kYXRhID0gX2Z1bmMg
-fQorCitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBiZ3Bpb19vZl9tYXRjaFtdID0g
-eworCUFERCgibGludXgsZ3Bpby1tbWlvIiwgYmdwaW9fYmFzaWNfbW1pb19wYXJzZV9kdCksCisK
-Kwl7IH0KK307CisjdW5kZWYgQURECitNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBiZ3Bpb19vZl9t
-YXRjaCk7CisKK3N0YXRpYyBzdHJ1Y3QgYmdwaW9fcGRhdGEgKmJncGlvX3BhcnNlX2R0KHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCisJCQkJCSAgdW5zaWduZWQgbG9uZyAqZmxhZ3MpCit7
-CisJaW50ICgqcGFyc2VfZHQpKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKiwKKwkJCXN0cnVjdCBi
-Z3Bpb19wZGF0YSAqLCB1bnNpZ25lZCBsb25nICopOworCWNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9k
-ZSAqbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOworCWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-Km9mX2lkOworCXN0cnVjdCBiZ3Bpb19wZGF0YSAqcGRhdGE7CisJaW50IGVyciA9IC1FTk9ERVY7
-CisKKwlvZl9pZCA9IG9mX21hdGNoX25vZGUoYmdwaW9fb2ZfbWF0Y2gsIG5vZGUpOworCWlmICgh
-b2ZfaWQpCisJCXJldHVybiBOVUxMOworCisJcGRhdGEgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRl
-diwgc2l6ZW9mKHN0cnVjdCBiZ3Bpb19wZGF0YSksCisJCQkgICAgIEdGUF9LRVJORUwpOworCWlm
-ICghcGRhdGEpCisJCXJldHVybiBFUlJfUFRSKC1FTk9NRU0pOworCisJcGFyc2VfZHQgPSBvZl9p
-ZC0+ZGF0YTsKKwlpZiAocGFyc2VfZHQpCisJCWVyciA9IHBhcnNlX2R0KHBkZXYsIHBkYXRhLCBm
-bGFncyk7CisJaWYgKGVycikKKwkJcmV0dXJuIEVSUl9QVFIoZXJyKTsKKworCXJldHVybiBwZGF0
-YTsKK30KKyNlbHNlCitzdGF0aWMgc3RydWN0IGJncGlvX3BkYXRhICpiZ3Bpb19wYXJzZV9kdChz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAorCQkJCQkgIHVuc2lnbmVkIGxvbmcgKmZsYWdz
-KQoreworCXJldHVybiBOVUxMOworfQorI2VuZGlmIC8qIENPTkZJR19PRiAqLworCiBzdGF0aWMg
-aW50IGJncGlvX3BkZXZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIHsKIAlz
-dHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2OwpAQCAtNTc5LDEwICs2NTksMTggQEAgc3Rh
-dGljIGludCBiZ3Bpb19wZGV2X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJ
-dm9pZCBfX2lvbWVtICpkaXJvdXQ7CiAJdm9pZCBfX2lvbWVtICpkaXJpbjsKIAl1bnNpZ25lZCBs
-b25nIHN6OwotCXVuc2lnbmVkIGxvbmcgZmxhZ3MgPSBwZGV2LT5pZF9lbnRyeS0+ZHJpdmVyX2Rh
-dGE7CisJdW5zaWduZWQgbG9uZyBmbGFncyA9IDA7CiAJaW50IGVycjsKIAlzdHJ1Y3QgZ3Bpb19j
-aGlwICpnYzsKLQlzdHJ1Y3QgYmdwaW9fcGRhdGEgKnBkYXRhID0gZGV2X2dldF9wbGF0ZGF0YShk
-ZXYpOworCXN0cnVjdCBiZ3Bpb19wZGF0YSAqcGRhdGE7CisKKwlwZGF0YSA9IGJncGlvX3BhcnNl
-X2R0KHBkZXYsICZmbGFncyk7CisJaWYgKElTX0VSUihwZGF0YSkpIHsKKwkJcmV0dXJuIFBUUl9F
-UlIocGRhdGEpOworCX0gZWxzZSBpZiAoIXBkYXRhKSB7CisJCXBkYXRhID0gZGV2X2dldF9wbGF0
-ZGF0YShkZXYpOworCQlmbGFncyA9IHBkZXYtPmlkX2VudHJ5LT5kcml2ZXJfZGF0YTsKKwl9CiAK
-IAlyID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2LCBJT1JFU09VUkNFX01FTSwg
-ImRhdCIpOwogCWlmICghcikKQEAgLTY0Niw2ICs3MzQsOSBAQCBNT0RVTEVfREVWSUNFX1RBQkxF
-KHBsYXRmb3JtLCBiZ3Bpb19pZF90YWJsZSk7CiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZl
-ciBiZ3Bpb19kcml2ZXIgPSB7CiAJLmRyaXZlciA9IHsKIAkJLm5hbWUgPSAiYmFzaWMtbW1pby1n
-cGlvIiwKKyNpZmRlZiBDT05GSUdfT0YKKwkJLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRy
-KGJncGlvX29mX21hdGNoKSwKKyNlbmRpZgogCX0sCiAJLmlkX3RhYmxlID0gYmdwaW9faWRfdGFi
-bGUsCiAJLnByb2JlID0gYmdwaW9fcGRldl9wcm9iZSwKLS0gCjIuOC4xCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This patch integrates the Cirrus' clps711x driver into the
+gpio-mmio framework.
+
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+ drivers/gpio/Kconfig            | 14 +++----
+ drivers/gpio/Makefile           |  2 +-
+ drivers/gpio/gpio-clps711x.c    | 84 ++++++++++++++---------------------------
+ drivers/gpio/gpio-mmio-compat.h | 11 ++++++
+ drivers/gpio/gpio-mmio.c        |  1 +
+ 5 files changed, 48 insertions(+), 64 deletions(-)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index d1f124e..ff9ac65 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -152,13 +152,6 @@ config GPIO_BRCMSTB
+ 	help
+ 	  Say yes here to enable GPIO support for Broadcom STB (BCM7XXX) SoCs.
+ 
+-config GPIO_CLPS711X
+-	tristate "CLPS711X GPIO support"
+-	depends on ARCH_CLPS711X || COMPILE_TEST
+-	select GPIO_GENERIC
+-	help
+-	  Say yes here to support GPIO on CLPS711X SoCs.
+-
+ config GPIO_DAVINCI
+ 	bool "TI Davinci/Keystone GPIO support"
+ 	default y if ARCH_DAVINCI
+@@ -213,6 +206,13 @@ config GPIO_GENERIC_PLATFORM
+ 	  Say yes here to support basic platform_device memory-mapped GPIO controllers.
+ 
+ if GPIO_GENERIC_PLATFORM
++config GPIO_CLPS711X
++	bool "CLPS711X GPIO support"
++	depends on ARCH_CLPS711X || COMPILE_TEST
++	select GPIO_GENERIC
++	help
++	  Say yes here to support GPIO on CLPS711X SoCs.
++
+ endif
+ 
+ config GPIO_GRGPIO
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 991598e..a1ae48f 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_GPIO_GENERIC)	+= gpio-generic.o
+ 
+ # directly supported by gpio-generic
+ gpio-generic-$(CONFIG_GPIO_GENERIC)	+= gpio-mmio.o
++gpio-generic-$(CONFIG_GPIO_CLPS711X)	+= gpio-clps711x.o
+ 
+ obj-$(CONFIG_GPIO_104_DIO_48E)	+= gpio-104-dio-48e.o
+ obj-$(CONFIG_GPIO_104_IDIO_16)	+= gpio-104-idio-16.o
+@@ -31,7 +32,6 @@ obj-$(CONFIG_GPIO_ATH79)	+= gpio-ath79.o
+ obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
+ obj-$(CONFIG_GPIO_BRCMSTB)	+= gpio-brcmstb.o
+ obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
+-obj-$(CONFIG_GPIO_CLPS711X)	+= gpio-clps711x.o
+ obj-$(CONFIG_GPIO_CS5535)	+= gpio-cs5535.o
+ obj-$(CONFIG_GPIO_CRYSTAL_COVE)	+= gpio-crystalcove.o
+ obj-$(CONFIG_GPIO_DA9052)	+= gpio-da9052.o
+diff --git a/drivers/gpio/gpio-clps711x.c b/drivers/gpio/gpio-clps711x.c
+index 5a69025..2072d0f 100644
+--- a/drivers/gpio/gpio-clps711x.c
++++ b/drivers/gpio/gpio-clps711x.c
+@@ -9,83 +9,55 @@
+  * (at your option) any later version.
+  */
+ 
+-#include <linux/err.h>
++#include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/err.h>
++#include <linux/ioport.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/platform_device.h>
++#include "gpio-mmio-compat.h"
+ 
+-static int clps711x_gpio_probe(struct platform_device *pdev)
++int cirrus_clps711x_parse_dt(struct platform_device *pdev,
++			     struct bgpio_pdata *pdata,
++			     unsigned long *flags)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	void __iomem *dat, *dir;
+-	struct gpio_chip *gc;
++	int id = np ? of_alias_get_id(np, "gpio") : pdev->id;
+ 	struct resource *res;
+-	int err, id = np ? of_alias_get_id(np, "gpio") : pdev->id;
++	struct resource nres[] = {
++		DEFINE_RES_MEM_NAMED(0, 1, "dat"),
++		DEFINE_RES_MEM_NAMED(0, 1, "dirout"),
++	};
+ 
+ 	if ((id < 0) || (id > 4))
+ 		return -ENODEV;
+ 
+-	gc = devm_kzalloc(&pdev->dev, sizeof(*gc), GFP_KERNEL);
+-	if (!gc)
+-		return -ENOMEM;
++	if (id == 4) {
++		/* PORTE is 3 lines only */
++		pdata->ngpio = 3;
++	}
++
++	pdata->base = id * 8;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dat = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(dat))
+-		return PTR_ERR(dat);
++	if (!res || resource_size(res) != 0x1)
++		return -EINVAL;
++	set_resource_address(&nres[0], res->start, 0x1);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	dir = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(dir))
+-		return PTR_ERR(dir);
++	if (!res || resource_size(res) != 0x1)
++		return -EINVAL;
++	set_resource_address(&nres[1], res->start, 0x1);
+ 
+-	switch (id) {
+-	case 3:
++	if (id == 3) {
+ 		/* PORTD is inverted logic for direction register */
+-		err = bgpio_init(gc, &pdev->dev, 1, dat, NULL, NULL,
+-				 NULL, dir, 0);
+-		break;
+-	default:
+-		err = bgpio_init(gc, &pdev->dev, 1, dat, NULL, NULL,
+-				 dir, NULL, 0);
+-		break;
+-	}
+-
+-	if (err)
+-		return err;
+-
+-	switch (id) {
+-	case 4:
+-		/* PORTE is 3 lines only */
+-		gc->ngpio = 3;
+-		break;
+-	default:
+-		break;
++		nres[1].name = "dirin";
+ 	}
+ 
+-	gc->base = id * 8;
+-	gc->owner = THIS_MODULE;
+-	platform_set_drvdata(pdev, gc);
+-
+-	return devm_gpiochip_add_data(&pdev->dev, gc, NULL);
++	return platform_device_add_resources(pdev, nres, ARRAY_SIZE(nres));
+ }
+ 
+-static const struct of_device_id __maybe_unused clps711x_gpio_ids[] = {
+-	{ .compatible = "cirrus,clps711x-gpio" },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(of, clps711x_gpio_ids);
+-
+-static struct platform_driver clps711x_gpio_driver = {
+-	.driver	= {
+-		.name		= "clps711x-gpio",
+-		.of_match_table	= of_match_ptr(clps711x_gpio_ids),
+-	},
+-	.probe	= clps711x_gpio_probe,
+-};
+-module_platform_driver(clps711x_gpio_driver);
+-
+-MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Alexander Shiyan <shc_work@mail.ru>");
+ MODULE_DESCRIPTION("CLPS711X GPIO driver");
+ MODULE_ALIAS("platform:clps711x-gpio");
++MODULE_ALIAS("clps711x-gpio");
+diff --git a/drivers/gpio/gpio-mmio-compat.h b/drivers/gpio/gpio-mmio-compat.h
+index 73c48bc..32b5510 100644
+--- a/drivers/gpio/gpio-mmio-compat.h
++++ b/drivers/gpio/gpio-mmio-compat.h
+@@ -5,6 +5,17 @@
+ 
+ #define ADD(_name, _func) { .compatible = _name, .data = _func }
+ 
++#if IS_ENABLED(CONFIG_GPIO_CLPS711X)
++int cirrus_clps711x_parse_dt(struct platform_device *pdev,
++			     struct bgpio_pdata *pdata,
++			     unsigned long *flags);
++
++#define GPIO_CLPS711X_COMPATIBLE			\
++	ADD("cirrus,clps711x-gpio", cirrus_clps711x_parse_dt),
++#else
++#define GPIO_CLPS711X_COMPATIBLE
++#endif /* CONFIG_GPIO_CLPS711X */
++
+ #undef ADD
+ 
+ static inline void set_resource_address(struct resource *res,
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index 4de9846..1be8cb7 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -608,6 +608,7 @@ static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
+ 
+ static const struct of_device_id bgpio_of_match[] = {
+ 	ADD("linux,gpio-mmio", bgpio_basic_mmio_parse_dt),
++	GPIO_CLPS711X_COMPATIBLE
+ 
+ 	{ }
+ };
+-- 
+2.8.1
