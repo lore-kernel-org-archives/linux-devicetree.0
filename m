@@ -1,89 +1,112 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v6 1/2] memory: add Atmel EBI (External Bus Interface)
- driver
-Date: Thu, 28 Apr 2016 10:57:50 +0200
-Message-ID: <20160428105750.01a32818@bbrezillon>
-References: <1461767754-12189-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1461767754-12189-2-git-send-email-boris.brezillon@free-electrons.com>
-	<CACh+v5MM68U64PQYKBzaKZehfEs7qNNH3XYXm0HyO=Lwy=KAkg@mail.gmail.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v7 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+ device tree binding documentation
+Date: Thu, 28 Apr 2016 09:00:48 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57C2E2@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1461740729-30715-1-git-send-email-appanad@xilinx.com>
+ <57206632.7010508@metafoo.de>
+ <C246CAC1457055469EF09E3A7AC4E11A4A57B840@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <5720B333.4000804@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACh+v5MM68U64PQYKBzaKZehfEs7qNNH3XYXm0HyO=Lwy=KAkg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5720B333.4000804-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Apr 2016 10:47:24 +0200
-Jean-Jacques Hiblot <jjhiblot@traphandler.com> wrote:
+Hi Lars,
 
-> > +static int at91_ebi_probe(struct platform_device *pdev)
-> > +{
-> > +       const struct of_device_id *match;
-> > +       struct device_node *child;
-> > +       struct at91_ebi *ebi;
-> > +       struct clk *clk;
-> > +       int ret;
-> > +
-> > +       match = of_match_device(at91_ebi_id_table, &pdev->dev);
-> > +       if (!match || !match->data)
-> > +               return -EINVAL;
-> > +
-> > +       ebi = devm_kzalloc(&pdev->dev, sizeof(*ebi), GFP_KERNEL);
-> > +       if (!ebi)
-> > +               return -ENOMEM;
-> > +
-> > +       ebi->caps = match->data;
-> > +       ebi->dev = &pdev->dev;
-> > +
-> > +       clk = devm_clk_get(&pdev->dev, NULL);
-> > +       if (IS_ERR(clk))
-> > +               return PTR_ERR(clk);
-> > +
-> > +       ebi->clk = clk;
-> > +
-> > +       ebi->smc = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> > +                                                  "atmel,smc");
-> > +       if (IS_ERR(ebi->smc))
-> > +               return PTR_ERR(ebi->smc);
-> > +
-> > +       /*
-> > +        * The sama5d3 does not provide an EBICSA register and thus does need
-> > +        * to access the matrix registers.
-> > +        */
-> > +       if (ebi->caps->ebi_csa) {
-> > +               ebi->matrix =
-> > +                       syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> > +                                                       "atmel,matrix");
-> > +               if (IS_ERR(ebi->matrix))
-> > +                       return PTR_ERR(ebi->matrix);
-> > +
-> > +               ebi->ebi_csa = regmap_field_alloc(ebi->matrix,
-> > +                                                 *ebi->caps->ebi_csa);
-> > +               if (IS_ERR(ebi->ebi_csa))
-> > +                       return PTR_ERR(ebi->ebi_csa);
-> > +       }
-> > +
-> > +       ret = ebi->caps->init(ebi);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       for_each_child_of_node(pdev->dev.of_node, child) {
-> > +               ret = at91_ebi_dev_setup(ebi, child);
-> > +               if (ret)
-> > +                       return ret;  
+	Thanks for the review...
+
+> -----Original Message-----
+> From: Lars-Peter Clausen [mailto:lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org]
+> Sent: Wednesday, April 27, 2016 6:10 PM
+> To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek
+> <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org;
+> laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org; luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org; Anirudha
+> Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Punnaiah Choudary Kalluri
+> <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH v7 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+> device tree binding documentation
 > 
-> I'm not sure about breaking out of the loop here, if
-> at91_ebi_dev_setup() for a device fail then the remaining devices
-> won't be probed. If you add a bad config for a fpga on CS1, you can
-> prevent your NAND  on CS2 to be probed.
+> On 04/27/2016 09:33 AM, Appana Durga Kedareswara Rao wrote:
+> > Hi Lars,
+> >
+> >> -----Original Message-----
+> >> From: Lars-Peter Clausen [mailto:lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org]
+> >> Sent: Wednesday, April 27, 2016 12:42 PM
+> >> To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> >> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> >> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek
+> >> <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> >> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Appana Durga
+> >> Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org;
+> >> laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org; luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org; Anirudha
+> >> Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Punnaiah Choudary Kalluri
+> >> <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> >> linux- kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Subject: Re: [PATCH v7 1/2] Documentation: DT: dma: Add Xilinx zynqmp
+> >> dma device tree binding documentation
+> >>
+> >> On 04/27/2016 09:05 AM, Kedareswara rao Appana wrote:
+> >> [...]
+> >>> +- xlnx,include-sg	: Indicates the controller to operate in simple or
+> >>> +			  scatter gather dma mode
+> >>> +- xlnx,ratectrl		: Scheduling interval in terms of clock cycles for
+> >>> +			  source AXI transaction
+> >>> +- xlnx,overfetch	: Tells whether the channel is allowed to over
+> >>> +			  fetch the data
+> >>> +- xlnx,src-issue	: Number of AXI outstanding transactions on source
+> >> side
+> >>> +- xlnx,src-burst-len	: AXI length for data read. Support only power of
+> >>> +			  2 byte values.
+> >>> +- xlnx,dst-burst-len	: AXI length for data write. Support only power of
+> >>
+> >> These are all software runtime configuration parameters that you'd
+> >> want to change at runtime depending on which peripheral you are
+> >> targeting with a specific DMA transfer. These really do not belong into the
+> devicetree.
+> >
+> > You mean to have a separate config structure in the driver and handle
+> > the above parameters Through that structure???
+> >
+> > I understand that above will work for slave dma transfer types what
+> > about memory to memory Transfers where we don't have provision to the use
+> this parameters...
+> 
+> These parameters are just as application specific as e.g. the DMA
+> source/destination address or the DMA transfer length. If you want to use the
+> DMA controller in a different configuration you'd have to re-compile the DTB
+> and reboot your board, that is not really practical. Especially considering that
+> you'd typically have multiple applications using the DMA controller in different
+> configurations concurrently. In general if I have to reconfigure the DT depending
+> on what application software is running something is fundamentally broken.
+> 
+> Derive these parameters at runtime depending on the requested transfer. E.g.
+> some transfer types only work in SG mode, others only work in non-SG modes.
+> For those which can work in both modes choose the one that is more efficient.
+> Similar for the other parameters.
 
-Fair enough, I'll continue iterating even if an error occurs.
+Ok will fix in the next version...
+Will use module_params for the above properties.
 
+Regards,
+Kedar.
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> 
+> - Lars
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
