@@ -1,225 +1,69 @@
-From: Sagar Dharia <sdharia@codeaurora.org>
-Subject: [PATCH V5 6/6] slim: qcom: Add runtime-pm support using clock-pause feature
-Date: Wed, 27 Apr 2016 17:58:09 -0600
-Message-ID: <1461801489-16254-7-git-send-email-sdharia@codeaurora.org>
-References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
+From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Subject: [PATCH net v3 0/5] drivers: net: cpsw: phy-handle fixes
+Date: Wed, 27 Apr 2016 21:10:03 -0400
+Message-ID: <1461805808-4102-1-git-send-email-drivshin.allworx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, sdharia@codeaurora.org, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
+To: netdev@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>, Mugunthan V N <mugunthanvnm@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Andrew Goodbody <andrew.goodbody@cambrionix.com>, Markus Brunner <systemprogrammierung.brunner@gmail.com>, Nicolas Chauvet <kwizart@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Slimbus HW mandates that clock-pause sequence has to be executed
-before disabling relevant interface and core clocks.
-Runtime-PM's autosuspend feature is used here to enter/exit low
-power mode for Qualcomm's Slimbus controller. Autosuspend feature
-enables driver to avoid changing power-modes too frequently since
-entering clock-pause is an expensive sequence
+From: David Rivshin <drivshin@allworx.com>
 
-Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
----
- drivers/slimbus/slim-qcom-ctrl.c | 128 +++++++++++++++++++++++++++++++++++++--
- drivers/slimbus/slim-qcom.h      |   1 +
- 2 files changed, 125 insertions(+), 4 deletions(-)
+This series fixes a number of related issues around using phy-handle
+properties in cpsw emac nodes.
 
-diff --git a/drivers/slimbus/slim-qcom-ctrl.c b/drivers/slimbus/slim-qcom-ctrl.c
-index 3609526..f18c4a7 100644
---- a/drivers/slimbus/slim-qcom-ctrl.c
-+++ b/drivers/slimbus/slim-qcom-ctrl.c
-@@ -20,6 +20,7 @@
- #include <linux/clk.h>
- #include <linux/of.h>
- #include <linux/slimbus.h>
-+#include <linux/pm_runtime.h>
- #include "slim-qcom.h"
- 
- #define MSM_SLIM_NAME	"msm_slim_ctrl"
-@@ -216,6 +217,30 @@ rx_ret_irq:
- 	return ret;
- }
- 
-+static int msm_clk_pause_wakeup(struct slim_controller *ctrl)
-+{
-+	struct msm_slim_ctrl *dev = slim_get_ctrldata(ctrl);
-+
-+	clk_prepare_enable(dev->hclk);
-+	clk_prepare_enable(dev->rclk);
-+	enable_irq(dev->irq);
-+
-+	writel_relaxed(1, dev->base + FRM_WAKEUP);
-+	/* Make sure framer wakeup write goes through before ISR fires */
-+	mb();
-+	/**
-+	 * HW Workaround: Currently, slave is reporting lost-sync messages
-+	 * after slimbus comes out of clock pause.
-+	 * Transaction with slave fail before slave reports that message
-+	 * Give some time for that report to come
-+	 * Slimbus wakes up in clock gear 10 at 24.576MHz. With each superframe
-+	 * being 250 usecs, we wait for 5-10 superframes here to ensure
-+	 * we get the message
-+	 */
-+	usleep_range(1250, 2500);
-+	return 0;
-+}
-+
- static int msm_xfer_msg(struct slim_controller *ctrl, struct slim_msg_txn *txn,
- 			void *pbuf)
- {
-@@ -286,7 +311,6 @@ static int msm_set_laddr(struct slim_controller *ctrl,
- 	 */
- 	msg.wbuf = buf;
- 	msg.num_bytes = 7;
--
- 	ret = slim_processtxn(&dev->ctrl, &txn);
- 
- 	if (ret)
-@@ -417,6 +441,8 @@ static int msm_slim_probe(struct platform_device *pdev)
- 
- 	dev->ctrl.set_laddr = msm_set_laddr;
- 	dev->ctrl.xfer_msg = msm_xfer_msg;
-+	dev->ctrl.wakeup =  msm_clk_pause_wakeup;
-+
- 	dev->ctrl.tx.n = MSM_TX_MSGS;
- 	dev->ctrl.rx.n = MSM_RX_MSGS;
- 	dev->ctrl.tx.sl_sz = SLIM_MSGQ_BUF_LEN;
-@@ -514,6 +540,12 @@ static int msm_slim_probe(struct platform_device *pdev)
- 	 */
- 	mb();
- 
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, MSM_SLIM_AUTOSUSPEND);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_mark_last_busy(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
- 	dev_dbg(dev->dev, "MSM SB controller is up:ver:0x%x!\n", dev->ver);
- 	return 0;
- 
-@@ -531,14 +563,101 @@ static int msm_slim_remove(struct platform_device *pdev)
- {
- 	struct msm_slim_ctrl *dev = platform_get_drvdata(pdev);
- 
--	disable_irq(dev->irq);
--	clk_disable_unprepare(dev->rclk);
--	clk_disable_unprepare(dev->hclk);
-+	pm_runtime_disable(&pdev->dev);
- 	slim_del_controller(&dev->ctrl);
- 	destroy_workqueue(dev->rxwq);
- 	return 0;
- }
- 
-+/**
-+ * If PM_RUNTIME is not defined, these 2 functions become helper
-+ * functions to be called from system suspend/resume.
-+ */
-+#ifdef CONFIG_PM
-+static int msm_slim_runtime_suspend(struct device *device)
-+{
-+	struct platform_device *pdev = to_platform_device(device);
-+	struct msm_slim_ctrl *dev = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	dev_dbg(device, "pm_runtime: suspending...\n");
-+	ret = slim_ctrl_clk_pause(&dev->ctrl, false, SLIM_CLK_UNSPECIFIED);
-+	if (ret) {
-+		dev_err(device, "clk pause not entered:%d", ret);
-+	} else {
-+		disable_irq(dev->irq);
-+		clk_disable_unprepare(dev->hclk);
-+		clk_disable_unprepare(dev->rclk);
-+	}
-+	return ret;
-+}
-+
-+static int msm_slim_runtime_resume(struct device *device)
-+{
-+	struct platform_device *pdev = to_platform_device(device);
-+	struct msm_slim_ctrl *dev = platform_get_drvdata(pdev);
-+	int ret = 0;
-+
-+	dev_dbg(device, "pm_runtime: resuming...\n");
-+	ret = slim_ctrl_clk_pause(&dev->ctrl, true, 0);
-+	if (ret)
-+		dev_err(device, "clk pause not exited:%d", ret);
-+	return ret;
-+}
-+#endif
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int msm_slim_suspend(struct device *dev)
-+{
-+	int ret = 0;
-+
-+	if (!pm_runtime_enabled(dev) ||
-+		(!pm_runtime_suspended(dev))) {
-+		dev_dbg(dev, "system suspend");
-+		ret = msm_slim_runtime_suspend(dev);
-+	}
-+	if (ret == -EISCONN) {
-+		/**
-+		* If the clock pause failed due to active channels, there is
-+		* a possibility that some audio stream is active during suspend.
-+		* (e.g. modem usecase during suspend)
-+		* We dont want to return suspend failure in that case so that
-+		* display and relevant components can still go to suspend.
-+		* If there is some other error, then it should prevent
-+		* system level suspend
-+		*/
-+		ret = 0;
-+	}
-+	return ret;
-+}
-+
-+static int msm_slim_resume(struct device *dev)
-+{
-+	if (!pm_runtime_enabled(dev) || !pm_runtime_suspended(dev)) {
-+		int ret;
-+
-+		dev_dbg(dev, "system resume");
-+		ret = msm_slim_runtime_resume(dev);
-+		if (!ret) {
-+			pm_runtime_mark_last_busy(dev);
-+			pm_request_autosuspend(dev);
-+		}
-+		return ret;
-+
-+	}
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static const struct dev_pm_ops msm_slim_dev_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(msm_slim_suspend, msm_slim_resume)
-+	SET_RUNTIME_PM_OPS(
-+			   msm_slim_runtime_suspend,
-+			   msm_slim_runtime_resume,
-+			   NULL
-+	)
-+};
-+
- static const struct of_device_id msm_slim_dt_match[] = {
- 	{
- 		.compatible = "qcom,slim-msm",
-@@ -553,6 +672,7 @@ static struct platform_driver msm_slim_driver = {
- 		.name = MSM_SLIM_NAME,
- 		.owner = THIS_MODULE,
- 		.of_match_table = msm_slim_dt_match,
-+		.pm = &msm_slim_dev_pm_ops,
- 	},
- };
- module_platform_driver(msm_slim_driver);
-diff --git a/drivers/slimbus/slim-qcom.h b/drivers/slimbus/slim-qcom.h
-index 0ad59c3..8b1d649 100644
---- a/drivers/slimbus/slim-qcom.h
-+++ b/drivers/slimbus/slim-qcom.h
-@@ -23,6 +23,7 @@
- 		((l) | ((mt) << 5) | ((mc) << 8) | ((dt) << 15) | ((ad) << 16))
- 
- #define SLIM_ROOT_FREQ 24576000
-+#define MSM_SLIM_AUTOSUSPEND 1000
- 
- /* MAX message size over control channel */
- #define SLIM_MSGQ_BUF_LEN	40
+Patch 1 fixes a bug if more than one slave is used, and either
+slave uses the phy-handle property in the devicetree.
+
+Patch 2 fixes a NULL pointer dereference which can occur if a
+phy-handle property is used and of_phy_connect() return NULL,
+such as with a bad devicetree.
+
+Patch 3 fixes an issue where the phy-mode property would be ignored
+if a phy-handle property was used. This also fixes a bogus error
+message that would be emitted.
+
+Patch 4 fixes makes the binding documentation more explicit that
+exactly one PHY property should be used, and also marks phy_id as
+deprecated.
+
+Patch 5 cleans up the fixed-link case to work like the now-fixed
+phy-handle case.
+
+I have tested on the following hardware configurations:
+ - (EVMSK) dual emac, phy_id property in both slaves
+ - (EVMSK) dual emac, phy-handle property in both slaves
+ - (EVMSK) a bad phy-handle property pointing to &mmc1
+ - (EVMSK) phy_id property with incorrect PHY address
+ - (BeagleBoneBlack) single emac, phy_id property
+ - (custom) single emac, fixed-link subnode
+
+Andrew Goodbody reported testing v2 on a board that doesn't use
+dual_emac mode, but with 2 PHYs using phy-handle properties [1].
+
+Nicolas Chauvet reported testing v2 on an HP t410 (dm8148).
+
+Markus Brunner reported testing v1 on the following [2]:
+ - emac0 with phy_id and emac1 with fixed phy
+ - emac0 with phy-handle and emac1 with fixed phy
+ - emac0 with fixed phy and emac1 with fixed phy
+
+[1] https://lkml.org/lkml/2016/4/22/537
+[2] http://www.spinics.net/lists/netdev/msg357890.html
+
+David Rivshin (5):
+  drivers: net: cpsw: fix parsing of phy-handle DT property in dual_emac
+    config
+  drivers: net: cpsw: fix segfault in case of bad phy-handle
+  drivers: net: cpsw: don't ignore phy-mode if phy-handle is used
+  dt: cpsw: phy-handle, phy_id, and fixed-link are mutually exclusive
+  drivers: net: cpsw: use of_phy_connect() in fixed-link case
+
+ Documentation/devicetree/bindings/net/cpsw.txt |  6 +--
+ drivers/net/ethernet/ti/cpsw.c                 | 69 ++++++++++++++------------
+ drivers/net/ethernet/ti/cpsw.h                 |  1 +
+ 3 files changed, 41 insertions(+), 35 deletions(-)
+
 -- 
-1.8.2.1
+2.5.5
