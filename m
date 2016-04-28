@@ -1,44 +1,69 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 0/3] Extend the LED panic trigger
-Date: Fri, 29 Apr 2016 00:22:19 +0200
-Message-ID: <20160428222219.GA2155@amd>
-References: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v4 2/4] ARM64: dts: rockchip: add core dtsi file for
+ RK3399 SoCs
+Date: Thu, 28 Apr 2016 15:28:19 -0700
+Message-ID: <20160428222819.GA98045@google.com>
+References: <1461743693-10671-1-git-send-email-jay.xu@rock-chips.com>
+ <20160428160353.GA95284@google.com>
+ <20160428182938.GA3079@google.com>
+ <2138015.GmMsjTUH7U@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-Sender: linux-leds-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <2138015.GmMsjTUH7U@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: mark.rutland@arm.com, huangtao@rock-chips.com, davidriley@chromium.org, linux-kernel@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dianders@chromium.org, smbarber@chromium.org, lintao@rock-chips.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, jwerner@chromium.org, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2016-04-28 19:03:37, Ezequiel Garcia wrote:
-> As per commit 916fe619951f ("leds: trigger: Introduce a kernel
-> panic LED trigger"), the kernel now supports a new LED trigger
-> to hook on the panic blink.
+On Thu, Apr 28, 2016 at 10:33:07PM +0200, Heiko Stuebner wrote:
+> Am Donnerstag, 28. April 2016, 11:29:38 schrieb Brian Norris:
+> > On Thu, Apr 28, 2016 at 09:03:53AM -0700, Brian Norris wrote:
+> > > On Wed, Apr 27, 2016 at 03:54:51PM +0800, Jianqun Xu wrote:
+> > > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi new file mode 100644
+> > > > index 0000000..5a8a915
+> > > > --- /dev/null
+> > > > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > > @@ -0,0 +1,1022 @@
+> > > 
+> > > [...]
+> > > 
+> > > > +	sdhci: sdhci@fe330000 {
+> > > > +		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
+> > > 
+> > > Not to rain on the parade too much, as this is already applied, but is
+> > > the "rockchip,rk3399-sdhci-5.1" string documented anywhere? I don't see
+> > > it.
 > 
-> However, the only way of using this is to dedicate a LED device,
-> making it rather useless.
+> I don't think it is. I'm still not sure how those dangling (aka spare bindings 
+> for later use) should be handled.
 > 
-> To overcome this limitation, the present series introduces the
-> capability to switch the LED trigger of certain LED devices upon
-> a kernel panic (using the panic notifier).
-> 
-> The decision of which LEDs should be switched to the panic trigger
-> is left to each LED device driver. As an example, a devicetree
-> boolean property is introduced and used in the leds-gpio driver.
-> 
-> The big change in this v3 is that I've moved the panic trigger
-> switching away from the core code and it's now part of
-> ledtrig-panic.c. Pavel, Jacek: How does it look?
+> Their use is suggested by dt maintainers, to be able to handle ip-block quirks 
+> later on without needing to touch the devicetree, but in this case spamming 
+> the arasan dt-binding document with numerous of those compatible values also 
+> feels wrong.
 
-Seems better now. Thanks for doing that.
+Hmm, good point. I was mostly tipped off by checkpatch when applying
+locally, and I also didn't have any context for whether there were any
+known quirks for rk3399 vs. the "standard" core. Given your comments, I
+suppose it's fair to use without documenting it (do I get burned at the
+stake for saying that?).
 
-For the series:
+> > According to the latest binding for "arasan,sdhci-5.1", the "phy" and
+> > "phy-names" properties are required. Fortunately, this device stays
+> > "disabled" for now in your EVB DTS. But just FYI.
+> 
+> Thanks for catching this. As the patch was still local to my repository, I've 
+> amended the commit and dropped the whole emmc block for now.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+No problem.
+
+> The emmc phy-binding just moved under the GRF (in 4.6-rc5 I think), so I guess 
+> we should handle that whole thing in the next version, as we're nearing (or 
+> are [nearly] over the armsoc cutoff already).
+
+Sounds good. I'm already tracking/testing that modification.
+
+Brian
