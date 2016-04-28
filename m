@@ -1,286 +1,276 @@
-From: Yisen Zhuang <Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH net-next 08/10] net: hns: add attribute cpld_ctrl for dsaf port node
-Date: Thu, 28 Apr 2016 15:01:40 +0800
-Message-ID: <1461826902-51368-9-git-send-email-Yisen.Zhuang@huawei.com>
-References: <1461826902-51368-1-git-send-email-Yisen.Zhuang@huawei.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [PATCH v2 4/9] of: Add bindings of hw throttle for soctherm
+Date: Thu, 28 Apr 2016 14:48:41 +0800
+Message-ID: <5721B249.3010101@nvidia.com>
+References: <1461727554-15065-1-git-send-email-wni@nvidia.com> <1461727554-15065-5-git-send-email-wni@nvidia.com> <20160427233054.GA26451@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461826902-51368-1-git-send-email-Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieqianqian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160427233054.GA26451@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, rui.zhang@intel.com, MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add attribute cpld_ctrl for dsaf port node, parse the syscon
-for mac_cb from dts, and change the method of access the cpld related
-registers through syscon.
 
-Signed-off-by: Daode Huang <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Yisen Zhuang <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/net/hisilicon-hns-dsaf.txt |  4 +++
- drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c  |  2 +-
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c  | 38 ++++++++++++----------
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h  |  3 +-
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  5 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h |  1 -
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c | 36 +++++++++++++++-----
- 7 files changed, 55 insertions(+), 34 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-index 01380a6..c1358ea 100644
---- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-@@ -39,6 +39,10 @@ Required properties:
- - phy-handle: phy handle of physicl port. It is not required if there isn't 
-   phy device. see ethernet.txt [1].
- - serdes-syscon: is syscon handle for SerDes register.
-+- cpld-syscon: is syscon handle for cpld register. It is not required if there
-+  isn't cpld device.
-+- cpld-ctrl-reg: is cpld register offset. It is not required if there isn't
-+  cpld-syscon.  
- 
- 
- [1] Documentation/devicetree/bindings/net/phy.txt
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-index 58341da..7a757e8 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c
-@@ -664,7 +664,7 @@ void hns_ae_update_led_status(struct hnae_handle *handle)
- 
- 	assert(handle);
- 	mac_cb = hns_get_mac_cb(handle);
--	if (!mac_cb->cpld_vaddr)
-+	if (!mac_cb->cpld_ctrl)
- 		return;
- 	hns_set_led_opt(mac_cb);
- }
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
-index 39dd55f..f1a477d 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c
-@@ -82,17 +82,6 @@ static enum mac_mode hns_get_enet_interface(const struct hns_mac_cb *mac_cb)
- 	}
- }
- 
--int hns_mac_get_sfp_prsnt(struct hns_mac_cb *mac_cb, int *sfp_prsnt)
--{
--	if (!mac_cb->cpld_vaddr)
--		return -ENODEV;
--
--	*sfp_prsnt = !dsaf_read_b((u8 *)mac_cb->cpld_vaddr
--					+ MAC_SFP_PORT_OFFSET);
--
--	return 0;
--}
--
- void hns_mac_get_link_status(struct hns_mac_cb *mac_cb, u32 *link_status)
- {
- 	struct mac_driver *mac_ctrl_drv;
-@@ -658,6 +647,8 @@ static int  hns_mac_get_info(struct hns_mac_cb *mac_cb)
- {
- 	struct device_node *np = mac_cb->dev->of_node;
- 	struct regmap *syscon;
-+	u32 ret;
-+
- 	mac_cb->link = false;
- 	mac_cb->half_duplex = false;
- 	mac_cb->speed = mac_phy_to_speed[mac_cb->phy_if];
-@@ -702,6 +693,23 @@ static int  hns_mac_get_info(struct hns_mac_cb *mac_cb)
- 		return -EINVAL;
- 	}
- 	mac_cb->serdes_ctrl = syscon;
-+
-+	syscon = syscon_node_to_regmap(
-+			of_parse_phandle(to_of_node(mac_cb->fw_port),
-+					 "cpld-syscon", 0));
-+	if (IS_ERR_OR_NULL(syscon)) {
-+		dev_dbg(mac_cb->dev, "no cpld-syscon found!\n");
-+		mac_cb->cpld_ctrl = NULL;
-+	} else {
-+		mac_cb->cpld_ctrl = syscon;
-+		ret = fwnode_property_read_u32(mac_cb->fw_port,
-+					       "cpld-ctrl-reg",
-+					       &mac_cb->cpld_ctrl_reg);
-+		if (ret) {
-+			dev_err(mac_cb->dev, "get cpld-ctrl-reg fail!\n");
-+			return ret;
-+		}
-+	}
- 	return 0;
- }
- 
-@@ -752,11 +760,6 @@ int hns_mac_get_cfg(struct dsaf_device *dsaf_dev, struct hns_mac_cb *mac_cb)
- 	mac_cb->sys_ctl_vaddr =	dsaf_dev->sc_base;
- 	mac_cb->serdes_vaddr = dsaf_dev->sds_base;
- 
--	if (dsaf_dev->cpld_base && !HNS_DSAF_IS_DEBUG(dsaf_dev)) {
--		mac_cb->cpld_vaddr = dsaf_dev->cpld_base +
--			mac_cb->mac_id * CPLD_ADDR_PORT_OFFSET;
--		cpld_led_reset(mac_cb);
--	}
- 	mac_cb->sfp_prsnt = 0;
- 	mac_cb->txpkt_for_led = 0;
- 	mac_cb->rxpkt_for_led = 0;
-@@ -781,6 +784,7 @@ int hns_mac_get_cfg(struct dsaf_device *dsaf_dev, struct hns_mac_cb *mac_cb)
- 	if (ret)
- 		return ret;
- 
-+	cpld_led_reset(mac_cb);
- 	mac_cb->vaddr = hns_mac_get_vaddr(dsaf_dev, mac_cb, mac_mode_idx);
- 
- 	return 0;
-@@ -957,7 +961,7 @@ void hns_set_led_opt(struct hns_mac_cb *mac_cb)
- int hns_cpld_led_set_id(struct hns_mac_cb *mac_cb,
- 			enum hnae_led_state status)
- {
--	if (!mac_cb || !mac_cb->cpld_vaddr)
-+	if (!mac_cb || !mac_cb->cpld_ctrl)
- 		return 0;
- 
- 	return cpld_set_led_id(mac_cb, status);
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h
-index 45c5f16..719816b 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h
-@@ -313,10 +313,11 @@ struct hns_mac_cb {
- 	struct mac_priv priv;
- 	struct fwnode_handle *fw_port;
- 	u8 __iomem *vaddr;
--	u8 __iomem *cpld_vaddr;
- 	u8 __iomem *sys_ctl_vaddr;
- 	u8 __iomem *serdes_vaddr;
- 	struct regmap *serdes_ctrl;
-+	struct regmap *cpld_ctrl;
-+	u32 cpld_ctrl_reg;
- 	struct mac_entry_idx addr_entry_idx[DSAF_MAX_VM_NUM];
- 	u8 sfp_prsnt;
- 	u8 cpld_led_value;
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-index 542dd09..1b8439f 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -198,8 +198,6 @@ unmap_base_addr:
- 		iounmap(dsaf_dev->sds_base);
- 	if (dsaf_dev->sc_base)
- 		iounmap(dsaf_dev->sc_base);
--	if (dsaf_dev->cpld_base)
--		iounmap(dsaf_dev->cpld_base);
- 	return ret;
- }
- 
-@@ -216,9 +214,6 @@ static void hns_dsaf_free_cfg(struct dsaf_device *dsaf_dev)
- 
- 	if (dsaf_dev->sc_base)
- 		iounmap(dsaf_dev->sc_base);
--
--	if (dsaf_dev->cpld_base)
--		iounmap(dsaf_dev->cpld_base);
- }
- 
- /**
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
-index a48ef26..f0502ba 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h
-@@ -277,7 +277,6 @@ struct dsaf_device {
- 	u8 __iomem *sds_base;
- 	u8 __iomem *ppe_base;
- 	u8 __iomem *io_base;
--	u8 __iomem *cpld_base;
- 	struct regmap *sub_ctrl;
- 	phys_addr_t ppe_paddr;
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-index 4762893..7e52ab5 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-@@ -43,8 +43,8 @@ void hns_cpld_set_led(struct hns_mac_cb *mac_cb, int link_status,
- 		pr_err("sfp_led_opt mac_dev is null!\n");
- 		return;
- 	}
--	if (!mac_cb->cpld_vaddr) {
--		dev_err(mac_cb->dev, "mac_id=%d, cpld_vaddr is null !\n",
-+	if (!mac_cb->cpld_ctrl) {
-+		dev_err(mac_cb->dev, "mac_id=%d, cpld syscon is null !\n",
- 			mac_cb->mac_id);
- 		return;
- 	}
-@@ -61,21 +61,24 @@ void hns_cpld_set_led(struct hns_mac_cb *mac_cb, int link_status,
- 		dsaf_set_bit(value, DSAF_LED_DATA_B, data);
- 
- 		if (value != mac_cb->cpld_led_value) {
--			dsaf_write_b(mac_cb->cpld_vaddr, value);
-+			dsaf_write_syscon(mac_cb->cpld_ctrl,
-+					  mac_cb->cpld_ctrl_reg, value);
- 			mac_cb->cpld_led_value = value;
- 		}
- 	} else {
--		dsaf_write_b(mac_cb->cpld_vaddr, CPLD_LED_DEFAULT_VALUE);
-+		dsaf_write_syscon(mac_cb->cpld_ctrl, mac_cb->cpld_ctrl_reg,
-+				  CPLD_LED_DEFAULT_VALUE);
- 		mac_cb->cpld_led_value = CPLD_LED_DEFAULT_VALUE;
- 	}
- }
- 
- void cpld_led_reset(struct hns_mac_cb *mac_cb)
- {
--	if (!mac_cb || !mac_cb->cpld_vaddr)
-+	if (!mac_cb || !mac_cb->cpld_ctrl)
- 		return;
- 
--	dsaf_write_b(mac_cb->cpld_vaddr, CPLD_LED_DEFAULT_VALUE);
-+	dsaf_write_syscon(mac_cb->cpld_ctrl, mac_cb->cpld_ctrl_reg,
-+			  CPLD_LED_DEFAULT_VALUE);
- 	mac_cb->cpld_led_value = CPLD_LED_DEFAULT_VALUE;
- }
- 
-@@ -84,15 +87,19 @@ int cpld_set_led_id(struct hns_mac_cb *mac_cb,
- {
- 	switch (status) {
- 	case HNAE_LED_ACTIVE:
--		mac_cb->cpld_led_value = dsaf_read_b(mac_cb->cpld_vaddr);
-+		mac_cb->cpld_led_value =
-+			dsaf_read_syscon(mac_cb->cpld_ctrl,
-+					 mac_cb->cpld_ctrl_reg);
- 		dsaf_set_bit(mac_cb->cpld_led_value, DSAF_LED_ANCHOR_B,
- 			     CPLD_LED_ON_VALUE);
--		dsaf_write_b(mac_cb->cpld_vaddr, mac_cb->cpld_led_value);
-+		dsaf_write_syscon(mac_cb->cpld_ctrl, mac_cb->cpld_ctrl_reg,
-+				  mac_cb->cpld_led_value);
- 		return 2;
- 	case HNAE_LED_INACTIVE:
- 		dsaf_set_bit(mac_cb->cpld_led_value, DSAF_LED_ANCHOR_B,
- 			     CPLD_LED_DEFAULT_VALUE);
--		dsaf_write_b(mac_cb->cpld_vaddr, mac_cb->cpld_led_value);
-+		dsaf_write_syscon(mac_cb->cpld_ctrl, mac_cb->cpld_ctrl_reg,
-+				  mac_cb->cpld_led_value);
- 		break;
- 	default:
- 		break;
-@@ -302,6 +309,17 @@ phy_interface_t hns_mac_get_phy_if(struct hns_mac_cb *mac_cb)
- 	return phy_if;
- }
- 
-+int hns_mac_get_sfp_prsnt(struct hns_mac_cb *mac_cb, int *sfp_prsnt)
-+{
-+	if (!mac_cb->cpld_ctrl)
-+		return -ENODEV;
-+
-+	*sfp_prsnt = !dsaf_read_syscon(mac_cb->cpld_ctrl, mac_cb->cpld_ctrl_reg
-+					+ MAC_SFP_PORT_OFFSET);
-+
-+	return 0;
-+}
-+
- /**
-  * hns_mac_config_sds_loopback - set loop back for serdes
-  * @mac_cb: mac control block
--- 
-1.9.1
+On 2016=E5=B9=B404=E6=9C=8828=E6=97=A5 07:30, Eduardo Valentin wrote:
+> From: Eduardo Valentin <edubezval@gmail.com>
+> To: Wei Ni <wni@nvidia.com>
+> Cc: thierry.reding@gmail.com, robh+dt@kernel.org, rui.zhang@intel.com=
+,
+> 	MLongnecker@nvidia.com, swarren@wwwdotorg.org,
+> 	mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org,
+> 	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+> 	linux-kernel@vger.kernel.org
+> Bcc:=20
+> Subject: Re: [PATCH v2 4/9] of: Add bindings of hw throttle for socth=
+erm
+> Reply-To:=20
+> In-Reply-To: <1461727554-15065-5-git-send-email-wni@nvidia.com>
+>=20
+> The patch title must say something about the fact that this is specif=
+ic
+> to nvidia thermal driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, it's my mistake, will fix it in next series.
+
+>=20
+> On Wed, Apr 27, 2016 at 11:25:49AM +0800, Wei Ni wrote:
+>> Add HW throttle configuration sub-node for soctherm, which
+>> is used to describe the throttle event, and worked as a
+>> cooling device. The "hot" type trip in thermal zone can
+>> be bound to this cooling device, and trigger the throttle
+>> function.
+>>
+>> Signed-off-by: Wei Ni <wni@nvidia.com>
+>> ---
+>>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 89 +++++++++++=
+++++++++++-
+>>  1 file changed, 87 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra1=
+24-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegr=
+a124-soctherm.txt
+>> index edebfa0a985e..dc337d139f49 100644
+>> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soct=
+herm.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soct=
+herm.txt
+>> @@ -10,8 +10,14 @@ Required properties :
+>>  - compatible : For Tegra124, must contain "nvidia,tegra124-soctherm=
+".
+>>    For Tegra132, must contain "nvidia,tegra132-soctherm".
+>>    For Tegra210, must contain "nvidia,tegra210-soctherm".
+>> -- reg : Should contain 1 entry:
+>> +- reg : Should contain at least 2 entries for each entry in reg-nam=
+es:
+>>    - SOCTHERM register set
+>> +  - Tegra CAR register set: Required for Tegra124 and Tegra210.
+>> +  - CCROC register set: Required for Tegra132.
+>> +- reg-names :  Should contain at least 2 entries:
+>> +  - soctherm-reg
+>> +  - car-reg
+>> +  - ccroc-reg
+>>  - interrupts : Defines the interrupt used by SOCTHERM
+>>  - clocks : Must contain an entry for each entry in clock-names.
+>>    See ../clocks/clock-bindings.txt for details.
+>> @@ -25,17 +31,44 @@ Required properties :
+>>  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a desc=
+ription
+>>      of this property. See <dt-bindings/thermal/tegra124-soctherm.h>=
+ for a
+>>      list of valid values when referring to thermal sensors.
+>> +- throttle-cfgs: A sub-node which is a container of configuration f=
+or each
+>> +    hardware throttle events. These events can be set as cooling de=
+vices.
+>> +  * throttle events: Sub-nodes must be named as "light" or "heavy".
+>> +      Properties:
+>> +      - priority: Each throttles has its own throttle settings, so =
+the SW need
+>> +        to set priorities for various throttle, the HW arbiter can =
+select the
+>> +        final throttle settings.
+>> +        Bigger value indicates higher priority, In general, higher =
+priority
+>> +        translates to lower target frequency. SW needs to ensure th=
+at critical
+>> +        thermal alarms are given higher priority, and ensure that t=
+here is
+>> +        no race if priority of two vectors is set to the same value=
+=2E
+>> +      - cpu-throt-depth:  This property is for Tegra124 and Tegra21=
+0. It is
+>> +        the throttling depth of pulse skippers, it's the percentage
+>> +        throttling.
+>> +      - cpu-throt-level: This property is only for Tegra132, it is =
+the level
+>> +        of pulse skippers, which used to throttle clock frequencies=
+=2E It
+>> +        indicates cpu clock throttling depth, and the depth can be =
+programmed.
+>> +        Must set as following values:
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_LOW, TEGRA_SOCTHERM_THROT_LEVEL_=
+MED
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_HIGH, TEGRA_SOCTHERM_THROT_LEVEL=
+_NONE
+>=20
+> These properties are not generic properties. My understanding is that
+> you must have vendor prefix in such case. Same applies to the new nod=
+es.
+
+Ok, will do it.
+
+>=20
+>> +      - #cooling-cells: Should be 1. This cooling device only suppo=
+rt on/off state.
+>> +        See ./thermal.txt for a description of this property.
+>> =20
+>>  Note:
+>>  - the "critical" type trip points will be set to SOC_THERM hardware=
+ as the
+>>  shut down temperature. Once the temperature of this thermal zone is=
+ higher
+>>  than it, the system will be shutdown or reset by hardware.
+>> +- the "hot" type trip points will be set to SOC_THERM hardware as t=
+he throttle
+>> +temperature. Once the the temperature of this thermal zone is highe=
+r
+>> +than it, it will trigger the HW throttle event.
+>> =20
+>>  Example :
+>> =20
+>>  	soctherm@700e2000 {
+>>  		compatible =3D "nvidia,tegra124-soctherm";
+>> -		reg =3D <0x0 0x700e2000 0x0 0x1000>;
+>> +		reg =3D <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
+>> +			0x0 0x60006000 0x0 0x400 /* CAR reg_base */
+>> +		reg-names =3D "soctherm-reg", "car-reg";
+>>  		interrupts =3D <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>>  		clocks =3D <&tegra_car TEGRA124_CLK_TSENSOR>,
+>>  			<&tegra_car TEGRA124_CLK_SOC_THERM>;
+>> @@ -44,6 +77,45 @@ Example :
+>>  		reset-names =3D "soctherm";
+>> =20
+>>  		#thermal-sensor-cells =3D <1>;
+>> +
+>> +		throttle-cfgs {
+>> +			throttle_heavy: heavy {
+>> +				priority =3D <100>;
+>> +				cpu-throt-depth =3D <85>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>> +			};
+>> +			throttle_light: light {
+>> +				priority =3D <80>;
+>> +				cpu-throt-depth =3D <50>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>> +			};
+>> +		};
+>=20
+> This is a sensor, which at the same time, has sub nodes that can be
+> cooling devices. Is my understanding correct of what you are trying t=
+o
+> do?
+
+Yes, we set this sub nodes as cooling devices.
+Let me explain it.
+The Tegra's soctherm has the HW throttle function, it will be triggered=
+ when the
+temperatures reach to the "hot" type trip. These throttle events can be
+configured to different levels "heavy" and "light" on different sensors=
+=2E So it
+something like cooling devices which can be bound with thermal zones, a=
+nd in
+this way, we can use the linux of-thermal framework to handle it. If no=
+t, we
+have to add more codes to parse these configuration and set them for th=
+ose
+sensors. I had used this method to handle the shutdown function in Tegr=
+a's
+soctherm driver in my previous series, however Rob didn't like it, he p=
+referred
+to use linux framework to handle it.
+So I think it's better to set these throttle-cfgs as cooling devices, s=
+o they
+can be bound to the cpu/gpu thermal zones easily.
+
+>=20
+>=20
+>> +	};
+>> +
+>> +Example: referring to Tegra132's "reg", "reg-names" and "throttle-c=
+fgs" :
+>> +
+>> +	soctherm@0,700e2000 {
+>> +		compatible =3D "nvidia,tegra132-soctherm";
+>> +		reg =3D <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
+>> +			0x0 0x70040000 0x0 0x200>; /* CCROC reg_base */;
+>> +		reg-names =3D "soctherm-reg", "ccroc-reg";
+>> +
+>> +		throttle-cfgs {
+>> +			throttle_heavy: heavy {
+>> +				priority =3D <100>;
+>> +				cpu-throt-level =3D <TEGRA_SOCTHERM_THROT_LEVEL_HIGH>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>> +			};
+>> +			throttle_light: light {
+>> +				priority =3D <80>;
+>> +				cpu-throt-level =3D <TEGRA_SOCTHERM_THROT_LEVEL_MED>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>=20
+> Could you please describe a little here what to expect of the above
+> setup?
+
+Ok, let me describe it.
+When the "heavy" cooling device triggered, the hardware will skip cpu c=
+lock's
+pulse in HIGH level, and if the "light" triggered, the hardware will sk=
+ip cpu
+clock's pulse in MED level.
+If these two devices are triggered in same time, the HW throttle arbite=
+r will
+select the highest priority as the final throttle settings to skip cpu =
+pulse.
+
+>=20
+>=20
+>> +			};
+>> +		};
+>>  	};
+>> =20
+>>  Example: referring to thermal sensors :
+>> @@ -62,6 +134,19 @@ Example: referring to thermal sensors :
+>>  					hysteresis =3D <1000>;
+>>  					type =3D "critical";
+>>  				};
+>> +
+>> +				cpu_throttle_trip: throttle-trip {
+>> +					temperature =3D <100000>;
+>> +					hysteresis =3D <1000>;
+>> +					type =3D "hot";
+>> +				};
+>> +			};
+>> +
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip =3D <&cpu_throttle_trip>;
+>> +					cooling-device =3D <&throttle_heavy 1 1>;
+>> +				};
+>>  			};
+>>                  };
+>>  	};
+>> --=20
+>> 1.9.1
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" i=
+n
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
