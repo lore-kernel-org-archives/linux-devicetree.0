@@ -1,104 +1,81 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC v4 3/8] gpio: generic: add DT support for generic
- memory-mapped GPIOs
-Date: Thu, 28 Apr 2016 12:58:03 +0300
-Message-ID: <CAHp75VeSf_=rQBRQ+1ox=fn7aJ53mGg_huH7HRbZck0HEhxBAQ@mail.gmail.com>
-References: <cover.1461806071.git.chunkeey@googlemail.com>
-	<a5d6bb7bb73ff9396c9e8053a8e8e0975b857934.1461806071.git.chunkeey@googlemail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
+Date: Thu, 28 Apr 2016 12:00:26 +0200
+Message-ID: <2692115.H6acsZmTjn@wuerfel>
+References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org> <1461801489-16254-2-git-send-email-sdharia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <a5d6bb7bb73ff9396c9e8053a8e8e0975b857934.1461806071.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1461801489-16254-2-git-send-email-sdharia@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sagar Dharia <sdharia@codeaurora.org>
+Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 28, 2016 at 12:05 PM, Christian Lamparter
-<chunkeey@googlemail.com> wrote:
-> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->
-> This patch adds support for defining memory-mapped GPIOs
-> which provide a compatible interface for the existing
-> generic-gpio driver.
+On Wednesday 27 April 2016 17:58:04 Sagar Dharia wrote:
 
-> +static inline void set_resource_address(struct resource *res,
-> +                                       resource_size_t start,
-> +                                       resource_size_t len)
+> +/**
+> + * slim_driver_register: Client driver registration with slimbus
+> + * @drv:Client driver to be associated with client-device.
+> + * This API will register the client driver with the slimbus
+> + * It is called from the driver's module-init function.
+> + */
+> +int slim_driver_register(struct slim_driver *drv)
 > +{
-> +       res->start =3D start;
-> +       res->end =3D start + len - 1;
-> +}
-
-It might make sense to put this in the generic (resource related, e.g.
-ioport.h) header. There are plenty users of such already and who knows
-how many will come.
-
->  #include <linux/bitops.h>
->  #include <linux/platform_device.h>
->  #include <linux/mod_devicetable.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-
-Perhaps + empty line?
-
-> +#include "gpio-mmio-compat.h"
-
-[]
-
-> +#ifdef CONFIG_OF
-> +static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
-> +                                    struct bgpio_pdata *pdata,
-> +                                    unsigned long *flags)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       int err;
+> +	drv->driver.bus = &slimbus_type;
 > +
-> +       err =3D of_property_read_u32(dev->of_node, "ngpio", &pdata->n=
-gpio);
-> +       if (err && err !=3D -EINVAL)
-> +               return err;
-
-I think check for -EINVAL needs explanation.
-
+> +	return driver_register(&drv->driver);
 > +}
+> +EXPORT_SYMBOL_GPL(slim_driver_register);
 
-[]
+Please make this use the same trick as platform_driver_register() to implicitly
+set the .owner field of the driver to THIS_MODULE.
 
-> +       pdata =3D bgpio_parse_dt(pdev, &flags);
-> +       if (IS_ERR(pdata)) {
-> +               return PTR_ERR(pdata);
+> +/**
+> + * slim_add_device: Add a new device without register board info.
+> + * @ctrl: Controller to which this device is to be added to.
+> + * Called when device doesn't have an explicit client-driver to be probed, or
+> + * the client-driver is a module installed dynamically.
+> + */
+> +int slim_add_device(struct slim_controller *ctrl, struct slim_device *sbdev)
 
-> +       } else if (!pdata) {
+This looks like an artifact of ancient pre-DT times. I'd say kill it off before
+someone starts using it.
 
-Redundant else
+> +struct sbi_boardinfo {
+> +	struct list_head	list;
+> +	struct slim_boardinfo	board_info;
+> +};
+> +
+> +static LIST_HEAD(board_list);
+> +static LIST_HEAD(slim_ctrl_list);
+> +static DEFINE_MUTEX(board_lock);
+> +
 
-> +               pdata =3D dev_get_platdata(dev);
-> +               flags =3D pdev->id_entry->driver_data;
-> +       }
->
->         r =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat=
-");
->         if (!r)
-> @@ -646,6 +734,9 @@ MODULE_DEVICE_TABLE(platform, bgpio_id_table);
->  static struct platform_driver bgpio_driver =3D {
->         .driver =3D {
->                 .name =3D "basic-mmio-gpio",
+> +/**
+> + * slim_register_board_info: Board-initialization routine.
+> + * @info: List of all devices on all controllers present on the board.
+> + * @n: number of entries.
+> + * API enumerates respective devices on corresponding controller.
+> + * Called from board-init function.
+> + */
+> +int slim_register_board_info(struct slim_boardinfo const *info, unsigned n)
+> +{
 
-> +#ifdef CONFIG_OF
+Same for all of this.
 
-Doesn't of_match_ptr do this for you?
+> +struct slim_device_id {
+> +	__u16 manf_id, prod_code;
+> +	__u8 dev_index, instance;
+> +
+> +	/* Data private to the driver */
+> +	kernel_ulong_t driver_data;
+> +};
 
+Can you add explicit padding here to avoid having the anonymous two bytes in the middle?
 
-> +               .of_match_table =3D of_match_ptr(bgpio_of_match),
-> +#endif
+Also, I think a void pointer instead of a kernel_ulong_t makes it more useful,
+but there are always cases where one or the other fits better.
 
---=20
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
