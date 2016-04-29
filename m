@@ -1,108 +1,197 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v9 0/8] Add MT8173 Video Encoder Driver and VPU Driver
-Date: Fri, 29 Apr 2016 13:14:54 +0200
-Message-ID: <5723422E.4030109@xs4all.nl>
-References: <1461661117-4657-1-git-send-email-tiffany.lin@mediatek.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC v5 4/4] gpio: dt-bindings: add gpio-mmio bindings
+Date: Fri, 29 Apr 2016 12:15:01 +0100
+Message-ID: <20160429111500.GA23726@leverpostej>
+References: <cover.1461888822.git.chunkeey@googlemail.com>
+ <a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461661117-4657-1-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tiffany,
+Hi,
 
-On 04/26/2016 10:58 AM, Tiffany Lin wrote:
-> ==============
->  Introduction
-> ==============
-> 
-> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
-> Mediatek Video Codec is able to handle video encoding of in a range of formats.
-> 
-> This patch series also include VPU driver. Mediatek Video Codec driver rely on VPU driver to load,
-> communicate with VPU.
-> 
-> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
-> 
-> ==================
->  Device interface
-> ==================
-> 
-> In principle the driver bases on v4l2 memory-to-memory framework:
-> it provides a single video node and each opened file handle gets its own private context with separate
-> buffer queues. Each context consist of 2 buffer queues: OUTPUT (for source buffers, i.e. raw video
-> frames) and CAPTURE (for destination buffers, i.e. encoded video frames).
-> 
-> ==============================
->  VPU (Video Processor Unit)
-> ==============================
-> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
-> It is able to handle video decoding/encoding in a range of formats.
-> The driver provides with VPU firmware download, memory management and the communication interface between CPU and VPU.
-> For VPU initialization, it will create virtual memory for CPU access and physical address for VPU hw device access. 
-> When a decode/encode instance opens a device node, vpu driver will download vpu firmware to the device.
-> A decode/encode instant will decode/encode a frame using VPU interface to interrupt vpu to handle decoding/encoding jobs.
-> 
-> Please have a look at the code and comments will be very much appreciated.
+As a general thing, please put the binding earlier in a series than cod=
+e
+implemeting it, as that that makes it easier to review the series
+in-order (with context from the binding making code review easier). See
+Documentation/devicetree/bindings/submitting-patches.txt
 
-I build this using my daily build setup and got a bunch of errors and warnings
-from both the compiler (when this driver is compile-tested on a 32 bit arch)
-and from sparse/smatch.
+On Fri, Apr 29, 2016 at 02:53:17AM +0200, Christian Lamparter wrote:
+> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>=20
+> This patch adds the device tree bindings for the gpio-mmio.
+> The gpio-mmio is already part of a the GPIO generic library.
+>=20
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-mmio.txt         | 73 ++++++++++++=
+++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.=
+txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.txt b/D=
+ocumentation/devicetree/bindings/gpio/gpio-mmio.txt
+> new file mode 100644
+> index 0000000..cc7f0b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.txt
+> @@ -0,0 +1,73 @@
+> +Bindings for the generic driver for memory-mapped GPIO controllers.
+> +
 
-Can you fix these?
+Bindings should be for hardware (either specific device models, or for
+classes), and not for Linux drivers. The latter is subject to arbitrary
+changes while the former is not, as old hardware continues to exist and
+does not change while drivers get completely reworked.
 
-linux-git-i686: WARNINGS
+So please frame this binding document in terms of the class of hardware
+you are trying to address. Please provide some introduction to the
+assumptions that you are making about said hardware, such that it's
+obvious when one needs a more specific binding.
 
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c: In function 'load_requested_vpu':
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:498:117: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'size_t {aka unsigned int}' [-Wformat=]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:498:117: warning: format '%lx' expects argument of type 'long unsigned int', but argument 5 has type 'size_t {aka unsigned int}' [-Wformat=]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:501:410: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'size_t {aka unsigned int}' [-Wformat=]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc_vpu_if.c: In function 'vpu_enc_ipi_handler':
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc_vpu_if.c:40:30: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-  struct venc_vpu_inst *vpu = (struct venc_vpu_inst *)msg->venc_inst;
-                              ^
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c: In function 'mtk_venc_worker':
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:1046:43: warning: format '%lx' expects argument of type 'long unsigned int', but argument 7 has type 'size_t {aka unsigned int}' [-Wformat=]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:1046:43: warning: format '%lx' expects argument of type 'long unsigned int', but argument 10 has type 'size_t {aka unsigned int}' [-Wformat=]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:1046:43: warning: format '%lx' expects argument of type 'long unsigned int', but argument 13 has type 'size_t {aka unsigned int}' [-Wformat=]
+I share the same fears that Rob mentioned in that while this may appear
+simple now, the limitations are unclear, and this effectively prevents
+us from accurately/specifically describing some hardware.
 
-Tip: use %zu or %zx for size_t.
+Regardless, I've taken the time to review the below, and I have a numbe=
+r
+of comments.
 
-sparse: ERRORS
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c:261:24: warning: incorrect type in assignment (different base types)
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c:476:23: warning: symbol 'get_vp8_enc_comm_if' was not declared. Should it be static?
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:237:6: warning: symbol 'vpu_clock_disable' was not declared. Should it be static?
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:250:5: warning: symbol 'vpu_clock_enable' was not declared. Should it be static?
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:436:54: warning: incorrect type in return expression (different address spaces)
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:504:14: warning: incorrect type in assignment (different address spaces)
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:710:26: warning: cast removes address space of expression
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c:674:23: warning: symbol 'get_h264_enc_comm_if' was not declared. Should it be static?
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:804:41: warning: Using plain integer as NULL pointer
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:905:25: warning: Using plain integer as NULL pointer
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:989:50: warning: Using plain integer as NULL pointer
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:133:15: error: undefined identifier 'kzalloc'
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:206:9: error: undefined identifier 'kfree'
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:228:9: error: undefined identifier 'kfree'
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:548:6: warning: 'vpu_fw' may be used uninitialized in this function [-Wmaybe-uninitialized]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:133:8: error: implicit declaration of function 'kzalloc' [-Werror=implicit-function-declaration]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:133:6: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:206:2: error: implicit declaration of function 'kfree' [-Werror=implicit-function-declaration]
+> +Required properties:
+> +	- compatible: should be "linux,gpio-mmio"
 
-smatch: ERRORS
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:921 mtk_venc_encode_header() warn: inconsistent indenting
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:397 vpu_wdt_reg_handler() warn: variable dereferenced before check 'vpu' (see line 395)
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:398 vpu_wdt_reg_handler() error: we previously assumed 'vpu' could be null (see line 397)
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:142 fops_vcodec_open() error: we previously assumed 'ctx' could be null (see line 134)
-/home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:363 mtk_vcodec_probe() warn: passing zero to 'PTR_ERR'
+Even with the above comments, this binding name would be valid.
 
-Thanks!
+> +	- reg-names: must contain
+> +		"dat" - data register
+> +		may contain
+> +		"set" - data set register
+> +		"clr" - data clear register
+> +		"dirout" - direction output register
+> +		"dirin" - direction input register
 
-	Hans
+Below, we mention endianness. Are registers an arbitrary number of byte=
+s
+long? In what unit size are they grouped (e.g. {8,16,32,64}-bit)?
+
+What are the expectations for the set/clear/dirin/dirout registers? Are
+they write-one to modify, or write-zero to modify?
+
+=46or the names, don't bother abbreviating (i.e. use "data", "set",
+"clear").
+
+These names might clash with the real names a specific HW model applies
+to its register sets, which means that this binding is exclusive w.r.t.
+a specific binding for a device (i.e. it cannot be extended with
+device-specific information).
+
+If we're happy with that, then we must call out the expected limitation=
+s
+on the use of this binding, or we end up with the not-so-simple-any-mor=
+e
+issues Rob mentioned previously.=20
+
+> +	- reg: address + size pairs describing the GPIO register sets;
+> +		order must correspond with the order of entries in reg-names
+> +	- #gpio-cells =3D must be set to 2
+
+Where the cells encode what? I'm guessing this is <$idx $flags>, but yo=
+u
+should spell that out explicitly.
+
+> +	- gpio-controller: Marks the device node as a gpio controller.
+> +
+> +Optional properties:
+> +	- ngpio: specifies the number of gpio mapped in the register.
+> +	- big-endian: force big endian register accesses.
+> +	- big-endian-byte-order: assign GPIOs in reverse order.
+
+I cannot parse this last description. It needs a better wording.
+
+I guess this means that the indices (in the first GPIO cell) are applie=
+d
+in descending order for ascending chunks of the registers (and that is =
+a
+poor description, too).
+
+> +	- unreadable-reg-set: data set register is not readable.
+> +	- read-output-reg-set: cache value set for reads.
+> +	- unreadable-reg-dir: dirout/dirin register is not readable.
+> +	- no-output: GPIOs are read-only.
+> +
+> +The GPIO generic library provides support for memory-mapped GPIO
+> +controllers. The configuration is detected by which resources are pr=
+esent.
+> +The simplest form of a GPIO controller that the driver support is ju=
+st a
+> +single "dat" register, where GPIO state can be read and/or written.
+> +However, the driver supports far more:
+> +	- 8/16/32/64 bits registers. The number of GPIOs is automatically
+> +	  determined by the width of the registers.
+> +	- GPIO controllers with clear/set registers.
+> +	- GPIO controllers with a single "dat" register.
+> +	- Big endian bits/GPIOs ordering.
+
+Reword this in terms of the class of hardware you are trying to support=
+,
+(rather than the specific library code you are using), and move it to
+the introduction at the top of the binding.
+
+Thanks,
+Mark.
+
+> +
+> +For setting GPIO's there are three configurations:
+> +	1. single input/output register resource (named "dat"),
+> +	2. set/clear pair (named "set" and "clr"),
+> +	3. single output register resource and single input resource
+> +	   ("set" and dat").
+> +
+> +For setting the GPIO direction, there are three configurations:
+> +	a. simple bidirectional GPIOs that requires no configuration.
+> +	b. an output direction register (named "dirout")
+> +	   where a 1 bit indicates the GPIO is an output.
+> +	c. an input direction register (named "dirin")
+> +	   where a 1 bit indicates the GPIO is an input.
+> +
+> +Examples:
+> +
+> +	/* Configuration for single input/output register
+> +	 * for eight simple bidirectional GPIOs.
+> +	 */
+> +	gpio_a_1 {
+> +		compatible =3D "linux,gpio-mmio";
+> +		reg =3D <0x18000000 0x1>;
+> +		reg-names =3D "dat";
+> +		#gpio-cells =3D <2>;
+> +		gpio-controller;
+> +	};
+> +
+> +	/* Configuration for set/clear pair registers with
+> +	 * 32 output direction register GPIOs.
+> +	 */
+> +	gpio_b_2 {
+> +		compatible =3D "linux,gpio-mmio";
+> +		reg =3D <0x18000000 0x4>, <0x18000010 0x4>,
+> +		      <0x18000004 0x4>, <0x18000008 0x4>;
+> +		reg-names =3D "dat", "set", "clr", "dirout";
+> +		#gpio-cells =3D <2>;
+> +		gpio-controller;
+> +	};
+> --=20
+> 2.8.1
+>=20
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
