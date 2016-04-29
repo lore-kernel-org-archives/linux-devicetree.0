@@ -1,66 +1,37 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFT PATCH 1/3] usb: misc: usb3503: Fix HUB mode after
- bootloader initialization
-Date: Fri, 29 Apr 2016 17:44:48 +0100
-Message-ID: <20160429164448.GY3217@sirena.org.uk>
-References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
- <1461927591-7864-2-git-send-email-k.kozlowski@samsung.com>
- <20160429113059.GX3217@sirena.org.uk>
- <57234BA2.6020304@samsung.com>
+From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] Documentation: Add documentation for APM X-Gene
+ SoC PMU DTS binding
+Date: Fri, 29 Apr 2016 10:08:12 -0700
+Message-ID: <CACgAJHwYRU_Z6hbgnjFyw9SXhRqHzTt3z2kyp9-T=8Jq70T2Cg@mail.gmail.com>
+References: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
+	<1460510547-17611-3-git-send-email-ttnguyen@apm.com>
+	<20160418170009.GA15338@rob-hp-laptop>
+	<CACgAJHyBbO_LXwtfNVK1f=dY3v1Jfxwxq1dw98EZ0aYdhjPpAg@mail.gmail.com>
+	<20160420113121.GE2514@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pJWGhKxYz0gFF1YW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57234BA2.6020304@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160420113121.GE2514-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark and Rob,
 
---pJWGhKxYz0gFF1YW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
 
-On Fri, Apr 29, 2016 at 01:55:14PM +0200, Krzysztof Kozlowski wrote:
-> On 04/29/2016 01:30 PM, Mark Brown wrote:
+>
+> Regardless, I'll need an ack from Rob or Mark before I can merge this.
+>
+> Will
 
-> > Supplies are only optional if they may be physically absent.  In this
-> > case it's possible that on device regulators may be used instead, a
-> > pattern more like that used for arizona-ldo1 where we represent those
-> > regulators might be better as it's more clearly describing the
-> > situation.  I'm just wondering if the supply lookup stuff there should
-> > be factored out as this is not an uncommon pattern..
+Do you have any more comments, please?
 
-> > It should at least be clearly stated what's going on, ignoring failure
-> > to get supplies is generally a bug and people will tend to blindly cut
-> > and paste things (witness all the breakage in graphics drivers with
-> > this).
-
-> The VDD33 is really optional. The device can work in different
-> configuration, e.g. only on VBAT. How the reset logic would work then? I
-> don't know... I would suspect that it could be exactly the same (just
-> replace VDD33 with VBAT) but I am not sure.
-
-What the Arizona example I mentioned does is look for the property
-specifying an external supply in DT and if there isn't one assumes that
-it must be using the internal regulator.  That's a bit icky but it does
-the right thing and is much simpler from a user point of view.
-
---pJWGhKxYz0gFF1YW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXI49/AAoJECTWi3JdVIfQJWkH/RKWxiRKAo28sPRxKp0DzRog
-4TQDH0Y6agkZowh7D5oexH2wyw2PBMni7LFkX7sxrM+1j14gnGwRN4pJ80Zc5tnE
-wZ1MiqFE1FIuDf8JzyM99ZNw9zPP1DO8bvIla+eG2WQx6AslGdY937FA+AzvQh8C
-AjJTQyNmeQHqwGVk5xteIkwT1PYFjBLWGt0KftCeMQN5R3ZLGI2vB3BkuyNnrIad
-j8u8vyTAtfNKog8PuinGCSsz4SnFKAPJUqWJdYUxciHaySO3VWsoerNGtcIX18t8
-7kcXIzZOJByfik2SS92oUyl+5sdcG5OJLPYUdbI+D5fev8sHCmnUhy7FOJPRcaI=
-=7PCN
------END PGP SIGNATURE-----
-
---pJWGhKxYz0gFF1YW--
+Thanks,
+-- 
+Tai
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
