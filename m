@@ -1,34 +1,42 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] ARM: OMAP3: hwmod data: Fix McBSP2/3 sidetone data
-Date: Fri, 29 Apr 2016 08:34:30 -0700
-Message-ID: <20160429153430.GK5995@atomide.com>
-References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
- <1461927202-17677-2-git-send-email-peter.ujfalusi@ti.com>
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
+ return phys_addr_t
+Date: Fri, 29 Apr 2016 21:17:40 +0530
+Message-ID: <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+	<E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
+	<CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
+	<20160429151639.GC23726@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1461927202-17677-2-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ia64-owner@vger.kernel.org>
+In-Reply-To: <20160429151639.GC23726@leverpostej>
+Sender: linux-ia64-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160429 03:55]:
-> The McBSPLP's sidetone main clock is the McBSPLP's ICLK, not FCLK as the
-> sidetone only receives the ICLK from the main McBSP module.
-> Since the McBSP and sidetone is using the very same clock from PRCM level
-> the sidetone must not have the prcm section to check the clock status since
-> the sidetone is only used when McBSP is already configured.
-> If two separate hwmods looking at the same bit and they would use
-> pm_runtime in nested way (as it must happen with McBSP and it's ST module)
-> the hwmod would warn, because the idlest will not match what it is expected
-> after enable/disable of the clocks.
+On Fri, Apr 29, 2016 at 8:46 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Fri, Apr 29, 2016 at 08:36:43PM +0530, Pratyush Anand wrote:
+>> > +       phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
+>> > +       return sprintf(buf, "%pa %x\n", &vmcore_base,
+>>
+>> Why do we pass &vmcore_base? Shouldn't it be vmcore_base?
+>
+> The %pa* printk format specifiers take the value by reference (as
+> phys_addr_t and friends are not necessarily the same width as a
+> pointer). Per Documentation/printk-formats.txt:
+>
+> Physical addresses types phys_addr_t:
+>
+>         %pa[p]  0x01234567 or 0x0123456789abcdef
+>
+>         For printing a phys_addr_t type (and its derivatives, such as
+>         resource_size_t) which can vary based on build options, regardless of
+>         the width of the CPU data path. Passed by reference.
+>
+> So the above prints the value of vmcore_base as expected.
 
-Thanks for looking into it, this looks right to me.
+Thanks a lot Mark for explaining :-)
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Pratyush Anand <panand@redhat.com>
