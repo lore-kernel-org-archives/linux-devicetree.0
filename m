@@ -1,175 +1,69 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3 1/3] leds: triggers: Allow to switch the trigger to
- "panic" on a kernel panic
-Date: Fri, 29 Apr 2016 09:20:06 +0200
-Message-ID: <57230B26.9010300@samsung.com>
-References: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <1461881020-13964-2-git-send-email-ezequiel@vanguardiasur.com.ar>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/3] Patches to allow consistent mmc / mmcblk numbering
+Date: Fri, 29 Apr 2016 09:21:19 +0200
+Message-ID: <CAPDyKFrip0M_hqVxqnTN=-UF7PnL6peEVR2o1dJRjYkHVMR-1Q@mail.gmail.com>
+References: <1461884805-29466-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1461881020-13964-2-git-send-email-ezequiel@vanguardiasur.com.ar>
+In-Reply-To: <1461884805-29466-1-git-send-email-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, linux-mmc <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Venu Byravarasu <vbyravarasu@nvidia.com>, =?UTF-8?B?SnVzdGluIFdhbmcgKOeOi+S4gSk=?= <justin.wang@spreadtrum.com>, ksumrall@android.com, Lars-Peter Clausen <lars@metafoo.de>, Dmitry Torokhov <dtor@chromium.org>, Jon Hunter <jonathanh@nvidia.com>, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Luca Porzio (lporzio)" <lporzio@micron.com>, Rob Herring <robh+dt@kernel.org>, Dong,
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
-
-Thanks for the update. It's indeed reasonable to have all the
-switching infrastructure in ledtrig-panic.c.
-
-I've noticed two minor issues below.
-
-On 04/29/2016 12:03 AM, Ezequiel Garcia wrote:
-> This commit adds a new led_cdev flag LED_PANIC_INDICATOR, which
-> allows to mark a specific LED to be switched to the "panic"
-> trigger, on a kernel panic.
+On 29 April 2016 at 01:06, Douglas Anderson <dianders@chromium.org> wrote:
+> This series picks patches from various different places to produce what
+> I consider the best solution to getting consistent mmc and mmcblk
+> ordering.
 >
-> This is useful to allow the user to assign a regular trigger
-> to a given LED, and still blink that LED on a kernel panic.
+> Why consistent ordering and why not just use UUIDs?  IMHO consistent
+> ordering solves a few different problems:
 >
-> Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-> ---
->   drivers/leds/led-triggers.c          |  2 +-
->   drivers/leds/leds.h                  |  1 +
->   drivers/leds/trigger/Kconfig         |  3 +++
->   drivers/leds/trigger/ledtrig-panic.c | 47 ++++++++++++++++++++++++++++++++++++
->   include/linux/leds.h                 |  1 +
->   5 files changed, 53 insertions(+), 1 deletion(-)
+> 1. For poor, feeble-minded humans like me, have sane numbering for
+>    devices helps a lot.  When grepping through dmesg it's terribly handy
+>    if a given SDMMC device has a consistent number.  I know that I can
+>    do "dmesg | grep mmc0" or "dmesg | grep mmcblk0" to find info about
+>    the eMMC.  I know that I can do "dmesg | grep mmc1" to find info
+>    about the SD card slot.  I don't want it to matter which one probed
+>    first, I don't want it to matter if I'm working on a variant of the
+>    hardware that has the SD card slot disabled, and I don't want to care
+>    what my boot device was.  Worrying about what device number I got
+>    increases my cognitive load.
 >
-> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> index 2181581795d3..55fa65e1ae03 100644
-> --- a/drivers/leds/led-triggers.c
-> +++ b/drivers/leds/led-triggers.c
-> @@ -26,7 +26,7 @@
->    * Nests outside led_cdev->trigger_lock
->    */
->   static DECLARE_RWSEM(triggers_list_lock);
-> -static LIST_HEAD(trigger_list);
-> +LIST_HEAD(trigger_list);
+> 2. There are cases where it's not trivially easy during development to
+>    use the UUID.  Specifically I work a lot with coreboot / depthcharge
+>    as a BIOS.  When configured properly, that BIOS has a nice feature to
+>    allow you to fetch the kernel and kernel command line from TFTP by
+>    pressing Ctrl-N.  In this particular case the BIOS doesn't actually
+>    know which disk I'd like for my root filesystem, so it's not so easy
+>    for it to put the right UUID into the command line.  For this
+>    purpose, knowing that "mmcblk0" will always refer to eMMC is handy.
 >
->    /* Used by LED Class */
 >
-> diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
-> index db3f20da7221..7d38e6b9a740 100644
-> --- a/drivers/leds/leds.h
-> +++ b/drivers/leds/leds.h
-> @@ -30,5 +30,6 @@ void led_set_brightness_nosleep(struct led_classdev *led_cdev,
+> Jaehoon Chung (1):
+>   Documentation: mmc: Document mmc aliases
 >
->   extern struct rw_semaphore leds_list_lock;
->   extern struct list_head leds_list;
-> +extern struct list_head trigger_list;
+> Stefan Agner (2):
+>   mmc: read mmc alias from device tree
+>   mmc: use SD/MMC host ID for block device name ID
 >
->   #endif	/* __LEDS_H_INCLUDED */
-> diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
-> index beac8c31c51b..4e4521c9072a 100644
-> --- a/drivers/leds/trigger/Kconfig
-> +++ b/drivers/leds/trigger/Kconfig
-> @@ -121,6 +121,9 @@ config LEDS_TRIGGER_PANIC
->   	depends on LEDS_TRIGGERS
->   	help
->   	  This allows LEDs to be configured to blink on a kernel panic.
-> +	  Enabling this option will allow to mark certain LEDs as 'panic-indicators',
-
-s/"panic-indicators"/panic indicators/
-
-I understand that you referred here to the DT property name, but this
-is not obvious at first glance, and it is an implementation detail.
-
-> +	  allowing to blink them on a kernel panic, even if they are set to
-> +	  a different trigger.
->   	  If unsure, say Y.
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
+>  drivers/mmc/card/block.c                      |  3 ++-
+>  drivers/mmc/core/host.c                       | 25 ++++++++++++++++++++-----
+>  3 files changed, 33 insertions(+), 6 deletions(-)
 >
->   endif # LEDS_TRIGGERS
-> diff --git a/drivers/leds/trigger/ b/drivers/leds/trigger/ledtrig-panic.c
-> index 627b350c5ec3..3e447bd2064a 100644
-> --- a/drivers/leds/trigger/ledtrig-panic.c
-> +++ b/drivers/leds/trigger/ledtrig-panic.c
-> @@ -11,10 +11,54 @@
->
->   #include <linux/kernel.h>
->   #include <linux/init.h>
-> +#include <linux/notifier.h>
->   #include <linux/leds.h>
-> +#include "../leds.h"
->
->   static struct led_trigger *trigger;
->
-> +/*
-> + * This is a called in a special context by the atomic panic
-
-s/is a/is/
-
-> + * notifier. This means the trigger can be changed without
-> + * worrying about locking.
-> + */
-> +static void led_trigger_set_panic(struct led_classdev *led_cdev)
-> +{
-> +	struct led_trigger *trig;
-> +
-> +	list_for_each_entry(trig, &trigger_list, next_trig) {
-> +		if (strcmp("panic", trig->name))
-> +			continue;
-> +		if (led_cdev->trigger)
-> +			list_del(&led_cdev->trig_list);
-> +		list_add_tail(&led_cdev->trig_list, &trig->led_cdevs);
-> +
-> +		/* Avoid the delayed blink path */
-> +		led_cdev->blink_delay_on = 0;
-> +		led_cdev->blink_delay_off = 0;
-> +
-> +		led_cdev->trigger = trig;
-> +		if (trig->activate)
-> +			trig->activate(led_cdev);
-> +		break;
-> +	}
-> +}
-> +
-> +static int led_trigger_panic_notifier(struct notifier_block *nb,
-> +				      unsigned long code, void *unused)
-> +{
-> +	struct led_classdev *led_cdev;
-> +
-> +	list_for_each_entry(led_cdev, &leds_list, node)
-> +		if (led_cdev->flags & LED_PANIC_INDICATOR)
-> +			led_trigger_set_panic(led_cdev);
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block led_trigger_panic_nb = {
-> +	.notifier_call = led_trigger_panic_notifier,
-> +};
-> +
->   static long led_panic_blink(int state)
->   {
->   	led_trigger_event(trigger, state ? LED_FULL : LED_OFF);
-> @@ -23,6 +67,9 @@ static long led_panic_blink(int state)
->
->   static int __init ledtrig_panic_init(void)
->   {
-> +	atomic_notifier_chain_register(&panic_notifier_list,
-> +				       &led_trigger_panic_nb);
-> +
->   	led_trigger_register_simple("panic", &trigger);
->   	panic_blink = led_panic_blink;
->   	return 0;
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index 19eb10278bea..7e9fb00e15e8 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -50,6 +50,7 @@ struct led_classdev {
->   #define LED_SYSFS_DISABLE	(1 << 22)
->   #define LED_DEV_CAP_FLASH	(1 << 23)
->   #define LED_HW_PLUGGABLE	(1 << 24)
-> +#define LED_PANIC_INDICATOR	(1 << 25)
->
->   	/* Set LED brightness level
->   	 * Must not sleep. Use brightness_set_blocking for drivers
+> --
+> 2.8.0.rc3.226.g39d4020
 >
 
+I believe you need to re-base this patchset as things have changed.
 
--- 
-Best regards,
-Jacek Anaszewski
+Currently the mmc host index that gets picked at host registration
+point, will also be given to the corresponding mmc block device index.
+That's probably solving most of your concerns, but I am open to extend
+this to cover aliases as well, as to allow it to be *really*
+deterministic.
+
+Kind regards
+Uffe
