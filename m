@@ -1,41 +1,45 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH 08/12] kexec: don't invoke OOM-killer for control page allocation
-Date: Fri, 29 Apr 2016 20:27:17 +0530
-Message-ID: <CAHB_Gupx7QgRdAaFuNSTdP6ZErSPRiaFcVYfeFXGbmqezAvSAA@mail.gmail.com>
+From: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 09/12] kexec: ensure user memory sizes do not wrap
+Date: Fri, 29 Apr 2016 20:27:43 +0530
+Message-ID: <CAHB_GupLrhak5CrTQE9976Pq0RFRaXWf5r--rjKmnBNU1oyK9g@mail.gmail.com>
 References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
-	<E1aviFE-0000jS-UI@rmk-PC.arm.linux.org.uk>
+	<E1aviFK-0000jY-1S@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ia64-owner@vger.kernel.org>
-In-Reply-To: <E1aviFE-0000jS-UI@rmk-PC.arm.linux.org.uk>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1aviFK-0000jY-1S-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fenghua Yu <fenghua.yu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Haren Myneni <hbabu-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Biederman <ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Apr 28, 2016 at 2:58 PM, Russell King
-<rmk+kernel@arm.linux.org.uk> wrote:
-> If we are unable to find a suitable page when allocating the control
-> page, do not invoke the OOM-killer: killing processes probably isn't
-> going to help.
+<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> Ensure that user memory sizes do not wrap around when validating the
+> user input, which can lead to the following input validation working
+> incorrectly.
 >
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 > ---
->  include/linux/kexec.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  kernel/kexec_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 2cc643c6e870..1b32ab587f66 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -41,7 +41,7 @@
->  #endif
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 8d34308ea449..d719a4d0ef55 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -169,6 +169,8 @@ int sanity_check_segment_list(struct kimage *image)
 >
->  #ifndef KEXEC_CONTROL_MEMORY_GFP
-> -#define KEXEC_CONTROL_MEMORY_GFP GFP_KERNEL
-> +#define KEXEC_CONTROL_MEMORY_GFP (GFP_KERNEL | __GFP_NORETRY)
->  #endif
->
->  #ifndef KEXEC_CONTROL_PAGE_SIZE
+>                 mstart = image->segment[i].mem;
+>                 mend   = mstart + image->segment[i].memsz;
+> +               if (mstart > mend)
+> +                       return result;
+>                 if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+>                         return result;
+>                 if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
 
-Reviewed-by: Pratyush Anand <panand@redhat.com>
+Reviewed-by: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
