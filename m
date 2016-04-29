@@ -1,80 +1,119 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
-Date: Fri, 29 Apr 2016 12:17:10 +0100
-Message-ID: <20160429111710.GW3217@sirena.org.uk>
-References: <2745420.JjpjMPLp2B@wuerfel>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 6/9] pinctrl: Add IRQ support to STM32 gpios
+Date: Fri, 29 Apr 2016 13:19:15 +0200
+Message-ID: <CALszF6D1nPJ8NVghWo27y1KABwN7-QQfjPTmgY2pgdY_8jjkTQ@mail.gmail.com>
+References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1459436979-17275-7-git-send-email-mcoquelin.stm32@gmail.com>
+	<CACRpkdYLPWNQZgdFHVwLOZv+rS=bdERM9St5b0hVHTd_+ZJMKg@mail.gmail.com>
+	<CALszF6CUFKAjzUpEh3pDtSDdJuFan1ON0Kcu_uKD_OX36kXOHQ@mail.gmail.com>
+	<CACRpkdZXz8-UnOd6ee48AWqDX2X9Hvux=+ZQ7qdg6a4KVoArww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="c2nJM3NjGGrqEmAW"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2745420.JjpjMPLp2B@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kheitke-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, mlocke-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sheetal.tigadoli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZXz8-UnOd6ee48AWqDX2X9Hvux=+ZQ7qdg6a4KVoArww@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+2016-04-29 10:53 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Tue, Apr 19, 2016 at 11:04 AM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
+>> 2016-04-08 11:43 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+>>> On Thu, Mar 31, 2016 at 5:09 PM, Maxime Coquelin
+>>> <mcoquelin.stm32@gmail.com> wrote:
+>>>
+>>>> +static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+>>>> +{
+>>>> +       struct stm32_pinctrl *pctl = dev_get_drvdata(chip->parent);
+>>>> +       struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
+>>>> +       unsigned int irq;
+>>>> +
+>>>> +       regmap_field_write(pctl->irqmux[offset], bank->range.id);
+>>>
+>>> No. You must implement the irqchip and GPIO controllers to
+>>> be orthogonal, doing things like this creates a semantic that
+>>> assumes .to_irq() is always called before using the IRQ and
+>>> that is not guaranteed at all. A consumer may very well
+>>> use an interrupt right off the irqchip without this being called
+>>> first. All this function should do is translate a number. No
+>>> other semantics.
+>>>
+>>> This needs to be done from the irqchip (sorry).
+>>
+>> Actually, the register written here is not part of the irqchip.
+>> It is a system config register that is only used when using a GPIO as
+>> external interrupt.
+>> Its aim is to mux the GPIO bank on a line.
+>
+> Then it should be done in .request() for the GPIO, not in
+> .to_irq().
+Problem is that at request time, we don't know whether the GPIO is to
+be used as an interrupt or not.
 
---c2nJM3NjGGrqEmAW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think I may have not been clear enough in the HW architecture description.
+Indeed, I used the term "mux", but should instead use the term "selector".
 
-On Thu, Apr 28, 2016 at 06:49:23PM +0200, Arnd Bergmann wrote:
-> On Thursday 28 April 2016 17:39:20 Mark Brown wrote:
+The idea is that between the GPIO controllers and the EXTI controller,
+there is one selector for each line number, to select the controller used as
+interrupt source.
 
-> > It's not just platforms that use these things though - there's things
-> > like the SolarFlare NICs where the firmware update mechanism essentially
-> > involves exposing a SPI flash as part of a PCI device and we just merged
-> > an ASoC driver for a video card which was reusing some existing IPs and
-> > chips.
+For example, there is a selector on line 0 to select between gpioa0, gpiob0,
+gpioc0,.., gpiok0, which one is connected to exti0.
 
-> That's of course fine: you essentially have a discoverable bus there,
-> and if we need something like that, we can always add it later to
-> any subsystem.
+It means there is a HW restriction that makes impossible to use both GPIOA0
+or GPIOB0 as interrupts at the same time.
 
-No, the issue with those cases is that there are devices on discoverable
-buses that instantiate non-discoverable buses as part of the
-discoverable device so the implementation of the discoverable device is
-in part essentially a board file.
+It looks like this: http://pastebin.com/raw/cs2WiNKZ
+You can directly check section 12.2.5 of the stm32f429 reference manual:
+http://www2.st.com/resource/en/reference_manual/dm00031020.pdf
 
-> In contrast, the interface in the proposed slimbus subsystem seems
-> designed for board files, and is in the best case just dead code
-> that can be removed, or has a risk of being misused e.g. if some
-> device manufacturer decides to use a board file for this instead
-> of describing the slimbus slaves in DT.
+For example, we can imagine a board where gpioa0 is used SD's card detect,
+and gpiob0 used to control a led.
 
-Which can be more of a pain than it should be if the code has been
-written to assume that all the world is DT.  That's the most problematic
-bit of this meme - I've seen people doing things like duplicating IP
-drivers inside larger devices because they don't think they're allowed
-to reuse the IP driver.  We can fix this sort of thing up when we notice
-it but we should also try to avoid people making the mistakes in the
-first place since it saves everyone a lot of effort.  With subsystems
-and to a lesser extent off SoC drivers we need to be careful about just
-blindly removing non-DT code and writing things so they're hard to use
-without DT.
+If we set the mux at request time, gpiob0 request may overwrite the mux
+configuration set by gpioa0, whereas it is not used as interrupt.
 
-Like I say in this case I think the board file stuff is probably never
-going to get used so it's probably sensible to remove that code but it
-does need to be thought about.
+That is the reason why I did it in .to_irq().
 
---c2nJM3NjGGrqEmAW
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> It should *also* be done in the set-up path for the irqchip
+> side, if that line is used without any interaction with the
+> gpio side of things.
+Actually, a line is either used by a GPIO, (exclusive) or another purpose.
+In the case of a GPIO line, I think we should always go through the gpio.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>
+>> For example on line 1, it can be muxed to select either gpioa1,
+>> gpiob1, gpioc1, ...
+>> How could I do it in the irqchip that has no gpio knowledge?
+>
+> I don't understand this.
+>
+> We are discussing an irqchip that is tightly coupled with
+> a gpiochip. Usually d->hwirq is the same as the GPIO offset
+> but that varies.
+>
+> The point is that each IRQ that ever get used
+> has a 1-to-1 relationship to a certain GPIO line, and if that
+> relationship cannot be resolved from the irqchip side,
+> something is wrong. The irqchip needs to enable the
+> GPIO line it is backing to recieve interrupts without any
+> requirements that .to_irq() have been called first.
 
-iQEcBAEBCAAGBQJXI0K1AAoJECTWi3JdVIfQ8DkH/0O+Djp+wuhmrpuJPBoJrqK9
-G2bIcbLKEdi/nxg3svVdnbbBrPXCAgxGwXm7Rn9DId40Gy4QMRS7GNdDVrNz76Xk
-UlVHpumphfPBfl2nBTDZXkOtMnIm6QgaD7R8lIiynTfUjtPWL4sYkcf7pPu9BCbG
-ApvAZMJUWzxGkYksgxfuiq0vHFbU2xzuOi5RMOoCmqkszCGPhofDU0HL0DCoQdvg
-psUNa43Uql+sCUZ8IEkGyJbkWAeBC3D9+QTDzahG9TGhklfo4+PcEjmuwpRGTj0L
-WslYplNHeHyZBEW4VsXgxwFy93AYBcBf9vfJHxg0gFAG9tPh43EC8RObqQH6IVA=
-=PKOC
------END PGP SIGNATURE-----
+Actually, this is not a 1:1 relationship, as for example, exti0 can be connected
+to either gpioa0, or gpiob0,..., or gpiok0.
 
---c2nJM3NjGGrqEmAW--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So for the exti entries that are connected to gpios, I don't see how
+we can reference it
+from the exti controller,
+>
+> If to_irq() does something else than translate to an IRQ
+> something is wrong.
+
+Ok, so maybe we need an intermediate layer between gpio and exti to manage the
+selectors sysconf?
+I wiil have a look in that direction, but I think it could be over-engineered.
+
+Thanks!
+Maxime
