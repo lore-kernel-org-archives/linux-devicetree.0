@@ -1,50 +1,54 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v7 22/24] [media] rtl2832: change the i2c gate to be
- mux-locked
-Date: Fri, 29 Apr 2016 06:41:01 +0200
-Message-ID: <4ae65dd6-1197-11d6-ef0a-714c0525cf3a@axentia.se>
-References: <1461165484-2314-1-git-send-email-peda@axentia.se>
- <1461165484-2314-23-git-send-email-peda@axentia.se>
- <20160428214758.GA4531@katana>
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Fri, 29 Apr 2016 14:40:25 +0900
+Message-ID: <CAC5umyhLZ7Nvakf84qS73HG=H39mjYf5Lv=BPFnqZt-rTrZvCA@mail.gmail.com>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+	<20160410151237.GD5377@piout.net>
+	<1460301781.17404.171.camel@gmail.com>
+	<20160410153855.GG5377@piout.net>
+	<20160412012518.GQ3351@sirena.org.uk>
+	<CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
+	<20160427135012.GP3217@sirena.org.uk>
+	<1461765799.2957.4.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160428214758.GA4531@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.koz>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461765799.2957.4.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-04-28 23:47, Wolfram Sang wrote:
-> On Wed, Apr 20, 2016 at 05:18:02PM +0200, Peter Rosin wrote:
->> The root i2c adapter lock is then no longer held by the i2c mux during
->> accesses behind the i2c gate, and such accesses need to take that lock
->> just like any other ordinary i2c accesses do.
+2016-04-27 23:03 GMT+09:00 Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> On Wed, 2016-04-27 at 14:50 +0100, Mark Brown wrote:
+>> On Wed, Apr 27, 2016 at 04:53:18AM +0900, Akinobu Mita wrote:
 >>
->> So, declare the i2c gate mux-locked, and zap the regmap overrides
->> that makes the i2c accesses unlocked and use plain old regmap
->> accesses. This also removes the need for the regmap wrappers used by
->> rtl2832_sdr, so deconvolute the code further and provide the regmap
->> handle directly instead of the wrapper functions.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
-> Antti, I'd need some tag from you since this is not the i2c realm.
+>> >
+>> > For the read data transfer, the address/command byte is sent on the
+>> > rising edge of the first eight SCLK cycles and the read data byte
+>> > is
+>> > transmitted on the falling edge of the next eight SCL cycles.
+>> That's an innovative and exciting hardware design :/  Definitely
+>> doesn't
+>> seem to correspond too closely to any SPI mode I can think of.
 >
+> DS1302 uses the standard MicroWire half-duplex transfer timing. The
+> timing can be handled by eg. PXA270 built-in SPI controller with proper
+> configuration.
 
-Antti sent this:
+Thanks for clarification about the hardware.
 
-https://lkml.org/lkml/2016/4/20/828
+I feel that using spi-gpio to communicate with DS1302 is difficult
+because we need to introduce different timing option to spi-gpio
+(spi-bitbang) for the I/O pin which is tri-stated upon each rising
+edge of SCLK, as I said in the last email.
 
-and I added a Tested-by in v8
+So I think that the way like the patch 3 and 4 in this series showed
+is reasonable.  And rtc-ds2404, rtc-moxart, and rtc-v3020 do something
+similar.
 
-https://github.com/peda-r/i2c-mux/commit/c023584d34db7aacbc59f28386378131cfa970d2
-
-but the patch was never sent as an email, only as part of a pull request for
-
-https://github.com/peda-r/i2c-mux/commits/mux-core-and-locking-8
-
-So, I think all is ok, or do you need more than Tested-by?
-
-Cheers,
-Peter
+If there is no complaint, I'll resend patch 3 and 4 with small fixes.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
