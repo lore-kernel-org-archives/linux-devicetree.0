@@ -1,109 +1,42 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk numbering
- w/ device tree
-Date: Fri, 29 Apr 2016 16:01:58 -0700
-Message-ID: <CAD=FV=U5jnJJ3v=nFGFecoKB5KGv1ufC+aKbHx2iCqBTWpDTww@mail.gmail.com>
-References: <20160429195741.GY19428@n2100.arm.linux.org.uk>
-	<CAD=FV=UGyi0r3kDmc1cpcANTP-2u+7UEgW3r9kRvF2f8qcWH+g@mail.gmail.com>
-	<20160429211328.GZ19428@n2100.arm.linux.org.uk>
-	<CAD=FV=V8BOsO36eUOGAcXp04xCiN13UGG0Vaf2yhh1MQn85FjA@mail.gmail.com>
-	<20160429212920.GA19428@n2100.arm.linux.org.uk>
-	<CAD=FV=V9V8P=d59RX1eaAdVxJgMxub1F6hzQNw1QW+7t=3POBw@mail.gmail.com>
-	<20160429215017.GC19428@n2100.arm.linux.org.uk>
-	<CAD=FV=VgQX_EVhUUCugzv+CZqjzTS8LwyeU5419aX9FbDnWJDg@mail.gmail.com>
-	<20160429221606.GE19428@n2100.arm.linux.org.uk>
-	<CAD=FV=WzgGFzzpeYAPrOpMS684_G=XRoSRjTegK-vre=fX=kpw@mail.gmail.com>
-	<20160429224407.GF19428@n2100.arm.linux.org.uk>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Devicetree specification process
+Date: Sat, 30 Apr 2016 00:23:41 +0100
+Message-ID: <CACxGe6uY-b49YfgBEkJmhjrZ5Pv3+_GPGj+eZOWOkJ43Qc2e4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20160429224407.GF19428@n2100.arm.linux.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jisheng Zhang <jszhang@marvell.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree-spec@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Venu Byravarasu <vbyravarasu@nvidia.com>, Lars-Peter Clausen <lars@metafoo.de>, Jon Hunter <jonathanh@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>Pawel Moll <p>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, U-Boot <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+I'm pleased to announce the first *very early draft* of the new
+devicetree specification that I and several others have been working
+on since January. This document picks up where ePAPR left off in 2012.
+I'm announcing it now along with the new devicetree.org organization
+which will handle governance for the spec.
 
-On Fri, Apr 29, 2016 at 3:44 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> My reply would be... why should MMC have special handling that no
-> other subsystem has?
+We're still in the process of getting all the details sorted out (not
+everything on the website is accurate at the moment), but in the mean
+time you can look at the current state of the document. At the moment,
+it is little more than repackaging the ePAPR text. The next step will
+be pulling in the new core bindings that were never covered by ePAPR.
+You can look at a draft copy of the document here:
 
-No other subsystem?
+https://github.com/kvekaria/devicetree-specification-released/blob/master/prerelease/DevicetreeSpecification-20160429-pre1.pdf
 
-* i2c allows numbering devices by alias
-* rtc allows numbering devices by alias.
-* serial allows numbering devices by alias.
-* spi allows numbering devices by alias.
-* watchdog allows numbering devices by alias.
+If you want to help out, the document source markup can be cloned from
+GitHub. You can find the project page here:
 
-...at least that's my impression doing a grep for of_alias_get_id(),
-which I suggested earlier in this thread but apparently wasn't done.
+https://github.com/devicetree-org/devicetree-specification
 
+Feedback is greatly appreciate. Please send any comments and/or
+changes to the devicetree specification mailing list:
 
-> Here's another example.  Plug in several USB serial adapters.  Which
-> USB serial /dev/ttyUSB* device corresponds to which adapter?  The
-> answer is... it depends on the order you plug them in, which could
-> well be different from the order in which they are found if the
-> machine reboots.  That's a very real problem.
+devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-USB is, by definition, hotplug and probable and there is no ordering.
-For peripherals built-in to a SoC there is a sane ordering.  Thus
-hotplug peripherals and builtin peripherals shouldn't have the same
-requirements.
+For more information, you can refer to the slides presented at BKK16 and ELC[1].
 
-Quite honestly, it _would_ be quite convenient that if you are on a
-SoC and you know it has builtin USB controllers to have the root hubs
-numbered in a sane and consistent manner.  An area for a future patch,
-maybe.
+[1] http://elinux.org/images/b/b7/Devicetree_specification_linaro_connect_bangkok_2016.pdf
 
-
-> However, the answer to this problem is not to find some way to bind
-> a particular /dev/ttyUSB* node to a particular USB device, but to
-> use the solution(s) already provided - iow, /dev/serial/by-id or
-> /dev/serial/by-path trees which give a stable view of these devices.
->
-> Now, while that allows the appropriate /dev/ttyUSB* device to be
-> found, it doesn't solve the "which ttyUSB* entry in the kernel
-> message log corresponds with which adapter" (which is the basis
-> of your point #1.)  That's not solved, and isn't purposely isn't
-> solved for any kernel subsystem.
->
-> Another example - I have boards here with multiple RTCs... guess
-> what happens with those?  Yep, same problem.  They get dynamic
-> /dev/rtc* assignment.
-
-Are you quite certain about that?  See above.
-
-
-> Another example - I have a board with three ethernet devices...
-> yep, same problem again, the order depends on the driver probe
-> order, and they get dynamically assigned eth* names.
-
-Ethernet is often provided by USB and thus hotplug and probable.
-Quite honestly if there was a builtin Ethernet adapter provided on a
-SoC (not connected over USB), it would be super handy if it was forced
-to be "eth0" (and if there were more than one if they could be ordered
-in a way that made sense for that SoC).  Dynamic ordering could come
-after.
-
-
-> The list of subsystems that have this property is large, because
-> it's all dependent on the device/driver probing order.
-
-Sure.  For hotplug, there is no sane device ordering.
-
-For things built in to an SoC, there is sane device ordering.  Dynamic
-ordering should come after static.
-
-
-> So, please answer this question: why should _only_ MMC be treated
-> as a special case?  Please give a _technical_ reason rather than a
-> _personal_ reason.
-
-Because technically it makes it easier for people to understand their
-system to have a sane ordering for builtin peripherals.
-
-
--Doug
+Thanks,
+g.
