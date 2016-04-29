@@ -1,109 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC v5 4/4] gpio: dt-bindings: add gpio-mmio bindings
-Date: Fri, 29 Apr 2016 16:29:13 +0200
-Message-ID: <CACRpkdYXqcQ1a=S5c6Cev__nqfquo7tFA=3uJSu9wf96txfBwQ@mail.gmail.com>
-References: <cover.1461888822.git.chunkeey@googlemail.com>
-	<a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey@googlemail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V5 0/3] Add support for Tegra210 ADMA
+Date: Fri, 29 Apr 2016 15:39:15 +0100
+Message-ID: <1461940758-25722-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 2:53 AM, Christian Lamparter
-<chunkeey@googlemail.com> wrote:
+Add support for the Tegra210 Audio DMA (ADMA) controller which is part
+of the Audio Processing Engine and used for transferring audio data.
 
-> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->
-> This patch adds the device tree bindings for the gpio-mmio.
-> The gpio-mmio is already part of a the GPIO generic library.
->
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+V5 changes:
+- Removed APE and APE2APB clocks as these clocks rightfully belong
+  in the ACONNECT bus driver [0] and the ADMA is child of this device.
+  Dropped power-domain from DT binding as this will be handled by
+  ACONNECT bus driver as well.
+- Minor update to case statement formatting based upon feedback from
+  Vinod.
+- Make ADMA dependent on Tegra210 as this is the only device
+  (currently) that supports it.
 
-I share your ambition to create something generic for this class
-of hardware(s).
+V4 changes:
+- Updated DT binding to include 'power-domains' entry for handling
+  the APE power domain inconjunction with runtime-pm.
+- Added missing clocks to the DT binding that were being handled by
+  the bootloader.
+- Added support for PM_CLK to simplify clock handling
 
-> +Bindings for the generic driver for memory-mapped GPIO controllers.
-> +
-> +Required properties:
-> +       - compatible: should be "linux,gpio-mmio"
+V3 changes:
+- Updated DT binding per feedback from Mark and Stephen
+- Fixed up items mentioned by Vinod
 
-Why?
-"memory-mapped-gpio" sits nicely with me.
+V2 changes:
+- Re-worked device-tree binding
 
-Read another very generic binding for inspiration:
-Documentation/devicetree/bindings/leds/register-bit-led.txt
+[0] http://marc.info/?l=devicetree&m=146193804830747&w=2
 
-> +       - reg-names: must contain
-> +               "dat" - data register
-> +               may contain
-> +               "set" - data set register
-> +               "clr" - data clear register
-> +               "dirout" - direction output register
-> +               "dirin" - direction input register
+Jon Hunter (3):
+  Documentation: DT: Add binding documentation for NVIDIA ADMA
+  dmaengine: tegra-adma: Add support for Tegra210 ADMA
+  MAINTAINERS: Update Tegra DMA maintainers
 
-I would just be more verbose:
+ .../bindings/dma/nvidia,tegra210-adma.txt          |  57 ++
+ MAINTAINERS                                        |   5 +-
+ drivers/dma/Kconfig                                |  14 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/tegra210-adma.c                        | 853 +++++++++++++++++++++
+ 5 files changed, 928 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+ create mode 100644 drivers/dma/tegra210-adma.c
 
-data-in-register
-data-out-set-register
-data-out-clear-register
-direction-output-register
-direction-input-register
-
-Some should be optional so we can support input-only
-and output-only GPIO controllers too.
-
-I would take this opportunity to add bindings also for stuff that
-the generic MMIO driver does not support today but
-could be made to support:
-
-open-drain-register
-open-source-register
-debounce-register
-
-etc
-
-> +Optional properties:
-> +       - ngpio: specifies the number of gpio mapped in the register.
-
-Just reference the generic docs.
-
-> +       - big-endian: force big endian register accesses.
-> +       - big-endian-byte-order: assign GPIOs in reverse order.
-> +       - unreadable-reg-set: data set register is not readable.
-> +       - read-output-reg-set: cache value set for reads.
-> +       - unreadable-reg-dir: dirout/dirin register is not readable.
-> +       - no-output: GPIOs are read-only.
-
-I think it's better to imply that if there is no data-in-register
-specified, then it is output-only etc.
-
-> +The GPIO generic library provides support for memory-mapped GPIO
-> +controllers. The configuration is detected by which resources are pr=
-esent.
-> +The simplest form of a GPIO controller that the driver support is ju=
-st a
-> +single "dat" register, where GPIO state can be read and/or written.
-> +However, the driver supports far more:
-> +       - 8/16/32/64 bits registers. The number of GPIOs is automatic=
-ally
-> +         determined by the width of the registers.
-> +       - GPIO controllers with clear/set registers.
-> +       - GPIO controllers with a single "dat" register.
-> +       - Big endian bits/GPIOs ordering.
-
-
-Skip this. It is Linux-specific.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.1.4
