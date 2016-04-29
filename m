@@ -1,37 +1,99 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 1/5] of/serial: move earlycon early_param handling to
- serial
-Date: Thu, 28 Apr 2016 17:42:44 -0700
-Message-ID: <20160429004244.GA31752@kroah.com>
-References: <1459431629-27934-1-git-send-email-aleksey.makarov@linaro.org>
- <1459431629-27934-2-git-send-email-aleksey.makarov@linaro.org>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: [RFC v5 0/4] gpio: add DT support for generic memory-mapped GPIOs
+Date: Fri, 29 Apr 2016 02:53:13 +0200
+Message-ID: <cover.1461888822.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459431629-27934-2-git-send-email-aleksey.makarov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aleksey Makarov <aleksey.makarov@linaro.org>
-Cc: Russell King <linux@arm.linux.org.uk>, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Zheng, Lv" <lv.zheng@intel.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Christian Lamparter <chunkeey@googlemail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 04:40:23PM +0300, Aleksey Makarov wrote:
-> From: Leif Lindholm <leif.lindholm@linaro.org>
-> 
-> We have multiple "earlycon" early_param handlers - merge the DT one into
-> the main earlycon one.  It's a cleanup that also will be useful
-> to defer setting up DT console until ACPI/DT decision is made.
-> 
-> Rename the exported function to avoid clashing with the function from
-> arch/microblaze/kernel/prom.c
-> 
-> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-> Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/of/fdt.c              | 11 +----------
->  drivers/tty/serial/earlycon.c |  2 +-
->  include/linux/of_fdt.h        |  2 ++
->  3 files changed, 4 insertions(+), 11 deletions(-)
+This patch series adds device tree support for generic memory-mapped GP=
+IOs.
+The GPIO library already allows drivers and architecture support code t=
+o
+reuse generic code for managing a GPIO chip. Currently, a developer has
+to create a platform device "basic-mmio-gpio" and attach a bgpio_pdata
+platform data structure to make use of it. However, for architectures
+which rely on the device tree to enumerate devices, creating custom
+platform devices is another extra step that can be avoided by having
+direct support via a device tree binding.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I initially came across this patch [0] from =C3=81lvaro Fern=C3=A1ndez =
+Rojas,
+while looking for an easy way to add support for the GPIO of my
+WD MyBook Live [1] (APM82181 - ppc464). This generic approach patch
+allowed me to easily get the GPIO (and the connected LEDs,
+buttons, gpiohogs, etc.) up and running. Even tought, Mr. Fernandez
+initially developed it for his work on the brcm63xx [2].
+
+The device tree parses for the integrated drivers:
+gpio-clps711x, gpio-ge, gpio-moxart and gpio-ts4800 are now part
+of the gpio-generic.c driver file. The old driver files have been
+removed and the Kconfig, Makefile entries have been updated
+accordingly. If no complaints are filed (MODULE_ALIASES?), I'll
+go ahead and post the PATCH series beginning of next week.
+
+And finally, the most important stat about the series:
+	>>> 312 insertions(+), 412 deletions(-) <<<
+	It removes more lines than it adds!
+
+Thanks! (Please keep me in the CC)
+
+[0] <https://patchwork.ozlabs.org/patch/422121/>
+[1] <https://github.com/chunkeey/MBL-openwrt>
+[2] <https://wiki.openwrt.org/doc/hardware/soc/soc.broadcom.bcm63xx>
+
+changelog:
+
+v4 -> v5:
+	- reverted rename of gpio-mmio.c back to gpio-generic.c
+	- fixed Andy Shevchenko's comments
+	- consolidated changes from clps711x, gpio-ge, gpio-moxart and
+	  gpio-ts4800 into one patch.
+
+v3 -> v4:
+	- renamed gpio-generic.c to gpio-mmio.c
+	- changed compat. string to "linux,gpio-mmio"
+	- integrated Cirrus clps711x driver
+	- integrated GE FGPA gpio-ge driver
+	- integrated MOXA ART GPIO driver
+	- integrated TS4800 gpio driver
+	- reshuffled patches, reworded commits, fixed spelling errors, etc.
+
+Christian Lamparter (2):
+  gpio: generic: fix GPIO_GENERIC_PLATFORM is set to module case
+  gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-generic
+
+=C3=81lvaro Fern=C3=A1ndez Rojas (2):
+  gpio: generic: add DT support for generic memory-mapped GPIOs
+  gpio: dt-bindings: add gpio-mmio bindings
+
+ .../devicetree/bindings/gpio/gpio-mmio.txt         |  73 +++++++
+ drivers/gpio/Kconfig                               |  43 +---
+ drivers/gpio/Makefile                              |   4 -
+ drivers/gpio/gpio-clps711x.c                       |  91 --------
+ drivers/gpio/gpio-ge.c                             | 114 ----------
+ drivers/gpio/gpio-generic.c                        | 234 +++++++++++++=
++++++++-
+ drivers/gpio/gpio-moxart.c                         |  84 --------
+ drivers/gpio/gpio-ts4800.c                         |  81 -------
+ 8 files changed, 312 insertions(+), 412 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.tx=
+t
+ delete mode 100644 drivers/gpio/gpio-clps711x.c
+ delete mode 100644 drivers/gpio/gpio-ge.c
+ delete mode 100644 drivers/gpio/gpio-moxart.c
+ delete mode 100644 drivers/gpio/gpio-ts4800.c
+
+--=20
+2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
