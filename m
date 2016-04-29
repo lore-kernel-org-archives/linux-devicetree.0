@@ -1,75 +1,50 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2 6/6] mmc: sdhci-of-arasan: overwrite enhanced strobe callback
-Date: Fri, 29 Apr 2016 10:48:34 +0800
-Message-ID: <1461898114-29067-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1461897751-28810-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461897751-28810-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v7 22/24] [media] rtl2832: change the i2c gate to be
+ mux-locked
+Date: Fri, 29 Apr 2016 06:41:01 +0200
+Message-ID: <4ae65dd6-1197-11d6-ef0a-714c0525cf3a@axentia.se>
+References: <1461165484-2314-1-git-send-email-peda@axentia.se>
+ <1461165484-2314-23-git-send-email-peda@axentia.se>
+ <20160428214758.GA4531@katana>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160428214758.GA4531@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.koz>
 List-Id: devicetree@vger.kernel.org
 
-Currently sdhci-arasan 5.1 can support enhanced strobe function,
-and we now limit it just for "arasan,sdhci-5.1". Add
-mmc-hs400-enhanced-strobe in DT to enable the function if we'r sure
-our controller can support it.
+On 2016-04-28 23:47, Wolfram Sang wrote:
+> On Wed, Apr 20, 2016 at 05:18:02PM +0200, Peter Rosin wrote:
+>> The root i2c adapter lock is then no longer held by the i2c mux during
+>> accesses behind the i2c gate, and such accesses need to take that lock
+>> just like any other ordinary i2c accesses do.
+>>
+>> So, declare the i2c gate mux-locked, and zap the regmap overrides
+>> that makes the i2c accesses unlocked and use plain old regmap
+>> accesses. This also removes the need for the regmap wrappers used by
+>> rtl2832_sdr, so deconvolute the code further and provide the regmap
+>> handle directly instead of the wrapper functions.
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Antti, I'd need some tag from you since this is not the i2c realm.
+>
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+Antti sent this:
 
-Changes in v2: None
+https://lkml.org/lkml/2016/4/20/828
 
- drivers/mmc/host/sdhci-of-arasan.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+and I added a Tested-by in v8
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index 20b859e..a0e4536 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -25,7 +25,9 @@
- #include "sdhci-pltfm.h"
- 
- #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
-+#define SDHCI_ARASAN_VENDOR_REGISTER	0x78
- 
-+#define VENDOR_ENHANCED_STROBE		BIT(0)
- #define CLK_CTRL_TIMEOUT_SHIFT		16
- #define CLK_CTRL_TIMEOUT_MASK		(0xf << CLK_CTRL_TIMEOUT_SHIFT)
- #define CLK_CTRL_TIMEOUT_MIN_EXP	13
-@@ -73,6 +75,23 @@ static void sdhci_arasan_set_clock(struct sdhci_host *host, unsigned int clock)
- 		phy_power_on(sdhci_arasan->phy);
- }
- 
-+static int sdhci_arasan_enhanced_strobe(struct mmc_host *mmc,
-+					bool enable)
-+{
-+	u32 vendor;
-+	struct sdhci_host *host = mmc_priv(mmc);
-+
-+	vendor = readl(host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
-+	if (enable)
-+		vendor |= VENDOR_ENHANCED_STROBE;
-+	else
-+		vendor &= (~VENDOR_ENHANCED_STROBE);
-+
-+	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
-+
-+	return 0;
-+}
-+
- static struct sdhci_ops sdhci_arasan_ops = {
- 	.set_clock = sdhci_arasan_set_clock,
- 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
-@@ -239,6 +258,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 			dev_err(&pdev->dev, "phy_power_on err.\n");
- 			goto err_phy_power;
- 		}
-+
-+		host->mmc_host_ops.prepare_enhanced_strobe =
-+					sdhci_arasan_enhanced_strobe;
- 	}
- 
- 	ret = sdhci_add_host(host);
--- 
-2.3.7
+https://github.com/peda-r/i2c-mux/commit/c023584d34db7aacbc59f28386378131cfa970d2
+
+but the patch was never sent as an email, only as part of a pull request for
+
+https://github.com/peda-r/i2c-mux/commits/mux-core-and-locking-8
+
+So, I think all is ok, or do you need more than Tested-by?
+
+Cheers,
+Peter
