@@ -1,40 +1,66 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Add SATA3 support for Broadcom NS2 SVK
-Date: Fri, 29 Apr 2016 09:41:18 -0700
-Message-ID: <57238EAE.80403@gmail.com>
-References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
- <57231D12.9080605@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFT PATCH 1/3] usb: misc: usb3503: Fix HUB mode after
+ bootloader initialization
+Date: Fri, 29 Apr 2016 17:44:48 +0100
+Message-ID: <20160429164448.GY3217@sirena.org.uk>
+References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
+ <1461927591-7864-2-git-send-email-k.kozlowski@samsung.com>
+ <20160429113059.GX3217@sirena.org.uk>
+ <57234BA2.6020304@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57231D12.9080605-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pJWGhKxYz0gFF1YW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57234BA2.6020304@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/04/16 01:36, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Monday 28 March 2016 10:18 AM, Anup Patel wrote:
->> The Broadcom NS2 SoC has a AHCI compliant SATA3 controller with
->> two ports.
->>
->> This patchset adds common Broadcom SATA3 PHY driver and related
->> DT bindings document. It also adds appropriate DT nodes in NS2 DT.
->>
->> The patchset is based on v4.6-rc1 tag and is available in branch
->> ns2_sata3_v2 of https://github.com/Broadcom/arm64-linux.git
->>
->> All patches have been tested on Broadcom NS2 SVK.
-> 
-> merged the first 3 patches to linux-phy tree.
 
-And applied patches 4-5 to devicetree-arm64/next, thanks!
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--pJWGhKxYz0gFF1YW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Apr 29, 2016 at 01:55:14PM +0200, Krzysztof Kozlowski wrote:
+> On 04/29/2016 01:30 PM, Mark Brown wrote:
+
+> > Supplies are only optional if they may be physically absent.  In this
+> > case it's possible that on device regulators may be used instead, a
+> > pattern more like that used for arizona-ldo1 where we represent those
+> > regulators might be better as it's more clearly describing the
+> > situation.  I'm just wondering if the supply lookup stuff there should
+> > be factored out as this is not an uncommon pattern..
+
+> > It should at least be clearly stated what's going on, ignoring failure
+> > to get supplies is generally a bug and people will tend to blindly cut
+> > and paste things (witness all the breakage in graphics drivers with
+> > this).
+
+> The VDD33 is really optional. The device can work in different
+> configuration, e.g. only on VBAT. How the reset logic would work then? I
+> don't know... I would suspect that it could be exactly the same (just
+> replace VDD33 with VBAT) but I am not sure.
+
+What the Arizona example I mentioned does is look for the property
+specifying an external supply in DT and if there isn't one assumes that
+it must be using the internal regulator.  That's a bit icky but it does
+the right thing and is much simpler from a user point of view.
+
+--pJWGhKxYz0gFF1YW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXI49/AAoJECTWi3JdVIfQJWkH/RKWxiRKAo28sPRxKp0DzRog
+4TQDH0Y6agkZowh7D5oexH2wyw2PBMni7LFkX7sxrM+1j14gnGwRN4pJ80Zc5tnE
+wZ1MiqFE1FIuDf8JzyM99ZNw9zPP1DO8bvIla+eG2WQx6AslGdY937FA+AzvQh8C
+AjJTQyNmeQHqwGVk5xteIkwT1PYFjBLWGt0KftCeMQN5R3ZLGI2vB3BkuyNnrIad
+j8u8vyTAtfNKog8PuinGCSsz4SnFKAPJUqWJdYUxciHaySO3VWsoerNGtcIX18t8
+7kcXIzZOJByfik2SS92oUyl+5sdcG5OJLPYUdbI+D5fev8sHCmnUhy7FOJPRcaI=
+=7PCN
+-----END PGP SIGNATURE-----
+
+--pJWGhKxYz0gFF1YW--
