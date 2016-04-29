@@ -1,7 +1,7 @@
 From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v2 2/3] Documentation: dtb: xgene: Add channel property
-Date: Fri, 29 Apr 2016 11:10:14 -0700
-Message-ID: <1461953415-9741-3-git-send-email-isubramanian@apm.com>
+Subject: [PATCH v2 3/3] dtb: xgene: Add channel property
+Date: Fri, 29 Apr 2016 11:10:15 -0700
+Message-ID: <1461953415-9741-4-git-send-email-isubramanian@apm.com>
 References: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
@@ -10,23 +10,37 @@ To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+Added 'channel' property, describing ethernet to CPU channel number.
+
 Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
 ---
- Documentation/devicetree/bindings/net/apm-xgene-enet.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 1 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi     | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-index 078060a..05f705e3 100644
---- a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-+++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-@@ -18,6 +18,8 @@ Required properties for all the ethernet interfaces:
-   - First is the Rx interrupt.  This irq is mandatory.
-   - Second is the Tx completion interrupt.
-     This is supported only on SGMII based 1GbE and 10GbE interfaces.
-+- channel: Ethernet to CPU, start channel (prefetch buffer) number
-+  - Must map to the first irq and irqs must be sequential
- - port-id: Port number (0 or 1)
- - clocks: Reference to the clock entry.
- - local-mac-address: MAC address assigned to this device
+diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+index a055a5d..ba04877 100644
+--- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+@@ -653,6 +653,7 @@
+ 				     <0 113 4>,
+ 				     <0 114 4>,
+ 				     <0 115 4>;
++			channel = <12>;
+ 			port-id = <1>;
+ 			dma-coherent;
+ 			clocks = <&xge1clk 0>;
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index ae4a173..5147d76 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -993,6 +993,7 @@
+ 				     <0x0 0x65 0x4>,
+ 				     <0x0 0x66 0x4>,
+ 				     <0x0 0x67 0x4>;
++			channel = <0>;
+ 			dma-coherent;
+ 			clocks = <&xge0clk 0>;
+ 			/* mac address will be overwritten by the bootloader */
 -- 
 1.9.1
