@@ -1,56 +1,40 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] mmc: sdhci-of-arasan: overwrite enhanced strobe
- callback
-Date: Fri, 29 Apr 2016 09:01:58 -0700
-Message-ID: <20160429160158.GZ3766@xsjsorenbubuntu>
-References: <1461897751-28810-1-git-send-email-shawn.lin@rock-chips.com>
- <1461898114-29067-1-git-send-email-shawn.lin@rock-chips.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] Add SATA3 support for Broadcom NS2 SVK
+Date: Fri, 29 Apr 2016 09:41:18 -0700
+Message-ID: <57238EAE.80403@gmail.com>
+References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
+ <57231D12.9080605@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1461898114-29067-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <57231D12.9080605-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-04-29 at 10:48:34 +0800, Shawn Lin wrote:
-> Currently sdhci-arasan 5.1 can support enhanced strobe function,
-> and we now limit it just for "arasan,sdhci-5.1". Add
-> mmc-hs400-enhanced-strobe in DT to enable the function if we'r sure
-> our controller can support it.
->=20
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->=20
-> Changes in v2: None
->=20
->  drivers/mmc/host/sdhci-of-arasan.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sd=
-hci-of-arasan.c
-> index 20b859e..a0e4536 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -25,7 +25,9 @@
->  #include "sdhci-pltfm.h"
-> =20
->  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
-> +#define SDHCI_ARASAN_VENDOR_REGISTER	0x78
+On 29/04/16 01:36, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Monday 28 March 2016 10:18 AM, Anup Patel wrote:
+>> The Broadcom NS2 SoC has a AHCI compliant SATA3 controller with
+>> two ports.
+>>
+>> This patchset adds common Broadcom SATA3 PHY driver and related
+>> DT bindings document. It also adds appropriate DT nodes in NS2 DT.
+>>
+>> The patchset is based on v4.6-rc1 tag and is available in branch
+>> ns2_sata3_v2 of https://github.com/Broadcom/arm64-linux.git
+>>
+>> All patches have been tested on Broadcom NS2 SVK.
+> 
+> merged the first 3 patches to linux-phy tree.
 
-Just as a note: This register doesn't seem to exist in the IP version
-Zynq is using. So, as long as we exclude that version from accessing it=
-,
-things should be fine (IIUC, that is the case).
-
-Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-
-	S=C3=B6ren
+And applied patches 4-5 to devicetree-arm64/next, thanks!
+-- 
+Florian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
