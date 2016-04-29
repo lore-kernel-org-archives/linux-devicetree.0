@@ -1,52 +1,62 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 11/12] kexec: allow architectures to override boot mapping
-Date: Fri, 29 Apr 2016 19:08:28 +0100
-Message-ID: <20160429180828.GU19428@n2100.arm.linux.org.uk>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviFU-0000jk-9q@rmk-PC.arm.linux.org.uk>
- <CAHB_GuoPDxqKbbfGHW8UEiuCxdMeEVBCMJpouaO--dbLomkzrQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHB_GuoPDxqKbbfGHW8UEiuCxdMeEVBCMJpouaO--dbLomkzrQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH v2 1/3] drivers: net: xgene: Get channel number from device binding
+Date: Fri, 29 Apr 2016 11:10:13 -0700
+Message-ID: <1461953415-9741-2-git-send-email-isubramanian@apm.com>
+References: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 08:44:29PM +0530, Pratyush Anand wrote:
-> On Thu, Apr 28, 2016 at 2:58 PM, Russell King
-> <rmk+kernel@arm.linux.org.uk> wrote:
-> > kexec physical addresses are the boot-time view of the system.  For
-> > certain ARM systems (such as Keystone 2), the boot view of the system
-> > does not match the kernel's view of the system: the boot view uses a
-> > special alias in the lower 4GB of the physical address space.
-> >
-> > To cater for these kinds of setups, we need to translate between the
-> > boot view physical addresses and the normal kernel view physical
-> > addresses.  This patch extracts the current transation points into
-> > linux/kexec.h, and allows an architecture to override the functions.
-> >
-> > Due to the translations required, we unfortunately end up with six
-> > translation functions, which are reduced down to four that the
-> > architecture can override.
-> >
-> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> 
-> I must be missing something when I am thinking that, had we passed
-> arch_phys_to_idmap_offset to user space, this patch would not have
-> been needed, and things would have been more simpler. Please help me
-> to understand why passing arch_phys_to_idmap_offset to user space
-> would not be a good idea.
+This patch gets ethernet to CPU channel (prefetch buffer number) from
+the newly added 'channel' property, thus decoupling Linux driver from
+resource management.
 
-Sorry, I disagree.
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+---
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-Even if we thought that passing the offset to userspace would be a
-good idea, it does nothing to solve each site in this patch.  This
-patch would still be necessary.
-
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+index 8d4c1ad..409152b 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+@@ -973,6 +973,17 @@ static enum xgene_ring_owner xgene_derive_ring_owner(struct xgene_enet_pdata *p)
+ 	return owner;
+ }
+ 
++static u8 xgene_start_cpu_bufnum(struct xgene_enet_pdata *pdata)
++{
++	struct device *dev = &pdata->pdev->dev;
++	u32 cpu_bufnum;
++	int ret;
++
++	ret = device_property_read_u32(dev, "channel", &cpu_bufnum);
++
++	return (!ret) ? cpu_bufnum : pdata->cpu_bufnum;
++}
++
+ static int xgene_enet_create_desc_rings(struct net_device *ndev)
+ {
+ 	struct xgene_enet_pdata *pdata = netdev_priv(ndev);
+@@ -981,13 +992,15 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
+ 	struct xgene_enet_desc_ring *buf_pool = NULL;
+ 	enum xgene_ring_owner owner;
+ 	dma_addr_t dma_exp_bufs;
+-	u8 cpu_bufnum = pdata->cpu_bufnum;
++	u8 cpu_bufnum;
+ 	u8 eth_bufnum = pdata->eth_bufnum;
+ 	u8 bp_bufnum = pdata->bp_bufnum;
+ 	u16 ring_num = pdata->ring_num;
+ 	u16 ring_id;
+ 	int i, ret, size;
+ 
++	cpu_bufnum = xgene_start_cpu_bufnum(pdata);
++
+ 	for (i = 0; i < pdata->rxq_cnt; i++) {
+ 		/* allocate rx descriptor ring */
+ 		owner = xgene_derive_ring_owner(pdata);
 -- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+1.9.1
