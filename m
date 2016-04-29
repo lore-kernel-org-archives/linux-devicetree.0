@@ -1,320 +1,116 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH V4] phy: bcm-ns-usb2: new driver for USB 2.0 PHY on
- Northstar
-Date: Fri, 29 Apr 2016 14:49:55 +0530
-Message-ID: <5723273B.3040603@ti.com>
-References: <1460367788-971-1-git-send-email-zajec5@gmail.com>
- <1460626663-5984-1-git-send-email-zajec5@gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
+Date: Fri, 29 Apr 2016 11:29:15 +0200
+Message-ID: <14f3be16-2912-cbed-ab89-08b1c22d827c@axentia.se>
+References: <5b1937140558514b3e43ed2c21ee860ecbac61ec.1461172603.git.leonard.crestez@intel.com>
+ <a978ad85-8191-7506-8090-809f89d0b2e2@kernel.org>
+ <6ab228db-9695-ac22-9c65-fd15c4837c45@axentia.se>
+ <5721E871.8010003@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460626663-5984-1-git-send-email-zajec5@gmail.com>
+In-Reply-To: <5721E871.8010003@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, Felix Fietkau <nbd@openwrt.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jon.mason@broadcom.com>, linux-usb@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org
+To: Crestez Dan Leonard <leonard.crestez@intel.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2016-04-28 12:39, Crestez Dan Leonard wrote:
+> On 04/27/2016 11:39 AM, Peter Rosin wrote:
+>> On 2016-04-23 23:32, Jonathan Cameron wrote:
+>>> On 20/04/16 18:17, Crestez Dan Leonard wrote:
+>>>> The MPU has an auxiliary I2C bus for connecting external
+>>>> sensors. This bus has two operating modes:
+>>>> * pass-through, which connects the primary and auxiliary busses
+>>>> together. This is already supported via an i2c mux.
+>>>> * I2C master mode, where the mpu60x0 acts as a master to any external
+>>>> connected sensors. This is implemented by this patch.
+>>>>
+>>>> This I2C master mode also works when the MPU itself is connected via
+>>>> SPI.
+>>>>
+>>>> I2C master supports up to 5 slaves. Slaves 0-3 have a common operating
+>>>> mode while slave 4 is different. This patch implements an i2c adapter
+>>>> using slave 4 because it has a cleaner interface and it has an
+>>>> interrupt that signals when data from slave to master arrived.
+>>>>
+>>>> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
+>>> This one needs acks from:
+>>>
+>>> Device tree maintainer (odd binding ;)
+>>> Peter Rosin (odd binding interacting with the mux support)
+>>> Wolfram (it has a whole i2c master driver in here).
+>>>
+>>> (just thought I'd list these for the avoidance of doubt).
+>> I spot some overlap with the questions in "[RFC] i2c: device-tree:
+>> Handling child nodes which are not i2c devices"
+>> http://marc.info/?l=linux-i2c&m=146073452819116&w=2
+>>
+>> And I think I agree with Stephen Warren that an intermediate placeholder
+>> node would make sense. I.e.
+>>
+>>     mpu6050@68 {
+>>         compatible = "...";
+>>         reg = <0x68>;
+>>         ...
+>>         i2c-aux-mux {
+>>             i2c@0 {
+>>                 #address-cells = <1>;
+>>                 #size-cells = <0>;
+>>                 reg = <0>;
+>>
+>>                 foo@44 {
+>>                     compatible = "bar";
+>>                     reg = <0x44>;
+>>                     ...
+>>                 }
+>>             }
+>>         }
+>>     }
+>>
+>> Or
+>>
+>>     mpu6050@68 {
+>>         compatible = "...";
+>>         reg = <0x68>;
+>>         ...
+>>         i2c-aux-master {
+>>             #address-cells = <1>;
+>>             #size-cells = <0>;
+>>
+>>             gazonk@44 {
+>>                 compatible = "baz";
+>>                 reg = <0x44>;
+>>                 ...
+>>             }
+>>         }
+>>     }
+>>
+>> depending on if you want an aux-mux or an aux-master.
+>>
+>> But I don't know if that intermediate i2c-aux-mux node causes any
+>> problems?
+> It's not clear how that would be implemented. It seems to me that right
+> now i2c_add_mux_adapter assumes that the parent device is a dedicated
+> mux device and all it's children are mux branches. Would this require
+> introducing a new "struct device" for the i2c-aux-master node?
+>
+> It might make sense to make the automatic processing of the parents
+> node's of_node optional and let the caller assign the of_node describing
+> the attached devices.
+>
+> I think the most natural solution would be to require child nodes named
+> i2c-aux-mux and i2c-aux-master to describe aux devices. For backwards
+> compatibility it would be easiest to go with i2c@0/i2c@1 (identified by
+> reg=0/1).
+>
+> But I don't know much about devicetree and I'd rather accept an external
+> suggestion.
+>
+I was thinking that with the new i2c_mux_core in place, it should be pretty simple
+to add a hook to point to another node and only use dev->of_node as a default
+value for where to look for the mux child adapters?
 
-
-On Thursday 14 April 2016 03:07 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
-> Northstar is a family of SoCs used in home routers. They have USB 2.0
-> and 3.0 controllers with PHYs that need to be properly initialized.
-> This driver provides PHY init support in a generic way and can be bou=
-nd
-> with an EHCI controller driver.
-> There are (just a few) registers being defined in bcma header. It's
-> because DMU/CRU registers will be also needed in other drivers. We wi=
-ll
-> need them e.g. in PCIe controller/PHY driver and at some point probab=
-ly
-> in clock driver for BCM53573 chipset. By using include/linux/bcma/ we
-> avoid code duplication.
->=20
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
-> ---
-> V2: Support reg-names and clock-names. As you can see PHY PLL is
->     controlled over DMU, not a separated PHY registers range. This ma=
-y
->     be a bit confusing and even less clear if we happen to support mo=
-re
->     complex hardware in the future. Using a clear name should make co=
-de
->     cleaner.
->     Also use struct device *dev helpers to make code simpler.
-> V3: Update Kconfig entry fixing 2.0 vs. 3.0 typo and removing info ab=
-out
->     bcma (this driver is not bcma specific).
-> V4: Drop unneeded #clock-cells =3D <0>; from Documentation
->     Do ioremap in probe function
->     Switch to readl and writel
->     Slightly optimize usb_pll_pdiv calculation
->     Describe 0x0000ea68 as magic value (we don't know bits meaning)
->     Fix MODULE_LICENSE
->     Update commit message
-> ---
->  .../devicetree/bindings/phy/bcm-ns-usb2-phy.txt    |  21 ++++
->  drivers/phy/Kconfig                                |   9 ++
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-bcm-ns-usb2.c                      | 137 +++++++++++=
-++++++++++
->  include/linux/bcma/bcma.h                          |   1 +
->  include/linux/bcma/bcma_driver_arm_c9.h            |  15 +++
->  6 files changed, 184 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/bcm-ns-usb2=
--phy.txt
->  create mode 100644 drivers/phy/phy-bcm-ns-usb2.c
->  create mode 100644 include/linux/bcma/bcma_driver_arm_c9.h
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.tx=
-t b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
-> new file mode 100644
-> index 0000000..a7aee9e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
-> @@ -0,0 +1,21 @@
-> +Driver for Broadcom Northstar USB 2.0 PHY
-> +
-> +Required properties:
-> +- compatible: brcm,ns-usb2-phy
-> +- reg: iomem address range of DMU (Device Management Unit)
-> +- reg-names: "dmu", the only needed & supported reg right now
-> +- clocks: USB PHY reference clock
-> +- clock-names: "phy-ref-clk", the only needed & supported clock righ=
-t now
-> +
-> +To initialize USB 2.0 PHY driver needs to setup PLL correctly. To do=
- this it
-> +requires passing phandle to the USB PHY reference clock.
-> +
-> +Example:
-> +	usb2-phy {
-> +		compatible =3D "brcm,ns-usb2-phy";
-> +		reg =3D <0x1800c000 0x1000>;
-> +		reg-names =3D "dmu";
-> +		#phy-cells =3D <0>;
-> +		clocks =3D <&genpll BCM_NSP_GENPLL_USB_PHY_REF_CLK>;
-> +		clock-names =3D "phy-ref-clk";
-> +	};
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 26566db..3292502 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -15,6 +15,15 @@ config GENERIC_PHY
->  	  phy users can obtain reference to the PHY. All the users of this
->  	  framework should select this config.
-> =20
-> +config PHY_BCM_NS_USB2
-> +	tristate "Broadcom Northstar USB 2.0 PHY Driver
-
-=46ixed
-drivers/phy/Kconfig:19:warning: multi-line strings not supported and up=
-dated
-the patch in linux-phy tree :-(
-
-Thanks
-Kishon
-> +	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> +	depends on HAS_IOMEM && OF
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support Broadcom USB 2.0 PHY connected to the USB
-> +	  controller on Northstar family.
-> +
->  config PHY_BERLIN_USB
->  	tristate "Marvell Berlin USB PHY Driver"
->  	depends on ARCH_BERLIN && RESET_CONTROLLER && HAS_IOMEM && OF
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 24596a9..9c8f08d 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -3,6 +3,7 @@
->  #
-> =20
->  obj-$(CONFIG_GENERIC_PHY)		+=3D phy-core.o
-> +obj-$(CONFIG_PHY_BCM_NS_USB2)		+=3D phy-bcm-ns-usb2.o
->  obj-$(CONFIG_PHY_BERLIN_USB)		+=3D phy-berlin-usb.o
->  obj-$(CONFIG_PHY_BERLIN_SATA)		+=3D phy-berlin-sata.o
->  obj-$(CONFIG_PHY_DM816X_USB)		+=3D phy-dm816x-usb.o
-> diff --git a/drivers/phy/phy-bcm-ns-usb2.c b/drivers/phy/phy-bcm-ns-u=
-sb2.c
-> new file mode 100644
-> index 0000000..95ab6b2
-> --- /dev/null
-> +++ b/drivers/phy/phy-bcm-ns-usb2.c
-> @@ -0,0 +1,137 @@
-> +/*
-> + * Broadcom Northstar USB 2.0 PHY Driver
-> + *
-> + * Copyright (C) 2016 Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <linux/bcma/bcma.h>
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +struct bcm_ns_usb2 {
-> +	struct device *dev;
-> +	struct clk *ref_clk;
-> +	struct phy *phy;
-> +	void __iomem *dmu;
-> +};
-> +
-> +static int bcm_ns_usb2_phy_init(struct phy *phy)
-> +{
-> +	struct bcm_ns_usb2 *usb2 =3D phy_get_drvdata(phy);
-> +	struct device *dev =3D usb2->dev;
-> +	void __iomem *dmu =3D usb2->dmu;
-> +	u32 ref_clk_rate, usb2ctl, usb_pll_ndiv, usb_pll_pdiv;
-> +	int err =3D 0;
-> +
-> +	err =3D clk_prepare_enable(usb2->ref_clk);
-> +	if (err < 0) {
-> +		dev_err(dev, "Failed to prepare ref clock: %d\n", err);
-> +		goto err_out;
-> +	}
-> +
-> +	ref_clk_rate =3D clk_get_rate(usb2->ref_clk);
-> +	if (!ref_clk_rate) {
-> +		dev_err(dev, "Failed to get ref clock rate\n");
-> +		err =3D -EINVAL;
-> +		goto err_clk_off;
-> +	}
-> +
-> +	usb2ctl =3D readl(dmu + BCMA_DMU_CRU_USB2_CONTROL);
-> +
-> +	if (usb2ctl & BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_PDIV_MASK) {
-> +		usb_pll_pdiv =3D usb2ctl;
-> +		usb_pll_pdiv &=3D BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_PDIV_MASK;
-> +		usb_pll_pdiv >>=3D BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_PDIV_SHIFT;
-> +	} else {
-> +		usb_pll_pdiv =3D 1 << 3;
-> +	}
-> +
-> +	/* Calculate ndiv based on a solid 1920 MHz that is for USB2 PHY */
-> +	usb_pll_ndiv =3D (1920000000 * usb_pll_pdiv) / ref_clk_rate;
-> +
-> +	/* Unlock DMU PLL settings with some magic value */
-> +	writel(0x0000ea68, dmu + BCMA_DMU_CRU_CLKSET_KEY);
-> +
-> +	/* Write USB 2.0 PLL control setting */
-> +	usb2ctl &=3D ~BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV_MASK;
-> +	usb2ctl |=3D usb_pll_ndiv << BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV=
-_SHIFT;
-> +	writel(usb2ctl, dmu + BCMA_DMU_CRU_USB2_CONTROL);
-> +
-> +	/* Lock DMU PLL settings */
-> +	writel(0x00000000, dmu + BCMA_DMU_CRU_CLKSET_KEY);
-> +
-> +err_clk_off:
-> +	clk_disable_unprepare(usb2->ref_clk);
-> +err_out:
-> +	return err;
-> +}
-> +
-> +static const struct phy_ops ops =3D {
-> +	.init		=3D bcm_ns_usb2_phy_init,
-> +	.owner		=3D THIS_MODULE,
-> +};
-> +
-> +static int bcm_ns_usb2_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct bcm_ns_usb2 *usb2;
-> +	struct resource *res;
-> +	struct phy_provider *phy_provider;
-> +
-> +	usb2 =3D devm_kzalloc(&pdev->dev, sizeof(*usb2), GFP_KERNEL);
-> +	if (!usb2)
-> +		return -ENOMEM;
-> +	usb2->dev =3D dev;
-> +
-> +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dmu");
-> +	usb2->dmu =3D devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(usb2->dmu)) {
-> +		dev_err(dev, "Failed to map DMU regs\n");
-> +		return PTR_ERR(usb2->dmu);
-> +	}
-> +
-> +	usb2->ref_clk =3D devm_clk_get(dev, "phy-ref-clk");
-> +	if (IS_ERR(usb2->ref_clk)) {
-> +		dev_err(dev, "Clock not defined\n");
-> +		return PTR_ERR(usb2->ref_clk);
-> +	}
-> +
-> +	usb2->phy =3D devm_phy_create(dev, NULL, &ops);
-> +	if (IS_ERR(dev))
-> +		return PTR_ERR(dev);
-> +
-> +	phy_set_drvdata(usb2->phy, usb2);
-> +	platform_set_drvdata(pdev, usb2);
-> +
-> +	phy_provider =3D devm_of_phy_provider_register(dev, of_phy_simple_x=
-late);
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +}
-> +
-> +static const struct of_device_id bcm_ns_usb2_id_table[] =3D {
-> +	{ .compatible =3D "brcm,ns-usb2-phy", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm_ns_usb2_id_table);
-> +
-> +static struct platform_driver bcm_ns_usb2_driver =3D {
-> +	.probe		=3D bcm_ns_usb2_probe,
-> +	.driver =3D {
-> +		.name =3D "bcm_ns_usb2",
-> +		.of_match_table =3D bcm_ns_usb2_id_table,
-> +	},
-> +};
-> +module_platform_driver(bcm_ns_usb2_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/bcma/bcma.h b/include/linux/bcma/bcma.h
-> index 0367c63..e6b41f4 100644
-> --- a/include/linux/bcma/bcma.h
-> +++ b/include/linux/bcma/bcma.h
-> @@ -4,6 +4,7 @@
->  #include <linux/pci.h>
->  #include <linux/mod_devicetable.h>
-> =20
-> +#include <linux/bcma/bcma_driver_arm_c9.h>
->  #include <linux/bcma/bcma_driver_chipcommon.h>
->  #include <linux/bcma/bcma_driver_pci.h>
->  #include <linux/bcma/bcma_driver_pcie2.h>
-> diff --git a/include/linux/bcma/bcma_driver_arm_c9.h b/include/linux/=
-bcma/bcma_driver_arm_c9.h
-> new file mode 100644
-> index 0000000..93bd73d
-> --- /dev/null
-> +++ b/include/linux/bcma/bcma_driver_arm_c9.h
-> @@ -0,0 +1,15 @@
-> +#ifndef LINUX_BCMA_DRIVER_ARM_C9_H_
-> +#define LINUX_BCMA_DRIVER_ARM_C9_H_
-> +
-> +/* DMU (Device Management Unit) */
-> +#define BCMA_DMU_CRU_USB2_CONTROL			0x0164
-> +#define  BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV_MASK	0x00000FFC
-> +#define  BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV_SHIFT	2
-> +#define  BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_PDIV_MASK	0x00007000
-> +#define  BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_PDIV_SHIFT	12
-> +#define BCMA_DMU_CRU_CLKSET_KEY				0x0180
-> +#define BCMA_DMU_CRU_STRAPS_CTRL			0x02A0
-> +#define  BCMA_DMU_CRU_STRAPS_CTRL_USB3			0x00000010
-> +#define  BCMA_DMU_CRU_STRAPS_CTRL_4BYTE			0x00008000
-> +
-> +#endif /* LINUX_BCMA_DRIVER_ARM_C9_H_ */
->=20
+Cheers,
+Peter
