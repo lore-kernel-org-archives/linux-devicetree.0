@@ -1,97 +1,140 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: AM335x ICE board Linux support
-Date: Fri, 29 Apr 2016 13:08:50 +0300
-Message-ID: <572332B2.6010203@ti.com>
-References: <571E069A.20700@ti.com> <571F2982.2080702@ti.com>
- <20160426151046.GQ5995@atomide.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
+Date: Fri, 29 Apr 2016 12:09:13 +0200
+Message-ID: <cfbef50a-3caa-3372-d911-14dd27c98e27@axentia.se>
+References: <5b1937140558514b3e43ed2c21ee860ecbac61ec.1461172603.git.leonard.crestez@intel.com>
+ <a978ad85-8191-7506-8090-809f89d0b2e2@kernel.org>
+ <6ab228db-9695-ac22-9c65-fd15c4837c45@axentia.se>
+ <5721E871.8010003@intel.com>
+ <14f3be16-2912-cbed-ab89-08b1c22d827c@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160426151046.GQ5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <14f3be16-2912-cbed-ab89-08b1c22d827c@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Crestez Dan Leonard <leonard.crestez@intel.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On 2016-04-29 11:29, Peter Rosin wrote:
 
-On 26/04/16 18:10, Tony Lindgren wrote:
-> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160426 01:42]:
->> On 25/04/16 14:59, Roger Quadros wrote:
->>> We are working on getting Linux on AM335X Industrial Communication Engine board (ICE) [1].
+> On 2016-04-28 12:39, Crestez Dan Leonard wrote:
+>> On 04/27/2016 11:39 AM, Peter Rosin wrote:
+>>> On 2016-04-23 23:32, Jonathan Cameron wrote:
+>>>> On 20/04/16 18:17, Crestez Dan Leonard wrote:
+>>>>> The MPU has an auxiliary I2C bus for connecting external
+>>>>> sensors. This bus has two operating modes:
+>>>>> * pass-through, which connects the primary and auxiliary busses
+>>>>> together. This is already supported via an i2c mux.
+>>>>> * I2C master mode, where the mpu60x0 acts as a master to any external
+>>>>> connected sensors. This is implemented by this patch.
+>>>>>
+>>>>> This I2C master mode also works when the MPU itself is connected via
+>>>>> SPI.
+>>>>>
+>>>>> I2C master supports up to 5 slaves. Slaves 0-3 have a common operating
+>>>>> mode while slave 4 is different. This patch implements an i2c adapter
+>>>>> using slave 4 because it has a cleaner interface and it has an
+>>>>> interrupt that signals when data from slave to master arrived.
+>>>>>
+>>>>> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
+>>>> This one needs acks from:
+>>>>
+>>>> Device tree maintainer (odd binding ;)
+>>>> Peter Rosin (odd binding interacting with the mux support)
+>>>> Wolfram (it has a whole i2c master driver in here).
+>>>>
+>>>> (just thought I'd list these for the avoidance of doubt).
+>>> I spot some overlap with the questions in "[RFC] i2c: device-tree:
+>>> Handling child nodes which are not i2c devices"
+>>> http://marc.info/?l=linux-i2c&m=146073452819116&w=2
 >>>
->>> This board has 2 Ethernet ports and each of them can be used either in RMII mode connected to
->>> the CPSW Ethernet MAC *or* in MII mode connected to the PRU Ethernet MAC.
+>>> And I think I agree with Stephen Warren that an intermediate placeholder
+>>> node would make sense. I.e.
 >>>
->>> The decision about the Ethernet port's mode is made by the user by setting a jumper near the
->>> Ethernet port before power up. This is a boot time configurable setting and doesn't need to
->>> change at runtime.
+>>>     mpu6050@68 {
+>>>         compatible = "...";
+>>>         reg = <0x68>;
+>>>         ...
+>>>         i2c-aux-mux {
+>>>             i2c@0 {
+>>>                 #address-cells = <1>;
+>>>                 #size-cells = <0>;
+>>>                 reg = <0>;
 >>>
->>> So 4 configurations are possible:
->>>     ETH0	ETH1
->>>     ----	----
->>>     RMII	RMII
->>>     RMII	MII
->>>     MII		RMII	(probably redundant and not needed)
->>>     MII		MII
+>>>                 foo@44 {
+>>>                     compatible = "bar";
+>>>                     reg = <0x44>;
+>>>                     ...
+>>>                 }
+>>>             }
+>>>         }
+>>>     }
 >>>
->>> Based on the port configuration, software (u-boot or Linux) needs to set the right pinmux,
->>> set a GPIOs (that controls external Mux), configure an external clock generator
->>> and enable the right device driver for the respective Ethernet port.
-> 
-> Ideally this would be runtime detected..
-> 
->>> Clock generator needs to be configured because different clock rates are required
->>> for RMII vs MII mode.
+>>> Or
 >>>
->>> Now question is how all this can be done on u-boot + Linux?
+>>>     mpu6050@68 {
+>>>         compatible = "...";
+>>>         reg = <0x68>;
+>>>         ...
+>>>         i2c-aux-master {
+>>>             #address-cells = <1>;
+>>>             #size-cells = <0>;
 >>>
->>> I already have a working solution where I create different DT blobs for the 3 configurations
->>> and have u-boot detect the mode and load the correct DT blob and also configure the clock.
-> 
-> If u-boot can detect the mode, can kernel also detect the mode?
-> 
-> You can have multiple named pinctrl states no problem that you
-> could select from based on the detection. Not sure if that solves
-> all the configuration issues though.
-> 
->>> You can see how the kernel patches look like here [2]
+>>>             gazonk@44 {
+>>>                 compatible = "baz";
+>>>                 reg = <0x44>;
+>>>                 ...
+>>>             }
+>>>         }
+>>>     }
 >>>
->>> Is this approach acceptable? If not is there any better way to do this? Thanks.
-> 
-> I guess for now if no runtime detection is possible in the kernel.
-
-There are 2 ways to detect them mode
-1) Enabe GPIO rising edge detect interrupt and reset the Ethernet PHY
-2) read a PHY register over MDIO bus
-
-I'm not very sure where this can be done in the kernel.
-
-Even if there is some place to do the detection, how do we go about reconfiguring the
-device tree?
-
-cheers,
--roger
-
-> 
-> Regards,
-> 
-> Tony
-> 
->>> [1] AM3359 ICE board
->>> http://www.ti.com/tool/tmdsice3359
->>> http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_%28ICE%29_EVM_HW_User_Guide
+>>> depending on if you want an aux-mux or an aux-master.
+>>>
+>>> But I don't know if that intermediate i2c-aux-mux node causes any
+>>> problems?
+>> It's not clear how that would be implemented. It seems to me that right
+>> now i2c_add_mux_adapter assumes that the parent device is a dedicated
+>> mux device and all it's children are mux branches. Would this require
+>> introducing a new "struct device" for the i2c-aux-master node?
 >>
->> There are 2 ICE board version. v1 and v2. The above wiki link is wrong.
->> We are dealing with the v2 board below
->> http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_EVM_Rev2_1_HW_User_Guide
->>>
->>> [2] Device tree patches
->>> https://github.com/rogerq/linux/commit/9a9cf6a15f779fddf91dba2370627aabf19aeff5
->>> https://github.com/rogerq/linux/commit/c87e8fa5b14f156a91883fd506e9dd8f7ccf95cf
->>> https://github.com/rogerq/linux/commit/d9cdd25e8c3878292d7f4180af8d3ac42b9645c4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> It might make sense to make the automatic processing of the parents
+>> node's of_node optional and let the caller assign the of_node describing
+>> the attached devices.
+>>
+>> I think the most natural solution would be to require child nodes named
+>> i2c-aux-mux and i2c-aux-master to describe aux devices. For backwards
+>> compatibility it would be easiest to go with i2c@0/i2c@1 (identified by
+>> reg=0/1).
+>>
+>> But I don't know much about devicetree and I'd rather accept an external
+>> suggestion.
+>>
+> I was thinking that with the new i2c_mux_core in place, it should be pretty simple
+> to add a hook to point to another node and only use dev->of_node as a default
+> value for where to look for the mux child adapters?
+>
+Or maybe always look for an intermediate "i2c-mux" node and look there if it exists? Something like this (totally untested) on top of the i2c-mux-core cleanup already in next (should be easy to adapt to 4.5 if you want that). Cheers, Peter
+
+diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
+index 25e9336b0e6e..ff1374f5b4f6 100644
+--- a/drivers/i2c/i2c-mux.c
++++ b/drivers/i2c/i2c-mux.c
+@@ -179,10 +179,15 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
+ 	 * nothing if !CONFIG_OF.
+ 	 */
+ 	if (muxc->dev->of_node) {
++		struct device_node *mux;
+ 		struct device_node *child;
+ 		u32 reg;
+ 
+-		for_each_child_of_node(muxc->dev->of_node, child) {
++		mux = of_get_child_by_name(muxc->dev->of_node, "i2c-mux");
++		if (!mux)
++			mux = muxc->dev->of_node;
++
++		for_each_child_of_node(mux, child) {
+ 			ret = of_property_read_u32(child, "reg", &reg);
+ 			if (ret)
+ 				continue;
