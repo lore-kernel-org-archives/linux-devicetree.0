@@ -1,69 +1,53 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/3] Patches to allow consistent mmc / mmcblk numbering
-Date: Fri, 29 Apr 2016 09:21:19 +0200
-Message-ID: <CAPDyKFrip0M_hqVxqnTN=-UF7PnL6peEVR2o1dJRjYkHVMR-1Q@mail.gmail.com>
-References: <1461884805-29466-1-git-send-email-dianders@chromium.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 2/2] dt-bindings: imx: ldb: Add ddc-i2c-bus property
+Date: Fri, 29 Apr 2016 09:44:12 +0200
+Message-ID: <1461915852.3521.3.camel@pengutronix.de>
+References: <1461788614-7784-1-git-send-email-akshay.bhat@timesys.com>
+ <1461788614-7784-2-git-send-email-akshay.bhat@timesys.com>
+ <20160428214823.GA841@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461884805-29466-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, linux-mmc <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Venu Byravarasu <vbyravarasu@nvidia.com>, =?UTF-8?B?SnVzdGluIFdhbmcgKOeOi+S4gSk=?= <justin.wang@spreadtrum.com>, ksumrall@android.com, Lars-Peter Clausen <lars@metafoo.de>, Dmitry Torokhov <dtor@chromium.org>, Jon Hunter <jonathanh@nvidia.com>, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Luca Porzio (lporzio)" <lporzio@micron.com>, Rob Herring <robh+dt@kernel.org>, Dong,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160428214823.GA841@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, steve_longerbeam@mentor.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 April 2016 at 01:06, Douglas Anderson <dianders@chromium.org> wrote:
-> This series picks patches from various different places to produce what
-> I consider the best solution to getting consistent mmc and mmcblk
-> ordering.
->
-> Why consistent ordering and why not just use UUIDs?  IMHO consistent
-> ordering solves a few different problems:
->
-> 1. For poor, feeble-minded humans like me, have sane numbering for
->    devices helps a lot.  When grepping through dmesg it's terribly handy
->    if a given SDMMC device has a consistent number.  I know that I can
->    do "dmesg | grep mmc0" or "dmesg | grep mmcblk0" to find info about
->    the eMMC.  I know that I can do "dmesg | grep mmc1" to find info
->    about the SD card slot.  I don't want it to matter which one probed
->    first, I don't want it to matter if I'm working on a variant of the
->    hardware that has the SD card slot disabled, and I don't want to care
->    what my boot device was.  Worrying about what device number I got
->    increases my cognitive load.
->
-> 2. There are cases where it's not trivially easy during development to
->    use the UUID.  Specifically I work a lot with coreboot / depthcharge
->    as a BIOS.  When configured properly, that BIOS has a nice feature to
->    allow you to fetch the kernel and kernel command line from TFTP by
->    pressing Ctrl-N.  In this particular case the BIOS doesn't actually
->    know which disk I'd like for my root filesystem, so it's not so easy
->    for it to put the right UUID into the command line.  For this
->    purpose, knowing that "mmcblk0" will always refer to eMMC is handy.
->
->
-> Jaehoon Chung (1):
->   Documentation: mmc: Document mmc aliases
->
-> Stefan Agner (2):
->   mmc: read mmc alias from device tree
->   mmc: use SD/MMC host ID for block device name ID
->
->  Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
->  drivers/mmc/card/block.c                      |  3 ++-
->  drivers/mmc/core/host.c                       | 25 ++++++++++++++++++++-----
->  3 files changed, 33 insertions(+), 6 deletions(-)
->
-> --
-> 2.8.0.rc3.226.g39d4020
->
-
-I believe you need to re-base this patchset as things have changed.
-
-Currently the mmc host index that gets picked at host registration
-point, will also be given to the corresponding mmc block device index.
-That's probably solving most of your concerns, but I am open to extend
-this to cover aliases as well, as to allow it to be *really*
-deterministic.
-
-Kind regards
-Uffe
+QW0gRG9ubmVyc3RhZywgZGVuIDI4LjA0LjIwMTYsIDE2OjQ4IC0wNTAwIHNjaHJpZWIgUm9iIEhl
+cnJpbmc6Cj4gT24gV2VkLCBBcHIgMjcsIDIwMTYgYXQgMDQ6MjM6MzRQTSAtMDQwMCwgQWtzaGF5
+IEJoYXQgd3JvdGU6Cj4gPiBEb2N1bWVudCB0aGUgZGRjLWkyYy1idXMgcHJvcGVydHkgdXNlZCBi
+eSBpbXgtbGRiIGRyaXZlciB0byByZWFkIEVESUQKPiA+IGluZm9ybWF0aW9uIHZpYSBJMkMgaW50
+ZXJmYWNlLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBBa3NoYXkgQmhhdCA8YWtzaGF5LmJoYXRA
+dGltZXN5cy5jb20+Cj4gPiAtLS0KPiA+IAo+ID4gdjM6Cj4gPiBOZXdseSBhZGRlZC4KPiA+IAo+
+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0
+IHwgMSArCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gPiAKPiA+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvbGRi
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIu
+dHh0Cj4gPiBpbmRleCAwYTE3NWQ5Li5hNDA3NDYyIDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2xkYi50eHQKPiA+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0Cj4gPiBA
+QCAtNjIsNiArNjIsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gICAgIGRpc3BsYXktdGlt
+aW5ncyBhcmUgdXNlZCBpbnN0ZWFkLgo+ID4gIAo+ID4gIE9wdGlvbmFsIHByb3BlcnRpZXMgKHJl
+cXVpcmVkIGlmIGRpc3BsYXktdGltaW5ncyBhcmUgdXNlZCk6Cj4gCj4gVGhlIHJlcXVpcmVkIHBh
+cnQgZG9lc24ndCBtYWtlIHNlbnNlIGlmIHlvdSBhZGQgdGhpcywgYnV0Li4uCj4gCj4gPiArIC0g
+ZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVE
+SUQgcHJvYmluZwo+IAo+IFJlYWxseSwgdGhpcyBzaG91bGQgYmUgcGFydCBvZiBhIGNvbm5lY3Rv
+ciBub2RlIHNpbmNlIGkyYyBnb2VzIGZyb20gdGhlIAo+IGkyYyBjb250cm9sbGVyIHRvIGEgY29u
+bmVjdG9yIGFuZCBpcyBub3QgcGFydCBvZiB0aGUgZGlzcGxheSBjb250cm9sbGVyLgoKSWYgdGhl
+IGRkYyBpMmMgYnVzIGRvZXMgaW5kZWVkIGdvIHRocm91Z2ggYSBjb25uZWN0b3IsIHllcy4gV291
+bGQgdGhhdAp3YXJyYW50IGEgZ2VuZXJpYyAibHZkcy1jb25uZWN0b3IiIGJpbmRpbmcgZm9yIGFs
+bCB0aG9zZSBkaWZmZXJlbnQgdHlwZXMKb2YgaW50ZXJuYWwgTFZEUyBjb25uZWN0b3JzPwoKcmVn
+YXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
