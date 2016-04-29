@@ -1,140 +1,87 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] iio: inv_mpu6050: Add support for auxiliary I2C master
-Date: Fri, 29 Apr 2016 12:09:13 +0200
-Message-ID: <cfbef50a-3caa-3372-d911-14dd27c98e27@axentia.se>
-References: <5b1937140558514b3e43ed2c21ee860ecbac61ec.1461172603.git.leonard.crestez@intel.com>
- <a978ad85-8191-7506-8090-809f89d0b2e2@kernel.org>
- <6ab228db-9695-ac22-9c65-fd15c4837c45@axentia.se>
- <5721E871.8010003@intel.com>
- <14f3be16-2912-cbed-ab89-08b1c22d827c@axentia.se>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400
+ mapped registers
+Date: Fri, 29 Apr 2016 11:35:15 +0100
+Message-ID: <20160429113515.333c42ef@arm.com>
+References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
+	<20160427233028.GA5155@verge.net.au>
+	<5721A2A5.9010908@de.bosch.com>
+	<20160428234345.GD18128@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <14f3be16-2912-cbed-ab89-08b1c22d827c@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Crestez Dan Leonard <leonard.crestez@intel.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160428234345.GD18128@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, julien.grall@arm.com, geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-04-29 11:29, Peter Rosin wrote:
+On Fri, 29 Apr 2016 09:43:45 +1000
+Simon Horman <horms@verge.net.au> wrote:
 
-> On 2016-04-28 12:39, Crestez Dan Leonard wrote:
->> On 04/27/2016 11:39 AM, Peter Rosin wrote:
->>> On 2016-04-23 23:32, Jonathan Cameron wrote:
->>>> On 20/04/16 18:17, Crestez Dan Leonard wrote:
->>>>> The MPU has an auxiliary I2C bus for connecting external
->>>>> sensors. This bus has two operating modes:
->>>>> * pass-through, which connects the primary and auxiliary busses
->>>>> together. This is already supported via an i2c mux.
->>>>> * I2C master mode, where the mpu60x0 acts as a master to any external
->>>>> connected sensors. This is implemented by this patch.
->>>>>
->>>>> This I2C master mode also works when the MPU itself is connected via
->>>>> SPI.
->>>>>
->>>>> I2C master supports up to 5 slaves. Slaves 0-3 have a common operating
->>>>> mode while slave 4 is different. This patch implements an i2c adapter
->>>>> using slave 4 because it has a cleaner interface and it has an
->>>>> interrupt that signals when data from slave to master arrived.
->>>>>
->>>>> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
->>>> This one needs acks from:
->>>>
->>>> Device tree maintainer (odd binding ;)
->>>> Peter Rosin (odd binding interacting with the mux support)
->>>> Wolfram (it has a whole i2c master driver in here).
->>>>
->>>> (just thought I'd list these for the avoidance of doubt).
->>> I spot some overlap with the questions in "[RFC] i2c: device-tree:
->>> Handling child nodes which are not i2c devices"
->>> http://marc.info/?l=linux-i2c&m=146073452819116&w=2
->>>
->>> And I think I agree with Stephen Warren that an intermediate placeholder
->>> node would make sense. I.e.
->>>
->>>     mpu6050@68 {
->>>         compatible = "...";
->>>         reg = <0x68>;
->>>         ...
->>>         i2c-aux-mux {
->>>             i2c@0 {
->>>                 #address-cells = <1>;
->>>                 #size-cells = <0>;
->>>                 reg = <0>;
->>>
->>>                 foo@44 {
->>>                     compatible = "bar";
->>>                     reg = <0x44>;
->>>                     ...
->>>                 }
->>>             }
->>>         }
->>>     }
->>>
->>> Or
->>>
->>>     mpu6050@68 {
->>>         compatible = "...";
->>>         reg = <0x68>;
->>>         ...
->>>         i2c-aux-master {
->>>             #address-cells = <1>;
->>>             #size-cells = <0>;
->>>
->>>             gazonk@44 {
->>>                 compatible = "baz";
->>>                 reg = <0x44>;
->>>                 ...
->>>             }
->>>         }
->>>     }
->>>
->>> depending on if you want an aux-mux or an aux-master.
->>>
->>> But I don't know if that intermediate i2c-aux-mux node causes any
->>> problems?
->> It's not clear how that would be implemented. It seems to me that right
->> now i2c_add_mux_adapter assumes that the parent device is a dedicated
->> mux device and all it's children are mux branches. Would this require
->> introducing a new "struct device" for the i2c-aux-master node?
->>
->> It might make sense to make the automatic processing of the parents
->> node's of_node optional and let the caller assign the of_node describing
->> the attached devices.
->>
->> I think the most natural solution would be to require child nodes named
->> i2c-aux-mux and i2c-aux-master to describe aux devices. For backwards
->> compatibility it would be easiest to go with i2c@0/i2c@1 (identified by
->> reg=0/1).
->>
->> But I don't know much about devicetree and I'd rather accept an external
->> suggestion.
->>
-> I was thinking that with the new i2c_mux_core in place, it should be pretty simple
-> to add a hook to point to another node and only use dev->of_node as a default
-> value for where to look for the mux child adapters?
->
-Or maybe always look for an intermediate "i2c-mux" node and look there if it exists? Something like this (totally untested) on top of the i2c-mux-core cleanup already in next (should be easy to adapt to 4.5 if you want that). Cheers, Peter
+> [Cc Mark Zyngier, linux-arm-kernel]
+> 
+> Hi Dirk,
+> 
+> On Thu, Apr 28, 2016 at 07:41:57AM +0200, Dirk Behme wrote:
+> > Hi Simon,
+> > 
+> > On 28.04.2016 01:30, Simon Horman wrote:
+> > >Hi Dirk,
+> > >
+> > >I understand that there is an issue here but I'm not yet able
+> > >to convince myself that this is the correct solution.
+> > >
+> > >In revision r0p1 of the CoreLink GIC-400 Generic Interrupt Controller
+> > >Technical Reference Manual[1] I see in Section 3.2. "GIC-400 register map"
+> > >that the size of both the CPU interfaces and Virtual CPU interfaces are
+> > >0x2000 bytes. And assuming that the hardware follows the specification it
+> > >appears that DT is correctly describing the hardware.
+> > 
+> > 
+> > I think you are missing the details described by ARM in
+> > 
+> > http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
+> > 
+> > 
+> > Maybe Julien could help if you have some more doubts?
+> 
+> I guess I am confused.
+> 
+> I see that there is now handling of the case where the region size is
+> 128Kbytes. But I'm still not seeing the bit which describes that the
+> GIC-400  has a region size of 128Kbytes. Perhaps the later is somehow
+> implied by the former. Or perhaps I need to check with the hw team.
 
-diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
-index 25e9336b0e6e..ff1374f5b4f6 100644
---- a/drivers/i2c/i2c-mux.c
-+++ b/drivers/i2c/i2c-mux.c
-@@ -179,10 +179,15 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
- 	 * nothing if !CONFIG_OF.
- 	 */
- 	if (muxc->dev->of_node) {
-+		struct device_node *mux;
- 		struct device_node *child;
- 		u32 reg;
- 
--		for_each_child_of_node(muxc->dev->of_node, child) {
-+		mux = of_get_child_by_name(muxc->dev->of_node, "i2c-mux");
-+		if (!mux)
-+			mux = muxc->dev->of_node;
-+
-+		for_each_child_of_node(mux, child) {
- 			ret = of_property_read_u32(child, "reg", &reg);
- 			if (ret)
- 				continue;
+Please have a look at the SBSA document, and in particular the
+Appendix-F (registration and selling your soul required - only kidding):
+
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0029/index.html
+
+This requires that, in order for the two halves of GICV to be trappable
+*separately* by a hypervisor using 64kB pages at Stage-2, the two 4kB
+pages that describe that region are aliased as such:
+- the first 4kB page is aliased 16 times over a 64kB region
+- the second 4kB page is aliased 16 times over another contiguous 64kB
+  region
+
+This means that your GIC is indeed covering a 128kB region, with the
+mapping corresponding to the GICv2 memory map located at offset 0xf000
+from the base of that 128kB region. Also, this GICV requirement also
+applies to GICC (most likely because the two regions use the same
+decoding logic).
+
+The OS must of course be aware of this (see gic_check_eoimode in the
+GIC driver). Of course, almost nobody got that right (I only know of
+the APM Xgene-1 so far). If you actually did, great!
+
+Also, the ACPI spec fails to recognize this by not providing the length
+of the region, meaning that those who got it right with DT are likely
+to get it wrong with ACPI, and vice-versa.
+
+It's a wonderful world.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
