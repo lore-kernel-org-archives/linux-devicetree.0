@@ -1,83 +1,44 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Extend the LED panic trigger
-Date: Fri, 29 Apr 2016 20:57:22 +0200
-Message-ID: <5723AE92.8020203@gmail.com>
-References: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: Re: [RFC v5 3/4] gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-generic
+Date: Fri, 29 Apr 2016 21:06:11 +0200
+Message-ID: <1518049.pLhlI1cuZi@debian64>
+References: <cover.1461888822.git.chunkeey@googlemail.com> <9e5cc9e957144bd5d4081573ef959f931281eaaa.1461888822.git.chunkeey@googlemail.com> <CACRpkdaX1xeGJxV9K-GkTAh87SctqyhkJ+VN6mwUdtD19tz99g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461881020-13964-1-git-send-email-ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaX1xeGJxV9K-GkTAh87SctqyhkJ+VN6mwUdtD19tz99g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Friday, April 29, 2016 04:18:20 PM Linus Walleij wrote:
+> On Fri, Apr 29, 2016 at 2:53 AM, Christian Lamparter
+> <chunkeey@googlemail.com> wrote:
+> 
+> > This patch integrates these GPIO drivers into gpio-generic.
+> >
+> > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> 
+> Very elegant. Let's wait for some feedback/ACKs from
+> the driver maintainers, but this looks very nice.
+Oh by the way: who's maintaining them? get_maintainer.pl just
+lists the usual gpio people. I can try to add the module authors.
+However, I don't know if these are working or dead. I ran into an
+issue once (for something else) that I got the dreaded "delivery
+notification failed" messages, but I can't rebroadcast them on the
+ML (because that would be very silly).
 
+Anyway, I'll rebase my patch series (without the two patches you
+had already merged)
 
-On 29/04/16 00:03, Ezequiel Garcia wrote:
-> As per commit 916fe619951f ("leds: trigger: Introduce a kernel
-> panic LED trigger"), the kernel now supports a new LED trigger
-> to hook on the panic blink.
->
-> However, the only way of using this is to dedicate a LED device,
-> making it rather useless.
->
-> To overcome this limitation, the present series introduces the
-> capability to switch the LED trigger of certain LED devices upon
-> a kernel panic (using the panic notifier).
->
-> The decision of which LEDs should be switched to the panic trigger
-> is left to each LED device driver. As an example, a devicetree
-> boolean property is introduced and used in the leds-gpio driver.
->
-> The big change in this v3 is that I've moved the panic trigger
-> switching away from the core code and it's now part of
-> ledtrig-panic.c. Pavel, Jacek: How does it look?
->
-> Changes from v2:
->
->    * Added Rob's "panic-indicator" devicetree property Acked-by.
->
->    * Fix typo, as pointed out by Robin Murphy.
->
->    * Documented "panic-indicator" in bindings/leds/leds-gpio.txt.
->
->    * Moved the panic trigger switching from the trigger core code,
->      to ledtrig-panic.c.
->
-> Changes from v1:
->
->    * Dropped the led_trigger_event_nosleep API, and instead just
->      clear the blink_delay_{on, off} when the panic is notified.
->      This results in less changes.
->
->    * Changed the flag to LED_PANIC_INDICATOR, as requested by Jacek.
->
->    * Changed the firmware property name to "panic-indicator", as
->      requested by Jacek.
->
-> Ezequiel Garcia (3):
->    leds: triggers: Allow to switch the trigger to "panic" on a kernel
->      panic
->    devicetree: leds: Introduce "panic-indicator" optional property
->    leds: gpio: Support the "panic-indicator" firmware property
->
->   Documentation/devicetree/bindings/leds/common.txt  |  3 ++
->   .../devicetree/bindings/leds/leds-gpio.txt         |  2 +
->   drivers/leds/led-triggers.c                        |  2 +-
->   drivers/leds/leds-gpio.c                           |  4 ++
->   drivers/leds/leds.h                                |  1 +
->   drivers/leds/trigger/Kconfig                       |  3 ++
->   drivers/leds/trigger/ledtrig-panic.c               | 47 ++++++++++++++++++++++
->   include/linux/leds.h                               |  2 +
->   8 files changed, 63 insertions(+), 1 deletion(-)
->
+> Do you want to address Andy's optimization suggestion directly
+> or as a follow-on patch?
+Oh, this is a RFC. I didn't expect anything to be merged just yet.
+Of course, I'll try to integrate his suggestion. I'll do that once
+I reply to Rob/Mark/You about the "linux,gpio-mmio",
+"memory-mapped-gpio" situation etc.
 
-Looks good to me.
-
-Reviewed-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Christian Lamparter
