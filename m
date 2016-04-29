@@ -1,371 +1,59 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC v5 3/4] gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-generic
-Date: Fri, 29 Apr 2016 11:05:34 +0300
-Message-ID: <CAHp75Vf_+3ja07Z99k1Grvvg-w3mj0inPdiE69zTs=fa_nn5=g@mail.gmail.com>
-References: <cover.1461888822.git.chunkeey@googlemail.com>
-	<9e5cc9e957144bd5d4081573ef959f931281eaaa.1461888822.git.chunkeey@googlemail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 0/5] Add SATA3 support for Broadcom NS2 SVK
+Date: Fri, 29 Apr 2016 14:06:34 +0530
+Message-ID: <57231D12.9080605@ti.com>
+References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9e5cc9e957144bd5d4081573ef959f931281eaaa.1461888822.git.chunkeey@googlemail.com>
+In-Reply-To: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Anup Patel <anup.patel@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 3:53 AM, Christian Lamparter
-<chunkeey@googlemail.com> wrote:
-> This patch integrates these GPIO drivers into gpio-generic.
->
+Hi,
 
->
-> +static int clps711x_parse_dt(struct platform_device *pdev,
-> +                            struct bgpio_pdata *pdata,
-> +                            unsigned long *flags)
-> +{
-> +       struct device_node *np =3D pdev->dev.of_node;
-> +       int id =3D np ? of_alias_get_id(np, "gpio") : pdev->id;
-> +       struct resource *res;
-> +
-> +       if ((id < 0) || (id > 4))
-> +               return -ENODEV;
-> +
-> +       /* PORTE is 3 lines only */
-> +       if (id =3D=3D 4)
-> +               pdata->ngpio =3D 3;
-> +
-> +       pdata->base =3D id * 8;
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res)
-> +               return -EINVAL;
-> +
-> +       res->name =3D "dat";
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       if (!res)
-> +               return -EINVAL;
-> +
-> +       /* PORTD is inverted logic for direction register */
-> +       res->name =3D (id =3D=3D 3) ? "dirin" : "dirout";
-> +       return 0;
-> +}
-> +
+On Monday 28 March 2016 10:18 AM, Anup Patel wrote:
+> The Broadcom NS2 SoC has a AHCI compliant SATA3 controller with
+> two ports.
+> 
+> This patchset adds common Broadcom SATA3 PHY driver and related
+> DT bindings document. It also adds appropriate DT nodes in NS2 DT.
+> 
+> The patchset is based on v4.6-rc1 tag and is available in branch
+> ns2_sata3_v2 of https://github.com/Broadcom/arm64-linux.git
+> 
+> All patches have been tested on Broadcom NS2 SVK.
 
-I think the three below have enough in common to reorganize data
-structure and use one parse function.
+merged the first 3 patches to linux-phy tree.
 
-So, instead of providing just parsing function, something like
+Thanks
+Kishon
 
-ngpios (0 =E2=80=94 read from property)
-resource size
-start, end pairs for dat/set/dirin.
-flags
-
-Have no idea if it's possible to re-use this approach for case above.
-
-> +static int ge_parse_dt(struct platform_device *pdev,
-> +                      struct bgpio_pdata *pdata,
-> +                      unsigned long *flags)
-> +{
-> +       struct device_node *np =3D pdev->dev.of_node;
-> +
-> +       struct resource *res;
-> +       struct resource nres[] =3D {
-> +               DEFINE_RES_MEM_NAMED(0, 1, "dat"),
-> +               DEFINE_RES_MEM_NAMED(0, 1, "set"),
-> +               DEFINE_RES_MEM_NAMED(0, 1, "dirin"),
-> +       };
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res || resource_size(res) !=3D 0x24)
-> +               return -EINVAL;
-> +
-> +       nres[0].start =3D res->start + 0x04;
-> +       nres[0].end =3D nres[0].start + 3;
-> +       nres[1].start =3D res->start + 0x08;
-> +       nres[1].end =3D nres[1].start + 3;
-> +       nres[2].start =3D res->start + 0x00;
-> +       nres[2].end =3D nres[2].start + 3;
-> +       *flags |=3D BGPIOF_BIG_ENDIAN_BYTE_ORDER;
-> +       pdata->label =3D devm_kstrdup(&pdev->dev, np->full_name, GFP_=
-KERNEL);
-> +       if (!pdata->label)
-> +               return -ENOMEM;
-> +
-> +       if (of_device_is_compatible(np, "ge,imp3a-gpio"))
-> +               pdata->ngpio =3D 16;
-> +       else if (of_device_is_compatible(np, "gef,sbc310-gpio"))
-> +               pdata->ngpio =3D 6;
-> +       else if (of_device_is_compatible(np, "gef,sbc610-gpio"))
-> +               pdata->ngpio =3D 19;
-> +
-> +       return platform_device_add_resources(pdev, nres, ARRAY_SIZE(n=
-res));
-> +}
-> +
-> +static int moxart_parse_dt(struct platform_device *pdev,
-> +                          struct bgpio_pdata *pdata,
-> +                          unsigned long *flags)
-> +{
-> +       struct resource *res;
-> +       struct resource nres[] =3D {
-> +               DEFINE_RES_MEM_NAMED(0, 1, "dat"),
-> +               DEFINE_RES_MEM_NAMED(0, 1, "set"),
-> +               DEFINE_RES_MEM_NAMED(0, 1, "dirout"),
-> +       };
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res || resource_size(res) !=3D 0xc)
-> +               return -EINVAL;
-> +
-> +       pdata->label =3D "moxart-gpio";
-> +       *flags |=3D BGPIOF_READ_OUTPUT_REG_SET;
-> +       nres[0].start =3D res->start + 0x04;
-> +       nres[0].end =3D nres[0].start + 3;
-> +       nres[1].start =3D res->start + 0x00;
-> +       nres[1].end =3D nres[1].start + 3;
-> +       nres[2].start =3D res->start + 0x08;
-> +       nres[2].end =3D nres[2].start + 3;
-> +       return platform_device_add_resources(pdev, nres, ARRAY_SIZE(n=
-res));
-> +}
-> +
-> +static int ts4800_parse_dt(struct platform_device *pdev,
-> +                          struct bgpio_pdata *pdata,
-> +                          unsigned long *flags)
-> +{
-> +       int err;
-> +       struct resource *res;
-> +       struct resource nres[] =3D {
-> +               DEFINE_RES_MEM_NAMED(0, 1, "dat"),
-> +               DEFINE_RES_MEM_NAMED(0, 1, "set"),
-> +               DEFINE_RES_MEM_NAMED(0, 1, "dirout"),
-> +       };
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res || resource_size(res) !=3D 0x6)
-> +               return -EINVAL;
-> +
-> +       nres[0].start =3D res->start;
-> +       nres[0].end =3D nres[0].start + 1;
-> +       nres[1].start =3D res->start + 0x02;
-> +       nres[1].end =3D nres[1].start + 1;
-> +       nres[2].start =3D res->start + 0x04;
-> +       nres[2].end =3D nres[2].start + 1;
-> +
-> +       err =3D of_property_read_u32(pdev->dev.of_node, "ngpios", &pd=
-ata->ngpio);
-> +       if (err =3D=3D -EINVAL)
-> +               pdata->ngpio =3D 16;
-> +       else if (err)
-> +               return err;
-> +
-> +       return platform_device_add_resources(pdev, nres, ARRAY_SIZE(n=
-res));
-> +}
-> +
->  #define ADD(_name, _func) { .compatible =3D _name, .data =3D _func }
->
->  static const struct of_device_id bgpio_of_match[] =3D {
->         ADD("linux,gpio-mmio", bgpio_basic_mmio_parse_dt),
-> +       ADD("cirrus,clps711x-gpio", clps711x_parse_dt),
-> +       ADD("ge,imp3a-gpio", ge_parse_dt),
-> +       ADD("gef,sbc310-gpio", ge_parse_dt),
-> +       ADD("gef,sbc610-gpio", ge_parse_dt),
-> +       ADD("moxa,moxart-gpio", moxart_parse_dt),
-> +       ADD("technologic,ts4800-gpio", ts4800_parse_dt),
->         { }
->  };
->  #undef ADD
-> diff --git a/drivers/gpio/gpio-moxart.c b/drivers/gpio/gpio-moxart.c
-> deleted file mode 100644
-> index d58d389..0000000
-> --- a/drivers/gpio/gpio-moxart.c
-> +++ /dev/null
-> @@ -1,84 +0,0 @@
-> -/*
-> - * MOXA ART SoCs GPIO driver.
-> - *
-> - * Copyright (C) 2013 Jonas Jensen
-> - *
-> - * Jonas Jensen <jonas.jensen@gmail.com>
-> - *
-> - * This file is licensed under the terms of the GNU General Public
-> - * License version 2.  This program is licensed "as is" without any
-> - * warranty of any kind, whether express or implied.
-> - */
-> -
-> -#include <linux/err.h>
-> -#include <linux/init.h>
-> -#include <linux/irq.h>
-> -#include <linux/io.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_gpio.h>
-> -#include <linux/pinctrl/consumer.h>
-> -#include <linux/delay.h>
-> -#include <linux/timer.h>
-> -#include <linux/bitops.h>
-> -#include <linux/gpio/driver.h>
-> -
-> -#define GPIO_DATA_OUT          0x00
-> -#define GPIO_DATA_IN           0x04
-> -#define GPIO_PIN_DIRECTION     0x08
-> -
-> -static int moxart_gpio_probe(struct platform_device *pdev)
-> -{
-> -       struct device *dev =3D &pdev->dev;
-> -       struct resource *res;
-> -       struct gpio_chip *gc;
-> -       void __iomem *base;
-> -       int ret;
-> -
-> -       gc =3D devm_kzalloc(dev, sizeof(*gc), GFP_KERNEL);
-> -       if (!gc)
-> -               return -ENOMEM;
-> -
-> -       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       base =3D devm_ioremap_resource(dev, res);
-> -       if (IS_ERR(base))
-> -               return PTR_ERR(base);
-> -
-> -       ret =3D bgpio_init(gc, dev, 4, base + GPIO_DATA_IN,
-> -                        base + GPIO_DATA_OUT, NULL,
-> -                        base + GPIO_PIN_DIRECTION, NULL,
-> -                        BGPIOF_READ_OUTPUT_REG_SET);
-> -       if (ret) {
-> -               dev_err(&pdev->dev, "bgpio_init failed\n");
-> -               return ret;
-> -       }
-> -
-> -       gc->label =3D "moxart-gpio";
-> -       gc->request =3D gpiochip_generic_request;
-> -       gc->free =3D gpiochip_generic_free;
-> -       gc->base =3D 0;
-> -       gc->owner =3D THIS_MODULE;
-> -
-> -       ret =3D devm_gpiochip_add_data(dev, gc, NULL);
-> -       if (ret) {
-> -               dev_err(dev, "%s: gpiochip_add failed\n",
-> -                       dev->of_node->full_name);
-> -               return ret;
-> -       }
-> -
-> -       return ret;
-> -}
-> -
-> -static const struct of_device_id moxart_gpio_match[] =3D {
-> -       { .compatible =3D "moxa,moxart-gpio" },
-> -       { }
-> -};
-> -
-> -static struct platform_driver moxart_gpio_driver =3D {
-> -       .driver =3D {
-> -               .name           =3D "moxart-gpio",
-> -               .of_match_table =3D moxart_gpio_match,
-> -       },
-> -       .probe  =3D moxart_gpio_probe,
-> -};
-> -builtin_platform_driver(moxart_gpio_driver);
-> diff --git a/drivers/gpio/gpio-ts4800.c b/drivers/gpio/gpio-ts4800.c
-> deleted file mode 100644
-> index 0c144a7..0000000
-> --- a/drivers/gpio/gpio-ts4800.c
-> +++ /dev/null
-> @@ -1,81 +0,0 @@
-> -/*
-> - * GPIO driver for the TS-4800 board
-> - *
-> - * Copyright (c) 2016 - Savoir-faire Linux
-> - *
-> - * This file is licensed under the terms of the GNU General Public
-> - * License version 2. This program is licensed "as is" without any
-> - * warranty of any kind, whether express or implied.
-> - */
-> -
-> -#include <linux/gpio/driver.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_device.h>
-> -#include <linux/platform_device.h>
-> -
-> -#define DEFAULT_PIN_NUMBER      16
-> -#define INPUT_REG_OFFSET        0x00
-> -#define OUTPUT_REG_OFFSET       0x02
-> -#define DIRECTION_REG_OFFSET    0x04
-> -
-> -static int ts4800_gpio_probe(struct platform_device *pdev)
-> -{
-> -       struct device_node *node;
-> -       struct gpio_chip *chip;
-> -       struct resource *res;
-> -       void __iomem *base_addr;
-> -       int retval;
-> -       u32 ngpios;
-> -
-> -       chip =3D devm_kzalloc(&pdev->dev, sizeof(struct gpio_chip), G=
-=46P_KERNEL);
-> -       if (!chip)
-> -               return -ENOMEM;
-> -
-> -       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       base_addr =3D devm_ioremap_resource(&pdev->dev, res);
-> -       if (IS_ERR(base_addr))
-> -               return PTR_ERR(base_addr);
-> -
-> -       node =3D pdev->dev.of_node;
-> -       if (!node)
-> -               return -EINVAL;
-> -
-> -       retval =3D of_property_read_u32(node, "ngpios", &ngpios);
-> -       if (retval =3D=3D -EINVAL)
-> -               ngpios =3D DEFAULT_PIN_NUMBER;
-> -       else if (retval)
-> -               return retval;
-> -
-> -       retval =3D bgpio_init(chip, &pdev->dev, 2, base_addr + INPUT_=
-REG_OFFSET,
-> -                           base_addr + OUTPUT_REG_OFFSET, NULL,
-> -                           base_addr + DIRECTION_REG_OFFSET, NULL, 0=
-);
-> -       if (retval) {
-> -               dev_err(&pdev->dev, "bgpio_init failed\n");
-> -               return retval;
-> -       }
-> -
-> -       chip->ngpio =3D ngpios;
-> -
-> -       platform_set_drvdata(pdev, chip);
-> -
-> -       return devm_gpiochip_add_data(&pdev->dev, chip, NULL);
-> -}
-> -
-> -static const struct of_device_id ts4800_gpio_of_match[] =3D {
-> -       { .compatible =3D "technologic,ts4800-gpio", },
-> -       {},
-> -};
-> -
-> -static struct platform_driver ts4800_gpio_driver =3D {
-> -       .driver =3D {
-> -                  .name =3D "ts4800-gpio",
-> -                  .of_match_table =3D ts4800_gpio_of_match,
-> -                  },
-> -       .probe =3D ts4800_gpio_probe,
-> -};
-> -
-> -module_platform_driver_probe(ts4800_gpio_driver, ts4800_gpio_probe);
-> -
-> -MODULE_AUTHOR("Julien Grossholtz <julien.grossholtz@savoirfairelinux=
-=2Ecom>");
-> -MODULE_DESCRIPTION("TS4800 FPGA GPIO driver");
-> -MODULE_LICENSE("GPL v2");
-> --
-> 2.8.1
->
-
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+> 
+> Changes since v1:
+>  - Added ACKed by Rob for DT bindings related patches
+> 
+> Anup Patel (5):
+>   phy: Rename phy-brcmstb-sata driver to phy-brcm-sata driver
+>   phy: Add support for NS2 SATA3 PHY in Broadcom SATA3 PHY driver
+>   dt-bindings: phy: bindings document for common Broadcom SATA3 PHY
+>     driver
+>   dt-bindings: ata: add compatible string for iProc AHCI controller
+>   arm64: dts: Add SATA3 AHCI and SATA3 PHY DT nodes for NS2
+> 
+>  .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
+>  ...brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} |  15 +-
+>  arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  12 +
+>  arch/arm64/boot/dts/broadcom/ns2.dtsi              |  43 +++
+>  drivers/phy/Kconfig                                |  18 +-
+>  drivers/phy/Makefile                               |   2 +-
+>  drivers/phy/phy-brcm-sata.c                        | 412 +++++++++++++++++++++
+>  drivers/phy/phy-brcmstb-sata.c                     | 250 -------------
+>  8 files changed, 487 insertions(+), 266 deletions(-)
+>  rename Documentation/devicetree/bindings/phy/{brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} (69%)
+>  create mode 100644 drivers/phy/phy-brcm-sata.c
+>  delete mode 100644 drivers/phy/phy-brcmstb-sata.c
+> 
