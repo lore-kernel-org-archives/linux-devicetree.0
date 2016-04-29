@@ -1,197 +1,80 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC v5 4/4] gpio: dt-bindings: add gpio-mmio bindings
-Date: Fri, 29 Apr 2016 12:15:01 +0100
-Message-ID: <20160429111500.GA23726@leverpostej>
-References: <cover.1461888822.git.chunkeey@googlemail.com>
- <a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey@googlemail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 1/6] SLIMbus: Device management on SLIMbus
+Date: Fri, 29 Apr 2016 12:17:10 +0100
+Message-ID: <20160429111710.GW3217@sirena.org.uk>
+References: <2745420.JjpjMPLp2B@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="c2nJM3NjGGrqEmAW"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2745420.JjpjMPLp2B@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kheitke-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, mlocke-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sheetal.tigadoli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-As a general thing, please put the binding earlier in a series than cod=
-e
-implemeting it, as that that makes it easier to review the series
-in-order (with context from the binding making code review easier). See
-Documentation/devicetree/bindings/submitting-patches.txt
+--c2nJM3NjGGrqEmAW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Apr 29, 2016 at 02:53:17AM +0200, Christian Lamparter wrote:
-> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> This patch adds the device tree bindings for the gpio-mmio.
-> The gpio-mmio is already part of a the GPIO generic library.
->=20
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpio/gpio-mmio.txt         | 73 ++++++++++++=
-++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.txt b/D=
-ocumentation/devicetree/bindings/gpio/gpio-mmio.txt
-> new file mode 100644
-> index 0000000..cc7f0b1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.txt
-> @@ -0,0 +1,73 @@
-> +Bindings for the generic driver for memory-mapped GPIO controllers.
-> +
+On Thu, Apr 28, 2016 at 06:49:23PM +0200, Arnd Bergmann wrote:
+> On Thursday 28 April 2016 17:39:20 Mark Brown wrote:
 
-Bindings should be for hardware (either specific device models, or for
-classes), and not for Linux drivers. The latter is subject to arbitrary
-changes while the former is not, as old hardware continues to exist and
-does not change while drivers get completely reworked.
+> > It's not just platforms that use these things though - there's things
+> > like the SolarFlare NICs where the firmware update mechanism essentially
+> > involves exposing a SPI flash as part of a PCI device and we just merged
+> > an ASoC driver for a video card which was reusing some existing IPs and
+> > chips.
 
-So please frame this binding document in terms of the class of hardware
-you are trying to address. Please provide some introduction to the
-assumptions that you are making about said hardware, such that it's
-obvious when one needs a more specific binding.
+> That's of course fine: you essentially have a discoverable bus there,
+> and if we need something like that, we can always add it later to
+> any subsystem.
 
-I share the same fears that Rob mentioned in that while this may appear
-simple now, the limitations are unclear, and this effectively prevents
-us from accurately/specifically describing some hardware.
+No, the issue with those cases is that there are devices on discoverable
+buses that instantiate non-discoverable buses as part of the
+discoverable device so the implementation of the discoverable device is
+in part essentially a board file.
 
-Regardless, I've taken the time to review the below, and I have a numbe=
-r
-of comments.
+> In contrast, the interface in the proposed slimbus subsystem seems
+> designed for board files, and is in the best case just dead code
+> that can be removed, or has a risk of being misused e.g. if some
+> device manufacturer decides to use a board file for this instead
+> of describing the slimbus slaves in DT.
 
-> +Required properties:
-> +	- compatible: should be "linux,gpio-mmio"
+Which can be more of a pain than it should be if the code has been
+written to assume that all the world is DT.  That's the most problematic
+bit of this meme - I've seen people doing things like duplicating IP
+drivers inside larger devices because they don't think they're allowed
+to reuse the IP driver.  We can fix this sort of thing up when we notice
+it but we should also try to avoid people making the mistakes in the
+first place since it saves everyone a lot of effort.  With subsystems
+and to a lesser extent off SoC drivers we need to be careful about just
+blindly removing non-DT code and writing things so they're hard to use
+without DT.
 
-Even with the above comments, this binding name would be valid.
+Like I say in this case I think the board file stuff is probably never
+going to get used so it's probably sensible to remove that code but it
+does need to be thought about.
 
-> +	- reg-names: must contain
-> +		"dat" - data register
-> +		may contain
-> +		"set" - data set register
-> +		"clr" - data clear register
-> +		"dirout" - direction output register
-> +		"dirin" - direction input register
+--c2nJM3NjGGrqEmAW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Below, we mention endianness. Are registers an arbitrary number of byte=
-s
-long? In what unit size are they grouped (e.g. {8,16,32,64}-bit)?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-What are the expectations for the set/clear/dirin/dirout registers? Are
-they write-one to modify, or write-zero to modify?
+iQEcBAEBCAAGBQJXI0K1AAoJECTWi3JdVIfQ8DkH/0O+Djp+wuhmrpuJPBoJrqK9
+G2bIcbLKEdi/nxg3svVdnbbBrPXCAgxGwXm7Rn9DId40Gy4QMRS7GNdDVrNz76Xk
+UlVHpumphfPBfl2nBTDZXkOtMnIm6QgaD7R8lIiynTfUjtPWL4sYkcf7pPu9BCbG
+ApvAZMJUWzxGkYksgxfuiq0vHFbU2xzuOi5RMOoCmqkszCGPhofDU0HL0DCoQdvg
+psUNa43Uql+sCUZ8IEkGyJbkWAeBC3D9+QTDzahG9TGhklfo4+PcEjmuwpRGTj0L
+WslYplNHeHyZBEW4VsXgxwFy93AYBcBf9vfJHxg0gFAG9tPh43EC8RObqQH6IVA=
+=PKOC
+-----END PGP SIGNATURE-----
 
-=46or the names, don't bother abbreviating (i.e. use "data", "set",
-"clear").
-
-These names might clash with the real names a specific HW model applies
-to its register sets, which means that this binding is exclusive w.r.t.
-a specific binding for a device (i.e. it cannot be extended with
-device-specific information).
-
-If we're happy with that, then we must call out the expected limitation=
-s
-on the use of this binding, or we end up with the not-so-simple-any-mor=
-e
-issues Rob mentioned previously.=20
-
-> +	- reg: address + size pairs describing the GPIO register sets;
-> +		order must correspond with the order of entries in reg-names
-> +	- #gpio-cells =3D must be set to 2
-
-Where the cells encode what? I'm guessing this is <$idx $flags>, but yo=
-u
-should spell that out explicitly.
-
-> +	- gpio-controller: Marks the device node as a gpio controller.
-> +
-> +Optional properties:
-> +	- ngpio: specifies the number of gpio mapped in the register.
-> +	- big-endian: force big endian register accesses.
-> +	- big-endian-byte-order: assign GPIOs in reverse order.
-
-I cannot parse this last description. It needs a better wording.
-
-I guess this means that the indices (in the first GPIO cell) are applie=
-d
-in descending order for ascending chunks of the registers (and that is =
-a
-poor description, too).
-
-> +	- unreadable-reg-set: data set register is not readable.
-> +	- read-output-reg-set: cache value set for reads.
-> +	- unreadable-reg-dir: dirout/dirin register is not readable.
-> +	- no-output: GPIOs are read-only.
-> +
-> +The GPIO generic library provides support for memory-mapped GPIO
-> +controllers. The configuration is detected by which resources are pr=
-esent.
-> +The simplest form of a GPIO controller that the driver support is ju=
-st a
-> +single "dat" register, where GPIO state can be read and/or written.
-> +However, the driver supports far more:
-> +	- 8/16/32/64 bits registers. The number of GPIOs is automatically
-> +	  determined by the width of the registers.
-> +	- GPIO controllers with clear/set registers.
-> +	- GPIO controllers with a single "dat" register.
-> +	- Big endian bits/GPIOs ordering.
-
-Reword this in terms of the class of hardware you are trying to support=
-,
-(rather than the specific library code you are using), and move it to
-the introduction at the top of the binding.
-
-Thanks,
-Mark.
-
-> +
-> +For setting GPIO's there are three configurations:
-> +	1. single input/output register resource (named "dat"),
-> +	2. set/clear pair (named "set" and "clr"),
-> +	3. single output register resource and single input resource
-> +	   ("set" and dat").
-> +
-> +For setting the GPIO direction, there are three configurations:
-> +	a. simple bidirectional GPIOs that requires no configuration.
-> +	b. an output direction register (named "dirout")
-> +	   where a 1 bit indicates the GPIO is an output.
-> +	c. an input direction register (named "dirin")
-> +	   where a 1 bit indicates the GPIO is an input.
-> +
-> +Examples:
-> +
-> +	/* Configuration for single input/output register
-> +	 * for eight simple bidirectional GPIOs.
-> +	 */
-> +	gpio_a_1 {
-> +		compatible =3D "linux,gpio-mmio";
-> +		reg =3D <0x18000000 0x1>;
-> +		reg-names =3D "dat";
-> +		#gpio-cells =3D <2>;
-> +		gpio-controller;
-> +	};
-> +
-> +	/* Configuration for set/clear pair registers with
-> +	 * 32 output direction register GPIOs.
-> +	 */
-> +	gpio_b_2 {
-> +		compatible =3D "linux,gpio-mmio";
-> +		reg =3D <0x18000000 0x4>, <0x18000010 0x4>,
-> +		      <0x18000004 0x4>, <0x18000008 0x4>;
-> +		reg-names =3D "dat", "set", "clr", "dirout";
-> +		#gpio-cells =3D <2>;
-> +		gpio-controller;
-> +	};
-> --=20
-> 2.8.1
->=20
+--c2nJM3NjGGrqEmAW--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
