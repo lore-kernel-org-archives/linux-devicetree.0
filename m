@@ -1,44 +1,133 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [RFC v5 3/4] gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-generic
-Date: Fri, 29 Apr 2016 21:06:11 +0200
-Message-ID: <1518049.pLhlI1cuZi@debian64>
-References: <cover.1461888822.git.chunkeey@googlemail.com> <9e5cc9e957144bd5d4081573ef959f931281eaaa.1461888822.git.chunkeey@googlemail.com> <CACRpkdaX1xeGJxV9K-GkTAh87SctqyhkJ+VN6mwUdtD19tz99g@mail.gmail.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [Patch v2 2/8] firmware: qcom: scm: Convert SCM to platform
+ driver
+Date: Fri, 29 Apr 2016 14:25:54 -0500
+Message-ID: <20160429192554.GA6666@hector.attlocal.net>
+References: <1461625725-32425-1-git-send-email-andy.gross@linaro.org>
+ <1461625725-32425-3-git-send-email-andy.gross@linaro.org>
+ <20160426012935.GE29990@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaX1xeGJxV9K-GkTAh87SctqyhkJ+VN6mwUdtD19tz99g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160426012935.GE29990@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, April 29, 2016 04:18:20 PM Linus Walleij wrote:
-> On Fri, Apr 29, 2016 at 2:53 AM, Christian Lamparter
-> <chunkeey@googlemail.com> wrote:
+On Mon, Apr 25, 2016 at 06:29:35PM -0700, Stephen Boyd wrote:
+> On 04/25, Andy Gross wrote:
+> > This patch converts the Qualcomm SCM firmware driver into a platform
+> > driver.
+> > 
+> > Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> > ---
+> >  arch/arm64/Kconfig.platforms |   1 +
+> >  drivers/firmware/qcom_scm.c  | 163 ++++++++++++++++++++++++++++++++++++++++---
+> >  2 files changed, 155 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> > index efa77c1..6f0876f 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -76,6 +76,7 @@ config ARCH_MVEBU
+> >  config ARCH_QCOM
+> >  	bool "Qualcomm Platforms"
+> >  	select PINCTRL
+> > +	select QCOM_SCM
 > 
-> > This patch integrates these GPIO drivers into gpio-generic.
-> >
-> > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> So far we've left this selection up to the consumer drivers of
+> the qcom_scm_*() APIs. Any reason why that's changing here? I
+> don't see mention in the commit text.
+
+We can leave it that way.
 > 
-> Very elegant. Let's wait for some feedback/ACKs from
-> the driver maintainers, but this looks very nice.
-Oh by the way: who's maintaining them? get_maintainer.pl just
-lists the usual gpio people. I can try to add the module authors.
-However, I don't know if these are working or dead. I ran into an
-issue once (for something else) that I got the dreaded "delivery
-notification failed" messages, but I can't rebroadcast them on the
-ML (because that would be very silly).
+> >  	help
+> >  	  This enables support for the ARMv8 based Qualcomm chipsets.
+> >  
+> > +
+> > +/**
+> > + * qcom_scm_is_available() - Checks if SCM is available
+> > + */
+> > +bool qcom_scm_is_available(void)
+> > +{
+> > +	return !!__scm;
+> > +}
+> > +EXPORT_SYMBOL(qcom_scm_is_available);
+> 
+> What's the planned user of this? If we need it can we bury it
+> inside the qcom_scm_*() functions?
 
-Anyway, I'll rebase my patch series (without the two patches you
-had already merged)
+Hmmmm doing a little searching, I don't see this being used anymore.  I'll drop
+it for now.
 
-> Do you want to address Andy's optimization suggestion directly
-> or as a follow-on patch?
-Oh, this is a RFC. I didn't expect anything to be merged just yet.
-Of course, I'll try to integrate his suggestion. I'll do that once
-I reply to Rob/Mark/You about the "linux,gpio-mmio",
-"memory-mapped-gpio" situation etc.
+> > +
+> > +static int qcom_scm_probe(struct platform_device *pdev)
+> > +{
+> [...]
+> > +
+> > +	/* vote for max clk rate for highest performance */
+> > +	rate = clk_round_rate(scm->core_clk, INT_MAX);
+> > +	ret = clk_set_rate(scm->core_clk, rate);
+> 
+> You can just do clk_set_rate(scm->core_clk, INT_MAX) and it will
+> round internally for you and do the right thing. 
+
+I'll change this to do that.
+
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	__scm = scm;
+> > +	__scm->dev = &pdev->dev;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id qcom_scm_dt_match[] = {
+> > +	{ .compatible = "qcom,scm-apq8064",},
+> > +	{ .compatible = "qcom,scm-apq8084",},
+> > +	{ .compatible = "qcom,scm-msm8916",},
+> > +	{ .compatible = "qcom,scm-msm8974",},
+> > +	{},
+> 
+> Nitpick: drop , here because it's always going to be the last
+> entry.
+
+will fix.
+
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
+> > +
+> > +static struct platform_driver qcom_scm_driver = {
+> > +	.driver = {
+> > +		.name	= "qcom_scm",
+> > +		.of_match_table = qcom_scm_dt_match,
+> > +	},
+> > +	.probe = qcom_scm_probe,
+> > +};
+> > +
+> > +builtin_platform_driver(qcom_scm_driver);
+> > +
+> > +static int __init qcom_scm_init(void)
+> > +{
+> > +	struct device_node *np;
+> > +
+> > +	np = of_find_node_by_name(NULL, "firmware");
+> > +	if (!np)
+> > +		return -ENODEV;
+> > +
+> > +	return of_platform_populate(np, qcom_scm_dt_match, NULL, NULL);
+> > +
+> 
+> Weird newline and also we need an of_node_put() on the firmware
+> node at the end of this function.
+
+Ah thanks for catching that.
+
 
 Regards,
-Christian Lamparter
+
+Andy
