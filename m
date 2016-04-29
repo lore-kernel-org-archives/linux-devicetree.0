@@ -1,78 +1,62 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
-Date: Fri, 29 Apr 2016 13:22:32 +0300
-Message-ID: <6ee9d67a-e907-715a-f3f5-d90a470314c3@ti.com>
-References: <1461925297-9734-1-git-send-email-peter.ujfalusi@ti.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] ARM: imx6: rework GPC to support multiple power
+ domains
+Date: Fri, 29 Apr 2016 14:43:13 +0200
+Message-ID: <1461933793.3482.24.camel@pengutronix.de>
+References: <1458128514-9560-1-git-send-email-l.stach@pengutronix.de>
+	 <1458128514-9560-2-git-send-email-l.stach@pengutronix.de>
+	 <20160407024857.GA3111@x250>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461925297-9734-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20160407024857.GA3111@x250>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/29/16 13:21, Peter Ujfalusi wrote:
-> ldo7_reg should not work as regulator since it is set to 'disabled' s=
-tate
-> in the omap5-board-common.dtsi and the state is not changed to 'okay'
-> this means that the ldo7_reg is not available to be used in the igep0=
-050
-> DTS file.
-> ldo4_reg is used by all other OMAP5 boards and this is most likely th=
-e
-> correct regulator to use with hdmi.
-> The hdmi needs 1.8V, but the ldo7_reg, based on the dtsi is 2V only.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> ---
-> Tony,
->=20
-> I don't have access to the schematics, but I believe tha the ldo7_reg=
- is not the
-> correct regulator to be used for hdmi.
->=20
-> If you have access and it is really ldo7_reg, then we should have thi=
-s in the
-> omap5-igep0050.dts file:
->=20
-> &ldo5_reg {
+Am Donnerstag, den 07.04.2016, 10:48 +0800 schrieb Shawn Guo:
+> On Wed, Mar 16, 2016 at 12:41:53PM +0100, Lucas Stach wrote:
+> > This largely reworks the GPC driver to better accommodate multiple
+> > power domains. This allows to extend the driver to support more domains
+> > (like present on i.MX6SX) easily later on.
+> > 
+> > Compatibility to the old DT bindings is provided to keep the currently
+> > supported i.MX6 devices working with the same feature level as before.
+> > New DTs and SoC support should only use the new binding from now on.
+> > 
+> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> > v2: correct spelling in commit message
+> > ---
+> >  arch/arm/mach-imx/gpc.c | 435 ++++++++++++++++++++++++++++++++++++------------
+> >  1 file changed, 329 insertions(+), 106 deletions(-)
+> 
+> There are too many changes in this single patch.  It makes the review
+> quite difficult.  Is it possible to split it a bit into some incremental
+> patches?
+> 
+I see that this is a quite difficult transformation and hard to review,
+but it's also equally hard to split up without introducing regressions
+and breaking bisectability in the series. This would cost me at least a
+full day to revalidate the changes, time which I currently don't have
+available.
 
-ldo7_reg, obviously ;)
+Maybe it's easier to review if you apply the change and look at the
+resulting code?
 
-> 	status =3D "okay";
-> 	regulator-min-microvolt =3D <1800000>;
-> 	regulator-max-microvolt =3D <1800000>;
-> };
->=20
-> Regards,
-> Peter
->=20
->  arch/arm/boot/dts/omap5-igep0050.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/omap5-igep0050.dts b/arch/arm/boot/dts=
-/omap5-igep0050.dts
-> index 46ecb1dd3b5c..6c8d40327c68 100644
-> --- a/arch/arm/boot/dts/omap5-igep0050.dts
-> +++ b/arch/arm/boot/dts/omap5-igep0050.dts
-> @@ -20,7 +20,7 @@
->  };
-> =20
->  &hdmi {
-> -	vdda-supply =3D <&ldo7_reg>;
-> +	vdda-supply =3D <&ldo4_reg>;
->  };
-> =20
->  &i2c4 {
->=20
+> Also please rebase against v4.6-rc1, which has the commit eaa2d73ef998
+> (ARM: imx6: pm: declare pm domain latency on power_state struct)
+> conflicting with your changes.
+> 
+I can do that if you are willing to take it in the current form. If you
+still want to have it split up, I'll keep it blocked on -ENOTIME.
 
+Regards,
+Lucas
 
---=20
-P=E9ter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
