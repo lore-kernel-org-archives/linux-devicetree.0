@@ -1,39 +1,57 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
- return phys_addr_t
-Date: Fri, 29 Apr 2016 16:16:39 +0100
-Message-ID: <20160429151639.GC23726@leverpostej>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
- <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: AM335x ICE board Linux support
+Date: Fri, 29 Apr 2016 08:31:59 -0700
+Message-ID: <20160429153158.GJ5995@atomide.com>
+References: <571E069A.20700@ti.com>
+ <571F2982.2080702@ti.com>
+ <20160426151046.GQ5995@atomide.com>
+ <572332B2.6010203@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+In-Reply-To: <572332B2.6010203-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 08:36:43PM +0530, Pratyush Anand wrote:
-> > +       phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
-> > +       return sprintf(buf, "%pa %x\n", &vmcore_base,
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160429 03:10]:
+> On 26/04/16 18:10, Tony Lindgren wrote:
+> > I guess for now if no runtime detection is possible in the kernel.
 > 
-> Why do we pass &vmcore_base? Shouldn't it be vmcore_base?
+> There are 2 ways to detect them mode
+> 1) Enabe GPIO rising edge detect interrupt and reset the Ethernet PHY
+> 2) read a PHY register over MDIO bus
+> 
+> I'm not very sure where this can be done in the kernel.
 
-The %pa* printk format specifiers take the value by reference (as
-phys_addr_t and friends are not necessarily the same width as a
-pointer). Per Documentation/printk-formats.txt:
+We already have some PHY detection over MDIO detection in place,
+so that's probably the most generic solution.
 
-Physical addresses types phys_addr_t:
+> Even if there is some place to do the detection, how do we go about reconfiguring the
+> device tree?
 
-        %pa[p]  0x01234567 or 0x0123456789abcdef
+You may not need to, you can have several named pin states:
 
-        For printing a phys_addr_t type (and its derivatives, such as
-        resource_size_t) which can vary based on build options, regardless of
-        the width of the CPU data path. Passed by reference.
+pinctrl-names = "default", "phy-foo", "phy-bar";
+pinctrl-0 = <&cpsw_default>;
+pinctrl-1 = <&cpsw_phy_foo>;
+pinctrl-2 = <&cpsw_phy_bar>;
+...
 
-So the above prints the value of vmcore_base as expected.
+Then have the common pins in cpsw_default, and manually enable
+the other pinctrl groups based on the detection. We already
+have that going on in am335x-bone-common.dtsi with the &mac
+entry for cpsw.
 
-Mark.
+But maybe you have other detection issues too beyond setting
+the pins?
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
