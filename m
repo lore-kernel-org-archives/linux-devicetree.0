@@ -1,63 +1,38 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: enable pinctrl for Broadcom NS2 SoC
-Date: Fri, 29 Apr 2016 08:51:39 -0400
-Message-ID: <1461934299-14774-3-git-send-email-yendapally.reddy@broadcom.com>
-References: <1461934299-14774-1-git-send-email-yendapally.reddy@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461934299-14774-1-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: Re: [PATCH v3 3/3] ARM: dts: imx6qp: Specify imx6qp version of PCIe core
+Date: Fri, 29 Apr 2016 14:52:50 +0200
+Message-ID: <CAAMH-yt8fGJzhhHENFobWO86E3JZ-Xgc0tZso_HkdScoKdfVDA@mail.gmail.com>
+References: <1461167131-26025-1-git-send-email-andrew.smirnov@gmail.com>
+	<1461167131-26025-3-git-send-email-andrew.smirnov@gmail.com>
+	<CAOMZO5DFd4+NQcBHgaoXVNnixOQ4xYbi_LJsUcWzjMzTidGcgA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5DFd4+NQcBHgaoXVNnixOQ4xYbi_LJsUcWzjMzTidGcgA@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Richard Zhu <Richard.Zhu@freescale.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables the pinctrl support for Broadcom NS2 SoC
+Hi all,
 
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/broadcom/ns2-svk.dts | 9 +++++++++
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 7 +++++++
- 2 files changed, 16 insertions(+)
+On Fri, Apr 29, 2016 at 3:48 AM, Fabio Estevam <festevam@gmail.com> wrote:
+> On Wed, Apr 20, 2016 at 12:45 PM, Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
+>> I.MX6Quad Plus has a slightly different version of PCIe core than
+>> reqular i.MX6Quad.
+>>
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index ce0ab84..2c98d76 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -87,3 +87,12 @@
- 		#size-cells = <1>;
- 	};
- };
-+
-+&pinctrl {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nand_sel>;
-+	nand_sel: nand_sel {
-+		function = "nand";
-+		groups = "nand_grp";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index 6f81c9d..e263ade3 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -308,6 +308,13 @@
- 					     "chimp", "port", "sdio";
- 		};
- 
-+		pinctrl: pinctrl@6501d130 {
-+			compatible = "brcm,ns2-pinmux";
-+			reg = <0x6501d130 0x08>,
-+			      <0x660a0028 0x04>,
-+			      <0x660009b0 0x40>;
-+		};
-+
- 		crmu: crmu@65024000 {
- 			compatible = "syscon";
- 			reg = <0x65024000 0x100>;
--- 
-2.1.0
+Tested on a Nitrogen6QP_MAX with an Intel WiFi Link 5300 PCIe card.
+Everything is working properly (Gen1 speed).
+# lspci
+00:00.0 Class 0604: 16c3:abcd
+01:00.0 Class 0280: 8086:4235
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested-by: Gary Bisson <gary.bisson@boundarydevices.com>
+
+Thanks,
+Gary
