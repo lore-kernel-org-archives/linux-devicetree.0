@@ -1,162 +1,52 @@
-From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Subject: [PATCH v3] ARM: bcm2835: dt: Add the ethernet to the device trees
-Date: Fri, 29 Apr 2016 08:52:17 +0200
-Message-ID: <1461912737-14716-1-git-send-email-lkundrak@v3.sk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v7 22/24] [media] rtl2832: change the i2c gate to be
+ mux-locked
+Date: Fri, 29 Apr 2016 08:57:52 +0200
+Message-ID: <20160429065752.GA1870@katana>
+References: <1461165484-2314-1-git-send-email-peda@axentia.se>
+ <1461165484-2314-23-git-send-email-peda@axentia.se>
+ <20160428214758.GA4531@katana>
+ <4ae65dd6-1197-11d6-ef0a-714c0525cf3a@axentia.se>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4ae65dd6-1197-11d6-ef0a-714c0525cf3a-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Ranostay <matt.ranostay-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlo>
 List-Id: devicetree@vger.kernel.org
 
-The hub and the ethernet in its port 1 are hardwired on the board.
 
-Compared to the adapters that can be plugged into the USB ports, this
-one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
-has the MAC address for this adapter in its ROM, accessible from its
-firmware.
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-U-Boot can read out the address and set the local-mac-address property of the
-node with "ethernet" alias. Let's add the node so that U-Boot can do its
-business.
+> So, I think all is ok, or do you need more than Tested-by?
 
-Model B rev2 and Model B+ entries were verified by me, the hierarchy and
-pid/vid pair for the Version 2 was provided by Peter Chen. Original
-Model B is a blind short, though very likely correct.
-
-Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
----
-Changes since v2:
-  - Removed leading zeroes in vendor name and reg
-  - Split the common files in separate includes per model
-
-Changes since v1:
-  - s/@01/@1/ for ethernet and the hub
-  - Corrected the vid/pid pairs for hub and ethernet
-  - Added Model B rev2 and version 2 board changes
-  - Fixed a missing semicolon typo
+I think this will do. Thanks!
 
 
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
- arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
- arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 20 ++++++++++++++++++++
- arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 13 +++++++++++++
- arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
- 7 files changed, 39 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index ef54050..c3e01ce 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 86f1f2f..364086a 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9512.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index 4859e9d..4420b09 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9512.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index ff94666..b975f29 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2836.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
- 
- / {
- 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
-new file mode 100644
-index 0000000..7200238
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
-@@ -0,0 +1,20 @@
-+
-+/ {
-+	aliases {
-+		ethernet = &ethernet;
-+	};
-+};
-+
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,9512";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-new file mode 100644
-index 0000000..3b8e282
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-@@ -0,0 +1,13 @@
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,9514";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 8aaf193..04504b7 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -230,6 +230,8 @@
- 			compatible = "brcm,bcm2835-usb";
- 			reg = <0x7e980000 0x10000>;
- 			interrupts = <1 9>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 	};
- 
--- 
-2.7.4
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJXIwXwAAoJEBQN5MwUoCm2UnUP/2B1IrbS77z10XlqIYnwthVF
+tWSEFlv+9wwkLVfpRQ/3aK2gMCAkblwnph3uhOytPLRFDYSbSQQTEmEhZ46RvKhK
+k3oDjzH1xqci5u8w84y+ykWokI/x/xBSsbw/R2ox2OY/LKts92DrYVT2RxFIq2Vt
++Jt8yfI8gxAOsiRi3qxYnH1FaqboxB/qbGdXKIduZe1yx6V+I2h0fHOLH/IiRF2M
+yoGcDpKrn69VYprAn6HK4+5erdAvT7dNSNoeW/QulBzUrIXs59h3VF3gHGKpRwSZ
+8zoxHAsHlBw6i0Qnd0PGW7BKBu9h7w4NrbShbmmqR+T4UF9f/bA1E9EaWDOM27QA
+v+B40nNV3VRMCLjNW00KdlgUF8LCNbb38dZ2IdK9z+RnuSlVhRD/tguWD4DKJKjs
+KdnDiZ4c1EVio+H/cylyyBV2RRxiWGDCSVwZlSWS66G3ca5wH7dZokFJqr+iTsNK
+kLMeJqsXgOlmbG+D573BgskD+SBvw75ht32LcsKqNw+12InEKzcRNrXwaxLAGvYA
+p4TxXM1hfG9/oiQr3mQ/fup2tUDpg7vqDZIqvJbXg/gCPkxxDE8PNiByQ3VLOKgd
+xPCoVA22rLBMaGqCYmM33fioxA+Embp6AkEhx8vM18xqJfU1kR4ZFYZ/mOhIEMlp
+oUmO+G1ZGXeVVlSFg2cc
+=e09L
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
