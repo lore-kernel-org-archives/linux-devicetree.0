@@ -1,54 +1,161 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: dt_to_config - report kernel config options
- for a devicetree
-Date: Fri, 29 Apr 2016 08:44:01 +0200
-Message-ID: <CAMuHMdUBq7XUTDrWenNy7tsnvLQdp9H5hUmzqUZ2F6wVUQn21g@mail.gmail.com>
-References: <572284AB.102@gmail.com>
-	<CAL_JsqKGcc_wXV2_-3ZVS7gzfo2ao9z+eATdnKVsyRnW2O5e4A@mail.gmail.com>
-	<CA+rpMbJkWM+bsvXT77eyLGewtKHjX1inc0vjsWxYQTCgzmpDGg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Subject: [PATCH v3] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Fri, 29 Apr 2016 08:52:17 +0200
+Message-ID: <1461912737-14716-1-git-send-email-lkundrak@v3.sk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+rpMbJkWM+bsvXT77eyLGewtKHjX1inc0vjsWxYQTCgzmpDGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 8:39 AM, Gaurav Minocha
-<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Apr 28, 2016 at 3:32 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Thu, Apr 28, 2016 at 4:46 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
->>>
->>> Determining which kernel config options need to be enabled for a
->>> given devicetree can be a painful process.  Create a new tool to
->>> find the drivers that may match a devicetree node compatible,
->>> find the kernel config options that enable the driver, and
->>> optionally report whether the kernel config option is enabled.
->>
->> I would find this more useful to output a config fragment with all the
->> options enabled. The hard part there is enabling the options a given
->> option is dependent on which I don't think kbuild takes care of.
->
-> Do you mean to generate something like .config? If yes, then IMO it would
-> not be a correct configuration file.
+The hub and the ethernet in its port 1 are hardwired on the board.
 
-A fragment to be appended to your current .config.
+Compared to the adapters that can be plugged into the USB ports, this
+one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+has the MAC address for this adapter in its ROM, accessible from its
+firmware.
 
-After that, an additional run of "make oldconfig" should (hopefully) bring
-everything into good shape.
+U-Boot can read out the address and set the local-mac-address property of the
+node with "ethernet" alias. Let's add the node so that U-Boot can do its
+business.
 
-Gr{oetje,eeting}s,
+Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+pid/vid pair for the Version 2 was provided by Peter Chen. Original
+Model B is a blind short, though very likely correct.
 
-                        Geert
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+---
+Changes since v2:
+  - Removed leading zeroes in vendor name and reg
+  - Split the common files in separate includes per model
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Changes since v1:
+  - s/@01/@1/ for ethernet and the hub
+  - Corrected the vid/pid pairs for hub and ethernet
+  - Added Model B rev2 and version 2 board changes
+  - Fixed a missing semicolon typo
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
+ arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
+ 7 files changed, 39 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index ef54050..c3e01ce 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 86f1f2f..364086a 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 4859e9d..4420b09 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index ff94666..b975f29 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2836.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+new file mode 100644
+index 0000000..7200238
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+@@ -0,0 +1,20 @@
++
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9512";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+new file mode 100644
+index 0000000..3b8e282
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+@@ -0,0 +1,13 @@
++&usb {
++	usb1@1 {
++		compatible = "usb424,9514";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 8aaf193..04504b7 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -230,6 +230,8 @@
+ 			compatible = "brcm,bcm2835-usb";
+ 			reg = <0x7e980000 0x10000>;
+ 			interrupts = <1 9>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
