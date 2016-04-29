@@ -1,257 +1,243 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] of: Add bindings of hw throttle for soctherm
-Date: Fri, 29 Apr 2016 13:55:06 +0800
-Message-ID: <5722F73A.7020606@nvidia.com>
-References: <1461727554-15065-1-git-send-email-wni@nvidia.com> <1461727554-15065-5-git-send-email-wni@nvidia.com> <20160427233054.GA26451@localhost.localdomain> <5721B249.3010101@nvidia.com> <20160428144828.GB19279@localhost.localdomain>
+From: Gaurav Minocha <gaurav.minocha.os@gmail.com>
+Subject: Re: [PATCH] scripts/dtc: dt_to_config - report kernel config options
+ for a devicetree
+Date: Thu, 28 Apr 2016 23:39:45 -0700
+Message-ID: <CA+rpMbJkWM+bsvXT77eyLGewtKHjX1inc0vjsWxYQTCgzmpDGg@mail.gmail.com>
+References: <572284AB.102@gmail.com>
+	<CAL_JsqKGcc_wXV2_-3ZVS7gzfo2ao9z+eATdnKVsyRnW2O5e4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160428144828.GB19279-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKGcc_wXV2_-3ZVS7gzfo2ao9z+eATdnKVsyRnW2O5e4A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Pavel Machek <pavel@ucw.cz>, Alison Chaiken <alison_chaiken@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016=E5=B9=B404=E6=9C=8828=E6=97=A5 22:48, Eduardo Valentin wrote:
-> On Thu, Apr 28, 2016 at 02:48:41PM +0800, Wei Ni wrote:
->>
->>
->> On 2016=E5=B9=B404=E6=9C=8828=E6=97=A5 07:30, Eduardo Valentin wrote=
+On Thu, Apr 28, 2016 at 3:32 PM, Rob Herring <robh+dt@kernel.org> wrote=
 :
->>> From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rui.zhang@intel.c=
-om,
->>> 	MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org,
->>> 	mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
->>> 	linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
->>> 	linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Bcc:=20
->>> Subject: Re: [PATCH v2 4/9] of: Add bindings of hw throttle for soc=
-therm
->>> Reply-To:=20
->>> In-Reply-To: <1461727554-15065-5-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> The patch title must say something about the fact that this is spec=
-ific
->>> to nvidia thermal driver.
+> On Thu, Apr 28, 2016 at 4:46 PM, Frank Rowand <frowand.list@gmail.com=
+> wrote:
+>> From: Frank Rowand <frank.rowand@am.sony.com>
 >>
->> Yes, it's my mistake, will fix it in next series.
->>
->>>
->>> On Wed, Apr 27, 2016 at 11:25:49AM +0800, Wei Ni wrote:
->>>> Add HW throttle configuration sub-node for soctherm, which
->>>> is used to describe the throttle event, and worked as a
->>>> cooling device. The "hot" type trip in thermal zone can
->>>> be bound to this cooling device, and trigger the throttle
->>>> function.
->>>>
->>>> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 89 +++++++++=
-++++++++++++-
->>>>  1 file changed, 87 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegr=
-a124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,te=
-gra124-soctherm.txt
->>>> index edebfa0a985e..dc337d139f49 100644
->>>> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-so=
-ctherm.txt
->>>> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-so=
-ctherm.txt
->>>> @@ -10,8 +10,14 @@ Required properties :
->>>>  - compatible : For Tegra124, must contain "nvidia,tegra124-socthe=
-rm".
->>>>    For Tegra132, must contain "nvidia,tegra132-soctherm".
->>>>    For Tegra210, must contain "nvidia,tegra210-soctherm".
->>>> -- reg : Should contain 1 entry:
->>>> +- reg : Should contain at least 2 entries for each entry in reg-n=
-ames:
->>>>    - SOCTHERM register set
->>>> +  - Tegra CAR register set: Required for Tegra124 and Tegra210.
->>>> +  - CCROC register set: Required for Tegra132.
->>>> +- reg-names :  Should contain at least 2 entries:
->>>> +  - soctherm-reg
->>>> +  - car-reg
->>>> +  - ccroc-reg
->>>>  - interrupts : Defines the interrupt used by SOCTHERM
->>>>  - clocks : Must contain an entry for each entry in clock-names.
->>>>    See ../clocks/clock-bindings.txt for details.
->>>> @@ -25,17 +31,44 @@ Required properties :
->>>>  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a de=
-scription
->>>>      of this property. See <dt-bindings/thermal/tegra124-soctherm.=
-h> for a
->>>>      list of valid values when referring to thermal sensors.
->>>> +- throttle-cfgs: A sub-node which is a container of configuration=
- for each
->>>> +    hardware throttle events. These events can be set as cooling =
-devices.
->>>> +  * throttle events: Sub-nodes must be named as "light" or "heavy=
-".
->>>> +      Properties:
->>>> +      - priority: Each throttles has its own throttle settings, s=
-o the SW need
->>>> +        to set priorities for various throttle, the HW arbiter ca=
-n select the
->>>> +        final throttle settings.
->>>> +        Bigger value indicates higher priority, In general, highe=
-r priority
->>>> +        translates to lower target frequency. SW needs to ensure =
-that critical
->>>> +        thermal alarms are given higher priority, and ensure that=
- there is
->>>> +        no race if priority of two vectors is set to the same val=
-ue.
->>>> +      - cpu-throt-depth:  This property is for Tegra124 and Tegra=
-210. It is
->>>> +        the throttling depth of pulse skippers, it's the percenta=
-ge
->>>> +        throttling.
->>>> +      - cpu-throt-level: This property is only for Tegra132, it i=
-s the level
->>>> +        of pulse skippers, which used to throttle clock frequenci=
-es. It
->>>> +        indicates cpu clock throttling depth, and the depth can b=
-e programmed.
->>>> +        Must set as following values:
->>>> +        TEGRA_SOCTHERM_THROT_LEVEL_LOW, TEGRA_SOCTHERM_THROT_LEVE=
-L_MED
->>>> +        TEGRA_SOCTHERM_THROT_LEVEL_HIGH, TEGRA_SOCTHERM_THROT_LEV=
-EL_NONE
->>>
->>> These properties are not generic properties. My understanding is th=
-at
->>> you must have vendor prefix in such case. Same applies to the new n=
-odes.
->>
->> Ok, will do it.
->>
->>>
->>>> +      - #cooling-cells: Should be 1. This cooling device only sup=
-port on/off state.
->>>> +        See ./thermal.txt for a description of this property.
->>>> =20
->>>>  Note:
->>>>  - the "critical" type trip points will be set to SOC_THERM hardwa=
-re as the
->>>>  shut down temperature. Once the temperature of this thermal zone =
-is higher
->>>>  than it, the system will be shutdown or reset by hardware.
->>>> +- the "hot" type trip points will be set to SOC_THERM hardware as=
- the throttle
->>>> +temperature. Once the the temperature of this thermal zone is hig=
-her
->>>> +than it, it will trigger the HW throttle event.
->>>> =20
->>>>  Example :
->>>> =20
->>>>  	soctherm@700e2000 {
->>>>  		compatible =3D "nvidia,tegra124-soctherm";
->>>> -		reg =3D <0x0 0x700e2000 0x0 0x1000>;
->>>> +		reg =3D <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
->>>> +			0x0 0x60006000 0x0 0x400 /* CAR reg_base */
->>>> +		reg-names =3D "soctherm-reg", "car-reg";
->>>>  		interrupts =3D <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
->>>>  		clocks =3D <&tegra_car TEGRA124_CLK_TSENSOR>,
->>>>  			<&tegra_car TEGRA124_CLK_SOC_THERM>;
->>>> @@ -44,6 +77,45 @@ Example :
->>>>  		reset-names =3D "soctherm";
->>>> =20
->>>>  		#thermal-sensor-cells =3D <1>;
->>>> +
->>>> +		throttle-cfgs {
->>>> +			throttle_heavy: heavy {
->>>> +				priority =3D <100>;
->>>> +				cpu-throt-depth =3D <85>;
->>>> +
->>>> +				#cooling-cells =3D <1>;
->>>> +			};
->>>> +			throttle_light: light {
->>>> +				priority =3D <80>;
->>>> +				cpu-throt-depth =3D <50>;
->>>> +
->>>> +				#cooling-cells =3D <1>;
->>>> +			};
->>>> +		};
->>>
->>> This is a sensor, which at the same time, has sub nodes that can be
->>> cooling devices. Is my understanding correct of what you are trying=
- to
->>> do?
->>
->> Yes, we set this sub nodes as cooling devices.
->> Let me explain it.
->> The Tegra's soctherm has the HW throttle function, it will be trigge=
-red when the
->> temperatures reach to the "hot" type trip. These throttle events can=
- be
->> configured to different levels "heavy" and "light" on different sens=
-ors. So it
->> something like cooling devices which can be bound with thermal zones=
-, and in
->> this way, we can use the linux of-thermal framework to handle it. If=
- not, we
->> have to add more codes to parse these configuration and set them for=
- those
->> sensors. I had used this method to handle the shutdown function in T=
-egra's
->> soctherm driver in my previous series, however Rob didn't like it, h=
-e preferred
->> to use linux framework to handle it.
->> So I think it's better to set these throttle-cfgs as cooling devices=
-, so they
->> can be bound to the cpu/gpu thermal zones easily.
->>
->>>
->>>
->>>> +	};
->>>> +
->>>> +Example: referring to Tegra132's "reg", "reg-names" and "throttle=
--cfgs" :
->>>> +
->>>> +	soctherm@0,700e2000 {
->>>> +		compatible =3D "nvidia,tegra132-soctherm";
->>>> +		reg =3D <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
->>>> +			0x0 0x70040000 0x0 0x200>; /* CCROC reg_base */;
->>>> +		reg-names =3D "soctherm-reg", "ccroc-reg";
->>>> +
->>>> +		throttle-cfgs {
->>>> +			throttle_heavy: heavy {
->>>> +				priority =3D <100>;
->>>> +				cpu-throt-level =3D <TEGRA_SOCTHERM_THROT_LEVEL_HIGH>;
->>>> +
->>>> +				#cooling-cells =3D <1>;
->>>> +			};
->>>> +			throttle_light: light {
->>>> +				priority =3D <80>;
->>>> +				cpu-throt-level =3D <TEGRA_SOCTHERM_THROT_LEVEL_MED>;
->>>> +
->>>> +				#cooling-cells =3D <1>;
->>>
->>> Could you please describe a little here what to expect of the above
->>> setup?
->>
->> Ok, let me describe it.
->> When the "heavy" cooling device triggered, the hardware will skip cp=
-u clock's
->> pulse in HIGH level, and if the "light" triggered, the hardware will=
- skip cpu
->> clock's pulse in MED level.
->> If these two devices are triggered in same time, the HW throttle arb=
-iter will
->> select the highest priority as the final throttle settings to skip c=
-pu pulse.
->=20
->=20
-> I would prefer if you add these descriptions into your examples in yo=
-ur
-> next version.
+>> Determining which kernel config options need to be enabled for a
+>> given devicetree can be a painful process.  Create a new tool to
+>> find the drivers that may match a devicetree node compatible,
+>> find the kernel config options that enable the driver, and
+>> optionally report whether the kernel config option is enabled.
+>
+> I would find this more useful to output a config fragment with all th=
+e
+> options enabled. The hard part there is enabling the options a given
+> option is dependent on which I don't think kbuild takes care of.
 
-Sure, will do it.
+Do you mean to generate something like .config? If yes, then IMO it wou=
+ld
+not be a correct configuration file.
 
->=20
+>
+>> Signed-off-by: Gaurav Minocha <gaurav.minocha.os@gmail.com>
+>> Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
+>>
+>> ---
+>>  scripts/dtc/dt_to_config | 1061 +++++++++++++++++++++++++++++++++++=
+++++++++++++
+>>  1 file changed, 1061 insertions(+)
+>>
+>> Index: b/scripts/dtc/dt_to_config
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> --- /dev/null
+>> +++ b/scripts/dtc/dt_to_config
+>> @@ -0,0 +1,1061 @@
+>> +#!/usr/bin/perl
+>
+> I don't do perl...
+>
+>> +
+>> +#   Copyright 2016 by Frank Rowand
+>> +# =C5=A0 Copyright 2016 by Gaurav Minocha
+>      ^
+> Is this supposed to be a copyright symbol?
+>
+>> +#
+>> +# This file is subject to the terms and conditions of the GNU Gener=
+al Public
+>> +# License v2.
+>
+> [...]
+>
+>> +# ----- magic compatibles, do not have a driver
+>> +#
+>> +# Will not search for drivers for these compatibles.
+>> +
+>> +%compat_white_list =3D (
+>> +       'fixed-partitions'      =3D> '1',
+>
+> Enabling CONFIG_MTD would be useful.
+>
+>> +       'none'                  =3D> '1',
+>
+> Is this an actual string used somewhere?
+>
+>> +       'pci'                   =3D> '1',
+>
+> ditto?
+>
+>> +       'simple-bus'            =3D> '1',
+>> +);
+>> +
+>> +# magic compatibles, have a driver
+>> +#
+>> +# Will not search for drivers for these compatibles.
+>> +# Will instead use the drivers and config options listed here.
+>> +#
+>> +# If you add an entry to this hash, add the corresponding entry
+>> +# to %driver_config_hard_code_list.
+>> +#
+>> +# These compatibles have a very large number of false positives.
+>
+> What does this mean?
+>
+>> +#
+>> +# 'hardcoded_no_driver' is a magic value.  Other code knows this
+>> +# magic value.  Do not use 'no_driver' here!
+>> +#
+>> +# TODO: Revisit each 'hardcoded_no_driver' to see how the compatibl=
+e
+>> +#       is used.  Are there drivers that can be provided?
+>> +
+>> +%driver_hard_code_list =3D (
+>> +       'cache'                 =3D> ['hardcoded_no_driver'],
+>> +       'eeprom'                =3D> ['hardcoded_no_driver'],
+>> +       'gpio'                  =3D> ['hardcoded_no_driver'],
+>> +       'gpios'                 =3D> ['drivers/leds/leds-tca6507.c']=
+,
+>> +       'gpio-keys'             =3D> ['drivers/input/keyboard/gpio_k=
+eys.c'],
+>> +       'i2c-gpio'              =3D> ['drivers/i2c/busses/i2c-gpio.c=
+'],
+>> +       'isa'                   =3D> ['arch/mips/mti-malta/malta-dt.=
+c',
+>> +                                    'arch/x86/kernel/devicetree.c']=
+,
+>> +       'led'                   =3D> ['hardcoded_no_driver'],
+>> +       'm25p32'                =3D> ['hardcoded_no_driver'],
+>> +       'm25p64'                =3D> ['hardcoded_no_driver'],
+>> +       'm25p80'                =3D> ['hardcoded_no_driver'],
+>> +       'mtd_ram'               =3D> ['drivers/mtd/maps/physmap_of.c=
+'],
+>> +       'pwm-backlight'         =3D> ['drivers/video/backlight/pwm_b=
+l.c'],
+>> +       'spidev'                =3D> ['hardcoded_no_driver'],
+>> +       'syscon'                =3D> ['drivers/mfd/syscon.c'],
+>> +       'tlv320aic23'           =3D> ['hardcoded_no_driver'],
+>> +       'wm8731'                =3D> ['hardcoded_no_driver'],
+>> +);
+>> +
+>> +%driver_config_hard_code_list =3D (
+>> +
+>> +       # this one needed even if %driver_hard_code_list is empty
+>> +       'no_driver'                             =3D> ['no_config'],
+>> +       'hardcoded_no_driver'                   =3D> ['no_config'],
+>> +
+>> +       'drivers/leds/leds-tca6507.c'           =3D> ['CONFIG_LEDS_T=
+CA6507'],
+>> +       'drivers/input/keyboard/gpio_keys.c'    =3D> ['CONFIG_KEYBOA=
+RD_GPIO'],
+>> +       'drivers/i2c/busses/i2c-gpio.c'         =3D> ['CONFIG_I2C_GP=
+IO'],
+>> +       'arch/mips/mti-malta/malta-dt.c'        =3D> ['obj-y'],
+>> +       'arch/x86/kernel/devicetree.c'          =3D> ['CONFIG_OF'],
+>> +       'drivers/mtd/maps/physmap_of.c'         =3D> ['CONFIG_MTD_PH=
+YSMAP_OF'],
+>> +       'drivers/video/backlight/pwm_bl.c'      =3D> ['CONFIG_BACKLI=
+GHT_PWM'],
+>> +       'drivers/mfd/syscon.c'                  =3D> ['CONFIG_MFD_SY=
+SCON'],
+>
+> I don't understand why some of these are not searchable by compatible=
+ strings.
+
+do you mean - pwm-backlight, gpio-keys, i2c-gpio and isa?
+
+these are being filtered by:
+my $drivers =3D `git grep -l '"$compat"' -- $files`;
+
+not,
+
+git grep -l '\.compatible\s*=3D\s*"$compat"' -- $files
+
+=46rank, please advise!
+
+>
+>> +
+>> +       # drivers/usb/host/ehci-ppc-of.c
+>> +       # drivers/usb/host/ehci-xilinx-of.c
+>> +       #  are included from:
+>> +       #    drivers/usb/host/ehci-hcd.c
+>> +       #  thus the search of Makefile for the included .c files is =
+incorrect
+>> +       # ehci-hcd.c wraps the includes with ifdef CONFIG_USB_EHCI_H=
+CD_..._OF
+>> +       #
+>> +       # similar model for ohci-hcd.c (but no ohci-xilinx-of.c)
+>> +       #
+>> +       # similarly, uhci-hcd.c includes uhci-platform.c
+>> +
+>> +       'drivers/usb/host/ehci-ppc-of.c'        =3D> ['CONFIG_USB_EH=
+CI_HCD',
+>> +                                                   'CONFIG_USB_EHCI=
+_HCD_PPC_OF'],
+>> +       'drivers/usb/host/ohci-ppc-of.c'        =3D> ['CONFIG_USB_OH=
+CI_HCD',
+>> +                                                   'CONFIG_USB_OHCI=
+_HCD_PPC_OF'],
+>> +
+>> +       'drivers/usb/host/ehci-xilinx-of.c'     =3D> ['CONFIG_USB_EH=
+CI_HCD',
+>> +                                                   'CONFIG_USB_EHCI=
+_HCD_XILINX'],
+>> +
+>> +       'drivers/usb/host/uhci-platform.c'      =3D> ['CONFIG_USB_UH=
+CI_HCD',
+>> +                                                   'CONFIG_USB_UHCI=
+_PLATFORM'],
+>> +
+>> +       # scan_makefile will find only one of these config options:
+>> +       #    ifneq ($(CONFIG_SOC_IMX6)$(CONFIG_SOC_LS1021A),)
+>> +       'arch/arm/mach-imx/platsmp.c'           =3D> ['CONFIG_SOC_IM=
+X6 && CONFIG_SMP',
+>> +                                                   'CONFIG_SOC_LS10=
+21A && CONFIG_SMP'],
+>
+> These will never get updated when the files or config options change.
+> Conversely, how do I know if I need to add something here? Is this
+> list complete or based on testing some set of dts files. IMO, this
+> list has to go to merge this.
+>
+>> +);
+>> +
+>> +
+>> +# 'virt/kvm/arm/.*' are controlled by makefiles in other directorie=
+s,
+>> +# using relative paths, such as 'KVM :=3D ../../../virt/kvm'.  Do n=
+ot
+>> +# add complexity to find_kconfig() to deal with this.  There is a l=
+ong
+>> +# term intent to change the kvm related makefiles to the normal ker=
+nel
+>> +# style.  After that is done, this entry can be removed from the
+>> +# driver_black_list.
+>> +
+>> +@driver_black_list =3D (
+>> +       'virt/kvm/arm/.*',
+>> +);
+>
+> A small number of exceptions like this I could stomach.
+>
+> The rest is just write-only language nonsense...
+>
+> Rob
