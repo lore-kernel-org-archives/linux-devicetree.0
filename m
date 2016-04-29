@@ -1,43 +1,109 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH 04/12] ARM: provide arm_has_idmap_alias() helper
-Date: Fri, 29 Apr 2016 19:51:42 +0530
-Message-ID: <CAHB_Guoj5ywYZGJ441MK9tBu-L_e4skCbhHyRkeXEXn8vaytXQ@mail.gmail.com>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
-	<E1aviEu-0000ix-C1@rmk-PC.arm.linux.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC v5 4/4] gpio: dt-bindings: add gpio-mmio bindings
+Date: Fri, 29 Apr 2016 16:29:13 +0200
+Message-ID: <CACRpkdYXqcQ1a=S5c6Cev__nqfquo7tFA=3uJSu9wf96txfBwQ@mail.gmail.com>
+References: <cover.1461888822.git.chunkeey@googlemail.com>
+	<a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ia64-owner@vger.kernel.org>
-In-Reply-To: <E1aviEu-0000ix-C1@rmk-PC.arm.linux.org.uk>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <a0ded4d0161f7ab3cd1945741d95d2718dbe4f44.1461888822.git.chunkeey@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 28, 2016 at 2:58 PM, Russell King
-<rmk+kernel@arm.linux.org.uk> wrote:
-> Provide a helper to indicate whether we need to perform special handling
-> for boot identity mapping aliases or not.
->
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> ---
->  arch/arm/include/asm/memory.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/include/asm/memory.h b/arch/arm/include/asm/memory.h
-> index ca208335fde6..31c07a2cc100 100644
-> --- a/arch/arm/include/asm/memory.h
-> +++ b/arch/arm/include/asm/memory.h
-> @@ -295,6 +295,11 @@ extern long long arch_phys_to_idmap_offset;
->   * of physical memory for idmap purposes.  Most cases should leave these
->   * untouched.  Note: this can only return addresses less than 4GiB.
->   */
-> +static inline bool arm_has_idmap_alias(void)
-> +{
-> +       return IS_ENABLED(CONFIG_MMU) && arch_phys_to_idmap_offset != 0;
-> +}
-> +
->  #define IDMAP_INVALID_ADDR ((u32)~0)
->
->  static inline unsigned long phys_to_idmap(phys_addr_t addr)
+On Fri, Apr 29, 2016 at 2:53 AM, Christian Lamparter
+<chunkeey@googlemail.com> wrote:
 
-Reviewed-by: Pratyush Anand <panand@redhat.com>
+> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>
+> This patch adds the device tree bindings for the gpio-mmio.
+> The gpio-mmio is already part of a the GPIO generic library.
+>
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+
+I share your ambition to create something generic for this class
+of hardware(s).
+
+> +Bindings for the generic driver for memory-mapped GPIO controllers.
+> +
+> +Required properties:
+> +       - compatible: should be "linux,gpio-mmio"
+
+Why?
+"memory-mapped-gpio" sits nicely with me.
+
+Read another very generic binding for inspiration:
+Documentation/devicetree/bindings/leds/register-bit-led.txt
+
+> +       - reg-names: must contain
+> +               "dat" - data register
+> +               may contain
+> +               "set" - data set register
+> +               "clr" - data clear register
+> +               "dirout" - direction output register
+> +               "dirin" - direction input register
+
+I would just be more verbose:
+
+data-in-register
+data-out-set-register
+data-out-clear-register
+direction-output-register
+direction-input-register
+
+Some should be optional so we can support input-only
+and output-only GPIO controllers too.
+
+I would take this opportunity to add bindings also for stuff that
+the generic MMIO driver does not support today but
+could be made to support:
+
+open-drain-register
+open-source-register
+debounce-register
+
+etc
+
+> +Optional properties:
+> +       - ngpio: specifies the number of gpio mapped in the register.
+
+Just reference the generic docs.
+
+> +       - big-endian: force big endian register accesses.
+> +       - big-endian-byte-order: assign GPIOs in reverse order.
+> +       - unreadable-reg-set: data set register is not readable.
+> +       - read-output-reg-set: cache value set for reads.
+> +       - unreadable-reg-dir: dirout/dirin register is not readable.
+> +       - no-output: GPIOs are read-only.
+
+I think it's better to imply that if there is no data-in-register
+specified, then it is output-only etc.
+
+> +The GPIO generic library provides support for memory-mapped GPIO
+> +controllers. The configuration is detected by which resources are pr=
+esent.
+> +The simplest form of a GPIO controller that the driver support is ju=
+st a
+> +single "dat" register, where GPIO state can be read and/or written.
+> +However, the driver supports far more:
+> +       - 8/16/32/64 bits registers. The number of GPIOs is automatic=
+ally
+> +         determined by the width of the registers.
+> +       - GPIO controllers with clear/set registers.
+> +       - GPIO controllers with a single "dat" register.
+> +       - Big endian bits/GPIOs ordering.
+
+
+Skip this. It is Linux-specific.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
