@@ -1,74 +1,57 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 03/12] ARM: kexec: remove 512MB restriction on kexec
- crashdump
-Date: Fri, 29 Apr 2016 19:10:09 +0100
-Message-ID: <20160429181008.GV19428@n2100.arm.linux.org.uk>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviEp-0000ir-7s@rmk-PC.arm.linux.org.uk>
- <CAHB_GuqOvRof94QdHztPy2B2kKuyKzQ-9uxXHY_g+i5WxsexZg@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk numbering
+ w/ device tree
+Date: Fri, 29 Apr 2016 13:12:30 -0500
+Message-ID: <CAL_JsqKOADU1hyLj+3cHjTJ7wgkOi-z-iWvFD3Bx5dvB12j+KQ@mail.gmail.com>
+References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHB_GuqOvRof94QdHztPy2B2kKuyKzQ-9uxXHY_g+i5WxsexZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fenghua Yu <fenghua.yu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Haren Myneni <hbabu-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Biederman <ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461951139-6109-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vbyravarasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>dev
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 07:49:45PM +0530, Pratyush Anand wrote:
-> On Thu, Apr 28, 2016 at 2:57 PM, Russell King
-> <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > ---
-> >  arch/arm/kernel/setup.c | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-> > index 77b54c461c52..d9317eec1eba 100644
-> > --- a/arch/arm/kernel/setup.c
-> > +++ b/arch/arm/kernel/setup.c
-> > @@ -943,7 +943,6 @@ late_initcall(init_machine_late);
-> >   * zImage relocating below the reserved region.
-> >   */
-> >  #define CRASH_ALIGN    (128 << 20)
-> > -#define CRASH_ADDR_MAX (PHYS_OFFSET + (512 << 20))
-> >
-> >  static inline unsigned long long get_total_mem(void)
-> >  {
-> > @@ -973,9 +972,7 @@ static void __init reserve_crashkernel(void)
-> >                 return;
-> >
-> >         if (crash_base <= 0) {
-> > -               unsigned long long crash_max = CRASH_ADDR_MAX;
-> > -               if (crash_max > (u32)~0)
-> > -                       crash_max = (u32)~0;
-> > +               unsigned long long crash_max = idmap_to_phys((u32)~0);
-> >                 crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
-> >                                                     crash_size, CRASH_ALIGN);
-> >                 if (!crash_base) {
-> 
-> Reviewed-by: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> 
-> Unrelated to these modification:
-> In function arch/arm/mm/init.c: arm_memblock_steal() may be  following
-> would be more appropriate?
-> memblock_alloc_base(size, align, idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE));
+On Fri, Apr 29, 2016 at 12:32 PM, Douglas Anderson
+<dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> This series picks patches from various different places to produce what
+> I consider the best solution to getting consistent mmc and mmcblk
+> ordering.
+>
+> Why consistent ordering and why not just use UUIDs?  IMHO consistent
+> ordering solves a few different problems:
+>
+> 1. For poor, feeble-minded humans like me, have sane numbering for
+>    devices helps a lot.  When grepping through dmesg it's terribly handy
+>    if a given SDMMC device has a consistent number.  I know that I can
+>    do "dmesg | grep mmc0" or "dmesg | grep mmcblk0" to find info about
+>    the eMMC.  I know that I can do "dmesg | grep mmc1" to find info
+>    about the SD card slot.  I don't want it to matter which one probed
+>    first, I don't want it to matter if I'm working on a variant of the
+>    hardware that has the SD card slot disabled, and I don't want to care
+>    what my boot device was.  Worrying about what device number I got
+>    increases my cognitive load.
+>
+> 2. There are cases where it's not trivially easy during development to
+>    use the UUID.  Specifically I work a lot with coreboot / depthcharge
+>    as a BIOS.  When configured properly, that BIOS has a nice feature to
+>    allow you to fetch the kernel and kernel command line from TFTP by
+>    pressing Ctrl-N.  In this particular case the BIOS doesn't actually
+>    know which disk I'd like for my root filesystem, so it's not so easy
+>    for it to put the right UUID into the command line.  For this
+>    purpose, knowing that "mmcblk0" will always refer to eMMC is handy.
 
-No, arm_memblock_steal() is totally unsuitable.  arm_memblock_steal()
-*removes* the memory range from memblock, including removing the 
-mapping of that memory.  It will make the memory range inaccessible to
-the kernel.
+Why don't you use labels? This works whether your rootfs is on
+/dev/vdXy, /dev/sdXy or /dev/mmcblkXpy. I can feel your pain as I've
+been looking at the per device crap that is Android fstab files which
+labels solve beautifully and worked without Android changes.
 
-Since kexec wants to write directly to this memory, using
-arm_memblock_steal() will have the cause the kernel to OOPS when
-it hits the resulting hole.
+Sorry, I'm not keen to add something that is both MMC and DT specific.
+If consistent numbering for devices is a goal in the kernel, then I'd
+feel otherwise. But I'm pretty sure that is a non-goal.
 
--- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Aliases were largely intended for backwards compatibility in cases
+where the numbering was already consistent (IOW consoles).
+
+Rob
