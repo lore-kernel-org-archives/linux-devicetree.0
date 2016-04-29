@@ -1,81 +1,208 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v3 7/7] ARM: OMAP2+: McBSP: Remove the old iclk allow/deny idle code
-Date: Fri, 29 Apr 2016 13:53:22 +0300
-Message-ID: <1461927202-17677-8-git-send-email-peter.ujfalusi@ti.com>
-References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, jarkko.nikula@bitmer.com, paul@pwsan.com, lgirdwood@gmail.com, broonie@kernel.org
-Cc: t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [RFT PATCH 1/3] usb: misc: usb3503: Fix HUB mode after bootloader
+ initialization
+Date: Fri, 29 Apr 2016 12:59:49 +0200
+Message-ID: <1461927591-7864-2-git-send-email-k.kozlowski@samsung.com>
+References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The new pdata callback (force_ick_on) is now used by the driver and the old
-callback related code can be removed.
+On Odroid U3 (Exynos4412-based) board if USB was initialized by
+bootloader (in U-Boot "usb start" before tftpboot), the HUB after after
+successful probing was not visible in the system ("lsusb"). Connected
+devices were not visible neither.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+In such case the USB3503 has to be fully reset before configuring to HUB
+mode. Reset by GPIO (called RESET_N pin) and by RESET field in STCD
+register are not sufficient. Instead full reset has to be done by
+disabling and enabling regulator.
+
+The USB3503 can work with different regulator configurations, however
+toggling of only one is relevant in mentioned case: the VDD 3.3V.
+
+The patch adds:
+1. New binding for optional regulator (VDD33),
+2. Code for toggling the regulator on/off before doing reset by GPIO,
+3. Initial reset during probing before configuring HUB mode.
+
+Patch is very loosely based on Tobias Jakobi's similar work for usb3503.
+
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
 ---
- arch/arm/mach-omap2/mcbsp.c                 | 18 ------------------
- include/linux/platform_data/asoc-ti-mcbsp.h |  1 -
- 2 files changed, 19 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/mcbsp.c b/arch/arm/mach-omap2/mcbsp.c
-index edf4f41c0135..fc04be74e064 100644
---- a/arch/arm/mach-omap2/mcbsp.c
-+++ b/arch/arm/mach-omap2/mcbsp.c
-@@ -34,20 +34,6 @@
- #include "cm3xxx.h"
- #include "cm-regbits-34xx.h"
+Tested on Odroid U3 so far. Please kindly test on X2 or other
+configurations and bootloaders.
+---
+ Documentation/devicetree/bindings/usb/usb3503.txt |  1 +
+ drivers/usb/misc/usb3503.c                        | 81 +++++++++++++++++++++++
+ 2 files changed, 82 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/usb3503.txt b/Documentation/devicetree/bindings/usb/usb3503.txt
+index c1a0a9191d26..36516ade9467 100644
+--- a/Documentation/devicetree/bindings/usb/usb3503.txt
++++ b/Documentation/devicetree/bindings/usb/usb3503.txt
+@@ -24,6 +24,7 @@ Optional properties:
+ 	pins (optional, if not provided, driver will not set rate of the
+ 	REFCLK signal and assume that a value from the primary reference
+ 	clock frequencies table is used)
++- vdd33-supply: Optional supply for VDD 3.3 V power source.
  
--static struct clk *mcbsp_iclks[5];
--
--static int omap3_enable_st_clock(unsigned int id, bool enable)
--{
--	/*
--	 * Sidetone uses McBSP ICLK - which must not idle when sidetones
--	 * are enabled or sidetones start sounding ugly.
--	 */
--	if (enable)
--		return omap2_clk_deny_idle(mcbsp_iclks[id]);
--	else
--		return omap2_clk_allow_idle(mcbsp_iclks[id]);
--}
--
- static int omap3_mcbsp_force_ick_on(struct clk *clk, bool force_on)
- {
- 	if (!clk)
-@@ -75,7 +61,6 @@ static int __init omap_init_mcbsp(struct omap_hwmod *oh, void *unused)
- 	struct omap_hwmod *oh_device[2];
- 	struct omap_mcbsp_platform_data *pdata = NULL;
- 	struct platform_device *pdev;
--	char clk_name[11];
+ Examples:
+ 	usb3503@08 {
+diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
+index b45cb77c0744..8905e8b2439d 100644
+--- a/drivers/usb/misc/usb3503.c
++++ b/drivers/usb/misc/usb3503.c
+@@ -28,6 +28,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/usb3503.h>
+ #include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
  
- 	sscanf(oh->name, "mcbsp%d", &id);
- 
-@@ -116,10 +101,7 @@ static int __init omap_init_mcbsp(struct omap_hwmod *oh, void *unused)
- 	if (oh->dev_attr) {
- 		oh_device[1] = omap_hwmod_lookup((
- 		(struct omap_mcbsp_dev_attr *)(oh->dev_attr))->sidetone);
--		pdata->enable_st_clock = omap3_enable_st_clock;
- 		pdata->force_ick_on = omap3_mcbsp_force_ick_on;
--		sprintf(clk_name, "mcbsp%d_ick", id);
--		mcbsp_iclks[id] = clk_get(NULL, clk_name);
- 		count++;
- 	}
- 	pdev = omap_device_build_ss(name, id, oh_device, count, pdata,
-diff --git a/include/linux/platform_data/asoc-ti-mcbsp.h b/include/linux/platform_data/asoc-ti-mcbsp.h
-index 5530971abf4d..e684543254f3 100644
---- a/include/linux/platform_data/asoc-ti-mcbsp.h
-+++ b/include/linux/platform_data/asoc-ti-mcbsp.h
-@@ -44,7 +44,6 @@ struct omap_mcbsp_platform_data {
- 	/* McBSP platform and instance specific features */
- 	bool has_wakeup; /* Wakeup capability */
- 	bool has_ccr; /* Transceiver has configuration control registers */
--	int (*enable_st_clock)(unsigned int, bool);
- 	int (*force_ick_on)(struct clk *clk, bool force_on);
+ #define USB3503_VIDL		0x00
+ #define USB3503_VIDM		0x01
+@@ -59,6 +60,7 @@ struct usb3503 {
+ 	struct regmap		*regmap;
+ 	struct device		*dev;
+ 	struct clk		*clk;
++	struct regulator	*vdd_reg;
+ 	u8	port_off_mask;
+ 	int	gpio_intn;
+ 	int	gpio_reset;
+@@ -66,8 +68,31 @@ struct usb3503 {
+ 	bool	secondary_ref_clk;
  };
  
++static int usb3503_regulator(struct usb3503 *hub, int state)
++{
++	int ret;
++
++	if (!hub->vdd_reg)
++		return 0;
++
++	if (state)
++		ret = regulator_enable(hub->vdd_reg);
++	else
++		ret = regulator_disable(hub->vdd_reg);
++
++	return ret;
++}
++
+ static int usb3503_reset(struct usb3503 *hub, int state)
+ {
++	int err;
++
++	err = usb3503_regulator(hub, state);
++	if (err) {
++		dev_err(hub->dev, "unable to %s VDD33 regulator to (%d)\n",
++			(state ? "enable" : "disable"), err);
++	}
++
+ 	if (!state && gpio_is_valid(hub->gpio_connect))
+ 		gpio_set_value_cansleep(hub->gpio_connect, 0);
+ 
+@@ -260,6 +285,15 @@ static int usb3503_probe(struct usb3503 *hub)
+ 			return -EPROBE_DEFER;
+ 		of_property_read_u32(np, "initial-mode", &mode);
+ 		hub->mode = mode;
++
++		hub->vdd_reg = devm_regulator_get_optional(dev, "vdd33");
++		if (IS_ERR(hub->vdd_reg)) {
++			if (PTR_ERR(hub->vdd_reg) == -EPROBE_DEFER)
++				return -EPROBE_DEFER;
++			hub->vdd_reg = NULL;
++		} else {
++			dev_dbg(dev, "Using VDD33 regulator for full reset\n");
++		}
+ 	}
+ 
+ 	if (hub->port_off_mask && !hub->regmap)
+@@ -299,6 +333,21 @@ static int usb3503_probe(struct usb3503 *hub)
+ 			return err;
+ 		}
+ 	}
++	err = usb3503_regulator(hub, true);
++	if (err) {
++		dev_err(dev, "unable to enable VDD33 regulator (%d)\n", err);
++		return err;
++	}
++
++	/*
++	 * Perform real full reset before configuring.
++	 * On some boards (e.g. on Odroid U3 board with LAN9730/SMSC95xx)
++	 * after enabling the USB by bootloader it has to be fully reset
++	 * here to be visible.
++	 */
++	usb3503_reset(hub, 0);
++	/* Settle down before powering on again */
++	usleep_range(4000, 10000);
+ 
+ 	usb3503_switch_mode(hub, hub->mode);
+ 
+@@ -330,6 +379,21 @@ static int usb3503_i2c_probe(struct i2c_client *i2c,
+ 	return usb3503_probe(hub);
+ }
+ 
++static int usb3503_i2c_remove(struct i2c_client *i2c)
++{
++	struct usb3503 *hub;
++
++	hub = i2c_get_clientdata(i2c);
++	if (hub) {
++		if (hub->clk)
++			clk_disable_unprepare(hub->clk);
++
++		usb3503_regulator(hub, false);
++	}
++
++	return 0;
++}
++
+ static int usb3503_platform_probe(struct platform_device *pdev)
+ {
+ 	struct usb3503 *hub;
+@@ -342,6 +406,21 @@ static int usb3503_platform_probe(struct platform_device *pdev)
+ 	return usb3503_probe(hub);
+ }
+ 
++static int usb3503_platform_remove(struct platform_device *pdev)
++{
++	struct usb3503 *hub;
++
++	hub = platform_get_drvdata(pdev);
++	if (hub) {
++		if (hub->clk)
++			clk_disable_unprepare(hub->clk);
++
++		usb3503_regulator(hub, false);
++	}
++
++	return 0;
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int usb3503_i2c_suspend(struct device *dev)
+ {
+@@ -395,6 +474,7 @@ static struct i2c_driver usb3503_i2c_driver = {
+ 		.of_match_table = of_match_ptr(usb3503_of_match),
+ 	},
+ 	.probe		= usb3503_i2c_probe,
++	.remove		= usb3503_i2c_remove,
+ 	.id_table	= usb3503_id,
+ };
+ 
+@@ -404,6 +484,7 @@ static struct platform_driver usb3503_platform_driver = {
+ 		.of_match_table = of_match_ptr(usb3503_of_match),
+ 	},
+ 	.probe		= usb3503_platform_probe,
++	.remove		= usb3503_platform_remove,
+ };
+ 
+ static int __init usb3503_init(void)
 -- 
-2.8.1
+1.9.1
