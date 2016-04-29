@@ -1,68 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/4] pinctrl: iproc: Allow PINCONF to be disabled completely
-Date: Fri, 29 Apr 2016 10:43:11 +0200
-Message-ID: <CACRpkdZWxiUA4xr6MpaB4qRfYLcLsoqV3tEZ3dZiRNxOvxjKcw@mail.gmail.com>
-References: <1460506523-6249-1-git-send-email-ray.jui@broadcom.com>
-	<1460506523-6249-5-git-send-email-ray.jui@broadcom.com>
-	<CACRpkdYmGUxQu5Sagw+J70wpFc+3Smg3V8mKxF2OFOhbMATYDw@mail.gmail.com>
-	<3a66ff72-dac1-eaa9-2567-a20f24bba1cf@broadcom.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] drivers: irqchip: Add STM32 external interrupts support
+Date: Fri, 29 Apr 2016 10:45:14 +0200
+Message-ID: <CACRpkdYY-5knOD0NwQjbQwAvhgRc_J5Pa1MWHw-P_7Wt29oEVQ@mail.gmail.com>
+References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1459436979-17275-3-git-send-email-mcoquelin.stm32@gmail.com>
+	<CACRpkdaiE1cJM6uq_bQuRS2NJTwniPREBsgwuxEjRjB5yTfc9Q@mail.gmail.com>
+	<CALszF6AKS2-SxQKTM-hrVfB2tMZS_21jRx9HtnHVACO1o=1Fgw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3a66ff72-dac1-eaa9-2567-a20f24bba1cf@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALszF6AKS2-SxQKTM-hrVfB2tMZS_21jRx9HtnHVACO1o=1Fgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 18, 2016 at 9:30 PM, Ray Jui <ray.jui@broadcom.com> wrote:
-> On 4/15/2016 1:24 AM, Linus Walleij wrote:
+On Tue, Apr 19, 2016 at 10:00 AM, Maxime Coquelin
+<mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2016-04-08 11:38 GMT+02:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+
+>>         while ((stat = readl_relaxed(vic->base + VIC_IRQ_STATUS))) {
+>>                 irq = ffs(stat) - 1;
+>>                 handle_domain_irq(vic->domain, irq, regs);
+>>                 handled = 1;
+>>         }
 >>
->> On Wed, Apr 13, 2016 at 2:15 AM, Ray Jui <ray.jui@broadcom.com> wrote:
->>
->>> In some of the future iProc based SoCs, pinconf is handled by another
->>> block and the iProc GPIO controller is solely used as a GPIO controller.
->>> This patch adds support of a new compatible string
->>> "brcm,iproc-gpio-only",
->>> that is introduced to handle this case, where pinconf functions in this
->>> driver are completely disabled
->>>
->>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>> Reviewed-by: Yendapally Reddy Dhananjaya Reddy
->>> <yendapally.reddy@broadcom.com>
->>> Reviewed-by: Jon Mason <jon.mason@broadcom.com>
->>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>
->>
->> If this was entirely true, then the driver should end up only executing
->> [devm_]gpiochip_add_data() but that does not seem to be the case.
+>>         return handled;
+>> }
 >
-> Yes, in the case of compatible string "brcm,iproc-gpio-only" is detected,
-> the driver only registers 'gpiochip_add_data'. Please check patch 2/4 of
-> this series, which takes care of it.
-
-OK.
-
->> You are still registering a pin controller, right? Just disabling some of
->> the pin config options. The pin multiplexing is still there, right?
->> Then it is not "solely a GPIO controller". Not at all.
+> Indeed, it would be better doing it like this.
+> Do you think I could even do this with two nested loops to reduce the
+> number of reg accesses?
+> It would look like this (just compiled, not tested):
 >
-> This driver does not register itself as a PINCONF driver if
-> "brcm,iproc-gpio-only" compatible string is detected. This is addressed in
-> patch 2/4 of this series.
+> static void stm32_irq_handler(struct irq_desc *desc)
+> {
+>     struct irq_domain *domain = irq_desc_get_handler_data(desc);
+>     struct irq_chip_generic *gc = domain->gc->gc[0];
+>     struct irq_chip *chip = irq_desc_get_chip(desc);
+>     unsigned long pending;
+>     int n;
 >
-> Pin based IOMUX GPIO override is only activated when
-> 'chip->pinmux_is_supported' is true, and it is only true if the optional DT
-> property "gpio-ranges" is defined.
+>     chained_irq_enter(chip, desc);
+>
+>     while ((pending = irq_reg_readl(gc, EXTI_PR))) {
+>         for_each_set_bit(n, &pending, BITS_PER_LONG) {
+>             generic_handle_irq(irq_find_mapping(domain, n));
+>         }
+>     }
 
-OK.
+Looks clever! :)
 
-> I believe the current issue with this patch series is now only on the naming
-> of the new compatible string "brcm,iproc-gpio-only". Please correct me if
-> I'm wrong.
-
-Yeah I think I get it now. The patch set makes sense.
-Looking forward to the next iteration!
+If it also works, I'm in for it.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
