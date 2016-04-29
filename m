@@ -1,38 +1,46 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: imx6qp: Specify imx6qp version of PCIe core
-Date: Fri, 29 Apr 2016 14:52:50 +0200
-Message-ID: <CAAMH-yt8fGJzhhHENFobWO86E3JZ-Xgc0tZso_HkdScoKdfVDA@mail.gmail.com>
-References: <1461167131-26025-1-git-send-email-andrew.smirnov@gmail.com>
-	<1461167131-26025-3-git-send-email-andrew.smirnov@gmail.com>
-	<CAOMZO5DFd4+NQcBHgaoXVNnixOQ4xYbi_LJsUcWzjMzTidGcgA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DFd4+NQcBHgaoXVNnixOQ4xYbi_LJsUcWzjMzTidGcgA@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Richard Zhu <Richard.Zhu@freescale.com>, Shawn Guo <shawnguo@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 01/11] serial: sh-sci: Update DT binding documentation for GPIO modem lines
+Date: Fri, 29 Apr 2016 14:58:24 +0200
+Message-ID: <1461934714-18681-2-git-send-email-geert+renesas@glider.be>
+References: <1461934714-18681-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1461934714-18681-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Peter Hurley <peter@hurleysoftware.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Amend the DT bindings for the Renesas SCI driver to allow describing
+optional GPIO-controlled modem lines, which can be used where dedicated
+modem lines are not available.
 
-On Fri, Apr 29, 2016 at 3:48 AM, Fabio Estevam <festevam@gmail.com> wrote:
-> On Wed, Apr 20, 2016 at 12:45 PM, Andrey Smirnov
-> <andrew.smirnov@gmail.com> wrote:
->> I.MX6Quad Plus has a slightly different version of PCIe core than
->> reqular i.MX6Quad.
->>
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->
-> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+The property naming is dictated by the Generic Serial DT Bindings.
 
-Tested on a Nitrogen6QP_MAX with an Intel WiFi Link 5300 PCIe card.
-Everything is working properly (Gen1 speed).
-# lspci
-00:00.0 Class 0604: 16c3:abcd
-01:00.0 Class 0280: 8086:4235
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+v2:
+  - Add Acked-by,
+  - Drop RFC status,
+  - Refer to the Generic Serial DT Bindings,
+  - Drop out[12]-gpios.
+---
+ Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Tested-by: Gary Bisson <gary.bisson@boundarydevices.com>
-
-Thanks,
-Gary
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+index 528c3b90f23cb04b..997baeaa869baa6f 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -76,6 +76,8 @@ Optional properties:
+   - dmas: Must contain a list of two references to DMA specifiers, one for
+ 	  transmission, and one for reception.
+   - dma-names: Must contain a list of two DMA names, "tx" and "rx".
++  - {cts,dsr,dcd,rng,rts,dtr}-gpios: Specify GPIOs for modem lines, cfr. the
++    generic serial DT bindings in serial.txt.
+ 
+ Example:
+ 	aliases {
+-- 
+1.9.1
