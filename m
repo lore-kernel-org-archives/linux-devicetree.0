@@ -1,89 +1,51 @@
-From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6: apalis: parallel lcd display support on ixora
-Date: Fri, 29 Apr 2016 22:20:49 +0200
-Message-ID: <1461961249-3792-1-git-send-email-marcel.ziswiler@toradex.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk
+ numbering w/ device tree
+Date: Fri, 29 Apr 2016 22:13:28 +0100
+Message-ID: <20160429211328.GZ19428@n2100.arm.linux.org.uk>
+References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
+ <20160429181248.GW19428@n2100.arm.linux.org.uk>
+ <CAD=FV=VMxBYXOYOyHPeqcaWX7oU8pVrdLHOsWOWUgq-q5FshAw@mail.gmail.com>
+ <20160429195741.GY19428@n2100.arm.linux.org.uk>
+ <CAD=FV=UGyi0r3kDmc1cpcANTP-2u+7UEgW3r9kRvF2f8qcWH+g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=UGyi0r3kDmc1cpcANTP-2u+7UEgW3r9kRvF2f8qcWH+g@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jisheng Zhang <jszhang@marvell.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree-spec@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Venu Byravarasu <vbyravarasu@nvidia.com>, Lars-Peter Clausen <lars@metafoo.de>, Jon Hunter <jonathanh@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>Pawel Moll <p>
 List-Id: devicetree@vger.kernel.org
 
-Add parallel LCD display support for the EDT ET057090DHU 5.7" LCD TFT
-panel.
+On Fri, Apr 29, 2016 at 01:04:48PM -0700, Doug Anderson wrote:
+> Russell,
+> 
+> On Fri, Apr 29, 2016 at 12:57 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> >> * Presumably on a PC you've got an extra bit in the middle (like grub
+> >> or something like that) that can help you resolve your UUIDs even if
+> >> you get your kernel from somewhere else.
+> >
+> > You are over-estimating what grub does.  Grub doesn't resolve UUIDs at
+> > all.  Grub just passes the kernel arguments in its configuration file
+> > for the entry it is booting to the kernel.  It's a static configuration
+> > found in /boot/grub/grub.conf.
+> >
+> > It doesn't probe devices for UUIDs.
+> 
+> OK.  The point was: if folks on PCs have a workflow that works for
+> them, wonderful.  That workflow doesn't work so great for me.  My
+> workflow doesn't hurt them.  Why is it bad?
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
----
+This discussion is over, since you're not willing to actually discuss
+it (illustrated by you cutting and pasting this same thing four
+times in your reply.)
 
- arch/arm/boot/dts/imx6q-apalis-ixora.dts | 45 ++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+My NAK stands until such time that you can partake in a reasonable
+discussion.
 
-diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-index 4b533cb..8e67ca2 100644
---- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-+++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-@@ -80,6 +80,47 @@
- 		};
- 	};
- 
-+	lcd_display: display@di0 {
-+		compatible = "fsl,imx-parallel-display";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interface-pix-fmt = "rgb24";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			lcd_display_in: endpoint {
-+				remote-endpoint = <&ipu1_di0_disp1>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
-+
-+	panel: panel {
-+		/*
-+		 * edt,et057090dhu: EDT 5.7" LCD TFT
-+		 * edt,et070080dh6: EDT 7.0" LCD TFT
-+		 */
-+		compatible = "edt,et057090dhu";
-+		backlight = <&backlight>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -169,6 +210,10 @@
- 	};
- };
- 
-+&ipu1_di0_disp1 {
-+	remote-endpoint = <&lcd_display_in>;
-+};
-+
- &ldb {
- 	status = "okay";
- };
 -- 
-2.5.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
