@@ -1,74 +1,52 @@
-From: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 1/4] Documentation: mmc: Document mmc aliases
-Date: Fri, 29 Apr 2016 10:32:16 -0700
-Message-ID: <1461951139-6109-2-git-send-email-dianders@chromium.org>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v2 4/4] ARM: dts: rockchip: Add mmc aliases for rk3288 platform
+Date: Fri, 29 Apr 2016 10:32:19 -0700
+Message-ID: <1461951139-6109-5-git-send-email-dianders@chromium.org>
 References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1461951139-6109-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461951139-6109-1-git-send-email-dianders@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ulf.hansson@linaro.org, jh80.chung@samsung.com
+Cc: jszhang@marvell.com, mark.rutland@arm.com, linux@arm.linux.org.uk, Heiko Stuebner <heiko@sntech.de>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, devicetree-spec@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, dmitry.torokhov@gmail.com, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, stefan@agner.ch, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Now that mmc aliases are officially in bindings, add them to rk3288.
+This could be done to lots of platforms, but this is the one I tested
+with.
 
-Now, index of mmc/mmcblk devices is allocated in accordance with probing
-time.  If want to use the mmcblk1 for some device, it can use alias.
-
-aliases {
-	mmc0 = &mmc0;	/* mmc0/mmcblk0 for eMMC */
-	mmc1 = &mmc2;	/* mmc1/mmcblk1 for SD */
-	mmc2 = &mmc1;	/* mmc2/mmcblk2 for SDIO*/
-};
-
-If there are no corresponding values, it might be allocated with
-existing scheme.
-
-Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-[dianders: just bindings now; mention mmc not just mmcblk]
-Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-Changes in v2: None
+Changes in v2:
+- rk3288 patch new for v2
 
- Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index ed23b9bedfdc..4b5c23e61adb 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -71,6 +71,10 @@ Optional SDIO properties:
- - wakeup-source: Enables wake up of host system on SDIO IRQ assertion
- 		 (Legacy property supported: "enable-sdio-wakeup")
- 
-+Aliases (Optional):
-+- If you want to use the fixed index for devices like mmcX / mmcblkX, should
-+be represented in the aliases node using following format "mmc(X)".
-+(X is an unique number for the alias.)
- 
- MMC power sequences:
- --------------------
-@@ -145,3 +149,10 @@ mmc3: mmc@01c12000 {
- 		interrupt-names = "host-wake";
- 	};
- };
-+
-+Example with aliases nodes:
-+
-+aliases {
-+	mmc0 = &mmc0;	/* Fixed to mmc0/mmcblk0 for &mmc0 */
-+	mmc1 = &mmc2;	/* Fixed to mmc1/mmcblk1 for &mmc2 */
-+};
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 31f7e20ef418..4cb15dcd1c1e 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -60,6 +60,10 @@
+ 		i2c3 = &i2c3;
+ 		i2c4 = &i2c4;
+ 		i2c5 = &i2c5;
++		mmc0 = &emmc;
++		mmc1 = &sdmmc;
++		mmc2 = &sdio0;
++		mmc3 = &sdio1;
+ 		mshc0 = &emmc;
+ 		mshc1 = &sdmmc;
+ 		mshc2 = &sdio0;
 -- 
 2.8.0.rc3.226.g39d4020
