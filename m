@@ -1,66 +1,75 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
-Date: Fri, 29 Apr 2016 10:51:53 +0200
-Message-ID: <CAMuHMdUf4JV=jUj-K3ojbhbx_zTedDuNf7Nng7z8CPW=eOgTRw@mail.gmail.com>
-References: <1457104420-18350-1-git-send-email-robh@kernel.org>
-	<CAMuHMdVcM9KF0v_0Ejaph4TVC5BtGfOfs9MJ3KMtOL4Hp1qMmg@mail.gmail.com>
-	<CAL_Jsq+cBNcHebxdrhn3nQOX4VikVodSBA3kSaWX+uERFNG8cw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 6/9] pinctrl: Add IRQ support to STM32 gpios
+Date: Fri, 29 Apr 2016 10:53:19 +0200
+Message-ID: <CACRpkdZXz8-UnOd6ee48AWqDX2X9Hvux=+ZQ7qdg6a4KVoArww@mail.gmail.com>
+References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1459436979-17275-7-git-send-email-mcoquelin.stm32@gmail.com>
+	<CACRpkdYLPWNQZgdFHVwLOZv+rS=bdERM9St5b0hVHTd_+ZJMKg@mail.gmail.com>
+	<CALszF6CUFKAjzUpEh3pDtSDdJuFan1ON0Kcu_uKD_OX36kXOHQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+cBNcHebxdrhn3nQOX4VikVodSBA3kSaWX+uERFNG8cw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALszF6CUFKAjzUpEh3pDtSDdJuFan1ON0Kcu_uKD_OX36kXOHQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Mar 8, 2016 at 9:00 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Mar 7, 2016 at 5:27 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Fri, Mar 4, 2016 at 4:13 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
->>> fdt_node_check_compatible()"). This adds the following commits from
->>> upstream:
->>>
->>> 53bf130 libfdt: simplify fdt_node_check_compatible()
->>> c9d9121 Warn on node name unit-address presence/absence mismatch
->>> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
->>>
->>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>> As usual, this is just an automated copy of upstream dtc into the kernel
->>> tree. The changeset is small enough that I have left it here.
->>>
->>> The main reason for this sync is to pick-up the new unit-address
->>> warnings.
+On Tue, Apr 19, 2016 at 11:04 AM, Maxime Coquelin
+<mcoquelin.stm32@gmail.com> wrote:
+> 2016-04-08 11:43 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+>> On Thu, Mar 31, 2016 at 5:09 PM, Maxime Coquelin
+>> <mcoquelin.stm32@gmail.com> wrote:
 >>
->> I gave this a try. Obviously it finds many abuses that should be fixed.
+>>> +static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+>>> +{
+>>> +       struct stm32_pinctrl *pctl = dev_get_drvdata(chip->parent);
+>>> +       struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
+>>> +       unsigned int irq;
+>>> +
+>>> +       regmap_field_write(pctl->irqmux[offset], bank->range.id);
 >>
->> However, I'm wondering about the following, where the unit-address is just
->> used to distinguish between multiple instances:
+>> No. You must implement the irqchip and GPIO controllers to
+>> be orthogonal, doing things like this creates a semantic that
+>> assumes .to_irq() is always called before using the IRQ and
+>> that is not guaranteed at all. A consumer may very well
+>> use an interrupt right off the irqchip without this being called
+>> first. All this function should do is translate a number. No
+>> other semantics.
 >>
->>     Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit
->> name, but no reg property
->>         compatible = "cache";
+>> This needs to be done from the irqchip (sorry).
 >
-> Just add a reg property. The values should probably match the MPIDR in
-> some way (e.g. 0 and 100).
+> Actually, the register written here is not part of the irqchip.
+> It is a system config register that is only used when using a GPIO as
+> external interrupt.
+> Its aim is to mux the GPIO bank on a line.
 
-Is it correct to move the cache-controller nodes under the cpus node?
-Else the reg properties don't match #address/size-cells?
+Then it should be done in .request() for the GPIO, not in
+.to_irq().
 
-Gr{oetje,eeting}s,
+It should *also* be done in the set-up path for the irqchip
+side, if that line is used without any interaction with the
+gpio side of things.
 
-                        Geert
+> For example on line 1, it can be muxed to select either gpioa1,
+> gpiob1, gpioc1, ...
+> How could I do it in the irqchip that has no gpio knowledge?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+I don't understand this.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We are discussing an irqchip that is tightly coupled with
+a gpiochip. Usually d->hwirq is the same as the GPIO offset
+but that varies.
+
+The point is that each IRQ that ever get used
+has a 1-to-1 relationship to a certain GPIO line, and if that
+relationship cannot be resolved from the irqchip side,
+something is wrong. The irqchip needs to enable the
+GPIO line it is backing to recieve interrupts without any
+requirements that .to_irq() have been called first.
+
+If to_irq() does something else than translate to an IRQ
+something is wrong.
+
+Yours,
+Linus Walleij
