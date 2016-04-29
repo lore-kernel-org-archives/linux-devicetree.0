@@ -1,46 +1,74 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v2 3/3] dtb: xgene: Add channel property
-Date: Fri, 29 Apr 2016 11:10:15 -0700
-Message-ID: <1461953415-9741-4-git-send-email-isubramanian@apm.com>
-References: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 03/12] ARM: kexec: remove 512MB restriction on kexec
+ crashdump
+Date: Fri, 29 Apr 2016 19:10:09 +0100
+Message-ID: <20160429181008.GV19428@n2100.arm.linux.org.uk>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+ <E1aviEp-0000ir-7s@rmk-PC.arm.linux.org.uk>
+ <CAHB_GuqOvRof94QdHztPy2B2kKuyKzQ-9uxXHY_g+i5WxsexZg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHB_GuqOvRof94QdHztPy2B2kKuyKzQ-9uxXHY_g+i5WxsexZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fenghua Yu <fenghua.yu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Haren Myneni <hbabu-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Biederman <ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added 'channel' property, describing ethernet to CPU channel number.
+On Fri, Apr 29, 2016 at 07:49:45PM +0530, Pratyush Anand wrote:
+> On Thu, Apr 28, 2016 at 2:57 PM, Russell King
+> <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> > ---
+> >  arch/arm/kernel/setup.c | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> >
+> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> > index 77b54c461c52..d9317eec1eba 100644
+> > --- a/arch/arm/kernel/setup.c
+> > +++ b/arch/arm/kernel/setup.c
+> > @@ -943,7 +943,6 @@ late_initcall(init_machine_late);
+> >   * zImage relocating below the reserved region.
+> >   */
+> >  #define CRASH_ALIGN    (128 << 20)
+> > -#define CRASH_ADDR_MAX (PHYS_OFFSET + (512 << 20))
+> >
+> >  static inline unsigned long long get_total_mem(void)
+> >  {
+> > @@ -973,9 +972,7 @@ static void __init reserve_crashkernel(void)
+> >                 return;
+> >
+> >         if (crash_base <= 0) {
+> > -               unsigned long long crash_max = CRASH_ADDR_MAX;
+> > -               if (crash_max > (u32)~0)
+> > -                       crash_max = (u32)~0;
+> > +               unsigned long long crash_max = idmap_to_phys((u32)~0);
+> >                 crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
+> >                                                     crash_size, CRASH_ALIGN);
+> >                 if (!crash_base) {
+> 
+> Reviewed-by: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> 
+> Unrelated to these modification:
+> In function arch/arm/mm/init.c: arm_memblock_steal() may be  following
+> would be more appropriate?
+> memblock_alloc_base(size, align, idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE));
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
----
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 1 +
- arch/arm64/boot/dts/apm/apm-storm.dtsi     | 1 +
- 2 files changed, 2 insertions(+)
+No, arm_memblock_steal() is totally unsuitable.  arm_memblock_steal()
+*removes* the memory range from memblock, including removing the 
+mapping of that memory.  It will make the memory range inaccessible to
+the kernel.
 
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-index a055a5d..ba04877 100644
---- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -653,6 +653,7 @@
- 				     <0 113 4>,
- 				     <0 114 4>,
- 				     <0 115 4>;
-+			channel = <12>;
- 			port-id = <1>;
- 			dma-coherent;
- 			clocks = <&xge1clk 0>;
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index ae4a173..5147d76 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -993,6 +993,7 @@
- 				     <0x0 0x65 0x4>,
- 				     <0x0 0x66 0x4>,
- 				     <0x0 0x67 0x4>;
-+			channel = <0>;
- 			dma-coherent;
- 			clocks = <&xge0clk 0>;
- 			/* mac address will be overwritten by the bootloader */
+Since kexec wants to write directly to this memory, using
+arm_memblock_steal() will have the cause the kernel to OOPS when
+it hits the resulting hole.
+
 -- 
-1.9.1
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
