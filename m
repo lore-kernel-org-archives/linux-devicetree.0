@@ -1,47 +1,29 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/3] bus: Add support for Tegra210 ACONNECT
-Date: Fri, 29 Apr 2016 14:55:51 +0100
-Message-ID: <572367E7.10207@nvidia.com>
-References: <1461937604-18481-1-git-send-email-jonathanh@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC v5 1/4] gpio: generic: fix GPIO_GENERIC_PLATFORM is set to
+ module case
+Date: Fri, 29 Apr 2016 16:13:36 +0200
+Message-ID: <CACRpkda0By+G-K-SvyaMAfqt-2SLpP0JtmMhoBf3nt-3+YPWtQ@mail.gmail.com>
+References: <cover.1461888822.git.chunkeey@googlemail.com>
+	<e365a17a9080ad6d16fe934121d78adb0402d0d5.1461888822.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461937604-18481-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <e365a17a9080ad6d16fe934121d78adb0402d0d5.1461888822.git.chunkeey@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Ignore this, I ballsed it up!
+On Fri, Apr 29, 2016 at 2:53 AM, Christian Lamparter
+<chunkeey@googlemail.com> wrote:
 
-On 29/04/16 14:46, Jon Hunter wrote:
-> Add support for the ACONNECT bus which is part of the audio sub-system
-> on Tegra210.
-> 
-> I did look to see if we could use the simple-pm-bus infrastructure for
-> this, however, in the end I found that it did was not a good fit because
-> of the way clocks for the bus are handled. The simple-pm-bus is tightly
-> coupled to the genpd subsystem and is reliant on the power-domain
-> associated with the bus to have the flag GENPD_FLAG_PM_CLK set and uses
-> the genpd function pointer, attach_dev(), as a hook to populate the
-> clocks. For Tegra this does not work because the power-domains are
-> instantiated from device-tree rather than platform code. In this case
-> for Tegra it is simpler to keep the clock management of devices within
-> the power-domain separated from the power-domain itself.
-> 
-> Jon Hunter (2):
->   dt-bindings: bus: Add documentation for Tegra210 ACONNECT
->   bus: Add support for Tegra ACONNECT
-> 
-> Shardar Shariff Md (1):
->   dmaengine: tegra-apb: proper default init of channel slave_id
-> 
->  .../bindings/bus/nvidia,tegra210-aconnect.txt      |  45 ++++++++
->  drivers/bus/Kconfig                                |   9 ++
->  drivers/bus/Makefile                               |   1 +
->  drivers/bus/tegra-aconnect.c                       | 113 +++++++++++++++++++++
->  drivers/dma/tegra20-apb-dma.c                      |  16 ++-
->  5 files changed, 182 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
->  create mode 100644 drivers/bus/tegra-aconnect.c
+> GPIO_GENERIC_PLATFORM is a tristate. If the module option is
+> selected the resulting gpio-generic.ko will lack most of the
+> module initialzation and probe code.
+>
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+
+Obviously correct, patch applied.
+
+Yours,
+Linus Walleij
