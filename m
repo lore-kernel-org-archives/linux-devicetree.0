@@ -1,154 +1,45 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] ARM64: dts: amlogic: Enable pin controller on GXBB-based platforms
-Date: Sat, 30 Apr 2016 19:21:15 +0200
-Message-ID: <1462036875-22625-3-git-send-email-carlo@caione.org>
-References: <1462036875-22625-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462036875-22625-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: enable pinctrl for Broadcom NS2 SoC
+Date: Sat, 30 Apr 2016 10:55:04 -0700
+Message-ID: <5724F178.20509@gmail.com>
+References: <1461934299-14774-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1461934299-14774-3-git-send-email-yendapally.reddy@broadcom.com>
+ <CACRpkdbsti48b+G8uHfzJvFPzUD8HivE8Fp57CBp_7eGF5wX5Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbsti48b+G8uHfzJvFPzUD8HivE8Fp57CBp_7eGF5wX5Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod Kumar <pramodku@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Le 30/04/2016 04:13, Linus Walleij a =C3=A9crit :
+> On Fri, Apr 29, 2016 at 2:51 PM, Yendapally Reddy Dhananjaya Reddy
+> <yendapally.reddy@broadcom.com> wrote:
+>=20
+>> This enables the pinctrl support for Broadcom NS2 SoC
+>>
+>> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@b=
+roadcom.com>
+>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>=20
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> Please take this in through the apropriate BCM tree to ARM SoC.
 
-Update DTS and DTSI files to enable the pin controller. We also now
-support the blinking blue LED on the Odroid-C2.
+Applied to devicetree-arm64/next, there was a small conflict due to the
+crmu node removal while switching to PSCI, Dhanajay, please double chec=
+k
+the result here:
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 13 +++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  2 ++
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  3 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 41 ++++++++++++++++++++++
- 4 files changed, 59 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 7f2c674..41e1e66 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -45,6 +45,7 @@
- /dts-v1/;
- 
- #include "meson-gxbb.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	compatible = "hardkernel,odroid-c2", "amlogic,meson-gxbb";
-@@ -62,8 +63,20 @@
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		blue {
-+			label = "c2:blue:alive";
-+			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index bf7ff1d..22e6298 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -62,4 +62,6 @@
- /* This UART is brought out to the DB9 connector */
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 012cdcc..54bb7c7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -56,4 +56,7 @@
- 
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 3126f0c..6dd2768 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -43,6 +43,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/meson-gxbb-gpio.h>
- 
- / {
- 	compatible = "amlogic,meson-gxbb";
-@@ -158,6 +159,29 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xc8100000 0x0 0x100000>;
- 
-+			pinctrl_aobus: pinctrl@14 {
-+				compatible = "amlogic,meson-gxbb-aobus-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio_ao: bank@14 {
-+					reg = <0x0 0x00014 0x0 0x8>,
-+					      <0x0 0x0002c 0x0 0x4>,
-+					      <0x0 0x00024 0x0 0x8>;
-+					reg-names = "mux", "pull", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+				};
-+
-+				uart_ao_a_pins: uart_ao_a {
-+					mux {
-+						groups = "uart_tx_ao_a", "uart_rx_ao_a";
-+						function = "uart_ao";
-+					};
-+				};
-+			};
-+
- 			uart_AO: serial@4c0 {
- 				compatible = "amlogic,meson-uart";
- 				reg = <0x0 0x004c0 0x0 0x14>;
-@@ -173,6 +197,23 @@
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xc8834000 0x0 0x2000>;
-+
-+			pinctrl_periphs: pinctrl@4b0 {
-+				compatible = "amlogic,meson-gxbb-periphs-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio: bank@4b0 {
-+					reg = <0x0 0x004b0 0x0 0x28>,
-+					      <0x0 0x004e8 0x0 0x14>,
-+					      <0x0 0x00120 0x0 0x14>,
-+					      <0x0 0x00430 0x0 0x40>;
-+					reg-names = "mux", "pull", "pull-enable", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+				};
-+			};
- 		};
- 
- 		hiubus: hiubus@c883c000 {
--- 
-2.7.4
-
+https://github.com/Broadcom/stblinux/commit/8eab685dda30fb15e74d6be07ba=
+a9d430a75b8ca
+--=20
+=46lorian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
