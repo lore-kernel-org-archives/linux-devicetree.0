@@ -1,73 +1,170 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH 03/12] ARM: kexec: remove 512MB restriction on kexec crashdump
-Date: Sat, 30 Apr 2016 09:06:19 +0530
-Message-ID: <CAHB_GuoQM9dzgyd+67QPOReLW4HYNqyuzKGzB7Fzq=dpWYHf_w@mail.gmail.com>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
-	<E1aviEp-0000ir-7s@rmk-PC.arm.linux.org.uk>
-	<CAHB_GuqOvRof94QdHztPy2B2kKuyKzQ-9uxXHY_g+i5WxsexZg@mail.gmail.com>
-	<20160429181008.GV19428@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ia64-owner@vger.kernel.org>
-In-Reply-To: <20160429181008.GV19428@n2100.arm.linux.org.uk>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Subject: [PATCH v4] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Sat, 30 Apr 2016 09:13:52 +0200
+Message-ID: <1462000432-18452-1-git-send-email-lkundrak@v3.sk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 11:40 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Fri, Apr 29, 2016 at 07:49:45PM +0530, Pratyush Anand wrote:
->> On Thu, Apr 28, 2016 at 2:57 PM, Russell King
->> <rmk+kernel@arm.linux.org.uk> wrote:
->> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
->> > ---
->> >  arch/arm/kernel/setup.c | 5 +----
->> >  1 file changed, 1 insertion(+), 4 deletions(-)
->> >
->> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
->> > index 77b54c461c52..d9317eec1eba 100644
->> > --- a/arch/arm/kernel/setup.c
->> > +++ b/arch/arm/kernel/setup.c
->> > @@ -943,7 +943,6 @@ late_initcall(init_machine_late);
->> >   * zImage relocating below the reserved region.
->> >   */
->> >  #define CRASH_ALIGN    (128 << 20)
->> > -#define CRASH_ADDR_MAX (PHYS_OFFSET + (512 << 20))
->> >
->> >  static inline unsigned long long get_total_mem(void)
->> >  {
->> > @@ -973,9 +972,7 @@ static void __init reserve_crashkernel(void)
->> >                 return;
->> >
->> >         if (crash_base <= 0) {
->> > -               unsigned long long crash_max = CRASH_ADDR_MAX;
->> > -               if (crash_max > (u32)~0)
->> > -                       crash_max = (u32)~0;
->> > +               unsigned long long crash_max = idmap_to_phys((u32)~0);
->> >                 crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
->> >                                                     crash_size, CRASH_ALIGN);
->> >                 if (!crash_base) {
->>
->> Reviewed-by: Pratyush Anand <panand@redhat.com>
->>
->> Unrelated to these modification:
->> In function arch/arm/mm/init.c: arm_memblock_steal() may be  following
->> would be more appropriate?
->> memblock_alloc_base(size, align, idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE));
->
-> No, arm_memblock_steal() is totally unsuitable.  arm_memblock_steal()
-> *removes* the memory range from memblock, including removing the
-> mapping of that memory.  It will make the memory range inaccessible to
-> the kernel.
->
-> Since kexec wants to write directly to this memory, using
-> arm_memblock_steal() will have the cause the kernel to OOPS when
-> it hits the resulting hole.
->
+The hub and the ethernet in its port 1 are hardwired on the board.
 
-Sorry, I was not trying to say that we should use arm_memblock_steal()
-here. As I said, this comment is totally unrelated to this patch
-series. In arm_memblock_steal() we pass MEMBLOCK_ALLOC_ANYWHERE as
-max_addr. Probably,  it would be good to pass
-idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE).
+Compared to the adapters that can be plugged into the USB ports, this
+one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+has the MAC address for this adapter in its ROM, accessible from its
+firmware.
+
+U-Boot can read out the address and set the local-mac-address property of the
+node with "ethernet" alias. Let's add the node so that U-Boot can do its
+business.
+
+Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+pid/vid pair for the Version 2 was provided by Peter Chen. Original
+Model B is a blind short, though very likely correct.
+
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+---
+Changes since v3:
+  - Include the ethernet alias in 9514 dtsi too
+
+Changes since v2:
+  - Removed leading zeroes in vendor name and reg
+  - Split the common files in separate includes per model
+
+Changes since v1:
+  - s/@01/@1/ for ethernet and the hub
+  - Corrected the vid/pid pairs for hub and ethernet
+  - Added Model B rev2 and version 2 board changes
+  - Fixed a missing semicolon typo
+
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
+ arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
+ 7 files changed, 45 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index ef54050..c3e01ce 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 86f1f2f..364086a 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 4859e9d..4420b09 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index ff94666..b975f29 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2836.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+new file mode 100644
+index 0000000..7200238
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+@@ -0,0 +1,20 @@
++
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9512";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+new file mode 100644
+index 0000000..3f0a56e
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+@@ -0,0 +1,19 @@
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9514";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 8aaf193..04504b7 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -230,6 +230,8 @@
+ 			compatible = "brcm,bcm2835-usb";
+ 			reg = <0x7e980000 0x10000>;
+ 			interrupts = <1 9>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
