@@ -1,45 +1,51 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk numbering
- w/ device tree
-Date: Sat, 30 Apr 2016 08:23:17 -0500
-Message-ID: <CAL_JsqKOwshLWyXr3moMXo8GeDwHgoNRU6gWm3D9WBivoqskEg@mail.gmail.com>
-References: <20160429195741.GY19428@n2100.arm.linux.org.uk>
- <CAD=FV=UGyi0r3kDmc1cpcANTP-2u+7UEgW3r9kRvF2f8qcWH+g@mail.gmail.com>
- <20160429211328.GZ19428@n2100.arm.linux.org.uk> <CAD=FV=V8BOsO36eUOGAcXp04xCiN13UGG0Vaf2yhh1MQn85FjA@mail.gmail.com>
- <20160429212920.GA19428@n2100.arm.linux.org.uk> <CAD=FV=V9V8P=d59RX1eaAdVxJgMxub1F6hzQNw1QW+7t=3POBw@mail.gmail.com>
- <20160429215017.GC19428@n2100.arm.linux.org.uk> <CAD=FV=VgQX_EVhUUCugzv+CZqjzTS8LwyeU5419aX9FbDnWJDg@mail.gmail.com>
- <20160429221606.GE19428@n2100.arm.linux.org.uk> <CAD=FV=WzgGFzzpeYAPrOpMS684_G=XRoSRjTegK-vre=fX=kpw@mail.gmail.com>
- <20160429224407.GF19428@n2100.arm.linux.org.uk> <CAD=FV=U5jnJJ3v=nFGFecoKB5KGv1ufC+aKbHx2iCqBTWpDTww@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=U5jnJJ3v=nFGFecoKB5KGv1ufC+aKbHx2iCqBTWpDTww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Venu Byravarasu <vbyravarasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM@public.gmane.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/2] amlogic: GXBB: Add pin controller
+Date: Sat, 30 Apr 2016 19:21:13 +0200
+Message-ID: <1462036875-22625-1-git-send-email-carlo@caione.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 6:01 PM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi,
->
-> On Fri, Apr 29, 2016 at 3:44 PM, Russell King - ARM Linux
-> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
->> My reply would be... why should MMC have special handling that no
->> other subsystem has?
->
-> No other subsystem?
->
-> * i2c allows numbering devices by alias
-> * rtc allows numbering devices by alias.
-> * serial allows numbering devices by alias.
-> * spi allows numbering devices by alias.
-> * watchdog allows numbering devices by alias.
->
-> ...at least that's my impression doing a grep for of_alias_get_id(),
-> which I suggested earlier in this thread but apparently wasn't done.
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-IMO, we should remove most or all of these not add more. We shoud move
-to identifying devices by other OS independent means. Peter already
-pointed out why serial is a problem.
+Patchset to add and enable the pin controller driver on a couple of Amlogic
+boards with a Meson GXBB SoC.
 
-Rob
+Please note that:
+
+* This patch depends on http://www.spinics.net/lists/devicetree/msg120964.html
+  ([PATCH] ARM64: dts: amlogic: Add hiu and periphs buses).
+
+* The platform driver is still missing a lot of muxing configurations. This is
+  because Amlogic still hasn't publicly released documentation for the GXBB.
+  Since Kevin has already this documentation under NDA, he will integrate and
+  complete this driver with a separate submission.
+
+Carlo Caione (2):
+  pinctrl: amlogic: Add support for Amlogic Meson GXBB SoC
+  ARM64: dts: amlogic: Enable pin controller on GXBB-based platforms
+
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   2 +
+ arch/arm64/Kconfig.platforms                       |   2 +
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  13 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |   2 +
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |   3 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  41 ++
+ drivers/pinctrl/meson/Makefile                     |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c         | 432 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c              |   8 +
+ drivers/pinctrl/meson/pinctrl-meson.h              |   2 +
+ include/dt-bindings/gpio/meson-gxbb-gpio.h         | 154 ++++++++
+ 11 files changed, 660 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+ create mode 100644 include/dt-bindings/gpio/meson-gxbb-gpio.h
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
