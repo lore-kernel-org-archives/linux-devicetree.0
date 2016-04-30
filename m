@@ -1,170 +1,124 @@
-From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Subject: [PATCH v4] ARM: bcm2835: dt: Add the ethernet to the device trees
-Date: Sat, 30 Apr 2016 09:13:52 +0200
-Message-ID: <1462000432-18452-1-git-send-email-lkundrak@v3.sk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 06/12] ARM: kexec: advertise location of bootable RAM
+Date: Sat, 30 Apr 2016 09:20:55 +0100
+Message-ID: <20160430082055.GG19428@n2100.arm.linux.org.uk>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+ <E1aviF4-0000jG-MO@rmk-PC.arm.linux.org.uk>
+ <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+ <20160429180024.GS19428@n2100.arm.linux.org.uk>
+ <CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-The hub and the ethernet in its port 1 are hardwired on the board.
+On Sat, Apr 30, 2016 at 08:57:34AM +0530, Pratyush Anand wrote:
+> On Fri, Apr 29, 2016 at 11:30 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> > On Fri, Apr 29, 2016 at 08:26:00PM +0530, Pratyush Anand wrote:
+> >> Hi Russell,
+> >>
+> >> On Thu, Apr 28, 2016 at 2:58 PM, Russell King
+> >> <rmk+kernel@arm.linux.org.uk> wrote:
+> >> > Advertise the location of bootable RAM to kexec-tools.  kexec needs to
+> >> > know where it can place the kernel in RAM, and so be executable when
+> >> > the system needs to jump into it.
+> >> >
+> >> > Advertise these areas in /proc/iomem with a "System RAM (boot alias)"
+> >> > tag.
+> >> >
+> >> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> >>
+> >> Can you please also share git tree path of corresponding kexec-tools changes?
+> >>
+> >> Could it be a better idea (if things in user space become simpler)
+> >> that in stead of patch 5 and 6, we pass arch_phys_to_idmap_offset to
+> >> user space, and then user space manipulates existing "Crash kernel"
+> >> and "System RAM" resources.
+> >
+> > Given that it's only _one_ platform right now, I don't think that
+> > additional complexity is worth it.  It means that we have to invent
+> 
+> Probably, I could not communicate it well.  I was not trying  to have
+> *additional* complexity. Wanted to see if things could be simpler
+> rather. So this is what my understanding was:
+> -- We create one patch to pass arch_phys_to_idmap_offset to user space
+> (say in /sys/kernel/bootmem_idmap_offset)
+> -- We do not use patch 5,6,11 and 12 of this series. Probably few more
+> content of the series will go away.
 
-Compared to the adapters that can be plugged into the USB ports, this
-one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
-has the MAC address for this adapter in its ROM, accessible from its
-firmware.
+Patches 11 and 12 don't go away with what you're suggesting.  Patches
+11 and 12 are necessary to allow the boot-view addresses to be passed
+into the kernel through kexec, and to allow kexec to find appropriate
+memory resources.
 
-U-Boot can read out the address and set the local-mac-address property of the
-node with "ethernet" alias. Let's add the node so that U-Boot can do its
-business.
+For example, from patch 11:
 
-Model B rev2 and Model B+ entries were verified by me, the hierarchy and
-pid/vid pair for the Version 2 was provided by Peter Chen. Original
-Model B is a blind short, though very likely correct.
+@@ -48,7 +48,8 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned
+long entry,
 
-Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
----
-Changes since v3:
-  - Include the ethernet alias in 9514 dtsi too
+-               if ((entry < crashk_res.start) || (entry > crashk_res.end))
++               if ((entry < phys_to_boot_phys(crashk_res.start)) ||
++                   (entry > phys_to_boot_phys(crashk_res.end)))
 
-Changes since v2:
-  - Removed leading zeroes in vendor name and reg
-  - Split the common files in separate includes per model
+"entry" is limited to a 32-bit physical address as it is unsigned long,
+and is the boot-view physical address.  crashk_res.start is the
+running-view physical address.  Without this change, the rest will
+always be true on Keystone 2.
 
-Changes since v1:
-  - s/@01/@1/ for ethernet and the hub
-  - Corrected the vid/pid pairs for hub and ethernet
-  - Added Model B rev2 and version 2 board changes
-  - Fixed a missing semicolon typo
+@@ -229,8 +229,8 @@ int sanity_check_segment_list(struct kimage *image)
+-                       if ((mstart < crashk_res.start) ||
+-                           (mend > crashk_res.end))
++                       if ((mstart < phys_to_boot_phys(crashk_res.start)) ||
++                           (mend > phys_to_boot_phys(crashk_res.end)))
 
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
- arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
- arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 20 ++++++++++++++++++++
- arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 19 +++++++++++++++++++
- arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
- 7 files changed, 45 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+Same problem - mstart and mend are both 32-bit quantities.  The result
+is the segment list validation always fails.
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index ef54050..c3e01ce 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 86f1f2f..364086a 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9512.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index 4859e9d..4420b09 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9512.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index ff94666..b975f29 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -1,6 +1,7 @@
- /dts-v1/;
- #include "bcm2836.dtsi"
- #include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
- 
- / {
- 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
-new file mode 100644
-index 0000000..7200238
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
-@@ -0,0 +1,20 @@
-+
-+/ {
-+	aliases {
-+		ethernet = &ethernet;
-+	};
-+};
-+
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,9512";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-new file mode 100644
-index 0000000..3f0a56e
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-@@ -0,0 +1,19 @@
-+/ {
-+	aliases {
-+		ethernet = &ethernet;
-+	};
-+};
-+
-+&usb {
-+	usb1@1 {
-+		compatible = "usb424,9514";
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 8aaf193..04504b7 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -230,6 +230,8 @@
- 			compatible = "brcm,bcm2835-usb";
- 			reg = <0x7e980000 0x10000>;
- 			interrupts = <1 9>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 	};
- 
+@@ -354,7 +354,7 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
+-               pfn   = page_to_pfn(pages);
++               pfn   = page_to_boot_pfn(pages);
+
+The result without this change is that we allocate _all_ system memory
+looking for a suitable page, never finding one because we never find
+a page which matches.  Without a previous patch, killing many
+processes and taking the system down.
+
+@@ -480,7 +480,7 @@ static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
+-               *image->entry = virt_to_phys(ind_page) | IND_INDIRECTION;
++               *image->entry = virt_to_boot_phys(ind_page) | IND_INDIRECTION;
+
+The physical address would end up being truncated to 32-bits, but
+would actually be larger than 4GiB.  So, *image->entry would point
+at the incorrect address, and kexec would fail.
+
+@@ -535,13 +535,13 @@ void kimage_terminate(struct kimage *image)
+ #define for_each_kimage_entry(image, ptr, entry) \
+        for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
+                ptr = (entry & IND_INDIRECTION) ? \
+-                       phys_to_virt((entry & PAGE_MASK)) : ptr + 1)
++                       boot_phys_to_virt((entry & PAGE_MASK)) : ptr + 1)
+
+"entry" is truncated to 32-bit, and so this passes an invalid
+physical address which is not part of the lowmem mapping to
+phys_to_virt().  The resulting virtual address is undefined.
+
+-       page = pfn_to_page(entry >> PAGE_SHIFT);
++       page = boot_pfn_to_page(entry >> PAGE_SHIFT);
+
+Same, except the resulting struct page pointer is undefined.
+
+... and so it goes on.
+
+The only patches which get replaced are patches 5 and 6 with a new
+userspace API.
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
