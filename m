@@ -1,155 +1,113 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [RFT PATCH 0/3] usb: misc: usb3503: Fix missing device when TFTP
- booting
-Date: Sat, 30 Apr 2016 11:43:44 +0200
-Message-ID: <57247E50.1020000@xs4all.nl>
-References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk
+ numbering w/ device tree
+Date: Sat, 30 Apr 2016 11:48:33 +0100
+Message-ID: <20160430104832.GJ19428@n2100.arm.linux.org.uk>
+References: <20160429195741.GY19428@n2100.arm.linux.org.uk>
+ <CAD=FV=UGyi0r3kDmc1cpcANTP-2u+7UEgW3r9kRvF2f8qcWH+g@mail.gmail.com>
+ <20160429211328.GZ19428@n2100.arm.linux.org.uk>
+ <CAD=FV=V8BOsO36eUOGAcXp04xCiN13UGG0Vaf2yhh1MQn85FjA@mail.gmail.com>
+ <20160429212920.GA19428@n2100.arm.linux.org.uk>
+ <CAD=FV=V9V8P=d59RX1eaAdVxJgMxub1F6hzQNw1QW+7t=3POBw@mail.gmail.com>
+ <20160429215017.GC19428@n2100.arm.linux.org.uk>
+ <CAD=FV=VgQX_EVhUUCugzv+CZqjzTS8LwyeU5419aX9FbDnWJDg@mail.gmail.com>
+ <20160429221606.GE19428@n2100.arm.linux.org.uk>
+ <CABxcv==4C+RrEV1Fd+DkbMdGrLyObw36vsmo3wTGdxO=UnAa8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461927591-7864-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABxcv==4C+RrEV1Fd+DkbMdGrLyObw36vsmo3wTGdxO=UnAa8w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Doug Anderson <dianders@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jisheng Zhang <jszhang@marvell.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree-spec@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Venu Byravarasu <vbyravarasu@nvidia.com>, Lars-Peter Clausen <lars@metafoo.de>, Jon Hunter <jonathanh@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>"devicetree@vger.kernel.org" <dev>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-On 04/29/2016 12:59 PM, Krzysztof Kozlowski wrote:
-> Hi,
+On Fri, Apr 29, 2016 at 06:42:35PM -0400, Javier Martinez Canillas wrote:
+> Maybe a third opinion could make this conversation constructive again.
 > 
-> Patches are independent, please pick up as you wish.
-> 
-> However all of them are needed to solve the issue, so I am sending
-> everything together for easier testng.
-> 
-> 
-> Problem
-> =======
-> When Odroid U3 (usb3503 + smsc95xx + max77686) boots from network (TFTP),
-> the usb3503 does not show up in "lsusb". Hard-reset is required, e.g.
-> by suspend to RAM. The actual TFTP boot does not have to happen. Just
-> "usb start" from U-Boot is sufficient.
-> 
-> 
-> Solution
-> ========
-> Perform real hardware reset (including regulator off/on) when probing.
-> 
-> 
-> Tested on Odroid U3 so far. Please kindly test on X2 and other
-> configurations and bootloaders.
+> I think Doug's point is that using a UUID or labels for consistency is
+> orthogonal to having a deterministic numbering for MMC devices. And I
+> agree with his point of view for what is worth.
 
-Against which kernel git repo is this patch?
+Yes, it may be orthogonal, but there are two issues here:
 
-I did apply this patch series first:
+1. How does the system know which MMC device to mount for its rootfs.
 
-http://www.spinics.net/lists/arm-kernel/msg500764.html
+This is the point that I've picked up on, which has been solved for
+years, and actually pre-dates MMC support in the kernel, and that is
+mount by UUID.
 
-followed by this patch series.
+The kernel itself has no support for mount-by-label, which is normally
+solved by using an initramfs, which contains programs such as mount
+etc which will scan the block devices looking for an appropriately
+labelled filesystem.  Label has slightly more issues since its possible
+that you could end up with two filesystems with the same label (eg, on
+x86, you're migrating your disks, and you plug in a disk which has a
+label of "/" but is not your intended rootfs.)
 
-I've tested with both 4.6.0-rc2 and -rc5, but in all cases (even without
-applying these patches!) the boot sequence hangs here:
+Of course, any scheme which relies on an identifier on the disk may
+result in some kind of clash if another partition/disk has the same
+identifier.
 
-...
-[drm] Exynos DRM: using 12c10000.mixer device for DMA mapping operations
-exynos-drm exynos-drm: bound 12c10000.mixer (ops mixer_component_ops)
-exynos-drm exynos-drm: bound 12d00000.hdmi (ops hdmi_component_ops)
-[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[drm] No driver support for vblank timestamp query.
-Console: switching to colour frame buffer device 240x67
-exynos-drm exynos-drm: fb0:  frame buffer device
-[drm] Initialized exynos 1.0.0 20110530 on minor 0
-brd: module loaded
-loop: module loaded
-s3c64xx-spi 13930000.spi: spi bus clock parent not specified, using clock
-at index 0 as parent
-s3c64xx-spi 13930000.spi: number of chip select lines not specified,
-assuming 1 chip select line
-tun: Universal TUN/TAP device driver, 1.6
-tun: (C) 1999-2004 Max Krasnyansky <maxk-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-usbcore: registered new interface driver asix
-usbcore: registered new interface driver ax88179_178a
-usbcore: registered new interface driver cdc_ether
-usbcore: registered new interface driver smsc95xx
-usbcore: registered new interface driver cdc_ncm
-dwc2 12480000.hsotg: Specified GNPTXFDEP=1024 > 768
-dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
-ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-ehci-exynos: EHCI EXYNOS driver
-exynos-ehci 12580000.ehci: EHCI Host Controller
-exynos-ehci 12580000.ehci: new USB bus registered, assigned bus number 1
-exynos-ehci 12580000.ehci: irq 51, io mem 0x12580000
-exynos-ehci 12580000.ehci: USB 2.0 started, EHCI 1.00
-usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
-usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-usb usb1: Product: EHCI Host Controller
-usb usb1: Manufacturer: Linux 4.6.0-rc5-odroid ehci_hcd
-usb usb1: SerialNumber: 12580000.ehci
-hub 1-0:1.0: USB hub found
-hub 1-0:1.0: 3 ports detected
-ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
-ohci-exynos: OHCI EXYNOS driver
-usbcore: registered new interface driver usb-storage
-usb3503 0-0008: switched to HUB mode
-usb3503 0-0008: usb3503_probe: probed in hub mode
-using random self ethernet address
-using random host ethernet address
-usb0: HOST MAC 66:79:ef:11:72:85
-usb0: MAC 1e:66:f2:66:8e:2a
-using random self ethernet address
-using random host ethernet address
-g_ether gadget: Ethernet Gadget, version: Memorial Day 2008
-g_ether gadget: g_ether ready
-dwc2 12480000.hsotg: bound driver g_ether
-mousedev: PS/2 mouse device common for all mice
-max77686-rtc max77686-rtc: rtc core: registered max77686-rtc as rtc0
-i2c /dev entries driver
-s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
-usb 1-2: new high-speed USB device number 2 using exynos-ehci
-usb 1-2: New USB device found, idVendor=0424, idProduct=9730
-usb 1-2: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-smsc95xx v1.0.4
-smsc95xx 1-2:1.0 eth0: register 'smsc95xx' at usb-12580000.ehci-2, smsc95xx
-USB 2.0 Ethernet, c2:22:09:f2:5f:e8
-usb 1-3: new high-speed USB device number 3 using exynos-ehci
-usb 1-3: New USB device found, idVendor=0424, idProduct=3503
-usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-hub 1-3:1.0: USB hub found
-hub 1-3:1.0: 3 ports detected
+2. The identifier found in kernel messages for each MMC device.
 
-No oops, no nothing. It's just sitting there.
+This is where Doug and myself disagree.  I don't see this as a big
+problem - the big problem is (1) above, which is the one which can
+lead to a non-functional system.  I believe that the actual name
+that we end up with is a cosmetic issue.
 
-Is this a regression that was introduced in 4.6? Or is there some special
-new config that needs to be turned on first in 4.6? I've been running
-4.5.0-rc3 before this, but I can't apply these patches there because there
-is no drivers/regulator/max77686-regulator.c in 4.5.
+What I've been trying to point out is that the same cosmetic issue
+occurs elsewhere in the kernel, particularly with disks on SATA
+interfaces.  I've lost count of the number of times that my IDE
+disks on one of my machines have changed between /dev/hda, /dev/hdc,
+/dev/sda, /dev/sdc, etc.  Thankfully, these are part of a raid
+array, and they are always constructed to appear as /dev/md* devices
+which are the devices that are mounted.
 
-Regards,
+The device names that they end up with depend on which drivers are
+built-in to the kernel, and the order in which the device drivers
+and devices are probed.  There's no way to tell the kernel "I want
+PCI card X socket Y to be _this_ device name" and that's a concious
+decision that was made years ago.
 
-	Hans
+However, it's a cosmetic issue - reading the log reveals which is
+which, and MMC is no different - the information required is in the
+log.
 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-> Krzysztof Kozlowski (3):
->   usb: misc: usb3503: Fix HUB mode after bootloader initialization
->   ARM: dts: exynos: Provide regulator for usb3503 on Odroid to fix
->     device detection
->   regulator: max77686: Configure enable time to properly handle
->     regulator enable
-> 
->  Documentation/devicetree/bindings/usb/usb3503.txt |  1 +
->  arch/arm/boot/dts/exynos4412-odroidu3.dts         |  2 +
->  drivers/regulator/max77686-regulator.c            |  5 ++
->  drivers/usb/misc/usb3503.c                        | 81 +++++++++++++++++++++++
->  4 files changed, 89 insertions(+)
-> 
+Here's some material on the problem:
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://www.tldp.org/HOWTO/Partition/devices.html
+http://tldp.org/HOWTO/Partition-Mass-Storage-Definitions-Naming-HOWTO/x99.html
+https://lkml.org/lkml/1997/5/4/54
+http://marc.info/?l=linux-raid&m=113595057816321&w=2
+
+The first two show that it's well understood (and documented) that
+storage devices are dynamically assigned and variable.
+
+The third is an example of how old this problem is - almost twenty
+years old, and it hasn't been "solved" on x86 except by using UUID/
+labels.
+
+The forth is an example of the "problem" that this dynamic device
+assignment causes, and again shows that kernel folk have chosen
+not to solve it by way of the problem still existing today.
+
+I guess I don't see it as much of problem because I've been doing
+this for over a decade.
+
+Now, thinking outside the box - if it's desirable for eMMC to be
+treated differently from regular MMC slots, maybe the solution to
+this problem is to have eMMC occupy a separate namespace, rather
+than using the /dev/mmcblk* namespace.  IOW, /dev/emmc* ?
+
+The /dev/mmcblk* namespace was designed (by me) to be dynamic,
+because MMC (not SD) bus structure allows for multiple cards on the
+same MMC host interface, much like a SCSI bus allows for multiple
+devices on the same cable.  Hence, tying individual mmcblkN to
+the mmcN host interface is wrong.
+
+-- 
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
