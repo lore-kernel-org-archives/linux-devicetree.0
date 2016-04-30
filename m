@@ -1,45 +1,44 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: enable pinctrl for Broadcom NS2 SoC
-Date: Sat, 30 Apr 2016 10:55:04 -0700
-Message-ID: <5724F178.20509@gmail.com>
-References: <1461934299-14774-1-git-send-email-yendapally.reddy@broadcom.com>
- <1461934299-14774-3-git-send-email-yendapally.reddy@broadcom.com>
- <CACRpkdbsti48b+G8uHfzJvFPzUD8HivE8Fp57CBp_7eGF5wX5Q@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: dt_to_config - report kernel config options
+ for a devicetree
+Date: Sat, 30 Apr 2016 15:38:35 -0500
+Message-ID: <CAL_Jsq+v3r1dNY1+CK=_Atyyysq=JAFfk0q7i6YVhKS1zTZMVg@mail.gmail.com>
+References: <572284AB.102@gmail.com> <CAL_JsqKGcc_wXV2_-3ZVS7gzfo2ao9z+eATdnKVsyRnW2O5e4A@mail.gmail.com>
+ <CA+rpMbJkWM+bsvXT77eyLGewtKHjX1inc0vjsWxYQTCgzmpDGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbsti48b+G8uHfzJvFPzUD8HivE8Fp57CBp_7eGF5wX5Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod Kumar <pramodku@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+rpMbJkWM+bsvXT77eyLGewtKHjX1inc0vjsWxYQTCgzmpDGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 30/04/2016 04:13, Linus Walleij a =C3=A9crit :
-> On Fri, Apr 29, 2016 at 2:51 PM, Yendapally Reddy Dhananjaya Reddy
-> <yendapally.reddy@broadcom.com> wrote:
->=20
->> This enables the pinctrl support for Broadcom NS2 SoC
+On Fri, Apr 29, 2016 at 1:39 AM, Gaurav Minocha
+<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Apr 28, 2016 at 3:32 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Thu, Apr 28, 2016 at 4:46 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+>>>
+>>> Determining which kernel config options need to be enabled for a
+>>> given devicetree can be a painful process.  Create a new tool to
+>>> find the drivers that may match a devicetree node compatible,
+>>> find the kernel config options that enable the driver, and
+>>> optionally report whether the kernel config option is enabled.
 >>
->> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@b=
-roadcom.com>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->=20
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> Please take this in through the apropriate BCM tree to ARM SoC.
+>> I would find this more useful to output a config fragment with all the
+>> options enabled. The hard part there is enabling the options a given
+>> option is dependent on which I don't think kbuild takes care of.
+>
+> Do you mean to generate something like .config? If yes, then IMO it would
+> not be a correct configuration file.
 
-Applied to devicetree-arm64/next, there was a small conflict due to the
-crmu node removal while switching to PSCI, Dhanajay, please double chec=
-k
-the result here:
+No, only a config fragment which is just some subset of config
+options. Then you could have a generic defconfig plus the fragment for
+a platform to get a working setup.
 
-https://github.com/Broadcom/stblinux/commit/8eab685dda30fb15e74d6be07ba=
-a9d430a75b8ca
---=20
-=46lorian
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
