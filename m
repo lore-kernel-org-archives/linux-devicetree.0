@@ -1,132 +1,46 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 6/9] pinctrl: Add IRQ support to STM32 gpios
-Date: Sat, 30 Apr 2016 13:32:19 +0200
-Message-ID: <CACRpkdbW133h_HNXhszzk2MdtMyrX5WBC_5GnqD5wrmo=yT27A@mail.gmail.com>
-References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1459436979-17275-7-git-send-email-mcoquelin.stm32@gmail.com>
-	<CACRpkdYLPWNQZgdFHVwLOZv+rS=bdERM9St5b0hVHTd_+ZJMKg@mail.gmail.com>
-	<CALszF6CUFKAjzUpEh3pDtSDdJuFan1ON0Kcu_uKD_OX36kXOHQ@mail.gmail.com>
-	<CACRpkdZXz8-UnOd6ee48AWqDX2X9Hvux=+ZQ7qdg6a4KVoArww@mail.gmail.com>
-	<CALszF6D1nPJ8NVghWo27y1KABwN7-QQfjPTmgY2pgdY_8jjkTQ@mail.gmail.com>
+Subject: Re: [PATCH V11 6/6] gpio: max77620: add gpio driver for MAX77620/MAX20024
+Date: Sat, 30 Apr 2016 13:38:24 +0200
+Message-ID: <CACRpkdZxVsGkC1U5Y9+M1fh6Z1T_ZBZC4eyH4ryzBijUq2hvCg@mail.gmail.com>
+References: <1461837540-17071-1-git-send-email-ldewangan@nvidia.com>
+	<1461837540-17071-7-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALszF6D1nPJ8NVghWo27y1KABwN7-QQfjPTmgY2pgdY_8jjkTQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1461837540-17071-7-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 1:19 PM, Maxime Coquelin
-<mcoquelin.stm32@gmail.com> wrote:
-> 2016-04-29 10:53 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
->> On Tue, Apr 19, 2016 at 11:04 AM, Maxime Coquelin
->> <mcoquelin.stm32@gmail.com> wrote:
->>> 2016-04-08 11:43 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
->>>> On Thu, Mar 31, 2016 at 5:09 PM, Maxime Coquelin
->>>> <mcoquelin.stm32@gmail.com> wrote:
->>>>
->>>>> +static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
->>>>> +{
->>>>> +       struct stm32_pinctrl *pctl = dev_get_drvdata(chip->parent);
->>>>> +       struct stm32_gpio_bank *bank = gpiochip_get_data(chip);
->>>>> +       unsigned int irq;
->>>>> +
->>>>> +       regmap_field_write(pctl->irqmux[offset], bank->range.id);
->>>>
->>>> No. You must implement the irqchip and GPIO controllers to
->>>> be orthogonal, doing things like this creates a semantic that
->>>> assumes .to_irq() is always called before using the IRQ and
->>>> that is not guaranteed at all. A consumer may very well
->>>> use an interrupt right off the irqchip without this being called
->>>> first. All this function should do is translate a number. No
->>>> other semantics.
->>>>
->>>> This needs to be done from the irqchip (sorry).
->>>
->>> Actually, the register written here is not part of the irqchip.
->>> It is a system config register that is only used when using a GPIO as
->>> external interrupt.
->>> Its aim is to mux the GPIO bank on a line.
->>
->> Then it should be done in .request() for the GPIO, not in
->> .to_irq().
+On Thu, Apr 28, 2016 at 11:59 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+
+> MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
+> pins. It also supports interrupts from these pins.
 >
-> Problem is that at request time, we don't know whether the GPIO is to
-> be used as an interrupt or not.
-
-Well the fact that .to_irq() is called does not mean that you know
-it will be used as an interrupt either. Sorry. It is just a translation
-function, not an allocation function.
-
-> I think I may have not been clear enough in the HW architecture description.
-> Indeed, I used the term "mux", but should instead use the term "selector".
+> Add GPIO driver for these pins to control via GPIO APIs.
 >
-> The idea is that between the GPIO controllers and the EXTI controller,
-> there is one selector for each line number, to select the controller used as
-> interrupt source.
->
-> For example, there is a selector on line 0 to select between gpioa0, gpiob0,
-> gpioc0,.., gpiok0, which one is connected to exti0.
->
-> It means there is a HW restriction that makes impossible to use both GPIOA0
-> or GPIOB0 as interrupts at the same time.
->
-> It looks like this: http://pastebin.com/raw/cs2WiNKZ
-> You can directly check section 12.2.5 of the stm32f429 reference manual:
-> http://www2.st.com/resource/en/reference_manual/dm00031020.pdf
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Nice ASCII art, include that into the commit message :)
+Gnah there is still a problem with this, I just saw it:
 
-> For example, we can imagine a board where gpioa0 is used SD's card detect,
-> and gpiob0 used to control a led.
->
-> If we set the mux at request time, gpiob0 request may overwrite the mux
-> configuration set by gpioa0, whereas it is not used as interrupt.
->
-> That is the reason why I did it in .to_irq().
+> +config GPIO_MAX77620
+> +       bool "GPIO support for PMIC MAX77620 and MAX20024"
 
-Well now I am even *more* convinced that this should not happen in
-.to_irq(). .to_irq() should not do *anything*.
+bool == not a module
 
-This needs to happen as part of the irqchip setting up the actual
-interrupt.
+> +MODULE_DEVICE_TABLE(platform, max77620_gpio_devtype);
+(...)
+> +module_platform_driver(max77620_gpio_driver);
+(...)
+> +MODULE_DESCRIPTION("GPIO interface for MAX77620 and MAX20024 PMIC");
+> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+> +MODULE_AUTHOR("Chaitanya Bandi <bandik@nvidia.com>");
+> +MODULE_ALIAS("platform:max77620-gpio");
+> +MODULE_LICENSE("GPL v2");
 
-And it seems the problem is that this driver does *not* define its
-own irqchip, but it *should*.
-
-What you want to do is implement an hierarchical irqdomain in your
-irqchip, which is what other drivers of this type are doing, see:
-drivers/gpio/gpio-xgene-sb.c
-irq_domain_create_hierarchy() is your friend.
-
->> It should *also* be done in the set-up path for the irqchip
->> side, if that line is used without any interaction with the
->> gpio side of things.
->
-> Actually, a line is either used by a GPIO, (exclusive) or another purpose.
-> In the case of a GPIO line, I think we should always go through the gpio.
-
-This is a textbook example of a hierarchichal irq domain I think.
-
->> The point is that each IRQ that ever get used
->> has a 1-to-1 relationship to a certain GPIO line, and if that
->> relationship cannot be resolved from the irqchip side,
->> something is wrong. The irqchip needs to enable the
->> GPIO line it is backing to recieve interrupts without any
->> requirements that .to_irq() have been called first.
->
-> Actually, this is not a 1:1 relationship, as for example, exti0 can be connected
-> to either gpioa0, or gpiob0,..., or gpiok0.
-
-That is what hierarchical irqdomain is for.
-
-You should expose an irqchip from the gpio driver, that give you
-unique irq translations for *all* GPIO lines.
-
-Then, at runtime, if the hierarchical irqdomain cannot map
-(i.e. mux) the interrupt onto one of the available lines,
-you will get an error.
+git log --author=Gortmaker and you will see what you need to do.
 
 Yours,
 Linus Walleij
