@@ -1,126 +1,151 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [RFC v6 2/3] gpio: mmio: add DT support for memory-mapped GPIOs
-Date: Sun,  1 May 2016 14:18:38 +0200
-Message-ID: <891081fc8cc10771d235f5ba04e13e08144293c9.1462104492.git.chunkeey@googlemail.com>
-References: <cover.1462104492.git.chunkeey@googlemail.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFT PATCH 0/3] usb: misc: usb3503: Fix missing device when TFTP
+ booting
+Date: Sun, 1 May 2016 15:17:46 +0200
+Message-ID: <20160501131746.GA16766@kozik-lap>
+References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
+ <57247E50.1020000@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1462104492.git.chunkeey@googlemail.com>
-In-Reply-To: <cover.1462104492.git.chunkeey@googlemail.com>
-References: <cover.1462104492.git.chunkeey@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Alexander Shiyan <shc_work@mail.ru>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Christian Lamparter <chunkeey@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57247E50.1020000-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogw4FsdmFybyBGZXJuw6FuZGV6IFJvamFzIDxub2x0YXJpQGdtYWlsLmNvbT4KClRoaXMg
-cGF0Y2ggYWRkcyBzdXBwb3J0IGZvciBkZWZpbmluZyBtZW1vcnktbWFwcGVkIEdQSU9zIHdoaWNo
-CmFyZSBjb21wYXRpYmxlIHdpdGggdGhlIGV4aXN0aW5nIGdwaW8tbW1pbyBpbnRlcmZhY2UuIFRo
-ZSBnZW5lcmljCmxpYnJhcnkgcHJvdmlkZXMgc3VwcG9ydCBmb3IgbWFueSBtZW1vcnktbWFwcGVk
-IEdQSU8gY29udHJvbGxlcnMKdGhhdCBhcmUgZm91bmQgaW4gdmFyaW91cyBvbi1ib2FyZCBGUEdB
-IGFuZCBBU0lDIHNvbHV0aW9ucyB0aGF0CmFyZSB1c2VkIHRvIGNvbnRyb2wgYm9hcmQncyBzd2l0
-Y2hlcywgTEVEcywgY2hpcC1zZWxlY3RzLApFdGhlcm5ldC9VU0IgUEhZIHBvd2VyLCBldGMuCgpG
-b3Igc2V0dGluZyBHUElPJ3MgdGhlcmUgYXJlIHRocmVlIGNvbmZpZ3VyYXRpb25zOgoJMS4gc2lu
-Z2xlIGlucHV0L291dHB1dCByZWdpc3RlciByZXNvdXJjZSAobmFtZWQgImRhdCIpLAoJMi4gc2V0
-L2NsZWFyIHBhaXIgKG5hbWVkICJzZXQiIGFuZCAiY2xyIiksCgkzLiBzaW5nbGUgb3V0cHV0IHJl
-Z2lzdGVyIHJlc291cmNlIGFuZCBzaW5nbGUgaW5wdXQgcmVzb3VyY2UKCSAgICgic2V0IiBhbmQg
-ZGF0IikuCgpUaGUgY29uZmlndXJhdGlvbiBpcyBkZXRlY3RlZCBieSB3aGljaCByZXNvdXJjZXMg
-YXJlIHByZXNlbnQuCkZvciB0aGUgc2luZ2xlIG91dHB1dCByZWdpc3RlciwgdGhpcyBkcml2ZXMg
-YSAxIGJ5IHNldHRpbmcgYSBiaXQKYW5kIGEgemVybyBieSBjbGVhcmluZyBhIGJpdC4gIEZvciB0
-aGUgc2V0IGNsciBwYWlyLCB0aGlzIGRyaXZlcwphIDEgYnkgc2V0dGluZyBhIGJpdCBpbiB0aGUg
-c2V0IHJlZ2lzdGVyIGFuZCBjbGVhcnMgaXQgYnkgc2V0dGluZwphIGJpdCBpbiB0aGUgY2xlYXIg
-cmVnaXN0ZXIuIFRoZSBjb25maWd1cmF0aW9uIGlzIGRldGVjdGVkIGJ5CndoaWNoIHJlc291cmNl
-cyBhcmUgcHJlc2VudC4KCkZvciBzZXR0aW5nIHRoZSBHUElPIGRpcmVjdGlvbiwgdGhlcmUgYXJl
-IHRocmVlIGNvbmZpZ3VyYXRpb25zOgoJYS4gc2ltcGxlIGJpZGlyZWN0aW9uYWwgR1BJT3MgdGhh
-dCByZXF1aXJlcyBubyBjb25maWd1cmF0aW9uLgoJYi4gYW4gb3V0cHV0IGRpcmVjdGlvbiByZWdp
-c3RlciAobmFtZWQgImRpcm91dCIpCgkgICB3aGVyZSBhIDEgYml0IGluZGljYXRlcyB0aGUgR1BJ
-TyBpcyBhbiBvdXRwdXQuCgljLiBhbiBpbnB1dCBkaXJlY3Rpb24gcmVnaXN0ZXIgKG5hbWVkICJk
-aXJpbiIpCgkgICB3aGVyZSBhIDEgYml0IGluZGljYXRlcyB0aGUgR1BJTyBpcyBhbiBpbnB1dC4K
-ClRoZSBmaXJzdCB1c2VyIGZvciB0aGlzIGJpbmRpbmcgaXMgIndkLG1ibC1ncGlvIi4KClNpZ25l
-ZC1vZmYtYnk6IMOBbHZhcm8gRmVybsOhbmRleiBSb2phcyA8bm9sdGFyaUBnbWFpbC5jb20+ClNp
-Z25lZC1vZmYtYnk6IENocmlzdGlhbiBMYW1wYXJ0ZXIgPGNodW5rZWV5QGdvb2dsZW1haWwuY29t
-PgotLS0KIGRyaXZlcnMvZ3Bpby9ncGlvLW1taW8uYyB8IDk5ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDk3IGluc2VydGlv
-bnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncGlvL2dwaW8tbW1p
-by5jIGIvZHJpdmVycy9ncGlvL2dwaW8tbW1pby5jCmluZGV4IDZjMWNiM2IuLjFjZmI3MGEgMTAw
-NjQ0Ci0tLSBhL2RyaXZlcnMvZ3Bpby9ncGlvLW1taW8uYworKysgYi9kcml2ZXJzL2dwaW8vZ3Bp
-by1tbWlvLmMKQEAgLTYxLDYgKzYxLDggQEAgbyAgICAgICAgYCAgICAgICAgICAgICAgICAgICAg
-IH5+fn5cX19fL35+fn4gICAgYCBjb250cm9sbGVyIGluIEZQR0EgaXMgLC5gCiAjaW5jbHVkZSA8
-bGludXgvYml0b3BzLmg+CiAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+CiAjaW5j
-bHVkZSA8bGludXgvbW9kX2RldmljZXRhYmxlLmg+CisjaW5jbHVkZSA8bGludXgvb2YuaD4KKyNp
-bmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KIAogc3RhdGljIHZvaWQgYmdwaW9fd3JpdGU4KHZv
-aWQgX19pb21lbSAqcmVnLCB1bnNpZ25lZCBsb25nIGRhdGEpCiB7CkBAIC01NjksNiArNTcxLDg5
-IEBAIHN0YXRpYyB2b2lkIF9faW9tZW0gKmJncGlvX21hcChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2LAogCXJldHVybiBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYtPmRldiwgcik7CiB9
-CiAKKyNpZmRlZiBDT05GSUdfT0YKK3N0YXRpYyBpbnQgYmdwaW9fYmFzaWNfbW1pb19wYXJzZV9k
-dChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAorCQkJCSAgICAgc3RydWN0IGJncGlvX3Bk
-YXRhICpwZGF0YSwKKwkJCQkgICAgIHVuc2lnbmVkIGxvbmcgKmZsYWdzKQoreworCXN0cnVjdCBk
-ZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7CisJaW50IGVycjsKKworCXBkYXRhLT5iYXNlID0gLTE7
-CisJLyogSWYgbmdwaW8gcHJvcGVydHkgaXMgbm90IHNwZWNpZmllZCwgb2ZfcHJvcGVydHlfcmVh
-ZF91MzIKKwkgKiB3aWxsIHJldHVybiAtRUlOVkFMLiBJbiB0aGlzIGNhc2UgdGhlIG51bWJlciBv
-ZiBHUElPcyBpcworCSAqIGF1dG9tYXRpY2FsbHkgZGV0ZXJtaW5lZCBieSB0aGUgcmVnaXN0ZXIg
-d2lkdGguIEFueQorCSAqIG90aGVyIGVycm9yIG9mIG9mX3Byb3BlcnR5X3JlYWRfdTMyIGlzIGR1
-ZSBiYWQgZGF0YSBhbmQKKwkgKiBuZWVkcyB0byBiZSBkZWFsdCB3aXRoLgorCSAqLworCWVyciA9
-IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9kZSwgIm5ncGlvIiwgJnBkYXRhLT5uZ3Bp
-byk7CisJaWYgKGVyciAmJiBlcnIgIT0gLUVJTlZBTCkKKwkJcmV0dXJuIGVycjsKKworCWlmIChv
-Zl9kZXZpY2VfaXNfYmlnX2VuZGlhbihkZXYtPm9mX25vZGUpKQorCQkqZmxhZ3MgfD0gQkdQSU9G
-X0JJR19FTkRJQU5fQllURV9PUkRFUjsKKworCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2woZGV2
-LT5vZl9ub2RlLCAidW5yZWFkYWJsZS1yZWctc2V0IikpCisJCSpmbGFncyB8PSBCR1BJT0ZfVU5S
-RUFEQUJMRV9SRUdfU0VUOworCisJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChkZXYtPm9mX25v
-ZGUsICJ1bnJlYWRhYmxlLXJlZy1kaXIiKSkKKwkJKmZsYWdzIHw9IEJHUElPRl9VTlJFQURBQkxF
-X1JFR19ESVI7CisKKwlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKGRldi0+b2Zfbm9kZSwgImJp
-Zy1lbmRpYW4tYnl0ZS1vcmRlciIpKQorCQkqZmxhZ3MgfD0gQkdQSU9GX0JJR19FTkRJQU47CisK
-KwlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKGRldi0+b2Zfbm9kZSwgInJlYWQtb3V0cHV0LXJl
-Zy1zZXQiKSkKKwkJKmZsYWdzIHw9IEJHUElPRl9SRUFEX09VVFBVVF9SRUdfU0VUOworCisJaWYg
-KG9mX3Byb3BlcnR5X3JlYWRfYm9vbChkZXYtPm9mX25vZGUsICJuby1vdXRwdXQiKSkKKwkJKmZs
-YWdzIHw9IEJHUElPRl9OT19PVVRQVVQ7CisJcmV0dXJuIDA7Cit9CisKKyNkZWZpbmUgQUREKF9u
-YW1lLCBfZnVuYykgeyAuY29tcGF0aWJsZSA9IF9uYW1lLCAuZGF0YSA9IF9mdW5jIH0KKworc3Rh
-dGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYmdwaW9fb2ZfbWF0Y2hbXSA9IHsKKwlBREQo
-IndkLG1ibC1ncGlvIiwgYmdwaW9fYmFzaWNfbW1pb19wYXJzZV9kdCksCisJeyB9Cit9OworI3Vu
-ZGVmIEFERAorTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYmdwaW9fb2ZfbWF0Y2gpOworCitzdGF0
-aWMgc3RydWN0IGJncGlvX3BkYXRhICpiZ3Bpb19wYXJzZV9kdChzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2LAorCQkJCQkgIHVuc2lnbmVkIGxvbmcgKmZsYWdzKQoreworCWNvbnN0IGludCAo
-KnBhcnNlX2R0KShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICosCisJCQkgICAgICBzdHJ1Y3QgYmdw
-aW9fcGRhdGEgKiwgdW5zaWduZWQgbG9uZyAqKTsKKwljb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5vZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsKKwljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpv
-Zl9pZDsKKwlzdHJ1Y3QgYmdwaW9fcGRhdGEgKnBkYXRhOworCWludCBlcnIgPSAtRU5PREVWOwor
-CisJb2ZfaWQgPSBvZl9tYXRjaF9ub2RlKGJncGlvX29mX21hdGNoLCBub2RlKTsKKwlpZiAoIW9m
-X2lkKQorCQlyZXR1cm4gTlVMTDsKKworCXBkYXRhID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYs
-IHNpemVvZihzdHJ1Y3QgYmdwaW9fcGRhdGEpLAorCQkJICAgICBHRlBfS0VSTkVMKTsKKwlpZiAo
-IXBkYXRhKQorCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsKKworCXBhcnNlX2R0ID0gKGNvbnN0
-IHZvaWQgKilvZl9pZC0+ZGF0YTsKKwlpZiAocGFyc2VfZHQpCisJCWVyciA9IHBhcnNlX2R0KHBk
-ZXYsIHBkYXRhLCBmbGFncyk7CisJaWYgKGVycikKKwkJcmV0dXJuIEVSUl9QVFIoZXJyKTsKKwor
-CXJldHVybiBwZGF0YTsKK30KKyNlbHNlCitzdGF0aWMgc3RydWN0IGJncGlvX3BkYXRhICpiZ3Bp
-b19wYXJzZV9kdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAorCQkJCQkgIHVuc2lnbmVk
-IGxvbmcgKmZsYWdzKQoreworCXJldHVybiBOVUxMOworfQorI2VuZGlmIC8qIENPTkZJR19PRiAq
-LworCiBzdGF0aWMgaW50IGJncGlvX3BkZXZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikKIHsKIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2OwpAQCAtNTc5LDEwICs2
-NjQsMTkgQEAgc3RhdGljIGludCBiZ3Bpb19wZGV2X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpCiAJdm9pZCBfX2lvbWVtICpkaXJvdXQ7CiAJdm9pZCBfX2lvbWVtICpkaXJpbjsK
-IAl1bnNpZ25lZCBsb25nIHN6OwotCXVuc2lnbmVkIGxvbmcgZmxhZ3MgPSBwZGV2LT5pZF9lbnRy
-eS0+ZHJpdmVyX2RhdGE7CisJdW5zaWduZWQgbG9uZyBmbGFncyA9IDA7CiAJaW50IGVycjsKIAlz
-dHJ1Y3QgZ3Bpb19jaGlwICpnYzsKLQlzdHJ1Y3QgYmdwaW9fcGRhdGEgKnBkYXRhID0gZGV2X2dl
-dF9wbGF0ZGF0YShkZXYpOworCXN0cnVjdCBiZ3Bpb19wZGF0YSAqcGRhdGE7CisKKwlwZGF0YSA9
-IGJncGlvX3BhcnNlX2R0KHBkZXYsICZmbGFncyk7CisJaWYgKElTX0VSUihwZGF0YSkpCisJCXJl
-dHVybiBQVFJfRVJSKHBkYXRhKTsKKworCWlmICghcGRhdGEpIHsKKwkJcGRhdGEgPSBkZXZfZ2V0
-X3BsYXRkYXRhKGRldik7CisJCWZsYWdzID0gcGRldi0+aWRfZW50cnktPmRyaXZlcl9kYXRhOwor
-CX0KIAogCXIgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsIElPUkVTT1VSQ0Vf
-TUVNLCAiZGF0Iik7CiAJaWYgKCFyKQpAQCAtNjQ2LDYgKzc0MCw3IEBAIE1PRFVMRV9ERVZJQ0Vf
-VEFCTEUocGxhdGZvcm0sIGJncGlvX2lkX3RhYmxlKTsKIHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1f
-ZHJpdmVyIGJncGlvX2RyaXZlciA9IHsKIAkuZHJpdmVyID0gewogCQkubmFtZSA9ICJiYXNpYy1t
-bWlvLWdwaW8iLAorCQkub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIoYmdwaW9fb2ZfbWF0
-Y2gpLAogCX0sCiAJLmlkX3RhYmxlID0gYmdwaW9faWRfdGFibGUsCiAJLnByb2JlID0gYmdwaW9f
-cGRldl9wcm9iZSwKLS0gCjIuOC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Sat, Apr 30, 2016 at 11:43:44AM +0200, Hans Verkuil wrote:
+> Hi Krzysztof,
+> 
+> On 04/29/2016 12:59 PM, Krzysztof Kozlowski wrote:
+> > Hi,
+> > 
+> > Patches are independent, please pick up as you wish.
+> > 
+> > However all of them are needed to solve the issue, so I am sending
+> > everything together for easier testng.
+> > 
+> > 
+> > Problem
+> > =======
+> > When Odroid U3 (usb3503 + smsc95xx + max77686) boots from network (TFTP),
+> > the usb3503 does not show up in "lsusb". Hard-reset is required, e.g.
+> > by suspend to RAM. The actual TFTP boot does not have to happen. Just
+> > "usb start" from U-Boot is sufficient.
+> > 
+> > 
+> > Solution
+> > ========
+> > Perform real hardware reset (including regulator off/on) when probing.
+> > 
+> > 
+> > Tested on Odroid U3 so far. Please kindly test on X2 and other
+> > configurations and bootloaders.
+> 
+> Against which kernel git repo is this patch?
+> 
+> I did apply this patch series first:
+> 
+> http://www.spinics.net/lists/arm-kernel/msg500764.html
+
+Indeed it is based on above patchset... and on linux-next. It touches
+multiple trees so next seems the easiest base.
+
+> 
+> followed by this patch series.
+> 
+> I've tested with both 4.6.0-rc2 and -rc5, but in all cases (even without
+> applying these patches!) the boot sequence hangs here:
+> 
+> ...
+> [drm] Exynos DRM: using 12c10000.mixer device for DMA mapping operations
+> exynos-drm exynos-drm: bound 12c10000.mixer (ops mixer_component_ops)
+> exynos-drm exynos-drm: bound 12d00000.hdmi (ops hdmi_component_ops)
+> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> [drm] No driver support for vblank timestamp query.
+> Console: switching to colour frame buffer device 240x67
+> exynos-drm exynos-drm: fb0:  frame buffer device
+> [drm] Initialized exynos 1.0.0 20110530 on minor 0
+> brd: module loaded
+> loop: module loaded
+> s3c64xx-spi 13930000.spi: spi bus clock parent not specified, using clock
+> at index 0 as parent
+> s3c64xx-spi 13930000.spi: number of chip select lines not specified,
+> assuming 1 chip select line
+> tun: Universal TUN/TAP device driver, 1.6
+> tun: (C) 1999-2004 Max Krasnyansky <maxk-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
+> usbcore: registered new interface driver asix
+> usbcore: registered new interface driver ax88179_178a
+> usbcore: registered new interface driver cdc_ether
+> usbcore: registered new interface driver smsc95xx
+> usbcore: registered new interface driver cdc_ncm
+> dwc2 12480000.hsotg: Specified GNPTXFDEP=1024 > 768
+> dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
+> ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+> ehci-exynos: EHCI EXYNOS driver
+> exynos-ehci 12580000.ehci: EHCI Host Controller
+> exynos-ehci 12580000.ehci: new USB bus registered, assigned bus number 1
+> exynos-ehci 12580000.ehci: irq 51, io mem 0x12580000
+> exynos-ehci 12580000.ehci: USB 2.0 started, EHCI 1.00
+> usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+> usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+> usb usb1: Product: EHCI Host Controller
+> usb usb1: Manufacturer: Linux 4.6.0-rc5-odroid ehci_hcd
+> usb usb1: SerialNumber: 12580000.ehci
+> hub 1-0:1.0: USB hub found
+> hub 1-0:1.0: 3 ports detected
+> ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+> ohci-exynos: OHCI EXYNOS driver
+> usbcore: registered new interface driver usb-storage
+> usb3503 0-0008: switched to HUB mode
+> usb3503 0-0008: usb3503_probe: probed in hub mode
+> using random self ethernet address
+> using random host ethernet address
+> usb0: HOST MAC 66:79:ef:11:72:85
+> usb0: MAC 1e:66:f2:66:8e:2a
+> using random self ethernet address
+> using random host ethernet address
+> g_ether gadget: Ethernet Gadget, version: Memorial Day 2008
+> g_ether gadget: g_ether ready
+> dwc2 12480000.hsotg: bound driver g_ether
+> mousedev: PS/2 mouse device common for all mice
+> max77686-rtc max77686-rtc: rtc core: registered max77686-rtc as rtc0
+> i2c /dev entries driver
+> s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
+> usb 1-2: new high-speed USB device number 2 using exynos-ehci
+> usb 1-2: New USB device found, idVendor=0424, idProduct=9730
+> usb 1-2: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> smsc95xx v1.0.4
+> smsc95xx 1-2:1.0 eth0: register 'smsc95xx' at usb-12580000.ehci-2, smsc95xx
+> USB 2.0 Ethernet, c2:22:09:f2:5f:e8
+> usb 1-3: new high-speed USB device number 3 using exynos-ehci
+> usb 1-3: New USB device found, idVendor=0424, idProduct=3503
+> usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> hub 1-3:1.0: USB hub found
+> hub 1-3:1.0: 3 ports detected
+> 
+> No oops, no nothing. It's just sitting there.
+
+Apparently you have encountered different issue. sysrq with 'l' might be
+useful.
+
+> Is this a regression that was introduced in 4.6? Or is there some special
+> new config that needs to be turned on first in 4.6?
+
+I think it was like that for looong time... although I did not use
+netboot before on that target.
+
+> I've been running
+> 4.5.0-rc3 before this, but I can't apply these patches there because there
+> is no drivers/regulator/max77686-regulator.c in 4.5.
+
+In that case skip the regulator patch or apply it for
+drivers/regulator/max77686.c driver.
+
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
