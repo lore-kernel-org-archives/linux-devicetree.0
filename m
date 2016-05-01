@@ -1,32 +1,81 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM64: dts: amlogic: Enable pin controller on
- GXBB-based platforms
-Date: Sun, 1 May 2016 11:05:01 +0200
-Message-ID: <CACRpkdb1XwjJEeKxadRWxeD1gq7yj9RMJfZQbiX+xG0sRNXz4w@mail.gmail.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: amlogic: Add support for Amlogic Meson GXBB SoC
+Date: Sun, 1 May 2016 11:20:14 +0200
+Message-ID: <CAOQ7t2YEVsk9cB-kmp-fXSVsVVtXynFbMSxPzTPE_0+s0qY9PQ@mail.gmail.com>
 References: <1462036875-22625-1-git-send-email-carlo@caione.org>
-	<1462036875-22625-3-git-send-email-carlo@caione.org>
+	<1462036875-22625-2-git-send-email-carlo@caione.org>
+	<CACRpkdbfSgVH_zGMdgyfvBbnpiTkd7dzugza4_w0_7MLMVNzyA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462036875-22625-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CACRpkdbfSgVH_zGMdgyfvBbnpiTkd7dzugza4_w0_7MLMVNzyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 30, 2016 at 7:21 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
-
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+On Sun, May 1, 2016 at 11:03 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Apr 30, 2016 at 7:21 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
 >
-> Update DTS and DTSI files to enable the pin controller. We also now
-> support the blinking blue LED on the Odroid-C2.
+>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>>
+>> This patch adds the basic platform file to support the pin controller
+>> found on the Amlogic Meson GXBB SoCs.
+>>
+>> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 >
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>>  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   2 +
+>
+> This thing conflicts with upstream. Make a separate patch for
+> updating the bindings I think.
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patch is based on linux-next where the documentation is correctly
+updated (see 11ca8735) but apparently this is missing from upstream.
+Probably slipped through the cracks with the latest PR.
 
-Yours,
-Linus Walleij
+Kevin, did you merge both the commits in
+https://patchwork.ozlabs.org/patch/603580/ or just the DT changes?
+
+>>  arch/arm64/Kconfig.platforms                       |   2 +
+>
+> This needs to be split off and sent separatelt to the ARM64
+> maintainers. Since it's just a symbol dependency (I think?) it
+> can be merged orthogonally.
+
+Ok
+
+>>  drivers/pinctrl/meson/Makefile                     |   2 +-
+>>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c         | 432 +++++++++++++++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson.c              |   8 +
+>>  drivers/pinctrl/meson/pinctrl-meson.h              |   2 +
+>>  include/dt-bindings/gpio/meson-gxbb-gpio.h         | 154 ++++++++
+>>  7 files changed, 601 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+>>  create mode 100644 include/dt-bindings/gpio/meson-gxbb-gpio.h
+>
+> This stuff I can merge, if I get it in a separate patch.
+
+I'll split it in v2
+
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> index 32f4a2d..fe7fe0b 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> @@ -5,6 +5,8 @@ Required properties for the root node:
+>>                       "amlogic,meson8b-cbus-pinctrl"
+>>                       "amlogic,meson8-aobus-pinctrl"
+>>                       "amlogic,meson8b-aobus-pinctrl"
+>> +                     "amlogic,meson-gxbb-periphs-pinctrl"
+>> +                     "amlogic,meson-gxbb-aobus-pinctrl"
+>
+> This is not how upstream looks...
+
+yeah, trying to figure this out,
+
+Thanks,
+
+-- 
+Carlo Caione
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
