@@ -1,91 +1,177 @@
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH 00/12] SH: landisk convert to devicetree
-Date: Sun,  1 May 2016 13:59:10 +0900
-Message-ID: <1462078763-27135-1-git-send-email-ysato@users.sourceforge.jp>
+Subject: [PATCH 10/12] sh: I/O DATA HDL-U (aka landisk) support dts
+Date: Sun,  1 May 2016 13:59:20 +0900
+Message-ID: <1462078763-27135-11-git-send-email-ysato@users.sourceforge.jp>
+References: <1462078763-27135-1-git-send-email-ysato@users.sourceforge.jp>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1462078763-27135-1-git-send-email-ysato@users.sourceforge.jp>
 Sender: linux-sh-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kerel@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-SH get devicetree support. But it not working on existing H/W.
-
-IO-DATA HDL-U (aka landisk) currentry supported.
-This H/W like SH7751 evalution board. It's a best to use this as a
-change base H/W.
-
-Yoshinori Sato (12):
-  sh: Fix typo
-  sh: Config update for OF mode
-  sh: Disable board specific code in OF mode
-  sh: Drop CPU specific setup on OF mode
-  sh: DeviceTree support update
-  clk: sh: SH7750/51 PLL and divider clock driver
-  pci: sh: SH7751 PCI host bridge driver
-  intc: sh: Renesas Super H INTC driver
-  sh: Add I/O DATA HDL-U support drivers.
-  sh: I/O DATA HDL-U (aka landisk) support dts
-  sh: I/O DATA HDL-U defconfig (DT mode)
-  of: Add sh support
-
- .../bindings/clock/renesas,sh-div-clock.txt        |  24 ++
- .../bindings/clock/renesas,sh7750-div-clock.txt    |  27 ++
- .../bindings/clock/renesas,sh7750-pll-clock.txt    |  26 ++
- .../interrupt-controller/iodata-landisk.txt        |  28 ++
- .../interrupt-controller/renesas,sh7751-intc.txt   |  25 ++
- .../devicetree/bindings/pci/sh7751-pci.txt         |  51 +++
- arch/sh/Kconfig                                    |  26 +-
- arch/sh/Makefile                                   |  11 +
- arch/sh/boards/Kconfig                             |   4 +
- arch/sh/boards/of-generic.c                        |  23 +-
- arch/sh/boot/compressed/head_32.S                  |   5 +-
- arch/sh/boot/dts/include/dt-bindings               |   1 +
- arch/sh/boot/dts/landisk.dts                       | 150 +++++++++
- arch/sh/configs/landisk-dt_defconfig               | 100 ++++++
- arch/sh/drivers/Makefile                           |   2 +
- arch/sh/include/asm/io.h                           |   6 +
- arch/sh/kernel/cpu/Makefile                        |   8 +-
- arch/sh/kernel/cpu/clock.c                         |   9 +-
- arch/sh/kernel/cpu/sh4/Makefile                    |   2 +
- arch/sh/kernel/head_32.S                           |   2 +-
- arch/sh/kernel/setup.c                             |  19 ++
- drivers/clk/Kconfig                                |   1 +
- drivers/clk/Makefile                               |   3 +-
- drivers/clk/sh/Kconfig                             |   5 +
- drivers/clk/sh/Makefile                            |   2 +
- drivers/clk/sh/clk-sh7750.c                        | 223 +++++++++++++
- drivers/clk/sh/clk-shdiv.c                         | 338 ++++++++++++++++++++
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-io-landisk.c                   |  71 +++++
- drivers/irqchip/irq-renesas-shipr.c                | 138 ++++++++
- drivers/of/fdt.c                                   |   3 +
- drivers/pci/host/Kconfig                           |   7 +
- drivers/pci/host/Makefile                          |   1 +
- drivers/pci/host/pci-sh7751.c                      | 346 +++++++++++++++++++++
- drivers/pci/host/pci-sh7751.h                      | 269 ++++++++++++++++
- drivers/sh/Makefile                                |   2 +
- include/dt-bindings/interrupt-controller/sh_intc.h |   2 +
- 38 files changed, 1942 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,sh-div-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,sh7750-div-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,sh7750-pll-clock.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
- create mode 100644 Documentation/devicetree/bindings/pci/sh7751-pci.txt
- create mode 120000 arch/sh/boot/dts/include/dt-bindings
+Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+---
+ arch/sh/boot/dts/landisk.dts | 150 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
  create mode 100644 arch/sh/boot/dts/landisk.dts
- create mode 100644 arch/sh/configs/landisk-dt_defconfig
- create mode 100644 drivers/clk/sh/Kconfig
- create mode 100644 drivers/clk/sh/Makefile
- create mode 100644 drivers/clk/sh/clk-sh7750.c
- create mode 100644 drivers/clk/sh/clk-shdiv.c
- create mode 100644 drivers/irqchip/irq-io-landisk.c
- create mode 100644 drivers/irqchip/irq-renesas-shipr.c
- create mode 100644 drivers/pci/host/pci-sh7751.c
- create mode 100644 drivers/pci/host/pci-sh7751.h
- create mode 100644 include/dt-bindings/interrupt-controller/sh_intc.h
 
+diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
+new file mode 100644
+index 0000000..a994d19
+--- /dev/null
++++ b/arch/sh/boot/dts/landisk.dts
+@@ -0,0 +1,150 @@
++#include <dt-bindings/interrupt-controller/sh_intc.h>
++
++/dts-v1/;
++/ {
++	model = "I/O DATA HDL-U";
++	compatible = "iodata,hdl-u";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&shintc>;
++	chosen {
++		stdout-path = &sci1;
++		bootargs = "console=ttySC1,115200";
++	};
++	aliases {
++		serial0 = &sci0;
++		serial1 = &sci1;
++	};
++
++	oclk: oscillator {
++                #clock-cells = <0>;
++                compatible = "fixed-clock";
++                clock-frequency = <22222222>;
++        };
++        pllclk: pllclk {
++                compatible = "renesas,sh7750-pll-clock";
++                clocks = <&oclk>;
++                #clock-cells = <0>;
++		renesas,mult = <12>;
++                reg = <0xffc00000 2>, <0xffc00008 4>;
++        };
++        iclk: iclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <6>;
++		clock-output-names = "ick";
++        };
++        bclk: bclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <3>;
++		clock-output-names = "bck";
++        };
++        fclk: fclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <0>;
++		clock-output-names = "fck";
++        };
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++		      compatible = "renesas,sh4", "renesas,sh";
++		      clock-frequency = <266666666>;
++		};
++	};
++	memory@0c000000 {
++		device_type = "memory";
++		reg = <0x0c000000 0x4000000>;
++	};
++ 	shintc: interrupt-controller@ffd00000 {
++		compatible = "renesas,sh7751-intc";
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-controller;
++		reg = <0xffd00000 14>, <0xfe080000 128>;
++		 
++	};
++	cpldintc: cpld@b0000000 {
++		compatible = "iodata,landisk-intc";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0xb0000000 8>;
++		interrupt-map=<0 &shintc 0 0>, <1 &shintc 1 0>,
++		              <2 &shintc 2 0>, <3 &shintc 3 0>,
++		              <4 &shintc 4 0>, <5 &shintc 5 0>,
++		              <6 &shintc 6 0>, <7 &shintc 7 0>;
++	};
++	sci0: serial@ffe00000 {
++		compatible = "renesas,scif";
++		reg = <0xffe00000 0x20>;
++		interrupts = <evt2irq(0x4e0) 0
++		              evt2irq(0x500) 0
++		              evt2irq(0x520) 0
++		              evt2irq(0x540) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++	};
++	sci1: serial@ffe80000 {
++		compatible = "renesas,scif";
++		reg = <0xffe80000 0x100>;
++		interrupts = <evt2irq(0x700) 0
++			      evt2irq(0x720) 0
++			      evt2irq(0x760) 0
++			      evt2irq(0x740) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++	};
++	tmu: timer@ffd80008 {
++	 	compatible = "renesas,tmu";
++		reg = <0xffd80000 12>;
++		interrupts = <evt2irq(0x400) 0
++			      evt2irq(0x420) 0
++			      evt2irq(0x440) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++		renesas,channels-mask = <0x03>;
++	};
++
++	pci: pci-controller@fe200000 {
++		compatible = "renesas,sh7751-pci", "iodata,landisk";
++		device_type = "pci";
++		bus-range = <0 0>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
++		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
++		reg = <0xfe200000 0x0400>,
++		      <0x0c000000 0x04000000>,
++		      <0xff800000 0x0030>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0x1800 0 7>;
++		interrupt-map = <0x0000 0 1 &cpldintc evt2irq(0x2a0) 0
++		                 0x0000 0 2 &cpldintc evt2irq(0x2c0) 0
++		                 0x0000 0 3 &cpldintc evt2irq(0x2e0) 0
++		                 0x0000 0 4 &cpldintc evt2irq(0x300) 0
++
++		                 0x0800 0 1 &cpldintc evt2irq(0x2c0) 0
++		                 0x0800 0 2 &cpldintc evt2irq(0x2e0) 0
++		                 0x0800 0 3 &cpldintc evt2irq(0x300) 0
++		                 0x0800 0 4 &cpldintc evt2irq(0x2a0) 0
++
++		                 0x1000 0 1 &cpldintc evt2irq(0x2e0) 0
++		                 0x1000 0 2 &cpldintc evt2irq(0x300) 0
++		                 0x1000 0 3 &cpldintc evt2irq(0x2a0) 0
++		                 0x1000 0 4 &cpldintc evt2irq(0x2c0) 0
++
++		                 0x1800 0 1 &cpldintc evt2irq(0x300) 0
++		                 0x1800 0 2 &cpldintc evt2irq(0x2a0) 0
++		                 0x1800 0 3 &cpldintc evt2irq(0x2c0) 0
++		                 0x1800 0 4 &cpldintc evt2irq(0x2e0) 0>;
++	};
++};
 -- 
 2.7.0
 
