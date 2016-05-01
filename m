@@ -1,82 +1,88 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: amlogic: Add support for Amlogic Meson GXBB SoC
-Date: Sun, 1 May 2016 11:20:14 +0200
-Message-ID: <CAOQ7t2YEVsk9cB-kmp-fXSVsVVtXynFbMSxPzTPE_0+s0qY9PQ@mail.gmail.com>
-References: <1462036875-22625-1-git-send-email-carlo@caione.org>
-	<1462036875-22625-2-git-send-email-carlo@caione.org>
-	<CACRpkdbfSgVH_zGMdgyfvBbnpiTkd7dzugza4_w0_7MLMVNzyA@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ARM: dts: Add binding documentation
+ for AXP20x pmic ac power supply
+Date: Sun, 1 May 2016 17:41:45 +0800
+Message-ID: <CAGb2v64hzeGc1tbtszVXkiexr--ry5KeOHcqj=MkH9-6HAzNQQ@mail.gmail.com>
+References: <1462093047-7885-1-git-send-email-haas@computerlinguist.org> <1462093047-7885-5-git-send-email-haas@computerlinguist.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbfSgVH_zGMdgyfvBbnpiTkd7dzugza4_w0_7MLMVNzyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4M6S64QKGQECDWU3EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1462093047-7885-5-git-send-email-haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, degoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 1, 2016 at 11:03 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Apr 30, 2016 at 7:21 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
+Hi,
+
+On Sun, May 1, 2016 at 4:57 PM, Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org> wrote:
+> Add binding documentation for the ac power supply part of the AXP20x
+> pmic.
 >
->> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->>
->> This patch adds the basic platform file to support the pin controller
->> found on the Amlogic Meson GXBB SoCs.
->>
->> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/power_supply/axp20x_ac_power.txt      | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/axp20x_ac_power.txt
 >
->>  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   2 +
+> diff --git a/Documentation/devicetree/bindings/power_supply/axp20x_ac_power.txt b/Documentation/devicetree/bindings/power_supply/axp20x_ac_power.txt
+> new file mode 100644
+> index 0000000..1cbdcfb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power_supply/axp20x_ac_power.txt
+> @@ -0,0 +1,34 @@
+> +AXP20x AC power supply
+> +
+> +Required Properties:
+> +-compatible: "x-powers,axp202-ac-power-supply"
+> +
+> +This node is a subnode of the axp20x PMIC.
+> +
+> +Example:
+> +
+> +axp209: pmic@34 {
+> +       compatible = "x-powers,axp209";
+> +       reg = <0x34>;
+> +       interrupt-parent = <&nmi_intc>;
+> +       interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +       interrupt-controller;
+> +       #interrupt-cells = <1>;
+> +
+> +       regulators {
+> +               x-powers,dcdc-freq = <1500>;
+> +
+> +               vdd_cpu: dcdc2 {
+> +                       regulator-always-on;
+> +                       regulator-min-microvolt = <1000000>;
+> +                       regulator-max-microvolt = <1450000>;
+> +                       regulator-name = "vdd-cpu";
+> +               };
+> +
+> +               ...
+> +       };
+
+You don't need to include this in the example. Just a "..." would suffice.
+
+> +
+> +       ac-power-supply: ac-power-supply {
+> +               compatible = "x-powers,axp202-ac-power-supply";
+> +       };
+
+Also this should come first in alphabetic order.
+
+Otherwise,
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+> +};
+> --
+> 2.8.0
 >
-> This thing conflicts with upstream. Make a separate patch for
-> updating the bindings I think.
-
-This patch is based on linux-next where the documentation is correctly
-updated (see 11ca8735) but apparently this is missing from upstream.
-Probably slipped through the cracks with the latest PR.
-
-Kevin, did you merge both the commits in
-https://patchwork.ozlabs.org/patch/603580/ or just the DT changes?
-
->>  arch/arm64/Kconfig.platforms                       |   2 +
->
-> This needs to be split off and sent separatelt to the ARM64
-> maintainers. Since it's just a symbol dependency (I think?) it
-> can be merged orthogonally.
-
-Ok
-
->>  drivers/pinctrl/meson/Makefile                     |   2 +-
->>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c         | 432 +++++++++++++++++++++
->>  drivers/pinctrl/meson/pinctrl-meson.c              |   8 +
->>  drivers/pinctrl/meson/pinctrl-meson.h              |   2 +
->>  include/dt-bindings/gpio/meson-gxbb-gpio.h         | 154 ++++++++
->>  7 files changed, 601 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-gxbb.c
->>  create mode 100644 include/dt-bindings/gpio/meson-gxbb-gpio.h
->
-> This stuff I can merge, if I get it in a separate patch.
-
-I'll split it in v2
-
->> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> index 32f4a2d..fe7fe0b 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> @@ -5,6 +5,8 @@ Required properties for the root node:
->>                       "amlogic,meson8b-cbus-pinctrl"
->>                       "amlogic,meson8-aobus-pinctrl"
->>                       "amlogic,meson8b-aobus-pinctrl"
->> +                     "amlogic,meson-gxbb-periphs-pinctrl"
->> +                     "amlogic,meson-gxbb-aobus-pinctrl"
->
-> This is not how upstream looks...
-
-yeah, trying to figure this out,
-
-Thanks,
-
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
