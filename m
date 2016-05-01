@@ -1,72 +1,105 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 3/6] mfd: axp20x: Add a cell for the ac power_supply
- part of the axp20x PMICs
-Date: Sun, 1 May 2016 17:58:12 +0800
-Message-ID: <CAGb2v67dANYj8-t8C=2_JeFz_WxvgAUhmXcrToK9d7Q-ryeBXg@mail.gmail.com>
-References: <1462093047-7885-1-git-send-email-haas@computerlinguist.org> <1462093047-7885-4-git-send-email-haas@computerlinguist.org>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: [RFC v6 0/3] gpio: add DT support for memory-mapped GPIOs
+Date: Sun,  1 May 2016 14:18:36 +0200
+Message-ID: <cover.1462104492.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1462093047-7885-4-git-send-email-haas@computerlinguist.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Michael Haas <haas@computerlinguist.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Hans De Goede <hdegoede@redhat.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, devicetree <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Christian Lamparter <chunkeey@googlemail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch series adds device tree support for generic memory-mapped GP=
+IOs.
+The GPIO library already allows drivers and architecture support code t=
+o
+reuse generic code for managing a GPIO chip. Currently, a developer has
+to create a platform device "basic-mmio-gpio" and attach a bgpio_pdata
+platform data structure to make use of it. However, for architectures
+which rely on the device tree to enumerate devices, creating custom
+platform devices is another extra step that can be avoided by having
+direct support via a device tree binding.
 
-On Sun, May 1, 2016 at 4:57 PM, Michael Haas <haas@computerlinguist.org> wrote:
-> As a counterpart to the usb power_supply cell, this commit adds an AC
-> power_supply cell to the axp20x driver.
->
-> Still missing are the RTC backup battery and the main battery charger
-> cells.
->
-> Signed-off-by: Michael Haas <haas@computerlinguist.org>
-> ---
->  drivers/mfd/axp20x.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index a57d6e9..9351c0e 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -178,6 +178,12 @@ static struct resource axp288_power_button_resources[] = {
->         },
->  };
->
-> +static struct resource axp20x_ac_power_supply_resources[] = {
-> +       DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_PLUGIN, "ACIN_PLUGIN"),
-> +       DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_REMOVAL, "ACIN_REMOVAL"),
-> +       DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_OVER_V, "ACIN_OVER_V"),
-> +};
-> +
+I initially came across this patch [0] from =C3=81lvaro Fern=C3=A1ndez =
+Rojas,
+while looking for an easy way to add support for the GPIO of my
+WD MyBook Live [1] (APM82181 - ppc464). His generic approach patch
+allowed me to easily get the GPIO (and the connected LEDs,
+buttons, gpiohogs, etc.) up and running. Even thought, Mr. Fernandez
+initially developed it for his work on the brcm63xx [2].
 
-Please group the resources by family, i.e. put this one above
-axp20x_pek_resources.
+The drivers for gpio-clps711x, gpio-ge, gpio-moxart and gpio-ts4800
+are now part of the gpio-mmio.c driver. The old driver files have
+been removed and the Kconfig, Makefile entries have been updated
+accordingly.
 
->  static struct resource axp288_fuel_gauge_resources[] = {
->         {
->                 .start = AXP288_IRQ_QWBTU,
-> @@ -440,6 +446,11 @@ static struct mfd_cell axp20x_cells[] = {
->                 .of_compatible  = "x-powers,axp202-usb-power-supply",
->                 .num_resources  = ARRAY_SIZE(axp20x_usb_power_supply_resources),
->                 .resources      = axp20x_usb_power_supply_resources,
-> +       }, {
-> +               .name           = "axp20x-ac-power-supply",
-> +               .of_compatible  = "x-powers,axp202-ac-power-supply",
-> +               .num_resources  = ARRAY_SIZE(axp20x_ac_power_supply_resources),
-> +               .resources      = axp20x_ac_power_supply_resources,
+And finally, the most important stat about the series:
+	>>> 333 insertions(+), 411 deletions(-) <<<
+	It still removes more lines than it adds!
 
-I would put this before "x-powers,axp202-usb-power-supply", as it's the primary
-power supply, but keeping the power supplies grouped. The list is already out of
-alphabetic order anyway.
+Thanks! (Please keep me in the CC)
 
-ChenYu
+[0] <https://patchwork.ozlabs.org/patch/422121/>
+[1] <https://github.com/chunkeey/MBL-openwrt>
+[2] <https://wiki.openwrt.org/doc/hardware/soc/soc.broadcom.bcm63xx>
 
->         },
->  };
->
-> --
-> 2.8.0
->
+changelog:
+
+v5 -> v6:
+	- rewrote bindings and driver patch to fit the wd,mbl-gpio
+	- unified parser code for gpio-ge, gpio-moxart and gpio-ts4800
+	- fixed gpio chip's base being overwritten with bogus "0"
+	- fixed compat driver crash when reload gpio-generic.ko module
+	- dropped already applied patches from the series
+	- rebased code on linus' devel tree
+	- moved dt bindings patch to the top of the series
+
+v4 -> v5:
+	- reverted rename of gpio-mmio.c back to gpio-generic.c
+	- fixed Andy Shevchenko's comments
+	- consolidated changes from clps711x, gpio-ge, gpio-moxart and
+	  gpio-ts4800 into one patch.
+
+v3 -> v4:
+	- renamed gpio-generic.c to gpio-mmio.c
+	- changed compat. string to "linux,gpio-mmio"
+	- integrated Cirrus clps711x driver
+	- integrated GE FGPA gpio-ge driver
+	- integrated MOXA ART GPIO driver
+	- integrated TS4800 gpio driver
+	- reshuffled patches, reworded commits, fixed spelling errors, etc.
+
+Christian Lamparter (2):
+  gpio: dt-bindings: add wd,mbl-gpio bindings
+  gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-mmio
+
+=C3=81lvaro Fern=C3=A1ndez Rojas (1):
+  gpio: mmio: add DT support for memory-mapped GPIOs
+
+ .../devicetree/bindings/gpio/wd,mbl-gpio.txt       |  38 +++
+ drivers/gpio/Kconfig                               |  43 +--
+ drivers/gpio/Makefile                              |   4 -
+ drivers/gpio/gpio-clps711x.c                       |  91 -------
+ drivers/gpio/gpio-ge.c                             | 114 --------
+ drivers/gpio/gpio-mmio.c                           | 289 +++++++++++++=
++++++++-
+ drivers/gpio/gpio-moxart.c                         |  84 ------
+ drivers/gpio/gpio-ts4800.c                         |  81 ------
+ 8 files changed, 333 insertions(+), 411 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.=
+txt
+ delete mode 100644 drivers/gpio/gpio-clps711x.c
+ delete mode 100644 drivers/gpio/gpio-ge.c
+ delete mode 100644 drivers/gpio/gpio-moxart.c
+ delete mode 100644 drivers/gpio/gpio-ts4800.c
+
+--=20
+2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
