@@ -1,7 +1,7 @@
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH RESEND 12/12] of: Add sh support
-Date: Sun,  1 May 2016 14:08:36 +0900
-Message-ID: <1462079316-27771-13-git-send-email-ysato@users.sourceforge.jp>
+Subject: [PATCH RESEND 10/12] sh: I/O DATA HDL-U (aka landisk) support dts
+Date: Sun,  1 May 2016 14:08:34 +0900
+Message-ID: <1462079316-27771-11-git-send-email-ysato@users.sourceforge.jp>
 References: <1462079316-27771-1-git-send-email-ysato@users.sourceforge.jp>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1462079316-27771-1-git-send-email-ysato@users.sourceforge.jp>
@@ -10,27 +10,167 @@ To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kern
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-sh fdt access in VA. But memory reservation use PA.
-So sh need convert to PA.
-
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- drivers/of/fdt.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/sh/boot/dts/landisk.dts | 150 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
+ create mode 100644 arch/sh/boot/dts/landisk.dts
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3349d2a..fb357be 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -593,6 +593,9 @@ void __init early_init_fdt_scan_reserved_mem(void)
- 		fdt_get_mem_rsv(initial_boot_params, n, &base, &size);
- 		if (!size)
- 			break;
-+#ifdef CONFIG_SUPERH
-+		base = virt_to_phys(base);
-+#endif
- 		early_init_dt_reserve_memory_arch(base, size, 0);
- 	}
- 
+diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
+new file mode 100644
+index 0000000..a994d19
+--- /dev/null
++++ b/arch/sh/boot/dts/landisk.dts
+@@ -0,0 +1,150 @@
++#include <dt-bindings/interrupt-controller/sh_intc.h>
++
++/dts-v1/;
++/ {
++	model = "I/O DATA HDL-U";
++	compatible = "iodata,hdl-u";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&shintc>;
++	chosen {
++		stdout-path = &sci1;
++		bootargs = "console=ttySC1,115200";
++	};
++	aliases {
++		serial0 = &sci0;
++		serial1 = &sci1;
++	};
++
++	oclk: oscillator {
++                #clock-cells = <0>;
++                compatible = "fixed-clock";
++                clock-frequency = <22222222>;
++        };
++        pllclk: pllclk {
++                compatible = "renesas,sh7750-pll-clock";
++                clocks = <&oclk>;
++                #clock-cells = <0>;
++		renesas,mult = <12>;
++                reg = <0xffc00000 2>, <0xffc00008 4>;
++        };
++        iclk: iclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <6>;
++		clock-output-names = "ick";
++        };
++        bclk: bclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <3>;
++		clock-output-names = "bck";
++        };
++        fclk: fclk {
++                compatible = "renesas,sh7750-div-clock";
++                clocks = <&pllclk>;
++                #clock-cells = <0>;
++                reg = <0xffc00000 2>;
++		renesas,offset = <0>;
++		clock-output-names = "fck";
++        };
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++		      compatible = "renesas,sh4", "renesas,sh";
++		      clock-frequency = <266666666>;
++		};
++	};
++	memory@0c000000 {
++		device_type = "memory";
++		reg = <0x0c000000 0x4000000>;
++	};
++ 	shintc: interrupt-controller@ffd00000 {
++		compatible = "renesas,sh7751-intc";
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-controller;
++		reg = <0xffd00000 14>, <0xfe080000 128>;
++		 
++	};
++	cpldintc: cpld@b0000000 {
++		compatible = "iodata,landisk-intc";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0xb0000000 8>;
++		interrupt-map=<0 &shintc 0 0>, <1 &shintc 1 0>,
++		              <2 &shintc 2 0>, <3 &shintc 3 0>,
++		              <4 &shintc 4 0>, <5 &shintc 5 0>,
++		              <6 &shintc 6 0>, <7 &shintc 7 0>;
++	};
++	sci0: serial@ffe00000 {
++		compatible = "renesas,scif";
++		reg = <0xffe00000 0x20>;
++		interrupts = <evt2irq(0x4e0) 0
++		              evt2irq(0x500) 0
++		              evt2irq(0x520) 0
++		              evt2irq(0x540) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++	};
++	sci1: serial@ffe80000 {
++		compatible = "renesas,scif";
++		reg = <0xffe80000 0x100>;
++		interrupts = <evt2irq(0x700) 0
++			      evt2irq(0x720) 0
++			      evt2irq(0x760) 0
++			      evt2irq(0x740) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++	};
++	tmu: timer@ffd80008 {
++	 	compatible = "renesas,tmu";
++		reg = <0xffd80000 12>;
++		interrupts = <evt2irq(0x400) 0
++			      evt2irq(0x420) 0
++			      evt2irq(0x440) 0>;
++		clocks = <&fclk>;
++		clock-names = "fck";
++		renesas,channels-mask = <0x03>;
++	};
++
++	pci: pci-controller@fe200000 {
++		compatible = "renesas,sh7751-pci", "iodata,landisk";
++		device_type = "pci";
++		bus-range = <0 0>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
++		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
++		reg = <0xfe200000 0x0400>,
++		      <0x0c000000 0x04000000>,
++		      <0xff800000 0x0030>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0x1800 0 7>;
++		interrupt-map = <0x0000 0 1 &cpldintc evt2irq(0x2a0) 0
++		                 0x0000 0 2 &cpldintc evt2irq(0x2c0) 0
++		                 0x0000 0 3 &cpldintc evt2irq(0x2e0) 0
++		                 0x0000 0 4 &cpldintc evt2irq(0x300) 0
++
++		                 0x0800 0 1 &cpldintc evt2irq(0x2c0) 0
++		                 0x0800 0 2 &cpldintc evt2irq(0x2e0) 0
++		                 0x0800 0 3 &cpldintc evt2irq(0x300) 0
++		                 0x0800 0 4 &cpldintc evt2irq(0x2a0) 0
++
++		                 0x1000 0 1 &cpldintc evt2irq(0x2e0) 0
++		                 0x1000 0 2 &cpldintc evt2irq(0x300) 0
++		                 0x1000 0 3 &cpldintc evt2irq(0x2a0) 0
++		                 0x1000 0 4 &cpldintc evt2irq(0x2c0) 0
++
++		                 0x1800 0 1 &cpldintc evt2irq(0x300) 0
++		                 0x1800 0 2 &cpldintc evt2irq(0x2a0) 0
++		                 0x1800 0 3 &cpldintc evt2irq(0x2c0) 0
++		                 0x1800 0 4 &cpldintc evt2irq(0x2e0) 0>;
++	};
++};
 -- 
 2.7.0
