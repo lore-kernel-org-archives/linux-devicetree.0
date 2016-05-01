@@ -1,150 +1,71 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [RFT PATCH 0/3] usb: misc: usb3503: Fix missing device when TFTP
- booting
-Date: Sun, 1 May 2016 16:09:34 +0200
-Message-ID: <57260E1E.70205@xs4all.nl>
-References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
- <57247E50.1020000@xs4all.nl> <20160501131746.GA16766@kozik-lap>
+From: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+Subject: Re: Re: [PATCH v2 2/6] mfd: axp20x: Add register bits
+ for axp20x-ac-power
+Date: Sun, 1 May 2016 16:24:20 +0200
+Message-ID: <70789f3b-32c2-7d9c-1091-e4fd40b9a754@computerlinguist.org>
+References: <1462093047-7885-1-git-send-email-haas@computerlinguist.org>
+ <1462093047-7885-3-git-send-email-haas@computerlinguist.org>
+ <CAGb2v67g6rmnsKwjP3d25y5FV4BpYcenU1gX5NF4PbhOhJSxNA@mail.gmail.com>
+Reply-To: haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20160501131746.GA16766@kozik-lap>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCD4V7EG6QFRBGVDTC4QKGQEEMQYGQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67g6rmnsKwjP3d25y5FV4BpYcenU1gX5NF4PbhOhJSxNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: wens-jdAy2FN1RRM@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/2016 03:17 PM, Krzysztof Kozlowski wrote:
-> On Sat, Apr 30, 2016 at 11:43:44AM +0200, Hans Verkuil wrote:
->> Hi Krzysztof,
->>
->> On 04/29/2016 12:59 PM, Krzysztof Kozlowski wrote:
->>> Hi,
->>>
->>> Patches are independent, please pick up as you wish.
->>>
->>> However all of them are needed to solve the issue, so I am sending
->>> everything together for easier testng.
->>>
->>>
->>> Problem
->>> =======
->>> When Odroid U3 (usb3503 + smsc95xx + max77686) boots from network (TFTP),
->>> the usb3503 does not show up in "lsusb". Hard-reset is required, e.g.
->>> by suspend to RAM. The actual TFTP boot does not have to happen. Just
->>> "usb start" from U-Boot is sufficient.
->>>
->>>
->>> Solution
->>> ========
->>> Perform real hardware reset (including regulator off/on) when probing.
->>>
->>>
->>> Tested on Odroid U3 so far. Please kindly test on X2 and other
->>> configurations and bootloaders.
->>
->> Against which kernel git repo is this patch?
->>
->> I did apply this patch series first:
->>
->> http://www.spinics.net/lists/arm-kernel/msg500764.html
+On 05/01/2016 11:48 AM, Chen-Yu Tsai wrote:
+> Hi,
 > 
-> Indeed it is based on above patchset... and on linux-next. It touches
-> multiple trees so next seems the easiest base.
-> 
+> On Sun, May 1, 2016 at 4:57 PM, Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org> wrote:
+>> This change adds some register bit definitions used by the
+>> axp20x-ac-power driver.
 >>
->> followed by this patch series.
+>> Signed-off-by: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+>> ---
+>>  include/linux/mfd/axp20x.h | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
 >>
->> I've tested with both 4.6.0-rc2 and -rc5, but in all cases (even without
->> applying these patches!) the boot sequence hangs here:
+>> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+>> index d82e7d5..c4c6dfa 100644
+>> --- a/include/linux/mfd/axp20x.h
+>> +++ b/include/linux/mfd/axp20x.h
+>> @@ -90,6 +90,17 @@ enum {
+>>  #define AXP22X_ALDO3_V_OUT             0x2a
+>>  #define AXP22X_CHRG_CTRL3              0x35
 >>
->> ...
->> [drm] Exynos DRM: using 12c10000.mixer device for DMA mapping operations
->> exynos-drm exynos-drm: bound 12c10000.mixer (ops mixer_component_ops)
->> exynos-drm exynos-drm: bound 12d00000.hdmi (ops hdmi_component_ops)
->> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
->> [drm] No driver support for vblank timestamp query.
->> Console: switching to colour frame buffer device 240x67
->> exynos-drm exynos-drm: fb0:  frame buffer device
->> [drm] Initialized exynos 1.0.0 20110530 on minor 0
->> brd: module loaded
->> loop: module loaded
->> s3c64xx-spi 13930000.spi: spi bus clock parent not specified, using clock
->> at index 0 as parent
->> s3c64xx-spi 13930000.spi: number of chip select lines not specified,
->> assuming 1 chip select line
->> tun: Universal TUN/TAP device driver, 1.6
->> tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
->> usbcore: registered new interface driver asix
->> usbcore: registered new interface driver ax88179_178a
->> usbcore: registered new interface driver cdc_ether
->> usbcore: registered new interface driver smsc95xx
->> usbcore: registered new interface driver cdc_ncm
->> dwc2 12480000.hsotg: Specified GNPTXFDEP=1024 > 768
->> dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
->> ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
->> ehci-exynos: EHCI EXYNOS driver
->> exynos-ehci 12580000.ehci: EHCI Host Controller
->> exynos-ehci 12580000.ehci: new USB bus registered, assigned bus number 1
->> exynos-ehci 12580000.ehci: irq 51, io mem 0x12580000
->> exynos-ehci 12580000.ehci: USB 2.0 started, EHCI 1.00
->> usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
->> usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
->> usb usb1: Product: EHCI Host Controller
->> usb usb1: Manufacturer: Linux 4.6.0-rc5-odroid ehci_hcd
->> usb usb1: SerialNumber: 12580000.ehci
->> hub 1-0:1.0: USB hub found
->> hub 1-0:1.0: 3 ports detected
->> ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
->> ohci-exynos: OHCI EXYNOS driver
->> usbcore: registered new interface driver usb-storage
->> usb3503 0-0008: switched to HUB mode
->> usb3503 0-0008: usb3503_probe: probed in hub mode
->> using random self ethernet address
->> using random host ethernet address
->> usb0: HOST MAC 66:79:ef:11:72:85
->> usb0: MAC 1e:66:f2:66:8e:2a
->> using random self ethernet address
->> using random host ethernet address
->> g_ether gadget: Ethernet Gadget, version: Memorial Day 2008
->> g_ether gadget: g_ether ready
->> dwc2 12480000.hsotg: bound driver g_ether
->> mousedev: PS/2 mouse device common for all mice
->> max77686-rtc max77686-rtc: rtc core: registered max77686-rtc as rtc0
->> i2c /dev entries driver
->> s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
->> usb 1-2: new high-speed USB device number 2 using exynos-ehci
->> usb 1-2: New USB device found, idVendor=0424, idProduct=9730
->> usb 1-2: New USB device strings: Mfr=0, Product=0, SerialNumber=0
->> smsc95xx v1.0.4
->> smsc95xx 1-2:1.0 eth0: register 'smsc95xx' at usb-12580000.ehci-2, smsc95xx
->> USB 2.0 Ethernet, c2:22:09:f2:5f:e8
->> usb 1-3: new high-speed USB device number 3 using exynos-ehci
->> usb 1-3: New USB device found, idVendor=0424, idProduct=3503
->> usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=0
->> hub 1-3:1.0: USB hub found
->> hub 1-3:1.0: 3 ports detected
->>
->> No oops, no nothing. It's just sitting there.
+>> +
+>> +/* Fields of AXP20X_PWR_INPUT_STATUS */
+>> +#define AXP20X_PWR_STATUS_AC_PRESENT     BIT(7)
+>> +#define AXP20X_PWR_STATUS_AC_AVAILABLE   BIT(6)
+>> +#define AXP20X_PWR_STATUS_AC_VBUS_SHORT  BIT(1)
+>> +#define AXP20X_PWR_STATUS_AC_VBUS_SEL    BIT(0)
+>> +
+>> +/* Fields of AXP20X_ADC_EN1 */
+>> +#define AXP20X_ADC_EN1_ACIN_VOLT BIT(5)
+>> +#define AXP20X_ADC_EN1_ACIN_CURR BIT(4)
+>> +
 > 
-> Apparently you have encountered different issue. sysrq with 'l' might be
-> useful.
+> We keep the bit definitions of each register in each separate driver.
+> The drivers only define the ones they use.
 > 
->> Is this a regression that was introduced in 4.6? Or is there some special
->> new config that needs to be turned on first in 4.6?
-> 
-> I think it was like that for looong time... although I did not use
-> netboot before on that target.
+> ChenYu
 
-Sorry, I meant the hanging issue I got in 4.6, not the ethernet issue.
-I get the same problem with linux-next. Can you mail me the .config you are using?
+Hi ChenYu,
 
-After some more testing I don't think it is hanging, instead it seems that the mmc
-isn't enabled/found and so it just sits waiting for the root partition to appear.
+i believe Maxime Ripard requested that these defines be moved to the
+header: https://groups.google.com/d/msg/linux-sunxi/nEUg87cV6KI/TvdB6MBZBAAJ
 
-Weird.
+What do you think?
 
-Regards,
+Thanks for the review!
 
-	Hans
+Michael
