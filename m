@@ -1,59 +1,70 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V3 1/3] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Sun, 1 May 2016 13:55:43 -0400
-Message-ID: <5726431F.7070106@codeaurora.org>
-References: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
- <147496989.L43SVC7xRY@wuerfel>
- <8f766d081b33d91f196e7bd5e13b6f33@codeaurora.org>
- <4981390.J9tsJr16lM@wuerfel>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH V3 0/7] iommu/msm: Add DT adaptation and generic bindings
+	support
+Date: Mon,  2 May 2016 00:24:28 +0530
+Message-ID: <1462128875-20988-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4981390.J9tsJr16lM@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, vikrams@codeaurora.org, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, vinod.koul@intel.com, Alex Williamson <alex.williamson@redhat.com>, agross@codeaurora.org, Dan Carpenter <dan.carpenter@oracle.com>, shankerd@codeaurora.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/29/2016 8:44 AM, Arnd Bergmann wrote:
->>  can certainly drop patch #3 and push the reset responsibility to acpi.
->> > 
->> > I never liked having a fragmented sw design across multiple drivers.
->> > 
->> > I need something for patch #1. Compatible is a DT property not ACPI.but 
->> > then, I won't have a reset driver anymore.
->> > 
->> > If we think about how vfio pci works, we pass the pci vendor and device 
->> > id to new_id file to find out which pci device needs to be pass thru.
->> > 
->> > I can go to a similar route. This time we pass the object id through 
->> > new_id and I call reset method on this object.
->> > 
->> > Let me know what you think?
-> It would certainly be nice to make it work more like PCI VFIO does
-> here, where you can assign any device as long as it has an IOMMU
-> (and a _rst method in this case).
-> 
-> 	Arnd
+The msm_iommu.c driver currently works based on platform data.
+A single master device can be connected to more than one iommu and multiple
+contexts in each of the iommu. This association between master and iommus was
+represented from platform data using parent/child devices. The master drivers
+were responsible for attaching all of the iommus/context to a domain. Now the
+platform data support is removed and DT support is added. The master/iommus are
+added through generic iommu bindings.
 
-I looked at the code today. This doesn't have to be as convoluted as PCI is. 
-The VFIO platform driver already has a pointer to the actual object in
-vdev->pdev.dev.
+This is essentially rework of the patch posted earlier by
+Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>. This series folds the changes in to the
+existing driver with the addition of generic bindings.
 
-This is really as simple as calling _RST method on the passed oject at the last
-step below. We don't need to create a dynamic list like PCI does. 
+        http://www.spinics.net/lists/linux-arm-msm/msg10077.html
 
-This is how the driver gets called. 
+Tested this series on ifc6410 board.
 
-echo vfio-platform | tee -a /sys/bus/platform/devices/QCOM8061:00/driver_override
-echo QCOM8061:00 | tee -a  /sys/bus/platform/devices/QCOM8061:00/driver/unbind
-echo QCOM8061:00 |tee -a /sys/bus/platform/drivers_probe
+[V3] Addressed comments to correct the usage
+     of the #iommu-cells binding, improve the flush_iotlb_range function,
+     added a new patch to use writel_relaxed for register access and split
+     up the documentation patch.
 
-I'll post a patch as soon as I test it.
+[V2] Adapted the driver to use generic ARMV7S short descriptor pagetable ops
+     and addressed comments.
+
+[V1]
+   https://lists.linuxfoundation.org/pipermail/iommu/2015-August/014074.html
+
+Sricharan R (7):
+  iommu/msm: Add DT adaptation
+  documentation: iommu: Add bindings for msm,iommu-v0 ip
+  iommu/msm: Move the contents from msm_iommu_dev.c to msm_iommu.c
+  iommu/msm: Add support for generic master bindings
+  iommu/msm: use generic ARMV7S short descriptor pagetable ops
+  iommu/msm: Use writel_relaxed and add a barrier
+  iommu/msm: Remove driver BROKEN
+
+ .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  62 ++
+ drivers/iommu/Kconfig                              |   2 +-
+ drivers/iommu/Makefile                             |   2 +-
+ drivers/iommu/msm_iommu.c                          | 872 +++++++++++----------
+ drivers/iommu/msm_iommu.h                          |  73 +-
+ drivers/iommu/msm_iommu_dev.c                      | 381 ---------
+ drivers/iommu/msm_iommu_hw-8xxx.h                  |   7 +-
+ 7 files changed, 567 insertions(+), 832 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+ delete mode 100644 drivers/iommu/msm_iommu_dev.c
 
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
