@@ -1,176 +1,67 @@
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH RESEND 10/12] sh: I/O DATA HDL-U (aka landisk) support dts
-Date: Sun,  1 May 2016 14:08:34 +0900
-Message-ID: <1462079316-27771-11-git-send-email-ysato@users.sourceforge.jp>
-References: <1462079316-27771-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462079316-27771-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] gpio: of: make it possible to name GPIO lines
+Date: Sun, 1 May 2016 10:56:57 +0200
+Message-ID: <CACRpkdbBah92TcAEquSL1HR4CdHx94MwdhBCcgu=p3-EUoHoTg@mail.gmail.com>
+References: <1461236901-28626-1-git-send-email-linus.walleij@linaro.org>
+	<1595634.pn7WvaDMTh@adelgunde>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1595634.pn7WvaDMTh@adelgunde>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Lee Campbell <leecam-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Bamvor Jian Zhang <bamvor.zhangjian-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Mandala <david.mandala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
----
- arch/sh/boot/dts/landisk.dts | 150 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
- create mode 100644 arch/sh/boot/dts/landisk.dts
+On Thu, Apr 28, 2016 at 10:12 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Thursday 21 April 2016 13:08:21 Linus Walleij wrote:
 
-diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
-new file mode 100644
-index 0000000..a994d19
---- /dev/null
-+++ b/arch/sh/boot/dts/landisk.dts
-@@ -0,0 +1,150 @@
-+#include <dt-bindings/interrupt-controller/sh_intc.h>
-+
-+/dts-v1/;
-+/ {
-+	model = "I/O DATA HDL-U";
-+	compatible = "iodata,hdl-u";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&shintc>;
-+	chosen {
-+		stdout-path = &sci1;
-+		bootargs = "console=ttySC1,115200";
-+	};
-+	aliases {
-+		serial0 = &sci0;
-+		serial1 = &sci1;
-+	};
-+
-+	oclk: oscillator {
-+                #clock-cells = <0>;
-+                compatible = "fixed-clock";
-+                clock-frequency = <22222222>;
-+        };
-+        pllclk: pllclk {
-+                compatible = "renesas,sh7750-pll-clock";
-+                clocks = <&oclk>;
-+                #clock-cells = <0>;
-+		renesas,mult = <12>;
-+                reg = <0xffc00000 2>, <0xffc00008 4>;
-+        };
-+        iclk: iclk {
-+                compatible = "renesas,sh7750-div-clock";
-+                clocks = <&pllclk>;
-+                #clock-cells = <0>;
-+                reg = <0xffc00000 2>;
-+		renesas,offset = <6>;
-+		clock-output-names = "ick";
-+        };
-+        bclk: bclk {
-+                compatible = "renesas,sh7750-div-clock";
-+                clocks = <&pllclk>;
-+                #clock-cells = <0>;
-+                reg = <0xffc00000 2>;
-+		renesas,offset = <3>;
-+		clock-output-names = "bck";
-+        };
-+        fclk: fclk {
-+                compatible = "renesas,sh7750-div-clock";
-+                clocks = <&pllclk>;
-+                #clock-cells = <0>;
-+                reg = <0xffc00000 2>;
-+		renesas,offset = <0>;
-+		clock-output-names = "fck";
-+        };
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+		      compatible = "renesas,sh4", "renesas,sh";
-+		      clock-frequency = <266666666>;
-+		};
-+	};
-+	memory@0c000000 {
-+		device_type = "memory";
-+		reg = <0x0c000000 0x4000000>;
-+	};
-+ 	shintc: interrupt-controller@ffd00000 {
-+		compatible = "renesas,sh7751-intc";
-+		#interrupt-cells = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		interrupt-controller;
-+		reg = <0xffd00000 14>, <0xfe080000 128>;
-+		 
-+	};
-+	cpldintc: cpld@b0000000 {
-+		compatible = "iodata,landisk-intc";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0xb0000000 8>;
-+		interrupt-map=<0 &shintc 0 0>, <1 &shintc 1 0>,
-+		              <2 &shintc 2 0>, <3 &shintc 3 0>,
-+		              <4 &shintc 4 0>, <5 &shintc 5 0>,
-+		              <6 &shintc 6 0>, <7 &shintc 7 0>;
-+	};
-+	sci0: serial@ffe00000 {
-+		compatible = "renesas,scif";
-+		reg = <0xffe00000 0x20>;
-+		interrupts = <evt2irq(0x4e0) 0
-+		              evt2irq(0x500) 0
-+		              evt2irq(0x520) 0
-+		              evt2irq(0x540) 0>;
-+		clocks = <&fclk>;
-+		clock-names = "fck";
-+	};
-+	sci1: serial@ffe80000 {
-+		compatible = "renesas,scif";
-+		reg = <0xffe80000 0x100>;
-+		interrupts = <evt2irq(0x700) 0
-+			      evt2irq(0x720) 0
-+			      evt2irq(0x760) 0
-+			      evt2irq(0x740) 0>;
-+		clocks = <&fclk>;
-+		clock-names = "fck";
-+	};
-+	tmu: timer@ffd80008 {
-+	 	compatible = "renesas,tmu";
-+		reg = <0xffd80000 12>;
-+		interrupts = <evt2irq(0x400) 0
-+			      evt2irq(0x420) 0
-+			      evt2irq(0x440) 0>;
-+		clocks = <&fclk>;
-+		clock-names = "fck";
-+		renesas,channels-mask = <0x03>;
-+	};
-+
-+	pci: pci-controller@fe200000 {
-+		compatible = "renesas,sh7751-pci", "iodata,landisk";
-+		device_type = "pci";
-+		bus-range = <0 0>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
-+		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
-+		reg = <0xfe200000 0x0400>,
-+		      <0x0c000000 0x04000000>,
-+		      <0xff800000 0x0030>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0x1800 0 7>;
-+		interrupt-map = <0x0000 0 1 &cpldintc evt2irq(0x2a0) 0
-+		                 0x0000 0 2 &cpldintc evt2irq(0x2c0) 0
-+		                 0x0000 0 3 &cpldintc evt2irq(0x2e0) 0
-+		                 0x0000 0 4 &cpldintc evt2irq(0x300) 0
-+
-+		                 0x0800 0 1 &cpldintc evt2irq(0x2c0) 0
-+		                 0x0800 0 2 &cpldintc evt2irq(0x2e0) 0
-+		                 0x0800 0 3 &cpldintc evt2irq(0x300) 0
-+		                 0x0800 0 4 &cpldintc evt2irq(0x2a0) 0
-+
-+		                 0x1000 0 1 &cpldintc evt2irq(0x2e0) 0
-+		                 0x1000 0 2 &cpldintc evt2irq(0x300) 0
-+		                 0x1000 0 3 &cpldintc evt2irq(0x2a0) 0
-+		                 0x1000 0 4 &cpldintc evt2irq(0x2c0) 0
-+
-+		                 0x1800 0 1 &cpldintc evt2irq(0x300) 0
-+		                 0x1800 0 2 &cpldintc evt2irq(0x2a0) 0
-+		                 0x1800 0 3 &cpldintc evt2irq(0x2c0) 0
-+		                 0x1800 0 4 &cpldintc evt2irq(0x2e0) 0>;
-+	};
-+};
--- 
-2.7.0
+>> +Optionally, a GPIO controller may have a "gpio-line-names" property. This is
+>> +an array of strings defining the names of the GPIO lines going out of the
+>> +GPIO controller. This name should be the most meaningful producer name
+>> +for the system, such as a rail name indicating the usage. Package names
+>> +such as pin name are discouraged: such lines have opaque names (since they
+>> +are by definition generic purpose) and such names are usually not very
+>> +helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
+>> +reasonable line names as they describe what the line is used for. "GPIO0"
+>> +is not a good name to give to a GPIO line. Placeholders are discouraged:
+>
+> "GPIO0" may not be a good name, but there are plenty of boards out there
+> that use just this line name in their schematic for GPIOs that are not
+> used otherwise. For example the riotboard has line-names "GPIO_1",
+> "GPIO4_31", "GPIO5_05", ...
+
+That is what is referred to as "rail name" above. If they really choose
+that name on a schematic, then it is the right name for it.
+
+>> +     gpio-line-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
+>> +             "LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
+>> +             "Row A", "Row B", "Row C", "Row D", "NMI button",
+>> +             "poweroff", "reset";
+>
+> As many GPIO controllers have something like 32 GPIO lines, it can be
+> difficult to read which GPIO number the line "reset" is on.
+> But I think you can get around that by writing one name per file-line or
+> something similar. Also it should be immediately visible by listing all
+> gpio names in the userspace.
+
+Yeah well, the problem goes for clk-output-names that it's derived
+from as well, it comes from the DT syntactic limitations.
+
+>> +             /* Empty strings are OK */
+>> +             if (ret < 0 && ret != -ENODATA)
+>> +                     dev_err(&gdev->dev, "unable to name line %d\n",
+>> +                             i);
+>> +     }
+>
+> Maybe a warning for nstrings > ngpio here?
+
+Sure. Just waiting for DT maintainers and other stakeholders' input at
+this point.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
