@@ -1,43 +1,98 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] of: include errno.h in of_graph.h
-Date: Mon,  2 May 2016 12:59:19 +0200
-Message-ID: <1462186769-2205767-1-git-send-email-arnd@arndb.de>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v4 4/5] Documentation: DT: vdma: update binding doc for
+ AXI CDMA
+Date: Mon, 2 May 2016 12:02:44 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57D479@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1460006985-14805-1-git-send-email-appanad@xilinx.com>
+ <1460006985-14805-5-git-send-email-appanad@xilinx.com>
+ <20160411140243.GA827@rob-hp-laptop>
+ <C246CAC1457055469EF09E3A7AC4E11A4A57553D@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A57553D-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah
 List-Id: devicetree@vger.kernel.org
 
-V2hlbiBDT05GSUdfT0YgaXMgZGlzYWJsZWQsIHdlIGhhdmUgdG8gaW5jbHVkZSBsaW51eC9lcnJu
-by5oIGJlZm9yZQppbmNsdWRpbmcgb2ZfZ3JhcGguaCwgb3IgZ2V0IGJ1aWxkIGVycm9ycyBsaWtl
-IGluIHRoZSBuZXdseSBhZGRlZApzdW40aSBkcm0gZHJpdmVyOgoKSW4gZmlsZSBpbmNsdWRlZCBm
-cm9tIC4uL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kcnYuYzoxNDowOgppbmNsdWRlL2xp
-bnV4L29mX2dyYXBoLmg6IEluIGZ1bmN0aW9uICdvZl9ncmFwaF9wYXJzZV9lbmRwb2ludCc6Cmlu
-Y2x1ZGUvbGludXgvb2ZfZ3JhcGguaDo1ODoxMDogZXJyb3I6ICdFTk9TWVMnIHVuZGVjbGFyZWQg
-KGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9uKQoKQSBiZXR0ZXIgc29sdXRpb24gaXMgdG8gZW5z
-dXJlIHRoYXQgdGhlIGhlYWRlciBjYW4gYmUgaW5jbHVkZWQKYnkgaXRzZWxmLCBzbyBsZXQncyBp
-bmNsdWRlIGxpbnV4L2Vycm5vLmggaGVyZSB0byBmaXggdGhlIGVycm9yCndlIGp1c3QgZ290LCBh
-bmQgYW55IHNpbWlsYXIgZnV0dXJlIGVycm9yLgoKU2lnbmVkLW9mZi1ieTogQXJuZCBCZXJnbWFu
-biA8YXJuZEBhcm5kYi5kZT4KRml4ZXM6IDkwMjZlMGQxMjJhYyAoImRybTogQWRkIEFsbHdpbm5l
-ciBBMTAgRGlzcGxheSBFbmdpbmUgc3VwcG9ydCIpCi0tLQogaW5jbHVkZS9saW51eC9vZl9ncmFw
-aC5oIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9p
-bmNsdWRlL2xpbnV4L29mX2dyYXBoLmggYi9pbmNsdWRlL2xpbnV4L29mX2dyYXBoLmgKaW5kZXgg
-ZjhiY2QwZTIxYTI2Li5iYjNhNWEyY2Q1NzAgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvb2Zf
-Z3JhcGguaAorKysgYi9pbmNsdWRlL2xpbnV4L29mX2dyYXBoLmgKQEAgLTE1LDYgKzE1LDcgQEAK
-ICNkZWZpbmUgX19MSU5VWF9PRl9HUkFQSF9ICiAKICNpbmNsdWRlIDxsaW51eC90eXBlcy5oPgor
-I2luY2x1ZGUgPGxpbnV4L2Vycm5vLmg+CiAKIC8qKgogICogc3RydWN0IG9mX2VuZHBvaW50IC0g
-dGhlIE9GIGdyYXBoIGVuZHBvaW50IGRhdGEgc3RydWN0dXJlCi0tIAoyLjcuMAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Vinod,
+
+> -----Original Message-----
+> From: dmaengine-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:dmaengine-
+> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Appana Durga Kedareswara Rao
+> Sent: Tuesday, April 12, 2016 11:51 AM
+> To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek
+> <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org;
+> laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org; luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org; Anirudha
+> Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Subject: RE: [PATCH v4 4/5] Documentation: DT: vdma: update binding doc for
+> AXI CDMA
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > Sent: Monday, April 11, 2016 7:33 PM
+> > To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> > ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; Michal Simek
+> > <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> > vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org; Appana Durga Kedareswara
+> > Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org;
+> > laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org; luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org; Anirudha
+> > Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH v4 4/5] Documentation: DT: vdma: update binding doc for
+> > AXI CDMA
+> >
+> > On Thu, Apr 07, 2016 at 10:59:44AM +0530, Kedareswara rao Appana wrote:
+> > > This patch updates the device-tree binding doc for adding support for
+> > > AXI CDMA.
+> > >
+> > > Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > > Changes for v4:
+> > > ---> None.
+> > > Changes for v3:
+> > > ---> Removed CDMA DT example from the patch as suggested by the Rob.
+> > > Changes for v2:
+> > > ---> Modified commit message as suggested by Vinod.
+> > > ---> Moved the patch to forward in the series as suggested by vinod.
+> > >
+> > >  Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 6
+> > > +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> Thanks for the Ack Rob...
+> 
+> @Vinod: I got the Ack's for the binding doc patches in this series
+> If you are ok with the other patches could you please apply this patch series?
+
+Could you please review this patch Series?
+If you are ok with this patch series will resend on top of the dma-next  
+
+Regards,
+Kedar.
+
+> 
+> Regards,
+> Kedar.
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
