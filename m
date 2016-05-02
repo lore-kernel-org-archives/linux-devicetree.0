@@ -1,10 +1,8 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 4/4] ARM64: dts: amlogic: Enable pin controller on GXBB-based platforms
-Date: Mon,  2 May 2016 10:02:18 +0200
-Message-ID: <1462176138-29433-5-git-send-email-carlo@caione.org>
-References: <1462176138-29433-1-git-send-email-carlo@caione.org>
+Subject: [PATCH v2 0/4] Amlogic: GXBB: Add pin controller
+Date: Mon,  2 May 2016 10:02:14 +0200
+Message-ID: <1462176138-29433-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462176138-29433-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
 Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
@@ -12,140 +10,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Update DTS and DTSI files to enable the pin controller. We also now
-support the blinking blue LED on the Odroid-C2.
+Patchset to add and enable the pin controller driver on a couple of Amlogic
+boards with a Meson GXBB SoC.
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 13 +++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  2 ++
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  3 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 41 ++++++++++++++++++++++
- 4 files changed, 59 insertions(+)
+Please note that:
+* This patch depends on http://www.spinics.net/lists/devicetree/msg120964.html
+  ([PATCH] ARM64: dts: amlogic: Add hiu and periphs buses).
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 7f2c674..41e1e66 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -45,6 +45,7 @@
- /dts-v1/;
- 
- #include "meson-gxbb.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	compatible = "hardkernel,odroid-c2", "amlogic,meson-gxbb";
-@@ -62,8 +63,20 @@
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		blue {
-+			label = "c2:blue:alive";
-+			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+	};
- };
- 
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index bf7ff1d..22e6298 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -62,4 +62,6 @@
- /* This UART is brought out to the DB9 connector */
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 012cdcc..54bb7c7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -56,4 +56,7 @@
- 
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 3126f0c..6dd2768 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -43,6 +43,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/meson-gxbb-gpio.h>
- 
- / {
- 	compatible = "amlogic,meson-gxbb";
-@@ -158,6 +159,29 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xc8100000 0x0 0x100000>;
- 
-+			pinctrl_aobus: pinctrl@14 {
-+				compatible = "amlogic,meson-gxbb-aobus-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio_ao: bank@14 {
-+					reg = <0x0 0x00014 0x0 0x8>,
-+					      <0x0 0x0002c 0x0 0x4>,
-+					      <0x0 0x00024 0x0 0x8>;
-+					reg-names = "mux", "pull", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+				};
-+
-+				uart_ao_a_pins: uart_ao_a {
-+					mux {
-+						groups = "uart_tx_ao_a", "uart_rx_ao_a";
-+						function = "uart_ao";
-+					};
-+				};
-+			};
-+
- 			uart_AO: serial@4c0 {
- 				compatible = "amlogic,meson-uart";
- 				reg = <0x0 0x004c0 0x0 0x14>;
-@@ -173,6 +197,23 @@
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xc8834000 0x0 0x2000>;
-+
-+			pinctrl_periphs: pinctrl@4b0 {
-+				compatible = "amlogic,meson-gxbb-periphs-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio: bank@4b0 {
-+					reg = <0x0 0x004b0 0x0 0x28>,
-+					      <0x0 0x004e8 0x0 0x14>,
-+					      <0x0 0x00120 0x0 0x14>,
-+					      <0x0 0x00430 0x0 0x40>;
-+					reg-names = "mux", "pull", "pull-enable", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+				};
-+			};
- 		};
- 
- 		hiubus: hiubus@c883c000 {
+* The platform driver is still missing a lot of muxing configurations. This is
+  because Amlogic still hasn't publicly released documentation for the GXBB.
+  Since Kevin has already this documentation under NDA, he will integrate and
+  complete this driver with a separate submission.
+
+Changelog:
+* v2:
+  - Split patchset in 4 different patches
+
+Carlo Caione (4):
+  pinctrl: amlogic: Add support for Amlogic Meson GXBB SoC
+  documentation: Add compatibles for Amlogic Meson GXBB pin controllers
+  ARM64: Kconfig: Select the Amlogic Meson pin controller driver
+  ARM64: dts: amlogic: Enable pin controller on GXBB-based platforms
+
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   2 +
+ arch/arm64/Kconfig.platforms                       |   2 +
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  13 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |   2 +
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |   3 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  41 ++
+ drivers/pinctrl/meson/Makefile                     |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c         | 432 +++++++++++++++++++++
+ drivers/pinctrl/meson/pinctrl-meson.c              |   8 +
+ drivers/pinctrl/meson/pinctrl-meson.h              |   2 +
+ include/dt-bindings/gpio/meson-gxbb-gpio.h         | 154 ++++++++
+ 11 files changed, 660 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+ create mode 100644 include/dt-bindings/gpio/meson-gxbb-gpio.h
+
 -- 
 2.7.4
 
