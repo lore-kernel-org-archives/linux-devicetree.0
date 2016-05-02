@@ -1,25 +1,64 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 0/3] dmaengine: Add clock support for AXI DMAS
-Date: Mon, 2 May 2016 15:22:15 +0530
-Message-ID: <20160502095214.GG2274@localhost>
-References: <1461305630-4826-1-git-send-email-appanad@xilinx.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFT PATCH 1/3] usb: misc: usb3503: Fix HUB mode after bootloader
+ initialization
+Date: Mon, 02 May 2016 11:49:12 +0200
+Message-ID: <57272298.50701@samsung.com>
+References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
+ <1461927591-7864-2-git-send-email-k.kozlowski@samsung.com>
+ <20160429113059.GX3217@sirena.org.uk> <57234BA2.6020304@samsung.com>
+ <20160429164448.GY3217@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461305630-4826-1-git-send-email-appanad@xilinx.com>
+In-reply-to: <20160429164448.GY3217@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, anirudh@xilinx.com, punnaia@xilinx.com, shubhraj@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 22, 2016 at 11:43:47AM +0530, Kedareswara rao Appana wrote:
-> This patch series adds basic clock support for AXI DMAS
-> This patch series is created on top of the
-> "dmaengine: vdma: AXI DMA's enhancments" patch series.
+On 04/29/2016 06:44 PM, Mark Brown wrote:
+> On Fri, Apr 29, 2016 at 01:55:14PM +0200, Krzysztof Kozlowski wrote:
+>> On 04/29/2016 01:30 PM, Mark Brown wrote:
+> 
+>>> Supplies are only optional if they may be physically absent.  In this
+>>> case it's possible that on device regulators may be used instead, a
+>>> pattern more like that used for arizona-ldo1 where we represent those
+>>> regulators might be better as it's more clearly describing the
+>>> situation.  I'm just wondering if the supply lookup stuff there should
+>>> be factored out as this is not an uncommon pattern..
+> 
+>>> It should at least be clearly stated what's going on, ignoring failure
+>>> to get supplies is generally a bug and people will tend to blindly cut
+>>> and paste things (witness all the breakage in graphics drivers with
+>>> this).
+> 
+>> The VDD33 is really optional. The device can work in different
+>> configuration, e.g. only on VBAT. How the reset logic would work then? I
+>> don't know... I would suspect that it could be exactly the same (just
+>> replace VDD33 with VBAT) but I am not sure.
+> 
+> What the Arizona example I mentioned does is look for the property
+> specifying an external supply in DT and if there isn't one assumes that
+> it must be using the internal regulator.  That's a bit icky but it does
+> the right thing and is much simpler from a user point of view.
 
-This fails due to above series not merged. Please resubmit once that one is
-merged
+Okay, that indeed looks similar... in case of lack of external supplies
+the usb3503 pins should be tied to the internal regulators.
 
--- 
-~Vinod
+However it seems I was wrong at the beginning. We've been looking here
+at the schematics and the datasheet. The design is unfortunately a
+little bit confusing but finally I think we got the impression how does
+it work.
+
+This VDD regulator supply actually is not a usb3503 USB HUB regulator
+supply... but a supply to the LAN attached to this HUB. Regulator off/on
+is needed for LAN to show up. The hub will show up with typical reset
+(which is also missing before my patchset btw).
+
+The LAN, as a USB device, is auto-probed so it cannot take the regulator
+and play with it. The simplest idea I have is to add it as "external
+supply"  to the parent: usb3503.
+
+Best regards,
+Krzysztof
