@@ -1,46 +1,55 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v2 1/2] dt-bindings: Update iProc GPIO bindings
-Date: Mon,  2 May 2016 13:51:47 -0700
-Message-ID: <1462222308-4869-2-git-send-email-ray.jui@broadcom.com>
-References: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/4] Documentation: Add documentation for APM X-Gene
+ SoC PMU DTS binding
+Date: Mon, 2 May 2016 15:56:48 -0500
+Message-ID: <20160502205648.GA7374@rob-hp-laptop>
+References: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
+ <1460510547-17611-3-git-send-email-ttnguyen@apm.com>
+ <20160418170009.GA15338@rob-hp-laptop>
+ <CACgAJHyBbO_LXwtfNVK1f=dY3v1Jfxwxq1dw98EZ0aYdhjPpAg@mail.gmail.com>
+ <20160420113121.GE2514@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160420113121.GE2514@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Tai Tri Nguyen <ttnguyen@apm.com>, Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the iProc GPIO binding document to add new compatible strings
-"brcm,iproc-gpio-v2" and "brcm,iproc-gpio-v3" for the 2nd and 3rd
-generation of the iProc GPIO controllers
+On Wed, Apr 20, 2016 at 12:31:22PM +0100, Will Deacon wrote:
+> On Mon, Apr 18, 2016 at 01:04:53PM -0700, Tai Tri Nguyen wrote:
+> > >> +Required properties for MCB subnode:
+> > >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
+> > >> +- reg                        : First resource shall be the MCB PMU resource.
+> > >> +- index                      : Instance number of the MCB PMU.
+> > >> +
+> > >> +Required properties for MC subnode:
+> > >> +- compatible         : Shall be "apm,xgene-pmu-mc".
+> > >> +- reg                        : First resource shall be the MC PMU resource.
+> > >> +- index                      : Instance number of the MC PMU.
+> > >
+> > > Don't use indexes. You probably need phandles to the nodes these are
+> > > related to.
+> > >
+> > > How many variations of child nodes do you expect to have? 2, 10, 50? You
+> > > might want to just collapse all this down to a single node and put this
+> > > information in the driver if it is fixed for each SoC and there's only a
+> > > handful.
+> > >
+> > 
+> > For each kind of PMU, for example memory controller PMU, I expect to
+> > have the number of instances up to 8.
+> > They are actually all independent PMU nodes and have their own CSR memory bases.
+> > The indexes are used for exposing the devices to perf user only. It
+> > doesn't have an impact on the programming model.
+> > Mark also had the same concern.
+> 
+> Regardless, I'll need an ack from Rob or Mark before I can merge this.
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
----
- Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+I still have a concern with this. Needing an index to expose to the user 
+is generally not a valid reason. That's OS specific and therefore 
+doesn't belong in DT.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-index e427792..3a56649 100644
---- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-@@ -4,7 +4,16 @@ Required properties:
- 
- - compatible:
-     Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
--    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
-+    or "brcm,cygnus-crmu-gpio" for Cygnus SoCs
-+
-+    "brcm,iproc-gpio" for the first generation of the GPIO controller that
-+    supports full-featured pinctrl and GPIO functions used in iProc based SoCs
-+
-+    "brcm,iproc-gpio-v2" for the second generation of the GPIO controller that
-+    has the drive strength pinctrl support disabled, e.g., in the iProc NSP SoC
-+
-+    "brcm,iproc-gpio-v3" for the third generation of the GPIO controller that
-+    has the general pinctrl support completely disabled
- 
- - reg:
-     Define the base and range of the I/O address space that contains SoC
--- 
-2.1.4
-
+Rob
