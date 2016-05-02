@@ -1,105 +1,173 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] add missing UARTs pins and I2C
- entriesfor AllWinner H3 DTSI
-Date: Mon, 2 May 2016 08:46:45 +0200
-Message-ID: <20160502064645.GK17159@lukather>
-References: <CAKQ8BtjPhfJC+njOUvo-4ZQ+Oj==LqQEhJ1LQROjY85hswE9Mg@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0qVF/w3MHQqLSynd"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYHPTO4QKGQEYEYPUUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAKQ8BtjPhfJC+njOUvo-4ZQ+Oj==LqQEhJ1LQROjY85hswE9Mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Martin Ayotte <martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans De Goede <jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?iso-8859-1?Q?Jean-Fran=E7ois?= Moine <moinejf-GANU6spQydw@public.gmane.org>
+From: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Subject: [PATCH v5] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Mon,  2 May 2016 09:06:51 +0200
+Message-ID: <1462172811-24206-1-git-send-email-lkundrak@v3.sk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---0qVF/w3MHQqLSynd
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The hub and the ethernet in its port 1 are hardwired on the board.
 
-Hi,
+Compared to the adapters that can be plugged into the USB ports, this
+one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+has the MAC address for this adapter in its ROM, accessible from its
+firmware.
 
-On Tue, Apr 19, 2016 at 03:50:39PM -0400, Martin Ayotte wrote:
-> Hi everyone,
->=20
-> This patch is submit to provide endusers access to additional UARTs on
-> AllWinner H3 SoC along with I2C ports.
+U-Boot can read out the address and set the local-mac-address property of the
+node with "ethernet" alias. Let's add the node so that U-Boot can do its
+business.
 
-Unfortunately, your patch cannot be applied in its current form, both
-because of process and technical reasons:
+Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+pid/vid pair for the Version 2 was provided by Peter Chen. Original
+Model B is a blind shot, though very likely correct.
 
-  * Every commits should have a commit title and log. While you do
-    have a title, you used the log to store your cover letter. This is
-    an issue, because that will be kept in the git history, which is
-    obviously something we don't want.
-    If you want to make a cover letter, you can either send it as a
-    separate mail, or after the "---" below that will be ignored when
-    applying the mails.
-    On the other hand, the commit log should be used to say why =C3=BDour
-    doing this patch and why it was needed.
+Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+---
+Changes since v4:
+  - A whitespace fix
 
-  * You do not have a Signed-off-by tag in your commit log. This and
-    the point above is documented in Documentation/SubmittingPatches,
-    please make sure to read that first.
+Changes since v3:
+  - Include the ethernet alias in 9514 dtsi too
 
-  * Your mailer completely corrupted the patch when you sent it,
-    replacing all tabs by spaces, and wrapping the longer lines. That
-    means that the patch cannot be applied anymore. Please fix your
-    mailer, or use one that just works, like git send-email.
+Changes since v2:
+  - Removed leading zeroes in vendor name and reg
+  - Split the common files in separate includes per model
 
-  * Finally, like Chen-Yu already told you, you're doing several
-    different things here in a single patch, while you should have
-    done separate patches. From what I can see, you're adding pinctrl
-    groups for the uart and i2c pins, and adding the i2c controller
-    nodes. That should have been ideally 3 patches: 1 for the uart
-    pinctrl groups, 1 for the i2c pinctrl groups, 1 for the i2c
-    controller nodes. We also don't take pinctrl groups that are not
-    enabled on any boards to keep the DT size as small as possible.
+Changes since v1:
+  - s/@01/@1/ for ethernet and the hub
+  - Corrected the vid/pid pairs for hub and ethernet
+  - Added Model B rev2 and version 2 board changes
+  - Fixed a missing semicolon typo
 
-Thanks,
-Maxime
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts    |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts         |  1 +
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts       |  1 +
+ arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm283x.dtsi              |  2 ++
+ 7 files changed, 44 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index ef54050..c3e01ce 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 86f1f2f..364086a 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 4859e9d..4420b09 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9512.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-b", "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index ff94666..b975f29 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ #include "bcm2836.dtsi"
+ #include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+new file mode 100644
+index 0000000..12c981e
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9512.dtsi
+@@ -0,0 +1,19 @@
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9512";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+new file mode 100644
+index 0000000..3f0a56e
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+@@ -0,0 +1,19 @@
++/ {
++	aliases {
++		ethernet = &ethernet;
++	};
++};
++
++&usb {
++	usb1@1 {
++		compatible = "usb424,9514";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 8aaf193..04504b7 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -230,6 +230,8 @@
+ 			compatible = "brcm,bcm2835-usb";
+ 			reg = <0x7e980000 0x10000>;
+ 			interrupts = <1 9>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---0qVF/w3MHQqLSynd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXJvfVAAoJEBx+YmzsjxAg54AP/j4AaHpB8U/Y3B5D2Chf1Jmh
-AgTpgoDYHkB2JOzoajDw5Aqn+CZZ/P13LLEL/nMOJcyHRyYzwm13LbYngC3LB8vh
-VBspZqqFcB2KMy//CxFbguzkNtiyQH6ZGPhB+ckx5CaMawCYNDvX1mLDPI2OMbsf
-u61acF3a1C619NvlUJKfJr8yb1Om0JUe1LseyVAPCKWWg7mDGfPuwTthtcZFrg5i
-8gL7pAEeMzqpPzMqGmfcoyEd9D7MK3eMnYGfEcLpgrtcDRwKGLmRbPTQ29a03hCk
-qd516/xdJSWpBnVD99Lq306hF22CFTYcy0m+ij5MT1odpj6uNKV0D7P6CmNKbieh
-hW2Ou8eFnVE8hUlnU+dHLYKKK5Q/c8pv8Z3HI1MewIWVEQqJFPiC75hL02fhpqU8
-WEWnZoZXIoYe+5uiFpZmjsHio+Ezk5Dds0r0J/Ooz6pPRiLxibakPDjaxej4H9O/
-x+jmVf85Ar2a0fMaIk8vxUyiv+JzBy0GPT1oV5XrxyhXcp7jnhqRT82RRZUVbnWL
-JqLEpJTUXxLYEIl5dHwSVro+/RQaFne6xDN/wKjri3Fec6/gTJEkge1ZZ9DxaAUE
-2Fs3AeXfdLkkTAxmhWJ5atwQeUaKcOvm2ee3S75iWoLNHalp/ZAUUSSYfeQTJnq5
-oQil2dgBvf35kkNmfRhp
-=42fP
------END PGP SIGNATURE-----
-
---0qVF/w3MHQqLSynd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
