@@ -1,61 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFT PATCH 1/3] usb: misc: usb3503: Fix HUB mode after
- bootloader initialization
-Date: Mon, 2 May 2016 11:55:01 +0100
-Message-ID: <20160502105501.GE6292@sirena.org.uk>
-References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
- <1461927591-7864-2-git-send-email-k.kozlowski@samsung.com>
- <20160429113059.GX3217@sirena.org.uk>
- <57234BA2.6020304@samsung.com>
- <20160429164448.GY3217@sirena.org.uk>
- <57272298.50701@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
+Date: Mon, 2 May 2016 12:55:46 +0200
+Message-ID: <20160502105546.GN17159@lukather>
+References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="r7U+bLA8boMOj+mD"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jozmn01XJZjDjM3N"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEPFTS4QKGQEIGXC5NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <57272298.50701@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <1461827998-12192-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tsvetan Usunov <tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---r7U+bLA8boMOj+mD
-Content-Type: text/plain; charset=us-ascii
+--jozmn01XJZjDjM3N
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Mon, May 02, 2016 at 11:49:12AM +0200, Krzysztof Kozlowski wrote:
+Hi,
 
-> This VDD regulator supply actually is not a usb3503 USB HUB regulator
-> supply... but a supply to the LAN attached to this HUB. Regulator off/on
-> is needed for LAN to show up. The hub will show up with typical reset
-> (which is also missing before my patchset btw).
+On Thu, Apr 28, 2016 at 09:19:58AM +0200, Olliver Schinagl wrote:
+> There are 3 kinds of OLinuXino Lime2 boards.
+> One without any on board storage, one with NAND storage and one with
+> eMMC storage. This patch adds the eMMC variant of boards.
+> 
+> eMMC storage is different from a regular SD card in that it is soldered
+> on the board and cannot be changed. Additionally, it shares pins with
+> the NAND module and with the second SPI port.
+> 
+> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-> The LAN, as a USB device, is auto-probed so it cannot take the regulator
-> and play with it. The simplest idea I have is to add it as "external
-> supply"  to the parent: usb3503.
+Is it a publicly available board, or is it a private hack you made
+yourself?
 
-This is common enough that that just isn't going to scale well I fear
-without some generic handling, either walking child devices at the bus
-level or at the device level with a pre-probe() callback to get the
-device to power on.  The latter is more appropriate to things like
-Slimbus where the device is more likely to do active management at
-runtime, it's not clear people are building USB devices like that.
+Maxime
 
---r7U+bLA8boMOj+mD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXJzIDAAoJECTWi3JdVIfQ78MH/RlSSVW3RSGtAAR1VNUptE8B
-QICq6VQWpPQ6P0/brJGA+OoywrvcqUa3mVJQQRdkmeiTcPqPwAXze37i1UJ4Pu0Z
-KYlGZvCAInxV54BhsnD1AfFpLlN/nbOICsgrkIGQ0Ks4eUh5qo9Hpz6+Md50eNGO
-xfdyFikf467TLmkoh6pXB/rXTIdPekqTmXNoqEL3bnI+YB+vkuO+RyQLe2x+LHGy
-ppJof0SKRFVEbZbxOVaozOW3aBiWHMv1QVBJb5kV5xsJw059PpS8TIEtXAIN8sHO
-Rk0uKRciwtT6xaqMhYNPezrpPZJ779+J6th/AXGO5b0FMX7+b40Yt7JSMNrC6lI=
-=jEmB
------END PGP SIGNATURE-----
-
---r7U+bLA8boMOj+mD--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--jozmn01XJZjDjM3N--
