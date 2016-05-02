@@ -1,108 +1,89 @@
-From: Martin Sperl <martin@sperl.org>
-Subject: Re: [PATCH 2/2] clk: bcm2835: Skip PLLC clocks when deciding on a new
- clock parent
-Date: Mon, 2 May 2016 10:54:29 +0200
-Message-ID: <572715C5.6070700@sperl.org>
-References: <1461699585-6649-1-git-send-email-eric@anholt.net>
- <1461699585-6649-2-git-send-email-eric@anholt.net>
- <C771F70C-2F88-49E1-A370-D76D13262C1E@martin.sperl.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
+Date: Mon, 2 May 2016 14:55:52 +0530
+Message-ID: <20160502092552.GC2274@localhost>
+References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
+ <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
+ <20160426033029.GB2274@localhost>
+ <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
+ <20160426162529.GK2274@localhost>
+ <571F9D76.2060809@codeaurora.org>
+ <20160427081501.GV2274@localhost>
+ <2c7ac0732fb16f952db24b7c70065318@codeaurora.org>
+ <57258799.70803@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <C771F70C-2F88-49E1-A370-D76D13262C1E@martin.sperl.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57258799.70803-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, May 01, 2016 at 12:35:37AM -0400, Sinan Kaya wrote:
+> >>> >
+> >>> > Hmm, have you thought about using regmap?
+> >>>
+> >>> To be honest, I didn't know what regmap is but I just read some code
+> >>> and looked at how it is used. Feel free to correct me if I got it
+> >>> wrong.
+> >>>
+> >>> Regmap seems to be designed for *slow* speed peripherals to improve frequent
+> >>> accesses by the SW. It looks like it is used by MFD, SPI and I2C drivers.
+> >>>
+> >>> It seems to cache the register contents and flush/invalidate them only when
+> >>> needed.
+> >>>
+> >>> The MMIO version seems to be assuming the presence of device-tree like CLK
+> >>> API which doesn't exist on ACPI systems and is not portable.
+> >>>
+> >>> My reaction is that it is a lot of code with no added functionality to what
+> >>> HIDMA driver is trying to achieve.
+> >>>
+> >>> Given that the use case here is only for debug purposes; I think it is OK
+> >>> to keep this runtime call here. I don't want to add any overhead into the
+> >>> existing code just to support the debug use case.
+> >>>
+> >>> None of my register read/writes are slow. This file will only be used to
+> >>> troubleshoot customer issues.
+> >>
+> >> $ is always faster than MMIO. This way you can give reg contents to users
+> >> without waking up hw.
+> >>
+> >> Also we at Intel use regmap on ACPI systems without CLK API
+> > 
+> > I can try and see the performance impact is. What happens to registers that hw updates like status registers. Those will be most interesting during debug. How does remap get updated for those? Is there a way to tell it not to cache certain registers
+> 
+> My evaluation turned out negative. The regmap code is nice for bus like peripherals
+> like I2C and SPI where everything is bitwise accessed. This is not the case
+> in this code. 
 
-On 30.04.2016 11:28, Martin Sperl wrote:
->> On 26.04.2016, at 21:39, Eric Anholt <eric@anholt.net> wrote:
->>
->> If the firmware had set up a clock to source from PLLC, go along wit=
-h
->> it.  But if we're looking for a new parent, we don't want to switch =
-it
->> to PLLC because the firmware will force PLLC (and thus the AXI bus
->> clock) to different frequencies during over-temp/under-voltage,
->> without notification to Linux.
->>
->> On my system, this moves the Linux-enabled HDMI state machine and DS=
-I1
->> escape clock over to plld_per from pllc_per.  EMMC still ends up on
->> pllc_per, because the firmware had set it up to use that.
->>
->> Signed-off-by: Eric Anholt <eric@anholt.net>
->> Fixes: 41691b8862e2 ("clk: bcm2835: Add support for programming the =
-audio domain clocks")
->> =E2=80=94
-> I guess this patch looks to me as if it is a policy inside the kernel=
-,
-> which is AFAIK frowned upon.
->
-> I am looking into making "assigned-clock-parents=E2=80=9D inside the =
-dt
-> work with the driver.
->
-> Could look something like this:
-> i2s: i2s@7e203000 {
-> 	assigned-clock-parents =3D <&cprman BCM2835_PLLD_PER>, <&clk_osc>;
-> 	assigned-clocks =3D <&cprman BCM2835_CLOCK_PCM>, <&cprman BCM2835_CL=
-OCK_PCM>;
-> };
-> (not sure if that works really - the same clock in assigned-clocks lo=
-oks suspicious)
->
-> This would move the policy out of the kernel into the device-tree,
-> which - i guess is a better solution.
+I do not entirely agree with the statements here, it does give big benefit
+on our systems with MMIO. I am going to ask Mark to comment on this, he
+know better and understands ARM.
 
-So after some more investigation it seems that we can not really use th=
-ose
-assigned-clock-parents properties for our purpose of filtering the pare=
-nt
-clocks, as it:
-a) requires also assigned-clocks to be set (this may be OK)
-b) it does not allow to define a list of clocks to get used - it will=20
-just set the
-     parent of the assigned-clock - if we take the example shown above,=
-=20
-it would
-     call clk_set_parent 2 times for the PCM clock - once with PLLD_PER
-     and once with clk_osc.
+I am probably going to be okay with this not using regmap and it is debug
+but you should give that a try in future for better performance and ofcourse
+you can add to regmap to get a better model for your device
 
-So I start to wonder if it would not be better to use an approach like =
-this:
-cprman: cprman@7e101000 {
-     ...
-     brcm,clock-flags =3D <flags for PCM>, <flags for PWM>;
-     brcm,clock-index =3D <BCM2835_CLOCK_PCM>, <BCM2835_CLOCK_PWM>;
-}
+> Regmap is a nice tool if used properly but it doesn't mean that it will work
+> in every single case. It doesn't match with the goal of this driver. 
+> 
+> As soon as I abstract register accesses, the regmap code writes all MMIO registers
+> with the readl variant functions.
+> 
+> Barriers are really expensive on ARM. I paid very special attention in the 
+> code to decide when to use relaxed version vs. the readl version. I lose 
+> all of this optimization. 
+> 
+> Since the clocks are restored only during the debug case, I don't see any
+> problems here. It is not worth the effort to do redo the whole thing and 
+> introduce errors as I see a lot of tripping points like regmap_sync variants.
 
-the flags would be a bitfield that select the parent clocks.
-
-So it could look like this:
-cprman: cprman@7e101000 {
-     ...
-     brcm,clock-flags =3D (BIT(BCM2835_PER_PARENT_OSC) |
-BIT(BCM2835_PER_PARENT_PLLD_PER)), ...;
-     brcm,clock-index =3D <BCM2835_CLOCK_PCM>, <BCM2835_CLOCK_PWM>;
-}
-
-BCM2835_PER_PARENT_PLLD_PER and BCM2835_PER_PARENT_OSC
-would then be defined in include/dt-bindings/clock/bcm2835.h
-
-In addition this would also allow us to add other flags to enable
-higher order MASH clock dividers - we currently only allow simple
-fractional dividers - we could even force the use of integer dividers
-if there comes a need.
-
-This would really allow us to define the parents freely and if the
-firmware ever changes its behavior with regards to PLLC, then we can
-easily change the device-tree.
-
-Is this approach acceptable - maybe in a variation?
-
-Thanks,
-                     Martin
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
