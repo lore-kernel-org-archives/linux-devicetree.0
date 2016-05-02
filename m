@@ -1,32 +1,34 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/3] drivers: net: xgene: fix: Get channel number
- from device binding
-Date: Mon, 02 May 2016 16:48:18 -0400 (EDT)
-Message-ID: <20160502.164818.1876590443775185144.davem@davemloft.net>
-References: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1461953415-9741-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: isubramanian@apm.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH v2 0/2] Additional iProc GPIO support
+Date: Mon,  2 May 2016 13:51:46 -0700
+Message-ID: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Iyappan Subramanian <isubramanian@apm.com>
-Date: Fri, 29 Apr 2016 11:10:12 -0700
+Add support to the iProc GPIO driver for v2 and v3 revisions of the iProc GPIO
+controllers. The v2 revision is used on NSP with drive strength pinconf
+feature disabled and the v3 revision is used on Stingray with all pinconf
+features disabled
 
-> This patch set adds 'channel' property to get ethernet to CPU channel number,
-> thus decoupling the Linux driver from static resource selection.
-> 
-> v2: Address review comments from v1
-> - removed irq reference from Linux driver
-> - added 'channel' property to get ethernet to CPU channel number
-> 
-> v1:
-> - Initial version
-> 
-> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+Changes from v1:
+ - Changed to use compatible strings "brcm,iproc-gpio-v2" and
+"brcm,iproc-gpio-v3" to deal with differences among various iProc based SoCs
+ - Removed DT header "include/dt-bindings/pinctrl/brcm,iproc-gpio.h"
 
-Series applied, thanks.
+Patch series is developed based on Linux v4.6-rc1 and available at:
+https://github.com/Broadcom/cygnus-linux/tree/iproc-gpio-v2
+
+Ray Jui (2):
+  dt-bindings: Update iProc GPIO bindings
+  pinctrl: iproc: Add v2/v3 GPIO support
+
+ .../bindings/pinctrl/brcm,iproc-gpio.txt           |  11 +-
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           | 115 +++++++++++++++++++--
+ 2 files changed, 119 insertions(+), 7 deletions(-)
+
+-- 
+2.1.4
+
