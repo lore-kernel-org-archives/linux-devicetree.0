@@ -1,122 +1,49 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v9 0/8] Add MT8173 Video Encoder Driver and VPU Driver
-Date: Mon, 2 May 2016 14:22:03 +0800
-Message-ID: <1462170123.18420.3.camel@mtksdaap41>
-References: <1461661117-4657-1-git-send-email-tiffany.lin@mediatek.com>
-	 <5723422E.4030109@xs4all.nl>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: Fwd: [PATCH v2 0/8] PM / devfreq: Add NoCP devfreq-event and
+ support busfreq on exyno5422-odroidxu3
+Date: Mon, 02 May 2016 08:24:16 +0200
+Message-ID: <5726F290.8050808@samsung.com>
+References: <1894783822.297231462168123817.JavaMail.weblogic@ep2mlwas04a>
+ <5726EBD7.30403@samsung.com> <5726EE55.7050204@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5723422E.4030109-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <5726EE55.7050204@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi@samsung.com>, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "m.reichl@fivetechno.de" <m.reichl@fivetechno.de>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.k
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On 05/02/2016 08:06 AM, Krzysztof Kozlowski wrote:
+> On 05/02/2016 07:55 AM, Krzysztof Kozlowski wrote:
+>> On 05/02/2016 07:48 AM, MyungJoo Ham wrote:
+>>> Sender : =EC=B5=9C=EC=B0=AC=EC=9A=B0<cw00.choi@samsung.com> S5(=EC=B1=
+=85=EC=9E=84)/Change Agent/Tizen Platform Lab(S/W=EC=84=BC=ED=84=B0)/=EC=
+=82=BC=EC=84=B1=EC=A0=84=EC=9E=90
+>>> Date : 2016-04-15 15:32 (GMT+09:00)
+>>>>
+>>>> This patchset support the AMBA bus frequency scaling on Exynos5422=
+-based
+>>>> Odroid-XU3 board. But, this series only support the bus frequency =
+scaling
+>>>> for INT (Internal) block using VDD_INT power line.
+>>>
+>>> Along with Devfreq/Passive patchset, the patchset is merged in
+>>> devfreq for-4.7 tree.
+>>>
+>>> https://git.kernel.org/cgit/linux/kernel/git/mzx/devfreq.git/log/?h=
+=3Dfor-4.7
+>>>
+>>> @Chanwoo: If there are commits to be merged by a tree other than Li=
+nux/PM,
+>>> please let me know. I'll send out pull-request soon.
 
-On Fri, 2016-04-29 at 13:14 +0200, Hans Verkuil wrote:
-> Hi Tiffany,
-> 
-> On 04/26/2016 10:58 AM, Tiffany Lin wrote:
-> > ==============
-> >  Introduction
-> > ==============
-> > 
-> > The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
-> > Mediatek Video Codec is able to handle video encoding of in a range of formats.
-> > 
-> > This patch series also include VPU driver. Mediatek Video Codec driver rely on VPU driver to load,
-> > communicate with VPU.
-> > 
-> > Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
-> > 
-> > ==================
-> >  Device interface
-> > ==================
-> > 
-> > In principle the driver bases on v4l2 memory-to-memory framework:
-> > it provides a single video node and each opened file handle gets its own private context with separate
-> > buffer queues. Each context consist of 2 buffer queues: OUTPUT (for source buffers, i.e. raw video
-> > frames) and CAPTURE (for destination buffers, i.e. encoded video frames).
-> > 
-> > ==============================
-> >  VPU (Video Processor Unit)
-> > ==============================
-> > The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
-> > It is able to handle video decoding/encoding in a range of formats.
-> > The driver provides with VPU firmware download, memory management and the communication interface between CPU and VPU.
-> > For VPU initialization, it will create virtual memory for CPU access and physical address for VPU hw device access. 
-> > When a decode/encode instance opens a device node, vpu driver will download vpu firmware to the device.
-> > A decode/encode instant will decode/encode a frame using VPU interface to interrupt vpu to handle decoding/encoding jobs.
-> > 
-> > Please have a look at the code and comments will be very much appreciated.
-> 
-> I build this using my daily build setup and got a bunch of errors and warnings
-> from both the compiler (when this driver is compile-tested on a 32 bit arch)
-> and from sparse/smatch.
-> 
-> Can you fix these?
+=2E.. and now I noticed that you also applied clock patches. Please don=
+'t.
+They are for some time in clk tree. Sylwester prepared a tag for that,
+if you need one.
 
-Our driver only support for ARM/ARM64 architecture.
-I will add 
-MTK_IOMMU [=y] && (ARM || ARM64) to Kconfig for VIDEO_MEDIATEK_VCODEC.
-And we will fix compiler warning.
+Best regards,
+Krzysztof
 
-best regards,
-Tiffany
-> 
-> linux-git-i686: WARNINGS
-> 
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c: In function 'load_requested_vpu':
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:498:117: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'size_t {aka unsigned int}' [-Wformat=]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:498:117: warning: format '%lx' expects argument of type 'long unsigned int', but argument 5 has type 'size_t {aka unsigned int}' [-Wformat=]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:501:410: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'size_t {aka unsigned int}' [-Wformat=]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc_vpu_if.c: In function 'vpu_enc_ipi_handler':
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc_vpu_if.c:40:30: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->   struct venc_vpu_inst *vpu = (struct venc_vpu_inst *)msg->venc_inst;
->                               ^
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c: In function 'mtk_venc_worker':
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:1046:43: warning: format '%lx' expects argument of type 'long unsigned int', but argument 7 has type 'size_t {aka unsigned int}' [-Wformat=]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:1046:43: warning: format '%lx' expects argument of type 'long unsigned int', but argument 10 has type 'size_t {aka unsigned int}' [-Wformat=]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:1046:43: warning: format '%lx' expects argument of type 'long unsigned int', but argument 13 has type 'size_t {aka unsigned int}' [-Wformat=]
-> 
-> Tip: use %zu or %zx for size_t.
-> 
-> sparse: ERRORS
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c:261:24: warning: incorrect type in assignment (different base types)
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c:476:23: warning: symbol 'get_vp8_enc_comm_if' was not declared. Should it be static?
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:237:6: warning: symbol 'vpu_clock_disable' was not declared. Should it be static?
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:250:5: warning: symbol 'vpu_clock_enable' was not declared. Should it be static?
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:436:54: warning: incorrect type in return expression (different address spaces)
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:504:14: warning: incorrect type in assignment (different address spaces)
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:710:26: warning: cast removes address space of expression
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c:674:23: warning: symbol 'get_h264_enc_comm_if' was not declared. Should it be static?
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:804:41: warning: Using plain integer as NULL pointer
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:905:25: warning: Using plain integer as NULL pointer
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:989:50: warning: Using plain integer as NULL pointer
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:133:15: error: undefined identifier 'kzalloc'
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:206:9: error: undefined identifier 'kfree'
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:228:9: error: undefined identifier 'kfree'
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:548:6: warning: 'vpu_fw' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:133:8: error: implicit declaration of function 'kzalloc' [-Werror=implicit-function-declaration]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:133:6: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:206:2: error: implicit declaration of function 'kfree' [-Werror=implicit-function-declaration]
-> 
-> smatch: ERRORS
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c:921 mtk_venc_encode_header() warn: inconsistent indenting
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:397 vpu_wdt_reg_handler() warn: variable dereferenced before check 'vpu' (see line 395)
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vpu/mtk_vpu.c:398 vpu_wdt_reg_handler() error: we previously assumed 'vpu' could be null (see line 397)
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:142 fops_vcodec_open() error: we previously assumed 'ctx' could be null (see line 134)
-> /home/hans/work/build/media-git/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c:363 mtk_vcodec_probe() warn: passing zero to 'PTR_ERR'
-> 
-> Thanks!
-> 
-> 	Hans
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
