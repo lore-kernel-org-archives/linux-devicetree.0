@@ -1,99 +1,43 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH 2/2] drivers: i2c: qup: Fix error handling
-Date: Mon,  2 May 2016 10:53:57 +0530
-Message-ID: <1462166637-16778-3-git-send-email-sricharan@codeaurora.org>
-References: <1462166637-16778-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1462166637-16778-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: sricharan@codeaurora.org
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Fwd: [PATCH v2 0/8] PM / devfreq: Add NoCP devfreq-event and support
+ busfreq on exyno5422-odroidxu3
+Date: Mon, 02 May 2016 05:48:50 +0000 (GMT)
+Message-ID: <1894783822.297231462168123817.JavaMail.weblogic@ep2mlwas04a>
+Reply-To: myungjoo.ham@samsung.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "m.reichl@fivetechno.de" <m.reichl@fivetechno.de>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, =?utf-8?Q?=EB=8C=80=EC=9D=B8=EA=B8=B0?= <inki.dae@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>de
 List-Id: devicetree@vger.kernel.org
 
-Among the bus errors reported from the QUP_MASTER_STATUS register
-only NACK is considered and transfer gets suspended, while
-other errors are ignored. Correct this and suspend the transfer
-for other errors as well. This avoids unnessecary 'timeouts' which
-happens when waiting for events that would never happen when there
-is already an error condition on the bus.
-
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- drivers/i2c/busses/i2c-qup.c | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index 8620e99..8afb733 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -310,6 +310,7 @@ static int qup_i2c_wait_ready(struct qup_i2c_dev *qup, int op, bool val,
- 	u32 opflags;
- 	u32 status;
- 	u32 shift = __ffs(op);
-+	int ret = 0;
- 
- 	len *= qup->one_byte_t;
- 	/* timeout after a wait of twice the max time */
-@@ -321,18 +322,31 @@ static int qup_i2c_wait_ready(struct qup_i2c_dev *qup, int op, bool val,
- 
- 		if (((opflags & op) >> shift) == val) {
- 			if ((op == QUP_OUT_NOT_EMPTY) && qup->is_last) {
--				if (!(status & I2C_STATUS_BUS_ACTIVE))
--					return 0;
-+				if (!(status & I2C_STATUS_BUS_ACTIVE)) {
-+					ret = 0;
-+					goto done;
-+				}
- 			} else {
--				return 0;
-+				ret = 0;
-+				goto done;
- 			}
- 		}
- 
--		if (time_after(jiffies, timeout))
--			return -ETIMEDOUT;
--
-+		if (time_after(jiffies, timeout)) {
-+			ret = -ETIMEDOUT;
-+			goto done;
-+		}
- 		usleep_range(len, len * 2);
- 	}
-+
-+done:
-+	if (qup->bus_err || qup->qup_err) {
-+		if (qup->bus_err & QUP_I2C_NACK_FLAG)
-+			dev_err(qup->dev, "NACK from %x\n", qup->msg->addr);
-+		ret = -EIO;
-+	}
-+
-+	return ret;
- }
- 
- static void qup_i2c_set_write_mode_v2(struct qup_i2c_dev *qup,
-@@ -882,10 +896,9 @@ static int qup_i2c_wait_for_complete(struct qup_i2c_dev *qup,
- 	}
- 
- 	if (qup->bus_err || qup->qup_err) {
--		if (qup->bus_err & QUP_I2C_NACK_FLAG) {
-+		if (qup->bus_err & QUP_I2C_NACK_FLAG)
- 			dev_err(qup->dev, "NACK from %x\n", msg->addr);
--			ret = -EIO;
--		}
-+		ret = -EIO;
- 	}
- 
- 	return ret;
-@@ -1227,6 +1240,9 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
- 	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
- 	int ret, len, idx = 0, use_dma = 0;
- 
-+	qup->bus_err = 0;
-+	qup->qup_err = 0;
-+
- 	ret = pm_runtime_get_sync(qup->dev);
- 	if (ret < 0)
- 		goto out;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+U2VuZGVyIDog7LWc7LCs7JqwPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4gUzUo7LGF7J6EKS9DaGFu
+Z2UgQWdlbnQvVGl6ZW4gUGxhdGZvcm0gTGFiKFMvV+yEvO2EsCkv7IK87ISx7KCE7J6QDQpEYXRl
+IDogMjAxNi0wNC0xNSAxNTozMiAoR01UKzA5OjAwKQ0KPiANCj4gVGhpcyBwYXRjaHNldCBzdXBw
+b3J0IHRoZSBBTUJBIGJ1cyBmcmVxdWVuY3kgc2NhbGluZyBvbiBFeHlub3M1NDIyLWJhc2VkDQo+
+IE9kcm9pZC1YVTMgYm9hcmQuIEJ1dCwgdGhpcyBzZXJpZXMgb25seSBzdXBwb3J0IHRoZSBidXMg
+ZnJlcXVlbmN5IHNjYWxpbmcNCj4gZm9yIElOVCAoSW50ZXJuYWwpIGJsb2NrIHVzaW5nIFZERF9J
+TlQgcG93ZXIgbGluZS4NCg0KQWxvbmcgd2l0aCBEZXZmcmVxL1Bhc3NpdmUgcGF0Y2hzZXQsIHRo
+ZSBwYXRjaHNldCBpcyBtZXJnZWQgaW4NCmRldmZyZXEgZm9yLTQuNyB0cmVlLg0KDQpodHRwczov
+L2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9tengvZGV2ZnJlcS5naXQvbG9n
+Lz9oPWZvci00LjcNCg0KQENoYW53b286IElmIHRoZXJlIGFyZSBjb21taXRzIHRvIGJlIG1lcmdl
+ZCBieSBhIHRyZWUgb3RoZXIgdGhhbiBMaW51eC9QTSwNCnBsZWFzZSBsZXQgbWUga25vdy4gSSds
+bCBzZW5kIG91dCBwdWxsLXJlcXVlc3Qgc29vbi4NCg0KDQpDaGVlcnMsDQpNeXVuZ0pvbw0KDQo+
+IA0KPiBBbHNvLCB0byBzdXBwb3J0IHRoZSBidXMgZnJlcXVlbmN5IHNjYWxpbmcgZm9yIEV4eW5v
+czU0MnggU29DLA0KPiBFeHlub3M1NDJ4IFNvQyBoYXMgdGhlIHNwZWNpZmljICdOb0MgKE5ldHdv
+cmsgb24gQ2hpcCkgUHJvYmUnIGRldmljZQ0KPiB0byBtZWFzdXJlIHRoZSB0cmFuc2ZlcmVkIGRh
+dGEgdHJhZmZpYyBvbiBOb0MgKE5ldHdvcmsgb24gQ2hpcCkNCj4gaW5zdGVhZCBvZiBQUE1VIChQ
+bGF0Zm9ybSBQZXJmb3JtYW5jZSBNb25pdG9yaW5nIFVuaXQpLiBOb0MgUHJvYmUgZGV2aWNlDQo+
+IHByb3ZpZGUgdGhlIHV0aWxpemF0aW9uIGZvciBJTlQgYmxvY2sgb2YgRXh5bm9zNTQyeCBTb0Mu
+DQo+IA0KPiBUaGUgZ2VuZXJpYyBleHlub3MtYnVzIGZyZXF1ZW5jeSBkcml2ZXIgdXNlcyB0aGUg
+J05vQyBQcm9iZScgZGV2ZnJlcS1ldmVudA0KPiBkZXZpY2UgKGRyaXZlcnMvZGV2ZnJlcS9ldmVu
+dC9leHlub3Mtbm9jcC5jKSB3aXRob3V0IGFueSBtb2RpZmljYXRpb24uDQo+IEp1c3QgYWRkIHRo
+ZSBwaGFuZGxlIG9mICdOb0MgUHJvYmUnIGR0IG5vZGUgdG8gYnVzIGR0IG5vZGUuDQo+IA0KPiBE
+ZXBlbmQgb246DQo+IFRoaXMgcGF0Y2hzZXQgZGVwZW5kcyBvbiBwYXRjaFsxXSB3aGljaCBzdXBw
+b3J0IHRoZSBnZW5lcmljIGV4eW5vcy1idXMNCj4gZnJlcXVlbmN5IGRyaXZlci4NCj4gWzFdIGh0
+dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2c0OTU5NzYuaHRtbA0KPiAt
+IFtQQVRDSCB2OSAwMC8yMF0gUE0gLyBkZXZmZXJxOiBBZGQgZ2VuZXJpYyBleHlub3MgYnVzIGZy
+ZXF1ZW5jeSBkcml2ZXIgYW5kIG5ldyBwYXNzaXZlIGdvdmVybm9yDQo+IA0KPiANCg==
