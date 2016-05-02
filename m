@@ -1,67 +1,39 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH 06/12] ARM: kexec: advertise location of bootable RAM
-Date: Mon, 2 May 2016 13:04:28 +0530
-Message-ID: <CAHB_Guq+w7JKXEpLHkefMaYuYowh7dqsdvxgG_dnGv-GdkX39A@mail.gmail.com>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
-	<E1aviF4-0000jG-MO@rmk-PC.arm.linux.org.uk>
-	<CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
-	<20160429180024.GS19428@n2100.arm.linux.org.uk>
-	<CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
-	<20160430082055.GG19428@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160430082055.GG19428@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [RESEND PATCH v4 1/4] drm/dp: Add define to set 0.5% down-spread in MAX_DOWNSPREAD register.
+Date: Mon,  2 May 2016 09:54:23 +0200
+Message-ID: <1462175666-8891-2-git-send-email-enric.balletbo@collabora.com>
+References: <1462175666-8891-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462175666-8891-1-git-send-email-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 30, 2016 at 1:50 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Sat, Apr 30, 2016 at 08:57:34AM +0530, Pratyush Anand wrote:
->> On Fri, Apr 29, 2016 at 11:30 PM, Russell King - ARM Linux
->> <linux@arm.linux.org.uk> wrote:
->> > On Fri, Apr 29, 2016 at 08:26:00PM +0530, Pratyush Anand wrote:
->> >> Hi Russell,
->> >>
->> >> On Thu, Apr 28, 2016 at 2:58 PM, Russell King
->> >> <rmk+kernel@arm.linux.org.uk> wrote:
->> >> > Advertise the location of bootable RAM to kexec-tools.  kexec needs to
->> >> > know where it can place the kernel in RAM, and so be executable when
->> >> > the system needs to jump into it.
->> >> >
->> >> > Advertise these areas in /proc/iomem with a "System RAM (boot alias)"
->> >> > tag.
->> >> >
->> >> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
->> >>
->> >> Can you please also share git tree path of corresponding kexec-tools changes?
->> >>
->> >> Could it be a better idea (if things in user space become simpler)
->> >> that in stead of patch 5 and 6, we pass arch_phys_to_idmap_offset to
->> >> user space, and then user space manipulates existing "Crash kernel"
->> >> and "System RAM" resources.
->> >
->> > Given that it's only _one_ platform right now, I don't think that
->> > additional complexity is worth it.  It means that we have to invent
->>
->> Probably, I could not communicate it well.  I was not trying  to have
->> *additional* complexity. Wanted to see if things could be simpler
->> rather. So this is what my understanding was:
->> -- We create one patch to pass arch_phys_to_idmap_offset to user space
->> (say in /sys/kernel/bootmem_idmap_offset)
->> -- We do not use patch 5,6,11 and 12 of this series. Probably few more
->> content of the series will go away.
->
-> Patches 11 and 12 don't go away with what you're suggesting.  Patches
-> 11 and 12 are necessary to allow the boot-view addresses to be passed
-> into the kernel through kexec, and to allow kexec to find appropriate
-> memory resources.
+Support of 0.5% down-spread is required for DisplayPort Specification
+Version 1.1 Sink.
 
-But once we would have manipulated "start" and "end" of "Crash Kernel"
-and "System RAM" resources in user space using
-/sys/kernel/bootmem_idmap_offset , then kernel through kexec system
-call would have already receive boot-view addresses, no?
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ include/drm/drm_dp_helper.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-~Pratyush
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 1252108..22be049 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -73,6 +73,7 @@
+ # define DP_ENHANCED_FRAME_CAP		    (1 << 7)
+ 
+ #define DP_MAX_DOWNSPREAD                   0x003
++# define DP_PERCENT_DOWNSPREAD_0_5	    (1 << 0)
+ # define DP_NO_AUX_HANDSHAKE_LINK_TRAINING  (1 << 6)
+ 
+ #define DP_NORP                             0x004
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
