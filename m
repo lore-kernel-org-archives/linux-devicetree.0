@@ -1,46 +1,106 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 6/7] ASoC: omap-mcbsp: sidetone: Use the new callback
- for iclk handling
-Date: Mon, 2 May 2016 11:42:13 +0100
-Message-ID: <20160502104213.GD6292@sirena.org.uk>
-References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
- <1461927202-17677-7-git-send-email-peter.ujfalusi@ti.com>
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH 06/12] ARM: kexec: advertise location of bootable RAM
+Date: Mon, 2 May 2016 16:18:47 +0530
+Message-ID: <CAHB_GuoUcVPexeaHzZ6O1bVTSksd39jVZpO63+jX=rACEe1QsA@mail.gmail.com>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+	<E1aviF4-0000jG-MO@rmk-PC.arm.linux.org.uk>
+	<CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+	<20160429180024.GS19428@n2100.arm.linux.org.uk>
+	<CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
+	<20160430082055.GG19428@n2100.arm.linux.org.uk>
+	<CAHB_Guq+w7JKXEpLHkefMaYuYowh7dqsdvxgG_dnGv-GdkX39A@mail.gmail.com>
+	<20160502101030.GK19428@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8w3uRX/HFJGApMzv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461927202-17677-7-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: tony@atomide.com, jarkko.nikula@bitmer.com, paul@pwsan.com, lgirdwood@gmail.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ia64-owner@vger.kernel.org>
+In-Reply-To: <20160502101030.GK19428@n2100.arm.linux.org.uk>
+Sender: linux-ia64-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 2, 2016 at 3:40 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Mon, May 02, 2016 at 01:04:28PM +0530, Pratyush Anand wrote:
+>> On Sat, Apr 30, 2016 at 1:50 PM, Russell King - ARM Linux
+>> <linux@arm.linux.org.uk> wrote:
+>> > On Sat, Apr 30, 2016 at 08:57:34AM +0530, Pratyush Anand wrote:
+>> >> On Fri, Apr 29, 2016 at 11:30 PM, Russell King - ARM Linux
+>> >> <linux@arm.linux.org.uk> wrote:
+>> >> > On Fri, Apr 29, 2016 at 08:26:00PM +0530, Pratyush Anand wrote:
+>> >> >> Hi Russell,
+>> >> >>
+>> >> >> On Thu, Apr 28, 2016 at 2:58 PM, Russell King
+>> >> >> <rmk+kernel@arm.linux.org.uk> wrote:
+>> >> >> > Advertise the location of bootable RAM to kexec-tools.  kexec needs to
+>> >> >> > know where it can place the kernel in RAM, and so be executable when
+>> >> >> > the system needs to jump into it.
+>> >> >> >
+>> >> >> > Advertise these areas in /proc/iomem with a "System RAM (boot alias)"
+>> >> >> > tag.
+>> >> >> >
+>> >> >> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+>> >> >>
+>> >> >> Can you please also share git tree path of corresponding kexec-tools changes?
+>> >> >>
+>> >> >> Could it be a better idea (if things in user space become simpler)
+>> >> >> that in stead of patch 5 and 6, we pass arch_phys_to_idmap_offset to
+>> >> >> user space, and then user space manipulates existing "Crash kernel"
+>> >> >> and "System RAM" resources.
+>> >> >
+>> >> > Given that it's only _one_ platform right now, I don't think that
+>> >> > additional complexity is worth it.  It means that we have to invent
+>> >>
+>> >> Probably, I could not communicate it well.  I was not trying  to have
+>> >> *additional* complexity. Wanted to see if things could be simpler
+>> >> rather. So this is what my understanding was:
+>> >> -- We create one patch to pass arch_phys_to_idmap_offset to user space
+>> >> (say in /sys/kernel/bootmem_idmap_offset)
+>> >> -- We do not use patch 5,6,11 and 12 of this series. Probably few more
+>> >> content of the series will go away.
+>> >
+>> > Patches 11 and 12 don't go away with what you're suggesting.  Patches
+>> > 11 and 12 are necessary to allow the boot-view addresses to be passed
+>> > into the kernel through kexec, and to allow kexec to find appropriate
+>> > memory resources.
+>>
+>> But once we would have manipulated "start" and "end" of "Crash Kernel"
+>> and "System RAM" resources in user space using
+>> /sys/kernel/bootmem_idmap_offset , then kernel through kexec system
+>> call would have already receive boot-view addresses, no?
+>
+> Correct, but that's still a problem for all the reasons I gave in the
+> email to which you replied to.
+>
+> I'm not sure where the misunderstanding is.
 
---8w3uRX/HFJGApMzv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No, no..there is no misunderstanding. I agreed to your implementation
+because that will work for generic cases and for me complete series is
+OK.
 
-On Fri, Apr 29, 2016 at 01:53:21PM +0300, Peter Ujfalusi wrote:
-> The McBSP sidetone (in OMAP3 McBSP2 and 3 module) is working with the
-> module's interface clock. When the sidetone is enabled the iclk must not
-> idle because it will result in choppy sidetone.
+I just wanted to clarify my understanding, and so was the last argument.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+>
+> Let me repeat: even if we do what you're suggesting, patches 11 and 12
+> do *not* go away.  I've explained in detail why each of the changes are
+> necessary (which you have cut from your reply.)
+>
 
---8w3uRX/HFJGApMzv
-Content-Type: application/pgp-signature; name="signature.asc"
+Again, it is just for clarifying myself.
+I cut the reply because I understood that in patch 11 and 12, you
+convert addresses passed by kexec tools from run time view to boot
+view using different helpers like phys_to_boot_phys(). So, had kexec
+system call passed boot view addresses, we would have not needed 11
+and 12. This is what I wanted to clarify.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> In other words: exporting this offset via
+> /sys/kernel/bootmem_idmap_offset is technically inferior to the solution
+> I have come up with here, and it saves very little complexity and code.
 
-iQEcBAEBCAAGBQJXJy8EAAoJECTWi3JdVIfQis0H/AuTWwMoioY55G4h3vyLSj97
-mJV7WNkV/CMOBQr6m0cdvkkEUdrNO5Vczx4ltWUwqH0CTt2qHWDbjT2oQBXAiXWT
-8Mf4sJTzkGilfCLxcDQT+KMurd/VKYjiXnQGOZ6JMayzFDbkEeXFlifXUvdCCLRm
-tH5OwiDQXHRijSTKGftsmLwVCrn2kqE8FV6QN5HN7Od6PBV+pgmXh8nJgVVsCBC6
-yIWMAz/cDI/KRzxrl0pjvqErCpUHE7PxO2cRST3nEnQ8V33Fiikkeu2sCeMLmaHX
-mEoDidMhb0gfy5b8QGhtfuD7VSDLRmOQLieuL66USOjMaaveNNQnxAtGfc2jbcY=
-=EFya
------END PGP SIGNATURE-----
+I still have opinion that code will probably be more simple and reduce
+significantly, however solution will siege to work the moment
+idmap_offset is not a simple additive value.
 
---8w3uRX/HFJGApMzv--
+Therefore, I am OK with your implementation.
+
+~Pratyush
