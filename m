@@ -1,142 +1,74 @@
-From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH v2 2/5] ARM: dts: vfxxx: Add device tree node for OCOTP
-Date: Mon, 2 May 2016 13:42:12 +0530
-Message-ID: <20160502081211.GA7847@Sanchayan-Arch.localdomain>
-References: <cover.1462171989.git.maitysanchayan@gmail.com>
- <b5c1ff5a805eae3e53f07f8d0161f0af51586c00.1462171990.git.maitysanchayan@gmail.com>
- <4759698.elnRBldlxl@wuerfel>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: AM335x ICE board Linux support
+Date: Mon, 2 May 2016 11:23:42 +0300
+Message-ID: <57270E8E.2040704@ti.com>
+References: <571E069A.20700@ti.com> <571F2982.2080702@ti.com>
+ <20160426151046.GQ5995@atomide.com> <572332B2.6010203@ti.com>
+ <20160429153158.GJ5995@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4759698.elnRBldlxl@wuerfel>
+In-Reply-To: <20160429153158.GJ5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
+On 29/04/16 18:31, Tony Lindgren wrote:
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160429 03:10]:
+>> On 26/04/16 18:10, Tony Lindgren wrote:
+>>> I guess for now if no runtime detection is possible in the kernel.
+>>
+>> There are 2 ways to detect them mode
+>> 1) Enabe GPIO rising edge detect interrupt and reset the Ethernet PHY
+>> 2) read a PHY register over MDIO bus
+>>
+>> I'm not very sure where this can be done in the kernel.
+> 
+> We already have some PHY detection over MDIO detection in place,
+> so that's probably the most generic solution.
 
-On 16-05-02 09:31:12, Arnd Bergmann wrote:
-> On Monday 02 May 2016 12:35:01 Sanchayan Maity wrote:
-> > +                       ocotp@400a5000 {
-> > +                               compatible =3D "fsl,vf610-ocotp";
-> > +                               #address-cells =3D <1>;
-> > +                               #size-cells =3D <1>;
-> > +                               reg =3D <0x400a5000 0xCF0>;
-> > +                               clocks =3D <&clks VF610_CLK_OCOTP>;
-> > +
-> > +                               ocotp_cfg0: cfg0@410 {
-> > +                                       reg =3D <0x410 0x4>;
-> > +                               };
-> > +
-> > +                               ocotp_cfg1: cfg1@420 {
-> > +                                       reg =3D <0x420 0x4>;
-> > +                               };
-> > +                       };
->=20
-> How do the registers of the child nodes relate to the registers of th=
-e
-> parent? If there are in the same address space, it might be good to
-> add a "ranges" property to describe it.
+Sorry, I didn't get you.
+Based on the PHY node we need to switch the MAC driver.
+i.e. either CPSW or PRUeth.
+The PHY driver remains the same in both modes.
 
-cfg0 and cfg1 are in the same address space viz. 0x400a5410 and 0x400a5=
-420
-respectively. These nodes are primarily for use by the NVMEM consumer A=
-PI in
-the SoC bus driver to retrieve the values from these registers leveragi=
-ng
-the NVMEM vf610 ocotp driver.
+> 
+>> Even if there is some place to do the detection, how do we go about reconfiguring the
+>> device tree?
+> 
+> You may not need to, you can have several named pin states:
+> 
+> pinctrl-names = "default", "phy-foo", "phy-bar";
+> pinctrl-0 = <&cpsw_default>;
+> pinctrl-1 = <&cpsw_phy_foo>;
+> pinctrl-2 = <&cpsw_phy_bar>;
+> ...
+> 
+> Then have the common pins in cpsw_default, and manually enable
+> the other pinctrl groups based on the detection. We already
+> have that going on in am335x-bone-common.dtsi with the &mac
+> entry for cpsw.
 
-Based on the NVMEM bindings here
-http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/=
-nvmem/nvmem.txt#L33
+Probably I'm looking at the wrong place but in am353x-bone-common.dtsi
+I only see "default" and "sleep" pins.
 
-Thanks.
+> 
+> But maybe you have other detection issues too beyond setting
+> the pins?
 
-Regards,
-Sanchayan.
+It is not only about the pinmux but using an entirely different MAC driver.
+So we need to enable/disable different MAC drivers.
 
->=20
-> 	Arnd
+It gets even trickier if one port is assigned to one MAC driver and the other
+one to another MAC driver. The pinmux now has to be port specific and the
+cpsw driver has to be updated to support port specific pinmux. As of now
+it handles only one pinmux group for both its ports.
 
-> Date: Mon, 02 May 2016 12:02:21 +1000
-> From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
->  aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Grant Likely
->  <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org"
->  <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>,
->  linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org
-> Subject: Re: [PATCH v8 40/45] drivers/of: Split unflatten_dt_node()
->=20
-> On Wed, Feb 17, 2016 at 08:30:42AM -0600, Rob Herring wrote:
-> >On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKQ@public.gmane.org=
-om> wrote:
-> >> The function unflatten_dt_node() is called recursively to unflatte=
-n
-> >> device nodes and properties in the FDT blob. It looks complicated
-> >> and hard to be understood.
-> >>
-> >> This splits the function into 3 functions: populate_properties(),
-> >> populate_node() and unflatten_dt_node(). populate_properties(),
-> >> which is called by populate_node(), creates properties for the
-> >> indicated device node. The later one creates the device nodes
-> >> from FDT blob. populate_node() gets the offset in FDT blob for
-> >> next device nodes and then calls populate_node(). No logical
-> >> changes introduced.
-> >>
-> >> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> >> ---
-> >>  drivers/of/fdt.c | 249 ++++++++++++++++++++++++++++++++----------=
--------------
-> >>  1 file changed, 147 insertions(+), 102 deletions(-)
-> >
-> >One nit, otherwise:
-> >
-> >Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >
-> >[...]
-> >
-> >> +               /* And we process the "ibm,phandle" property
-> >> +                * used in pSeries dynamic device tree
-> >> +                * stuff
-> >> +                */
-> >> +               if (!strcmp(pname, "ibm,phandle"))
-> >> +                       np->phandle =3D be32_to_cpup(val);
-> >> +
-> >> +               pp->name   =3D (char *)pname;
-> >> +               pp->length =3D sz;
-> >> +               pp->value  =3D (__be32 *)val;
-> >
-> >This cast should not be needed.
-> >
->=20
-> It's needed. Otherwise, we will have warning. So I will keep it. I ju=
-st
-> went through this one for next revision and sorry for late response.
->=20
-> drivers/of/fdt.c:225:14: warning: assignment discards =E2=80=98const=E2=
-=80=99 qualifier from pointer target type
->    pp->value  =3D val;
->               ^
->=20
-> Thanks,
-> Gavin
->=20
-> >> +               *pprev     =3D pp;
-> >> +               pprev      =3D &pp->next;
-> >> +       }
-> >
->=20
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
-
+cheers,
+-roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
