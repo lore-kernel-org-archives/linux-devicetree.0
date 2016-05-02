@@ -1,71 +1,56 @@
-From: "J.D. Schroeder" <Linux.HWI@garmin.com>
-Subject: [PATCH v2 1/3] DRA7: Fix clock data for gmac_gmii_ref_clk_div
-Date: Mon, 2 May 2016 12:12:01 -0500
-Message-ID: <1462209123-7332-2-git-send-email-Linux.HWI@garmin.com>
-References: <20160427171658.GA5995@atomide.com>
- <1462209123-7332-1-git-send-email-Linux.HWI@garmin.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH v8 1/2] dt: bindings: add MARVELL's bt-sd8xxx wireless device
+Date: Mon, 2 May 2016 10:28:35 -0700
+Message-ID: <36F7EC16-DCBB-4B5E-8391-88B64CCA9D05@holtmann.org>
+References: <1461679047-22631-1-git-send-email-akarwar@marvell.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462209123-7332-1-git-send-email-Linux.HWI@garmin.com>
+In-Reply-To: <1461679047-22631-1-git-send-email-akarwar@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, t-kristo@ti.com, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: jay.schroeder@garmin.com
+To: Amitkumar Karwar <akarwar@marvell.com>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "J.D. Schroeder" <jay.schroeder@garmin.com>
+Hi Amitkumar,
 
-This commit fixes the clock data inside the DRA7xx clocks device tree
-structure for the gmac_gmii_ref_clk_div clock. This clock is actually
-the GMAC_MAIN_CLK and has nothing to do with the register at address
-0x4a0093d0. If CLKSEL_REF bit 24 inside of CM_GMAC_GMAC_CLKCTRL, is
-set to 1 in order to use the GMAC_RMII_CLK instead of the
-GMAC_RMII_HS_CLK, the kernel generates a clock divider warning:
-    WARNING: CPU: 0 PID: 0 at drivers/clk/clk-divider.c:129 clk_divider_recalc_rate+0xa8/0xe0()
-    gmac_gmii_ref_clk_div: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
+> Add device tree binding documentation for MARVELL's bluetooth sdio
+> (sd8897 and sd8997) chip.
+> 
+> Signed-off-by: Xinming Hu <huxm@marvell.com>
+> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
+> ---
+> Listing changelist for both 1/2 and 2/2 here
+> v2: Fixed build error reported by kbuild test robot
+> drivers/bluetooth/btmrvl_platform.c:141:22: error:
+> 'btmrvl_plt_pm_ops' undeclared here (not in a function)
+> 
+> v3: Add NULL check for 'btmrvl_plt_dev'
+> 
+> v4: Moved the bindings file to bindings/net/
+>    Corrected the name of 'name' and 'compatible' properties(Rob Herring)
+> 
+> v5: Comments for wlan patches were applicable here as well. Like all binding
+>    changes in single file, specifying node as a child of SDIO controller.
+> 
+> v6: a)Use <chip>-bt order for compatible attribute(Rob Herring)
+>    b)Split wakeuppin-gap to wakeup-pin and wakeup-gap(Rob Herring) 
+>    c)Use sdio function number for both the unit address and reg(Rob Herring)
+> 
+> v7: a)Use suggested vendor name and generic node name(Rob Herring)
+> v8: a)Nodes are renamed as per suggestions from Rob Herring
+>      btmrvl,* -> marvell,*
+>      "wakeup-gap-msec" -> "wakeup-gap-ms"
+> ---
+> Documentation/devicetree/bindings/btmrvl.txt       | 29 -----------
+> .../devicetree/bindings/net/marvell-bt-sd8xxx.txt  | 56 ++++++++++++++++++++++
+> 2 files changed, 56 insertions(+), 29 deletions(-)
+> delete mode 100644 Documentation/devicetree/bindings/btmrvl.txt
+> create mode 100644 Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
 
-By properly configuring the gmac_gmii_ref_clk_div (GMAC_MAIN_CLK) to
-have the parent of dpll_gmac_m2_ck always divided by 2 the warning is
-resolved and the clock tree is fixed up.
+patch has been applied to bluetooth-next tree.
 
-Additionally, a new clock called rmii_50mhz_clk_mux is defined that
-does utilize CM_GMAC_GMAC_CLKCTRL[24] CLKSEL_REF to configure the
-source clock for the RMII_50MHZ_CLK.
+Regards
 
-Signed-off-by: J.D. Schroeder <jay.schroeder@garmin.com>
-Reviewed-by: Trenton Andres <trenton.andres@garmin.com>
----
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index 8378b44..3f0c61d 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -1718,13 +1718,20 @@
- 		reg = <0x0c00>;
- 	};
- 
--	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div@13d0 {
-+	rmii_50mhz_clk_mux: rmii_50mhz_clk_mux@13d0 {
- 		#clock-cells = <0>;
--		compatible = "ti,divider-clock";
--		clocks = <&dpll_gmac_m2_ck>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&dpll_gmac_h11x2_ck>, <&rmii_clk_ck>;
- 		ti,bit-shift = <24>;
- 		reg = <0x13d0>;
--		ti,dividers = <2>;
-+	};
-+
-+	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clocks = <&dpll_gmac_m2_ck>;
-+		clock-mult = <1>;
-+		clock-div = <2>;
- 	};
- 
- 	gmac_rft_clk_mux: gmac_rft_clk_mux@13d0 {
--- 
-1.9.1
+Marcel
