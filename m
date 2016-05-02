@@ -1,67 +1,69 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [RESEND PATCH v4 4/4] drm: bridge: anx78xx: Add anx78xx driver
- support.
-Date: Mon, 2 May 2016 17:22:08 +0200
-Message-ID: <CAFqH_503y=pAH7BsXxsRuCn-VutTobJ_H2QK_nmu8xAKZ-Xhmg@mail.gmail.com>
-References: <1462175666-8891-1-git-send-email-enric.balletbo@collabora.com>
- <1462175666-8891-5-git-send-email-enric.balletbo@collabora.com>
- <20160502142215.GA10348@ulmo.ba.sec>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v5] ARM: bcm2835: dt: Add the ethernet to the device trees
+Date: Mon, 02 May 2016 08:34:28 -0700
+Message-ID: <8737q0iid7.fsf@eliezer.anholt.net>
+References: <1462172811-24206-1-git-send-email-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160502142215.GA10348@ulmo.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, drinkcat@chromium.org, Emil Velikov <emil.l.velikov@gmail.com>, linux-kernel@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Thierry Reding <treding@nvidia.com>, Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462172811-24206-1-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCjIwMTYtMDUtMDIgMTY6MjIgR01UKzAyOjAwIFRoaWVycnkgUmVkaW5nIDx0
-aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Ogo+IE9uIE1vbiwgTWF5IDAyLCAyMDE2IGF0IDA5OjU0
-OjI2QU0gKzAyMDAsIEVucmljIEJhbGxldGJvIGkgU2VycmEgd3JvdGU6Cj4gWy4uLl0KPj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgtYW54Nzh4eC5jIGIvZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC1hbng3OHh4LmMKPiBbLi4uXQo+PiArc3RhdGlj
-IGludCBhbng3OHh4X2luaXRfcGRhdGEoc3RydWN0IGFueDc4eHggKmFueDc4eHgpCj4+ICt7Cj4+
-ICsgICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZhbng3OHh4LT5jbGllbnQtPmRldjsKPj4gKyAg
-ICAgc3RydWN0IGFueDc4eHhfcGxhdGZvcm1fZGF0YSAqcGRhdGEgPSAmYW54Nzh4eC0+cGRhdGE7
-Cj4+ICsKPj4gKyAgICAgLyogMS4wViBkaWdpdGFsIGNvcmUgcG93ZXIgcmVndWxhdG9yIChvcHRp
-b25hbCkgKi8KPj4gKyAgICAgcGRhdGEtPmR2ZGQxMCA9IGRldm1fcmVndWxhdG9yX2dldChkZXYs
-ICJkdmRkMTAiKTsKPj4gKyAgICAgaWYgKElTX0VSUihwZGF0YS0+ZHZkZDEwKSkgewo+PiArICAg
-ICAgICAgICAgIERSTV9JTkZPKCJEVkREMTAgcmVndWxhdG9yIG5vdCBmb3VuZFxuIik7Cj4+ICsg
-ICAgICAgICAgICAgcGRhdGEtPmR2ZGQxMCA9IE5VTEw7Cj4+ICsgICAgIH0KPgo+IEknbSBhbG1v
-c3Qgc3VyZSB0aGF0IHRoaXMgaXNuJ3Qgd2hhdCB5b3Ugd2FudC4gV2hhdCBpZiB0aGUgcmVndWxh
-dG9yIGlzCj4gaG9va2VkIHVwIGJ1dCB0aGUgYnJpZGdlIGRyaXZlciBwcm9iZXMgYmVmb3JlIHRo
-ZSByZWd1bGF0b3IuIEkgdGhpbmsKPiB3aGF0IHlvdSByZWFsbHkgd2FudCBpcyB0byBzaW1wbHkg
-cHJvcGFnYXRlIHRoZSBlcnJvciBjb2RlIHZpYToKPgo+ICAgICAgICAgcmV0dXJuIFBUUl9FUlIo
-cGRhdGEtPmR2ZGQxMCk7Cj4KPiBNeSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgdGhlIHJlZ3VsYXRv
-ciBjb3JlIHdpbGwgZ2l2ZSB5b3UgYSBkdW1teSBvbmUgaWYKPiB0aGVyZSdzIHJlYWxseSBub3Ro
-aW5nIGhvb2tlZCB1cC4gSSB0aGluayB5b3UncmUgYWxzbyBzdXBwb3NlZCB0byBjYWxsCj4gcmVn
-dWxhdG9yX2dldF9vcHRpb25hbCgpIChvciB0aGUgZGV2bV8qKCkgZXF1aXZhbGVudCkgaWYgdGhp
-cyBpcyB0cnVseQo+IGFuIG9wdGlvbmFsIHN1cHBseS4gR2l2ZW4gdGhhdCBpdCdzIHRoZSAiY29y
-ZSBwb3dlciIgcmVndWxhdG9yIEkgZG91YnQKPiB0aGF0IGl0J3MgcmVhbGx5IG9wdGlvbmFsOyBp
-dCdzIG1vcmUgbGlrZWx5IHRoYXQgeW91IG1heSBub3QgYmUgYWJsZSB0bwo+IGNvbnRyb2wgaXQs
-IGFuZCB0aGF0IGl0J3MgdGhlcmVmb3JlIGFsd2F5cyBvbi4gSW4gdGhhdCBjYXNlIHlvdSdyZQo+
-IHN1cHBvc2VkIHRvIG1vZGVsIGl0IGluIERUIGFzIGEgZml4ZWQgcmVndWxhdG9yIHRoYXQncyBh
-bHdheXMgb24uCj4KClllcywgSSB3YXMgdGhpbmtpbmcgaW4gdGhlIGNhc2UgeW91J3JlIGFyZSBu
-b3QgYWJsZSB0byBjb250cm9sIGl0IGFuZApJIG1ha2UgaXQgYXMgb3B0aW9uYWwsIGFuZCB5ZXMs
-IHlvdSBoYXZlIHJlYXNvbiBzbyBJdCdzIGZpbmUgd2l0aCBtZQp0aGUgYWJvdmUgc29sdXRpb24u
-Cgo+IFRoaXMgaXMgZmFpcmx5IG1pbm9yIGFuZCBpdCdzIHJlYWxseSB0aGUgb25seSB0aGluZyBJ
-IGNvdWxkIGZpbmQsIHNvIG5vCj4gbmVlZCB0byByZXNwaW4ganVzdCBmb3IgdGhhdC4gSWYgeW91
-J3JlIGZpbmUgd2l0aCB0aGUgYWJvdmUgc29sdXRpb24gKHRvCj4gcHJvcGFnYXRlIHRoZSBlcnJv
-ciBjb2RlKSBJIGNhbiBtYWtlIHRoZSBjaGFuZ2UgbWFudWFsbHkgd2hpbGUgYXBwbHlpbmcuCj4K
-Ckl0J3MgdXAgdG8geW91LiBXaGljaGV2ZXIgeW91IHByZWZlci4KCgpUaGFua3MsCiBFbnJpYwoK
-Cj4gVGhpZXJyeQo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+--=-=-=
+Content-Type: text/plain
+
+Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> writes:
+
+> The hub and the ethernet in its port 1 are hardwired on the board.
+>
+> Compared to the adapters that can be plugged into the USB ports, this
+> one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
+> has the MAC address for this adapter in its ROM, accessible from its
+> firmware.
+>
+> U-Boot can read out the address and set the local-mac-address property of the
+> node with "ethernet" alias. Let's add the node so that U-Boot can do its
+> business.
+>
+> Model B rev2 and Model B+ entries were verified by me, the hierarchy and
+> pid/vid pair for the Version 2 was provided by Peter Chen. Original
+> Model B is a blind shot, though very likely correct.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> ---
+
+Applied to bcm2835-dt-next locally.  We've already sent out pull
+requests for 4.7, so I'll push it once 4.7-rc1 happens.
+
+Thanks!
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXJ3OFAAoJELXWKTbR/J7oHqQQALI9nEmmuDzvHe4hIibYrm2G
+8UwtqQdv0pUz43/Du4gHKg/5LQNC6dxx0w1mjEPuRJKJJ5LZ4Dc9RkP/Kw09X6N7
+y59lM1AnFnPvhKFftHJkHkEQsmeQWWtxRdi/oYtk1rWVXuvR2RyPGk2cVJREbWkl
+X1Mo6BQBylQnvnC2s2LL+C++WkSl+iNHjpyK0MgnzijLWSFk5f4duAXNI/gbrhTE
+WfqWqEqQkPxm+BufJtXkHJzuwhYuCM02S9qpS3ulnxwzGR84ACEw5G8QrPoVH9fn
+wVi3vaSvHMUth0Zt3P9FCJKdNtxjIC51jg7AYZvMulXmWDBEaNMrJlPc8W//YRA5
+ExLkA0InvDDJHBwWD3jlLml8kE1nUgOFMam2k6wyHjhoiZiwcrOiKYSu78B9X8Qg
+vIoDRiG5lAjrP5CS5SNkFhg/oRc435ZDOJIJPDlAWLdUrMzSIgykqVYiUS1XZ7+9
+4VzH5WyoBD/IlicHy4pzaGLj4LNaJ9bw/c/1JcyX9uWoPem1lj6zWbCQ2WFdC4Ad
+sbaJvQk7mB7frihrnUCJokFgsfHcH0CQ6blkj/mOG2Clnyat+Q7+B6aMPJ6tBMwL
+SKmFrofPZ15+RqEXV3/jtH6XGGbFqq7ONe0SHWdO0ey/MOsBZD2ey+buMdv/Ko3M
+Ss+udq6+Zmg+tgvSJaKd
+=yaGz
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
