@@ -1,45 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND 12/12] of: Add sh support
-Date: Mon, 2 May 2016 07:35:28 -0500
-Message-ID: <CAL_JsqKTaJEFtPm-R3WS23S0Zhvm4T2d3_dscHB2o-KGUfkqfQ@mail.gmail.com>
-References: <1462079316-27771-1-git-send-email-ysato@users.sourceforge.jp> <1462079316-27771-13-git-send-email-ysato@users.sourceforge.jp>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] pinctrl: ns2: add pinmux driver support for Broadcom NS2 SoC
+Date: Mon, 02 May 2016 15:36:08 +0200
+Message-ID: <7673779.BeEs3iufq4@wuerfel>
+References: <1461934299-14774-1-git-send-email-yendapally.reddy@broadcom.com> <1461934299-14774-2-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1462079316-27771-13-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1461934299-14774-2-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod Kumar <pramodku@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 1, 2016 at 12:08 AM, Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> sh fdt access in VA. But memory reservation use PA.
-> So sh need convert to PA.
->
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  drivers/of/fdt.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 3349d2a..fb357be 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -593,6 +593,9 @@ void __init early_init_fdt_scan_reserved_mem(void)
->                 fdt_get_mem_rsv(initial_boot_params, n, &base, &size);
->                 if (!size)
->                         break;
-> +#ifdef CONFIG_SUPERH
-> +               base = virt_to_phys(base);
-> +#endif
->                 early_init_dt_reserve_memory_arch(base, size, 0);
+On Friday 29 April 2016 08:51:38 Yendapally Reddy Dhananjaya Reddy wrote:
+> +static struct pinctrl_ops ns2_pinctrl_ops = {
+> +       .get_groups_count = ns2_get_groups_count,
+> +       .get_group_name = ns2_get_group_name,
+> +       .get_group_pins = ns2_get_group_pins,
+> +       .pin_dbg_show = ns2_pin_dbg_show,
+> +       .dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+> +       .dt_free_map = pinctrl_utils_dt_free_map,
+> +};
+> +
 
-This is not right. base is already a physical address and
-early_init_dt_reserve_memory_arch takes a physical address. The
-default implementation using memblock also works on physical
-addresses. It is a weak function so you can override it if you need to
-do something special. But it seems something else is wrong here if you
-need this.
+This does not build:
 
-Rob
+drivers/pinctrl/bcm/pinctrl-ns2-mux.c:540:17: error: 'pinctrl_utils_dt_free_map' undeclared here (not in a function)
+  .dt_free_map = pinctrl_utils_dt_free_map,
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+Apparently this function got renamed to pinctrl_utils_free_map
+
+	Arnd
