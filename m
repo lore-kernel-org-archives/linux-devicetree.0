@@ -1,84 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V17 2/3] dmaengine: qcom_hidma: add debugfs hooks
-Date: Mon, 2 May 2016 11:40:49 +0100
-Message-ID: <20160502104049.GB6292@sirena.org.uk>
-References: <1460384473-5775-1-git-send-email-okaya@codeaurora.org>
- <1460384473-5775-3-git-send-email-okaya@codeaurora.org>
- <20160426033029.GB2274@localhost>
- <b068ead6474f2ffee5acef9ea799aba3@codeaurora.org>
- <20160426162529.GK2274@localhost>
- <571F9D76.2060809@codeaurora.org>
- <20160427081501.GV2274@localhost>
- <2c7ac0732fb16f952db24b7c70065318@codeaurora.org>
- <57258799.70803@codeaurora.org>
- <20160502092552.GC2274@localhost>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] ASoc: omap-mcbsp: Rename
+ omap_mcbsp_sysfs_remove() to omap_mcbsp_cleanup()
+Date: Mon, 2 May 2016 11:41:54 +0100
+Message-ID: <20160502104154.GC6292@sirena.org.uk>
+References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
+ <1461927202-17677-6-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kORqDWCi7qDJ0mEj"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="ctP54qlpMx3WjD+/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160502092552.GC2274@localhost>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <1461927202-17677-6-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---kORqDWCi7qDJ0mEj
+--ctP54qlpMx3WjD+/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 02, 2016 at 02:55:52PM +0530, Vinod Koul wrote:
-> On Sun, May 01, 2016 at 12:35:37AM -0400, Sinan Kaya wrote:
+On Fri, Apr 29, 2016 at 01:53:20PM +0300, Peter Ujfalusi wrote:
+> The function will do more then removing the sysfs files in the future.
 
-> > My evaluation turned out negative. The regmap code is nice for bus like=
- peripherals
-> > like I2C and SPI where everything is bitwise accessed. This is not the =
-case
-> > in this code.=20
+Please fix the subject line but otherwise this looks OK.
 
-> I do not entirely agree with the statements here, it does give big benefit
-> on our systems with MMIO. I am going to ask Mark to comment on this, he
-> know better and understands ARM.
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> I am probably going to be okay with this not using regmap and it is debug
-> but you should give that a try in future for better performance and ofcou=
-rse
-> you can add to regmap to get a better model for your device
-
-I've no idea what "this" is, sorry.  All I've got here is an enormous
-backtrace with a bunch of the messages not even word wrapped.
-
-Please be aware that I get CCed on so much irrelevant crap that copying
-me into the middle of a thread about some other subsystem is likely to
-get missed - almost always it's review of some patch I've got no
-interest in.
-
-> > Barriers are really expensive on ARM. I paid very special attention in =
-the=20
-> > code to decide when to use relaxed version vs. the readl version. I los=
-e=20
-> > all of this optimization.=20
-
-Drivers should not be using the relaxed accessors, they are there for
-the generic code to build on not for drivers and they really need the
-cache flush operations.  Getting the cache flush operations right,
-especially on ARM, isn't easy and needs detailed review.
-
---kORqDWCi7qDJ0mEj
+--ctP54qlpMx3WjD+/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXJy6wAAoJECTWi3JdVIfQ3CgH/iNZEm4o5yzJeCR1mhG2n4Zj
-JMqhiCtj5M+LQpRmUNaF00Uyd+jIbbSVO7XF3C9aU0tJ1tvJfEVpAgcf45pahy/Q
-uAF6lHSccheJcxpTJSiC7qtOEslqlLURIdFPwPN3jDWDv3MUqXxGXn/kc6RFAHo5
-laD2Qv/OPcwoP9+1/pUYXj88khM+luu7p3eIuu8RdpZJNyRplKi6vCHHbnxrU938
-AlfAv3FImjFDLRmczHp79MSE3RqKkaeh1qYFW05YZLTQYpXlnTi+d10YiJtZeQsv
-l5FFnvlNMJLq5W8rbxG+1BcUzO9cX+0YY5bQxXsM1Fr6WedyXcMzz6C0SrscPNg=
-=QYGD
+iQEcBAEBCAAGBQJXJy7xAAoJECTWi3JdVIfQjDwH/2cfevS0W76uOvoc4lC32Kid
+zVJ8GluWbPNp8C36nzkuS9Y8Hpq0uu+pcDimH/syiBvkn1zsi80209VABuVAwEtE
+IKJrmSZoha16B3yG5kiD5G9iacqOA/xSCl+oQai7WRHlsS8xuxnoxZEE2oQIILH1
+EEtfEn4uAD0kfI5MMnewcIpqp7/ltq5qjDG0IncZ9LvgrD5wW2bwwyXzSF2ulR+p
+ocXdYZSK4n42lGZlbBp7uzR3iaWlKeVYrjGjIhHbZPLw+YgzHc6ial/Ogp7PkSp5
+0lwmGvUGx2VxcjbmzvwYVxviO9MDuU7tseh0PBQ+uLrW9/WGILJGOSMo9edL7KE=
+=J+ar
 -----END PGP SIGNATURE-----
 
---kORqDWCi7qDJ0mEj--
+--ctP54qlpMx3WjD+/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
