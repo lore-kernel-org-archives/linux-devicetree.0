@@ -1,74 +1,52 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: AM335x ICE board Linux support
-Date: Mon, 2 May 2016 11:23:42 +0300
-Message-ID: <57270E8E.2040704@ti.com>
-References: <571E069A.20700@ti.com> <571F2982.2080702@ti.com>
- <20160426151046.GQ5995@atomide.com> <572332B2.6010203@ti.com>
- <20160429153158.GJ5995@atomide.com>
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: enable pinctrl for Broadcom NS2 SoC
+Date: Mon, 2 May 2016 13:55:59 +0530
+Message-ID: <CAL2FKYn6FnGRyu=QKDmhqbYx5K3_orROnFww7dekcG4XGo_Y=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160429153158.GJ5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramodku-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/04/16 18:31, Tony Lindgren wrote:
-> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160429 03:10]:
->> On 26/04/16 18:10, Tony Lindgren wrote:
->>> I guess for now if no runtime detection is possible in the kernel.
+Hi Florian,
+
+On Sat, Apr 30, 2016 at 11:25 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8@public.gmane.org=
+m> wrote:
+> Le 30/04/2016 04:13, Linus Walleij a =C3=A9crit :
+>> On Fri, Apr 29, 2016 at 2:51 PM, Yendapally Reddy Dhananjaya Reddy
+>> <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
 >>
->> There are 2 ways to detect them mode
->> 1) Enabe GPIO rising edge detect interrupt and reset the Ethernet PHY
->> 2) read a PHY register over MDIO bus
+>>> This enables the pinctrl support for Broadcom NS2 SoC
+>>>
+>>> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@=
+broadcom.com>
+>>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 >>
->> I'm not very sure where this can be done in the kernel.
-> 
-> We already have some PHY detection over MDIO detection in place,
-> so that's probably the most generic solution.
+>> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Please take this in through the apropriate BCM tree to ARM SoC.
+>
+> Applied to devicetree-arm64/next, there was a small conflict due to t=
+he
+> crmu node removal while switching to PSCI, Dhanajay, please double ch=
+eck
+> the result here:
+>
+> https://github.com/Broadcom/stblinux/commit/8eab685dda30fb15e74d6be07=
+baa9d430a75b8ca
+> --
 
-Sorry, I didn't get you.
-Based on the PHY node we need to switch the MAC driver.
-i.e. either CPSW or PRUeth.
-The PHY driver remains the same in both modes.
+I verified it on the provided path. Its working fine.
 
-> 
->> Even if there is some place to do the detection, how do we go about reconfiguring the
->> device tree?
-> 
-> You may not need to, you can have several named pin states:
-> 
-> pinctrl-names = "default", "phy-foo", "phy-bar";
-> pinctrl-0 = <&cpsw_default>;
-> pinctrl-1 = <&cpsw_phy_foo>;
-> pinctrl-2 = <&cpsw_phy_bar>;
-> ...
-> 
-> Then have the common pins in cpsw_default, and manually enable
-> the other pinctrl groups based on the detection. We already
-> have that going on in am335x-bone-common.dtsi with the &mac
-> entry for cpsw.
+> Florian
 
-Probably I'm looking at the wrong place but in am353x-bone-common.dtsi
-I only see "default" and "sleep" pins.
-
-> 
-> But maybe you have other detection issues too beyond setting
-> the pins?
-
-It is not only about the pinmux but using an entirely different MAC driver.
-So we need to enable/disable different MAC drivers.
-
-It gets even trickier if one port is assigned to one MAC driver and the other
-one to another MAC driver. The pinmux now has to be port specific and the
-cpsw driver has to be updated to support port specific pinmux. As of now
-it handles only one pinmux group for both its ports.
-
-cheers,
--roger
+Thanks
+Dhananjay
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
