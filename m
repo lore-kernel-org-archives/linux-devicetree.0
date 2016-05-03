@@ -1,94 +1,58 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 5/9] dt-bindings: msm/dsi: Some binding doc cleanups
-Date: Tue, 03 May 2016 16:05:01 +0200
-Message-ID: <1462284301.3617.71.camel@pengutronix.de>
-References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
- <1462273081-5814-6-git-send-email-architt@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1462273081-5814-6-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v9 02/22] powerpc/pci: Override pcibios_setup_bridge()
+Date: Tue,  3 May 2016 23:22:33 +1000
+Message-ID: <1462281773-26438-3-git-send-email-gwshan@linux.vnet.ibm.com>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIGRlbiAwMy4wNS4yMDE2LCAxNjoyNyArMDUzMCBzY2hyaWViIEFyY2hpdCBU
-YW5lamE6Cj4gU29tZSBjbGVhbnVwczoKPiAKPiAtIFVzZSBzaW1wbGVyIG5hbWVzIGZvciBEVCBu
-b2RlcyBpbiB0aGUgZXhhbXBsZQo+IC0gRml4IHBoYW5kbGUgZm9yIHNwZWNpZnlpbmcgZGF0YSBs
-YW5lIG1hcHBpbmcgaW4gdGhlIGV4YW1wbGUuCj4gLSBVc2UgcmVmZXJlbmNlcyBpbnN0ZWFkIG9m
-IGR1bXBpbmcgRG9jdW1lbnQgbGlua3MgZXZlcnl3aGVyZQo+IAo+IFNpZ25lZC1vZmYtYnk6IEFy
-Y2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgICAgICAgIHwgMjMgKysrKysrKysrKyst
-LS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRp
-b25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L21zbS9kc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvbXNtL2RzaS50eHQKPiBpbmRleCBmNTk0OGM0Li5iZjQxZDdjIDEwMDY0NAo+IC0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0
-Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2Rz
-aS50eHQKPiBAQCAtMTEsOCArMTEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgIGJlIDAg
-b3IgMSwgc2luY2Ugd2UgaGF2ZSAyIERTSSBjb250cm9sbGVycyBhdCBtb3N0IGZvciBub3cuCj4g
-IC0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBzaWduYWwgZnJvbSB0aGUgRFNJIGJsb2NrLgo+
-ICAtIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPiAtLSBjbG9j
-a3M6IGRldmljZSBjbG9ja3MKPiAtICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4gKy0gY2xvY2tzOiBQ
-aGFuZGxlcyB0byBkZXZpY2UgY2xvY2tzIGFzIGRlc2NpcmJlZCBpbiBbMV0KCnMvZGVzY2lyYmVk
-L2Rlc2NyaWJlZC8KCj4gIC0gY2xvY2stbmFtZXM6IHRoZSBmb2xsb3dpbmcgY2xvY2tzIGFyZSBy
-ZXF1aXJlZDoKPiAgICAqICJtZHBfY29yZV9jbGsiCj4gICAgKiAiaWZhY2VfY2xrIgo+IEBAIC0z
-MSw4ICszMCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIAo+ICBPcHRpb25hbCBwcm9wZXJ0
-aWVzOgo+ICAtIHBhbmVsQDA6IE5vZGUgb2YgcGFuZWwgY29ubmVjdGVkIHRvIHRoaXMgRFNJIGNv
-bnRyb2xsZXIuCj4gLSAgU2VlIGZpbGVzIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsLyBmb3IgZWFjaCBzdXBwb3J0ZWQKPiAtICBwYW5lbC4KPiArICBT
-ZWUgZmlsZXMgaW4gWzJdIGZvciBlYWNoIHN1cHBvcnRlZCBwYW5lbC4KPiAgLSBxY29tLGR1YWwt
-ZHNpLW1vZGU6IEJvb2xlYW4gdmFsdWUgaW5kaWNhdGluZyBpZiB0aGUgRFNJIGNvbnRyb2xsZXIg
-aXMKPiAgICBkcml2aW5nIGEgcGFuZWwgd2hpY2ggbmVlZHMgMiBEU0kgbGlua3MuCj4gIC0gcWNv
-bSxtYXN0ZXItZHNpOiBCb29sZWFuIHZhbHVlIGluZGljYXRpbmcgaWYgdGhlIERTSSBjb250cm9s
-bGVyIGlzIGRyaXZpbmcKPiBAQCAtNDgsNyArNDYsNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
-ICAKPiAgICBEU0kgRW5kcG9pbnQgcHJvcGVydGllczoKPiAgICAtIHJlbW90ZS1lbmRwb2ludDog
-c2V0IHRvIHBoYW5kbGUgb2YgdGhlIGNvbm5lY3RlZCBwYW5lbCdzIGVuZHBvaW50Lgo+IC0gICAg
-U2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQgZm9yIGRldmlj
-ZSBncmFwaCBpbmZvLgo+ICsgICAgU2VlIFszXSBmb3IgZGV2aWNlIGdyYXBoIGluZm8uCj4gICAg
-LSBxY29tLGRhdGEtbGFuZS1tYXA6IHRoaXMgZGVzY3JpYmVzIGhvdyB0aGUgbG9naWNhbCBEU0kg
-bGFuZXMgYXJlIG1hcHBlZAo+ICAgICAgdG8gdGhlIHBoeXNpY2FsIGxhbmVzIG9uIHRoZSBnaXZl
-biBwbGF0Zm9ybS4gVGhlIHZhbHVlIGNvbnRhaW5lZCBpbgo+ICAgICAgaW5kZXggbiBkZXNjcmli
-ZXMgd2hhdCBsb2dpY2FsIGRhdGEgbGFuZSBpcyBtYXBwZWQgdG8gdGhlIHBoeXNpY2FsIGRhdGEK
-PiBAQCAtODksOCArODcsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAtIHFjb20sZHNpLXBo
-eS1pbmRleDogVGhlIElEIG9mIERTSSBQSFkgaGFyZHdhcmUgaW5zdGFuY2UuIFRoaXMgc2hvdWxk
-Cj4gICAgYmUgMCBvciAxLCBzaW5jZSB3ZSBoYXZlIDIgRFNJIFBIWXMgYXQgbW9zdCBmb3Igbm93
-Lgo+ICAtIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPiAtLSBj
-bG9ja3M6IGRldmljZSBjbG9ja3MKPiAtICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4gKy0gY2xvY2tz
-OiBQaGFuZGxlcyB0byBkZXZpY2UgY2xvY2tzIGFzIGRlc2NpcmJlZCBpbiBbMV0KCnMvZGVzY2ly
-YmVkL2Rlc2NyaWJlZC8KCj4gIC0gY2xvY2stbmFtZXM6IHRoZSBmb2xsb3dpbmcgY2xvY2tzIGFy
-ZSByZXF1aXJlZDoKPiAgICAqICJpZmFjZV9jbGsiCj4gIC0gdmRkaW8tc3VwcGx5OiBwaGFuZGxl
-IHRvIHZkZC1pbyByZWd1bGF0b3IgZGV2aWNlIG5vZGUKPiBAQCAtOTksOCArOTYsMTIgQEAgT3B0
-aW9uYWwgcHJvcGVydGllczoKPiAgLSBxY29tLGRzaS1waHktcmVndWxhdG9yLWxkby1tb2RlOiBC
-b29sZWFuIHZhbHVlIGluZGljYXRpbmcgaWYgdGhlIExETyBtb2RlIFBIWQo+ICAgIHJlZ3VsYXRv
-ciBpcyB3YW50ZWQuCj4gIAo+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dAo+ICtbMl0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvCj4gK1szXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZ3JhcGgudHh0Cj4gKwo+ICBFeGFtcGxlOgo+IC0JbWRzc19kc2kwOiBxY29tLG1k
-c3NfZHNpQGZkOTIyODAwIHsKPiArCWRzaTA6IGRzaUBmZDkyMjgwMCB7Cj4gIAkJY29tcGF0aWJs
-ZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+ICAJCXFjb20sZHNpLWhvc3QtaW5kZXggPSA8MD47
-Cj4gIAkJaW50ZXJydXB0LXBhcmVudCA9IDwmbWRzc19tZHA+Owo+IEBAIC0xMjgsNyArMTI5LDcg
-QEAgRXhhbXBsZToKPiAgCQl2ZGQtc3VwcGx5ID0gPCZwbWE4MDg0X2wyMj47Cj4gIAkJdmRkaW8t
-c3VwcGx5ID0gPCZwbWE4MDg0X2wxMj47Cj4gIAo+IC0JCXFjb20sZHNpLXBoeSA9IDwmbWRzc19k
-c2lfcGh5MD47Cj4gKwkJcWNvbSxkc2ktcGh5ID0gPCZkc2lfcGh5MD47Cj4gCj4gIAo+ICAJCXFj
-b20sZHVhbC1kc2ktbW9kZTsKPiAgCQlxY29tLG1hc3Rlci1kc2k7Cj4gQEAgLTE1NiwxMiArMTU3
-LDEyIEBAIEV4YW1wbGU6Cj4gIAkJcG9ydCB7Cj4gIAkJCWRzaTBfb3V0OiBlbmRwb2ludCB7Cj4g
-IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsKPiAtCQkJCWxhbmVzID0gPDAgMSAy
-IDM+Owo+ICsJCQkJcWNvbSxkYXRhLWxhbmUtbWFwID0gPDAgMSAyIDM+OwoKU2VlIG15IGNvbW1l
-bnQgYWJvdXQgdGhlIENTSS0yIGRhdGEtbGFuZXMgYmluZGluZyBpbiB0aGUgb3RoZXIgbWFpbCwK
-Y291bGQgdGhlIGV4aXN0aW5nIGJpbmRpbmcgYmUgcmV1c2VkPwoKcmVnYXJkcwpQaGlsaXBwCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This overrides pcibios_setup_bridge() that is called to update PCI
+bridge windows when PCI resource assignment is completed, to assign
+PE and setup various (resource) mapping for the PE in subsequent
+patches.
+
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+---
+ arch/powerpc/include/asm/pci-bridge.h | 2 ++
+ arch/powerpc/kernel/pci-common.c      | 8 ++++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index 467c0b0..b5e88e4 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -33,6 +33,8 @@ struct pci_controller_ops {
+ 	/* Called during PCI resource reassignment */
+ 	resource_size_t (*window_alignment)(struct pci_bus *bus,
+ 					    unsigned long type);
++	void		(*setup_bridge)(struct pci_bus *bus,
++					unsigned long type);
+ 	void		(*reset_secondary_bus)(struct pci_dev *pdev);
+ 
+ #ifdef CONFIG_PCI_MSI
+diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+index 0f7a60f..40df3a5 100644
+--- a/arch/powerpc/kernel/pci-common.c
++++ b/arch/powerpc/kernel/pci-common.c
+@@ -124,6 +124,14 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+ 	return 1;
+ }
+ 
++void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
++{
++	struct pci_controller *hose = pci_bus_to_host(bus);
++
++	if (hose->controller_ops.setup_bridge)
++		hose->controller_ops.setup_bridge(bus, type);
++}
++
+ void pcibios_reset_secondary_bus(struct pci_dev *dev)
+ {
+ 	struct pci_controller *phb = pci_bus_to_host(dev->bus);
+-- 
+2.1.0
