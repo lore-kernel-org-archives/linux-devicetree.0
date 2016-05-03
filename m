@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v9 12/22] powerpc/pci: Delay populating pdn
-Date: Tue,  3 May 2016 23:22:43 +1000
-Message-ID: <1462281773-26438-13-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v9 15/22] powerpc/powernv: Functions to get/set PCI slot state
+Date: Tue,  3 May 2016 23:22:46 +1000
+Message-ID: <1462281773-26438-16-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,347 +10,232 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The pdn (struct pci_dn) instances are allocated from memblock or
-bootmem when creating PCI controller (hoses) in setup_arch(). PCI
-hotplug, which will be supported by proceeding patches, releases
-PCI device nodes and their corresponding pdn on unplugging event.
-The memory chunks for pdn instances allocated from memblock or
-bootmem are hard to reused after being released.
+This exports 4 functions, which base on the corresponding OPAL
+APIs to get/set PCI slot status. Those functions are going to
+be used by PowerNV PCI hotplug driver:
 
-This delays creating pdn by pci_devs_phb_init() from setup_arch()
-to core_initcall() so that they are allocated from slab. The memory
-consumed by pdn can be released to system without problem during
-PCI unplugging time. It indicates that pci_dn is unavailable in
-setup_arch() and the the fixup on pdn (like AGP's) can't be carried
-out that time. We have to do that in pcibios_root_bridge_prepare()
-on maple/pasemi/powermac platforms where/when the pdn is available.
-pcibios_root_bridge_prepare is called from subsys_initcall() which
-is executed after core_initcall() so the code flow does not change.
+   pnv_pci_get_device_tree()    opal_get_device_tree()
+   pnv_pci_get_presence_state() opal_pci_get_presence_state()
+   pnv_pci_get_power_state()    opal_pci_get_power_state()
+   pnv_pci_set_power_state()    opal_pci_set_power_state()
 
-At the mean while, the EEH device is created when pdn is populated,
-meaning pdn and EEH device have same life cycle. In turn, we needn't
-call eeh_dev_init() to create EEH device explicitly.
+Besides, the patch also exports pnv_pci_hotplug_notifier_{register,
+unregister}() to allow registration and unregistration of PCI hotplug
+notifier, which will be used to receive PCI hotplug message from
+skiboot firmware in PowerNV PCI hotplug driver.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 ---
- arch/powerpc/include/asm/eeh.h         |  2 +-
- arch/powerpc/include/asm/ppc-pci.h     |  2 --
- arch/powerpc/kernel/eeh_dev.c          | 17 +++------------
- arch/powerpc/kernel/pci_dn.c           | 23 ++++++++++++++++----
- arch/powerpc/platforms/maple/pci.c     | 34 ++++++++++++++++++------------
- arch/powerpc/platforms/pasemi/pci.c    |  3 ---
- arch/powerpc/platforms/powermac/pci.c  | 38 +++++++++++++++++++++-------------
- arch/powerpc/platforms/powernv/pci.c   |  3 ---
- arch/powerpc/platforms/pseries/setup.c |  6 +-----
- 9 files changed, 69 insertions(+), 59 deletions(-)
+ arch/powerpc/include/asm/opal-api.h            |  18 ++++-
+ arch/powerpc/include/asm/opal.h                |   5 ++
+ arch/powerpc/include/asm/pnv-pci.h             |   7 ++
+ arch/powerpc/platforms/powernv/opal-wrappers.S |   5 ++
+ arch/powerpc/platforms/powernv/pci.c           | 102 +++++++++++++++++++++++++
+ 5 files changed, 136 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/eeh.h b/arch/powerpc/include/asm/eeh.h
-index fb9f376..8721580 100644
---- a/arch/powerpc/include/asm/eeh.h
-+++ b/arch/powerpc/include/asm/eeh.h
-@@ -274,7 +274,7 @@ void eeh_pe_restore_bars(struct eeh_pe *pe);
- const char *eeh_pe_loc_get(struct eeh_pe *pe);
- struct pci_bus *eeh_pe_bus_get(struct eeh_pe *pe);
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index 9bb8ddf..728e04e 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -158,7 +158,12 @@
+ #define OPAL_LEDS_SET_INDICATOR			115
+ #define OPAL_CEC_REBOOT2			116
+ #define OPAL_CONSOLE_FLUSH			117
+-#define OPAL_LAST				117
++#define OPAL_GET_DEVICE_TREE			118
++#define OPAL_PCI_GET_PRESENCE_STATE		119
++#define OPAL_PCI_GET_POWER_STATE		120
++#define OPAL_PCI_SET_POWER_STATE		121
++#define OPAL_PCI_POLL2				122
++#define OPAL_LAST				122
  
--void *eeh_dev_init(struct pci_dn *pdn, void *data);
-+struct eeh_dev *eeh_dev_init(struct pci_dn *pdn);
- void eeh_dev_phb_init_dynamic(struct pci_controller *phb);
- int eeh_init(void);
- int __init eeh_ops_register(struct eeh_ops *ops);
-diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-index 8753e4e..0f73de0 100644
---- a/arch/powerpc/include/asm/ppc-pci.h
-+++ b/arch/powerpc/include/asm/ppc-pci.h
-@@ -39,8 +39,6 @@ void *pci_traverse_device_nodes(struct device_node *start,
- void *traverse_pci_dn(struct pci_dn *root,
- 		      void *(*fn)(struct pci_dn *, void *),
- 		      void *data);
--
--extern void pci_devs_phb_init(void);
- extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
+ /* Device tree flags */
  
- /* From rtas_pci.h */
-diff --git a/arch/powerpc/kernel/eeh_dev.c b/arch/powerpc/kernel/eeh_dev.c
-index 7815095..d6b2ca7 100644
---- a/arch/powerpc/kernel/eeh_dev.c
-+++ b/arch/powerpc/kernel/eeh_dev.c
-@@ -44,14 +44,13 @@
- /**
-  * eeh_dev_init - Create EEH device according to OF node
-  * @pdn: PCI device node
-- * @data: PHB
-  *
-  * It will create EEH device according to the given OF node. The function
-  * might be called by PCI emunation, DR, PHB hotplug.
-  */
--void *eeh_dev_init(struct pci_dn *pdn, void *data)
-+struct eeh_dev *eeh_dev_init(struct pci_dn *pdn)
- {
--	struct pci_controller *phb = data;
-+	struct pci_controller *phb = pdn->phb;
- 	struct eeh_dev *edev;
+@@ -344,6 +349,16 @@ enum OpalPciResetState {
+ 	OPAL_ASSERT_RESET   = 1
+ };
  
- 	/* Allocate EEH device */
-@@ -69,7 +68,7 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
- 	INIT_LIST_HEAD(&edev->list);
- 	INIT_LIST_HEAD(&edev->rmv_list);
- 
--	return NULL;
-+	return edev;
- }
- 
- /**
-@@ -81,16 +80,8 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
-  */
- void eeh_dev_phb_init_dynamic(struct pci_controller *phb)
- {
--	struct pci_dn *root = phb->pci_data;
--
- 	/* EEH PE for PHB */
- 	eeh_phb_pe_create(phb);
--
--	/* EEH device for PHB */
--	eeh_dev_init(root, phb);
--
--	/* EEH devices for children OF nodes */
--	traverse_pci_dn(root, eeh_dev_init, phb);
- }
- 
- /**
-@@ -106,8 +97,6 @@ static int __init eeh_dev_phb_init(void)
- 	list_for_each_entry_safe(phb, tmp, &hose_list, list_node)
- 		eeh_dev_phb_init_dynamic(phb);
- 
--	pr_info("EEH: devices created\n");
--
- 	return 0;
- }
- 
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index ecdccce..9cbf95a 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -209,8 +209,7 @@ struct pci_dn *add_dev_pci_data(struct pci_dev *pdev)
- 		}
- 
- 		/* Create the EEH device for the VF */
--		eeh_dev_init(pdn, pci_bus_to_host(pdev->bus));
--		edev = pdn_to_eeh_dev(pdn);
-+		edev = eeh_dev_init(pdn);
- 		BUG_ON(!edev);
- 		edev->physfn = pdev;
- 	}
-@@ -289,8 +288,11 @@ struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
- 	const __be32 *regs;
- 	struct device_node *parent;
- 	struct pci_dn *pdn;
-+#ifdef CONFIG_EEH
-+	struct eeh_dev *edev;
-+#endif
- 
--	pdn = zalloc_maybe_bootmem(sizeof(*pdn), GFP_KERNEL);
-+	pdn = kzalloc(sizeof(*pdn), GFP_KERNEL);
- 	if (pdn == NULL)
- 		return NULL;
- 	dn->data = pdn;
-@@ -319,6 +321,15 @@ struct pci_dn *pci_add_device_node_info(struct pci_controller *hose,
- 	/* Extended config space */
- 	pdn->pci_ext_config_space = (type && of_read_number(type, 1) == 1);
- 
-+	/* Create EEH device */
-+#ifdef CONFIG_EEH
-+	edev = eeh_dev_init(pdn);
-+	if (!edev) {
-+		kfree(pdn);
-+		return NULL;
-+	}
-+#endif
++enum OpalPciSlotPresentenceState {
++	OPAL_PCI_SLOT_EMPTY	= 0,
++	OPAL_PCI_SLOT_PRESENT	= 1
++};
 +
- 	/* Attach to parent node */
- 	INIT_LIST_HEAD(&pdn->child_list);
- 	INIT_LIST_HEAD(&pdn->list);
-@@ -504,15 +515,19 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
-  * pci device found underneath.  This routine runs once,
-  * early in the boot sequence.
-  */
--void __init pci_devs_phb_init(void)
-+static int __init pci_devs_phb_init(void)
- {
- 	struct pci_controller *phb, *tmp;
- 
- 	/* This must be done first so the device nodes have valid pci info! */
- 	list_for_each_entry_safe(phb, tmp, &hose_list, list_node)
- 		pci_devs_phb_init_dynamic(phb);
++enum OpalPciSlotPowerState {
++	OPAL_PCI_SLOT_POWER_OFF	= 0,
++	OPAL_PCI_SLOT_POWER_ON	= 1
++};
 +
-+	return 0;
- }
+ enum OpalSlotLedType {
+ 	OPAL_SLOT_LED_TYPE_ID = 0,	/* IDENTIFY LED */
+ 	OPAL_SLOT_LED_TYPE_FAULT = 1,	/* FAULT LED */
+@@ -378,6 +393,7 @@ enum opal_msg_type {
+ 	OPAL_MSG_DPO		= 5,
+ 	OPAL_MSG_PRD		= 6,
+ 	OPAL_MSG_OCC		= 7,
++	OPAL_MSG_PCI_HOTPLUG	= 8,
+ 	OPAL_MSG_TYPE_MAX,
+ };
  
-+core_initcall(pci_devs_phb_init);
-+
- static void pci_dev_pdn_setup(struct pci_dev *pdev)
- {
- 	struct pci_dn *pdn;
-diff --git a/arch/powerpc/platforms/maple/pci.c b/arch/powerpc/platforms/maple/pci.c
-index a923230..a2f89e6 100644
---- a/arch/powerpc/platforms/maple/pci.c
-+++ b/arch/powerpc/platforms/maple/pci.c
-@@ -568,6 +568,26 @@ void maple_pci_irq_fixup(struct pci_dev *dev)
- 	DBG(" <- maple_pci_irq_fixup\n");
- }
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 348132c..1a83c80 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -209,6 +209,11 @@ int64_t opal_flash_write(uint64_t id, uint64_t offset, uint64_t buf,
+ 		uint64_t size, uint64_t token);
+ int64_t opal_flash_erase(uint64_t id, uint64_t offset, uint64_t size,
+ 		uint64_t token);
++int64_t opal_get_device_tree(uint32_t phandle, uint64_t buf, uint64_t len);
++int64_t opal_pci_get_presence_state(uint64_t id, uint64_t data);
++int64_t opal_pci_get_power_state(uint64_t id, uint64_t data);
++int64_t opal_pci_set_power_state(uint64_t id, uint64_t data);
++int64_t opal_pci_poll2(uint64_t id, uint64_t data);
  
-+static int maple_pci_root_bridge_prepare(struct pci_host_bridge *bridge)
-+{
-+	struct pci_controller *hose = pci_bus_to_host(bridge->bus);
-+	struct device_node *np, *child;
-+
-+	if (hose != u3_agp)
-+		return 0;
-+
-+	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
-+	 * assume there is no P2P bridge on the AGP bus, which should be a
-+	 * safe assumptions hopefully.
-+	 */
-+	np = hose->dn;
-+	PCI_DN(np)->busno = 0xf0;
-+	for_each_child_of_node(np, child)
-+		PCI_DN(child)->busno = 0xf0;
-+
-+	return 0;
-+}
-+
- void __init maple_pci_init(void)
- {
- 	struct device_node *np, *root;
-@@ -605,19 +625,7 @@ void __init maple_pci_init(void)
- 	if (ht && maple_add_bridge(ht) != 0)
- 		of_node_put(ht);
+ /* Internal functions */
+ extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
+diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
+index c607902..8db7439 100644
+--- a/arch/powerpc/include/asm/pnv-pci.h
++++ b/arch/powerpc/include/asm/pnv-pci.h
+@@ -17,6 +17,13 @@
+ #define PCI_SLOT_ID(phb_id, bdfn)	\
+ 	(PCI_SLOT_ID_PREFIX | ((uint64_t)(bdfn) << 16) | (phb_id))
  
--	/* Setup the linkage between OF nodes and PHBs */ 
--	pci_devs_phb_init();
--
--	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
--	 * assume there is no P2P bridge on the AGP bus, which should be a
--	 * safe assumptions hopefully.
--	 */
--	if (u3_agp) {
--		struct device_node *np = u3_agp->dn;
--		PCI_DN(np)->busno = 0xf0;
--		for (np = np->child; np; np = np->sibling)
--			PCI_DN(np)->busno = 0xf0;
--	}
-+	ppc_md.pcibios_root_bridge_prepare = maple_pci_root_bridge_prepare;
- 
- 	/* Tell pci.c to not change any resource allocations.  */
- 	pci_add_flags(PCI_PROBE_ONLY);
-diff --git a/arch/powerpc/platforms/pasemi/pci.c b/arch/powerpc/platforms/pasemi/pci.c
-index f3a68a0..10c4e8f 100644
---- a/arch/powerpc/platforms/pasemi/pci.c
-+++ b/arch/powerpc/platforms/pasemi/pci.c
-@@ -229,9 +229,6 @@ void __init pas_pci_init(void)
- 			of_node_get(np);
- 
- 	of_node_put(root);
--
--	/* Setup the linkage between OF nodes and PHBs */
--	pci_devs_phb_init();
- }
- 
- void __iomem *pasemi_pci_getcfgaddr(struct pci_dev *dev, int offset)
-diff --git a/arch/powerpc/platforms/powermac/pci.c b/arch/powerpc/platforms/powermac/pci.c
-index 59ab16f..6e06c3b 100644
---- a/arch/powerpc/platforms/powermac/pci.c
-+++ b/arch/powerpc/platforms/powermac/pci.c
-@@ -878,6 +878,29 @@ void pmac_pci_irq_fixup(struct pci_dev *dev)
- #endif /* CONFIG_PPC32 */
- }
- 
-+#ifdef CONFIG_PPC64
-+static int pmac_pci_root_bridge_prepare(struct pci_host_bridge *bridge)
-+{
-+	struct pci_controller *hose = pci_bus_to_host(bridge->bus);
-+	struct device_node *np, *child;
++extern int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len);
++extern int pnv_pci_get_presence_state(uint64_t id, uint8_t *state);
++extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
++extern int pnv_pci_set_power_state(uint64_t id, uint8_t state);
++extern int pnv_pci_hotplug_notifier_register(struct notifier_block *nb);
++extern int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb);
 +
-+	if (hose != u3_agp)
-+		return 0;
-+
-+	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
-+	 * assume there is no P2P bridge on the AGP bus, which should be a
-+	 * safe assumptions for now. We should do something better in the
-+	 * future though
-+	 */
-+	np = hose->dn;
-+	PCI_DN(np)->busno = 0xf0;
-+	for_each_child_of_node(np, child)
-+		PCI_DN(child)->busno = 0xf0;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PPC64 */
-+
- void __init pmac_pci_init(void)
- {
- 	struct device_node *np, *root;
-@@ -914,20 +937,7 @@ void __init pmac_pci_init(void)
- 	if (ht && pmac_add_bridge(ht) != 0)
- 		of_node_put(ht);
- 
--	/* Setup the linkage between OF nodes and PHBs */
--	pci_devs_phb_init();
--
--	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
--	 * assume there is no P2P bridge on the AGP bus, which should be a
--	 * safe assumptions for now. We should do something better in the
--	 * future though
--	 */
--	if (u3_agp) {
--		struct device_node *np = u3_agp->dn;
--		PCI_DN(np)->busno = 0xf0;
--		for (np = np->child; np; np = np->sibling)
--			PCI_DN(np)->busno = 0xf0;
--	}
-+	ppc_md.pcibios_root_bridge_prepare = pmac_pci_root_bridge_prepare;
- 	/* pmac_check_ht_link(); */
- 
- #else /* CONFIG_PPC64 */
+ int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
+ int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
+ 			   unsigned int virq);
+diff --git a/arch/powerpc/platforms/powernv/opal-wrappers.S b/arch/powerpc/platforms/powernv/opal-wrappers.S
+index e45b88a..60397d2 100644
+--- a/arch/powerpc/platforms/powernv/opal-wrappers.S
++++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
+@@ -302,3 +302,8 @@ OPAL_CALL(opal_prd_msg,				OPAL_PRD_MSG);
+ OPAL_CALL(opal_leds_get_ind,			OPAL_LEDS_GET_INDICATOR);
+ OPAL_CALL(opal_leds_set_ind,			OPAL_LEDS_SET_INDICATOR);
+ OPAL_CALL(opal_console_flush,			OPAL_CONSOLE_FLUSH);
++OPAL_CALL(opal_get_device_tree,			OPAL_GET_DEVICE_TREE);
++OPAL_CALL(opal_pci_get_presence_state,		OPAL_PCI_GET_PRESENCE_STATE);
++OPAL_CALL(opal_pci_get_power_state,		OPAL_PCI_GET_POWER_STATE);
++OPAL_CALL(opal_pci_set_power_state,		OPAL_PCI_SET_POWER_STATE);
++OPAL_CALL(opal_pci_poll2,			OPAL_PCI_POLL2);
 diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index 8827461..67a33e9 100644
+index 67a33e9..6e10ac4 100644
 --- a/arch/powerpc/platforms/powernv/pci.c
 +++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -822,9 +822,6 @@ void __init pnv_pci_init(void)
- 	for_each_compatible_node(np, NULL, "ibm,ioda2-npu-phb")
- 		pnv_pci_init_npu_phb(np);
+@@ -42,6 +42,108 @@
+ #define cfg_dbg(fmt...)	do { } while(0)
+ //#define cfg_dbg(fmt...)	printk(fmt)
  
--	/* Setup the linkage between OF nodes and PHBs */
--	pci_devs_phb_init();
--
- 	/* Configure IOMMU DMA hooks */
- 	set_pci_dma_ops(&dma_iommu_ops);
- }
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index cd739da..62041a3 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -263,11 +263,8 @@ static int pci_dn_reconfig_notifier(struct notifier_block *nb, unsigned long act
- 	case OF_RECONFIG_ATTACH_NODE:
- 		parent = of_get_parent(np);
- 		pdn = parent ? PCI_DN(parent) : NULL;
--		if (pdn) {
--			/* Create pdn and EEH device */
-+		if (pdn)
- 			pci_add_device_node_info(pdn->phb, np);
--			eeh_dev_init(PCI_DN(np), pdn->phb);
--		}
- 
- 		of_node_put(parent);
- 		break;
-@@ -490,7 +487,6 @@ static void __init find_and_init_phbs(void)
- 	}
- 
- 	of_node_put(root);
--	pci_devs_phb_init();
- 
- 	/*
- 	 * PCI_PROBE_ONLY and PCI_REASSIGN_ALL_BUS can be set via properties
++int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_GET_DEVICE_TREE))
++		return -ENXIO;
++
++	rc = opal_get_device_tree(phandle, (uint64_t)buf, len);
++	if (rc != OPAL_SUCCESS)
++		return -EIO;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_device_tree);
++
++static int pnv_pci_poll2(uint64_t id, uint8_t *state)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_POLL2))
++		return -ENXIO;
++
++	while (1) {
++		rc = opal_pci_poll2(id, (uint64_t)state);
++		if (rc <= OPAL_SUCCESS)
++			break;
++
++		if (system_state < SYSTEM_RUNNING)
++			udelay(1000 * rc);
++		else
++			msleep(rc);
++	}
++
++	if (rc != OPAL_SUCCESS)
++		return -EIO;
++
++	return 0;
++}
++
++int pnv_pci_get_presence_state(uint64_t id, uint8_t *state)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_GET_PRESENCE_STATE))
++		return -ENXIO;
++
++	rc = opal_pci_get_presence_state(id, (uint64_t)state);
++	if (rc == OPAL_SUCCESS)
++		return 0;
++	else if (rc < OPAL_SUCCESS)
++		return -EIO;
++
++	return pnv_pci_poll2(id, state);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_presence_state);
++
++int pnv_pci_get_power_state(uint64_t id, uint8_t *state)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_GET_POWER_STATE))
++		return -ENXIO;
++
++	rc = opal_pci_get_power_state(id, (uint64_t)state);
++	if (rc == OPAL_SUCCESS)
++		return 0;
++	else if (rc < OPAL_SUCCESS)
++		return -EIO;
++
++	return pnv_pci_poll2(id, state);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_power_state);
++
++int pnv_pci_set_power_state(uint64_t id, uint8_t state)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_SET_POWER_STATE))
++		return -ENXIO;
++
++	rc = opal_pci_set_power_state(id, (uint64_t)&state);
++	if (rc == OPAL_SUCCESS)
++		return 0;
++	else if (rc < OPAL_SUCCESS)
++		return -EIO;
++
++	return pnv_pci_poll2(id, &state);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_set_power_state);
++
++int pnv_pci_hotplug_notifier_register(struct notifier_block *nb)
++{
++	return opal_message_notifier_register(OPAL_MSG_PCI_HOTPLUG, nb);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_register);
++
++int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb)
++{
++	return opal_message_notifier_unregister(OPAL_MSG_PCI_HOTPLUG, nb);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_unregister);
++
+ #ifdef CONFIG_PCI_MSI
+ int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+ {
 -- 
 2.1.0
