@@ -1,70 +1,41 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/6] soc/tegra: pmc: Add support for IO pads power state
- and voltage
-Date: Tue, 3 May 2016 13:55:17 +0100
-Message-ID: <57289FB5.5040705@nvidia.com>
-References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com>
- <1462191434-28933-4-git-send-email-ldewangan@nvidia.com>
- <57289AC0.4090604@nvidia.com> <57289A2B.7040501@nvidia.com>
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
+ return phys_addr_t
+Date: Tue, 3 May 2016 20:56:49 +0800
+Message-ID: <20160503125649.GA2656@x1.redhat.com>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+ <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
+ <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
+ <20160429151639.GC23726@leverpostej>
+ <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
+ <20160503042441.GA2518@x1.redhat.com>
+ <20160503101258.GL19428@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57289A2B.7040501-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160503101258.GL19428@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/03/16 at 11:12am, Russell King - ARM Linux wrote:
+> On Tue, May 03, 2016 at 12:24:41PM +0800, Baoquan He wrote:
+> > Could you please help tell why arm PAE kernel can be put above 4G?
+> > Since the change is related to common code, I am curious about how
+> > it's so different with other ARCHs.
+> 
+> This is explained in the covering email to the series.
+> 
+> The explanation given by Pratyush was incomplete.
 
-On 03/05/16 13:31, Laxman Dewangan wrote:
-> 
-> On Tuesday 03 May 2016 06:04 PM, Jon Hunter wrote:
->> On 02/05/16 13:17, Laxman Dewangan wrote:
->>> +
->>> +    return tegra_io_rail_power_on(dpd_bit);
->>  From a readability standpoint the above seems weird because
->> tegra_io_pads_power_enable() takes an ID as the argument, translates it
->> to a bit value and passes it to tegra_io_rail_power_on() which also
->> takes an ID for the argument.
-> 
-> Yaah, I did not want to duplicate the implementation and hence it is there.
-> We will get rid of the older APIs once this is IN and new mechanism there.
-> 
-> 
-> 
->>> +
->>> +    bval = (io_volt_uv == 3300000) ? BIT(pwr_bit) : 0;
->>> +
->>> +    mutex_lock(&pmc->powergates_lock);
->>> +    tegra_pmc_read_modify_write(PMC_PWR_DET, BIT(pwr_bit),
->>> BIT(pwr_bit));
->>> +    tegra_pmc_read_modify_write(PMC_PWR_DET_VAL, BIT(pwr_bit), bval);
->>> +    mutex_unlock(&pmc->powergates_lock);
->> There are 4 instances of BIT(pwr_bit). May be we should do this once or
->> have tegra_io_pads_to_power_val() return the bit?
-> 
-> OK, will re-write this part.
-> 
-> 
->>
->>> +int tegra_io_pads_power_disable(int io_pad_id);
->>> +int tegra_io_pads_power_is_enabled(int io_pad_id);
->> What I don't like here, is now we have two public APIs to do the same
->> job because tegra_io_pads_power_enable/disable() calls
->> tegra_io_rail_power_off/on() internally. Furthermore, the two APIs use
->> different ID definitions to accomplish the same job. This shouldn't be
->> necessary.
-> 
-> Currently SOR driver is using the tegra_io_rail_power_off/on() APIs.
-> Once the proper interface available then I will move sor driver to use
-> new method and then we can full get rid of older APIs and macros.
-> 
-> Till that, we need to have this.
+Yeah, he said non LPAE also has PHYS_OFFSET later to me. In fact this
+patch is totally unharmful to other ARCHes, I just can't stand the
+curiosity. Sorry about this.
 
-I prefer it is done before this series. In other words, if we need a
-proper enum for the rail/pad IDs then add one and convert any existing
-drivers over to use any new APIs first. The other option is to live with
-the existing API names.
-
-Jon
+> 
+> -- 
+> RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> according to speedtest.net.
