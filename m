@@ -1,47 +1,83 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 2/6] soc/tegra: pmc: Correct type of variable for
- tegra_pmc_readl()
-Date: Tue, 3 May 2016 12:42:59 +0100
-Message-ID: <57288EC3.3090001@nvidia.com>
-References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com>
- <1462191434-28933-3-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1462191434-28933-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH] thermal: trivial: fix the typo
+Date: Tue,  3 May 2016 20:07:41 +0800
+Message-ID: <1462277262-29935-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: edubezval@gmail.com
+Cc: Caesar Wang <wxt@rock-chips.com>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+See the thermal code, the obvious typo from my editor.
 
-On 02/05/16 13:17, Laxman Dewangan wrote:
-> The function tegra_pmc_readl() returns the u32 type data and hence
-> change the data type of variable where this data is stored to u32
-> type.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> 
-> ---
-> Changes from V1:
-> -This is new in series as per discussion on V1 series to use u32 for
-> tegra_pmc_readl.
-> ---
->  drivers/soc/tegra/pmc.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 2c3f1f9..fc4f7b2 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -878,7 +878,7 @@ static int tegra_io_rail_prepare(unsigned int id, unsigned long *request,
->  static int tegra_io_rail_poll(unsigned long offset, unsigned long mask,
->  			      unsigned long val, unsigned long timeout)
->  {
-> -	unsigned long value;
-> +	u32 value;
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+---
 
-You also need to make mask and val a u32.
+ Documentation/devicetree/bindings/thermal/thermal.txt | 10 +++++-----
+ drivers/thermal/thermal_core.c                        |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Jon
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+index 41b817f..88b6ea1 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -62,7 +62,7 @@ For more examples of cooling devices, refer to the example sections below.
+ Required properties:
+ - #cooling-cells:	Used to provide cooling device specific information
+   Type: unsigned	while referring to it. Must be at least 2, in order
+-  Size: one cell      	to specify minimum and maximum cooling state used
++  Size: one cell	to specify minimum and maximum cooling state used
+ 			in the reference. The first cell is the minimum
+ 			cooling state requested and the second cell is
+ 			the maximum cooling state requested in the reference.
+@@ -119,7 +119,7 @@ Required properties:
+ Optional property:
+ - contribution:		The cooling contribution to the thermal zone of the
+   Type: unsigned	referred cooling device at the referred trip point.
+-  Size: one cell      	The contribution is a ratio of the sum
++  Size: one cell	The contribution is a ratio of the sum
+ 			of all cooling contributions within a thermal zone.
+ 
+ Note: Using the THERMAL_NO_LIMIT (-1UL) constant in the cooling-device phandle
+@@ -145,7 +145,7 @@ Required properties:
+   Size: one cell
+ 
+ - thermal-sensors:	A list of thermal sensor phandles and sensor specifier
+-  Type: list of 	used while monitoring the thermal zone.
++  Type: list of		used while monitoring the thermal zone.
+   phandles + sensor
+   specifier
+ 
+@@ -473,7 +473,7 @@ thermal-zones {
+ 				  <&adc>;	/* pcb north */
+ 
+ 		/* hotspot = 100 * bandgap - 120 * adc + 484 */
+-		coefficients = 		<100	-120	484>;
++		coefficients =		<100	-120	484>;
+ 
+ 		trips {
+ 			...
+@@ -502,7 +502,7 @@ from the ADC sensor. The binding would be then:
+         thermal-sensors =  <&adc>;
+ 
+ 		/* hotspot = 1 * adc + 6000 */
+-	coefficients = 		<1	6000>;
++	coefficients =		<1	6000>;
+ 
+ (d) - Board thermal
+ 
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index e5bfbd3..26870ef 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -513,7 +513,7 @@ int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
+ 		if (!ret && *temp < crit_temp)
+ 			*temp = tz->emul_temperature;
+ 	}
+- 
++
+ 	mutex_unlock(&tz->lock);
+ exit:
+ 	return ret;
+-- 
+1.9.1
