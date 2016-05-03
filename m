@@ -1,83 +1,122 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: Fwd: [PATCH v2 0/8] PM / devfreq: Add NoCP devfreq-event and
- support busfreq on exyno5422-odroidxu3
-Date: Tue, 03 May 2016 11:17:45 +0900
-Message-ID: <57280A49.6060609@samsung.com>
-References: <1894783822.297231462168123817.JavaMail.weblogic@ep2mlwas04a>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
+Date: Tue, 3 May 2016 11:33:09 +0800
+Message-ID: <CAGb2v66E2TuN3+tYaAbniV3q67waDZOfqKAW14VJz6xZFomZ=Q@mail.gmail.com>
+References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1894783822.297231462168123817.JavaMail.weblogic@ep2mlwas04a>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, =?UTF-8?B?7YGs7Ims7Iuc7Yag7ZSE?= <k.kozlowski@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "m.reichl@fivetechno.de" <m.reichl@fivetechno.de>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.k
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBENYUC4QKGQEHJ2O3II-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1461827998-12192-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tsvetan Usunov <tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Myungjoo,
+Hi,
 
-On 2016=EB=85=84 05=EC=9B=94 02=EC=9D=BC 14:48, MyungJoo Ham wrote:
-> Sender : =EC=B5=9C=EC=B0=AC=EC=9A=B0<cw00.choi@samsung.com> S5(=EC=B1=
-=85=EC=9E=84)/Change Agent/Tizen Platform Lab(S/W=EC=84=BC=ED=84=B0)/=EC=
-=82=BC=EC=84=B1=EC=A0=84=EC=9E=90
-> Date : 2016-04-15 15:32 (GMT+09:00)
->>
->> This patchset support the AMBA bus frequency scaling on Exynos5422-b=
-ased
->> Odroid-XU3 board. But, this series only support the bus frequency sc=
-aling
->> for INT (Internal) block using VDD_INT power line.
->=20
-> Along with Devfreq/Passive patchset, the patchset is merged in
-> devfreq for-4.7 tree.
->=20
-> https://git.kernel.org/cgit/linux/kernel/git/mzx/devfreq.git/log/?h=3D=
-for-4.7
->=20
-> @Chanwoo: If there are commits to be merged by a tree other than Linu=
-x/PM,
-> please let me know. I'll send out pull-request soon.
+On Thu, Apr 28, 2016 at 3:19 PM, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org> wrote:
+> There are 3 kinds of OLinuXino Lime2 boards.
+> One without any on board storage, one with NAND storage and one with
+> eMMC storage. This patch adds the eMMC variant of boards.
+>
+> eMMC storage is different from a regular SD card in that it is soldered
+> on the board and cannot be changed. Additionally, it shares pins with
+> the NAND module and with the second SPI port.
+>
+> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> ---
+>  .../boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts    | 64 ++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+> new file mode 100644
+> index 0000000..689da36
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+> @@ -0,0 +1,64 @@
+> + /*
+> + * Copyright 2015 - Ultimaker B.V.
+> + * Author Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include "sun7i-a20-olinuxino-lime2.dts"
+> +
+> +/ {
+> +       model = "Olimex A20-OLinuXino-LIME2-eMMC";
+> +};
+> +
+> +&mmc2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc2_pins_a>;
+> +       vmmc-supply = <&reg_vcc3v3>;
+> +       bus-width = <4>;
 
-On Krzysztof Kozlowski's reply, dts patches will be merged on samsung-s=
-oc tree.
-and then the clock patches about exynos5420 was already merged to samsu=
-ng-clk tree
-by Sylwester.
+Only 4 bits? We normally see eMMC with 8 bits. 4 bits are some kind of
+embedded SD card.
 
-Only devfreq patches should be merged on devfreq tree.
+> +       non-removable;
+> +       no-1-8-v;
 
-We already discussed this topic on offline. I expect that you will agai=
-n handle
-this patchset according to reply of both Krzysztof and me.
+This flag is not supported on sunxi.
 
-Best Regards,
-Chanwoo Choi
+Instead, use the vqmmc-supply with the correct regulator and constraints.
 
->=20
->=20
-> Cheers,
-> MyungJoo
->=20
->>
->> Also, to support the bus frequency scaling for Exynos542x SoC,
->> Exynos542x SoC has the specific 'NoC (Network on Chip) Probe' device
->> to measure the transfered data traffic on NoC (Network on Chip)
->> instead of PPMU (Platform Performance Monitoring Unit). NoC Probe de=
-vice
->> provide the utilization for INT block of Exynos542x SoC.
->>
->> The generic exynos-bus frequency driver uses the 'NoC Probe' devfreq=
--event
->> device (drivers/devfreq/event/exynos-nocp.c) without any modificatio=
-n.
->> Just add the phandle of 'NoC Probe' dt node to bus dt node.
->>
->> Depend on:
->> This patchset depends on patch[1] which support the generic exynos-b=
-us
->> frequency driver.
->> [1] http://www.spinics.net/lists/arm-kernel/msg495976.html
->> - [PATCH v9 00/20] PM / devferq: Add generic exynos bus frequency dr=
-iver and new passive governor
->>
->>
+ChenYu
+
+> +       status = "okay";
+> +
+> +       emmc: emmc@0 {
+> +               reg = <0>;
+> +               compatible = "mmc-card";
+> +               broken-hpi;
+> +       };
+> +};
+> --
+> 2.8.0.rc3
+>
