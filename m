@@ -1,69 +1,114 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH 9/9] dt-bindings: msm/dsi: Add assigned clocks bindings
-Date: Tue,  3 May 2016 16:28:01 +0530
-Message-ID: <1462273081-5814-10-git-send-email-architt@codeaurora.org>
-References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 1/3] iio: mxs-lradc: Add regulators for current sources
+Date: Tue, 3 May 2016 13:07:32 +0200
+Message-ID: <57288674.9050601@i2se.com>
+References: <1461333147-11873-1-git-send-email-harald@ccbib.org>
+ <1461333147-11873-2-git-send-email-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robdclark@gmail.com, robh@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461333147-11873-2-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFBMTCBpbiB0aGUgRFNJIFBIWSBibG9jayBnZW5lcmF0ZXMgMiBjbG9jayBvdXRwdXRzIChC
-eXRlIGFuZCBQaXhlbApjbG9ja3MpIHRoYXQgYXJlIGZlZCBpbnRvIHRoZSBNdWx0aW1lZGlhIENs
-b2NrIENvbnRyb2xsZXIgKE1NQ0MpLiBUaGUgTU1DQwp1c2VzIHRoZXNlIGFzIHNvdXJjZSBjbG9j
-a3MgZm9yIHNvbWUgb2YgaXRzIFJDR3MgdG8gZ2VuZXJhdGUgY2xvY2tzIHRoYXQKZmluYWxseSBm
-ZWVkIHRvIHRoZSBEU0kgaG9zdCBjb250cm9sbGVyLgoKVXNlIHRoZSBhc3NpZ25lZCBjbG9ja3Mg
-RFQgYmluZGluZ3MgdG8gc2V0IHVwIHRoZSBNTUNDIFJDR3MgdGhhdCBmZWVkIHRvCnRoZSBEU0kg
-aG9zdC4gVXNlIHRoZSBEU0kgUEhZIHByb3ZpZGVkIGNsb2NrcyB0byBzZXQgdXAgdGhlIHBhcmVu
-dHMKb2YgdGhlc2UgYXNzaWduZWQgY2xvY2tzLgoKU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVq
-YSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dCB8IDE1ICsrKysrKysrKysrKysrKwogMSBmaWxl
-IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0CmluZGV4IDAyMjNmMDYuLjY4NmY0
-NzUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21zbS9kc2kudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L21zbS9kc2kudHh0CkBAIC0yMiw2ICsyMiwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgog
-ICAqICJjb3JlX2NsayIKICAgRm9yIERTSXYyLCB3ZSBuZWVkIGFuIGFkZGl0aW9uYWwgY2xvY2s6
-CiAgICAqICJzcmNfY2xrIgorLSBhc3NpZ25lZC1jbG9ja3M6IFBhcmVudHMgb2YgImJ5dGVfY2xr
-IiBhbmQgInBpeGVsX2NsayIgZm9yIHRoZSBnaXZlbiBwbGF0Zm9ybS4KKyAgU2VlIFsxXSBmb3Ig
-bW9yZSBkZXRhaWxzLgorLSBhc3NpZ25lZC1jbG9jay1wYXJlbnRzOiBUaGUgQnl0ZSBjbG9jayBh
-bmQgUGl4ZWwgY2xvY2sgUExMIG91dHB1dHMgcHJvdmlkZWQKKyAgYnkgYSBEU0kgUEhZIGJsb2Nr
-LgogLSB2ZGQtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZCByZWd1bGF0b3IgZGV2aWNlIG5vZGUKIC0g
-dmRkaW8tc3VwcGx5OiBwaGFuZGxlIHRvIHZkZC1pbyByZWd1bGF0b3IgZGV2aWNlIG5vZGUKIC0g
-dmRkYS1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkYSByZWd1bGF0b3IgZGV2aWNlIG5vZGUKQEAgLTkw
-LDYgKzk0LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgKiAiZHNpX3BsbCIKICAgKiAiZHNp
-X3BoeSIKICAgKiAiZHNpX3BoeV9yZWd1bGF0b3IiCistIGNsb2NrLWNlbGxzOiBNdXN0IGJlIDEu
-IFRoZSBEU0kgUEhZIGJsb2NrIGFjdHMgYXMgYSBjbG9jayBwcm92aWRlciwgY3JlYXRpbmcKKyAg
-MiBjbG9ja3M6IEEgYnl0ZSBjbG9jayAoaW5kZXggMCksIGFuZCBhIHBpeGVsIGNsb2NrIChpbmRl
-eCAxKS4KIC0gcWNvbSxkc2ktcGh5LWluZGV4OiBUaGUgSUQgb2YgRFNJIFBIWSBoYXJkd2FyZSBp
-bnN0YW5jZS4gVGhpcyBzaG91bGQKICAgYmUgMCBvciAxLCBzaW5jZSB3ZSBoYXZlIDIgRFNJIFBI
-WXMgYXQgbW9zdCBmb3Igbm93LgogLSBwb3dlci1kb21haW5zOiBTaG91bGQgYmUgPCZtbWNjIE1E
-U1NfR0RTQz4uCkBAIC0xMzIsNiArMTM4LDE0IEBAIEV4YW1wbGU6CiAJCQk8Jm1tY2MgTURTU19B
-SEJfQ0xLPiwKIAkJCTwmbW1jYyBNRFNTX01EUF9DTEs+LAogCQkJPCZtbWNjIE1EU1NfUENMSzBf
-Q0xLPjsKKworCQlhc3NpZ25lZC1jbG9ja3MgPQorCQkJCSA8Jm1tY2MgQllURTBfQ0xLX1NSQz4s
-CisJCQkJIDwmbW1jYyBQQ0xLMF9DTEtfU1JDPjsKKwkJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9
-CisJCQkJIDwmZHNpMF9waHkgMD4sCisJCQkJIDwmZHNpMF9waHkgMT47CisKIAkJdmRkYS1zdXBw
-bHkgPSA8JnBtYTgwODRfbDI+OwogCQl2ZGQtc3VwcGx5ID0gPCZwbWE4MDg0X2wyMj47CiAJCXZk
-ZGlvLXN1cHBseSA9IDwmcG1hODA4NF9sMTI+OwpAQCAtMTk1LDYgKzIwOSw3IEBAIEV4YW1wbGU6
-CiAJCQk8MHhmZDkyMmQ4MCAweDdiPjsKIAkJY2xvY2stbmFtZXMgPSAiaWZhY2VfY2xrIjsKIAkJ
-Y2xvY2tzID0gPCZtbWNjIE1EU1NfQUhCX0NMSz47CisJCSNjbG9jay1jZWxscyA9IDwxPjsKIAkJ
-dmRkaW8tc3VwcGx5ID0gPCZwbWE4MDg0X2wxMj47CiAKIAkJcWNvbSxkc2ktcGh5LXJlZ3VsYXRv
-ci1sZG8tbW9kZTsKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
-IG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmhvc3RlZCBieSBUaGUgTGludXggRm91
-bmRhdGlvbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Harald,
+
+Am 22.04.2016 um 15:52 schrieb Harald Geyer:
+> The hardware has two current sources ISRC0 and ISRC1 to allow measuring
+> resistors without additional circuitry. This commit makes them available
+> as regulators.
+>
+> Tested on an imx233-olinuxino board.
+>
+> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+> ---
+> The current regulator API doesn't fit this type of device very well: Typically
+> consumers will want to set a defined current, ie. min_uA == max_uA, but they
+> can't without help from configuration data, because the valid values aren't
+> reported by the API for current regulators. I have been thinking about
+> extending the API, but currently AFAIK no such consumers exist and most
+> users, like myself, will force the regulator to a defined value in
+> devicetree anyway.
+>
+>  .../bindings/staging/iio/adc/mxs-lradc.txt         |  29 ++++
+>  drivers/iio/adc/Kconfig                            |   1 +
+>  drivers/iio/adc/mxs-lradc.c                        | 152 +++++++++++++++++++++
+>  3 files changed, 182 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> index 555fb11..983952c 100644
+> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> @@ -19,6 +19,15 @@ Optional properties:
+>  - fsl,settling: delay between plate switch to next sample. Allowed value is
+>                  1 ... 2047. It counts at 2 kHz and its default is
+>                  10 (= 5 ms)
+> +- ISRC0: A node describing the regulator of internal current source 0
+> +- ISRC1: A node describing the regulator of internal current source 1
+> +
+> +Required properties for the ISRCx sub-nodes:
+> +- regulator-max-microamp: See standard regulator binding documentation.
+> +                          Valid values are from 0 to 300 in steps of 20.
+> +
+> +Optional properties for the ISRCx sub-nodes:
+> +Any standard regulator properties that apply to current regulators.
+>  
+>  Example for i.MX23 SoC:
+>  
+> @@ -31,6 +40,16 @@ Example for i.MX23 SoC:
+>  		fsl,ave-ctrl = <4>;
+>  		fsl,ave-delay = <2>;
+>  		fsl,settling = <10>;
+> +
+> +		isrc_lradc0: ISRC0 {
+> +			regulator-max-microamp = <300>;
+> +		};
+> +
+> +		isrc_lradc1: ISRC1 {
+> +			regulator-max-microamp = <120>;
+> +			regulator-min-microamp = <120>;
+> +			regulator-always-on;
+> +		};
+
+IMHO the binding should represent the direct connection between the
+current source and the physical channel. I think a node label isn't
+enough. Unfortunately i don't have an idea to do it the "right way".
+
+>  	};
+>  
+>  Example for i.MX28 SoC:
+> @@ -44,4 +63,14 @@ Example for i.MX28 SoC:
+>  		fsl,ave-ctrl = <4>;
+>  		fsl,ave-delay = <2>;
+>  		fsl,settling = <10>;
+> +
+> +		isrc_lradc0: ISRC0 {
+> +			regulator-max-microamp = <300>;
+> +		};
+> +
+> +		isrc_lradc6: ISRC1 {
+> +			regulator-max-microamp = <120>;
+> +			regulator-min-microamp = <120>;
+> +			regulator-always-on;
+> +		};
+>  	};
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 5937030..1968d1c 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -319,6 +319,7 @@ config MXS_LRADC
+>          tristate "Freescale i.MX23/i.MX28 LRADC"
+>          depends on (ARCH_MXS || COMPILE_TEST) && HAS_IOMEM
+>          depends on INPUT
+> +        depends on REGULATOR
+
+Any chance to avoid this dependency for an optional feature?
+
+Stefan
+
+>          select STMP_DEVICE
+>          select IIO_BUFFER
+>          select IIO_TRIGGERED_BUFFER
