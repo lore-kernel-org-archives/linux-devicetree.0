@@ -1,60 +1,98 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: imx: ldb: Add ddc-i2c-bus property
-Date: Tue, 3 May 2016 11:06:47 -0500
-Message-ID: <20160503160647.GA10680@rob-hp-laptop>
-References: <1461788614-7784-1-git-send-email-akshay.bhat@timesys.com>
- <1461788614-7784-2-git-send-email-akshay.bhat@timesys.com>
- <20160428214823.GA841@rob-hp-laptop>
- <1461915852.3521.3.camel@pengutronix.de>
+Subject: Re: [PATCH V5 2/6] of/slimbus: OF helper for SLIMbus
+Date: Tue, 3 May 2016 11:11:56 -0500
+Message-ID: <20160503161156.GA12898@rob-hp-laptop>
+References: <1461801489-16254-1-git-send-email-sdharia@codeaurora.org>
+ <1461801489-16254-3-git-send-email-sdharia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461915852.3521.3.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, steve_longerbeam@mentor.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <1461801489-16254-3-git-send-email-sdharia@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sagar Dharia <sdharia@codeaurora.org>
+Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, sheetal.tigadoli@gmail.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMjksIDIwMTYgYXQgMDk6NDQ6MTJBTSArMDIwMCwgUGhpbGlwcCBaYWJlbCB3
-cm90ZToKPiBBbSBEb25uZXJzdGFnLCBkZW4gMjguMDQuMjAxNiwgMTY6NDggLTA1MDAgc2Nocmll
-YiBSb2IgSGVycmluZzoKPiA+IE9uIFdlZCwgQXByIDI3LCAyMDE2IGF0IDA0OjIzOjM0UE0gLTA0
-MDAsIEFrc2hheSBCaGF0IHdyb3RlOgo+ID4gPiBEb2N1bWVudCB0aGUgZGRjLWkyYy1idXMgcHJv
-cGVydHkgdXNlZCBieSBpbXgtbGRiIGRyaXZlciB0byByZWFkIEVESUQKPiA+ID4gaW5mb3JtYXRp
-b24gdmlhIEkyQyBpbnRlcmZhY2UuCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBa3NoYXkg
-QmhhdCA8YWtzaGF5LmJoYXRAdGltZXN5cy5jb20+Cj4gPiA+IC0tLQo+ID4gPiAKPiA+ID4gdjM6
-Cj4gPiA+IE5ld2x5IGFkZGVkLgo+ID4gPiAKPiA+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0IHwgMSArCj4gPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKykKPiA+ID4gCj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvbGRiLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0Cj4gPiA+IGluZGV4IDBhMTc1
-ZDkuLmE0MDc0NjIgMTAwNjQ0Cj4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0Cj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0Cj4gPiA+IEBAIC02Miw2ICs2Miw3
-IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+ICAgICBkaXNwbGF5LXRpbWluZ3MgYXJlIHVz
-ZWQgaW5zdGVhZC4KPiA+ID4gIAo+ID4gPiAgT3B0aW9uYWwgcHJvcGVydGllcyAocmVxdWlyZWQg
-aWYgZGlzcGxheS10aW1pbmdzIGFyZSB1c2VkKToKPiA+IAo+ID4gVGhlIHJlcXVpcmVkIHBhcnQg
-ZG9lc24ndCBtYWtlIHNlbnNlIGlmIHlvdSBhZGQgdGhpcywgYnV0Li4uCj4gPiAKPiA+ID4gKyAt
-IGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBF
-RElEIHByb2JpbmcKPiA+IAo+ID4gUmVhbGx5LCB0aGlzIHNob3VsZCBiZSBwYXJ0IG9mIGEgY29u
-bmVjdG9yIG5vZGUgc2luY2UgaTJjIGdvZXMgZnJvbSB0aGUgCj4gPiBpMmMgY29udHJvbGxlciB0
-byBhIGNvbm5lY3RvciBhbmQgaXMgbm90IHBhcnQgb2YgdGhlIGRpc3BsYXkgY29udHJvbGxlci4K
-PiAKPiBJZiB0aGUgZGRjIGkyYyBidXMgZG9lcyBpbmRlZWQgZ28gdGhyb3VnaCBhIGNvbm5lY3Rv
-ciwgeWVzLiBXb3VsZCB0aGF0Cj4gd2FycmFudCBhIGdlbmVyaWMgImx2ZHMtY29ubmVjdG9yIiBi
-aW5kaW5nIGZvciBhbGwgdGhvc2UgZGlmZmVyZW50IHR5cGVzCj4gb2YgaW50ZXJuYWwgTFZEUyBj
-b25uZWN0b3JzPwoKUHJvYmFibHkgYW4gb3ZlcmtpbGwgZm9yIHRoYXQgY2FzZS4gSXQgY291bGQg
-YmUgcGFydCBvZiB0aGUgcGFuZWwgbm9kZSwgCmJ1dCBJJ20gcmVsdWN0YW50IHRvIGRlZmluZSBh
-IDNyZCB3YXkuIFNvIHRoaXMgaXMgZmluZSBhcyBpcy4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8
-cm9iaEBrZXJuZWwub3JnPgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Wed, Apr 27, 2016 at 05:58:05PM -0600, Sagar Dharia wrote:
+> OF helper routine scans the SLIMbus DeviceTree, allocates resources,
+> and creates slim_devices according to the hierarchy.
+> 
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/slimbus/bus.txt | 55 ++++++++++++++++++++++
+>  drivers/slimbus/slim-core.c                       | 57 +++++++++++++++++++++++
+>  2 files changed, 112 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/slimbus/bus.txt b/Documentation/devicetree/bindings/slimbus/bus.txt
+> new file mode 100644
+> index 0000000..c5bb54a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/slimbus/bus.txt
+> @@ -0,0 +1,55 @@
+> +SLIM(Serial Low Power Interchip Media Bus) bus
+> +
+> +SLIMbus is a 2-wire bus, and is used to communicate with peripheral
+> +components like audio-codec.
+> +
+> +Controller is a normal device using binding for whatever bus it is
+> +on (e.g. platform bus).
+> +Required property for SLIMbus controller node:
+> +- compatible	- name of SLIMbus controller following generic names
+> +		recommended practice.
+> +- #address-cells - should be 4 (number of cells required to define
+> +		4 fields of the enumeration address for the SLIMbus
+> +		slave device)
+> +- #size-cells	- should be 0
+> +
+> +No other properties are required in the SLIMbus controller bus node.
+> +
+> +Child nodes:
+> +Every SLIMbus controller node can contain zero or more child nodes
+> +representing slave devices on the bus. Every SLIMbus slave device is
+> +uniquely determined by the enumeration address containing 4 fields:
+> +Manufacturer ID, Product code, Device index, and Instance value for
+> +the device.
+> +If child node is not present and it is instantiated after device
+> +discovery (slave device reporting itself present),
+> +its name will be in this format: "217:60:1:0"
+> +
+> +However, the device may need additional non-standard way to power it
+> +up so that it can start functioning. In that case, child node will
+> +need to be present as slave of the slimbus-controller device.
+> +The compatible property will be necessary so that corresponding
+> +driver can probe and execute the required procedure to make it
+> +functional.
+> +
+> +Required property for SLIMbus child node if it is present:
+> +- reg		- enumeration address fields of the device
+> +
+> +- compatible	- name of SLIMbus child node using practice typically
+> +		followed by discoverable buses:
+> +		"<manufacturer>,<product-model>", "slim"
+
+Im most cases for compatible strings on discoverable buses, the VID and 
+PID (and perhaps more) are used to form the compatible string. See USB 
+binding for a recent example. This will save you from having to make up 
+strings for every device.
+
+> +
+> +SLIMbus example for Qualcomm's slimbus manager component:
+> +
+> +	slim@28080000 {
+> +		compatible = "qcom,slim-msm";
+> +		reg = <0x28080000 0x2000>,
+> +		interrupts = <0 33 0>;
+> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
+> +		clock-names = "iface_clk", "core_clk";
+> +
+> +		codec@0217.0060.01.00 {
+
+unit-addresses should use ',' to separate fields and generally don't 
+have leading zeros.
+
+> +			compatible = "qcom,wcdv1", "slim";
+> +			reg = <0x217 0x60 0x1 0x0>;
+> +		};
+> +	};
