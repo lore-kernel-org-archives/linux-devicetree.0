@@ -1,44 +1,62 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/6] soc/tegra: pmc: Add support for IO pads power state
- and voltage
-Date: Tue, 3 May 2016 14:12:01 +0100
-Message-ID: <5728A3A1.2030304@nvidia.com>
-References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com>
- <1462191434-28933-4-git-send-email-ldewangan@nvidia.com>
- <57289AC0.4090604@nvidia.com> <57289A2B.7040501@nvidia.com>
- <57289FB5.5040705@nvidia.com> <57289E35.8040400@nvidia.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 3/7] ARM: davinci: da850: add clocks for mcbsp0 and 1
+Date: Tue, 3 May 2016 18:43:45 +0530
+Message-ID: <5728A409.40506@ti.com>
+References: <1461327617-11435-1-git-send-email-petr@barix.com>
+ <1461327617-11435-4-git-send-email-petr@barix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57289E35.8040400-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461327617-11435-4-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 03/05/16 13:48, Laxman Dewangan wrote:
+On Friday 22 April 2016 05:50 PM, Petr Kulhavy wrote:
+> Add clock definitions "davinci-mcbsp.0" and "davinci-mcbsp.1" in order
+> to make McBSP driver work on the DA850 platform.
 > 
-> On Tuesday 03 May 2016 06:25 PM, Jon Hunter wrote:
->>
->>>
->>> Currently SOR driver is using the tegra_io_rail_power_off/on() APIs.
->>> Once the proper interface available then I will move sor driver to use
->>> new method and then we can full get rid of older APIs and macros.
->>>
->>> Till that, we need to have this.
->> I prefer it is done before this series. In other words, if we need a
->> proper enum for the rail/pad IDs then add one and convert any existing
->> drivers over to use any new APIs first.
+> The McBSP 0 and 1 interfaces were not defined for the DA850 platform.
+> Neither were the related clocks. In order to make the use of McBSP via
+> devicetree the clocks need to be defined.
 > 
-> But the converting to new API can be done after this patch only.
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> ---
+> v1: initial
+> v2: no change
+> v3: no change
+> v4: no change
+> 
+>  arch/arm/mach-davinci/da850.c | 16 ++++++++++++++++
+>  arch/arm/mach-davinci/psc.h   |  2 ++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+> index 97d8779a9a65..2b9d972e30ac 100644
+> --- a/arch/arm/mach-davinci/da850.c
+> +++ b/arch/arm/mach-davinci/da850.c
+> @@ -306,6 +306,20 @@ static struct clk mcasp_clk = {
+>  	.flags		= DA850_CLK_ASYNC3,
+>  };
+>  
+> +static struct clk mcbsp0_clk = {
+> +	.name		= "mcbsp0",
+> +	.parent		= &pll1_sysclk2,
+> +	.lpsc		= DA850_LPSC1_McBSP0,
+> +	.gpsc		= 1,
+> +};
 
-Yes but before you add the pinctrl driver. May be you should separate
-the two.
+Can you please rebase this to the master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/nsekhar/linux-davinci.git?
 
-My point is that any follow-up series to this, would have to touch the
-pmc and the sor driver. So why not make the changes for the pmc and sor
-now, and once in place then add the pinctrl driver?
+We now have a clock called async3 which is to be used for all clocks in
+async3 domain.
 
-Jon
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
