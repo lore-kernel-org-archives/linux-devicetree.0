@@ -1,37 +1,62 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] arm64: tegra: fix compatible string for Tegra132 fuse node
-Date: Tue, 3 May 2016 17:09:37 +0800
-Message-ID: <1462266577-951-1-git-send-email-wni@nvidia.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v7 1/2] Documentation: DT: dma: Add Xilinx zynqmp dma
+ device tree binding documentation
+Date: Tue, 3 May 2016 09:12:24 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57E033@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1461740729-30715-1-git-send-email-appanad@xilinx.com>
+ <57206632.7010508@metafoo.de>
+ <C246CAC1457055469EF09E3A7AC4E11A4A57B840@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <5720B333.4000804@metafoo.de>
+ <C246CAC1457055469EF09E3A7AC4E11A4A57C2E2@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <5721D38A.8010501@metafoo.de> <20160502100953.GJ2274@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160502100953.GJ2274@localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Lars-Peter Clausen <lars@metafoo.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengin>
 List-Id: devicetree@vger.kernel.org
 
-This patch changes the compatible of Tegra132 fuse node
-to "nvidia,tegra132-efuse", instead of "nvidia,tegra1124-efuse".
-Because the CONFIG_ARCH_TEGRA_124_SOC will not be enabled for
-Tegra132, the fuse driver can't find the corresponding node.
 
-Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm64/boot/dts/nvidia/tegra132.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Vinod,
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-index 5d013809448b..ee101cb52f70 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-@@ -582,7 +582,7 @@
- 	};
- 
- 	fuse@7000f800 {
--		compatible = "nvidia,tegra124-efuse";
-+		compatible = "nvidia,tegra132-efuse";
- 		reg = <0x0 0x7000f800 0x0 0x400>;
- 		clocks = <&tegra_car TEGRA124_CLK_FUSE>;
- 		clock-names = "fuse";
--- 
-1.9.1
+> 
+> PLEASE strip the crap from your MUA, better use a linux MUA
+
+OK will fix Sorry for the noise...
+
+> 
+> 
+> > >>>>> +- xlnx,include-sg	: Indicates the controller to operate in simple
+> or
+> > >>>>> +			  scatter gather dma mode
+> > >>>>> +- xlnx,ratectrl		: Scheduling interval in terms of clock cycles for
+> > >>>>> +			  source AXI transaction
+> > >>>>> +- xlnx,overfetch	: Tells whether the channel is allowed to over
+> > >>>>> +			  fetch the data
+> > >>>>> +- xlnx,src-issue	: Number of AXI outstanding transactions on source
+> > >>>> side
+> > >>>>> +- xlnx,src-burst-len	: AXI length for data read. Support only power
+> of
+> > >>>>> +			  2 byte values.
+> > >>>>> +- xlnx,dst-burst-len	: AXI length for data write. Support only power
+> of
+> > >>>>
+> > >>>> These are all software runtime configuration parameters that you'd
+> > >>>> want to change at runtime depending on which peripheral you are
+> > >>>> targeting with a specific DMA transfer. These really do not belong into
+
+> > Sorry, but that is just as broken. You need to derive those parameters from
+> > the DMA transfer as they are transfer specific.
+> 
+> Right, for memcpy you should derive the parameters. Frankly burst size
+> and lengths, rate control should be set to maximun to achives best
+> performance on mecpy.  People want memcpy to be done asap
+
+Ok Will fix in the next version of the patch...
+
+Regards,
+Kedar.
