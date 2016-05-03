@@ -1,53 +1,54 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Tue, 3 May 2016 15:14:37 +0200
-Message-ID: <20160503131437.GV17159@lukather>
-References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
- <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e@googlegroups.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 3/6] soc/tegra: pmc: Add support for IO pads power state
+ and voltage
+Date: Tue, 3 May 2016 18:37:14 +0530
+Message-ID: <5728A282.5020208@nvidia.com>
+References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com> <1462191434-28933-4-git-send-email-ldewangan@nvidia.com> <57289AC0.4090604@nvidia.com> <57289A2B.7040501@nvidia.com> <57289FB5.5040705@nvidia.com> <57289E35.8040400@nvidia.com> <5728A3A1.2030304@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uk6W7isEeLAaRh3S"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBQGIUK4QKGQE5S5SNHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, wens-jdAy2FN1RRM@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5728A3A1.2030304@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---uk6W7isEeLAaRh3S
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-Hi,
+On Tuesday 03 May 2016 06:42 PM, Jon Hunter wrote:
+> On 03/05/16 13:48, Laxman Dewangan wrote:
+>> On Tuesday 03 May 2016 06:25 PM, Jon Hunter wrote:
+>>>> Currently SOR driver is using the tegra_io_rail_power_off/on() APIs.
+>>>> Once the proper interface available then I will move sor driver to use
+>>>> new method and then we can full get rid of older APIs and macros.
+>>>>
+>>>> Till that, we need to have this.
+>>> I prefer it is done before this series. In other words, if we need a
+>>> proper enum for the rail/pad IDs then add one and convert any existing
+>>> drivers over to use any new APIs first.
+>> But the converting to new API can be done after this patch only.
+> Yes but before you add the pinctrl driver. May be you should separate
+> the two.
+>
+> My point is that any follow-up series to this, would have to touch the
+> pmc and the sor driver. So why not make the changes for the pmc and sor
+> now, and once in place then add the pinctrl driver?
 
-On Tue, May 03, 2016 at 12:12:06AM -0700, christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> Hi to All,
-> 
-> I have already solved and tested this issue on Armbian build.  Find
-> patches for both legacy (3.4.111) and mainline (4.5.2) kernels on:
-> http://forum.armbian.com/index.php/topic/853-armbian-customization/page-2#entry7494
-> There it is also described how to do eMMC bootable and much more.
-> 
-> About the board - Olimex already sold all 3 kinds after migration to
-> their HW rev. E. One have to specify Lime2-eMMC as
-> A20-Olinuxino-Lime2-eMMC instead of their old 2 options
-> A20-Olinuxino-Lime2(-4GB).
+I will be happy on this approach also. I added pincontrol driver for 
+following purpose:
+- To show how new APIs used. This will help on understanding of need and 
+whole as a design.
+- To get reviewed the whole design/method.
+- To get accepted the pmc changes on this cycle so that if possible, we 
+can have pincntrl driver in next cycle to avoid cross subsystem approach.
 
-Interesting, you have a link to that device?
 
-Thanks,
-Maxime
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---uk6W7isEeLAaRh3S--
+
+
+
+
+
+
+
+
