@@ -1,54 +1,44 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 5/6] pinctrl: tegra: Add DT binding for io pads control
-Date: Tue, 3 May 2016 18:24:32 +0530
-Message-ID: <57289F88.6040203@nvidia.com>
-References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com> <1462191434-28933-6-git-send-email-ldewangan@nvidia.com> <57289D3D.40301@nvidia.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] drivers/of: Add check for null property in of_remove_property()
+Date: Tue, 3 May 2016 08:06:48 -0500
+Message-ID: <CAL_JsqJCkrjkDDwqznCPbiDVrQUr4pQgHs_YcFVm04-j5XZREA@mail.gmail.com>
+References: <1461821695-19204-1-git-send-email-sjitindarsingh@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57289D3D.40301@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461821695-19204-1-git-send-email-sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Tuesday 03 May 2016 06:14 PM, Jon Hunter wrote:
-> On 02/05/16 13:17, Laxman Dewangan wrote:
->> +
->> +The voltage supported on the pads are 1.8V and 3.3V. The enums are defined as:
->> +	For 1.8V, use TEGRA_IO_PAD_POWER_SOURCE_1800000UV
->> +	For 3.3V, use TEGRA_IO_PAD_POWER_SOURCE_3300000UV
-> Are these still necessary now that the driver is using uV? Can't we just
-> use integer values for 1800000 and 3300000 in the DTS directly?
+On Thu, Apr 28, 2016 at 12:34 AM, Suraj Jitindar Singh
+<sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The validity of the property input argument to of_remove_property() is
+> never checked within the function and thus it is possible to pass a null
+> value. It happens that this will be picked up in __of_remove_property()
+> as no matching property of the device node will be found and thus an
+> error will be returned, however once again there is no explicit check
+> for a null value. By the time this is detected 2 locks have already been
+> acquired which is completely unnecessary if the property to remove is
+> null.
 >
-The config param and value are packed in u32 with 16bit each So we can 
-not make uV in 16bit until we do conversion of uV->mV.
-Hence suggestion came from Stephen that we can have enum for Nvidia 
-specific and what actually it supports by HW. HW does not support any 
-other voltage.
-
-
->> +Required subnode-properties:
->> +==========================
->> +- pins : An array of strings. Each string contains the name of an IO pads. Valid
->> +	 values for these names are listed below.
-> Please see my previous comments.
-
-This is taken from other dt binding docs for description. We can have 
-array of string.
-As all value of pins are not supporting all property and hence I 
-explicitly wrote under properties.
-
+> Add an explicit check in the function of_remove_property() for a null
+> property value and return -ENODEV in this case, this is consistent with
+> what the previous return value would have been when the null value was
+> not detected and passed to __of_remove_property().
 >
->> +Optional subnode-properties:
->> +==========================
->> +-nvidia,power-source-voltage:	Integer. The voltage level of IO pads. The
-> I think I prefer nvidia,io-voltage or something. You can describe what
-> this means in this doc. In fact, the current description here does not
-> explicitly state that this voltage, is the voltage the pad is configured
-> to operate at versus the voltage of the IO rail.
+> By moving an explicit check for the property paramenter into the
+> of_remove_property() function, this will remove the need to perform this
+> check in calling code before invocation of the of_remove_property()
+> function.
+>
+> Signed-off-by: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Linus suggested this dt property name to make more readable and generic 
-and meaningful with other property :power-source.
+For both patches:
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
