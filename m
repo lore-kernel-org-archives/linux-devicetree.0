@@ -1,38 +1,104 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
- return phys_addr_t
-Date: Tue, 3 May 2016 11:12:59 +0100
-Message-ID: <20160503101258.GL19428@n2100.arm.linux.org.uk>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
- <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
- <20160429151639.GC23726@leverpostej>
- <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
- <20160503042441.GA2518@x1.redhat.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: [PATCH v3 08/11] arm64: tegra: set hot trips for Tegra132
+Date: Tue, 3 May 2016 18:13:27 +0800
+Message-ID: <1462270410-2425-9-git-send-email-wni@nvidia.com>
+References: <1462270410-2425-1-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160503042441.GA2518-ejN7fcUYdH/by3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fenghua Yu <fenghua.yu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vivek Goyal <vgoyal-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Haren Myneni <hbabu-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Biederman <ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462270410-2425-1-git-send-email-wni@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: edubezval@gmail.com, thierry.reding@gmail.com, robh+dt@kernel.org, rui.zhang@intel.com
+Cc: MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wei Ni <wni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 03, 2016 at 12:24:41PM +0800, Baoquan He wrote:
-> Could you please help tell why arm PAE kernel can be put above 4G?
-> Since the change is related to common code, I am curious about how
-> it's so different with other ARCHs.
+Enable throttle function for SOC_THERM.
+Set "hot" trips for cpu and gpu thermal zones, which
+can trigger the SOC_THERM hardware throttle.
 
-This is explained in the covering email to the series.
+Signed-off-by: Wei Ni <wni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra132.dtsi | 41 +++++++++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 9 deletions(-)
 
-The explanation given by Pratyush was incomplete.
-
+diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
+index 92df892f5f23..ee101cb52f70 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
+@@ -729,7 +729,9 @@
+ 
+ 	soctherm: thermal-sensor@700e2000 {
+ 		compatible = "nvidia,tegra132-soctherm";
+-		reg = <0x0 0x700e2000 0x0 0x600>;
++		reg = <0x0 0x700e2000 0x0 0x600 /* 0: SOC_THERM reg_base */
++			0x0 0x70040000 0x0 0x200>; /* 2: CCROC reg_base */
++		reg-names = "soctherm-reg", "ccroc-reg";
+ 		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&tegra_car TEGRA124_CLK_TSENSOR>,
+ 			<&tegra_car TEGRA124_CLK_SOC_THERM>;
+@@ -737,6 +739,15 @@
+ 		resets = <&tegra_car 78>;
+ 		reset-names = "soctherm";
+ 		#thermal-sensor-cells = <1>;
++
++		nvidia,throttle-cfgs {
++			throttle_heavy: nvidia,heavy {
++				nvidia,priority = <100>;
++				nvidia,cpu-throt-level = <TEGRA_SOCTHERM_THROT_LEVEL_HIGH>;
++
++				#cooling-cells = <2>;
++			};
++		};
+ 	};
+ 
+ 	thermal-zones {
+@@ -753,13 +764,19 @@
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
++
++				cpu_throttle_trip: throttle-trip {
++					temperature = <102000>;
++					hysteresis = <1000>;
++					type = "hot";
++				};
+ 			};
+ 
+ 			cooling-maps {
+-				/*
+-				 * There are currently no cooling maps,
+-				 * because there are no cooling devices.
+-				 */
++				map0 {
++					trip = <&cpu_throttle_trip>;
++					cooling-device = <&throttle_heavy 1 1>;
++				};
+ 			};
+ 		};
+ 		mem {
+@@ -797,13 +814,19 @@
+ 					hysteresis = <1000>;
+ 					type = "critical";
+ 				};
++
++				gpu_throttle_trip: throttle-trip {
++					temperature = <99000>;
++					hysteresis = <1000>;
++					type = "hot";
++				};
+ 			};
+ 
+ 			cooling-maps {
+-				/*
+-				 * There are currently no cooling maps,
+-				 * because there are no cooling devices.
+-				 */
++				map0 {
++					trip = <&gpu_throttle_trip>;
++					cooling-device = <&throttle_heavy 1 1>;
++				};
+ 			};
+ 		};
+ 		pllx {
 -- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
