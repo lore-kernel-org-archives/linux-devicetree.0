@@ -1,50 +1,156 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/9] drm/msm/mdp: mdp4: Update LCDC/LVDS port parsing
-Date: Tue, 03 May 2016 15:50:14 +0200
-Message-ID: <1462283414.3617.60.camel@pengutronix.de>
+Subject: Re: [PATCH 8/9] dt-bindings: msm/dsi: Modify port and PHY bindings
+Date: Tue, 03 May 2016 16:02:08 +0200
+Message-ID: <1462284128.3617.68.camel@pengutronix.de>
 References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
- <1462273081-5814-4-git-send-email-architt@codeaurora.org>
+	 <1462273081-5814-9-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1462273081-5814-4-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1462273081-5814-9-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: robdclark@gmail.com, robh@kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIGRlbiAwMy4wNS4yMDE2LCAxNjoyNyArMDUzMCBzY2hyaWViIEFyY2hpdCBU
-YW5lamE6Cj4gVGhlIExDREMgcG9ydCBpcyB0aGUgZmlyc3QgaW4gdGhlIGxpc3Qgb2YgdGhlIG91
-dHB1dCBwb3J0cyBpbiBNRFA0Lgo+IE1lbnRpb24gdGhpcyBleHBsaWNpdGx5IGluIHRoZSBkcml2
-ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3Jh
-Lm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9tZHAvbWRwNC9tZHA0X2ttcy5jIHwg
-OCArKysrKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9u
-cygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21kcC9tZHA0L21kcDRf
-a21zLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL21kcC9tZHA0L21kcDRfa21zLmMKPiBpbmRleCBm
-OGUwY2VhLi5jZDEyOWY0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vbWRwL21k
-cDQvbWRwNF9rbXMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbWRwL21kcDQvbWRwNF9r
-bXMuYwo+IEBAIC0yNjMsOSArMjYzLDEzIEBAIHN0YXRpYyBzdHJ1Y3QgZGV2aWNlX25vZGUgKm1k
-cDRfZGV0ZWN0X2xjZGNfcGFuZWwoc3RydWN0IGRybV9kZXZpY2UgKmRldikKPiAgCXN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqZW5kcG9pbnQsICpwYW5lbF9ub2RlOwo+ICAJc3RydWN0IGRldmljZV9ub2Rl
-ICpucCA9IGRldi0+ZGV2LT5vZl9ub2RlOwo+ICAKPiAtCWVuZHBvaW50ID0gb2ZfZ3JhcGhfZ2V0
-X25leHRfZW5kcG9pbnQobnAsIE5VTEwpOwo+ICsJLyoKPiArCSAqIExDREMvTFZEUyBpcyB0aGUg
-Zmlyc3QgcG9ydCBkZXNjcmliZWQgaW4gdGhlIGxpc3Qgb2YgcG9ydHMgaW4gdGhlCj4gKwkgKiBN
-RFA0IERUIG5vZGUuCj4gKwkgKi8KPiArCWVuZHBvaW50ID0gb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50
-X2J5X3JlZ3MobnAsIDAsIC0xKTsKPiAgCWlmICghZW5kcG9pbnQpIHsKPiAtCQlEQkcoIm5vIGVu
-ZHBvaW50IGluIE1EUDQgdG8gZmV0Y2ggTFZEUyBwYW5lbFxuIik7Cj4gKwkJREJHKCJubyBMVkRT
-IHBhbmVsIHJlbW90ZSBlbmRwb2ludFxuIik7Cj4gIAkJcmV0dXJuIE5VTEw7Cj4gIAl9CgpPaCBu
-aWNlLCBJIHdhc24ndCBhd2FyZSBvZiBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncygpLgpX
-ZSBzaG91bGQgc3dpdGNoIGlteC1kcm0gYW5kIGV4eW5vcyB0byB1c2UgaXQsIHRvby4KCnJlZ2Fy
-ZHMKUGhpbGlwcAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+Am Dienstag, den 03.05.2016, 16:28 +0530 schrieb Archit Taneja:
+> The DSI node now has two ports that describe the connection between the
+> MDP interface output and the DSI input, and the connection between the DSI
+> output and the connected panel/bridge. Update the properties and the
+> example.
+> 
+> Also, use generic PHY bindings instead of the custom one.
+> 
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+>  .../devicetree/bindings/display/msm/dsi.txt        | 53 +++++++++++++++-------
+>  1 file changed, 37 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> index bf41d7c..0223f06 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> @@ -25,12 +25,18 @@ Required properties:
+>  - vdd-supply: phandle to vdd regulator device node
+>  - vddio-supply: phandle to vdd-io regulator device node
+>  - vdda-supply: phandle to vdda regulator device node
+> -- qcom,dsi-phy: phandle to DSI PHY device node
+> +- phys: phandle to DSI PHY device node
+> +- phy-names: the name of the corresponding PHY device
+
+Should "dsi_phy" be specified here?
+
+Also is there any kind of system to the PHY naming? I've seen more
+bindings use hyphen instead of underscore in the name, for example.
+I have called the MediaTek MIPI_TX PHY "dphy" for no other reason than
+it's a MIPI D-PHY.
+
+>  - syscon-sfpb: A phandle to mmss_sfpb syscon node (only for DSIv2)
+> +- ports: Contains 2 DSI controller ports as child nodes. Each port contains
+> +  an endpoint subnode as defined in [2] and [3]. port@0 describes the
+> +  connection between the MDP interface output and the DSI input. port@1
+> +  describes the connection between the DSI output and the connected
+> +  panel/bridge.
+>  
+>  Optional properties:
+>  - panel@0: Node of panel connected to this DSI controller.
+> -  See files in [2] for each supported panel.
+> +  See files in [4] for each supported panel.
+>  - qcom,dual-dsi-mode: Boolean value indicating if the DSI controller is
+>    driving a panel which needs 2 DSI links.
+>  - qcom,master-dsi: Boolean value indicating if the DSI controller is driving
+> @@ -42,15 +48,15 @@ Optional properties:
+>  - pinctrl-names: the pin control state names; should contain "default"
+>  - pinctrl-0: the default pinctrl state (active)
+>  - pinctrl-n: the "sleep" pinctrl state
+> -- port: DSI controller output port, containing one endpoint subnode.
+>  
+>    DSI Endpoint properties:
+> -  - remote-endpoint: set to phandle of the connected panel's endpoint.
+> -    See [3] for device graph info.
+> +  - remote-endpoint: For port@0, set to phandle of the connected panel/bridge's
+> +    input endpoint. For port@1, set to the MDP interface output.
+>    - qcom,data-lane-map: this describes how the logical DSI lanes are mapped
+>      to the physical lanes on the given platform. The value contained in
+>      index n describes what logical data lane is mapped to the physical data
+> -    lane n (DATAn, where n lies between 0 and 3).
+> +    lane n (DATAn, where n lies between 0 and 3). Only for the endpoint in
+> +    port@1.
+
+I approve of the of graph change, but I notice that the
+qcom,data-lane-map is very similar to the data-lanes property documented
+in Documentation/devicetree/bindings/media/video-interfaces.txt for MIPI
+CSI-2. Could that maybe be reused for DSI?
+
+>      For example:
+>  
+> @@ -97,8 +103,9 @@ Optional properties:
+>    regulator is wanted.
+>  
+>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -[2] Documentation/devicetree/bindings/display/panel/
+> -[3] Documentation/devicetree/bindings/graph.txt
+> +[2] Documentation/devicetree/bindings/graph.txt
+> +[3] Documentation/devicetree/bindings/media/video-interfaces.txt
+> +[4] Documentation/devicetree/bindings/display/panel/
+>  
+>  Example:
+>  	dsi0: dsi@fd922800 {
+> @@ -129,7 +136,8 @@ Example:
+>  		vdd-supply = <&pma8084_l22>;
+>  		vddio-supply = <&pma8084_l12>;
+>  
+> -		qcom,dsi-phy = <&dsi_phy0>;
+> +		phys = <&dsi_phy0>;
+> +		phy-names ="dsi_phy";
+>  
+>  		qcom,dual-dsi-mode;
+>  		qcom,master-dsi;
+> @@ -139,6 +147,26 @@ Example:
+>  		pinctrl-0 = <&mdss_dsi_active>;
+>  		pinctrl-1 = <&mdss_dsi_suspend>;
+>  
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				dsi0_in: endpoint {
+> +					remote-endpoint = <&mdp_intf1_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				dsi0_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +					qcom,data-lane-map = <0 1 2 3>;
+> +				};
+> +			};
+> +		};
+> +
+>  		panel: panel@0 {
+>  			compatible = "sharp,lq101r1sx01";
+>  			reg = <0>;
+
+If the panel is connected via port@1, why is this still needed?
+
+> @@ -153,13 +181,6 @@ Example:
+>  				};
+>  			};
+>  		};
+> -
+> -		port {
+> -			dsi0_out: endpoint {
+> -				remote-endpoint = <&panel_in>;
+> -				qcom,data-lane-map = <0 1 2 3>;
+> -			};
+> -		};
+>  	};
+>  
+>  	dsi_phy0: dsi_phy@fd922a00 {
+
+regards
+Philipp
