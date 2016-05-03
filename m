@@ -1,66 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Tue, 3 May 2016 11:47:28 -0500
-Message-ID: <20160503164728.GA32640@rob-hp-laptop>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1461846188-31249-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1461846188-31249-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Subject: Re: [PATCH v3 net-next 2/2] net: ethernet: enc28j60: add device tree
+ support
+Date: Tue, 3 May 2016 11:51:36 -0500
+Message-ID: <20160503165136.GA24880@rob-hp-laptop>
+References: <1461873975-6368-1-git-send-email-mhei@heimpold.de>
+ <1461873975-6368-3-git-send-email-mhei@heimpold.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1461846188-31249-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+In-Reply-To: <1461873975-6368-3-git-send-email-mhei@heimpold.de>
 Sender: netdev-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: mkl@pengutronix.de, wg@grandegger.com, socketcan@hartkopp.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, chris.paterson2@renesas.com
+To: Michael Heimpold <mhei@heimpold.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 28, 2016 at 01:23:07PM +0100, Ramesh Shanmugasundaram wrote:
-> This patch adds support for the CAN FD controller found in Renesas R-Car
-> SoCs. The controller operates in CAN FD only mode by default.
+On Thu, Apr 28, 2016 at 10:06:15PM +0200, Michael Heimpold wrote:
+> The following patch adds the required match table for device tree support
+> (and while at, fix the indent). It's also possible to specify the
+> MAC address in the DT blob.
 > 
-> CAN FD mode supports both Classical CAN & CAN FD frame formats. The
-> controller supports ISO 11898-1:2015 CAN FD format only.
+> Also add the corresponding binding documentation file.
 > 
-> This controller supports two channels and the driver can enable either
-> or both of the channels.
-> 
-> Driver uses Rx FIFOs (one per channel) for reception & Common FIFOs (one
-> per channel) for transmission. Rx filter rules are configured to the
-> minimum (one per channel) and it accepts Standard, Extended, Data &
-> Remote Frame combinations.
-> 
-> Note: There are few documentation errors in R-Car Gen3 Hardware User
-> Manual v0.5E with respect to CAN FD controller. They are listed below:
-> 
-> 1. CAN FD interrupt numbers 29 & 30 are listed as per channel
-> interrupts. However, they are common to both channels (i.e.) they are
-> global and channel interrupts respectively.
-> 
-> 2. CANFD clock is derived from PLL1. This is not documented.
-> 
-> 3. CANFD clock is further divided by (1/2) within the CAN FD controller.
-> This is not documented.
-> 
-> 4. The minimum value of NTSEG1 in RSCFDnCFDCmNCFG register is 2 Tq. It
-> is specified 4 Tq in the manual.
-> 
-> 5. The maximum number of message RAM area the controller can use is 3584
-> bytes. It is specified 10752 bytes in the manual.
-> 
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> Signed-off-by: Michael Heimpold <mhei@heimpold.de>
 > ---
->  .../devicetree/bindings/net/can/rcar_canfd.txt     |   89 ++
+> 
+> Changelog:
+> 
+> v3: * renamed and improved binding documentation as
+>       suggested by Rob Herring
+> 
+> v2: * took care of Arnd Bergmann's review comments
+>       - allow to specify MAC address via DT
+>       - unconditionally define DT id table
+>     * increased the driver version minor number
+>     * driver author's email address bounces, removed from address list
+> 
+> v1: * Initial submission
+> 
+> 
+>  .../devicetree/bindings/net/microchip,enc28j60.txt | 59 ++++++++++++++++++++++
 
-What happened to my ack?
+Acked-by: Rob Herring <robh@kernel.org>
 
->  drivers/net/can/Kconfig                            |    1 +
->  drivers/net/can/Makefile                           |    1 +
->  drivers/net/can/rcar/Kconfig                       |   11 +
->  drivers/net/can/rcar/Makefile                      |    5 +
->  drivers/net/can/rcar/rcar_canfd.c                  | 1624 ++++++++++++++++++++
->  6 files changed, 1731 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/can/rcar_canfd.txt
->  create mode 100644 drivers/net/can/rcar/Kconfig
->  create mode 100644 drivers/net/can/rcar/Makefile
->  create mode 100644 drivers/net/can/rcar/rcar_canfd.c
+>  drivers/net/ethernet/microchip/enc28j60.c          | 20 ++++++--
+>  2 files changed, 76 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/microchip,enc28j60.txt
