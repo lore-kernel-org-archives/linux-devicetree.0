@@ -1,67 +1,75 @@
-From: Tiffany Lin <tiffany.lin@mediatek.com>
-Subject: [PATCH v10 1/8] dt-bindings: Add a binding for Mediatek Video Processor
-Date: Tue, 3 May 2016 18:11:20 +0800
-Message-ID: <1462270287-11374-2-git-send-email-tiffany.lin@mediatek.com>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v10 3/8] arm64: dts: mediatek: Add node for Mediatek Video Processor Unit
+Date: Tue, 3 May 2016 18:11:22 +0800
+Message-ID: <1462270287-11374-4-git-send-email-tiffany.lin@mediatek.com>
 References: <1462270287-11374-1-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-2-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-3-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462270287-11374-1-git-send-email-tiffany.lin@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Tiffany.lin@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Tiffany Lin <tiffany.lin@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462270287-11374-3-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+From: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Add a DT binding documentation of Video Processor Unit for the
-MT8173 SoC from Mediatek.
+Add VPU drivers for MT8173
 
-Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
 ---
- .../devicetree/bindings/media/mediatek-vpu.txt     |   31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-vpu.txt b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
-new file mode 100644
-index 0000000..2a5bac3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
-@@ -0,0 +1,31 @@
-+* Mediatek Video Processor Unit
-+
-+Video Processor Unit is a HW video controller. It controls HW Codec including
-+H.264/VP8/VP9 Decode, H.264/VP8 Encode and Image Processor (scale/rotate/color convert).
-+
-+Required properties:
-+  - compatible: "mediatek,mt8173-vpu"
-+  - reg: Must contain an entry for each entry in reg-names.
-+  - reg-names: Must include the following entries:
-+    "tcm": tcm base
-+    "cfg_reg": Main configuration registers base
-+  - interrupts: interrupt number to the cpu.
-+  - clocks : clock name from clock manager
-+  - clock-names: must be main. It is the main clock of VPU
-+
-+Optional properties:
-+  - memory-region: phandle to a node describing memory (see
-+    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
-+    to be used for VPU extended memory; if not present, VPU may be located
-+    anywhere in the memory
-+
-+Example:
-+	vpu: vpu@10020000 {
-+		compatible = "mediatek,mt8173-vpu";
-+		reg = <0 0x10020000 0 0x30000>,
-+		      <0 0x10050000 0 0x100>;
-+		reg-names = "tcm", "cfg_reg";
-+		interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&topckgen TOP_SCP_SEL>;
-+		clock-names = "main";
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index eab7efc..ae147bb 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -125,6 +125,18 @@
+ 		clock-output-names = "cpum_ck";
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		vpu_dma_reserved: vpu_dma_mem_region {
++			compatible = "shared-dma-pool";
++			reg = <0 0xb7000000 0 0x500000>;
++			alignment = <0x1000>;
++			no-map;
++		};
 +	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupt-parent = <&gic>;
+@@ -269,6 +281,17 @@
+ 			clock-names = "spi", "wrap";
+ 		};
+ 
++		vpu: vpu@10020000 {
++			compatible = "mediatek,mt8173-vpu";
++			reg = <0 0x10020000 0 0x30000>,
++			      <0 0x10050000 0 0x100>;
++			reg-names = "tcm", "cfg_reg";
++			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&topckgen CLK_TOP_SCP_SEL>;
++			clock-names = "main";
++			memory-region = <&vpu_dma_reserved>;
++		};
++
+ 		sysirq: intpol-controller@10200620 {
+ 			compatible = "mediatek,mt8173-sysirq",
+ 				     "mediatek,mt6577-sysirq";
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
