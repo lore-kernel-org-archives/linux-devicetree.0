@@ -1,46 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFT PATCH 1/3] usb: misc: usb3503: Fix HUB mode after
- bootloader initialization
-Date: Tue, 3 May 2016 13:00:22 -0500
-Message-ID: <20160503180022.GA3008@rob-hp-laptop>
-References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
- <1461927591-7864-2-git-send-email-k.kozlowski@samsung.com>
- <20160429113059.GX3217@sirena.org.uk>
- <57234BA2.6020304@samsung.com>
- <20160429164448.GY3217@sirena.org.uk>
- <57272298.50701@samsung.com>
- <20160502105501.GE6292@sirena.org.uk>
+Subject: Re: [PATCH v2 02/11] serial: sh-sci: Update DT binding documentation
+ for dedicated RTS/CTS
+Date: Tue, 3 May 2016 13:01:57 -0500
+Message-ID: <20160503180156.GA3536@rob-hp-laptop>
+References: <1461934714-18681-1-git-send-email-geert+renesas@glider.be>
+ <1461934714-18681-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160502105501.GE6292@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <1461934714-18681-3-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Peter Hurley <peter@hurleysoftware.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2016 at 11:55:01AM +0100, Mark Brown wrote:
-> On Mon, May 02, 2016 at 11:49:12AM +0200, Krzysztof Kozlowski wrote:
+On Fri, Apr 29, 2016 at 02:58:25PM +0200, Geert Uytterhoeven wrote:
+> Some Renesas SCIF UARTs have dedicated lines for RTS/CTS hardware flow
+> control.  Whether these lines exist depends on SoC and UART instance
+> inside the SoC.  Whether these lines can be used for hardware flow
+> control depends on board wiring.
 > 
-> > This VDD regulator supply actually is not a usb3503 USB HUB regulator
-> > supply... but a supply to the LAN attached to this HUB. Regulator off/on
-> > is needed for LAN to show up. The hub will show up with typical reset
-> > (which is also missing before my patchset btw).
+> Amend the DT bindings with an optional property to indicate that RTS/CTS
+> hardware flow control lines exist, and can be used as such, according to
+> the Generic Serial DT Bindings.
 > 
-> > The LAN, as a USB device, is auto-probed so it cannot take the regulator
-> > and play with it. The simplest idea I have is to add it as "external
-> > supply"  to the parent: usb3503.
-> 
-> This is common enough that that just isn't going to scale well I fear
-> without some generic handling, either walking child devices at the bus
-> level or at the device level with a pre-probe() callback to get the
-> device to power on.  The latter is more appropriate to things like
-> Slimbus where the device is more likely to do active management at
-> runtime, it's not clear people are building USB devices like that.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: devicetree@vger.kernel.org
+> ---
+> v2:
+>   - Drop RFC status,
+>   - Use "uart-has-rtscts" instead of "renesas,uart-has-rtscts",
+>   - Refer to the Generic Serial DT Bindings.
+> ---
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-There's a new binding and support in -next (.../usb/usb-device.txt) for 
-USB devices that should help here. Though, how to handle a hub on USB 
-and I2C buses would need to be worked out.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
