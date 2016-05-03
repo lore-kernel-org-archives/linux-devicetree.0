@@ -1,108 +1,59 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [RFC] i2c: device-tree: Handling child nodes which are not i2c
- devices
-Date: Tue, 3 May 2016 16:16:30 +0100
-Message-ID: <5728C0CE.3050300@nvidia.com>
-References: <57110A35.2070509@nvidia.com> <571E2EE4.90104@nvidia.com>
- <571E3D07.9040503@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] arm64: tegra: fix compatible string for Tegra132 fuse
+ node
+Date: Tue, 3 May 2016 17:21:11 +0200
+Message-ID: <20160503152111.GC19539@ulmo.ba.sec>
+References: <1462266577-951-1-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <571E3D07.9040503@wwwdotorg.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <treding@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, linux-i2c@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uXxzq0nDebZQVNAZ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462266577-951-1-git-send-email-wni@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Ni <wni@nvidia.com>
+Cc: robh+dt@kernel.org, swarren@wwwdotorg.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
 
-Any thoughts on this? Would you accept option #1 below?
+--uXxzq0nDebZQVNAZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers
-Jon
+On Tue, May 03, 2016 at 05:09:37PM +0800, Wei Ni wrote:
+> This patch changes the compatible of Tegra132 fuse node
+> to "nvidia,tegra132-efuse", instead of "nvidia,tegra1124-efuse".
+> Because the CONFIG_ARCH_TEGRA_124_SOC will not be enabled for
+> Tegra132, the fuse driver can't find the corresponding node.
 
-On 25/04/16 16:51, Stephen Warren wrote:
-> On 04/25/2016 08:51 AM, Jon Hunter wrote:
->> Hi all,
->>
->> Any thoughts on this? Let me know if this is not clear in anyway.
-> 
-> I'm not sure if you're expecting comment from me since I suggested
-> option (1) below. For the record though I do think that's the better
-> option; it's very general/explicit, should apply well to any OS
-> environment, and relying on OF_POPULATED implies an order that the
-> driver must initialize things in, so that it ensures OF_POPULATED is set
-> before any I2C children are handled.
-> 
->> On 15/04/16 16:35, Jon Hunter wrote:
->>> Hi all,
->>>
->>> For Tegra we have an i2c device for display port, namely the display
->>> port auxiliary channel (or dpaux) as specified by the display port
->>> standard. If an design using Tegra does not utilise the display port
->>> interface, then the pads assigned to the dpaux can be re-assigned to
->>> another generic i2c controller (i2c6 for Tegra124/210). In other words,
->>> the pads can be re-used for a generic i2c interface.
->>>
->>> The registers that control whether the pads are mapped to the dpaux or
->>> i2c6 are located in the dpaux register space. Therefore, I am looking at
->>> adding pin controller support for dpaux so that i2c6 can request these
->>> pads if it is enabled and I was hoping to add a pinmux node the to dpaux
->>> device in device-tree to do this. For example, something like ...
->>>
->>>     dpaux@0,545c0000 {
->>>         ...
->>>
->>>         /* pinctrl node */
->>>         pinmux {
->>>             ...
->>>         };
->>>     };
->>>
->>> Although the above works, when doing this I noticed that when the device
->>> booted, I would seeing the following error messages on boot ...
->>>
->>>   i2c i2c-5: of_i2c: modalias failure on ...
->>>
->>> These error messages being caused by the new pinmux node because it is
->>> not recognised as an i2c device. To avoid this error messages we have
->>> come up with a couple solutions but wanted to get some feedback on the
->>> best approach.
->>>
->>> 1. Add a i2c-bus sub-node to the dpaux binding (suggested by Stephen
->>>     Warren), so we would have something like the below. Then i2c devices
->>>     for dpaux would be place in the i2c-bus sub-node.
->>>
->>>     dpaux@0,545c0000 {
->>>         ...
->>>
->>>         /* pinctrl node */
->>>         pinmux {
->>>             ...
->>>         };
->>>
->>>         /* place-holder for i2c devices */
->>>         i2c-bus {
->>>             ...
->>>         };
->>>     };   
->>>
->>>     To make the above work ideally we would like to make the 'i2c-bus'
->>>     node a generic solution for all i2c devices, so the i2c core would
->>>     check for the presence of this node and if it is found then would
->>>     default to this node for looking for i2c-devices.
->>>
->>> 2. When registering i2c devices via device-tree, the function
->>>     of_i2c_register_devices() checks to see if OF_POPULATED flag is set
->>>     for a given node. If it is set, then the node is skipped. I believe
->>>     this was added for device-tree overlays (commit 4f001fd30145 i2c:
->>>     Mark instantiated device nodes with OF_POPULATE). Another option is
->>>     for the dpaux driver to mark the pinmux node as populated before
->>>     registering the i2c adapter and this will prevent the i2c core from
->>>     trying to parse the pinmux node. I am not sure if this would be
->>>     frowned upon in anyway or if we can guarantee that no future changes
->>>     to DT overlays would change this in a way where it would not work.
->>>
->>> Let me know your thoughts.
-> 
+Okay, that's not really a good reason to modify the DTS. What we should
+do instead is make sure that the OF table contains the entry on Tegra132
+builds. Unless the IP block really is different and Tegra124 and
+Tegra132 aren't compatible in this regard after all.
+
+In the latter case the commit message should reflect the real reason.
+
+Thierry
+
+--uXxzq0nDebZQVNAZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXKMHnAAoJEN0jrNd/PrOhyXAP/17X5cNsTnPZlKl/meWm26x4
+2zvqqR405vPMaVASWfW/o/8Vi7B3aIuNdYasGbYh6nrhXC0jC+2+jxsLJFVQ82OA
+YzGEhX6sywGAM5HVfr8YgMUuZnqnN1ev5SVAV9u9aj0fy+Kz2ya7tKVA5eUDx/Be
+3xm5ZrFZ8h8zRnXYCCM2tOOmoOUVLzDpWVJ5zWWwFGgk09vRTBKcNkUMIIE3cysz
+o20Tyj3S8gcy2Jnrs1aoUGZWHcmlAV2Pa9FrkBYJJqmXAALcduzM7u+0uf7t45zU
+EhXwwUfU3Nu9gO9vZf0QFHR5L84pZpTD1v+nX7uV2/9FSbQam1s1EH4Rk4KbVuQq
+aRwWQKPuH4Gcxb2LfZVZjRafpCjupkxWaMR+jLX1hxKO/RmLd/mCenqOgiegJ2vG
+fUUJOwJXIfVl+e00ku4RxpSs79Jz6YqLYgkQ0ISogfIhIaXxpCSdTsNB+stG81YN
+zT+i2kZ3fYyoTyITIKLPmRK4WEhHBVf9hTK/KYy3Ayqo2CvRjmk1HNwtP6jjibvQ
+TMGQe158Pp0Wwb7Z50yn1iq10kbBTyvcXRsGUYWxZGtuKIQ4zrqFXOXC6G4anhgk
+dsqif4tDGsH7WRXdMVSTL3hnJmeQiFoKg/HyooVLujrXwQ49f3veC5Htts6PrnNT
+gSjaF3h3UZTELX/ljP0l
+=k9lg
+-----END PGP SIGNATURE-----
+
+--uXxzq0nDebZQVNAZ--
