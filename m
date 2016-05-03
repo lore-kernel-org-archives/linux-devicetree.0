@@ -1,51 +1,128 @@
-From: christo.radev@gmail.com
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Tue, 3 May 2016 00:12:06 -0700 (PDT)
-Message-ID: <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e@googlegroups.com>
+Date: Tue, 3 May 2016 09:21:06 +0200
+Message-ID: <57285162.2000704@schinagl.nl>
 References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
+ <CAGb2v66E2TuN3+tYaAbniV3q67waDZOfqKAW14VJz6xZFomZ=Q@mail.gmail.com>
+Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="----=_Part_1164_1300126375.1462259526952"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-sunxi <linux-sunxi@googlegroups.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dev@linux-sunxi.org, tsvetan@olimex.com, linux-kernel@vger.kernel.org, hdegoede@redhat.com, wens@csie.org, robh+dt@kernel.org, galak@codeaurora.org, maxime.ripard@free-electrons.com, oliver@schinagl.nl, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDC2JNWXZAJBB35CUG4QKGQE24E3V3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66E2TuN3+tYaAbniV3q67waDZOfqKAW14VJz6xZFomZ=Q@mail.gmail.com>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tsvetan Usunov <tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_1164_1300126375.1462259526952
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Hey Chen,
 
-Hi to All,
-
-I have already solved and tested this issue on Armbian build.
-Find patches for both legacy (3.4.111) and mainline (4.5.2) kernels on:
-http://forum.armbian.com/index.php/topic/853-armbian-customization/page-2#entry7494
-There it is also described how to do eMMC bootable and much more.
-
-About the board - Olimex already sold all 3 kinds after migration to their HW rev. E. One have to specify Lime2-eMMC as A20-Olinuxino-Lime2-eMMC instead of their old 2 options A20-Olinuxino-Lime2(-4GB).
-
-Regards
-Chris
-
-------=_Part_1164_1300126375.1462259526952
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-------=_Part_1164_1300126375.1462259526952--
+On 03-05-16 05:33, Chen-Yu Tsai wrote:
+> Hi,
+>
+> On Thu, Apr 28, 2016 at 3:19 PM, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org> wrote:
+>> There are 3 kinds of OLinuXino Lime2 boards.
+>> One without any on board storage, one with NAND storage and one with
+>> eMMC storage. This patch adds the eMMC variant of boards.
+>>
+>> eMMC storage is different from a regular SD card in that it is soldered
+>> on the board and cannot be changed. Additionally, it shares pins with
+>> the NAND module and with the second SPI port.
+>>
+>> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>> ---
+>>   .../boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts    | 64 ++++++++++++++++++++++
+>>   1 file changed, 64 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+>>
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+>> new file mode 100644
+>> index 0000000..689da36
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+>> @@ -0,0 +1,64 @@
+>> + /*
+>> + * Copyright 2015 - Ultimaker B.V.
+>> + * Author Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +#include "sun7i-a20-olinuxino-lime2.dts"
+>> +
+>> +/ {
+>> +       model = "Olimex A20-OLinuXino-LIME2-eMMC";
+>> +};
+>> +
+>> +&mmc2 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&mmc2_pins_a>;
+>> +       vmmc-supply = <&reg_vcc3v3>;
+>> +       bus-width = <4>;
+> Only 4 bits? We normally see eMMC with 8 bits. 4 bits are some kind of
+> embedded SD card.
+On A20 as well? Our investigations so far have concluded that the A10 
+and A20 have those pins not mapped out to pads. The IP does support it 
+however we assume.
+>
+>> +       non-removable;
+>> +       no-1-8-v;
+> This flag is not supported on sunxi.
+>
+> Instead, use the vqmmc-supply with the correct regulator and constraints.
+That was not supposed to be there, i'll fix it! Sorry.
+>
+> ChenYu
+>
+>> +       status = "okay";
+>> +
+>> +       emmc: emmc@0 {
+>> +               reg = <0>;
+>> +               compatible = "mmc-card";
+>> +               broken-hpi;
+>> +       };
+>> +};
+>> --
+>> 2.8.0.rc3
+>>
