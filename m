@@ -1,45 +1,42 @@
-From: Yisen Zhuang <Yisen.zhuang@huawei.com>
-Subject: Re: [PATCH net-next 0/4] net: hns: update DT properties according to
- Rob's comments
-Date: Tue, 3 May 2016 08:54:11 +0800
-Message-ID: <5727F6B3.2080007@huawei.com>
-References: <1461827344-52230-1-git-send-email-Yisen.Zhuang@huawei.com>
- <20160429.133949.1719521222260369497.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160429.133949.1719521222260369497.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, yankejian@huawei.com, huangdaode@hisilicon.com, salil.mehta@huawei.com, lipeng321@huawei.com, liguozhu@huawei.com, xieqianqian@huawei.com, xuwei5@hisilicon.com, linuxarm@huawei.com
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] pci: host: Broadcom STB PCIE RC controller support
+Date: Mon,  2 May 2016 18:25:47 -0700
+Message-ID: <1462238749-19715-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Hi all,
 
-Thanks for applying the patches.
+This patch series adds support for Broadcom STB SoC's PCIe root complex driver.
 
-The series which i reposted is my misoperation. Please ignore them.
+This was primarily tested on BCM7445 (ARM) and BCM7435 (MIPS).
 
-Thanks,
+Jim is the original author, and I picked up our downstream 4.1 driver and
+updated it to utilize the non-ARM hw_pci functions as well as made some
+stylistic changes.
 
-Yisen
+Thanks!
 
-=E5=9C=A8 2016/4/30 1:39, David Miller =E5=86=99=E9=81=93:
-> From: Yisen Zhuang <Yisen.Zhuang@huawei.com>
-> Date: Thu, 28 Apr 2016 15:09:00 +0800
->=20
->> There are some inappropriate properties definition in hns DT. We upd=
-ate the definition
->> according to Rob's review comments and fix some typos in binding.
->>
->> For more details, please see individual patches.
->=20
-> Series applied, thanks.
->=20
-> BTW, you reposted your 10 part series for adding the dsaf-debug devic=
-e, but I
-> already applied the series you posted for that nearly a week ago.
->=20
-> .
->=20
+Jim Quinlan (2):
+  Documentation: DT: bindings: Add Broadcom STB PCIe bindings
+  pci: host: Add Broadcom STB PCIE RC controller
+
+ .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  |   81 ++
+ MAINTAINERS                                        |    1 +
+ drivers/pci/host/Kconfig                           |    9 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pcie-brcmstb.c                    | 1243 ++++++++++++++++++++
+ 5 files changed, 1335 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-brcmstb.c
+
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
