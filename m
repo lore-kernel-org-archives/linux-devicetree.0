@@ -1,102 +1,90 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: [PATCH v3 05/11] arm: tegra: set hot trips for Tegra124
-Date: Tue, 3 May 2016 18:13:24 +0800
-Message-ID: <1462270410-2425-6-git-send-email-wni@nvidia.com>
-References: <1462270410-2425-1-git-send-email-wni@nvidia.com>
+From: Tiffany Lin <tiffany.lin@mediatek.com>
+Subject: [PATCH v10 8/8] arm64: dts: mediatek: Add Video Encoder for MT8173
+Date: Tue, 3 May 2016 18:11:27 +0800
+Message-ID: <1462270287-11374-9-git-send-email-tiffany.lin@mediatek.com>
+References: <1462270287-11374-1-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-2-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-3-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-4-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-5-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-6-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-7-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-8-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462270410-2425-1-git-send-email-wni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: edubezval@gmail.com, thierry.reding@gmail.com, robh+dt@kernel.org, rui.zhang@intel.com
-Cc: MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wei Ni <wni@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462270287-11374-8-git-send-email-tiffany.lin@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: devicetree@vger.kernel.org, Tiffany Lin <tiffany.lin@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable throttle function for SOC_THERM.
-Set "hot" trips for cpu and gpu thermal zones, which
-can trigger the SOC_THERM hardware throttle.
+Add video encoder node for MT8173
 
-Signed-off-by: Wei Ni <wni@nvidia.com>
+Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+
 ---
- arch/arm/boot/dts/tegra124.dtsi | 39 ++++++++++++++++++++++++++++++---------
- 1 file changed, 30 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   39 ++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 08c7f85ea2c8..982eec9056d3 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -846,7 +846,9 @@
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index ae147bb..348ce0e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -717,6 +717,45 @@
+ 			clock-names = "apb", "smi";
+ 		};
  
- 	soctherm: thermal-sensor@0,700e2000 {
- 		compatible = "nvidia,tegra124-soctherm";
--		reg = <0x0 0x700e2000 0x0 0x1000>;
-+		reg = <0x0 0x700e2000 0x0 0x600 /* SOC_THERM reg_base */
-+			0x0 0x60006000 0x0 0x400>; /* CAR reg_base */
-+		reg-names = "soctherm-reg", "car-reg";
- 		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA124_CLK_TSENSOR>,
- 			<&tegra_car TEGRA124_CLK_SOC_THERM>;
-@@ -854,6 +856,15 @@
- 		resets = <&tegra_car 78>;
- 		reset-names = "soctherm";
- 		#thermal-sensor-cells = <1>;
-+
-+		nvidia,throttle-cfgs {
-+			throttle_heavy: nvidia,heavy {
-+				nvidia,priority = <100>;
-+				nvidia,cpu-throt-depth = <85>;
-+
-+				#cooling-cells = <2>;
-+			};
++		vcodec_enc: vcodec@18002000 {
++			compatible = "mediatek,mt8173-vcodec-enc";
++			reg = <0 0x18002000 0 0x1000>,	/* VENC_SYS */
++			      <0 0x19002000 0 0x1000>;	/* VENC_LT_SYS */
++			interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
++				     <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
++			mediatek,larb = <&larb3>,
++					<&larb5>;
++			iommus = <&iommu M4U_PORT_VENC_RCPU>,
++				 <&iommu M4U_PORT_VENC_REC>,
++				 <&iommu M4U_PORT_VENC_BSDMA>,
++				 <&iommu M4U_PORT_VENC_SV_COMV>,
++				 <&iommu M4U_PORT_VENC_RD_COMV>,
++				 <&iommu M4U_PORT_VENC_CUR_LUMA>,
++				 <&iommu M4U_PORT_VENC_CUR_CHROMA>,
++				 <&iommu M4U_PORT_VENC_REF_LUMA>,
++				 <&iommu M4U_PORT_VENC_REF_CHROMA>,
++				 <&iommu M4U_PORT_VENC_NBM_RDMA>,
++				 <&iommu M4U_PORT_VENC_NBM_WDMA>,
++				 <&iommu M4U_PORT_VENC_RCPU_SET2>,
++				 <&iommu M4U_PORT_VENC_REC_FRM_SET2>,
++				 <&iommu M4U_PORT_VENC_BSDMA_SET2>,
++				 <&iommu M4U_PORT_VENC_SV_COMA_SET2>,
++				 <&iommu M4U_PORT_VENC_RD_COMA_SET2>,
++				 <&iommu M4U_PORT_VENC_CUR_LUMA_SET2>,
++				 <&iommu M4U_PORT_VENC_CUR_CHROMA_SET2>,
++				 <&iommu M4U_PORT_VENC_REF_LUMA_SET2>,
++				 <&iommu M4U_PORT_VENC_REC_CHROMA_SET2>;
++			mediatek,vpu = <&vpu>;
++			clocks = <&topckgen CLK_TOP_VENCPLL_D2>,
++				 <&topckgen CLK_TOP_VENC_SEL>,
++				 <&topckgen CLK_TOP_UNIVPLL1_D2>,
++				 <&topckgen CLK_TOP_VENC_LT_SEL>;
++			clock-names = "venc_sel_src",
++				      "venc_sel",
++				      "venc_lt_sel_src",
++				      "venc_lt_sel";
 +		};
- 	};
- 
- 	dfll: clock@0,70110000 {
-@@ -1156,13 +1167,18 @@
- 					hysteresis = <0>;
- 					type = "critical";
- 				};
-+				cpu_throttle_trip: throttle-trip {
-+					temperature = <100000>;
-+					hysteresis = <1000>;
-+					type = "hot";
-+				};
- 			};
- 
- 			cooling-maps {
--				/*
--				 * There are currently no cooling maps,
--				 * because there are no cooling devices.
--				 */
-+				map0 {
-+					trip = <&cpu_throttle_trip>;
-+					cooling-device = <&throttle_heavy 1 1>;
-+				};
- 			};
- 		};
- 
-@@ -1202,13 +1218,18 @@
- 					hysteresis = <0>;
- 					type = "critical";
- 				};
-+				gpu_throttle_trip: throttle-trip {
-+					temperature = <99000>;
-+					hysteresis = <1000>;
-+					type = "hot";
-+				};
- 			};
- 
- 			cooling-maps {
--				/*
--				 * There are currently no cooling maps,
--				 * because there are no cooling devices.
--				 */
-+				map0 {
-+					trip = <&gpu_throttle_trip>;
-+					cooling-device = <&throttle_heavy 1 1>;
-+				};
- 			};
- 		};
- 
++
+ 		vencltsys: clock-controller@19000000 {
+ 			compatible = "mediatek,mt8173-vencltsys", "syscon";
+ 			reg = <0 0x19000000 0 0x1000>;
 -- 
-1.9.1
+1.7.9.5
