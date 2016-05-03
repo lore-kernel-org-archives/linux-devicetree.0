@@ -1,390 +1,99 @@
-From: Grant Grundler <grundler@chromium.org>
-Subject: Input: add Atmel Atmegaxx captouch driver
-Date: Tue,  3 May 2016 10:13:31 -0700
-Message-ID: <1462295611-49684-1-git-send-email-grundler@chromium.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Hung-yu Wu <hywu@google.com>, Grant Grundler <grundler@chromium.org>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH 1/2] ARM: sun4i: dt: Add pll3 and pll7 clocks
+Date: Tue,  3 May 2016 20:14:18 +0300
+Message-ID: <1462295659-6945-2-git-send-email-plaes@plaes.org>
+References: <1462295659-6945-1-git-send-email-plaes@plaes.org>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJLTBEBXENBB5NYUO4QKGQEAQM4PRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1462295659-6945-1-git-send-email-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add I2C driver for AtmegaXX capacitive touch device.
+Enable pll3 and pll7 clocks that are needed to drive display clocks.
 
-Signed-off-by: Hung-yu Wu <hywu@google.com>
-Signed-off-by: Grant Grundler <grundler@chromium.org>
+Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 ---
- .../bindings/input/atmel,atmegaxx_captouch.txt     |  34 +++
- drivers/input/misc/Kconfig                         |  11 +
- drivers/input/misc/Makefile                        |   1 +
- drivers/input/misc/atmegaxx_captouch.c             | 278 +++++++++++++++++++++
- 4 files changed, 324 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
- create mode 100644 drivers/input/misc/atmegaxx_captouch.c
+ arch/arm/boot/dts/sun4i-a10.dtsi | 44 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-For those that like to know how sausage is made, ChromeOS code review history here:
-   https://chromium-review.googlesource.com/339950
-
-Driver was tested with prototype HW and it reliably reports events correctly.
-Manual testing was just using "evtest /dev/input/event0" and watch for events.
-
-diff --git a/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt b/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
-new file mode 100644
-index 0000000..07a4b0b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
-@@ -0,0 +1,34 @@
-+Device tree bindings for Atmel AtmegaXX capacitive touch sensor
-+
-+The node for this device must be a child of a I2C controller node, as the
-+device communicates via I2C.
-+
-+Required properties:
-+
-+	compatible:	Must be "atmel,atmegaxx_captouch".
-+	reg:		The I2C slave address of the device.
-+	interrupts:	Property describing the interrupt line the device
-+			is connected to. The device only has one interrupt
-+			source.
-+	linux,keycodes:	Specifies an array of numeric keycode values to
-+			be used for reporting button presses. The array can
-+			contain up to 8 entries.
-+
-+Optional properties:
-+
-+	autorepeat:	Enables the Linux input system's autorepeat
-+			feature on the input device.
-+
-+Example:
-+
-+	atmegaxx_captouch@51 {
-+		compatible = "atmel,atmegaxx_captouch";
-+		reg = <0x51>;
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <67 IRQ_TYPE_EDGE_FALLING>;
-+		linux,keycodes = <BTN_0>, <BTN_1>,
-+			<BTN_2>, <BTN_3>,
-+			<BTN_4>, <BTN_5>,
-+			<BTN_6>, <BTN_7>;
-+		autorepeat;
-+	};
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 838824b..4cee1ac 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -82,6 +82,17 @@ config INPUT_ARIZONA_HAPTICS
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called arizona-haptics.
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 268a150..c893744 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -184,6 +184,15 @@
+ 			clock-output-names = "osc24M";
+ 		};
  
-+config INPUT_ATMEGAXX_CAPTOUCH
-+	tristate "Atmel AtmegaXX Capacitive Touch"
-+	depends on OF || COMPILE_TEST
-+	help
-+	  Say Y here if an Atmel Capacitive Touch device is connected to
-+	  an I2C bus. One should find "atmel,atmegaxx_captouch" node in
-+	  the board specific DTS.
++		osc3M: osc3M_clk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <8>;
++			clock-mult = <1>;
++			clocks = <&osc24M>;
++			clock-output-names = "osc3M";
++		};
 +
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called atmegaxx_captouch.
+ 		osc32k: clk@0 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+@@ -208,6 +217,24 @@
+ 					     "pll2-4x", "pll2-8x";
+ 		};
+ 
++		pll3: clk@01c20010 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-pll3-clk";
++			reg = <0x01c20010 0x4>;
++			clocks = <&osc3M>;
++			clock-output-names = "pll3";
++		};
 +
- config INPUT_BMA150
- 	tristate "BMA150/SMB380 acceleration sensor support"
- 	depends on I2C
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index f77268e..7254bd6c 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_INPUT_APANEL)		+= apanel.o
- obj-$(CONFIG_INPUT_ARIZONA_HAPTICS)	+= arizona-haptics.o
- obj-$(CONFIG_INPUT_ATI_REMOTE2)		+= ati_remote2.o
- obj-$(CONFIG_INPUT_ATLAS_BTNS)		+= atlas_btns.o
-+obj-$(CONFIG_INPUT_ATMEGAXX_CAPTOUCH)	+= atmegaxx_captouch.o
- obj-$(CONFIG_INPUT_BFIN_ROTARY)		+= bfin_rotary.o
- obj-$(CONFIG_INPUT_BMA150)		+= bma150.o
- obj-$(CONFIG_INPUT_CM109)		+= cm109.o
-diff --git a/drivers/input/misc/atmegaxx_captouch.c b/drivers/input/misc/atmegaxx_captouch.c
-new file mode 100644
-index 0000000..bd886c1
---- /dev/null
-+++ b/drivers/input/misc/atmegaxx_captouch.c
-@@ -0,0 +1,278 @@
-+/*
-+ * Atmel Atmegaxx Capacitive Touch Driver
-+ *
-+ * Copyright (C) 2016 Google, inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++		pll3x2: pll3x2_clk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <2>;
++			clocks = <&pll3>;
++			clock-output-names = "pll3-x2";
++		};
 +
-+/*
-+ * For raw i2c access from userspace, use i2cset/i2cget
-+ * to poke at /dev/i2c-N devices.
-+ */
 +
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/i2c.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/slab.h>
+ 		pll4: clk@01c20018 {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun4i-a10-pll1-clk";
+@@ -232,6 +259,23 @@
+ 			clock-output-names = "pll6_sata", "pll6_other", "pll6";
+ 		};
+ 
++		pll7: clk@01c20030 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-pll3-clk";
++			reg = <0x01c20030 0x4>;
++			clocks = <&osc3M>;
++			clock-output-names = "pll7";
++		};
 +
-+/* Maximum number of buttons supported */
-+#define MAX_NUM_OF_BUTTONS		8
++		pll7x2: pll7x2_clk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <2>;
++			clocks = <&pll7>;
++			clock-output-names = "pll7-2x";
++		};
 +
-+/* Registers */
-+#define REG_KEY1_THRESHOLD		0x02
-+#define REG_KEY2_THRESHOLD		0x03
-+#define REG_KEY3_THRESHOLD		0x04
-+#define REG_KEY4_THRESHOLD		0x05
-+
-+#define REG_KEY1_REF_H			0x20
-+#define REG_KEY1_REF_L			0x21
-+#define REG_KEY2_REF_H			0x22
-+#define REG_KEY2_REF_L			0x23
-+#define REG_KEY3_REF_H			0x24
-+#define REG_KEY3_REF_L			0x25
-+#define REG_KEY4_REF_H			0x26
-+#define REG_KEY4_REF_L			0x27
-+
-+#define REG_KEY1_DLT_H			0x30
-+#define REG_KEY1_DLT_L			0x31
-+#define REG_KEY2_DLT_H			0x32
-+#define REG_KEY2_DLT_L			0x33
-+#define REG_KEY3_DLT_H			0x34
-+#define REG_KEY3_DLT_L			0x35
-+#define REG_KEY4_DLT_H			0x36
-+#define REG_KEY4_DLT_L			0x37
-+
-+#define REG_KEY_STATE			0x3C
-+
-+/*
-+ * @i2c_client: I2C slave device client pointer
-+ * @input: Input device pointer
-+ * @num_btn: Number of buttons
-+ * @keycodes: map of button# to KeyCode
-+ * @prev_btn: Previous key state to detect button "press" or "release"
-+ * @xfer_buf: I2C transfer buffer
-+ */
-+struct atmegaxx_captouch_device {
-+	struct i2c_client *client;
-+	struct input_dev *input;
-+	u32 num_btn;
-+	u32 keycodes[MAX_NUM_OF_BUTTONS];
-+	u8 prev_btn;
-+	u8 xfer_buf[8] ____cacheline_aligned;
-+};
-+
-+/*
-+ * Read from I2C slave device
-+ * The protocol is that the client has to provide both the register address
-+ * and the length, and while reading back the device would prepend the data
-+ * with address and length for verification.
-+ */
-+static int atmegaxx_read(struct atmegaxx_captouch_device *atmegaxx,
-+			 u8 reg, u8 *data, size_t len)
-+{
-+	struct i2c_client *client = atmegaxx->client;
-+	struct device *dev = &client->dev;
-+	struct i2c_msg msg[2];
-+	int err;
-+
-+	if (len > sizeof(atmegaxx->xfer_buf) - 2)
-+		return -EINVAL;
-+
-+	atmegaxx->xfer_buf[0] = reg;
-+	atmegaxx->xfer_buf[1] = len;
-+
-+	msg[0].addr = client->addr;
-+	msg[0].flags = 0;
-+	msg[0].buf = atmegaxx->xfer_buf;
-+	msg[0].len = 2;
-+
-+	msg[1].addr = client->addr;
-+	msg[1].flags = I2C_M_RD;
-+	msg[1].buf = atmegaxx->xfer_buf;
-+	msg[1].len = len + 2;
-+
-+	err = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
-+	if (err != ARRAY_SIZE(msg))
-+		return err < 0 ? err : -EIO;
-+
-+	if (atmegaxx->xfer_buf[0] != reg) {
-+		dev_err(dev, "I2C read error: register address does not match\n");
-+		return -ECOMM;
-+	}
-+
-+	memcpy(data, &atmegaxx->xfer_buf[2], len);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Handle interrupt and report the key changes to the input system.
-+ * Multi-touch can be supported; however, it really depends on whether
-+ * the device can multi-touch.
-+ */
-+static irqreturn_t atmegaxx_captouch_isr(int irq, void *data)
-+{
-+	struct atmegaxx_captouch_device *atmegaxx = data;
-+	struct device *dev = &atmegaxx->client->dev;
-+	int error;
-+	int i;
-+	u8 new_btn;
-+	u8 changed_btn;
-+
-+	error = atmegaxx_read(atmegaxx, REG_KEY_STATE, &new_btn, 1);
-+	if (error) {
-+		dev_err(dev, "failed to read button state: %d\n", error);
-+		goto out;
-+	}
-+
-+	dev_dbg(dev, "%s: button state %#02x\n", __func__, new_btn);
-+
-+	changed_btn = new_btn ^ atmegaxx->prev_btn;
-+	atmegaxx->prev_btn = new_btn;
-+
-+	for (i = 0; i < atmegaxx->num_btn; i++) {
-+		if (changed_btn & BIT(i))
-+			input_report_key(atmegaxx->input,
-+					 atmegaxx->keycodes[i],
-+					 new_btn & BIT(i));
-+	}
-+
-+	input_sync(atmegaxx->input);
-+
-+out:
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * Probe function to setup the device, input system and interrupt
-+ */
-+static int atmegaxx_captouch_probe(struct i2c_client *client,
-+		const struct i2c_device_id *id)
-+{
-+	struct atmegaxx_captouch_device *atmegaxx;
-+	struct device *dev = &client->dev;
-+	struct device_node *node;
-+	int i;
-+	int err;
-+
-+	if (!i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_SMBUS_BYTE_DATA |
-+					I2C_FUNC_SMBUS_WORD_DATA |
-+					I2C_FUNC_SMBUS_I2C_BLOCK)) {
-+		dev_err(dev, "needed i2c functionality is not supported\n");
-+		return -EINVAL;
-+	}
-+
-+	atmegaxx = devm_kzalloc(dev, sizeof(*atmegaxx), GFP_KERNEL);
-+	if (!atmegaxx)
-+		return -ENOMEM;
-+
-+	atmegaxx->client = client;
-+	i2c_set_clientdata(client, atmegaxx);
-+
-+	err = atmegaxx_read(atmegaxx, REG_KEY_STATE,
-+			    &atmegaxx->prev_btn, sizeof(atmegaxx->prev_btn));
-+	if (err) {
-+		dev_err(dev, "failed to read initial button state: %d\n", err);
-+		return err;
-+	}
-+
-+	atmegaxx->input = devm_input_allocate_device(dev);
-+	if (!atmegaxx->input) {
-+		dev_err(dev, "failed to allocate input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	atmegaxx->input->id.bustype = BUS_I2C;
-+	atmegaxx->input->id.product = 0x880A;
-+	atmegaxx->input->id.version = 0;
-+	atmegaxx->input->name = "ATMegaXX Capacitive Button Controller";
-+	__set_bit(EV_KEY, atmegaxx->input->evbit);
-+
-+	node = dev->of_node;
-+	if (!node) {
-+		dev_err(dev, "failed to find matching node in device tree\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_bool(node, "autorepeat"))
-+		__set_bit(EV_REP, atmegaxx->input->evbit);
-+
-+	atmegaxx->num_btn = of_property_count_u32_elems(node, "linux,keymap");
-+	if (atmegaxx->num_btn > MAX_NUM_OF_BUTTONS)
-+		atmegaxx->num_btn = MAX_NUM_OF_BUTTONS;
-+
-+	err = of_property_read_u32_array(node, "linux,keycodes",
-+					 atmegaxx->keycodes,
-+					 atmegaxx->num_btn);
-+	if (err) {
-+		dev_err(dev,
-+			"failed to read linux,keycode property: %d\n", err);
-+		return err;
-+	}
-+
-+	for (i = 0; i < atmegaxx->num_btn; i++)
-+		__set_bit(atmegaxx->keycodes[i], atmegaxx->input->keybit);
-+
-+	atmegaxx->input->keycode = atmegaxx->keycodes;
-+	atmegaxx->input->keycodesize = sizeof(atmegaxx->keycodes[0]);
-+	atmegaxx->input->keycodemax = atmegaxx->num_btn;
-+
-+	err = input_register_device(atmegaxx->input);
-+	if (err)
-+		return err;
-+
-+	err = devm_request_threaded_irq(dev, client->irq, NULL,
-+				atmegaxx_captouch_isr, IRQF_ONESHOT,
-+				"atmegaxx_captouch", atmegaxx);
-+	if (err) {
-+		dev_err(dev, "failed to request irq %d: %d\n",
-+			client->irq, err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id atmegaxx_captouch_of_id[] = {
-+	{
-+		.compatible = "atmel,atmegaxx_captouch",
-+	},
-+	{ /* sentinel */ }
-+}
-+MODULE_DEVICE_TABLE(of, atmegaxx_captouch_of_id);
-+#endif
-+
-+static const struct i2c_device_id atmegaxx_captouch_id[] = {
-+	{ "atmegaxx_captouch", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, atmegaxx_captouch_id);
-+
-+static struct i2c_driver atmegaxx_captouch_driver = {
-+	.probe		= atmegaxx_captouch_probe,
-+	.id_table	= atmegaxx_captouch_id,
-+	.driver		= {
-+		.name	= "atmegaxx_captouch",
-+		.of_match_table = of_match_ptr(atmegaxx_captouch_of_id),
-+	},
-+};
-+module_i2c_driver(atmegaxx_captouch_driver);
-+
-+/* Module information */
-+MODULE_AUTHOR("Hung-yu Wu <hywu@google.com>");
-+MODULE_DESCRIPTION("Atmel ATmegaXX Capacitance Touch Sensor I2C Driver");
-+MODULE_LICENSE("GPL v2");
+ 		/* dummy is 200M */
+ 		cpu: cpu@01c20054 {
+ 			#clock-cells = <0>;
 -- 
-2.1.2
-
+2.8.1
