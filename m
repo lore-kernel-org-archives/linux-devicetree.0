@@ -1,44 +1,51 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
- return phys_addr_t
-Date: Tue, 3 May 2016 11:23:29 +0530
-Message-ID: <20160503055329.GA13045@dhcppc6.redhat.com>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
- <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
- <20160429151639.GC23726@leverpostej>
- <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
- <20160503042441.GA2518@x1.redhat.com>
+From: christo.radev@gmail.com
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
+Date: Tue, 3 May 2016 00:12:06 -0700 (PDT)
+Message-ID: <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e@googlegroups.com>
+References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ia64-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160503042441.GA2518@x1.redhat.com>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed;
+ boundary="----=_Part_1164_1300126375.1462259526952"
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-sunxi <linux-sunxi@googlegroups.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dev@linux-sunxi.org, tsvetan@olimex.com, linux-kernel@vger.kernel.org, hdegoede@redhat.com, wens@csie.org, robh+dt@kernel.org, galak@codeaurora.org, maxime.ripard@free-electrons.com, oliver@schinagl.nl, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baoquan,
+------=_Part_1164_1300126375.1462259526952
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 03/05/2016:12:24:41 PM, Baoquan He wrote:
-> Hi Pratyush,
-> 
-> Could you please help tell why arm PAE kernel can be put above 4G?
+Hi to All,
 
-PAE system can have physical addresses above 4G. So, if a CPU is supporting the
-LPAE page table format then we should be able to access physical addresses
-beyond 4G.
+I have already solved and tested this issue on Armbian build.
+Find patches for both legacy (3.4.111) and mainline (4.5.2) kernels on:
+http://forum.armbian.com/index.php/topic/853-armbian-customization/page-2#entry7494
+There it is also described how to do eMMC bootable and much more.
 
-> Since the change is related to common code, I am curious about how
-> it's so different with other ARCHs.
+About the board - Olimex already sold all 3 kinds after migration to their HW rev. E. One have to specify Lime2-eMMC as A20-Olinuxino-Lime2-eMMC instead of their old 2 options A20-Olinuxino-Lime2(-4GB).
 
-paddr_vmcoreinfo_note() returns a physical address, so returning phys_addr_t
-seems most appropriate. So, kernel variable may land into above 4G locations,
-even with the platform in other architecture (with PAE support), if start of RAM
-is located very high,
+Regards
+Chris
 
-So, in my opinion it would be safer to have these changes for other ARCHs as
-well.
+------=_Part_1164_1300126375.1462259526952
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-~Pratyush
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+------=_Part_1164_1300126375.1462259526952--
