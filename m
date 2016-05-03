@@ -1,58 +1,64 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v9 02/22] powerpc/pci: Override pcibios_setup_bridge()
-Date: Tue,  3 May 2016 23:22:33 +1000
-Message-ID: <1462281773-26438-3-git-send-email-gwshan@linux.vnet.ibm.com>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au, Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
+Date: Tue, 3 May 2016 08:02:12 -0700 (PDT)
+Message-ID: <66e4c452-1e34-474b-8973-2d57d9f036d0@googlegroups.com>
+References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
+ <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e@googlegroups.com>
+ <20160503131437.GV17159@lukather>
+Reply-To: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_Part_634_1726910865.1462287732758"
+Return-path: <linux-sunxi+bncBD7ORYHCVECRB5P2UK4QKGQEKCOIX7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160503131437.GV17159@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This overrides pcibios_setup_bridge() that is called to update PCI
-bridge windows when PCI resource assignment is completed, to assign
-PE and setup various (resource) mapping for the PE in subsequent
-patches.
+------=_Part_634_1726910865.1462287732758
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
----
- arch/powerpc/include/asm/pci-bridge.h | 2 ++
- arch/powerpc/kernel/pci-common.c      | 8 ++++++++
- 2 files changed, 10 insertions(+)
+On Tuesday, May 3, 2016 at 4:14:41 PM UTC+3, Maxime Ripard wrote:
+> Hi,
+> 
+> On Tue, May 03, 2016 at 4:12:06 PM UTC+3, Christo Radev wrote:
+> > Hi to All,
+> > 
+> > I have already solved and tested this issue on Armbian build.  Find
+> > patches for both legacy (3.4.111) and mainline (4.5.2) kernels on:
+> > http://forum.armbian.com/index.php/topic/853-armbian-customization/page-2#entry7494
+> > There it is also described how to do eMMC bootable and much more.
+> > 
+> > About the board - Olimex already sold all 3 kinds after migration to
+> > their HW rev. E. One have to specify Lime2-eMMC as
+> > A20-Olinuxino-Lime2-eMMC instead of their old 2 options
+> > A20-Olinuxino-Lime2(-4GB).
+> 
+> Interesting, you have a link to that device?
+> 
+> Thanks,
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index 467c0b0..b5e88e4 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -33,6 +33,8 @@ struct pci_controller_ops {
- 	/* Called during PCI resource reassignment */
- 	resource_size_t (*window_alignment)(struct pci_bus *bus,
- 					    unsigned long type);
-+	void		(*setup_bridge)(struct pci_bus *bus,
-+					unsigned long type);
- 	void		(*reset_secondary_bus)(struct pci_dev *pdev);
- 
- #ifdef CONFIG_PCI_MSI
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index 0f7a60f..40df3a5 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -124,6 +124,14 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
- 	return 1;
- }
- 
-+void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
-+{
-+	struct pci_controller *hose = pci_bus_to_host(bus);
-+
-+	if (hose->controller_ops.setup_bridge)
-+		hose->controller_ops.setup_bridge(bus, type);
-+}
-+
- void pcibios_reset_secondary_bus(struct pci_dev *dev)
- {
- 	struct pci_controller *phb = pci_bus_to_host(dev->bus);
--- 
-2.1.0
+I have really 2 boards delivered by their local distributor.
+
+Unfortunately, they do not update their site. Use the link for NAND option:
+https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXIno-LIME2-4GB/open-source-hardware
+There you can find Users Manual where it is described that eMMC option is available from HW rev. D. The schematic for HW rev. E is also available on their repository:
+https://github.com/OLIMEX/OLINUXINO/tree/master/HARDWARE/A20-OLinuXino-LIME2
+
+On the board both 4GB NAND and eMMC Flash chips can be placed alternatively on the same place. There is difference in some other components as well.
+
+If one want to order it from the site probably has to order A20-Olinuxino-Lime2-4GB with note that eMMC option is required. The price is the same.
+------=_Part_634_1726910865.1462287732758--
