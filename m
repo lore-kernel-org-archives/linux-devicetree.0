@@ -1,55 +1,41 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] ASoC: davinci-mcbsp: add binding for McBSP
-Date: Tue, 3 May 2016 18:27:20 +0530
-Message-ID: <5728A030.1050802@ti.com>
-References: <1461327617-11435-1-git-send-email-petr@barix.com>
- <57289832.9050904@barix.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 3/6] soc/tegra: pmc: Add support for IO pads power state
+ and voltage
+Date: Tue, 3 May 2016 18:18:53 +0530
+Message-ID: <57289E35.8040400@nvidia.com>
+References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com> <1462191434-28933-4-git-send-email-ldewangan@nvidia.com> <57289AC0.4090604@nvidia.com> <57289A2B.7040501@nvidia.com> <57289FB5.5040705@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57289832.9050904-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Petr Kulhavy <brain-wDf7oJUeT2I@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <57289FB5.5040705@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 May 2016 05:53 PM, Petr Kulhavy wrote:
-> 
-> On 22.04.2016 14:20, Petr Kulhavy wrote:
->> This series of patches adds devicetree support for the davinci McBSP
->> audio
->> interface.
+
+On Tuesday 03 May 2016 06:25 PM, Jon Hunter wrote:
+>
 >>
->> Changes in version 4 of the patch:
+>> Currently SOR driver is using the tegra_io_rail_power_off/on() APIs.
+>> Once the proper interface available then I will move sor driver to use
+>> new method and then we can full get rid of older APIs and macros.
 >>
->> * minor correction in the binding example ("interrupt names")
->> * re-added index note to the "mpu" property.
-> 
-> Hi,
-> 
-> I'm just wondering if anybody is picking up on this.
-> Peter has reviewed the patch set (v3 where the code is identical to v4)
-> and Rob has acked the DT part.
+>> Till that, we need to have this.
+> I prefer it is done before this series. In other words, if we need a
+> proper enum for the rail/pad IDs then add one and convert any existing
+> drivers over to use any new APIs first.
 
-For the mach-davinci portions, I was actually waiting on the driver
-changes to be accepted first. I have already sent my pull request for
-v4.7. I am afraid these have to wait for v4.8.
+But the converting to new API can be done after this patch only.
 
-Also, I just noticed that linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org was not
-copied on the submission. That list must be copied on all mach-davinci
-submissions.
+I need to implement new APIs and then move driver to use new APIs and 
+then remove older one.
 
-And looks like not all patches in the series depend on the driver
-changes (3/7 and even 7/7?). In such cases, it always helps to send them
-separately so they can be queued independently.
+Otherwise, I need to have single patch for the new API + converting 
+existing user to use new APIs.
+If this is allowed in subsystem level then this is best method.
 
-Even now, can you please separate out such patches and resend them with
-linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org copied.
+We already did for max77686 RTC + mfd change together.
 
-Regards,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So will it be fine to make such changes?
