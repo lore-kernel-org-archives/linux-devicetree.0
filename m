@@ -1,105 +1,62 @@
-From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: [PATCHv2] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Tue,  3 May 2016 14:42:06 +0200
-Message-ID: <1462279326-9852-1-git-send-email-oliver@schinagl.nl>
-Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/9] drm/msm: Drop the gpu binding
+Date: Tue, 3 May 2016 07:42:08 -0500
+Message-ID: <CAL_JsqJJsdxW7a4cbGNs5oC6j-+Cq7+7rwh9W8D7OO+NJK351g@mail.gmail.com>
+References: <1462273081-5814-1-git-send-email-architt@codeaurora.org> <1462273081-5814-3-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDC2JNWXZAJBBJNZUK4QKGQEXVK7SFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tsvetan Usunov <tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1462273081-5814-3-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-There are 3 kinds of OLinuXino Lime2 boards.
-One without any on board storage, one with NAND storage and one with
-eMMC storage. This patch adds the eMMC variant of boards.
+On Tue, May 3, 2016 at 5:57 AM, Archit Taneja <architt@codeaurora.org> wrote:
+> The driver currently identifies the GPU components it needs by parsing
+> a phandle list from the 'gpus' DT property.
+>
+> This isn't the right binding to go with. So, for now, just search all
+> device nodes and find the gpu node we need by parsing a list of
+> compatible strings.
+>
+> Once we know how to link the kms and gpu drivers, we'll drop this method
+> and use the correct binding.
+>
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/msm_drv.c | 26 +++++++++++++++++++-------
+>  1 file changed, 19 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index 30b8f3b..f717a69 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -1068,20 +1068,32 @@ static int compare_of(struct device *dev, void *data)
+>         return dev->of_node == data;
+>  }
+>
+> -static int add_components(struct device *dev, struct component_match **matchptr,
+> -               const char *name)
+> +static const char * const msm_compatible_gpus[] = {
+> +       "qcom,adreno-3xx",
+> +       "qcom,kgsl-3d0",
+> +};
+> +
+> +/*
+> + * We don't know what's the best binding to link the gpu with the drm device.
+> + * Fow now, we just hunt for all the possible gpus that we support, and add them
+> + * as components.
+> + */
+> +static int add_gpu_components(struct device *dev,
+> +                             struct component_match **matchptr)
+>  {
+> -       struct device_node *np = dev->of_node;
+>         unsigned i;
+>
+> -       for (i = 0; ; i++) {
+> +       for (i = 0; i < ARRAY_SIZE(msm_compatible_gpus); i++) {
 
-eMMC storage is different from a regular SD card in that it is soldered
-on the board and cannot be changed. Additionally, it shares pins with
-the NAND module and with the second SPI port.
+You can use of_find_matching_node() here instead of a loop.
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
----
- .../boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts    | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
-new file mode 100644
-index 0000000..b49aafe
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
-@@ -0,0 +1,64 @@
-+ /*
-+ * Copyright 2015 - Ultimaker B.V.
-+ * Author Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "sun7i-a20-olinuxino-lime2.dts"
-+
-+/ {
-+	model = "Olimex A20-OLinuXino-LIME2-eMMC";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	emmc: emmc@0 {
-+		reg = <0>;
-+		compatible = "mmc-card";
-+		broken-hpi;
-+	};
-+};
--- 
-2.8.1
+Rob
