@@ -1,176 +1,149 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 Subject: Re: [PATCH v8 45/45] PCI/hotplug: PowerPC PowerNV PCI hotplug driver
-Date: Tue, 3 May 2016 09:41:23 +1000
-Message-ID: <20160502234123.GB5908@gwshan>
+Date: Tue, 3 May 2016 10:44:17 +1000
+Message-ID: <75f3eeb2-24cd-fca2-3c14-d29b31e08330@ozlabs.ru>
 References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
  <1455680668-23298-46-git-send-email-gwshan@linux.vnet.ibm.com>
- <57160A40.3020406@ozlabs.ru>
- <5044520.n8NHsZUD6Y@new-mexico>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+ <57160A40.3020406@ozlabs.ru> <5044520.n8NHsZUD6Y@new-mexico>
+ <20160502234123.GB5908@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5044520.n8NHsZUD6Y@new-mexico>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alistair Popple <alistair@popple.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org, Alexey Kardashevskiy <aik@ozlabs.ru>, Gavin Shan <gwshan@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20160502234123.GB5908@gwshan>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, Alistair Popple <alistair@popple.id.au>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, robherring2@gmail.com, grant.likely@linaro.org, linuxppc-dev@lists.ozlabs.org, dja@axtens.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 20, 2016 at 11:55:56AM +1000, Alistair Popple wrote:
->On Tue, 19 Apr 2016 20:36:48 Alexey Kardashevskiy wrote:
->> On 02/17/2016 02:44 PM, Gavin Shan wrote:
->> > This adds standalone driver to support PCI hotplug for PowerPC PowerNV
->> > platform that runs on top of skiboot firmware. The firmware identifies
->> > hotpluggable slots and marked their device tree node with proper
->> > "ibm,slot-pluggable" and "ibm,reset-by-firmware". The driver scans
->> > device tree nodes to create/register PCI hotplug slot accordingly.
->> >
->> > The PCI slots are organized in fashion of tree, which means one
->> > PCI slot might have parent PCI slot and parent PCI slot possibly
->> > contains multiple child PCI slots. At the plugging time, the parent
->> > PCI slot is populated before its children. The child PCI slots are
->> > removed before their parent PCI slot can be removed from the system.
->> >
->> > If the skiboot firmware doesn't support slot status retrieval, the PCI
->> > slot device node shouldn't have property "ibm,reset-by-firmware". In
->> > that case, none of valid PCI slots will be detected from device tree.
->> > The skiboot firmware doesn't export the capability to access attention
->> > LEDs yet and it's something for TBD.
->> >
->> > Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> > ---
->> >   drivers/pci/hotplug/Kconfig   |  12 +
->> >   drivers/pci/hotplug/Makefile  |   3 +
->> >   drivers/pci/hotplug/pnv_php.c | 870 ++++++++++++++++++++++++++++++++++++++++++
->> >   3 files changed, 885 insertions(+)
->> >   create mode 100644 drivers/pci/hotplug/pnv_php.c
->> >
->> > diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
->> > index df8caec..167c8ce 100644
->> > --- a/drivers/pci/hotplug/Kconfig
->> > +++ b/drivers/pci/hotplug/Kconfig
->> > @@ -113,6 +113,18 @@ config HOTPLUG_PCI_SHPC
->> >
->> >   	  When in doubt, say N.
->> >
->> > +config HOTPLUG_PCI_POWERNV
->> > +	tristate "PowerPC PowerNV PCI Hotplug driver"
->> > +	depends on PPC_POWERNV && EEH
->> > +	help
->> > +	  Say Y here if you run PowerPC PowerNV platform that supports
->> > +	  PCI Hotplug
->> > +
->> > +	  To compile this driver as a module, choose M here: the
->> > +	  module will be called pnv-php.
->> > +
->> > +	  When in doubt, say N.
->> > +
->> >   config HOTPLUG_PCI_RPA
->> >   	tristate "RPA PCI Hotplug driver"
->> >   	depends on PPC_PSERIES && EEH
->> > diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
->> > index b616e75..e33cdda 100644
->> > --- a/drivers/pci/hotplug/Makefile
->> > +++ b/drivers/pci/hotplug/Makefile
->> > @@ -14,6 +14,7 @@ obj-$(CONFIG_HOTPLUG_PCI_PCIE)		+= pciehp.o
->> >   obj-$(CONFIG_HOTPLUG_PCI_CPCI_ZT5550)	+= cpcihp_zt5550.o
->> >   obj-$(CONFIG_HOTPLUG_PCI_CPCI_GENERIC)	+= cpcihp_generic.o
->> >   obj-$(CONFIG_HOTPLUG_PCI_SHPC)		+= shpchp.o
->> > +obj-$(CONFIG_HOTPLUG_PCI_POWERNV)	+= pnv-php.o
->> >   obj-$(CONFIG_HOTPLUG_PCI_RPA)		+= rpaphp.o
->> >   obj-$(CONFIG_HOTPLUG_PCI_RPA_DLPAR)	+= rpadlpar_io.o
->> >   obj-$(CONFIG_HOTPLUG_PCI_SGI)		+= sgi_hotplug.o
->> > @@ -50,6 +51,8 @@ ibmphp-objs		:=	ibmphp_core.o	\
->> >   acpiphp-objs		:=	acpiphp_core.o	\
->> >   				acpiphp_glue.o
->> >
->> > +pnv-php-objs		:=	pnv_php.o
->> > +
->> >   rpaphp-objs		:=	rpaphp_core.o	\
->> >   				rpaphp_pci.o	\
->> >   				rpaphp_slot.o
->> > diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
->> > new file mode 100644
->> > index 0000000..364ec36
->> > --- /dev/null
->> > +++ b/drivers/pci/hotplug/pnv_php.c
->> > @@ -0,0 +1,870 @@
->> > +/*
->> > + * PCI Hotplug Driver for PowerPC PowerNV platform.
->> > + *
->> > + * Copyright Gavin Shan, IBM Corporation 2015.
->> > + *
->> > + * This program is free software; you can redistribute it and/or modify
->> > + * it under the terms of the GNU General Public License as published by
->> > + * the Free Software Foundation; either version 2 of the License, or
->> > + * (at your option) any later version.
->> > + */
->> > +
->> > +#include <linux/libfdt.h>
->> > +#include <linux/module.h>
->> > +#include <linux/pci.h>
->> > +#include <linux/pci_hotplug.h>
->> > +
->> > +#include <asm/opal.h>
->> > +#include <asm/pnv-pci.h>
->> > +#include <asm/ppc-pci.h>
->> > +
->> > +#define DRIVER_VERSION	"0.1"
->> > +#define DRIVER_AUTHOR	"Gavin Shan, IBM Corporation"
->> > +#define DRIVER_DESC	"PowerPC PowerNV PCI Hotplug Driver"
->> > +
->> > +struct pnv_php_slot {
->> > +	struct hotplug_slot		slot;
->> > +	struct hotplug_slot_info	slot_info;
->> > +	uint64_t			id;
->> > +	char				*name;
->> > +	int				slot_no;
->> > +	struct kref			kref;
->> > +#define PNV_PHP_STATE_INITIALIZED	0
->> > +#define PNV_PHP_STATE_REGISTERED	1
->> > +#define PNV_PHP_STATE_POPULATED		2
->> > +	int				state;
->> > +	struct device_node		*dn;
->> > +	struct pci_dev			*pdev;
->> > +	struct pci_bus			*bus;
->> > +	bool				power_state_check;
->> > +	int				power_state_confirmed;
->> > +#define PNV_PHP_POWER_CONFIRMED_INVALID	0
->> > +#define PNV_PHP_POWER_CONFIRMED_SUCCESS	1
->> > +#define PNV_PHP_POWER_CONFIRMED_FAIL	2
->> > +	struct opal_msg			*msg;
->> > +	void				*fdt;
->> > +	void				*dt;
->> > +	struct of_changeset		ocs;
->> > +	struct work_struct		work;
->> > +	wait_queue_head_t		queue;
->> > +	struct pnv_php_slot		*parent;
->> > +	struct list_head		children;
->> > +	struct list_head		link;
->> > +};
->> > +
->> > +static LIST_HEAD(pnv_php_slot_list);
->> > +static DEFINE_SPINLOCK(pnv_php_lock);
->> > +
->> > +static void pnv_php_register(struct device_node *dn);
->> > +static void pnv_php_unregister_one(struct device_node *dn);
->> > +static void pnv_php_unregister(struct device_node *dn);
->> 
->> 
->> The names confused me. I'd suggest pnv_php_scan(), pnv_php_unregister(), 
->> pnv_php_unregister_children() instead.
->> 
->> 
->> Alistair, what do you reckon?
->
->To be honest I'm not sure the new names are necessarily any less confusing. I
->will admit to having to read that code twice though so perhaps a short comment
->describing what each of those functions does would be the best method for
->reducing confusion.
-
-Alexey, Please confirm if I need rename those functions though I
-don't understand the confusion caused the function names.
-
-[unrelated content removed]
+T24gMDUvMDMvMjAxNiAwOTo0MSBBTSwgR2F2aW4gU2hhbiB3cm90ZToKPiBPbiBXZWQsIEFwciAy
+MCwgMjAxNiBhdCAxMTo1NTo1NkFNICsxMDAwLCBBbGlzdGFpciBQb3BwbGUgd3JvdGU6Cj4+IE9u
+IFR1ZSwgMTkgQXByIDIwMTYgMjA6MzY6NDggQWxleGV5IEthcmRhc2hldnNraXkgd3JvdGU6Cj4+
+PiBPbiAwMi8xNy8yMDE2IDAyOjQ0IFBNLCBHYXZpbiBTaGFuIHdyb3RlOgo+Pj4+IFRoaXMgYWRk
+cyBzdGFuZGFsb25lIGRyaXZlciB0byBzdXBwb3J0IFBDSSBob3RwbHVnIGZvciBQb3dlclBDIFBv
+d2VyTlYKPj4+PiBwbGF0Zm9ybSB0aGF0IHJ1bnMgb24gdG9wIG9mIHNraWJvb3QgZmlybXdhcmUu
+IFRoZSBmaXJtd2FyZSBpZGVudGlmaWVzCj4+Pj4gaG90cGx1Z2dhYmxlIHNsb3RzIGFuZCBtYXJr
+ZWQgdGhlaXIgZGV2aWNlIHRyZWUgbm9kZSB3aXRoIHByb3Blcgo+Pj4+ICJpYm0sc2xvdC1wbHVn
+Z2FibGUiIGFuZCAiaWJtLHJlc2V0LWJ5LWZpcm13YXJlIi4gVGhlIGRyaXZlciBzY2Fucwo+Pj4+
+IGRldmljZSB0cmVlIG5vZGVzIHRvIGNyZWF0ZS9yZWdpc3RlciBQQ0kgaG90cGx1ZyBzbG90IGFj
+Y29yZGluZ2x5Lgo+Pj4+Cj4+Pj4gVGhlIFBDSSBzbG90cyBhcmUgb3JnYW5pemVkIGluIGZhc2hp
+b24gb2YgdHJlZSwgd2hpY2ggbWVhbnMgb25lCj4+Pj4gUENJIHNsb3QgbWlnaHQgaGF2ZSBwYXJl
+bnQgUENJIHNsb3QgYW5kIHBhcmVudCBQQ0kgc2xvdCBwb3NzaWJseQo+Pj4+IGNvbnRhaW5zIG11
+bHRpcGxlIGNoaWxkIFBDSSBzbG90cy4gQXQgdGhlIHBsdWdnaW5nIHRpbWUsIHRoZSBwYXJlbnQK
+Pj4+PiBQQ0kgc2xvdCBpcyBwb3B1bGF0ZWQgYmVmb3JlIGl0cyBjaGlsZHJlbi4gVGhlIGNoaWxk
+IFBDSSBzbG90cyBhcmUKPj4+PiByZW1vdmVkIGJlZm9yZSB0aGVpciBwYXJlbnQgUENJIHNsb3Qg
+Y2FuIGJlIHJlbW92ZWQgZnJvbSB0aGUgc3lzdGVtLgo+Pj4+Cj4+Pj4gSWYgdGhlIHNraWJvb3Qg
+ZmlybXdhcmUgZG9lc24ndCBzdXBwb3J0IHNsb3Qgc3RhdHVzIHJldHJpZXZhbCwgdGhlIFBDSQo+
+Pj4+IHNsb3QgZGV2aWNlIG5vZGUgc2hvdWxkbid0IGhhdmUgcHJvcGVydHkgImlibSxyZXNldC1i
+eS1maXJtd2FyZSIuIEluCj4+Pj4gdGhhdCBjYXNlLCBub25lIG9mIHZhbGlkIFBDSSBzbG90cyB3
+aWxsIGJlIGRldGVjdGVkIGZyb20gZGV2aWNlIHRyZWUuCj4+Pj4gVGhlIHNraWJvb3QgZmlybXdh
+cmUgZG9lc24ndCBleHBvcnQgdGhlIGNhcGFiaWxpdHkgdG8gYWNjZXNzIGF0dGVudGlvbgo+Pj4+
+IExFRHMgeWV0IGFuZCBpdCdzIHNvbWV0aGluZyBmb3IgVEJELgo+Pj4+Cj4+Pj4gU2lnbmVkLW9m
+Zi1ieTogR2F2aW4gU2hhbiA8Z3dzaGFuQGxpbnV4LnZuZXQuaWJtLmNvbT4KPj4+PiBBY2tlZC1i
+eTogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4KPj4+PiAtLS0KPj4+PiAgIGRy
+aXZlcnMvcGNpL2hvdHBsdWcvS2NvbmZpZyAgIHwgIDEyICsKPj4+PiAgIGRyaXZlcnMvcGNpL2hv
+dHBsdWcvTWFrZWZpbGUgIHwgICAzICsKPj4+PiAgIGRyaXZlcnMvcGNpL2hvdHBsdWcvcG52X3Bo
+cC5jIHwgODcwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4+
+ICAgMyBmaWxlcyBjaGFuZ2VkLCA4ODUgaW5zZXJ0aW9ucygrKQo+Pj4+ICAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvcGNpL2hvdHBsdWcvcG52X3BocC5jCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9wY2kvaG90cGx1Zy9LY29uZmlnIGIvZHJpdmVycy9wY2kvaG90cGx1Zy9LY29u
+ZmlnCj4+Pj4gaW5kZXggZGY4Y2FlYy4uMTY3YzhjZSAxMDA2NDQKPj4+PiAtLS0gYS9kcml2ZXJz
+L3BjaS9ob3RwbHVnL0tjb25maWcKPj4+PiArKysgYi9kcml2ZXJzL3BjaS9ob3RwbHVnL0tjb25m
+aWcKPj4+PiBAQCAtMTEzLDYgKzExMywxOCBAQCBjb25maWcgSE9UUExVR19QQ0lfU0hQQwo+Pj4+
+Cj4+Pj4gICAJICBXaGVuIGluIGRvdWJ0LCBzYXkgTi4KPj4+Pgo+Pj4+ICtjb25maWcgSE9UUExV
+R19QQ0lfUE9XRVJOVgo+Pj4+ICsJdHJpc3RhdGUgIlBvd2VyUEMgUG93ZXJOViBQQ0kgSG90cGx1
+ZyBkcml2ZXIiCj4+Pj4gKwlkZXBlbmRzIG9uIFBQQ19QT1dFUk5WICYmIEVFSAo+Pj4+ICsJaGVs
+cAo+Pj4+ICsJICBTYXkgWSBoZXJlIGlmIHlvdSBydW4gUG93ZXJQQyBQb3dlck5WIHBsYXRmb3Jt
+IHRoYXQgc3VwcG9ydHMKPj4+PiArCSAgUENJIEhvdHBsdWcKPj4+PiArCj4+Pj4gKwkgIFRvIGNv
+bXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhlcmU6IHRoZQo+Pj4+ICsJ
+ICBtb2R1bGUgd2lsbCBiZSBjYWxsZWQgcG52LXBocC4KPj4+PiArCj4+Pj4gKwkgIFdoZW4gaW4g
+ZG91YnQsIHNheSBOLgo+Pj4+ICsKPj4+PiAgIGNvbmZpZyBIT1RQTFVHX1BDSV9SUEEKPj4+PiAg
+IAl0cmlzdGF0ZSAiUlBBIFBDSSBIb3RwbHVnIGRyaXZlciIKPj4+PiAgIAlkZXBlbmRzIG9uIFBQ
+Q19QU0VSSUVTICYmIEVFSAo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9ob3RwbHVnL01h
+a2VmaWxlIGIvZHJpdmVycy9wY2kvaG90cGx1Zy9NYWtlZmlsZQo+Pj4+IGluZGV4IGI2MTZlNzUu
+LmUzM2NkZGEgMTAwNjQ0Cj4+Pj4gLS0tIGEvZHJpdmVycy9wY2kvaG90cGx1Zy9NYWtlZmlsZQo+
+Pj4+ICsrKyBiL2RyaXZlcnMvcGNpL2hvdHBsdWcvTWFrZWZpbGUKPj4+PiBAQCAtMTQsNiArMTQs
+NyBAQCBvYmotJChDT05GSUdfSE9UUExVR19QQ0lfUENJRSkJCSs9IHBjaWVocC5vCj4+Pj4gICBv
+YmotJChDT05GSUdfSE9UUExVR19QQ0lfQ1BDSV9aVDU1NTApCSs9IGNwY2locF96dDU1NTAubwo+
+Pj4+ICAgb2JqLSQoQ09ORklHX0hPVFBMVUdfUENJX0NQQ0lfR0VORVJJQykJKz0gY3BjaWhwX2dl
+bmVyaWMubwo+Pj4+ICAgb2JqLSQoQ09ORklHX0hPVFBMVUdfUENJX1NIUEMpCQkrPSBzaHBjaHAu
+bwo+Pj4+ICtvYmotJChDT05GSUdfSE9UUExVR19QQ0lfUE9XRVJOVikJKz0gcG52LXBocC5vCj4+
+Pj4gICBvYmotJChDT05GSUdfSE9UUExVR19QQ0lfUlBBKQkJKz0gcnBhcGhwLm8KPj4+PiAgIG9i
+ai0kKENPTkZJR19IT1RQTFVHX1BDSV9SUEFfRExQQVIpCSs9IHJwYWRscGFyX2lvLm8KPj4+PiAg
+IG9iai0kKENPTkZJR19IT1RQTFVHX1BDSV9TR0kpCQkrPSBzZ2lfaG90cGx1Zy5vCj4+Pj4gQEAg
+LTUwLDYgKzUxLDggQEAgaWJtcGhwLW9ianMJCTo9CWlibXBocF9jb3JlLm8JXAo+Pj4+ICAgYWNw
+aXBocC1vYmpzCQk6PQlhY3BpcGhwX2NvcmUubwlcCj4+Pj4gICAJCQkJYWNwaXBocF9nbHVlLm8K
+Pj4+Pgo+Pj4+ICtwbnYtcGhwLW9ianMJCTo9CXBudl9waHAubwo+Pj4+ICsKPj4+PiAgIHJwYXBo
+cC1vYmpzCQk6PQlycGFwaHBfY29yZS5vCVwKPj4+PiAgIAkJCQlycGFwaHBfcGNpLm8JXAo+Pj4+
+ICAgCQkJCXJwYXBocF9zbG90Lm8KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvaG90cGx1
+Zy9wbnZfcGhwLmMgYi9kcml2ZXJzL3BjaS9ob3RwbHVnL3Budl9waHAuYwo+Pj4+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0Cj4+Pj4gaW5kZXggMDAwMDAwMC4uMzY0ZWMzNgo+Pj4+IC0tLSAvZGV2L251
+bGwKPj4+PiArKysgYi9kcml2ZXJzL3BjaS9ob3RwbHVnL3Budl9waHAuYwo+Pj4+IEBAIC0wLDAg
+KzEsODcwIEBACj4+Pj4gKy8qCj4+Pj4gKyAqIFBDSSBIb3RwbHVnIERyaXZlciBmb3IgUG93ZXJQ
+QyBQb3dlck5WIHBsYXRmb3JtLgo+Pj4+ICsgKgo+Pj4+ICsgKiBDb3B5cmlnaHQgR2F2aW4gU2hh
+biwgSUJNIENvcnBvcmF0aW9uIDIwMTUuCj4+Pj4gKyAqCj4+Pj4gKyAqIFRoaXMgcHJvZ3JhbSBp
+cyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5Cj4+
+Pj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vu
+c2UgYXMgcHVibGlzaGVkIGJ5Cj4+Pj4gKyAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247
+IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlIExpY2Vuc2UsIG9yCj4+Pj4gKyAqIChhdCB5b3VyIG9w
+dGlvbikgYW55IGxhdGVyIHZlcnNpb24uCj4+Pj4gKyAqLwo+Pj4+ICsKPj4+PiArI2luY2x1ZGUg
+PGxpbnV4L2xpYmZkdC5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+Pj4gKyNp
+bmNsdWRlIDxsaW51eC9wY2kuaD4KPj4+PiArI2luY2x1ZGUgPGxpbnV4L3BjaV9ob3RwbHVnLmg+
+Cj4+Pj4gKwo+Pj4+ICsjaW5jbHVkZSA8YXNtL29wYWwuaD4KPj4+PiArI2luY2x1ZGUgPGFzbS9w
+bnYtcGNpLmg+Cj4+Pj4gKyNpbmNsdWRlIDxhc20vcHBjLXBjaS5oPgo+Pj4+ICsKPj4+PiArI2Rl
+ZmluZSBEUklWRVJfVkVSU0lPTgkiMC4xIgo+Pj4+ICsjZGVmaW5lIERSSVZFUl9BVVRIT1IJIkdh
+dmluIFNoYW4sIElCTSBDb3Jwb3JhdGlvbiIKPj4+PiArI2RlZmluZSBEUklWRVJfREVTQwkiUG93
+ZXJQQyBQb3dlck5WIFBDSSBIb3RwbHVnIERyaXZlciIKPj4+PiArCj4+Pj4gK3N0cnVjdCBwbnZf
+cGhwX3Nsb3Qgewo+Pj4+ICsJc3RydWN0IGhvdHBsdWdfc2xvdAkJc2xvdDsKPj4+PiArCXN0cnVj
+dCBob3RwbHVnX3Nsb3RfaW5mbwlzbG90X2luZm87Cj4+Pj4gKwl1aW50NjRfdAkJCWlkOwo+Pj4+
+ICsJY2hhcgkJCQkqbmFtZTsKPj4+PiArCWludAkJCQlzbG90X25vOwo+Pj4+ICsJc3RydWN0IGty
+ZWYJCQlrcmVmOwo+Pj4+ICsjZGVmaW5lIFBOVl9QSFBfU1RBVEVfSU5JVElBTElaRUQJMAo+Pj4+
+ICsjZGVmaW5lIFBOVl9QSFBfU1RBVEVfUkVHSVNURVJFRAkxCj4+Pj4gKyNkZWZpbmUgUE5WX1BI
+UF9TVEFURV9QT1BVTEFURUQJCTIKPj4+PiArCWludAkJCQlzdGF0ZTsKPj4+PiArCXN0cnVjdCBk
+ZXZpY2Vfbm9kZQkJKmRuOwo+Pj4+ICsJc3RydWN0IHBjaV9kZXYJCQkqcGRldjsKPj4+PiArCXN0
+cnVjdCBwY2lfYnVzCQkJKmJ1czsKPj4+PiArCWJvb2wJCQkJcG93ZXJfc3RhdGVfY2hlY2s7Cj4+
+Pj4gKwlpbnQJCQkJcG93ZXJfc3RhdGVfY29uZmlybWVkOwo+Pj4+ICsjZGVmaW5lIFBOVl9QSFBf
+UE9XRVJfQ09ORklSTUVEX0lOVkFMSUQJMAo+Pj4+ICsjZGVmaW5lIFBOVl9QSFBfUE9XRVJfQ09O
+RklSTUVEX1NVQ0NFU1MJMQo+Pj4+ICsjZGVmaW5lIFBOVl9QSFBfUE9XRVJfQ09ORklSTUVEX0ZB
+SUwJMgo+Pj4+ICsJc3RydWN0IG9wYWxfbXNnCQkJKm1zZzsKPj4+PiArCXZvaWQJCQkJKmZkdDsK
+Pj4+PiArCXZvaWQJCQkJKmR0Owo+Pj4+ICsJc3RydWN0IG9mX2NoYW5nZXNldAkJb2NzOwo+Pj4+
+ICsJc3RydWN0IHdvcmtfc3RydWN0CQl3b3JrOwo+Pj4+ICsJd2FpdF9xdWV1ZV9oZWFkX3QJCXF1
+ZXVlOwo+Pj4+ICsJc3RydWN0IHBudl9waHBfc2xvdAkJKnBhcmVudDsKPj4+PiArCXN0cnVjdCBs
+aXN0X2hlYWQJCWNoaWxkcmVuOwo+Pj4+ICsJc3RydWN0IGxpc3RfaGVhZAkJbGluazsKPj4+PiAr
+fTsKPj4+PiArCj4+Pj4gK3N0YXRpYyBMSVNUX0hFQUQocG52X3BocF9zbG90X2xpc3QpOwo+Pj4+
+ICtzdGF0aWMgREVGSU5FX1NQSU5MT0NLKHBudl9waHBfbG9jayk7Cj4+Pj4gKwo+Pj4+ICtzdGF0
+aWMgdm9pZCBwbnZfcGhwX3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZG4pOwo+Pj4+ICtz
+dGF0aWMgdm9pZCBwbnZfcGhwX3VucmVnaXN0ZXJfb25lKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZG4p
+Owo+Pj4+ICtzdGF0aWMgdm9pZCBwbnZfcGhwX3VucmVnaXN0ZXIoc3RydWN0IGRldmljZV9ub2Rl
+ICpkbik7Cj4+Pgo+Pj4KPj4+IFRoZSBuYW1lcyBjb25mdXNlZCBtZS4gSSdkIHN1Z2dlc3QgcG52
+X3BocF9zY2FuKCksIHBudl9waHBfdW5yZWdpc3RlcigpLAo+Pj4gcG52X3BocF91bnJlZ2lzdGVy
+X2NoaWxkcmVuKCkgaW5zdGVhZC4KPj4+Cj4+Pgo+Pj4gQWxpc3RhaXIsIHdoYXQgZG8geW91IHJl
+Y2tvbj8KPj4KPj4gVG8gYmUgaG9uZXN0IEknbSBub3Qgc3VyZSB0aGUgbmV3IG5hbWVzIGFyZSBu
+ZWNlc3NhcmlseSBhbnkgbGVzcyBjb25mdXNpbmcuIEkKPj4gd2lsbCBhZG1pdCB0byBoYXZpbmcg
+dG8gcmVhZCB0aGF0IGNvZGUgdHdpY2UgdGhvdWdoIHNvIHBlcmhhcHMgYSBzaG9ydCBjb21tZW50
+Cj4+IGRlc2NyaWJpbmcgd2hhdCBlYWNoIG9mIHRob3NlIGZ1bmN0aW9ucyBkb2VzIHdvdWxkIGJl
+IHRoZSBiZXN0IG1ldGhvZCBmb3IKPj4gcmVkdWNpbmcgY29uZnVzaW9uLgo+Cj4gQWxleGV5LCBQ
+bGVhc2UgY29uZmlybSBpZiBJIG5lZWQgcmVuYW1lIHRob3NlIGZ1bmN0aW9ucyB0aG91Z2ggSQo+
+IGRvbid0IHVuZGVyc3RhbmQgdGhlIGNvbmZ1c2lvbiBjYXVzZWQgdGhlIGZ1bmN0aW9uIG5hbWVz
+LgoKSnVzdCBhZGQgdGhlIGNvbW1lbnRzLgoKSSBnb3QgY29uZnVzZWQgYmVjYXVzZToKCnBudl9w
+aHBfcmVnaXN0ZXIoKSB3YWxrcyB0aHJvdWdoIG5vZGVzIHRvIGZpbmQgImlibSxzbG90LXBsdWdn
+YWJsZSIgLSB0aGlzIAppcyByYXRoZXIgInNjYW4iIHRoYW4gInJlZ2lzdGVyIiAod2hpY2ggbWF5
+IG5vdCBoYXBwZW4gaWYgdGhlIHByb3BlcnR5IGlzIApub3QgdGhlcmUpLgoKcG52X3BocF9yZWdp
+c3Rlcl9vbmUoKSByZWdpc3RlcnMgb25lIHdoYXQ/IHNsb3Q/IEZyb20gdGhlIG5hbWUgSSBjb25j
+bHVkZSAKdGhhdCBub3QgYSBzbG90IGFzIHRoZXJlIGlzIHBudl9waHBfcmVnaXN0ZXJfc2xvdCgp
+IHdoaWNoIGRvZXMgcmVnaXN0ZXIgb25lIApzbG90LiBTbyBJIHN1cHBvc2UgcG52X3BocF9yZWdp
+c3Rlcl9vbmUoKSByZWdpc3RlcnMgb25lIF9ub2RlXyAod2hpY2ggbWF5IApoYXZlIG11bHRpcGxl
+IHNsb3RzPyB0aGVyZSBzaG91bGQgYmUgcmVhc29uIHdoeSBpdCBpcyBhIHNlcGFyYXRlIGZ1bmN0
+aW9uKS4gCkkgZG8gbm90IGtub3cuLi4KCgoKPiBbdW5yZWxhdGVkIGNvbnRlbnQgcmVtb3ZlZF0K
+CgoKLS0gCkFsZXhleQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
+b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
