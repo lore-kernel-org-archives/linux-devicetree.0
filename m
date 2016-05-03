@@ -1,62 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/9] drm/msm: Drop the gpu binding
-Date: Tue, 3 May 2016 07:42:08 -0500
-Message-ID: <CAL_JsqJJsdxW7a4cbGNs5oC6j-+Cq7+7rwh9W8D7OO+NJK351g@mail.gmail.com>
-References: <1462273081-5814-1-git-send-email-architt@codeaurora.org> <1462273081-5814-3-git-send-email-architt@codeaurora.org>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 5/7] ARM: DTS: da850: Fix wrong number of interrupts
+Date: Tue, 3 May 2016 18:12:01 +0530
+Message-ID: <57289C99.2070208@ti.com>
+References: <1461327617-11435-1-git-send-email-petr@barix.com>
+ <1461327617-11435-6-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1462273081-5814-3-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461327617-11435-6-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 3, 2016 at 5:57 AM, Archit Taneja <architt@codeaurora.org> wrote:
-> The driver currently identifies the GPU components it needs by parsing
-> a phandle list from the 'gpus' DT property.
->
-> This isn't the right binding to go with. So, for now, just search all
-> device nodes and find the gpu node we need by parsing a list of
-> compatible strings.
->
-> Once we know how to link the kms and gpu drivers, we'll drop this method
-> and use the correct binding.
->
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+On Friday 22 April 2016 05:50 PM, Petr Kulhavy wrote:
+> The DA850 supports interrupts 0 to 100. The number of interrupts
+> property "ti,intc-size" was wrongly set to 100. Corrected to 101.
+> 
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+
+This patch is already in my tree and sent for inclusion in v4.7.
+
+Regards,
+Sekhar
+
 > ---
->  drivers/gpu/drm/msm/msm_drv.c | 26 +++++++++++++++++++-------
->  1 file changed, 19 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 30b8f3b..f717a69 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -1068,20 +1068,32 @@ static int compare_of(struct device *dev, void *data)
->         return dev->of_node == data;
->  }
->
-> -static int add_components(struct device *dev, struct component_match **matchptr,
-> -               const char *name)
-> +static const char * const msm_compatible_gpus[] = {
-> +       "qcom,adreno-3xx",
-> +       "qcom,kgsl-3d0",
-> +};
-> +
-> +/*
-> + * We don't know what's the best binding to link the gpu with the drm device.
-> + * Fow now, we just hunt for all the possible gpus that we support, and add them
-> + * as components.
-> + */
-> +static int add_gpu_components(struct device *dev,
-> +                             struct component_match **matchptr)
->  {
-> -       struct device_node *np = dev->of_node;
->         unsigned i;
->
-> -       for (i = 0; ; i++) {
-> +       for (i = 0; i < ARRAY_SIZE(msm_compatible_gpus); i++) {
+> v1: initial
+> v2: no change
+> v3: no change
+> v4: no change
+> 
+>  arch/arm/boot/dts/da850.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 226cda76e77c..5996e765e59c 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -19,7 +19,7 @@
+>  			compatible = "ti,cp-intc";
+>  			interrupt-controller;
+>  			#interrupt-cells = <1>;
+> -			ti,intc-size = <100>;
+> +			ti,intc-size = <101>;
+>  			reg = <0xfffee000 0x2000>;
+>  		};
+>  	};
+> 
 
-You can use of_find_matching_node() here instead of a loop.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
