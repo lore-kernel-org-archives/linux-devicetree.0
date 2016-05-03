@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v9 01/22] PCI: Add pcibios_setup_bridge()
-Date: Tue,  3 May 2016 23:22:32 +1000
-Message-ID: <1462281773-26438-2-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v9 16/22] drivers/of: Split unflatten_dt_node()
+Date: Tue,  3 May 2016 23:22:47 +1000
+Message-ID: <1462281773-26438-17-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,56 +10,319 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently, PowerPC PowerNV platform utilizes ppc_md.pcibios_fixup(),
-which is called for once after PCI probing and resource assignment
-are completed, to allocate platform required resources for PCI devices:
-PE#, IO and MMIO mapping, DMA address translation (TCE) table etc.
-Obviously, it's not hotplug friendly.
+The function unflatten_dt_node() is called recursively to unflatten
+device nodes and properties in the FDT blob. It looks complicated
+and hard to be understood.
 
-This adds weak function pcibios_setup_bridge(), which is called by
-pci_setup_bridge(). PowerPC PowerNV platform will reuse the function
-to assign above platform required resources to newly plugged PCI devices
-during PCI hotplug in subsequent patches.
+This splits the function into 3 functions: populate_properties(),
+populate_node() and unflatten_dt_node(). populate_properties(),
+which is called by populate_node(), creates properties for the
+indicated device node. The later one creates the device nodes
+from FDT blob. populate_node() gets the offset in FDT blob for
+next device nodes and then calls populate_node(). No logical
+changes introduced.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/setup-bus.c | 5 +++++
- include/linux/pci.h     | 1 +
- 2 files changed, 6 insertions(+)
+ drivers/of/fdt.c | 249 ++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 147 insertions(+), 102 deletions(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 55641a3..d678c46 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -695,11 +695,16 @@ static void __pci_setup_bridge(struct pci_bus *bus, unsigned long type)
- 	pci_write_config_word(bridge, PCI_BRIDGE_CONTROL, bus->bridge_ctl);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 3349d2a..d031c78 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -161,39 +161,127 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+ 	return res;
  }
  
-+void __weak pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
-+{
+-/**
+- * unflatten_dt_node - Alloc and populate a device_node from the flat tree
+- * @blob: The parent device tree blob
+- * @mem: Memory chunk to use for allocating device nodes and properties
+- * @poffset: pointer to node in flat tree
+- * @dad: Parent struct device_node
+- * @nodepp: The device_node tree created by the call
+- * @fpsize: Size of the node path up at the current depth.
+- * @dryrun: If true, do not allocate device nodes but still calculate needed
+- * memory size
+- */
+-static void * unflatten_dt_node(const void *blob,
+-				void *mem,
+-				int *poffset,
+-				struct device_node *dad,
+-				struct device_node **nodepp,
+-				unsigned long fpsize,
++static void populate_properties(const void *blob,
++				int offset,
++				void **mem,
++				struct device_node *np,
++				const char *nodename,
+ 				bool dryrun)
+ {
+-	const __be32 *p;
++	struct property *pp, **pprev = NULL;
++	int cur;
++	bool has_name = false;
++
++	pprev = &np->properties;
++	for (cur = fdt_first_property_offset(blob, offset);
++	     cur >= 0;
++	     cur = fdt_next_property_offset(blob, cur)) {
++		const __be32 *val;
++		const char *pname;
++		u32 sz;
++
++		val = fdt_getprop_by_offset(blob, cur, &pname, &sz);
++		if (!val) {
++			pr_warn("%s: Cannot locate property at 0x%x\n",
++				__func__, cur);
++			continue;
++		}
++
++		if (!pname) {
++			pr_warn("%s: Cannot find property name at 0x%x\n",
++				__func__, cur);
++			continue;
++		}
++
++		if (!strcmp(pname, "name"))
++			has_name = true;
++
++		pp = unflatten_dt_alloc(mem, sizeof(struct property),
++					__alignof__(struct property));
++		if (dryrun)
++			continue;
++
++		/* We accept flattened tree phandles either in
++		 * ePAPR-style "phandle" properties, or the
++		 * legacy "linux,phandle" properties.  If both
++		 * appear and have different values, things
++		 * will get weird. Don't do that.
++		 */
++		if (!strcmp(pname, "phandle") ||
++		    !strcmp(pname, "linux,phandle")) {
++			if (!np->phandle)
++				np->phandle = be32_to_cpup(val);
++		}
++
++		/* And we process the "ibm,phandle" property
++		 * used in pSeries dynamic device tree
++		 * stuff
++		 */
++		if (!strcmp(pname, "ibm,phandle"))
++			np->phandle = be32_to_cpup(val);
++
++		pp->name   = (char *)pname;
++		pp->length = sz;
++		pp->value  = (__be32 *)val;
++		*pprev     = pp;
++		pprev      = &pp->next;
++	}
++
++	/* With version 0x10 we may not have the name property,
++	 * recreate it here from the unit name if absent
++	 */
++	if (!has_name) {
++		const char *p = nodename, *ps = p, *pa = NULL;
++		int len;
++
++		while (*p) {
++			if ((*p) == '@')
++				pa = p;
++			else if ((*p) == '/')
++				ps = p + 1;
++			p++;
++		}
++
++		if (pa < ps)
++			pa = p;
++		len = (pa - ps) + 1;
++		pp = unflatten_dt_alloc(mem, sizeof(struct property) + len,
++					__alignof__(struct property));
++		if (!dryrun) {
++			pp->name   = "name";
++			pp->length = len;
++			pp->value  = pp + 1;
++			*pprev     = pp;
++			pprev      = &pp->next;
++			memcpy(pp->value, ps, len - 1);
++			((char *)pp->value)[len - 1] = 0;
++			pr_debug("fixed up name for %s -> %s\n",
++				 nodename, (char *)pp->value);
++		}
++	}
++
++	if (!dryrun)
++		*pprev = NULL;
 +}
 +
- void pci_setup_bridge(struct pci_bus *bus)
- {
- 	unsigned long type = IORESOURCE_IO | IORESOURCE_MEM |
- 				  IORESOURCE_PREFETCH;
++static unsigned long populate_node(const void *blob,
++				   int offset,
++				   void **mem,
++				   struct device_node *dad,
++				   unsigned long fpsize,
++				   struct device_node **pnp,
++				   bool dryrun)
++{
+ 	struct device_node *np;
+-	struct property *pp, **prev_pp = NULL;
+ 	const char *pathp;
+ 	unsigned int l, allocl;
+-	static int depth;
+-	int old_depth;
+-	int offset;
+-	int has_name = 0;
+ 	int new_format = 0;
  
-+	pcibios_setup_bridge(bus, type);
- 	__pci_setup_bridge(bus, type);
- }
+-	pathp = fdt_get_name(blob, *poffset, &l);
+-	if (!pathp)
+-		return mem;
++	pathp = fdt_get_name(blob, offset, &l);
++	if (!pathp) {
++		*pnp = NULL;
++		return 0;
++	}
  
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 004b813..a17f0e8 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -856,6 +856,7 @@ void pci_stop_and_remove_bus_device_locked(struct pci_dev *dev);
- void pci_stop_root_bus(struct pci_bus *bus);
- void pci_remove_root_bus(struct pci_bus *bus);
- void pci_setup_cardbus(struct pci_bus *bus);
-+void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type);
- void pci_sort_breadthfirst(void);
- #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
- #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
+ 	allocl = ++l;
+ 
+@@ -223,7 +311,7 @@ static void * unflatten_dt_node(const void *blob,
+ 		}
+ 	}
+ 
+-	np = unflatten_dt_alloc(&mem, sizeof(struct device_node) + allocl,
++	np = unflatten_dt_alloc(mem, sizeof(struct device_node) + allocl,
+ 				__alignof__(struct device_node));
+ 	if (!dryrun) {
+ 		char *fn;
+@@ -246,89 +334,15 @@ static void * unflatten_dt_node(const void *blob,
+ 		}
+ 		memcpy(fn, pathp, l);
+ 
+-		prev_pp = &np->properties;
+ 		if (dad != NULL) {
+ 			np->parent = dad;
+ 			np->sibling = dad->child;
+ 			dad->child = np;
+ 		}
+ 	}
+-	/* process properties */
+-	for (offset = fdt_first_property_offset(blob, *poffset);
+-	     (offset >= 0);
+-	     (offset = fdt_next_property_offset(blob, offset))) {
+-		const char *pname;
+-		u32 sz;
+ 
+-		if (!(p = fdt_getprop_by_offset(blob, offset, &pname, &sz))) {
+-			offset = -FDT_ERR_INTERNAL;
+-			break;
+-		}
+-
+-		if (pname == NULL) {
+-			pr_info("Can't find property name in list !\n");
+-			break;
+-		}
+-		if (strcmp(pname, "name") == 0)
+-			has_name = 1;
+-		pp = unflatten_dt_alloc(&mem, sizeof(struct property),
+-					__alignof__(struct property));
+-		if (!dryrun) {
+-			/* We accept flattened tree phandles either in
+-			 * ePAPR-style "phandle" properties, or the
+-			 * legacy "linux,phandle" properties.  If both
+-			 * appear and have different values, things
+-			 * will get weird.  Don't do that. */
+-			if ((strcmp(pname, "phandle") == 0) ||
+-			    (strcmp(pname, "linux,phandle") == 0)) {
+-				if (np->phandle == 0)
+-					np->phandle = be32_to_cpup(p);
+-			}
+-			/* And we process the "ibm,phandle" property
+-			 * used in pSeries dynamic device tree
+-			 * stuff */
+-			if (strcmp(pname, "ibm,phandle") == 0)
+-				np->phandle = be32_to_cpup(p);
+-			pp->name = (char *)pname;
+-			pp->length = sz;
+-			pp->value = (__be32 *)p;
+-			*prev_pp = pp;
+-			prev_pp = &pp->next;
+-		}
+-	}
+-	/* with version 0x10 we may not have the name property, recreate
+-	 * it here from the unit name if absent
+-	 */
+-	if (!has_name) {
+-		const char *p1 = pathp, *ps = pathp, *pa = NULL;
+-		int sz;
+-
+-		while (*p1) {
+-			if ((*p1) == '@')
+-				pa = p1;
+-			if ((*p1) == '/')
+-				ps = p1 + 1;
+-			p1++;
+-		}
+-		if (pa < ps)
+-			pa = p1;
+-		sz = (pa - ps) + 1;
+-		pp = unflatten_dt_alloc(&mem, sizeof(struct property) + sz,
+-					__alignof__(struct property));
+-		if (!dryrun) {
+-			pp->name = "name";
+-			pp->length = sz;
+-			pp->value = pp + 1;
+-			*prev_pp = pp;
+-			prev_pp = &pp->next;
+-			memcpy(pp->value, ps, sz - 1);
+-			((char *)pp->value)[sz - 1] = 0;
+-			pr_debug("fixed up name for %s -> %s\n", pathp,
+-				(char *)pp->value);
+-		}
+-	}
++	populate_properties(blob, offset, mem, np, pathp, dryrun);
+ 	if (!dryrun) {
+-		*prev_pp = NULL;
+ 		np->name = of_get_property(np, "name", NULL);
+ 		np->type = of_get_property(np, "device_type", NULL);
+ 
+@@ -338,6 +352,37 @@ static void * unflatten_dt_node(const void *blob,
+ 			np->type = "<NULL>";
+ 	}
+ 
++	*pnp = np;
++	return fpsize;
++}
++
++/**
++ * unflatten_dt_node - Alloc and populate a device_node from the flat tree
++ * @blob: The parent device tree blob
++ * @mem: Memory chunk to use for allocating device nodes and properties
++ * @poffset: pointer to node in flat tree
++ * @dad: Parent struct device_node
++ * @nodepp: The device_node tree created by the call
++ * @fpsize: Size of the node path up at the current depth.
++ * @dryrun: If true, do not allocate device nodes but still calculate needed
++ * memory size
++ */
++static void *unflatten_dt_node(const void *blob,
++			       void *mem,
++			       int *poffset,
++			       struct device_node *dad,
++			       struct device_node **nodepp,
++			       unsigned long fpsize,
++			       bool dryrun)
++{
++	struct device_node *np;
++	static int depth;
++	int old_depth;
++
++	fpsize = populate_node(blob, *poffset, &mem, dad, fpsize, &np, dryrun);
++	if (!fpsize)
++		return mem;
++
+ 	old_depth = depth;
+ 	*poffset = fdt_next_node(blob, *poffset, &depth);
+ 	if (depth < 0)
 -- 
 2.1.0
