@@ -1,73 +1,139 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 5/6] pinctrl: tegra: Add DT binding for io pads control
-Date: Tue, 3 May 2016 14:33:25 +0100
-Message-ID: <5728A8A5.4080603@nvidia.com>
-References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com>
- <1462191434-28933-6-git-send-email-ldewangan@nvidia.com>
- <57289D3D.40301@nvidia.com> <57289F88.6040203@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57289F88.6040203@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v9 07/22] powerpc/powernv: Setup PE for root bus
+Date: Tue,  3 May 2016 23:22:38 +1000
+Message-ID: <1462281773-26438-8-git-send-email-gwshan@linux.vnet.ibm.com>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+There is no parent bridge for root bus, meaning pcibios_setup_bridge()
+isn't invoked for root bus. The PE for root bus is the ancestor of
+other PEs in PELTV. It means we need PE for root bus populated before
+all others.
 
-On 03/05/16 13:54, Laxman Dewangan wrote:
-> 
-> On Tuesday 03 May 2016 06:14 PM, Jon Hunter wrote:
->> On 02/05/16 13:17, Laxman Dewangan wrote:
->>> +
->>> +The voltage supported on the pads are 1.8V and 3.3V. The enums are
->>> defined as:
->>> +    For 1.8V, use TEGRA_IO_PAD_POWER_SOURCE_1800000UV
->>> +    For 3.3V, use TEGRA_IO_PAD_POWER_SOURCE_3300000UV
->> Are these still necessary now that the driver is using uV? Can't we just
->> use integer values for 1800000 and 3300000 in the DTS directly?
->>
-> The config param and value are packed in u32 with 16bit each So we can
-> not make uV in 16bit until we do conversion of uV->mV.
-> Hence suggestion came from Stephen that we can have enum for Nvidia
-> specific and what actually it supports by HW. HW does not support any
-> other voltage.
+This populates the PE for root bus in pcibios_setup_bridge() path
+if it's not existing. The PE number next to the reserved one is
+used as the PE# to avoid holes in continuous M64 space.
 
-Ah yes I see.
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+---
+ arch/powerpc/platforms/powernv/pci-ioda.c | 49 ++++++++++++++++++++++++-------
+ arch/powerpc/platforms/powernv/pci.h      |  2 ++
+ 2 files changed, 41 insertions(+), 10 deletions(-)
 
-> 
->>> +Required subnode-properties:
->>> +==========================
->>> +- pins : An array of strings. Each string contains the name of an IO
->>> pads. Valid
->>> +     values for these names are listed below.
->> Please see my previous comments.
-> 
-> This is taken from other dt binding docs for description. We can have
-> array of string.
-
-OK.
-
-> As all value of pins are not supporting all property and hence I
-> explicitly wrote under properties.
-
-I don't find it very clear. I thought all pins support the low power
-modes so I think it is clearer to list all the pin names under the pins
-description.
-
->>> +Optional subnode-properties:
->>> +==========================
->>> +-nvidia,power-source-voltage:    Integer. The voltage level of IO
->>> pads. The
->> I think I prefer nvidia,io-voltage or something. You can describe what
->> this means in this doc. In fact, the current description here does not
->> explicitly state that this voltage, is the voltage the pad is configured
->> to operate at versus the voltage of the IO rail.
-> 
-> Linus suggested this dt property name to make more readable and generic
-> and meaningful with other property :power-source.
-
-OK.
-
-Jon
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index f63902a..de3f292 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -201,14 +201,14 @@ static int pnv_ioda2_init_m64(struct pnv_phb *phb)
+ 	set_bit(phb->ioda.m64_bar_idx, &phb->ioda.m64_bar_alloc);
+ 
+ 	/*
+-	 * Strip off the segment used by the reserved PE, which is
+-	 * expected to be 0 or last one of PE capabicity.
++	 * Exclude the segments for reserved and root bus PE, which
++	 * are first or last two PEs.
+ 	 */
+ 	r = &phb->hose->mem_resources[1];
+ 	if (phb->ioda.reserved_pe_idx == 0)
+-		r->start += phb->ioda.m64_segsize;
++		r->start += (2 * phb->ioda.m64_segsize);
+ 	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+-		r->end -= phb->ioda.m64_segsize;
++		r->end -= (2 * phb->ioda.m64_segsize);
+ 	else
+ 		pr_warn("  Cannot strip M64 segment for reserved PE#%d\n",
+ 			phb->ioda.reserved_pe_idx);
+@@ -288,14 +288,14 @@ static int pnv_ioda1_init_m64(struct pnv_phb *phb)
+ 	}
+ 
+ 	/*
+-	 * Exclude the segment used by the reserved PE, which
+-	 * is expected to be 0 or last supported PE#.
++	 * Exclude the segments for reserved and root bus PE, which
++	 * are first or last two PEs.
+ 	 */
+ 	r = &phb->hose->mem_resources[1];
+ 	if (phb->ioda.reserved_pe_idx == 0)
+-		r->start += phb->ioda.m64_segsize;
++		r->start += (2 * phb->ioda.m64_segsize);
+ 	else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1))
+-		r->end -= phb->ioda.m64_segsize;
++		r->end -= (2 * phb->ioda.m64_segsize);
+ 	else
+ 		pr_warn("  Cannot cut M64 segment for reserved PE#%d\n",
+ 			phb->ioda.reserved_pe_idx);
+@@ -1066,8 +1066,13 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+ 		return NULL;
+ 	}
+ 
++	/* PE number for root bus should have been reserved */
++	if (pci_is_root_bus(bus) &&
++	    phb->ioda.root_pe_idx != IODA_INVALID_PE)
++		pe = &phb->ioda.pe_array[phb->ioda.root_pe_idx];
++
+ 	/* Check if PE is determined by M64 */
+-	if (phb->pick_m64_pe)
++	if (!pe && phb->pick_m64_pe)
+ 		pe = phb->pick_m64_pe(bus, all);
+ 
+ 	/* The PE number isn't pinned by M64 */
+@@ -3149,6 +3154,15 @@ static void pnv_pci_setup_bridge(struct pci_bus *bus, unsigned long type)
+ 	struct pnv_ioda_pe *pe;
+ 	bool all = (pci_pcie_type(bridge) == PCI_EXP_TYPE_PCI_BRIDGE);
+ 
++	/* The PE for root bus should be realized before any one else */
++	if (!phb->ioda.root_pe_populated) {
++		pe = pnv_ioda_setup_bus_PE(phb->hose->bus, false);
++		if (pe) {
++			phb->ioda.root_pe_idx = pe->pe_number;
++			phb->ioda.root_pe_populated = true;
++		}
++	}
++
+ 	/* Don't assign PE to PCI bus, which doesn't have subordinate devices */
+ 	if (list_empty(&bus->devices))
+ 		return;
+@@ -3413,7 +3427,22 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 			phb->ioda.dma32_segmap[segno] = IODA_INVALID_PE;
+ 	}
+ 	phb->ioda.pe_array = aux + pemap_off;
+-	set_bit(phb->ioda.reserved_pe_idx, phb->ioda.pe_alloc);
++
++	/*
++	 * Choose PE number for root bus, which shouldn't have
++	 * M64 resources consumed by its child devices. To pick
++	 * the PE number adjacent to the reserved one if possible.
++	 */
++	pnv_ioda_reserve_pe(phb, phb->ioda.reserved_pe_idx);
++	if (phb->ioda.reserved_pe_idx == 0) {
++		phb->ioda.root_pe_idx = 1;
++		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
++	} else if (phb->ioda.reserved_pe_idx == (phb->ioda.total_pe_num - 1)) {
++		phb->ioda.root_pe_idx = phb->ioda.reserved_pe_idx - 1;
++		pnv_ioda_reserve_pe(phb, phb->ioda.root_pe_idx);
++	} else {
++		phb->ioda.root_pe_idx = IODA_INVALID_PE;
++	}
+ 
+ 	INIT_LIST_HEAD(&phb->ioda.pe_list);
+ 	mutex_init(&phb->ioda.pe_list_mutex);
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index 80f5326..a81bf01 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -114,6 +114,8 @@ struct pnv_phb {
+ 		/* Global bridge info */
+ 		unsigned int		total_pe_num;
+ 		unsigned int		reserved_pe_idx;
++		unsigned int		root_pe_idx;
++		bool			root_pe_populated;
+ 
+ 		/* 32-bit MMIO window */
+ 		unsigned int		m32_size;
+-- 
+2.1.0
