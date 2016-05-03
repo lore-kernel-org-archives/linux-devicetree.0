@@ -1,68 +1,136 @@
-From: "J.D. Schroeder" <Linux.HWI@garmin.com>
-Subject: Re: [PATCH v2 2/3] ARM: DRA7x: dts: Update the OSC_32K_CLK frequency
-Date: Tue, 3 May 2016 08:31:11 -0500
-Message-ID: <5728A81F.4050906@garmin.com>
-References: <20160427171658.GA5995@atomide.com>
- <1462209123-7332-1-git-send-email-Linux.HWI@garmin.com>
- <1462209123-7332-3-git-send-email-Linux.HWI@garmin.com>
- <57285E66.2000708@ti.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v9 17/22] drivers/of: Avoid recursively calling
+ unflatten_dt_node()
+Date: Tue,  3 May 2016 23:22:48 +1000
+Message-ID: <1462281773-26438-18-git-send-email-gwshan@linux.vnet.ibm.com>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57285E66.2000708@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: jay.schroeder@garmin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, alistair@popple.id.au, aik@ozlabs.ru, linux-pci@vger.kernel.org, Gavin Shan <gwshan@linux.vnet.ibm.com>, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2016 03:16 AM, Tero Kristo wrote:
-> On 02/05/16 20:12, J.D. Schroeder wrote:
->> From: "J.D. Schroeder" <jay.schroeder@garmin.com>
->>
->> This commit updates the OSC_32K_CLK (secure_32k_clk_src_ck) frequency
->> from the precise 32kHz frequency (i.e., 32.768 kHz) to a more
->> accurate frequency of ~34.6 kHz. Actual measured frequencies of the
->> clock vary from processor to processor anywhere from 34.4 kHz up to
->> 34.8 kHz. Note that the ~34 kHz frequency clock is generated
->> internally by the processor, not an input to the processor. This
->> change makes it more clear that the consumer of the
->> secure_32k_clk_src_ck will not get a precise 32.768 kHz frequency
->> output.
->>
->> Signed-off-by: J.D. Schroeder <jay.schroeder@garmin.com>
->> Reviewed-by: Trenton Andres <trenton.andres@garmin.com>
->> ---
->>   arch/arm/boot/dts/dra7xx-clocks.dtsi | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi
->> b/arch/arm/boot/dts/dra7xx-clocks.dtsi
->> index 3f0c61d..f7ec976 100644
->> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
->> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
->> @@ -95,7 +95,7 @@
->>       secure_32k_clk_src_ck: secure_32k_clk_src_ck {
->>           #clock-cells = <0>;
->>           compatible = "fixed-clock";
->> -        clock-frequency = <32768>;
->> +        clock-frequency = <34600>; /* approximate frequency */
->>       };
->>
->>       sys_clk32_crystal_ck: sys_clk32_crystal_ck {
->>
-> 
-> I still don't agree with this patch. The actual frequency can drift much more,
-> you are just seeing this number at your setup.
-
-Yes, it can drift significantly from processor to processor. Do you agree that
-this frequency is closer to what can be expected than 32768 Hz?
-
-Like I said, I would have renamed the clock also but I opted to go the less
-obtrusive route while still helping others that might think they can
-reasonably use this clock in their design as a 32768 Hz clock source. Perhaps
-my comment and selection of the approximate frequency is not the best (I'm
-open for suggestions). However, I do think this change is an improvement and
-clarifying change to what is currently present in the clock description.
-
--JD
+SW4gY3VycmVudCBpbXBsZW1lbnRhdGlvbiwgdW5mbGF0dGVuX2R0X25vZGUoKSBpcyBjYWxsZWQg
+cmVjdXJzaXZlbHkKdG8gdW5mbGF0dGVuIGRldmljZSBub2RlcyBpbiBGRFQgYmxvYi4gSXQncyBz
+dHJlc3MgdG8gbGltaXRlZCBzdGFjawpjYXBhY2l0eSwgZXNwZWNpYWxseSB0byBhZG9wdCB0aGUg
+ZnVuY3Rpb24gdG8gdW5mbGF0dGVuIGRldmljZSBzdWItdHJlZQp0aGF0IHBvc3NpYmx5IGhhcyBt
+dWx0aXBsZSByb290IG5vZGVzLiBJbiB0aGF0IGNhc2UsIHdlIHJ1bnMgb3V0IG9mCnN0YWNrIGFu
+ZCB0aGUgc3lzdGVtIGNhbid0IGJvb3QgdXAgc3VjY2Vzc2Z1bGx5LgoKSW4gb3JkZXIgdG8gcmV1
+c2UgdGhlIGZ1bmN0aW9uIHRvIHVuZmxhdHRlbiBkZXZpY2Ugc3ViLXRyZWUsIHRoaXMgYXZvaWRz
+CmNhbGxpbmcgdGhlIGZ1bmN0aW9uIHJlY3Vyc2l2ZWx5LCBtZWFuaW5nIHRoZSBkZXZpY2Ugbm9k
+ZXMgYXJlIHVuZmxhdHRlbmVkCmluIG9uZSBjYWxsIG9uIHVuZmxhdHRlbl9kdF9ub2RlKCk6IHR3
+byBhcnJheXMgYXJlIGludHJvZHVjZWQgdG8gdHJhY2sgdGhlCnBhcmVudCBwYXRoIHNpemUgYW5k
+IHRoZSBkZXZpY2Ugbm9kZSBvZiBjdXJyZW50IGxldmVsIG9mIGRlcHRoLCB3aGljaCB3aWxsCmJl
+IHVzZWQgYnkgdGhlIGRldmljZSBub2RlIG9uIG5leHQgbGV2ZWwgb2YgZGVwdGggdG8gYmUgdW5m
+bGF0dGVuZWQuIEFsbApkZXZpY2Ugbm9kZXMgaW4gbW9yZSB0aGFuIDY0IGxldmVsIG9mIGRlcHRo
+IGFyZSBkcm9wcGVkIGFuZCBob3BlZnVsbHksCnRoZSBzeXN0ZW0gY2FuIGJvb3QgdXAgc3VjY2Vz
+c2Z1bGx5IHdpdGggdGhlIHBhcnRpYWwgZGV2aWNlLXRyZWUuCgpBbHNvLCB0aGUgcGFyYW1ldGVy
+ICJwb2Zmc2V0IiBhbmQgImZwc2l6ZSIgYXJlIHVudXNlZCBhbmQgZHJvcHBlZCBhbmQgdGhlCnBh
+cmFtZXRlciAiZHJ5cnVuIiBpcyBmaWd1cmVkIG91dCBmcm9tICJtZW0gPT0gTlVMTCIuIEJlc2lk
+ZXMsIHRoZSByZXR1cm4KdmFsdWUgb2YgdGhlIGZ1bmN0aW9uIGlzIGNoYW5nZWQgdG8gaW5kaWNh
+dGUgdGhlIHNpemUgb2YgbWVtb3J5IGNvbnN1bWVkIGJ5CnRoZSB1bmZsYXR0ZW4gZGV2aWNlIHRy
+ZWUgb3IgZXJyb3IgY29kZS4KClNpZ25lZC1vZmYtYnk6IEdhdmluIFNoYW4gPGd3c2hhbkBsaW51
+eC52bmV0LmlibS5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgot
+LS0KIGRyaXZlcnMvb2YvZmR0LmMgfCAxMjIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlvbnMo
+KyksIDQ4IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvZmR0LmMgYi9kcml2
+ZXJzL29mL2ZkdC5jCmluZGV4IGQwMzFjNzguLmQxZDUzMDkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+b2YvZmR0LmMKKysrIGIvZHJpdmVycy9vZi9mZHQuYwpAQCAtMzU2LDYzICszNTYsOTAgQEAgc3Rh
+dGljIHVuc2lnbmVkIGxvbmcgcG9wdWxhdGVfbm9kZShjb25zdCB2b2lkICpibG9iLAogCXJldHVy
+biBmcHNpemU7CiB9CiAKK3N0YXRpYyB2b2lkIHJldmVyc2Vfbm9kZXMoc3RydWN0IGRldmljZV9u
+b2RlICpwYXJlbnQpCit7CisJc3RydWN0IGRldmljZV9ub2RlICpjaGlsZCwgKm5leHQ7CisKKwkv
+KiBJbi1kZXB0aCBmaXJzdCAqLworCWNoaWxkID0gcGFyZW50LT5jaGlsZDsKKwl3aGlsZSAoY2hp
+bGQpIHsKKwkJcmV2ZXJzZV9ub2RlcyhjaGlsZCk7CisKKwkJY2hpbGQgPSBjaGlsZC0+c2libGlu
+ZzsKKwl9CisKKwkvKiBSZXZlcnNlIHRoZSBub2RlcyBpbiB0aGUgY2hpbGQgbGlzdCAqLworCWNo
+aWxkID0gcGFyZW50LT5jaGlsZDsKKwlwYXJlbnQtPmNoaWxkID0gTlVMTDsKKwl3aGlsZSAoY2hp
+bGQpIHsKKwkJbmV4dCA9IGNoaWxkLT5zaWJsaW5nOworCisJCWNoaWxkLT5zaWJsaW5nID0gcGFy
+ZW50LT5jaGlsZDsKKwkJcGFyZW50LT5jaGlsZCA9IGNoaWxkOworCQljaGlsZCA9IG5leHQ7CisJ
+fQorfQorCiAvKioKICAqIHVuZmxhdHRlbl9kdF9ub2RlIC0gQWxsb2MgYW5kIHBvcHVsYXRlIGEg
+ZGV2aWNlX25vZGUgZnJvbSB0aGUgZmxhdCB0cmVlCiAgKiBAYmxvYjogVGhlIHBhcmVudCBkZXZp
+Y2UgdHJlZSBibG9iCiAgKiBAbWVtOiBNZW1vcnkgY2h1bmsgdG8gdXNlIGZvciBhbGxvY2F0aW5n
+IGRldmljZSBub2RlcyBhbmQgcHJvcGVydGllcwotICogQHBvZmZzZXQ6IHBvaW50ZXIgdG8gbm9k
+ZSBpbiBmbGF0IHRyZWUKICAqIEBkYWQ6IFBhcmVudCBzdHJ1Y3QgZGV2aWNlX25vZGUKICAqIEBu
+b2RlcHA6IFRoZSBkZXZpY2Vfbm9kZSB0cmVlIGNyZWF0ZWQgYnkgdGhlIGNhbGwKLSAqIEBmcHNp
+emU6IFNpemUgb2YgdGhlIG5vZGUgcGF0aCB1cCBhdCB0aGUgY3VycmVudCBkZXB0aC4KLSAqIEBk
+cnlydW46IElmIHRydWUsIGRvIG5vdCBhbGxvY2F0ZSBkZXZpY2Ugbm9kZXMgYnV0IHN0aWxsIGNh
+bGN1bGF0ZSBuZWVkZWQKLSAqIG1lbW9yeSBzaXplCisgKgorICogSXQgcmV0dXJucyB0aGUgc2l6
+ZSBvZiB1bmZsYXR0ZW5lZCBkZXZpY2UgdHJlZSBvciBlcnJvciBjb2RlCiAgKi8KLXN0YXRpYyB2
+b2lkICp1bmZsYXR0ZW5fZHRfbm9kZShjb25zdCB2b2lkICpibG9iLAotCQkJICAgICAgIHZvaWQg
+Km1lbSwKLQkJCSAgICAgICBpbnQgKnBvZmZzZXQsCi0JCQkgICAgICAgc3RydWN0IGRldmljZV9u
+b2RlICpkYWQsCi0JCQkgICAgICAgc3RydWN0IGRldmljZV9ub2RlICoqbm9kZXBwLAotCQkJICAg
+ICAgIHVuc2lnbmVkIGxvbmcgZnBzaXplLAotCQkJICAgICAgIGJvb2wgZHJ5cnVuKQorc3RhdGlj
+IGludCB1bmZsYXR0ZW5fZHRfbm9kZShjb25zdCB2b2lkICpibG9iLAorCQkJICAgICB2b2lkICpt
+ZW0sCisJCQkgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGFkLAorCQkJICAgICBzdHJ1Y3QgZGV2
+aWNlX25vZGUgKipub2RlcHApCiB7Ci0Jc3RydWN0IGRldmljZV9ub2RlICpucDsKLQlzdGF0aWMg
+aW50IGRlcHRoOwotCWludCBvbGRfZGVwdGg7CisJc3RydWN0IGRldmljZV9ub2RlICpyb290Owor
+CWludCBvZmZzZXQgPSAwLCBkZXB0aCA9IDA7CisjZGVmaW5lIEZEVF9NQVhfREVQVEgJNjQKKwl1
+bnNpZ25lZCBsb25nIGZwc2l6ZXNbRkRUX01BWF9ERVBUSF07CisJc3RydWN0IGRldmljZV9ub2Rl
+ICpucHNbRkRUX01BWF9ERVBUSF07CisJdm9pZCAqYmFzZSA9IG1lbTsKKwlib29sIGRyeXJ1biA9
+ICFiYXNlOwogCi0JZnBzaXplID0gcG9wdWxhdGVfbm9kZShibG9iLCAqcG9mZnNldCwgJm1lbSwg
+ZGFkLCBmcHNpemUsICZucCwgZHJ5cnVuKTsKLQlpZiAoIWZwc2l6ZSkKLQkJcmV0dXJuIG1lbTsK
+KwlpZiAobm9kZXBwKQorCQkqbm9kZXBwID0gTlVMTDsKKworCXJvb3QgPSBkYWQ7CisJZnBzaXpl
+c1tkZXB0aF0gPSBkYWQgPyBzdHJsZW4ob2Zfbm9kZV9mdWxsX25hbWUoZGFkKSkgOiAwOworCW5w
+c1tkZXB0aCsrXSA9IGRhZDsKKwlmb3IgKG9mZnNldCA9IDA7CisJICAgICBvZmZzZXQgPj0gMDsK
+KwkgICAgIG9mZnNldCA9IGZkdF9uZXh0X25vZGUoYmxvYiwgb2Zmc2V0LCAmZGVwdGgpKSB7CisJ
+CWlmIChXQVJOX09OX09OQ0UoZGVwdGggPj0gRkRUX01BWF9ERVBUSCkpCisJCQljb250aW51ZTsK
+IAotCW9sZF9kZXB0aCA9IGRlcHRoOwotCSpwb2Zmc2V0ID0gZmR0X25leHRfbm9kZShibG9iLCAq
+cG9mZnNldCwgJmRlcHRoKTsKLQlpZiAoZGVwdGggPCAwKQotCQlkZXB0aCA9IDA7Ci0Jd2hpbGUg
+KCpwb2Zmc2V0ID4gMCAmJiBkZXB0aCA+IG9sZF9kZXB0aCkKLQkJbWVtID0gdW5mbGF0dGVuX2R0
+X25vZGUoYmxvYiwgbWVtLCBwb2Zmc2V0LCBucCwgTlVMTCwKLQkJCQkJZnBzaXplLCBkcnlydW4p
+OworCQlmcHNpemVzW2RlcHRoXSA9IHBvcHVsYXRlX25vZGUoYmxvYiwgb2Zmc2V0LCAmbWVtLAor
+CQkJCQkgICAgICAgbnBzW2RlcHRoIC0gMV0sCisJCQkJCSAgICAgICBmcHNpemVzW2RlcHRoIC0g
+MV0sCisJCQkJCSAgICAgICAmbnBzW2RlcHRoXSwgZHJ5cnVuKTsKKwkJaWYgKCFmcHNpemVzW2Rl
+cHRoXSkKKwkJCXJldHVybiBtZW0gLSBiYXNlOworCisJCWlmICghZHJ5cnVuICYmIG5vZGVwcCAm
+JiAhKm5vZGVwcCkKKwkJCSpub2RlcHAgPSBucHNbZGVwdGhdOworCQlpZiAoIWRyeXJ1biAmJiAh
+cm9vdCkKKwkJCXJvb3QgPSBucHNbZGVwdGhdOworCX0KIAotCWlmICgqcG9mZnNldCA8IDAgJiYg
+KnBvZmZzZXQgIT0gLUZEVF9FUlJfTk9URk9VTkQpCi0JCXByX2VycigidW5mbGF0dGVuOiBlcnJv
+ciAlZCBwcm9jZXNzaW5nIEZEVFxuIiwgKnBvZmZzZXQpOworCWlmIChvZmZzZXQgPCAwICYmIG9m
+ZnNldCAhPSAtRkRUX0VSUl9OT1RGT1VORCkgeworCQlwcl9lcnIoIiVzOiBFcnJvciAlZCBwcm9j
+ZXNzaW5nIEZEVFxuIiwgX19mdW5jX18sIG9mZnNldCk7CisJCXJldHVybiAtRUlOVkFMOworCX0K
+IAogCS8qCiAJICogUmV2ZXJzZSB0aGUgY2hpbGQgbGlzdC4gU29tZSBkcml2ZXJzIGFzc3VtZXMg
+bm9kZSBvcmRlciBtYXRjaGVzIC5kdHMKIAkgKiBub2RlIG9yZGVyCiAJICovCi0JaWYgKCFkcnly
+dW4gJiYgbnAtPmNoaWxkKSB7Ci0JCXN0cnVjdCBkZXZpY2Vfbm9kZSAqY2hpbGQgPSBucC0+Y2hp
+bGQ7Ci0JCW5wLT5jaGlsZCA9IE5VTEw7Ci0JCXdoaWxlIChjaGlsZCkgewotCQkJc3RydWN0IGRl
+dmljZV9ub2RlICpuZXh0ID0gY2hpbGQtPnNpYmxpbmc7Ci0JCQljaGlsZC0+c2libGluZyA9IG5w
+LT5jaGlsZDsKLQkJCW5wLT5jaGlsZCA9IGNoaWxkOwotCQkJY2hpbGQgPSBuZXh0OwotCQl9Ci0J
+fQotCi0JaWYgKG5vZGVwcCkKLQkJKm5vZGVwcCA9IG5wOworCWlmICghZHJ5cnVuKQorCQlyZXZl
+cnNlX25vZGVzKHJvb3QpOwogCi0JcmV0dXJuIG1lbTsKKwlyZXR1cm4gbWVtIC0gYmFzZTsKIH0K
+IAogLyoqCkBAIC00MzEsOCArNDU4LDcgQEAgc3RhdGljIHZvaWQgX191bmZsYXR0ZW5fZGV2aWNl
+X3RyZWUoY29uc3Qgdm9pZCAqYmxvYiwKIAkJCSAgICAgc3RydWN0IGRldmljZV9ub2RlICoqbXlu
+b2RlcywKIAkJCSAgICAgdm9pZCAqICgqZHRfYWxsb2MpKHU2NCBzaXplLCB1NjQgYWxpZ24pKQog
+ewotCXVuc2lnbmVkIGxvbmcgc2l6ZTsKLQlpbnQgc3RhcnQ7CisJaW50IHNpemU7CiAJdm9pZCAq
+bWVtOwogCiAJcHJfZGVidWcoIiAtPiB1bmZsYXR0ZW5fZGV2aWNlX3RyZWUoKVxuIik7CkBAIC00
+NTMsMTEgKzQ3OSwxMiBAQCBzdGF0aWMgdm9pZCBfX3VuZmxhdHRlbl9kZXZpY2VfdHJlZShjb25z
+dCB2b2lkICpibG9iLAogCX0KIAogCS8qIEZpcnN0IHBhc3MsIHNjYW4gZm9yIHNpemUgKi8KLQlz
+dGFydCA9IDA7Ci0Jc2l6ZSA9ICh1bnNpZ25lZCBsb25nKXVuZmxhdHRlbl9kdF9ub2RlKGJsb2Is
+IE5VTEwsICZzdGFydCwgTlVMTCwgTlVMTCwgMCwgdHJ1ZSk7Ci0Jc2l6ZSA9IEFMSUdOKHNpemUs
+IDQpOworCXNpemUgPSB1bmZsYXR0ZW5fZHRfbm9kZShibG9iLCBOVUxMLCBOVUxMLCBOVUxMKTsK
+KwlpZiAoc2l6ZSA8IDApCisJCXJldHVybjsKIAotCXByX2RlYnVnKCIgIHNpemUgaXMgJWx4LCBh
+bGxvY2F0aW5nLi4uXG4iLCBzaXplKTsKKwlzaXplID0gQUxJR04oc2l6ZSwgNCk7CisJcHJfZGVi
+dWcoIiAgc2l6ZSBpcyAlZCwgYWxsb2NhdGluZy4uLlxuIiwgc2l6ZSk7CiAKIAkvKiBBbGxvY2F0
+ZSBtZW1vcnkgZm9yIHRoZSBleHBhbmRlZCBkZXZpY2UgdHJlZSAqLwogCW1lbSA9IGR0X2FsbG9j
+KHNpemUgKyA0LCBfX2FsaWdub2ZfXyhzdHJ1Y3QgZGV2aWNlX25vZGUpKTsKQEAgLTQ2OCw4ICs0
+OTUsNyBAQCBzdGF0aWMgdm9pZCBfX3VuZmxhdHRlbl9kZXZpY2VfdHJlZShjb25zdCB2b2lkICpi
+bG9iLAogCXByX2RlYnVnKCIgIHVuZmxhdHRlbmluZyAlcC4uLlxuIiwgbWVtKTsKIAogCS8qIFNl
+Y29uZCBwYXNzLCBkbyBhY3R1YWwgdW5mbGF0dGVuaW5nICovCi0Jc3RhcnQgPSAwOwotCXVuZmxh
+dHRlbl9kdF9ub2RlKGJsb2IsIG1lbSwgJnN0YXJ0LCBOVUxMLCBteW5vZGVzLCAwLCBmYWxzZSk7
+CisJdW5mbGF0dGVuX2R0X25vZGUoYmxvYiwgbWVtLCBOVUxMLCBteW5vZGVzKTsKIAlpZiAoYmUz
+Ml90b19jcHVwKG1lbSArIHNpemUpICE9IDB4ZGVhZGJlZWYpCiAJCXByX3dhcm5pbmcoIkVuZCBv
+ZiB0cmVlIG1hcmtlciBvdmVyd3JpdHRlbjogJTA4eFxuIiwKIAkJCSAgIGJlMzJfdG9fY3B1cCht
+ZW0gKyBzaXplKSk7Ci0tIAoyLjEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlz
+dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMt
+ZGV2
