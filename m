@@ -1,64 +1,62 @@
-From: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Tue, 3 May 2016 08:02:12 -0700 (PDT)
-Message-ID: <66e4c452-1e34-474b-8973-2d57d9f036d0@googlegroups.com>
-References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
- <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e@googlegroups.com>
- <20160503131437.GV17159@lukather>
-Reply-To: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] ASoC: davinci-mcbsp: add binding for McBSP
+Date: Tue, 3 May 2016 16:10:12 +0100
+Message-ID: <20160503151012.GS6292@sirena.org.uk>
+References: <1461327617-11435-1-git-send-email-petr@barix.com>
+ <57289832.9050904@barix.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_634_1726910865.1462287732758"
-Return-path: <linux-sunxi+bncBD7ORYHCVECRB5P2UK4QKGQEKCOIX7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160503131437.GV17159@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="A3RWl4qWgABmkY4K"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57289832.9050904-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Petr Kulhavy <brain-wDf7oJUeT2I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_634_1726910865.1462287732758
-Content-Type: text/plain; charset=UTF-8
 
-On Tuesday, May 3, 2016 at 4:14:41 PM UTC+3, Maxime Ripard wrote:
-> Hi,
-> 
-> On Tue, May 03, 2016 at 4:12:06 PM UTC+3, Christo Radev wrote:
-> > Hi to All,
-> > 
-> > I have already solved and tested this issue on Armbian build.  Find
-> > patches for both legacy (3.4.111) and mainline (4.5.2) kernels on:
-> > http://forum.armbian.com/index.php/topic/853-armbian-customization/page-2#entry7494
-> > There it is also described how to do eMMC bootable and much more.
-> > 
-> > About the board - Olimex already sold all 3 kinds after migration to
-> > their HW rev. E. One have to specify Lime2-eMMC as
-> > A20-Olinuxino-Lime2-eMMC instead of their old 2 options
-> > A20-Olinuxino-Lime2(-4GB).
-> 
-> Interesting, you have a link to that device?
-> 
-> Thanks,
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+--A3RWl4qWgABmkY4K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have really 2 boards delivered by their local distributor.
+On Tue, May 03, 2016 at 02:23:14PM +0200, Petr Kulhavy wrote:
 
-Unfortunately, they do not update their site. Use the link for NAND option:
-https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXIno-LIME2-4GB/open-source-hardware
-There you can find Users Manual where it is described that eMMC option is available from HW rev. D. The schematic for HW rev. E is also available on their repository:
-https://github.com/OLIMEX/OLINUXINO/tree/master/HARDWARE/A20-OLinuXino-LIME2
+> I'm just wondering if anybody is picking up on this.
 
-On the board both 4GB NAND and eMMC Flash chips can be placed alternatively on the same place. There is difference in some other components as well.
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
+Sending content free pings just adds to the mail volume (if they are
+seen at all) and if something has gone wrong you'll have to resend the
+patches anyway.
 
-If one want to order it from the site probably has to order A20-Olinuxino-Lime2-4GB with note that eMMC option is required. The price is the same.
-------=_Part_634_1726910865.1462287732758--
+> Peter has reviewed the patch set (v3 where the code is identical to v4) a=
+nd
+> Rob has acked the DT part.
+
+I'm not seeing any review from Peter on what's in my inbox...
+
+--A3RWl4qWgABmkY4K
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXKL9TAAoJECTWi3JdVIfQzqYH/2B9nXcr6q7R7tgBFfACWK4G
+G54nd39smGFsgFhMkwEd9mDJO6uxxYVN9Dez+DDd2cwn28nIe238p/YsVey0TXej
+DiyXVRDltFCVGqGKt/12NccVHr9ASEW1l47+FdonmXAwWSq8+0lq/1ncHucK7ZmF
+ijdoSFE43PsNK+hbdtMWLHgE3stUORwG7euXFefejO5QFnAhyP9jor2gjzYy6g+c
+Dq5AwxPJlULvw/oyN3lI1WMd79Rb+VhjxNVEGEHRMZE0mrfDxLGiI94ZuctU3o3c
+kocp3W44eoeKFMqQNPOpXQmWAQfYvQZ4C1FRRpNHe/KtCa90GGXtlpDQ0yEbfbU=
+=J1cQ
+-----END PGP SIGNATURE-----
+
+--A3RWl4qWgABmkY4K--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
