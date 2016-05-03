@@ -1,119 +1,91 @@
-From: Dan Haab <dhaab@luxul.com>
-Subject: [PATCH] ARM: BCM5301X: Add DT for Luxul XAP-1510
-Date: Tue, 3 May 2016 11:28:16 -0600
-Message-ID: <1462296501-5209-1-git-send-email-dhaab@luxul.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] ARM: DRA7x: dts: Update the OSC_32K_CLK frequency
+Date: Tue, 3 May 2016 20:32:44 +0300
+Message-ID: <5728E0BC.3080509@ti.com>
+References: <20160427171658.GA5995@atomide.com>
+ <1462209123-7332-1-git-send-email-Linux.HWI@garmin.com>
+ <1462209123-7332-3-git-send-email-Linux.HWI@garmin.com>
+ <57285E66.2000708@ti.com> <5728A81F.4050906@garmin.com>
+ <20160503164323.GN5995@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Dan Haab <dhaab@luxul.com>, open list <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160503164323.GN5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "J.D. Schroeder" <Linux.HWI-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org, Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Luxul XAP-1510 is an AP device based on BCM4708 SoC. It uses flash
-memory connected to the SPI controller.
+On 03/05/16 19:43, Tony Lindgren wrote:
+> * J.D. Schroeder <Linux.HWI-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org> [160503 06:32]:
+>> On 05/03/2016 03:16 AM, Tero Kristo wrote:
+>>> On 02/05/16 20:12, J.D. Schroeder wrote:
+>>>> From: "J.D. Schroeder" <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> This commit updates the OSC_32K_CLK (secure_32k_clk_src_ck) frequency
+>>>> from the precise 32kHz frequency (i.e., 32.768 kHz) to a more
+>>>> accurate frequency of ~34.6 kHz. Actual measured frequencies of the
+>>>> clock vary from processor to processor anywhere from 34.4 kHz up to
+>>>> 34.8 kHz. Note that the ~34 kHz frequency clock is generated
+>>>> internally by the processor, not an input to the processor. This
+>>>> change makes it more clear that the consumer of the
+>>>> secure_32k_clk_src_ck will not get a precise 32.768 kHz frequency
+>>>> output.
+>>>>
+>>>> Signed-off-by: J.D. Schroeder <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
+>>>> Reviewed-by: Trenton Andres <trenton.andres-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>    arch/arm/boot/dts/dra7xx-clocks.dtsi | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>>>> b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>>>> index 3f0c61d..f7ec976 100644
+>>>> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>>>> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>>>> @@ -95,7 +95,7 @@
+>>>>        secure_32k_clk_src_ck: secure_32k_clk_src_ck {
+>>>>            #clock-cells = <0>;
+>>>>            compatible = "fixed-clock";
+>>>> -        clock-frequency = <32768>;
+>>>> +        clock-frequency = <34600>; /* approximate frequency */
+>>>>        };
+>>>>
+>>>>        sys_clk32_crystal_ck: sys_clk32_crystal_ck {
+>>>>
+>>>
+>>> I still don't agree with this patch. The actual frequency can drift much more,
+>>> you are just seeing this number at your setup.
+>>
+>> Yes, it can drift significantly from processor to processor. Do you agree that
+>> this frequency is closer to what can be expected than 32768 Hz?
+>>
+>> Like I said, I would have renamed the clock also but I opted to go the less
+>> obtrusive route while still helping others that might think they can
+>> reasonably use this clock in their design as a 32768 Hz clock source. Perhaps
+>> my comment and selection of the approximate frequency is not the best (I'm
+>> open for suggestions). However, I do think this change is an improvement and
+>> clarifying change to what is currently present in the clock description.
+>
+> Does a fixed divider calculation of input * (32768 / 0x27e6) make sense
+> here too as pointed out earlier by Matthijs for the ti81xx?
 
-Signed-off-by: Dan Haab <dhaab@luxul.com>
----
- arch/arm/boot/dts/Makefile                   |    1 +
- arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts |   67 ++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
+Not really, the hardware setup for this clock is not like that. Also, as 
+it is security related, this is kind of sensitive area to discuss 
+publicly. Personally I would not recommend using this clock for any 
+timing sensitive applications. May I ask why you are interested in the 
+exact clock rate of this clock anyway?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923..c499d09 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -71,6 +71,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
- 	bcm4708-asus-rt-ac68u.dtb \
- 	bcm4708-buffalo-wzr-1750dhp.dtb \
-+	bcm4708-luxul-xap-1510.dtb \
- 	bcm4708-luxul-xwc-1000.dtb \
- 	bcm4708-netgear-r6250.dtb \
- 	bcm4708-netgear-r6300-v2.dtb \
-diff --git a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
-new file mode 100644
-index 0000000..f4460b5
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
-@@ -0,0 +1,67 @@
-+/*
-+ * Broadcom BCM470X / BCM5301X ARM platform code.
-+ * DTS for Luxul XAP-1510
-+ *
-+ * Copyright 2015 Luxul Inc.
-+ *
-+ * Licensed under the GNU/GPL. See COPYING for details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm4708.dtsi"
-+
-+/ {
-+	compatible = "luxul,xap-1510v1", "brcm,bcm4708";
-+	model = "Luxul XAP-1510 V1";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlycon";
-+	};
-+
-+	memory {
-+		reg = <0x00000000 0x08000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		5ghz {
-+			label = "bcm53xx:blue:5ghz";
-+			gpios = <&chipcommon 13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "none";
-+		};
-+
-+		2ghz {
-+			label = "bcm53xx:blue:2ghz";
-+			gpios = <&chipcommon 14 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "none";
-+		};
-+
-+		status {
-+			label = "bcm53xx:green:status";
-+			gpios = <&chipcommon 15 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "timer";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		restart {
-+			label = "Reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&chipcommon 11 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&spi_nor {
-+	status = "okay";
-+};
--- 
-1.7.9.5
+-Tero
+
+>
+> Regards,
+>
+> Tony
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
