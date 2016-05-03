@@ -1,48 +1,74 @@
-From: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH v5] ARM: bcm2835: dt: Add the ethernet to the device trees
-Date: Tue, 03 May 2016 23:35:45 +0200
-Message-ID: <m3lh3qrfim.fsf@euphor.blino.org>
-References: <1462172811-24206-1-git-send-email-lkundrak@v3.sk>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v7 16/24] i2c: allow adapter drivers to override the
+ adapter locking
+Date: Tue, 3 May 2016 23:38:08 +0200
+Message-ID: <20160503213807.GA2018@tetsubishi>
+References: <1461165484-2314-1-git-send-email-peda@axentia.se>
+ <1461165484-2314-17-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462172811-24206-1-git-send-email-lkundrak-NGH9Lh4a5iE@public.gmane.org> (Lubomir
-	Rintel's message of "Mon, 2 May 2016 09:06:51 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461165484-2314-17-git-send-email-peda@axentia.se>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.kozlo>
 List-Id: devicetree@vger.kernel.org
 
-Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> writes:
+On Wed, Apr 20, 2016 at 05:17:56PM +0200, Peter Rosin wrote:
+> Add i2c_lock_bus() and i2c_unlock_bus(), which call the new lock_bus and
+> unlock_bus ops in the adapter. These funcs/ops take an additional flags
+> argument that indicates for what purpose the adapter is locked.
+> 
+> There are two flags, I2C_LOCK_ADAPTER and I2C_LOCK_SEGMENT, but they are
+> both implemented the same. For now. Locking the adapter means that the
+> whole bus is locked, locking the segment means that only the current bus
+> segment is locked (i.e. i2c traffic on the parent side of mux is still
+> allowed even if the child side of the mux is locked.
+> 
+> Also support a trylock_bus op (but no function to call it, as it is not
+> expected to be needed outside of the i2c core).
+> 
+> Implement i2c_lock_adapter/i2c_unlock_adapter in terms of the new locking
+> scheme (i.e. lock with the I2C_LOCK_ADAPTER flag).
+> 
+> Annotate some of the locking with explicit I2C_LOCK_SEGMENT flags.
 
-> The hub and the ethernet in its port 1 are hardwired on the board.
->
-> Compared to the adapters that can be plugged into the USB ports, this
-> one has no serial EEPROM to store its MAC. Nevertheless, the Raspberry Pi
-> has the MAC address for this adapter in its ROM, accessible from its
-> firmware.
->
-> U-Boot can read out the address and set the local-mac-address property of the
-> node with "ethernet" alias. Let's add the node so that U-Boot can do its
-> business.
->
-> Model B rev2 and Model B+ entries were verified by me, the hierarchy and
-> pid/vid pair for the Version 2 was provided by Peter Chen. Original
-> Model B is a blind shot, though very likely correct.
->
-> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Can you explain a little why it is SEGMENT and not ADAPTER here? That
+probably makes it easier to get into this patch.
 
-Tested-by: Olivier Blin <dev-RZzICDNEOQ/YtjvyW6yDsg@public.gmane.org>
+And to double check my understanding: I was surprised to not see any
+i2c_lock_adapter() or I2C_LOCK_ADAPTER in action. This is because muxes
+call I2C_LOCK_SEGMENT on their parent which in case of the parent being
+the root adapter is essentially the same as I2C_LOCK_ADAPTER. Correct?
 
-Though, I still need the following patch for this DT patch to be useful:
-net/smscx5xx: use the device tree for mac address
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/i2c/i2c-core.c | 46 ++++++++++++++++++++++++++++------------------
+>  include/linux/i2c.h    | 28 ++++++++++++++++++++++++++--
+>  2 files changed, 54 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index 0f2f8484e8ec..21f46d011c33 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -960,10 +960,12 @@ static int i2c_check_addr_busy(struct i2c_adapter *adapter, int addr)
+>  }
+>  
+>  /**
+> - * i2c_lock_adapter - Get exclusive access to an I2C bus segment
+> + * i2c_adapter_lock_bus - Get exclusive access to an I2C bus segment
+>   * @adapter: Target I2C bus segment
+> + * @flags: I2C_LOCK_ADAPTER locks the root i2c adapter, I2C_LOCK_SEGMENT
+> + *	locks only this branch in the adapter tree
+>   */
 
-Thanks for the update Lubomir
+I think this kerneldoc should be moved to i2c_lock_adapter and/or
+i2c_lock_bus() which are now in i2c.h. This is what users will use, not
+this static, adapter-specific implementation. I think it is enough to
+have a comment here explaining what is special in handling adapters.
 
--- 
-Olivier Blin - blino
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+   Wolfram
