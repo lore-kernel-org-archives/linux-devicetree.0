@@ -1,59 +1,129 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] arm64: tegra: fix compatible string for Tegra132 fuse
- node
-Date: Tue, 3 May 2016 17:21:11 +0200
-Message-ID: <20160503152111.GC19539@ulmo.ba.sec>
-References: <1462266577-951-1-git-send-email-wni@nvidia.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 4/6] soc/tegra: pmc: Register PMC child devices as
+ platform device
+Date: Tue, 3 May 2016 16:26:54 +0100
+Message-ID: <5728C33E.1060306@nvidia.com>
+References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com>
+ <1462191434-28933-5-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uXxzq0nDebZQVNAZ"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462266577-951-1-git-send-email-wni@nvidia.com>
+In-Reply-To: <1462191434-28933-5-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: robh+dt@kernel.org, swarren@wwwdotorg.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---uXxzq0nDebZQVNAZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 02/05/16 13:17, Laxman Dewangan wrote:
+> Power Management Controller(PMC) of Tegra does the multiple chip
+> power related functionality for internal and IO interfacing.
+> Some of the functionalities are power gating of IP blocks, IO pads
+> voltage and power state configuration, system power state configurations,
+> wakeup controls etc.
+> 
+> Different functionalities of the PMC are provided through different
+> framework like IO pads control can be provided through pinctrl framework,
+> IO power control is via misc driver etc. All sub functionalities are
+> represented as PMC child devices.
+> 
+> Register the PMC child devices as platform device and fill the child
+> devices table for Tegra210.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> 
+> ---
+> Changes from V1:
+> Reworked on DT for having flat entry and register all child devices
+> as simple platform device instead of of_populate_device().
+> ---
+>  drivers/soc/tegra/pmc.c | 54 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index b3be4b9..625167e 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -132,6 +132,8 @@ struct tegra_pmc_soc {
+>  	const u8 *cpu_powergates;
+>  	const struct tegra_io_pads_control *io_pads_control;
+>  	unsigned int num_io_pads;
+> +	const char **sub_devs_name;
+> +	unsigned int num_sub_devs;
+>  	bool has_tsense_reset;
+>  	bool has_gpu_clamps;
+>  };
+> @@ -158,6 +160,8 @@ struct tegra_pmc_soc {
+>   * @lp0_vec_size: size of the LP0 warm boot code
+>   * @powergates_available: Bitmap of available power gates
+>   * @powergates_lock: mutex for power gate register access
+> + * @pdevs: Platform device for PMC child devices.
+> + * @num_pdevs: Number of platform devices.
+>   */
+>  struct tegra_pmc {
+>  	struct device *dev;
+> @@ -184,6 +188,9 @@ struct tegra_pmc {
+>  	DECLARE_BITMAP(powergates_available, TEGRA_POWERGATE_MAX);
+>  
+>  	struct mutex powergates_lock;
+> +
+> +	struct platform_device **pdevs;
+> +	unsigned int num_pdevs;
 
-On Tue, May 03, 2016 at 05:09:37PM +0800, Wei Ni wrote:
-> This patch changes the compatible of Tegra132 fuse node
-> to "nvidia,tegra132-efuse", instead of "nvidia,tegra1124-efuse".
-> Because the CONFIG_ARCH_TEGRA_124_SOC will not be enabled for
-> Tegra132, the fuse driver can't find the corresponding node.
+We already have num_sub_devs in the soc data, do we really need this?
 
-Okay, that's not really a good reason to modify the DTS. What we should
-do instead is make sure that the OF table contains the entry on Tegra132
-builds. Unless the IP block really is different and Tegra124 and
-Tegra132 aren't compatible in this regard after all.
+>  };
+>  
+>  static struct tegra_pmc *pmc = &(struct tegra_pmc) {
+> @@ -1379,6 +1386,43 @@ out:
+>  	of_node_put(np);
+>  }
+>  
+> +static int  tegra_pmc_init_sub_devs(struct tegra_pmc *pmc)
+> +{
+> +	int ret, i;
+> +
+> +	if (!pmc->soc->num_sub_devs)
+> +		return 0;
+> +
+> +	pmc->pdevs = devm_kzalloc(pmc->dev, sizeof(**pmc->pdevs), GFP_KERNEL);
+> +	if (!pmc->pdevs)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < pmc->soc->num_sub_devs; ++i) {
+> +		pmc->pdevs[i] = platform_device_register_data(pmc->dev,
+> +						pmc->soc->sub_devs_name[i],
+> +						0, NULL, 0);
+> +		if (IS_ERR(pmc->pdevs[i])) {
+> +			ret = PTR_ERR(pmc->pdevs[i]);
+> +			dev_err(pmc->dev,
+> +				"Failed to register platform device for %s: %d\n",
+> +				pmc->soc->sub_devs_name[i], ret);
+> +			goto pdev_cleanups;
+> +		}
+> +		pmc->num_pdevs++;
 
-In the latter case the commit message should reflect the real reason.
+I would get rid of pmc->num_pdevs because isn't this always equal to i here?
 
-Thierry
+> +	}
+> +
+> +	return 0;
+> +
+> +pdev_cleanups:
+> +	for (i = pmc->num_pdevs; i > 0; i--) {
 
---uXxzq0nDebZQVNAZ
-Content-Type: application/pgp-signature; name="signature.asc"
+Here I think this could be ...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+	while (--i) {
 
-iQIcBAABCAAGBQJXKMHnAAoJEN0jrNd/PrOhyXAP/17X5cNsTnPZlKl/meWm26x4
-2zvqqR405vPMaVASWfW/o/8Vi7B3aIuNdYasGbYh6nrhXC0jC+2+jxsLJFVQ82OA
-YzGEhX6sywGAM5HVfr8YgMUuZnqnN1ev5SVAV9u9aj0fy+Kz2ya7tKVA5eUDx/Be
-3xm5ZrFZ8h8zRnXYCCM2tOOmoOUVLzDpWVJ5zWWwFGgk09vRTBKcNkUMIIE3cysz
-o20Tyj3S8gcy2Jnrs1aoUGZWHcmlAV2Pa9FrkBYJJqmXAALcduzM7u+0uf7t45zU
-EhXwwUfU3Nu9gO9vZf0QFHR5L84pZpTD1v+nX7uV2/9FSbQam1s1EH4Rk4KbVuQq
-aRwWQKPuH4Gcxb2LfZVZjRafpCjupkxWaMR+jLX1hxKO/RmLd/mCenqOgiegJ2vG
-fUUJOwJXIfVl+e00ku4RxpSs79Jz6YqLYgkQ0ISogfIhIaXxpCSdTsNB+stG81YN
-zT+i2kZ3fYyoTyITIKLPmRK4WEhHBVf9hTK/KYy3Ayqo2CvRjmk1HNwtP6jjibvQ
-TMGQe158Pp0Wwb7Z50yn1iq10kbBTyvcXRsGUYWxZGtuKIQ4zrqFXOXC6G4anhgk
-dsqif4tDGsH7WRXdMVSTL3hnJmeQiFoKg/HyooVLujrXwQ49f3veC5Htts6PrnNT
-gSjaF3h3UZTELX/ljP0l
-=k9lg
------END PGP SIGNATURE-----
+> +		platform_device_unregister(pmc->pdevs[i - 1]);
+> +		pmc->pdevs[i - 1] = NULL;
+> +	}
+> +	pmc->num_pdevs = 0;
+> +
+> +	return ret;
+> +}
 
---uXxzq0nDebZQVNAZ--
+Cheers
+Jon
