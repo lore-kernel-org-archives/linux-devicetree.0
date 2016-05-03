@@ -1,54 +1,97 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 3/6] soc/tegra: pmc: Add support for IO pads power state
- and voltage
-Date: Tue, 3 May 2016 18:37:14 +0530
-Message-ID: <5728A282.5020208@nvidia.com>
-References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com> <1462191434-28933-4-git-send-email-ldewangan@nvidia.com> <57289AC0.4090604@nvidia.com> <57289A2B.7040501@nvidia.com> <57289FB5.5040705@nvidia.com> <57289E35.8040400@nvidia.com> <5728A3A1.2030304@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5728A3A1.2030304@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v9 08/22] powerpc/powernv: Extend PCI bridge resources
+Date: Tue,  3 May 2016 23:22:39 +1000
+Message-ID: <1462281773-26438-9-git-send-email-gwshan@linux.vnet.ibm.com>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+The PCI slots are associated with root port or downstream ports
+of the PCIe switch connected to root port. When adapter is hot
+added to the PCI slot, it usually requests more IO or memory
+resource from the directly connected parent bridge (port) and
+update the bridge's windows accordingly. The resource windows
+of upstream bridges can't be updated automatically. It possibly
+leads to unbalanced resource across the bridges: The window of
+downstream bridge is overruning that of upstream bridge. The
+IO or MMIO path won't work.
 
-On Tuesday 03 May 2016 06:42 PM, Jon Hunter wrote:
-> On 03/05/16 13:48, Laxman Dewangan wrote:
->> On Tuesday 03 May 2016 06:25 PM, Jon Hunter wrote:
->>>> Currently SOR driver is using the tegra_io_rail_power_off/on() APIs.
->>>> Once the proper interface available then I will move sor driver to use
->>>> new method and then we can full get rid of older APIs and macros.
->>>>
->>>> Till that, we need to have this.
->>> I prefer it is done before this series. In other words, if we need a
->>> proper enum for the rail/pad IDs then add one and convert any existing
->>> drivers over to use any new APIs first.
->> But the converting to new API can be done after this patch only.
-> Yes but before you add the pinctrl driver. May be you should separate
-> the two.
->
-> My point is that any follow-up series to this, would have to touch the
-> pmc and the sor driver. So why not make the changes for the pmc and sor
-> now, and once in place then add the pinctrl driver?
+This resolves the above issue by extending bridge windows of
+root port and upstream port of the PCIe switch connected to
+the root port to PHB's windows.
 
-I will be happy on this approach also. I added pincontrol driver for 
-following purpose:
-- To show how new APIs used. This will help on understanding of need and 
-whole as a design.
-- To get reviewed the whole design/method.
-- To get accepted the pmc changes on this cycle so that if possible, we 
-can have pincntrl driver in next cycle to avoid cross subsystem approach.
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+---
+ arch/powerpc/platforms/powernv/pci-ioda.c | 46 +++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-
-
-
-
-
-
-
-
-
-
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index de3f292..b518364 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -3146,6 +3146,49 @@ static resource_size_t pnv_pci_window_alignment(struct pci_bus *bus,
+ 	return phb->ioda.io_segsize;
+ }
+ 
++/*
++ * We are updating root port or the upstream port of the
++ * bridge behind the root port with PHB's windows in order
++ * to accommodate the changes on required resources during
++ * PCI (slot) hotplug, which is connected to either root
++ * port or the downstream ports of PCIe switch behind the
++ * root port.
++ */
++static void pnv_pci_fixup_bridge_resources(struct pci_bus *bus,
++					   unsigned long type)
++{
++	struct pci_controller *hose = pci_bus_to_host(bus);
++	struct pnv_phb *phb = hose->private_data;
++	struct pci_dev *bridge = bus->self;
++	struct resource *r, *w;
++	int i;
++
++	/* Check if we need apply fixup to the bridge's windows */
++	if (!pci_is_root_bus(bridge->bus) &&
++	    !pci_is_root_bus(bridge->bus->self->bus))
++		return;
++
++	/* Fixup the resources */
++	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
++		r = &bridge->resource[PCI_BRIDGE_RESOURCES + i];
++		if (!r->flags || !r->parent)
++			continue;
++
++		w = NULL;
++		if (r->flags & type & IORESOURCE_IO)
++			w = &hose->io_resource;
++		else if (pnv_pci_is_mem_pref_64(r->flags) &&
++			 (type & IORESOURCE_PREFETCH) &&
++			 phb->ioda.m64_segsize)
++			w = &hose->mem_resources[1];
++		else if (r->flags & type & IORESOURCE_MEM)
++			w = &hose->mem_resources[0];
++
++		r->start = w->start;
++		r->end = w->end;
++	}
++}
++
+ static void pnv_pci_setup_bridge(struct pci_bus *bus, unsigned long type)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(bus);
+@@ -3154,6 +3197,9 @@ static void pnv_pci_setup_bridge(struct pci_bus *bus, unsigned long type)
+ 	struct pnv_ioda_pe *pe;
+ 	bool all = (pci_pcie_type(bridge) == PCI_EXP_TYPE_PCI_BRIDGE);
+ 
++	/* Extend bridge's windows if necessary */
++	pnv_pci_fixup_bridge_resources(bus, type);
++
+ 	/* The PE for root bus should be realized before any one else */
+ 	if (!phb->ioda.root_pe_populated) {
+ 		pe = pnv_ioda_setup_bus_PE(phb->hose->bus, false);
+-- 
+2.1.0
