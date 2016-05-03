@@ -1,49 +1,44 @@
-From: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Subject: [PATCH 2/2] extcon: gpio: add DT binding doc for extcon-gpio
-Date: Tue, 3 May 2016 11:19:51 +0530
-Message-ID: <1462254591-8907-2-git-send-email-vreddytalla@nvidia.com>
-References: <1462254591-8907-1-git-send-email-vreddytalla@nvidia.com>
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
+ return phys_addr_t
+Date: Tue, 3 May 2016 11:23:29 +0530
+Message-ID: <20160503055329.GA13045@dhcppc6.redhat.com>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+ <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
+ <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
+ <20160429151639.GC23726@leverpostej>
+ <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
+ <20160503042441.GA2518@x1.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462254591-8907-1-git-send-email-vreddytalla@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Venkat Reddy Talla <vreddytalla@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ia64-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160503042441.GA2518@x1.redhat.com>
+Sender: linux-ia64-owner@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Addiing DT binding doc for the extcon gpios properties.
+Hi Baoquan,
 
-Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
----
- .../devicetree/bindings/extcon/extcon-gpio.txt        | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+On 03/05/2016:12:24:41 PM, Baoquan He wrote:
+> Hi Pratyush,
+> 
+> Could you please help tell why arm PAE kernel can be put above 4G?
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-new file mode 100644
-index 0000000..4a49c23
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -0,0 +1,19 @@
-+EXTCON FOR GPIO
-+
-+Required Properties:
-+ - compatible : Should be "extcon-gpio";
-+
-+Optional Properties:
-+ - extcon-gpio,name: Name of extcon device.
-+ - gpio: gpio number.
-+ - extcon-gpio,irq-flags: IRQ flags for GPIO.
-+ - extcon-gpio,debounce: Debounce time in ms.
-+ - extcon-gpio,connection-state-low: boolean, Connection state with
-+                gpio state. True if gpio low means connected.
-+
-+extcon-gpio {
-+	compatible = "extcon-gpio";
-+        extcon-gpio,name = "VBUS";
-+	gpio = <&gpio 20 0>;
-+	extcon-gpio,cable-names = <EXTCON_USB EXTCON_NONE>;
-+};
--- 
-2.1.4
+PAE system can have physical addresses above 4G. So, if a CPU is supporting the
+LPAE page table format then we should be able to access physical addresses
+beyond 4G.
+
+> Since the change is related to common code, I am curious about how
+> it's so different with other ARCHs.
+
+paddr_vmcoreinfo_note() returns a physical address, so returning phys_addr_t
+seems most appropriate. So, kernel variable may land into above 4G locations,
+even with the platform in other architecture (with PAE support), if start of RAM
+is located very high,
+
+So, in my opinion it would be safer to have these changes for other ARCHs as
+well.
+
+~Pratyush
