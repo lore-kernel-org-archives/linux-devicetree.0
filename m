@@ -1,41 +1,55 @@
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
- return phys_addr_t
-Date: Tue, 3 May 2016 20:56:49 +0800
-Message-ID: <20160503125649.GA2656@x1.redhat.com>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
- <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
- <20160429151639.GC23726@leverpostej>
- <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
- <20160503042441.GA2518@x1.redhat.com>
- <20160503101258.GL19428@n2100.arm.linux.org.uk>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] ASoC: davinci-mcbsp: add binding for McBSP
+Date: Tue, 3 May 2016 18:27:20 +0530
+Message-ID: <5728A030.1050802@ti.com>
+References: <1461327617-11435-1-git-send-email-petr@barix.com>
+ <57289832.9050904@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160503101258.GL19428@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57289832.9050904-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Petr Kulhavy <brain-wDf7oJUeT2I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/16 at 11:12am, Russell King - ARM Linux wrote:
-> On Tue, May 03, 2016 at 12:24:41PM +0800, Baoquan He wrote:
-> > Could you please help tell why arm PAE kernel can be put above 4G?
-> > Since the change is related to common code, I am curious about how
-> > it's so different with other ARCHs.
+On Tuesday 03 May 2016 05:53 PM, Petr Kulhavy wrote:
 > 
-> This is explained in the covering email to the series.
+> On 22.04.2016 14:20, Petr Kulhavy wrote:
+>> This series of patches adds devicetree support for the davinci McBSP
+>> audio
+>> interface.
+>>
+>> Changes in version 4 of the patch:
+>>
+>> * minor correction in the binding example ("interrupt names")
+>> * re-added index note to the "mpu" property.
 > 
-> The explanation given by Pratyush was incomplete.
+> Hi,
+> 
+> I'm just wondering if anybody is picking up on this.
+> Peter has reviewed the patch set (v3 where the code is identical to v4)
+> and Rob has acked the DT part.
 
-Yeah, he said non LPAE also has PHYS_OFFSET later to me. In fact this
-patch is totally unharmful to other ARCHes, I just can't stand the
-curiosity. Sorry about this.
+For the mach-davinci portions, I was actually waiting on the driver
+changes to be accepted first. I have already sent my pull request for
+v4.7. I am afraid these have to wait for v4.8.
 
-> 
-> -- 
-> RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
+Also, I just noticed that linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org was not
+copied on the submission. That list must be copied on all mach-davinci
+submissions.
+
+And looks like not all patches in the series depend on the driver
+changes (3/7 and even 7/7?). In such cases, it always helps to send them
+separately so they can be queued independently.
+
+Even now, can you please separate out such patches and resend them with
+linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org copied.
+
+Regards,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
