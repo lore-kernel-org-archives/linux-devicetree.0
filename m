@@ -1,89 +1,53 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC] i2c: device-tree: Handling child nodes which are not i2c
- devices
-Date: Tue, 3 May 2016 16:30:25 +0100
-Message-ID: <20160503153024.GB6850@leverpostej>
-References: <57110A35.2070509@nvidia.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver
+ code
+Date: Tue, 3 May 2016 17:46:00 +0200
+Message-ID: <5728C7B8.5050903@st.com>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-10-git-send-email-peter.griffin@linaro.org>
+ <20160421155753.GS3217@sirena.org.uk>
+ <20160426110229.GA5374@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57110A35.2070509@nvidia.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Thierry Reding <treding@nvidia.com>, Stephen Warren <swarren@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, linux-i2c@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160426110229.GA5374@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, ludovic.barre@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 15, 2016 at 04:35:17PM +0100, Jon Hunter wrote:
-> Hi all,
-> 
-> For Tegra we have an i2c device for display port, namely the display
-> port auxiliary channel (or dpaux) as specified by the display port
-> standard. If an design using Tegra does not utilise the display port
-> interface, then the pads assigned to the dpaux can be re-assigned to
-> another generic i2c controller (i2c6 for Tegra124/210). In other words,
-> the pads can be re-used for a generic i2c interface.
-> 
-> The registers that control whether the pads are mapped to the dpaux or
-> i2c6 are located in the dpaux register space. Therefore, I am looking at
-> adding pin controller support for dpaux so that i2c6 can request these
-> pads if it is enabled and I was hoping to add a pinmux node the to dpaux
-> device in device-tree to do this. For example, something like ...
-> 
-> 	dpaux@0,545c0000 {
-> 		...
-> 
-> 		/* pinctrl node */
-> 		pinmux {
-> 			...
-> 		};
-> 	};
-> 
-> Although the above works, when doing this I noticed that when the device
-> booted, I would seeing the following error messages on boot ...
-> 
->  i2c i2c-5: of_i2c: modalias failure on ...
-> 
-> These error messages being caused by the new pinmux node because it is
-> not recognised as an i2c device. To avoid this error messages we have
-> come up with a couple solutions but wanted to get some feedback on the
-> best approach.
-> 
-> 1. Add a i2c-bus sub-node to the dpaux binding (suggested by Stephen
->    Warren), so we would have something like the below. Then i2c devices
->    for dpaux would be place in the i2c-bus sub-node.
-> 
-> 	dpaux@0,545c0000 {
-> 		...
-> 
-> 		/* pinctrl node */
-> 		pinmux {
-> 			...
-> 		};
-> 
-> 		/* place-holder for i2c devices */
-> 		i2c-bus {
-> 			...
-> 		};
-> 	};	
 
->From a binding perspective, this makes the most sense to me.
 
-I believe we have variants of this (container nodes for actual busses
-owned by a controller) in practice today elsewhere. 
+On 04/26/2016 01:02 PM, Peter Griffin wrote:
+> Hi Mark,
+> 
+> On Thu, 21 Apr 2016, Mark Brown wrote:
+> 
+>> On Thu, Apr 21, 2016 at 12:04:26PM +0100, Peter Griffin wrote:
+>>> uniperiph-id, version and mode are ST specific bindings and
+>>> need the 'st,' prefix. Update the examples, as otherwise copying
+>>> them yields a runtime error parsing the DT node.
+>>
+>> I'm not sure what connection this or the other ASoC documentation update
+>> have to the rest of the series?
+> 
+> The ASoC DT bindings are missing upstream as the ASoC driver depends on the
+> fdma driver. So this series adds the fdma driver, fdma dt bindings,
+> and also the missing ASoC dt bindings.
+> 
+> Whilst doing this and getting it working I noticed a few discrepencies
+> in the ASoC dt binding documentation versus the driver so also fixed that.
+> 
+> Once this whole series is applied the end result is working
+> audio upstream for STi platforms (as ASoC is the only upstream driver
+> using fdma currently).
 
->    To make the above work ideally we would like to make the 'i2c-bus'
->    node a generic solution for all i2c devices, so the i2c core would
->    check for the presence of this node and if it is found then would
->    default to this node for looking for i2c-devices.
+Hi Peter,
+I also noticed the error in bindings, i'm planning to correct it with
+DTS upstream for STI ASoC after FDMA has been accepted.
+So if you estimate that it is simplier for FDMA upstream, you can drop
+ASoC patches in you next version.
 
-I don't have strong opinions on this (having a generic subnode name for
-the actual bus exposed by a controller) either way.
-
-I can imagine that it would be possible for a single controller to
-expose multiple I2C (or other) busses, so it might make sense for this
-to be the preferred style, but not necessarily enforeced as a generic
-binding.
-
-Thanks,
-Mark
+Regards,
+Arnaud
