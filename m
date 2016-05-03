@@ -1,84 +1,69 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 6/7] ARM: DTS: da850: Add McBSP0 and McBSP1
-Date: Tue, 3 May 2016 18:54:09 +0530
-Message-ID: <5728A679.7050304@ti.com>
-References: <1461327617-11435-1-git-send-email-petr@barix.com>
- <1461327617-11435-7-git-send-email-petr@barix.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v9 05/22] powerpc/powernv: Allocate PE# in reverse order
+Date: Tue,  3 May 2016 23:22:36 +1000
+Message-ID: <1462281773-26438-6-git-send-email-gwshan@linux.vnet.ibm.com>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461327617-11435-7-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, alistair@popple.id.au, aik@ozlabs.ru, linux-pci@vger.kernel.org, Gavin Shan <gwshan@linux.vnet.ibm.com>, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 April 2016 05:50 PM, Petr Kulhavy wrote:
-> Add SoC nodes for McBSP0 and McBSP1 as well as the corresponding pinmux
-> configurations.
-> 
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-> ---
-> v1: initial
-> v2: add missing TC channel in dmas properties (for compatibility with the new EDMA3 binding)
->     remove "-audio" postfix from the compatible string
-> v3: no change
-> v4: no change
-> 
->  arch/arm/boot/dts/da850.dtsi | 45 +++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index 5996e765e59c..708d48e1b6d1 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -148,7 +148,24 @@
->  					0xc 0x88888888 0xffffffff
->  				>;
->  			};
-> -
-> +			mcbsp0_pins: pinmux_mcbsp0_pins {
-> +				pinctrl-single,bits = <
-> +					/* PINMUX2:
-> +					* CLKS0, DX0, DR0, FSX0
-> +					* FSR0, CLKX0, CLKR0
-> +					*/
-> +					0x8 0x02222220 0xfffffff0
-> +				>;
-> +			};
-> +			mcbsp1_pins: pinmux_mcbsp1_pins {
-> +				pinctrl-single,bits = <
-> +					/* PINMUX1:
-> +					* CLKS1, DX1, DR1, FSX1,
-> +					* FSR1, CLKX1, CLKR1
-> +					*/
-> +					0x4 0x22222220 0xfffffff0
-> +				>;
-> +			};
->  		};
->  		edma0: edma@01c00000 {
->  			compatible = "ti,edma3-tpcc";
-> @@ -335,6 +352,32 @@
->  				<&edma0 0 1>;
->  			dma-names = "tx", "rx";
->  		};
-> +
-> +		mcbsp0: mcbsp@1d10000 {
-> +			compatible = "ti,da850-mcbsp";
-> +			reg =	<0x00110000 0x1000>,
-> +				<0x00310000 0x1000>;
-
-The node name should be sound@110000
-
-sound because use of generic names is preferred (I know the mcasp has
-got this wrong). And the unit address after the @ should match the reg
-property. I would also lose the unnecessary 0s in the reg address.
-
-Thanks,
-Sekhar
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+UEUgbnVtYmVyIGZvciBvbmUgcGFydGljdWxhciBQRSBjYW4gYmUgYWxsb2NhdGVkIGR5bmFtaWNh
+bGx5IG9yCnJlc2VydmVkIGFjY29yZGluZyB0byB0aGUgY29uc3VtZWQgTTY0ICg2NC1iaXRzIHBy
+ZWZldGNoYWJsZSkKc2VnbWVudHMgb2YgdGhlIFBFLiBUaGUgTTY0IHNlZ21lbnQgY2FuJ3QgYmUg
+cmVtYXBwZWQgdG8gYXJiaXRyYXJ5ClBFLCBtZWFuaW5nIHRoZSBQRSBudW1iZXIgaXMgZGV0ZXJt
+aW5lZCBhY2NvcmRpbmcgdG8gdGhlIGluZGV4Cm9mIHRoZSBjb25zdW1lZCBNNjQgc2VnbWVudC4g
+QXMgYmVsb3cgZmlndXJlIHNob3dzLCBNNjQgcmVzb3VyY2UKZ3Jvd3MgZnJvbSBsb3cgdG8gaGln
+aCBlbmQsIG1lYW5pbmcgdGhlIFBFIChudW1iZXIpIHJlc2VydmVkCmFjY29yZGluZyB0byBNNjQg
+c2VnbWVudCBncm93cyBmcm9tIGxvdyB0byBoaWdoIGVuZCBhcyB3ZWxsLApzbyBkb2VzIHRoZSBk
+eW5hbWljYWxseSBhbGxvY2F0ZWQgUEUgbnVtYmVyLiBJdCB3aWxsIGxlYWQgdG8KY29uZmxpY3Q6
+IFBFIG51bWJlciAoTTY0IHNlZ21lbnQpIHJlc2VydmVkIGJ5IGR5bmFtaWMgYWxsb2NhdGlvbgpp
+cyByZXF1aXJlZCBieSBob3QgYWRkZWQgUENJIGFkYXB0ZXIgYXQgbGF0ZXIgcG9pbnQuIEl0IGZh
+aWxzCnRoZSBQQ0kgaG90cGx1ZyBiZWNhdXNlIG9mIHRoZSBQRSBudW1iZXIgY2FuJ3QgYmUgcmVz
+ZXJ2ZWQKYmFzZWQgb24gdGhlIGluZGV4IG9mIHRoZSBjb25zdW1lZCBNNjQgc2VnbWVudC4KCiAg
+Ky0tLSstLS0rLS0tKy0tLSstLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0t
+LS0rCiAgfCAwIHwgMSB8IDIgfCAzIHwgNCB8ICAgICAgLi4uLi4uLiAgICAgICAgICAgICAgICAg
+ICB8IDI1NSB8CiAgKy0tLSstLS0rLS0tKy0tLSstLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0rLS0tLS0rCgogIFBFIG51bWJlciBmb3IgZHluYW1pYyBhbGxvY2F0aW9uICAgICAg
+ICAgIC0tLS0tLS0tLS0tLS0tLS0tPgogIFBFIG51bWJlciByZXNlcnZlZCBmb3IgTTY0IHNlZ21l
+bnQgICAgICAgIC0tLS0tLS0tLS0tLS0tLS0tPgoKVG8gcmVzb2x2ZSBhYm92ZSBjb25mbGljdHMs
+IHRoaXMgZm9yY2VzIHRoZSBQRSBudW1iZXIgdG8gYmUKYWxsb2NhdGVkIGR5bmFtaWNhbGx5IGlu
+IHJldmVyc2Ugb3JkZXIuIFdpdGggdGhpcyBwYXRjaCBhcHBsaWVkLAp0aGUgUEUgbnVtYmVycyBh
+cmUgcmVzZXJ2ZWQgaW4gYXNjZW5kaW5nIG9yZGVyLCBidXQgYWxsb2NhdGVkCmR5bmFtaWNhbGx5
+IGluIHJldmVyc2Ugb3JkZXIuCgpTaWduZWQtb2ZmLWJ5OiBHYXZpbiBTaGFuIDxnd3NoYW5AbGlu
+dXgudm5ldC5pYm0uY29tPgotLS0KIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcG93ZXJudi9wY2kt
+aW9kYS5jIHwgMTQgKysrKysrLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMo
+KyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9w
+b3dlcm52L3BjaS1pb2RhLmMgYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybnYvcGNpLWlv
+ZGEuYwppbmRleCBjZjk2Y2I1Li42NzllMjc5IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvcGxh
+dGZvcm1zL3Bvd2VybnYvcGNpLWlvZGEuYworKysgYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bv
+d2VybnYvcGNpLWlvZGEuYwpAQCAtMTQ4LDE2ICsxNDgsMTQgQEAgc3RhdGljIHZvaWQgcG52X2lv
+ZGFfcmVzZXJ2ZV9wZShzdHJ1Y3QgcG52X3BoYiAqcGhiLCBpbnQgcGVfbm8pCiAKIHN0YXRpYyBz
+dHJ1Y3QgcG52X2lvZGFfcGUgKnBudl9pb2RhX2FsbG9jX3BlKHN0cnVjdCBwbnZfcGhiICpwaGIp
+CiB7Ci0JdW5zaWduZWQgbG9uZyBwZTsKKwl1bnNpZ25lZCBsb25nIHBlID0gcGhiLT5pb2RhLnRv
+dGFsX3BlX251bSAtIDE7CiAKLQlkbyB7Ci0JCXBlID0gZmluZF9uZXh0X3plcm9fYml0KHBoYi0+
+aW9kYS5wZV9hbGxvYywKLQkJCQkJcGhiLT5pb2RhLnRvdGFsX3BlX251bSwgMCk7Ci0JCWlmIChw
+ZSA+PSBwaGItPmlvZGEudG90YWxfcGVfbnVtKQotCQkJcmV0dXJuIE5VTEw7Ci0JfSB3aGlsZSh0
+ZXN0X2FuZF9zZXRfYml0KHBlLCBwaGItPmlvZGEucGVfYWxsb2MpKTsKKwlmb3IgKHBlID0gcGhi
+LT5pb2RhLnRvdGFsX3BlX251bSAtIDE7IHBlID49IDA7IHBlLS0pIHsKKwkJaWYgKCF0ZXN0X2Fu
+ZF9zZXRfYml0KHBlLCBwaGItPmlvZGEucGVfYWxsb2MpKQorCQkJcmV0dXJuIHBudl9pb2RhX2lu
+aXRfcGUocGhiLCBwZSk7CisJfQogCi0JcmV0dXJuIHBudl9pb2RhX2luaXRfcGUocGhiLCBwZSk7
+CisJcmV0dXJuIE5VTEw7CiB9CiAKIHN0YXRpYyB2b2lkIHBudl9pb2RhX2ZyZWVfcGUoc3RydWN0
+IHBudl9pb2RhX3BlICpwZSkKLS0gCjIuMS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRl
+dkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51
+eHBwYy1kZXY=
