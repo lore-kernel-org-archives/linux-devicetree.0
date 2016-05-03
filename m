@@ -1,213 +1,60 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v8 7/9] ARM: dts: am437x/am33xx: Remove hwmod entries for ECAP
- and EPWM nodes
-Date: Tue,  3 May 2016 10:56:53 -0500
-Message-ID: <1462291015-1919-8-git-send-email-fcooper@ti.com>
-References: <1462291015-1919-1-git-send-email-fcooper@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: imx: ldb: Add ddc-i2c-bus property
+Date: Tue, 3 May 2016 11:06:47 -0500
+Message-ID: <20160503160647.GA10680@rob-hp-laptop>
+References: <1461788614-7784-1-git-send-email-akshay.bhat@timesys.com>
+ <1461788614-7784-2-git-send-email-akshay.bhat@timesys.com>
+ <20160428214823.GA841@rob-hp-laptop>
+ <1461915852.3521.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462291015-1919-1-git-send-email-fcooper@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1461915852.3521.3.camel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, steve_longerbeam@mentor.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Previous patches switched the ECAP and EPWM to use the new bindings.
-These bindings explicitly adds the various required clocks via DT rather
-than depending on hwmod.
-
-Therefore, it is safe to remove the hwmod entries since they are no longer
-needed.
-
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Paul Walmsley <paul@pwsan.com>
----
- Documentation/devicetree/bindings/pwm/pwm-tiecap.txt   | 3 ---
- Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt | 3 ---
- arch/arm/boot/dts/am33xx.dtsi                          | 6 ------
- arch/arm/boot/dts/am4372.dtsi                          | 9 ---------
- 4 files changed, 21 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-index ee0a8bd..f2a9a7c 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-@@ -11,8 +11,6 @@ Required properties:
- - reg: physical base address and size of the registers map.
- 
- Optional properties:
--- ti,hwmods: Name of the hwmod associated to the ECAP:
--  "ecap<x>", <x> being the 0-based instance number from the HW spec
- - clocks: Handle to the ECAP's functional clock.
- - clock-names: Must be set to "fck".
- 
-@@ -22,7 +20,6 @@ ecap0: ecap@48300100 { /* ECAP on am33xx */
- 	compatible = "ti,am3352-ecap", "ti,am33xx-ecap";
- 	#pwm-cells = <3>;
- 	reg = <0x48300100 0x80>;
--	ti,hwmods = "ecap0";
- 	clocks = <&l4ls_gclk>;
- 	clock-names = "fck";
- };
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
-index e9a156b..41a2bd4 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
-@@ -11,8 +11,6 @@ Required properties:
- - reg: physical base address and size of the registers map.
- 
- Optional properties:
--- ti,hwmods: Name of the hwmod associated to the EHRPWM:
--  "ehrpwm<x>", <x> being the 0-based instance number from the HW spec
- - clocks: Handle to the PWM's time-base and functional clock.
- - clock-names: Must be set to "tbclk" and "fck".
- 
-@@ -24,7 +22,6 @@ ehrpwm0: pwm@48300200 { /* EHRPWM on am33xx */
- 	reg = <0x48300200 0x100>;
- 	clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
- 	clock-names = "tbclk", "fck";
--	ti,hwmods = "ehrpwm0";
- };
- 
- ehrpwm0: pwm@48300200 { /* EHRPWM on am4372 */
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 999ba2f..2661acc 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -687,7 +687,6 @@
- 				clock-names = "fck";
- 				interrupts = <31>;
- 				interrupt-names = "ecap0";
--				ti,hwmods = "ecap0";
- 				status = "disabled";
- 			};
- 
-@@ -696,7 +695,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48300200 0x80>;
--				ti,hwmods = "ehrpwm0";
- 				clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-@@ -723,7 +721,6 @@
- 				clock-names = "fck";
- 				interrupts = <47>;
- 				interrupt-names = "ecap1";
--				ti,hwmods = "ecap1";
- 				status = "disabled";
- 			};
- 
-@@ -732,7 +729,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48302200 0x80>;
--				ti,hwmods = "ehrpwm1";
- 				clocks = <&ehrpwm1_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-@@ -759,7 +755,6 @@
- 				clock-names = "fck";
- 				interrupts = <61>;
- 				interrupt-names = "ecap2";
--				ti,hwmods = "ecap2";
- 				status = "disabled";
- 			};
- 
-@@ -768,7 +763,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48304200 0x80>;
--				ti,hwmods = "ehrpwm2";
- 				clocks = <&ehrpwm2_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index e858460..cfdd4b7 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -677,7 +677,6 @@
- 					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48300100 0x80>;
--				ti,hwmods = "ecap0";
- 				clocks = <&l4ls_gclk>;
- 				clock-names = "fck";
- 				status = "disabled";
-@@ -689,7 +688,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48300200 0x80>;
--				ti,hwmods = "ehrpwm0";
- 				clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-@@ -711,7 +709,6 @@
- 					     "ti,am33xx-ecap";
- 				#pwm-cells = <3>;
- 				reg = <0x48302100 0x80>;
--				ti,hwmods = "ecap1";
- 				clocks = <&l4ls_gclk>;
- 				clock-names = "fck";
- 				status = "disabled";
-@@ -723,7 +720,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48302200 0x80>;
--				ti,hwmods = "ehrpwm1";
- 				clocks = <&ehrpwm1_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-@@ -747,7 +743,6 @@
- 				reg = <0x48304100 0x80>;
- 				clocks = <&l4ls_gclk>;
- 				clock-names = "fck";
--				ti,hwmods = "ecap2";
- 				status = "disabled";
- 			};
- 
-@@ -757,7 +752,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48304200 0x80>;
--				ti,hwmods = "ehrpwm2";
- 				clocks = <&ehrpwm2_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-@@ -779,7 +773,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48306200 0x80>;
--				ti,hwmods = "ehrpwm3";
- 				clocks = <&ehrpwm3_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-@@ -801,7 +794,6 @@
- 					     "ti,am33xx-ehrpwm";
- 				#pwm-cells = <3>;
- 				reg = <0x48308200 0x80>;
--				ti,hwmods = "ehrpwm4";
- 				clocks = <&ehrpwm4_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
- 				status = "disabled";
-@@ -825,7 +817,6 @@
- 				reg = <0x4830a200 0x80>;
- 				clocks = <&ehrpwm5_tbclk>, <&l4ls_gclk>;
- 				clock-names = "tbclk", "fck";
--				ti,hwmods = "ehrpwm5";
- 				status = "disabled";
- 			};
- 		};
--- 
-2.7.0
+T24gRnJpLCBBcHIgMjksIDIwMTYgYXQgMDk6NDQ6MTJBTSArMDIwMCwgUGhpbGlwcCBaYWJlbCB3
+cm90ZToKPiBBbSBEb25uZXJzdGFnLCBkZW4gMjguMDQuMjAxNiwgMTY6NDggLTA1MDAgc2Nocmll
+YiBSb2IgSGVycmluZzoKPiA+IE9uIFdlZCwgQXByIDI3LCAyMDE2IGF0IDA0OjIzOjM0UE0gLTA0
+MDAsIEFrc2hheSBCaGF0IHdyb3RlOgo+ID4gPiBEb2N1bWVudCB0aGUgZGRjLWkyYy1idXMgcHJv
+cGVydHkgdXNlZCBieSBpbXgtbGRiIGRyaXZlciB0byByZWFkIEVESUQKPiA+ID4gaW5mb3JtYXRp
+b24gdmlhIEkyQyBpbnRlcmZhY2UuCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBa3NoYXkg
+QmhhdCA8YWtzaGF5LmJoYXRAdGltZXN5cy5jb20+Cj4gPiA+IC0tLQo+ID4gPiAKPiA+ID4gdjM6
+Cj4gPiA+IE5ld2x5IGFkZGVkLgo+ID4gPiAKPiA+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0IHwgMSArCj4gPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMSBpbnNlcnRpb24oKykKPiA+ID4gCj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvbGRiLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0Cj4gPiA+IGluZGV4IDBhMTc1
+ZDkuLmE0MDc0NjIgMTAwNjQ0Cj4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0Cj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9sZGIudHh0Cj4gPiA+IEBAIC02Miw2ICs2Miw3
+IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+ICAgICBkaXNwbGF5LXRpbWluZ3MgYXJlIHVz
+ZWQgaW5zdGVhZC4KPiA+ID4gIAo+ID4gPiAgT3B0aW9uYWwgcHJvcGVydGllcyAocmVxdWlyZWQg
+aWYgZGlzcGxheS10aW1pbmdzIGFyZSB1c2VkKToKPiA+IAo+ID4gVGhlIHJlcXVpcmVkIHBhcnQg
+ZG9lc24ndCBtYWtlIHNlbnNlIGlmIHlvdSBhZGQgdGhpcywgYnV0Li4uCj4gPiAKPiA+ID4gKyAt
+IGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBF
+RElEIHByb2JpbmcKPiA+IAo+ID4gUmVhbGx5LCB0aGlzIHNob3VsZCBiZSBwYXJ0IG9mIGEgY29u
+bmVjdG9yIG5vZGUgc2luY2UgaTJjIGdvZXMgZnJvbSB0aGUgCj4gPiBpMmMgY29udHJvbGxlciB0
+byBhIGNvbm5lY3RvciBhbmQgaXMgbm90IHBhcnQgb2YgdGhlIGRpc3BsYXkgY29udHJvbGxlci4K
+PiAKPiBJZiB0aGUgZGRjIGkyYyBidXMgZG9lcyBpbmRlZWQgZ28gdGhyb3VnaCBhIGNvbm5lY3Rv
+ciwgeWVzLiBXb3VsZCB0aGF0Cj4gd2FycmFudCBhIGdlbmVyaWMgImx2ZHMtY29ubmVjdG9yIiBi
+aW5kaW5nIGZvciBhbGwgdGhvc2UgZGlmZmVyZW50IHR5cGVzCj4gb2YgaW50ZXJuYWwgTFZEUyBj
+b25uZWN0b3JzPwoKUHJvYmFibHkgYW4gb3ZlcmtpbGwgZm9yIHRoYXQgY2FzZS4gSXQgY291bGQg
+YmUgcGFydCBvZiB0aGUgcGFuZWwgbm9kZSwgCmJ1dCBJJ20gcmVsdWN0YW50IHRvIGRlZmluZSBh
+IDNyZCB3YXkuIFNvIHRoaXMgaXMgZmluZSBhcyBpcy4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8
+cm9iaEBrZXJuZWwub3JnPgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
