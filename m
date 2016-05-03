@@ -1,37 +1,69 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH 7/9] drm/msm/dsi: Use generic PHY bindings
-Date: Tue,  3 May 2016 16:27:59 +0530
-Message-ID: <1462273081-5814-8-git-send-email-architt@codeaurora.org>
+Subject: [PATCH 9/9] dt-bindings: msm/dsi: Add assigned clocks bindings
+Date: Tue,  3 May 2016 16:28:01 +0530
+Message-ID: <1462273081-5814-10-git-send-email-architt@codeaurora.org>
 References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: robdclark@gmail.com, robh@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The DSI host links to the DSI PHY device using a custom binding. Switch to
-the generic PHY bindings. The DSI PHY driver itself doesn't use the common
-PHY framework for now.
-
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
- drivers/gpu/drm/msm/dsi/dsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index 6edcd6f..ec572f8 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -29,7 +29,7 @@ static int dsi_get_phy(struct msm_dsi *msm_dsi)
- 	struct platform_device *phy_pdev;
- 	struct device_node *phy_node;
- 
--	phy_node = of_parse_phandle(pdev->dev.of_node, "qcom,dsi-phy", 0);
-+	phy_node = of_parse_phandle(pdev->dev.of_node, "phys", 0);
- 	if (!phy_node) {
- 		dev_err(&pdev->dev, "cannot find phy device\n");
- 		return -ENXIO;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+VGhlIFBMTCBpbiB0aGUgRFNJIFBIWSBibG9jayBnZW5lcmF0ZXMgMiBjbG9jayBvdXRwdXRzIChC
+eXRlIGFuZCBQaXhlbApjbG9ja3MpIHRoYXQgYXJlIGZlZCBpbnRvIHRoZSBNdWx0aW1lZGlhIENs
+b2NrIENvbnRyb2xsZXIgKE1NQ0MpLiBUaGUgTU1DQwp1c2VzIHRoZXNlIGFzIHNvdXJjZSBjbG9j
+a3MgZm9yIHNvbWUgb2YgaXRzIFJDR3MgdG8gZ2VuZXJhdGUgY2xvY2tzIHRoYXQKZmluYWxseSBm
+ZWVkIHRvIHRoZSBEU0kgaG9zdCBjb250cm9sbGVyLgoKVXNlIHRoZSBhc3NpZ25lZCBjbG9ja3Mg
+RFQgYmluZGluZ3MgdG8gc2V0IHVwIHRoZSBNTUNDIFJDR3MgdGhhdCBmZWVkIHRvCnRoZSBEU0kg
+aG9zdC4gVXNlIHRoZSBEU0kgUEhZIHByb3ZpZGVkIGNsb2NrcyB0byBzZXQgdXAgdGhlIHBhcmVu
+dHMKb2YgdGhlc2UgYXNzaWduZWQgY2xvY2tzLgoKU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVq
+YSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dCB8IDE1ICsrKysrKysrKysrKysrKwogMSBmaWxl
+IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0CmluZGV4IDAyMjNmMDYuLjY4NmY0
+NzUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21zbS9kc2kudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21zbS9kc2kudHh0CkBAIC0yMiw2ICsyMiwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgog
+ICAqICJjb3JlX2NsayIKICAgRm9yIERTSXYyLCB3ZSBuZWVkIGFuIGFkZGl0aW9uYWwgY2xvY2s6
+CiAgICAqICJzcmNfY2xrIgorLSBhc3NpZ25lZC1jbG9ja3M6IFBhcmVudHMgb2YgImJ5dGVfY2xr
+IiBhbmQgInBpeGVsX2NsayIgZm9yIHRoZSBnaXZlbiBwbGF0Zm9ybS4KKyAgU2VlIFsxXSBmb3Ig
+bW9yZSBkZXRhaWxzLgorLSBhc3NpZ25lZC1jbG9jay1wYXJlbnRzOiBUaGUgQnl0ZSBjbG9jayBh
+bmQgUGl4ZWwgY2xvY2sgUExMIG91dHB1dHMgcHJvdmlkZWQKKyAgYnkgYSBEU0kgUEhZIGJsb2Nr
+LgogLSB2ZGQtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZCByZWd1bGF0b3IgZGV2aWNlIG5vZGUKIC0g
+dmRkaW8tc3VwcGx5OiBwaGFuZGxlIHRvIHZkZC1pbyByZWd1bGF0b3IgZGV2aWNlIG5vZGUKIC0g
+dmRkYS1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkYSByZWd1bGF0b3IgZGV2aWNlIG5vZGUKQEAgLTkw
+LDYgKzk0LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgKiAiZHNpX3BsbCIKICAgKiAiZHNp
+X3BoeSIKICAgKiAiZHNpX3BoeV9yZWd1bGF0b3IiCistIGNsb2NrLWNlbGxzOiBNdXN0IGJlIDEu
+IFRoZSBEU0kgUEhZIGJsb2NrIGFjdHMgYXMgYSBjbG9jayBwcm92aWRlciwgY3JlYXRpbmcKKyAg
+MiBjbG9ja3M6IEEgYnl0ZSBjbG9jayAoaW5kZXggMCksIGFuZCBhIHBpeGVsIGNsb2NrIChpbmRl
+eCAxKS4KIC0gcWNvbSxkc2ktcGh5LWluZGV4OiBUaGUgSUQgb2YgRFNJIFBIWSBoYXJkd2FyZSBp
+bnN0YW5jZS4gVGhpcyBzaG91bGQKICAgYmUgMCBvciAxLCBzaW5jZSB3ZSBoYXZlIDIgRFNJIFBI
+WXMgYXQgbW9zdCBmb3Igbm93LgogLSBwb3dlci1kb21haW5zOiBTaG91bGQgYmUgPCZtbWNjIE1E
+U1NfR0RTQz4uCkBAIC0xMzIsNiArMTM4LDE0IEBAIEV4YW1wbGU6CiAJCQk8Jm1tY2MgTURTU19B
+SEJfQ0xLPiwKIAkJCTwmbW1jYyBNRFNTX01EUF9DTEs+LAogCQkJPCZtbWNjIE1EU1NfUENMSzBf
+Q0xLPjsKKworCQlhc3NpZ25lZC1jbG9ja3MgPQorCQkJCSA8Jm1tY2MgQllURTBfQ0xLX1NSQz4s
+CisJCQkJIDwmbW1jYyBQQ0xLMF9DTEtfU1JDPjsKKwkJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9
+CisJCQkJIDwmZHNpMF9waHkgMD4sCisJCQkJIDwmZHNpMF9waHkgMT47CisKIAkJdmRkYS1zdXBw
+bHkgPSA8JnBtYTgwODRfbDI+OwogCQl2ZGQtc3VwcGx5ID0gPCZwbWE4MDg0X2wyMj47CiAJCXZk
+ZGlvLXN1cHBseSA9IDwmcG1hODA4NF9sMTI+OwpAQCAtMTk1LDYgKzIwOSw3IEBAIEV4YW1wbGU6
+CiAJCQk8MHhmZDkyMmQ4MCAweDdiPjsKIAkJY2xvY2stbmFtZXMgPSAiaWZhY2VfY2xrIjsKIAkJ
+Y2xvY2tzID0gPCZtbWNjIE1EU1NfQUhCX0NMSz47CisJCSNjbG9jay1jZWxscyA9IDwxPjsKIAkJ
+dmRkaW8tc3VwcGx5ID0gPCZwbWE4MDg0X2wxMj47CiAKIAkJcWNvbSxkc2ktcGh5LXJlZ3VsYXRv
+ci1sZG8tbW9kZTsKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
+IG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmhvc3RlZCBieSBUaGUgTGludXggRm91
+bmRhdGlvbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
