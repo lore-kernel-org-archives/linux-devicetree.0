@@ -1,125 +1,83 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
- bindings
-Date: Mon,  2 May 2016 18:25:48 -0700
-Message-ID: <1462238749-19715-2-git-send-email-f.fainelli@gmail.com>
-References: <1462238749-19715-1-git-send-email-f.fainelli@gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: Fwd: [PATCH v2 0/8] PM / devfreq: Add NoCP devfreq-event and
+ support busfreq on exyno5422-odroidxu3
+Date: Tue, 03 May 2016 11:17:45 +0900
+Message-ID: <57280A49.6060609@samsung.com>
+References: <1894783822.297231462168123817.JavaMail.weblogic@ep2mlwas04a>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462238749-19715-1-git-send-email-f.fainelli@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, jim2101024@gmail.com, bcm-kernel-feedback-list@broadcom.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1894783822.297231462168123817.JavaMail.weblogic@ep2mlwas04a>
+Sender: linux-kernel-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, =?UTF-8?B?7YGs7Ims7Iuc7Yag7ZSE?= <k.kozlowski@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "m.reichl@fivetechno.de" <m.reichl@fivetechno.de>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.k
 List-Id: devicetree@vger.kernel.org
 
-From: Jim Quinlan <jim2101024@gmail.com>
+Dear Myungjoo,
 
-This patchs adds the Device Tree bindings for the Broadcom STB PCIe root
-complex hardware.
+On 2016=EB=85=84 05=EC=9B=94 02=EC=9D=BC 14:48, MyungJoo Ham wrote:
+> Sender : =EC=B5=9C=EC=B0=AC=EC=9A=B0<cw00.choi@samsung.com> S5(=EC=B1=
+=85=EC=9E=84)/Change Agent/Tizen Platform Lab(S/W=EC=84=BC=ED=84=B0)/=EC=
+=82=BC=EC=84=B1=EC=A0=84=EC=9E=90
+> Date : 2016-04-15 15:32 (GMT+09:00)
+>>
+>> This patchset support the AMBA bus frequency scaling on Exynos5422-b=
+ased
+>> Odroid-XU3 board. But, this series only support the bus frequency sc=
+aling
+>> for INT (Internal) block using VDD_INT power line.
+>=20
+> Along with Devfreq/Passive patchset, the patchset is merged in
+> devfreq for-4.7 tree.
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/mzx/devfreq.git/log/?h=3D=
+for-4.7
+>=20
+> @Chanwoo: If there are commits to be merged by a tree other than Linu=
+x/PM,
+> please let me know. I'll send out pull-request soon.
 
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  | 81 ++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+On Krzysztof Kozlowski's reply, dts patches will be merged on samsung-s=
+oc tree.
+and then the clock patches about exynos5420 was already merged to samsu=
+ng-clk tree
+by Sylwester.
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
-new file mode 100644
-index 000000000000..922317969ab5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
-@@ -0,0 +1,81 @@
-+Brcmstb PCIe Host Controller Device Tree Bindings
-+
-+Introduction:
-+
-+The brcmstb host controller closely follows the example set in
-+
-+	[1] http://devicetree.org/Device_Tree_Usage#PCI_Host_Bridge
-+
-+The rest of this document explains some added customizations and
-+offers an example Brcmstb PCIe host controller DT node.
-+
-+Required Properties:
-+  reg -- the register start address and length for the PCIe block.
-+      Additional start,length pairs may be specified for clock addresses.
-+  interrupts -- this must be specified but it is used indirectly.  Interrupt
-+      zero must be specified; the Brcmstb driver code uses this interrupt
-+      to determine the offset used for all interrupts, specifically, those
-+      listed in interrupt-map.
-+  compatible -- must be one of: "brcm,bcm7425-pcie", "brcm,bcm7435-pcie" or
-+      "brcm,bcm7445-pcie".
-+  #address-cells -- the number of address cells for PCI-space.
-+  #size-cells -- the number of size cells for PCI-space.
-+  ranges -- See [1]; a specification of the outbound windows for the host
-+      controller.  Each outbound window is described by a 7-tuple:
-+          (3 entries) -- PCIe space start address (0th entry is ignored).
-+          (2 entries) -- CPU/System start address
-+          (2 entries) -- Size of region.
-+      Due to hardware limitations, there may be a maximum of four windows
-+      specified.
-+  #interrupt-cells -- number of cells used to describe the interrupt.
-+  interrupt-map -- See [1]; each interrupt requires 7 entries, and
-+      currently all but the fifth entry (order 0) -- the interrupt
-+      number -- is ignored.  There must be four interrupts specified
-+      for the PCI's INTA, INTB, INTC, and INTD.
-+
-+Optional Properties:
-+  interrupt-names -- names of the interrupts listed in the interrupt map.
-+  clocks -- list of clock phandles.  If specified, this should list one
-+      clock.
-+  clock-names -- the "local" names of the clocks specified in 'clocks'.  Note
-+      that if the 'clocks' property is given, 'clock-names' is mandatory,
-+      and the name of the clock is expected to be "sw_pcie".
-+  brcm,ssc -- (boolean) indicates usage of spread-spectrum clocking.
-+  brcm,gen --  (integer) indicates desired generation of link:
-+      1 => 2.5 Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps.
-+  supply-names -- the names of voltage regulators that the root
-+      complex should turn off/on/on on suspend/resume/boot.  This
-+      is a string list.
-+  supplies -- A collection of phandles to a regulator nodes, see
-+	Documentation/devicetree/bindings/regulator/ for specific
-+	bindings. The number and order of phandles must match
-+	exactly the number of strings in the "supply-names" property.
-+
-+Example Node:
-+
-+	pcie@f0460000 {
-+		reg = <0x0 0xf0460000 0x0 0x9310>;
-+		interrupts = <0x0 0x0 0x4>;
-+		compatible = "brcm,pci-plat-dev";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		ranges = <0x02000000 0x00000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x08000000
-+			  0x02000000 0x00000000 0x08000000 0x00000000 0xc8000000 0x00000000 0x08000000>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0xf800 0 0 7>;
-+		interrupt-map = <0 0 0 1 &intc 47 3
-+				 0 0 0 2 &intc 48 3
-+				 0 0 0 3 &intc 49 3
-+				 0 0 0 4 &intc 50 3>;
-+		interrupt-names = "pcie_0_inta",
-+				  "pcie_0_intb",
-+				  "pcie_0_intc",
-+				  "pcie_0_intd";
-+		clocks = <&sw_pcie0>;
-+		clock-names = "sw_pcie";
-+		brcm,ssc;
-+		brcm,gen = <1>;
-+		supply-names = "vreg-wifi-pwr";
-+		supplies = <&vreg-wifi-pwr>;
-+
-+	};
--- 
-2.1.0
+Only devfreq patches should be merged on devfreq tree.
+
+We already discussed this topic on offline. I expect that you will agai=
+n handle
+this patchset according to reply of both Krzysztof and me.
+
+Best Regards,
+Chanwoo Choi
+
+>=20
+>=20
+> Cheers,
+> MyungJoo
+>=20
+>>
+>> Also, to support the bus frequency scaling for Exynos542x SoC,
+>> Exynos542x SoC has the specific 'NoC (Network on Chip) Probe' device
+>> to measure the transfered data traffic on NoC (Network on Chip)
+>> instead of PPMU (Platform Performance Monitoring Unit). NoC Probe de=
+vice
+>> provide the utilization for INT block of Exynos542x SoC.
+>>
+>> The generic exynos-bus frequency driver uses the 'NoC Probe' devfreq=
+-event
+>> device (drivers/devfreq/event/exynos-nocp.c) without any modificatio=
+n.
+>> Just add the phandle of 'NoC Probe' dt node to bus dt node.
+>>
+>> Depend on:
+>> This patchset depends on patch[1] which support the generic exynos-b=
+us
+>> frequency driver.
+>> [1] http://www.spinics.net/lists/arm-kernel/msg495976.html
+>> - [PATCH v9 00/20] PM / devferq: Add generic exynos bus frequency dr=
+iver and new passive governor
+>>
+>>
