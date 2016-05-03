@@ -1,62 +1,73 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v9 18/22] drivers/of: Rename unflatten_dt_node()
-Date: Tue,  3 May 2016 23:22:49 +1000
-Message-ID: <1462281773-26438-19-git-send-email-gwshan@linux.vnet.ibm.com>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 5/6] pinctrl: tegra: Add DT binding for io pads control
+Date: Tue, 3 May 2016 14:33:25 +0100
+Message-ID: <5728A8A5.4080603@nvidia.com>
+References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com>
+ <1462191434-28933-6-git-send-email-ldewangan@nvidia.com>
+ <57289D3D.40301@nvidia.com> <57289F88.6040203@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, alistair@popple.id.au, aik@ozlabs.ru, linux-pci@vger.kernel.org, Gavin Shan <gwshan@linux.vnet.ibm.com>, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57289F88.6040203@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyByZW5hbWVzIHVuZmxhdHRlbl9kdF9ub2RlKCkgdG8gdW5mbGF0dGVuX2R0X25vZGVzKCkg
-YXMgaXQKcG9wdWxhdGVzIG11bHRpcGxlIGRldmljZSBub2RlcyBmcm9tIEZEVCBibG9iLiBObyBs
-b2dpY2FsIGNoYW5nZXMKaW50cm9kdWNlZC4KClNpZ25lZC1vZmYtYnk6IEdhdmluIFNoYW4gPGd3
-c2hhbkBsaW51eC52bmV0LmlibS5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
-ZWwub3JnPgotLS0KIGRyaXZlcnMvb2YvZmR0LmMgfCAxNCArKysrKysrLS0tLS0tLQogMSBmaWxl
-IGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL29mL2ZkdC5jIGIvZHJpdmVycy9vZi9mZHQuYwppbmRleCBkMWQ1MzA5Li43ODUwMTUw
-IDEwMDY0NAotLS0gYS9kcml2ZXJzL29mL2ZkdC5jCisrKyBiL2RyaXZlcnMvb2YvZmR0LmMKQEAg
-LTM4MSw3ICszODEsNyBAQCBzdGF0aWMgdm9pZCByZXZlcnNlX25vZGVzKHN0cnVjdCBkZXZpY2Vf
-bm9kZSAqcGFyZW50KQogfQogCiAvKioKLSAqIHVuZmxhdHRlbl9kdF9ub2RlIC0gQWxsb2MgYW5k
-IHBvcHVsYXRlIGEgZGV2aWNlX25vZGUgZnJvbSB0aGUgZmxhdCB0cmVlCisgKiB1bmZsYXR0ZW5f
-ZHRfbm9kZXMgLSBBbGxvYyBhbmQgcG9wdWxhdGUgYSBkZXZpY2Vfbm9kZSBmcm9tIHRoZSBmbGF0
-IHRyZWUKICAqIEBibG9iOiBUaGUgcGFyZW50IGRldmljZSB0cmVlIGJsb2IKICAqIEBtZW06IE1l
-bW9yeSBjaHVuayB0byB1c2UgZm9yIGFsbG9jYXRpbmcgZGV2aWNlIG5vZGVzIGFuZCBwcm9wZXJ0
-aWVzCiAgKiBAZGFkOiBQYXJlbnQgc3RydWN0IGRldmljZV9ub2RlCkBAIC0zODksMTAgKzM4OSwx
-MCBAQCBzdGF0aWMgdm9pZCByZXZlcnNlX25vZGVzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50
-KQogICoKICAqIEl0IHJldHVybnMgdGhlIHNpemUgb2YgdW5mbGF0dGVuZWQgZGV2aWNlIHRyZWUg
-b3IgZXJyb3IgY29kZQogICovCi1zdGF0aWMgaW50IHVuZmxhdHRlbl9kdF9ub2RlKGNvbnN0IHZv
-aWQgKmJsb2IsCi0JCQkgICAgIHZvaWQgKm1lbSwKLQkJCSAgICAgc3RydWN0IGRldmljZV9ub2Rl
-ICpkYWQsCi0JCQkgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqKm5vZGVwcCkKK3N0YXRpYyBpbnQg
-dW5mbGF0dGVuX2R0X25vZGVzKGNvbnN0IHZvaWQgKmJsb2IsCisJCQkgICAgICB2b2lkICptZW0s
-CisJCQkgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRhZCwKKwkJCSAgICAgIHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqKm5vZGVwcCkKIHsKIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKnJvb3Q7CiAJaW50IG9m
-ZnNldCA9IDAsIGRlcHRoID0gMDsKQEAgLTQ3OSw3ICs0NzksNyBAQCBzdGF0aWMgdm9pZCBfX3Vu
-ZmxhdHRlbl9kZXZpY2VfdHJlZShjb25zdCB2b2lkICpibG9iLAogCX0KIAogCS8qIEZpcnN0IHBh
-c3MsIHNjYW4gZm9yIHNpemUgKi8KLQlzaXplID0gdW5mbGF0dGVuX2R0X25vZGUoYmxvYiwgTlVM
-TCwgTlVMTCwgTlVMTCk7CisJc2l6ZSA9IHVuZmxhdHRlbl9kdF9ub2RlcyhibG9iLCBOVUxMLCBO
-VUxMLCBOVUxMKTsKIAlpZiAoc2l6ZSA8IDApCiAJCXJldHVybjsKIApAQCAtNDk1LDcgKzQ5NSw3
-IEBAIHN0YXRpYyB2b2lkIF9fdW5mbGF0dGVuX2RldmljZV90cmVlKGNvbnN0IHZvaWQgKmJsb2Is
-CiAJcHJfZGVidWcoIiAgdW5mbGF0dGVuaW5nICVwLi4uXG4iLCBtZW0pOwogCiAJLyogU2Vjb25k
-IHBhc3MsIGRvIGFjdHVhbCB1bmZsYXR0ZW5pbmcgKi8KLQl1bmZsYXR0ZW5fZHRfbm9kZShibG9i
-LCBtZW0sIE5VTEwsIG15bm9kZXMpOworCXVuZmxhdHRlbl9kdF9ub2RlcyhibG9iLCBtZW0sIE5V
-TEwsIG15bm9kZXMpOwogCWlmIChiZTMyX3RvX2NwdXAobWVtICsgc2l6ZSkgIT0gMHhkZWFkYmVl
-ZikKIAkJcHJfd2FybmluZygiRW5kIG9mIHRyZWUgbWFya2VyIG92ZXJ3cml0dGVuOiAlMDh4XG4i
-LAogCQkJICAgYmUzMl90b19jcHVwKG1lbSArIHNpemUpKTsKLS0gCjIuMS4wCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGlu
-ZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
-Lm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+
+On 03/05/16 13:54, Laxman Dewangan wrote:
+> 
+> On Tuesday 03 May 2016 06:14 PM, Jon Hunter wrote:
+>> On 02/05/16 13:17, Laxman Dewangan wrote:
+>>> +
+>>> +The voltage supported on the pads are 1.8V and 3.3V. The enums are
+>>> defined as:
+>>> +    For 1.8V, use TEGRA_IO_PAD_POWER_SOURCE_1800000UV
+>>> +    For 3.3V, use TEGRA_IO_PAD_POWER_SOURCE_3300000UV
+>> Are these still necessary now that the driver is using uV? Can't we just
+>> use integer values for 1800000 and 3300000 in the DTS directly?
+>>
+> The config param and value are packed in u32 with 16bit each So we can
+> not make uV in 16bit until we do conversion of uV->mV.
+> Hence suggestion came from Stephen that we can have enum for Nvidia
+> specific and what actually it supports by HW. HW does not support any
+> other voltage.
+
+Ah yes I see.
+
+> 
+>>> +Required subnode-properties:
+>>> +==========================
+>>> +- pins : An array of strings. Each string contains the name of an IO
+>>> pads. Valid
+>>> +     values for these names are listed below.
+>> Please see my previous comments.
+> 
+> This is taken from other dt binding docs for description. We can have
+> array of string.
+
+OK.
+
+> As all value of pins are not supporting all property and hence I
+> explicitly wrote under properties.
+
+I don't find it very clear. I thought all pins support the low power
+modes so I think it is clearer to list all the pin names under the pins
+description.
+
+>>> +Optional subnode-properties:
+>>> +==========================
+>>> +-nvidia,power-source-voltage:    Integer. The voltage level of IO
+>>> pads. The
+>> I think I prefer nvidia,io-voltage or something. You can describe what
+>> this means in this doc. In fact, the current description here does not
+>> explicitly state that this voltage, is the voltage the pad is configured
+>> to operate at versus the voltage of the IO rail.
+> 
+> Linus suggested this dt property name to make more readable and generic
+> and meaningful with other property :power-source.
+
+OK.
+
+Jon
