@@ -1,94 +1,57 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: add Cypress FM33256B Processor Companion driver
-Date: Tue, 3 May 2016 10:14:18 +0200
-Message-ID: <20160503081418.GC2335@piout.net>
-References: <1461150471-23163-1-git-send-email-jlp@gomspace.com>
- <1461150471-23163-2-git-send-email-jlp@gomspace.com>
- <20160422193232.GA9737@rob-hp-laptop>
- <20160422201153.GB17051@piout.net>
- <571F7BD2.60201@gomspace.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v2 2/3] ARM: DRA7x: dts: Update the OSC_32K_CLK frequency
+Date: Tue, 3 May 2016 11:16:38 +0300
+Message-ID: <57285E66.2000708@ti.com>
+References: <20160427171658.GA5995@atomide.com>
+ <1462209123-7332-1-git-send-email-Linux.HWI@garmin.com>
+ <1462209123-7332-3-git-send-email-Linux.HWI@garmin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <571F7BD2.60201-jTq9jD7AHYRWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeppe Ledet-Pedersen <jlp-jTq9jD7AHYRWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462209123-7332-3-git-send-email-Linux.HWI@garmin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "J.D. Schroeder" <Linux.HWI@garmin.com>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: jay.schroeder@garmin.com
 List-Id: devicetree@vger.kernel.org
 
-On 26/04/2016 at 16:31:46 +0200, Jeppe Ledet-Pedersen wrote :
-> > Good catch, I didn't look at this patch but it includes a lot of code
-> > that should be going to the RTC driver.
-> > If trickle charging is not enabled, I guess the RTC will not charge its
-> > backup battery.
-> 
-> Thank you for the comments.
-> 
-> Alexandre is correct. If the "cypress,charge-enabled" property is
-> present, the internal 80 uA trickle charger is enabled to charge a
-> backup capacitor on the VBAK pin.
-> 
-> Do you want more code than the trickle charger setup moved to the RTC
-> driver?
-> 
+On 02/05/16 20:12, J.D. Schroeder wrote:
+> From: "J.D. Schroeder" <jay.schroeder@garmin.com>
+>
+> This commit updates the OSC_32K_CLK (secure_32k_clk_src_ck) frequency
+> from the precise 32kHz frequency (i.e., 32.768 kHz) to a more
+> accurate frequency of ~34.6 kHz. Actual measured frequencies of the
+> clock vary from processor to processor anywhere from 34.4 kHz up to
+> 34.8 kHz. Note that the ~34 kHz frequency clock is generated
+> internally by the processor, not an input to the processor. This
+> change makes it more clear that the consumer of the
+> secure_32k_clk_src_ck will not get a precise 32.768 kHz frequency
+> output.
+>
+> Signed-off-by: J.D. Schroeder <jay.schroeder@garmin.com>
+> Reviewed-by: Trenton Andres <trenton.andres@garmin.com>
+> ---
+>   arch/arm/boot/dts/dra7xx-clocks.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> index 3f0c61d..f7ec976 100644
+> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> @@ -95,7 +95,7 @@
+>   	secure_32k_clk_src_ck: secure_32k_clk_src_ck {
+>   		#clock-cells = <0>;
+>   		compatible = "fixed-clock";
+> -		clock-frequency = <32768>;
+> +		clock-frequency = <34600>; /* approximate frequency */
+>   	};
+>
+>   	sys_clk32_crystal_ck: sys_clk32_crystal_ck {
+>
 
-I guess the 32k oscillator could go in the rtc driver too.
+I still don't agree with this patch. The actual frequency can drift much 
+more, you are just seeing this number at your setup. There is some 
+internal discussion going on in TI about this, but I can't share any 
+data on this yet.
 
-> >>> +- cypress,charge-fast: enable fast (1 mA) charging
-> >>
-> >> What does fast mean?
-> >>
-> 
-> Fast charging means charging with 1 mA instead of 80 uA. The wording is
-> from the datasheet, but I agree it should be renamed to something that
-> better explains what the difference is.
-> 
-> >> I think it is time for a common binding here. There's all sorts of 
-> >> variations on setting the charge current in bindings. Add something like 
-> >> "charge-current-microamp" in power_supply.txt and use it here. Then 
-> >> 1000uA implies "fast charge".
-> > 
-> > Well, this is not a power supply, it is an RTC.
-> > 
-> > I think both properties should got to the RTC subdevice and be parsed in
-> > the RTC driver.
-> 
-> The backup capacitor is primarily used to supply current to the RTC, but
-> a couple of other registers are also battery-backed (watchdog reset
-> cause, event counter), so I put the charger setup in the main MFD file.
-> 
-> If you prefer, I can move them both to the RTC driver?
-
-I would prefer unless you think that many people are not using the RTC
-while still using the watchdog (I'd say that is not the case).
-
-> 
-> > Note that for trickle charging, we currently have the following
-> > properties:
-> >  - trickle-resistor-ohms
-> >  - trickle-diode-disable
-> >  - abracon,tc-diode
-> >  - abracon,tc-resistor
-> > 
-> > abracon,tc-resistor can be replaced by trickle-resistor-ohms, I'll make
-> > a patch but abracon,tc-diode allows to select a diode type (and in
-> > particular a voltage drop).
-> > 
-> > I think we could add a trickle-current-microamp like you suggested and
-> > trickle-diode-disable can be reused.
-> 
-> So replace "cypress,charge-enabled/charge-fast" with
-> "trickle-current-microamp" and a check for 0/80/1000 uA?
-> 
-
-Yeah, seems fine.
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Tero
