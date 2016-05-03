@@ -1,91 +1,92 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] ARM: DRA7x: dts: Update the OSC_32K_CLK frequency
-Date: Tue, 3 May 2016 20:32:44 +0300
-Message-ID: <5728E0BC.3080509@ti.com>
-References: <20160427171658.GA5995@atomide.com>
- <1462209123-7332-1-git-send-email-Linux.HWI@garmin.com>
- <1462209123-7332-3-git-send-email-Linux.HWI@garmin.com>
- <57285E66.2000708@ti.com> <5728A81F.4050906@garmin.com>
- <20160503164323.GN5995@atomide.com>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
+ registers
+Date: Tue, 3 May 2016 19:48:32 +0200
+Message-ID: <5728E470.7050408@gmail.com>
+References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
+ <20160427233028.GA5155@verge.net.au> <5721A2A5.9010908@de.bosch.com>
+ <20160428234345.GD18128@verge.net.au> <20160429113515.333c42ef@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160503164323.GN5995-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "J.D. Schroeder" <Linux.HWI-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org, Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160429113515.333c42ef@arm.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, julien.grall@arm.com, geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/16 19:43, Tony Lindgren wrote:
-> * J.D. Schroeder <Linux.HWI-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org> [160503 06:32]:
->> On 05/03/2016 03:16 AM, Tero Kristo wrote:
->>> On 02/05/16 20:12, J.D. Schroeder wrote:
->>>> From: "J.D. Schroeder" <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
->>>>
->>>> This commit updates the OSC_32K_CLK (secure_32k_clk_src_ck) frequency
->>>> from the precise 32kHz frequency (i.e., 32.768 kHz) to a more
->>>> accurate frequency of ~34.6 kHz. Actual measured frequencies of the
->>>> clock vary from processor to processor anywhere from 34.4 kHz up to
->>>> 34.8 kHz. Note that the ~34 kHz frequency clock is generated
->>>> internally by the processor, not an input to the processor. This
->>>> change makes it more clear that the consumer of the
->>>> secure_32k_clk_src_ck will not get a precise 32.768 kHz frequency
->>>> output.
->>>>
->>>> Signed-off-by: J.D. Schroeder <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
->>>> Reviewed-by: Trenton Andres <trenton.andres-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>    arch/arm/boot/dts/dra7xx-clocks.dtsi | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi
->>>> b/arch/arm/boot/dts/dra7xx-clocks.dtsi
->>>> index 3f0c61d..f7ec976 100644
->>>> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
->>>> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
->>>> @@ -95,7 +95,7 @@
->>>>        secure_32k_clk_src_ck: secure_32k_clk_src_ck {
->>>>            #clock-cells = <0>;
->>>>            compatible = "fixed-clock";
->>>> -        clock-frequency = <32768>;
->>>> +        clock-frequency = <34600>; /* approximate frequency */
->>>>        };
->>>>
->>>>        sys_clk32_crystal_ck: sys_clk32_crystal_ck {
->>>>
+Hi Simon,
+
+On 29.04.2016 12:35, Marc Zyngier wrote:
+> On Fri, 29 Apr 2016 09:43:45 +1000
+> Simon Horman <horms@verge.net.au> wrote:
+>
+>> [Cc Mark Zyngier, linux-arm-kernel]
+>>
+>> Hi Dirk,
+>>
+>> On Thu, Apr 28, 2016 at 07:41:57AM +0200, Dirk Behme wrote:
+>>> Hi Simon,
 >>>
->>> I still don't agree with this patch. The actual frequency can drift much more,
->>> you are just seeing this number at your setup.
+>>> On 28.04.2016 01:30, Simon Horman wrote:
+>>>> Hi Dirk,
+>>>>
+>>>> I understand that there is an issue here but I'm not yet able
+>>>> to convince myself that this is the correct solution.
+>>>>
+>>>> In revision r0p1 of the CoreLink GIC-400 Generic Interrupt Controller
+>>>> Technical Reference Manual[1] I see in Section 3.2. "GIC-400 register map"
+>>>> that the size of both the CPU interfaces and Virtual CPU interfaces are
+>>>> 0x2000 bytes. And assuming that the hardware follows the specification it
+>>>> appears that DT is correctly describing the hardware.
+>>>
+>>>
+>>> I think you are missing the details described by ARM in
+>>>
+>>> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
+>>>
+>>>
+>>> Maybe Julien could help if you have some more doubts?
 >>
->> Yes, it can drift significantly from processor to processor. Do you agree that
->> this frequency is closer to what can be expected than 32768 Hz?
+>> I guess I am confused.
 >>
->> Like I said, I would have renamed the clock also but I opted to go the less
->> obtrusive route while still helping others that might think they can
->> reasonably use this clock in their design as a 32768 Hz clock source. Perhaps
->> my comment and selection of the approximate frequency is not the best (I'm
->> open for suggestions). However, I do think this change is an improvement and
->> clarifying change to what is currently present in the clock description.
+>> I see that there is now handling of the case where the region size is
+>> 128Kbytes. But I'm still not seeing the bit which describes that the
+>> GIC-400  has a region size of 128Kbytes. Perhaps the later is somehow
+>> implied by the former. Or perhaps I need to check with the hw team.
 >
-> Does a fixed divider calculation of input * (32768 / 0x27e6) make sense
-> here too as pointed out earlier by Matthijs for the ti81xx?
-
-Not really, the hardware setup for this clock is not like that. Also, as 
-it is security related, this is kind of sensitive area to discuss 
-publicly. Personally I would not recommend using this clock for any 
-timing sensitive applications. May I ask why you are interested in the 
-exact clock rate of this clock anyway?
-
--Tero
-
+> Please have a look at the SBSA document, and in particular the
+> Appendix-F (registration and selling your soul required - only kidding):
 >
-> Regards,
+> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0029/index.html
 >
-> Tony
+> This requires that, in order for the two halves of GICV to be trappable
+> *separately* by a hypervisor using 64kB pages at Stage-2, the two 4kB
+> pages that describe that region are aliased as such:
+> - the first 4kB page is aliased 16 times over a 64kB region
+> - the second 4kB page is aliased 16 times over another contiguous 64kB
+>    region
 >
+> This means that your GIC is indeed covering a 128kB region, with the
+> mapping corresponding to the GICv2 memory map located at offset 0xf000
+> from the base of that 128kB region. Also, this GICV requirement also
+> applies to GICC (most likely because the two regions use the same
+> decoding logic).
+>
+> The OS must of course be aware of this (see gic_check_eoimode in the
+> GIC driver). Of course, almost nobody got that right (I only know of
+> the APM Xgene-1 so far). If you actually did, great!
+>
+> Also, the ACPI spec fails to recognize this by not providing the length
+> of the region, meaning that those who got it right with DT are likely
+> to get it wrong with ACPI, and vice-versa.
+>
+> It's a wonderful world.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Could this patch be applied, then?
+
+Best regards
+
+Dirk
