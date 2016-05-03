@@ -1,156 +1,94 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 8/9] dt-bindings: msm/dsi: Modify port and PHY bindings
-Date: Tue, 03 May 2016 16:02:08 +0200
-Message-ID: <1462284128.3617.68.camel@pengutronix.de>
+Subject: Re: [PATCH 5/9] dt-bindings: msm/dsi: Some binding doc cleanups
+Date: Tue, 03 May 2016 16:05:01 +0200
+Message-ID: <1462284301.3617.71.camel@pengutronix.de>
 References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
-	 <1462273081-5814-9-git-send-email-architt@codeaurora.org>
+ <1462273081-5814-6-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1462273081-5814-9-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1462273081-5814-6-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Archit Taneja <architt@codeaurora.org>
-Cc: robdclark@gmail.com, robh@kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, devicetree@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 03.05.2016, 16:28 +0530 schrieb Archit Taneja:
-> The DSI node now has two ports that describe the connection between the
-> MDP interface output and the DSI input, and the connection between the DSI
-> output and the connected panel/bridge. Update the properties and the
-> example.
-> 
-> Also, use generic PHY bindings instead of the custom one.
-> 
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> ---
->  .../devicetree/bindings/display/msm/dsi.txt        | 53 +++++++++++++++-------
->  1 file changed, 37 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> index bf41d7c..0223f06 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> @@ -25,12 +25,18 @@ Required properties:
->  - vdd-supply: phandle to vdd regulator device node
->  - vddio-supply: phandle to vdd-io regulator device node
->  - vdda-supply: phandle to vdda regulator device node
-> -- qcom,dsi-phy: phandle to DSI PHY device node
-> +- phys: phandle to DSI PHY device node
-> +- phy-names: the name of the corresponding PHY device
-
-Should "dsi_phy" be specified here?
-
-Also is there any kind of system to the PHY naming? I've seen more
-bindings use hyphen instead of underscore in the name, for example.
-I have called the MediaTek MIPI_TX PHY "dphy" for no other reason than
-it's a MIPI D-PHY.
-
->  - syscon-sfpb: A phandle to mmss_sfpb syscon node (only for DSIv2)
-> +- ports: Contains 2 DSI controller ports as child nodes. Each port contains
-> +  an endpoint subnode as defined in [2] and [3]. port@0 describes the
-> +  connection between the MDP interface output and the DSI input. port@1
-> +  describes the connection between the DSI output and the connected
-> +  panel/bridge.
->  
->  Optional properties:
->  - panel@0: Node of panel connected to this DSI controller.
-> -  See files in [2] for each supported panel.
-> +  See files in [4] for each supported panel.
->  - qcom,dual-dsi-mode: Boolean value indicating if the DSI controller is
->    driving a panel which needs 2 DSI links.
->  - qcom,master-dsi: Boolean value indicating if the DSI controller is driving
-> @@ -42,15 +48,15 @@ Optional properties:
->  - pinctrl-names: the pin control state names; should contain "default"
->  - pinctrl-0: the default pinctrl state (active)
->  - pinctrl-n: the "sleep" pinctrl state
-> -- port: DSI controller output port, containing one endpoint subnode.
->  
->    DSI Endpoint properties:
-> -  - remote-endpoint: set to phandle of the connected panel's endpoint.
-> -    See [3] for device graph info.
-> +  - remote-endpoint: For port@0, set to phandle of the connected panel/bridge's
-> +    input endpoint. For port@1, set to the MDP interface output.
->    - qcom,data-lane-map: this describes how the logical DSI lanes are mapped
->      to the physical lanes on the given platform. The value contained in
->      index n describes what logical data lane is mapped to the physical data
-> -    lane n (DATAn, where n lies between 0 and 3).
-> +    lane n (DATAn, where n lies between 0 and 3). Only for the endpoint in
-> +    port@1.
-
-I approve of the of graph change, but I notice that the
-qcom,data-lane-map is very similar to the data-lanes property documented
-in Documentation/devicetree/bindings/media/video-interfaces.txt for MIPI
-CSI-2. Could that maybe be reused for DSI?
-
->      For example:
->  
-> @@ -97,8 +103,9 @@ Optional properties:
->    regulator is wanted.
->  
->  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -[2] Documentation/devicetree/bindings/display/panel/
-> -[3] Documentation/devicetree/bindings/graph.txt
-> +[2] Documentation/devicetree/bindings/graph.txt
-> +[3] Documentation/devicetree/bindings/media/video-interfaces.txt
-> +[4] Documentation/devicetree/bindings/display/panel/
->  
->  Example:
->  	dsi0: dsi@fd922800 {
-> @@ -129,7 +136,8 @@ Example:
->  		vdd-supply = <&pma8084_l22>;
->  		vddio-supply = <&pma8084_l12>;
->  
-> -		qcom,dsi-phy = <&dsi_phy0>;
-> +		phys = <&dsi_phy0>;
-> +		phy-names ="dsi_phy";
->  
->  		qcom,dual-dsi-mode;
->  		qcom,master-dsi;
-> @@ -139,6 +147,26 @@ Example:
->  		pinctrl-0 = <&mdss_dsi_active>;
->  		pinctrl-1 = <&mdss_dsi_suspend>;
->  
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				dsi0_in: endpoint {
-> +					remote-endpoint = <&mdp_intf1_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				dsi0_out: endpoint {
-> +					remote-endpoint = <&panel_in>;
-> +					qcom,data-lane-map = <0 1 2 3>;
-> +				};
-> +			};
-> +		};
-> +
->  		panel: panel@0 {
->  			compatible = "sharp,lq101r1sx01";
->  			reg = <0>;
-
-If the panel is connected via port@1, why is this still needed?
-
-> @@ -153,13 +181,6 @@ Example:
->  				};
->  			};
->  		};
-> -
-> -		port {
-> -			dsi0_out: endpoint {
-> -				remote-endpoint = <&panel_in>;
-> -				qcom,data-lane-map = <0 1 2 3>;
-> -			};
-> -		};
->  	};
->  
->  	dsi_phy0: dsi_phy@fd922a00 {
-
-regards
-Philipp
+QW0gRGllbnN0YWcsIGRlbiAwMy4wNS4yMDE2LCAxNjoyNyArMDUzMCBzY2hyaWViIEFyY2hpdCBU
+YW5lamE6Cj4gU29tZSBjbGVhbnVwczoKPiAKPiAtIFVzZSBzaW1wbGVyIG5hbWVzIGZvciBEVCBu
+b2RlcyBpbiB0aGUgZXhhbXBsZQo+IC0gRml4IHBoYW5kbGUgZm9yIHNwZWNpZnlpbmcgZGF0YSBs
+YW5lIG1hcHBpbmcgaW4gdGhlIGV4YW1wbGUuCj4gLSBVc2UgcmVmZXJlbmNlcyBpbnN0ZWFkIG9m
+IGR1bXBpbmcgRG9jdW1lbnQgbGlua3MgZXZlcnl3aGVyZQo+IAo+IFNpZ25lZC1vZmYtYnk6IEFy
+Y2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgICAgICAgIHwgMjMgKysrKysrKysrKyst
+LS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRp
+b25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L21zbS9kc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvbXNtL2RzaS50eHQKPiBpbmRleCBmNTk0OGM0Li5iZjQxZDdjIDEwMDY0NAo+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0
+Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2Rz
+aS50eHQKPiBAQCAtMTEsOCArMTEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgIGJlIDAg
+b3IgMSwgc2luY2Ugd2UgaGF2ZSAyIERTSSBjb250cm9sbGVycyBhdCBtb3N0IGZvciBub3cuCj4g
+IC0gaW50ZXJydXB0czogVGhlIGludGVycnVwdCBzaWduYWwgZnJvbSB0aGUgRFNJIGJsb2NrLgo+
+ICAtIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPiAtLSBjbG9j
+a3M6IGRldmljZSBjbG9ja3MKPiAtICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4gKy0gY2xvY2tzOiBQ
+aGFuZGxlcyB0byBkZXZpY2UgY2xvY2tzIGFzIGRlc2NpcmJlZCBpbiBbMV0KCnMvZGVzY2lyYmVk
+L2Rlc2NyaWJlZC8KCj4gIC0gY2xvY2stbmFtZXM6IHRoZSBmb2xsb3dpbmcgY2xvY2tzIGFyZSBy
+ZXF1aXJlZDoKPiAgICAqICJtZHBfY29yZV9jbGsiCj4gICAgKiAiaWZhY2VfY2xrIgo+IEBAIC0z
+MSw4ICszMCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIAo+ICBPcHRpb25hbCBwcm9wZXJ0
+aWVzOgo+ICAtIHBhbmVsQDA6IE5vZGUgb2YgcGFuZWwgY29ubmVjdGVkIHRvIHRoaXMgRFNJIGNv
+bnRyb2xsZXIuCj4gLSAgU2VlIGZpbGVzIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsLyBmb3IgZWFjaCBzdXBwb3J0ZWQKPiAtICBwYW5lbC4KPiArICBT
+ZWUgZmlsZXMgaW4gWzJdIGZvciBlYWNoIHN1cHBvcnRlZCBwYW5lbC4KPiAgLSBxY29tLGR1YWwt
+ZHNpLW1vZGU6IEJvb2xlYW4gdmFsdWUgaW5kaWNhdGluZyBpZiB0aGUgRFNJIGNvbnRyb2xsZXIg
+aXMKPiAgICBkcml2aW5nIGEgcGFuZWwgd2hpY2ggbmVlZHMgMiBEU0kgbGlua3MuCj4gIC0gcWNv
+bSxtYXN0ZXItZHNpOiBCb29sZWFuIHZhbHVlIGluZGljYXRpbmcgaWYgdGhlIERTSSBjb250cm9s
+bGVyIGlzIGRyaXZpbmcKPiBAQCAtNDgsNyArNDYsNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
+ICAKPiAgICBEU0kgRW5kcG9pbnQgcHJvcGVydGllczoKPiAgICAtIHJlbW90ZS1lbmRwb2ludDog
+c2V0IHRvIHBoYW5kbGUgb2YgdGhlIGNvbm5lY3RlZCBwYW5lbCdzIGVuZHBvaW50Lgo+IC0gICAg
+U2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQgZm9yIGRldmlj
+ZSBncmFwaCBpbmZvLgo+ICsgICAgU2VlIFszXSBmb3IgZGV2aWNlIGdyYXBoIGluZm8uCj4gICAg
+LSBxY29tLGRhdGEtbGFuZS1tYXA6IHRoaXMgZGVzY3JpYmVzIGhvdyB0aGUgbG9naWNhbCBEU0kg
+bGFuZXMgYXJlIG1hcHBlZAo+ICAgICAgdG8gdGhlIHBoeXNpY2FsIGxhbmVzIG9uIHRoZSBnaXZl
+biBwbGF0Zm9ybS4gVGhlIHZhbHVlIGNvbnRhaW5lZCBpbgo+ICAgICAgaW5kZXggbiBkZXNjcmli
+ZXMgd2hhdCBsb2dpY2FsIGRhdGEgbGFuZSBpcyBtYXBwZWQgdG8gdGhlIHBoeXNpY2FsIGRhdGEK
+PiBAQCAtODksOCArODcsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAtIHFjb20sZHNpLXBo
+eS1pbmRleDogVGhlIElEIG9mIERTSSBQSFkgaGFyZHdhcmUgaW5zdGFuY2UuIFRoaXMgc2hvdWxk
+Cj4gICAgYmUgMCBvciAxLCBzaW5jZSB3ZSBoYXZlIDIgRFNJIFBIWXMgYXQgbW9zdCBmb3Igbm93
+Lgo+ICAtIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPiAtLSBj
+bG9ja3M6IGRldmljZSBjbG9ja3MKPiAtICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4gKy0gY2xvY2tz
+OiBQaGFuZGxlcyB0byBkZXZpY2UgY2xvY2tzIGFzIGRlc2NpcmJlZCBpbiBbMV0KCnMvZGVzY2ly
+YmVkL2Rlc2NyaWJlZC8KCj4gIC0gY2xvY2stbmFtZXM6IHRoZSBmb2xsb3dpbmcgY2xvY2tzIGFy
+ZSByZXF1aXJlZDoKPiAgICAqICJpZmFjZV9jbGsiCj4gIC0gdmRkaW8tc3VwcGx5OiBwaGFuZGxl
+IHRvIHZkZC1pbyByZWd1bGF0b3IgZGV2aWNlIG5vZGUKPiBAQCAtOTksOCArOTYsMTIgQEAgT3B0
+aW9uYWwgcHJvcGVydGllczoKPiAgLSBxY29tLGRzaS1waHktcmVndWxhdG9yLWxkby1tb2RlOiBC
+b29sZWFuIHZhbHVlIGluZGljYXRpbmcgaWYgdGhlIExETyBtb2RlIFBIWQo+ICAgIHJlZ3VsYXRv
+ciBpcyB3YW50ZWQuCj4gIAo+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dAo+ICtbMl0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvCj4gK1szXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZ3JhcGgudHh0Cj4gKwo+ICBFeGFtcGxlOgo+IC0JbWRzc19kc2kwOiBxY29tLG1k
+c3NfZHNpQGZkOTIyODAwIHsKPiArCWRzaTA6IGRzaUBmZDkyMjgwMCB7Cj4gIAkJY29tcGF0aWJs
+ZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+ICAJCXFjb20sZHNpLWhvc3QtaW5kZXggPSA8MD47
+Cj4gIAkJaW50ZXJydXB0LXBhcmVudCA9IDwmbWRzc19tZHA+Owo+IEBAIC0xMjgsNyArMTI5LDcg
+QEAgRXhhbXBsZToKPiAgCQl2ZGQtc3VwcGx5ID0gPCZwbWE4MDg0X2wyMj47Cj4gIAkJdmRkaW8t
+c3VwcGx5ID0gPCZwbWE4MDg0X2wxMj47Cj4gIAo+IC0JCXFjb20sZHNpLXBoeSA9IDwmbWRzc19k
+c2lfcGh5MD47Cj4gKwkJcWNvbSxkc2ktcGh5ID0gPCZkc2lfcGh5MD47Cj4gCj4gIAo+ICAJCXFj
+b20sZHVhbC1kc2ktbW9kZTsKPiAgCQlxY29tLG1hc3Rlci1kc2k7Cj4gQEAgLTE1NiwxMiArMTU3
+LDEyIEBAIEV4YW1wbGU6Cj4gIAkJcG9ydCB7Cj4gIAkJCWRzaTBfb3V0OiBlbmRwb2ludCB7Cj4g
+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsKPiAtCQkJCWxhbmVzID0gPDAgMSAy
+IDM+Owo+ICsJCQkJcWNvbSxkYXRhLWxhbmUtbWFwID0gPDAgMSAyIDM+OwoKU2VlIG15IGNvbW1l
+bnQgYWJvdXQgdGhlIENTSS0yIGRhdGEtbGFuZXMgYmluZGluZyBpbiB0aGUgb3RoZXIgbWFpbCwK
+Y291bGQgdGhlIGV4aXN0aW5nIGJpbmRpbmcgYmUgcmV1c2VkPwoKcmVnYXJkcwpQaGlsaXBwCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
