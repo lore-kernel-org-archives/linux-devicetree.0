@@ -1,1045 +1,763 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: [PATCH v3 02/11] thermal: tegra: add hw-throttle function
-Date: Tue, 3 May 2016 18:13:21 +0800
-Message-ID: <1462270410-2425-3-git-send-email-wni@nvidia.com>
-References: <1462270410-2425-1-git-send-email-wni@nvidia.com>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v10 7/8] [media] vcodec: mediatek: Add Mediatek H264 Video
+ Encoder Driver
+Date: Tue, 3 May 2016 18:11:26 +0800
+Message-ID: <1462270287-11374-8-git-send-email-tiffany.lin@mediatek.com>
+References: <1462270287-11374-1-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-2-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-3-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-4-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-5-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-6-git-send-email-tiffany.lin@mediatek.com>
+ <1462270287-11374-7-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462270410-2425-1-git-send-email-wni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: edubezval@gmail.com, thierry.reding@gmail.com, robh+dt@kernel.org, rui.zhang@intel.com
-Cc: MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wei Ni <wni@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1462270287-11374-7-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tegra soctherm support HW throttle, when the soctherm snesors'
-temperature is above the throttle trip point, it will trigger
-pulse skiper to tune clocks accroding to the throttle depth.
-Add this function for Tegra124 and Tegra210.
-Since Tegra132 use different registers to configure pulse skiper,
-will support it in next patch.
+Add h264 encoder driver for MT8173
 
-Signed-off-by: Wei Ni <wni@nvidia.com>
+Signed-off-by: PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
 ---
- drivers/thermal/tegra/soctherm.c          | 668 +++++++++++++++++++++++++++++-
- drivers/thermal/tegra/soctherm.h          |  10 +
- drivers/thermal/tegra/tegra124-soctherm.c |  18 +
- drivers/thermal/tegra/tegra132-soctherm.c |   1 +
- drivers/thermal/tegra/tegra210-soctherm.c |  18 +
- 5 files changed, 700 insertions(+), 15 deletions(-)
+ drivers/media/platform/mtk-vcodec/Makefile         |    1 +
+ .../media/platform/mtk-vcodec/venc/venc_h264_if.c  |  679 ++++++++++++++++++++
+ drivers/media/platform/mtk-vcodec/venc_drv_if.c    |    4 +-
+ 3 files changed, 683 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
 
-diff --git a/drivers/thermal/tegra/soctherm.c b/drivers/thermal/tegra/soctherm.c
-index b8651726201e..d7fd67928607 100644
---- a/drivers/thermal/tegra/soctherm.c
-+++ b/drivers/thermal/tegra/soctherm.c
-@@ -30,6 +30,7 @@
+diff --git a/drivers/media/platform/mtk-vcodec/Makefile b/drivers/media/platform/mtk-vcodec/Makefile
+index bf73a45..dc5cb00 100644
+--- a/drivers/media/platform/mtk-vcodec/Makefile
++++ b/drivers/media/platform/mtk-vcodec/Makefile
+@@ -12,6 +12,7 @@ mtk-vcodec-enc-y := venc/venc_vp8_if.o \
+ 		venc_drv_if.o \
+ 		venc_vpu_if.o \
  
- #include <dt-bindings/thermal/tegra124-soctherm.h>
++
+ mtk-vcodec-common-y := mtk_vcodec_intr.o \
+ 		mtk_vcodec_util.o\
  
-+#include "../thermal_core.h"
- #include "soctherm.h"
- 
- #define SENSOR_CONFIG0				0
-@@ -67,35 +68,179 @@
- #define READBACK_ADD_HALF			BIT(7)
- #define READBACK_NEGATE				BIT(0)
- 
+diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
+new file mode 100644
+index 0000000..f4e18bb
+--- /dev/null
++++ b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
+@@ -0,0 +1,679 @@
 +/*
-+ * THERMCTL_LEVEL0_GROUP_CPU is defined in soctherm.h
-+ * because it will be used by tegraxxx_soctherm.c
-+ */
-+#define THERMCTL_LVL0_CPU0_EN_MASK		BIT(8)
-+#define THERMCTL_LVL0_CPU0_CPU_THROT_MASK	(0x3 << 5)
-+#define THERMCTL_LVL0_CPU0_CPU_THROT_LIGHT	0x1
-+#define THERMCTL_LVL0_CPU0_CPU_THROT_HEAVY	0x2
-+#define THERMCTL_LVL0_CPU0_GPU_THROT_MASK	(0x3 << 3)
-+#define THERMCTL_LVL0_CPU0_GPU_THROT_LIGHT	0x1
-+#define THERMCTL_LVL0_CPU0_GPU_THROT_HEAVY	0x2
-+#define THERMCTL_LVL0_CPU0_MEM_THROT_MASK	BIT(2)
-+#define THERMCTL_LVL0_CPU0_STATUS_MASK		0x3
-+
-+#define THERMCTL_LVL0_UP_STATS			0x10
-+#define THERMCTL_LVL0_DN_STATS			0x14
-+
-+#define THERMCTL_STATS_CTL			0x94
-+#define STATS_CTL_CLR_DN			0x8
-+#define STATS_CTL_EN_DN				0x4
-+#define STATS_CTL_CLR_UP			0x2
-+#define STATS_CTL_EN_UP				0x1
-+
-+#define THROT_GLOBAL_CFG			0x400
-+#define THROT_GLOBAL_ENB_MASK			BIT(0)
-+
-+#define CPU_PSKIP_STATUS			0x418
-+#define XPU_PSKIP_STATUS_M_MASK			(0xff << 12)
-+#define XPU_PSKIP_STATUS_N_MASK			(0xff << 4)
-+#define XPU_PSKIP_STATUS_SW_OVERRIDE_MASK	BIT(1)
-+#define XPU_PSKIP_STATUS_ENABLED_MASK		BIT(0)
-+
-+#define THROT_PRIORITY_LOCK			0x424
-+#define THROT_PRIORITY_LOCK_PRIORITY_MASK	0xff
-+
-+#define THROT_STATUS				0x428
-+#define THROT_STATUS_BREACH_MASK		BIT(12)
-+#define THROT_STATUS_STATE_MASK			(0xff << 4)
-+#define THROT_STATUS_ENABLED_MASK		BIT(0)
-+
-+#define THROT_PSKIP_CTRL_LITE_CPU		0x430
-+#define THROT_PSKIP_CTRL_ENABLE_MASK            BIT(31)
-+#define THROT_PSKIP_CTRL_DIVIDEND_MASK          (0xff << 8)
-+#define THROT_PSKIP_CTRL_DIVISOR_MASK           0xff
-+#define THROT_PSKIP_CTRL_VECT_GPU_MASK          (0x7 << 16)
-+#define THROT_PSKIP_CTRL_VECT_CPU_MASK          (0x7 << 8)
-+#define THROT_PSKIP_CTRL_VECT2_CPU_MASK         0x7
-+
-+#define THROT_VECT_NONE				0x0 /* 3'b000 */
-+#define THROT_VECT_LOW				0x1 /* 3'b001 */
-+#define THROT_VECT_MED				0x3 /* 3'b011 */
-+#define THROT_VECT_HIGH				0x7 /* 3'b111 */
-+
-+#define THROT_PSKIP_RAMP_LITE_CPU		0x434
-+#define THROT_PSKIP_RAMP_SEQ_BYPASS_MODE_MASK	BIT(31)
-+#define THROT_PSKIP_RAMP_DURATION_MASK		(0xffff << 8)
-+#define THROT_PSKIP_RAMP_STEP_MASK		0xff
-+
-+#define THROT_PRIORITY_LITE			0x444
-+#define THROT_PRIORITY_LITE_PRIO_MASK		0xff
-+
-+#define THROT_DELAY_LITE			0x448
-+#define THROT_DELAY_LITE_DELAY_MASK		0xff
-+
-+/* car register offsets needed for enabling HW throttling */
-+#define CAR_SUPER_CCLKG_DIVIDER			0x36c
-+#define CDIVG_USE_THERM_CONTROLS_MASK		BIT(30)
-+
- /* get val from register(r) mask bits(m) */
- #define REG_GET_MASK(r, m)	(((r) & (m)) >> (ffs(m) - 1))
- /* set val(v) to mask bits(m) of register(r) */
- #define REG_SET_MASK(r, m, v)	(((r) & ~(m)) | \
- 				 (((v) & (m >> (ffs(m) - 1))) << (ffs(m) - 1)))
- 
-+/* get dividend from the depth */
-+#define THROT_DEPTH_DIVIDEND(depth)	((256 * (100 - (depth)) / 100) - 1)
-+
-+/* get THROT_PSKIP_xxx offset per LIGHT/HEAVY throt and CPU/GPU dev */
-+#define THROT_OFFSET			0x30
-+#define THROT_PSKIP_CTRL(throt, dev)	(THROT_PSKIP_CTRL_LITE_CPU + \
-+					(THROT_OFFSET * throt) + (8 * dev))
-+#define THROT_PSKIP_RAMP(throt, dev)	(THROT_PSKIP_RAMP_LITE_CPU + \
-+					(THROT_OFFSET * throt) + (8 * dev))
-+
-+/* get THROT_xxx_CTRL offset per LIGHT/HEAVY throt */
-+#define THROT_PRIORITY_CTRL(throt)	(THROT_PRIORITY_LITE + \
-+					(THROT_OFFSET * throt))
-+#define THROT_DELAY_CTRL(throt)		(THROT_DELAY_LITE + \
-+					(THROT_OFFSET * throt))
-+
-+/* get THERMCTL_LEVELx offset per CPU/GPU/MEM/TSENSE rg and LEVEL0~3 lv */
-+#define THERMCTL_LVL_REGS_SIZE		0x20
-+#define THERMCTL_LVL_REG(rg, lv)	((rg) + ((lv) * THERMCTL_LVL_REGS_SIZE))
-+
- static const int min_low_temp = -127000;
- static const int max_high_temp = 127000;
- 
-+enum soctherm_throttle_id {
-+	THROTTLE_LIGHT = 0,
-+	THROTTLE_HEAVY,
-+	THROTTLE_SIZE,
-+};
-+
-+enum soctherm_throttle_dev_id {
-+	THROTTLE_DEV_CPU = 0,
-+	THROTTLE_DEV_GPU,
-+	THROTTLE_DEV_SIZE,
-+};
-+
-+static const char *const throt_names[] = {
-+	[THROTTLE_LIGHT] = "nvidia,light",
-+	[THROTTLE_HEAVY] = "nvidia,heavy",
-+};
-+
-+struct tegra_soctherm;
- struct tegra_thermctl_zone {
- 	void __iomem *reg;
- 	struct device *dev;
-+	struct tegra_soctherm *ts;
- 	struct thermal_zone_device *tz;
- 	const struct tegra_tsensor_group *sg;
- };
- 
-+struct soctherm_throt_cfg {
-+	const char *name;
-+	unsigned int id;
-+	u8 priority;
-+	u32 cpu_throt_depth;
-+	struct thermal_cooling_device *cdev;
-+	bool init;
-+};
-+
- struct tegra_soctherm {
- 	struct reset_control *reset;
- 	struct clk *clock_tsensor;
- 	struct clk *clock_soctherm;
- 	void __iomem *regs;
--	struct thermal_zone_device **thermctl_tzs;
-+	void __iomem *clk_regs;
- 
- 	u32 *calib;
-+	struct thermal_zone_device **thermctl_tzs;
- 	struct tegra_soctherm_soc *soc;
- 
-+	struct soctherm_throt_cfg throt_cfgs[THROTTLE_SIZE];
-+
- 	struct dentry *debugfs_dir;
- };
- 
-+/**
-+ * clk_writel() - writes a value to a CAR register
-+ * @ts: pointer to a struct tegra_soctherm
-+ * @v: the value to write
-+ * @reg: the register offset
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Jungchang Tsao <jungchang.tsao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *         Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *         PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 + *
-+ * Writes @v to @reg.  No return value.
++ * This program is free software; you can redistribute it and/or
++ * modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
-+static inline void clk_writel(struct tegra_soctherm *ts, u32 value, u32 reg)
-+{
-+	writel(value, (ts->clk_regs + reg));
-+}
++
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++
++#include "../mtk_vcodec_drv.h"
++#include "../mtk_vcodec_util.h"
++#include "../mtk_vcodec_intr.h"
++#include "../mtk_vcodec_enc.h"
++#include "../mtk_vcodec_enc_pm.h"
++#include "../venc_drv_base.h"
++#include "../venc_ipi_msg.h"
++#include "../venc_vpu_if.h"
++#include "mtk_vpu.h"
++
++static const char h264_filler_marker[] = {0x0, 0x0, 0x0, 0x1, 0xc};
++
++#define H264_FILLER_MARKER_SIZE ARRAY_SIZE(h264_filler_marker)
++#define VENC_PIC_BITSTREAM_BYTE_CNT 0x0098
 +
 +/**
-+ * clk_readl() - reads specified register from CAR IP block
-+ * @ts: pointer to a struct tegra_soctherm
-+ * @reg: register address to be read
-+ *
-+ * Return: the value of the register
++ * enum venc_h264_vpu_work_buf - h264 encoder buffer index
 + */
-+static inline u32 clk_readl(struct tegra_soctherm *ts, u32 reg)
-+{
-+	return readl(ts->clk_regs + reg);
-+}
-+
- static void enable_tsensor(struct tegra_soctherm *tegra, unsigned int i)
- {
- 	const struct tegra_tsensor *sensor = &tegra->soc->tsensors[i];
-@@ -150,11 +295,17 @@ static int tegra_thermctl_get_temp(void *data, int *out_temp)
- static int
- thermtrip_program(struct device *dev, const struct tegra_tsensor_group *sg,
- 		  int trip_temp);
-+static int
-+throttrip_program(struct device *dev, const struct tegra_tsensor_group *sg,
-+		  struct soctherm_throt_cfg *stc, int trip_temp);
-+static struct soctherm_throt_cfg *
-+find_throttle_cfg_by_name(struct tegra_soctherm *ts, const char *name);
- 
- static int tegra_thermctl_set_trip_temp(void *data, int trip, int temp)
- {
- 	struct tegra_thermctl_zone *zone = data;
- 	struct thermal_zone_device *tz = zone->tz;
-+	struct tegra_soctherm *ts = zone->ts;
- 	const struct tegra_tsensor_group *sg = zone->sg;
- 	struct device *dev = zone->dev;
- 	enum thermal_trip_type type;
-@@ -167,10 +318,29 @@ static int tegra_thermctl_set_trip_temp(void *data, int trip, int temp)
- 	if (ret)
- 		return ret;
- 
--	if (type != THERMAL_TRIP_CRITICAL)
--		return 0;
-+	if (type == THERMAL_TRIP_CRITICAL) {
-+		return thermtrip_program(dev, sg, temp);
-+	} else if (type == THERMAL_TRIP_HOT) {
-+		int i;
-+
-+		for (i = 0; i < THROTTLE_SIZE; i++) {
-+			struct thermal_cooling_device *cdev;
-+			struct soctherm_throt_cfg *stc;
- 
--	return thermtrip_program(dev, sg, temp);
-+			if (!ts->throt_cfgs[i].init)
-+				continue;
-+
-+			cdev = ts->throt_cfgs[i].cdev;
-+			if (get_thermal_instance(tz, cdev, trip))
-+				stc = find_throttle_cfg_by_name(ts, cdev->type);
-+			else
-+				continue;
-+
-+			return throttrip_program(dev, sg, stc, temp);
-+		}
-+	}
-+
-+	return 0;
- }
- 
- static const struct thermal_zone_of_device_ops tegra_of_thermal_ops = {
-@@ -238,14 +408,110 @@ static int thermtrip_program(struct device *dev,
- }
- 
- /**
-+ * throttrip_program() - Configures the hardware to throttle the
-+ * pulse if a given sensor group reaches a given temperature
-+ * @dev: ptr to the struct device for the SOC_THERM IP block
-+ * @sg: pointer to the sensor group to set the thermtrip temperature for
-+ * @stc: pointer to the throttle need to be triggered
-+ * @trip_temp: the temperature in millicelsius to trigger the thermal trip at
-+ *
-+ * Sets the thermal trip threshold and throttle event of the given sensor
-+ * group. If this threshold is crossed, the hardware will trigger the
-+ * throttle.
-+ *
-+ * Note that, although @trip_temp is specified in millicelsius, the
-+ * hardware is programmed in degrees Celsius.
-+ *
-+ * Return: 0 upon success, or %-EINVAL upon failure.
-+ */
-+static int throttrip_program(struct device *dev,
-+			     const struct tegra_tsensor_group *sg,
-+			     struct soctherm_throt_cfg *stc,
-+			     int trip_temp)
-+{
-+	struct tegra_soctherm *ts = dev_get_drvdata(dev);
-+	int temp, cpu_throt, gpu_throt;
-+	unsigned int throt;
-+	u32 r, reg_off;
-+
-+	if (!dev || !sg || !stc || !stc->init)
-+		return -EINVAL;
-+
-+	temp = enforce_temp_range(dev, trip_temp) / ts->soc->thresh_grain;
-+
-+	/* Hardcode LIGHT on LEVEL1 and HEAVY on LEVEL2 */
-+	throt = stc->id;
-+	reg_off = THERMCTL_LVL_REG(sg->thermctl_lvl0_offset, throt + 1);
-+
-+	if (throt == THROTTLE_LIGHT) {
-+		cpu_throt = THERMCTL_LVL0_CPU0_CPU_THROT_LIGHT;
-+		gpu_throt = THERMCTL_LVL0_CPU0_GPU_THROT_LIGHT;
-+	} else {
-+		cpu_throt = THERMCTL_LVL0_CPU0_CPU_THROT_HEAVY;
-+		gpu_throt = THERMCTL_LVL0_CPU0_GPU_THROT_HEAVY;
-+		if (throt != THROTTLE_HEAVY)
-+			dev_warn(dev,
-+				 "invalid throt id %d - assuming HEAVY",
-+				 throt);
-+	}
-+
-+	r = readl(ts->regs + reg_off);
-+	r = REG_SET_MASK(r, sg->thermctl_lvl0_up_thresh_mask, temp);
-+	r = REG_SET_MASK(r, sg->thermctl_lvl0_dn_thresh_mask, temp);
-+	r = REG_SET_MASK(r, THERMCTL_LVL0_CPU0_CPU_THROT_MASK, cpu_throt);
-+	r = REG_SET_MASK(r, THERMCTL_LVL0_CPU0_GPU_THROT_MASK, gpu_throt);
-+	r = REG_SET_MASK(r, THERMCTL_LVL0_CPU0_EN_MASK, 1);
-+	writel(r, ts->regs + reg_off);
-+
-+	return 0;
-+}
-+
-+static struct soctherm_throt_cfg *
-+find_throttle_cfg_by_name(struct tegra_soctherm *ts, const char *name)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; ts->throt_cfgs[i].name; i++)
-+		if (!strcmp(ts->throt_cfgs[i].name, name))
-+			return &ts->throt_cfgs[i];
-+
-+	return NULL;
-+}
-+
-+static int get_hot_temp(struct thermal_zone_device *tz, int *trip, int *temp)
-+{
-+	int ntrips, i, ret;
-+	enum thermal_trip_type type;
-+
-+	ntrips = of_thermal_get_ntrips(tz);
-+	if (ntrips <= 0)
-+		return -EINVAL;
-+
-+	for (i = 0; i < ntrips; i++) {
-+		ret = tz->ops->get_trip_type(tz, i, &type);
-+		if (ret)
-+			return -EINVAL;
-+		if (type == THERMAL_TRIP_HOT) {
-+			ret = tz->ops->get_trip_temp(tz, i, temp);
-+			if (!ret)
-+				*trip = i;
-+
-+			return ret;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
++enum venc_h264_vpu_work_buf {
++	VENC_H264_VPU_WORK_BUF_RC_INFO,
++	VENC_H264_VPU_WORK_BUF_RC_CODE,
++	VENC_H264_VPU_WORK_BUF_REC_LUMA,
++	VENC_H264_VPU_WORK_BUF_REC_CHROMA,
++	VENC_H264_VPU_WORK_BUF_REF_LUMA,
++	VENC_H264_VPU_WORK_BUF_REF_CHROMA,
++	VENC_H264_VPU_WORK_BUF_MV_INFO_1,
++	VENC_H264_VPU_WORK_BUF_MV_INFO_2,
++	VENC_H264_VPU_WORK_BUF_SKIP_FRAME,
++	VENC_H264_VPU_WORK_BUF_MAX,
++};
 +
 +/**
-  * tegra_soctherm_set_hwtrips() - set HW trip point from DT data
-  * @dev: struct device * of the SOC_THERM instance
-  *
-  * Configure the SOC_THERM HW trip points, setting "THERMTRIP"
-- * trip points , using "critical" type trip_temp from thermal
-- * zone.
-- * After they have been configured, THERMTRIP will take action
-- * when the configured SoC thermal sensor group reaches a
-+ * "THROTTLE" trip points , using "critical" or "hot" type trip_temp
-+ * from thermal zone.
-+ * After they have been configured, THERMTRIP or THROTTLE will take
-+ * action when the configured SoC thermal sensor group reaches a
-  * certain temperature.
-  *
-  * Return: 0 upon success, or a negative error code on failure.
-@@ -254,19 +520,24 @@ static int thermtrip_program(struct device *dev,
-  * THERMTRIP has been enabled successfully when a message similar to
-  * this one appears on the serial console:
-  * "thermtrip: will shut down when sensor group XXX reaches YYYYYY mC"
-+ * THROTTLE has been enabled successfully when a message similar to
-+ * this one appears on the serial console:
-+ * ""throttrip: will throttle when sensor group XXX reaches YYYYYY mC"
-  */
- static int tegra_soctherm_set_hwtrips(struct device *dev,
- 				      const struct tegra_tsensor_group *sg,
- 				      struct thermal_zone_device *tz)
- {
--	int temperature;
-+	struct tegra_soctherm *ts = dev_get_drvdata(dev);
-+	struct soctherm_throt_cfg *stc;
-+	int i, trip, temperature;
- 	int ret;
- 
- 	ret = tz->ops->get_crit_temp(tz, &temperature);
- 	if (ret) {
- 		dev_warn(dev, "thermtrip: %s: missing critical temperature\n",
- 			 sg->name);
--		return ret;
-+		goto set_throttle;
- 	}
- 
- 	ret = thermtrip_program(dev, sg, temperature);
-@@ -280,6 +551,46 @@ static int tegra_soctherm_set_hwtrips(struct device *dev,
- 		 "thermtrip: will shut down when %s reaches %d mC\n",
- 		 sg->name, temperature);
- 
-+set_throttle:
-+	if (ts->soc->use_ccroc)
++ * enum venc_h264_bs_mode - for bs_mode argument in h264_enc_vpu_encode
++ */
++enum venc_h264_bs_mode {
++	H264_BS_MODE_SPS,
++	H264_BS_MODE_PPS,
++	H264_BS_MODE_FRAME,
++};
++
++/*
++ * struct venc_h264_vpu_config - Structure for h264 encoder configuration
++ * @input_fourcc: input fourcc
++ * @bitrate: target bitrate (in bps)
++ * @pic_w: picture width. Picture size is visible stream resolution, in pixels,
++ *         to be used for display purposes; must be smaller or equal to buffer
++ *         size.
++ * @pic_h: picture height
++ * @buf_w: buffer width. Buffer size is stream resolution in pixels aligned to
++ *         hardware requirements.
++ * @buf_h: buffer height
++ * @gop_size: group of picture size (idr frame)
++ * @intra_period: intra frame period
++ * @framerate: frame rate in fps
++ * @profile: as specified in standard
++ * @level: as specified in standard
++ * @wfd: WFD mode 1:on, 0:off
++ */
++struct venc_h264_vpu_config {
++	u32 input_fourcc;
++	u32 bitrate;
++	u32 pic_w;
++	u32 pic_h;
++	u32 buf_w;
++	u32 buf_h;
++	u32 gop_size;
++	u32 intra_period;
++	u32 framerate;
++	u32 profile;
++	u32 level;
++	u32 wfd;
++};
++
++/*
++ * struct venc_h264_vpu_buf - Structure for buffer information
++ * @align: buffer alignment (in bytes)
++ * @iova: IO virtual address
++ * @vpua: VPU side memory addr which is used by RC_CODE
++ * @size: buffer size (in bytes)
++ */
++struct venc_h264_vpu_buf {
++	u32 align;
++	u32 iova;
++	u32 vpua;
++	u32 size;
++};
++
++/*
++ * struct venc_h264_vsi - Structure for VPU driver control and info share
++ * This structure is allocated in VPU side and shared to AP side.
++ * @config: h264 encoder configuration
++ * @work_bufs: working buffer information in VPU side
++ * The work_bufs here is for storing the 'size' info shared to AP side.
++ * The similar item in struct venc_h264_inst is for memory allocation
++ * in AP side. The AP driver will copy the 'size' from here to the one in
++ * struct mtk_vcodec_mem, then invoke mtk_vcodec_mem_alloc to allocate
++ * the buffer. After that, bypass the 'dma_addr' to the 'iova' field here for
++ * register setting in VPU side.
++ */
++struct venc_h264_vsi {
++	struct venc_h264_vpu_config config;
++	struct venc_h264_vpu_buf work_bufs[VENC_H264_VPU_WORK_BUF_MAX];
++};
++
++/*
++ * struct venc_h264_inst - h264 encoder AP driver instance
++ * @hw_base: h264 encoder hardware register base
++ * @work_bufs: working buffer
++ * @pps_buf: buffer to store the pps bitstream
++ * @work_buf_allocated: working buffer allocated flag
++ * @frm_cnt: encoded frame count
++ * @prepend_hdr: when the v4l2 layer send VENC_SET_PARAM_PREPEND_HEADER cmd
++ *  through h264_enc_set_param interface, it will set this flag and prepend the
++ *  sps/pps in h264_enc_encode function.
++ * @vpu_inst: VPU instance to exchange information between AP and VPU
++ * @vsi: driver structure allocated by VPU side and shared to AP side for
++ *	 control and info share
++ * @ctx: context for v4l2 layer integration
++ */
++struct venc_h264_inst {
++	void __iomem *hw_base;
++	struct mtk_vcodec_mem work_bufs[VENC_H264_VPU_WORK_BUF_MAX];
++	struct mtk_vcodec_mem pps_buf;
++	bool work_buf_allocated;
++	unsigned int frm_cnt;
++	unsigned int prepend_hdr;
++	struct venc_vpu_inst vpu_inst;
++	struct venc_h264_vsi *vsi;
++	struct mtk_vcodec_ctx *ctx;
++};
++
++static inline void h264_write_reg(struct venc_h264_inst *inst, u32 addr,
++				  u32 val)
++{
++	writel(val, inst->hw_base + addr);
++}
++
++static inline u32 h264_read_reg(struct venc_h264_inst *inst, u32 addr)
++{
++	return readl(inst->hw_base + addr);
++}
++
++static unsigned int h264_get_profile(struct venc_h264_inst *inst,
++				     unsigned int profile)
++{
++	switch (profile) {
++	case V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE:
++		return 66;
++	case V4L2_MPEG_VIDEO_H264_PROFILE_MAIN:
++		return 77;
++	case V4L2_MPEG_VIDEO_H264_PROFILE_HIGH:
++		return 100;
++	case V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE:
++		mtk_vcodec_err(inst, "unsupported CONSTRAINED_BASELINE");
 +		return 0;
++	case V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED:
++		mtk_vcodec_err(inst, "unsupported EXTENDED");
++		return 0;
++	default:
++		mtk_vcodec_debug(inst, "unsupported profile %d", profile);
++		return 100;
++	}
++}
 +
-+	ret = get_hot_temp(tz, &trip, &temperature);
++static unsigned int h264_get_level(struct venc_h264_inst *inst,
++				   unsigned int level)
++{
++	switch (level) {
++	case V4L2_MPEG_VIDEO_H264_LEVEL_1B:
++		mtk_vcodec_err(inst, "unsupported 1B");
++		return 0;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_1_0:
++		return 10;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_1_1:
++		return 11;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_1_2:
++		return 12;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_1_3:
++		return 13;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_2_0:
++		return 20;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_2_1:
++		return 21;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_2_2:
++		return 22;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_3_0:
++		return 30;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_3_1:
++		return 31;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_3_2:
++		return 32;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_4_0:
++		return 40;
++	case V4L2_MPEG_VIDEO_H264_LEVEL_4_1:
++		return 41;
++	default:
++		mtk_vcodec_debug(inst, "unsupported level %d", level);
++		return 31;
++	}
++}
++
++static void h264_enc_free_work_buf(struct venc_h264_inst *inst)
++{
++	int i;
++
++	mtk_vcodec_debug_enter(inst);
++
++	/* Except the SKIP_FRAME buffers,
++	 * other buffers need to be freed by AP.
++	 */
++	for (i = 0; i < VENC_H264_VPU_WORK_BUF_MAX; i++) {
++		if (i != VENC_H264_VPU_WORK_BUF_SKIP_FRAME)
++			mtk_vcodec_mem_free(inst->ctx, &inst->work_bufs[i]);
++	}
++
++	mtk_vcodec_mem_free(inst->ctx, &inst->pps_buf);
++
++	mtk_vcodec_debug_leave(inst);
++}
++
++static int h264_enc_alloc_work_buf(struct venc_h264_inst *inst)
++{
++	int i;
++	int ret = 0;
++	struct venc_h264_vpu_buf *wb = inst->vsi->work_bufs;
++
++	mtk_vcodec_debug_enter(inst);
++
++	for (i = 0; i < VENC_H264_VPU_WORK_BUF_MAX; i++) {
++		/*
++		 * This 'wb' structure is set by VPU side and shared to AP for
++		 * buffer allocation and IO virtual addr mapping. For most of
++		 * the buffers, AP will allocate the buffer according to 'size'
++		 * field and store the IO virtual addr in 'iova' field. There
++		 * are two exceptions:
++		 * (1) RC_CODE buffer, it's pre-allocated in the VPU side, and
++		 * save the VPU addr in the 'vpua' field. The AP will translate
++		 * the VPU addr to the corresponding IO virtual addr and store
++		 * in 'iova' field for reg setting in VPU side.
++		 * (2) SKIP_FRAME buffer, it's pre-allocated in the VPU side,
++		 * and save the VPU addr in the 'vpua' field. The AP will
++		 * translate the VPU addr to the corresponding AP side virtual
++		 * address and do some memcpy access to move to bitstream buffer
++		 * assigned by v4l2 layer.
++		 */
++		inst->work_bufs[i].size = wb[i].size;
++		if (i == VENC_H264_VPU_WORK_BUF_SKIP_FRAME) {
++			inst->work_bufs[i].va = vpu_mapping_dm_addr(
++				inst->vpu_inst.dev, wb[i].vpua);
++			inst->work_bufs[i].dma_addr = 0;
++		} else {
++			ret = mtk_vcodec_mem_alloc(inst->ctx,
++						   &inst->work_bufs[i]);
++			if (ret) {
++				mtk_vcodec_err(inst,
++					       "cannot allocate buf %d", i);
++				goto err_alloc;
++			}
++			/*
++			 * This RC_CODE is pre-allocated by VPU and saved in VPU
++			 * addr. So we need use memcpy to copy RC_CODE from VPU
++			 * addr into IO virtual addr in 'iova' field for reg
++			 * setting in VPU side.
++			 */
++			if (i == VENC_H264_VPU_WORK_BUF_RC_CODE) {
++				void *tmp_va;
++
++				tmp_va = vpu_mapping_dm_addr(inst->vpu_inst.dev,
++							     wb[i].vpua);
++				memcpy(inst->work_bufs[i].va, tmp_va,
++				       wb[i].size);
++			}
++		}
++		wb[i].iova = inst->work_bufs[i].dma_addr;
++
++		mtk_vcodec_debug(inst,
++				 "work_buf[%d] va=0x%p iova=0x%p size=%zu",
++				 i, inst->work_bufs[i].va,
++				 (void *)inst->work_bufs[i].dma_addr,
++				 inst->work_bufs[i].size);
++	}
++
++	/* the pps_buf is used by AP side only */
++	inst->pps_buf.size = 128;
++	ret = mtk_vcodec_mem_alloc(inst->ctx, &inst->pps_buf);
 +	if (ret) {
-+		dev_warn(dev, "throttrip: %s: missing hot temperature\n",
-+			 sg->name);
-+		return 0;
++		mtk_vcodec_err(inst, "cannot allocate pps_buf");
++		goto err_alloc;
 +	}
 +
-+	for (i = 0; i < THROTTLE_SIZE; i++) {
-+		struct thermal_cooling_device *cdev;
++	mtk_vcodec_debug_leave(inst);
 +
-+		if (!ts->throt_cfgs[i].init)
-+			continue;
++	return ret;
 +
-+		cdev = ts->throt_cfgs[i].cdev;
-+		if (get_thermal_instance(tz, cdev, trip))
-+			stc = find_throttle_cfg_by_name(ts, cdev->type);
-+		else
-+			continue;
++err_alloc:
++	h264_enc_free_work_buf(inst);
 +
-+		ret = throttrip_program(dev, sg, stc, temperature);
-+		if (ret) {
-+			dev_err(dev, "throttrip: %s: error during enable\n",
-+				sg->name);
-+			return ret;
-+		}
++	return ret;
++}
 +
-+		dev_info(dev,
-+			 "throttrip: will throttle when %s reaches %d mC\n",
-+			 sg->name, temperature);
++static unsigned int h264_enc_wait_venc_done(struct venc_h264_inst *inst)
++{
++	unsigned int irq_status = 0;
++	struct mtk_vcodec_ctx *ctx = (struct mtk_vcodec_ctx *)inst->ctx;
++
++	if (!mtk_vcodec_wait_for_done_ctx(ctx, MTK_INST_IRQ_RECEIVED,
++					  WAIT_INTR_TIMEOUT_MS)) {
++		irq_status = ctx->irq_status;
++		mtk_vcodec_debug(inst, "irq_status %x <-", irq_status);
++	}
++	return irq_status;
++}
++
++static int h264_encode_sps(struct venc_h264_inst *inst,
++			   struct mtk_vcodec_mem *bs_buf,
++			   unsigned int *bs_size)
++{
++	int ret = 0;
++	unsigned int irq_status;
++
++	mtk_vcodec_debug_enter(inst);
++
++	ret = vpu_enc_encode(&inst->vpu_inst, H264_BS_MODE_SPS, NULL,
++			     bs_buf, bs_size);
++	if (ret)
++		return ret;
++
++	irq_status = h264_enc_wait_venc_done(inst);
++	if (irq_status != MTK_VENC_IRQ_STATUS_SPS) {
++		mtk_vcodec_err(inst, "expect irq status %d",
++			       MTK_VENC_IRQ_STATUS_SPS);
++		return -EINVAL;
++	}
++
++	*bs_size = h264_read_reg(inst, VENC_PIC_BITSTREAM_BYTE_CNT);
++	mtk_vcodec_debug(inst, "bs size %d <-", *bs_size);
++
++	return ret;
++}
++
++static int h264_encode_pps(struct venc_h264_inst *inst,
++			   struct mtk_vcodec_mem *bs_buf,
++			   unsigned int *bs_size)
++{
++	int ret = 0;
++	unsigned int irq_status;
++
++	mtk_vcodec_debug_enter(inst);
++
++	ret = vpu_enc_encode(&inst->vpu_inst, H264_BS_MODE_PPS, NULL,
++			     bs_buf, bs_size);
++	if (ret)
++		return ret;
++
++	irq_status = h264_enc_wait_venc_done(inst);
++	if (irq_status != MTK_VENC_IRQ_STATUS_PPS) {
++		mtk_vcodec_err(inst, "expect irq status %d",
++			       MTK_VENC_IRQ_STATUS_PPS);
++		return -EINVAL;
++	}
++
++	*bs_size = h264_read_reg(inst, VENC_PIC_BITSTREAM_BYTE_CNT);
++	mtk_vcodec_debug(inst, "bs size %d <-", *bs_size);
++
++	return ret;
++}
++
++static int h264_encode_header(struct venc_h264_inst *inst,
++			      struct mtk_vcodec_mem *bs_buf,
++			      unsigned int *bs_size)
++{
++	int ret = 0;
++	unsigned int bs_size_sps;
++	unsigned int bs_size_pps;
++
++	ret = h264_encode_sps(inst, bs_buf, &bs_size_sps);
++	if (ret)
++		return ret;
++
++	ret = h264_encode_pps(inst, &inst->pps_buf, &bs_size_pps);
++	if (ret)
++		return ret;
++
++	memcpy(bs_buf->va + bs_size_sps, inst->pps_buf.va, bs_size_pps);
++	*bs_size = bs_size_sps + bs_size_pps;
++
++	return ret;
++}
++
++static int h264_encode_frame(struct venc_h264_inst *inst,
++			     struct venc_frm_buf *frm_buf,
++			     struct mtk_vcodec_mem *bs_buf,
++			     unsigned int *bs_size)
++{
++	int ret = 0;
++	unsigned int irq_status;
++
++	mtk_vcodec_debug_enter(inst);
++
++	ret = vpu_enc_encode(&inst->vpu_inst, H264_BS_MODE_FRAME, frm_buf,
++			     bs_buf, bs_size);
++	if (ret)
++		return ret;
++
++	/*
++	 * skip frame case: The skip frame buffer is composed by vpu side only,
++	 * it does not trigger the hw, so skip the wait interrupt operation.
++	 */
++	if (inst->vpu_inst.state == VEN_IPI_MSG_ENC_STATE_SKIP) {
++		*bs_size = inst->vpu_inst.bs_size;
++		memcpy(bs_buf->va,
++		       inst->work_bufs[VENC_H264_VPU_WORK_BUF_SKIP_FRAME].va,
++		       *bs_size);
++		++inst->frm_cnt;
++		return ret;
++	}
++
++	irq_status = h264_enc_wait_venc_done(inst);
++	if (irq_status != MTK_VENC_IRQ_STATUS_FRM) {
++		mtk_vcodec_err(inst, "irq_status=%d failed", irq_status);
++		return -EIO;
++	}
++
++	*bs_size = h264_read_reg(inst, VENC_PIC_BITSTREAM_BYTE_CNT);
++
++	++inst->frm_cnt;
++	mtk_vcodec_debug(inst, "frm %d bs_size %d key_frm %d <-",
++			 inst->frm_cnt, *bs_size, inst->vpu_inst.is_key_frm);
++
++	return ret;
++}
++
++static void h264_encode_filler(struct venc_h264_inst *inst, void *buf,
++			       int size)
++{
++	unsigned char *p = buf;
++
++	if (size < H264_FILLER_MARKER_SIZE) {
++		mtk_vcodec_err(inst, "filler size too small %d", size);
++		return;
++	}
++
++	memcpy(p, h264_filler_marker, ARRAY_SIZE(h264_filler_marker));
++	size -= H264_FILLER_MARKER_SIZE;
++	p += H264_FILLER_MARKER_SIZE;
++	memset(p, 0xff, size);
++}
++
++static int h264_enc_init(struct mtk_vcodec_ctx *ctx, unsigned long *handle)
++{
++	int ret = 0;
++	struct venc_h264_inst *inst;
++
++	inst = kzalloc(sizeof(*inst), GFP_KERNEL);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->ctx = ctx;
++	inst->vpu_inst.ctx = ctx;
++	inst->vpu_inst.dev = ctx->dev->vpu_plat_dev;
++	inst->vpu_inst.id = IPI_VENC_H264;
++	inst->hw_base = mtk_vcodec_get_reg_addr(inst->ctx, VENC_SYS);
++
++	mtk_vcodec_debug_enter(inst);
++
++	ret = vpu_enc_init(&inst->vpu_inst);
++
++	inst->vsi = (struct venc_h264_vsi *)inst->vpu_inst.vsi;
++
++	mtk_vcodec_debug_leave(inst);
++
++	if (ret)
++		kfree(inst);
++	else
++		(*handle) = (unsigned long)inst;
++
++	return ret;
++}
++
++static int h264_enc_encode(unsigned long handle,
++			   enum venc_start_opt opt,
++			   struct venc_frm_buf *frm_buf,
++			   struct mtk_vcodec_mem *bs_buf,
++			   struct venc_done_result *result)
++{
++	int ret = 0;
++	struct venc_h264_inst *inst = (struct venc_h264_inst *)handle;
++	struct mtk_vcodec_ctx *ctx = inst->ctx;
++
++	mtk_vcodec_debug(inst, "opt %d ->", opt);
++
++	enable_irq(ctx->dev->enc_irq);
++
++	switch (opt) {
++	case VENC_START_OPT_ENCODE_SEQUENCE_HEADER: {
++		unsigned int bs_size_hdr;
++
++		ret = h264_encode_header(inst, bs_buf, &bs_size_hdr);
++		if (ret)
++			goto encode_err;
++
++		result->bs_size = bs_size_hdr;
++		result->is_key_frm = false;
 +		break;
 +	}
 +
-+	if (i == THROTTLE_SIZE)
-+		dev_warn(dev, "throttrip: %s: missing throttle cdev\n",
-+			 sg->name);
++	case VENC_START_OPT_ENCODE_FRAME: {
++		int hdr_sz;
++		int hdr_sz_ext;
++		int filler_sz = 0;
++		const int bs_alignment = 128;
++		struct mtk_vcodec_mem tmp_bs_buf;
++		unsigned int bs_size_hdr;
++		unsigned int bs_size_frm;
 +
- 	return 0;
- }
- 
-@@ -291,7 +602,7 @@ static int regs_show(struct seq_file *s, void *data)
- 	const struct tegra_tsensor *tsensors = ts->soc->tsensors;
- 	const struct tegra_tsensor_group **ttgs = ts->soc->ttgs;
- 	u32 r, state;
--	int i;
-+	int i, level;
- 
- 	seq_puts(s, "-----TSENSE (convert HW)-----\n");
- 
-@@ -365,6 +676,84 @@ static int regs_show(struct seq_file *s, void *data)
- 	state = REG_GET_MASK(r, SENSOR_TEMP2_MEM_TEMP_MASK);
- 	seq_printf(s, " MEM(%d)\n", translate_temp(state));
- 
-+	if (ts->soc->use_ccroc)
-+		return 0;
-+
-+	for (i = 0; i < ts->soc->num_ttgs; i++) {
-+		seq_printf(s, "%s:\n", ttgs[i]->name);
-+		for (level = 0; level < 4; level++) {
-+			s32 v;
-+			u32 mask;
-+			u16 off = ttgs[i]->thermctl_lvl0_offset;
-+
-+			r = readl(ts->regs + THERMCTL_LVL_REG(off, level));
-+
-+			mask = ttgs[i]->thermctl_lvl0_up_thresh_mask;
-+			state = REG_GET_MASK(r, mask);
-+			v = sign_extend32(state, ts->soc->bptt - 1);
-+			v *= ts->soc->thresh_grain;
-+			seq_printf(s, "   %d: Up/Dn(%d /", level, v);
-+
-+			mask = ttgs[i]->thermctl_lvl0_dn_thresh_mask;
-+			state = REG_GET_MASK(r, mask);
-+			v = sign_extend32(state, ts->soc->bptt - 1);
-+			v *= ts->soc->thresh_grain;
-+			seq_printf(s, "%d ) ", v);
-+
-+			mask = THERMCTL_LVL0_CPU0_EN_MASK;
-+			state = REG_GET_MASK(r, mask);
-+			seq_printf(s, "En(%d) ", state);
-+
-+			mask = THERMCTL_LVL0_CPU0_CPU_THROT_MASK;
-+			state = REG_GET_MASK(r, mask);
-+			seq_puts(s, "CPU Throt");
-+			if (!state)
-+				seq_printf(s, "(%s) ", "none");
-+			else if (state == THERMCTL_LVL0_CPU0_CPU_THROT_LIGHT)
-+				seq_printf(s, "(%s) ", "L");
-+			else if (state == THERMCTL_LVL0_CPU0_CPU_THROT_HEAVY)
-+				seq_printf(s, "(%s) ", "H");
-+			else
-+				seq_printf(s, "(%s) ", "H+L");
-+
-+			mask = THERMCTL_LVL0_CPU0_GPU_THROT_MASK;
-+			state = REG_GET_MASK(r, mask);
-+			seq_puts(s, "GPU Throt");
-+			if (!state)
-+				seq_printf(s, "(%s) ", "none");
-+			else if (state == THERMCTL_LVL0_CPU0_GPU_THROT_LIGHT)
-+				seq_printf(s, "(%s) ", "L");
-+			else if (state == THERMCTL_LVL0_CPU0_GPU_THROT_HEAVY)
-+				seq_printf(s, "(%s) ", "H");
-+			else
-+				seq_printf(s, "(%s) ", "H+L");
-+
-+			mask = THERMCTL_LVL0_CPU0_STATUS_MASK;
-+			state = REG_GET_MASK(r, mask);
-+			seq_printf(s, "Status(%s)\n",
-+				   state == 0 ? "LO" :
-+				   state == 1 ? "In" :
-+				   state == 2 ? "Res" : "HI");
++		if (!inst->prepend_hdr) {
++			ret = h264_encode_frame(inst, frm_buf, bs_buf,
++						&result->bs_size);
++			if (ret)
++				goto encode_err;
++			result->is_key_frm = inst->vpu_inst.is_key_frm;
++			break;
 +		}
++
++		mtk_vcodec_debug(inst, "h264_encode_frame prepend SPS/PPS");
++
++		ret = h264_encode_header(inst, bs_buf, &bs_size_hdr);
++		if (ret)
++			goto encode_err;
++
++		hdr_sz = bs_size_hdr;
++		hdr_sz_ext = (hdr_sz & (bs_alignment - 1));
++		if (hdr_sz_ext) {
++			filler_sz = bs_alignment - hdr_sz_ext;
++			if (hdr_sz_ext + H264_FILLER_MARKER_SIZE > bs_alignment)
++				filler_sz += bs_alignment;
++			h264_encode_filler(inst, bs_buf->va + hdr_sz,
++					   filler_sz);
++		}
++
++		tmp_bs_buf.va = bs_buf->va + hdr_sz + filler_sz;
++		tmp_bs_buf.dma_addr = bs_buf->dma_addr + hdr_sz + filler_sz;
++		tmp_bs_buf.size = bs_buf->size - (hdr_sz + filler_sz);
++
++		ret = h264_encode_frame(inst, frm_buf, &tmp_bs_buf,
++					&bs_size_frm);
++		if (ret)
++			goto encode_err;
++
++		result->bs_size = hdr_sz + filler_sz + bs_size_frm;
++
++		mtk_vcodec_debug(inst, "hdr %d filler %d frame %d bs %d",
++				 hdr_sz, filler_sz, bs_size_frm,
++				 result->bs_size);
++
++		inst->prepend_hdr = 0;
++		result->is_key_frm = inst->vpu_inst.is_key_frm;
++		break;
 +	}
 +
-+	r = readl(ts->regs + THERMCTL_STATS_CTL);
-+	seq_printf(s, "STATS: Up(%s) Dn(%s)\n",
-+		   r & STATS_CTL_EN_UP ? "En" : "--",
-+		   r & STATS_CTL_EN_DN ? "En" : "--");
-+
-+	for (level = 0; level < 4; level++) {
-+		u16 off;
-+
-+		off = THERMCTL_LVL0_UP_STATS;
-+		r = readl(ts->regs + THERMCTL_LVL_REG(off, level));
-+		seq_printf(s, "  Level_%d Up(%d) ", level, r);
-+
-+		off = THERMCTL_LVL0_DN_STATS;
-+		r = readl(ts->regs + THERMCTL_LVL_REG(off, level));
-+		seq_printf(s, "Dn(%d)\n", r);
++	default:
++		mtk_vcodec_err(inst, "venc_start_opt %d not supported", opt);
++		ret = -EINVAL;
++		break;
 +	}
 +
- 	r = readl(ts->regs + THERMCTL_THERMTRIP_CTL);
- 	state = REG_GET_MASK(r, ttgs[0]->thermtrip_any_en_mask);
- 	seq_printf(s, "Thermtrip Any En(%d)\n", state);
-@@ -376,6 +765,27 @@ static int regs_show(struct seq_file *s, void *data)
- 		seq_printf(s, "Thresh(%d)\n", state);
- 	}
- 
-+	r = readl(ts->regs + THROT_GLOBAL_CFG);
-+	seq_puts(s, "\n");
-+	seq_printf(s, "GLOBAL THROTTLE CONFIG: 0x%08x\n", r);
++encode_err:
 +
-+	seq_puts(s, "---------------------------------------------------\n");
-+	r = readl(ts->regs + THROT_STATUS);
-+	state = REG_GET_MASK(r, THROT_STATUS_BREACH_MASK);
-+	seq_printf(s, "THROT STATUS: breach(%d) ", state);
-+	state = REG_GET_MASK(r, THROT_STATUS_STATE_MASK);
-+	seq_printf(s, "state(%d) ", state);
-+	state = REG_GET_MASK(r, THROT_STATUS_ENABLED_MASK);
-+	seq_printf(s, "enabled(%d)\n", state);
++	disable_irq(ctx->dev->enc_irq);
++	mtk_vcodec_debug(inst, "opt %d <-", opt);
 +
-+	r = readl(ts->regs + CPU_PSKIP_STATUS);
-+	state = REG_GET_MASK(r, XPU_PSKIP_STATUS_M_MASK);
-+	seq_printf(s, "CPU PSKIP STATUS: M(%d) ", state);
-+	state = REG_GET_MASK(r, XPU_PSKIP_STATUS_N_MASK);
-+	seq_printf(s, "N(%d) ", state);
-+	state = REG_GET_MASK(r, XPU_PSKIP_STATUS_ENABLED_MASK);
-+	seq_printf(s, "enabled(%d)\n", state);
-+
- 	return 0;
- }
- 
-@@ -449,6 +859,204 @@ static int soctherm_clk_enable(struct platform_device *pdev, bool enable)
- 	return 0;
- }
- 
-+static int throt_get_cdev_max_state(struct thermal_cooling_device *cdev,
-+				    unsigned long *max_state)
-+{
-+	*max_state = 1;
-+	return 0;
++	return ret;
 +}
 +
-+static int throt_get_cdev_cur_state(struct thermal_cooling_device *cdev,
-+				    unsigned long *cur_state)
++static int h264_enc_set_param(unsigned long handle,
++			      enum venc_set_param_type type,
++			      struct venc_enc_param *enc_prm)
 +{
-+	struct tegra_soctherm *ts = cdev->devdata;
-+	u32 r;
++	int ret = 0;
++	struct venc_h264_inst *inst = (struct venc_h264_inst *)handle;
 +
-+	r = readl(ts->regs + THROT_STATUS);
-+	if (REG_GET_MASK(r, THROT_STATUS_STATE_MASK))
-+		*cur_state = 1;
-+	else
-+		*cur_state = 0;
++	mtk_vcodec_debug(inst, "->type=%d", type);
 +
-+	return 0;
++	switch (type) {
++	case VENC_SET_PARAM_ENC:
++		inst->vsi->config.input_fourcc = enc_prm->input_yuv_fmt;
++		inst->vsi->config.bitrate = enc_prm->bitrate;
++		inst->vsi->config.pic_w = enc_prm->width;
++		inst->vsi->config.pic_h = enc_prm->height;
++		inst->vsi->config.buf_w = enc_prm->buf_width;
++		inst->vsi->config.buf_h = enc_prm->buf_height;
++		inst->vsi->config.gop_size = enc_prm->gop_size;
++		inst->vsi->config.framerate = enc_prm->frm_rate;
++		inst->vsi->config.intra_period = enc_prm->intra_period;
++		inst->vsi->config.profile =
++			h264_get_profile(inst, enc_prm->h264_profile);
++		inst->vsi->config.level =
++			h264_get_level(inst, enc_prm->h264_level);
++		inst->vsi->config.wfd = 0;
++		ret = vpu_enc_set_param(&inst->vpu_inst, type, enc_prm);
++		if (ret)
++			break;
++		if (inst->work_buf_allocated) {
++			h264_enc_free_work_buf(inst);
++			inst->work_buf_allocated = false;
++		}
++		ret = h264_enc_alloc_work_buf(inst);
++		if (ret)
++			break;
++		inst->work_buf_allocated = true;
++		break;
++
++	case VENC_SET_PARAM_PREPEND_HEADER:
++		inst->prepend_hdr = 1;
++		mtk_vcodec_debug(inst, "set prepend header mode");
++		break;
++
++	default:
++		ret = vpu_enc_set_param(&inst->vpu_inst, type, enc_prm);
++		break;
++	}
++
++	mtk_vcodec_debug_leave(inst);
++
++	return ret;
 +}
 +
-+static int throt_set_cdev_state(struct thermal_cooling_device *cdev,
-+				unsigned long cur_state)
++static int h264_enc_deinit(unsigned long handle)
 +{
-+	return 0;
++	int ret = 0;
++	struct venc_h264_inst *inst = (struct venc_h264_inst *)handle;
++
++	mtk_vcodec_debug_enter(inst);
++
++	ret = vpu_enc_deinit(&inst->vpu_inst);
++
++	if (inst->work_buf_allocated)
++		h264_enc_free_work_buf(inst);
++
++	mtk_vcodec_debug_leave(inst);
++	kfree(inst);
++
++	return ret;
 +}
 +
-+static struct thermal_cooling_device_ops throt_cooling_ops = {
-+	.get_max_state = throt_get_cdev_max_state,
-+	.get_cur_state = throt_get_cdev_cur_state,
-+	.set_cur_state = throt_set_cdev_state,
++static struct venc_common_if venc_h264_if = {
++	h264_enc_init,
++	h264_enc_encode,
++	h264_enc_set_param,
++	h264_enc_deinit,
 +};
 +
-+/**
-+ * soctherm_init_hw_throt_cdev() - Parse the HW throttle configurations
-+ * and register them as cooling devices.
-+ */
-+static void soctherm_init_hw_throt_cdev(struct platform_device *pdev)
++struct venc_common_if *get_h264_enc_comm_if(void);
++
++struct venc_common_if *get_h264_enc_comm_if(void)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct tegra_soctherm *ts = dev_get_drvdata(dev);
-+	struct device_node *np_stc, *np_stcc;
-+	const char *name;
-+	u32 val;
-+	int i, r;
-+
-+	for (i = 0; i < THROTTLE_SIZE; i++) {
-+		ts->throt_cfgs[i].name = throt_names[i];
-+		ts->throt_cfgs[i].id = i;
-+		ts->throt_cfgs[i].init = false;
-+	}
-+
-+	np_stc = of_get_child_by_name(dev->of_node, "nvidia,throttle-cfgs");
-+	if (!np_stc) {
-+		dev_info(dev,
-+			 "throttle-cfg: no throttle-cfgs - not enabling\n");
-+		return;
-+	}
-+
-+	for_each_child_of_node(np_stc, np_stcc) {
-+		struct soctherm_throt_cfg *stc;
-+		struct thermal_cooling_device *tcd;
-+
-+		name = np_stcc->name;
-+		stc = find_throttle_cfg_by_name(ts, name);
-+		if (!stc) {
-+			dev_err(dev,
-+				"throttle-cfg: could not find %s\n", name);
-+			continue;
-+		}
-+
-+		r = of_property_read_u32(np_stcc, "nvidia,priority", &val);
-+		if (r) {
-+			dev_info(dev,
-+				 "throttle-cfg: %s: missing priority\n", name);
-+			continue;
-+		}
-+		stc->priority = val;
-+
-+		r = of_property_read_u32(np_stcc, "nvidia,cpu-throt-depth",
-+					 &val);
-+		if (r) {
-+			dev_info(dev,
-+				 "throttle-cfg: %s: missing cpu_throt_depth\n",
-+				 name);
-+			continue;
-+		}
-+		stc->cpu_throt_depth = val;
-+
-+		tcd = thermal_of_cooling_device_register(np_stcc,
-+							 (char *)name, ts,
-+							 &throt_cooling_ops);
-+		of_node_put(np_stcc);
-+		if (IS_ERR_OR_NULL(tcd)) {
-+			dev_err(dev,
-+				"throttle-cfg: %s: failed to register cooling device\n",
-+				name);
-+			continue;
-+		}
-+
-+		stc->cdev = tcd;
-+		stc->init = true;
-+	}
-+
-+	of_node_put(np_stc);
++	return &venc_h264_if;
 +}
-+
-+/**
-+ * throttlectl_cpu_mn() - program CPU pulse skipper configuration
-+ * @throt: the LIGHT/HEAVY of throttle event id
-+ *
-+ * Pulse skippers are used to throttle clock frequencies.  This
-+ * function programs the pulse skippers based on @throt and platform
-+ * data.  This function is used for CPUs that have "remote" pulse
-+ * skipper control, e.g., the CPU pulse skipper is controlled by the
-+ * SOC_THERM IP block.  (SOC_THERM is located outside the CPU
-+ * complex.)
-+ */
-+static void throttlectl_cpu_mn(struct tegra_soctherm *ts,
-+			       enum soctherm_throttle_id throt)
-+{
-+	u32 r;
-+	int depth;
-+	u8 dividend;
-+
-+	depth = ts->throt_cfgs[throt].cpu_throt_depth;
-+	dividend = THROT_DEPTH_DIVIDEND(depth);
-+
-+	r = readl(ts->regs + THROT_PSKIP_CTRL(throt, THROTTLE_DEV_CPU));
-+	r = REG_SET_MASK(r, THROT_PSKIP_CTRL_ENABLE_MASK, 1);
-+	r = REG_SET_MASK(r, THROT_PSKIP_CTRL_DIVIDEND_MASK, dividend);
-+	r = REG_SET_MASK(r, THROT_PSKIP_CTRL_DIVISOR_MASK, 0xff);
-+	writel(r, ts->regs + THROT_PSKIP_CTRL(throt, THROTTLE_DEV_CPU));
-+
-+	r = readl(ts->regs + THROT_PSKIP_RAMP(throt, THROTTLE_DEV_CPU));
-+	r = REG_SET_MASK(r, THROT_PSKIP_RAMP_DURATION_MASK, 0xff);
-+	r = REG_SET_MASK(r, THROT_PSKIP_RAMP_STEP_MASK, 0xf);
-+	writel(r, ts->regs + THROT_PSKIP_RAMP(throt, THROTTLE_DEV_CPU));
-+}
-+
-+/**
-+ * soctherm_throttle_program() - programs pulse skippers' configuration
-+ * @throt: the LIGHT/HEAVY of the throttle event id.
-+ *
-+ * Pulse skippers are used to throttle clock frequencies.
-+ * This function programs the pulse skippers.
-+ */
-+static void soctherm_throttle_program(struct tegra_soctherm *ts,
-+				      enum soctherm_throttle_id throt)
-+{
-+	u32 r;
-+	struct soctherm_throt_cfg stc = ts->throt_cfgs[throt];
-+
-+	if (!stc.init)
-+		return;
-+
-+	/* Setup PSKIP parameters */
-+	throttlectl_cpu_mn(ts, throt);
-+
-+	r = REG_SET_MASK(0, THROT_PRIORITY_LITE_PRIO_MASK, stc.priority);
-+	writel(r, ts->regs + THROT_PRIORITY_CTRL(throt));
-+
-+	r = REG_SET_MASK(0, THROT_DELAY_LITE_DELAY_MASK, 0);
-+	writel(r, ts->regs + THROT_DELAY_CTRL(throt));
-+
-+	r = readl(ts->regs + THROT_PRIORITY_LOCK);
-+	r = REG_GET_MASK(r, THROT_PRIORITY_LOCK_PRIORITY_MASK);
-+	if (r >= stc.priority)
-+		return;
-+	r = REG_SET_MASK(0, THROT_PRIORITY_LOCK_PRIORITY_MASK,
-+			 stc.priority);
-+	writel(r, ts->regs + THROT_PRIORITY_LOCK);
-+}
-+
-+static void tegra_soctherm_throttle(struct device *dev)
-+{
-+	struct tegra_soctherm *ts = dev_get_drvdata(dev);
-+	u32 v;
-+	int i;
-+
-+	/* Thermal HW throttle programming */
-+	for (i = 0; i < THROTTLE_SIZE; i++)
-+		soctherm_throttle_program(ts, i);
-+
-+	v = REG_SET_MASK(0, THROT_GLOBAL_ENB_MASK, 1);
-+	writel(v, ts->regs + THROT_GLOBAL_CFG);
-+
-+	v = clk_readl(ts, CAR_SUPER_CCLKG_DIVIDER);
-+	v = REG_SET_MASK(v, CDIVG_USE_THERM_CONTROLS_MASK, 1);
-+	clk_writel(ts, v, CAR_SUPER_CCLKG_DIVIDER);
-+
-+	/* initialize stats collection */
-+	v = STATS_CTL_CLR_DN | STATS_CTL_EN_DN |
-+	    STATS_CTL_CLR_UP | STATS_CTL_EN_UP;
-+	writel(v, ts->regs + THERMCTL_STATS_CTL);
-+}
-+
- static void soctherm_init(struct platform_device *pdev)
- {
- 	struct tegra_soctherm *tegra = platform_get_drvdata(pdev);
-@@ -475,6 +1083,12 @@ static void soctherm_init(struct platform_device *pdev)
+diff --git a/drivers/media/platform/mtk-vcodec/venc_drv_if.c b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
+index 77c39d2..c4c83e7 100644
+--- a/drivers/media/platform/mtk-vcodec/venc_drv_if.c
++++ b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
+@@ -26,7 +26,7 @@
+ #include "mtk_vcodec_enc_pm.h"
+ #include "mtk_vpu.h"
+ 
+-
++struct venc_common_if *get_h264_enc_comm_if(void);
+ struct venc_common_if *get_vp8_enc_comm_if(void);
+ 
+ int venc_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+@@ -38,6 +38,8 @@ int venc_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+ 		ctx->enc_if = get_vp8_enc_comm_if();
+ 		break;
+ 	case V4L2_PIX_FMT_H264:
++		ctx->enc_if = get_h264_enc_comm_if();
++		break;
+ 	default:
+ 		return -EINVAL;
  	}
- 	writel(pdiv, tegra->regs + SENSOR_PDIV);
- 	writel(hotspot, tegra->regs + SENSOR_HOTSPOT_OFF);
-+
-+	if (tegra->soc->use_ccroc)
-+		return;
-+
-+	/* Configure hw throttle */
-+	tegra_soctherm_throttle(&pdev->dev);
- }
- 
- static const struct of_device_id tegra_soctherm_of_match[] = {
-@@ -527,10 +1141,23 @@ static int tegra_soctherm_probe(struct platform_device *pdev)
- 
- 	tegra->soc = soc;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "soctherm-reg");
- 	tegra->regs = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(tegra->regs))
-+	if (IS_ERR(tegra->regs)) {
-+		dev_err(&pdev->dev, "can't get soctherm registers");
- 		return PTR_ERR(tegra->regs);
-+	}
-+
-+	if (!tegra->soc->use_ccroc) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   "car-reg");
-+		tegra->clk_regs = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(tegra->clk_regs)) {
-+			dev_err(&pdev->dev, "can't get car clk registers");
-+			return PTR_ERR(tegra->clk_regs);
-+		}
-+	}
- 
- 	tegra->reset = devm_reset_control_get(&pdev->dev, "soctherm");
- 	if (IS_ERR(tegra->reset)) {
-@@ -580,6 +1207,9 @@ static int tegra_soctherm_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
-+	if (!tegra->soc->use_ccroc)
-+		soctherm_init_hw_throt_cdev(pdev);
-+
- 	soctherm_init(pdev);
- 
- 	for (i = 0; i < soc->num_ttgs; ++i) {
-@@ -593,6 +1223,7 @@ static int tegra_soctherm_probe(struct platform_device *pdev)
- 		zone->reg = tegra->regs + soc->ttgs[i]->sensor_temp_offset;
- 		zone->dev = &pdev->dev;
- 		zone->sg = soc->ttgs[i];
-+		zone->ts = tegra;
- 
- 		z = devm_thermal_zone_of_sensor_register(&pdev->dev,
- 							 soc->ttgs[i]->id, zone,
-@@ -608,7 +1239,9 @@ static int tegra_soctherm_probe(struct platform_device *pdev)
- 		tegra->thermctl_tzs[soc->ttgs[i]->id] = z;
- 
- 		/* Configure hw trip points */
--		tegra_soctherm_set_hwtrips(&pdev->dev, soc->ttgs[i], z);
-+		err = tegra_soctherm_set_hwtrips(&pdev->dev, soc->ttgs[i], z);
-+		if (err)
-+			goto disable_clocks;
- 	}
- 
- 	soctherm_debug_init(pdev);
-@@ -661,7 +1294,12 @@ static int __maybe_unused soctherm_resume(struct device *dev)
- 		struct thermal_zone_device *tz;
- 
- 		tz = tegra->thermctl_tzs[soc->ttgs[i]->id];
--		tegra_soctherm_set_hwtrips(dev, soc->ttgs[i], tz);
-+		err = tegra_soctherm_set_hwtrips(dev, soc->ttgs[i], tz);
-+		if (err) {
-+			dev_err(&pdev->dev,
-+				"Resume failed: set hwtrips failed\n");
-+			return err;
-+		}
- 	}
- 
- 	return 0;
-diff --git a/drivers/thermal/tegra/soctherm.h b/drivers/thermal/tegra/soctherm.h
-index 28e18ec4b4c3..e96ca73fd780 100644
---- a/drivers/thermal/tegra/soctherm.h
-+++ b/drivers/thermal/tegra/soctherm.h
-@@ -15,6 +15,11 @@
- #ifndef __DRIVERS_THERMAL_TEGRA_SOCTHERM_H
- #define __DRIVERS_THERMAL_TEGRA_SOCTHERM_H
- 
-+#define THERMCTL_LEVEL0_GROUP_CPU               0x0
-+#define THERMCTL_LEVEL0_GROUP_GPU		0x4
-+#define THERMCTL_LEVEL0_GROUP_MEM		0x8
-+#define THERMCTL_LEVEL0_GROUP_TSENSE		0xc
-+
- #define SENSOR_CONFIG2                          8
- #define SENSOR_CONFIG2_THERMA_MASK		(0xffff << 16)
- #define SENSOR_CONFIG2_THERMA_SHIFT		16
-@@ -65,6 +70,9 @@ struct tegra_tsensor_group {
- 	u32 thermtrip_enable_mask;
- 	u32 thermtrip_any_en_mask;
- 	u32 thermtrip_threshold_mask;
-+	u16 thermctl_lvl0_offset;
-+	u32 thermctl_lvl0_up_thresh_mask;
-+	u32 thermctl_lvl0_dn_thresh_mask;
- };
- 
- struct tegra_tsensor_configuration {
-@@ -103,6 +111,8 @@ struct tegra_soctherm_soc {
- 	const unsigned int num_ttgs;
- 	const struct tegra_soctherm_fuse *tfuse;
- 	const int thresh_grain;
-+	const unsigned int bptt;
-+	const bool use_ccroc;
- };
- 
- int tegra_calc_shared_calib(const struct tegra_soctherm_fuse *tfuse,
-diff --git a/drivers/thermal/tegra/tegra124-soctherm.c b/drivers/thermal/tegra/tegra124-soctherm.c
-index beb9d36b9c8a..36768630f78c 100644
---- a/drivers/thermal/tegra/tegra124-soctherm.c
-+++ b/drivers/thermal/tegra/tegra124-soctherm.c
-@@ -28,7 +28,11 @@
- #define TEGRA124_THERMTRIP_CPU_THRESH_MASK	(0xff << 8)
- #define TEGRA124_THERMTRIP_TSENSE_THRESH_MASK	0xff
- 
-+#define TEGRA124_THERMCTL_LVL0_UP_THRESH_MASK	(0xff << 17)
-+#define TEGRA124_THERMCTL_LVL0_DN_THRESH_MASK	(0xff << 9)
-+
- #define TEGRA124_THRESH_GRAIN			1000
-+#define TEGRA124_BPTT				8
- 
- static const struct tegra_tsensor_configuration tegra124_tsensor_config = {
- 	.tall = 16300,
-@@ -51,6 +55,9 @@ static const struct tegra_tsensor_group tegra124_tsensor_group_cpu = {
- 	.thermtrip_any_en_mask = TEGRA124_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA124_THERMTRIP_CPU_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA124_THERMTRIP_CPU_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_CPU,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA124_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA124_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group tegra124_tsensor_group_gpu = {
-@@ -66,6 +73,9 @@ static const struct tegra_tsensor_group tegra124_tsensor_group_gpu = {
- 	.thermtrip_any_en_mask = TEGRA124_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA124_THERMTRIP_GPU_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA124_THERMTRIP_GPUMEM_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_GPU,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA124_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA124_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group tegra124_tsensor_group_pll = {
-@@ -79,6 +89,9 @@ static const struct tegra_tsensor_group tegra124_tsensor_group_pll = {
- 	.thermtrip_any_en_mask = TEGRA124_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA124_THERMTRIP_TSENSE_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA124_THERMTRIP_TSENSE_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_TSENSE,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA124_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA124_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group tegra124_tsensor_group_mem = {
-@@ -94,6 +107,9 @@ static const struct tegra_tsensor_group tegra124_tsensor_group_mem = {
- 	.thermtrip_any_en_mask = TEGRA124_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA124_THERMTRIP_MEM_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA124_THERMTRIP_GPUMEM_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_MEM,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA124_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA124_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group *tegra124_tsensor_groups[] = {
-@@ -193,4 +209,6 @@ const struct tegra_soctherm_soc tegra124_soctherm = {
- 	.num_ttgs = ARRAY_SIZE(tegra124_tsensor_groups),
- 	.tfuse = &tegra124_soctherm_fuse,
- 	.thresh_grain = TEGRA124_THRESH_GRAIN,
-+	.bptt = TEGRA124_BPTT,
-+	.use_ccroc = false,
- };
-diff --git a/drivers/thermal/tegra/tegra132-soctherm.c b/drivers/thermal/tegra/tegra132-soctherm.c
-index e2aa84e1b307..ae5d61af2df3 100644
---- a/drivers/thermal/tegra/tegra132-soctherm.c
-+++ b/drivers/thermal/tegra/tegra132-soctherm.c
-@@ -193,4 +193,5 @@ const struct tegra_soctherm_soc tegra132_soctherm = {
- 	.num_ttgs = ARRAY_SIZE(tegra132_tsensor_groups),
- 	.tfuse = &tegra132_soctherm_fuse,
- 	.thresh_grain = TEGRA132_THRESH_GRAIN,
-+	.use_ccroc = true,
- };
-diff --git a/drivers/thermal/tegra/tegra210-soctherm.c b/drivers/thermal/tegra/tegra210-soctherm.c
-index 19cc0ab66f0e..ad53169a8e95 100644
---- a/drivers/thermal/tegra/tegra210-soctherm.c
-+++ b/drivers/thermal/tegra/tegra210-soctherm.c
-@@ -29,7 +29,11 @@
- #define TEGRA210_THERMTRIP_CPU_THRESH_MASK	(0x1ff << 9)
- #define TEGRA210_THERMTRIP_TSENSE_THRESH_MASK	0x1ff
- 
-+#define TEGRA210_THERMCTL_LVL0_UP_THRESH_MASK	(0x1ff << 18)
-+#define TEGRA210_THERMCTL_LVL0_DN_THRESH_MASK	(0x1ff << 9)
-+
- #define TEGRA210_THRESH_GRAIN			500
-+#define TEGRA210_BPTT				9
- 
- static const struct tegra_tsensor_configuration tegra210_tsensor_config = {
- 	.tall = 16300,
-@@ -52,6 +56,9 @@ static const struct tegra_tsensor_group tegra210_tsensor_group_cpu = {
- 	.thermtrip_any_en_mask = TEGRA210_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA210_THERMTRIP_CPU_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA210_THERMTRIP_CPU_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_CPU,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA210_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA210_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group tegra210_tsensor_group_gpu = {
-@@ -67,6 +74,9 @@ static const struct tegra_tsensor_group tegra210_tsensor_group_gpu = {
- 	.thermtrip_any_en_mask = TEGRA210_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA210_THERMTRIP_GPU_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA210_THERMTRIP_GPUMEM_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_GPU,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA210_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA210_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group tegra210_tsensor_group_pll = {
-@@ -80,6 +90,9 @@ static const struct tegra_tsensor_group tegra210_tsensor_group_pll = {
- 	.thermtrip_any_en_mask = TEGRA210_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA210_THERMTRIP_TSENSE_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA210_THERMTRIP_TSENSE_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_TSENSE,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA210_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA210_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group tegra210_tsensor_group_mem = {
-@@ -95,6 +108,9 @@ static const struct tegra_tsensor_group tegra210_tsensor_group_mem = {
- 	.thermtrip_any_en_mask = TEGRA210_THERMTRIP_ANY_EN_MASK,
- 	.thermtrip_enable_mask = TEGRA210_THERMTRIP_MEM_EN_MASK,
- 	.thermtrip_threshold_mask = TEGRA210_THERMTRIP_GPUMEM_THRESH_MASK,
-+	.thermctl_lvl0_offset = THERMCTL_LEVEL0_GROUP_MEM,
-+	.thermctl_lvl0_up_thresh_mask = TEGRA210_THERMCTL_LVL0_UP_THRESH_MASK,
-+	.thermctl_lvl0_dn_thresh_mask = TEGRA210_THERMCTL_LVL0_DN_THRESH_MASK,
- };
- 
- static const struct tegra_tsensor_group *tegra210_tsensor_groups[] = {
-@@ -194,4 +210,6 @@ const struct tegra_soctherm_soc tegra210_soctherm = {
- 	.num_ttgs = ARRAY_SIZE(tegra210_tsensor_groups),
- 	.tfuse = &tegra210_soctherm_fuse,
- 	.thresh_grain = TEGRA210_THRESH_GRAIN,
-+	.bptt = TEGRA210_BPTT,
-+	.use_ccroc = false,
- };
 -- 
-1.9.1
+1.7.9.5
