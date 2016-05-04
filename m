@@ -1,37 +1,41 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [2/2] powerpc: Update of_remove_property() call sites to remove null checking
-Date: Thu,  5 May 2016 08:40:25 +1000 (AEST)
-Message-ID: <3r0Y092fNPz9t5T@ozlabs.org>
-References: <1461821695-19204-2-git-send-email-sjitindarsingh@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461821695-19204-2-git-send-email-sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Andy Gross <andy.gross@linaro.org>
+Subject: [Patch v3 7/8] dts: qcom: apq8084: Add SCM firmware node
+Date: Wed,  4 May 2016 17:50:44 -0500
+Message-ID: <1462402245-18295-8-git-send-email-andy.gross@linaro.org>
+References: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, jilai wang <jilaiw@codeaurora.org>, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-28-04 at 05:34:55 UTC, Suraj Jitindar Singh wrote:
-> After obtaining a property from of_find_property() and before calling
-> of_remove_property() most code checks to ensure that the property
-> returned from of_find_property() is not null. The previous patch
-> moved this check to the start of the function of_remove_property() in
-> order to avoid the case where this check isn't done and a null value is
-> passed. This ensures the check is always conducted before taking locks
-> and attempting to remove the property. Thus it is no longer necessary
-> to perform a check for null values before invoking of_remove_property().
-> 
-> Update of_remove_property() call sites in order to remove redundant
-> checking for null property value as check is now performed within the
-> of_remove_property function().
-> 
-> Signed-off-by: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This patch adds the firmware node for the SCM
 
-Applied to powerpc next, thanks.
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+---
+ arch/arm/boot/dts/qcom-apq8084.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-https://git.kernel.org/powerpc/c/676669b666574a23f7bd62870c
-
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+index a33a09f..7c2df06 100644
+--- a/arch/arm/boot/dts/qcom-apq8084.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+@@ -86,6 +86,14 @@
+ 		};
+ 	};
+ 
++	firmware {
++		scm {
++			compatible = "qcom,scm";
++			clocks = <&gcc GCC_CE1_CLK> , <&gcc GCC_CE1_AXI_CLK>, <&gcc GCC_CE1_AHB_CLK>;
++			clock-names = "core", "bus", "iface";
++		};
++	};
++
+ 	cpu-pmu {
+ 		compatible = "qcom,krait-pmu";
+ 		interrupts = <1 7 0xf04>;
+-- 
+1.9.1
