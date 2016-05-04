@@ -1,189 +1,126 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v7 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Wed, 4 May 2016 11:38:52 +0200
-Message-ID: <20160504113852.10a2dd84@bbrezillon>
-References: <1461845007-23139-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1461845007-23139-2-git-send-email-boris.brezillon@free-electrons.com>
-	<20160503164019.GA1604@rob-hp-laptop>
-	<20160503185153.5cfddc32@bbrezillon>
-	<CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v7 16/24] i2c: allow adapter drivers to override the
+ adapter locking
+Date: Wed, 4 May 2016 12:01:17 +0200
+Message-ID: <0b4136b2-e555-9bc0-9003-898d686de7a1@axentia.se>
+References: <1461165484-2314-1-git-send-email-peda@axentia.se>
+ <1461165484-2314-17-git-send-email-peda@axentia.se>
+ <20160503213807.GA2018@tetsubishi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160503213807.GA2018@tetsubishi>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lucas De Marchi <lucas.demarchi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Ranostay <matt.ranostay-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.koz>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi!
 
-On Tue, 3 May 2016 14:11:04 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Tue, May 3, 2016 at 11:51 AM, Boris Brezillon
-> <boris.brezillon@free-electrons.com> wrote:
-> > Hi Rob,
-> >
-> > On Tue, 3 May 2016 11:40:19 -0500
-> > Rob Herring <robh@kernel.org> wrote:
-> >
-> >> On Thu, Apr 28, 2016 at 02:03:27PM +0200, Boris Brezillon wrote:
-> >> > The EBI (External Bus Interface) is used to access external peripherals
-> >> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> >> > Each device is assigned a CS line and an address range and can have its
-> >> > own configuration (timings, access mode, bus width, ...).
-> >> > This driver provides a generic DT binding to configure a device according
-> >> > to its requirements.
-> >> > For specific device controllers (like the NAND one) the SMC timings
-> >> > should be configured by the controller driver through the matrix and smc
-> >> > syscon regmaps.
-> >> >
-> >> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> >> > ---
-> >> >  .../bindings/memory-controllers/atmel,ebi.txt      | 136 +++++++++++++++++++++
-> >> >  1 file changed, 136 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> >> > new file mode 100644
-> >> > index 0000000..a6dca5c
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> >> > @@ -0,0 +1,136 @@
-> >> > +* Device tree bindings for Atmel EBI
-> >> > +
-> >> > +The External Bus Interface (EBI) controller is a bus where you can connect
-> >> > +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
-> >> > +The EBI provides a glue-less interface to asynchronous memories through the SMC
-> >> > +(Static Memory Controller).
-> >> > +
-> >> > +Required properties:
-> >> > +
-> >> > +- compatible:              "atmel,at91sam9260-ebi"
-> >> > +                   "atmel,at91sam9261-ebi"
-> >> > +                   "atmel,at91sam9263-ebi0"
-> >> > +                   "atmel,at91sam9263-ebi1"
-> >>
-> >> What are the differences between 0 and 1?
-> >
-> > Because this SoC has 2 EBI busses with different capabilities.
+On 2016-05-03 23:38, Wolfram Sang wrote:
+> On Wed, Apr 20, 2016 at 05:17:56PM +0200, Peter Rosin wrote:
+>> Add i2c_lock_bus() and i2c_unlock_bus(), which call the new lock_bus and
+>> unlock_bus ops in the adapter. These funcs/ops take an additional flags
+>> argument that indicates for what purpose the adapter is locked.
+>>
+>> There are two flags, I2C_LOCK_ADAPTER and I2C_LOCK_SEGMENT, but they are
+>> both implemented the same. For now. Locking the adapter means that the
+>> whole bus is locked, locking the segment means that only the current bus
+>> segment is locked (i.e. i2c traffic on the parent side of mux is still
+>> allowed even if the child side of the mux is locked.
+>>
+>> Also support a trylock_bus op (but no function to call it, as it is not
+>> expected to be needed outside of the i2c core).
+>>
+>> Implement i2c_lock_adapter/i2c_unlock_adapter in terms of the new locking
+>> scheme (i.e. lock with the I2C_LOCK_ADAPTER flag).
+>>
+>> Annotate some of the locking with explicit I2C_LOCK_SEGMENT flags.
 > 
-> Okay, correct answer. :)
+> Can you explain a little why it is SEGMENT and not ADAPTER here? That
+> probably makes it easier to get into this patch.
 > 
-> [...]
+> And to double check my understanding: I was surprised to not see any
+> i2c_lock_adapter() or I2C_LOCK_ADAPTER in action. This is because muxes
+> call I2C_LOCK_SEGMENT on their parent which in case of the parent being
+> the root adapter is essentially the same as I2C_LOCK_ADAPTER. Correct?
+
+Correct. Locking the ADAPTER and the SEGMENT is the same thing for
+the root adapter and for traditional muxes (i.e. not mux-locked).
+Traditional muxes simply feed the locking request upwards to the
+root adapter. The new mux-locked muxes behave the same for ADAPTER
+locking; all locks all the way up to the root adapter are grabbed
+instantly. If you instead lock SEGMENT on a mux-locked mux, only
+the new mux lock in the parent adapter is grabbed right away, but
+when the mux then fires off accesses on its parent adapter, that
+triggers SEGMENT locks one level up in the tree and the process
+recurses.
+
+So, SEGMENT locking is the normal thing that happens when e.g. normal
+i2c_transfer calls are made. ADAPTER locking is used for transactions.
+The patch enables muxes to use more relaxed locking compared to
+locking the ADAPTER for its transations.
+
+The naming can probably be improved. SEGMENT made more sense when
+it did not lock all mux accesses one level up (that changed in v6,
+but I didn't change the I2C_LOCK_SEGMENT name at that time), so it
+is kind of outdated. I2C_LOCK_ROOT_ADAPTER and I2C_LOCK_MUXES instead
+of I2C_LOCK_ADAPTER and L2C_LOCK_SEGMENT perhaps?
+
+But I don't really like I2C_LOCK_MUXES as I find it a bit too specific,
+and people not thinking about i2c muxes at all (most people I gather,
+ignorance is bliss) will not think that it is something for them...
+
+It is also the case that the two flags are mutually exclusive, and
+at this point there is no valid uses of using neither flag, nor for
+using both. It is a binary decision and one flag would technically be
+enough. So, not setting e.g. I2C_LOCK_ADAPTER could in theory imply
+I2C_LOCK_SEGMENT. I did it as two separate flags since there might
+be a third (or fourth even) option in the future (I don't see what
+it would be though, I have no crystal ball...)
+
+So maybe there should be only one flag, e.g. I2C_LOCK_ROOT_ADAPTER?
+I.e. perhaps leave the future for later?
+
+Hmmm, I just now realized that you were not really suggesting any
+changes other than to the commit message. Oh well, I can perhaps
+rephrase some of the above in the commit message if you think that
+we should not unnecessarily touch the code at this point...
+
+>>
+>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>> ---
+>>  drivers/i2c/i2c-core.c | 46 ++++++++++++++++++++++++++++------------------
+>>  include/linux/i2c.h    | 28 ++++++++++++++++++++++++++--
+>>  2 files changed, 54 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+>> index 0f2f8484e8ec..21f46d011c33 100644
+>> --- a/drivers/i2c/i2c-core.c
+>> +++ b/drivers/i2c/i2c-core.c
+>> @@ -960,10 +960,12 @@ static int i2c_check_addr_busy(struct i2c_adapter *adapter, int addr)
+>>  }
+>>  
+>>  /**
+>> - * i2c_lock_adapter - Get exclusive access to an I2C bus segment
+>> + * i2c_adapter_lock_bus - Get exclusive access to an I2C bus segment
+>>   * @adapter: Target I2C bus segment
+>> + * @flags: I2C_LOCK_ADAPTER locks the root i2c adapter, I2C_LOCK_SEGMENT
+>> + *	locks only this branch in the adapter tree
+>>   */
 > 
-> >>
-> >> > +                   of the memory region requested by the device.
-> >> > +
-> >> > +EBI bus configuration associated with specific chip-select will be defined in
-> >> > +the configs subnode. This configs node will in turn contain several subnodes
-> >> > +named config-<cs-id>, each of them containing the following properties.
-> >>
-> >> This is a bit unusual. Why not just part of the child device nodes?
-> >
-> > Oh, come on! I reworked the binding because Mark complained about the
-> > previous binding which was doing exactly what you're suggesting. Can
-> > you please be consistent in your reviews...
-> 
-> No, Mark and I both have our opinions. Which part of this patch
-> explains the history?
+> I think this kerneldoc should be moved to i2c_lock_adapter and/or
+> i2c_lock_bus() which are now in i2c.h. This is what users will use, not
+> this static, adapter-specific implementation. I think it is enough to
+> have a comment here explaining what is special in handling adapters.
 
-Hm, it's in patch 1/2 (just dropped the cover letter, which might not
-be such a good idea).
+Yes, I was not really satisfied with having documentation on static
+functions. But if I move it, there is no natural home for the current
+i2c_trylock_adapter docs, and I'd hate killing documentation that
+still applies. Do you have a suggestion? Maybe keep that one doc at
+the static i2c_trylock_adapter for now and move it to ->trylock_bus
+when someone decides to write kerneldoc for struct i2c_adapter?
 
-> If the revision history is not in the patch, I'm
-> not looking at it.
-> 
-> My issue with it this way is that it has invented yet another way to
-> describe timings. I would like to be consistent across external bus
-> descriptions, but we're not very consistent to begin with though. The
-> most common seems to be the way you first did it. But I agree that it
-> is kind of screwy to have an intermediate node unless the controller
-> itself has sub-blocks within it and is not the established way to
-> describe a bus with chip selects. I would either put the properties
-> directly in the child nodes (e.g. flash@0,0) or put your config nodes
-> in the device node. I'd call it timings instead of config, but that's
-> just bikeshedding.
-
-Well, it's not only describing timings (see atmel,bus-width,
-atmel,byte-access-type, ...), but I'm fine with either names :).
-
-> 
-> memory-controller@1000 {
->   ...
->   flash@0,0 {
->     timings {
->       ...
->     };
->   };
-> };
-
-Okay. Mark, what do you think of this approach?
-
-Note that one of my previous version was defining timings directly in
-the EBI device node, and Arnd noted that doing so may cause problems
-if one of the EBI property (or the config/timing node name) conflict
-with the sub-device binding, which is why I decided to put the EBI
-config definitions in a separate subnode.
-
-> 
-> >> > +
-> >> > +Optional config-<cs-id> node properties:
-> >> > +
-> >> > +- atmel,bus-width:         width of the asynchronous device's data bus
-> >> > +                           8, 16 or 32.
-> >> > +                           Default to 8 when undefined.
-> >> > +
-> >> > +- atmel,byte-access-type   "write" or "select" (see Atmel datasheet).
-> >> > +                           Default to "select" when undefined.
-> >> > +
-> >> > +- atmel,read-mode          "nrd" or "ncs".
-> >> > +                           Default to "ncs" when undefined.
-> >> > +
-> >> > +- atmel,write-mode         "nwe" or "ncs".
-> >> > +                           Default to "ncs" when undefined.
-> >> > +
-> >> > +- atmel,exnw-mode          "disabled", "frozen" or "ready".
-> >> > +                           Default to "disabled" when undefined.
-> >> > +
-> >> > +- atmel,page-mode          enable page mode if present. The provided value
-> >> > +                           defines the page size (supported values: 4, 8,
-> >> > +                           16 and 32).
-> >> > +
-> >> > +- atmel,tdf-mode:          "normal" or "optimized". When set to
-> >>
-> >> This should be boolean.
-> >
-> > It was a formerly defined as a boolean, and when it's done like that we
-> > have no way to identify whether the property was forgotten or
-> > intentionally set to normal mode. What's the problem with this approach?
-> 
-> Only preference to use boolean when that is sufficient. With your
-> argument, then we should never have booleans. You state that missing
-> means "normal", not forgotten, so all these properties should be
-> required with no default.
-> 
-> BTW, I debated the same thing on the other properties, but I could see
-> them being expanded to a 3rd mode. I don't see that here though.
-
-Well, another reason I switched to a string property is because I
-implemented hardware readout in v4, and decided to retrieve the current
-state from the hardware and only overload the config with what was
-defined in the DT. In this case, if we move to a boolean property we
-can't know whether the property is missing because we want to put the
-bus in "normal" mode or because we want to keep this config unchanged
-(keep the bootloader/bootstrap config).
-
-This is not true in v5, so maybe we should go back to the boolean
-atmel,tdf-optimized property.
-
-Thanks,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Cheers,
+Peter
