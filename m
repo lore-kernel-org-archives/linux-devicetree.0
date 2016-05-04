@@ -1,75 +1,154 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/9] drm/msm: Drop the gpu binding
-Date: Wed, 4 May 2016 12:15:29 +0530
-Message-ID: <57299A89.5040905@codeaurora.org>
-References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
- <1462273081-5814-3-git-send-email-architt@codeaurora.org>
- <CAL_JsqJJsdxW7a4cbGNs5oC6j-+Cq7+7rwh9W8D7OO+NJK351g@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] iio: mxs-lradc: Add regulators for current sources
+Date: Wed, 4 May 2016 08:15:30 +0100
+Message-ID: <1e7d5f3a-22c1-94d4-9620-7aa112602e39@kernel.org>
+References: <1461333147-11873-1-git-send-email-harald@ccbib.org>
+ <1461333147-11873-2-git-send-email-harald@ccbib.org>
+ <57288674.9050601@i2se.com> <6cdd4f858dacf72e192a292f29c12feb@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJJsdxW7a4cbGNs5oC6j-+Cq7+7rwh9W8D7OO+NJK351g@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6cdd4f858dacf72e192a292f29c12feb-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 03/05/16 12:22, Harald Geyer wrote:
+> Hi Stefan!
+> 
+> On 03.05.2016 13:07, Stefan Wahren wrote:
+>> Am 22.04.2016 um 15:52 schrieb Harald Geyer:
+>>> The hardware has two current sources ISRC0 and ISRC1 to allow measuring
+>>> resistors without additional circuitry. This commit makes them available
+>>> as regulators.
+>>>
+>>> Tested on an imx233-olinuxino board.
+>>>
+>>> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+>>> ---
+>>> The current regulator API doesn't fit this type of device very well: Typically
+>>> consumers will want to set a defined current, ie. min_uA == max_uA, but they
+>>> can't without help from configuration data, because the valid values aren't
+>>> reported by the API for current regulators. I have been thinking about
+>>> extending the API, but currently AFAIK no such consumers exist and most
+>>> users, like myself, will force the regulator to a defined value in
+>>> devicetree anyway.
+>>>
+>>>  .../bindings/staging/iio/adc/mxs-lradc.txt         |  29 ++++
+>>>  drivers/iio/adc/Kconfig                            |   1 +
+>>>  drivers/iio/adc/mxs-lradc.c                        | 152 +++++++++++++++++++++
+>>>  3 files changed, 182 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+>>> index 555fb11..983952c 100644
+>>> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+>>> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+>>> @@ -19,6 +19,15 @@ Optional properties:
+>>>  - fsl,settling: delay between plate switch to next sample. Allowed value is
+>>>                  1 ... 2047. It counts at 2 kHz and its default is
+>>>                  10 (= 5 ms)
+>>> +- ISRC0: A node describing the regulator of internal current source 0
+>>> +- ISRC1: A node describing the regulator of internal current source 1
+>>> +
+>>> +Required properties for the ISRCx sub-nodes:
+>>> +- regulator-max-microamp: See standard regulator binding documentation.
+>>> +                          Valid values are from 0 to 300 in steps of 20.
+>>> +
+>>> +Optional properties for the ISRCx sub-nodes:
+>>> +Any standard regulator properties that apply to current regulators.
+>>>
+>>>  Example for i.MX23 SoC:
+>>>
+>>> @@ -31,6 +40,16 @@ Example for i.MX23 SoC:
+>>>          fsl,ave-ctrl = <4>;
+>>>          fsl,ave-delay = <2>;
+>>>          fsl,settling = <10>;
+>>> +
+>>> +        isrc_lradc0: ISRC0 {
+>>> +            regulator-max-microamp = <300>;
+>>> +        };
+>>> +
+>>> +        isrc_lradc1: ISRC1 {
+>>> +            regulator-max-microamp = <120>;
+>>> +            regulator-min-microamp = <120>;
+>>> +            regulator-always-on;
+>>> +        };
+>>
+>> IMHO the binding should represent the direct connection between the
+>> current source and the physical channel. I think a node label isn't
+>> enough. Unfortunately i don't have an idea to do it the "right way".
+> 
+> I strictly followed the names of the data sheet here: imx23 and imx28
+> reference manuals both call the current sources ISRC0 and ISRC1 even
+> if they are attached to different channels of the ADC. I think
+> inventing some ISRC6 for imx28 would do more harm then good.
+So just to check... These two current sources are effectively
+pushing current out of the ADC input pin?  Assumption being that
+this causes an appropriate voltage across a component between there
+and 0V?
 
+I wonder if we are better off not treating these as regulators at
+all - whilst you could in theory use them for general purposes, it
+would be a bit nuts and sometimes the 'it is nuts argument' is
+enough to mean we don't support something :)
 
-On 05/03/2016 06:12 PM, Rob Herring wrote:
-> On Tue, May 3, 2016 at 5:57 AM, Archit Taneja <architt@codeaurora.org> wrote:
->> The driver currently identifies the GPU components it needs by parsing
->> a phandle list from the 'gpus' DT property.
->>
->> This isn't the right binding to go with. So, for now, just search all
->> device nodes and find the gpu node we need by parsing a list of
->> compatible strings.
->>
->> Once we know how to link the kms and gpu drivers, we'll drop this method
->> and use the correct binding.
->>
->> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->> ---
->>   drivers/gpu/drm/msm/msm_drv.c | 26 +++++++++++++++++++-------
->>   1 file changed, 19 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
->> index 30b8f3b..f717a69 100644
->> --- a/drivers/gpu/drm/msm/msm_drv.c
->> +++ b/drivers/gpu/drm/msm/msm_drv.c
->> @@ -1068,20 +1068,32 @@ static int compare_of(struct device *dev, void *data)
->>          return dev->of_node == data;
->>   }
->>
->> -static int add_components(struct device *dev, struct component_match **matchptr,
->> -               const char *name)
->> +static const char * const msm_compatible_gpus[] = {
->> +       "qcom,adreno-3xx",
->> +       "qcom,kgsl-3d0",
->> +};
->> +
->> +/*
->> + * We don't know what's the best binding to link the gpu with the drm device.
->> + * Fow now, we just hunt for all the possible gpus that we support, and add them
->> + * as components.
->> + */
->> +static int add_gpu_components(struct device *dev,
->> +                             struct component_match **matchptr)
->>   {
->> -       struct device_node *np = dev->of_node;
->>          unsigned i;
->>
->> -       for (i = 0; ; i++) {
->> +       for (i = 0; i < ARRAY_SIZE(msm_compatible_gpus); i++) {
->
-> You can use of_find_matching_node() here instead of a loop.
+I wouldn't have any problem with an additional attribute for the
+adc channels - maybe something like...
 
-I'll switch to that.
+in_voltage6_sourcecurrent?  Then the control could be pushed to
+userspace. 
 
-Thanks,
-Archit
+Or if it only makes sense to do it as a fixed value in DT then
+define optional child nodes for the individual channels, with
+the relevant ones have current-source-microamp or
+something like that as an parameter.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, hosted by The Linux Foundation
+What do you think?
+
+Jonathan
+
+> 
+>>>      };
+>>>
+>>>  Example for i.MX28 SoC:
+>>> @@ -44,4 +63,14 @@ Example for i.MX28 SoC:
+>>>          fsl,ave-ctrl = <4>;
+>>>          fsl,ave-delay = <2>;
+>>>          fsl,settling = <10>;
+>>> +
+>>> +        isrc_lradc0: ISRC0 {
+>>> +            regulator-max-microamp = <300>;
+>>> +        };
+>>> +
+>>> +        isrc_lradc6: ISRC1 {
+>>> +            regulator-max-microamp = <120>;
+>>> +            regulator-min-microamp = <120>;
+>>> +            regulator-always-on;
+>>> +        };
+>>>      };
+>>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>>> index 5937030..1968d1c 100644
+>>> --- a/drivers/iio/adc/Kconfig
+>>> +++ b/drivers/iio/adc/Kconfig
+>>> @@ -319,6 +319,7 @@ config MXS_LRADC
+>>>          tristate "Freescale i.MX23/i.MX28 LRADC"
+>>>          depends on (ARCH_MXS || COMPILE_TEST) && HAS_IOMEM
+>>>          depends on INPUT
+>>> +        depends on REGULATOR
+>>
+>> Any chance to avoid this dependency for an optional feature?
+> 
+> I haven't looked into it yet, but I expect that that the mfd
+> conversion will avoid this neatly.
+> 
+> Thanks,
+> Harald
+> 
+>> Stefan
+>>
+>>>          select STMP_DEVICE
+>>>          select IIO_BUFFER
+>>>          select IIO_TRIGGERED_BUFFER
+> 
