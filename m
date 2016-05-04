@@ -1,70 +1,39 @@
-Return-Path: <Jose.Abreu@synopsys.com>
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: [RESEND PATCH 2/2 v6] arc: axs10x: Add DT bindings for I2S PLL Clock
-Date: Mon,  2 May 2016 10:39:06 +0100
-Message-Id: <e98c3f738b3a8f6755793959d89b4e43c9410fb1.1461258787.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1461258787.git.joabreu@synopsys.com>
-References: <cover.1461258787.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1461258787.git.joabreu@synopsys.com>
-References: <cover.1461258787.git.joabreu@synopsys.com>
-To: linux-clk@vger.kernel.org
-Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <mtk07307@kernel.org>
+From: Weiqing Kong <weiqing.kong@mediatek.com>
+Subject: [PATCH 1/3] dt-bindings: pwm: Add MediaTek display PWM bindings
+Date: Wed, 4 May 2016 14:53:25 +0800
+Message-ID: <1462344807-6336-2-git-send-email-weiqing.kong@mediatek.com>
+In-Reply-To: <1462344807-6336-1-git-send-email-weiqing.kong@mediatek.com>
+References: <1462344807-6336-1-git-send-email-weiqing.kong@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, weiqing.kong@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@medaitek.com, yingjoe.chen@mediatek.com, yh.huang@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for AXS10X I2S PLL Clock driver.
+Add MT2701 compatible string.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Acked-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
 ---
+ Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Changes v5 -> v6:
-* Added 'clocks' field
-
-This patch was only introduced in v5.
-
-Cc: Carlos Palminha <palminha@synopsys.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: linux-snps-arc@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
-
- arch/arc/boot/dts/axs10x_mb.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index ab5d570..5c6489e 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -16,7 +16,20 @@
- 		ranges = <0x00000000 0xe0000000 0x10000000>;
- 		interrupt-parent = <&mb_intc>;
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+index f8f59ba..f2f2fa9 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+@@ -1,9 +1,10 @@
+ MediaTek display PWM controller
  
-+		i2sclk: i2sclk@100a0 {
-+			compatible = "snps,axs10x-i2s-pll-clock";
-+			reg = <0x100a0 0x10>;
-+			clocks = <&i2spll_clk>;
-+			#clock-cells = <0>;
-+		};
-+
- 		clocks {
-+			i2spll_clk: i2spll_clk {
-+				compatible = "fixed-clock";
-+				clock-frequency = <27000000>;
-+				#clock-cells = <0>;
-+			};
-+
- 			i2cclk: i2cclk {
- 				compatible = "fixed-clock";
- 				clock-frequency = <50000000>;
+ Required properties:
+- - compatible: should be "mediatek,<name>-disp-pwm":
+-   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
++ - compatible: should be like these:
++   - "mediatek,mt2701-disp-bls": found on mt2701 SoC.
+    - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
++   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
+  - reg: physical base address and length of the controller's registers.
+  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+    the cell format.
 -- 
 1.9.1
