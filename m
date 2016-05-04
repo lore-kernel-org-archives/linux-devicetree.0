@@ -1,49 +1,58 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v3 3/3] ARM: dts: exynos: Lower SD card interface voltage to
- 2.8 V on Odroid X/X2/U3
-Date: Wed, 04 May 2016 14:44:00 +0200
-Message-ID: <1462365840-27406-3-git-send-email-k.kozlowski@samsung.com>
-References: <1462365840-27406-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1462365840-27406-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk
+ numbering w/ device tree
+Date: Wed, 4 May 2016 14:46:53 +0200
+Message-ID: <20160504124653.GA23838@amd>
+References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
+ <20160429181248.GW19428@n2100.arm.linux.org.uk>
+ <20160504071801.GA17045@amd>
+ <CAL_JsqJ4Pzuip9VUpwryy_xK6XSZ6E+kus3wD=T4wcTHav=9iA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ4Pzuip9VUpwryy_xK6XSZ6E+kus3wD=T4wcTHav=9iA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Douglas Anderson <dianders@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jisheng Zhang <jszhang@marvell.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree-spec@vger.kernel.org" <devicetree-spec@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Venu Byravarasu <vbyravarasu@nvidia.com>, Lars-Peter Clausen <lars@metafoo.de>, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.
 List-Id: devicetree@vger.kernel.org
 
-Odroid X/X2/U3 schematics say that SD card vmmc regulator
-(LDO21/TFLASH) operates on 2.8 V. Mainline U-Boot uses that value as
-well and 2.8 V is common on Exynos-based boards. Additionally use some
-descriptive name for this regulator.
+On Wed 2016-05-04 07:25:42, Rob Herring wrote:
+> On Wed, May 4, 2016 at 2:18 AM, Pavel Machek <pavel@ucw.cz> wrote:
+> > On Fri 2016-04-29 19:12:48, Russell King - ARM Linux wrote:
+> >> On Fri, Apr 29, 2016 at 10:32:15AM -0700, Douglas Anderson wrote:
+> >> > This series picks patches from various different places to produce what
+> >> > I consider the best solution to getting consistent mmc and mmcblk
+> >> > ordering.
+> >> >
+> >> > Why consistent ordering and why not just use UUIDs?  IMHO consistent
+> >> > ordering solves a few different problems:
+> >>
+> >> NAK.  Really.  Use UUIDs, that's the proper solution here.
+> >
+> > Except that UUIDs do not solve the problem.
+> >
+> > You have just booted of nfsroot, and you want to format u-SD card in
+> > the external slot. How do you do that?
+> 
+> The same way you format a USB stick when you insert it.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Well, and that actually brings related question "how do you format the
+right USB stick if you have 5 of them connected". PCs don't have good
+solution, but that does not mean it can't be solved.
 
----
-Changes since v2:
-1. Add Javier's tag.
+And no, its not really the same. At least in N900 case, I'm not really
+sure if you are expected to manipulate the u-SD card while the system
+is on. It is under battery cover.
 
-Changes since v1:
-1. None
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> If you have built-in versus removable, then we should expose that
+> information to userspace rather than some arbitrary encoding in DT
+> that 0 means built-in and 1 means removable. Or if you have multiple
+> slots, then use "label" to provide meaningful slot names.
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index 7485ce8a6fb3..14e653e32e0f 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -341,9 +341,9 @@
- 			};
- 
- 			ldo21_reg: LDO21 {
--				regulator-name = "LDO21_3.3V";
--				regulator-min-microvolt = <3300000>;
--				regulator-max-microvolt = <3300000>;
-+				regulator-name = "TFLASH_2.8V";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
- 				regulator-boot-on;
- 			};
- 
+Yes, labels would be nice. Plus the slot numbers should be stable, so
+that booting does not randomly break.
+									Pavel
 -- 
-1.9.1
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
