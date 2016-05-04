@@ -1,7 +1,7 @@
 From: Andy Gross <andy.gross@linaro.org>
-Subject: [Patch v3 7/8] dts: qcom: apq8084: Add SCM firmware node
-Date: Wed,  4 May 2016 17:50:44 -0500
-Message-ID: <1462402245-18295-8-git-send-email-andy.gross@linaro.org>
+Subject: [Patch v3 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Wed,  4 May 2016 17:50:38 -0500
+Message-ID: <1462402245-18295-2-git-send-email-andy.gross@linaro.org>
 References: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
@@ -10,32 +10,45 @@ To: linux-arm-msm@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, jilai wang <jilaiw@codeaurora.org>, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the firmware node for the SCM
+This patch adds the device tree support for the Qualcomm SCM firmware.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Andy Gross <andy.gross@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8084.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/firmware/qcom,scm.txt      | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index a33a09f..7c2df06 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -86,6 +86,14 @@
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+new file mode 100644
+index 0000000..ee7cd12
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -0,0 +1,26 @@
++QCOM Secure Channel Manager (SCM)
++
++Qualcomm processors include an interface to communicate to the secure firmware.
++This interface allows for clients to request different types of actions.  These
++can include CPU power up/down, HDCP requests, loading of firmware, and other
++assorted actions.
++
++Required properties:
++- compatible: must contain one of the following:
++ * "qcom,scm-a-family" for A family Qualcomm processors (APQ8064, MSM8960, etc)
++ * "qcom,scm" for B family and later processors (MSM8916, APQ8084, MSM8974, etc)
++- clocks: One to three clocks may be required based on compatible.
++ * Only core clock required for "qcom,scm-apq8064"
++ * Core, iface, and bus clocks required for "qcom,scm"
++- clock-names: Must contain "core" for the core clock, "iface" for the interface
++  clock and "bus" for the bus clock per the requirements of the compatible.
++
++Example for MSM8916:
++
 +	firmware {
 +		scm {
 +			compatible = "qcom,scm";
-+			clocks = <&gcc GCC_CE1_CLK> , <&gcc GCC_CE1_AXI_CLK>, <&gcc GCC_CE1_AHB_CLK>;
++			clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
 +			clock-names = "core", "bus", "iface";
 +		};
 +	};
-+
- 	cpu-pmu {
- 		compatible = "qcom,krait-pmu";
- 		interrupts = <1 7 0xf04>;
 -- 
 1.9.1
