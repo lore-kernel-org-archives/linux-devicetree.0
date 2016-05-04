@@ -1,92 +1,73 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Wed, 04 May 2016 08:13:01 +0300
-Message-ID: <1462338781.15404.0.camel@plaes.org>
-References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
-	 <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e@googlegroups.com>
-	 <20160503131437.GV17159@lukather>
-	 <66e4c452-1e34-474b-8973-2d57d9f036d0@googlegroups.com>
-	 <5728C929.3040709@schinagl.nl>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH v5 1/2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Wed, 4 May 2016 06:23:44 +0000
+Message-ID: <SG2PR06MB1038986EFD250DCE8E9D8D05C37B0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1461846188-31249-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1461846188-31249-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <20160503164728.GA32640@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJLTBEBXENBBX4JU24QKGQEBC7C74I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5728C929.3040709-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160503164728.GA32640@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mkl@pengutronix.de" <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "socketcan@hartkopp.net" <socketcan@hartkopp.net>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-05-03 at 17:52 +0200, Olliver Schinagl wrote:
-> Hey all,
-> 
-> On 03-05-16 17:02, christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > On Tuesday, May 3, 2016 at 4:14:41 PM UTC+3, Maxime Ripard wrote:
-> > > Hi,
-> > > 
-> > > On Tue, May 03, 2016 at 4:12:06 PM UTC+3, Christo Radev wrote:
-> > > > Hi to All,
-> > > > 
-> > > > I have already solved and tested this issue on Armbian build. 
-> > > >  Find
-> > > > patches for both legacy (3.4.111) and mainline (4.5.2) kernels
-> > > > on:
-> > > > http://forum.armbian.com/index.php/topic/853-armbian-customizat
-> > > > ion/page-2#entry7494
-> > > > There it is also described how to do eMMC bootable and much
-> > > > more.
-> > > > 
-> > > > About the board - Olimex already sold all 3 kinds after
-> > > > migration to
-> > > > their HW rev. E. One have to specify Lime2-eMMC as
-> > > > A20-Olinuxino-Lime2-eMMC instead of their old 2 options
-> > > > A20-Olinuxino-Lime2(-4GB).
-> > > Interesting, you have a link to that device?
+Hi Rob,
 
-I guess, it is this one:
-
-https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXino-LIME2-eMMC/
-open-source-hardware
-
-> > > 
-> > > Thanks,
-> > > Maxime
-> > > 
-> > > -- 
-> > > Maxime Ripard, Free Electrons
-> > > Embedded Linux, Kernel and Android engineering
-> > > http://free-electrons.com
-> > I have really 2 boards delivered by their local distributor.
-> > 
-> > Unfortunately, they do not update their site. Use the link for NAND
-> > option:
-> > https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXIno-LIME2-4
-> > GB/open-source-hardware
-> > There you can find Users Manual where it is described that eMMC
-> > option is available from HW rev. D. The schematic for HW rev. E is
-> > also available on their repository:
-> > https://github.com/OLIMEX/OLINUXINO/tree/master/HARDWARE/A20-OLinuX
-> > ino-LIME2
-> > 
-> > On the board both 4GB NAND and eMMC Flash chips can be placed
-> > alternatively on the same place. There is difference in some other
-> > components as well.
-> > 
-> > If one want to order it from the site probably has to order A20
-> > -Olinuxino-Lime2-4GB with note that eMMC option is required. The
-> > price is the same.
-> Sorry for the late reply, but yeah the board exists, we asked Olimex
-> to 
-> develop the eMMC variant for us. I currently have a dozen or so on my
-> desk :)
+> On Thu, Apr 28, 2016 at 01:23:07PM +0100, Ramesh Shanmugasundaram wrote:
+> > This patch adds support for the CAN FD controller found in Renesas
+> > R-Car SoCs. The controller operates in CAN FD only mode by default.
+> >
+> > CAN FD mode supports both Classical CAN & CAN FD frame formats. The
+> > controller supports ISO 11898-1:2015 CAN FD format only.
+> >
+> > This controller supports two channels and the driver can enable either
+> > or both of the channels.
+> >
+> > Driver uses Rx FIFOs (one per channel) for reception & Common FIFOs
+> > (one per channel) for transmission. Rx filter rules are configured to
+> > the minimum (one per channel) and it accepts Standard, Extended, Data
+> > & Remote Frame combinations.
+> >
+> > Note: There are few documentation errors in R-Car Gen3 Hardware User
+> > Manual v0.5E with respect to CAN FD controller. They are listed below:
+> >
+> > 1. CAN FD interrupt numbers 29 & 30 are listed as per channel
+> > interrupts. However, they are common to both channels (i.e.) they are
+> > global and channel interrupts respectively.
+> >
+> > 2. CANFD clock is derived from PLL1. This is not documented.
+> >
+> > 3. CANFD clock is further divided by (1/2) within the CAN FD controller.
+> > This is not documented.
+> >
+> > 4. The minimum value of NTSEG1 in RSCFDnCFDCmNCFG register is 2 Tq. It
+> > is specified 4 Tq in the manual.
+> >
+> > 5. The maximum number of message RAM area the controller can use is
+> > 3584 bytes. It is specified 10752 bytes in the manual.
+> >
+> > Signed-off-by: Ramesh Shanmugasundaram
+> > <ramesh.shanmugasundaram@bp.renesas.com>
+> > ---
+> >  .../devicetree/bindings/net/can/rcar_canfd.txt     |   89 ++
 > 
-> I don't know when Olimex will update their webshop with the new
-> designs, 
-> but they simply might not have enough eMMC chips available yet?
-> 
+> What happened to my ack?
+
+Sorry, I missed it when I updated the patch. I mentioned it in cover letter though. I will request the CAN maintainer to add it if this is accepted or otherwise I will add it to the next patch series.
+
+---
+Changes since v3:
+	* Split v3 patch into two (Marc K)
+	  (1) Introduce rcar_canfd.c driver in drivers/net/can/rcar dir
+	  (2) Move rcar_can.c driver to new drivers/net/can/rcar dir
+	* Added Acked-by Rob H for the bindings
+---
+
+Thanks,
+Ramesh
