@@ -1,31 +1,82 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/3] soc: renesas: rcar-sysc: Document r8a7796 support
-Date: Wed,  4 May 2016 16:36:08 +0200
-Message-ID: <1462372570-31979-2-git-send-email-geert+renesas@glider.be>
-References: <1462372570-31979-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1462372570-31979-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/3] soc: renesas: rcar-sysc: Add support for R-Car M3-W power areas
+Date: Wed,  4 May 2016 16:36:07 +0200
+Message-ID: <1462372570-31979-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt | 1 +
- 1 file changed, 1 insertion(+)
+	Hi Simon, Magnus,
 
-diff --git a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-index b74e4d4785ab2d60..0725fb37a973d8eb 100644
---- a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-+++ b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-@@ -14,6 +14,7 @@ Required properties:
-       - "renesas,r8a7793-sysc" (R-Car M2-N)
-       - "renesas,r8a7794-sysc" (R-Car E2)
-       - "renesas,r8a7795-sysc" (R-Car H3)
-+      - "renesas,r8a7796-sysc" (R-Car M3-W)
-   - reg: Address start and address range for the device.
-   - #power-domain-cells: Must be 1.
- 
+This patch series adds support for the power areas exposed by the System
+Controller on the Renesas R-Car M3-W SoC.
+
+/sys/kernel/debug/pm_genpd/pm_genpd_summary output:
+
+    domain                          status          slaves
+	/device                                             runtime status
+    ----------------------------------------------------------------------
+    clock-controller                on              
+    a3ir                            off-0           
+    3dg-b                           off-0           
+    3dg-a                           off-0           3dg-b
+    a2vc1                           off-0           
+    a2vc0                           off-0           
+    a3vc                            off-0           a2vc0, a2vc1
+    cr7                             off-0           
+    ca53-cpu3                       on              
+    ca53-cpu2                       on              
+    ca53-cpu1                       on              
+    ca53-cpu0                       on              
+    ca53-scu                        on              ca53-cpu0, ca53-cpu1, ca53-cpu2, ca53-cpu3
+    ca57-cpu1                       on              
+    ca57-cpu0                       on              
+    ca57-scu                        on              ca57-cpu0, ca57-cpu1
+    always-on                       on              ca57-scu, ca53-scu, cr7, a3vc, 3dg-a, a3ir
+	/devices/platform/soc/e6e88000.serial               active
+
+For your convenience, I've pushed this series to the
+topic/r8a7796-sysc-v1 branch of
+https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git.
+
+Integration with renesas-drivers-2016-04-26-v4.6-rc5, and minimal board
+integration for testing is available in the topic/gen3-latest branch.
+
+This has received minimal testing on r8a7796/salvator-x.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (3):
+  soc: renesas: rcar-sysc: Document r8a7796 support
+  soc: renesas: Add r8a7796 SYSC PM Domain Binding Definitions
+  soc: renesas: rcar-sysc: Add support for R-Car M3-W power areas
+
+ .../bindings/power/renesas,rcar-sysc.txt           |  1 +
+ drivers/soc/renesas/Makefile                       |  1 +
+ drivers/soc/renesas/r8a7796-sysc.c                 | 48 ++++++++++++++++++++++
+ drivers/soc/renesas/rcar-sysc.c                    |  3 ++
+ drivers/soc/renesas/rcar-sysc.h                    |  1 +
+ include/dt-bindings/power/r8a7796-sysc.h           | 36 ++++++++++++++++
+ 6 files changed, 90 insertions(+)
+ create mode 100644 drivers/soc/renesas/r8a7796-sysc.c
+ create mode 100644 include/dt-bindings/power/r8a7796-sysc.h
+
 -- 
 1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
