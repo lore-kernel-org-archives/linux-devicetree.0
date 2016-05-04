@@ -1,58 +1,47 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 0/4] Patches to allow consistent mmc / mmcblk
- numbering w/ device tree
-Date: Wed, 4 May 2016 14:46:53 +0200
-Message-ID: <20160504124653.GA23838@amd>
-References: <1461951139-6109-1-git-send-email-dianders@chromium.org>
- <20160429181248.GW19428@n2100.arm.linux.org.uk>
- <20160504071801.GA17045@amd>
- <CAL_JsqJ4Pzuip9VUpwryy_xK6XSZ6E+kus3wD=T4wcTHav=9iA@mail.gmail.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: exynos: Lower SD card interface voltage
+ to 2.8 V on Odroid X/X2/U3
+Date: Wed, 4 May 2016 08:51:25 -0400
+Message-ID: <764fb4d7-873f-0e59-446b-e9652151512d@osg.samsung.com>
+References: <1462365840-27406-1-git-send-email-k.kozlowski@samsung.com>
+ <1462365840-27406-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ4Pzuip9VUpwryy_xK6XSZ6E+kus3wD=T4wcTHav=9iA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Douglas Anderson <dianders@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jisheng Zhang <jszhang@marvell.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree-spec@vger.kernel.org" <devicetree-spec@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Venu Byravarasu <vbyravarasu@nvidia.com>, Lars-Peter Clausen <lars@metafoo.de>, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462365840-27406-3-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2016-05-04 07:25:42, Rob Herring wrote:
-> On Wed, May 4, 2016 at 2:18 AM, Pavel Machek <pavel@ucw.cz> wrote:
-> > On Fri 2016-04-29 19:12:48, Russell King - ARM Linux wrote:
-> >> On Fri, Apr 29, 2016 at 10:32:15AM -0700, Douglas Anderson wrote:
-> >> > This series picks patches from various different places to produce what
-> >> > I consider the best solution to getting consistent mmc and mmcblk
-> >> > ordering.
-> >> >
-> >> > Why consistent ordering and why not just use UUIDs?  IMHO consistent
-> >> > ordering solves a few different problems:
-> >>
-> >> NAK.  Really.  Use UUIDs, that's the proper solution here.
-> >
-> > Except that UUIDs do not solve the problem.
-> >
-> > You have just booted of nfsroot, and you want to format u-SD card in
-> > the external slot. How do you do that?
+Hello Krzysztof,
+
+On 05/04/2016 08:44 AM, Krzysztof Kozlowski wrote:
+> Odroid X/X2/U3 schematics say that SD card vmmc regulator
+> (LDO21/TFLASH) operates on 2.8 V. Mainline U-Boot uses that value as
+> well and 2.8 V is common on Exynos-based boards. Additionally use some
+> descriptive name for this regulator.
 > 
-> The same way you format a USB stick when you insert it.
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> ---
+> Changes since v2:
+> 1. Add Javier's tag.
+> 
 
-Well, and that actually brings related question "how do you format the
-right USB stick if you have 5 of them connected". PCs don't have good
-solution, but that does not mean it can't be solved.
+It's missing though :)
 
-And no, its not really the same. At least in N900 case, I'm not really
-sure if you are expected to manipulate the u-SD card while the system
-is on. It is under battery cover.
+Adding the tag again so it can be picked by patchwork:
 
-> If you have built-in versus removable, then we should expose that
-> information to userspace rather than some arbitrary encoding in DT
-> that 0 means built-in and 1 means removable. Or if you have multiple
-> slots, then use "label" to provide meaningful slot names.
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-Yes, labels would be nice. Plus the slot numbers should be stable, so
-that booting does not randomly break.
-									Pavel
+Best regards,
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
