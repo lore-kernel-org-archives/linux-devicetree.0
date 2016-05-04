@@ -1,142 +1,189 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v8 0/3] gpio: add DT support for memory-mapped GPIOs
-Date: Sun, 8 May 2016 16:19:34 +0300
-Message-ID: <CAHp75VdrbagU496qLjoUWMb7pWS3VyM4PDYwmyZFw52RgPs9=g@mail.gmail.com>
-References: <cover.1462543457.git.chunkeey@googlemail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v7 2/2] memory: atmel-ebi: add DT bindings documentation
+Date: Wed, 4 May 2016 11:35:55 +0200
+Message-ID: <20160504113555.20f0c622@bbrezillon>
+References: <1461845007-23139-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1461845007-23139-2-git-send-email-boris.brezillon@free-electrons.com>
+	<20160503164019.GA1604@rob-hp-laptop>
+	<20160503185153.5cfddc32@bbrezillon>
+	<CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.1462543457.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 8, 2016 at 4:08 PM, Christian Lamparter
-<chunkeey@googlemail.com> wrote:
-> This patch series adds device tree support for generic memory-mapped =
-GPIOs.
-> The GPIO library already allows drivers and architecture support code=
- to
-> reuse generic code for managing a GPIO chip. Currently, a developer h=
-as
-> to create a platform device "basic-mmio-gpio" and attach a bgpio_pdat=
-a
-> platform data structure to make use of it. However, for architectures
-> which rely on the device tree to enumerate devices, creating custom
-> platform devices is another extra step that can be avoided by having
-> direct support via a device tree binding.
->
-> I initially came across this patch [0] from =C3=81lvaro Fern=C3=A1nde=
-z Rojas,
-> while looking for an easy way to add support for the GPIO of my
-> WD MyBook Live [1] (APM82181). His generic approach patch allowed
-> me to easily get the GPIO (and the connected LEDs, buttons, gpiohogs)
-> up and running. Even thought, Mr. Fernandez initially developed it
-> for his work on the brcm63xx [2].
->
-> The third patch (which can be applied at a later time) moves gpio-clp=
-s711x,
-> gpio-ge, gpio-moxart and gpio-ts4800 into gpio-mmio.c. The old driver=
- files
-> and makefile entries have been removed. The Kconfig entries for these
-> drivers are kept for compatibility reasons.
->
-> And finally, the most important stat about the series:
->         >>> 336 insertions(+), 380 deletions(-) <<<
->         It still removes more lines than it adds!
->
-> Thanks!
->
-> [0] <https://patchwork.ozlabs.org/patch/422121/>
-> [1] <https://github.com/chunkeey/MBL-openwrt>
-> [2] <https://wiki.openwrt.org/doc/hardware/soc/soc.broadcom.bcm63xx>
->
+Hi Rob,
 
-=46WIW:
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Tue, 3 May 2016 14:11:04 -0500
+Rob Herring <robh@kernel.org> wrote:
 
+> On Tue, May 3, 2016 at 11:51 AM, Boris Brezillon
+> <boris.brezillon@free-electrons.com> wrote:
+> > Hi Rob,
+> >
+> > On Tue, 3 May 2016 11:40:19 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >
+> >> On Thu, Apr 28, 2016 at 02:03:27PM +0200, Boris Brezillon wrote:
+> >> > The EBI (External Bus Interface) is used to access external peripherals
+> >> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> >> > Each device is assigned a CS line and an address range and can have its
+> >> > own configuration (timings, access mode, bus width, ...).
+> >> > This driver provides a generic DT binding to configure a device according
+> >> > to its requirements.
+> >> > For specific device controllers (like the NAND one) the SMC timings
+> >> > should be configured by the controller driver through the matrix and smc
+> >> > syscon regmaps.
+> >> >
+> >> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> >> > ---
+> >> >  .../bindings/memory-controllers/atmel,ebi.txt      | 136 +++++++++++++++++++++
+> >> >  1 file changed, 136 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> >> > new file mode 100644
+> >> > index 0000000..a6dca5c
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> >> > @@ -0,0 +1,136 @@
+> >> > +* Device tree bindings for Atmel EBI
+> >> > +
+> >> > +The External Bus Interface (EBI) controller is a bus where you can connect
+> >> > +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
+> >> > +The EBI provides a glue-less interface to asynchronous memories through the SMC
+> >> > +(Static Memory Controller).
+> >> > +
+> >> > +Required properties:
+> >> > +
+> >> > +- compatible:              "atmel,at91sam9260-ebi"
+> >> > +                   "atmel,at91sam9261-ebi"
+> >> > +                   "atmel,at91sam9263-ebi0"
+> >> > +                   "atmel,at91sam9263-ebi1"
+> >>
+> >> What are the differences between 0 and 1?
+> >
+> > Because this SoC has 2 EBI busses with different capabilities.
+> 
+> Okay, correct answer. :)
+> 
+> [...]
+> 
+> >>
+> >> > +                   of the memory region requested by the device.
+> >> > +
+> >> > +EBI bus configuration associated with specific chip-select will be defined in
+> >> > +the configs subnode. This configs node will in turn contain several subnodes
+> >> > +named config-<cs-id>, each of them containing the following properties.
+> >>
+> >> This is a bit unusual. Why not just part of the child device nodes?
+> >
+> > Oh, come on! I reworked the binding because Mark complained about the
+> > previous binding which was doing exactly what you're suggesting. Can
+> > you please be consistent in your reviews...
+> 
+> No, Mark and I both have our opinions. Which part of this patch
+> explains the history?
 
-> changelog:
->
-> v7 -> v8:
->         - removed ngpio property parser and most flags parsers
->         - converted clps711x to switch case for GPIO
->         - retained original Kconfig syms which now select GPIO_GENERI=
-C_PLATFORM
->
-> v6 -> v7:
->         - finally made a PATCH series (based on linux-gpio devel bran=
-ch)
->         - added Rob Herring's ACK to the dt bindings
->         - cc'd clps711x, gpio-ge, moxart and ts4800 authors for drive=
-r
->           changes.
->
-> v5 -> v6:
->         - rewrote bindings and driver patch to fit the wd,mbl-gpio
->         - unified parser code for gpio-ge, gpio-moxart and gpio-ts480=
-0
->         - fixed gpio chip's base being overwritten with bogus "0"
->         - fixed compat driver crash when reload gpio-generic.ko modul=
-e
->         - dropped already applied patches from the series
->         - rebased code on linus' devel tree
->         - moved dt bindings patch to the top of the series
->
-> v4 -> v5:
->         - reverted rename of gpio-mmio.c back to gpio-generic.c
->         - fixed Andy Shevchenko's comments
->         - consolidated changes from clps711x, gpio-ge, gpio-moxart an=
-d
->           gpio-ts4800 into one patch.
->
-> v3 -> v4:
->         - renamed gpio-generic.c to gpio-mmio.c
->         - changed compat. string to "linux,gpio-mmio"
->         - integrated Cirrus clps711x driver
->         - integrated GE FGPA gpio-ge driver
->         - integrated MOXA ART GPIO driver
->         - integrated TS4800 gpio driver
->         - reshuffled patches, reworded commits, fixed spelling errors=
-, etc.
->
-> Christian Lamparter (2):
->   gpio: dt-bindings: add wd,mbl-gpio bindings
->   gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-mmio
->
-> =C3=81lvaro Fern=C3=A1ndez Rojas (1):
->   gpio: mmio: add DT support for memory-mapped GPIOs
->
->  .../devicetree/bindings/gpio/wd,mbl-gpio.txt       |  38 +++
->  drivers/gpio/Kconfig                               |  16 +-
->  drivers/gpio/Makefile                              |   4 -
->  drivers/gpio/gpio-clps711x.c                       |  91 -------
->  drivers/gpio/gpio-ge.c                             | 114 --------
->  drivers/gpio/gpio-mmio.c                           | 288 +++++++++++=
-+++++++++-
->  drivers/gpio/gpio-moxart.c                         |  84 ------
->  drivers/gpio/gpio-ts4800.c                         |  81 ------
->  8 files changed, 336 insertions(+), 380 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpi=
-o.txt
->  delete mode 100644 drivers/gpio/gpio-clps711x.c
->  delete mode 100644 drivers/gpio/gpio-ge.c
->  delete mode 100644 drivers/gpio/gpio-moxart.c
->  delete mode 100644 drivers/gpio/gpio-ts4800.c
->
-> --
-> 2.8.1
->
+Hm, it's in patch 1/2 (just dropped the cover letter, which might not
+be such a good idea).
 
+> If the revision history is not in the patch, I'm
+> not looking at it.
+> 
+> My issue with it this way is that it has invented yet another way to
+> describe timings. I would like to be consistent across external bus
+> descriptions, but we're not very consistent to begin with though. The
+> most common seems to be the way you first did it. But I agree that it
+> is kind of screwy to have an intermediate node unless the controller
+> itself has sub-blocks within it and is not the established way to
+> describe a bus with chip selects. I would either put the properties
+> directly in the child nodes (e.g. flash@0,0) or put your config nodes
+> in the device node. I'd call it timings instead of config, but that's
+> just bikeshedding.
 
+Well, it's not only describing timings (see atmel,bus-width,
+atmel,byte-access-type, ...), but I'm fine with either names :).
 
---=20
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> memory-controller@1000 {
+>   ...
+>   flash@0,0 {
+>     timings {
+>       ...
+>     };
+>   };
+> };
+
+Okay. Mark, what do you think of this approach?
+
+Note that one of my previous version was defining timings directly in
+the EBI device node, and Arnd noted that doing so may cause problems
+if one of the EBI property (or the config/timing node name) conflict
+with the sub-device binding, which is why I decided to put the EBI
+config definitions in a separate subnode.
+
+> 
+> >> > +
+> >> > +Optional config-<cs-id> node properties:
+> >> > +
+> >> > +- atmel,bus-width:         width of the asynchronous device's data bus
+> >> > +                           8, 16 or 32.
+> >> > +                           Default to 8 when undefined.
+> >> > +
+> >> > +- atmel,byte-access-type   "write" or "select" (see Atmel datasheet).
+> >> > +                           Default to "select" when undefined.
+> >> > +
+> >> > +- atmel,read-mode          "nrd" or "ncs".
+> >> > +                           Default to "ncs" when undefined.
+> >> > +
+> >> > +- atmel,write-mode         "nwe" or "ncs".
+> >> > +                           Default to "ncs" when undefined.
+> >> > +
+> >> > +- atmel,exnw-mode          "disabled", "frozen" or "ready".
+> >> > +                           Default to "disabled" when undefined.
+> >> > +
+> >> > +- atmel,page-mode          enable page mode if present. The provided value
+> >> > +                           defines the page size (supported values: 4, 8,
+> >> > +                           16 and 32).
+> >> > +
+> >> > +- atmel,tdf-mode:          "normal" or "optimized". When set to
+> >>
+> >> This should be boolean.
+> >
+> > It was a formerly defined as a boolean, and when it's done like that we
+> > have no way to identify whether the property was forgotten or
+> > intentionally set to normal mode. What's the problem with this approach?
+> 
+> Only preference to use boolean when that is sufficient. With your
+> argument, then we should never have booleans. You state that missing
+> means "normal", not forgotten, so all these properties should be
+> required with no default.
+> 
+> BTW, I debated the same thing on the other properties, but I could see
+> them being expanded to a 3rd mode. I don't see that here though.
+
+Well, another reason I switched to a string property is because I
+implemented hardware readout in v4, and decided to retrieve the current
+state from the hardware and only overload the config with what was
+defined in the DT. In this case, if we move to a boolean property we
+can't know whether the property is missing because we want to put the
+bus in "normal" mode or because we want to keep this config unchanged
+(keep the bootloader/bootstrap config).
+
+This is not true in v5, so maybe we should go back to the boolean
+atmel,tdf-optimized property.
+
+Thanks,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
