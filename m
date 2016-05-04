@@ -1,61 +1,109 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver code
-Date: Wed, 04 May 2016 11:05:03 +0200
-Message-ID: <7856280.FvxMcUZr6e@wuerfel>
-References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org> <5608365.uloflbeuqO@wuerfel> <5729AA33.6020305@st.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 2/6] mmc: core: add mmc-hs400-enhanced-strobe support
+Date: Wed, 4 May 2016 17:19:30 +0800
+Message-ID: <2c73521e-7734-7438-06ef-065722130036@rock-chips.com>
+References: <1461897751-28810-1-git-send-email-shawn.lin@rock-chips.com>
+ <1461897995-28903-1-git-send-email-shawn.lin@rock-chips.com>
+ <CAPDyKFrPhBKA3g+_NMBGfw4kqonpgQzbdTSo-A5sRwqio268xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5729AA33.6020305@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Peter Griffin <peter.griffin@linaro.org>, devicetree@vger.kernel.org, vinod.koul@intel.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, broonie@kernel.org, ludovic.barre@st.com, dmaengine@vger.kernel.org, lee.jones@linaro.org, maxime.coquelin@st.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrPhBKA3g+_NMBGfw4kqonpgQzbdTSo-A5sRwqio268xw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: shawn.lin@rock-chips.com, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 May 2016 09:52:19 Arnaud Pouliquen wrote:
-> hello Arnd, peter,
-> 
-> On 04/26/2016 01:44 PM, Arnd Bergmann wrote:
-> > On Tuesday 26 April 2016 12:15:32 Peter Griffin wrote:
-> >>>
-> >>>> If not what would you recommend instead? 
-> >>>
-> >>> It's still not clear to me what that bit in the syscfg register
-> >>> is for. Given the error message about "sti-audio-clk-glue",
-> >>> I suspect that this is actually a clock controller and that
-> >>> it should be using the clock binding with a separate driver
-> >>> instead of manipulating the regmap directly from the audio driver.
-> >>
-> >> Luckily I do have the datasheet for the audio-glue sysconf register.
-> >>
-> >> It says: -
-> >>
-> >> [11:8] PCM_CLK_SEL: Selects the frequency synthesizer clock or the external
-> >> PCM clock for each channel.
-> >>
-> >> The driver only ever sets this to 1 which selects the frequency synthesizer
-> >> clock. So the bitfield of the register which the driver is using (PCM_CLK_SEL)
-> >> is a clock mux.
-> > 
-> > Ok, that sounds like it could be either a really simple clock driver
-> > with just a few lines, or integrated into an existing clock driver
-> > if you already have one for this syscon node.
-> > 
-> >       Arnd
-> > 
-> FYI, Name of this glue is related to the register name. But it does not
-> concern only clock...
->  This glue register is used to :
-> - select clock source ( clock framework or external clock from GPIO)
-> => one bit field per IP instance (player->clk_sel)
-> - select uniperiph player IP instance for PCM out.
-> (http://www.spinics.net/lists/alsa-devel/msg49034.html)
+On 2016/5/4 16:12, Ulf Hansson =E5=86=99=E9=81=93:
+> On 29 April 2016 at 04:46, Shawn Lin <shawn.lin@rock-chips.com> wrote=
+:
+>> This patch introduce mmc-hs400-enhanced-strobe for platforms
+>> which want to enable enhanced strobe function from DT if the
+>> mmc host controller claims to support enhanced strobe.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v2:
+>> - switch to HS400ES from Highspeed mode directly
+>>
+>>  drivers/mmc/core/host.c  | 2 ++
+>>  include/linux/mmc/host.h | 6 ++++++
+>>  2 files changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+>> index e0a3ee1..eb1530a 100644
+>> --- a/drivers/mmc/core/host.c
+>> +++ b/drivers/mmc/core/host.c
+>> @@ -289,6 +289,8 @@ int mmc_of_parse(struct mmc_host *host)
+>>                 host->caps2 |=3D MMC_CAP2_HS400_1_8V | MMC_CAP2_HS20=
+0_1_8V_SDR;
+>>         if (of_property_read_bool(np, "mmc-hs400-1_2v"))
+>>                 host->caps2 |=3D MMC_CAP2_HS400_1_2V | MMC_CAP2_HS20=
+0_1_2V_SDR;
+>> +       if (of_property_read_bool(np, "mmc-hs400-enhanced-strobe"))
+>> +               host->caps2 |=3D MMC_CAP2_HS400_ENHANCED_STROBE;
+>
+> How about MMC_CAP2_HS400_ES instead?
 
-Ok, I see. This is of course again the STi platform being a bit different
-from everyone else, and whatever we do to hide it won't give us a nice
-abstraction. Having just a clock driver for the register won't do the
-job here as you say, so I guess the original patch was already the
-least awkward way to handle it.
+MMC_CAP2_HS400_ES is fine to me.
 
-	Arnd
+>
+>>
+>>         host->dsr_req =3D !of_property_read_u32(np, "dsr", &host->ds=
+r);
+>>         if (host->dsr_req && (host->dsr & ~0xffff)) {
+>> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+>> index 85800b4..11e89d3 100644
+>> --- a/include/linux/mmc/host.h
+>> +++ b/include/linux/mmc/host.h
+>> @@ -302,6 +302,7 @@ struct mmc_host {
+>>  #define MMC_CAP2_SDIO_IRQ_NOTHREAD (1 << 17)
+>>  #define MMC_CAP2_NO_WRITE_PROTECT (1 << 18)    /* No physical write=
+ protect pin, assume that card is always read-write */
+>>  #define MMC_CAP2_NO_SDIO       (1 << 19)       /* Do not send SDIO =
+commands during initialization */
+>> +#define MMC_CAP2_HS400_ENHANCED_STROBE (1 << 20) /* Host supports e=
+nhanced strobe */
+>>
+>>         mmc_pm_flag_t           pm_caps;        /* supported pm feat=
+ures */
+>>
+>> @@ -480,6 +481,11 @@ static inline int mmc_host_uhs(struct mmc_host =
+*host)
+>>                  MMC_CAP_UHS_DDR50);
+>>  }
+>>
+>> +static inline int mmc_host_hs400_enhanced_strobe(struct mmc_host *h=
+ost)
+>> +{
+>> +       return host->caps2 & MMC_CAP2_HS400_ENHANCED_STROBE;
+>> +}
+>> +
+>
+> This helper function is to me a bit unnecessary, can you please just
+> check the MMC_CAP2_* when needed instead!?
+
+okay, I will deal with these two comments above.
+
+Thanks.
+
+>
+>>  static inline int mmc_host_packed_wr(struct mmc_host *host)
+>>  {
+>>         return host->caps2 & MMC_CAP2_PACKED_WR;
+>
+> Kind regards
+> Uffe
+>
+>
+>
+
+
+--=20
+Best Regards
+Shawn Lin
+
