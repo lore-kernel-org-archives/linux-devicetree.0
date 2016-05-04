@@ -1,36 +1,39 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v4 3/7] phy: Add set_mode callback
-Date: Wed, 4 May 2016 14:48:21 -0500
-Message-ID: <572A5205.8010509@lechnology.com>
-References: <1460658919-4965-1-git-send-email-david@lechnology.com>
- <1460658919-4965-4-git-send-email-david@lechnology.com>
- <20160504181030.GA4327@uda0271908> <572A3D74.3080907@lechnology.com>
- <20160504183903.GB27414@uda0271908>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] ARM: dts: omap5-board-common: Describe the voltage supply
+ mapping accurately
+Date: Wed, 4 May 2016 14:50:36 -0500
+Message-ID: <572A528C.4090302@ti.com>
+References: <1462389618-28860-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160504183903.GB27414@uda0271908>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462389618-28860-1-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2016 01:39 PM, Bin Liu wrote:
->
-> Have you already tested this? I never tried changing mode via sysfs, but
-> by quickly reviewing the code, I am wondering how it works. the core
-> only calls ops->set_mode() but nothing else. To really switch the mode,
-> the driver has to talk to the root hub, and manipulate the SESSION
-> bit...
->
-> Regards,
-> -Bin.
->
+On 05/04/2016 02:20 PM, Nishanth Menon wrote:
+[...]
+
+> @@ -551,6 +590,8 @@
+>  
+>  				ldo9_reg: ldo9 {
+>  					/* VCC_DV_SDIO: vdds_sdcard */
+> +					vin-supply = <&vmmcsdio_fixed>;
+> +
+
+There is an extra white space here, and vmmcsd_fixed is the regulator
+to be used, looks like vmmcsdio_fixed should ideally been vwlan_fixed
+or something.. the actual rail to LDO9_IN was called vmmc_3v3_SDIO..
+
+Sorry for the confusion. Unfortunately, I can not recreate the fail on
+my board, but this sounded like the closest fix I can think of.
 
 
-I haven't actually tried this. I need to hack together a USB cable to 
-test it in host mode (Mini-B to Mini-B w/ powered hub).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+-- 
+Regards,
+Nishanth Menon
