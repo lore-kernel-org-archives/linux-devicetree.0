@@ -1,166 +1,103 @@
-From: David Wu <david.wu@rock-chips.com>
-Subject: [PATCH v7 6/9] i2c: rk3x: Move spec timing data to "static const" structs
-Date: Wed,  4 May 2016 22:34:32 +0800
-Message-ID: <1462372472-6396-1-git-send-email-david.wu@rock-chips.com>
-References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, wsa@the-dreams.de
-Cc: robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Wu <david.wu@rock-chips.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/4] clk: renesas: Add r8a7796 CPG Core Clock Definitions
+Date: Wed,  4 May 2016 16:35:41 +0200
+Message-ID: <1462372543-31835-3-git-send-email-geert+renesas@glider.be>
+References: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: David Wu <david.wu@rock-chips.com>
----
- drivers/i2c/busses/i2c-rk3x.c | 100 ++++++++++++++++++++++++++++++------------
- 1 file changed, 72 insertions(+), 28 deletions(-)
+Add all R-Car M3-W Clock Pulse Generator Core Clock Outputs, as listed
+in Table 8.2b ("List of Clocks [R-Car M3-W]") of the R-Car Gen3
+datasheet (rev. 0.51 + Errata for Rev051 Mar 31 2016).
 
-diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-index 9686c81..408f9ab 100644
---- a/drivers/i2c/busses/i2c-rk3x.c
-+++ b/drivers/i2c/busses/i2c-rk3x.c
-@@ -76,6 +76,51 @@ enum {
- #define DEFAULT_SCL_RATE  (100 * 1000) /* Hz */
- 
- /**
-+ * struct i2c_spec_values:
-+ * @min_hold_start_ns: min hold time (repeated) START condition
-+ * @min_low_ns: min LOW period of the SCL clock
-+ * @min_high_ns: min HIGH period of the SCL cloc
-+ * @min_setup_start_ns: min set-up time for a repeated START conditio
-+ * @max_data_hold_ns: max data hold time
-+ * @min_data_setup_ns: min data set-up time
-+ * @min_setup_stop_ns: min set-up time for STOP condition
-+ * @min_hold_buffer_ns: min bus free time between a STOP and
-+ * START condition
-+ */
-+struct i2c_spec_values {
-+	unsigned long min_hold_start_ns;
-+	unsigned long min_low_ns;
-+	unsigned long min_high_ns;
-+	unsigned long min_setup_start_ns;
-+	unsigned long max_data_hold_ns;
-+	unsigned long min_data_setup_ns;
-+	unsigned long min_setup_stop_ns;
-+	unsigned long min_hold_buffer_ns;
-+};
-+
-+static const struct i2c_spec_values standard_mode_spec = {
-+	.min_hold_start_ns = 4000,
-+	.min_low_ns = 4700,
-+	.min_high_ns = 4000,
-+	.min_setup_start_ns = 4700,
-+	.max_data_hold_ns = 3450,
-+	.min_data_setup_ns = 250,
-+	.min_setup_stop_ns = 4000,
-+	.min_hold_buffer_ns = 4700,
-+};
-+
-+static const struct i2c_spec_values fast_mode_spec = {
-+	.min_hold_start_ns = 600,
-+	.min_low_ns = 1300,
-+	.min_high_ns = 600,
-+	.min_setup_start_ns = 600,
-+	.max_data_hold_ns = 900,
-+	.min_data_setup_ns = 100,
-+	.min_setup_stop_ns = 600,
-+	.min_hold_buffer_ns = 1300,
-+};
-+
-+/**
-  * struct rk3x_i2c_calced_timings:
-  * @div_low: Divider output for low
-  * @div_high: Divider output for high
-@@ -463,6 +508,21 @@ out:
- }
- 
- /**
-+ * Get timing values of I2C specification
+Note that internal CPG clocks (S0, S1, S2, S3, SDSRC, and SSPSRC) are
+not included, as they are used as internal clock sources only, and never
+referenced from DT.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ include/dt-bindings/clock/r8a7796-cpg-mssr.h | 69 ++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r8a7796-cpg-mssr.h
+
+diff --git a/include/dt-bindings/clock/r8a7796-cpg-mssr.h b/include/dt-bindings/clock/r8a7796-cpg-mssr.h
+new file mode 100644
+index 0000000000000000..1e5942695f0dd057
+--- /dev/null
++++ b/include/dt-bindings/clock/r8a7796-cpg-mssr.h
+@@ -0,0 +1,69 @@
++/*
++ * Copyright (C) 2016 Renesas Electronics Corp.
 + *
-+ * @speed: Desired SCL frequency
-+ *
-+ * Returns: Matched i2c spec values.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + */
-+static const struct i2c_spec_values *rk3x_i2c_get_spec(unsigned int speed)
-+{
-+	if (speed <= 100000)
-+		return &standard_mode_spec;
-+	else
-+		return &fast_mode_spec;
-+}
++#ifndef __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__
 +
-+/**
-  * Calculate divider values for desired SCL frequency
-  *
-  * @clk_rate: I2C input clock rate
-@@ -477,10 +537,6 @@ static int rk3x_i2c_calc_divs(unsigned long clk_rate,
- 			      struct i2c_timings *t,
- 			      struct rk3x_i2c_calced_timings *t_calc)
- {
--	unsigned long spec_min_low_ns, spec_min_high_ns;
--	unsigned long spec_setup_start, spec_max_data_hold_ns;
--	unsigned long data_hold_buffer_ns;
--
- 	unsigned long min_low_ns, min_high_ns;
- 	unsigned long max_low_ns, min_total_ns;
- 
-@@ -492,6 +548,8 @@ static int rk3x_i2c_calc_divs(unsigned long clk_rate,
- 	unsigned long min_div_for_hold, min_total_div;
- 	unsigned long extra_div, extra_low_div, ideal_low_div;
- 
-+	unsigned long data_hold_buffer_ns = 50;
-+	const struct i2c_spec_values *spec;
- 	int ret = 0;
- 
- 	/* Only support standard-mode and fast-mode */
-@@ -514,22 +572,8 @@ static int rk3x_i2c_calc_divs(unsigned long clk_rate,
- 	 *	 This is because the i2c host on Rockchip holds the data line
- 	 *	 for half the low time.
- 	 */
--	if (t->bus_freq_hz <= 100000) {
--		/* Standard-mode */
--		spec_min_low_ns = 4700;
--		spec_setup_start = 4700;
--		spec_min_high_ns = 4000;
--		spec_max_data_hold_ns = 3450;
--		data_hold_buffer_ns = 50;
--	} else {
--		/* Fast-mode */
--		spec_min_low_ns = 1300;
--		spec_setup_start = 600;
--		spec_min_high_ns = 600;
--		spec_max_data_hold_ns = 900;
--		data_hold_buffer_ns = 50;
--	}
--	min_high_ns = t->scl_rise_ns + spec_min_high_ns;
-+	spec = rk3x_i2c_get_spec(t->bus_freq_hz);
-+	min_high_ns = t->scl_rise_ns + spec->min_high_ns;
- 
- 	/*
- 	 * Timings for repeated start:
-@@ -539,14 +583,14 @@ static int rk3x_i2c_calc_divs(unsigned long clk_rate,
- 	 * We need to account for those rules in picking our "high" time so
- 	 * we meet tSU;STA and tHD;STA times.
- 	 */
--	min_high_ns = max(min_high_ns,
--		DIV_ROUND_UP((t->scl_rise_ns + spec_setup_start) * 1000, 875));
--	min_high_ns = max(min_high_ns,
--		DIV_ROUND_UP((t->scl_rise_ns + spec_setup_start +
--			      t->sda_fall_ns + spec_min_high_ns), 2));
--
--	min_low_ns = t->scl_fall_ns + spec_min_low_ns;
--	max_low_ns = spec_max_data_hold_ns * 2 - data_hold_buffer_ns;
-+	min_high_ns = max(min_high_ns, DIV_ROUND_UP(
-+		(t->scl_rise_ns + spec->min_setup_start_ns) * 1000, 875));
-+	min_high_ns = max(min_high_ns, DIV_ROUND_UP(
-+		(t->scl_rise_ns + spec->min_setup_start_ns + t->sda_fall_ns +
-+		spec->min_high_ns), 2));
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
 +
-+	min_low_ns = t->scl_fall_ns + spec->min_low_ns;
-+	max_low_ns =  spec->max_data_hold_ns * 2 - data_hold_buffer_ns;
- 	min_total_ns = min_low_ns + min_high_ns;
- 
- 	/* Adjust to avoid overflow */
++/* r8a7796 CPG Core Clocks */
++#define R8A7796_CLK_Z			0
++#define R8A7796_CLK_Z2			1
++#define R8A7796_CLK_ZR			2
++#define R8A7796_CLK_ZG			3
++#define R8A7796_CLK_ZTR			4
++#define R8A7796_CLK_ZTRD2		5
++#define R8A7796_CLK_ZT			6
++#define R8A7796_CLK_ZX			7
++#define R8A7796_CLK_S0D1		8
++#define R8A7796_CLK_S0D2		9
++#define R8A7796_CLK_S0D3		10
++#define R8A7796_CLK_S0D4		11
++#define R8A7796_CLK_S0D6		12
++#define R8A7796_CLK_S0D8		13
++#define R8A7796_CLK_S0D12		14
++#define R8A7796_CLK_S1D1		15
++#define R8A7796_CLK_S1D2		16
++#define R8A7796_CLK_S1D4		17
++#define R8A7796_CLK_S2D1		18
++#define R8A7796_CLK_S2D2		19
++#define R8A7796_CLK_S2D4		20
++#define R8A7796_CLK_S3D1		21
++#define R8A7796_CLK_S3D2		22
++#define R8A7796_CLK_S3D4		23
++#define R8A7796_CLK_LB			24
++#define R8A7796_CLK_CL			25
++#define R8A7796_CLK_ZB3			26
++#define R8A7796_CLK_ZB3D2		27
++#define R8A7796_CLK_ZB3D4		28
++#define R8A7796_CLK_CR			29
++#define R8A7796_CLK_CRD2		30
++#define R8A7796_CLK_SD0H		31
++#define R8A7796_CLK_SD0			32
++#define R8A7796_CLK_SD1H		33
++#define R8A7796_CLK_SD1			34
++#define R8A7796_CLK_SD2H		35
++#define R8A7796_CLK_SD2			36
++#define R8A7796_CLK_SD3H		37
++#define R8A7796_CLK_SD3			38
++#define R8A7796_CLK_SSP2		39
++#define R8A7796_CLK_SSP1		40
++#define R8A7796_CLK_SSPRS		41
++#define R8A7796_CLK_RPC			42
++#define R8A7796_CLK_RPCD2		43
++#define R8A7796_CLK_MSO			44
++#define R8A7796_CLK_CANFD		45
++#define R8A7796_CLK_HDMI		46
++#define R8A7796_CLK_CSI0		47
++#define R8A7796_CLK_CSIREF		48
++#define R8A7796_CLK_CP			49
++#define R8A7796_CLK_CPEX		50
++#define R8A7796_CLK_R			51
++#define R8A7796_CLK_OSC			52
++
++#endif /* __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__ */
 -- 
 1.9.1
