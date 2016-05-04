@@ -1,95 +1,83 @@
-From: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH v2 1/1] add missing UARTs pins and I2C
- entriesfor AllWinner H3 DTSI
-Date: Wed, 4 May 2016 11:15:55 -0700 (PDT)
-Message-ID: <c17544c6-2b49-44cc-b2f9-537d94f276ef@googlegroups.com>
-References: <CAKQ8BtjPhfJC+njOUvo-4ZQ+Oj==LqQEhJ1LQROjY85hswE9Mg@mail.gmail.com>
- <20160502064645.GK17159@lukather>
-Reply-To: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v4 3/7] phy: Add set_mode callback
+Date: Wed, 4 May 2016 13:20:36 -0500
+Message-ID: <572A3D74.3080907@lechnology.com>
+References: <1460658919-4965-1-git-send-email-david@lechnology.com>
+ <1460658919-4965-4-git-send-email-david@lechnology.com>
+ <20160504181030.GA4327@uda0271908>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_875_1838026450.1462385755952"
-Return-path: <linux-sunxi+bncBDW4XUV4YULRBXHYVC4QKGQEN65KYUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160502064645.GK17159@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160504181030.GA4327@uda0271908>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bin Liu <b-liu@ti.com>, petr@barix.com, sergei.shtylyov@cogentembedded.com, khilman@kernel.org, nsekhar@ti.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_875_1838026450.1462385755952
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Bonjour Maxime,
-
-On Monday, May 2, 2016 at 2:46:57 AM UTC-4, Maxime Ripard wrote:
+On 05/04/2016 01:10 PM, Bin Liu wrote:
 > Hi,
->=20
-> On Tue, Apr 19, 2016 at 03:50:39PM -0400, Martin Ayotte wrote:
-> > Hi everyone,
-> >=20
-> > This patch is submit to provide endusers access to additional UARTs on
-> > AllWinner H3 SoC along with I2C ports.
->=20
-> Unfortunately, your patch cannot be applied in its current form, both
-> because of process and technical reasons:
->=20
->   * Every commits should have a commit title and log. While you do
->     have a title, you used the log to store your cover letter. This is
->     an issue, because that will be kept in the git history, which is
->     obviously something we don't want.
->     If you want to make a cover letter, you can either send it as a
->     separate mail, or after the "---" below that will be ignored when
->     applying the mails.
->     On the other hand, the commit log should be used to say why =C3=BDour
->     doing this patch and why it was needed.
->=20
->   * You do not have a Signed-off-by tag in your commit log. This and
->     the point above is documented in Documentation/SubmittingPatches,
->     please make sure to read that first.
->=20
->   * Your mailer completely corrupted the patch when you sent it,
->     replacing all tabs by spaces, and wrapping the longer lines. That
->     means that the patch cannot be applied anymore. Please fix your
->     mailer, or use one that just works, like git send-email.
->=20
->   * Finally, like Chen-Yu already told you, you're doing several
->     different things here in a single patch, while you should have
->     done separate patches. From what I can see, you're adding pinctrl
->     groups for the uart and i2c pins, and adding the i2c controller
->     nodes. That should have been ideally 3 patches: 1 for the uart
->     pinctrl groups, 1 for the i2c pinctrl groups, 1 for the i2c
->     controller nodes. We also don't take pinctrl groups that are not
->     enabled on any boards to keep the DT size as small as possible.
->=20
-> Thanks,
-> Maxime
->=20
-> --=20
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+>
+> On Thu, Apr 14, 2016 at 01:35:14PM -0500, David Lechner wrote:
+>> The initial use for this is for PHYs that have a mode related to USB OTG.
+>> There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
+>> in the USB PHY to override OTG VBUS and ID signals.
+>>
+>> Of course, the enum can be expaned in the future to include modes for
+>> other types of PHYs as well.
+>>
+>> Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
+>>
+>> v4 changes:
+>>
+>> * This is a new patch to avoid exporting a symbol from the phy-da8xx-usb driver.
+>>
+>>
+>>   drivers/phy/phy-core.c  | 15 +++++++++++++++
+>>   include/linux/phy/phy.h | 15 +++++++++++++++
+>>   2 files changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+>> index e7e574d..fe0344c 100644
+>> --- a/drivers/phy/phy-core.c
+>> +++ b/drivers/phy/phy-core.c
+>> @@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
+>>   }
+>>   EXPORT_SYMBOL_GPL(phy_power_off);
+>>
+>> +int phy_set_mode(struct phy *phy, enum phy_mode mode)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!phy || !phy->ops->set_mode)
+>> +		return 0;
+>> +
+>> +	mutex_lock(&phy->mutex);
+>> +	ret = phy->ops->set_mode(phy, mode);
+>> +	mutex_unlock(&phy->mutex);
+>> +
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(phy_set_mode);
+>
+> Sorry for my late comments, have been busy on other things.
+>
+> As I commented in v2, isn't it a better idea to not adding this callback
+> and let the da8xx phy driver set the mode register in _probe() based on
+> DT dr_mode?
+>
+> musb core only calls the *optional* _set_mode() during init, so I don't
+> see any problem if the phy set the mode in its probe.
+>
+> Regards,
+> -Bin.
+>
 
-Thanks for your help and make me understanding more the process.
+As was already discussed, the mode can be changed via sysfs as well as 
+during probe, so this callback is needed for that case.
 
-I've now prepared a new v3 for that, and just send it.
-Strangely, it seems that the 3 patches been sent separately.=20
-I will try to figure out what happened.
-
-Regards,
-Martin.
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
-------=_Part_875_1838026450.1462385755952--
+This is something I actually plan on using because the device I am using 
+(LEGO MINDSTORMS EV3) is not wired for OTG, so the callback is needed to 
+override the ID and VBUS signals when switching between host and 
+peripheral mode.
