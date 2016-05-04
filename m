@@ -1,138 +1,91 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: [Patch v3 3/8] firmware: qcom: scm: Use atomic SCM for cold boot
-Date: Wed,  4 May 2016 17:50:40 -0500
-Message-ID: <1462402245-18295-4-git-send-email-andy.gross@linaro.org>
-References: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
+Date: Wed, 4 May 2016 15:58:46 -0700
+Message-ID: <20160504225846.GA17403@dtor-ws>
+References: <1461923113-426-1-git-send-email-jeffrey.lin@rad-ic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461923113-426-1-git-send-email-jeffrey.lin@rad-ic.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "jeffrey.lin" <yajohn@gmail.com>
+Cc: rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org, jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch changes the cold_set_boot_addr function to use atomic SCM
-calls.  cold_set_boot_addr required adding qcom_scm_call_atomic2 to
-support the two arguments going to the smc call.  Using atomic removes
-the need for memory allocation and instead places all arguments in
-registers.
+Hi Jeffrey,
 
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
----
- drivers/firmware/qcom_scm-32.c | 63 ++++++++++++++++++++++++++++++------------
- 1 file changed, 45 insertions(+), 18 deletions(-)
+On Fri, Apr 29, 2016 at 05:45:13PM +0800, jeffrey.lin wrote:
+> Raydium I2C touch driver.
+> 
 
-diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-index 0883292..5be6a12 100644
---- a/drivers/firmware/qcom_scm-32.c
-+++ b/drivers/firmware/qcom_scm-32.c
-@@ -342,6 +342,41 @@ static s32 qcom_scm_call_atomic1(u32 svc, u32 cmd, u32 arg1)
- 	return r0;
- }
- 
-+/**
-+ * qcom_scm_call_atomic2() - Send an atomic SCM command with two arguments
-+ * @svc_id:	service identifier
-+ * @cmd_id:	command identifier
-+ * @arg1:	first argument
-+ * @arg2:	second argument
-+ *
-+ * This shall only be used with commands that are guaranteed to be
-+ * uninterruptable, atomic and SMP safe.
-+ */
-+static s32 qcom_scm_call_atomic2(u32 svc, u32 cmd, u32 arg1, u32 arg2)
-+{
-+	int context_id;
-+
-+	register u32 r0 asm("r0") = SCM_ATOMIC(svc, cmd, 2);
-+	register u32 r1 asm("r1") = (u32)&context_id;
-+	register u32 r2 asm("r2") = arg1;
-+	register u32 r3 asm("r3") = arg2;
-+
-+	asm volatile(
-+			__asmeq("%0", "r0")
-+			__asmeq("%1", "r0")
-+			__asmeq("%2", "r1")
-+			__asmeq("%3", "r2")
-+			__asmeq("%4", "r3")
-+#ifdef REQUIRES_SEC
-+			".arch_extension sec\n"
-+#endif
-+			"smc    #0      @ switch to secure world\n"
-+			: "=r" (r0)
-+			: "r" (r0), "r" (r1), "r" (r2), "r" (r3)
-+			);
-+	return r0;
-+}
-+
- u32 qcom_scm_get_version(void)
- {
- 	int context_id;
-@@ -378,22 +413,6 @@ u32 qcom_scm_get_version(void)
- }
- EXPORT_SYMBOL(qcom_scm_get_version);
- 
--/*
-- * Set the cold/warm boot address for one of the CPU cores.
-- */
--static int qcom_scm_set_boot_addr(u32 addr, int flags)
--{
--	struct {
--		__le32 flags;
--		__le32 addr;
--	} cmd;
--
--	cmd.addr = cpu_to_le32(addr);
--	cmd.flags = cpu_to_le32(flags);
--	return qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
--			&cmd, sizeof(cmd), NULL, 0);
--}
--
- /**
-  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-  * @entry: Entry point function for the cpus
-@@ -423,7 +442,8 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- 			set_cpu_present(cpu, false);
- 	}
- 
--	return qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
-+	return qcom_scm_call_atomic2(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
-+				    flags, virt_to_phys(entry));
- }
- 
- /**
-@@ -439,6 +459,10 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
- 	int ret;
- 	int flags = 0;
- 	int cpu;
-+	struct {
-+		__le32 flags;
-+		__le32 addr;
-+	} cmd;
- 
- 	/*
- 	 * Reassign only if we are switching from hotplug entry point
-@@ -454,7 +478,10 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
- 	if (!flags)
- 		return 0;
- 
--	ret = qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
-+	cmd.addr = cpu_to_le32(virt_to_phys(entry));
-+	cmd.flags = cpu_to_le32(flags);
-+	ret = qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
-+			    &cmd, sizeof(cmd), NULL, 0);
- 	if (!ret) {
- 		for_each_cpu(cpu, cpus)
- 			qcom_scm_wb[cpu].entry = entry;
+In my previous e-mail I requested you to enumerate changes that are made
+to the driver, compared to the previous version(s). There were also a
+few questions that I did not get answer for.
+
+Also:
+
+> +static int raydium_i2c_query_ts_info(struct raydium_data *ts)
+> +{
+> +	struct i2c_client *client = ts->client;
+> +	int error, retry_cnt;
+> +
+> +	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
+> +		error = raydium_i2c_read(client, CMD_DATA_BANK,
+> +			sizeof(ts->obj), (void *)&ts->obj);
+> +			ts->obj.data_bank_addr =
+> +				get_unaligned_le32(&ts->obj.data_bank_addr);
+> +
+> +		if (!error) {
+> +			error = raydium_i2c_read(client, CMD_QUERY_BANK,
+> +				sizeof(ts->query_bank_info),
+> +				(void *)&ts->query_bank_info);
+> +			if (!error) {
+> +				error = raydium_i2c_read_message(client,
+> +					ts->query_bank_info, sizeof(ts->info),
+> +					(void *)&ts->info);
+> +
+> +				ts->info.hw_ver =
+> +					get_unaligned_le32(&ts->info.hw_ver);
+> +				ts->info.ft_ver =
+> +					get_unaligned_le16(&ts->info.ft_ver);
+> +				ts->info.x_max =
+> +					get_unaligned_le16(&ts->info.x_max);
+> +				ts->info.y_max =
+> +					get_unaligned_le16(&ts->info.y_max);
+> +				return 0;
+> +			}
+> +		}
+> +	}
+> +	dev_err(&client->dev, "Get touch data failed: %d\n", error);
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int raydium_i2c_fastboot(struct i2c_client *client)
+> +{
+> +	static const u8 boot_cmd[] = { 0x50, 0x00, 0x06, 0x20 };
+> +	u8 buf[HEADER_SIZE];
+> +	int error;
+> +
+> +	error = raydium_i2c_read_message(client,
+> +		get_unaligned_be32(boot_cmd),
+> +		sizeof(boot_cmd), buf);
+
+I still can't figure out the logic in read/write mesage handling. Here
+we see that device is supposedly reporting data_bank_addr as LE integer,
+but query_bank_info is returned in native CPU endianness. With fastboot
+command we assume that we are dealing with BE-encoded data and convert
+it to CPU-endianness before using it.
+
+However in raydium_i2c_read_message() we convert from CPU endianness to
+BE and this comfuses me (does the device really return data in one
+endianness but accepts in another endianness?
+
+By the way, why do you have raydium_i2c_read_message() handle reads
+above MAX_PKG_SIZE? There are no callers that want it.
+
+Thanks.
+
 -- 
-1.9.1
+Dmitry
