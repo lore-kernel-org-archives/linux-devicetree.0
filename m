@@ -1,38 +1,102 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCH] leds-pca963x: add bindings to invert polarity
-Date: Wed, 4 May 2016 10:10:01 +0200
-Message-ID: <5729AE59.6000009@schinagl.nl>
-References: <1462182104-21450-1-git-send-email-anders@chargestorm.se>
- <5729A4AB.5080901@samsung.com> <20160504075508.GA22125@ad.chargestorm.se>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 5/9] dt-bindings: msm/dsi: Some binding doc cleanups
+Date: Wed, 4 May 2016 13:41:46 +0530
+Message-ID: <5729AEC2.6010708@codeaurora.org>
+References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
+ <1462273081-5814-6-git-send-email-architt@codeaurora.org>
+ <1462284301.3617.71.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20160504075508.GA22125@ad.chargestorm.se>
-Sender: linux-leds-owner@vger.kernel.org
-To: Anders Darander <anders@chargestorm.se>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: rpurdie@rpsys.net, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1462284301.3617.71.camel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Jacek,
-
-On 04-05-16 09:55, Anders Darander wrote:
-> Hi,
->
-> Thanks for the info.
->
-> * Jacek Anaszewski <j.anaszewski@samsung.com> [160504 09:28]:
->> Please note that there has already been an attempt to add
->> the support for inverted output polarity to this driver and related
->> discussion [1]. This thread remains quiet for around two weeks.
-> Ah, nice coincidence! Unfortunately, I made the work earlier than his
-> posting, otherwise I could have spent the time on somethinge else. ;)
-Sorry to be so slacking with submitting this, I've been sitting on it 
-for 6 months now :) I just kept postponing in submitting it. But as they 
-say, great minds, and all that.
->
-> Well, then I hope v2 of his patches comes along.
->
-> Cheers,
-> Anders
->
+CgpPbiAwNS8wMy8yMDE2IDA3OjM1IFBNLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+IEFtIERpZW5z
+dGFnLCBkZW4gMDMuMDUuMjAxNiwgMTY6MjcgKzA1MzAgc2NocmllYiBBcmNoaXQgVGFuZWphOgo+
+PiBTb21lIGNsZWFudXBzOgo+Pgo+PiAtIFVzZSBzaW1wbGVyIG5hbWVzIGZvciBEVCBub2RlcyBp
+biB0aGUgZXhhbXBsZQo+PiAtIEZpeCBwaGFuZGxlIGZvciBzcGVjaWZ5aW5nIGRhdGEgbGFuZSBt
+YXBwaW5nIGluIHRoZSBleGFtcGxlLgo+PiAtIFVzZSByZWZlcmVuY2VzIGluc3RlYWQgb2YgZHVt
+cGluZyBEb2N1bWVudCBsaW5rcyBldmVyeXdoZXJlCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEFyY2hp
+dCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgICAgICAgIHwgMjMgKysrKysrKysrKyst
+LS0tLS0tLS0tLQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAxMSBkZWxl
+dGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L21zbS9kc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKPj4gaW5kZXggZjU5NDhjNC4uYmY0MWQ3YyAxMDA2NDQK
+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2Rz
+aS50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bXNtL2RzaS50eHQKPj4gQEAgLTExLDggKzExLDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4g
+ICAgIGJlIDAgb3IgMSwgc2luY2Ugd2UgaGF2ZSAyIERTSSBjb250cm9sbGVycyBhdCBtb3N0IGZv
+ciBub3cuCj4+ICAgLSBpbnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBE
+U0kgYmxvY2suCj4+ICAgLSBwb3dlci1kb21haW5zOiBTaG91bGQgYmUgPCZtbWNjIE1EU1NfR0RT
+Qz4uCj4+IC0tIGNsb2NrczogZGV2aWNlIGNsb2Nrcwo+PiAtICBTZWUgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMu
+Cj4+ICstIGNsb2NrczogUGhhbmRsZXMgdG8gZGV2aWNlIGNsb2NrcyBhcyBkZXNjaXJiZWQgaW4g
+WzFdCj4KPiBzL2Rlc2NpcmJlZC9kZXNjcmliZWQvCj4KPj4gICAtIGNsb2NrLW5hbWVzOiB0aGUg
+Zm9sbG93aW5nIGNsb2NrcyBhcmUgcmVxdWlyZWQ6Cj4+ICAgICAqICJtZHBfY29yZV9jbGsiCj4+
+ICAgICAqICJpZmFjZV9jbGsiCj4+IEBAIC0zMSw4ICszMCw3IEBAIFJlcXVpcmVkIHByb3BlcnRp
+ZXM6Cj4+Cj4+ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gICAtIHBhbmVsQDA6IE5vZGUgb2Yg
+cGFuZWwgY29ubmVjdGVkIHRvIHRoaXMgRFNJIGNvbnRyb2xsZXIuCj4+IC0gIFNlZSBmaWxlcyBp
+biBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC8gZm9yIGVh
+Y2ggc3VwcG9ydGVkCj4+IC0gIHBhbmVsLgo+PiArICBTZWUgZmlsZXMgaW4gWzJdIGZvciBlYWNo
+IHN1cHBvcnRlZCBwYW5lbC4KPj4gICAtIHFjb20sZHVhbC1kc2ktbW9kZTogQm9vbGVhbiB2YWx1
+ZSBpbmRpY2F0aW5nIGlmIHRoZSBEU0kgY29udHJvbGxlciBpcwo+PiAgICAgZHJpdmluZyBhIHBh
+bmVsIHdoaWNoIG5lZWRzIDIgRFNJIGxpbmtzLgo+PiAgIC0gcWNvbSxtYXN0ZXItZHNpOiBCb29s
+ZWFuIHZhbHVlIGluZGljYXRpbmcgaWYgdGhlIERTSSBjb250cm9sbGVyIGlzIGRyaXZpbmcKPj4g
+QEAgLTQ4LDcgKzQ2LDcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4KPj4gICAgIERTSSBFbmRw
+b2ludCBwcm9wZXJ0aWVzOgo+PiAgICAgLSByZW1vdGUtZW5kcG9pbnQ6IHNldCB0byBwaGFuZGxl
+IG9mIHRoZSBjb25uZWN0ZWQgcGFuZWwncyBlbmRwb2ludC4KPj4gLSAgICBTZWUgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dCBmb3IgZGV2aWNlIGdyYXBoIGluZm8u
+Cj4+ICsgICAgU2VlIFszXSBmb3IgZGV2aWNlIGdyYXBoIGluZm8uCj4+ICAgICAtIHFjb20sZGF0
+YS1sYW5lLW1hcDogdGhpcyBkZXNjcmliZXMgaG93IHRoZSBsb2dpY2FsIERTSSBsYW5lcyBhcmUg
+bWFwcGVkCj4+ICAgICAgIHRvIHRoZSBwaHlzaWNhbCBsYW5lcyBvbiB0aGUgZ2l2ZW4gcGxhdGZv
+cm0uIFRoZSB2YWx1ZSBjb250YWluZWQgaW4KPj4gICAgICAgaW5kZXggbiBkZXNjcmliZXMgd2hh
+dCBsb2dpY2FsIGRhdGEgbGFuZSBpcyBtYXBwZWQgdG8gdGhlIHBoeXNpY2FsIGRhdGEKPj4gQEAg
+LTg5LDggKzg3LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4gICAtIHFjb20sZHNpLXBoeS1p
+bmRleDogVGhlIElEIG9mIERTSSBQSFkgaGFyZHdhcmUgaW5zdGFuY2UuIFRoaXMgc2hvdWxkCj4+
+ICAgICBiZSAwIG9yIDEsIHNpbmNlIHdlIGhhdmUgMiBEU0kgUEhZcyBhdCBtb3N0IGZvciBub3cu
+Cj4+ICAgLSBwb3dlci1kb21haW5zOiBTaG91bGQgYmUgPCZtbWNjIE1EU1NfR0RTQz4uCj4+IC0t
+IGNsb2NrczogZGV2aWNlIGNsb2Nrcwo+PiAtICBTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4+ICstIGNs
+b2NrczogUGhhbmRsZXMgdG8gZGV2aWNlIGNsb2NrcyBhcyBkZXNjaXJiZWQgaW4gWzFdCj4KPiBz
+L2Rlc2NpcmJlZC9kZXNjcmliZWQvCgpUaGFua3MsIHdpbGwgZml4IHRoZXNlLgoKPgo+PiAgIC0g
+Y2xvY2stbmFtZXM6IHRoZSBmb2xsb3dpbmcgY2xvY2tzIGFyZSByZXF1aXJlZDoKPj4gICAgICog
+ImlmYWNlX2NsayIKPj4gICAtIHZkZGlvLXN1cHBseTogcGhhbmRsZSB0byB2ZGQtaW8gcmVndWxh
+dG9yIGRldmljZSBub2RlCj4+IEBAIC05OSw4ICs5NiwxMiBAQCBPcHRpb25hbCBwcm9wZXJ0aWVz
+Ogo+PiAgIC0gcWNvbSxkc2ktcGh5LXJlZ3VsYXRvci1sZG8tbW9kZTogQm9vbGVhbiB2YWx1ZSBp
+bmRpY2F0aW5nIGlmIHRoZSBMRE8gbW9kZSBQSFkKPj4gICAgIHJlZ3VsYXRvciBpcyB3YW50ZWQu
+Cj4+Cj4+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2Nr
+LWJpbmRpbmdzLnR4dAo+PiArWzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsLwo+PiArWzNdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
+cmFwaC50eHQKPj4gKwo+PiAgIEV4YW1wbGU6Cj4+IC0JbWRzc19kc2kwOiBxY29tLG1kc3NfZHNp
+QGZkOTIyODAwIHsKPj4gKwlkc2kwOiBkc2lAZmQ5MjI4MDAgewo+PiAgIAkJY29tcGF0aWJsZSA9
+ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+PiAgIAkJcWNvbSxkc2ktaG9zdC1pbmRleCA9IDwwPjsK
+Pj4gICAJCWludGVycnVwdC1wYXJlbnQgPSA8Jm1kc3NfbWRwPjsKPj4gQEAgLTEyOCw3ICsxMjks
+NyBAQCBFeGFtcGxlOgo+PiAgIAkJdmRkLXN1cHBseSA9IDwmcG1hODA4NF9sMjI+Owo+PiAgIAkJ
+dmRkaW8tc3VwcGx5ID0gPCZwbWE4MDg0X2wxMj47Cj4+Cj4+IC0JCXFjb20sZHNpLXBoeSA9IDwm
+bWRzc19kc2lfcGh5MD47Cj4+ICsJCXFjb20sZHNpLXBoeSA9IDwmZHNpX3BoeTA+Owo+Pgo+Pgo+
+PiAgIAkJcWNvbSxkdWFsLWRzaS1tb2RlOwo+PiAgIAkJcWNvbSxtYXN0ZXItZHNpOwo+PiBAQCAt
+MTU2LDEyICsxNTcsMTIgQEAgRXhhbXBsZToKPj4gICAJCXBvcnQgewo+PiAgIAkJCWRzaTBfb3V0
+OiBlbmRwb2ludCB7Cj4+ICAgCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW4+Owo+PiAt
+CQkJCWxhbmVzID0gPDAgMSAyIDM+Owo+PiArCQkJCXFjb20sZGF0YS1sYW5lLW1hcCA9IDwwIDEg
+MiAzPjsKPgo+IFNlZSBteSBjb21tZW50IGFib3V0IHRoZSBDU0ktMiBkYXRhLWxhbmVzIGJpbmRp
+bmcgaW4gdGhlIG90aGVyIG1haWwsCj4gY291bGQgdGhlIGV4aXN0aW5nIGJpbmRpbmcgYmUgcmV1
+c2VkPwoKWWVzLCBJJ2xsIGluY29ycG9yYXRlIHRoZSBleGlzdGluZyBiaW5kaW5nLgoKVGhhbmtz
+IGZvciB0aGUgcmV2aWV3LgoKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2Vu
+dGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBi
+eSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
