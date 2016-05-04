@@ -1,32 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] documentation: Add compatibles for Amlogic Meson
- GXBB pin controllers
-Date: Tue, 3 May 2016 21:31:15 -0500
-Message-ID: <20160504023115.GA8507@rob-hp-laptop>
-References: <1462176138-29433-1-git-send-email-carlo@caione.org>
- <1462176138-29433-3-git-send-email-carlo@caione.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH 1/2 v6] clk/axs10x: Add I2S PLL clock driver
+Date: Tue, 3 May 2016 21:34:13 -0500
+Message-ID: <20160504023413.GA9595@rob-hp-laptop>
+References: <cover.1461258787.git.joabreu@synopsys.com>
+ <6bae37562ffc6c62c015e12b7bf6a35c9a3e734d.1461258787.git.joabreu@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462176138-29433-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <6bae37562ffc6c62c015e12b7bf6a35c9a3e734d.1461258787.git.joabreu@synopsys.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: linux-clk@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2016 at 10:02:16AM +0200, Carlo Caione wrote:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+On Mon, May 02, 2016 at 10:39:05AM +0100, Jose Abreu wrote:
+> The ARC SDP I2S clock can be programmed using a
+> specific PLL.
 > 
-> Add the two new compatibles for the Amlogic Meson GXBB pin controllers.
+> This patch has the goal of adding a clock driver
+> that programs this PLL.
 > 
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> At this moment the rate values are hardcoded in
+> a table but in the future it would be ideal to
+> use a function which determines the PLL values
+> given the desired rate.
+> 
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> 
+> Changes v5 -> v6:
+> * Use parent clock to determine PLL input rate instead of using hardcoded values
+> * Documentation update (added 'clocks' field)
+> 
+> Changes v4 -> v5:
+> * Documentation update (as suggested by Alexey Brodkin)
+> * Changed compatible string to "snps,axs10x-i2s-pll-clock" (as suggested by Alexey Brodkin)
+> 
+> Changes v3 -> v4:
+> * Added binding document (as suggested by Stephen Boyd)
+> * Minor code style fixes (as suggested by Stephen Boyd)
+> * Use ioremap (as suggested by Stephen Boyd)
+> * Implement round_rate (as suggested by Stephen Boyd)
+> * Change to platform driver (as suggested by Stephen Boyd)
+> * Use {readl/writel}_relaxed (as suggested by Vineet Gupta)
+> 
+> Changes v2 -> v3:
+> * Implemented recalc_rate
+> 
+> Changes v1 -> v2:
+> * Renamed folder to axs10x (as suggested by Alexey Brodkin)
+> * Added more supported rates
+> 
+> Cc: Carlos Palminha <palminha@synopsys.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Alexey Brodkin <abrodkin@synopsys.com>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> 
+>  .../bindings/clock/axs10x-i2s-pll-clock.txt        |  25 +++
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/axs10x/Makefile                        |   1 +
+>  drivers/clk/axs10x/i2s_pll_clock.c                 | 228 +++++++++++++++++++++
+>  4 files changed, 255 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/axs10x-i2s-pll-clock.txt
+>  create mode 100644 drivers/clk/axs10x/Makefile
+>  create mode 100644 drivers/clk/axs10x/i2s_pll_clock.c
