@@ -1,8 +1,8 @@
 Return-Path: <mtk07307@kernel.org>
 From: Weiqing Kong <weiqing.kong@mediatek.com>
-Subject: [PATCH 1/3] dt-bindings: pwm: Add MediaTek display PWM bindings
-Date: Wed, 4 May 2016 14:53:25 +0800
-Message-ID: <1462344807-6336-2-git-send-email-weiqing.kong@mediatek.com>
+Subject: [PATCH 3/3] dts: Add disp bls dsti and dts config for MT2701
+Date: Wed, 4 May 2016 14:53:27 +0800
+Message-ID: <1462344807-6336-4-git-send-email-weiqing.kong@mediatek.com>
 In-Reply-To: <1462344807-6336-1-git-send-email-weiqing.kong@mediatek.com>
 References: <1462344807-6336-1-git-send-email-weiqing.kong@mediatek.com>
 MIME-Version: 1.0
@@ -11,29 +11,71 @@ To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.co
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@medaitek.com, yingjoe.chen@mediatek.com, yh.huang@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add MT2701 compatible string.
-
 Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
 ---
- Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/mt2701-evb.dts | 29 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/mt2701.dtsi    |  9 +++++++++
+ 2 files changed, 38 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-index f8f59ba..f2f2fa9 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-@@ -1,9 +1,10 @@
- MediaTek display PWM controller
+diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+index 082ca88..6d572f4 100644
+--- a/arch/arm/boot/dts/mt2701-evb.dts
++++ b/arch/arm/boot/dts/mt2701-evb.dts
+@@ -22,6 +22,35 @@
+ 	memory {
+ 		reg = <0 0x80000000 0 0x40000000>;
+ 	};
++
++	backlight_lcd: backlight_lcd {
++		compatible = "pwm-backlight";
++		pwms = <&disp_bls 0 100000>;
++		brightness-levels = <
++			  0  16  32  48  64  80  96 112
++			128 144 160 176 192 208 224 240
++			255
++		>;
++		default-brightness-level = <9>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm_bls_gpio>;
++	};
++};
++
++&disp_bls {
++	status = "okay";
++};
++
++&mmsys {
++	status = "okay";
++};
++
++&pio {
++	pwm_bls_gpio: pwm_bls_gpio {
++		pins_cmd_dat {
++			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
++		};
++	};
+ };
  
- Required properties:
-- - compatible: should be "mediatek,<name>-disp-pwm":
--   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-+ - compatible: should be like these:
-+   - "mediatek,mt2701-disp-bls": found on mt2701 SoC.
-    - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
-+   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-  - reg: physical base address and length of the controller's registers.
-  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-    the cell format.
+ &uart0 {
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 42d5a37..dae55d6 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -234,6 +234,15 @@
+ 		status = "disabled";
+ 	};
+ 
++	disp_bls: dispsys@1400a000 {
++		compatible = "mediatek,mt2701-disp-bls";
++		reg = <0 0x1400a000 0 0x1000>;
++		#pwm-cells = <2>;
++		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
++		clock-names = "main", "mm";
++		status = "disabled";
++	};
++
+ 	imgsys: syscon@15000000 {
+ 		compatible = "mediatek,mt2701-imgsys", "syscon";
+ 		reg = <0 0x15000000 0 0x1000>;
 -- 
 1.9.1
