@@ -1,244 +1,79 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V3 12/17] irqchip/gic: Pass GIC pointer to save/restore functions
-Date: Wed, 4 May 2016 17:25:25 +0100
-Message-ID: <1462379130-11742-13-git-send-email-jonathanh@nvidia.com>
-References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Update iProc GPIO bindings
+Date: Wed, 4 May 2016 09:29:04 -0700
+Message-ID: <6fe293c1-505d-2af9-711a-09e5b5a83e58@broadcom.com>
+References: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
+ <1462222308-4869-2-git-send-email-ray.jui@broadcom.com>
+ <20160504132020.GA21065@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160504132020.GA21065@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of passing the GIC index to the save/restore functions pass a
-pointer to the GIC chip data. This will allow these save/restore
-functions to be re-used by a platform driver where the GIC chip data
-structure is allocated dynamically and so there is no applicable index
-for identifying the GIC.
+Hi Rob,
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
----
- drivers/irqchip/irq-gic.c | 74 +++++++++++++++++++++++++----------------------
- 1 file changed, 39 insertions(+), 35 deletions(-)
+On 5/4/2016 6:20 AM, Rob Herring wrote:
+> On Mon, May 02, 2016 at 01:51:47PM -0700, Ray Jui wrote:
+>> Update the iProc GPIO binding document to add new compatible strings
+>> "brcm,iproc-gpio-v2" and "brcm,iproc-gpio-v3" for the 2nd and 3rd
+>> generation of the iProc GPIO controllers
+>>
+>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>> ---
+>>  Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+>> index e427792..3a56649 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+>> @@ -4,7 +4,16 @@ Required properties:
+>>
+>>  - compatible:
+>>      Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
+>> -    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
+>> +    or "brcm,cygnus-crmu-gpio" for Cygnus SoCs
+>> +
+>> +    "brcm,iproc-gpio" for the first generation of the GPIO controller that
+>> +    supports full-featured pinctrl and GPIO functions used in iProc based SoCs
+>> +
+>> +    "brcm,iproc-gpio-v2" for the second generation of the GPIO controller that
+>> +    has the drive strength pinctrl support disabled, e.g., in the iProc NSP SoC
+>> +
+>> +    "brcm,iproc-gpio-v3" for the third generation of the GPIO controller that
+>> +    has the general pinctrl support completely disabled
+>
+> You can have these for driver matching, but you still need SoC specific
+> compatible strings.
+>
+> Rob
+>
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 82931aa68868..30666f349649 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -518,34 +518,35 @@ int gic_cpu_if_down(unsigned int gic_nr)
-  * this function, no interrupts will be delivered by the GIC, and another
-  * platform-specific wakeup source must be enabled.
-  */
--static void gic_dist_save(unsigned int gic_nr)
-+static void gic_dist_save(struct gic_chip_data *gic)
- {
- 	unsigned int gic_irqs;
- 	void __iomem *dist_base;
- 	int i;
- 
--	BUG_ON(gic_nr >= CONFIG_ARM_GIC_MAX_NR);
-+	if (WARN_ON(!gic))
-+		return;
- 
--	gic_irqs = gic_data[gic_nr].gic_irqs;
--	dist_base = gic_data_dist_base(&gic_data[gic_nr]);
-+	gic_irqs = gic->gic_irqs;
-+	dist_base = gic_data_dist_base(gic);
- 
- 	if (!dist_base)
- 		return;
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 16); i++)
--		gic_data[gic_nr].saved_spi_conf[i] =
-+		gic->saved_spi_conf[i] =
- 			readl_relaxed(dist_base + GIC_DIST_CONFIG + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
--		gic_data[gic_nr].saved_spi_target[i] =
-+		gic->saved_spi_target[i] =
- 			readl_relaxed(dist_base + GIC_DIST_TARGET + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 32); i++)
--		gic_data[gic_nr].saved_spi_enable[i] =
-+		gic->saved_spi_enable[i] =
- 			readl_relaxed(dist_base + GIC_DIST_ENABLE_SET + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 32); i++)
--		gic_data[gic_nr].saved_spi_active[i] =
-+		gic->saved_spi_active[i] =
- 			readl_relaxed(dist_base + GIC_DIST_ACTIVE_SET + i * 4);
- }
- 
-@@ -556,16 +557,17 @@ static void gic_dist_save(unsigned int gic_nr)
-  * handled normally, but any edge interrupts that occured will not be seen by
-  * the GIC and need to be handled by the platform-specific wakeup source.
-  */
--static void gic_dist_restore(unsigned int gic_nr)
-+static void gic_dist_restore(struct gic_chip_data *gic)
- {
- 	unsigned int gic_irqs;
- 	unsigned int i;
- 	void __iomem *dist_base;
- 
--	BUG_ON(gic_nr >= CONFIG_ARM_GIC_MAX_NR);
-+	if (WARN_ON(!gic))
-+		return;
- 
--	gic_irqs = gic_data[gic_nr].gic_irqs;
--	dist_base = gic_data_dist_base(&gic_data[gic_nr]);
-+	gic_irqs = gic->gic_irqs;
-+	dist_base = gic_data_dist_base(gic);
- 
- 	if (!dist_base)
- 		return;
-@@ -573,7 +575,7 @@ static void gic_dist_restore(unsigned int gic_nr)
- 	writel_relaxed(GICD_DISABLE, dist_base + GIC_DIST_CTRL);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 16); i++)
--		writel_relaxed(gic_data[gic_nr].saved_spi_conf[i],
-+		writel_relaxed(gic->saved_spi_conf[i],
- 			dist_base + GIC_DIST_CONFIG + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
-@@ -581,85 +583,87 @@ static void gic_dist_restore(unsigned int gic_nr)
- 			dist_base + GIC_DIST_PRI + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
--		writel_relaxed(gic_data[gic_nr].saved_spi_target[i],
-+		writel_relaxed(gic->saved_spi_target[i],
- 			dist_base + GIC_DIST_TARGET + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 32); i++) {
- 		writel_relaxed(GICD_INT_EN_CLR_X32,
- 			dist_base + GIC_DIST_ENABLE_CLEAR + i * 4);
--		writel_relaxed(gic_data[gic_nr].saved_spi_enable[i],
-+		writel_relaxed(gic->saved_spi_enable[i],
- 			dist_base + GIC_DIST_ENABLE_SET + i * 4);
- 	}
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 32); i++) {
- 		writel_relaxed(GICD_INT_EN_CLR_X32,
- 			dist_base + GIC_DIST_ACTIVE_CLEAR + i * 4);
--		writel_relaxed(gic_data[gic_nr].saved_spi_active[i],
-+		writel_relaxed(gic->saved_spi_active[i],
- 			dist_base + GIC_DIST_ACTIVE_SET + i * 4);
- 	}
- 
- 	writel_relaxed(GICD_ENABLE, dist_base + GIC_DIST_CTRL);
- }
- 
--static void gic_cpu_save(unsigned int gic_nr)
-+static void gic_cpu_save(struct gic_chip_data *gic)
- {
- 	int i;
- 	u32 *ptr;
- 	void __iomem *dist_base;
- 	void __iomem *cpu_base;
- 
--	BUG_ON(gic_nr >= CONFIG_ARM_GIC_MAX_NR);
-+	if (WARN_ON(!gic))
-+		return;
- 
--	dist_base = gic_data_dist_base(&gic_data[gic_nr]);
--	cpu_base = gic_data_cpu_base(&gic_data[gic_nr]);
-+	dist_base = gic_data_dist_base(gic);
-+	cpu_base = gic_data_cpu_base(gic);
- 
- 	if (!dist_base || !cpu_base)
- 		return;
- 
--	ptr = raw_cpu_ptr(gic_data[gic_nr].saved_ppi_enable);
-+	ptr = raw_cpu_ptr(gic->saved_ppi_enable);
- 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++)
- 		ptr[i] = readl_relaxed(dist_base + GIC_DIST_ENABLE_SET + i * 4);
- 
--	ptr = raw_cpu_ptr(gic_data[gic_nr].saved_ppi_active);
-+	ptr = raw_cpu_ptr(gic->saved_ppi_active);
- 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++)
- 		ptr[i] = readl_relaxed(dist_base + GIC_DIST_ACTIVE_SET + i * 4);
- 
--	ptr = raw_cpu_ptr(gic_data[gic_nr].saved_ppi_conf);
-+	ptr = raw_cpu_ptr(gic->saved_ppi_conf);
- 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
- 		ptr[i] = readl_relaxed(dist_base + GIC_DIST_CONFIG + i * 4);
- 
- }
- 
--static void gic_cpu_restore(unsigned int gic_nr)
-+static void gic_cpu_restore(struct gic_chip_data *gic)
- {
- 	int i;
- 	u32 *ptr;
- 	void __iomem *dist_base;
- 	void __iomem *cpu_base;
- 
--	BUG_ON(gic_nr >= CONFIG_ARM_GIC_MAX_NR);
-+	if (WARN_ON(!gic))
-+		return;
- 
--	dist_base = gic_data_dist_base(&gic_data[gic_nr]);
--	cpu_base = gic_data_cpu_base(&gic_data[gic_nr]);
-+	dist_base = gic_data_dist_base(gic);
-+	cpu_base = gic_data_cpu_base(gic);
- 
- 	if (!dist_base || !cpu_base)
- 		return;
- 
--	ptr = raw_cpu_ptr(gic_data[gic_nr].saved_ppi_enable);
-+	ptr = raw_cpu_ptr(gic->saved_ppi_enable);
- 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++) {
- 		writel_relaxed(GICD_INT_EN_CLR_X32,
- 			       dist_base + GIC_DIST_ENABLE_CLEAR + i * 4);
- 		writel_relaxed(ptr[i], dist_base + GIC_DIST_ENABLE_SET + i * 4);
- 	}
- 
--	ptr = raw_cpu_ptr(gic_data[gic_nr].saved_ppi_active);
-+	ptr = raw_cpu_ptr(gic->saved_ppi_active);
- 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++) {
- 		writel_relaxed(GICD_INT_EN_CLR_X32,
- 			       dist_base + GIC_DIST_ACTIVE_CLEAR + i * 4);
- 		writel_relaxed(ptr[i], dist_base + GIC_DIST_ACTIVE_SET + i * 4);
- 	}
- 
--	ptr = raw_cpu_ptr(gic_data[gic_nr].saved_ppi_conf);
-+	ptr = raw_cpu_ptr(gic->saved_ppi_conf);
- 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
- 		writel_relaxed(ptr[i], dist_base + GIC_DIST_CONFIG + i * 4);
- 
-@@ -668,7 +672,7 @@ static void gic_cpu_restore(unsigned int gic_nr)
- 					dist_base + GIC_DIST_PRI + i * 4);
- 
- 	writel_relaxed(GICC_INT_PRI_THRESHOLD, cpu_base + GIC_CPU_PRIMASK);
--	gic_cpu_if_up(&gic_data[gic_nr]);
-+	gic_cpu_if_up(gic);
- }
- 
- static int gic_notifier(struct notifier_block *self, unsigned long cmd,	void *v)
-@@ -683,18 +687,18 @@ static int gic_notifier(struct notifier_block *self, unsigned long cmd,	void *v)
- #endif
- 		switch (cmd) {
- 		case CPU_PM_ENTER:
--			gic_cpu_save(i);
-+			gic_cpu_save(&gic_data[i]);
- 			break;
- 		case CPU_PM_ENTER_FAILED:
- 		case CPU_PM_EXIT:
--			gic_cpu_restore(i);
-+			gic_cpu_restore(&gic_data[i]);
- 			break;
- 		case CPU_CLUSTER_PM_ENTER:
--			gic_dist_save(i);
-+			gic_dist_save(&gic_data[i]);
- 			break;
- 		case CPU_CLUSTER_PM_ENTER_FAILED:
- 		case CPU_CLUSTER_PM_EXIT:
--			gic_dist_restore(i);
-+			gic_dist_restore(&gic_data[i]);
- 			break;
- 		}
- 	}
--- 
-2.1.4
+I think I'm missing something and hope you can help to clarify here. It 
+looks like the notion of v2, v3 should only be used if there's an indeed 
+an revision update on the controller IP itself, correct?
+
+In our case, if the same revision of GPIO controller is used but instead 
+synthesized differently with different SoCs, then you are suggesting 
+here that it should be dealt with SoC specific compatible string, correct?
+
+For example, for the GPIO controller on NSP where drive strength is 
+disabled, the compatible string in DT should look like this?
+
+compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-nsp";
+
+For the GPIO controller on Stingray where pinconf is completely 
+disabled, the compatible string in DT should look like:
+
+compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-stingray";
+
+Is that correct?
+
+Thanks,
+
+Ray
