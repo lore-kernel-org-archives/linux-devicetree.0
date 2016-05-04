@@ -1,112 +1,276 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/4] clk: renesas: cpg-mssr: Add support for R-Car M3-W
-Date: Wed,  4 May 2016 16:35:39 +0200
-Message-ID: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH 4/4] clk: renesas: cpg-mssr: Add support for R-Car M3-W
+Date: Wed,  4 May 2016 16:35:43 +0200
+Message-ID: <1462372543-31835-5-git-send-email-geert+renesas@glider.be>
+References: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Mike, Stephen,
+Initial support for R-Car M3-W (r8a7796), including basic core clocks,
+and SCIF2 (console) and INTC-AP (GIC) module clocks.
 
-This patch series adds initial support for the Clock Pulse Generator and
-Module Standby and Software Reset modules on the Renesas R-Car M3-W
-SoC:
-  - Basic core clocks,
-  - SCIF2 (console) module clock,
-  - INTC-AP (GIC) module clock (disabled pending CLK_ENABLE_HAND_OFF).
-
-Support for more core and module clocks will be added incrementally.
-
-/sys/kernel/debug/clk/clk_summary output:
-
-       clock            enable_cnt  prepare_cnt        rate   accuracy   phase
-    ---------------------------------------------------------------------------
-     scif                        1            1    14745600          0 0
-     extalr                      0            0           0          0 0
-     extal                       1            1    16666666          0 0
-	cp                       0            0     8333333          0 0
-	.main                    1            1    16666666          0 0
-	   .pll4                 0            0  2399999904          0 0
-	   .pll3                 0            0  3199999872          0 0
-	   .pll2                 0            0  2399999904          0 0
-	   .pll1                 1            1  3199999872          0 0
-	      .pll1_div2         1            1  1599999936          0 0
-		 cl              0            0    33333332          0 0
-		 zx              0            0   799999968          0 0
-		 zt              0            0   399999984          0 0
-		 ztrd2           0            0   133333328          0 0
-		 ztr             0            0   266666656          0 0
-		 .s3             2            2   266666656          0 0
-		    s3d4         1            1    66666664          0 0
-		       scif2     2            2    66666664          0 0
-		    s3d2         0            0   133333328          0 0
-		    s3d1         2            2   266666656          0 0
-		       intc-ap   1            1   266666656          0 0
-		 .s2             0            0   399999984          0 0
-		    s2d4         0            0    99999996          0 0
-		    s2d2         0            0   199999992          0 0
-		    s2d1         0            0   399999984          0 0
-		 .s1             0            0   533333312          0 0
-		    s1d4         0            0   133333328          0 0
-		    s1d2         0            0   266666656          0 0
-		    s1d1         0            0   533333312          0 0
-		 .s0             0            0   799999968          0 0
-		    s0d12        0            0    66666664          0 0
-		    s0d8         0            0    99999996          0 0
-		    s0d6         0            0   133333328          0 0
-		    s0d4         0            0   199999992          0 0
-		    s0d3         0            0   266666656          0 0
-		    s0d2         0            0   399999984          0 0
-		    s0d1         0            0   799999968          0 0
-		 .pll1_div4      0            0   799999968          0 0
-	   .pll0                 0            0  2999999880          0 0
-
-For your convenience, I've pushed this series to the
-topic/r8a7796-clk-v1 branch of
-https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git.
-
-Integration with renesas-drivers-2016-04-26-v4.6-rc5, and minimal board
-integration for testing is available in the topic/gen3-latest branch.
-
-This has received minimal testing on r8a7796/salvator-x, and regression
-testing on r8a7795/salvator-x (ES1.0 and ES1.1).
-
-Thanks for your comments!
-
-Geert Uytterhoeven (4):
-  clk: renesas: cpg-mssr: Document r8a7796 support
-  clk: renesas: Add r8a7796 CPG Core Clock Definitions
-  clk: renesas: cpg-mssr: Extract common R-Car Gen3 support code
-  clk: renesas: cpg-mssr: Add support for R-Car M3-W
-
- .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   7 +-
- drivers/clk/renesas/Kconfig                        |   1 +
- drivers/clk/renesas/Makefile                       |   3 +-
- drivers/clk/renesas/r8a7795-cpg-mssr.c             | 360 +--------------------
- drivers/clk/renesas/r8a7796-cpg-mssr.c             | 192 +++++++++++
- drivers/clk/renesas/rcar-gen3-cpg.c                | 359 ++++++++++++++++++++
- drivers/clk/renesas/rcar-gen3-cpg.h                |  43 +++
- drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
- drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
- include/dt-bindings/clock/r8a7796-cpg-mssr.h       |  69 ++++
- 10 files changed, 682 insertions(+), 359 deletions(-)
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/clk/renesas/Kconfig            |   1 +
+ drivers/clk/renesas/Makefile           |   1 +
+ drivers/clk/renesas/r8a7796-cpg-mssr.c | 192 +++++++++++++++++++++++++++++++++
+ drivers/clk/renesas/renesas-cpg-mssr.c |   6 ++
+ drivers/clk/renesas/renesas-cpg-mssr.h |   1 +
+ 5 files changed, 201 insertions(+)
  create mode 100644 drivers/clk/renesas/r8a7796-cpg-mssr.c
- create mode 100644 drivers/clk/renesas/rcar-gen3-cpg.c
- create mode 100644 drivers/clk/renesas/rcar-gen3-cpg.h
- create mode 100644 include/dt-bindings/clock/r8a7796-cpg-mssr.h
 
+diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
+index 2115ce410cfb4bc9..fcad9ff090f5fd2b 100644
+--- a/drivers/clk/renesas/Kconfig
++++ b/drivers/clk/renesas/Kconfig
+@@ -1,6 +1,7 @@
+ config CLK_RENESAS_CPG_MSSR
+ 	bool
+ 	default y if ARCH_R8A7795
++	default y if ARCH_R8A7796
+ 
+ config CLK_RENESAS_CPG_MSTP
+ 	bool
+diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
+index 88924c95808c3b2e..0b8d31b4909c9690 100644
+--- a/drivers/clk/renesas/Makefile
++++ b/drivers/clk/renesas/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o clk-div6.o
+ obj-$(CONFIG_ARCH_R8A7793)		+= clk-rcar-gen2.o clk-div6.o
+ obj-$(CONFIG_ARCH_R8A7794)		+= clk-rcar-gen2.o clk-div6.o
+ obj-$(CONFIG_ARCH_R8A7795)		+= r8a7795-cpg-mssr.o rcar-gen3-cpg.o
++obj-$(CONFIG_ARCH_R8A7796)		+= r8a7796-cpg-mssr.o rcar-gen3-cpg.o
+ obj-$(CONFIG_ARCH_SH73A0)		+= clk-sh73a0.o clk-div6.o
+ 
+ obj-$(CONFIG_CLK_RENESAS_CPG_MSSR)	+= renesas-cpg-mssr.o clk-div6.o
+diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+new file mode 100644
+index 0000000000000000..c84b549c14d2e57d
+--- /dev/null
++++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+@@ -0,0 +1,192 @@
++/*
++ * r8a7796 Clock Pulse Generator / Module Standby and Software Reset
++ *
++ * Copyright (C) 2016 Glider bvba
++ *
++ * Based on r8a7795-cpg-mssr.c
++ *
++ * Copyright (C) 2015 Glider bvba
++ * Copyright (C) 2015 Renesas Electronics Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ */
++
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++
++#include <dt-bindings/clock/r8a7796-cpg-mssr.h>
++
++#include "renesas-cpg-mssr.h"
++#include "rcar-gen3-cpg.h"
++
++enum clk_ids {
++	/* Core Clock Outputs exported to DT */
++	LAST_DT_CORE_CLK = R8A7796_CLK_OSC,
++
++	/* External Input Clocks */
++	CLK_EXTAL,
++	CLK_EXTALR,
++
++	/* Internal Core Clocks */
++	CLK_MAIN,
++	CLK_PLL0,
++	CLK_PLL1,
++	CLK_PLL2,
++	CLK_PLL3,
++	CLK_PLL4,
++	CLK_PLL1_DIV2,
++	CLK_PLL1_DIV4,
++	CLK_S0,
++	CLK_S1,
++	CLK_S2,
++	CLK_S3,
++	CLK_SDSRC,
++	CLK_SSPSRC,
++
++	/* Module Clocks */
++	MOD_CLK_BASE
++};
++
++static const struct cpg_core_clk r8a7796_core_clks[] __initconst = {
++	/* External Clock Inputs */
++	DEF_INPUT("extal",  CLK_EXTAL),
++	DEF_INPUT("extalr", CLK_EXTALR),
++
++	/* Internal Core Clocks */
++	DEF_BASE(".main",       CLK_MAIN, CLK_TYPE_GEN3_MAIN, CLK_EXTAL),
++	DEF_BASE(".pll0",       CLK_PLL0, CLK_TYPE_GEN3_PLL0, CLK_MAIN),
++	DEF_BASE(".pll1",       CLK_PLL1, CLK_TYPE_GEN3_PLL1, CLK_MAIN),
++	DEF_BASE(".pll2",       CLK_PLL2, CLK_TYPE_GEN3_PLL2, CLK_MAIN),
++	DEF_BASE(".pll3",       CLK_PLL3, CLK_TYPE_GEN3_PLL3, CLK_MAIN),
++	DEF_BASE(".pll4",       CLK_PLL4, CLK_TYPE_GEN3_PLL4, CLK_MAIN),
++
++	DEF_FIXED(".pll1_div2", CLK_PLL1_DIV2,     CLK_PLL1,       2, 1),
++	DEF_FIXED(".pll1_div4", CLK_PLL1_DIV4,     CLK_PLL1_DIV2,  2, 1),
++	DEF_FIXED(".s0",        CLK_S0,            CLK_PLL1_DIV2,  2, 1),
++	DEF_FIXED(".s1",        CLK_S1,            CLK_PLL1_DIV2,  3, 1),
++	DEF_FIXED(".s2",        CLK_S2,            CLK_PLL1_DIV2,  4, 1),
++	DEF_FIXED(".s3",        CLK_S3,            CLK_PLL1_DIV2,  6, 1),
++
++	/* Core Clock Outputs */
++	DEF_FIXED("ztr",        R8A7796_CLK_ZTR,   CLK_PLL1_DIV2,  6, 1),
++	DEF_FIXED("ztrd2",      R8A7796_CLK_ZTRD2, CLK_PLL1_DIV2, 12, 1),
++	DEF_FIXED("zt",         R8A7796_CLK_ZT,    CLK_PLL1_DIV2,  4, 1),
++	DEF_FIXED("zx",         R8A7796_CLK_ZX,    CLK_PLL1_DIV2,  2, 1),
++	DEF_FIXED("s0d1",       R8A7796_CLK_S0D1,  CLK_S0,         1, 1),
++	DEF_FIXED("s0d2",       R8A7796_CLK_S0D2,  CLK_S0,         2, 1),
++	DEF_FIXED("s0d3",       R8A7796_CLK_S0D3,  CLK_S0,         3, 1),
++	DEF_FIXED("s0d4",       R8A7796_CLK_S0D4,  CLK_S0,         4, 1),
++	DEF_FIXED("s0d6",       R8A7796_CLK_S0D6,  CLK_S0,         6, 1),
++	DEF_FIXED("s0d8",       R8A7796_CLK_S0D8,  CLK_S0,         8, 1),
++	DEF_FIXED("s0d12",      R8A7796_CLK_S0D12, CLK_S0,        12, 1),
++	DEF_FIXED("s1d1",       R8A7796_CLK_S1D1,  CLK_S1,         1, 1),
++	DEF_FIXED("s1d2",       R8A7796_CLK_S1D2,  CLK_S1,         2, 1),
++	DEF_FIXED("s1d4",       R8A7796_CLK_S1D4,  CLK_S1,         4, 1),
++	DEF_FIXED("s2d1",       R8A7796_CLK_S2D1,  CLK_S2,         1, 1),
++	DEF_FIXED("s2d2",       R8A7796_CLK_S2D2,  CLK_S2,         2, 1),
++	DEF_FIXED("s2d4",       R8A7796_CLK_S2D4,  CLK_S2,         4, 1),
++	DEF_FIXED("s3d1",       R8A7796_CLK_S3D1,  CLK_S3,         1, 1),
++	DEF_FIXED("s3d2",       R8A7796_CLK_S3D2,  CLK_S3,         2, 1),
++	DEF_FIXED("s3d4",       R8A7796_CLK_S3D4,  CLK_S3,         4, 1),
++
++	DEF_FIXED("cl",         R8A7796_CLK_CL,    CLK_PLL1_DIV2, 48, 1),
++	DEF_FIXED("cp",         R8A7796_CLK_CP,    CLK_EXTAL,      2, 1),
++};
++
++static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
++	DEF_MOD("scif2",		 310,	R8A7796_CLK_S3D4),
++	DEF_MOD("intc-ap",		 408,	R8A7796_CLK_S3D1),
++};
++
++static const unsigned int r8a7796_crit_mod_clks[] __initconst = {
++	MOD_CLK_ID(408),	/* INTC-AP (GIC) */
++};
++
++
++/*
++ * CPG Clock Data
++ */
++
++/*
++ *   MD		EXTAL		PLL0	PLL1	PLL2	PLL3	PLL4
++ * 14 13 19 17	(MHz)
++ *-------------------------------------------------------------------
++ * 0  0  0  0	16.66 x 1	x180	x192	x144	x192	x144
++ * 0  0  0  1	16.66 x 1	x180	x192	x144	x128	x144
++ * 0  0  1  0	Prohibited setting
++ * 0  0  1  1	16.66 x 1	x180	x192	x144	x192	x144
++ * 0  1  0  0	20    x 1	x150	x160	x120	x160	x120
++ * 0  1  0  1	20    x 1	x150	x160	x120	x106	x120
++ * 0  1  1  0	Prohibited setting
++ * 0  1  1  1	20    x 1	x150	x160	x120	x160	x120
++ * 1  0  0  0	25    x 1	x120	x128	x96	x128	x96
++ * 1  0  0  1	25    x 1	x120	x128	x96	x84	x96
++ * 1  0  1  0	Prohibited setting
++ * 1  0  1  1	25    x 1	x120	x128	x96	x128	x96
++ * 1  1  0  0	33.33 / 2	x180	x192	x144	x192	x144
++ * 1  1  0  1	33.33 / 2	x180	x192	x144	x128	x144
++ * 1  1  1  0	Prohibited setting
++ * 1  1  1  1	33.33 / 2	x180	x192	x144	x192	x144
++ */
++#define CPG_PLL_CONFIG_INDEX(md)	((((md) & BIT(14)) >> 11) | \
++					 (((md) & BIT(13)) >> 11) | \
++					 (((md) & BIT(19)) >> 18) | \
++					 (((md) & BIT(17)) >> 17))
++
++static const struct rcar_gen3_cpg_pll_config cpg_pll_configs[16] __initconst = {
++	/* EXTAL div	PLL1 mult	PLL3 mult */
++	{ 1,		192,		192,	},
++	{ 1,		192,		128,	},
++	{ 0, /* Prohibited setting */		},
++	{ 1,		192,		192,	},
++	{ 1,		160,		160,	},
++	{ 1,		160,		106,	},
++	{ 0, /* Prohibited setting */		},
++	{ 1,		160,		160,	},
++	{ 1,		128,		128,	},
++	{ 1,		128,		84,	},
++	{ 0, /* Prohibited setting */		},
++	{ 1,		128,		128,	},
++	{ 2,		192,		192,	},
++	{ 2,		192,		128,	},
++	{ 0, /* Prohibited setting */		},
++	{ 2,		192,		192,	},
++};
++
++static int __init r8a7796_cpg_mssr_init(struct device *dev)
++{
++	const struct rcar_gen3_cpg_pll_config *cpg_pll_config;
++	u32 cpg_mode = rcar_gen3_read_mode_pins();
++
++	cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
++	if (!cpg_pll_config->extal_div) {
++		dev_err(dev, "Prohibited setting (cpg_mode=0x%x)\n", cpg_mode);
++		return -EINVAL;
++	}
++
++	return rcar_gen3_cpg_init(cpg_pll_config, CLK_EXTALR);
++}
++
++const struct cpg_mssr_info r8a7796_cpg_mssr_info __initconst = {
++	/* Core Clocks */
++	.core_clks = r8a7796_core_clks,
++	.num_core_clks = ARRAY_SIZE(r8a7796_core_clks),
++	.last_dt_core_clk = LAST_DT_CORE_CLK,
++	.num_total_core_clks = MOD_CLK_BASE,
++
++	/* Module Clocks */
++	.mod_clks = r8a7796_mod_clks,
++	.num_mod_clks = ARRAY_SIZE(r8a7796_mod_clks),
++	.num_hw_mod_clks = 12 * 32,
++
++	/* Critical Module Clocks */
++	.crit_mod_clks = r8a7796_crit_mod_clks,
++	.num_crit_mod_clks = ARRAY_SIZE(r8a7796_crit_mod_clks),
++
++	/* Callbacks */
++	.init = r8a7796_cpg_mssr_init,
++	.cpg_clk_register = rcar_gen3_cpg_clk_register,
++};
+diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
+index 210cd744a7a97bbd..e1365e7491ae02a0 100644
+--- a/drivers/clk/renesas/renesas-cpg-mssr.c
++++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+@@ -509,6 +509,12 @@ static const struct of_device_id cpg_mssr_match[] = {
+ 		.data = &r8a7795_cpg_mssr_info,
+ 	},
+ #endif
++#ifdef CONFIG_ARCH_R8A7796
++	{
++		.compatible = "renesas,r8a7796-cpg-mssr",
++		.data = &r8a7796_cpg_mssr_info,
++	},
++#endif
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/drivers/clk/renesas/renesas-cpg-mssr.h b/drivers/clk/renesas/renesas-cpg-mssr.h
+index 0d1e3e811e79bf43..ee7edfaf14089cef 100644
+--- a/drivers/clk/renesas/renesas-cpg-mssr.h
++++ b/drivers/clk/renesas/renesas-cpg-mssr.h
+@@ -131,4 +131,5 @@ struct cpg_mssr_info {
+ };
+ 
+ extern const struct cpg_mssr_info r8a7795_cpg_mssr_info;
++extern const struct cpg_mssr_info r8a7796_cpg_mssr_info;
+ #endif
 -- 
 1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
