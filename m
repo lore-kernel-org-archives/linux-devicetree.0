@@ -1,80 +1,82 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH 1/2 v6] clk/axs10x: Add I2S PLL clock driver
-Date: Tue, 3 May 2016 21:34:13 -0500
-Message-ID: <20160504023413.GA9595@rob-hp-laptop>
-References: <cover.1461258787.git.joabreu@synopsys.com>
- <6bae37562ffc6c62c015e12b7bf6a35c9a3e734d.1461258787.git.joabreu@synopsys.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH RESEND 10/12] sh: I/O DATA HDL-U (aka landisk) support dts
+Date: Tue, 3 May 2016 23:27:57 -0400
+Message-ID: <20160504032757.GP21636@brightrain.aerifal.cx>
+References: <1462079316-27771-1-git-send-email-ysato@users.sourceforge.jp>
+ <1462079316-27771-11-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6bae37562ffc6c62c015e12b7bf6a35c9a3e734d.1461258787.git.joabreu@synopsys.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: linux-clk@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1462079316-27771-11-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2016 at 10:39:05AM +0100, Jose Abreu wrote:
-> The ARC SDP I2S clock can be programmed using a
-> specific PLL.
-> 
-> This patch has the goal of adding a clock driver
-> that programs this PLL.
-> 
-> At this moment the rate values are hardcoded in
-> a table but in the future it would be ideal to
-> use a function which determines the PLL values
-> given the desired rate.
-> 
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+On Sun, May 01, 2016 at 02:08:34PM +0900, Yoshinori Sato wrote:
+> Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
 > ---
+>  arch/sh/boot/dts/landisk.dts | 150 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 150 insertions(+)
+>  create mode 100644 arch/sh/boot/dts/landisk.dts
 > 
-> Changes v5 -> v6:
-> * Use parent clock to determine PLL input rate instead of using hardcoded values
-> * Documentation update (added 'clocks' field)
-> 
-> Changes v4 -> v5:
-> * Documentation update (as suggested by Alexey Brodkin)
-> * Changed compatible string to "snps,axs10x-i2s-pll-clock" (as suggested by Alexey Brodkin)
-> 
-> Changes v3 -> v4:
-> * Added binding document (as suggested by Stephen Boyd)
-> * Minor code style fixes (as suggested by Stephen Boyd)
-> * Use ioremap (as suggested by Stephen Boyd)
-> * Implement round_rate (as suggested by Stephen Boyd)
-> * Change to platform driver (as suggested by Stephen Boyd)
-> * Use {readl/writel}_relaxed (as suggested by Vineet Gupta)
-> 
-> Changes v2 -> v3:
-> * Implemented recalc_rate
-> 
-> Changes v1 -> v2:
-> * Renamed folder to axs10x (as suggested by Alexey Brodkin)
-> * Added more supported rates
-> 
-> Cc: Carlos Palminha <palminha@synopsys.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Alexey Brodkin <abrodkin@synopsys.com>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> 
->  .../bindings/clock/axs10x-i2s-pll-clock.txt        |  25 +++
+> diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
+> new file mode 100644
+> index 0000000..a994d19
+> --- /dev/null
+> +++ b/arch/sh/boot/dts/landisk.dts
+> @@ -0,0 +1,150 @@
+> +#include <dt-bindings/interrupt-controller/sh_intc.h>
+> +
+> +/dts-v1/;
+> +/ {
+> +	model = "I/O DATA HDL-U";
+> +	compatible = "iodata,hdl-u";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&shintc>;
+> +	chosen {
+> +		stdout-path = &sci1;
+> +		bootargs = "console=ttySC1,115200";
+> +	};
+> +	aliases {
+> +		serial0 = &sci0;
+> +		serial1 = &sci1;
+> +	};
+> +
+> +	oclk: oscillator {
+> +                #clock-cells = <0>;
+> +                compatible = "fixed-clock";
+> +                clock-frequency = <22222222>;
+> +        };
+> +        pllclk: pllclk {
+> +                compatible = "renesas,sh7750-pll-clock";
+> +                clocks = <&oclk>;
+> +                #clock-cells = <0>;
+> +		renesas,mult = <12>;
+> +                reg = <0xffc00000 2>, <0xffc00008 4>;
 
-Acked-by: Rob Herring <robh@kernel.org>
+You have inconsistent mixes of tabs and spaces here and in several
+other places.
 
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/axs10x/Makefile                        |   1 +
->  drivers/clk/axs10x/i2s_pll_clock.c                 | 228 +++++++++++++++++++++
->  4 files changed, 255 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/axs10x-i2s-pll-clock.txt
->  create mode 100644 drivers/clk/axs10x/Makefile
->  create mode 100644 drivers/clk/axs10x/i2s_pll_clock.c
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
+> +		      compatible = "renesas,sh4", "renesas,sh";
+> +		      clock-frequency = <266666666>;
+> +		};
+> +	};
+
+Do you have in mind a scenario where the plain "renesas,sh"
+fallback-compatible tag makes sense? Linux (or any kernel or baremetal
+app) can't treat all sh as the same because the trap mechanism is
+different for sh1/2 and sh3/4. Declaring that it's sh3-compatible
+might make sense but I still doubt it has much practical usefulness.
+
+Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
