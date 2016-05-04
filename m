@@ -1,41 +1,53 @@
-From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: dra7: Add gpmc dma channel
-Date: Wed,  4 May 2016 12:43:55 -0500
-Message-ID: <1462383835-10839-1-git-send-email-fcooper@ti.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 4/9] dt-bindings: msm/mdp: Remove connector and gpu
+ bindings
+Date: Wed, 4 May 2016 23:19:30 +0530
+Message-ID: <572A362A.1070903@codeaurora.org>
+References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
+ <1462273081-5814-5-git-send-email-architt@codeaurora.org>
+ <20160504133848.GA30492@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160504133848.GA30492@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Add dma channel information to the gpmc.
-
-Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
----
-This patch is based on top of linux-next where EDMA support for DRA7 has
-been added.
-
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index e007401..3a8f397 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1451,6 +1451,8 @@
- 			ti,hwmods = "gpmc";
- 			reg = <0x50000000 0x37c>;      /* device IO registers */
- 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			dmas = <&edma_xbar 4 0>;
-+			dma-names = "rxtx";
- 			gpmc,num-cs = <8>;
- 			gpmc,num-waitpins = <2>;
- 			#address-cells = <2>;
--- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiA1LzQvMjAxNiA3OjA4IFBNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBUdWUsIE1heSAw
+MywgMjAxNiBhdCAwNDoyNzo1NlBNICswNTMwLCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+PiBUaGUg
+TURQIERUIG5vZGUgbm93IGNvbnRhaW5zIGEgbGlzdCBvZiBwb3J0cyB0aGF0IGRlc2NyaWJlIGhv
+dyBpdCBjb25uZWN0cwo+PiB0byBleHRlcm5hbCBlbmNvZGVyIGludGVyZmFjZXMgbGlrZSBEU0kg
+YW5kIEhETUkuIFRoZXNlIGZvbGxvdyB0aGUKPj4gc3RhbmRhcmQgb2ZfZ3JhcGggYmluZGluZ3Ms
+IGFuZCBhbGxvdyB1cyB0byBnZXQgcmlkIG9mIHRoZSAnY29ubmVjdG9ycycKPj4gcGhhbmRsZSB0
+aGF0IGNvbnRhaW5lZCBhIGxpc3Qgb2YgYWxsIHRoZSBleHRlcm5hbCBlbmNvZGVycyBjb25uZWN0
+ZWQgdG8KPj4gTURQLgo+Pgo+PiBUaGUgR1BVIHBoYW5kbGUgaXMgcmVtb3ZlZCB0b28gdW50aWwg
+d2UgZmlndXJlIG91dCB3aGF0J3MgdGhlIHJpZ2h0IHdheQo+PiB0byBzcGVjaWZ5IGl0IGluIERU
+Lgo+Cj4gWy4uLl0KPgo+PiArICBGb3IgTURQNCwgdGhlIG91dHB1dCBwb3J0IG1hcHBpbmdzIGFy
+ZToKPj4gKwlQb3J0IDAgLT4gTENEQy9MVkRTCj4+ICsJUG9ydCAxIC0+IERTSTEgQ21kL1ZpZGVv
+Cj4+ICsJUG9ydCAyIC0+IERTSTIgQ21kL1ZpZGVvCj4+ICsJUG9ydCAzIC0+IERUVgo+PiArCj4+
+ICsgRm9yIE1EUDUsIHRoZSBhdmFpbGFiaWxpdHkgb2Ygb3V0cHV0IHBvcnRzIHZhcnkgYWNyb3Nz
+IGVhY2ggU29DIHJldmlzaW9uLCBidXQKPj4gKyB0aGV5IGdlbmVyYWxseSBoYXZlIHRoZSBmb2xs
+b3dpbmcgbWFwcGluZzoKPj4gKwlQb3J0IDAgLT4gTURQX0lOVEYwIChlRFApCj4+ICsJUG9ydCAx
+IC0+IE1EUF9JTlRGMSAoRFNJMSkKPj4gKwlQb3J0IDIgLT4gTURQX0lOVEYyIChEU0kyKQo+PiAr
+CVBvcnQgMyAtPiBNRFBfSU5URjMgKEhETUkpCj4+ICsKPj4gKyBTZWUgZHJpdmVycy9ncHUvZHJt
+L21zbS9tZHAvbWRwNS9tZHA1X2NmZy5jIHRvIHNlZSB3aGF0IGFsbCBJTlRGcyBhIHBhcnRpY3Vs
+YXIKPj4gKyBTb0MgcmV2aXNpb24gaGFzIGVuYWJsZWQuCj4KPiBUaGUgYmluZGluZyBkb2Mgc2hv
+dWxkbid0IGRlcGVuZCBvbiBrZXJuZWwgY29kZS4gWW91IG5lZWQgdG8gZG9jdW1lbnQgaXQKPiBo
+ZXJlLgoKT2theS4gSSdsbCBsaXN0IHRoZSBhdmFpbGFibGUgaW50ZXJmYWNlcyBmb3IgZWFjaCBT
+b0MgcmV2aXNpb24uCgpUaGFua3MsCkFyY2hpdAoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2Vu
+dGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5k
+YXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
