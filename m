@@ -1,207 +1,210 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] of: Add bindings of hw throttle for Tegra
- soctherm
-Date: Wed, 4 May 2016 08:35:18 -0500
-Message-ID: <20160504133518.GA28191@rob-hp-laptop>
-References: <1462270410-2425-1-git-send-email-wni@nvidia.com>
- <1462270410-2425-2-git-send-email-wni@nvidia.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v7 2/2] memory: atmel-ebi: add DT bindings documentation
+Date: Wed, 4 May 2016 15:35:47 +0200
+Message-ID: <20160504153547.60d736bb@bbrezillon>
+References: <1461845007-23139-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1461845007-23139-2-git-send-email-boris.brezillon@free-electrons.com>
+	<20160503164019.GA1604@rob-hp-laptop>
+	<20160503185153.5cfddc32@bbrezillon>
+	<CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
+	<20160504113852.10a2dd84@bbrezillon>
+	<CAL_Jsq+4aL5znA3zOKdcJb+pEXhVOQthkFF6DN2+P6U37t2o6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462270410-2425-2-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+4aL5znA3zOKdcJb+pEXhVOQthkFF6DN2+P6U37t2o6g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 03, 2016 at 06:13:20PM +0800, Wei Ni wrote:
-> Add HW throttle configuration sub-node for soctherm, which
-> is used to describe the throttle event, and worked as a
-> cooling device. The "hot" type trip in thermal zone can
-> be bound to this cooling device, and trigger the throttle
-> function.
+On Wed, 4 May 2016 08:06:10 -0500
+Rob Herring <robh@kernel.org> wrote:
+
+> On Wed, May 4, 2016 at 4:38 AM, Boris Brezillon
+> <boris.brezillon@free-electrons.com> wrote:
+> > Hi Rob,
+> >
+> > On Tue, 3 May 2016 14:11:04 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >  
+> >> On Tue, May 3, 2016 at 11:51 AM, Boris Brezillon
+> >> <boris.brezillon@free-electrons.com> wrote:  
+> >> > Hi Rob,
+> >> >
+> >> > On Tue, 3 May 2016 11:40:19 -0500
+> >> > Rob Herring <robh@kernel.org> wrote:
+> >> >  
+> >> >> On Thu, Apr 28, 2016 at 02:03:27PM +0200, Boris Brezillon wrote:  
+> >> >> > The EBI (External Bus Interface) is used to access external peripherals
+> >> >> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> >> >> > Each device is assigned a CS line and an address range and can have its
+> >> >> > own configuration (timings, access mode, bus width, ...).
+> >> >> > This driver provides a generic DT binding to configure a device according
+> >> >> > to its requirements.
+> >> >> > For specific device controllers (like the NAND one) the SMC timings
+> >> >> > should be configured by the controller driver through the matrix and smc
+> >> >> > syscon regmaps.  
 > 
-> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 120 ++++++++++++++++++++-
->  1 file changed, 118 insertions(+), 2 deletions(-)
+> [...]
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> index edebfa0a985e..6ba8ae3f59ed 100644
-> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> @@ -10,8 +10,14 @@ Required properties :
->  - compatible : For Tegra124, must contain "nvidia,tegra124-soctherm".
->    For Tegra132, must contain "nvidia,tegra132-soctherm".
->    For Tegra210, must contain "nvidia,tegra210-soctherm".
-> -- reg : Should contain 1 entry:
-> +- reg : Should contain at least 2 entries for each entry in reg-names:
->    - SOCTHERM register set
-> +  - Tegra CAR register set: Required for Tegra124 and Tegra210.
-> +  - CCROC register set: Required for Tegra132.
-> +- reg-names :  Should contain at least 2 entries:
-> +  - soctherm-reg
-> +  - car-reg
-> +  - ccroc-reg
->  - interrupts : Defines the interrupt used by SOCTHERM
->  - clocks : Must contain an entry for each entry in clock-names.
->    See ../clocks/clock-bindings.txt for details.
-> @@ -25,17 +31,44 @@ Required properties :
->  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description
->      of this property. See <dt-bindings/thermal/tegra124-soctherm.h> for a
->      list of valid values when referring to thermal sensors.
-> +- nvidia,throttle-cfgs: A sub-node which is a container of configuration for
-> +    each hardware throttle events. These events can be set as cooling devices.
-> +  * throttle events: Sub-nodes must be named as "nvidia,light" or "nvidia,heavy".
-> +      Properties:
-> +      - nvidia,priority: Each throttles has its own throttle settings, so the
-> +        SW need to set priorities for various throttle, the HW arbiter can select
-> +        the final throttle settings.
-> +        Bigger value indicates higher priority, In general, higher priority
-> +        translates to lower target frequency. SW needs to ensure that critical
-> +        thermal alarms are given higher priority, and ensure that there is
-> +        no race if priority of two vectors is set to the same value.
-
-What are valid range of values?
-
-> +      - nvidia,cpu-throt-depth:  This property is for Tegra124 and Tegra210.
-> +        It is the throttling depth of pulse skippers, it's the percentage
-> +        throttling.
-
-Add unit suffix (-percent)
-
-> +      - nvidia,cpu-throt-level: This property is only for Tegra132, it is the
-> +        level of pulse skippers, which used to throttle clock frequencies. It
-> +        indicates cpu clock throttling depth, and the depth can be programmed.
-> +        Must set as following values:
-> +        TEGRA_SOCTHERM_THROT_LEVEL_LOW, TEGRA_SOCTHERM_THROT_LEVEL_MED
-> +        TEGRA_SOCTHERM_THROT_LEVEL_HIGH, TEGRA_SOCTHERM_THROT_LEVEL_NONE
-> +      - #cooling-cells: Should be 1. This cooling device only support on/off state.
-> +        See ./thermal.txt for a description of this property.
->  
->  Note:
->  - the "critical" type trip points will be set to SOC_THERM hardware as the
->  shut down temperature. Once the temperature of this thermal zone is higher
->  than it, the system will be shutdown or reset by hardware.
-> +- the "hot" type trip points will be set to SOC_THERM hardware as the throttle
-> +temperature. Once the the temperature of this thermal zone is higher
-> +than it, it will trigger the HW throttle event.
->  
->  Example :
->  
->  	soctherm@700e2000 {
->  		compatible = "nvidia,tegra124-soctherm";
-> -		reg = <0x0 0x700e2000 0x0 0x1000>;
-> +		reg = <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
-> +			0x0 0x60006000 0x0 0x400 /* CAR reg_base */
-> +		reg-names = "soctherm-reg", "car-reg";
->  		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&tegra_car TEGRA124_CLK_TSENSOR>,
->  			<&tegra_car TEGRA124_CLK_SOC_THERM>;
-> @@ -44,6 +77,76 @@ Example :
->  		reset-names = "soctherm";
->  
->  		#thermal-sensor-cells = <1>;
-> +
-> +		nvidia,throttle-cfgs {
-
-Drop the vendor prefix in node names.
-
-> +			/*
-> +			 * When the "heavy" cooling device triggered,
-> +			 * the HW will skip cpu clock's pulse in 85% depth
-> +			 */
-> +			throttle_heavy: nvidia,heavy {
-> +				nvidia,priority = <100>;
-> +				nvidia,cpu-throt-depth = <85>;
-> +
-> +				#cooling-cells = <1>;
-> +			};
-> +
-> +			/*
-> +			 * When the "light" cooling device triggered,
-> +			 * the HW will skip cpu clock's pulse in 50% depth
-> +			 */
-> +			throttle_light: nvidia,light {
-> +				nvidia,priority = <80>;
-> +				nvidia,cpu-throt-depth = <50>;
-> +
-> +				#cooling-cells = <1>;
-> +			};
-> +
-> +			/*
-> +			 * If these two devices are triggered in same time, the HW throttle
-> +			 * arbiter will select the highest priority as the final throttle
-> +			 * settings to skip cpu pulse.
-> +			 */
-> +		};
-> +	};
-> +
-> +Example: referring to Tegra132's "reg", "reg-names" and "throttle-cfgs" :
-> +
-> +	soctherm@0,700e2000 {
-
-Drop the comma in the unit address.
-
-> +		compatible = "nvidia,tegra132-soctherm";
-> +		reg = <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
-> +			0x0 0x70040000 0x0 0x200>; /* CCROC reg_base */;
-> +		reg-names = "soctherm-reg", "ccroc-reg";
-> +
-> +		nvidia,throttle-cfgs {
-> +			/*
-> +			 * When the "heavy" cooling device triggered,
-> +			 * the HW will skip cpu clock's pulse in HIGH level
-> +			 */
-> +			throttle_heavy: nvidia,heavy {
-> +				nvidia,priority = <100>;
-> +				nvidia,cpu-throt-level = <TEGRA_SOCTHERM_THROT_LEVEL_HIGH>;
-> +
-> +				#cooling-cells = <1>;
-> +			};
-> +
-> +			/*
-> +			 * When the "light" cooling device triggered,
-> +			 * the HW will skip cpu clock's pulse in MED level
-> +			 */
-> +			throttle_light: nvidia,light {
-> +				nvidia,priority = <80>;
-> +				nvidia,cpu-throt-level = <TEGRA_SOCTHERM_THROT_LEVEL_MED>;
-> +
-> +				#cooling-cells = <1>;
-> +			};
-> +
-> +			/*
-> +			 * If these two devices are triggered in same time, the HW throttle
-> +			 * arbiter will select the highest priority as the final throttle
-> +			 * settings to skip cpu pulse.
-> +			 */
-> +
-> +		};
->  	};
->  
->  Example: referring to thermal sensors :
-> @@ -62,6 +165,19 @@ Example: referring to thermal sensors :
->  					hysteresis = <1000>;
->  					type = "critical";
->  				};
-> +
-> +				cpu_throttle_trip: throttle-trip {
-> +					temperature = <100000>;
-> +					hysteresis = <1000>;
-> +					type = "hot";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&cpu_throttle_trip>;
-> +					cooling-device = <&throttle_heavy 1 1>;
-> +				};
->  			};
->                  };
->  	};
-> -- 
-> 1.9.1
+> >> >> > +EBI bus configuration associated with specific chip-select will be defined in
+> >> >> > +the configs subnode. This configs node will in turn contain several subnodes
+> >> >> > +named config-<cs-id>, each of them containing the following properties.  
+> >> >>
+> >> >> This is a bit unusual. Why not just part of the child device nodes?  
+> >> >
+> >> > Oh, come on! I reworked the binding because Mark complained about the
+> >> > previous binding which was doing exactly what you're suggesting. Can
+> >> > you please be consistent in your reviews...  
+> >>
+> >> No, Mark and I both have our opinions. Which part of this patch
+> >> explains the history?  
+> >
+> > Hm, it's in patch 1/2 (just dropped the cover letter, which might not
+> > be such a good idea).
+> >  
+> >> If the revision history is not in the patch, I'm
+> >> not looking at it.
+> >>
+> >> My issue with it this way is that it has invented yet another way to
+> >> describe timings. I would like to be consistent across external bus
+> >> descriptions, but we're not very consistent to begin with though. The
+> >> most common seems to be the way you first did it. But I agree that it
+> >> is kind of screwy to have an intermediate node unless the controller
+> >> itself has sub-blocks within it and is not the established way to
+> >> describe a bus with chip selects. I would either put the properties
+> >> directly in the child nodes (e.g. flash@0,0) or put your config nodes
+> >> in the device node. I'd call it timings instead of config, but that's
+> >> just bikeshedding.  
+> >
+> > Well, it's not only describing timings (see atmel,bus-width,
+> > atmel,byte-access-type, ...), but I'm fine with either names :).
+> >  
+> >>
+> >> memory-controller@1000 {
+> >>   ...
+> >>   flash@0,0 {
+> >>     timings {
+> >>       ...
+> >>     };
+> >>   };
+> >> };  
+> >
+> > Okay. Mark, what do you think of this approach?
+> >
+> > Note that one of my previous version was defining timings directly in
+> > the EBI device node, and Arnd noted that doing so may cause problems
+> > if one of the EBI property (or the config/timing node name) conflict
+> > with the sub-device binding, which is why I decided to put the EBI
+> > config definitions in a separate subnode.  
 > 
+> You have vendor prefixes on all the properties so I don't think a
+> collision is really a problem. It's also an established pattern in
+> i.MX WEIM and OMAP GPMC (which are hiding in bindings/bus/) and I
+> prefer consistency.
+
+So let's summarize that.
+
+memory-controller@1000 {
+	...
+	flash@0,0 {
+		atmel,<ebi-prop-name> = <value>;
+		...
+		<flash-device-prop> = <value>;
+	};
+};
+
+Would everyone agree on this representation?
+
+With this approach, it's a bit more complicated to detect the case
+where we want to keep bootloader/firmware config, but it should be
+doable (it's much more easier to test for the presence of a
+config/timing node than verifying that either all or none of the
+mandatory properties are here).
+
+Still remains the problem mentioned by Jean-Jacques: what if the
+sub-device takes 2 CS lines. Should we apply the same setting to those
+slots?
+
+> 
+> >> >> > +
+> >> >> > +Optional config-<cs-id> node properties:
+> >> >> > +
+> >> >> > +- atmel,bus-width:         width of the asynchronous device's data bus
+> >> >> > +                           8, 16 or 32.
+> >> >> > +                           Default to 8 when undefined.
+> >> >> > +
+> >> >> > +- atmel,byte-access-type   "write" or "select" (see Atmel datasheet).
+> >> >> > +                           Default to "select" when undefined.
+> >> >> > +
+> >> >> > +- atmel,read-mode          "nrd" or "ncs".
+> >> >> > +                           Default to "ncs" when undefined.
+> >> >> > +
+> >> >> > +- atmel,write-mode         "nwe" or "ncs".
+> >> >> > +                           Default to "ncs" when undefined.
+> >> >> > +
+> >> >> > +- atmel,exnw-mode          "disabled", "frozen" or "ready".
+> >> >> > +                           Default to "disabled" when undefined.
+> >> >> > +
+> >> >> > +- atmel,page-mode          enable page mode if present. The provided value
+> >> >> > +                           defines the page size (supported values: 4, 8,
+> >> >> > +                           16 and 32).
+> >> >> > +
+> >> >> > +- atmel,tdf-mode:          "normal" or "optimized". When set to  
+> >> >>
+> >> >> This should be boolean.  
+> >> >
+> >> > It was a formerly defined as a boolean, and when it's done like that we
+> >> > have no way to identify whether the property was forgotten or
+> >> > intentionally set to normal mode. What's the problem with this approach?  
+> >>
+> >> Only preference to use boolean when that is sufficient. With your
+> >> argument, then we should never have booleans. You state that missing
+> >> means "normal", not forgotten, so all these properties should be
+> >> required with no default.
+> >>
+> >> BTW, I debated the same thing on the other properties, but I could see
+> >> them being expanded to a 3rd mode. I don't see that here though.  
+> >
+> > Well, another reason I switched to a string property is because I
+> > implemented hardware readout in v4, and decided to retrieve the current
+> > state from the hardware and only overload the config with what was
+> > defined in the DT. In this case, if we move to a boolean property we
+> > can't know whether the property is missing because we want to put the
+> > bus in "normal" mode or because we want to keep this config unchanged
+> > (keep the bootloader/bootstrap config).  
+> 
+> Now you are giving yet another definition of what missing means.
+> Please pick and document one:
+> - Error, property missing
+> - Normal mode
+> - Retain firmware/bootloader settings (this should probably apply to
+> all or none)
+
+As I said, this has changed in v5. In v4 we were first retrieving the
+config from the hardware and then overloading this config with the
+properties defined in the DT.
+This ambiguity has gone along with the approach of putting the timings
+directly in the sub-device node. In this version, EBI configs are
+defined directly in configs/config-X nodes, which means that
+- if configs/config-X exists, then all mandatory properties should be
+  defined (otherwise -EINVAL is returned), and we can fallback to
+  default values for optional properties.
+- if configs/config-X does not exist, we retrieve the config directly
+  from the hardware
+
+So, with this assumption, we could definitely switch to a boolean
+property. The only reason I did not change that is because I find it
+clearer to have both modes clearly named than having a property called
+atmel,tdf-optimized.
+
+Anyway that's not something I'm particularly attached to, so let's
+switch back to a boolean property.
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
