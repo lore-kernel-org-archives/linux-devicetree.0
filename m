@@ -1,162 +1,76 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 00/11] drm: Add Allwinner A10 display
- engine support
-Date: Wed, 4 May 2016 20:01:43 +0200
-Message-ID: <20160504180143.GA17159@lukather>
-References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
+Date: Wed, 4 May 2016 13:01:33 -0500
+Message-ID: <572A38FD.9050801@ti.com>
+References: <1461925297-9734-1-git-send-email-peter.ujfalusi@ti.com>
+ <6ee9d67a-e907-715a-f3f5-d90a470314c3@ti.com>
+ <20160504172634.GS5995@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WbqItKNU/G8FVTDf"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCXSVC4QKGQEEIIQ3OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1461590572-4027-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160504172634.GS5995@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---WbqItKNU/G8FVTDf
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 05/04/2016 12:26 PM, Tony Lindgren wrote:
+> Hi,
+> 
+> Adding Nishanth to Cc.
+> 
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [160429 05:15]:
+>> ldo7_reg, obviously ;)
+>>
+>>> 	status = "okay";
+>>> 	regulator-min-microvolt = <1800000>;
+>>> 	regulator-max-microvolt = <1800000>;
+>>> };
+> 
+> It really seems to be ldo7, otherwise there's no HDMI output. I don't
+> have the schematics either.
+> 
+> But it seems we have at least two other regressions in Linux next that
+> prevent me from testing this properly:
+> 
+> 1. On igepv5, I get this for the MMC regulator
+> 
+> ldo9: bypassed regulator has no supply!
+> ldo9: failed to get the current voltage(-517)
+> palmas-pmic 48070000.i2c:palmas@48:palmas_pmic: failed to register 48070000.i2c:palmar
+> 
+> I'm pretty sure it really is using the ldo9 for MMC just like
+> omap5-uevm.. Nishanth suggested it may use something else, but
+> why would it as ldo9 has a nice voltage range?
+> 
+> 2. On both omap5-uevm and igepv5, NFSroot hangs
+> 
+> It seems that NFSroot boots to the point where PM runtime now
+> just shuts down some regulator affecting the USB connected
+> smsc Ethernet adapter?
+> 
+> Regards,
 
-On Mon, Apr 25, 2016 at 03:22:41PM +0200, Maxime Ripard wrote:
-> Hi everyone,
-> 
-> The Allwinner SoCs (except for the very latest ones) all share the
-> same set of controllers, loosely coupled together to form the display
-> pipeline.
-> 
-> Depending on the SoC, the number of instances of the controller will
-> change (2 instances of each in the A10, only one in the A13, for
-> example), and the output availables will change too (HDMI, composite,
-> VGA on the A20, none of them on the A13).
-> 
-> On most featured SoCs, it looks like that:
-> 
-> +--------------------------------------------+
-> |                    RAM                     |
-> +--------------------------------------------+
->       |            |      |            |
->       v            |      |            v
-> +----------------+ |      | +----------------+
-> |    Frontend    | |      | |    Frontend    |
-> +----------------+ |      | +----------------+
->         |          |      |         |
->         v          |      |         v
-> +----------------+ |      | +----------------+
-> |    Backend     |<+      +>|    Backend     |
-> +----------------+          +----------------+
->         |                           |
->         v                           v
-> +----------------+          +----------------+---> LVDS
-> |      TCON      |          |      TCON      |---> RGB
-> +----------------+          +----------------+
->       |       +---+       +---+          |
->       |           |       |              |
->       v           v       v              v
-> +------------+  +------------+  +------------+---> VGA
-> | TV Encoder |  |    HDMI    |  | TV Encoder |---> Composite
-> +------------+  +------------+  +------------+
-> 
-> The current code only assumes that there is a single instance of all
-> the controllers. It also supports only the RGB and Composite
-> interfaces.
-> 
-> Let me know what you think,
-> Maxime
-> 
-> Changes from v3:
->   - Fixed a circular dependency issue found when building as a module
->   - Changed a bit the mode_valid checks
->   - Fixed an issue with the timings generated by the display engine
-> 
->   - Changed the DT bindings according to Rob feedback (removed the
->     allwinner,panel property, documented the endpoints indices, always
->     use the frontend as the pipeline entrypoint)
-> 
->   - Changed the display clocks according to Stephen comments (marked
->     structures as const, changed a variable name)
-> 
-> Changes from v2:
->   - Rebased on top of next-20160318
-> 
->   - Dropped the generic clock regmap conversion and implemented a
->     custom clock for our pixel clock, backed by a regmap
->   - Added the reset bits for the tcon channel 0 and display clocks
->   - Used the new generic gates compatible for the DRAM gates
->   - Few clock fixes (missing iounmap, return error checks, etc)
->   - Found out that the TCON channel 1 clock was not operating properly
->     because of some weird rounding down and up between the various
->     generic clocks involved. Rewrote it using custom operations
-> 
->   - Removed some TODO that were still there
->   - Converted our panel DT description to the OF graph instead of a
->     custom property
->   - Tested the driver on a setup where U-Boot was not initialising the
->     display, or initialising it on a different output, and fixed a
->     number of associated bugs (mostly related to missing
->     initialisation bits, missing reset handles, and so on)
->   - Fixed the layer code that was assuming that the X and Y
->     coordinates were in pixels, leading to a miscalculation of the
->     buffer address when those coordinates where set.
->   - Added the missing EXPORT_SYMBOL calls
-> 
->   - Fixed our VBLANK interrupt code that was completely broken (and
->     not usable, which is why it was unnoticed)
-> 
-> Changes from v1:
->   - Rebased on top of 4.4
-> 
->   - Merged the clock drivers for the display and TCON channel 0 clocks
->   - Replaced the container_of calls in the display reset clocks to an
->     inline function
->   - Checked the return code of of_clk_parent_fill in the clocks
->     drivers
->   - Checked the return code of of_clk_add_provider in the tcon-ch1 and
->     PLL3 clocks
->   - Added missing clocks headers
->   - Created a composite clock unregister function
-> 
->   - Moved the binding documentation to
->     Documentation/devicetree/bindings/display
->   - Added the clocks binding documentation
->   - Added the Olimex vendor to the list of DT vendors
->   - Moved to the OF graph representation and the component framework
-> 
->   - Moved the reset cells count check into the reset framework to
->     avoid duplicating the code in every xlate implementation.
->   - Made the reset_ops const
-> 
->   - Reworked the DRM cmdline mode parsing code to allow named mode
->   - Fixed the TV mode lookup when the mode name is not present (for
->     example because it was given by the userspace)
-> 
->   - Made the driver outputs optional (to avoid crashing when a board
->     doesn't have either a panel or a composite output enabled)
->   - Added multiple plane support with transparency
->   - Moved the backend registers writes commit in the CRTC atomic_flush
->     callback
->   - Removed the load / unload functions
->   - Removed the enabled booleans in my private structure and removed
->     the implicit call to disable_unused_functions in the DRM core to
->     push it in the drivers.
->   - Fixed a few bitmasks on some bitfields definition
->   - Fixed the RGB connector mode validation that was not testing the
->     right values				  
+This one is interesting..
+BayLibre uEVM:
+https://storage.kernelci.org/next/next-20160504/arm-omap2plus_defconfig/lab-baylibre-seattle/boot-omap5-uevm_rootfs:mmc.txt
 
-Applied the DT patches.
+My uEVM:
+https://github.com/nmenon/kernel-test-logs/blob/next-20160504/omap2plus_defconfig/omap5-evm.txt
 
-Maxime
+Mine boots, but BayLibre one does not. So, that got me started
+thinking it was bootloader... but then I realize it could be SDCard
+since they are dual voltage. U-boot starting v2013.07-rc1 included
+code that would set to bypass or program voltage for LDO9 based on
+card voltage needed. It is possible (since my card seems to need 3.0v,
+not 3.3v), that bypass to VCC_3v3_SDIO was never needed - but the
+cards that Baylibre board could probably be setup in bypass.
+
+I will send in a patch assuming (without access to igev5 schematics -
+based on how it seems to be booting), that sdio path.
+
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---WbqItKNU/G8FVTDf--
+Regards,
+Nishanth Menon
