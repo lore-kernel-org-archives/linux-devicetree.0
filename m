@@ -1,103 +1,112 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/4] clk: renesas: Add r8a7796 CPG Core Clock Definitions
-Date: Wed,  4 May 2016 16:35:41 +0200
-Message-ID: <1462372543-31835-3-git-send-email-geert+renesas@glider.be>
-References: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Subject: [PATCH 0/4] clk: renesas: cpg-mssr: Add support for R-Car M3-W
+Date: Wed,  4 May 2016 16:35:39 +0200
+Message-ID: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add all R-Car M3-W Clock Pulse Generator Core Clock Outputs, as listed
-in Table 8.2b ("List of Clocks [R-Car M3-W]") of the R-Car Gen3
-datasheet (rev. 0.51 + Errata for Rev051 Mar 31 2016).
+	Hi Mike, Stephen,
 
-Note that internal CPG clocks (S0, S1, S2, S3, SDSRC, and SSPSRC) are
-not included, as they are used as internal clock sources only, and never
-referenced from DT.
+This patch series adds initial support for the Clock Pulse Generator and
+Module Standby and Software Reset modules on the Renesas R-Car M3-W
+SoC:
+  - Basic core clocks,
+  - SCIF2 (console) module clock,
+  - INTC-AP (GIC) module clock (disabled pending CLK_ENABLE_HAND_OFF).
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- include/dt-bindings/clock/r8a7796-cpg-mssr.h | 69 ++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Support for more core and module clocks will be added incrementally.
+
+/sys/kernel/debug/clk/clk_summary output:
+
+       clock            enable_cnt  prepare_cnt        rate   accuracy   phase
+    ---------------------------------------------------------------------------
+     scif                        1            1    14745600          0 0
+     extalr                      0            0           0          0 0
+     extal                       1            1    16666666          0 0
+	cp                       0            0     8333333          0 0
+	.main                    1            1    16666666          0 0
+	   .pll4                 0            0  2399999904          0 0
+	   .pll3                 0            0  3199999872          0 0
+	   .pll2                 0            0  2399999904          0 0
+	   .pll1                 1            1  3199999872          0 0
+	      .pll1_div2         1            1  1599999936          0 0
+		 cl              0            0    33333332          0 0
+		 zx              0            0   799999968          0 0
+		 zt              0            0   399999984          0 0
+		 ztrd2           0            0   133333328          0 0
+		 ztr             0            0   266666656          0 0
+		 .s3             2            2   266666656          0 0
+		    s3d4         1            1    66666664          0 0
+		       scif2     2            2    66666664          0 0
+		    s3d2         0            0   133333328          0 0
+		    s3d1         2            2   266666656          0 0
+		       intc-ap   1            1   266666656          0 0
+		 .s2             0            0   399999984          0 0
+		    s2d4         0            0    99999996          0 0
+		    s2d2         0            0   199999992          0 0
+		    s2d1         0            0   399999984          0 0
+		 .s1             0            0   533333312          0 0
+		    s1d4         0            0   133333328          0 0
+		    s1d2         0            0   266666656          0 0
+		    s1d1         0            0   533333312          0 0
+		 .s0             0            0   799999968          0 0
+		    s0d12        0            0    66666664          0 0
+		    s0d8         0            0    99999996          0 0
+		    s0d6         0            0   133333328          0 0
+		    s0d4         0            0   199999992          0 0
+		    s0d3         0            0   266666656          0 0
+		    s0d2         0            0   399999984          0 0
+		    s0d1         0            0   799999968          0 0
+		 .pll1_div4      0            0   799999968          0 0
+	   .pll0                 0            0  2999999880          0 0
+
+For your convenience, I've pushed this series to the
+topic/r8a7796-clk-v1 branch of
+https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git.
+
+Integration with renesas-drivers-2016-04-26-v4.6-rc5, and minimal board
+integration for testing is available in the topic/gen3-latest branch.
+
+This has received minimal testing on r8a7796/salvator-x, and regression
+testing on r8a7795/salvator-x (ES1.0 and ES1.1).
+
+Thanks for your comments!
+
+Geert Uytterhoeven (4):
+  clk: renesas: cpg-mssr: Document r8a7796 support
+  clk: renesas: Add r8a7796 CPG Core Clock Definitions
+  clk: renesas: cpg-mssr: Extract common R-Car Gen3 support code
+  clk: renesas: cpg-mssr: Add support for R-Car M3-W
+
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   7 +-
+ drivers/clk/renesas/Kconfig                        |   1 +
+ drivers/clk/renesas/Makefile                       |   3 +-
+ drivers/clk/renesas/r8a7795-cpg-mssr.c             | 360 +--------------------
+ drivers/clk/renesas/r8a7796-cpg-mssr.c             | 192 +++++++++++
+ drivers/clk/renesas/rcar-gen3-cpg.c                | 359 ++++++++++++++++++++
+ drivers/clk/renesas/rcar-gen3-cpg.h                |  43 +++
+ drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
+ drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
+ include/dt-bindings/clock/r8a7796-cpg-mssr.h       |  69 ++++
+ 10 files changed, 682 insertions(+), 359 deletions(-)
+ create mode 100644 drivers/clk/renesas/r8a7796-cpg-mssr.c
+ create mode 100644 drivers/clk/renesas/rcar-gen3-cpg.c
+ create mode 100644 drivers/clk/renesas/rcar-gen3-cpg.h
  create mode 100644 include/dt-bindings/clock/r8a7796-cpg-mssr.h
 
-diff --git a/include/dt-bindings/clock/r8a7796-cpg-mssr.h b/include/dt-bindings/clock/r8a7796-cpg-mssr.h
-new file mode 100644
-index 0000000000000000..1e5942695f0dd057
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a7796-cpg-mssr.h
-@@ -0,0 +1,69 @@
-+/*
-+ * Copyright (C) 2016 Renesas Electronics Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#ifndef __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__
-+#define __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+/* r8a7796 CPG Core Clocks */
-+#define R8A7796_CLK_Z			0
-+#define R8A7796_CLK_Z2			1
-+#define R8A7796_CLK_ZR			2
-+#define R8A7796_CLK_ZG			3
-+#define R8A7796_CLK_ZTR			4
-+#define R8A7796_CLK_ZTRD2		5
-+#define R8A7796_CLK_ZT			6
-+#define R8A7796_CLK_ZX			7
-+#define R8A7796_CLK_S0D1		8
-+#define R8A7796_CLK_S0D2		9
-+#define R8A7796_CLK_S0D3		10
-+#define R8A7796_CLK_S0D4		11
-+#define R8A7796_CLK_S0D6		12
-+#define R8A7796_CLK_S0D8		13
-+#define R8A7796_CLK_S0D12		14
-+#define R8A7796_CLK_S1D1		15
-+#define R8A7796_CLK_S1D2		16
-+#define R8A7796_CLK_S1D4		17
-+#define R8A7796_CLK_S2D1		18
-+#define R8A7796_CLK_S2D2		19
-+#define R8A7796_CLK_S2D4		20
-+#define R8A7796_CLK_S3D1		21
-+#define R8A7796_CLK_S3D2		22
-+#define R8A7796_CLK_S3D4		23
-+#define R8A7796_CLK_LB			24
-+#define R8A7796_CLK_CL			25
-+#define R8A7796_CLK_ZB3			26
-+#define R8A7796_CLK_ZB3D2		27
-+#define R8A7796_CLK_ZB3D4		28
-+#define R8A7796_CLK_CR			29
-+#define R8A7796_CLK_CRD2		30
-+#define R8A7796_CLK_SD0H		31
-+#define R8A7796_CLK_SD0			32
-+#define R8A7796_CLK_SD1H		33
-+#define R8A7796_CLK_SD1			34
-+#define R8A7796_CLK_SD2H		35
-+#define R8A7796_CLK_SD2			36
-+#define R8A7796_CLK_SD3H		37
-+#define R8A7796_CLK_SD3			38
-+#define R8A7796_CLK_SSP2		39
-+#define R8A7796_CLK_SSP1		40
-+#define R8A7796_CLK_SSPRS		41
-+#define R8A7796_CLK_RPC			42
-+#define R8A7796_CLK_RPCD2		43
-+#define R8A7796_CLK_MSO			44
-+#define R8A7796_CLK_CANFD		45
-+#define R8A7796_CLK_HDMI		46
-+#define R8A7796_CLK_CSI0		47
-+#define R8A7796_CLK_CSIREF		48
-+#define R8A7796_CLK_CP			49
-+#define R8A7796_CLK_CPEX		50
-+#define R8A7796_CLK_R			51
-+#define R8A7796_CLK_OSC			52
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A7796_CPG_MSSR_H__ */
 -- 
 1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
