@@ -1,59 +1,67 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
-Date: Wed, 4 May 2016 10:26:35 -0700
-Message-ID: <20160504172634.GS5995@atomide.com>
-References: <1461925297-9734-1-git-send-email-peter.ujfalusi@ti.com>
- <6ee9d67a-e907-715a-f3f5-d90a470314c3@ti.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [v9, 6/7] MAINTAINERS: add entry for Freescale SoC driver
+Date: Wed, 04 May 2016 12:35:08 -0500
+Message-ID: <1462383308.16584.43.camel@buserror.net>
+References: <1462332274-13744-1-git-send-email-yangbo.lu@nxp.com>
+	 <1462332274-13744-7-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6ee9d67a-e907-715a-f3f5-d90a470314c3-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1462332274-13744-7-git-send-email-yangbo.lu@nxp.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>, linux-mmc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc: ulf.hansson@linaro.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang Zhao <qiang.zhao@nxp.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, leoyang.li@nxp.com, xiaobo.xie@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Adding Nishanth to Cc.
-
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160429 05:15]:
-> ldo7_reg, obviously ;)
+On Wed, 2016-05-04 at 11:24 +0800, Yangbo Lu wrote:
+> Add maintainer entry for Freescale SoC driver including
+> the QE library and the GUTS driver now. Also add maintainer
+> for QE library.
 > 
-> > 	status = "okay";
-> > 	regulator-min-microvolt = <1800000>;
-> > 	regulator-max-microvolt = <1800000>;
-> > };
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> ---
+> Changes for v8:
+> 	- Added this patch
+> Changes for v9:
+> 	- Added linux-arm mail list
+> 	- Removed GUTS driver entry
+> ---
+>  MAINTAINERS | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 42e65d1..ce91db7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4622,9 +4622,18 @@ F:	drivers/net/ethernet/freescale/fec_ptp.c
+>  F:	drivers/net/ethernet/freescale/fec.h
+>  F:	Documentation/devicetree/bindings/net/fsl-fec.txt
+>  
+> +FREESCALE SOC DRIVER
+> +M:	Scott Wood <oss@buserror.net>
+> +L:	linuxppc-dev@lists.ozlabs.org
+> +L:	linux-arm-kernel@lists.infradead.org
+> +S:	Maintained
+> +F:	drivers/soc/fsl/
+> +F:	include/linux/fsl/
+> +
+>  FREESCALE QUICC ENGINE LIBRARY
+> +M:	Qiang Zhao <qiang.zhao@nxp.com>
+>  L:	linuxppc-dev@lists.ozlabs.org
+> -S:	Orphan
+> +S:	Maintained
+>  F:	drivers/soc/fsl/qe/
+>  F:	include/soc/fsl/*qe*.h
+>  F:	include/soc/fsl/*ucc*.h
 
-It really seems to be ldo7, otherwise there's no HDMI output. I don't
-have the schematics either.
+s/DRIVER/DRIVERS/
 
-But it seems we have at least two other regressions in Linux next that
-prevent me from testing this properly:
+There's more than one.
 
-1. On igepv5, I get this for the MMC regulator
+Otherwise:
+Acked-by: Scott Wood <oss@buserror.net>
 
-ldo9: bypassed regulator has no supply!
-ldo9: failed to get the current voltage(-517)
-palmas-pmic 48070000.i2c:palmas@48:palmas_pmic: failed to register 48070000.i2c:palmar
+-Scott
 
-I'm pretty sure it really is using the ldo9 for MMC just like
-omap5-uevm.. Nishanth suggested it may use something else, but
-why would it as ldo9 has a nice voltage range?
-
-2. On both omap5-uevm and igepv5, NFSroot hangs
-
-It seems that NFSroot boots to the point where PM runtime now
-just shuts down some regulator affecting the USB connected
-smsc Ethernet adapter?
-
-Regards,
-
-Tony
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
