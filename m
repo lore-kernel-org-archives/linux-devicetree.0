@@ -1,65 +1,63 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [v9, 6/7] MAINTAINERS: add entry for Freescale SoC driver
-Date: Wed, 4 May 2016 09:43:38 +0200
-Message-ID: <CAPDyKFoh7mfmMYxVxjG6jrRr6CuGKkuxdeON4yxX3yXFEamikg@mail.gmail.com>
-References: <1462332274-13744-1-git-send-email-yangbo.lu@nxp.com>
-	<1462332274-13744-7-git-send-email-yangbo.lu@nxp.com>
+From: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver
+ code
+Date: Wed, 4 May 2016 09:52:19 +0200
+Message-ID: <5729AA33.6020305@st.com>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <6161197.8XCk69TI60@wuerfel>
+ <20160426111532.GA5457@griffinp-ThinkPad-X1-Carbon-2nd>
+ <5608365.uloflbeuqO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1462332274-13744-7-git-send-email-yangbo.lu@nxp.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Yangbo Lu <yangbo.lu@nxp.com>, Scott Wood <oss@buserror.net>, Qiang Zhao <qiang.zhao@nxp.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5608365.uloflbeuqO@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 May 2016 at 05:24, Yangbo Lu <yangbo.lu@nxp.com> wrote:
-> Add maintainer entry for Freescale SoC driver including
-> the QE library and the GUTS driver now. Also add maintainer
-> for QE library.
->
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+hello Arnd, peter,
 
-So I need an ack from Scott and Qiang for this one, then I intend to
-queue up the series.
+On 04/26/2016 01:44 PM, Arnd Bergmann wrote:
+> On Tuesday 26 April 2016 12:15:32 Peter Griffin wrote:
+>>>
+>>>> If not what would you recommend instead? 
+>>>
+>>> It's still not clear to me what that bit in the syscfg register
+>>> is for. Given the error message about "sti-audio-clk-glue",
+>>> I suspect that this is actually a clock controller and that
+>>> it should be using the clock binding with a separate driver
+>>> instead of manipulating the regmap directly from the audio driver.
+>>
+>> Luckily I do have the datasheet for the audio-glue sysconf register.
+>>
+>> It says: -
+>>
+>> [11:8] PCM_CLK_SEL: Selects the frequency synthesizer clock or the external
+>> PCM clock for each channel.
+>>
+>> The driver only ever sets this to 1 which selects the frequency synthesizer
+>> clock. So the bitfield of the register which the driver is using (PCM_CLK_SEL)
+>> is a clock mux.
+> 
+> Ok, that sounds like it could be either a really simple clock driver
+> with just a few lines, or integrated into an existing clock driver
+> if you already have one for this syscon node.
+> 
+> 	Arnd
+> 
+FYI, Name of this glue is related to the register name. But it does not
+concern only clock...
+ This glue register is used to :
+- select clock source ( clock framework or external clock from GPIO)
+=> one bit field per IP instance (player->clk_sel)
+- select uniperiph player IP instance for PCM out.
+(http://www.spinics.net/lists/alsa-devel/msg49034.html)
 
-Kind regards
-Uffe
-
-> ---
-> Changes for v8:
->         - Added this patch
-> Changes for v9:
->         - Added linux-arm mail list
->         - Removed GUTS driver entry
-> ---
->  MAINTAINERS | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 42e65d1..ce91db7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4622,9 +4622,18 @@ F:       drivers/net/ethernet/freescale/fec_ptp.c
->  F:     drivers/net/ethernet/freescale/fec.h
->  F:     Documentation/devicetree/bindings/net/fsl-fec.txt
->
-> +FREESCALE SOC DRIVER
-> +M:     Scott Wood <oss@buserror.net>
-> +L:     linuxppc-dev@lists.ozlabs.org
-> +L:     linux-arm-kernel@lists.infradead.org
-> +S:     Maintained
-> +F:     drivers/soc/fsl/
-> +F:     include/linux/fsl/
-> +
->  FREESCALE QUICC ENGINE LIBRARY
-> +M:     Qiang Zhao <qiang.zhao@nxp.com>
->  L:     linuxppc-dev@lists.ozlabs.org
-> -S:     Orphan
-> +S:     Maintained
->  F:     drivers/soc/fsl/qe/
->  F:     include/soc/fsl/*qe*.h
->  F:     include/soc/fsl/*ucc*.h
-> --
-> 2.1.0.27.g96db324
->
+Regards
+Arnaud
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
