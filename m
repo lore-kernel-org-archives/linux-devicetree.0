@@ -1,76 +1,73 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
-Date: Wed, 4 May 2016 13:01:33 -0500
-Message-ID: <572A38FD.9050801@ti.com>
-References: <1461925297-9734-1-git-send-email-peter.ujfalusi@ti.com>
- <6ee9d67a-e907-715a-f3f5-d90a470314c3@ti.com>
- <20160504172634.GS5995@atomide.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 9/9] dt-bindings: msm/dsi: Add assigned clocks bindings
+Date: Wed, 4 May 2016 23:34:39 +0530
+Message-ID: <572A39B7.5020008@codeaurora.org>
+References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
+ <1462273081-5814-10-git-send-email-architt@codeaurora.org>
+ <20160504134416.GA1235@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160504172634.GS5995@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160504134416.GA1235@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: robdclark@gmail.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, heiko@sntech.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/2016 12:26 PM, Tony Lindgren wrote:
-> Hi,
-> 
-> Adding Nishanth to Cc.
-> 
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [160429 05:15]:
->> ldo7_reg, obviously ;)
+
+
+On 5/4/2016 7:14 PM, Rob Herring wrote:
+> On Tue, May 03, 2016 at 04:28:01PM +0530, Archit Taneja wrote:
+>> The PLL in the DSI PHY block generates 2 clock outputs (Byte and Pixel
+>> clocks) that are fed into the Multimedia Clock Controller (MMCC). The MMCC
+>> uses these as source clocks for some of its RCGs to generate clocks that
+>> finally feed to the DSI host controller.
 >>
->>> 	status = "okay";
->>> 	regulator-min-microvolt = <1800000>;
->>> 	regulator-max-microvolt = <1800000>;
->>> };
-> 
-> It really seems to be ldo7, otherwise there's no HDMI output. I don't
-> have the schematics either.
-> 
-> But it seems we have at least two other regressions in Linux next that
-> prevent me from testing this properly:
-> 
-> 1. On igepv5, I get this for the MMC regulator
-> 
-> ldo9: bypassed regulator has no supply!
-> ldo9: failed to get the current voltage(-517)
-> palmas-pmic 48070000.i2c:palmas@48:palmas_pmic: failed to register 48070000.i2c:palmar
-> 
-> I'm pretty sure it really is using the ldo9 for MMC just like
-> omap5-uevm.. Nishanth suggested it may use something else, but
-> why would it as ldo9 has a nice voltage range?
-> 
-> 2. On both omap5-uevm and igepv5, NFSroot hangs
-> 
-> It seems that NFSroot boots to the point where PM runtime now
-> just shuts down some regulator affecting the USB connected
-> smsc Ethernet adapter?
-> 
-> Regards,
+>> Use the assigned clocks DT bindings to set up the MMCC RCGs that feed to
+>> the DSI host. Use the DSI PHY provided clocks to set up the parents
+>> of these assigned clocks.
+>>
+>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/display/msm/dsi.txt | 15 +++++++++++++++
+>>   1 file changed, 15 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> index 0223f06..686f475 100644
+>> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> @@ -22,6 +22,10 @@ Required properties:
+>>     * "core_clk"
+>>     For DSIv2, we need an additional clock:
+>>      * "src_clk"
+>> +- assigned-clocks: Parents of "byte_clk" and "pixel_clk" for the given platform.
+>> +  See [1] for more details.
+>> +- assigned-clock-parents: The Byte clock and Pixel clock PLL outputs provided
+>> +  by a DSI PHY block.
+>>   - vdd-supply: phandle to vdd regulator device node
+>>   - vddio-supply: phandle to vdd-io regulator device node
+>>   - vdda-supply: phandle to vdda regulator device node
+>> @@ -90,6 +94,8 @@ Required properties:
+>>     * "dsi_pll"
+>>     * "dsi_phy"
+>>     * "dsi_phy_regulator"
+>> +- clock-cells: Must be 1. The DSI PHY block acts as a clock provider, creating
+>> +  2 clocks: A byte clock (index 0), and a pixel clock (index 1).
+>
+> You can't really add new required properties unless they are for a new
+> compatible string.
 
-This one is interesting..
-BayLibre uEVM:
-https://storage.kernelci.org/next/next-20160504/arm-omap2plus_defconfig/lab-baylibre-seattle/boot-omap5-uevm_rootfs:mmc.txt
+Does this hold even when currently there isn't any device tree file in
+the kernel that has this DT node in it?
 
-My uEVM:
-https://github.com/nmenon/kernel-test-logs/blob/next-20160504/omap2plus_defconfig/omap5-evm.txt
+I was trying to get all the properties in place before posting out
+patches that actually add the nodes into the platform files. Currently,
+they exist only DT files in downstream kernels.
 
-Mine boots, but BayLibre one does not. So, that got me started
-thinking it was bootloader... but then I realize it could be SDCard
-since they are dual voltage. U-boot starting v2013.07-rc1 included
-code that would set to bypass or program voltage for LDO9 based on
-card voltage needed. It is possible (since my card seems to need 3.0v,
-not 3.3v), that bypass to VCC_3v3_SDIO was never needed - but the
-cards that Baylibre board could probably be setup in bypass.
-
-I will send in a patch assuming (without access to igev5 schematics -
-based on how it seems to be booting), that sdio path.
-
+Thanks,
+Archit
 
 -- 
-Regards,
-Nishanth Menon
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
