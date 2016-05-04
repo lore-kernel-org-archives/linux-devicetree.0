@@ -1,36 +1,66 @@
-From: Anders Darander <anders@chargestorm.se>
-Subject: Re: [PATCH] leds-pca963x: add bindings to invert polarity
-Date: Wed, 4 May 2016 09:55:08 +0200
-Message-ID: <20160504075508.GA22125@ad.chargestorm.se>
-References: <1462182104-21450-1-git-send-email-anders@chargestorm.se>
- <5729A4AB.5080901@samsung.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 0/3] Add support for Tegra210 ADMA
+Date: Wed, 4 May 2016 09:04:41 +0100
+Message-ID: <5729AD19.2010807@nvidia.com>
+References: <1461940758-25722-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5729A4AB.5080901@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: rpurdie@rpsys.net, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Olliver Schinagl <oliver@schinagl.nl>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461940758-25722-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Vinod,
 
-Thanks for the info.
+Let me know if you are ok to pick up this version?
 
-* Jacek Anaszewski <j.anaszewski@samsung.com> [160504 09:28]:
-> Please note that there has already been an attempt to add
-> the support for inverted output polarity to this driver and related
-> discussion [1]. This thread remains quiet for around two weeks.
+Cheers
+Jon
 
-Ah, nice coincidence! Unfortunately, I made the work earlier than his
-posting, otherwise I could have spent the time on somethinge else. ;)
-
-Well, then I hope v2 of his patches comes along.
-
-Cheers,
-Anders
-
--- 
-Anders Darander, Senior System Architect
-ChargeStorm AB / eStorm AB
+On 29/04/16 15:39, Jon Hunter wrote:
+> Add support for the Tegra210 Audio DMA (ADMA) controller which is part
+> of the Audio Processing Engine and used for transferring audio data.
+> 
+> V5 changes:
+> - Removed APE and APE2APB clocks as these clocks rightfully belong
+>   in the ACONNECT bus driver [0] and the ADMA is child of this device.
+>   Dropped power-domain from DT binding as this will be handled by
+>   ACONNECT bus driver as well.
+> - Minor update to case statement formatting based upon feedback from
+>   Vinod.
+> - Make ADMA dependent on Tegra210 as this is the only device
+>   (currently) that supports it.
+> 
+> V4 changes:
+> - Updated DT binding to include 'power-domains' entry for handling
+>   the APE power domain inconjunction with runtime-pm.
+> - Added missing clocks to the DT binding that were being handled by
+>   the bootloader.
+> - Added support for PM_CLK to simplify clock handling
+> 
+> V3 changes:
+> - Updated DT binding per feedback from Mark and Stephen
+> - Fixed up items mentioned by Vinod
+> 
+> V2 changes:
+> - Re-worked device-tree binding
+> 
+> [0] http://marc.info/?l=devicetree&m=146193804830747&w=2
+> 
+> Jon Hunter (3):
+>   Documentation: DT: Add binding documentation for NVIDIA ADMA
+>   dmaengine: tegra-adma: Add support for Tegra210 ADMA
+>   MAINTAINERS: Update Tegra DMA maintainers
+> 
+>  .../bindings/dma/nvidia,tegra210-adma.txt          |  57 ++
+>  MAINTAINERS                                        |   5 +-
+>  drivers/dma/Kconfig                                |  14 +
+>  drivers/dma/Makefile                               |   1 +
+>  drivers/dma/tegra210-adma.c                        | 853 +++++++++++++++++++++
+>  5 files changed, 928 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+>  create mode 100644 drivers/dma/tegra210-adma.c
+> 
