@@ -1,119 +1,189 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v10 0/8] Add MT8173 Video Encoder Driver and VPU Driver
-Date: Wed, 4 May 2016 17:21:22 +0800
-Message-ID: <1462353682.1891.7.camel@mtksdaap41>
-References: <1462270287-11374-1-git-send-email-tiffany.lin@mediatek.com>
-	 <5729A57E.1080505@xs4all.nl> <1462349987.1891.5.camel@mtksdaap41>
-	 <5729B20B.6090006@xs4all.nl>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v7 2/2] memory: atmel-ebi: add DT bindings documentation
+Date: Wed, 4 May 2016 11:38:52 +0200
+Message-ID: <20160504113852.10a2dd84@bbrezillon>
+References: <1461845007-23139-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1461845007-23139-2-git-send-email-boris.brezillon@free-electrons.com>
+	<20160503164019.GA1604@rob-hp-laptop>
+	<20160503185153.5cfddc32@bbrezillon>
+	<CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5729B20B.6090006-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Rob,
 
-On Wed, 2016-05-04 at 10:25 +0200, Hans Verkuil wrote:
-> 
-> On 05/04/2016 10:19 AM, tiffany lin wrote:
-> > Hi Hans,
-> > 
-> > On Wed, 2016-05-04 at 09:32 +0200, Hans Verkuil wrote:
-> >> Hi Tiffany,
-> >>
-> >> On 05/03/2016 12:11 PM, Tiffany Lin wrote:
-> >>> ==============
-> >>>  Introduction
-> >>> ==============
-> >>>
-> >>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
-> >>> Mediatek Video Codec is able to handle video encoding of in a range of formats.
-> >>>
-> >>> This patch series also include VPU driver. Mediatek Video Codec driver rely on VPU driver to load,
-> >>> communicate with VPU.
-> >>>
-> >>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
-> >>> This patch series need [PATCH v15 8/8] memory: mtk-smi: export mtk_smi_larb_get/put[1] to build as module
-> >>>
-> >>> [1]http://lists.infradead.org/pipermail/linux-mediatek/2016-April/005173.html
-> >>>
-> >>> ==================
-> >>>  Device interface
-> >>> ==================
-> >>>
-> >>> In principle the driver bases on v4l2 memory-to-memory framework:
-> >>> it provides a single video node and each opened file handle gets its own private context with separate
-> >>> buffer queues. Each context consist of 2 buffer queues: OUTPUT (for source buffers, i.e. raw video
-> >>> frames) and CAPTURE (for destination buffers, i.e. encoded video frames).
-> >>>
-> >>> ==============================
-> >>>  VPU (Video Processor Unit)
-> >>> ==============================
-> >>> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
-> >>> It is able to handle video decoding/encoding in a range of formats.
-> >>> The driver provides with VPU firmware download, memory management and the communication interface between CPU and VPU.
-> >>> For VPU initialization, it will create virtual memory for CPU access and physical address for VPU hw device access. 
-> >>> When a decode/encode instance opens a device node, vpu driver will download vpu firmware to the device.
-> >>> A decode/encode instant will decode/encode a frame using VPU interface to interrupt vpu to handle decoding/encoding jobs.
-> >>>
-> >>> Please have a look at the code and comments will be very much appreciated.
-> >>>
-> >>> Change in v10:
-> >>> 1. Fix smatch/sparse error message
-> >>> 2. Add depends on ARM || ARM64 and MTK_IOMMU in Kconfig
-> >>
-> >> I don't like the ARM or ARM64 dependency since that makes COMPILE_TEST harder.
-> >>
-> >> I removed it here and for the VPU and everything still compiles fine with
-> >> sparse and smatch. So I'll drop those dependencies.
-> >>
-> >> Why is the MTK_IOMMU dependency needed? Just curious.
-> >>
-> > This is because we need MTK_IOMMU module to get dma continuous memory
-> > for HW.
-> > 
-> >> Note that sparse still complains about this:
-> >>
-> >> media-git/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c:261:24: warning: incorrect type in assignment (different base types)
-> >>
-> >> I think this code should be rewritten. Something like this would work
-> >> (if I understand the code correctly):
-> >>
-> >> u32 tag = (bs_hdr_len << 5) | 0x10 | not_key;
-> >>
-> >> ac_tag[0] = tag & 0xff;
-> >> ac_tag[1] = (tag >> 8) & 0xff;
-> >> ac_tag[2] = (tag >> 16) & 0xff;
-> >>
-> >> It's perhaps a bit more verbose, but a lot easier to understand.
-> >>
-> > 
-> >> I'm accepting this driver but I'll remove the ARM || ARM64 dependency. Can
-> >> you post a follow-up patch for this sparse warning?
-> >>
-> > 
-> > Got it. We will provide a patch to fix this.
-> > I was curious why my sparse do not show this warning.
-> > Is there any parameter I need to set except C=1?
-> 
-> I'm running it with these parameters: C=2 CF="-D__CHECK_ENDIAN__"
-> 
-> I suspect it is the CHECK_ENDIAN flag that does it.
-> 
-Got it, thanks for the information.
+On Tue, 3 May 2016 14:11:04 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-best regards,
-Tiffany
-> Regards,
+> On Tue, May 3, 2016 at 11:51 AM, Boris Brezillon
+> <boris.brezillon@free-electrons.com> wrote:
+> > Hi Rob,
+> >
+> > On Tue, 3 May 2016 11:40:19 -0500
+> > Rob Herring <robh@kernel.org> wrote:
+> >
+> >> On Thu, Apr 28, 2016 at 02:03:27PM +0200, Boris Brezillon wrote:
+> >> > The EBI (External Bus Interface) is used to access external peripherals
+> >> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> >> > Each device is assigned a CS line and an address range and can have its
+> >> > own configuration (timings, access mode, bus width, ...).
+> >> > This driver provides a generic DT binding to configure a device according
+> >> > to its requirements.
+> >> > For specific device controllers (like the NAND one) the SMC timings
+> >> > should be configured by the controller driver through the matrix and smc
+> >> > syscon regmaps.
+> >> >
+> >> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> >> > ---
+> >> >  .../bindings/memory-controllers/atmel,ebi.txt      | 136 +++++++++++++++++++++
+> >> >  1 file changed, 136 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> >> > new file mode 100644
+> >> > index 0000000..a6dca5c
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+> >> > @@ -0,0 +1,136 @@
+> >> > +* Device tree bindings for Atmel EBI
+> >> > +
+> >> > +The External Bus Interface (EBI) controller is a bus where you can connect
+> >> > +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
+> >> > +The EBI provides a glue-less interface to asynchronous memories through the SMC
+> >> > +(Static Memory Controller).
+> >> > +
+> >> > +Required properties:
+> >> > +
+> >> > +- compatible:              "atmel,at91sam9260-ebi"
+> >> > +                   "atmel,at91sam9261-ebi"
+> >> > +                   "atmel,at91sam9263-ebi0"
+> >> > +                   "atmel,at91sam9263-ebi1"
+> >>
+> >> What are the differences between 0 and 1?
+> >
+> > Because this SoC has 2 EBI busses with different capabilities.
 > 
-> 	Hans
+> Okay, correct answer. :)
+> 
+> [...]
+> 
+> >>
+> >> > +                   of the memory region requested by the device.
+> >> > +
+> >> > +EBI bus configuration associated with specific chip-select will be defined in
+> >> > +the configs subnode. This configs node will in turn contain several subnodes
+> >> > +named config-<cs-id>, each of them containing the following properties.
+> >>
+> >> This is a bit unusual. Why not just part of the child device nodes?
+> >
+> > Oh, come on! I reworked the binding because Mark complained about the
+> > previous binding which was doing exactly what you're suggesting. Can
+> > you please be consistent in your reviews...
+> 
+> No, Mark and I both have our opinions. Which part of this patch
+> explains the history?
 
+Hm, it's in patch 1/2 (just dropped the cover letter, which might not
+be such a good idea).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If the revision history is not in the patch, I'm
+> not looking at it.
+> 
+> My issue with it this way is that it has invented yet another way to
+> describe timings. I would like to be consistent across external bus
+> descriptions, but we're not very consistent to begin with though. The
+> most common seems to be the way you first did it. But I agree that it
+> is kind of screwy to have an intermediate node unless the controller
+> itself has sub-blocks within it and is not the established way to
+> describe a bus with chip selects. I would either put the properties
+> directly in the child nodes (e.g. flash@0,0) or put your config nodes
+> in the device node. I'd call it timings instead of config, but that's
+> just bikeshedding.
+
+Well, it's not only describing timings (see atmel,bus-width,
+atmel,byte-access-type, ...), but I'm fine with either names :).
+
+> 
+> memory-controller@1000 {
+>   ...
+>   flash@0,0 {
+>     timings {
+>       ...
+>     };
+>   };
+> };
+
+Okay. Mark, what do you think of this approach?
+
+Note that one of my previous version was defining timings directly in
+the EBI device node, and Arnd noted that doing so may cause problems
+if one of the EBI property (or the config/timing node name) conflict
+with the sub-device binding, which is why I decided to put the EBI
+config definitions in a separate subnode.
+
+> 
+> >> > +
+> >> > +Optional config-<cs-id> node properties:
+> >> > +
+> >> > +- atmel,bus-width:         width of the asynchronous device's data bus
+> >> > +                           8, 16 or 32.
+> >> > +                           Default to 8 when undefined.
+> >> > +
+> >> > +- atmel,byte-access-type   "write" or "select" (see Atmel datasheet).
+> >> > +                           Default to "select" when undefined.
+> >> > +
+> >> > +- atmel,read-mode          "nrd" or "ncs".
+> >> > +                           Default to "ncs" when undefined.
+> >> > +
+> >> > +- atmel,write-mode         "nwe" or "ncs".
+> >> > +                           Default to "ncs" when undefined.
+> >> > +
+> >> > +- atmel,exnw-mode          "disabled", "frozen" or "ready".
+> >> > +                           Default to "disabled" when undefined.
+> >> > +
+> >> > +- atmel,page-mode          enable page mode if present. The provided value
+> >> > +                           defines the page size (supported values: 4, 8,
+> >> > +                           16 and 32).
+> >> > +
+> >> > +- atmel,tdf-mode:          "normal" or "optimized". When set to
+> >>
+> >> This should be boolean.
+> >
+> > It was a formerly defined as a boolean, and when it's done like that we
+> > have no way to identify whether the property was forgotten or
+> > intentionally set to normal mode. What's the problem with this approach?
+> 
+> Only preference to use boolean when that is sufficient. With your
+> argument, then we should never have booleans. You state that missing
+> means "normal", not forgotten, so all these properties should be
+> required with no default.
+> 
+> BTW, I debated the same thing on the other properties, but I could see
+> them being expanded to a 3rd mode. I don't see that here though.
+
+Well, another reason I switched to a string property is because I
+implemented hardware readout in v4, and decided to retrieve the current
+state from the hardware and only overload the config with what was
+defined in the DT. In this case, if we move to a boolean property we
+can't know whether the property is missing because we want to put the
+bus in "normal" mode or because we want to keep this config unchanged
+(keep the bootloader/bootstrap config).
+
+This is not true in v5, so maybe we should go back to the boolean
+atmel,tdf-optimized property.
+
+Thanks,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
