@@ -1,113 +1,104 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH] leds-pca963x: add bindings to invert polarity
-Date: Wed, 04 May 2016 09:28:43 +0200
-Message-ID: <5729A4AB.5080901@samsung.com>
-References: <1462182104-21450-1-git-send-email-anders@chargestorm.se>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm64: tegra: fix compatible string for Tegra132 fuse
+ node
+Date: Wed, 4 May 2016 15:32:34 +0800
+Message-ID: <5729A592.30407@nvidia.com>
+References: <1462266577-951-1-git-send-email-wni@nvidia.com> <20160503152111.GC19539@ulmo.ba.sec> <57295DAF.1050800@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1462182104-21450-1-git-send-email-anders@chargestorm.se>
-Sender: linux-leds-owner@vger.kernel.org
-To: Anders Darander <anders@chargestorm.se>
-Cc: rpurdie@rpsys.net, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Olliver Schinagl <oliver@schinagl.nl>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57295DAF.1050800-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anders,
 
-Thanks for the patch.
-Please note that there has already been an attempt to add
-the support for inverted output polarity to this driver and related
-discussion [1]. This thread remains quiet for around two weeks.
 
-Cc Olliver and Ricardo.
+On 2016=E5=B9=B405=E6=9C=8804=E6=97=A5 10:25, Wei Ni wrote:
+>=20
+>=20
+> On 2016=E5=B9=B405=E6=9C=8803=E6=97=A5 23:21, Thierry Reding wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On Tue, May 03, 2016 at 05:09:37PM +0800, Wei Ni wrote:
+>>> This patch changes the compatible of Tegra132 fuse node
+>>> to "nvidia,tegra132-efuse", instead of "nvidia,tegra1124-efuse".
+>>> Because the CONFIG_ARCH_TEGRA_124_SOC will not be enabled for
+>>> Tegra132, the fuse driver can't find the corresponding node.
+>>
+>> Okay, that's not really a good reason to modify the DTS. What we sho=
+uld
+>> do instead is make sure that the OF table contains the entry on Tegr=
+a132
+>> builds. Unless the IP block really is different and Tegra124 and
+>> Tegra132 aren't compatible in this regard after all.
+>>
+>> In the latter case the commit message should reflect the real reason=
+=2E
 
-[1] https://lkml.org/lkml/2016/4/19/95
+Hi Thierry,
+I read the Documentation/devicetree/bindings/fuse/nvidia,tegra20-fuse.t=
+xt, it
+has description:
+- compatible : For Tegra20, must contain "nvidia,tegra20-efuse".  For T=
+egra30,
+  must contain "nvidia,tegra30-efuse".  For Tegra114, must contain
+  "nvidia,tegra114-efuse".  For Tegra124, must contain "nvidia,tegra124=
+-efuse".
+  Otherwise, must contain "nvidia,<chip>-efuse", plus one of the above,=
+ where
+  <chip> is tegra132.
 
-Best regards,
-Jacek Anaszewski
+It mean for Tegra132, it should use "nvidia,tegra132-efuse".
 
-On 05/02/2016 11:41 AM, Anders Darander wrote:
-> Add a new DT property, nxp,inverted, to invert the polarity of the output.
->
-> Tested on PCA9634.
->
-> Signed-off-by: Anders Darander <anders@chargestorm.se>
-> ---
->   Documentation/devicetree/bindings/leds/pca963x.txt |  1 +
->   drivers/leds/leds-pca963x.c                        | 17 +++++++++++++++--
->   include/linux/platform_data/leds-pca963x.h         |  6 ++++++
->   3 files changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/leds/pca963x.txt b/Documentation/devicetree/bindings/leds/pca963x.txt
-> index dafbe99..68579c5 100644
-> --- a/Documentation/devicetree/bindings/leds/pca963x.txt
-> +++ b/Documentation/devicetree/bindings/leds/pca963x.txt
-> @@ -7,6 +7,7 @@ Optional properties:
->   - nxp,totem-pole : use totem pole (push-pull) instead of open-drain (pca9632 defaults
->     to open-drain, newer chips to totem pole)
->   - nxp,hw-blink : use hardware blinking instead of software blinking
-> +- nxp,inverted: invert the polarity of the generated PWM
->
->   Each led is represented as a sub-node of the nxp,pca963x device.
->
-> diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-> index 407eba1..41b7648 100644
-> --- a/drivers/leds/leds-pca963x.c
-> +++ b/drivers/leds/leds-pca963x.c
-> @@ -294,6 +294,12 @@ pca963x_dt_init(struct i2c_client *client, struct pca963x_chipdef *chip)
->   	else
->   		pdata->blink_type = PCA963X_SW_BLINK;
->
-> +	/* default to non-inverted output, unless inverted is specified */
-> +	if (of_property_read_bool(np, "nxp,inverted"))
-> +		pdata->dir = PCA963X_INVERTED;
-> +	else
-> +		pdata->dir = PCA963X_NORMAL;
-> +
->   	return pdata;
->   }
->
-> @@ -395,11 +401,18 @@ static int pca963x_probe(struct i2c_client *client,
->   	i2c_smbus_write_byte_data(client, PCA963X_MODE1, 0x00);
->
->   	if (pdata) {
-> +		u8 mode2 = i2c_smbus_read_byte_data(pca963x->chip->client,
-> +						    PCA963X_MODE2);
->   		/* Configure output: open-drain or totem pole (push-pull) */
->   		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
-> -			i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x01);
-> +			mode2 |= 0x01;
->   		else
-> -			i2c_smbus_write_byte_data(client, PCA963X_MODE2, 0x05);
-> +			mode2 |= 0x05;
-> +		/* Configure direction: normal or inverted */
-> +		if (pdata->dir == PCA963X_INVERTED)
-> +			mode2 |= 0x10;
-> +		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
-> +					  mode2);
->   	}
->
->   	return 0;
-> diff --git a/include/linux/platform_data/leds-pca963x.h b/include/linux/platform_data/leds-pca963x.h
-> index e731f00..54e845f 100644
-> --- a/include/linux/platform_data/leds-pca963x.h
-> +++ b/include/linux/platform_data/leds-pca963x.h
-> @@ -33,10 +33,16 @@ enum pca963x_blink_type {
->   	PCA963X_HW_BLINK,
->   };
->
-> +enum pca963x_direction {
-> +	PCA963X_NORMAL,
-> +	PCA963X_INVERTED,
-> +};
-> +
->   struct pca963x_platform_data {
->   	struct led_platform_data leds;
->   	enum pca963x_outdrv outdrv;
->   	enum pca963x_blink_type blink_type;
-> +	enum pca963x_direction dir;
->   };
->
->   #endif /* __LINUX_PCA963X_H*/
->
+So if we don't change the DTS file, I need to fix the OF table in the d=
+river and
+update the of-bindings, is it right?
+
+
+Wei.
+
+>=20
+> Hi Thierry,
+>=20
+> The fuse driver fuse-tegra.c has following OF table:
+> #ifdef CONFIG_ARCH_TEGRA_132_SOC
+>         { .compatible =3D "nvidia,tegra132-efuse", .data =3D &tegra12=
+4_fuse_soc },
+> #endif
+> #ifdef CONFIG_ARCH_TEGRA_124_SOC
+>         { .compatible =3D "nvidia,tegra124-efuse", .data =3D &tegra12=
+4_fuse_soc },
+> #endif
+>=20
+> It defined "nvidia,tegra124-efuse" under CONFIG_ARCH_TEGRA_124_SOC, s=
+o if we
+> don't change the DTS file, we should change it as:
+> -#ifdef CONFIG_ARCH_TEGRA_132_SOC
+> -       { .compatible =3D "nvidia,tegra132-efuse", .data =3D &tegra12=
+4_fuse_soc },
+> -#endif
+> -#ifdef CONFIG_ARCH_TEGRA_124_SOC
+> +#if defined CONFIG_ARCH_TEGRA_124_SOC || defined CONFIG_ARCH_TEGRA_1=
+32_SOC
+>         { .compatible =3D "nvidia,tegra124-efuse", .data =3D &tegra12=
+4_fuse_soc },
+>  #endif
+>  #ifdef CONFIG_ARCH_TEGRA_114_SOC
+>=20
+> I will send it out.
+>=20
+>>
+>> Thierry
+>>
+>> * Unknown Key
+>> * 0x7F3EB3A1
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra=
+" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
