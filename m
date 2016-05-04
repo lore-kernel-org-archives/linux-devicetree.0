@@ -1,36 +1,61 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] ARM: dts: kzm9g: SCIFA4 supports RTS/CTS hardware flow control
-Date: Wed,  4 May 2016 10:57:57 +0200
-Message-ID: <1462352278-30327-3-git-send-email-geert+renesas@glider.be>
-References: <1462352278-30327-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1462352278-30327-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 09/18] ASoC: sti: Update DT example to match the driver code
+Date: Wed, 04 May 2016 11:05:03 +0200
+Message-ID: <7856280.FvxMcUZr6e@wuerfel>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org> <5608365.uloflbeuqO@wuerfel> <5729AA33.6020305@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5729AA33.6020305@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Peter Griffin <peter.griffin@linaro.org>, devicetree@vger.kernel.org, vinod.koul@intel.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, linux-kernel@vger.kernel.org, broonie@kernel.org, ludovic.barre@st.com, dmaengine@vger.kernel.org, lee.jones@linaro.org, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-On the KZM-A9-GT development board, the RTS and CTS pins of the debug
-console SCIFA4 are wired to the CP2102 Serial-USB bridge.  Reflect
-this in the DTS by adding the "uart-has-rtscts" property to the scifa4
-device node.
+On Wednesday 04 May 2016 09:52:19 Arnaud Pouliquen wrote:
+> hello Arnd, peter,
+> 
+> On 04/26/2016 01:44 PM, Arnd Bergmann wrote:
+> > On Tuesday 26 April 2016 12:15:32 Peter Griffin wrote:
+> >>>
+> >>>> If not what would you recommend instead? 
+> >>>
+> >>> It's still not clear to me what that bit in the syscfg register
+> >>> is for. Given the error message about "sti-audio-clk-glue",
+> >>> I suspect that this is actually a clock controller and that
+> >>> it should be using the clock binding with a separate driver
+> >>> instead of manipulating the regmap directly from the audio driver.
+> >>
+> >> Luckily I do have the datasheet for the audio-glue sysconf register.
+> >>
+> >> It says: -
+> >>
+> >> [11:8] PCM_CLK_SEL: Selects the frequency synthesizer clock or the external
+> >> PCM clock for each channel.
+> >>
+> >> The driver only ever sets this to 1 which selects the frequency synthesizer
+> >> clock. So the bitfield of the register which the driver is using (PCM_CLK_SEL)
+> >> is a clock mux.
+> > 
+> > Ok, that sounds like it could be either a really simple clock driver
+> > with just a few lines, or integrated into an existing clock driver
+> > if you already have one for this syscon node.
+> > 
+> >       Arnd
+> > 
+> FYI, Name of this glue is related to the register name. But it does not
+> concern only clock...
+>  This glue register is used to :
+> - select clock source ( clock framework or external clock from GPIO)
+> => one bit field per IP instance (player->clk_sel)
+> - select uniperiph player IP instance for PCM out.
+> (http://www.spinics.net/lists/alsa-devel/msg49034.html)
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/sh73a0-kzm9g.dts | 1 +
- 1 file changed, 1 insertion(+)
+Ok, I see. This is of course again the STi platform being a bit different
+from everyone else, and whatever we do to hide it won't give us a nice
+abstraction. Having just a clock driver for the register won't do the
+job here as you say, so I guess the original patch was already the
+least awkward way to handle it.
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts b/arch/arm/boot/dts/sh73a0-kzm9g.dts
-index e6b2ef3785c7542a..b393b1f5bee24574 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
-@@ -378,6 +378,7 @@
- 	pinctrl-0 = <&scifa4_pins>;
- 	pinctrl-names = "default";
- 
-+	uart-has-rtscts;
- 	status = "okay";
- };
- 
--- 
-1.9.1
+	Arnd
