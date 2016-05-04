@@ -1,68 +1,120 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 16/24] i2c: allow adapter drivers to override the
- adapter locking
-Date: Wed, 4 May 2016 18:38:25 +0200
-Message-ID: <20160504163825.GA1516@katana>
-References: <1461165484-2314-1-git-send-email-peda@axentia.se>
- <1461165484-2314-17-git-send-email-peda@axentia.se>
- <20160428205018.GA3553@katana>
- <470abe38-ab5f-2d0a-305b-e1a3253ce5a9@axentia.se>
- <20160429071604.GB1870@katana>
- <357e6fda-73b3-fb7f-c341-97f09af1943f@axentia.se>
- <20160503213908.GC2018@tetsubishi>
- <87de4033-3b58-3ef6-d22b-b90901885b39@axentia.se>
+From: Grant Grundler <grundler@chromium.org>
+Subject: Re: Input: add Atmel Atmegaxx captouch driver
+Date: Wed, 4 May 2016 09:43:35 -0700
+Message-ID: <CANEJEGvZyU6-P8FcR7Z7GriJw3Pj32f5hnJRkbYxoE-t0yXy7g@mail.gmail.com>
+References: <1462295611-49684-1-git-send-email-grundler@chromium.org>
+	<20160504135123.GA4567@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87de4033-3b58-3ef6-d22b-b90901885b39@axentia.se>
-Sender: linux-media-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.kozlo>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160504135123.GA4567@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Grant Grundler <grundler@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Hung-yu Wu <hywu@google.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 4, 2016 at 6:51 AM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, May 03, 2016 at 10:13:31AM -0700, Grant Grundler wrote:
+>> Add I2C driver for AtmegaXX capacitive touch device.
+>>
+>> Signed-off-by: Hung-yu Wu <hywu@google.com>
+>> Signed-off-by: Grant Grundler <grundler@chromium.org>
+>> ---
+>>  .../bindings/input/atmel,atmegaxx_captouch.txt     |  34 +++
+>
+> It is generally preferred that bindings are a separate patch.
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ACK - I just discovered Documentation/devicetree/bindings/submitting-patches.txt
+(which explains this in more detail)
+
+>>  drivers/input/misc/Kconfig                         |  11 +
+>>  drivers/input/misc/Makefile                        |   1 +
+>>  drivers/input/misc/atmegaxx_captouch.c             | 278 +++++++++++++++++++++
+>>  4 files changed, 324 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
+>>  create mode 100644 drivers/input/misc/atmegaxx_captouch.c
+>>
+>> For those that like to know how sausage is made, ChromeOS code review history here:
+>>    https://chromium-review.googlesource.com/339950
+>>
+>> Driver was tested with prototype HW and it reliably reports events correctly.
+>> Manual testing was just using "evtest /dev/input/event0" and watch for events.
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt b/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
+>> new file mode 100644
+>> index 0000000..07a4b0b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
+>> @@ -0,0 +1,34 @@
+>> +Device tree bindings for Atmel AtmegaXX capacitive touch sensor
+>> +
+>> +The node for this device must be a child of a I2C controller node, as the
+>> +device communicates via I2C.
+>> +
+>> +Required properties:
+>> +
+>> +     compatible:     Must be "atmel,atmegaxx_captouch".
+>
+> No wildcards in the compatible strings. Use the specific devices.
+
+Sorry, I don't understand - What is a wildcard in this context?
+
+I also just discovered
+Documentation/devicetree/bindings/submitting-patches.txt and the "5)
+the wildcard" text doesn't seem to match the usage here.
+
+> Also, use hyphen rather than underscore.
+
+ACK - I have no clue why - I've been scrounging around in
+Documentation and haven't stumbled across "coding style" for device
+tree document.
 
 
-> A question on best practices here... I already did a v8 (but only as
-> a branch) so I think this will be v9, bit that's a minor detail. The
-> real question is what I should do about patches 1-15 that are already
-> in next? Send them too? If not, should I send 16-24 with the same old
-> patch numbers or should they be numbered 1-9 now? And should such a
-> shortened series be rebased on 1-15 in next?
->=20
-> Or does it not really matter?
+> However, if the device is only a touch controller, then '_captouch' is not needed.
+> The part number is sufficient to identify the device.
 
-Easiest for me is:
-
-Send as v9, only the patches not yet applied, numbered from 1-9, based
-on my for-next.
+atmegaxx is an Atmel microcontroller series and in this particular
+case used to drive a capacitive touch input device (just buttons).
+Since the microcontroller can be used for "anything", "captouch" is
+sort of the "model" of this implementation.
 
 
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
+>> +     reg:            The I2C slave address of the device.
+>> +     interrupts:     Property describing the interrupt line the device
+>> +                     is connected to. The device only has one interrupt
+>> +                     source.
+>> +     linux,keycodes: Specifies an array of numeric keycode values to
+>> +                     be used for reporting button presses. The array can
+>> +                     contain up to 8 entries.
+>> +
+>> +Optional properties:
+>> +
+>> +     autorepeat:     Enables the Linux input system's autorepeat
+>> +                     feature on the input device.
+>> +
+>> +Example:
+>> +
+>> +     atmegaxx_captouch@51 {
+>
+> atmegaxx@51 (with actual part number)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+atmegaxx_captouch (or -captouch) is how Atmel has been referring to
+this implementation. I'm not aware of any other part number or model
+number.
 
-iQIcBAEBAgAGBQJXKiWBAAoJEBQN5MwUoCm2JRwP/3pJfeAOonaG99Z+aFHFcxKb
-nV2lgIKSHRzgLxEFInIhnvW1m6gvm9AqJL0IO3ZYOJkmly7bf896FGGMVWSG3wHg
-5EepSrn8HuDPIlCf23EDgzTqSvp+J2GChbC/0x7AtQ7PnGw3CmKqGJPz2ecxRUMg
-iMGVVo3eNoBaboYB0lAmawHgS3Ui2zyn5t9GHPeZNmD8uFG8CrGK1wPD1KkK298X
-2KSKDX3K8G1us81/iVs4Z67E21O+9ls5zZCpBmZi1YSDWA5vzf3Rh8BIYPUj3BaT
-K6Dq/RnBt5aVOzG5wWdaonLZca6ozQgF1kgrPcNj+6mPWyv8+nzNSMDDqaqYDXt1
-IL6crz1aGIMhz6chlRFQm6HhMVnGp83CCwIjeaUNEnzG6VeFux0UJPMVyWVDc4pQ
-qDVs8izEnVbAw46JwbJxCxpqSgRDqDyAnsMdh1/x8XT/SbuPaNHWVFGz7/8G+1FG
-7QzlNcX0WGdapK7ZR3dZ4ob2z4tkL3EKiVbiN7jePpqk0C6Uppa61xNj9LdFKAJe
-WXSArGjwUzWisLzPZ37w0ko0a+uMVGrQxv2YQGAUixaXpqtaXx75Boj7lIiozflS
-ryO/VniaGcVTsHJiAHZo5fpt7XOqPwmfq4cs4qEn38PXkhScKwlfyRwraYcrjtJx
-K6HVk05ZVfaPU8CRrIvE
-=XLBz
------END PGP SIGNATURE-----
+>> +             compatible = "atmel,atmegaxx_captouch";
+>> +             reg = <0x51>;
+>> +             interrupt-parent = <&tlmm>;
+>> +             interrupts = <67 IRQ_TYPE_EDGE_FALLING>;
+>> +             linux,keycodes = <BTN_0>, <BTN_1>,
+>> +                     <BTN_2>, <BTN_3>,
+>> +                     <BTN_4>, <BTN_5>,
+>> +                     <BTN_6>, <BTN_7>;
+>> +             autorepeat;
+>> +     };
 
---7AUc2qLy4jB3hD7Z--
+Thanks for the feedback!
+I'll repost with s/_/-/ fix after naming is clear.
+
+thanks,
+grant
