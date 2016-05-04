@@ -1,56 +1,48 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v9 21/22] drivers/of: Export of_detach_node()
-Date: Wed, 4 May 2016 23:36:03 +1000
-Message-ID: <20160504133603.GA30081@gwshan>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1462281773-26438-22-git-send-email-gwshan@linux.vnet.ibm.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/9] dt-bindings: msm/mdp: Remove connector and gpu
+ bindings
+Date: Wed, 4 May 2016 08:38:48 -0500
+Message-ID: <20160504133848.GA30492@rob-hp-laptop>
+References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
+ <1462273081-5814-5-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1462281773-26438-22-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
+In-Reply-To: <1462273081-5814-5-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 03, 2016 at 11:22:52PM +1000, Gavin Shan wrote:
->This exports of_detach_node() for PowerPC PowerNV PCI hotplug
->driver. No functional changes introduced.
->
->Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-
-Rob, I'm not sure it's late to cache the 4.7 merge window.
-Also, I was told this series is needed by new CAPI driver which
-is being developed. The developers hope to push the new CAPI driver
-in 4.8 merge window (perhaps) or linux-next before 4.8 merge window
-is opened. It means the new CAPI driver depends on this series which
-has to be pushed to linux-next before 4.8 merge window.
-
-If it's fine, could you please merge 16 to 21? With them merged to
-4.7, the left patches won't depend on FDT changes. Thanks in advance
-for your help.
-
-Thanks,
-Gavin
-
->---
-> drivers/of/dynamic.c | 1 +
-> 1 file changed, 1 insertion(+)
->
->diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->index c647bd1..75ce30d 100644
->--- a/drivers/of/dynamic.c
->+++ b/drivers/of/dynamic.c
->@@ -311,6 +311,7 @@ int of_detach_node(struct device_node *np)
->
-> 	return rc;
-> }
->+EXPORT_SYMBOL_GPL(of_detach_node);
->
-> /**
->  * of_node_release() - release a dynamically allocated node
->-- 
->2.1.0
->
+T24gVHVlLCBNYXkgMDMsIDIwMTYgYXQgMDQ6Mjc6NTZQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
+cm90ZToKPiBUaGUgTURQIERUIG5vZGUgbm93IGNvbnRhaW5zIGEgbGlzdCBvZiBwb3J0cyB0aGF0
+IGRlc2NyaWJlIGhvdyBpdCBjb25uZWN0cwo+IHRvIGV4dGVybmFsIGVuY29kZXIgaW50ZXJmYWNl
+cyBsaWtlIERTSSBhbmQgSERNSS4gVGhlc2UgZm9sbG93IHRoZQo+IHN0YW5kYXJkIG9mX2dyYXBo
+IGJpbmRpbmdzLCBhbmQgYWxsb3cgdXMgdG8gZ2V0IHJpZCBvZiB0aGUgJ2Nvbm5lY3RvcnMnCj4g
+cGhhbmRsZSB0aGF0IGNvbnRhaW5lZCBhIGxpc3Qgb2YgYWxsIHRoZSBleHRlcm5hbCBlbmNvZGVy
+cyBjb25uZWN0ZWQgdG8KPiBNRFAuCj4gCj4gVGhlIEdQVSBwaGFuZGxlIGlzIHJlbW92ZWQgdG9v
+IHVudGlsIHdlIGZpZ3VyZSBvdXQgd2hhdCdzIHRoZSByaWdodCB3YXkKPiB0byBzcGVjaWZ5IGl0
+IGluIERULgoKWy4uLl0KCj4gKyAgRm9yIE1EUDQsIHRoZSBvdXRwdXQgcG9ydCBtYXBwaW5ncyBh
+cmU6Cj4gKwlQb3J0IDAgLT4gTENEQy9MVkRTCj4gKwlQb3J0IDEgLT4gRFNJMSBDbWQvVmlkZW8K
+PiArCVBvcnQgMiAtPiBEU0kyIENtZC9WaWRlbwo+ICsJUG9ydCAzIC0+IERUVgo+ICsKPiArIEZv
+ciBNRFA1LCB0aGUgYXZhaWxhYmlsaXR5IG9mIG91dHB1dCBwb3J0cyB2YXJ5IGFjcm9zcyBlYWNo
+IFNvQyByZXZpc2lvbiwgYnV0Cj4gKyB0aGV5IGdlbmVyYWxseSBoYXZlIHRoZSBmb2xsb3dpbmcg
+bWFwcGluZzoKPiArCVBvcnQgMCAtPiBNRFBfSU5URjAgKGVEUCkKPiArCVBvcnQgMSAtPiBNRFBf
+SU5URjEgKERTSTEpCj4gKwlQb3J0IDIgLT4gTURQX0lOVEYyIChEU0kyKQo+ICsJUG9ydCAzIC0+
+IE1EUF9JTlRGMyAoSERNSSkKPiArCj4gKyBTZWUgZHJpdmVycy9ncHUvZHJtL21zbS9tZHAvbWRw
+NS9tZHA1X2NmZy5jIHRvIHNlZSB3aGF0IGFsbCBJTlRGcyBhIHBhcnRpY3VsYXIKPiArIFNvQyBy
+ZXZpc2lvbiBoYXMgZW5hYmxlZC4KClRoZSBiaW5kaW5nIGRvYyBzaG91bGRuJ3QgZGVwZW5kIG9u
+IGtlcm5lbCBjb2RlLiBZb3UgbmVlZCB0byBkb2N1bWVudCBpdCAKaGVyZS4KClJvYgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
