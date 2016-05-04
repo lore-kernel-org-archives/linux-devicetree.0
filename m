@@ -1,140 +1,95 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 3/7] phy: Add set_mode callback
-Date: Wed, 4 May 2016 13:10:30 -0500
-Message-ID: <20160504181030.GA4327@uda0271908>
-References: <1460658919-4965-1-git-send-email-david@lechnology.com>
- <1460658919-4965-4-git-send-email-david@lechnology.com>
+From: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v2 1/1] add missing UARTs pins and I2C
+ entriesfor AllWinner H3 DTSI
+Date: Wed, 4 May 2016 11:15:55 -0700 (PDT)
+Message-ID: <c17544c6-2b49-44cc-b2f9-537d94f276ef@googlegroups.com>
+References: <CAKQ8BtjPhfJC+njOUvo-4ZQ+Oj==LqQEhJ1LQROjY85hswE9Mg@mail.gmail.com>
+ <20160502064645.GK17159@lukather>
+Reply-To: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1460658919-4965-4-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed;
+	boundary="----=_Part_875_1838026450.1462385755952"
+Return-path: <linux-sunxi+bncBDW4XUV4YULRBXHYVC4QKGQEN65KYUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160502064645.GK17159@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+------=_Part_875_1838026450.1462385755952
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 14, 2016 at 01:35:14PM -0500, David Lechner wrote:
-> The initial use for this is for PHYs that have a mode related to USB OTG.
-> There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
-> in the USB PHY to override OTG VBUS and ID signals.
-> 
-> Of course, the enum can be expaned in the future to include modes for
-> other types of PHYs as well.
-> 
-> Suggested-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
-> 
-> v4 changes:
-> 
-> * This is a new patch to avoid exporting a symbol from the phy-da8xx-usb driver.
-> 
-> 
->  drivers/phy/phy-core.c  | 15 +++++++++++++++
->  include/linux/phy/phy.h | 15 +++++++++++++++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index e7e574d..fe0344c 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
->  }
->  EXPORT_SYMBOL_GPL(phy_power_off);
->  
-> +int phy_set_mode(struct phy *phy, enum phy_mode mode)
-> +{
-> +	int ret;
-> +
-> +	if (!phy || !phy->ops->set_mode)
-> +		return 0;
-> +
-> +	mutex_lock(&phy->mutex);
-> +	ret = phy->ops->set_mode(phy, mode);
-> +	mutex_unlock(&phy->mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_set_mode);
+Bonjour Maxime,
 
-Sorry for my late comments, have been busy on other things.
+On Monday, May 2, 2016 at 2:46:57 AM UTC-4, Maxime Ripard wrote:
+> Hi,
+>=20
+> On Tue, Apr 19, 2016 at 03:50:39PM -0400, Martin Ayotte wrote:
+> > Hi everyone,
+> >=20
+> > This patch is submit to provide endusers access to additional UARTs on
+> > AllWinner H3 SoC along with I2C ports.
+>=20
+> Unfortunately, your patch cannot be applied in its current form, both
+> because of process and technical reasons:
+>=20
+>   * Every commits should have a commit title and log. While you do
+>     have a title, you used the log to store your cover letter. This is
+>     an issue, because that will be kept in the git history, which is
+>     obviously something we don't want.
+>     If you want to make a cover letter, you can either send it as a
+>     separate mail, or after the "---" below that will be ignored when
+>     applying the mails.
+>     On the other hand, the commit log should be used to say why =C3=BDour
+>     doing this patch and why it was needed.
+>=20
+>   * You do not have a Signed-off-by tag in your commit log. This and
+>     the point above is documented in Documentation/SubmittingPatches,
+>     please make sure to read that first.
+>=20
+>   * Your mailer completely corrupted the patch when you sent it,
+>     replacing all tabs by spaces, and wrapping the longer lines. That
+>     means that the patch cannot be applied anymore. Please fix your
+>     mailer, or use one that just works, like git send-email.
+>=20
+>   * Finally, like Chen-Yu already told you, you're doing several
+>     different things here in a single patch, while you should have
+>     done separate patches. From what I can see, you're adding pinctrl
+>     groups for the uart and i2c pins, and adding the i2c controller
+>     nodes. That should have been ideally 3 patches: 1 for the uart
+>     pinctrl groups, 1 for the i2c pinctrl groups, 1 for the i2c
+>     controller nodes. We also don't take pinctrl groups that are not
+>     enabled on any boards to keep the DT size as small as possible.
+>=20
+> Thanks,
+> Maxime
+>=20
+> --=20
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
-As I commented in v2, isn't it a better idea to not adding this callback
-and let the da8xx phy driver set the mode register in _probe() based on
-DT dr_mode?
+Thanks for your help and make me understanding more the process.
 
-musb core only calls the *optional* _set_mode() during init, so I don't
-see any problem if the phy set the mode in its probe. 
+I've now prepared a new v3 for that, and just send it.
+Strangely, it seems that the 3 patches been sent separately.=20
+I will try to figure out what happened.
 
 Regards,
--Bin.
+Martin.
 
-> +
->  /**
->   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
->   * @np: device_node for which to get the phy
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index 8cf05e3..d66f4d9 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -22,12 +22,20 @@
->  
->  struct phy;
->  
-> +enum phy_mode {
-> +	PHY_MODE_INVALID,
-> +	PHY_MODE_USB_HOST,
-> +	PHY_MODE_USB_DEVICE,
-> +	PHY_MODE_USB_OTG,
-> +};
-> +
->  /**
->   * struct phy_ops - set of function pointers for performing phy operations
->   * @init: operation to be performed for initializing phy
->   * @exit: operation to be performed while exiting
->   * @power_on: powering on the phy
->   * @power_off: powering off the phy
-> + * @set_mode: set the mode of the phy
->   * @owner: the module owner containing the ops
->   */
->  struct phy_ops {
-> @@ -35,6 +43,7 @@ struct phy_ops {
->  	int	(*exit)(struct phy *phy);
->  	int	(*power_on)(struct phy *phy);
->  	int	(*power_off)(struct phy *phy);
-> +	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
->  	struct module *owner;
->  };
->  
-> @@ -119,6 +128,7 @@ int phy_init(struct phy *phy);
->  int phy_exit(struct phy *phy);
->  int phy_power_on(struct phy *phy);
->  int phy_power_off(struct phy *phy);
-> +int phy_set_mode(struct phy *phy, enum phy_mode mode);
->  static inline int phy_get_bus_width(struct phy *phy)
->  {
->  	return phy->attrs.bus_width;
-> @@ -224,6 +234,13 @@ static inline int phy_power_off(struct phy *phy)
->     return -ENOSYS;
->  }
->  
-> +static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
-> +{
-> +	if (!phy)
-> +		return 0;
-> +	return -ENOSYS;
-> +}
-> +
->  static inline int phy_get_bus_width(struct phy *phy)
->  {
->     return -ENOSYS;
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+------=_Part_875_1838026450.1462385755952--
