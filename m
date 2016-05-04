@@ -1,97 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] thermal: trivial: fix the typo
-Date: Wed, 4 May 2016 08:46:18 -0500
-Message-ID: <20160504134618.GA3079@rob-hp-laptop>
-References: <1462277262-29935-1-git-send-email-wxt@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 4/9] pwm: pwm-tiecap: Update dt binding document to
+ use proper unit address
+Date: Wed, 4 May 2016 08:47:03 -0500
+Message-ID: <20160504134703.GA4194@rob-hp-laptop>
+References: <1462291015-1919-1-git-send-email-fcooper@ti.com>
+ <1462291015-1919-5-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462277262-29935-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1462291015-1919-5-git-send-email-fcooper@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: thierry.reding@gmail.com, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 03, 2016 at 08:07:41PM +0800, Caesar Wang wrote:
-> See the thermal code, the obvious typo from my editor.
-
-It looks like whitespace changes, not typos. Please be specific.
-
+On Tue, May 03, 2016 at 10:56:50AM -0500, Franklin S Cooper Jr wrote:
+> Replace unit address from 0 to the proper physical address. Also insure
+> that the unit address matches the reg property address.
 > 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 > ---
+>  Documentation/devicetree/bindings/pwm/pwm-tiecap.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > 
->  Documentation/devicetree/bindings/thermal/thermal.txt | 10 +++++-----
->  drivers/thermal/thermal_core.c                        |  2 +-
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index 41b817f..88b6ea1 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -62,7 +62,7 @@ For more examples of cooling devices, refer to the example sections below.
->  Required properties:
->  - #cooling-cells:	Used to provide cooling device specific information
->    Type: unsigned	while referring to it. Must be at least 2, in order
-> -  Size: one cell      	to specify minimum and maximum cooling state used
-> +  Size: one cell	to specify minimum and maximum cooling state used
->  			in the reference. The first cell is the minimum
->  			cooling state requested and the second cell is
->  			the maximum cooling state requested in the reference.
-> @@ -119,7 +119,7 @@ Required properties:
->  Optional property:
->  - contribution:		The cooling contribution to the thermal zone of the
->    Type: unsigned	referred cooling device at the referred trip point.
-> -  Size: one cell      	The contribution is a ratio of the sum
-> +  Size: one cell	The contribution is a ratio of the sum
->  			of all cooling contributions within a thermal zone.
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+> index 788da6c..0d47354 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+> @@ -16,22 +16,22 @@ Optional properties:
 >  
->  Note: Using the THERMAL_NO_LIMIT (-1UL) constant in the cooling-device phandle
-> @@ -145,7 +145,7 @@ Required properties:
->    Size: one cell
+>  Example:
 >  
->  - thermal-sensors:	A list of thermal sensor phandles and sensor specifier
-> -  Type: list of 	used while monitoring the thermal zone.
-> +  Type: list of		used while monitoring the thermal zone.
->    phandles + sensor
->    specifier
+> -ecap0: ecap@0 { /* ECAP on am33xx */
+> +ecap0: ecap@48300100 { /* ECAP on am33xx */
+>  	compatible = "ti,am33xx-ecap";
+>  	#pwm-cells = <3>;
+>  	reg = <0x48300100 0x80>;
+>  	ti,hwmods = "ecap0";
+>  };
 >  
-> @@ -473,7 +473,7 @@ thermal-zones {
->  				  <&adc>;	/* pcb north */
+> -ecap0: ecap@0 { /* ECAP on am4372 */
+> +ecap0: ecap@48300100 { /* ECAP on am4372 */
+>  	compatible = "ti,am4372-ecap", "ti,am33xx-ecap";
+>  	#pwm-cells = <3>;
+>  	reg = <0x48300100 0x80>;
+>  	ti,hwmods = "ecap0";
+>  };
 >  
->  		/* hotspot = 100 * bandgap - 120 * adc + 484 */
-> -		coefficients = 		<100	-120	484>;
-> +		coefficients =		<100	-120	484>;
->  
->  		trips {
->  			...
-> @@ -502,7 +502,7 @@ from the ADC sensor. The binding would be then:
->          thermal-sensors =  <&adc>;
->  
->  		/* hotspot = 1 * adc + 6000 */
-> -	coefficients = 		<1	6000>;
-> +	coefficients =		<1	6000>;
->  
->  (d) - Board thermal
->  
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index e5bfbd3..26870ef 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -513,7 +513,7 @@ int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp)
->  		if (!ret && *temp < crit_temp)
->  			*temp = tz->emul_temperature;
->  	}
-> - 
-> +
->  	mutex_unlock(&tz->lock);
->  exit:
->  	return ret;
+> -ecap0: ecap@0 { /* ECAP on da850 */
+> +ecap0: ecap@1f06000 { /* ECAP on da850 */
+>  	compatible = "ti,da850-ecap", "ti,am33xx-ecap";
+>  	#pwm-cells = <3>;
+> -	reg = <0x306000 0x80>;
+> +	reg = <0x1f06000 0x80>;
+>  };
 > -- 
-> 1.9.1
+> 2.7.0
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
