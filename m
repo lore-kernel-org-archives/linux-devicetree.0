@@ -1,41 +1,61 @@
-From: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: dra7xx: Fix compatible string for PCF8575 chip
-Date: Wed, 04 May 2016 19:23:23 +0100
-Message-ID: <1462386203.2360.12.camel@codethink.co.uk>
-References: <1461588834-20908-1-git-send-email-rogerq@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFT PATCH 1/3] usb: misc: usb3503: Fix HUB mode after
+ bootloader initialization
+Date: Wed, 4 May 2016 19:25:55 +0100
+Message-ID: <20160504182555.GE6292@sirena.org.uk>
+References: <1461927591-7864-1-git-send-email-k.kozlowski@samsung.com>
+ <1461927591-7864-2-git-send-email-k.kozlowski@samsung.com>
+ <20160429113059.GX3217@sirena.org.uk>
+ <57234BA2.6020304@samsung.com>
+ <20160429164448.GY3217@sirena.org.uk>
+ <57272298.50701@samsung.com>
+ <20160502105501.GE6292@sirena.org.uk>
+ <20160503180022.GA3008@rob-hp-laptop>
+ <5729E4B5.2090702@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461588834-20908-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8M+gQFKLhTGBxzRu"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5729E4B5.2090702@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh@kernel.org>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-04-25 at 15:53 +0300, Roger Quadros wrote:
-> The boards use a TI variant of the PCF8575 so specify that
-> in the compatible string.
-> 
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-[...]
 
-1. This compatible string is still not documented (AFAIK).
-2. As I understand it, TI is a second source for this NXP-designed chip,
-i.e. it manufactures chips with identical logic (not clones) under
-license.  They should not be distinguishable in software.
-3. For the same reason, there is no guarantee that the board
-manufacturer won't populate boards with PCF8575 chips from the other
-source in future.
+--8M+gQFKLhTGBxzRu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ben.
+On Wed, May 04, 2016 at 02:01:57PM +0200, Krzysztof Kozlowski wrote:
 
--- 
-Ben Hutchings
-Software Developer, Codethink Ltd.
+> This looks like pwrseq for MMC devices so the idea is to:
+> 1. Move drivers/mmc/core/pwrseq* to separate directory
+> (drivers/power/pwrseq ?)
+> 2. Add support for pwrseq to USB core,
+> 3. Add new pwrseq driver (or extend existing one): toggling the regulator.
+> 4. Add pwrseq phandle to the DT node of USB hub (to the binding
+> mentioned by Rob?).
 
+> Does it look sensible?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It certainly seems like a similar problem space, USB seems very much
+like MMC in both the spec and the way it tends to get used.
+
+--8M+gQFKLhTGBxzRu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXKj6yAAoJECTWi3JdVIfQDVoIAIQNIIIDVg6dIq4dg7+yaBEa
+9xaqLg3+enIW/2q/p+q7JlQWaEb/WJ68wA8pXZDE6RIItO6bJ0vZiRIYBZMkRIds
+sWsLTAo/0lXKSJYM4ustWLfr8egt+6HSUvRYnkVpeW6SpsQkkpngBIylkxkmRvxb
+iWs1nvOSbV4gyQmdaESPtK9g+YL33cBEWEW8f+kWSUnhbp63gPSdnfBtcdtHr8Fe
+Bm27BYxvpzFuVp+ERwdDz4XhgZUbn+8/gJJ/+DeO4MqGHvbJGDGd6S2fl2efSuZh
+0atErQWoTJG1N95YD0NSjfIlnbu2wDF7E4CdIXOCg8Fqsf4HXXdMmZtt4XxLfB8=
+=/2XA
+-----END PGP SIGNATURE-----
+
+--8M+gQFKLhTGBxzRu--
