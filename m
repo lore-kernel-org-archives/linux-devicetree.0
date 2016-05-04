@@ -1,347 +1,263 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: Re: [PATCH v10] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Wed, 4 May 2016 16:25:43 +0800
-Message-ID: <5729B207.5090809@hisilicon.com>
-References: <1461050839-24644-1-git-send-email-xuejiancheng@hisilicon.com>
- <5720A8BD.90302@atmel.com>
+From: Christo Radev <christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
+Date: Wed, 4 May 2016 01:49:07 -0700 (PDT)
+Message-ID: <ecb1db18-1972-4af8-80ff-c9523dfeebf9@googlegroups.com>
+References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
+ <f3da30a6-9ac0-4d5e-8611-ebb80cb3589e@googlegroups.com>
+ <20160503131437.GV17159@lukather>
+ <66e4c452-1e34-474b-8973-2d57d9f036d0@googlegroups.com>
+ <5728C929.3040709@schinagl.nl>
+ <1462338781.15404.0.camel@plaes.org>
+Reply-To: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5720A8BD.90302@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar, juhosg@openwrt.org, furquan@google.com, robh+dt@kernel.org
-Cc: suwenping@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, raojun@hisilicon.com, linux-mtd@lists.infradead.org, jiangheng@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, yanghongwei@hisilicon.com, zhangzhenxing@hisilicon.com, hermit.wangheming@hisilicon.com
+Content-Type: multipart/mixed;
+	boundary="----=_Part_169_95417768.1462351747939"
+Return-path: <linux-sunxi+bncBD7ORYHCVECRBBXPU24QKGQE6NG2CYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1462338781.15404.0.camel-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille,
+------=_Part_169_95417768.1462351747939
+Content-Type: multipart/alternative;
+	boundary="----=_Part_170_881606319.1462351747939"
 
-On 2016/4/27 19:55, Cyrille Pitchen wrote:
-> Hi Jiancheng,
->=20
-> Le 19/04/2016 09:27, Jiancheng Xue a =E9crit :
->> From: Jiancheng Xue <xuejiancheng@huawei.com>
->>
->> Add hisilicon spi-nor flash controller driver
->=20
-> [...]
->> +enum hifmc_iftype {
->> +	IF_TYPE_STD,
->> +	IF_TYPE_DUAL,
->> +	IF_TYPE_DIO,
->> +	IF_TYPE_QUAD,
->> +	IF_TYPE_QIO,
->> +};
->=20
-> Just for my own information, the hisilicon controller supports:
-> - SPI 1-1-1 : IF_TYPE_STD
-> - SPI 1-1-2 : IF_TYPE_DUAL
-> - SPI 1-2-2 : IF_TYPE_DIO
-> - SPI 1-1-4 : IF_TYPE_QUAD
-> - SPI 1-4-4 : IF_TYPE_QIO
->=20
-> but not the SPI protocols 2-2-2 or 4-4-4, does it?
+------=_Part_170_881606319.1462351747939
+Content-Type: text/plain; charset=UTF-8
 
-You are right.
+Exactly, the site is finally updated.
 
-> If I ask you this question, it's because I wonder how to make the dif=
-ference
-> between SPI controllers supporting both SPI 1-4-4 and 4-4-4 and those
-> supporting only SPI 1-4-4 in the case they rely on the m25p80 driver =
-as an
-> adaptation layer between the spi-nor framework et the spi framework.
->=20
-> I guess the "spi-tx-bus-width" and "spi-rx-bus-width" DT properties a=
-re not
-> enough to make the difference between these two kinds of SPI controll=
-er.
->=20
-> I understand your driver doesn't use the m25p80 driver as it directly=
- calls
-> spi_nor_scan() and implements the .read_reg, .write_reg, .read, .writ=
-e and
-> .erase hooks, but its a general question :)
->=20
-IMO, the "spi-tx-bus-width" and "spi-rx-bus-width" DT properties which
-will be stored in spi_device.mode just represent modes of the spi devic=
-e,
-but not the ones of the spi controller. We should add a specific member=
- for
-the controller to indicate all modes which it supports.
+On Wednesday, May 4, 2016 at 8:13:05 AM UTC+3, Priit Laes wrote:
+>
+> On Tue, 2016-05-03 at 17:52 +0200, Olliver Schinagl wrote: 
+> > Hey all, 
+> > 
+> > On 03-05-16 17:02, christ...-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <javascript:> wrote: 
+> > > On Tuesday, May 3, 2016 at 4:14:41 PM UTC+3, Maxime Ripard wrote: 
+> > > > Hi, 
+> > > > 
+> > > > On Tue, May 03, 2016 at 4:12:06 PM UTC+3, Christo Radev wrote: 
+> > > > > Hi to All, 
+> > > > > 
+> > > > > I have already solved and tested this issue on Armbian build. 
+> > > > >  Find 
+> > > > > patches for both legacy (3.4.111) and mainline (4.5.2) kernels 
+> > > > > on: 
+> > > > > http://forum.armbian.com/index.php/topic/853-armbian-customizat 
+> > > > > ion/page-2#entry7494 
+> > > > > There it is also described how to do eMMC bootable and much 
+> > > > > more. 
+> > > > > 
+> > > > > About the board - Olimex already sold all 3 kinds after 
+> > > > > migration to 
+> > > > > their HW rev. E. One have to specify Lime2-eMMC as 
+> > > > > A20-Olinuxino-Lime2-eMMC instead of their old 2 options 
+> > > > > A20-Olinuxino-Lime2(-4GB). 
+> > > > Interesting, you have a link to that device? 
+>
+> I guess, it is this one: 
+>
+> https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXino-LIME2-eMMC/ 
+> open-source-hardware 
+> <https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXino-LIME2-eMMC/open-source-hardware> 
+>
+> > > > 
+> > > > Thanks, 
+> > > > Maxime 
+> > > > 
+> > > > -- 
+> > > > Maxime Ripard, Free Electrons 
+> > > > Embedded Linux, Kernel and Android engineering 
+> > > > http://free-electrons.com 
+> > > I have really 2 boards delivered by their local distributor. 
+> > > 
+> > > Unfortunately, they do not update their site. Use the link for NAND 
+> > > option: 
+> > > https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXIno-LIME2-4 
+> > > GB/open-source-hardware 
+> > > There you can find Users Manual where it is described that eMMC 
+> > > option is available from HW rev. D. The schematic for HW rev. E is 
+> > > also available on their repository: 
+> > > https://github.com/OLIMEX/OLINUXINO/tree/master/HARDWARE/A20-OLinuX 
+> > > ino-LIME2 
+> > > 
+> > > On the board both 4GB NAND and eMMC Flash chips can be placed 
+> > > alternatively on the same place. There is difference in some other 
+> > > components as well. 
+> > > 
+> > > If one want to order it from the site probably has to order A20 
+> > > -Olinuxino-Lime2-4GB with note that eMMC option is required. The 
+> > > price is the same. 
+> > Sorry for the late reply, but yeah the board exists, we asked Olimex 
+> > to 
+> > develop the eMMC variant for us. I currently have a dozen or so on my 
+> > desk :) 
+> > 
+> > I don't know when Olimex will update their webshop with the new 
+> > designs, 
+> > but they simply might not have enough eMMC chips available yet? 
+> > 
+>
 
-The definition of spi_nor_scan can be modified to
-int spi_nor_scan(struct spi_nor *nor, const char *name, int mode).
-The argument "mode" represents all modes which the controller supports.
-=46or example,
-#define SPI_1_1_1  (1 << 0)
-#define SPI_1_1_4  (1 << 0)
-#define SPI_1_4_4  (1 << 2)
-#define SPI_4_4_4  (1 << 3)
-If the controller supports SPI_1_1_1, SPI_1_1_4 and SPI_1_4_4, the mode
-passed to spi_nor_scan will be (SPI_1_1_1 | SPI_1_1_4 | SPI_1_4_4).
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-The really read_mode we use when transferring should depend on both con=
-troller's
-modes(i.e. the argument "mode") and device's modes(i.e. struct flash_in=
-fo.flags,
-which can be got by spi_nor_read_id()).
+------=_Part_170_881606319.1462351747939
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
->> +static int get_if_type(enum read_mode flash_read)
->> +{
->> +	enum hifmc_iftype if_type;
->> +
->> +	switch (flash_read) {
->> +	case SPI_NOR_DUAL:
->> +		if_type =3D IF_TYPE_DUAL;
->> +		break;
->> +	case SPI_NOR_QUAD:
->> +		if_type =3D IF_TYPE_QUAD;
->> +		break;
->> +	case SPI_NOR_NORMAL:
->> +	case SPI_NOR_FAST:
->> +	default:
->> +		if_type =3D IF_TYPE_STD;
->> +		break;
->> +	}
->> +
->> +	return if_type;
->> +}
->=20
-> Here I understand your QSPI controller could support SPI 1-4-4 and SP=
-I 1-2-2
-> but you limit it to SPI 1-1-4 and SPI 1-1-2 because the spi-nor frame=
-work
-> doesn't support those protocols yet.
->=20
-Yes. You're right.
-It is one of the reasons that the spi-nor framework doesn't support tho=
-se two protocols.
-We also found protocols supported were enough for our product solutions=
- now. So
-we didn't implement SPI-1-4-4 and SPI-1-2-2 in this patch.
+<div dir=3D"ltr">Exactly, the site is finally updated.<br><br>On Wednesday,=
+ May 4, 2016 at 8:13:05 AM UTC+3, Priit Laes wrote:<blockquote class=3D"gma=
+il_quote" style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid=
+;padding-left: 1ex;">On Tue, 2016-05-03 at 17:52 +0200, Olliver Schinagl wr=
+ote:
+<br>&gt; Hey all,
+<br>&gt;=20
+<br>&gt; On 03-05-16 17:02, <a href=3D"javascript:" target=3D"_blank" gdf-o=
+bfuscated-mailto=3D"J3RHZENBAQAJ" rel=3D"nofollow" onmousedown=3D"this.href=
+=3D&#39;javascript:&#39;;return true;" onclick=3D"this.href=3D&#39;javascri=
+pt:&#39;;return true;">christ...-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a> wrote:
+<br>&gt; &gt; On Tuesday, May 3, 2016 at 4:14:41 PM UTC+3, Maxime Ripard wr=
+ote:
+<br>&gt; &gt; &gt; Hi,
+<br>&gt; &gt; &gt;=20
+<br>&gt; &gt; &gt; On Tue, May 03, 2016 at 4:12:06 PM UTC+3, Christo Radev =
+wrote:
+<br>&gt; &gt; &gt; &gt; Hi to All,
+<br>&gt; &gt; &gt; &gt;=20
+<br>&gt; &gt; &gt; &gt; I have already solved and tested this issue on Armb=
+ian build.=20
+<br>&gt; &gt; &gt; &gt; =C2=A0Find
+<br>&gt; &gt; &gt; &gt; patches for both legacy (3.4.111) and mainline (4.5=
+.2) kernels
+<br>&gt; &gt; &gt; &gt; on:
+<br>&gt; &gt; &gt; &gt; <a href=3D"http://forum.armbian.com/index.php/topic=
+/853-armbian-customizat" target=3D"_blank" rel=3D"nofollow" onmousedown=3D"=
+this.href=3D&#39;http://www.google.com/url?q\x3dhttp%3A%2F%2Fforum.armbian.=
+com%2Findex.php%2Ftopic%2F853-armbian-customizat\x26sa\x3dD\x26sntz\x3d1\x2=
+6usg\x3dAFQjCNFfNnocc-5o_mBIjtCDuEjEtkXc_Q&#39;;return true;" onclick=3D"th=
+is.href=3D&#39;http://www.google.com/url?q\x3dhttp%3A%2F%2Fforum.armbian.co=
+m%2Findex.php%2Ftopic%2F853-armbian-customizat\x26sa\x3dD\x26sntz\x3d1\x26u=
+sg\x3dAFQjCNFfNnocc-5o_mBIjtCDuEjEtkXc_Q&#39;;return true;">http://forum.ar=
+mbian.com/<wbr>index.php/topic/853-armbian-<wbr>customizat</a>
+<br>&gt; &gt; &gt; &gt; ion/page-2#entry7494
+<br>&gt; &gt; &gt; &gt; There it is also described how to do eMMC bootable =
+and much
+<br>&gt; &gt; &gt; &gt; more.
+<br>&gt; &gt; &gt; &gt;=20
+<br>&gt; &gt; &gt; &gt; About the board - Olimex already sold all 3 kinds a=
+fter
+<br>&gt; &gt; &gt; &gt; migration to
+<br>&gt; &gt; &gt; &gt; their HW rev. E. One have to specify Lime2-eMMC as
+<br>&gt; &gt; &gt; &gt; A20-Olinuxino-Lime2-eMMC instead of their old 2 opt=
+ions
+<br>&gt; &gt; &gt; &gt; A20-Olinuxino-Lime2(-4GB).
+<br>&gt; &gt; &gt; Interesting, you have a link to that device?
+<br>
+<br>I guess, it is this one:
+<br>
+<br><a href=3D"https://www.olimex.com/Products/OLinuXino/A20/A20-OLinuXino-=
+LIME2-eMMC/open-source-hardware" target=3D"_blank" rel=3D"nofollow" onmouse=
+down=3D"this.href=3D&#39;https://www.google.com/url?q\x3dhttps%3A%2F%2Fwww.=
+olimex.com%2FProducts%2FOLinuXino%2FA20%2FA20-OLinuXino-LIME2-eMMC%2Fopen-s=
+ource-hardware\x26sa\x3dD\x26sntz\x3d1\x26usg\x3dAFQjCNEfcGcRencgmPg6XkIRh1=
+vnKQ9ddA&#39;;return true;" onclick=3D"this.href=3D&#39;https://www.google.=
+com/url?q\x3dhttps%3A%2F%2Fwww.olimex.com%2FProducts%2FOLinuXino%2FA20%2FA2=
+0-OLinuXino-LIME2-eMMC%2Fopen-source-hardware\x26sa\x3dD\x26sntz\x3d1\x26us=
+g\x3dAFQjCNEfcGcRencgmPg6XkIRh1vnKQ9ddA&#39;;return true;">https://www.olim=
+ex.com/<wbr>Products/OLinuXino/A20/A20-<wbr>OLinuXino-LIME2-eMMC/
+<br>open-source-hardware</a>
+<br>
+<br>&gt; &gt; &gt;=20
+<br>&gt; &gt; &gt; Thanks,
+<br>&gt; &gt; &gt; Maxime
+<br>&gt; &gt; &gt;=20
+<br>&gt; &gt; &gt; --=20
+<br>&gt; &gt; &gt; Maxime Ripard, Free Electrons
+<br>&gt; &gt; &gt; Embedded Linux, Kernel and Android engineering
+<br>&gt; &gt; &gt; <a href=3D"http://free-electrons.com" target=3D"_blank" =
+rel=3D"nofollow" onmousedown=3D"this.href=3D&#39;http://www.google.com/url?=
+q\x3dhttp%3A%2F%2Ffree-electrons.com\x26sa\x3dD\x26sntz\x3d1\x26usg\x3dAFQj=
+CNGC8C9pT7xKJEabITLGL5cqtolifQ&#39;;return true;" onclick=3D"this.href=3D&#=
+39;http://www.google.com/url?q\x3dhttp%3A%2F%2Ffree-electrons.com\x26sa\x3d=
+D\x26sntz\x3d1\x26usg\x3dAFQjCNGC8C9pT7xKJEabITLGL5cqtolifQ&#39;;return tru=
+e;">http://free-electrons.com</a>
+<br>&gt; &gt; I have really 2 boards delivered by their local distributor.
+<br>&gt; &gt;=20
+<br>&gt; &gt; Unfortunately, they do not update their site. Use the link fo=
+r NAND
+<br>&gt; &gt; option:
+<br>&gt; &gt; <a href=3D"https://www.olimex.com/Products/OLinuXino/A20/A20-=
+OLinuXIno-LIME2-4" target=3D"_blank" rel=3D"nofollow" onmousedown=3D"this.h=
+ref=3D&#39;https://www.google.com/url?q\x3dhttps%3A%2F%2Fwww.olimex.com%2FP=
+roducts%2FOLinuXino%2FA20%2FA20-OLinuXIno-LIME2-4\x26sa\x3dD\x26sntz\x3d1\x=
+26usg\x3dAFQjCNGY_P6H-DyWC6U0OhfKm5xYHnxIcw&#39;;return true;" onclick=3D"t=
+his.href=3D&#39;https://www.google.com/url?q\x3dhttps%3A%2F%2Fwww.olimex.co=
+m%2FProducts%2FOLinuXino%2FA20%2FA20-OLinuXIno-LIME2-4\x26sa\x3dD\x26sntz\x=
+3d1\x26usg\x3dAFQjCNGY_P6H-DyWC6U0OhfKm5xYHnxIcw&#39;;return true;">https:/=
+/www.olimex.com/<wbr>Products/OLinuXino/A20/A20-<wbr>OLinuXIno-LIME2-4</a>
+<br>&gt; &gt; GB/open-source-hardware
+<br>&gt; &gt; There you can find Users Manual where it is described that eM=
+MC
+<br>&gt; &gt; option is available from HW rev. D. The schematic for HW rev.=
+ E is
+<br>&gt; &gt; also available on their repository:
+<br>&gt; &gt; <a href=3D"https://github.com/OLIMEX/OLINUXINO/tree/master/HA=
+RDWARE/A20-OLinuX" target=3D"_blank" rel=3D"nofollow" onmousedown=3D"this.h=
+ref=3D&#39;https://www.google.com/url?q\x3dhttps%3A%2F%2Fgithub.com%2FOLIME=
+X%2FOLINUXINO%2Ftree%2Fmaster%2FHARDWARE%2FA20-OLinuX\x26sa\x3dD\x26sntz\x3=
+d1\x26usg\x3dAFQjCNFnL-7JZwFKMvIQUbhNsPsk8gb_vg&#39;;return true;" onclick=
+=3D"this.href=3D&#39;https://www.google.com/url?q\x3dhttps%3A%2F%2Fgithub.c=
+om%2FOLIMEX%2FOLINUXINO%2Ftree%2Fmaster%2FHARDWARE%2FA20-OLinuX\x26sa\x3dD\=
+x26sntz\x3d1\x26usg\x3dAFQjCNFnL-7JZwFKMvIQUbhNsPsk8gb_vg&#39;;return true;=
+">https://github.com/OLIMEX/<wbr>OLINUXINO/tree/master/<wbr>HARDWARE/A20-OL=
+inuX</a>
+<br>&gt; &gt; ino-LIME2
+<br>&gt; &gt;=20
+<br>&gt; &gt; On the board both 4GB NAND and eMMC Flash chips can be placed
+<br>&gt; &gt; alternatively on the same place. There is difference in some =
+other
+<br>&gt; &gt; components as well.
+<br>&gt; &gt;=20
+<br>&gt; &gt; If one want to order it from the site probably has to order A=
+20
+<br>&gt; &gt; -Olinuxino-Lime2-4GB with note that eMMC option is required. =
+The
+<br>&gt; &gt; price is the same.
+<br>&gt; Sorry for the late reply, but yeah the board exists, we asked Olim=
+ex
+<br>&gt; to=20
+<br>&gt; develop the eMMC variant for us. I currently have a dozen or so on=
+ my
+<br>&gt; desk :)
+<br>&gt;=20
+<br>&gt; I don&#39;t know when Olimex will update their webshop with the ne=
+w
+<br>&gt; designs,=20
+<br>&gt; but they simply might not have enough eMMC chips available yet?
+<br>&gt;=20
+<br></blockquote></div>
 
-> [...]
->=20
->> +static void hisi_spi_nor_cmd_prepare(struct hifmc_host *host, u8 cm=
-d,
->> +		u32 *opcfg)
->> +{
->> +	u32 reg;
->> +
->> +	*opcfg |=3D FMC_OP_CMD1_EN;
->> +	switch (cmd) {
->> +	case SPINOR_OP_RDID:
->> +	case SPINOR_OP_RDSR:
->> +	case SPINOR_OP_RDCR:
->> +		*opcfg |=3D FMC_OP_READ_DATA_EN;
->> +		break;
->> +	case SPINOR_OP_WREN:
->> +		reg =3D readl(host->regbase + FMC_GLOBAL_CFG);
->> +		if (reg & FMC_GLOBAL_CFG_WP_ENABLE) {
->> +			reg &=3D ~FMC_GLOBAL_CFG_WP_ENABLE;
->> +			writel(reg, host->regbase + FMC_GLOBAL_CFG);
->> +		}
->> +		break;
->> +	case SPINOR_OP_WRSR:
->> +		*opcfg |=3D FMC_OP_WRITE_DATA_EN;
->> +		break;
->> +	case SPINOR_OP_BE_4K:
->> +	case SPINOR_OP_BE_4K_PMC:
->> +	case SPINOR_OP_SE_4B:
->> +	case SPINOR_OP_SE:
->> +		*opcfg |=3D FMC_OP_ADDR_EN;
->> +		break;
->> +	case SPINOR_OP_EN4B:
->> +		reg =3D readl(host->regbase + FMC_CFG);
->> +		reg |=3D SPI_NOR_ADDR_MODE;
->> +		writel(reg, host->regbase + FMC_CFG);
->> +		break;
->> +	case SPINOR_OP_EX4B:
->> +		reg =3D readl(host->regbase + FMC_CFG);
->> +		reg &=3D ~SPI_NOR_ADDR_MODE;
->> +		writel(reg, host->regbase + FMC_CFG);
->> +		break;
->> +	case SPINOR_OP_CHIP_ERASE:
->> +	default:
->> +		break;
->> +	}
->> +}
->=20
-> IMHO, this is exactly what should be avoided in (Q)SPI controller dri=
-vers:
-> they should not analyse the command op code to guess some settings su=
-ch as
-> the SPI protocol to be used or in your case whether some address or d=
-ata
-> cycles are included inside the command.
->=20
-> Why? Just because your driver won't know what to do when we introduce=
- new
-> op codes. Right now, hisi_spi_nor_cmd_prepare() is not aware of op co=
-de 0x15
-> use by Macronix to read its Configuration Register or Micron op codes=
- to
-> read/write their Volatile Configuration Register and Enhanced Volatil=
-e
-> Configuration Register. So your driver won't support those memories a=
-ny longer
-> when new features using those registers will be added in the spi-nor =
-framework.
->=20
->=20
-> Since your driver implements struct spi_nor hooks, here is what you c=
-ould do
-> instead:
->=20
-> 1 - hisi_spi_nor_read_reg(..., u8 *buf, int len)
->=20
-> if buf !=3D NULL then you should set FMC_OP_READ_DATA_EN, don't set i=
-t otherwise.
->=20
->=20
-> 2 - hisi_spi_nor_write_reg(..., u8 *buf, int len)
->=20
-> buf should always be !=3D NULL so I guess you can always set FMC_OP_W=
-RITE_DATA_EN
->=20
-> For the special case of SPINOR_OP_WREN (Write Enable), your driver se=
-ems
-> to clear the FMC_GLOBAL_CFG_WP_ENABLE bit from the FMC_GLOBAL_CFG reg=
-ister, if
-> set, but never set it again... So why not clear this bit once for all=
-?
->=20
-> Reading the current source code, the support of the hardware write pr=
-otect
-> feature is a little bit odd, isn't it?
->=20
-> 3 - hisi_spi_nor_read(struct spi_nor *nor, ...)
->=20
-> your driver doesn't seem to call hisi_spi_nor_send_cmd() /
-> hisi_spi_nor_cmd_prepare() from _read() so I don't know whether you h=
-ave to
-> set the FMC_OP_READ_DATA_EN bit here.
->=20
-> Also you can check nor->addr_width to know whether you need SPI_NOR_A=
-DDR_MODE.
->=20
->=20
-> 4 - hisi_spi_nor_write(struct spi_nor *nor, ...)
->=20
-> Almost the same comment as for _read(): just replace FMC_OP_READ_DATA=
-_EN by
-> FMC_OP_WRITE_DATA_EN I guess.
->=20
->=20
-> 5 - hisi_spi_nor_erase(struct spi_nor *nor, ...)
->=20
-> Here again you should check nor->addr_width to know when to set the
-> SPI_NOR_ADDR_MODE bit in the FMC_CFG register.
->=20
-> The FMC_OP_ADDR_EN bit should always be set for erase operations.
->=20
->=20
->> +static int hisi_spi_nor_send_cmd(struct spi_nor *nor, u8 cmd, int l=
-en)
->> +{
->> +	struct hifmc_priv *priv =3D nor->priv;
->> +	struct hifmc_host *host =3D priv->host;
->> +	u32 reg, op_cfg =3D 0;
->> +
->> +	hisi_spi_nor_cmd_prepare(host, cmd, &op_cfg);
-> [...]
->=20
-> Just get rid of hisi_spi_nor_cmd_prepare(), it would simplify the sup=
-port of
-> your driver a lot. For sure, I don't know the hisilicon spi-nor flash
-> controller as much as you do but I'm pretty sure its driver doesn't n=
-eed to
-> analyse the op code to guess some hardware settings. There are other =
-means to
-> find out these settings.
->=20
-> Anyway, I hope these few comments will help you.
->=20
-Thank you very much for your detailed comments. They help me a lot. I l=
-ooked into
-the datasheet and this driver. I found it was really a big mistake for
-hisi_spi_nor_cmd_prepare to configure registers according to the comman=
-d op code.
+<p></p>
 
-I rewrote corresponding functions like below.
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
 
-static int hisi_spi_nor_op_reg(struct spi_nor *nor, u8 opcode, int len,=
- u8 optype)
-{
-	struct hifmc_priv *priv =3D nor->priv;
-	struct hifmc_host *host =3D priv->host;
-	u32 reg;
+------=_Part_170_881606319.1462351747939--
 
-	reg =3D FMC_CMD_CMD1(opcode);
-	writel(reg, host->regbase + FMC_CMD);
-
-	reg =3D FMC_DATA_NUM_CNT(len);
-	writel(reg, host->regbase + FMC_DATA_NUM);
-
-	reg =3D OP_CFG_FM_CS(priv->chipselect);
-	writel(reg, host->regbase + FMC_OP_CFG);
-
-	writel(0xff, host->regbase + FMC_INT_CLR);
-	reg =3D FMC_OP_CMD1_EN;
-	if (optype =3D=3D FMC_OP_READ) {
-		reg |=3D FMC_OP_READ_DATA_EN;
-	} else {
-		reg |=3D FMC_OP_WRITE_DATA_EN;
-	}
-	reg |=3D FMC_OP_REG_OP_START;
-	writel(reg, host->regbase + FMC_OP);
-
-	return wait_op_finish(host);
-}
-
-static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *bu=
-f,
-		int len)
-{
-	struct hifmc_priv *priv =3D nor->priv;
-	struct hifmc_host *host =3D priv->host;
-	int ret;
-
-	ret =3D hisi_spi_nor_op_reg(nor, opcode, len, FMC_OP_READ);
-	if (ret)
-		return ret;
-
-	memcpy_fromio(buf, host->iobase, len);
-	return 0;
-}
-
-static int hisi_spi_nor_write_reg(struct spi_nor *nor, u8 opcode,
-				u8 *buf, int len)
-{
-	struct hifmc_priv *priv =3D nor->priv;
-	struct hifmc_host *host =3D priv->host;
-
-	if (len)
-		memcpy_toio(host->iobase, buf, len);
-
-	return hisi_spi_nor_op_reg(nor, opcode, len, FMC_OP_WRITE);
-}
-
-static int hisi_spi_nor_register(struct device_node *np,
-				struct hifmc_host *host)
-{
-	struct spi_nor *nor;
-	...
-	nor->read_reg =3D hisi_spi_nor_read_reg;
-	nor->write_reg =3D hisi_spi_nor_write_reg;
-	nor->erase =3D NULL;   /*use the default implementation*/
-	...
-	spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
-	...
-}
-
-Any new comments will be highly appreciated. Thank you.
-
-Regards,
-Jiancheng
+------=_Part_169_95417768.1462351747939--
