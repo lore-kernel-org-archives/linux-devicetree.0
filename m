@@ -1,233 +1,81 @@
-From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: mxs-lradc: Add regulators for current sources
-Date: Wed, 04 May 2016 13:38:25 +0200
-Message-ID: <0e2b0d54b37d5c780b7b81b64b4e9743@ccbib.org>
-References: <1461333147-11873-1-git-send-email-harald@ccbib.org>
- <1461333147-11873-2-git-send-email-harald@ccbib.org>
- <57288674.9050601@i2se.com> <6cdd4f858dacf72e192a292f29c12feb@ccbib.org>
- <1e7d5f3a-22c1-94d4-9620-7aa112602e39@kernel.org>
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: pci: add DT binding for Axis ARTPEC-6 PCIe controller
+Date: Wed, 4 May 2016 13:54:17 +0200
+Message-ID: <1462362857-27481-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1e7d5f3a-22c1-94d4-9620-7aa112602e39-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: niklass-VrBV9hrLPhE@public.gmane.org, jespern-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04.05.2016 09:15, Jonathan Cameron wrote:
-> On 03/05/16 12:22, Harald Geyer wrote:
->> On 03.05.2016 13:07, Stefan Wahren wrote:
->>> Am 22.04.2016 um 15:52 schrieb Harald Geyer:
->>>> The hardware has two current sources ISRC0 and ISRC1 to allow 
->>>> measuring
->>>> resistors without additional circuitry. This commit makes them 
->>>> available
->>>> as regulators.
->>>>
->>>> Tested on an imx233-olinuxino board.
->>>>
->>>> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
->>>> ---
->>>> The current regulator API doesn't fit this type of device very 
->>>> well: Typically
->>>> consumers will want to set a defined current, ie. min_uA == 
->>>> max_uA, but they
->>>> can't without help from configuration data, because the valid 
->>>> values aren't
->>>> reported by the API for current regulators. I have been thinking 
->>>> about
->>>> extending the API, but currently AFAIK no such consumers exist and 
->>>> most
->>>> users, like myself, will force the regulator to a defined value in
->>>> devicetree anyway.
->>>>
->>>>  .../bindings/staging/iio/adc/mxs-lradc.txt         |  29 ++++
->>>>  drivers/iio/adc/Kconfig                            |   1 +
->>>>  drivers/iio/adc/mxs-lradc.c                        | 152 
->>>> +++++++++++++++++++++
->>>>  3 files changed, 182 insertions(+)
->>>>
->>>> diff --git 
->>>> a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt 
->>>> b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>>> index 555fb11..983952c 100644
->>>> --- 
->>>> a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>>> +++ 
->>>> b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>>> @@ -19,6 +19,15 @@ Optional properties:
->>>>  - fsl,settling: delay between plate switch to next sample. 
->>>> Allowed value is
->>>>                  1 ... 2047. It counts at 2 kHz and its default is
->>>>                  10 (= 5 ms)
->>>> +- ISRC0: A node describing the regulator of internal current 
->>>> source 0
->>>> +- ISRC1: A node describing the regulator of internal current 
->>>> source 1
->>>> +
->>>> +Required properties for the ISRCx sub-nodes:
->>>> +- regulator-max-microamp: See standard regulator binding 
->>>> documentation.
->>>> +                          Valid values are from 0 to 300 in steps 
->>>> of 20.
->>>> +
->>>> +Optional properties for the ISRCx sub-nodes:
->>>> +Any standard regulator properties that apply to current 
->>>> regulators.
->>>>
->>>>  Example for i.MX23 SoC:
->>>>
->>>> @@ -31,6 +40,16 @@ Example for i.MX23 SoC:
->>>>          fsl,ave-ctrl = <4>;
->>>>          fsl,ave-delay = <2>;
->>>>          fsl,settling = <10>;
->>>> +
->>>> +        isrc_lradc0: ISRC0 {
->>>> +            regulator-max-microamp = <300>;
->>>> +        };
->>>> +
->>>> +        isrc_lradc1: ISRC1 {
->>>> +            regulator-max-microamp = <120>;
->>>> +            regulator-min-microamp = <120>;
->>>> +            regulator-always-on;
->>>> +        };
->>>
->>> IMHO the binding should represent the direct connection between the
->>> current source and the physical channel. I think a node label isn't
->>> enough. Unfortunately i don't have an idea to do it the "right 
->>> way".
->>
->> I strictly followed the names of the data sheet here: imx23 and 
->> imx28
->> reference manuals both call the current sources ISRC0 and ISRC1 even
->> if they are attached to different channels of the ADC. I think
->> inventing some ISRC6 for imx28 would do more harm then good.
-> So just to check... These two current sources are effectively
-> pushing current out of the ADC input pin?  Assumption being that
-> this causes an appropriate voltage across a component between there
-> and 0V?
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
 
-Exactly.
+This commit adds the Device Tree binding documentation that allows to
+describe the PCIe controller found in the Axis ARTPEC-6 SoC.
 
-> I wonder if we are better off not treating these as regulators at
-> all - whilst you could in theory use them for general purposes, it
-> would be a bit nuts and sometimes the 'it is nuts argument' is
-> enough to mean we don't support something :)
+Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+---
+ .../devicetree/bindings/pci/axis,artpec6-pcie.txt  | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
 
-Yeah, it would be some funny 4-bit DAC ...
-
-> I wouldn't have any problem with an additional attribute for the
-> adc channels - maybe something like...
->
-> in_voltage6_sourcecurrent?  Then the control could be pushed to
-> userspace.
-
-I'm very open to that idea. Not having yet an other subsystem
-involved would simplify some things a lot.
-
-> Or if it only makes sense to do it as a fixed value in DT then
-> define optional child nodes for the individual channels, with
-> the relevant ones have current-source-microamp or
-> something like that as an parameter.
-
-My research in thermistors is still ongoing (so I don't have
-a kernel driver yet) but I think for thermistors with
-exponential temperature dependence dynamic setting of the
-current source will be necessary to get high resolution across
-the whole temperature range.
-
-Of course many applications wont need this. For checks like
-"Is my battery over-heating?" a simple fixed current from DT
-will to well, so I guess we should support both.
-
-> What do you think?
-
-As I already stated in an other subthread, I'm not entirely
-happy with the regulator approach. Having everything inside
-iio would make supporting complex use cases easier in the
-future, I guess.
-
-Also IIO devices are much easier to control from user space
-then regulators, which might be desired for this type of
-device.
-
-OTOH I'm not sure how many other devices out there have a
-similar feature. I'd rather not invent a new API for just
-very few devices. IMO iio already suffers from the
-complexity of the sysfs API. Maybe somebody with a good
-overview of ADCs available on the market can provide some
-input here.
-
-Also of course there are lots of ADCs out there without
-internal current source and those could be used with
-thermistors too but would need a regulator anyway.
-So maybe eventually we would end up with both solutions
-supported, which I'd avoid if at all possible. (I guess
-we could work around the last issue by providing some
-generic driver to pull an iio channel and a regulator
-together - do we like that level of abstraction?)
-
-If we start our own API to control current sources we
-might end up pretty much reimplementing the regulator
-API for the single consumer case.
-
-I'd like to have input from more people on the above
-points before going one way or the other.
-
-Thanks,
-Harald
-
-> Jonathan
->
->>
->>>>      };
->>>>
->>>>  Example for i.MX28 SoC:
->>>> @@ -44,4 +63,14 @@ Example for i.MX28 SoC:
->>>>          fsl,ave-ctrl = <4>;
->>>>          fsl,ave-delay = <2>;
->>>>          fsl,settling = <10>;
->>>> +
->>>> +        isrc_lradc0: ISRC0 {
->>>> +            regulator-max-microamp = <300>;
->>>> +        };
->>>> +
->>>> +        isrc_lradc6: ISRC1 {
->>>> +            regulator-max-microamp = <120>;
->>>> +            regulator-min-microamp = <120>;
->>>> +            regulator-always-on;
->>>> +        };
->>>>      };
->>>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>>> index 5937030..1968d1c 100644
->>>> --- a/drivers/iio/adc/Kconfig
->>>> +++ b/drivers/iio/adc/Kconfig
->>>> @@ -319,6 +319,7 @@ config MXS_LRADC
->>>>          tristate "Freescale i.MX23/i.MX28 LRADC"
->>>>          depends on (ARCH_MXS || COMPILE_TEST) && HAS_IOMEM
->>>>          depends on INPUT
->>>> +        depends on REGULATOR
->>>
->>> Any chance to avoid this dependency for an optional feature?
->>
->> I haven't looked into it yet, but I expect that that the mfd
->> conversion will avoid this neatly.
->>
->> Thanks,
->> Harald
->>
->>> Stefan
->>>
->>>>          select STMP_DEVICE
->>>>          select IIO_BUFFER
->>>>          select IIO_TRIGGERED_BUFFER
->>
-
+diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+new file mode 100644
+index 0000000..fdac2a2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+@@ -0,0 +1,45 @@
++* Axis ARTPEC-6 PCIe interface
++
++This PCIe host controller is based on the Synopsis Designware PCIe IP
++and thus inherits all the common properties defined in designware-pcie.txt.
++
++Required properties:
++- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
++- reg: base addresses and lengths of the pcie controller (DBI),
++	the phy controller, and configuration address space.
++- reg-names: Must include the following entries:
++	- "dbi"
++	- "phy"
++	- "config"
++- interrupts: A list of interrupt outputs of the controller. Must contain an
++  entry for each entry in the interrupt-names property.
++- interrupt-names: Must include the following entries:
++	- "msi": The interrupt that is asserted when an MSI is received
++- syscon: Should contain a link to the syscon device node.
++
++Example:
++
++	pcie@f8050000 {
++		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
++		reg = <0xf8050000 0x2000
++		       0xf8040000 0x1000
++		       0xc0000000 0x1000>;
++		reg-names = "dbi", "phy", "config";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++			  /* downstream I/O */
++		ranges = <0x81000000 0 0	  0xc0001000 0 0x00010000
++			  /* non-prefetchable memory */
++			  0x82000000 0 0xc0011000 0xc0011000 0 0x1ffef000>;
++		num-lanes = <2>;
++		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "msi";
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0x7>;
++		interrupt-map = <0 0 0 1 &intc GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 2 &intc GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 3 &intc GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++		                <0 0 0 4 &intc GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
++		syscon = <&syscon>;
++	};
 -- 
-If you want to support my work:
-see http://friends.ccbib.org/harald/supporting/
-or donate via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
-or bitcoin 1FUtd8T9jRN1rFz63vZz7s2fDtB6d6A7aS
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
