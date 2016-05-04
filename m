@@ -1,59 +1,36 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/3] ARM/arm64: dts: renesas: Describe RTS/CTS hardware flow control
-Date: Wed,  4 May 2016 10:57:55 +0200
-Message-ID: <1462352278-30327-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 3/3] arm64: dts: salvator-x: SCIF1 supports RTS/CTS hardware flow control
+Date: Wed,  4 May 2016 10:57:58 +0200
+Message-ID: <1462352278-30327-4-git-send-email-geert+renesas@glider.be>
+References: <1462352278-30327-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1462352278-30327-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+On the Salvator-X development board, the RTS and CTS pins of debug
+serial-1 port SCIF1 are wired to the CP2102 Serial-USB bridge.  Reflect
+this in the DTS by adding the "uart-has-rtscts" property to the scif1
+device node.
 
-This patch series updates the various Renesas DTSes to describe that
-some UARTS have dedicated lines for RTS/CTS hardware flow control, and
-that they are available for use (wired and enabled by pinmux
-configuration), by adding the "uart-has-rtscts" property to
-board-specific DTS files where appropriate.
-
-While the actual DT binding updates documenting the "uart-has-rtscts"
-property for SCIF(A) UARTs ("serial: sh-sci: Update DT binding
-documentation for dedicated RTS/CTS") hasn't been accepted into tty-next
-yet, this property is part of the Generic Serial DT Bindings
-(Documentation/devicetree/bindings/serial/serial.txt), which has been
-accepted.
-
-Actual enablement of RTS/CTS hardware flow control (through setting the
-CRTSCTS termios flag from userspace) depends on series "[PATCH v2 00/11]
-serial: sh-sci: Hardware Flow Control Updates"
-(http://www.spinics.net/lists/linux-serial/msg22535.html).
-Note that setting the CRTSCTS flag for a serial port that is being used
-as the kernel console is a bad idea ;-) You'll have better luck with
-UARTs on expansion connectors, cfr. the topic/renesas-overlays branch of
-https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git
-
-Thanks!
-
-Geert Uytterhoeven (3):
-  ARM: dts: bockw: SCIF0 supports RTS/CTS hardware flow control
-  ARM: dts: kzm9g: SCIFA4 supports RTS/CTS hardware flow control
-  arm64: dts: salvator-x: SCIF1 supports RTS/CTS hardware flow control
-
- arch/arm/boot/dts/r8a7778-bockw.dts                | 1 +
- arch/arm/boot/dts/sh73a0-kzm9g.dts                 | 1 +
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
  arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 1 +
- 3 files changed, 3 insertions(+)
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+index 5232aad07062198b..c09ead3a29fb72cf 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+@@ -369,6 +369,7 @@
+ 	pinctrl-0 = <&scif1_pins>;
+ 	pinctrl-names = "default";
+ 
++	uart-has-rtscts;
+ 	status = "okay";
+ };
+ 
 -- 
 1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
