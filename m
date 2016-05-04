@@ -1,66 +1,88 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 10/14] usb: otg: add hcd companion support
-Date: Wed, 4 May 2016 16:47:18 +0300
-Message-ID: <5729FD66.4020704@ti.com>
-References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
- <1462191537-10314-11-git-send-email-rogerq@ti.com>
- <20160504131700.GA20184@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Input: add Atmel Atmegaxx captouch driver
+Date: Wed, 4 May 2016 08:51:23 -0500
+Message-ID: <20160504135123.GA4567@rob-hp-laptop>
+References: <1462295611-49684-1-git-send-email-grundler@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160504131700.GA20184@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462295611-49684-1-git-send-email-grundler@chromium.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Grundler <grundler@chromium.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Hung-yu Wu <hywu@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/16 16:17, Rob Herring wrote:
-> On Mon, May 02, 2016 at 03:18:53PM +0300, Roger Quadros wrote:
->> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->>
->> Since some host controller (e.g. EHCI) needs a companion host controller
->> (e.g. OHCI), this patch adds such a configuration to use it in the OTG
->> core.
->>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/usb/generic.txt |  3 +++
->>  drivers/usb/common/usb-otg.c                      | 32 ++++++++++++++++-------
->>  include/linux/usb/otg.h                           |  7 ++++-
->>  3 files changed, 32 insertions(+), 10 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
->> index f6866c1..1db1c33 100644
->> --- a/Documentation/devicetree/bindings/usb/generic.txt
->> +++ b/Documentation/devicetree/bindings/usb/generic.txt
->> @@ -27,6 +27,9 @@ Optional properties:
->>   - otg-controller: phandle to otg controller. Host or gadget controllers can
->>  			contain this property to link it to a particular OTG
->>  			controller.
->> + - hcd-needs-companion: must be present if otg controller is dealing with
->> +			EHCI host controller that needs a companion OHCI host
->> +			controller.
+On Tue, May 03, 2016 at 10:13:31AM -0700, Grant Grundler wrote:
+> Add I2C driver for AtmegaXX capacitive touch device.
 > 
-> Don't you need to have a link to the companion controller node?
+> Signed-off-by: Hung-yu Wu <hywu@google.com>
+> Signed-off-by: Grant Grundler <grundler@chromium.org>
+> ---
+>  .../bindings/input/atmel,atmegaxx_captouch.txt     |  34 +++
 
-primary and companion controllers are totally independent of each other
-e.g. EHCI and OHCI. They are enabled by separate Kconfig options and
-the system can operate with either or both of them enabled.
+It is generally preferred that bindings are a separate patch.
 
-At the OTG layer we don't have information as to whether we should be waiting
-for both of them to register or not and hence need this "hcd-needs-companion" flag.
-
+>  drivers/input/misc/Kconfig                         |  11 +
+>  drivers/input/misc/Makefile                        |   1 +
+>  drivers/input/misc/atmegaxx_captouch.c             | 278 +++++++++++++++++++++
+>  4 files changed, 324 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
+>  create mode 100644 drivers/input/misc/atmegaxx_captouch.c
 > 
->>  
->>  This is an attribute to a USB controller such as:
->>  
+> For those that like to know how sausage is made, ChromeOS code review history here:
+>    https://chromium-review.googlesource.com/339950
+> 
+> Driver was tested with prototype HW and it reliably reports events correctly.
+> Manual testing was just using "evtest /dev/input/event0" and watch for events.
+> 
+> diff --git a/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt b/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
+> new file mode 100644
+> index 0000000..07a4b0b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/atmel,atmegaxx_captouch.txt
+> @@ -0,0 +1,34 @@
+> +Device tree bindings for Atmel AtmegaXX capacitive touch sensor
+> +
+> +The node for this device must be a child of a I2C controller node, as the
+> +device communicates via I2C.
+> +
+> +Required properties:
+> +
+> +	compatible:	Must be "atmel,atmegaxx_captouch".
 
---
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No wildcards in the compatible strings. Use the specific devices.
+
+Also, use hyphen rather than underscore. However, if the device is only 
+a touch controller, then '_captouch' is not needed. The part number is 
+sufficient to identify the device.
+
+> +	reg:		The I2C slave address of the device.
+> +	interrupts:	Property describing the interrupt line the device
+> +			is connected to. The device only has one interrupt
+> +			source.
+> +	linux,keycodes:	Specifies an array of numeric keycode values to
+> +			be used for reporting button presses. The array can
+> +			contain up to 8 entries.
+> +
+> +Optional properties:
+> +
+> +	autorepeat:	Enables the Linux input system's autorepeat
+> +			feature on the input device.
+> +
+> +Example:
+> +
+> +	atmegaxx_captouch@51 {
+
+atmegaxx@51 (with actual part number)
+
+> +		compatible = "atmel,atmegaxx_captouch";
+> +		reg = <0x51>;
+> +		interrupt-parent = <&tlmm>;
+> +		interrupts = <67 IRQ_TYPE_EDGE_FALLING>;
+> +		linux,keycodes = <BTN_0>, <BTN_1>,
+> +			<BTN_2>, <BTN_3>,
+> +			<BTN_4>, <BTN_5>,
+> +			<BTN_6>, <BTN_7>;
+> +		autorepeat;
+> +	};
