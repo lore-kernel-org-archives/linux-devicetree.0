@@ -1,109 +1,119 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v2 2/6] mmc: core: add mmc-hs400-enhanced-strobe support
-Date: Wed, 4 May 2016 17:19:30 +0800
-Message-ID: <2c73521e-7734-7438-06ef-065722130036@rock-chips.com>
-References: <1461897751-28810-1-git-send-email-shawn.lin@rock-chips.com>
- <1461897995-28903-1-git-send-email-shawn.lin@rock-chips.com>
- <CAPDyKFrPhBKA3g+_NMBGfw4kqonpgQzbdTSo-A5sRwqio268xw@mail.gmail.com>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v10 0/8] Add MT8173 Video Encoder Driver and VPU Driver
+Date: Wed, 4 May 2016 17:21:22 +0800
+Message-ID: <1462353682.1891.7.camel@mtksdaap41>
+References: <1462270287-11374-1-git-send-email-tiffany.lin@mediatek.com>
+	 <5729A57E.1080505@xs4all.nl> <1462349987.1891.5.camel@mtksdaap41>
+	 <5729B20B.6090006@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrPhBKA3g+_NMBGfw4kqonpgQzbdTSo-A5sRwqio268xw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: shawn.lin@rock-chips.com, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5729B20B.6090006-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/5/4 16:12, Ulf Hansson =E5=86=99=E9=81=93:
-> On 29 April 2016 at 04:46, Shawn Lin <shawn.lin@rock-chips.com> wrote=
-:
->> This patch introduce mmc-hs400-enhanced-strobe for platforms
->> which want to enable enhanced strobe function from DT if the
->> mmc host controller claims to support enhanced strobe.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>
->> ---
->>
->> Changes in v2:
->> - switch to HS400ES from Highspeed mode directly
->>
->>  drivers/mmc/core/host.c  | 2 ++
->>  include/linux/mmc/host.h | 6 ++++++
->>  2 files changed, 8 insertions(+)
->>
->> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
->> index e0a3ee1..eb1530a 100644
->> --- a/drivers/mmc/core/host.c
->> +++ b/drivers/mmc/core/host.c
->> @@ -289,6 +289,8 @@ int mmc_of_parse(struct mmc_host *host)
->>                 host->caps2 |=3D MMC_CAP2_HS400_1_8V | MMC_CAP2_HS20=
-0_1_8V_SDR;
->>         if (of_property_read_bool(np, "mmc-hs400-1_2v"))
->>                 host->caps2 |=3D MMC_CAP2_HS400_1_2V | MMC_CAP2_HS20=
-0_1_2V_SDR;
->> +       if (of_property_read_bool(np, "mmc-hs400-enhanced-strobe"))
->> +               host->caps2 |=3D MMC_CAP2_HS400_ENHANCED_STROBE;
->
-> How about MMC_CAP2_HS400_ES instead?
+Hi Hans,
 
-MMC_CAP2_HS400_ES is fine to me.
+On Wed, 2016-05-04 at 10:25 +0200, Hans Verkuil wrote:
+> 
+> On 05/04/2016 10:19 AM, tiffany lin wrote:
+> > Hi Hans,
+> > 
+> > On Wed, 2016-05-04 at 09:32 +0200, Hans Verkuil wrote:
+> >> Hi Tiffany,
+> >>
+> >> On 05/03/2016 12:11 PM, Tiffany Lin wrote:
+> >>> ==============
+> >>>  Introduction
+> >>> ==============
+> >>>
+> >>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+> >>> Mediatek Video Codec is able to handle video encoding of in a range of formats.
+> >>>
+> >>> This patch series also include VPU driver. Mediatek Video Codec driver rely on VPU driver to load,
+> >>> communicate with VPU.
+> >>>
+> >>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+> >>> This patch series need [PATCH v15 8/8] memory: mtk-smi: export mtk_smi_larb_get/put[1] to build as module
+> >>>
+> >>> [1]http://lists.infradead.org/pipermail/linux-mediatek/2016-April/005173.html
+> >>>
+> >>> ==================
+> >>>  Device interface
+> >>> ==================
+> >>>
+> >>> In principle the driver bases on v4l2 memory-to-memory framework:
+> >>> it provides a single video node and each opened file handle gets its own private context with separate
+> >>> buffer queues. Each context consist of 2 buffer queues: OUTPUT (for source buffers, i.e. raw video
+> >>> frames) and CAPTURE (for destination buffers, i.e. encoded video frames).
+> >>>
+> >>> ==============================
+> >>>  VPU (Video Processor Unit)
+> >>> ==============================
+> >>> The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
+> >>> It is able to handle video decoding/encoding in a range of formats.
+> >>> The driver provides with VPU firmware download, memory management and the communication interface between CPU and VPU.
+> >>> For VPU initialization, it will create virtual memory for CPU access and physical address for VPU hw device access. 
+> >>> When a decode/encode instance opens a device node, vpu driver will download vpu firmware to the device.
+> >>> A decode/encode instant will decode/encode a frame using VPU interface to interrupt vpu to handle decoding/encoding jobs.
+> >>>
+> >>> Please have a look at the code and comments will be very much appreciated.
+> >>>
+> >>> Change in v10:
+> >>> 1. Fix smatch/sparse error message
+> >>> 2. Add depends on ARM || ARM64 and MTK_IOMMU in Kconfig
+> >>
+> >> I don't like the ARM or ARM64 dependency since that makes COMPILE_TEST harder.
+> >>
+> >> I removed it here and for the VPU and everything still compiles fine with
+> >> sparse and smatch. So I'll drop those dependencies.
+> >>
+> >> Why is the MTK_IOMMU dependency needed? Just curious.
+> >>
+> > This is because we need MTK_IOMMU module to get dma continuous memory
+> > for HW.
+> > 
+> >> Note that sparse still complains about this:
+> >>
+> >> media-git/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c:261:24: warning: incorrect type in assignment (different base types)
+> >>
+> >> I think this code should be rewritten. Something like this would work
+> >> (if I understand the code correctly):
+> >>
+> >> u32 tag = (bs_hdr_len << 5) | 0x10 | not_key;
+> >>
+> >> ac_tag[0] = tag & 0xff;
+> >> ac_tag[1] = (tag >> 8) & 0xff;
+> >> ac_tag[2] = (tag >> 16) & 0xff;
+> >>
+> >> It's perhaps a bit more verbose, but a lot easier to understand.
+> >>
+> > 
+> >> I'm accepting this driver but I'll remove the ARM || ARM64 dependency. Can
+> >> you post a follow-up patch for this sparse warning?
+> >>
+> > 
+> > Got it. We will provide a patch to fix this.
+> > I was curious why my sparse do not show this warning.
+> > Is there any parameter I need to set except C=1?
+> 
+> I'm running it with these parameters: C=2 CF="-D__CHECK_ENDIAN__"
+> 
+> I suspect it is the CHECK_ENDIAN flag that does it.
+> 
+Got it, thanks for the information.
 
->
->>
->>         host->dsr_req =3D !of_property_read_u32(np, "dsr", &host->ds=
-r);
->>         if (host->dsr_req && (host->dsr & ~0xffff)) {
->> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
->> index 85800b4..11e89d3 100644
->> --- a/include/linux/mmc/host.h
->> +++ b/include/linux/mmc/host.h
->> @@ -302,6 +302,7 @@ struct mmc_host {
->>  #define MMC_CAP2_SDIO_IRQ_NOTHREAD (1 << 17)
->>  #define MMC_CAP2_NO_WRITE_PROTECT (1 << 18)    /* No physical write=
- protect pin, assume that card is always read-write */
->>  #define MMC_CAP2_NO_SDIO       (1 << 19)       /* Do not send SDIO =
-commands during initialization */
->> +#define MMC_CAP2_HS400_ENHANCED_STROBE (1 << 20) /* Host supports e=
-nhanced strobe */
->>
->>         mmc_pm_flag_t           pm_caps;        /* supported pm feat=
-ures */
->>
->> @@ -480,6 +481,11 @@ static inline int mmc_host_uhs(struct mmc_host =
-*host)
->>                  MMC_CAP_UHS_DDR50);
->>  }
->>
->> +static inline int mmc_host_hs400_enhanced_strobe(struct mmc_host *h=
-ost)
->> +{
->> +       return host->caps2 & MMC_CAP2_HS400_ENHANCED_STROBE;
->> +}
->> +
->
-> This helper function is to me a bit unnecessary, can you please just
-> check the MMC_CAP2_* when needed instead!?
-
-okay, I will deal with these two comments above.
-
-Thanks.
-
->
->>  static inline int mmc_host_packed_wr(struct mmc_host *host)
->>  {
->>         return host->caps2 & MMC_CAP2_PACKED_WR;
->
-> Kind regards
-> Uffe
->
->
->
+best regards,
+Tiffany
+> Regards,
+> 
+> 	Hans
 
 
---=20
-Best Regards
-Shawn Lin
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
