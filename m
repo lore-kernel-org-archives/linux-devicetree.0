@@ -1,50 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Update iProc GPIO bindings
-Date: Wed, 4 May 2016 08:20:20 -0500
-Message-ID: <20160504132020.GA21065@rob-hp-laptop>
-References: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
- <1462222308-4869-2-git-send-email-ray.jui@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] extcon: gpio: add DT binding doc for extcon-gpio
+Date: Wed, 4 May 2016 08:30:37 -0500
+Message-ID: <20160504133037.GA23334@rob-hp-laptop>
+References: <1462254591-8907-1-git-send-email-vreddytalla@nvidia.com>
+ <1462254591-8907-2-git-send-email-vreddytalla@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1462222308-4869-2-git-send-email-ray.jui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+In-Reply-To: <1462254591-8907-2-git-send-email-vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2016 at 01:51:47PM -0700, Ray Jui wrote:
-> Update the iProc GPIO binding document to add new compatible strings
-> "brcm,iproc-gpio-v2" and "brcm,iproc-gpio-v3" for the 2nd and 3rd
-> generation of the iProc GPIO controllers
+On Tue, May 03, 2016 at 11:19:51AM +0530, Venkat Reddy Talla wrote:
+> Addiing DT binding doc for the extcon gpios properties.
 > 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/extcon/extcon-gpio.txt        | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-> index e427792..3a56649 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-> @@ -4,7 +4,16 @@ Required properties:
->  
->  - compatible:
->      Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
-> -    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
-> +    or "brcm,cygnus-crmu-gpio" for Cygnus SoCs
-> +
-> +    "brcm,iproc-gpio" for the first generation of the GPIO controller that
-> +    supports full-featured pinctrl and GPIO functions used in iProc based SoCs
-> +
-> +    "brcm,iproc-gpio-v2" for the second generation of the GPIO controller that
-> +    has the drive strength pinctrl support disabled, e.g., in the iProc NSP SoC
-> +
-> +    "brcm,iproc-gpio-v3" for the third generation of the GPIO controller that
-> +    has the general pinctrl support completely disabled
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> new file mode 100644
+> index 0000000..4a49c23
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+> @@ -0,0 +1,19 @@
+> +EXTCON FOR GPIO
 
-You can have these for driver matching, but you still need SoC specific 
-compatible strings.
+This needs a better description of what this is and what h/w this 
+applies to.
+
+> +
+> +Required Properties:
+> + - compatible : Should be "extcon-gpio";
+> +
+> +Optional Properties:
+> + - extcon-gpio,name: Name of extcon device.
+> + - gpio: gpio number.
+
+Should be 'gpios'.
+
+> + - extcon-gpio,irq-flags: IRQ flags for GPIO.
+
+If this is an interrupt, then you should be using the interrupts 
+property.
+
+> + - extcon-gpio,debounce: Debounce time in ms.
+
+extcon-gpio is not a vendor prefix, so drop it.
+
+Add unit suffix (-ms).
+
+> + - extcon-gpio,connection-state-low: boolean, Connection state with
+> +                gpio state. True if gpio low means connected.
+
+The active state should be in the GPIO flags cell.
+
+> +
+> +extcon-gpio {
+> +	compatible = "extcon-gpio";
+> +        extcon-gpio,name = "VBUS";
+
+How is VBus a gpio?
+
+> +	gpio = <&gpio 20 0>;
+> +	extcon-gpio,cable-names = <EXTCON_USB EXTCON_NONE>;
+
+Not documented.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
