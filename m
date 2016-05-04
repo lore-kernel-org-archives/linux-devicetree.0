@@ -1,163 +1,233 @@
-From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: Re: [PATCH v7 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Wed, 4 May 2016 12:06:43 +0200
-Message-ID: <CACh+v5O2XpJyYWz70pVgtU5-g9td6J7EdmNtJwk0s5SUkAywaQ@mail.gmail.com>
-References: <1461845007-23139-1-git-send-email-boris.brezillon@free-electrons.com>
- <1461845007-23139-2-git-send-email-boris.brezillon@free-electrons.com>
- <20160503164019.GA1604@rob-hp-laptop> <20160503185153.5cfddc32@bbrezillon>
- <CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
+From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH 1/3] iio: mxs-lradc: Add regulators for current sources
+Date: Wed, 04 May 2016 13:38:25 +0200
+Message-ID: <0e2b0d54b37d5c780b7b81b64b4e9743@ccbib.org>
+References: <1461333147-11873-1-git-send-email-harald@ccbib.org>
+ <1461333147-11873-2-git-send-email-harald@ccbib.org>
+ <57288674.9050601@i2se.com> <6cdd4f858dacf72e192a292f29c12feb@ccbib.org>
+ <1e7d5f3a-22c1-94d4-9620-7aa112602e39@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1e7d5f3a-22c1-94d4-9620-7aa112602e39-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2016-05-03 21:11 GMT+02:00 Rob Herring <robh@kernel.org>:
-> On Tue, May 3, 2016 at 11:51 AM, Boris Brezillon
-> <boris.brezillon@free-electrons.com> wrote:
->> Hi Rob,
->>
->> On Tue, 3 May 2016 11:40:19 -0500
->> Rob Herring <robh@kernel.org> wrote:
->>
->>> On Thu, Apr 28, 2016 at 02:03:27PM +0200, Boris Brezillon wrote:
->>> > The EBI (External Bus Interface) is used to access external peripherals
->>> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
->>> > Each device is assigned a CS line and an address range and can have its
->>> > own configuration (timings, access mode, bus width, ...).
->>> > This driver provides a generic DT binding to configure a device according
->>> > to its requirements.
->>> > For specific device controllers (like the NAND one) the SMC timings
->>> > should be configured by the controller driver through the matrix and smc
->>> > syscon regmaps.
->>> >
->>> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
->>> > ---
->>> >  .../bindings/memory-controllers/atmel,ebi.txt      | 136 +++++++++++++++++++++
->>> >  1 file changed, 136 insertions(+)
->>> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
->>> >
->>> > diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
->>> > new file mode 100644
->>> > index 0000000..a6dca5c
->>> > --- /dev/null
->>> > +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
->>> > @@ -0,0 +1,136 @@
->>> > +* Device tree bindings for Atmel EBI
->>> > +
->>> > +The External Bus Interface (EBI) controller is a bus where you can connect
->>> > +asynchronous (NAND, NOR, SRAM, ....) and synchronous memories (SDR/DDR SDRAMs).
->>> > +The EBI provides a glue-less interface to asynchronous memories through the SMC
->>> > +(Static Memory Controller).
->>> > +
->>> > +Required properties:
->>> > +
->>> > +- compatible:              "atmel,at91sam9260-ebi"
->>> > +                   "atmel,at91sam9261-ebi"
->>> > +                   "atmel,at91sam9263-ebi0"
->>> > +                   "atmel,at91sam9263-ebi1"
+On 04.05.2016 09:15, Jonathan Cameron wrote:
+> On 03/05/16 12:22, Harald Geyer wrote:
+>> On 03.05.2016 13:07, Stefan Wahren wrote:
+>>> Am 22.04.2016 um 15:52 schrieb Harald Geyer:
+>>>> The hardware has two current sources ISRC0 and ISRC1 to allow 
+>>>> measuring
+>>>> resistors without additional circuitry. This commit makes them 
+>>>> available
+>>>> as regulators.
+>>>>
+>>>> Tested on an imx233-olinuxino board.
+>>>>
+>>>> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+>>>> ---
+>>>> The current regulator API doesn't fit this type of device very 
+>>>> well: Typically
+>>>> consumers will want to set a defined current, ie. min_uA == 
+>>>> max_uA, but they
+>>>> can't without help from configuration data, because the valid 
+>>>> values aren't
+>>>> reported by the API for current regulators. I have been thinking 
+>>>> about
+>>>> extending the API, but currently AFAIK no such consumers exist and 
+>>>> most
+>>>> users, like myself, will force the regulator to a defined value in
+>>>> devicetree anyway.
+>>>>
+>>>>  .../bindings/staging/iio/adc/mxs-lradc.txt         |  29 ++++
+>>>>  drivers/iio/adc/Kconfig                            |   1 +
+>>>>  drivers/iio/adc/mxs-lradc.c                        | 152 
+>>>> +++++++++++++++++++++
+>>>>  3 files changed, 182 insertions(+)
+>>>>
+>>>> diff --git 
+>>>> a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt 
+>>>> b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+>>>> index 555fb11..983952c 100644
+>>>> --- 
+>>>> a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+>>>> +++ 
+>>>> b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+>>>> @@ -19,6 +19,15 @@ Optional properties:
+>>>>  - fsl,settling: delay between plate switch to next sample. 
+>>>> Allowed value is
+>>>>                  1 ... 2047. It counts at 2 kHz and its default is
+>>>>                  10 (= 5 ms)
+>>>> +- ISRC0: A node describing the regulator of internal current 
+>>>> source 0
+>>>> +- ISRC1: A node describing the regulator of internal current 
+>>>> source 1
+>>>> +
+>>>> +Required properties for the ISRCx sub-nodes:
+>>>> +- regulator-max-microamp: See standard regulator binding 
+>>>> documentation.
+>>>> +                          Valid values are from 0 to 300 in steps 
+>>>> of 20.
+>>>> +
+>>>> +Optional properties for the ISRCx sub-nodes:
+>>>> +Any standard regulator properties that apply to current 
+>>>> regulators.
+>>>>
+>>>>  Example for i.MX23 SoC:
+>>>>
+>>>> @@ -31,6 +40,16 @@ Example for i.MX23 SoC:
+>>>>          fsl,ave-ctrl = <4>;
+>>>>          fsl,ave-delay = <2>;
+>>>>          fsl,settling = <10>;
+>>>> +
+>>>> +        isrc_lradc0: ISRC0 {
+>>>> +            regulator-max-microamp = <300>;
+>>>> +        };
+>>>> +
+>>>> +        isrc_lradc1: ISRC1 {
+>>>> +            regulator-max-microamp = <120>;
+>>>> +            regulator-min-microamp = <120>;
+>>>> +            regulator-always-on;
+>>>> +        };
 >>>
->>> What are the differences between 0 and 1?
+>>> IMHO the binding should represent the direct connection between the
+>>> current source and the physical channel. I think a node label isn't
+>>> enough. Unfortunately i don't have an idea to do it the "right 
+>>> way".
 >>
->> Because this SoC has 2 EBI busses with different capabilities.
->
-> Okay, correct answer. :)
->
-> [...]
->
->>>
->>> > +                   of the memory region requested by the device.
->>> > +
->>> > +EBI bus configuration associated with specific chip-select will be defined in
->>> > +the configs subnode. This configs node will in turn contain several subnodes
->>> > +named config-<cs-id>, each of them containing the following properties.
->>>
->>> This is a bit unusual. Why not just part of the child device nodes?
->>
->> Oh, come on! I reworked the binding because Mark complained about the
->> previous binding which was doing exactly what you're suggesting. Can
->> you please be consistent in your reviews...
->
-> No, Mark and I both have our opinions. Which part of this patch
-> explains the history? If the revision history is not in the patch, I'm
-> not looking at it.
->
-> My issue with it this way is that it has invented yet another way to
-> describe timings. I would like to be consistent across external bus
-> descriptions, but we're not very consistent to begin with though. The
-> most common seems to be the way you first did it. But I agree that it
-> is kind of screwy to have an intermediate node unless the controller
-> itself has sub-blocks within it and is not the established way to
-> describe a bus with chip selects. I would either put the properties
-> directly in the child nodes (e.g. flash@0,0) or put your config nodes
-> in the device node. I'd call it timings instead of config, but that's
-> just bikeshedding.
->
-> memory-controller@1000 {
->   ...
->   flash@0,0 {
->     timings {
->       ...
->     };
->   };
-> };
->
+>> I strictly followed the names of the data sheet here: imx23 and 
+>> imx28
+>> reference manuals both call the current sources ISRC0 and ISRC1 even
+>> if they are attached to different channels of the ADC. I think
+>> inventing some ISRC6 for imx28 would do more harm then good.
+> So just to check... These two current sources are effectively
+> pushing current out of the ADC input pin?  Assumption being that
+> this causes an appropriate voltage across a component between there
+> and 0V?
 
-I don't think the timings belong in the child node as they really are
-for the chip select and the chip select may select several devices at
-once. I'm thinking (again) of a FPGA here that could implement or
-example 4 serial ports at different addresses.
+Exactly.
 
-JJ
+> I wonder if we are better off not treating these as regulators at
+> all - whilst you could in theory use them for general purposes, it
+> would be a bit nuts and sometimes the 'it is nuts argument' is
+> enough to mean we don't support something :)
 
->>> > +
->>> > +Optional config-<cs-id> node properties:
->>> > +
->>> > +- atmel,bus-width:         width of the asynchronous device's data bus
->>> > +                           8, 16 or 32.
->>> > +                           Default to 8 when undefined.
->>> > +
->>> > +- atmel,byte-access-type   "write" or "select" (see Atmel datasheet).
->>> > +                           Default to "select" when undefined.
->>> > +
->>> > +- atmel,read-mode          "nrd" or "ncs".
->>> > +                           Default to "ncs" when undefined.
->>> > +
->>> > +- atmel,write-mode         "nwe" or "ncs".
->>> > +                           Default to "ncs" when undefined.
->>> > +
->>> > +- atmel,exnw-mode          "disabled", "frozen" or "ready".
->>> > +                           Default to "disabled" when undefined.
->>> > +
->>> > +- atmel,page-mode          enable page mode if present. The provided value
->>> > +                           defines the page size (supported values: 4, 8,
->>> > +                           16 and 32).
->>> > +
->>> > +- atmel,tdf-mode:          "normal" or "optimized". When set to
->>>
->>> This should be boolean.
+Yeah, it would be some funny 4-bit DAC ...
+
+> I wouldn't have any problem with an additional attribute for the
+> adc channels - maybe something like...
+>
+> in_voltage6_sourcecurrent?  Then the control could be pushed to
+> userspace.
+
+I'm very open to that idea. Not having yet an other subsystem
+involved would simplify some things a lot.
+
+> Or if it only makes sense to do it as a fixed value in DT then
+> define optional child nodes for the individual channels, with
+> the relevant ones have current-source-microamp or
+> something like that as an parameter.
+
+My research in thermistors is still ongoing (so I don't have
+a kernel driver yet) but I think for thermistors with
+exponential temperature dependence dynamic setting of the
+current source will be necessary to get high resolution across
+the whole temperature range.
+
+Of course many applications wont need this. For checks like
+"Is my battery over-heating?" a simple fixed current from DT
+will to well, so I guess we should support both.
+
+> What do you think?
+
+As I already stated in an other subthread, I'm not entirely
+happy with the regulator approach. Having everything inside
+iio would make supporting complex use cases easier in the
+future, I guess.
+
+Also IIO devices are much easier to control from user space
+then regulators, which might be desired for this type of
+device.
+
+OTOH I'm not sure how many other devices out there have a
+similar feature. I'd rather not invent a new API for just
+very few devices. IMO iio already suffers from the
+complexity of the sysfs API. Maybe somebody with a good
+overview of ADCs available on the market can provide some
+input here.
+
+Also of course there are lots of ADCs out there without
+internal current source and those could be used with
+thermistors too but would need a regulator anyway.
+So maybe eventually we would end up with both solutions
+supported, which I'd avoid if at all possible. (I guess
+we could work around the last issue by providing some
+generic driver to pull an iio channel and a regulator
+together - do we like that level of abstraction?)
+
+If we start our own API to control current sources we
+might end up pretty much reimplementing the regulator
+API for the single consumer case.
+
+I'd like to have input from more people on the above
+points before going one way or the other.
+
+Thanks,
+Harald
+
+> Jonathan
+>
 >>
->> It was a formerly defined as a boolean, and when it's done like that we
->> have no way to identify whether the property was forgotten or
->> intentionally set to normal mode. What's the problem with this approach?
->
-> Only preference to use boolean when that is sufficient. With your
-> argument, then we should never have booleans. You state that missing
-> means "normal", not forgotten, so all these properties should be
-> required with no default.
->
-> BTW, I debated the same thing on the other properties, but I could see
-> them being expanded to a 3rd mode. I don't see that here though.
->
-> Rob
+>>>>      };
+>>>>
+>>>>  Example for i.MX28 SoC:
+>>>> @@ -44,4 +63,14 @@ Example for i.MX28 SoC:
+>>>>          fsl,ave-ctrl = <4>;
+>>>>          fsl,ave-delay = <2>;
+>>>>          fsl,settling = <10>;
+>>>> +
+>>>> +        isrc_lradc0: ISRC0 {
+>>>> +            regulator-max-microamp = <300>;
+>>>> +        };
+>>>> +
+>>>> +        isrc_lradc6: ISRC1 {
+>>>> +            regulator-max-microamp = <120>;
+>>>> +            regulator-min-microamp = <120>;
+>>>> +            regulator-always-on;
+>>>> +        };
+>>>>      };
+>>>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>>>> index 5937030..1968d1c 100644
+>>>> --- a/drivers/iio/adc/Kconfig
+>>>> +++ b/drivers/iio/adc/Kconfig
+>>>> @@ -319,6 +319,7 @@ config MXS_LRADC
+>>>>          tristate "Freescale i.MX23/i.MX28 LRADC"
+>>>>          depends on (ARCH_MXS || COMPILE_TEST) && HAS_IOMEM
+>>>>          depends on INPUT
+>>>> +        depends on REGULATOR
+>>>
+>>> Any chance to avoid this dependency for an optional feature?
+>>
+>> I haven't looked into it yet, but I expect that that the mfd
+>> conversion will avoid this neatly.
+>>
+>> Thanks,
+>> Harald
+>>
+>>> Stefan
+>>>
+>>>>          select STMP_DEVICE
+>>>>          select IIO_BUFFER
+>>>>          select IIO_TRIGGERED_BUFFER
+>>
+
+-- 
+If you want to support my work:
+see http://friends.ccbib.org/harald/supporting/
+or donate via peercoin to P98LRdhit3gZbHDBe7ta5jtXrMJUms4p7w
+or bitcoin 1FUtd8T9jRN1rFz63vZz7s2fDtB6d6A7aS
