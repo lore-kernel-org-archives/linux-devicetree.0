@@ -1,124 +1,101 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v9 0/9] i2c mux cleanup and locking update
-Date: Wed, 4 May 2016 22:42:48 +0200
-Message-ID: <20160504204248.GA4270@katana>
-References: <1462392935-28011-1-git-send-email-peda@axentia.se>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] pci: host: Add Broadcom STB PCIE RC controller
+Date: Wed, 04 May 2016 22:56:34 +0200
+Message-ID: <246366157.3SALjN7m5a@wuerfel>
+References: <1462238749-19715-1-git-send-email-f.fainelli@gmail.com> <4199321.vpfzMt0zhT@wuerfel> <572A5678.7020603@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462392935-28011-1-git-send-email-peda@axentia.se>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans Verkuil <hans.v>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <572A5678.7020603@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: jim2101024@gmail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, bhelgaas@google.com
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 04 May 2016 13:07:20 Florian Fainelli wrote:
+> On 04/05/16 12:56, Arnd Bergmann wrote:
+> > On Wednesday 04 May 2016 12:36:17 Florian Fainelli wrote:
+> >> On 03/05/16 02:57, Arnd Bergmann wrote:
+> >> How about introducing helper functions but keeping the same set of
+> >> read/write pci_ops instead, would that seem more acceptable? I agree
+> >> that the macros are not the friendliest thing.
+> > 
+> > I can't think of how that would look right now. My impression was that
+> > the macros here are mainly used to implement pci_ops, so I suggested
+> > having two copies of those. Of course the two copies could call the
+> > same implementation and just pass in some constant that the compiler
+> > can then optimize again in any possible way.
+> 
+> Providing separate copies for read_config and write_config makes sense,
+> what I wanted to avoid was 3 sets of brcm_pcie_read_config and
+> brcm_pcie_write_config, because that would be duplicating quite some
+> code, working on that now.
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, May 04, 2016 at 10:15:26PM +0200, Peter Rosin wrote:
-> Hi!
->=20
-> I have a pair of boards with this i2c topology:
->=20
->                        GPIO ---|  ------ BAT1
->                         |      v /
->    I2C  -----+------B---+---- MUX
->              |                   \
->            EEPROM                 ------ BAT2
->=20
-> 	(B denotes the boundary between the boards)
->=20
-> The problem with this is that the GPIO controller sits on the same i2c bus
-> that it MUXes. For pca954x devices this is worked around by using unlocked
-> transfers when updating the MUX. I have no such luck as the GPIO is a gen=
-eral
-> purpose IO expander and the MUX is just a random bidirectional MUX, unawa=
-re
-> of the fact that it is muxing an i2c bus. Extending unlocked transfers
-> into the GPIO subsystem is too ugly to even think about. But the general =
-hw
-> approach is sane in my opinion, with the number of connections between the
-> two boards minimized. To put it plainly, I need support for it.
->=20
-> So, I observe that while it is needed to have the i2c bus locked during t=
-he
-> actual MUX update in order to avoid random garbage on the slave side, it
-> is not strictly a must to have it locked over the whole sequence of a full
-> select-transfer-deselect operation. The MUX itself needs to be locked, so
-> transfers to clients behind the mux are serialized, and the MUX needs to =
-be
-> stable during all i2c traffic (otherwise individual mux slave segments
-> might see garbage).
->=20
-> This series accomplishes this by adding code to i2c-mux-gpio and
-> i2c-mux-pinctrl that determines if all involved devices used to update the
-> mux are controlled by the same root i2c adapter that is muxed. When this
-> is the case, the select-transfer-deselect operations should be locked
-> individually to avoid the deadlock. The i2c bus *is* still locked
-> during muxing, since the muxing happens as part of i2c transfers. This
-> is true even if the MUX is updated with several transfers to the GPIO (at
-> least as long as *all* MUX changes are using the i2c master bus). A lock
-> is added to i2c adapters that muxes on that adapter grab, so that transfe=
-rs
-> through the muxes are serialized.
->=20
-> Concerns:
-> - The locking is perhaps too complex?
-> - I worry about the priority inheritance aspect of the adapter lock. When
->   the transfers behind the mux are divided into select-transfer-deselect =
-all
->   locked individually, low priority transfers get more chances to interfe=
-re
->   with high priority transfers.
-> - When doing an i2c_transfer() in_atomic() context or with irqs_disabled(=
-),
->   there is a higher possibility that the mux is not returned to its idle
->   state after a failed (-EAGAIN) transfer due to trylock.
-> - Is the detection of i2c-controlled gpios and pinctrls sane (i.e. the
->   usage of the new i2c_root_adapter() function in 18/24)?
->=20
-> The first half (patches 01-15 in v7) of what was originally part of this
-> series have already been scheduled for 4.6. So, this is the second half
-> (patches 16-24 in v7, patches 1-9 in v9).
->=20
-> To summarize the series, there is some preparatory locking changes in
-> in 1/9 and the real meat is in 3/9. There is some documentation added in
-> 4/9 while 5/9 and after are cleanups to existing drivers utilizing
-> the new stuff.
->=20
-> PS. needs a bunch of testing, I do not have access to all the involved hw.
->=20
-> This second half of the series is planned to be merged with 4.7 and can
-> also be pulled from github, if that is preferred:
->=20
-
-Applied all to for-next, thanks for keeping at it!
+Ok, good.
 
 
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
+> >>> Don't parse the regulator properties yourself here, use the proper APIs.
+> >>
+> >> I will probably drop this for now, and  add it later, there are only a
+> >> handful of boards which requires this, and ultimately, I think we should
+> >> be seaking for a more generic solutions, we can't be the only ones doing
+> >> that.
+> > 
+> > So is this the supply for the slots attached to the PCI host rather than
+> > the host bridge itself?
+> 
+> Technically yes, there are for the attached PCI slots, not the hsost
+> bridge, so their are misplaced, we need to rework that, and I would
+> prefer if there was a way to make it pre-scan type of operation offered
+> by the core PCI code itself, but then there is a chicken and egg
+> problem: you cannot get regulators for device_nodes that have not been
+> created yet, and you can't create pci_device and their corresponding
+> device_nodes until you have turned them on...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Ah, I can see how that is doable but rather tricky to get done right.
 
-iQIcBAEBAgAGBQJXKl7IAAoJEBQN5MwUoCm2m88P/3xZwhW448LzmsJnYPKjkk60
-QYI1Ndi/yx22b3KFjihd5dBq/nyq9BVNpqkDeEFOuknC1Sg8aYjfu5nFJWIPj+50
-GLjbP1qfPhBxygzPJ5m5/pgBPQJGa6XI+UVFjKOoUYPzQXLLLI040hlYgkU9OPVa
-/OqybfWaA6AATy+J1nU0SStLHnJbQO4l+0QXJQ3DyGjJbW1ZJzbAm1F3vCjlfSQF
-T6HFsMSBUDzpKtDyLIznekRJqMp9wkn5nc2ZALKR9f51DSM52auEHrMGqPKHCdun
-gaRFuGj6h9xzUkJkdB7PibS78jUDyZJT237bPnB3JWRnWyy/Y4dQjekr6FZdpc2n
-ciUpYAiAfzaSk+mxr496glcaLDalU5pCzsWVLfFsxSz1hKF56vIT4SIElpfcZy9R
-NjrXj9GpdDTHc8IfZYpHxoy2ILfHoEZwySvoOHQdfuWDk56JCvJK8e2NFm1RVGPw
-xeGyFHPg+vnznMe45leVhsuX8YzTJhpTrrS+j5XnuQi+Af1ZPFrHety4Yw01pWqS
-NA2BiYE8uBAIzLVKaChGGCHJyMgpkp97ESx7n1GuCq3VITIpwQJLIb5ynartEwEk
-HBHlDc78s1Q6Vhm3sTUpXi6bsW/XD0aveg8CSqWHuMLCnxfKi4N2yz9Y1uOe++Um
-c7j74vKBacnVMkhGKbPw
-=+P4c
------END PGP SIGNATURE-----
+Are there actually any legacy PCI slots that need this, or are they PCIe
+ports? If we are lucky, they are all PCIe ports that have a standard
+port device, so we can could add support for a regulator supply
+in drivers/pci/pcie/portdrv_pci.c: The port device will should always be
+present as a child of the root node, but the actual device connected
+to the port is what needs the regulator.
 
---ew6BAiZeqk4r7MaW--
+> > You didn't complete this sentence, but I think I've gotten a better
+> > idea of what is going on from the code now. It looks like this
+> > is used to program a set of default DMA ranges into the host
+> > bridge, so there are now three ways of finding out what it
+> > should be:
+> > 
+> > a) count the memory controllers, assume that each one has 1GB of
+> >    address space
+> > b) read the "brcm,log2-scb-sizes" property to find out the
+> >    actual sizes
+> > c) interpret the dma-ranges property
+> > 
+> > The first two seem to things in a rather nonstandard way (the binding
+> > mentions neither of them), while the third is not implemented yet.
+> > I think we have to improve this.
+> 
+> What I meant to say is that we want to avoid programming a SCB window
+> (SCB equals memory controller for the sake of making things simple here)
+> which does not have a baking memory controller, because, well, guess
+> what happens, the PCIe RC could be trying to access non existent memory,
+> and just stall doing so because no error reporting, I can't remember
+> which chips had this problem exactly, but there were definitively some,
+> so the concern is real.
+> 
+> The "brcm,log2-scb-sizes" should be correctly populated all the time in
+> our Device Tree blobs, but we are not quite making a use of them here.
+> 
+> "dma-ranges" seems like an appropriate solution, but sorts of forces us
+> to reinforce the same information that is available somewhere in the
+> Device Tree within the memory controllers nodes themselves.
+> 
+> Let me think about this some more.
+
+Maybe a property that contains a tuple of <&mc-phandle start-addr size>
+instead of "brcm,log2-scb-sizes" would be better here?
+
+	Arnd
