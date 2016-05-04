@@ -1,101 +1,61 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] pci: host: Add Broadcom STB PCIE RC controller
-Date: Wed, 04 May 2016 22:56:34 +0200
-Message-ID: <246366157.3SALjN7m5a@wuerfel>
-References: <1462238749-19715-1-git-send-email-f.fainelli@gmail.com> <4199321.vpfzMt0zhT@wuerfel> <572A5678.7020603@gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: BCM5301X: Add DT for Luxul XAP-1510
+Date: Thu, 5 May 2016 00:36:24 +0200
+Message-ID: <CACna6ryWGsOwBhhauJTROi2BPbmgGn_4oYnKc-L8-3Joy+5M7g@mail.gmail.com>
+References: <1462296501-5209-1-git-send-email-dhaab@luxul.com>
+	<572A453E.6010000@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <572A5678.7020603@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: jim2101024@gmail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, bhelgaas@google.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <572A453E.6010000-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 May 2016 13:07:20 Florian Fainelli wrote:
-> On 04/05/16 12:56, Arnd Bergmann wrote:
-> > On Wednesday 04 May 2016 12:36:17 Florian Fainelli wrote:
-> >> On 03/05/16 02:57, Arnd Bergmann wrote:
-> >> How about introducing helper functions but keeping the same set of
-> >> read/write pci_ops instead, would that seem more acceptable? I agree
-> >> that the macros are not the friendliest thing.
-> > 
-> > I can't think of how that would look right now. My impression was that
-> > the macros here are mainly used to implement pci_ops, so I suggested
-> > having two copies of those. Of course the two copies could call the
-> > same implementation and just pass in some constant that the compiler
-> > can then optimize again in any possible way.
-> 
-> Providing separate copies for read_config and write_config makes sense,
-> what I wanted to avoid was 3 sets of brcm_pcie_read_config and
-> brcm_pcie_write_config, because that would be duplicating quite some
-> code, working on that now.
+On 4 May 2016 at 20:53, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 03/05/16 10:28, Dan Haab wrote:
+>> Luxul XAP-1510 is an AP device based on BCM4708 SoC. It uses flash
+>> memory connected to the SPI controller.
+>
+> Looks fine, except one nit:
+>
+>> diff --git a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts b/arch/arm=
+/boot/dts/bcm4708-luxul-xap-1510.dts
+>> new file mode 100644
+>> index 0000000..f4460b5
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
+>> @@ -0,0 +1,67 @@
+>> +/*
+>> + * Broadcom BCM470X / BCM5301X ARM platform code.
+>> + * DTS for Luxul XAP-1510
+>> + *
+>> + * Copyright 2015 Luxul Inc.
+>> + *
+>> + * Licensed under the GNU/GPL. See COPYING for details.
+>
+> The ARM SoC maintainer have been asking to utilize a license which is
+> also BSD compatible, so something along the lines of this one:
+>
+> arch/arm/boot/dts/bcm911360k.dts
+>
+> Do you mind respining the patch to include that kind of license heade=
+r?
 
-Ok, good.
+I wasn't aware of this neither. Shall we re-license existing DTS files
+as well? I'm fine with changing them to BSD compatible.
 
+I'm a bit confused by using BSD license only. Kernel is licensed under
+GNU GPL version 2 and if there are some BSD compatible modules, they
+use dual licensing model (BSD/GPL). Shouldn't we use BSD/GPL in DTS
+files as well then?
 
-> >>> Don't parse the regulator properties yourself here, use the proper APIs.
-> >>
-> >> I will probably drop this for now, and  add it later, there are only a
-> >> handful of boards which requires this, and ultimately, I think we should
-> >> be seaking for a more generic solutions, we can't be the only ones doing
-> >> that.
-> > 
-> > So is this the supply for the slots attached to the PCI host rather than
-> > the host bridge itself?
-> 
-> Technically yes, there are for the attached PCI slots, not the hsost
-> bridge, so their are misplaced, we need to rework that, and I would
-> prefer if there was a way to make it pre-scan type of operation offered
-> by the core PCI code itself, but then there is a chicken and egg
-> problem: you cannot get regulators for device_nodes that have not been
-> created yet, and you can't create pci_device and their corresponding
-> device_nodes until you have turned them on...
-
-Ah, I can see how that is doable but rather tricky to get done right.
-
-Are there actually any legacy PCI slots that need this, or are they PCIe
-ports? If we are lucky, they are all PCIe ports that have a standard
-port device, so we can could add support for a regulator supply
-in drivers/pci/pcie/portdrv_pci.c: The port device will should always be
-present as a child of the root node, but the actual device connected
-to the port is what needs the regulator.
-
-> > You didn't complete this sentence, but I think I've gotten a better
-> > idea of what is going on from the code now. It looks like this
-> > is used to program a set of default DMA ranges into the host
-> > bridge, so there are now three ways of finding out what it
-> > should be:
-> > 
-> > a) count the memory controllers, assume that each one has 1GB of
-> >    address space
-> > b) read the "brcm,log2-scb-sizes" property to find out the
-> >    actual sizes
-> > c) interpret the dma-ranges property
-> > 
-> > The first two seem to things in a rather nonstandard way (the binding
-> > mentions neither of them), while the third is not implemented yet.
-> > I think we have to improve this.
-> 
-> What I meant to say is that we want to avoid programming a SCB window
-> (SCB equals memory controller for the sake of making things simple here)
-> which does not have a baking memory controller, because, well, guess
-> what happens, the PCIe RC could be trying to access non existent memory,
-> and just stall doing so because no error reporting, I can't remember
-> which chips had this problem exactly, but there were definitively some,
-> so the concern is real.
-> 
-> The "brcm,log2-scb-sizes" should be correctly populated all the time in
-> our Device Tree blobs, but we are not quite making a use of them here.
-> 
-> "dma-ranges" seems like an appropriate solution, but sorts of forces us
-> to reinforce the same information that is available somewhere in the
-> Device Tree within the memory controllers nodes themselves.
-> 
-> Let me think about this some more.
-
-Maybe a property that contains a tuple of <&mc-phandle start-addr size>
-instead of "brcm,log2-scb-sizes" would be better here?
-
-	Arnd
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
