@@ -1,46 +1,51 @@
-From: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] ARM: DRA7x: dts: Update the OSC_32K_CLK frequency
-Date: Wed, 4 May 2016 16:09:40 +0200
-Message-ID: <CAALWOA_4bqWo-izirjQUKb-YjiyBJwAdek_z60kjnEnj74Er7w@mail.gmail.com>
-References: <20160427171658.GA5995@atomide.com> <1462209123-7332-1-git-send-email-Linux.HWI@garmin.com>
- <1462209123-7332-3-git-send-email-Linux.HWI@garmin.com> <57285E66.2000708@ti.com>
- <5728A81F.4050906@garmin.com> <20160503164323.GN5995@atomide.com> <5728E0BC.3080509@ti.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v7 16/24] i2c: allow adapter drivers to override the
+ adapter locking
+Date: Wed, 4 May 2016 16:10:49 +0200
+Message-ID: <87de4033-3b58-3ef6-d22b-b90901885b39@axentia.se>
+References: <1461165484-2314-1-git-send-email-peda@axentia.se>
+ <1461165484-2314-17-git-send-email-peda@axentia.se>
+ <20160428205018.GA3553@katana>
+ <470abe38-ab5f-2d0a-305b-e1a3253ce5a9@axentia.se>
+ <20160429071604.GB1870@katana>
+ <357e6fda-73b3-fb7f-c341-97f09af1943f@axentia.se>
+ <20160503213908.GC2018@tetsubishi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5728E0BC.3080509-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "J.D. Schroeder" <Linux.HWI-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160503213908.GC2018@tetsubishi>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Adriana Reus <adriana.reus@intel.com>, Matt Ranostay <matt.ranostay@intel.com>, Krzysztof Kozlowski <k.koz>
 List-Id: devicetree@vger.kernel.org
 
-On 3 May 2016 at 18:43, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> Does a fixed divider calculation of input * (32768 / 27e6) make sense
-> here too as pointed out earlier by Matthijs for the ti81xx?
-
-That was an actual fractional divider, i.e. the output clock would be
-exactly that ratio of the input clock, which would therefore yield
-32768 Hz if the default crystal is used for the main osc.
-
-It makes no sense to use it to describe a wobbly RC osc.
 
 
-On 3 May 2016 at 19:32, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> wrote:
-> Also, as it is security related, this is kind of sensitive area to discuss publicly.
+On 2016-05-03 23:39, Wolfram Sang wrote:
+>> Yes, they look like reasonable complaints.
+> 
+> Thanks for fixing them. I just sent out my latest comments and when you
+> fix those and send V8, I'll apply that right away. I think we are safe
+> to fix the rest incrementally if needed. Note that I didn't review the
 
-Don't be silly. The only sense in which this clock is "security
-related" is because it's used for the secure watchdog, and the reason
-to use it despite its inaccuracy is completely obvious: an internal rc
-osc can't be easily manipulated by an external attacker. I see no
-reason to act all cloak-and-dagger about this.
+Sounds like a plan.
 
-(This seems to be a general theme to conceal "security related" things
-from public documentation. If I were an HS customer I'd actually be
-concerned about such behaviour since it would seem to indicate a lack
-of confidence in one's security architecture.)
+> IIO and media patches, I trust the reviewers on those.
+> 
+> Thanks for your work on this! I need a break now, this is
+> mind-boggling...
 
-Matthijs
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And thanks for reviewing it!
+
+A question on best practices here... I already did a v8 (but only as
+a branch) so I think this will be v9, bit that's a minor detail. The
+real question is what I should do about patches 1-15 that are already
+in next? Send them too? If not, should I send 16-24 with the same old
+patch numbers or should they be numbered 1-9 now? And should such a
+shortened series be rebased on 1-15 in next?
+
+Or does it not really matter?
+
+Cheers,
+Peter
