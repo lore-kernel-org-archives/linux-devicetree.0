@@ -1,48 +1,37 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: BCM5301X: Add DT for Luxul XAP-1510
-Date: Wed, 4 May 2016 11:53:50 -0700
-Message-ID: <572A453E.6010000@gmail.com>
-References: <1462296501-5209-1-git-send-email-dhaab@luxul.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462296501-5209-1-git-send-email-dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org
+From: Naveen Kaje <nkaje@codeaurora.org>
+Subject: Re: [PATCH 0/2] drivers: i2c: qup: Some misc fixes
+Date: Wed,  4 May 2016 12:53:59 -0600
+Message-ID: <1462388039-8518-1-git-send-email-nkaje@codeaurora.org>
+References: <1462166637-16778-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462166637-16778-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sricharan@codeaurora.org, dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm@vger.kernel.org
+Cc: Naveen Kaje <nkaje@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/16 10:28, Dan Haab wrote:
-> Luxul XAP-1510 is an AP device based on BCM4708 SoC. It uses flash
-> memory connected to the SPI controller.
+From: Naveen Kaje <nkaje@codeaurora.org>
 
-Looks fine, except one nit:
+Hi Sricharan,
+I tested these changes. They did not cause any regressions on QDF2432. Note that QDF2432 does not use DMA mode.
+I based my patches (http://marc.info/?l=linux-i2c&m=146231797008963&w=2 and http://marc.info/?l=linux-i2c&m=146231798708969&w=2) on top of these fixes.
+There are no merge conflicts.
 
-> diff --git a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
-> new file mode 100644
-> index 0000000..f4460b5
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
-> @@ -0,0 +1,67 @@
-> +/*
-> + * Broadcom BCM470X / BCM5301X ARM platform code.
-> + * DTS for Luxul XAP-1510
-> + *
-> + * Copyright 2015 Luxul Inc.
-> + *
-> + * Licensed under the GNU/GPL. See COPYING for details.
+Thanks,
+Naveen
 
-The ARM SoC maintainer have been asking to utilize a license which is
-also BSD compatible, so something along the lines of this one:
+---
 
-arch/arm/boot/dts/bcm911360k.dts
+One for fixing the bug with CONFIG_DEBUG_SG enabled and another
+to suspend the transfer for all errors instead of just for nack.
 
-Do you mind respining the patch to include that kind of license header?
-Thanks!
+Sricharan R (2):
+  drivers: i2c: qup: Fix broken dma when CONFIG_DEBUG_SG is enabled.
+  drivers: i2c: qup: Fix error handling
+
+ drivers/i2c/busses/i2c-qup.c | 87 +++++++++++++++++++++-----------------------
+ 1 file changed, 42 insertions(+), 45 deletions(-)
+
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
