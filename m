@@ -1,80 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v6 1/3] gpio: dt-bindings: add wd,mbl-gpio bindings
-Date: Tue, 3 May 2016 21:22:10 -0500
-Message-ID: <20160504022210.GA9913@rob-hp-laptop>
-References: <cover.1462104492.git.chunkeey@googlemail.com>
- <103bf8fceb426a9c3b09641ea989955e3ec1c7d4.1462104492.git.chunkeey@googlemail.com>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm64: tegra: fix compatible string for Tegra132 fuse
+ node
+Date: Wed, 4 May 2016 10:25:51 +0800
+Message-ID: <57295DAF.1050800@nvidia.com>
+References: <1462266577-951-1-git-send-email-wni@nvidia.com> <20160503152111.GC19539@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <103bf8fceb426a9c3b09641ea989955e3ec1c7d4.1462104492.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160503152111.GC19539-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 01, 2016 at 02:18:37PM +0200, Christian Lamparter wrote:
-> This patch adds the device tree bindings for the Western Digital's
-> MyBook Live memory-mapped GPIO controllers.
-> 
-> The gpios will be supported by gpio-mmio code of the
-> GPIO generic library.
-> 
-> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
-> ---
->  .../devicetree/bindings/gpio/wd,mbl-gpio.txt       | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt b/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
-> new file mode 100644
-> index 0000000..038c3a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
-> @@ -0,0 +1,38 @@
-> +Bindings for the Western Digital's MyBook Live memory-mapped GPIO controllers.
 
-Are these really product level GPIOs rather than some SOC's GPIOs 
-(APM?)?
 
-> +
-> +The Western Digital MyBook Live has two memory-mapped GPIO controllers.
-> +Both GPIO controller only have a single 8-bit data register, where GPIO
-> +state can be read and/or written.
-> +
-> +Required properties:
-> +	- compatible: should be "wd,mbl-gpio"
-> +	- reg-names: must contain
-> +		"dat" - data register
-> +	- reg: address + size pairs describing the GPIO register sets;
-> +		order must correspond with the order of entries in reg-names
-> +	- #gpio-cells: must be set to 2. The first cell is the pin number and
-> +			the second cell is used to specify the gpio polarity:
-> +			0 = active high
-> +			1 = active low
-> +	- gpio-controller: Marks the device node as a gpio controller.
-> +
-> +Optional properties:
-> +	- no-output: GPIOs are read-only.
-> +
-> +Examples:
-> +	gpio0: gpio0@e0000000 {
-> +		compatible = "wd,mbl-gpio";
-> +		reg-names = "dat";
-> +		reg = <0xe0000000 0x1>;
-> +		#gpio-cells = <2>;
-> +		gpio-controller;
-> +	};
-> +
-> +	gpio1: gpio1@e0100000 {
-> +		compatible = "wd,mbl-gpio";
-> +		reg-names = "dat";
-> +		reg = <0xe0100000 0x1>;
-> +		#gpio-cells = <2>;
-> +		gpio-controller;
-> +		no-output;
-> +	};
-> -- 
-> 2.8.1
-> 
+On 2016=E5=B9=B405=E6=9C=8803=E6=97=A5 23:21, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+>=20
+> On Tue, May 03, 2016 at 05:09:37PM +0800, Wei Ni wrote:
+>> This patch changes the compatible of Tegra132 fuse node
+>> to "nvidia,tegra132-efuse", instead of "nvidia,tegra1124-efuse".
+>> Because the CONFIG_ARCH_TEGRA_124_SOC will not be enabled for
+>> Tegra132, the fuse driver can't find the corresponding node.
+>=20
+> Okay, that's not really a good reason to modify the DTS. What we shou=
+ld
+> do instead is make sure that the OF table contains the entry on Tegra=
+132
+> builds. Unless the IP block really is different and Tegra124 and
+> Tegra132 aren't compatible in this regard after all.
+>=20
+> In the latter case the commit message should reflect the real reason.
+
+Hi Thierry,
+
+The fuse driver fuse-tegra.c has following OF table:
+#ifdef CONFIG_ARCH_TEGRA_132_SOC
+        { .compatible =3D "nvidia,tegra132-efuse", .data =3D &tegra124_=
+fuse_soc },
+#endif
+#ifdef CONFIG_ARCH_TEGRA_124_SOC
+        { .compatible =3D "nvidia,tegra124-efuse", .data =3D &tegra124_=
+fuse_soc },
+#endif
+
+It defined "nvidia,tegra124-efuse" under CONFIG_ARCH_TEGRA_124_SOC, so =
+if we
+don't change the DTS file, we should change it as:
+-#ifdef CONFIG_ARCH_TEGRA_132_SOC
+-       { .compatible =3D "nvidia,tegra132-efuse", .data =3D &tegra124_=
+fuse_soc },
+-#endif
+-#ifdef CONFIG_ARCH_TEGRA_124_SOC
++#if defined CONFIG_ARCH_TEGRA_124_SOC || defined CONFIG_ARCH_TEGRA_132=
+_SOC
+        { .compatible =3D "nvidia,tegra124-efuse", .data =3D &tegra124_=
+fuse_soc },
+ #endif
+ #ifdef CONFIG_ARCH_TEGRA_114_SOC
+
+I will send it out.
+
+>=20
+> Thierry
+>=20
+> * Unknown Key
+> * 0x7F3EB3A1
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
