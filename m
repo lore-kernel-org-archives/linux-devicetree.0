@@ -1,66 +1,51 @@
-From: Grant Grundler <grundler@chromium.org>
-Subject: Re: Input: add Atmel Atmegaxx captouch driver
-Date: Thu, 5 May 2016 09:04:39 -0700
-Message-ID: <CANEJEGt1Ri7Q-g25U8_KTAb9Z8MfVWH0N5QLaLcdnDuF_wwrtw@mail.gmail.com>
-References: <1462295611-49684-1-git-send-email-grundler@chromium.org>
-	<20160504135123.GA4567@rob-hp-laptop>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: dt_to_config - report kernel config options
+ for a devicetree
+Date: Thu, 5 May 2016 09:25:21 -0700
+Message-ID: <CA+rpMbKfZq2Z3Vn_z-oWnq+JfW4Vu3fQrnu4mnbGjBWL6+9XMA@mail.gmail.com>
+References: <572284AB.102@gmail.com>
+	<CAL_JsqKGcc_wXV2_-3ZVS7gzfo2ao9z+eATdnKVsyRnW2O5e4A@mail.gmail.com>
+	<CA+rpMbJkWM+bsvXT77eyLGewtKHjX1inc0vjsWxYQTCgzmpDGg@mail.gmail.com>
+	<CAL_Jsq+v3r1dNY1+CK=_Atyyysq=JAFfk0q7i6YVhKS1zTZMVg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160504135123.GA4567@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Grant Grundler <grundler@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Hung-yu Wu <hywu@google.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+v3r1dNY1+CK=_Atyyysq=JAFfk0q7i6YVhKS1zTZMVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 4, 2016 at 6:51 AM, Rob Herring <robh@kernel.org> wrote:
-...
->> +Required properties:
->> +
->> +     compatible:     Must be "atmel,atmegaxx_captouch".
+On Sat, Apr 30, 2016 at 1:38 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Apr 29, 2016 at 1:39 AM, Gaurav Minocha
+> <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Thu, Apr 28, 2016 at 3:32 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Thu, Apr 28, 2016 at 4:46 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+>>>>
+>>>> Determining which kernel config options need to be enabled for a
+>>>> given devicetree can be a painful process.  Create a new tool to
+>>>> find the drivers that may match a devicetree node compatible,
+>>>> find the kernel config options that enable the driver, and
+>>>> optionally report whether the kernel config option is enabled.
+>>>
+>>> I would find this more useful to output a config fragment with all the
+>>> options enabled. The hard part there is enabling the options a given
+>>> option is dependent on which I don't think kbuild takes care of.
+>>
+>> Do you mean to generate something like .config? If yes, then IMO it would
+>> not be a correct configuration file.
 >
-> No wildcards in the compatible strings. Use the specific devices.
->
-> Also, use hyphen rather than underscore. However, if the device is only
-> a touch controller, then '_captouch' is not needed. The part number is
-> sufficient to identify the device.
+> No, only a config fragment which is just some subset of config
+> options. Then you could have a generic defconfig plus the fragment for
+> a platform to get a working setup.
 
-The primary part used on the board is AtMega88PA. Details of that SoC
-are public:
-    http://www.atmel.com/devices/ATMEGA88PA.aspx
-
-I don't see why the exact chip is relevant to the driver. The driver
-is just talking to an I2C device that reports button events.  The
-protocol across the I2C determines what this driver has to do and that
-protocol is implemented by the on-board firmware (supplied by Atmel).
-Any AVR CPU could implement this same protocol.
-
-Can we call this "atmel,qtouch-buttons-v2" or something like that?
-
-I personally don't have anything invested in any particular name. Feel
-free to suggest a different one. I'm perfectly happy with any color
-paint on the shed.
-
-...
->> +Example:
->> +
->> +     atmegaxx_captouch@51 {
->
-> atmegaxx@51 (with actual part number)
-
-Is "qtouch-buttons@51" ok?
+Okay, that seems like a useful option, that should be part of the tool itself.
+Will discuss with Frank once he is back. Thanks!
 
 >
->> +             compatible = "atmel,atmegaxx_captouch";
->> +             reg = <0x51>;
->> +             interrupt-parent = <&tlmm>;
->> +             interrupts = <67 IRQ_TYPE_EDGE_FALLING>;
->> +             linux,keycodes = <BTN_0>, <BTN_1>,
->> +                     <BTN_2>, <BTN_3>,
->> +                     <BTN_4>, <BTN_5>,
->> +                     <BTN_6>, <BTN_7>;
->> +             autorepeat;
->> +     };
-
-cheers,
-grant
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
