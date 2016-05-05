@@ -1,64 +1,111 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH 1/5] dt: bindings: add means to control flags of specific clocks
-Date: Thu,  5 May 2016 15:53:24 +0000
-Message-ID: <1462463608-22940-2-git-send-email-kernel@martin.sperl.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH 3/5] clk: bcm2835: enable default filtering for parent clocks
+Date: Thu,  5 May 2016 15:53:26 +0000
+Message-ID: <1462463608-22940-4-git-send-email-kernel@martin.sperl.org>
 References: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462463608-22940-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Add documentation for "brcm,clock-index" and "brcm,clock-flags"
-which allows to set flags to enable the use of parent clocks
-that may be different from the default.
+Depending on the type of clock define a default set of
+parent clocks that are uses during parent clock selection.
 
-In the future this may also contain flags that would allow
-enabling higher order mash dividers.
-
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- .../devicetree/bindings/clock/brcm,bcm2835-cprman.txt      | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/clk/bcm/clk-bcm2835.c | 47 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt b/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-index e56a1df..cbcca56 100644
---- a/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,bcm2835-cprman.txt
-@@ -18,6 +18,15 @@ Required properties:
- - reg:		Specifies base physical address and size of the registers
- - clocks:	The external oscillator clock phandle
-
-+Optional properties:
-+- brcm,clock-index: clock id to which the corresponding brcm,clock-flags
-+		      value applies
-+- brcm,clock-flags: flags for the specific clock id given in
-+		      brcm,clock-index - the bits are defined in
-+		      include/dt-bindings/clock/bcm2835.h
-+		      of which the bottom 16 bits are reserved for
-+		      parent clock selection.
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 1b1657d..8a44ebf 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -836,6 +836,7 @@ struct bcm2835_clock {
+ 	struct clk_hw hw;
+ 	struct bcm2835_cprman *cprman;
+ 	const struct bcm2835_clock_data *data;
++	u32 flags;
+ };
+ 
+ static struct bcm2835_clock *bcm2835_clock_from_hw(struct clk_hw *hw)
+@@ -1023,6 +1024,8 @@ static int bcm2835_clock_determine_rate(struct clk_hw *hw,
+ 		parent = clk_hw_get_parent_by_index(hw, i);
+ 		if (!parent)
+ 			continue;
++		if (!(clock->flags & BIT(i)))
++			continue;
+ 		prate = clk_hw_get_rate(parent);
+ 		div = bcm2835_clock_choose_div(hw, req->rate, prate, true);
+ 		rate = bcm2835_clock_rate_from_divisor(clock, prate, div);
+@@ -1216,6 +1219,10 @@ bcm2835_register_pll_divider(struct bcm2835_cprman *cprman,
+ 	return clk;
+ }
+ 
++static u32 bcm2835_register_clock_default_parents(
++	struct device *dev,
++	const struct bcm2835_clock_data *data);
 +
- Example:
-
- 	clk_osc: clock@3 {
-@@ -33,7 +42,11 @@ Example:
- 		#clock-cells = <1>;
- 		reg = <0x7e101000 0x2000>;
- 		clocks = <&clk_osc>;
-+		/* the pcm clock should use the non-standard pllc-per parent */
-+		brcm,clock-index = <BCM2835_CLOCK_PCM>;
-+		brcm,clock-flags = <((1 <<BCM2835_PER_PARENT_GND)|
-+				     (1 <<BCM2835_PER_PARENT_OSC)|
-+				     (1 <<BCM2835_PER_PARENT_PLLC))>;
- 	};
-
- 	i2c0: i2c@7e205000 {
---
+ static struct clk *bcm2835_register_clock(struct bcm2835_cprman *cprman,
+ 					  const struct bcm2835_clock_data *data)
+ {
+@@ -1263,6 +1270,8 @@ static struct clk *bcm2835_register_clock(struct bcm2835_cprman *cprman,
+ 	clock->cprman = cprman;
+ 	clock->data = data;
+ 	clock->hw.init = &init;
++	clock->flags = bcm2835_register_clock_default_parents(
++		cprman->dev, data);
+ 
+ 	return devm_clk_register(cprman->dev, &clock->hw);
+ }
+@@ -1349,6 +1358,44 @@ static const char *const bcm2835_clock_vpu_parents[] = {
+ 	.parents = bcm2835_clock_vpu_parents,				\
+ 	__VA_ARGS__)
+ 
++/* calc the default flags for different clocks based on the parent array */
++static u32 bcm2835_register_clock_default_parents(
++	struct device *dev,
++	const struct bcm2835_clock_data *data)
++{
++	/* by default we disable the testdebug clocks for all known types */
++	if (data->parents == bcm2835_clock_osc_parents)
++		return
++			BIT(BCM2835_OSC_PARENT_GND) |
++			BIT(BCM2835_OSC_PARENT_OSC);
++	if (data->parents == bcm2835_clock_vpu_parents)
++		return
++			BIT(BCM2835_VPU_PARENT_GND) |
++			BIT(BCM2835_VPU_PARENT_OSC) |
++			BIT(BCM2835_VPU_PARENT_PLLA_CORE) |
++			BIT(BCM2835_VPU_PARENT_PLLC_CORE0) |
++			BIT(BCM2835_VPU_PARENT_PLLD_CORE) |
++			BIT(BCM2835_VPU_PARENT_PLLH_AUX) |
++			BIT(BCM2835_VPU_PARENT_PLLC_CORE1) |
++			BIT(BCM2835_VPU_PARENT_PLLC_CORE2);
++	if (data->parents == bcm2835_clock_per_parents)
++		return
++			BIT(BCM2835_PER_PARENT_GND) |
++			BIT(BCM2835_PER_PARENT_OSC) |
++			BIT(BCM2835_PER_PARENT_PLLA_PER) |
++			/* by default do not use PLLC_PER */
++			BIT(BCM2835_PER_PARENT_PLLD_PER) |
++			BIT(BCM2835_PER_PARENT_PLLH_AUX);
++
++	/* warn about unknown parents */
++	dev_warn(dev,
++		 "unknown clock parents for clock %s - enabling all %d parents\n",
++		 data->name, data->num_mux_parents);
++
++	/* return enable all clocks */
++	return BIT(data->num_mux_parents) - 1;
++}
++
+ /*
+  * the real definition of all the pll, pll_dividers and clocks
+  * these make use of the above REGISTER_* macros
+-- 
 2.1.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
