@@ -1,82 +1,47 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: AM335x ICE board Linux support
-Date: Thu, 5 May 2016 10:06:12 -0700
-Message-ID: <20160505170612.GY5995@atomide.com>
-References: <571E069A.20700@ti.com>
- <571F2982.2080702@ti.com>
- <20160426151046.GQ5995@atomide.com>
- <572332B2.6010203@ti.com>
- <20160429153158.GJ5995@atomide.com>
- <57270E8E.2040704@ti.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH 2/2] drivers: i2c: qup: Fix error handling
+Date: Thu, 5 May 2016 12:22:19 -0500
+Message-ID: <20160505172219.GB6533@hector.attlocal.net>
+References: <1462166637-16778-1-git-send-email-sricharan@codeaurora.org>
+ <1462166637-16778-3-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <57270E8E.2040704-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462166637-16778-3-git-send-email-sricharan@codeaurora.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160502 01:25]:
-> On 29/04/16 18:31, Tony Lindgren wrote:
-> > * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160429 03:10]:
-> >> On 26/04/16 18:10, Tony Lindgren wrote:
-> >>> I guess for now if no runtime detection is possible in the kernel.
-> >>
-> >> There are 2 ways to detect them mode
-> >> 1) Enabe GPIO rising edge detect interrupt and reset the Ethernet PHY
-> >> 2) read a PHY register over MDIO bus
-> >>
-> >> I'm not very sure where this can be done in the kernel.
-> > 
-> > We already have some PHY detection over MDIO detection in place,
-> > so that's probably the most generic solution.
+On Mon, May 02, 2016 at 10:53:57AM +0530, Sricharan R wrote:
+> Among the bus errors reported from the QUP_MASTER_STATUS register
+> only NACK is considered and transfer gets suspended, while
+> other errors are ignored. Correct this and suspend the transfer
+> for other errors as well. This avoids unnessecary 'timeouts' which
+> happens when waiting for events that would never happen when there
+> is already an error condition on the bus.
 > 
-> Sorry, I didn't get you.
-> Based on the PHY node we need to switch the MAC driver.
-> i.e. either CPSW or PRUeth.
-> The PHY driver remains the same in both modes.
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  drivers/i2c/busses/i2c-qup.c | 34 +++++++++++++++++++++++++---------
+>  1 file changed, 25 insertions(+), 9 deletions(-)
 
-OK
+Reviewed-by: Andy Gross <andy.gross@linaro.org>
 
-> >> Even if there is some place to do the detection, how do we go about reconfiguring the
-> >> device tree?
-> > 
-> > You may not need to, you can have several named pin states:
-> > 
-> > pinctrl-names = "default", "phy-foo", "phy-bar";
-> > pinctrl-0 = <&cpsw_default>;
-> > pinctrl-1 = <&cpsw_phy_foo>;
-> > pinctrl-2 = <&cpsw_phy_bar>;
-> > ...
-> > 
-> > Then have the common pins in cpsw_default, and manually enable
-> > the other pinctrl groups based on the detection. We already
-> > have that going on in am335x-bone-common.dtsi with the &mac
-> > entry for cpsw.
-> 
-> Probably I'm looking at the wrong place but in am353x-bone-common.dtsi
-> I only see "default" and "sleep" pins.
-> 
-> > 
-> > But maybe you have other detection issues too beyond setting
-> > the pins?
-> 
-> It is not only about the pinmux but using an entirely different MAC driver.
-> So we need to enable/disable different MAC drivers.
-> 
-> It gets even trickier if one port is assigned to one MAC driver and the other
-> one to another MAC driver. The pinmux now has to be port specific and the
-> cpsw driver has to be updated to support port specific pinmux. As of now
-> it handles only one pinmux group for both its ports.
+<snip>
 
-OK I guess up to you to figure out what makes most sense here.
+> @@ -1227,6 +1240,9 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+>  	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
+>  	int ret, len, idx = 0, use_dma = 0;
+>  
+> +	qup->bus_err = 0;
+> +	qup->qup_err = 0;
+> +
 
-Regards,
+What about the initial setting of these?  Does this need to be removed from the
+main xfer function?
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	ret = pm_runtime_get_sync(qup->dev);
+>  	if (ret < 0)
+>  		goto out;
