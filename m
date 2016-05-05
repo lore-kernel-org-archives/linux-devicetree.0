@@ -1,71 +1,135 @@
-From: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] ARM: dts: axp209: Enable
- usb_power_supply by default
-Date: Thu, 5 May 2016 12:46:27 +0200
-Message-ID: <3512867a-a82c-6be7-35ff-a4f6fb48a259@computerlinguist.org>
-References: <1462444508-9363-1-git-send-email-haas@computerlinguist.org>
- <1462444508-9363-6-git-send-email-haas@computerlinguist.org>
- <f672f0c7-495c-de63-6115-68d57500d874@redhat.com>
-Reply-To: haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [v10,
+	7/7] mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
+Date: Thu, 05 May 2016 13:10:31 +0200
+Message-ID: <5159406.HOFrj7pRfW@wuerfel>
+References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
+	<4448030.Zs8fVnr3nm@wuerfel>
+	<HE1PR04MB0889B52134A43C0E7A452B7BF87C0@HE1PR04MB0889.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCD4V7EG6QFRBCGJVS4QKGQEH4ZJAKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <f672f0c7-495c-de63-6115-68d57500d874-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <HE1PR04MB0889B52134A43C0E7A452B7BF87C0-6LN7OEpIatX1kPMWxTxe+c9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On 05/05/2016 12:39 PM, Hans de Goede wrote:
-> Hi,
+On Thursday 05 May 2016 09:41:32 Yangbo Lu wrote:
+> > -----Original Message-----
+> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > Sent: Thursday, May 05, 2016 4:32 PM
+> > To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > Cc: Yangbo Lu; linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
+> > foundation.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland;
+> > ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Russell King; Bhupesh Sharma; Joerg Roedel;
+> > Santosh Shilimkar; Yang-Leo Li; Scott Wood; Rob Herring; Claudiu Manoil;
+> > Kumar Gala; Xiaobo Xie; Qiang Zhao
+> > Subject: Re: [v10, 7/7] mmc: sdhci-of-esdhc: fix host version for T4240-
+> > R1.0-R2.0
+> > 
+> > On Thursday 05 May 2016 11:12:30 Yangbo Lu wrote:
+> > >
+> > > +       fsl_guts_init();
+> > > +       svr = fsl_guts_get_svr();
+> > > +       if (svr) {
+> > > +               esdhc->soc_ver = SVR_SOC_VER(svr);
+> > > +               esdhc->soc_rev = SVR_REV(svr);
+> > > +       } else {
+> > > +               dev_err(&pdev->dev, "Failed to get SVR value!\n");
+> > > +       }
+> > > +
+> > >
+> > 
+> > 
+> > Sorry for jumping in again after not participating in the discussion for
+> > the past few versions.
+> > 
+> > What happened to my suggestion of making this a platform-independent
+> > interface to avoid the link time dependency?
+> > 
+> > Specifically, why not add an exported function to drivers/base/soc.c that
+> > uses glob_match() for comparing a string in the device driver to the ID
+> > of the SoC that is set by whatever SoC identifying driver the platform
+> > has?
 > 
-> On 05-05-16 12:35, Michael Haas wrote:
->> This node should be enabled by default. A device is likely to have an
->> USB power
->> connection. If USB power is indeed absent, the USB power driver
->> will simply report the power input as offline.
+> [Lu Yangbo-B47093] I think this has been discussed in v6.
+> You can find Scott's comments about this in below link.
+> https://patchwork.kernel.org/patch/8544501/
+
+Ah, thanks for bearing with me and digging this out again. Let me follow
+up on Scott's older replies here then:
+
+> >> IIRC, it is the same IP block as i.MX and Arnd's point is this won't
+> >> even compile on !PPC. It is things like this that prevent sharing the
+> >> driver.
 > 
-> Nack, as Maxime already said we do not want to enable any optional
-> features by default. Many top set boxes do not use the usb power supply,
-> and we don't want some userspace power control panel applet showing
-> the supply as offline, we want the supply to simply not be there.
+> The whole point of using the MMIO SVR instead of the PPC SPR is so that
+> it will work on ARM...  The guts driver should build on any platform as
+> long as OF is enabled, and if it doesn't find a node to bind to it will
+> return 0 for SVR, and the eSDHC driver will continue (after printing an
+> error that should be removed) without the ability to test for errata
+> based on SVR.
 
-it was my understanding that Maxime [0] and ChenYu [1] indicated they
-would prefer it to be enabled globally.
+It feels like a bad design to have to come up with a different
+method for each SoC type here when they all do the same thing
+and want to identify some variant of the chip to do device
+specific quirks.
 
-Best,
+As far as I'm concerned, every driver in drivers/soc that needs to
+export a symbol to be used by a device driver is an indication that
+we don't have the right set of abstractions yet. There are cases
+that are not worth abstracting because the functionality is rather
+obscure and only a couple of drivers for one particular chip
+ever need it.
 
-Michael
+Finding out the version of the SoC does not look like this case.
 
-[0] https://groups.google.com/d/msg/linux-sunxi/cHAlhoIw74g/CbBeoX23AAAJ
-[1] https://groups.google.com/d/msg/linux-sunxi/Ee7i8DVI4F8/0b0TBrRkAAAJ
+> > I think the first four patches take care of building for ARM,
+> > but the problem remains if you want to enable COMPILE_TEST as
+> > we need for certain automated checking.
+> 
+> What specific problem is there with COMPILE_TEST?
 
->>
->> Signed-off-by: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/axp209.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/axp209.dtsi
->> b/arch/arm/boot/dts/axp209.dtsi
->> index 7deb7d9..4f16be0 100644
->> --- a/arch/arm/boot/dts/axp209.dtsi
->> +++ b/arch/arm/boot/dts/axp209.dtsi
->> @@ -97,7 +97,7 @@
->>
->>      usb_power_supply: usb_power_supply {
->>          compatible = "x-powers,axp202-usb-power-supply";
->> -        status = "disabled";
->> +        status = "okay";
->>      };
->>
->>  };
->>
+COMPILE_TEST is solvable here and the way it is implemented in this
+case (selecting FSL_GUTS from the driver) indeed looks like it works
+correctly, but it's still awkward that this means building the
+SoC specific ID stuff into the vmlinux binary for any driver that
+uses something like that for a particular SoC.
+
+> >> Dealing with Si revs is a common problem. We should have a
+> >> common solution. There is soc_device for this purpose.
+> > 
+> > Exactly. The last time this came up, I think we agreed to implement a
+> > helper using glob_match() on the soc_device strings. Unfortunately
+> > this hasn't happened then, but I'd still prefer that over yet another
+> > vendor-specific way of dealing with the generic issue.
+> 
+> soc_device would require encoding the SVR as a string and then decoding
+> the string, which is more complicated and error prone than having
+> platform-specific code test a platform-specific number. 
+
+You already need to encode it as a string to register the soc_device,
+and the driver just needs to pass a glob string, so the only part that
+is missing is the generic function that takes the string from the
+driver and passes that to glob_match for the soc_device.
+
+> And when would it get registered on arm64, which doesn't have
+> platform code?
+
+Whenever the soc driver is loaded, as is the case now. The match
+function can return -EPROBE_DEFER if no SoC device is registered
+yet.
+
+	Arnd
