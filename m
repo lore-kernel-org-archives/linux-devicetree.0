@@ -1,62 +1,88 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] ARM: BCM5301X: Add DT for Luxul XAP-1510
-Date: Thu, 5 May 2016 23:47:23 +0200
-Message-ID: <572BBF6B.8030207@hauke-m.de>
+Date: Thu, 5 May 2016 14:48:57 -0700
+Message-ID: <572BBFC9.1030800@gmail.com>
 References: <1462296501-5209-1-git-send-email-dhaab@luxul.com>
  <572A453E.6010000@gmail.com>
  <CACna6ryWGsOwBhhauJTROi2BPbmgGn_4oYnKc-L8-3Joy+5M7g@mail.gmail.com>
+ <572BBF6B.8030207@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACna6ryWGsOwBhhauJTROi2BPbmgGn_4oYnKc-L8-3Joy+5M7g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Dan Haab <dhaab@luxul.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <572BBF6B.8030207-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMDUvMjAxNiAxMjozNiBBTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IE9uIDQgTWF5
-IDIwMTYgYXQgMjA6NTMsIEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPiB3
-cm90ZToKPj4gT24gMDMvMDUvMTYgMTA6MjgsIERhbiBIYWFiIHdyb3RlOgo+Pj4gTHV4dWwgWEFQ
-LTE1MTAgaXMgYW4gQVAgZGV2aWNlIGJhc2VkIG9uIEJDTTQ3MDggU29DLiBJdCB1c2VzIGZsYXNo
-Cj4+PiBtZW1vcnkgY29ubmVjdGVkIHRvIHRoZSBTUEkgY29udHJvbGxlci4KPj4KPj4gTG9va3Mg
-ZmluZSwgZXhjZXB0IG9uZSBuaXQ6Cj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
-dHMvYmNtNDcwOC1sdXh1bC14YXAtMTUxMC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA4
-LWx1eHVsLXhhcC0xNTEwLmR0cwo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAw
-MDAwMDAuLmY0NDYwYjUKPj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2JjbTQ3MDgtbHV4dWwteGFwLTE1MTAuZHRzCj4+PiBAQCAtMCwwICsxLDY3IEBACj4+PiAr
-LyoKPj4+ICsgKiBCcm9hZGNvbSBCQ000NzBYIC8gQkNNNTMwMVggQVJNIHBsYXRmb3JtIGNvZGUu
-Cj4+PiArICogRFRTIGZvciBMdXh1bCBYQVAtMTUxMAo+Pj4gKyAqCj4+PiArICogQ29weXJpZ2h0
-IDIwMTUgTHV4dWwgSW5jLgo+Pj4gKyAqCj4+PiArICogTGljZW5zZWQgdW5kZXIgdGhlIEdOVS9H
-UEwuIFNlZSBDT1BZSU5HIGZvciBkZXRhaWxzLgo+Pgo+PiBUaGUgQVJNIFNvQyBtYWludGFpbmVy
-IGhhdmUgYmVlbiBhc2tpbmcgdG8gdXRpbGl6ZSBhIGxpY2Vuc2Ugd2hpY2ggaXMKPj4gYWxzbyBC
-U0QgY29tcGF0aWJsZSwgc28gc29tZXRoaW5nIGFsb25nIHRoZSBsaW5lcyBvZiB0aGlzIG9uZToK
-Pj4KPj4gYXJjaC9hcm0vYm9vdC9kdHMvYmNtOTExMzYway5kdHMKPj4KPj4gRG8geW91IG1pbmQg
-cmVzcGluaW5nIHRoZSBwYXRjaCB0byBpbmNsdWRlIHRoYXQga2luZCBvZiBsaWNlbnNlIGhlYWRl
-cj8KPiAKPiBJIHdhc24ndCBhd2FyZSBvZiB0aGlzIG5laXRoZXIuIFNoYWxsIHdlIHJlLWxpY2Vu
-c2UgZXhpc3RpbmcgRFRTIGZpbGVzCj4gYXMgd2VsbD8gSSdtIGZpbmUgd2l0aCBjaGFuZ2luZyB0
-aGVtIHRvIEJTRCBjb21wYXRpYmxlLgo+IAo+IEknbSBhIGJpdCBjb25mdXNlZCBieSB1c2luZyBC
-U0QgbGljZW5zZSBvbmx5LiBLZXJuZWwgaXMgbGljZW5zZWQgdW5kZXIKPiBHTlUgR1BMIHZlcnNp
-b24gMiBhbmQgaWYgdGhlcmUgYXJlIHNvbWUgQlNEIGNvbXBhdGlibGUgbW9kdWxlcywgdGhleQo+
-IHVzZSBkdWFsIGxpY2Vuc2luZyBtb2RlbCAoQlNEL0dQTCkuIFNob3VsZG4ndCB3ZSB1c2UgQlNE
-L0dQTCBpbiBEVFMKPiBmaWxlcyBhcyB3ZWxsIHRoZW4/Cj4gCgpBcyBmYXIgYXMgSSB1bmRlcnN0
-YW5kIHRoZSBMaWNlbnNlIHBhcnQgeW91IGNhbiB0YWtlIGNvZGUgd2hpY2ggaXMKbGljZW5zZWQg
-dW5kZXIgQlNEIGxpY2Vuc2UgYW5kIHVzZSBpdCBpbiBHUEwgY29kZSBiZWNhdXNlIHlvdSBjYW4g
-Y29tcGx5CndpdGggdGhlIEJTRCBsaWNlbnNlIGFuZCBhbHNvIGhhbmRsZSBpdCBpbiBhIHdheSB0
-byBiZSBHUEwgY29tcGxpYW50IGF0CnRoZSBzYW1lIHRpbWUuIFlvdSBjYW4gYWxzbyBtYWtlIGEg
-Y2hhbmdlIHRvIEJTRCBjb2RlIGFuZCBsaWNlbnNlIHRoaXMKY2hhbmdlIHVuZGVyIHRoZSBHUEws
-IHRoZW4gdGhlIGNvbXBsZXRlIGNvZGUgKHRoZSBvbGQgb25lICsgeW91ciBjaGFuZ2UpCmlzIG5v
-dyBHUEwuCgpBcmUgdGhlIGRldmljZSB0cmVlIGZpbGVzIGxpY2Vuc2VkIHVuZGVyIEJTRCBsaWNl
-bnNlIHRvIG1ha2UgaXQgZWFzaWVyCnRvIGludGVncmF0ZSB0aGVtIGludG8gYSBwcm9wcmlldGFy
-eSBib290IGxvYWRlciBvciB3aGF0IGlzIHRoZSBwdXJwb3NlPwoKSGF1a2UKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 05/05/16 14:47, Hauke Mehrtens wrote:
+> On 05/05/2016 12:36 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> On 4 May 2016 at 20:53, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+>>> On 03/05/16 10:28, Dan Haab wrote:
+>>>> Luxul XAP-1510 is an AP device based on BCM4708 SoC. It uses flash
+>>>> memory connected to the SPI controller.
+>>>
+>>> Looks fine, except one nit:
+>>>
+>>>> diff --git a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts b/arch/a=
+rm/boot/dts/bcm4708-luxul-xap-1510.dts
+>>>> new file mode 100644
+>>>> index 0000000..f4460b5
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
+>>>> @@ -0,0 +1,67 @@
+>>>> +/*
+>>>> + * Broadcom BCM470X / BCM5301X ARM platform code.
+>>>> + * DTS for Luxul XAP-1510
+>>>> + *
+>>>> + * Copyright 2015 Luxul Inc.
+>>>> + *
+>>>> + * Licensed under the GNU/GPL. See COPYING for details.
+>>>
+>>> The ARM SoC maintainer have been asking to utilize a license which =
+is
+>>> also BSD compatible, so something along the lines of this one:
+>>>
+>>> arch/arm/boot/dts/bcm911360k.dts
+>>>
+>>> Do you mind respining the patch to include that kind of license hea=
+der?
+>>
+>> I wasn't aware of this neither. Shall we re-license existing DTS fil=
+es
+>> as well? I'm fine with changing them to BSD compatible.
+>>
+>> I'm a bit confused by using BSD license only. Kernel is licensed und=
+er
+>> GNU GPL version 2 and if there are some BSD compatible modules, they
+>> use dual licensing model (BSD/GPL). Shouldn't we use BSD/GPL in DTS
+>> files as well then?
+>>
+>=20
+> As far as I understand the License part you can take code which is
+> licensed under BSD license and use it in GPL code because you can com=
+ply
+> with the BSD license and also handle it in a way to be GPL compliant =
+at
+> the same time. You can also make a change to BSD code and license thi=
+s
+> change under the GPL, then the complete code (the old one + your chan=
+ge)
+> is now GPL.
+>=20
+> Are the device tree files licensed under BSD license to make it easie=
+r
+> to integrate them into a proprietary boot loader or what is the purpo=
+se?
+
+Yes, there could be that, or just making the license compatible with
+other OSes like FreeBSD for instace.
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
