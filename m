@@ -1,56 +1,39 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] regulator: lp873x: Add support for lp873x PMIC
- regulators
-Date: Thu, 5 May 2016 16:38:20 +0100
-Message-ID: <20160505153820.GF6292@sirena.org.uk>
-References: <1462425040-18566-1-git-send-email-j-keerthy@ti.com>
- <1462425040-18566-4-git-send-email-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TUvp6TiFcfhGC84w"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462425040-18566-4-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: lgirdwood@gmail.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+From: kernel@martin.sperl.org
+Subject: [PATCH 0/5] clk: bcm2835: add flags for mash and parent clocks
+Date: Thu,  5 May 2016 15:53:23 +0000
+Message-ID: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Martin Sperl <kernel@martin.sperl.org>
 
---TUvp6TiFcfhGC84w
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Allow flags to be set on a per clock index basis, which control:
+* the parent clocks selected when not setting clocks explicitly
+* the clock mode with regards to integer only or higher order mash
 
-On Thu, May 05, 2016 at 10:40:40AM +0530, Keerthy wrote:
+These flags can also get set via the device tree.
 
-> +static const struct of_device_id of_lp873x_match_tbl[] = {
-> +	{ .compatible = "ti,lp8733-regulators",},
-> +	{ .compatible = "ti,lp8732-regulators",},
-> +	{ .compatible = "ti,lp873x-regulators",},
-> +	{},
-> +};
+Default flags:
+* avoid the use of testdebug clocks for all clocks
+* avoid pllc_* for per clocks
+* allow fractional clocks, but not higher order mash
 
-There should be no need for compatible strings here, we already know
-what device this is from the parent.  The way we split drivers up for
-Linux is something that's internal to Linux and shouldn't be in the
-device tree.  If we do have explicit compatible strings then they should
-(as always) be specific to a device, no wildcards.
+Other flags can easily get added if the need arrises.
 
-Otherwise this looks sensible.
+Martin Sperl (5):
+  dt: bindings: add means to control flags of specific clocks
+  clk: bcm2835: expose the parent clocks via include/dt-bindings
+  clk: bcm2835: enable default filtering for parent clocks
+  clk: bcm2835: allow setting clocks flags via the dt
+  clk: bcm2835: add support for BCM2835_CLOCK_FLAG_USE_MASH/INTEGER
 
---TUvp6TiFcfhGC84w
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/clock/brcm,bcm2835-cprman.txt         |  14 ++
+ drivers/clk/bcm/clk-bcm2835.c                      | 202 +++++++++++++++++----
+ include/dt-bindings/clock/bcm2835.h                |  33 ++++
+ 3 files changed, 216 insertions(+), 33 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXK2jrAAoJECTWi3JdVIfQBSkH/RfOIGws1Q8B/TA6uqaCRx/7
-sRc1M3AN20HLiRG4PnjT2yWutkvJBnLdYHfEft0nFLdpqQWAlOtWVeidgq9Pj42z
-CWlOq2xqa9LVwFfaQuh53j8ksYCiIHsQp2omoIwVAPoadOBPCVz5+aNCLGdTImKK
-5Xizcm7lrqzg/35kxsnJqUv7uriakaoKXD7k3QP/DtWMF0Ta5fTF49iPsbw4DoZT
-T0kDhbDNRhvpBY4akO6lYfuMecQc1Cgxby9oWsIraiNSBKJrBgzkzdFvqD3JX/0V
-IkppxNTF4H0qJ5ts5FnQMV5rKzTX8MMKoMkYma03YTe5K9XgaBNE19AheFoMT2M=
-=1t3+
------END PGP SIGNATURE-----
-
---TUvp6TiFcfhGC84w--
+--
+2.1.4
