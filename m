@@ -1,135 +1,114 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [v10,
-	7/7] mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
-Date: Thu, 05 May 2016 13:10:31 +0200
-Message-ID: <5159406.HOFrj7pRfW@wuerfel>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
-	<4448030.Zs8fVnr3nm@wuerfel>
-	<HE1PR04MB0889B52134A43C0E7A452B7BF87C0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V3 02/17] irqchip/gic: WARN if setting the interrupt type
+ for a PPI fails
+Date: Thu, 5 May 2016 13:06:09 +0100
+Message-ID: <572B3731.80602@arm.com>
+References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
+ <1462379130-11742-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <HE1PR04MB0889B52134A43C0E7A452B7BF87C0-6LN7OEpIatX1kPMWxTxe+c9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462379130-11742-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 May 2016 09:41:32 Yangbo Lu wrote:
-> > -----Original Message-----
-> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> > Sent: Thursday, May 05, 2016 4:32 PM
-> > To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Cc: Yangbo Lu; linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> > foundation.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland;
-> > ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Russell King; Bhupesh Sharma; Joerg Roedel;
-> > Santosh Shilimkar; Yang-Leo Li; Scott Wood; Rob Herring; Claudiu Manoil;
-> > Kumar Gala; Xiaobo Xie; Qiang Zhao
-> > Subject: Re: [v10, 7/7] mmc: sdhci-of-esdhc: fix host version for T4240-
-> > R1.0-R2.0
-> > 
-> > On Thursday 05 May 2016 11:12:30 Yangbo Lu wrote:
-> > >
-> > > +       fsl_guts_init();
-> > > +       svr = fsl_guts_get_svr();
-> > > +       if (svr) {
-> > > +               esdhc->soc_ver = SVR_SOC_VER(svr);
-> > > +               esdhc->soc_rev = SVR_REV(svr);
-> > > +       } else {
-> > > +               dev_err(&pdev->dev, "Failed to get SVR value!\n");
-> > > +       }
-> > > +
-> > >
-> > 
-> > 
-> > Sorry for jumping in again after not participating in the discussion for
-> > the past few versions.
-> > 
-> > What happened to my suggestion of making this a platform-independent
-> > interface to avoid the link time dependency?
-> > 
-> > Specifically, why not add an exported function to drivers/base/soc.c that
-> > uses glob_match() for comparing a string in the device driver to the ID
-> > of the SoC that is set by whatever SoC identifying driver the platform
-> > has?
+Hi Jon,
+
+On 04/05/16 17:25, Jon Hunter wrote:
+> Setting the interrupt type for private peripheral interrupts (PPIs) may
+> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
+> whether this is allowed. There is no way to know if setting the type is
+> supported for a given GIC and so the value written is read back to
+> verify it matches the desired configuration. If it does not match then
+> an error is return.
 > 
-> [Lu Yangbo-B47093] I think this has been discussed in v6.
-> You can find Scott's comments about this in below link.
-> https://patchwork.kernel.org/patch/8544501/
-
-Ah, thanks for bearing with me and digging this out again. Let me follow
-up on Scott's older replies here then:
-
-> >> IIRC, it is the same IP block as i.MX and Arnd's point is this won't
-> >> even compile on !PPC. It is things like this that prevent sharing the
-> >> driver.
+> There are cases where the interrupt configuration read from firmware
+> (such as a device-tree blob), has been incorrect and hence
+> gic_configure_irq() has returned an error. This error has gone
+> undetected because the error code returned was ignored but the interrupt
+> still worked fine because the configuration for the interrupt could not
+> be overwritten.
 > 
-> The whole point of using the MMIO SVR instead of the PPC SPR is so that
-> it will work on ARM...  The guts driver should build on any platform as
-> long as OF is enabled, and if it doesn't find a node to bind to it will
-> return 0 for SVR, and the eSDHC driver will continue (after printing an
-> error that should be removed) without the ability to test for errata
-> based on SVR.
-
-It feels like a bad design to have to come up with a different
-method for each SoC type here when they all do the same thing
-and want to identify some variant of the chip to do device
-specific quirks.
-
-As far as I'm concerned, every driver in drivers/soc that needs to
-export a symbol to be used by a device driver is an indication that
-we don't have the right set of abstractions yet. There are cases
-that are not worth abstracting because the functionality is rather
-obscure and only a couple of drivers for one particular chip
-ever need it.
-
-Finding out the version of the SoC does not look like this case.
-
-> > I think the first four patches take care of building for ARM,
-> > but the problem remains if you want to enable COMPILE_TEST as
-> > we need for certain automated checking.
+> Given that this has done undetected and that failing to set the
+> configuration for a PPI may not be a catastrophic, don't return an error
+> but WARN if we fail to configure a PPI. This will allows us to fix up
+> any places in the kernel where we should be checking the return status
+> and maintain backward compatibility with firmware images that may have
+> incorrect PPI configurations.
 > 
-> What specific problem is there with COMPILE_TEST?
-
-COMPILE_TEST is solvable here and the way it is implemented in this
-case (selecting FSL_GUTS from the driver) indeed looks like it works
-correctly, but it's still awkward that this means building the
-SoC specific ID stuff into the vmlinux binary for any driver that
-uses something like that for a particular SoC.
-
-> >> Dealing with Si revs is a common problem. We should have a
-> >> common solution. There is soc_device for this purpose.
-> > 
-> > Exactly. The last time this came up, I think we agreed to implement a
-> > helper using glob_match() on the soc_device strings. Unfortunately
-> > this hasn't happened then, but I'd still prefer that over yet another
-> > vendor-specific way of dealing with the generic issue.
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/irqchip/irq-gic-common.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
-> soc_device would require encoding the SVR as a string and then decoding
-> the string, which is more complicated and error prone than having
-> platform-specific code test a platform-specific number. 
+> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+> index ffff5a45f1e3..9fa92a17225c 100644
+> --- a/drivers/irqchip/irq-gic-common.c
+> +++ b/drivers/irqchip/irq-gic-common.c
+> @@ -56,12 +56,15 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+>  
+>  	/*
+>  	 * Write back the new configuration, and possibly re-enable
+> -	 * the interrupt. If we fail to write a new configuration,
+> -	 * return an error.
+> +	 * the interrupt. WARN if we fail to write a new configuration
+> +	 * and return an error if we failed to write the configuration
+> +	 * for an SPI. If we fail to write the configuration for a PPI
+> +	 * this is most likely because the GIC does not allow us to set
+> +	 * the configuration and so it is not a catastrophic failure.
+>  	 */
+>  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
+> -	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val)
+> -		ret = -EINVAL;
+> +	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
+> +		ret = irq < 32 ? 0 : -EINVAL;
+>  
+>  	if (sync_access)
+>  		sync_access();
+> 
 
-You already need to encode it as a string to register the soc_device,
-and the driver just needs to pass a glob string, so the only part that
-is missing is the generic function that takes the string from the
-driver and passes that to glob_match for the soc_device.
+I'm going to slightly backpedal on that one:
 
-> And when would it get registered on arm64, which doesn't have
-> platform code?
+When running in non-secure mode, you can reconfigure secure interrupts
+(for obvious reasons). But you don't know which mode you're running in
+either. A typical example is the arch timer, which requests both secure
+and non-secure interrupts, because we cannot know which side of the CPU
+we're running on. In the non-secure case, we end-up with a splat that
+is rather undeserved.
 
-Whenever the soc driver is loaded, as is the case now. The match
-function can return -EPROBE_DEFER if no SoC device is registered
-yet.
+So I'm tempted to tone down the splat in the PPI case like this:
 
-	Arnd
+diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+index 083c303..1605e42 100644
+--- a/drivers/irqchip/irq-gic-common.c
++++ b/drivers/irqchip/irq-gic-common.c
+@@ -63,8 +63,17 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+ 	 * the configuration and so it is not a catastrophic failure.
+ 	 */
+ 	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
+-	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
+-		ret = irq < 32 ? 0 : -EINVAL;
++	oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
++	if (oldval != val) {
++		if (irq < 32) {
++			pr_warn("GIC: PPI%d is either secure or misconfigured\n",
++				irq - 16);
++			ret = 0;
++		} else {
++			WARN_ON(1);
++			ret = -EINVAL;
++		}
++	}
+ 
+ 	if (sync_access)
+ 		sync_access();
+
+Thoughts?
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
