@@ -1,55 +1,78 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [RFC v2 13/13] ARM: dts: exynos: Fix LAN and HUB after bootloader
- initialization on Odroid U3
-Date: Thu, 5 May 2016 16:16:20 -0400
-Message-ID: <9dff13ae-5863-2b45-0e6a-00b345a19019@osg.samsung.com>
-References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
- <1462451666-17945-14-git-send-email-k.kozlowski@samsung.com>
+From: Frank Li <frank.li@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx7d-pinfunc: add input mux for UART2 RX DTE
+ mode
+Date: Thu, 5 May 2016 20:29:05 +0000
+Message-ID: <DBXPR04MB27100FCD4D233611E0BACED887C0@DBXPR04MB271.eurprd04.prod.outlook.com>
+References: <1462479144-2481-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1462451666-17945-14-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>
-Cc: tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462479144-2481-1-git-send-email-stefan@agner.ch>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aalonso@freescale.com" <aalonso@freescale.com>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
 
-On 05/05/2016 08:34 AM, Krzysztof Kozlowski wrote:
-> On Odroid U3 (Exynos4412-based) board if USB was initialized by
-> bootloader (in U-Boot "usb start" before tftpboot), the HUB (usb3503)
-> and LAN (smsc95xx) after after successful probing were not visible in the
-> system ("lsusb").
+
+> -----Original Message-----
+> From: Stefan Agner [mailto:stefan@agner.ch]
+> Sent: Thursday, May 05, 2016 3:12 PM
+> To: shawnguo@kernel.org
+> Cc: kernel@pengutronix.de; Frank.Li@freescale.com;
+> aalonso@freescale.com; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Stefan Agner
+> <stefan@agner.ch>
+> Subject: [PATCH] ARM: dts: imx7d-pinfunc: add input mux for UART2 RX DTE
+> mode
 > 
-> In such case the devices had to be fully reset before configuring.
-> Reset by GPIO (called RESET_N pin) and by RESET field in STCD register
-> in usb3503 HUB are not sufficient. Instead full reset has to be done by
-> disabling and enabling regulator.
+> Add input mux for UART2 RX in DTE mode. This allows to use the pad
+> UART2_TX_DATA_ALT0 as UART2 RX. This particular input select seems to be
+> missing in current reference manuals (Rev. B), but when looking at the tables
+> and other UART input select registers (e.g. UART3) it seems naturally that this
+> input mux register also has a fourth pad option for UART2_TX_DATA_ALT0. It
+> has also been proven to be required to use UART2 in DTE mode and the
+> particular pads on the Colibri iMX7 platform.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+
+Acked-by: Frank Li  <Frank.Li@nxp.com>
+
 > ---
-
-[snip]
-
->  
-> +	lan_pwrseq: pwrseq2 {
-> +		compatible = "mmc-pwrseq-simple";
-
-It feels strange to have a "mmc-pwrseq-simple" compatible for a USB power
-sequence provider. As I mentioned in the other patch, I think there should
-either be a DT binding for the USB pwrseq-simple with a "usb-pwrseq-simple"
-compatible that binds to the same pwrseq-simple driver or maybe having a
-generic DT binding for any device with a new "pwrseq-simple" compatible.
-
-Patch looks good to me though, so after having a DT binding and changing
-the compatible string:
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+>  arch/arm/boot/dts/imx7d-pinfunc.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d-pinfunc.h b/arch/arm/boot/dts/imx7d-
+> pinfunc.h
+> index eeda783..3f9f0d9 100644
+> --- a/arch/arm/boot/dts/imx7d-pinfunc.h
+> +++ b/arch/arm/boot/dts/imx7d-pinfunc.h
+> @@ -594,7 +594,7 @@
+>  #define MX7D_PAD_UART2_RX_DATA__GPIO4_IO2                         0x0130
+> 0x03A0 0x0000 0x5 0x0
+>  #define MX7D_PAD_UART2_RX_DATA__ENET2_MDIO                        0x0130
+> 0x03A0 0x0000 0x6 0x0
+>  #define MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX                      0x0134
+> 0x03A4 0x0000 0x0 0x0
+> -#define MX7D_PAD_UART2_TX_DATA__UART2_DTE_RX                      0x0134
+> 0x03A4 0x0000 0x0 0x0
+> +#define MX7D_PAD_UART2_TX_DATA__UART2_DTE_RX                      0x0134
+> 0x03A4 0x06FC 0x0 0x3
+>  #define MX7D_PAD_UART2_TX_DATA__I2C2_SDA                          0x0134
+> 0x03A4 0x05E0 0x1 0x0
+>  #define MX7D_PAD_UART2_TX_DATA__SAI3_RX_DATA0                     0x0134
+> 0x03A4 0x06C8 0x2 0x0
+>  #define MX7D_PAD_UART2_TX_DATA__ECSPI1_RDY                        0x0134
+> 0x03A4 0x0000 0x3 0x0
+> --
+> 2.8.2
