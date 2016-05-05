@@ -1,56 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: add DT binding for Axis ARTPEC-6
- PCIe controller
-Date: Thu, 5 May 2016 17:03:31 -0500
-Message-ID: <20160505220331.GA9225@rob-hp-laptop>
-References: <1462362857-27481-1-git-send-email-niklass@axis.com>
+Subject: Re: [PATCH] i2c: rcar: add DMA support
+Date: Thu, 5 May 2016 17:06:25 -0500
+Message-ID: <20160505220625.GA18367@rob-hp-laptop>
+References: <1462365503-8451-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462362857-27481-1-git-send-email-niklass@axis.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>
-Cc: niklass@axis.com, jespern@axis.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1462365503-8451-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 04, 2016 at 01:54:17PM +0200, Niklas Cassel wrote:
-> From: Niklas Cassel <niklas.cassel@axis.com>
-> 
-> This commit adds the Device Tree binding documentation that allows to
-> describe the PCIe controller found in the Axis ARTPEC-6 SoC.
-> 
-> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+On Wed, May 04, 2016 at 02:38:23PM +0200, Niklas S=F6derlund wrote:
+> Make it possible to transfer i2c message buffers via DMA.
+> Start/Stop/Sending_Slave_Address and some data is still handled using
+> the old state machine, it is sending the bulk of the data that is don=
+e
+> via DMA.
+>=20
+> The first byte of a transmission and the last two bytes of reception =
+are
+> sent/received using PIO. This is needed for the HW to have access to =
+the
+> first byte before DMA transmit and to be able to set the STOP conditi=
+on
+> for DMA reception.
+>=20
+> Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech=
+=2Ese>
 > ---
->  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> new file mode 100644
-> index 0000000..fdac2a2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> @@ -0,0 +1,45 @@
-> +* Axis ARTPEC-6 PCIe interface
-> +
-> +This PCIe host controller is based on the Synopsis Designware PCIe IP
-> +and thus inherits all the common properties defined in designware-pcie.txt.
-> +
-> +Required properties:
-> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
-> +- reg: base addresses and lengths of the pcie controller (DBI),
-> +	the phy controller, and configuration address space.
-> +- reg-names: Must include the following entries:
-> +	- "dbi"
-> +	- "phy"
-> +	- "config"
-> +- interrupts: A list of interrupt outputs of the controller. Must contain an
-> +  entry for each entry in the interrupt-names property.
-> +- interrupt-names: Must include the following entries:
-> +	- "msi": The interrupt that is asserted when an MSI is received
-> +- syscon: Should contain a link to the syscon device node.
+>  Documentation/devicetree/bindings/i2c/i2c-rcar.txt |   3 +
+>  drivers/i2c/busses/i2c-rcar.c                      | 237 +++++++++++=
++++++++++-
+>  2 files changed, 236 insertions(+), 4 deletions(-)
 
-What is the syscon for? Perhaps a name that reflects the purpose.
+Is DMA actually faster or less cpu usage? I'm doubtful.
 
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
