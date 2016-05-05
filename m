@@ -1,114 +1,106 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V3 02/17] irqchip/gic: WARN if setting the interrupt type
- for a PPI fails
-Date: Thu, 5 May 2016 13:06:09 +0100
-Message-ID: <572B3731.80602@arm.com>
-References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
- <1462379130-11742-3-git-send-email-jonathanh@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462379130-11742-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
+Date: Thu, 05 May 2016 14:34:13 +0200
+Message-ID: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+Hi,
 
-On 04/05/16 17:25, Jon Hunter wrote:
-> Setting the interrupt type for private peripheral interrupts (PPIs) may
-> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
-> whether this is allowed. There is no way to know if setting the type is
-> supported for a given GIC and so the value written is read back to
-> verify it matches the desired configuration. If it does not match then
-> an error is return.
-> 
-> There are cases where the interrupt configuration read from firmware
-> (such as a device-tree blob), has been incorrect and hence
-> gic_configure_irq() has returned an error. This error has gone
-> undetected because the error code returned was ignored but the interrupt
-> still worked fine because the configuration for the interrupt could not
-> be overwritten.
-> 
-> Given that this has done undetected and that failing to set the
-> configuration for a PPI may not be a catastrophic, don't return an error
-> but WARN if we fail to configure a PPI. This will allows us to fix up
-> any places in the kernel where we should be checking the return status
-> and maintain backward compatibility with firmware images that may have
-> incorrect PPI configurations.
-> 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/irqchip/irq-gic-common.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-> index ffff5a45f1e3..9fa92a17225c 100644
-> --- a/drivers/irqchip/irq-gic-common.c
-> +++ b/drivers/irqchip/irq-gic-common.c
-> @@ -56,12 +56,15 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
->  
->  	/*
->  	 * Write back the new configuration, and possibly re-enable
-> -	 * the interrupt. If we fail to write a new configuration,
-> -	 * return an error.
-> +	 * the interrupt. WARN if we fail to write a new configuration
-> +	 * and return an error if we failed to write the configuration
-> +	 * for an SPI. If we fail to write the configuration for a PPI
-> +	 * this is most likely because the GIC does not allow us to set
-> +	 * the configuration and so it is not a catastrophic failure.
->  	 */
->  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
-> -	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val)
-> -		ret = -EINVAL;
-> +	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
-> +		ret = irq < 32 ? 0 : -EINVAL;
->  
->  	if (sync_access)
->  		sync_access();
-> 
+This is a different, second try to fix usb3503+lan on Odroid U3 board
+if it was initialized by bootloader (e.g. for TFTP boot).
 
-I'm going to slightly backpedal on that one:
+First version:
+http://www.spinics.net/lists/linux-usb/msg140042.html
 
-When running in non-secure mode, you can reconfigure secure interrupts
-(for obvious reasons). But you don't know which mode you're running in
-either. A typical example is the arch timer, which requests both secure
-and non-secure interrupts, because we cannot know which side of the CPU
-we're running on. In the non-secure case, we end-up with a splat that
-is rather undeserved.
 
-So I'm tempted to tone down the splat in the PPI case like this:
+Problem
+=======
+When Odroid U3 (usb3503 + smsc95xx + max77686) boots from network (TFTP),
+the usb3503 and LAN smsc95xx do not show up in "lsusb". Hard-reset
+is required, e.g. by suspend to RAM. The actual TFTP boot does
+not have to happen. Just "usb start" from U-Boot is sufficient.
 
-diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index 083c303..1605e42 100644
---- a/drivers/irqchip/irq-gic-common.c
-+++ b/drivers/irqchip/irq-gic-common.c
-@@ -63,8 +63,17 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
- 	 * the configuration and so it is not a catastrophic failure.
- 	 */
- 	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
--	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
--		ret = irq < 32 ? 0 : -EINVAL;
-+	oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-+	if (oldval != val) {
-+		if (irq < 32) {
-+			pr_warn("GIC: PPI%d is either secure or misconfigured\n",
-+				irq - 16);
-+			ret = 0;
-+		} else {
-+			WARN_ON(1);
-+			ret = -EINVAL;
-+		}
-+	}
- 
- 	if (sync_access)
- 		sync_access();
+>From the schematics, the regulator is a supply only to LAN, however
+without toggling it off/on, the usb3503 hub won appear neither.
 
-Thoughts?
 
-	M.
+Solution
+========
+This is very similar to the MMC pwrseq behavior so the idea is to:
+1. Move MMC pwrseq drivers to generic place,
+2. Extend the pwrseq-simple with regulator toggling,
+3. Add support to USB hub and port core for pwrseq,
+4. Toggle the regulator when needed.
+
+
+Issues
+======
+I am not familiar with USB subsystem, so please kindly guide me
+where USB related code should be placed.
+
+In the code there are still some issues to solve (FIXME/TODO notes).
+If the approach is okay, I will improve the patchset. However at this
+point - IT WORKS, which is nice. :)
+
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (13):
+  usb: misc: usb3503: Clean up on driver unbind
+  power/mmc: Move pwrseq drivers to power/pwrseq
+  MAINTAINERS: Retain Ulf Hansson as the same maintainer of pwrseq
+  power: pwrseq: Enable COMPILE_TEST for drivers
+  power: pwrseq: Remove mmc prefix from mmc_pwrseq
+  power: pwrseq: Generalize mmc_pwrseq operations by removing mmc prefix
+  power: pwrseq: simple: Add support for toggling regulator
+  usb: hub: Handle deferred probe
+  power: pwrseq: Add support for USB hubs with external power
+  usb: hub: Power sequence the ports on activation
+  usb: port: Parse pwrseq phandle from Device Tree
+  ARM: dts: exynos: Switch the buck8 to GPIO mode on Odroid U3
+  ARM: dts: exynos: Fix LAN and HUB after bootloader initialization on
+    Odroid U3
+
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  2 +
+ MAINTAINERS                                        |  8 +++
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |  2 +-
+ arch/arm/boot/dts/exynos4412-odroidu3.dts          |  7 ++
+ drivers/mmc/Kconfig                                |  2 -
+ drivers/mmc/core/Makefile                          |  3 -
+ drivers/mmc/core/core.c                            |  8 +--
+ drivers/mmc/core/host.c                            |  2 +-
+ drivers/mmc/core/pwrseq.h                          | 52 --------------
+ drivers/power/Kconfig                              |  1 +
+ drivers/power/Makefile                             |  1 +
+ drivers/{mmc/core => power/pwrseq}/Kconfig         | 21 ++++--
+ drivers/power/pwrseq/Makefile                      |  3 +
+ drivers/{mmc/core => power/pwrseq}/pwrseq.c        | 80 +++++++++++++++++-----
+ drivers/{mmc/core => power/pwrseq}/pwrseq_emmc.c   | 15 ++--
+ drivers/{mmc/core => power/pwrseq}/pwrseq_simple.c | 73 ++++++++++++++++----
+ drivers/usb/core/hub.c                             | 17 ++++-
+ drivers/usb/core/hub.h                             |  3 +
+ drivers/usb/core/port.c                            | 15 ++++
+ drivers/usb/misc/usb3503.c                         | 28 ++++++++
+ include/linux/mmc/host.h                           |  4 +-
+ include/linux/pwrseq.h                             | 60 ++++++++++++++++
+ 22 files changed, 294 insertions(+), 113 deletions(-)
+ delete mode 100644 drivers/mmc/core/pwrseq.h
+ rename drivers/{mmc/core => power/pwrseq}/Kconfig (65%)
+ create mode 100644 drivers/power/pwrseq/Makefile
+ rename drivers/{mmc/core => power/pwrseq}/pwrseq.c (50%)
+ rename drivers/{mmc/core => power/pwrseq}/pwrseq_emmc.c (89%)
+ rename drivers/{mmc/core => power/pwrseq}/pwrseq_simple.c (64%)
+ create mode 100644 include/linux/pwrseq.h
+
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
