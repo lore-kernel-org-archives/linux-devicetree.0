@@ -1,38 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 21/22] drivers/of: Export of_detach_node()
-Date: Thu, 5 May 2016 14:42:35 -0500
-Message-ID: <20160505194235.GA13790@rob-hp-laptop>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1462281773-26438-22-git-send-email-gwshan@linux.vnet.ibm.com>
- <20160504133603.GA30081@gwshan>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: fix device compatibility scoring
+Date: Thu, 5 May 2016 14:47:18 -0500
+Message-ID: <CAL_JsqJ99yTTbYyroV+QixNnmyv0YQyveC=VG-z5iut-43tUhA@mail.gmail.com>
+References: <1462473048-10001-1-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160504133603.GA30081@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462473048-10001-1-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 04, 2016 at 11:36:03PM +1000, Gavin Shan wrote:
-> On Tue, May 03, 2016 at 11:22:52PM +1000, Gavin Shan wrote:
-> >This exports of_detach_node() for PowerPC PowerNV PCI hotplug
-> >driver. No functional changes introduced.
-> >
-> >Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> 
-> Rob, I'm not sure it's late to cache the 4.7 merge window.
-> Also, I was told this series is needed by new CAPI driver which
-> is being developed. The developers hope to push the new CAPI driver
-> in 4.8 merge window (perhaps) or linux-next before 4.8 merge window
-> is opened. It means the new CAPI driver depends on this series which
-> has to be pushed to linux-next before 4.8 merge window.
-> 
-> If it's fine, could you please merge 16 to 21? With them merged to
-> 4.7, the left patches won't depend on FDT changes. Thanks in advance
-> for your help.
+On Thu, May 5, 2016 at 1:30 PM, Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+> If a constraint given to __of_device_is_compatible() does not
+> match, we should just move to the next constraint without adding
+> to the compatibility score. Instead, the function immediately
+> returns 0.
+>
+> Do not return from __of_device_is_compatible() until a complete
+> score has been calculated.
 
-I've applied the 6 patches.
+This matching is very sensitive to changes. Can you please describe
+what conditions don't work for you and add a test case for that
+condition to the unit test.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
