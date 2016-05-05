@@ -1,139 +1,56 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V3 02/17] irqchip/gic: WARN if setting the interrupt type
- for a PPI fails
-Date: Thu, 5 May 2016 15:41:07 +0100
-Message-ID: <572B5B82.4040902@nvidia.com>
-References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
- <1462379130-11742-3-git-send-email-jonathanh@nvidia.com>
- <572B3731.80602@arm.com> <572B48FE.20707@nvidia.com>
- <20160505144025.50c02f3d@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] regulator: lp873x: Add support for lp873x PMIC
+ regulators
+Date: Thu, 5 May 2016 16:38:20 +0100
+Message-ID: <20160505153820.GF6292@sirena.org.uk>
+References: <1462425040-18566-1-git-send-email-j-keerthy@ti.com>
+ <1462425040-18566-4-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TUvp6TiFcfhGC84w"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160505144025.50c02f3d@arm.com>
+Content-Disposition: inline
+In-Reply-To: <1462425040-18566-4-git-send-email-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: lgirdwood@gmail.com, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
 
-On 05/05/16 14:40, Marc Zyngier wrote:
-> On Thu, 5 May 2016 14:22:06 +0100
-> Jon Hunter <jonathanh@nvidia.com> wrote:
-> 
->> Hi Marc,
->>
->> On 05/05/16 13:06, Marc Zyngier wrote:
->>> Hi Jon,
->>>
->>> On 04/05/16 17:25, Jon Hunter wrote:
->>>> Setting the interrupt type for private peripheral interrupts (PPIs) may
->>>> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
->>>> whether this is allowed. There is no way to know if setting the type is
->>>> supported for a given GIC and so the value written is read back to
->>>> verify it matches the desired configuration. If it does not match then
->>>> an error is return.
->>>>
->>>> There are cases where the interrupt configuration read from firmware
->>>> (such as a device-tree blob), has been incorrect and hence
->>>> gic_configure_irq() has returned an error. This error has gone
->>>> undetected because the error code returned was ignored but the interrupt
->>>> still worked fine because the configuration for the interrupt could not
->>>> be overwritten.
->>>>
->>>> Given that this has done undetected and that failing to set the
->>>> configuration for a PPI may not be a catastrophic, don't return an error
->>>> but WARN if we fail to configure a PPI. This will allows us to fix up
->>>> any places in the kernel where we should be checking the return status
->>>> and maintain backward compatibility with firmware images that may have
->>>> incorrect PPI configurations.
->>>>
->>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->>>> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
->>>> ---
->>>>  drivers/irqchip/irq-gic-common.c | 11 +++++++----
->>>>  1 file changed, 7 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
->>>> index ffff5a45f1e3..9fa92a17225c 100644
->>>> --- a/drivers/irqchip/irq-gic-common.c
->>>> +++ b/drivers/irqchip/irq-gic-common.c
->>>> @@ -56,12 +56,15 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
->>>>  
->>>>  	/*
->>>>  	 * Write back the new configuration, and possibly re-enable
->>>> -	 * the interrupt. If we fail to write a new configuration,
->>>> -	 * return an error.
->>>> +	 * the interrupt. WARN if we fail to write a new configuration
->>>> +	 * and return an error if we failed to write the configuration
->>>> +	 * for an SPI. If we fail to write the configuration for a PPI
->>>> +	 * this is most likely because the GIC does not allow us to set
->>>> +	 * the configuration and so it is not a catastrophic failure.
->>>>  	 */
->>>>  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
->>>> -	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val)
->>>> -		ret = -EINVAL;
->>>> +	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
->>>> +		ret = irq < 32 ? 0 : -EINVAL;
->>>>  
->>>>  	if (sync_access)
->>>>  		sync_access();
->>>>
->>>
->>> I'm going to slightly backpedal on that one:
->>>
->>> When running in non-secure mode, you can reconfigure secure interrupts
->>
->> Do you mean 'cannot'?
-> 
-> Yes, sorry.
-> 
->>> (for obvious reasons). But you don't know which mode you're running in
->>> either. A typical example is the arch timer, which requests both secure
->>> and non-secure interrupts, because we cannot know which side of the CPU
->>> we're running on. In the non-secure case, we end-up with a splat that
->>> is rather undeserved.
->>
->> Yes seems sensible.
->>
->>> So I'm tempted to tone down the splat in the PPI case like this:
->>>
->>> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
->>> index 083c303..1605e42 100644
->>> --- a/drivers/irqchip/irq-gic-common.c
->>> +++ b/drivers/irqchip/irq-gic-common.c
->>> @@ -63,8 +63,17 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
->>>  	 * the configuration and so it is not a catastrophic failure.
->>>  	 */
->>>  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
->>> -	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
->>> -		ret = irq < 32 ? 0 : -EINVAL;
->>> +	oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
->>> +	if (oldval != val) {
->>> +		if (irq < 32) {
->>> +			pr_warn("GIC: PPI%d is either secure or misconfigured\n",
->>> +				irq - 16);
->>> +			ret = 0;
->>> +		} else {
->>> +			WARN_ON(1);
->>> +			ret = -EINVAL;
->>> +		}
->>> +	}
->>>  
->>>  	if (sync_access)
->>>  		sync_access();
->>>
->>> Thoughts?
->>
->> That is fine with me. Do you want me to re-spin or do you want to apply
->> your change on top? However, before I re-spin would like to get your
->> thoughts on patches 13-17.
-> 
-> I can squash this into your own patch if you're OK with it. I'll reply
-> to your other patches shortly, as I have a number of comments there.
+--TUvp6TiFcfhGC84w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes that is fine with me.
+On Thu, May 05, 2016 at 10:40:40AM +0530, Keerthy wrote:
 
-Cheers
-Jon
+> +static const struct of_device_id of_lp873x_match_tbl[] = {
+> +	{ .compatible = "ti,lp8733-regulators",},
+> +	{ .compatible = "ti,lp8732-regulators",},
+> +	{ .compatible = "ti,lp873x-regulators",},
+> +	{},
+> +};
+
+There should be no need for compatible strings here, we already know
+what device this is from the parent.  The way we split drivers up for
+Linux is something that's internal to Linux and shouldn't be in the
+device tree.  If we do have explicit compatible strings then they should
+(as always) be specific to a device, no wildcards.
+
+Otherwise this looks sensible.
+
+--TUvp6TiFcfhGC84w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXK2jrAAoJECTWi3JdVIfQBSkH/RfOIGws1Q8B/TA6uqaCRx/7
+sRc1M3AN20HLiRG4PnjT2yWutkvJBnLdYHfEft0nFLdpqQWAlOtWVeidgq9Pj42z
+CWlOq2xqa9LVwFfaQuh53j8ksYCiIHsQp2omoIwVAPoadOBPCVz5+aNCLGdTImKK
+5Xizcm7lrqzg/35kxsnJqUv7uriakaoKXD7k3QP/DtWMF0Ta5fTF49iPsbw4DoZT
+T0kDhbDNRhvpBY4akO6lYfuMecQc1Cgxby9oWsIraiNSBKJrBgzkzdFvqD3JX/0V
+IkppxNTF4H0qJ5ts5FnQMV5rKzTX8MMKoMkYma03YTe5K9XgaBNE19AheFoMT2M=
+=1t3+
+-----END PGP SIGNATURE-----
+
+--TUvp6TiFcfhGC84w--
