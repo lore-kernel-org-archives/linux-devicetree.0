@@ -1,86 +1,151 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: NSP: Add MSI support on PCI
-Date: Thu,  5 May 2016 19:29:30 -0400
-Message-ID: <1462490972-13566-1-git-send-email-jonmason@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH 3/3] ARM: dts: NSP: Add new DT file for bcm958625hr
+Date: Thu,  5 May 2016 19:29:32 -0400
+Message-ID: <1462490972-13566-3-git-send-email-jonmason@broadcom.com>
+References: <1462490972-13566-1-git-send-email-jonmason@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462490972-13566-1-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Add MSI support to the PCI driver of the Northstar Plus SoC.  This uses
-the existing pcie-iproc driver.  So, all that is needed is device tree
-entries in the DTS.
+Create a new device tree file for the Broadcom Northstar Plus HR SVK.
+This SVK is a smaller form factor, and thus only has 2 PCI slots and 1
+UART.  Also, it has the ability to reboot via GPIO (instead of the
+processor reset).
 
-Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm/boot/dts/Makefile        |   1 +
+ arch/arm/boot/dts/bcm958625hr.dts | 107 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm958625hr.dts
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index def9e78..a44bf29 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -290,6 +290,18 @@
- 		ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
- 
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 95c1923..17e185c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -97,6 +97,7 @@ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
+ 	bcm28155-ap.dtb \
+ 	bcm21664-garnet.dtb
+ dtb-$(CONFIG_ARCH_BCM_NSP) += \
++	bcm958625hr.dtb \
+ 	bcm958625k.dtb
+ dtb-$(CONFIG_ARCH_BERLIN) += \
+ 	berlin2-sony-nsz-gs7.dtb \
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+new file mode 100644
+index 0000000..d82cc96
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -0,0 +1,107 @@
++/*
++ *  BSD LICENSE
++ *
++ *  Copyright (c) 2016 Broadcom.  All rights reserved.
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom Corporation nor the names of its
++ *      contributors may be used to endorse or promote products derived
++ *      from this software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
 +
-+		msi-parent = <&msi0>;
-+		msi0: msi@18012000 {
-+			compatible = "brcm,iproc-msi";
-+			msi-controller;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 127 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 128 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 129 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 130 IRQ_TYPE_NONE>;
-+			brcm,pcie-msi-inten;
-+		};
- 	};
- 
- 	pcie1: pcie@18013000 {
-@@ -314,6 +326,18 @@
- 		ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
- 
- 		status = "disabled";
++/dts-v1/;
 +
-+		msi-parent = <&msi1>;
-+		msi1: msi@18013000 {
-+			compatible = "brcm,iproc-msi";
-+			msi-controller;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 134 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 135 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 136 IRQ_TYPE_NONE>;
-+			brcm,pcie-msi-inten;
-+		};
- 	};
- 
- 	pcie2: pcie@18014000 {
-@@ -338,5 +362,17 @@
- 		ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
- 
- 		status = "disabled";
++#include "bcm-nsp.dtsi"
 +
-+		msi-parent = <&msi2>;
-+		msi2: msi@18014000 {
-+			compatible = "brcm,iproc-msi";
-+			msi-controller;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 139 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 140 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 141 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 142 IRQ_TYPE_NONE>;
-+			brcm,pcie-msi-inten;
++/ {
++	model = "NorthStar Plus SVK (BCM958625HR)";
++	compatible = "brcm,bcm58625", "brcm,nsp";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&nand {
++	nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		nand-ecc-strength = <24>;
++		nand-ecc-step-size = <1024>;
++
++		brcm,nand-oob-sector-size = <27>;
++
++		partition@0 {
++			label = "nboot";
++			reg = <0x00000000 0x00200000>;
++			read-only;
 +		};
- 	};
- };
++		partition@200000 {
++			label = "nenv";
++			reg = <0x00200000 0x00400000>;
++		};
++		partition@600000 {
++			label = "nsystem";
++			reg = <0x00600000 0x00a00000>;
++		};
++		partition@1000000 {
++			label = "nrootfs";
++			reg = <0x01000000 0x03000000>;
++		};
++		partition@4000000 {
++			label = "ncustfs";
++			reg = <0x04000000 0x3c000000>;
++		};
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&pcie0 {
++	status = "okay";
++};
++
++&pcie1 {
++	status = "okay";
++};
++
++&pinctrl {
++	pinctrl-names = "default";
++	pinctrl-0 = <&nand_sel>;
++	nand_sel: nand_sel {
++		function = "nand";
++		groups = "nand_grp";
++	};
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
