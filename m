@@ -1,23 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] soc: renesas: rcar-sysc: Document r8a7796 support
-Date: Thu, 5 May 2016 17:13:39 -0500
-Message-ID: <20160505221339.GA10595@rob-hp-laptop>
-References: <1462372570-31979-1-git-send-email-geert+renesas@glider.be>
- <1462372570-31979-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [Patch v3 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Thu, 5 May 2016 17:17:13 -0500
+Message-ID: <20160505221713.GA12273@rob-hp-laptop>
+References: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
+ <1462402245-18295-2-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462372570-31979-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1462402245-18295-2-git-send-email-andy.gross@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, jilai wang <jilaiw@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 04, 2016 at 04:36:08PM +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, May 04, 2016 at 05:50:38PM -0500, Andy Gross wrote:
+> This patch adds the device tree support for the Qualcomm SCM firmware.
+> 
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
 > ---
->  Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/firmware/qcom,scm.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> new file mode 100644
+> index 0000000..ee7cd12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> @@ -0,0 +1,26 @@
+> +QCOM Secure Channel Manager (SCM)
+> +
+> +Qualcomm processors include an interface to communicate to the secure firmware.
+> +This interface allows for clients to request different types of actions.  These
+> +can include CPU power up/down, HDCP requests, loading of firmware, and other
+> +assorted actions.
+> +
+> +Required properties:
+> +- compatible: must contain one of the following:
+> + * "qcom,scm-a-family" for A family Qualcomm processors (APQ8064, MSM8960, etc)
+> + * "qcom,scm" for B family and later processors (MSM8916, APQ8084, MSM8974, etc)
+> +- clocks: One to three clocks may be required based on compatible.
+> + * Only core clock required for "qcom,scm-apq8064"
 
-Acked-by: Rob Herring <robh@kernel.org>
+This is not a compatible string. What happened to the chip ones. I 
+thought we decided on chip specific plus one of the above ones.
+
+Rob
