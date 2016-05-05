@@ -1,68 +1,126 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 5/7] iio: inv_mpu6050: Add support for auxiliary I2C master
-Date: Thu, 5 May 2016 08:10:50 -0500
-Message-ID: <CAL_JsqKXv3vY_rce18jm4fcYBArc8V_o_1cpuUFYbJFgt2-QOA@mail.gmail.com>
-References: <cover.1461953982.git.leonard.crestez@intel.com>
- <4aeaced7c1c8e222996df4c1b4b71e505ab256f7.1461953982.git.leonard.crestez@intel.com>
- <7168c23b-8b82-5e57-42fd-b164bee9fa85@kernel.org> <3e520787-1dc4-b703-9a44-1c3ac2200f25@intel.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V3 02/17] irqchip/gic: WARN if setting the interrupt type
+ for a PPI fails
+Date: Thu, 5 May 2016 14:22:06 +0100
+Message-ID: <572B48FE.20707@nvidia.com>
+References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
+ <1462379130-11742-3-git-send-email-jonathanh@nvidia.com>
+ <572B3731.80602@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <3e520787-1dc4-b703-9a44-1c3ac2200f25@intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Crestez Dan Leonard <leonard.crestez@intel.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Daniel Baluta <daniel.baluta@intel.com>, Ge Gao <GGao@invensense.com>, Peter Rosin <peda@axentia.se>, Linux I2C <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matt Ranostay <matt.ranostay@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <572B3731.80602@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 5, 2016 at 7:38 AM, Crestez Dan Leonard
-<leonard.crestez@intel.com> wrote:
-> On 05/01/2016 08:27 PM, Jonathan Cameron wrote:
->> On 29/04/16 20:02, Crestez Dan Leonard wrote:
->>> --- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
->>> +++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
->>> @@ -1,16 +1,27 @@
->>>  InvenSense MPU-6050 Six-Axis (Gyro + Accelerometer) MEMS MotionTracking Device
->>>
->>> -http://www.invensense.com/mems/gyro/mpu6050.html
->> If this is invalid, please add an up to date link if possible.
->>> -
->>>  Required properties:
->>> - - compatible : should be "invensense,mpu6050"
->>> - - reg : the I2C address of the sensor
->>> + - compatible : should be "invensense,mpuXXXX"
->> List them all explicitly here rather than wild cards.
+Hi Marc,
+
+On 05/05/16 13:06, Marc Zyngier wrote:
+> Hi Jon,
+> 
+> On 04/05/16 17:25, Jon Hunter wrote:
+>> Setting the interrupt type for private peripheral interrupts (PPIs) may
+>> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
+>> whether this is allowed. There is no way to know if setting the type is
+>> supported for a given GIC and so the value written is read back to
+>> verify it matches the desired configuration. If it does not match then
+>> an error is return.
 >>
-> But the list is a bit long. I'll just write "see below for valid
-> compatible strings".
-
-No, please list here. 4 is not long. A note of which ones are SPI
-would be good too.
-
-Can you add 9250 as well as it is commonly available for maker h/w.
-
->
->>> + - reg : the I2C or SPI address of the sensor
->>>   - interrupt-parent : should be the phandle for the interrupt controller
->>>   - interrupts : interrupt mapping for GPIO IRQ
->>>
->>>  Optional properties:
->>>   - mount-matrix: an optional 3x3 mounting rotation matrix
->>> + - inv,i2c-aux-master: operate aux i2c in "master mode" (default is mux).
->>> +
->>> +Valid compatible strings:
->> Vendor prefix? These will work for historical reasons, but now vendor
->> prefix should definitely be there as well.
->>> + - mpu6000
->>> + - mpu6050
->>> + - mpu6500
->>> + - mpu9150
+>> There are cases where the interrupt configuration read from firmware
+>> (such as a device-tree blob), has been incorrect and hence
+>> gic_configure_irq() has returned an error. This error has gone
+>> undetected because the error code returned was ignored but the interrupt
+>> still worked fine because the configuration for the interrupt could not
+>> be overwritten.
 >>
-> The driver currently only lists i2c_device_id and this will work
-> ignoring the vendor string. I can prefix all these valid strings with
-> the vendor prefix but this is not actually a requirement. That would
-> require a separate unrelated patch adding of_device_id tables.
+>> Given that this has done undetected and that failing to set the
+>> configuration for a PPI may not be a catastrophic, don't return an error
+>> but WARN if we fail to configure a PPI. This will allows us to fix up
+>> any places in the kernel where we should be checking the return status
+>> and maintain backward compatibility with firmware images that may have
+>> incorrect PPI configurations.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+>> ---
+>>  drivers/irqchip/irq-gic-common.c | 11 +++++++----
+>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+>> index ffff5a45f1e3..9fa92a17225c 100644
+>> --- a/drivers/irqchip/irq-gic-common.c
+>> +++ b/drivers/irqchip/irq-gic-common.c
+>> @@ -56,12 +56,15 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+>>  
+>>  	/*
+>>  	 * Write back the new configuration, and possibly re-enable
+>> -	 * the interrupt. If we fail to write a new configuration,
+>> -	 * return an error.
+>> +	 * the interrupt. WARN if we fail to write a new configuration
+>> +	 * and return an error if we failed to write the configuration
+>> +	 * for an SPI. If we fail to write the configuration for a PPI
+>> +	 * this is most likely because the GIC does not allow us to set
+>> +	 * the configuration and so it is not a catastrophic failure.
+>>  	 */
+>>  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
+>> -	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val)
+>> -		ret = -EINVAL;
+>> +	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
+>> +		ret = irq < 32 ? 0 : -EINVAL;
+>>  
+>>  	if (sync_access)
+>>  		sync_access();
+>>
+> 
+> I'm going to slightly backpedal on that one:
+> 
+> When running in non-secure mode, you can reconfigure secure interrupts
 
-What the driver happens to do is irrelevant to the binding. From a
-binding standpoint, the vendor prefix is always required.
+Do you mean 'cannot'?
 
-Rob
+> (for obvious reasons). But you don't know which mode you're running in
+> either. A typical example is the arch timer, which requests both secure
+> and non-secure interrupts, because we cannot know which side of the CPU
+> we're running on. In the non-secure case, we end-up with a splat that
+> is rather undeserved.
+
+Yes seems sensible.
+
+> So I'm tempted to tone down the splat in the PPI case like this:
+> 
+> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+> index 083c303..1605e42 100644
+> --- a/drivers/irqchip/irq-gic-common.c
+> +++ b/drivers/irqchip/irq-gic-common.c
+> @@ -63,8 +63,17 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+>  	 * the configuration and so it is not a catastrophic failure.
+>  	 */
+>  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
+> -	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
+> -		ret = irq < 32 ? 0 : -EINVAL;
+> +	oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
+> +	if (oldval != val) {
+> +		if (irq < 32) {
+> +			pr_warn("GIC: PPI%d is either secure or misconfigured\n",
+> +				irq - 16);
+> +			ret = 0;
+> +		} else {
+> +			WARN_ON(1);
+> +			ret = -EINVAL;
+> +		}
+> +	}
+>  
+>  	if (sync_access)
+>  		sync_access();
+> 
+> Thoughts?
+
+That is fine with me. Do you want me to re-spin or do you want to apply
+your change on top? However, before I re-spin would like to get your
+thoughts on patches 13-17.
+
+Cheers
+Jon
