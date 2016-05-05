@@ -1,151 +1,41 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH 3/3] ARM: dts: NSP: Add new DT file for bcm958625hr
-Date: Thu,  5 May 2016 19:29:32 -0400
-Message-ID: <1462490972-13566-3-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: NSP: modify second CPU address
+Date: Thu,  5 May 2016 19:29:31 -0400
+Message-ID: <1462490972-13566-2-git-send-email-jonmason@broadcom.com>
 References: <1462490972-13566-1-git-send-email-jonmason@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462490972-13566-1-git-send-email-jonmason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462490972-13566-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Create a new device tree file for the Broadcom Northstar Plus HR SVK.
-This SVK is a smaller form factor, and thus only has 2 PCI slots and 1
-UART.  Also, it has the ability to reboot via GPIO (instead of the
-processor reset).
+NSP B0 has a different address for the second core.  Since there should
+not be any Ax versions in the field, it should be safe to universally
+change this.
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
+Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/bcm958625hr.dts | 107 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm958625hr.dts
+ arch/arm/boot/dts/bcm-nsp.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923..17e185c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -97,6 +97,7 @@ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
- 	bcm28155-ap.dtb \
- 	bcm21664-garnet.dtb
- dtb-$(CONFIG_ARCH_BCM_NSP) += \
-+	bcm958625hr.dtb \
- 	bcm958625k.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
- 	berlin2-sony-nsz-gs7.dtb \
-diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-new file mode 100644
-index 0000000..d82cc96
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm958625hr.dts
-@@ -0,0 +1,107 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright (c) 2016 Broadcom.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm-nsp.dtsi"
-+
-+/ {
-+	model = "NorthStar Plus SVK (BCM958625HR)";
-+	compatible = "brcm,bcm58625", "brcm,nsp";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&nand {
-+	nandcs@0 {
-+		compatible = "brcm,nandcs";
-+		reg = <0>;
-+		nand-on-flash-bbt;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		nand-ecc-strength = <24>;
-+		nand-ecc-step-size = <1024>;
-+
-+		brcm,nand-oob-sector-size = <27>;
-+
-+		partition@0 {
-+			label = "nboot";
-+			reg = <0x00000000 0x00200000>;
-+			read-only;
-+		};
-+		partition@200000 {
-+			label = "nenv";
-+			reg = <0x00200000 0x00400000>;
-+		};
-+		partition@600000 {
-+			label = "nsystem";
-+			reg = <0x00600000 0x00a00000>;
-+		};
-+		partition@1000000 {
-+			label = "nrootfs";
-+			reg = <0x01000000 0x03000000>;
-+		};
-+		partition@4000000 {
-+			label = "ncustfs";
-+			reg = <0x04000000 0x3c000000>;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nand_sel>;
-+	nand_sel: nand_sel {
-+		function = "nand";
-+		groups = "nand_grp";
-+	};
-+};
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index a44bf29..1759e65 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -57,7 +57,7 @@
+ 			compatible = "arm,cortex-a9";
+ 			next-level-cache = <&L2>;
+ 			enable-method = "brcm,bcm-nsp-smp";
+-			secondary-boot-reg = <0xffff042c>;
++			secondary-boot-reg = <0xffff0fec>;
+ 			reg = <0x1>;
+ 		};
+ 	};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
