@@ -1,47 +1,41 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [RFC v2 05/13] power: pwrseq: Remove mmc prefix from mmc_pwrseq
-Date: Thu, 5 May 2016 15:09:52 -0400
-Message-ID: <48539995-2966-0df0-51db-e0c549a92880@osg.samsung.com>
-References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
- <1462451666-17945-6-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1462451666-17945-6-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>
-Cc: tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 0/2] pci: host: Broadcom STB PCIE RC controller support
+Date: Thu,  5 May 2016 12:14:58 -0700
+Message-ID: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com, arnd@arndb.de, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Hi all,
 
-On 05/05/2016 08:34 AM, Krzysztof Kozlowski wrote:
-> The "mmc" prefix is no longer needed after moving the pwrseq core code
-> from mmc/ to power/.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
+This patch series adds support for Broadcom STB SoC's PCIe root complex driver.
 
-[snip]
+This was primarily tested on BCM7445 (ARM) and BCM7435 (MIPS).
 
-> diff --git a/drivers/power/pwrseq/pwrseq_emmc.c b/drivers/power/pwrseq/pwrseq_emmc.c
-> index a0583ed46d7f..a68ac9a68e04 100644
-> --- a/drivers/power/pwrseq/pwrseq_emmc.c
-> +++ b/drivers/power/pwrseq/pwrseq_emmc.c
-> @@ -22,7 +22,7 @@
->  #include <linux/mmc/host.h>
-> 
+Jim is the original author, and I picked up our downstream 4.1 driver and
+updated it to utilize the non-ARM hw_pci functions as well as made some
+stylistic changes.
 
-I don't think this header inclusion is needed. At least I didn't see anything
-defined there that's used in this driver. This also applies to pwrseq_simple.
+Thanks!
 
-I think you could remove those in another preparatory patches before the move.
+Jim Quinlan (2):
+  Documentation: DT: bindings: Add Broadcom STB PCIe bindings
+  pci: host: Add Broadcom STB PCIE RC controller
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+ .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  |  98 +++
+ MAINTAINERS                                        |   1 +
+ drivers/pci/host/Kconfig                           |  17 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pcie-brcmstb-msi.c                | 305 ++++++++
+ drivers/pci/host/pcie-brcmstb.c                    | 772 +++++++++++++++++++++
+ drivers/pci/host/pcie-brcmstb.h                    | 169 +++++
+ 7 files changed, 1364 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-brcmstb-msi.c
+ create mode 100644 drivers/pci/host/pcie-brcmstb.c
+ create mode 100644 drivers/pci/host/pcie-brcmstb.h
 
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.1.0
