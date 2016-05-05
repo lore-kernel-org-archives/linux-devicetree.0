@@ -1,91 +1,55 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/2] pci: host: Add Broadcom STB PCIE RC controller
-Date: Thu, 5 May 2016 11:19:57 -0700
-Message-ID: <572B8ECD.4070100@gmail.com>
-References: <1462238749-19715-1-git-send-email-f.fainelli@gmail.com>
- <1462238749-19715-3-git-send-email-f.fainelli@gmail.com>
- <2339405.90vXV1p6zU@wuerfel> <572A4F31.8010802@gmail.com>
- <CANCKTBuNFQFLsab2WS+BRGUOuUOTLYuoaWNuM5T9HPGihvwYCg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CANCKTBuNFQFLsab2WS+BRGUOuUOTLYuoaWNuM5T9HPGihvwYCg@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, bhelgaas@google.com
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: [PATCH] of: fix device compatibility scoring
+Date: Thu,  5 May 2016 13:30:48 -0500
+Message-ID: <1462473048-10001-1-git-send-email-arbab@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kevin Hao <haokexin@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/16 10:48, Jim Quinlan wrote:
->>> Why is this?
->>
->> This is so we do not end-up programming the PCIe RC which is agnostic of
->> the number of
-> 
-> I believe this code is still around for folks passing us a device tree
-> with lacking information.  It should be removed.
+If a constraint given to __of_device_is_compatible() does not
+match, we should just move to the next constraint without adding
+to the compatibility score. Instead, the function immediately
+returns 0.
 
-I have actually reworked this to utilize the brcm,log2-scb-sizes
-property, since the number of elements in the property is equal to the
-number of memory controllers populated on the system.
+Do not return from __of_device_is_compatible() until a complete
+score has been calculated.
 
-> 
->>
->>>
->>>> +    resource_list_for_each_entry(win, &res) {
->>>> +            struct brcm_window *w = &pcie->out_wins[i];
->>>> +
->>>> +            r = win->res;
->>>> +
->>>> +            if (!r->flags)
->>>> +                    continue;
->>>> +
->>>> +            switch (resource_type(r)) {
->>>> +            case IORESOURCE_MEM:
->>>> +                    w->cpu_addr = r->start;
->>>> +                    w->size = resource_size(r);
->>>> +                    w->pcie_iomem_res.name  = "External PCIe MEM";
->>>> +                    w->pcie_iomem_res.flags = r->flags;
->>>> +                    w->pcie_iomem_res.start = r->start;
->>>> +                    w->pcie_iomem_res.end   = r->end;
->>>> +                    pcie->num_out_wins++;
->>>> +                    i++;
->>>> +                    /* Request memory region resources. */
->>>> +                    ret = devm_request_resource(&pdev->dev,
->>>> +                                                &iomem_resource,
->>>> +                                                &w->pcie_iomem_res);
->>>> +                    if (ret) {
->>>> +                            dev_err(&pdev->dev,
->>>> +                                    "request PCIe memory resource failed\n");
->>>> +                            goto out_err_clk;
->>>> +                    }
->>>> +                    break;
->>>> +
->>>> +            default:
->>>> +                    continue;
->>>> +            }
->>>> +    }
->>>
->>> What about IORESOURCE_IO?
->>
->> We do not support I/O space on this controller AFAIR. Our downstream
->> driver does insert a fake bogus I/O range, but I cannot really remember
->> why that was needed now, Jim do you remember?
->> --
->> Florian
-> 
-> We added a bogus IO region because there was no other way to proceed
-> w/o getting an error.  Or should I say, I knew of no other way to
-> proceed...
+Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
+---
+ drivers/of/base.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-AH, I found your commit doing that, I would really think that the PCI
-domains logic should be able to take care of assigning non-conflicting
-I/O regions these days, if not, that seems like a bug to me.
-
-Do I need a specific board with a ton of switches/peripherals attached
-to it to expose whether this is needed or not? Right now, I removed it
-from this patchset, but I suppose we could add it back, would we need that?
-
-Thanks Jim!
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 017dd94..942a60e 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -455,22 +455,18 @@ static int __of_device_is_compatible(const struct device_node *device,
+ 				break;
+ 			}
+ 		}
+-		if (!score)
+-			return 0;
+ 	}
+ 
+ 	/* Matching type is better than matching name */
+ 	if (type && type[0]) {
+-		if (!device->type || of_node_cmp(type, device->type))
+-			return 0;
+-		score += 2;
++		if (device->type && !of_node_cmp(type, device->type))
++			score += 2;
+ 	}
+ 
+ 	/* Matching name is a bit better than not */
+ 	if (name && name[0]) {
+-		if (!device->name || of_node_cmp(name, device->name))
+-			return 0;
+-		score++;
++		if (device->name && !of_node_cmp(name, device->name))
++			score++;
+ 	}
+ 
+ 	return score;
 -- 
-Florian
+1.8.3.1
