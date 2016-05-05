@@ -1,7 +1,7 @@
 From: kernel@martin.sperl.org
-Subject: [PATCH 2/5] clk: bcm2835: expose the parent clocks via include/dt-bindings
-Date: Thu,  5 May 2016 15:53:25 +0000
-Message-ID: <1462463608-22940-3-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH 5/5] clk: bcm2835: add support for BCM2835_CLOCK_FLAG_USE_MASH/INTEGER
+Date: Thu,  5 May 2016 15:53:28 +0000
+Message-ID: <1462463608-22940-6-git-send-email-kernel@martin.sperl.org>
 References: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
@@ -12,120 +12,119 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-Expose the parent clocks via include/dt-bindings,
-so that they can easily get referred to in the device tree.
+Allow the use of higher order mash fractional divider modes
+and also allow to force the use of integer dividers.
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c       | 45 ++++++++++++++++++-------------------
- include/dt-bindings/clock/bcm2835.h | 26 +++++++++++++++++++++
- 2 files changed, 48 insertions(+), 23 deletions(-)
+ drivers/clk/bcm/clk-bcm2835.c       | 57 +++++++++++++++++++++++++++++++++++--
+ include/dt-bindings/clock/bcm2835.h |  7 +++++
+ 2 files changed, 62 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index c19b99c9..1b1657d 100644
+index c80487e..08140ad 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1303,10 +1303,10 @@ struct bcm2835_clk_desc {
+@@ -130,6 +130,7 @@
+ # define CM_BUSY			BIT(7)
+ # define CM_BUSYD			BIT(8)
+ # define CM_FRAC			BIT(9)
++# define CM_MASH			BIT(10)
+ # define CM_SRC_SHIFT			0
+ # define CM_SRC_BITS			4
+ # define CM_SRC_MASK			0xf
+@@ -888,6 +889,24 @@ static u32 bcm2835_clock_choose_div(struct clk_hw *hw,
+ 				 CM_DIV_FRAC_BITS - data->frac_bits);
+ 	}
  
- /* main oscillator parent mux */
- static const char *const bcm2835_clock_osc_parents[] = {
--	"gnd",
--	"xosc",
--	"testdebug0",
--	"testdebug1"
-+	[BCM2835_OSC_PARENT_GND]	= "gnd",
-+	[BCM2835_OSC_PARENT_OSC]	= "xosc",
-+	[BCM2835_OSC_PARENT_TESTDEBUG0]	= "testdebug0",
-+	[BCM2835_OSC_PARENT_TESTDEBUG1]	= "testdebug1",
- };
++	/* based on flags modify settings */
++	switch (clock->flags & BCM2835_CLOCK_FLAG_USE_MASK) {
++	case BCM2835_CLOCK_FLAG_USE_FRAC:
++			break;
++	case BCM2835_CLOCK_FLAG_USE_INTEGER:
++		div &= GENMASK(data->int_bits + CM_DIV_FRAC_BITS - 1,
++			       CM_DIV_FRAC_BITS);
++		break;
++	case BCM2835_CLOCK_FLAG_USE_MASH2:
++		mindiv += 2 << CM_DIV_FRAC_BITS;
++		maxdiv -= 1 << CM_DIV_FRAC_BITS;
++		break;
++	case BCM2835_CLOCK_FLAG_USE_MASH3:
++		mindiv += 4 << CM_DIV_FRAC_BITS;
++		maxdiv -= 3 << CM_DIV_FRAC_BITS;
++		break;
++	}
++
+ 	/* apply the clamping  limits */
+ 	div = max_t(u32, div, mindiv);
+ 	div = min_t(u32, div, maxdiv);
+@@ -996,8 +1015,26 @@ static int bcm2835_clock_set_rate(struct clk_hw *hw,
+ 	 * clock this requirement should be take care of by the
+ 	 * clk-framework.
+ 	 */
+-	ctl = cprman_read(cprman, data->ctl_reg) & ~CM_FRAC;
+-	ctl |= (div & CM_DIV_FRAC_MASK) ? CM_FRAC : 0;
++	ctl = cprman_read(cprman, data->ctl_reg) & ~(CM_FRAC | CM_MASH);
++	if (div & CM_DIV_FRAC_MASK) {
++		/*
++		 * we never get to *MASH* for non-mash clock,
++		 * as it is filtered in bcm2835_register_clock
++		 * USE_INTEGER forces already choose_clock_div
++		 * to apply the mask so that we do not get here
++		 */
++		switch (clock->flags & BCM2835_CLOCK_FLAG_USE_MASK) {
++		case BCM2835_CLOCK_FLAG_USE_FRAC:
++			ctl |= CM_FRAC;
++			break;
++		case BCM2835_CLOCK_FLAG_USE_MASH2:
++			ctl |= CM_MASH;
++			break;
++		case BCM2835_CLOCK_FLAG_USE_MASH3:
++			ctl |= CM_MASH | CM_FRAC;
++			break;
++		}
++	}
+ 	cprman_write(cprman, data->ctl_reg, ctl);
  
- #define REGISTER_OSC_CLK(...)	REGISTER_CLK(				\
-@@ -1316,14 +1316,14 @@ static const char *const bcm2835_clock_osc_parents[] = {
+ 	cprman_write(cprman, data->div_reg, div);
+@@ -1280,6 +1317,22 @@ bcm2835_register_clock(struct bcm2835_cprman *cprman,
+ 		clock->flags |= bcm2835_register_clock_default_parents(
+ 			cprman->dev, data);
  
- /* main peripherial parent mux */
- static const char *const bcm2835_clock_per_parents[] = {
--	"gnd",
--	"xosc",
--	"testdebug0",
--	"testdebug1",
--	"plla_per",
--	"pllc_per",
--	"plld_per",
--	"pllh_aux",
-+	[BCM2835_PER_PARENT_GND]	= "gnd",
-+	[BCM2835_PER_PARENT_OSC]	= "xosc",
-+	[BCM2835_PER_PARENT_TESTDEBUG0]	= "testdebug0",
-+	[BCM2835_PER_PARENT_TESTDEBUG1]	= "testdebug1",
-+	[BCM2835_PER_PARENT_PLLA_PER]	= "plla_per",
-+	[BCM2835_PER_PARENT_PLLC_PER]	= "pllc_per",
-+	[BCM2835_PER_PARENT_PLLD_PER]	= "plld_per",
-+	[BCM2835_PER_PARENT_PLLH_AUX]	= "pllh_aux",
- };
++	/* check for MASH flags when the clock is not a mash clock */
++	if (!data->is_mash_clock) {
++		switch (clock->flags & BCM2835_CLOCK_FLAG_USE_MASK) {
++		case BCM2835_CLOCK_FLAG_USE_MASH2:
++		case BCM2835_CLOCK_FLAG_USE_MASH3:
++			dev_warn(cprman->dev,
++				 "found mash2/mash3 flag for clock %s, which does not support mash\n",
++				 data->name);
++			clock->flags &= BCM2835_CLOCK_FLAG_USE_MASK;
++			clock->flags |= BCM2835_CLOCK_FLAG_USE_FRAC;
++			break;
++		default:
++			break;
++		}
++	}
++
+ 	return devm_clk_register(cprman->dev, &clock->hw);
+ }
  
- #define REGISTER_PER_CLK(...)	REGISTER_CLK(				\
-@@ -1333,18 +1333,17 @@ static const char *const bcm2835_clock_per_parents[] = {
- 
- /* main vpu parent mux */
- static const char *const bcm2835_clock_vpu_parents[] = {
--	"gnd",
--	"xosc",
--	"testdebug0",
--	"testdebug1",
--	"plla_core",
--	"pllc_core0",
--	"plld_core",
--	"pllh_aux",
--	"pllc_core1",
--	"pllc_core2",
-+	[BCM2835_VPU_PARENT_GND]	= "gnd",
-+	[BCM2835_VPU_PARENT_OSC]	= "xosc",
-+	[BCM2835_VPU_PARENT_TESTDEBUG0]	= "testdebug0",
-+	[BCM2835_VPU_PARENT_TESTDEBUG1]	= "testdebug1",
-+	[BCM2835_VPU_PARENT_PLLA_CORE]	= "plla_core",
-+	[BCM2835_VPU_PARENT_PLLC_CORE0]	= "pllc_core0",
-+	[BCM2835_VPU_PARENT_PLLD_CORE]	= "plld_core",
-+	[BCM2835_VPU_PARENT_PLLH_AUX]	= "pllh_aux",
-+	[BCM2835_VPU_PARENT_PLLC_CORE1]	= "pllc_core1",
-+	[BCM2835_VPU_PARENT_PLLC_CORE2]	= "pllc_core2",
- };
--
- #define REGISTER_VPU_CLK(...)	REGISTER_CLK(				\
- 	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_vpu_parents),	\
- 	.parents = bcm2835_clock_vpu_parents,				\
 diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index 360e00c..e5396fe 100644
+index e5396fe..5591bd1 100644
 --- a/include/dt-bindings/clock/bcm2835.h
 +++ b/include/dt-bindings/clock/bcm2835.h
-@@ -64,3 +64,29 @@
- #define BCM2835_CLOCK_CAM1		46
- #define BCM2835_CLOCK_DSI0E		47
- #define BCM2835_CLOCK_DSI1E		48
+@@ -90,3 +90,10 @@
+ #define BCM2835_VPU_PARENT_PLLH_AUX	7
+ #define BCM2835_VPU_PARENT_PLLC_CORE1	8
+ #define BCM2835_VPU_PARENT_PLLC_CORE2	9
 +
-+/* the parent clock for different clock types */
-+#define BCM2835_OSC_PARENT_GND		0
-+#define BCM2835_OSC_PARENT_OSC		1
-+#define BCM2835_OSC_PARENT_TESTDEBUG0	2
-+#define BCM2835_OSC_PARENT_TESTDEBUG1	3
-+
-+#define BCM2835_PER_PARENT_GND		0
-+#define BCM2835_PER_PARENT_OSC		1
-+#define BCM2835_PER_PARENT_TESTDEBUG0	2
-+#define BCM2835_PER_PARENT_TESTDEBUG1	3
-+#define BCM2835_PER_PARENT_PLLA_PER	4
-+#define BCM2835_PER_PARENT_PLLC_PER	5
-+#define BCM2835_PER_PARENT_PLLD_PER	6
-+#define BCM2835_PER_PARENT_PLLH_AUX	7
-+
-+#define BCM2835_VPU_PARENT_GND		0
-+#define BCM2835_VPU_PARENT_OSC		1
-+#define BCM2835_VPU_PARENT_TESTDEBUG0	2
-+#define BCM2835_VPU_PARENT_TESTDEBUG1	3
-+#define BCM2835_VPU_PARENT_PLLA_CORE	4
-+#define BCM2835_VPU_PARENT_PLLC_CORE0	5
-+#define BCM2835_VPU_PARENT_PLLD_CORE	6
-+#define BCM2835_VPU_PARENT_PLLH_AUX	7
-+#define BCM2835_VPU_PARENT_PLLC_CORE1	8
-+#define BCM2835_VPU_PARENT_PLLC_CORE2	9
++/* additional clock flags */
++#define BCM2835_CLOCK_FLAG_USE_FRAC	((0 << 31) | (0 << 30))
++#define BCM2835_CLOCK_FLAG_USE_INTEGER	((0 << 31) | (1 << 30))
++#define BCM2835_CLOCK_FLAG_USE_MASH2	((1 << 31) | (0 << 30))
++#define BCM2835_CLOCK_FLAG_USE_MASH3	((1 << 31) | (1 << 30))
++#define BCM2835_CLOCK_FLAG_USE_MASK	((1 << 31) | (1 << 30))
 -- 
 2.1.4
 
