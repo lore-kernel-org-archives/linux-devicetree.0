@@ -1,61 +1,86 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [Patch v3 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Thu, 5 May 2016 18:16:11 -0500
-Message-ID: <CAPBZ5QfYOiGniV6PGRRRgAb2sy=J2TjVSxM-+42GR+4mU-Ht9w@mail.gmail.com>
-References: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
-	<1462402245-18295-2-git-send-email-andy.gross@linaro.org>
-	<20160505221713.GA12273@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160505221713.GA12273@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, jilai wang <jilaiw@codeaurora.org>, devicetree@vger.kernel.org
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: NSP: Add MSI support on PCI
+Date: Thu,  5 May 2016 19:29:30 -0400
+Message-ID: <1462490972-13566-1-git-send-email-jonmason@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2016 at 17:17, Rob Herring <robh@kernel.org> wrote:
-> On Wed, May 04, 2016 at 05:50:38PM -0500, Andy Gross wrote:
->> This patch adds the device tree support for the Qualcomm SCM firmware.
->>
->> Signed-off-by: Andy Gross <andy.gross@linaro.org>
->> ---
->>  .../devicetree/bindings/firmware/qcom,scm.txt      | 26 ++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
->> new file mode 100644
->> index 0000000..ee7cd12
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
->> @@ -0,0 +1,26 @@
->> +QCOM Secure Channel Manager (SCM)
->> +
->> +Qualcomm processors include an interface to communicate to the secure firmware.
->> +This interface allows for clients to request different types of actions.  These
->> +can include CPU power up/down, HDCP requests, loading of firmware, and other
->> +assorted actions.
->> +
->> +Required properties:
->> +- compatible: must contain one of the following:
->> + * "qcom,scm-a-family" for A family Qualcomm processors (APQ8064, MSM8960, etc)
->> + * "qcom,scm" for B family and later processors (MSM8916, APQ8084, MSM8974, etc)
->> +- clocks: One to three clocks may be required based on compatible.
->> + * Only core clock required for "qcom,scm-apq8064"
->
-> This is not a compatible string. What happened to the chip ones. I
-> thought we decided on chip specific plus one of the above ones.
+Add MSI support to the PCI driver of the Northstar Plus SoC.  This uses
+the existing pcie-iproc driver.  So, all that is needed is device tree
+entries in the DTS.
 
-Stephen specifically didn't like the chip ones due to churn.  We'd
-have to add compat tags every time we got a new chip.... which is kind
-of frequent.  So I opted for defining one compat for older A family
-chips that require only 1 clock.  The qcom,scm would cover the newer
-chips.
+Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-And it looks like i left a reference to apq8064.  That needs to be
-replaced with a-family.  Sorry for that confusion.
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index def9e78..a44bf29 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -290,6 +290,18 @@
+ 		ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
+ 
+ 		status = "disabled";
++
++		msi-parent = <&msi0>;
++		msi0: msi@18012000 {
++			compatible = "brcm,iproc-msi";
++			msi-controller;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 127 IRQ_TYPE_NONE>,
++				     <GIC_SPI 128 IRQ_TYPE_NONE>,
++				     <GIC_SPI 129 IRQ_TYPE_NONE>,
++				     <GIC_SPI 130 IRQ_TYPE_NONE>;
++			brcm,pcie-msi-inten;
++		};
+ 	};
+ 
+ 	pcie1: pcie@18013000 {
+@@ -314,6 +326,18 @@
+ 		ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
+ 
+ 		status = "disabled";
++
++		msi-parent = <&msi1>;
++		msi1: msi@18013000 {
++			compatible = "brcm,iproc-msi";
++			msi-controller;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 133 IRQ_TYPE_NONE>,
++				     <GIC_SPI 134 IRQ_TYPE_NONE>,
++				     <GIC_SPI 135 IRQ_TYPE_NONE>,
++				     <GIC_SPI 136 IRQ_TYPE_NONE>;
++			brcm,pcie-msi-inten;
++		};
+ 	};
+ 
+ 	pcie2: pcie@18014000 {
+@@ -338,5 +362,17 @@
+ 		ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
+ 
+ 		status = "disabled";
++
++		msi-parent = <&msi2>;
++		msi2: msi@18014000 {
++			compatible = "brcm,iproc-msi";
++			msi-controller;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 139 IRQ_TYPE_NONE>,
++				     <GIC_SPI 140 IRQ_TYPE_NONE>,
++				     <GIC_SPI 141 IRQ_TYPE_NONE>,
++				     <GIC_SPI 142 IRQ_TYPE_NONE>;
++			brcm,pcie-msi-inten;
++		};
+ 	};
+ };
+-- 
+1.9.1
 
-Regards,
-
-Andy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
