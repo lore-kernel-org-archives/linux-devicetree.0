@@ -1,51 +1,113 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [v10,
-	7/7] mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
-Date: Thu, 05 May 2016 10:31:36 +0200
-Message-ID: <4448030.Zs8fVnr3nm@wuerfel>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
-	<1462417950-46796-8-git-send-email-yangbo.lu@nxp.com>
+From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v2 5/5] vf610-soc: Add Vybrid SoC device tree binding
+ documentation
+Date: Thu, 5 May 2016 13:57:58 +0530
+Message-ID: <20160505082758.GB18151@Sanchayan-Arch.localdomain>
+References: <cover.1462171989.git.maitysanchayan@gmail.com>
+ <65f3a7bd7a9faf1b390644d7c599c69683c753c4.1462171990.git.maitysanchayan@gmail.com>
+ <20160504023026.GB5382@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1462417950-46796-8-git-send-email-yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160504023026.GB5382@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 05 May 2016 11:12:30 Yangbo Lu wrote:
+Hello Rob,
+
+On 16-05-03 21:30:26, Rob Herring wrote:
+> On Mon, May 02, 2016 at 12:35:04PM +0530, Sanchayan Maity wrote:
+> > Add device tree binding documentation for Vybrid SoC.
+> > 
+> > Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       | 35 ++++++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> > new file mode 100644
+> > index 0000000..bdd95e8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+> > @@ -0,0 +1,35 @@
+> > +Vybrid System-on-Chip
+> > +---------------------
+> > +
+> > +Required properties:
+> > +
+> > +- #address-cells: must be 1
+> > +- #size-cells: must be 1
+> > +- compatible: "fsl,vf610-soc-bus", "simple-bus"
 > 
-> +       fsl_guts_init();
-> +       svr = fsl_guts_get_svr();
-> +       if (svr) {
-> +               esdhc->soc_ver = SVR_SOC_VER(svr);
-> +               esdhc->soc_rev = SVR_REV(svr);
-> +       } else {
-> +               dev_err(&pdev->dev, "Failed to get SVR value!\n");
-> +       }
-> +
+> If this is a bus, put the file in bindings/bus/...
+
+The fsl,vf610-soc-bus binding is used to bind the driver in question with
+an appropriate compatible node.
+
+Basically being a standalone platform driver, there was need of a compatible
+property to bind on. Introducing a separate device tree node for it's sake
+didn't seem appropriate so the alteration to SoC node's compatible.
+
 > 
+> > +- interrupt-parent: phandle to the MSCM interrupt router node
+> > +- ranges
+> > +- fsl,rom-revision: phandle to the on-chip ROM node and address of rom
+> > +  revision register
+> 
+> Why is this needed here? Can't you search the tree for the ROM node and 
+> get this info.
 
+Strictly per say this and next two can be specified in their respective nodes
+of ocrom and mscm cpucfg, however they would then require the use of syscon_
+regmap_lookup_by_compatible and this seems clean along with the introduction
+of new syscon_regmap_read_from_offset function used with SoC node.
 
-Sorry for jumping in again after not participating in the discussion for the
-past few versions.
+> 
+> > +- fsl,cpu-count: phandle to the MSCM CPU configuration node and address of
+> > +  CPU count register
+> > +- fsl,l2-size: phandle to the MSCM CPU configuration node and address of
+> > +  L2 cache size register
+> > +- nvmem-cells: phandles to two OCOTP child nodes ocotp_cfg0 and ocotp_cfg1
+> > +- nvmem-cell-names: should contain string names "cfg0" and "cfg1"
+> 
+> How are all these properties used?
 
-What happened to my suggestion of making this a platform-independent interface
-to avoid the link time dependency?
+All the above five are used to get the relevant values from the registers and
+expose the information for SoC sysfs device.
+https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-soc
 
-Specifically, why not add an exported function to drivers/base/soc.c that
-uses glob_match() for comparing a string in the device driver to the ID
-of the SoC that is set by whatever SoC identifying driver the platform
-has?
+nvmem are consumer nodes which are accessed using the NVMEM consumer API's
+leveraging the NVMEM framework and NVMEM vf610 ocotp driver.
 
-	Arnd
+Regards,
+Sanchayan.
+
+> 
+> > +
+> > +Example:
+> > +
+> > +	soc {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		compatible = "fsl,vf610-soc-bus", "simple-bus";
+> > +		interrupt-parent = <&mscm_ir>;
+> > +		ranges;
+> > +		fsl,rom-revision = <&ocrom 0x80>;
+> > +		fsl,cpu-count = <&mscm_cpucfg 0x2C>;
+> > +		fsl,l2-size = <&mscm_cpucfg 0x14>;
+> > +		nvmem-cells = <&ocotp_cfg0>, <&ocotp_cfg1>;
+> > +		nvmem-cell-names = "cfg0", "cfg1";
+> > +
+> > +		...
+> > +	};
+> > -- 
+> > 2.8.2
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
