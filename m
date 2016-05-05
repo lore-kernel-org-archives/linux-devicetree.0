@@ -1,120 +1,62 @@
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
- bindings
-Date: Thu, 5 May 2016 14:46:22 -0700
-Message-ID: <572BBF2E.5010606@broadcom.com>
-References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
- <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
- <4513390.VWu0VVAxOl@wuerfel>
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: Re: [PATCH] ARM: BCM5301X: Add DT for Luxul XAP-1510
+Date: Thu, 5 May 2016 23:47:23 +0200
+Message-ID: <572BBF6B.8030207@hauke-m.de>
+References: <1462296501-5209-1-git-send-email-dhaab@luxul.com>
+ <572A453E.6010000@gmail.com>
+ <CACna6ryWGsOwBhhauJTROi2BPbmgGn_4oYnKc-L8-3Joy+5M7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4513390.VWu0VVAxOl@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACna6ryWGsOwBhhauJTROi2BPbmgGn_4oYnKc-L8-3Joy+5M7g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Dan Haab <dhaab@luxul.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/16 14:15, Arnd Bergmann wrote:
-> On Thursday 05 May 2016 12:14:59 Florian Fainelli wrote:
->> From: Jim Quinlan <jim2101024@gmail.com>
->>
->> This patchs adds the Device Tree bindings for the Broadcom STB PCIe root
->> complex hardware.
->>
->> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->> Changes in v2:
->>
->> - rewrite the binding document almost from scratch to include many more
->>   references to existing documents
->> - describe missing properties
->> - give better examples
->>
->>  .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  | 98 ++++++++++++++++++++++
->>  1 file changed, 98 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
->> new file mode 100644
->> index 000000000000..3682b0f0bc26
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
->> @@ -0,0 +1,98 @@
->> +Broadcom STB PCIe Host Controller Device Tree Bindings
->> +
->> +This document describes the binding of the PCIe Root Complex hardware found in
->> +Broadcom Set Top Box System-on-Chips such as BCM7425 (MIPS), BCM7435 (MIPS) and
->> +BCM7445 (ARMv7).
->> +
->> +Required properties:
->> +- compatible: must be one of: "brcm,bcm7425-pcie"
->> +			      "brcm,bcm7435-pcie"
->> +			      "brcm,bcm7445-pcie"
->> +
->> +- reg: specifies the physical base address of the controller registers and
->> +  its length
->> +
->> +- interrupt-parent: must be a reference (phandle) to the parent interrupt
->> +  controller in the system (7038-l1-intc on MIPS, GIC on ARM/ARM64)
->> +
->> +- interrrupts: first interrupt must be the Level 1 interrupt number corresponding
->> +  to the main PCIe RC interrupt, second interrupt must be the MSI interrupt
->> +  See the interrupt-parent documentation for the number of cells and their meaning:
->> +  MIPS: Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
->> +  ARM/ARM64: Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
->> +
->> +- interrupt-names: must be "pcie", and if present "msi"
-> 
-> When I suggested splitting out the MSI support, I was thinking (but not writing)
-> that you'd use an msi-parent property to refer to the node that holds the
-> msi-controller as well.
-
-Humm fair enough.
-
-> 
->> +- ranges: ranges for the PCI outbound windows, no I/O or prefetchable windows
->> +  must be specified here, only non-prefetchable. 32-bits windows or 64-bits
->> +  windows are allowed based on the host processor's capabilities (ARM w/ LPAE,
->> +  ARM64).
-> 
-> So this supports 64-bit non-prefetchable windows? Usually 64-bit windows
-> are prefetchable.
-> 
->> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to PCIe space
->> +  there must be exactly one value per memory controller present in the system
->> +  (ranges from 1 to 3)
-> 
-> I'm still not too happy with this property. I see no reason for the log2
-> format (rather than length in bytes, or offset/length tuples, or dma-ranges,
-> or phandles pointing to the memory controllers). I think we need to discuss
-> this some more.
-
-Sure, works for me.
-
-> 
->> +- brcm,gen: integer that indicates desired forced generation of link: 1 => 2.5
->> +  Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps. Will override the auto-negotation if
->> +  specified.
-> 
-> to repeat my earlier comment from v1:
-> 
-> Shouldn't the link generation be probed automatically?
-
-It is, but if the property is present, we can foce the link negotiation,
-We have had cases where this was desired and helpful.
-
-> 
->> +- <*>-supply: see Documentation/devicetree/bindings/regulator/regulator.txt
->> +
->> +- <*>-supply-names: see Documentation/devicetree/bindings/regulator/regulator.txt
-> 
-> I don't see supply-names documented there.
-
-Meh, I read that wrong, will fix that.
-
-Thanks!
--- 
-Florian
+T24gMDUvMDUvMjAxNiAxMjozNiBBTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IE9uIDQgTWF5
+IDIwMTYgYXQgMjA6NTMsIEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPiB3
+cm90ZToKPj4gT24gMDMvMDUvMTYgMTA6MjgsIERhbiBIYWFiIHdyb3RlOgo+Pj4gTHV4dWwgWEFQ
+LTE1MTAgaXMgYW4gQVAgZGV2aWNlIGJhc2VkIG9uIEJDTTQ3MDggU29DLiBJdCB1c2VzIGZsYXNo
+Cj4+PiBtZW1vcnkgY29ubmVjdGVkIHRvIHRoZSBTUEkgY29udHJvbGxlci4KPj4KPj4gTG9va3Mg
+ZmluZSwgZXhjZXB0IG9uZSBuaXQ6Cj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
+dHMvYmNtNDcwOC1sdXh1bC14YXAtMTUxMC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA4
+LWx1eHVsLXhhcC0xNTEwLmR0cwo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAw
+MDAwMDAuLmY0NDYwYjUKPj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2JjbTQ3MDgtbHV4dWwteGFwLTE1MTAuZHRzCj4+PiBAQCAtMCwwICsxLDY3IEBACj4+PiAr
+LyoKPj4+ICsgKiBCcm9hZGNvbSBCQ000NzBYIC8gQkNNNTMwMVggQVJNIHBsYXRmb3JtIGNvZGUu
+Cj4+PiArICogRFRTIGZvciBMdXh1bCBYQVAtMTUxMAo+Pj4gKyAqCj4+PiArICogQ29weXJpZ2h0
+IDIwMTUgTHV4dWwgSW5jLgo+Pj4gKyAqCj4+PiArICogTGljZW5zZWQgdW5kZXIgdGhlIEdOVS9H
+UEwuIFNlZSBDT1BZSU5HIGZvciBkZXRhaWxzLgo+Pgo+PiBUaGUgQVJNIFNvQyBtYWludGFpbmVy
+IGhhdmUgYmVlbiBhc2tpbmcgdG8gdXRpbGl6ZSBhIGxpY2Vuc2Ugd2hpY2ggaXMKPj4gYWxzbyBC
+U0QgY29tcGF0aWJsZSwgc28gc29tZXRoaW5nIGFsb25nIHRoZSBsaW5lcyBvZiB0aGlzIG9uZToK
+Pj4KPj4gYXJjaC9hcm0vYm9vdC9kdHMvYmNtOTExMzYway5kdHMKPj4KPj4gRG8geW91IG1pbmQg
+cmVzcGluaW5nIHRoZSBwYXRjaCB0byBpbmNsdWRlIHRoYXQga2luZCBvZiBsaWNlbnNlIGhlYWRl
+cj8KPiAKPiBJIHdhc24ndCBhd2FyZSBvZiB0aGlzIG5laXRoZXIuIFNoYWxsIHdlIHJlLWxpY2Vu
+c2UgZXhpc3RpbmcgRFRTIGZpbGVzCj4gYXMgd2VsbD8gSSdtIGZpbmUgd2l0aCBjaGFuZ2luZyB0
+aGVtIHRvIEJTRCBjb21wYXRpYmxlLgo+IAo+IEknbSBhIGJpdCBjb25mdXNlZCBieSB1c2luZyBC
+U0QgbGljZW5zZSBvbmx5LiBLZXJuZWwgaXMgbGljZW5zZWQgdW5kZXIKPiBHTlUgR1BMIHZlcnNp
+b24gMiBhbmQgaWYgdGhlcmUgYXJlIHNvbWUgQlNEIGNvbXBhdGlibGUgbW9kdWxlcywgdGhleQo+
+IHVzZSBkdWFsIGxpY2Vuc2luZyBtb2RlbCAoQlNEL0dQTCkuIFNob3VsZG4ndCB3ZSB1c2UgQlNE
+L0dQTCBpbiBEVFMKPiBmaWxlcyBhcyB3ZWxsIHRoZW4/Cj4gCgpBcyBmYXIgYXMgSSB1bmRlcnN0
+YW5kIHRoZSBMaWNlbnNlIHBhcnQgeW91IGNhbiB0YWtlIGNvZGUgd2hpY2ggaXMKbGljZW5zZWQg
+dW5kZXIgQlNEIGxpY2Vuc2UgYW5kIHVzZSBpdCBpbiBHUEwgY29kZSBiZWNhdXNlIHlvdSBjYW4g
+Y29tcGx5CndpdGggdGhlIEJTRCBsaWNlbnNlIGFuZCBhbHNvIGhhbmRsZSBpdCBpbiBhIHdheSB0
+byBiZSBHUEwgY29tcGxpYW50IGF0CnRoZSBzYW1lIHRpbWUuIFlvdSBjYW4gYWxzbyBtYWtlIGEg
+Y2hhbmdlIHRvIEJTRCBjb2RlIGFuZCBsaWNlbnNlIHRoaXMKY2hhbmdlIHVuZGVyIHRoZSBHUEws
+IHRoZW4gdGhlIGNvbXBsZXRlIGNvZGUgKHRoZSBvbGQgb25lICsgeW91ciBjaGFuZ2UpCmlzIG5v
+dyBHUEwuCgpBcmUgdGhlIGRldmljZSB0cmVlIGZpbGVzIGxpY2Vuc2VkIHVuZGVyIEJTRCBsaWNl
+bnNlIHRvIG1ha2UgaXQgZWFzaWVyCnRvIGludGVncmF0ZSB0aGVtIGludG8gYSBwcm9wcmlldGFy
+eSBib290IGxvYWRlciBvciB3aGF0IGlzIHRoZSBwdXJwb3NlPwoKSGF1a2UKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
