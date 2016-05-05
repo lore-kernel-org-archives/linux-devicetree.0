@@ -1,136 +1,75 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH V3 02/17] irqchip/gic: WARN if setting the interrupt
- type for a PPI fails
-Date: Thu, 5 May 2016 14:40:25 +0100
-Message-ID: <20160505144025.50c02f3d@arm.com>
-References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
-	<1462379130-11742-3-git-send-email-jonathanh@nvidia.com>
-	<572B3731.80602@arm.com>
-	<572B48FE.20707@nvidia.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [RFC v2 10/13] usb: hub: Power sequence the ports on activation
+Date: Thu, 5 May 2016 10:09:47 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1605051007040.2008-100000@iolanthe.rowland.org>
+References: <1462451666-17945-11-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <572B48FE.20707@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462451666-17945-11-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 5 May 2016 14:22:06 +0100
-Jon Hunter <jonathanh@nvidia.com> wrote:
+On Thu, 5 May 2016, Krzysztof Kozlowski wrote:
 
-> Hi Marc,
+> The autodetection of attached USB device might not work on certain
+> boards where the power is delivered externally. These devices also might
+> require a hard reset. Use pwrseq for that in USB hub.
 > 
-> On 05/05/16 13:06, Marc Zyngier wrote:
-> > Hi Jon,
-> > 
-> > On 04/05/16 17:25, Jon Hunter wrote:
-> >> Setting the interrupt type for private peripheral interrupts (PPIs) may
-> >> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
-> >> whether this is allowed. There is no way to know if setting the type is
-> >> supported for a given GIC and so the value written is read back to
-> >> verify it matches the desired configuration. If it does not match then
-> >> an error is return.
-> >>
-> >> There are cases where the interrupt configuration read from firmware
-> >> (such as a device-tree blob), has been incorrect and hence
-> >> gic_configure_irq() has returned an error. This error has gone
-> >> undetected because the error code returned was ignored but the interrupt
-> >> still worked fine because the configuration for the interrupt could not
-> >> be overwritten.
-> >>
-> >> Given that this has done undetected and that failing to set the
-> >> configuration for a PPI may not be a catastrophic, don't return an error
-> >> but WARN if we fail to configure a PPI. This will allows us to fix up
-> >> any places in the kernel where we should be checking the return status
-> >> and maintain backward compatibility with firmware images that may have
-> >> incorrect PPI configurations.
-> >>
-> >> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> >> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-> >> ---
-> >>  drivers/irqchip/irq-gic-common.c | 11 +++++++----
-> >>  1 file changed, 7 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-> >> index ffff5a45f1e3..9fa92a17225c 100644
-> >> --- a/drivers/irqchip/irq-gic-common.c
-> >> +++ b/drivers/irqchip/irq-gic-common.c
-> >> @@ -56,12 +56,15 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
-> >>  
-> >>  	/*
-> >>  	 * Write back the new configuration, and possibly re-enable
-> >> -	 * the interrupt. If we fail to write a new configuration,
-> >> -	 * return an error.
-> >> +	 * the interrupt. WARN if we fail to write a new configuration
-> >> +	 * and return an error if we failed to write the configuration
-> >> +	 * for an SPI. If we fail to write the configuration for a PPI
-> >> +	 * this is most likely because the GIC does not allow us to set
-> >> +	 * the configuration and so it is not a catastrophic failure.
-> >>  	 */
-> >>  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
-> >> -	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val)
-> >> -		ret = -EINVAL;
-> >> +	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
-> >> +		ret = irq < 32 ? 0 : -EINVAL;
-> >>  
-> >>  	if (sync_access)
-> >>  		sync_access();
-> >>
-> > 
-> > I'm going to slightly backpedal on that one:
-> > 
-> > When running in non-secure mode, you can reconfigure secure interrupts
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/usb/core/hub.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> Do you mean 'cannot'?
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 1c82fcc448f5..0fddaacc62bf 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/random.h>
+>  #include <linux/pm_qos.h>
+> +#include <linux/pwrseq.h>
+>  
+>  #include <asm/uaccess.h>
+>  #include <asm/byteorder.h>
+> @@ -1661,7 +1662,17 @@ static int hub_configure(struct usb_hub *hub,
+>  
+>  	usb_hub_adjust_deviceremovable(hdev, hub->descriptor);
+>  
+> +	/* FIXME: When do the pre-power-on? */
 
-Yes, sorry.
+It's hard to answer this without knowing what pre-power-on involves.
 
-> > (for obvious reasons). But you don't know which mode you're running in
-> > either. A typical example is the arch timer, which requests both secure
-> > and non-secure interrupts, because we cannot know which side of the CPU
-> > we're running on. In the non-secure case, we end-up with a splat that
-> > is rather undeserved.
-> 
-> Yes seems sensible.
-> 
-> > So I'm tempted to tone down the splat in the PPI case like this:
-> > 
-> > diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-> > index 083c303..1605e42 100644
-> > --- a/drivers/irqchip/irq-gic-common.c
-> > +++ b/drivers/irqchip/irq-gic-common.c
-> > @@ -63,8 +63,17 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
-> >  	 * the configuration and so it is not a catastrophic failure.
-> >  	 */
-> >  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
-> > -	if (WARN_ON(readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val))
-> > -		ret = irq < 32 ? 0 : -EINVAL;
-> > +	oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-> > +	if (oldval != val) {
-> > +		if (irq < 32) {
-> > +			pr_warn("GIC: PPI%d is either secure or misconfigured\n",
-> > +				irq - 16);
-> > +			ret = 0;
-> > +		} else {
-> > +			WARN_ON(1);
-> > +			ret = -EINVAL;
-> > +		}
-> > +	}
-> >  
-> >  	if (sync_access)
-> >  		sync_access();
-> > 
-> > Thoughts?
-> 
-> That is fine with me. Do you want me to re-spin or do you want to apply
-> your change on top? However, before I re-spin would like to get your
-> thoughts on patches 13-17.
+Why not create a pwrseq_power_on() routine that does pre_power_on 
+followed by post_power_on?
 
-I can squash this into your own patch if you're OK with it. I'll reply
-to your other patches shortly, as I have a number of comments there.
+> +	/*
+> +	for (i = 0; i < maxchild; i++)
+> +		pwrseq_pre_power_on(hub->ports[i]->pwrseq);
+> +	*/
+> +
+> +	for (i = 0; i < maxchild; i++)
+> +		pwrseq_post_power_on(hub->ports[i]->pwrseq);
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+This is patch 10/13.  hub->ports[i]->pwrseq doesn't get added until 
+11/13.  Obviously you never tried compiling each patch in the series.
+
+> +
+>  	hub_activate(hub, HUB_INIT);
+> +
+
+Unnecessary blank line added.
+
+>  	return 0;
+>  
+>  fail:
+
+Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
