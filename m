@@ -1,62 +1,75 @@
-From: Martin Ayotte <martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 2/3] dts: sun8i-h3: add i2c0/i2c1/i2c2 pins definitions
-Date: Thu, 5 May 2016 10:00:06 -0400
-Message-ID: <f137fb6ade91f28ef40c2dbf6a5a337c5ed0198e.1462457172.git.martinayotte@gmail.com>
-References: <cover.1462457172.git.martinayotte@gmail.com>
-Reply-To: martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: bus: Add documentation for Tegra210
+ ACONNECT
+Date: Thu, 5 May 2016 15:39:16 +0100
+Message-ID: <572B5B14.6060603@nvidia.com>
+References: <1461938027-23034-1-git-send-email-jonathanh@nvidia.com>
+ <1461938027-23034-2-git-send-email-jonathanh@nvidia.com>
+ <20160503182215.GA4341@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDW4XUV4YULRBIVKVW4QKGQEQ75W2DA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.1462457172.git.martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: jwrdegoede-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160503182215.GA4341@rob-hp-laptop>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-dts: sun8i-h3: add i2c0/i2c1/i2c2 pins definitions
 
-Signed-off-by: Martin Ayotte <martinayotte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+On 03/05/16 19:22, Rob Herring wrote:
+> On Fri, Apr 29, 2016 at 02:53:45PM +0100, Jon Hunter wrote:
+>> Add binding documentation for the Tegra ACONNECT bus that is part of the
+>> Audio Processing Engine (APE) on Tegra210. The ACONNECT bus is used to
+>> access devices within the APE subsystem. The APE is located in a
+>> separate power domain and so accesses made to the ACONNECT require the
+>> power domain to be enabled as well as some platform specific clocks.
+>>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../bindings/bus/nvidia,tegra210-aconnect.txt      | 45 ++++++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
+>> new file mode 100644
+>> index 000000000000..e5e915f8fca7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
+>> @@ -0,0 +1,45 @@
+>> +NVIDIA Tegra ACONNECT Bus
+>> +
+>> +The Tegra ACONNECT bus is an AXI switch which is used to connnect various
+>> +components inside the Audio Processing Engine (APE). All CPU accesses to
+>> +the APE subsystem go through the ACONNECT via an APB to AXI wrapper.
+>> +
+>> +Required properties:
+>> +- compatible: Must be "nvidia,tegra210-aconnect".
+>> +- clocks: Must contain the entries for the APE clock (TEGRA210_CLK_APE),
+>> +  and APE interface clock (TEGRA210_CLK_APB2APE).
+>> +- clock-names: Must contain the names "ape" and "apb2ape" for the corresponding
+>> +  'clocks' entries.
+>> +- power-domains: Must contain a phandle that points to the audio powergate
+>> +  (namely 'aud') for Tegra210.
+>> +- #address-cells: The number of cells used to represent physical base addresses
+>> +  in the host1x address space. Should be 2.
+>> +- #size-cells: The number of cells used to represent the size of an address
+>> +  range in the host1x address space. Should be 2.
+> 
+> Do you really need >4GB of child addresses?
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 292ed59..79a3af6 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -529,6 +529,27 @@
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
- 
-+			i2c0_pins_a: i2c0@0 {
-+				allwinner,pins = "PA11", "PA12";
-+				allwinner,function = "i2c0";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			i2c1_pins_a: i2c1@0 {
-+				allwinner,pins = "PA18", "PA19";
-+				allwinner,function = "i2c1";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			i2c2_pins_a: i2c2@0 {
-+				allwinner,pins = "PE12", "PE13";
-+				allwinner,function = "i2c2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
- 			mmc0_pins_a: mmc0@0 {
- 				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
- 						 "PF4", "PF5";
--- 
-2.7.4
+Sounds rather silly when you put it like that. No, its not needed. I
+will fix that.
+
+>> +- ranges: 1:1 mapping of the aconnect address space to the CPU address space.
+> 
+> Why 1:1 for 256KB of address space?
+
+No good reason. I have looking at what we did for host1x and ahub which
+also have a ranges property and use a 1:1 mapping. For ahub this makes
+sense because it is more of a cross-bar/switch. The aconnect bus is also
+a switch and thought may be that is the easiest thing to do. What is
+recommended here?
+
+Cheers
+Jon
