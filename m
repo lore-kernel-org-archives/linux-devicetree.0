@@ -1,85 +1,94 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC v2 10/13] usb: hub: Power sequence the ports on activation
-Date: Thu, 5 May 2016 19:37:03 +0200
-Message-ID: <20160505173703.GA3034@kozik-lap>
-References: <1462451666-17945-11-git-send-email-k.kozlowski@samsung.com>
- <Pine.LNX.4.44L0.1605051007040.2008-100000@iolanthe.rowland.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1605051007040.2008-100000@iolanthe.rowland.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH v2] ARM: sun7i: dt: Add pll3 and pll7 clocks
+Date: Thu,  5 May 2016 20:39:04 +0300
+Message-ID: <1462469944-27915-1-git-send-email-plaes@plaes.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 05, 2016 at 10:09:47AM -0400, Alan Stern wrote:
-> On Thu, 5 May 2016, Krzysztof Kozlowski wrote:
-> 
-> > The autodetection of attached USB device might not work on certain
-> > boards where the power is delivered externally. These devices also might
-> > require a hard reset. Use pwrseq for that in USB hub.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > ---
-> >  drivers/usb/core/hub.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> > index 1c82fcc448f5..0fddaacc62bf 100644
-> > --- a/drivers/usb/core/hub.c
-> > +++ b/drivers/usb/core/hub.c
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/random.h>
-> >  #include <linux/pm_qos.h>
-> > +#include <linux/pwrseq.h>
-> >  
-> >  #include <asm/uaccess.h>
-> >  #include <asm/byteorder.h>
-> > @@ -1661,7 +1662,17 @@ static int hub_configure(struct usb_hub *hub,
-> >  
-> >  	usb_hub_adjust_deviceremovable(hdev, hub->descriptor);
-> >  
-> > +	/* FIXME: When do the pre-power-on? */
-> 
-> It's hard to answer this without knowing what pre-power-on involves.
+Enable pll3 and pll7 clocks that are needed by display clocks.
 
-In my particular case, I want to achieve a full reset through regulator (off
-and on) because the bootloader left it in initialized state. I assume
-that if bootloader did not configure the device, the reset won't be
-harmful.
+Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+---
+v2:
+ - Fix typos in clocks property (spotted by Alexander Syring)
+ - Fix indentation (spotted by Maxime Ripard)
 
-In a MMC case, this pre-power-on on is setting the 'reset' GPIO (thus
-triggering the reset) and post-power-on is clearing the 'reset'.
+ arch/arm/boot/dts/sun7i-a20.dtsi | 41 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-> Why not create a pwrseq_power_on() routine that does pre_power_on 
-> followed by post_power_on?
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index bf5d056..febdf4c 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -187,6 +187,15 @@
+ 			clock-output-names = "osc24M";
+ 		};
+ 
++		osc3M: osc3M_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-div = <8>;
++			clock-mult = <1>;
++			clocks = <&osc24M>;
++			clock-output-names = "osc3M";
++		};
++
+ 		osc32k: clk@0 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+@@ -211,6 +220,22 @@
+ 					     "pll2-4x", "pll2-8x";
+ 		};
+ 
++		pll3: clk@01c20010 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-pll3-clk";
++			reg = <0x01c20010 0x4>;
++			clocks = <&osc3M>;
++			clock-output-names = "pll3";
++		};
++
++		pll3x2: pll3x2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-div = <1>;
++			clock-mult = <2>;
++			clock-output-names = "pll3-2x";
++		};
++
+ 		pll4: clk@01c20018 {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun7i-a20-pll4-clk";
+@@ -236,6 +261,22 @@
+ 					     "pll6_div_4";
+ 		};
+ 
++		pll7: clk@01c20030 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-pll3-clk";
++			reg = <0x01c20030 0x4>;
++			clocks = <&osc3M>;
++			clock-output-names = "pll7";
++		};
++
++		pll7x2: pll7x2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-div = <1>;
++			clock-mult = <2>;
++			clock-output-names = "pll7-2x";
++		};
++
+ 		pll8: clk@01c20040 {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun7i-a20-pll4-clk";
+-- 
+2.8.2
 
-For my purpose it seems sensible.
-
-> 
-> > +	/*
-> > +	for (i = 0; i < maxchild; i++)
-> > +		pwrseq_pre_power_on(hub->ports[i]->pwrseq);
-> > +	*/
-> > +
-> > +	for (i = 0; i < maxchild; i++)
-> > +		pwrseq_post_power_on(hub->ports[i]->pwrseq);
-> 
-> This is patch 10/13.  hub->ports[i]->pwrseq doesn't get added until 
-> 11/13.  Obviously you never tried compiling each patch in the series.
-
-Ahh yes, I forgot to reorder them. Thanks for spotting this.
-
-> 
-> > +
-> >  	hub_activate(hub, HUB_INIT);
-> > +
-> 
-> Unnecessary blank line added.
-
-Thanks for feedback,
-Krzysztof
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
