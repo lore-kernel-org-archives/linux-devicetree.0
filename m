@@ -1,55 +1,61 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v7 9/9] i2c: rk3x: support fast-mode plus for rk3399
-Date: Thu, 5 May 2016 16:02:16 -0700
-Message-ID: <CAD=FV=UtHPDtB7LTbUpwcjOcoYwNma59-TRDU3hrt6c_2TWxxA@mail.gmail.com>
-References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
-	<1462372668-6583-1-git-send-email-david.wu@rock-chips.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [Patch v3 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Thu, 5 May 2016 18:16:11 -0500
+Message-ID: <CAPBZ5QfYOiGniV6PGRRRgAb2sy=J2TjVSxM-+42GR+4mU-Ht9w@mail.gmail.com>
+References: <1462402245-18295-1-git-send-email-andy.gross@linaro.org>
+	<1462402245-18295-2-git-send-email-andy.gross@linaro.org>
+	<20160505221713.GA12273@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1462372668-6583-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160505221713.GA12273@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, jilai wang <jilaiw@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-David,
-
-On Wed, May 4, 2016 at 7:37 AM, David Wu <david.wu@rock-chips.com> wrote:
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
-> ---
->  drivers/i2c/busses/i2c-rk3x.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
+On 5 May 2016 at 17:17, Rob Herring <robh@kernel.org> wrote:
+> On Wed, May 04, 2016 at 05:50:38PM -0500, Andy Gross wrote:
+>> This patch adds the device tree support for the Qualcomm SCM firmware.
+>>
+>> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+>> ---
+>>  .../devicetree/bindings/firmware/qcom,scm.txt      | 26 ++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+>> new file mode 100644
+>> index 0000000..ee7cd12
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+>> @@ -0,0 +1,26 @@
+>> +QCOM Secure Channel Manager (SCM)
+>> +
+>> +Qualcomm processors include an interface to communicate to the secure firmware.
+>> +This interface allows for clients to request different types of actions.  These
+>> +can include CPU power up/down, HDCP requests, loading of firmware, and other
+>> +assorted actions.
+>> +
+>> +Required properties:
+>> +- compatible: must contain one of the following:
+>> + * "qcom,scm-a-family" for A family Qualcomm processors (APQ8064, MSM8960, etc)
+>> + * "qcom,scm" for B family and later processors (MSM8916, APQ8084, MSM8974, etc)
+>> +- clocks: One to three clocks may be required based on compatible.
+>> + * Only core clock required for "qcom,scm-apq8064"
 >
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> index 47368c4..c66cc39 100644
-> --- a/drivers/i2c/busses/i2c-rk3x.c
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -124,6 +124,17 @@ static const struct i2c_spec_values fast_mode_spec = {
->         .min_hold_buffer_ns = 1300,
->  };
->
-> +static const struct i2c_spec_values fast_mode_plus_spec = {
-> +       .min_hold_start_ns = 260,
-> +       .min_low_ns = 500,
-> +       .min_high_ns = 260,
-> +       .min_setup_start_ns = 260,
-> +       .max_data_hold_ns = 400,
+> This is not a compatible string. What happened to the chip ones. I
+> thought we decided on chip specific plus one of the above ones.
 
-I'm curious where you got the data_hold_ns.  I can't quite remember
-what this parameter does / how the timing function works anymore, but
-the doc I have (search for UM10204 and click the first link) shows
-values for Standard-mode and Fast-mode but not Fast-mode Plus.  It
-seems to imply that this is a bit of a bogus number anyway because it
-only matters if we don't stretch the tLOW to go along with the longer
-data hold.
+Stephen specifically didn't like the chip ones due to churn.  We'd
+have to add compat tags every time we got a new chip.... which is kind
+of frequent.  So I opted for defining one compat for older A family
+chips that require only 1 clock.  The qcom,scm would cover the newer
+chips.
 
-As I have said in the previous patch, how all this stuff works has
-totally left my brain, so if you understand it that's probably good
-enough.  If you feel like I should try to re-understand this again so
-I can review it more deeply, let me know.
+And it looks like i left a reference to apq8064.  That needs to be
+replaced with a-family.  Sorry for that confusion.
 
+Regards,
 
-Since I assume that you had some sane reason to include max_data_hold_ns:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Andy
