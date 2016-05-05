@@ -1,55 +1,107 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH] of: fix device compatibility scoring
-Date: Thu,  5 May 2016 13:30:48 -0500
-Message-ID: <1462473048-10001-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Kevin Hao <haokexin@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [RFC v2 01/13] usb: misc: usb3503: Clean up on driver unbind
+Date: Thu, 5 May 2016 14:32:16 -0400
+Message-ID: <d78e8151-ee37-a003-2f8f-bc5431906512@osg.samsung.com>
+References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
+ <1462451666-17945-2-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1462451666-17945-2-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>
+Cc: tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-If a constraint given to __of_device_is_compatible() does not
-match, we should just move to the next constraint without adding
-to the compatibility score. Instead, the function immediately
-returns 0.
+Hello Krzysztof
 
-Do not return from __of_device_is_compatible() until a complete
-score has been calculated.
+Patch looks good to me, I just have a trivial comment below.
 
-Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
----
- drivers/of/base.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+On 05/05/2016 08:34 AM, Krzysztof Kozlowski wrote:
+> The driver should clean up after itself by unpreparing the clock when it
+> is unbound.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  drivers/usb/misc/usb3503.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
+> index b45cb77c0744..a464636675a6 100644
+> --- a/drivers/usb/misc/usb3503.c
+> +++ b/drivers/usb/misc/usb3503.c
+> @@ -330,6 +330,19 @@ static int usb3503_i2c_probe(struct i2c_client *i2c,
+>  	return usb3503_probe(hub);
+>  }
+>  
+> +static int usb3503_i2c_remove(struct i2c_client *i2c)
+> +{
+> +	struct usb3503 *hub;
+> +
+> +	hub = i2c_get_clientdata(i2c);
+> +	if (hub) {
+> +		if (hub->clk)
+> +			clk_disable_unprepare(hub->clk);
+> +	}
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 017dd94..942a60e 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -455,22 +455,18 @@ static int __of_device_is_compatible(const struct device_node *device,
- 				break;
- 			}
- 		}
--		if (!score)
--			return 0;
- 	}
- 
- 	/* Matching type is better than matching name */
- 	if (type && type[0]) {
--		if (!device->type || of_node_cmp(type, device->type))
--			return 0;
--		score += 2;
-+		if (device->type && !of_node_cmp(type, device->type))
-+			score += 2;
- 	}
- 
- 	/* Matching name is a bit better than not */
- 	if (name && name[0]) {
--		if (!device->name || of_node_cmp(name, device->name))
--			return 0;
--		score++;
-+		if (device->name && !of_node_cmp(name, device->name))
-+			score++;
- 	}
- 
- 	return score;
+I think the following is simpler and easier to read:
+
+if (hub && hub->clk)
+	clk_disable_unprepare(hub->clk);
+
+> +
+> +	return 0;
+> +}
+> +
+>  static int usb3503_platform_probe(struct platform_device *pdev)
+>  {
+>  	struct usb3503 *hub;
+> @@ -342,6 +355,19 @@ static int usb3503_platform_probe(struct platform_device *pdev)
+>  	return usb3503_probe(hub);
+>  }
+>  
+> +static int usb3503_platform_remove(struct platform_device *pdev)
+> +{
+> +	struct usb3503 *hub;
+> +
+> +	hub = platform_get_drvdata(pdev);
+> +	if (hub) {
+> +		if (hub->clk)
+> +			clk_disable_unprepare(hub->clk);
+> +	}
+> +
+
+Ditto.
+
+> +	return 0;
+> +}
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>  static int usb3503_i2c_suspend(struct device *dev)
+>  {
+> @@ -395,6 +421,7 @@ static struct i2c_driver usb3503_i2c_driver = {
+>  		.of_match_table = of_match_ptr(usb3503_of_match),
+>  	},
+>  	.probe		= usb3503_i2c_probe,
+> +	.remove		= usb3503_i2c_remove,
+>  	.id_table	= usb3503_id,
+>  };
+>  
+> @@ -404,6 +431,7 @@ static struct platform_driver usb3503_platform_driver = {
+>  		.of_match_table = of_match_ptr(usb3503_of_match),
+>  	},
+>  	.probe		= usb3503_platform_probe,
+> +	.remove		= usb3503_platform_remove,
+>  };
+>  
+>  static int __init usb3503_init(void)
+> 
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
 -- 
-1.8.3.1
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
