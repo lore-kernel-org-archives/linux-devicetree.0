@@ -1,33 +1,38 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [RFC v2 08/13] usb: hub: Handle deferred probe
-Date: Thu, 5 May 2016 15:33:38 -0400
-Message-ID: <0a751690-a506-34b8-9435-289cf016b756@osg.samsung.com>
-References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
- <1462451666-17945-9-git-send-email-k.kozlowski@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 21/22] drivers/of: Export of_detach_node()
+Date: Thu, 5 May 2016 14:42:35 -0500
+Message-ID: <20160505194235.GA13790@rob-hp-laptop>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1462281773-26438-22-git-send-email-gwshan@linux.vnet.ibm.com>
+ <20160504133603.GA30081@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1462451666-17945-9-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>
-Cc: tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160504133603.GA30081@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 05/05/2016 08:34 AM, Krzysztof Kozlowski wrote:
-> Add support for deferred probing to the usb hub. Currently EPROBE_DEFER
-> does not exist in usb hub path but future patches will add it on the
-> port level.
+On Wed, May 04, 2016 at 11:36:03PM +1000, Gavin Shan wrote:
+> On Tue, May 03, 2016 at 11:22:52PM +1000, Gavin Shan wrote:
+> >This exports of_detach_node() for PowerPC PowerNV PCI hotplug
+> >driver. No functional changes introduced.
+> >
+> >Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
+> Rob, I'm not sure it's late to cache the 4.7 merge window.
+> Also, I was told this series is needed by new CAPI driver which
+> is being developed. The developers hope to push the new CAPI driver
+> in 4.8 merge window (perhaps) or linux-next before 4.8 merge window
+> is opened. It means the new CAPI driver depends on this series which
+> has to be pushed to linux-next before 4.8 merge window.
+> 
+> If it's fine, could you please merge 16 to 21? With them merged to
+> 4.7, the left patches won't depend on FDT changes. Thanks in advance
+> for your help.
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+I've applied the 6 patches.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Rob
