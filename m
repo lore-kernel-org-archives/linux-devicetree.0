@@ -1,89 +1,197 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH V3 2/7] documentation: iommu: Add bindings for msm,iommu-v0 ip
-Date: Thu, 5 May 2016 10:40:00 +0530
-Message-ID: <000001d1a68c$648e3a90$2daaafb0$@codeaurora.org>
-References: <1462128875-20988-1-git-send-email-sricharan@codeaurora.org> <1462128875-20988-3-git-send-email-sricharan@codeaurora.org> <20160504022437.GA4110@rob-hp-laptop>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/3] Documentation: mfd/regulator: LP873X: Add information for the mfd and regulator drivers
+Date: Thu, 5 May 2016 10:40:38 +0530
+Message-ID: <1462425040-18566-2-git-send-email-j-keerthy@ti.com>
+References: <1462425040-18566-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160504022437.GA4110@rob-hp-laptop>
-Content-Language: en-us
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: 'Rob Herring' <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, robdclark@gmail.com, iommu@lists.linux-foundation.org, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org, architt@codeaurora.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462425040-18566-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add information for the mfd and regulator drivers.
 
-> > The MSM IOMMU is an implementation compatible with the ARM VMSA
-> short
-> > descriptor page tables. It provides address translation for bus
-> > masters outside of the CPU, each connected to the IOMMU through a port
-> called micro-TLB.
-> > Adding the DT bindings for the same.
-> >
-> > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> > ---
-> >  .../devicetree/bindings/iommu/msm,iommu-v0.txt     | 62
-> ++++++++++++++++++++++
-> >  1 file changed, 62 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
-> > b/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
-> > new file mode 100644
-> > index 0000000..63b4f96
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
-> > @@ -0,0 +1,62 @@
-> > +* MSM IOMMU
-> > +
-> > +The MSM IOMMU is an implementation compatible with the ARM VMSA
-> short
-> > +descriptor page tables. It provides address translation for bus
-> > +masters outside of the CPU, each connected to the IOMMU through a
-> port called micro-TLB.
-> > +
-> > +Required Properties:
-> > +
-> > +  - compatible: Must contain "msm,iommu-v0".
-> 
-> SOC specific compatible strings please.
-  Ok sure. I think I missed being explicit here last time.
+Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/lp873x.txt   | 56 +++++++++++++
+ .../devicetree/bindings/regulator/lp873x.txt       | 98 ++++++++++++++++++++++
+ 2 files changed, 154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/lp873x.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/lp873x.txt
 
-> 
-> > +  - reg: Base address and size of the IOMMU registers.
-> > +  - interrupts: Specifiers for the MMU fault interrupts. For instances
-that
-> > +    support secure mode two interrupts must be specified, for
-non-secure
-> and
-> > +    secure mode, in that order. For instances that don't support secure
-> mode a
-> > +    single interrupt must be specified.
-> > +  - #iommu-cells: The number of cells needed to specify the stream id.
-This
-> > +		  is always 1.
-> > +  - qcom,ncb:	  The total number of context banks in the IOMMU.
-> > +  - clocks	: List of clocks to be used during SMMU register access. See
-> > +		  Documentation/devicetree/bindings/clock/clock-
-> bindings.txt
-> > +		  for information about the format. For each clock specified
-> > +		  here, there must be a corresponding entry in clock-names
-> > +		  (see below).
-> > +
-> > +  - clock-names	: List of clock names corresponding to the clocks
-> specified in
-> > +		  the "clocks" property (above). See
-> > +		  Documentation/devicetree/bindings/clock/clock-
-> bindings.txt
-> > +		  for more info.
-> 
-> You must define how many clocks, their order and their names.
- Ok, will update this and repost
+diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Documentation/devicetree/bindings/mfd/lp873x.txt
+new file mode 100644
+index 0000000..050d822
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
+@@ -0,0 +1,56 @@
++TI LP3943 MFD driver
++
++Required properties:
++  - compatible: "ti,lp873x", "ti,lp8732", "ti,lp8733"
++  - reg: I2C slave address.
++
++For the lp873x regulator properties please refer to:
++Documentation/devicetree/bindings/regulator/lp873x.txt
++
++Example:
++
++lp8733: lp8733@60 {
++	compatible = "ti,lp8733";
++	reg = <0x60>;
++
++	regulators {
++		compatible = "ti,lp8733-regulators";
++		buck0 {
++			regulator-name = "lp8733-buck0";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <1400000>;
++			regulator-min-microamp = <1500000>;
++			regulator-max-microamp = <4000000>;
++			regulator-ramp-delay = <10000>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		buck1 {
++			regulator-name = "lp8733-buck1";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <1400000>;
++			regulator-min-microamp = <1500000>;
++			regulator-max-microamp = <4000000>;
++			regulator-ramp-delay = <10000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		ldo0 {
++			regulator-name = "lp8733-ldo0";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <3000000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		ldo1 {
++			regulator-name = "lp8733-ldo1";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <3000000>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++	};
++};
+diff --git a/Documentation/devicetree/bindings/regulator/lp873x.txt b/Documentation/devicetree/bindings/regulator/lp873x.txt
+new file mode 100644
+index 0000000..079d8a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/lp873x.txt
+@@ -0,0 +1,98 @@
++LP873X family of regulators
++
++Required properties:
++For lp873x Bucks/LDOs
++- compatible:
++  - "ti,lp8733-regulators" for lp8733 PMIC
++  - "ti,lp8732-regulators" for lp8732 PMIC
++  - "ti,lp873x-regulators" for lp8732 PMIC
++
++Examples:
++
++1) LP8733 Regulators:
++
++regulators {
++	compatible = "ti,lp8733-regulators";
++
++	buck0 {
++		regulator-name = "lp8733-buck0";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-min-microamp = <1500000>;
++		regulator-max-microamp = <4000000>;
++		regulator-ramp-delay = <10000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	buck1 {
++		regulator-name = "lp8733-buck1";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-min-microamp = <1500000>;
++		regulator-max-microamp = <4000000>;
++		regulator-ramp-delay = <10000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	ldo0 {
++		regulator-name = "lp8733-ldo0";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <3000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	ldo1 {
++		regulator-name = "lp8733-ldo1";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <3000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++1) LP8732 Regulators:
++
++regulators {
++	compatible = "ti,lp8732-regulators";
++
++	buck0 {
++		regulator-name = "lp8732-buck0";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-min-microamp = <1500000>;
++		regulator-max-microamp = <4000000>;
++		regulator-ramp-delay = <10000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	buck1 {
++		regulator-name = "lp8732-buck1";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-min-microamp = <1500000>;
++		regulator-max-microamp = <4000000>;
++		regulator-ramp-delay = <10000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	ldo0 {
++		regulator-name = "lp8732-ldo0";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <3000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	ldo1 {
++		regulator-name = "lp8732-ldo1";
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <3000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
+-- 
+1.9.1
 
-Regards,
- Sricharan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
