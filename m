@@ -1,84 +1,120 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 5/9] i2c: rk3x: Change SoC data to not use array
-Date: Thu, 05 May 2016 23:36:49 +0200
-Message-ID: <2061861.OMNZ1I2HYA@diego>
-References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com> <1462372418-6349-1-git-send-email-david.wu@rock-chips.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
+ bindings
+Date: Thu, 5 May 2016 14:46:22 -0700
+Message-ID: <572BBF2E.5010606@broadcom.com>
+References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+ <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
+ <4513390.VWu0VVAxOl@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462372418-6349-1-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, davidriley-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4513390.VWu0VVAxOl@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 4. Mai 2016, 22:33:38 schrieb David Wu:
-> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-that makes the code look nicer (and of course prepares for you further 
-changes), so
-
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-> ---
->  drivers/i2c/busses/i2c-rk3x.c | 38 ++++++++++++++++++++++++++++++--------
->  1 file changed, 30 insertions(+), 8 deletions(-)
+On 05/05/16 14:15, Arnd Bergmann wrote:
+> On Thursday 05 May 2016 12:14:59 Florian Fainelli wrote:
+>> From: Jim Quinlan <jim2101024@gmail.com>
+>>
+>> This patchs adds the Device Tree bindings for the Broadcom STB PCIe root
+>> complex hardware.
+>>
+>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>> Changes in v2:
+>>
+>> - rewrite the binding document almost from scratch to include many more
+>>   references to existing documents
+>> - describe missing properties
+>> - give better examples
+>>
+>>  .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  | 98 ++++++++++++++++++++++
+>>  1 file changed, 98 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+>> new file mode 100644
+>> index 000000000000..3682b0f0bc26
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+>> @@ -0,0 +1,98 @@
+>> +Broadcom STB PCIe Host Controller Device Tree Bindings
+>> +
+>> +This document describes the binding of the PCIe Root Complex hardware found in
+>> +Broadcom Set Top Box System-on-Chips such as BCM7425 (MIPS), BCM7435 (MIPS) and
+>> +BCM7445 (ARMv7).
+>> +
+>> +Required properties:
+>> +- compatible: must be one of: "brcm,bcm7425-pcie"
+>> +			      "brcm,bcm7435-pcie"
+>> +			      "brcm,bcm7445-pcie"
+>> +
+>> +- reg: specifies the physical base address of the controller registers and
+>> +  its length
+>> +
+>> +- interrupt-parent: must be a reference (phandle) to the parent interrupt
+>> +  controller in the system (7038-l1-intc on MIPS, GIC on ARM/ARM64)
+>> +
+>> +- interrrupts: first interrupt must be the Level 1 interrupt number corresponding
+>> +  to the main PCIe RC interrupt, second interrupt must be the MSI interrupt
+>> +  See the interrupt-parent documentation for the number of cells and their meaning:
+>> +  MIPS: Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+>> +  ARM/ARM64: Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+>> +
+>> +- interrupt-names: must be "pcie", and if present "msi"
 > 
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> index 0838fcf..9686c81 100644
-> --- a/drivers/i2c/busses/i2c-rk3x.c
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -867,17 +867,39 @@ static const struct i2c_algorithm rk3x_i2c_algorithm =
-> { .functionality		= rk3x_i2c_func,
->  };
-> 
-> -static struct rk3x_i2c_soc_data soc_data[3] = {
-> -	{ .grf_offset = 0x154 }, /* rk3066 */
-> -	{ .grf_offset = 0x0a4 }, /* rk3188 */
-> -	{ .grf_offset = -1 },    /* no I2C switching needed */
-> +static const struct rk3x_i2c_soc_data rk3066_soc_data = {
-> +	.grf_offset = 0x154,
-> +};
-> +
-> +static const struct rk3x_i2c_soc_data rk3188_soc_data = {
-> +	.grf_offset = 0x0a4,
-> +};
-> +
-> +static const struct rk3x_i2c_soc_data rk3228_soc_data = {
-> +	.grf_offset = -1,
-> +};
-> +
-> +static const struct rk3x_i2c_soc_data rk3288_soc_data = {
-> +	.grf_offset = -1,
->  };
-> 
->  static const struct of_device_id rk3x_i2c_match[] = {
-> -	{ .compatible = "rockchip,rk3066-i2c", .data = (void *)&soc_data[0] },
-> -	{ .compatible = "rockchip,rk3188-i2c", .data = (void *)&soc_data[1] },
-> -	{ .compatible = "rockchip,rk3228-i2c", .data = (void *)&soc_data[2] },
-> -	{ .compatible = "rockchip,rk3288-i2c", .data = (void *)&soc_data[2] },
-> +	{
-> +		.compatible = "rockchip,rk3066-i2c",
-> +		.data = (void *)&rk3066_soc_data
-> +	},
-> +	{
-> +		.compatible = "rockchip,rk3188-i2c",
-> +		.data = (void *)&rk3188_soc_data
-> +	},
-> +	{
-> +		.compatible = "rockchip,rk3228-i2c",
-> +		.data = (void *)&rk3228_soc_data
-> +	},
-> +	{
-> +		.compatible = "rockchip,rk3288-i2c",
-> +		.data = (void *)&rk3288_soc_data
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, rk3x_i2c_match);
+> When I suggested splitting out the MSI support, I was thinking (but not writing)
+> that you'd use an msi-parent property to refer to the node that holds the
+> msi-controller as well.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Humm fair enough.
+
+> 
+>> +- ranges: ranges for the PCI outbound windows, no I/O or prefetchable windows
+>> +  must be specified here, only non-prefetchable. 32-bits windows or 64-bits
+>> +  windows are allowed based on the host processor's capabilities (ARM w/ LPAE,
+>> +  ARM64).
+> 
+> So this supports 64-bit non-prefetchable windows? Usually 64-bit windows
+> are prefetchable.
+> 
+>> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to PCIe space
+>> +  there must be exactly one value per memory controller present in the system
+>> +  (ranges from 1 to 3)
+> 
+> I'm still not too happy with this property. I see no reason for the log2
+> format (rather than length in bytes, or offset/length tuples, or dma-ranges,
+> or phandles pointing to the memory controllers). I think we need to discuss
+> this some more.
+
+Sure, works for me.
+
+> 
+>> +- brcm,gen: integer that indicates desired forced generation of link: 1 => 2.5
+>> +  Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps. Will override the auto-negotation if
+>> +  specified.
+> 
+> to repeat my earlier comment from v1:
+> 
+> Shouldn't the link generation be probed automatically?
+
+It is, but if the property is present, we can foce the link negotiation,
+We have had cases where this was desired and helpful.
+
+> 
+>> +- <*>-supply: see Documentation/devicetree/bindings/regulator/regulator.txt
+>> +
+>> +- <*>-supply-names: see Documentation/devicetree/bindings/regulator/regulator.txt
+> 
+> I don't see supply-names documented there.
+
+Meh, I read that wrong, will fix that.
+
+Thanks!
+-- 
+Florian
