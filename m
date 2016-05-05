@@ -1,77 +1,81 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 22/22] PCI/hotplug: PowerPC PowerNV PCI hotplug driver
-Date: Thu, 5 May 2016 12:04:49 -0500
-Message-ID: <CAL_JsqLAYk2S80LNvF2z2ZzPfCWAbpz2LNKK-04OgSkabjWbxQ@mail.gmail.com>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com> <1462281773-26438-23-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: AM335x ICE board Linux support
+Date: Thu, 5 May 2016 10:06:12 -0700
+Message-ID: <20160505170612.GY5995@atomide.com>
+References: <571E069A.20700@ti.com>
+ <571F2982.2080702@ti.com>
+ <20160426151046.GQ5995@atomide.com>
+ <572332B2.6010203@ti.com>
+ <20160429153158.GJ5995@atomide.com>
+ <57270E8E.2040704@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462281773-26438-23-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57270E8E.2040704-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Alexey Kardashevskiy <aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dja-Yfaxwxk/+vWsTnJN9+BGXg@public.gmane.org, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 3, 2016 at 8:22 AM, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> This adds standalone driver to support PCI hotplug for PowerPC PowerNV
-> platform that runs on top of skiboot firmware. The firmware identifies
-> hotpluggable slots and marked their device tree node with proper
-> "ibm,slot-pluggable" and "ibm,reset-by-firmware". The driver scans
-> device tree nodes to create/register PCI hotplug slot accordingly.
->
-> The PCI slots are organized in fashion of tree, which means one
-> PCI slot might have parent PCI slot and parent PCI slot possibly
-> contains multiple child PCI slots. At the plugging time, the parent
-> PCI slot is populated before its children. The child PCI slots are
-> removed before their parent PCI slot can be removed from the system.
->
-> If the skiboot firmware doesn't support slot status retrieval, the PCI
-> slot device node shouldn't have property "ibm,reset-by-firmware". In
-> that case, none of valid PCI slots will be detected from device tree.
-> The skiboot firmware doesn't export the capability to access attention
-> LEDs yet and it's something for TBD.
->
-> Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160502 01:25]:
+> On 29/04/16 18:31, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160429 03:10]:
+> >> On 26/04/16 18:10, Tony Lindgren wrote:
+> >>> I guess for now if no runtime detection is possible in the kernel.
+> >>
+> >> There are 2 ways to detect them mode
+> >> 1) Enabe GPIO rising edge detect interrupt and reset the Ethernet PHY
+> >> 2) read a PHY register over MDIO bus
+> >>
+> >> I'm not very sure where this can be done in the kernel.
+> > 
+> > We already have some PHY detection over MDIO detection in place,
+> > so that's probably the most generic solution.
+> 
+> Sorry, I didn't get you.
+> Based on the PHY node we need to switch the MAC driver.
+> i.e. either CPSW or PRUeth.
+> The PHY driver remains the same in both modes.
 
-[...]
+OK
 
-> +static void pnv_php_handle_poweron(struct pnv_php_slot *php_slot)
-> +{
-> +       void *fdt, *fdt1, *dt;
-> +       int confirm = PNV_PHP_POWER_CONFIRMED_SUCCESS;
-> +       int ret;
-> +
-> +       /* We don't know the FDT blob size. We try to get it through
-> +        * maximal memory chunk and then copy it to another chunk that
-> +        * fits the real size.
-> +        */
-> +       fdt1 = kzalloc(0x10000, GFP_KERNEL);
-> +       if (!fdt1)
-> +               goto error;
-> +
-> +       ret = pnv_pci_get_device_tree(php_slot->dn->phandle, fdt1, 0x10000);
-> +       if (ret)
-> +               goto free_fdt1;
-> +
-> +       fdt = kzalloc(fdt_totalsize(fdt1), GFP_KERNEL);
-> +       if (!fdt)
-> +               goto free_fdt1;
-> +
-> +       /* Unflatten device tree blob */
-> +       memcpy(fdt, fdt1, fdt_totalsize(fdt1));
+> >> Even if there is some place to do the detection, how do we go about reconfiguring the
+> >> device tree?
+> > 
+> > You may not need to, you can have several named pin states:
+> > 
+> > pinctrl-names = "default", "phy-foo", "phy-bar";
+> > pinctrl-0 = <&cpsw_default>;
+> > pinctrl-1 = <&cpsw_phy_foo>;
+> > pinctrl-2 = <&cpsw_phy_bar>;
+> > ...
+> > 
+> > Then have the common pins in cpsw_default, and manually enable
+> > the other pinctrl groups based on the detection. We already
+> > have that going on in am335x-bone-common.dtsi with the &mac
+> > entry for cpsw.
+> 
+> Probably I'm looking at the wrong place but in am353x-bone-common.dtsi
+> I only see "default" and "sleep" pins.
+> 
+> > 
+> > But maybe you have other detection issues too beyond setting
+> > the pins?
+> 
+> It is not only about the pinmux but using an entirely different MAC driver.
+> So we need to enable/disable different MAC drivers.
+> 
+> It gets even trickier if one port is assigned to one MAC driver and the other
+> one to another MAC driver. The pinmux now has to be port specific and the
+> cpsw driver has to be updated to support port specific pinmux. As of now
+> it handles only one pinmux group for both its ports.
 
-This is wrong. If the size is greater than 64K, then you will be
-overrunning the fdt1 buffer. You need to fetch the FDT again if it is
-bigger than 64KB.
+OK I guess up to you to figure out what makes most sense here.
 
+Regards,
 
-> +       dt = of_fdt_unflatten_tree(fdt, php_slot->dn, NULL);
-> +       if (!dt) {
-> +               dev_warn(&php_slot->pdev->dev, "Cannot unflatten FDT\n");
-> +               goto free_fdt;
-> +       }
-> +
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
