@@ -1,78 +1,139 @@
-From: Frank Li <frank.li@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx7d-pinfunc: add input mux for UART2 RX DTE
- mode
-Date: Thu, 5 May 2016 20:29:05 +0000
-Message-ID: <DBXPR04MB27100FCD4D233611E0BACED887C0@DBXPR04MB271.eurprd04.prod.outlook.com>
-References: <1462479144-2481-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462479144-2481-1-git-send-email-stefan@agner.ch>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aalonso@freescale.com" <aalonso@freescale.com>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Chris Brand <chris.brand@broadcom.com>
+Subject: [PATCH 1/6] power: Introduce Broadcom kona reset driver
+Date: Thu,  5 May 2016 13:48:49 -0700
+Message-ID: <1462481334-8943-2-git-send-email-chris.brand@broadcom.com>
+References: <1462481334-8943-1-git-send-email-chris.brand@broadcom.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1462481334-8943-1-git-send-email-chris.brand@broadcom.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Raymond Ngun <raymond.ngun@broadcom.com>, Markus Mayer <markus.mayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+This driver supports reset on both BCM21664 and BCM23550.
+Code is being moved from arch/arm/mach-bcm/board_bcm21664.c
 
+Signed-off-by: Chris Brand <chris.brand@broadcom.com>
+---
+ drivers/power/reset/Kconfig           | 10 +++++
+ drivers/power/reset/Makefile          |  1 +
+ drivers/power/reset/brcm-kona-reset.c | 75 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 86 insertions(+)
+ create mode 100644 drivers/power/reset/brcm-kona-reset.c
 
-> -----Original Message-----
-> From: Stefan Agner [mailto:stefan@agner.ch]
-> Sent: Thursday, May 05, 2016 3:12 PM
-> To: shawnguo@kernel.org
-> Cc: kernel@pengutronix.de; Frank.Li@freescale.com;
-> aalonso@freescale.com; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Stefan Agner
-> <stefan@agner.ch>
-> Subject: [PATCH] ARM: dts: imx7d-pinfunc: add input mux for UART2 RX DTE
-> mode
-> 
-> Add input mux for UART2 RX in DTE mode. This allows to use the pad
-> UART2_TX_DATA_ALT0 as UART2 RX. This particular input select seems to be
-> missing in current reference manuals (Rev. B), but when looking at the tables
-> and other UART input select registers (e.g. UART3) it seems naturally that this
-> input mux register also has a fourth pad option for UART2_TX_DATA_ALT0. It
-> has also been proven to be required to use UART2 in DTE mode and the
-> particular pads on the Colibri iMX7 platform.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index 0a6408a39c66..1a7c49f3650a 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -38,6 +38,16 @@ config POWER_RESET_AXXIA
+ 
+ 	  Say Y if you have an Axxia family SoC.
+ 
++config POWER_RESET_BRCMKONA
++	bool "Broadcom Kona reset driver"
++	depends on ARM || COMPILE_TEST
++	default ARCH_BCM_MOBILE
++	help
++	  This driver provides restart support for Broadcom Kona chips.
++
++	  Say Y here if you have a Broadcom Kona-based board and you wish
++	  to have restart support.
++
+ config POWER_RESET_BRCMSTB
+ 	bool "Broadcom STB reset driver"
+ 	depends on ARM || MIPS || COMPILE_TEST
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index 096fa67047f6..ddb9a5b35480 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -2,6 +2,7 @@ obj-$(CONFIG_POWER_RESET_AS3722) += as3722-poweroff.o
+ obj-$(CONFIG_POWER_RESET_AT91_POWEROFF) += at91-poweroff.o
+ obj-$(CONFIG_POWER_RESET_AT91_RESET) += at91-reset.o
+ obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
++obj-$(CONFIG_POWER_RESET_BRCMKONA) += brcm-kona-reset.o
+ obj-$(CONFIG_POWER_RESET_BRCMSTB) += brcmstb-reboot.o
+ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+ obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
+diff --git a/drivers/power/reset/brcm-kona-reset.c b/drivers/power/reset/brcm-kona-reset.c
+new file mode 100644
+index 000000000000..d6f2070be89c
+--- /dev/null
++++ b/drivers/power/reset/brcm-kona-reset.c
+@@ -0,0 +1,75 @@
++/*
++ * Copyright (C) 2016 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/io.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++#include <linux/reboot.h>
++
++#include <asm/mach/arch.h>
++
++#define RSTMGR_REG_WR_ACCESS_OFFSET	0
++#define RSTMGR_REG_CHIP_SOFT_RST_OFFSET	4
++
++#define RSTMGR_WR_PASSWORD		0xa5a5
++#define RSTMGR_WR_PASSWORD_SHIFT	8
++#define RSTMGR_WR_ACCESS_ENABLE		1
++
++static void __iomem *kona_reset_base;
++
++static int kona_reset_handler(struct notifier_block *this,
++				unsigned long mode, void *cmd)
++{
++	/*
++	 * A soft reset is triggered by writing a 0 to bit 0 of the soft reset
++	 * register. To write to that register we must first write the password
++	 * and the enable bit in the write access enable register.
++	 */
++	writel((RSTMGR_WR_PASSWORD << RSTMGR_WR_PASSWORD_SHIFT) |
++		RSTMGR_WR_ACCESS_ENABLE,
++		kona_reset_base + RSTMGR_REG_WR_ACCESS_OFFSET);
++	writel(0, kona_reset_base + RSTMGR_REG_CHIP_SOFT_RST_OFFSET);
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block kona_reset_nb = {
++	.notifier_call = kona_reset_handler,
++	.priority = 128,
++};
++
++static int kona_reset_probe(struct platform_device *pdev)
++{
++	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++
++	kona_reset_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(kona_reset_base))
++		return PTR_ERR(kona_reset_base);
++
++	return register_restart_handler(&kona_reset_nb);
++}
++
++static const struct of_device_id of_match[] = {
++	{ .compatible = "brcm,bcm21664-resetmgr" },
++	{},
++};
++
++static struct platform_driver bcm_kona_reset_driver = {
++	.probe = kona_reset_probe,
++	.driver = {
++		.name = "brcm-kona-reset",
++		.of_match_table = of_match,
++	},
++};
++
++builtin_platform_driver(bcm_kona_reset_driver);
+-- 
+1.9.1
 
-Acked-by: Frank Li  <Frank.Li@nxp.com>
-
-> ---
->  arch/arm/boot/dts/imx7d-pinfunc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7d-pinfunc.h b/arch/arm/boot/dts/imx7d-
-> pinfunc.h
-> index eeda783..3f9f0d9 100644
-> --- a/arch/arm/boot/dts/imx7d-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx7d-pinfunc.h
-> @@ -594,7 +594,7 @@
->  #define MX7D_PAD_UART2_RX_DATA__GPIO4_IO2                         0x0130
-> 0x03A0 0x0000 0x5 0x0
->  #define MX7D_PAD_UART2_RX_DATA__ENET2_MDIO                        0x0130
-> 0x03A0 0x0000 0x6 0x0
->  #define MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX                      0x0134
-> 0x03A4 0x0000 0x0 0x0
-> -#define MX7D_PAD_UART2_TX_DATA__UART2_DTE_RX                      0x0134
-> 0x03A4 0x0000 0x0 0x0
-> +#define MX7D_PAD_UART2_TX_DATA__UART2_DTE_RX                      0x0134
-> 0x03A4 0x06FC 0x0 0x3
->  #define MX7D_PAD_UART2_TX_DATA__I2C2_SDA                          0x0134
-> 0x03A4 0x05E0 0x1 0x0
->  #define MX7D_PAD_UART2_TX_DATA__SAI3_RX_DATA0                     0x0134
-> 0x03A4 0x06C8 0x2 0x0
->  #define MX7D_PAD_UART2_TX_DATA__ECSPI1_RDY                        0x0134
-> 0x03A4 0x0000 0x3 0x0
-> --
-> 2.8.2
