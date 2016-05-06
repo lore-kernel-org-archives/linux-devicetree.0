@@ -1,31 +1,49 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V4 0/2] vfio, platform: add ACPI support
-Date: Fri, 6 May 2016 15:52:21 -0400
-Message-ID: <572CF5F5.3000606@codeaurora.org>
-References: <1462136872-17590-1-git-send-email-okaya@codeaurora.org>
- <57290E25.7010501@codeaurora.org> <572CE401.4080102@codeaurora.org>
- <2869312.Xk2efht43x@vostro.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <kvm-owner@vger.kernel.org>
-In-Reply-To: <2869312.Xk2efht43x@vostro.rjw.lan>
-Sender: kvm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, eric.auger@linaro.org, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vikrams@codeaurora.org, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, shankerd@codeaurora.org
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 2/2] ARM: dts: igep0020: Add SD card write-protect pin.
+Date: Fri,  6 May 2016 23:02:34 +0200
+Message-ID: <1462568554-7868-2-git-send-email-enric.balletbo@collabora.com>
+References: <1462568554-7868-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462568554-7868-1-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On 5/6/2016 3:54 PM, Rafael J. Wysocki wrote:
->> Before I post my next patch, I wanted to see if there is any other 
->> > feedback. Rafael mentioned to me that this code should go through
->> > his branch as it is ACPI specific.
-> It doesn't have to, but it should be posted to linux-acpi@vger.kernel.org at
-> least for a review in there.
-> 
+A host device that supports write protection should refuse to write to
+an SD card that is designated read-only when write-protect is set. This
+is an optional feature of the SD specification.
 
-I'll do that on the next post.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+ arch/arm/boot/dts/omap3-igep0020-common.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
+diff --git a/arch/arm/boot/dts/omap3-igep0020-common.dtsi b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
+index d6f839c..b697106 100644
+--- a/arch/arm/boot/dts/omap3-igep0020-common.dtsi
++++ b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
+@@ -194,6 +194,12 @@
+ 			OMAP3630_CORE2_IOPAD(0x25f8, PIN_OUTPUT | MUX_MODE4) /* etk_d14.gpio_28 */
+ 		>;
+ 	};
++
++	mmc1_wp_pins: pinmux_mmc1_cd_pins {
++		pinctrl-single,pins = <
++			OMAP3630_CORE2_IOPAD(0x25fa, PIN_INPUT | MUX_MODE4)   /* etk_d15.gpio_29 */
++		>;
++	};
+ };
+ 
+ &i2c3 {
+@@ -250,3 +256,8 @@
+ 		};
+ 	};
+ };
++
++&mmc1 {
++	pinctrl-0 = <&mmc1_pins &mmc1_wp_pins>;
++	wp-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;	/* gpio_29 */
++};
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.1.0
