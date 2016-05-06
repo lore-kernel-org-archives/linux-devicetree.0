@@ -1,220 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 3/3] gpio: move clps711x, moxart, ts4800 and gpio-ge
- into gpio-mmio
-Date: Fri, 6 May 2016 14:53:24 +0300
-Message-ID: <CAHp75VeFjcPX+f3j+h+OL2jEpfGP+aqL78ymcsj4JwUfO0RvtA@mail.gmail.com>
-References: <cover.1462372360.git.chunkeey@googlemail.com>
-	<e936c3c38deee5cd954862c5ed11f9cffa2ba6a9.1462372360.git.chunkeey@googlemail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] regulator: lp873x: Add support for lp873x PMIC
+ regulators
+Date: Fri, 6 May 2016 13:02:06 +0100
+Message-ID: <20160506120206.GO6292@sirena.org.uk>
+References: <1462425040-18566-1-git-send-email-j-keerthy@ti.com>
+ <1462425040-18566-4-git-send-email-j-keerthy@ti.com>
+ <20160505153820.GF6292@sirena.org.uk>
+ <572C20EC.7000706@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <e936c3c38deee5cd954862c5ed11f9cffa2ba6a9.1462372360.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Julien Grossholtz <julien.grossholtz@savoirfairelinux.com>, Martyn Welch <martyn.welch@ge.com>, Jonas Jensen <jonas.jensen@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="FJOUHINv8uyEJFmS"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <572C20EC.7000706-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 6, 2016 at 2:10 PM, Christian Lamparter
-<chunkeey@googlemail.com> wrote:
-> This patch integrates these GPIO drivers into gpio-mmio.
 
-Would be nice to repeat a list here.
+--FJOUHINv8uyEJFmS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  config GPIO_GENERIC_PLATFORM
->         tristate "Generic memory-mapped GPIO controller support (MMIO platform device)"
->         select GPIO_GENERIC
->         help
-> +         Select this to support many generic memory-mapped GPIO controllers.
-> +
-> +         This driver also includes support for the following GPIOs:
-> +           CLPS711X SoCs
-> +           MOXA ART SoC
-> +           TS-4800 FPGA DIO blocks and compatibles.
-> +           GPIOs found on some GE Single Board Computers.
-> +
->           Say yes here to support basic platform_device memory-mapped GPIO controllers.
->
->  config GPIO_GRGPIO
-> @@ -285,14 +274,6 @@ config GPIO_MM_LANTIQ
->           (EBU) found on Lantiq SoCs. The gpios are output only as they are
->           created by attaching a 16bit latch to the bus.
->
-> -config GPIO_MOXART
-> -       bool "MOXART GPIO support"
-> -       depends on ARCH_MOXART || COMPILE_TEST
-> -       select GPIO_GENERIC
-> -       help
-> -         Select this option to enable GPIO driver for
-> -         MOXA ART SoC devices.
-> -
+On Fri, May 06, 2016 at 10:13:24AM +0530, Keerthy wrote:
 
-Doesn't it change behaviour? So, as a user of old .config I expect to
-have driver enabled. How is it achieved now?
+> I am using of_platform_populate function in the mfd driver to create
+> platform devices for the child nodes, in my case regulators.
 
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -610,10 +610,200 @@ static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
->         return 0;
->  }
->
-> +static int clps711x_parse_dt(struct platform_device *pdev,
-> +                            struct bgpio_pdata *pdata,
-> +                            unsigned long *flags)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct resource *res;
-> +       const char *dir_reg_name;
-> +       int id = np ? of_alias_get_id(np, "gpio") : pdev->id;
-> +
-> +       if ((id < 0) || (id > 4))
-> +               return -ENODEV;
-> +
+> of_platform_populate in turn calls on to of_platform_bus_create which
+> mandates compatible properties. It quietly skips device creation if there
+> are no compatible properties.
 
-> +       /* PORTE is 3 lines only */
-> +       pdata->ngpio = (id == 4) ? 3 : /* determined by register width */ 0;
-> +
-> +       /* PORTD is inverted logic for direction register */
-> +       dir_reg_name = (id == 3) ? "dirin" : "dirout",
+You shouldn't be using that, you should just have a table of subdevices
+in the MFD.
 
-Just a nit: possible to use switch case?
+--FJOUHINv8uyEJFmS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +       pdata->base = id * 8;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res)
-> +               return -EINVAL;
-> +       if (!res->name || strcmp("dat", res->name))
-> +               res->name = devm_kstrdup(&pdev->dev, "dat", GFP_KERNEL);
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       if (!res)
-> +               return -EINVAL;
-> +       if (!res->name || strcmp(dir_reg_name, res->name))
-> +               res->name = devm_kstrdup(&pdev->dev, dir_reg_name, GFP_KERNEL);
-> +
-> +       return 0;
-> +}
-> +
-> +static int ge_dt_cb(struct platform_device *pdev,
-> +                   struct bgpio_pdata *pdata,
-> +                   unsigned long *flags)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +
-> +       pdata->label = devm_kstrdup(&pdev->dev, np->full_name, GFP_KERNEL);
-> +       if (!pdata->label)
-> +               return -ENOMEM;
-> +
-> +       return 0;
-> +}
-> +
-> +static int moxart_dt_cb(struct platform_device *pdev,
-> +                       struct bgpio_pdata *pdata,
-> +                       unsigned long *flags)
-> +{
-> +       pdata->base = 0;
-> +       pdata->label = "moxart-gpio";
-> +       return 0;
-> +}
-> +
-> +
-> +static int ts4800_dt_cb(struct platform_device *pdev,
-> +                       struct bgpio_pdata *pdata,
-> +                       unsigned long *flags)
-> +{
-> +       int err;
-> +
-> +       err = of_property_read_u32(pdev->dev.of_node, "ngpios", &pdata->ngpio);
-> +       if (err == -EINVAL) {
-> +               pdata->ngpio = 16;
-> +               err = 0;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-return 0; ? (Up to you)
+iQEcBAEBCAAGBQJXLIe8AAoJECTWi3JdVIfQnYgH/0zkEQttYknwp7FqjTE3Cj5+
+omdo8zs00wgBBIFUxzAJWol9/8nW31Iq81LQyNYZkbnCpy07uh13+v7Hikpxum6G
+mqmCAbTdCTtq/MkKIwLmQ160PfRf0O4oSJoJVfeq+RXdvvyXiFs5/of76LJQj1hB
+1kK5j4M3n4im34DNuUTThrvTZxJwP7hecIpH1nZxucS8Ivlorew40IuZYVHD/DHy
+lS6b8ndEP65hsNXqGWkJKYEx/AV8dPvJ1Ao21Vh1sS1F8HH7BSFFrHMtvdAH2Q9u
+PwhnHCvO5uxrsE6UutkGHKyRTzWBEApsgTIt6Es/qCpRzsMlzU8bdI51biN8fCM=
+=8Ta2
+-----END PGP SIGNATURE-----
 
-> +       }
-> +       return err;
-> +}
-> +
-> +struct compat_gpio_device_data {
-> +       unsigned int expected_resource_size;
-> +       unsigned int ngpio;
-> +       resource_size_t register_width;
-> +       unsigned long flags;
-> +       int (*call_back)(struct platform_device *pdev,
-> +                        struct bgpio_pdata *pdata,
-> +                        unsigned long *flags);
-> +       struct resource_replacement {
-> +               resource_size_t start_offset;
-> +               const char *name;
-> +       } resources[5];
-
-I would define magic number with a description what are those 5.
-
-> +};
-
-[...]
-
-> +static int compat_parse_dt(struct platform_device *pdev,
-> +                          struct bgpio_pdata *pdata,
-> +                          unsigned long *flags)
-> +{
-> +       const struct device_node *node = pdev->dev.of_node;
-> +       const struct compat_gpio_device_data *entry;
-> +       const struct of_device_id *of_id;
-> +       struct resource *res;
-> +       int err;
-> +
-> +       of_id = of_match_node(compat_gpio_devices, node);
-> +       if (!of_id)
-> +               return -ENODEV;
-> +
-> +       entry = of_id->data;
-> +       if (!entry || !entry->resources[0].name)
-> +               return -EINVAL;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res)
-> +               return -EINVAL;
-> +
-> +       if (!res->name || strcmp(entry->resources[0].name, res->name)) {
-> +               struct resource nres[ARRAY_SIZE(entry->resources)];
-> +               int i;
-
-unsigned int i; ?
-
-> +
-> +               if (resource_size(res) != entry->expected_resource_size)
-> +                       return -EINVAL;
-> +
-> +               for (i = 0; i < ARRAY_SIZE(entry->resources); i++) {
-> +                       if (!entry->resources[i].name)
-> +                               continue;
-> +
-> +                       nres[i].name = devm_kstrdup(&pdev->dev,
-> +                               entry->resources[i].name, GFP_KERNEL);
-> +                       nres[i].start = res->start +
-> +                               entry->resources[i].start_offset;
-> +                       nres[i].end = nres[i].start +
-> +                               entry->register_width - 1;
-> +                       nres[i].flags = IORESOURCE_MEM;
-> +               }
-> +
-> +               err = platform_device_add_resources(pdev, nres, i);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       pdata->base = -1;
-> +       pdata->ngpio = entry->ngpio;
-> +       *flags = entry->flags;
-> +
-> +       if (entry->call_back)
-> +               err = entry->call_back(pdev, pdata, flags);
-> +
-> +       return err;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+--FJOUHINv8uyEJFmS--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
