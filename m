@@ -1,197 +1,113 @@
-From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-mmio
-Date: Fri, 06 May 2016 15:06:11 +0200
-Message-ID: <4995974.1A7SuhXPf2@debian64>
-References: <cover.1462372360.git.chunkeey@googlemail.com> <e936c3c38deee5cd954862c5ed11f9cffa2ba6a9.1462372360.git.chunkeey@googlemail.com> <CAHp75VeFjcPX+f3j+h+OL2jEpfGP+aqL78ymcsj4JwUfO0RvtA@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v9 22/22] PCI/hotplug: PowerPC PowerNV PCI hotplug driver
+Date: Fri, 6 May 2016 08:12:42 -0500
+Message-ID: <CAL_JsqKQNyL7g71PL9unwqS9834A=D41X9mx5Zr0iX=NapWLJw@mail.gmail.com>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1462281773-26438-23-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqLAYk2S80LNvF2z2ZzPfCWAbpz2LNKK-04OgSkabjWbxQ@mail.gmail.com> <20160506002834.GA5509@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VeFjcPX+f3j+h+OL2jEpfGP+aqL78ymcsj4JwUfO0RvtA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Julien Grossholtz <julien.grossholtz-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Martyn Welch <martyn.welch-JJi787mZWgc@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160506002834.GA5509@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Alexey Kardashevskiy <aik@ozlabs.ru>, Bjorn Helgaas <bhelgaas@google.com>, dja@axtens.net, Alistair Popple <alistair@popple.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, May 06, 2016 02:53:24 PM Andy Shevchenko wrote:
-> On Fri, May 6, 2016 at 2:10 PM, Christian Lamparter
-> <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> > This patch integrates these GPIO drivers into gpio-mmio.
-> 
-> Would be nice to repeat a list here.
-Ok.
- 
-> > @@ -285,14 +274,6 @@ config GPIO_MM_LANTIQ
-> >           (EBU) found on Lantiq SoCs. The gpios are output only as they are
-> >           created by attaching a 16bit latch to the bus.
-> >
-> > -config GPIO_MOXART
-> > -       bool "MOXART GPIO support"
-> > -       depends on ARCH_MOXART || COMPILE_TEST
-> > -       select GPIO_GENERIC
-> > -       help
-> > -         Select this option to enable GPIO driver for
-> > -         MOXA ART SoC devices.
-> > -
-> 
-> Doesn't it change behaviour? So, as a user of old .config I expect to
-> have driver enabled. How is it achieved now?
-Ok, I'll restore the configs and let them select GPIO_GENERIC_PLATFORM.
+On Thu, May 5, 2016 at 7:28 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+> On Thu, May 05, 2016 at 12:04:49PM -0500, Rob Herring wrote:
+>>On Tue, May 3, 2016 at 8:22 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>>> This adds standalone driver to support PCI hotplug for PowerPC PowerNV
+>>> platform that runs on top of skiboot firmware. The firmware identifies
+>>> hotpluggable slots and marked their device tree node with proper
+>>> "ibm,slot-pluggable" and "ibm,reset-by-firmware". The driver scans
+>>> device tree nodes to create/register PCI hotplug slot accordingly.
+>>>
+>>> The PCI slots are organized in fashion of tree, which means one
+>>> PCI slot might have parent PCI slot and parent PCI slot possibly
+>>> contains multiple child PCI slots. At the plugging time, the parent
+>>> PCI slot is populated before its children. The child PCI slots are
+>>> removed before their parent PCI slot can be removed from the system.
+>>>
+>>> If the skiboot firmware doesn't support slot status retrieval, the PCI
+>>> slot device node shouldn't have property "ibm,reset-by-firmware". In
+>>> that case, none of valid PCI slots will be detected from device tree.
+>>> The skiboot firmware doesn't export the capability to access attention
+>>> LEDs yet and it's something for TBD.
+>>>
+>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>
+>>[...]
+>>
+>>> +static void pnv_php_handle_poweron(struct pnv_php_slot *php_slot)
+>>> +{
+>>> +       void *fdt, *fdt1, *dt;
+>>> +       int confirm = PNV_PHP_POWER_CONFIRMED_SUCCESS;
+>>> +       int ret;
+>>> +
+>>> +       /* We don't know the FDT blob size. We try to get it through
+>>> +        * maximal memory chunk and then copy it to another chunk that
+>>> +        * fits the real size.
+>>> +        */
+>>> +       fdt1 = kzalloc(0x10000, GFP_KERNEL);
+>>> +       if (!fdt1)
+>>> +               goto error;
+>>> +
+>>> +       ret = pnv_pci_get_device_tree(php_slot->dn->phandle, fdt1, 0x10000);
+>>> +       if (ret)
+>>> +               goto free_fdt1;
+>>> +
+>>> +       fdt = kzalloc(fdt_totalsize(fdt1), GFP_KERNEL);
+>>> +       if (!fdt)
+>>> +               goto free_fdt1;
+>>> +
+>>> +       /* Unflatten device tree blob */
+>>> +       memcpy(fdt, fdt1, fdt_totalsize(fdt1));
+>>
+>>This is wrong. If the size is greater than 64K, then you will be
+>>overrunning the fdt1 buffer. You need to fetch the FDT again if it is
+>>bigger than 64KB.
+>>
+>
+> Thanks for review, Rob. Sorry that I don't see how it's a problem. An
+> errcode is returned from pnv_pci_get_device_tree() if the FDT blob
+> size is greater than 64K. In this case, memcpy() won't be triggered.
+> pnv_pci_get_device_tree() relies on firmware implementation which
+> avoids overrunning the buffer.
 
-> > --- a/drivers/gpio/gpio-mmio.c
-> > +++ b/drivers/gpio/gpio-mmio.c
-> > @@ -610,10 +610,200 @@ static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
-> >         return 0;
-> >  }
-> >
-> > +static int clps711x_parse_dt(struct platform_device *pdev,
-> > +                            struct bgpio_pdata *pdata,
-> > +                            unsigned long *flags)
-> > +{
-> > +       struct device_node *np = pdev->dev.of_node;
-> > +       struct resource *res;
-> > +       const char *dir_reg_name;
-> > +       int id = np ? of_alias_get_id(np, "gpio") : pdev->id;
-> > +
-> > +       if ((id < 0) || (id > 4))
-> > +               return -ENODEV;
-> > +
-> 
-> > +       /* PORTE is 3 lines only */
-> > +       pdata->ngpio = (id == 4) ? 3 : /* determined by register width */ 0;
-> > +
-> > +       /* PORTD is inverted logic for direction register */
-> > +       dir_reg_name = (id == 3) ? "dirin" : "dirout",
-Actually, the , should be a ; it compiled because , is an operator.
-But yes, fixed.
+Okay, I missed that pnv_pci_get_device_tree would error out.
 
-> Just a nit: possible to use switch case?
-I think so. I've integrated the id < 0 || id > 4 check as well.
-I don't know, I liked the old version more, it was shorter
+> On the other hand, it would be reasonable to retry retriving the
+> FDT blob if 64K buffer isn't enough. Also, kzalloc() can be replaced
+> with alloc_pages() as 64K is the default page size on PPC64. I will
+> have something like below until some one has more concerns. As the
+> size of the allocated buffer will be greater than the real FDT blob
+> size, some memory (not too much) is wasted. I guess it should be ok.
+>
+>         struct page *page;
+>         void *fdt;
+>         unsigned int order;
+>         int ret;
+>
+>         for (order = 0; order < MAX_ORDER; order++) {
+>                 page = alloc_pages(GFP_KERNEL, order);
+>                 if (page) {
+>                         fdt = page_address(page);
+>                         ret = pnv_pci_get_device_tree(php_slot->dn->phandle,
+>                                                       fdt, (1 << order) * PAGE_SIZE);
+>                         if (ret) {
+>                                 dev_dbg(&php_slot->pdev.dev, "Error %d getting device tree (%d)\n",
+>                                         ret, order);
+>                                 free_pages(fdt, order);
+>                                 continue;
+>                         }
+>                 }
+>         }
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index f116786..f71021c 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -619,14 +619,25 @@ static int clps711x_parse_dt(struct platform_device *pdev,
- 	const char *dir_reg_name;
- 	int id = np ? of_alias_get_id(np, "gpio") : pdev->id;
- 
--	if ((id < 0) || (id > 4))
-+	switch (id) {
-+	case 0:
-+	case 1:
-+	case 2:
-+		pdata->ngpio = 0; /* determined by register width */
-+		dir_reg_name = "dirout";
-+		break;
-+	case 3:
-+		pdata->ngpio = 0; /* determined by register width */
-+		/* PORTD is inverted logic for direction register */
-+		dir_reg_name = "dirin";
-+		break;
-+	case 4:
-+		pdata->ngpio = 3; /* PORTE is 3 lines only */
-+		dir_reg_name = "dirout";
-+		break;
-+	default:
- 		return -ENODEV;
--
--	/* PORTE is 3 lines only */
--	pdata->ngpio = (id == 4) ? 3 : /* determined by register width */ 0;
--
--	/* PORTD is inverted logic for direction register */
--	dir_reg_name = (id == 3) ? "dirin" : "dirout",
-+	}
- 
- 	pdata->base = id * 8;
----
-  
-> > +
-> > +       pdata->base = id * 8;
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       if (!res)
-> > +               return -EINVAL;
-> > +       if (!res->name || strcmp("dat", res->name))
-> > +               res->name = devm_kstrdup(&pdev->dev, "dat", GFP_KERNEL);
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > +       if (!res)
-> > +               return -EINVAL;
-> > +       if (!res->name || strcmp(dir_reg_name, res->name))
-> > +               res->name = devm_kstrdup(&pdev->dev, dir_reg_name, GFP_KERNEL);
-> > +
-> > +       return 0;
-> > +}
+I would allocate a minimal buffer to read the header, get the actual
+size, then allocate a new buffer. There's no point in looping. If you
+know 64KB is the biggest size you should ever see, then how you had it
+is reasonable, too.
 
-[...]
-
-> > +struct compat_gpio_device_data {
-> > +       unsigned int expected_resource_size;
-> > +       unsigned int ngpio;
-> > +       resource_size_t register_width;
-> > +       unsigned long flags;
-> > +       int (*call_back)(struct platform_device *pdev,
-> > +                        struct bgpio_pdata *pdata,
-> > +                        unsigned long *flags);
-> > +       struct resource_replacement {
-> > +               resource_size_t start_offset;
-> > +               const char *name;
-> > +       } resources[5];
-> 
-> I would define magic number with a description what are those 5.
-
-Difficult, these are 5 placeholders for the named resources.
-There's particular order so a enum like
-{
-	DAT,
-	SET,
-	CLR,
-	DIRIN,
-	DIROUT,
-	__NUM_RES 
-}
-
-might look nice but it has no purpose other than maybe confusing people
-why the entries aren't used.
-
-> > +};
-> 
-> [...]
-> 
-> > +static int compat_parse_dt(struct platform_device *pdev,
-> > +                          struct bgpio_pdata *pdata,
-> > +                          unsigned long *flags)
-> > +{
-> > +       const struct device_node *node = pdev->dev.of_node;
-> > +       const struct compat_gpio_device_data *entry;
-> > +       const struct of_device_id *of_id;
-> > +       struct resource *res;
-> > +       int err;
-> > +
-> > +       of_id = of_match_node(compat_gpio_devices, node);
-> > +       if (!of_id)
-> > +               return -ENODEV;
-> > +
-> > +       entry = of_id->data;
-> > +       if (!entry || !entry->resources[0].name)
-> > +               return -EINVAL;
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       if (!res)
-> > +               return -EINVAL;
-> > +
-> > +       if (!res->name || strcmp(entry->resources[0].name, res->name)) {
-> > +               struct resource nres[ARRAY_SIZE(entry->resources)];
-> > +               int i;
-> 
-> unsigned int i; ?
-yes. I think I change it to size_t. ARRAY_SIZE uses sizeof internally.
- 
-Regards,
-Christian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
