@@ -1,124 +1,48 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v9 22/22] PCI/hotplug: PowerPC PowerNV PCI hotplug driver
-Date: Fri, 6 May 2016 10:28:34 +1000
-Message-ID: <20160506002834.GA5509@gwshan>
+Subject: Re: [PATCH v9 21/22] drivers/of: Export of_detach_node()
+Date: Fri, 6 May 2016 10:40:20 +1000
+Message-ID: <20160506004020.GA14869@gwshan>
 References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1462281773-26438-23-git-send-email-gwshan@linux.vnet.ibm.com>
- <CAL_JsqLAYk2S80LNvF2z2ZzPfCWAbpz2LNKK-04OgSkabjWbxQ@mail.gmail.com>
+ <1462281773-26438-22-git-send-email-gwshan@linux.vnet.ibm.com>
+ <20160504133603.GA30081@gwshan>
+ <20160505194235.GA13790@rob-hp-laptop>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLAYk2S80LNvF2z2ZzPfCWAbpz2LNKK-04OgSkabjWbxQ@mail.gmail.com>
+In-Reply-To: <20160505194235.GA13790@rob-hp-laptop>
 Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Alexey Kardashevskiy <aik@ozlabs.ru>, Bjorn Helgaas <bhelgaas@google.com>, dja@axtens.net, Alistair Popple <alistair@popple.id.au>
+To: Rob Herring <robh@kernel.org>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 05, 2016 at 12:04:49PM -0500, Rob Herring wrote:
->On Tue, May 3, 2016 at 8:22 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->> This adds standalone driver to support PCI hotplug for PowerPC PowerNV
->> platform that runs on top of skiboot firmware. The firmware identifies
->> hotpluggable slots and marked their device tree node with proper
->> "ibm,slot-pluggable" and "ibm,reset-by-firmware". The driver scans
->> device tree nodes to create/register PCI hotplug slot accordingly.
->>
->> The PCI slots are organized in fashion of tree, which means one
->> PCI slot might have parent PCI slot and parent PCI slot possibly
->> contains multiple child PCI slots. At the plugging time, the parent
->> PCI slot is populated before its children. The child PCI slots are
->> removed before their parent PCI slot can be removed from the system.
->>
->> If the skiboot firmware doesn't support slot status retrieval, the PCI
->> slot device node shouldn't have property "ibm,reset-by-firmware". In
->> that case, none of valid PCI slots will be detected from device tree.
->> The skiboot firmware doesn't export the capability to access attention
->> LEDs yet and it's something for TBD.
->>
->> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Thu, May 05, 2016 at 02:42:35PM -0500, Rob Herring wrote:
+>On Wed, May 04, 2016 at 11:36:03PM +1000, Gavin Shan wrote:
+>> On Tue, May 03, 2016 at 11:22:52PM +1000, Gavin Shan wrote:
+>> >This exports of_detach_node() for PowerPC PowerNV PCI hotplug
+>> >driver. No functional changes introduced.
+>> >
+>> >Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>> 
+>> Rob, I'm not sure it's late to cache the 4.7 merge window.
+>> Also, I was told this series is needed by new CAPI driver which
+>> is being developed. The developers hope to push the new CAPI driver
+>> in 4.8 merge window (perhaps) or linux-next before 4.8 merge window
+>> is opened. It means the new CAPI driver depends on this series which
+>> has to be pushed to linux-next before 4.8 merge window.
+>> 
+>> If it's fine, could you please merge 16 to 21? With them merged to
+>> 4.7, the left patches won't depend on FDT changes. Thanks in advance
+>> for your help.
 >
->[...]
->
->> +static void pnv_php_handle_poweron(struct pnv_php_slot *php_slot)
->> +{
->> +       void *fdt, *fdt1, *dt;
->> +       int confirm = PNV_PHP_POWER_CONFIRMED_SUCCESS;
->> +       int ret;
->> +
->> +       /* We don't know the FDT blob size. We try to get it through
->> +        * maximal memory chunk and then copy it to another chunk that
->> +        * fits the real size.
->> +        */
->> +       fdt1 = kzalloc(0x10000, GFP_KERNEL);
->> +       if (!fdt1)
->> +               goto error;
->> +
->> +       ret = pnv_pci_get_device_tree(php_slot->dn->phandle, fdt1, 0x10000);
->> +       if (ret)
->> +               goto free_fdt1;
->> +
->> +       fdt = kzalloc(fdt_totalsize(fdt1), GFP_KERNEL);
->> +       if (!fdt)
->> +               goto free_fdt1;
->> +
->> +       /* Unflatten device tree blob */
->> +       memcpy(fdt, fdt1, fdt_totalsize(fdt1));
->
->This is wrong. If the size is greater than 64K, then you will be
->overrunning the fdt1 buffer. You need to fetch the FDT again if it is
->bigger than 64KB.
+>I've applied the 6 patches.
 >
 
-Thanks for review, Rob. Sorry that I don't see how it's a problem. An
-errcode is returned from pnv_pci_get_device_tree() if the FDT blob
-size is greater than 64K. In this case, memcpy() won't be triggered.
-pnv_pci_get_device_tree() relies on firmware implementation which
-avoids overrunning the buffer.
-
-On the other hand, it would be reasonable to retry retriving the
-FDT blob if 64K buffer isn't enough. Also, kzalloc() can be replaced
-with alloc_pages() as 64K is the default page size on PPC64. I will
-have something like below until some one has more concerns. As the
-size of the allocated buffer will be greater than the real FDT blob
-size, some memory (not too much) is wasted. I guess it should be ok.
-
-	struct page *page;
-	void *fdt;
-	unsigned int order;
-	int ret;
-
-	for (order = 0; order < MAX_ORDER; order++) {
-		page = alloc_pages(GFP_KERNEL, order);
-		if (page) {
-			fdt = page_address(page);
-			ret = pnv_pci_get_device_tree(php_slot->dn->phandle,
-						      fdt, (1 << order) * PAGE_SIZE);
-			if (ret) {
-				dev_dbg(&php_slot->pdev.dev, "Error %d getting device tree (%d)\n",
-					ret, order);
-				free_pages(fdt, order);
-				continue;
-			}
-		}
-	}
-
-	if (order >= MAX_ORDER) {
-		dev_warn(&php_slot->pdev.dev, "Cannot get device tree\n");
-		return;
-	}
-
-	/* Unflatten the blob without copying it to another allocated buffer */
+Rob, thank you very much for your helps!
 
 Thanks,
 Gavin
 
->
->> +       dt = of_fdt_unflatten_tree(fdt, php_slot->dn, NULL);
->> +       if (!dt) {
->> +               dev_warn(&php_slot->pdev->dev, "Cannot unflatten FDT\n");
->> +               goto free_fdt;
->> +       }
->> +
+>Rob
 >
