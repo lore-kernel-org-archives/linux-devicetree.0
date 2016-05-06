@@ -1,48 +1,43 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] Amlogic: GXBB: Add pin controller
-Date: Fri, 06 May 2016 14:35:24 +0200
-Message-ID: <m2bn4jbbzn.fsf@baylibre.com>
-References: <1462176138-29433-1-git-send-email-carlo@caione.org>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] regulator: lp873x: Add support for lp873x PMIC
+ regulators
+Date: Fri, 6 May 2016 18:06:38 +0530
+Message-ID: <572C8FD6.20702@ti.com>
+References: <1462425040-18566-1-git-send-email-j-keerthy@ti.com>
+ <1462425040-18566-4-git-send-email-j-keerthy@ti.com>
+ <20160505153820.GF6292@sirena.org.uk> <572C20EC.7000706@ti.com>
+ <20160506120206.GO6292@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462176138-29433-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> (Carlo
-	Caione's message of "Mon, 2 May 2016 10:02:14 +0200")
+In-Reply-To: <20160506120206.GO6292-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
 
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+
+On Friday 06 May 2016 05:32 PM, Mark Brown wrote:
+> On Fri, May 06, 2016 at 10:13:24AM +0530, Keerthy wrote:
 >
-> Patchset to add and enable the pin controller driver on a couple of Amlogic
-> boards with a Meson GXBB SoC.
+>> I am using of_platform_populate function in the mfd driver to create
+>> platform devices for the child nodes, in my case regulators.
+>
+>> of_platform_populate in turn calls on to of_platform_bus_create which
+>> mandates compatible properties. It quietly skips device creation if there
+>> are no compatible properties.
+>
+> You shouldn't be using that, you should just have a table of subdevices
+> in the MFD.
 
-Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Okay. I will send v2 with compatibles removed.
 
-I tested this series on GXBB odroid-c2 and p200 boards, along with some
-additional pins (patches forthcoming)
+Thanks,
+Keerthy
 
-Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-> Please note that:
-> * This patch depends on http://www.spinics.net/lists/devicetree/msg120964.html
->   ([PATCH] ARM64: dts: amlogic: Add hiu and periphs buses).
-
-Linus, with your ack, we could keep this series together, or if you
-prefer, you can take patch 1, and Carlo can take the others through his
-tree.
-
-> * The platform driver is still missing a lot of muxing configurations. This is
->   because Amlogic still hasn't publicly released documentation for the GXBB.
->   Since Kevin has already this documentation under NDA, he will integrate and
->   complete this driver with a separate submission.
-
-Coming soon...
-
-Kevin
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
