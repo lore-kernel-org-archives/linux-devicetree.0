@@ -1,60 +1,74 @@
-From: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] powerpc: Update of_remove_property() call sites to
- remove null checking
-Date: Fri, 6 May 2016 13:00:43 +1000
-Message-ID: <572C08DB.9000109@gmail.com>
-References: <1461821695-19204-1-git-send-email-sjitindarsingh@gmail.com>
- <1461821695-19204-2-git-send-email-sjitindarsingh@gmail.com>
- <57292702.5070507@linux.vnet.ibm.com>
- <1462431031.12473.3.camel@ellerman.id.au>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH v7 4/9] i2c: rk3x: Move setting STATE_START and add
+ STATE_SETUP
+Date: Fri, 6 May 2016 11:20:41 +0800
+Message-ID: <572C0D89.9050708@rock-chips.com>
+References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
+ <1462371194-5809-5-git-send-email-david.wu@rock-chips.com>
+ <CAD=FV=WVKpJJbqc=UYbeObDurjte0iQOzvLL++i=wM9=TBeCDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462431031.12473.3.camel-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WVKpJJbqc=UYbeObDurjte0iQOzvLL++i=wM9=TBeCDQ@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Tao Huang <huangtao@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eddie Cai <cf@rock-chips.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris <zyw@rock-chips.com>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Doug,
 
-
-On 05/05/16 16:50, Michael Ellerman wrote:
-> On Tue, 2016-05-03 at 15:32 -0700, Tyrel Datwyler wrote:
->> On 04/27/2016 10:34 PM, Suraj Jitindar Singh wrote:
->>> diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
->>> index ceb18d3..a560a98 100644
->>> --- a/arch/powerpc/platforms/pseries/mobility.c
->>> +++ b/arch/powerpc/platforms/pseries/mobility.c
->>> @@ -191,8 +191,8 @@ static int update_dt_node(__be32 phandle, s32 scope)
->>>  				break;
->>>  
->>>  			case 0x80000000:
->>> -				prop = of_find_property(dn, prop_name, NULL);
->>> -				of_remove_property(dn, prop);
->>> +				of_remove_property(dn, of_find_property(dn,
->>> +							prop_name, NULL));
->>>  				prop = NULL;
->>>  				break;
->>>
->> You haven't removed a NULL check here, as suggested by the changelog,
->> but instead made a cosmetic change to the code that still leaves behind
->> a now unnecessary "prop = NULL;" to bit rot.
-> Yeah I think you're right. Though it's not very clear how prop is used in that
-> function.
+=E5=9C=A8 2016/5/6 6:56, Doug Anderson =E5=86=99=E9=81=93:
+> David,
 >
-> Please one of you send me an incremental to remove the prop = NULL;
+> On Wed, May 4, 2016 at 7:13 AM, David Wu <david.wu@rock-chips.com> wr=
+ote:
+>> Signed-off-by: David Wu <david.wu@rock-chips.com>
+>> ---
+>> Change in v7:
+>> - none
+>>
+>>   drivers/i2c/busses/i2c-rk3x.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> cheers
+> Probably this change could be dropped now.  Switching the location of
+> setting START_START was much more important when you were supporting
+> HIGH SPEED mode.  I don't think we need it anymore, right?
 >
 
-Resend of previous message due to formatting issues:
+Yes, I would drop it next version=EF=BC=8CSTATE_SETUP didn't make sense=
+, it was
+not much more important, because there was a error printk for=20
+rk3x_i2c_setup() called failed.
 
-I didn't delete the prop = NULL; initially as I didn't fully understand
-how it was used in the rest of the function and the effect of deleting
-it.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ...if we want to keep this change, I'd say:
+>
+> 1. Add a description, like maybe:
+>
+> To help with debugging add a STATE_SETUP between STATE_IDLE and
+> STATE_START to make it more obvious that we're not actually idle but =
+we
+> also haven't initiated the start bit.  This change is not expected to
+> have any impact but it does delay the changing of state to STATE_STAR=
+T.
+> If previously we were getting an erroneous interrupt before we actual=
+ly
+> sent the start bit we'll now be treating that differently.  The new
+> behavior (catching the erroneous interrupt) should be better.
+>
+> 2. Change "i2c->state =3D STATE_SETUP" to the _start_ of
+> rk3x_i2c_setup().  That would have a better chance of catching a
+> spurious interrupt.
+>
+> 3. Add an error check at the start of rk3x_i2c_irq() similar to the
+> check for STATE_IDLE (or use the same check and modify the printk).
+> Specifically the justification for adding STATE_SETUP is to help with
+> debugging (catch interrupts that were unexpected and print more info
+> about our state), so we should make it useful for this.
+>
+>
+> -Doug
+>
+>
+>
