@@ -1,40 +1,103 @@
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH v3 1/3] leds: triggers: Allow to switch the trigger to
- "panic" on a kernel panic
-Date: Fri, 6 May 2016 10:05:06 -0300
-Message-ID: <CAAEAJfD_U1Z=wXQbK+DNdhZj5KEDkd3sK8mbBLNOvtKbZd1zYg@mail.gmail.com>
-References: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-	<1461881020-13964-2-git-send-email-ezequiel@vanguardiasur.com.ar>
-	<57230B26.9010300@samsung.com>
-	<572C5DEE.3070307@samsung.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v16 0/8] MT8173 DRM support
+Date: Fri,  6 May 2016 15:05:46 +0200
+Message-ID: <1462539954-26158-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <572C5DEE.3070307@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6 May 2016 at 06:03, Jacek Anaszewski <j.anaszewski@samsung.com> wro=
-te:
-> On 04/29/2016 09:20 AM, Jacek Anaszewski wrote:
->>
->> Hi Ezequiel,
->>
->> Thanks for the update. It's indeed reasonable to have all the
->> switching infrastructure in ledtrig-panic.c.
->>
->> I've noticed two minor issues below.
->
->
-> Since the merge window is imminent, I've addressed those issues by
-> myself and applied the patch set to the for-next branch
-> of linux-leds.git.
->
-
-Thanks a lot for taking care of this, Jacek!
---=20
-Ezequiel Garc=C3=ADa, VanguardiaSur
-www.vanguardiasur.com.ar
+UmViYXNlZCBvbnRvIGRybS1uZXh0LCByZXBsYWNlZCBkcm1fc2VuZF92YmxhbmtfZXZlbnQoKSB3
+aXRoCmRybV9jcnRjX3NlbmRfdmJsYW5rX2V2ZW50KCkgYW5kIHJlb3JkZXJlZCBhIGJpdDogdGhl
+IHBsYXRmb3JtIGRyaXZlcgpsaXN0IGFscGhhYmV0aWNhbGx5LCBhbmQgdGhlIG10a19zbWlfbGFy
+Yl9nZXQvcHV0IGV4cG9ydCBwYXRjaCBmaXJzdC4KCnJlZ2FyZHMKUGhpbGlwcAoKQ2hhbmdlcyBz
+aW5jZSB2MTU6CiAtIEV4cG9ydCBtdGtfc21pX2xhcmJfZ2V0L3B1dCBiZWZvcmUgdXNpbmcgaXQK
+IC0gVXNlIGRybV9jcnRjX3NlbmRfdmJsYW5rX2V2ZW50KCkgaW5zdGVhZCBvZiBkcm1fc2VuZF92
+YmxhbmtfZXZlbnQoKQogLSBPcmRlciBtdGtfZHJtX2RyaXZlcnMgYWxwaGFiZXRpY2FsbHkKCkNL
+IEh1ICgzKToKICBkdC1iaW5kaW5nczogZHJtL21lZGlhdGVrOiBBZGQgTWVkaWF0ZWsgZGlzcGxh
+eSBzdWJzeXN0ZW0gZHRzIGJpbmRpbmcKICBkcm0vbWVkaWF0ZWs6IEFkZCBEUk0gRHJpdmVyIGZv
+ciBNZWRpYXRlayBTb0MgTVQ4MTczLgogIGRybS9tZWRpYXRlazogQWRkIERTSSBzdWIgZHJpdmVy
+CgpKaWUgUWl1ICgxKToKICBkcm0vbWVkaWF0ZWs6IEFkZCBEUEkgc3ViIGRyaXZlcgoKUGhpbGlw
+cCBaYWJlbCAoNCk6CiAgbWVtb3J5OiBtdGstc21pOiBleHBvcnQgbXRrX3NtaV9sYXJiX2dldC9w
+dXQKICBjbGs6IG1lZGlhdGVrOiBtYWtlIGRwaTBfc2VsIHByb3BhZ2F0ZSByYXRlIGNoYW5nZXMK
+ICBjbGs6IG1lZGlhdGVrOiBBZGQgaGRtaV9yZWYgSERNSSBQSFkgUExMIHJlZmVyZW5jZSBjbG9j
+ayBvdXRwdXQKICBjbGs6IG1lZGlhdGVrOiByZW1vdmUgaGRtaXR4X2RpZ19jdHMgZnJvbSBUT1Ag
+Y2xvY2tzCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQg
+ICAgfCAyMDMgKysrKysKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRw
+aS50eHQgICAgIHwgIDM1ICsKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVr
+LGRzaS50eHQgICAgIHwgIDYwICsrCiBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTczLmMg
+ICAgICAgICAgICAgICAgICB8ICAxMiArLQogZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ay5o
+ICAgICAgICAgICAgICAgICAgICAgfCAgMTUgKy0KIGRyaXZlcnMvZ3B1L2RybS9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgIDE2ICsKIGRyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgIDE0ICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAgICAgICAgIHwgMzAyICsrKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgICAgICAgICAgIHwgMjQwICsrKysr
+KwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYyAgICAgICAgICAgICAgICAgfCA3
+NjkgKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpX3Jl
+Z3MuaCAgICAgICAgICAgIHwgMjI4ICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2RybV9jcnRjLmMgICAgICAgICAgICB8IDU4MiArKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmggICAgICAgICAgICB8ICAzMiArCiBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgICAgICAgICAgICB8IDM1MyArKysrKysrKwog
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmggICAgICAgICAgICAgfCAgNDEg
+KwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyAgICAgICAgfCAy
+MjUgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggICAg
+ICAgIHwgMTUwICsrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAg
+ICAgICAgICAgIHwgNTYxICsrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2Rydi5oICAgICAgICAgICAgIHwgIDYwICsrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9mYi5jICAgICAgICAgICAgICB8IDE2NSArKysrCiBkcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9mYi5oICAgICAgICAgICAgICB8ICAyMyArCiBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYyAgICAgICAgICAgICB8IDI2OSArKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oICAgICAgICAgICAgIHwgIDU5ICsrCiBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9wbGFuZS5jICAgICAgICAgICB8IDI0MCAr
+KysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX3BsYW5lLmggICAgICAgICAg
+IHwgIDU5ICsrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jICAgICAgICAgICAg
+ICAgICB8IDkyNyArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfbWlwaV90eC5jICAgICAgICAgICAgIHwgNDYzICsrKysrKysrKysKIGRyaXZlcnMvbWVt
+b3J5L210ay1zbWkuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGluY2x1ZGUv
+ZHQtYmluZGluZ3MvY2xvY2svbXQ4MTczLWNsay5oICAgICAgICAgICAgIHwgICAzICstCiAzMSBm
+aWxlcyBjaGFuZ2VkLCA2MTA2IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
+aWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0CiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9LY29uZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX292bC5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RwaV9yZWdzLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwogY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5oCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5o
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZmIu
+YwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Zi
+LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9n
+ZW0uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2dlbS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fcGxhbmUuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX3BsYW5lLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RzaS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19taXBpX3R4LmMKCi0tIAoyLjguMC5yYzMKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
