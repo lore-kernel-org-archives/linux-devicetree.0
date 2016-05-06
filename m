@@ -1,145 +1,89 @@
-From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Subject: Re: [PATCH 2/2] powerpc: Update of_remove_property() call sites to
- remove null checking
-Date: Fri, 6 May 2016 11:01:26 +1000
-Message-ID: <572BECE6.1080303@gmail.com>
-References: <1461821695-19204-1-git-send-email-sjitindarsingh@gmail.com>
- <1461821695-19204-2-git-send-email-sjitindarsingh@gmail.com>
- <57292702.5070507@linux.vnet.ibm.com>
- <1462431031.12473.3.camel@ellerman.id.au>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH v7 9/9] i2c: rk3x: support fast-mode plus for rk3399
+Date: Fri, 6 May 2016 10:12:04 +0800
+Message-ID: <572BFD74.9080200@rock-chips.com>
+References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
+ <1462372668-6583-1-git-send-email-david.wu@rock-chips.com>
+ <CAD=FV=UtHPDtB7LTbUpwcjOcoYwNma59-TRDU3hrt6c_2TWxxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5987397910449098736=="
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1462431031.12473.3.camel@ellerman.id.au>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: grant.likely@linaro.org, paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=UtHPDtB7LTbUpwcjOcoYwNma59-TRDU3hrt6c_2TWxxA@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============5987397910449098736==
-Content-Type: multipart/alternative;
- boundary="------------050905060000030904040301"
+Hi Doug,
 
-This is a multi-part message in MIME format.
---------------050905060000030904040301
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+=E5=9C=A8 2016/5/6 7:02, Doug Anderson =E5=86=99=E9=81=93:
+> David,
+>
+> On Wed, May 4, 2016 at 7:37 AM, David Wu <david.wu@rock-chips.com> wr=
+ote:
+>> Signed-off-by: David Wu <david.wu@rock-chips.com>
+>> ---
+>>   drivers/i2c/busses/i2c-rk3x.c | 21 +++++++++++++++++----
+>>   1 file changed, 17 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-=
+rk3x.c
+>> index 47368c4..c66cc39 100644
+>> --- a/drivers/i2c/busses/i2c-rk3x.c
+>> +++ b/drivers/i2c/busses/i2c-rk3x.c
+>> @@ -124,6 +124,17 @@ static const struct i2c_spec_values fast_mode_s=
+pec =3D {
+>>          .min_hold_buffer_ns =3D 1300,
+>>   };
+>>
+>> +static const struct i2c_spec_values fast_mode_plus_spec =3D {
+>> +       .min_hold_start_ns =3D 260,
+>> +       .min_low_ns =3D 500,
+>> +       .min_high_ns =3D 260,
+>> +       .min_setup_start_ns =3D 260,
+>> +       .max_data_hold_ns =3D 400,
+>
+> I'm curious where you got the data_hold_ns.  I can't quite remember
+> what this parameter does / how the timing function works anymore, but
+> the doc I have (search for UM10204 and click the first link) shows
+> values for Standard-mode and Fast-mode but not Fast-mode Plus.  It
+> seems to imply that this is a bit of a bogus number anyway because it
+> only matters if we don't stretch the tLOW to go along with the longer
+> data hold.
+>
+> As I have said in the previous patch, how all this stuff works has
+> totally left my brain, so if you understand it that's probably good
+> enough.  If you feel like I should try to re-understand this again so
+> I can review it more deeply, let me know.
+>
+>
 
+Yes, I could not get the description of fast-mode plus data_hold_ns, bu=
+t=20
+I saw that the maximum tHD;DAT must be less than the maximum of=20
+tVD;DATor tVD;ACKby for Standard-mode and Fast-mode.
 
+So I think the maximum tHD;DAT for Fast-mode Plus should be less than=20
+the maximum of tVD;DATor tVD;ACKby too, the maximum of tVD;DATor=20
+tVD;ACKby is 450ns, and 400ns is my taking a conservative value.
 
-On 05/05/16 16:50, Michael Ellerman wrote:
-> On Tue, 2016-05-03 at 15:32 -0700, Tyrel Datwyler wrote: >> On 04/27/20=
-16 10:34 PM, Suraj Jitindar Singh wrote: >>> diff --git a/arch/powerpc/pl=
-atforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c >>=
-> index ceb18d3..a560a98 100644 >>> --- a/arch/powerpc/platforms/pseries/=
-mobility.c >>> +++ b/arch/powerpc/platforms/pseries/mobility.c >>> @@ -19=
-1,8 +191,8 @@ static int update_dt_node(__be32 phandle, s32 scope) >>>   =
-               break; >>>  >>>              case 0x80000000: >>> -       =
-         prop =3D of_find_property(dn, prop_name, NULL); >>> -           =
-     of_remove_property(dn, prop); >>> +                of_remove_propert=
-y(dn, of_find_property(dn, >>> +                            prop_name, NU=
-LL)); >>>                  prop =3D NULL; >>>                  break; >>>=
- >> >> You haven't removed a NULL check here, as suggested by the changel=
-og, >> but instead made a cosmetic change to the code that still leaves b=
-ehind >> a now unnecessary "prop =3D NULL;" to bit rot. > > Yeah I think =
-you're right. Though it's not
-very clear how prop is used in that > function. > > Please one of you sen=
-d me an incremental to remove the prop =3D NULL; > > cheers >
+Description form UM10204
+[4] The maximum tHD;DATcould be 3.45=CE=BCs and 0.9=CE=BCs for Standard=
+-mode and=20
+=46ast-mode, but must be less than the maximum of tVD;DATor tVD;ACKby a=
+=20
+transition time. This maximum must only be met if the device does not=20
+stretch the LOW period (tLOW) of the SCL signal. If the clock stretches=
+=20
+the SCL, the data must be valid by the set-up time before it releases
+the clock.
 
-I didn't delete the prop =3D NULL; initially as I didn't fully understand=
-
-how it was used in the rest of the function and the effect of deleting
-it.
-
-
---------------050905060000030904040301
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-  <head>
-    <meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Ty=
-pe">
-  </head>
-  <body text=3D"#000000" bgcolor=3D"#FFFFFF">
-    <br>
-    <br>
-    On 05/05/16 16:50, Michael Ellerman wrote:<br>
-    <span style=3D"white-space: pre;">&gt; On Tue, 2016-05-03 at 15:32 -0=
-700, Tyrel Datwyler wrote:
-&gt;&gt; On 04/27/2016 10:34 PM, Suraj Jitindar Singh wrote:
-&gt;&gt;&gt; diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arc=
-h/powerpc/platforms/pseries/mobility.c
-&gt;&gt;&gt; index ceb18d3..a560a98 100644
-&gt;&gt;&gt; --- a/arch/powerpc/platforms/pseries/mobility.c
-&gt;&gt;&gt; +++ b/arch/powerpc/platforms/pseries/mobility.c
-&gt;&gt;&gt; @@ -191,8 +191,8 @@ static int update_dt_node(__be32 phandle=
-, s32 scope)
-&gt;&gt;&gt;=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=
- =C2=A0=C2=A0=C2=A0 break;
-&gt;&gt;&gt;=C2=A0=20
-&gt;&gt;&gt;=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=
- case 0x80000000:
-&gt;&gt;&gt; -=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0=C2=A0 prop =3D of_find_property(dn, prop_name, NULL);
-&gt;&gt;&gt; -=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0=C2=A0 of_remove_property(dn, prop);
-&gt;&gt;&gt; +=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0=C2=A0 of_remove_property(dn, of_find_property(dn,
-&gt;&gt;&gt; +=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=
-=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
-prop_name, NULL));
-&gt;&gt;&gt;=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=
- =C2=A0=C2=A0=C2=A0 prop =3D NULL;
-&gt;&gt;&gt;=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=
- =C2=A0=C2=A0=C2=A0 break;
-&gt;&gt;&gt;
-&gt;&gt;
-&gt;&gt; You haven't removed a NULL check here, as suggested by the chang=
-elog,
-&gt;&gt; but instead made a cosmetic change to the code that still leaves=
- behind
-&gt;&gt; a now unnecessary "prop =3D NULL;" to bit rot.
-&gt;
-&gt; Yeah I think you're right. Though it's not very clear how prop is us=
-ed in that
-&gt; function.
-&gt;
-&gt; Please one of you send me an incremental to remove the prop =3D NULL=
-;
-&gt;
-&gt; cheers
-&gt;</span><br>
-    <br>
-    I didn't delete the prop =3D NULL; initially as I didn't fully
-    understand<br>
-    how it was used in the rest of the function and the effect of
-    deleting<br>
-    it.<br>
-    <br>
-  </body>
-</html>
-
---------------050905060000030904040301--
-
---===============5987397910449098736==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMt
-ZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
-c3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
-
---===============5987397910449098736==--
+> Since I assume that you had some sane reason to include max_data_hold=
+_ns:
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>
+>
+>
