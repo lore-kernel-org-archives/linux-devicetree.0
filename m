@@ -1,105 +1,202 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [PATCH v7 0/3] gpio: add DT support for memory-mapped GPIOs
-Date: Fri,  6 May 2016 13:10:18 +0200
-Message-ID: <cover.1462372360.git.chunkeey@googlemail.com>
+From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v7 2/3] gpio: mmio: add DT support for memory-mapped GPIOs
+Date: Fri,  6 May 2016 13:10:20 +0200
+Message-ID: <50f7f506364f84effd5224677b21726fd2e511a4.1462372360.git.chunkeey@googlemail.com>
+References: <cover.1462372360.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christian Lamparter <chunkeey@googlemail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1462372360.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <cover.1462372360.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+References: <cover.1462372360.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds device tree support for generic memory-mapped GP=
-IOs.
-The GPIO library already allows drivers and architecture support code t=
-o
-reuse generic code for managing a GPIO chip. Currently, a developer has
-to create a platform device "basic-mmio-gpio" and attach a bgpio_pdata
-platform data structure to make use of it. However, for architectures
-which rely on the device tree to enumerate devices, creating custom
-platform devices is another extra step that can be avoided by having
-direct support via a device tree binding.
+=46rom: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I initially came across this patch [0] from =C3=81lvaro Fern=C3=A1ndez =
-Rojas,
-while looking for an easy way to add support for the GPIO of my
-WD MyBook Live [1] (APM82181). His generic approach patch allowed
-me to easily get the GPIO (and the connected LEDs, buttons, gpiohogs)
-up and running. Even thought, Mr. Fernandez initially developed it
-for his work on the brcm63xx [2].
+This patch adds support for defining memory-mapped GPIOs which
+are compatible with the existing gpio-mmio interface. The generic
+library provides support for many memory-mapped GPIO controllers
+that are found in various on-board FPGA and ASIC solutions that
+are used to control board's switches, LEDs, chip-selects,
+Ethernet/USB PHY power, etc.
 
-The drivers for gpio-clps711x, gpio-ge, gpio-moxart and gpio-ts4800
-are now part of the gpio-mmio.c driver. The old driver files have
-been removed and the Kconfig, Makefile entries have been updated
-accordingly.
+=46or setting GPIO's there are three configurations:
+	1. single input/output register resource (named "dat"),
+	2. set/clear pair (named "set" and "clr"),
+	3. single output register resource and single input resource
+	   ("set" and dat").
 
-And finally, the most important stat about the series:
-	>>> 333 insertions(+), 411 deletions(-) <<<
-	It still removes more lines than it adds!
+The configuration is detected by which resources are present.
+=46or the single output register, this drives a 1 by setting a bit
+and a zero by clearing a bit.  For the set clr pair, this drives
+a 1 by setting a bit in the set register and clears it by setting
+a bit in the clear register. The configuration is detected by
+which resources are present.
 
-Thanks!
+=46or setting the GPIO direction, there are three configurations:
+	a. simple bidirectional GPIOs that requires no configuration.
+	b. an output direction register (named "dirout")
+	   where a 1 bit indicates the GPIO is an output.
+	c. an input direction register (named "dirin")
+	   where a 1 bit indicates the GPIO is an input.
 
-[0] <https://patchwork.ozlabs.org/patch/422121/>
-[1] <https://github.com/chunkeey/MBL-openwrt>
-[2] <https://wiki.openwrt.org/doc/hardware/soc/soc.broadcom.bcm63xx>
+The first user for this binding is "wd,mbl-gpio".
 
-changelog:
-
-v6 -> v7:
-	- finally made a PATCH series (based on linux-gpio devel branch)
-	- added Rob Herring's ACK to the dt bindings
-	- cc'd clps711x, gpio-ge, moxart and ts4800 authors for driver
-	  changes.
-
-v5 -> v6:
-	- rewrote bindings and driver patch to fit the wd,mbl-gpio
-	- unified parser code for gpio-ge, gpio-moxart and gpio-ts4800
-	- fixed gpio chip's base being overwritten with bogus "0"
-	- fixed compat driver crash when reload gpio-generic.ko module
-	- dropped already applied patches from the series
-	- rebased code on linus' devel tree
-	- moved dt bindings patch to the top of the series
-
-v4 -> v5:
-	- reverted rename of gpio-mmio.c back to gpio-generic.c
-	- fixed Andy Shevchenko's comments
-	- consolidated changes from clps711x, gpio-ge, gpio-moxart and
-	  gpio-ts4800 into one patch.
-
-v3 -> v4:
-	- renamed gpio-generic.c to gpio-mmio.c
-	- changed compat. string to "linux,gpio-mmio"
-	- integrated Cirrus clps711x driver
-	- integrated GE FGPA gpio-ge driver
-	- integrated MOXA ART GPIO driver
-	- integrated TS4800 gpio driver
-	- reshuffled patches, reworded commits, fixed spelling errors, etc.
-
-Christian Lamparter (2):
-  gpio: dt-bindings: add wd,mbl-gpio bindings
-  gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-mmio
-
-=C3=81lvaro Fern=C3=A1ndez Rojas (1):
-  gpio: mmio: add DT support for memory-mapped GPIOs
-
- .../devicetree/bindings/gpio/wd,mbl-gpio.txt       |  38 +++
- drivers/gpio/Kconfig                               |  43 +--
- drivers/gpio/Makefile                              |   4 -
- drivers/gpio/gpio-clps711x.c                       |  91 -------
- drivers/gpio/gpio-ge.c                             | 114 --------
- drivers/gpio/gpio-mmio.c                           | 289 +++++++++++++=
+Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/gpio/gpio-mmio.c | 99 ++++++++++++++++++++++++++++++++++++++++=
 +++++++-
- drivers/gpio/gpio-moxart.c                         |  84 ------
- drivers/gpio/gpio-ts4800.c                         |  81 ------
- 8 files changed, 333 insertions(+), 411 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.=
-txt
- delete mode 100644 drivers/gpio/gpio-clps711x.c
- delete mode 100644 drivers/gpio/gpio-ge.c
- delete mode 100644 drivers/gpio/gpio-moxart.c
- delete mode 100644 drivers/gpio/gpio-ts4800.c
+ 1 file changed, 97 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index 6c1cb3b..1cfb70a 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -61,6 +61,8 @@ o        `                     ~~~~\___/~~~~    ` con=
+troller in FPGA is ,.`
+ #include <linux/bitops.h>
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+=20
+ static void bgpio_write8(void __iomem *reg, unsigned long data)
+ {
+@@ -569,6 +571,89 @@ static void __iomem *bgpio_map(struct platform_dev=
+ice *pdev,
+ 	return devm_ioremap_resource(&pdev->dev, r);
+ }
+=20
++#ifdef CONFIG_OF
++static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
++				     struct bgpio_pdata *pdata,
++				     unsigned long *flags)
++{
++	struct device *dev =3D &pdev->dev;
++	int err;
++
++	pdata->base =3D -1;
++	/* If ngpio property is not specified, of_property_read_u32
++	 * will return -EINVAL. In this case the number of GPIOs is
++	 * automatically determined by the register width. Any
++	 * other error of of_property_read_u32 is due bad data and
++	 * needs to be dealt with.
++	 */
++	err =3D of_property_read_u32(dev->of_node, "ngpio", &pdata->ngpio);
++	if (err && err !=3D -EINVAL)
++		return err;
++
++	if (of_device_is_big_endian(dev->of_node))
++		*flags |=3D BGPIOF_BIG_ENDIAN_BYTE_ORDER;
++
++	if (of_property_read_bool(dev->of_node, "unreadable-reg-set"))
++		*flags |=3D BGPIOF_UNREADABLE_REG_SET;
++
++	if (of_property_read_bool(dev->of_node, "unreadable-reg-dir"))
++		*flags |=3D BGPIOF_UNREADABLE_REG_DIR;
++
++	if (of_property_read_bool(dev->of_node, "big-endian-byte-order"))
++		*flags |=3D BGPIOF_BIG_ENDIAN;
++
++	if (of_property_read_bool(dev->of_node, "read-output-reg-set"))
++		*flags |=3D BGPIOF_READ_OUTPUT_REG_SET;
++
++	if (of_property_read_bool(dev->of_node, "no-output"))
++		*flags |=3D BGPIOF_NO_OUTPUT;
++	return 0;
++}
++
++#define ADD_GPIO_OF(_name, _func) { .compatible =3D _name, .data =3D _=
+func }
++
++static const struct of_device_id bgpio_of_match[] =3D {
++	ADD_GPIO_OF("wd,mbl-gpio", bgpio_basic_mmio_parse_dt),
++	{ }
++};
++#undef ADD_GPIO_OF
++MODULE_DEVICE_TABLE(of, bgpio_of_match);
++
++static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pdev=
+,
++					  unsigned long *flags)
++{
++	const int (*parse_dt)(struct platform_device *,
++			      struct bgpio_pdata *, unsigned long *);
++	const struct device_node *node =3D pdev->dev.of_node;
++	const struct of_device_id *of_id;
++	struct bgpio_pdata *pdata;
++	int err =3D -ENODEV;
++
++	of_id =3D of_match_node(bgpio_of_match, node);
++	if (!of_id)
++		return NULL;
++
++	pdata =3D devm_kzalloc(&pdev->dev, sizeof(struct bgpio_pdata),
++			     GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	parse_dt =3D (const void *)of_id->data;
++	if (parse_dt)
++		err =3D parse_dt(pdev, pdata, flags);
++	if (err)
++		return ERR_PTR(err);
++
++	return pdata;
++}
++#else
++static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pdev=
+,
++					  unsigned long *flags)
++{
++	return NULL;
++}
++#endif /* CONFIG_OF */
++
+ static int bgpio_pdev_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev =3D &pdev->dev;
+@@ -579,10 +664,19 @@ static int bgpio_pdev_probe(struct platform_devic=
+e *pdev)
+ 	void __iomem *dirout;
+ 	void __iomem *dirin;
+ 	unsigned long sz;
+-	unsigned long flags =3D pdev->id_entry->driver_data;
++	unsigned long flags =3D 0;
+ 	int err;
+ 	struct gpio_chip *gc;
+-	struct bgpio_pdata *pdata =3D dev_get_platdata(dev);
++	struct bgpio_pdata *pdata;
++
++	pdata =3D bgpio_parse_dt(pdev, &flags);
++	if (IS_ERR(pdata))
++		return PTR_ERR(pdata);
++
++	if (!pdata) {
++		pdata =3D dev_get_platdata(dev);
++		flags =3D pdev->id_entry->driver_data;
++	}
+=20
+ 	r =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
+ 	if (!r)
+@@ -646,6 +740,7 @@ MODULE_DEVICE_TABLE(platform, bgpio_id_table);
+ static struct platform_driver bgpio_driver =3D {
+ 	.driver =3D {
+ 		.name =3D "basic-mmio-gpio",
++		.of_match_table =3D of_match_ptr(bgpio_of_match),
+ 	},
+ 	.id_table =3D bgpio_id_table,
+ 	.probe =3D bgpio_pdev_probe,
 --=20
 2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
