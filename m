@@ -1,33 +1,94 @@
-From: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] plugin: Transparently support old style syntax
-Date: Fri, 6 May 2016 10:16:39 +0100
-Message-ID: <CAPhXvM7D-Uv9nzmiiz8kw6w18nZQ-h_R4UEEPzj+_HPt3t=+BA@mail.gmail.com>
-References: <1462477724-8092-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1462477724-8092-4-git-send-email-pantelis.antoniou@konsulko.com>
-	<CAL_JsqJkJyMi4_RoxLAiVD3GXst8CX_8ekounavztXZKxdMKtg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: Input: add Atmel Atmegaxx captouch driver
+Date: Fri, 6 May 2016 11:19:45 +0200
+Message-ID: <572C61B1.2040508@atmel.com>
+References: <1462295611-49684-1-git-send-email-grundler@chromium.org>
+ <20160504135123.GA4567@rob-hp-laptop>
+ <CANEJEGt1Ri7Q-g25U8_KTAb9Z8MfVWH0N5QLaLcdnDuF_wwrtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJkJyMi4_RoxLAiVD3GXst8CX_8ekounavztXZKxdMKtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CANEJEGt1Ri7Q-g25U8_KTAb9Z8MfVWH0N5QLaLcdnDuF_wwrtw@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Grundler <grundler@chromium.org>, Rob Herring <robh@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Hung-yu Wu <hywu@google.com>
 List-Id: devicetree@vger.kernel.org
 
-> In the wild where?
->
-> IMO, too bad. That's the danger of deploying prototype code. Perhaps a
-> tool to convert them would be better.
+Le 05/05/2016 18:04, Grant Grundler a =C3=A9crit :
+> On Wed, May 4, 2016 at 6:51 AM, Rob Herring <robh@kernel.org> wrote:
+> ...
+>>> +Required properties:
+>>> +
+>>> +     compatible:     Must be "atmel,atmegaxx_captouch".
+>>
+>> No wildcards in the compatible strings. Use the specific devices.
+>>
+>> Also, use hyphen rather than underscore. However, if the device is o=
+nly
+>> a touch controller, then '_captouch' is not needed. The part number =
+is
+>> sufficient to identify the device.
+>=20
+> The primary part used on the board is AtMega88PA. Details of that SoC
+> are public:
+>     http://www.atmel.com/devices/ATMEGA88PA.aspx
+>=20
+> I don't see why the exact chip is relevant to the driver. The driver
+> is just talking to an I2C device that reports button events.  The
+> protocol across the I2C determines what this driver has to do and tha=
+t
+> protocol is implemented by the on-board firmware (supplied by Atmel).
+> Any AVR CPU could implement this same protocol.
+>=20
+> Can we call this "atmel,qtouch-buttons-v2" or something like that?
+
+Is it different from the Atmel QT1070 or QT2160 which have drivers
+already available in Linux:
+drivers/input/keyboard/qt1070.c
+
+Bye,
+
+> I personally don't have anything invested in any particular name. Fee=
+l
+> free to suggest a different one. I'm perfectly happy with any color
+> paint on the shed.
+>=20
+> ...
+>>> +Example:
+>>> +
+>>> +     atmegaxx_captouch@51 {
+>>
+>> atmegaxx@51 (with actual part number)
+>=20
+> Is "qtouch-buttons@51" ok?
+>=20
+>>
+>>> +             compatible =3D "atmel,atmegaxx_captouch";
+>>> +             reg =3D <0x51>;
+>>> +             interrupt-parent =3D <&tlmm>;
+>>> +             interrupts =3D <67 IRQ_TYPE_EDGE_FALLING>;
+>>> +             linux,keycodes =3D <BTN_0>, <BTN_1>,
+>>> +                     <BTN_2>, <BTN_3>,
+>>> +                     <BTN_4>, <BTN_5>,
+>>> +                     <BTN_6>, <BTN_7>;
+>>> +             autorepeat;
+>>> +     };
+>=20
+> cheers,
+> grant
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
 
 
-At Raspberry Pi we've been making good use of overlays for over a year now.
-They have been an invaluable tool, allowing us to reduce the need for
-downstream code while retaining and extending the flexibility our users
-need. Without the circulating patches I would have pressed ahead with a
-homegrown equivalent, which would have made switching to overlays much more
-painful.
-
-I hope to see Pantelis's overlay configfs code in a kernel release soon,
-but until then we'll continue to apply the patches downstream.
-
-Phil
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
