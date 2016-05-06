@@ -1,136 +1,175 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH V2 2/2] drivers: i2c: qup: Fix error handling
-Date: Fri,  6 May 2016 17:01:14 +0530
-Message-ID: <1462534274-28925-3-git-send-email-sricharan@codeaurora.org>
-References: <1462534274-28925-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1462534274-28925-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nkaje@codeaurora.org
-Cc: sricharan@codeaurora.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 2/3] gpio: mmio: add DT support for memory-mapped GPIOs
+Date: Fri, 6 May 2016 14:44:14 +0300
+Message-ID: <CAHp75VcDPY+LbV5+j9DUMJ8Ws=O9=+KmAa9Nog-JuKkPGAM6Cw@mail.gmail.com>
+References: <cover.1462372360.git.chunkeey@googlemail.com>
+	<50f7f506364f84effd5224677b21726fd2e511a4.1462372360.git.chunkeey@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <50f7f506364f84effd5224677b21726fd2e511a4.1462372360.git.chunkeey@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Among the bus errors reported from the QUP_MASTER_STATUS register
-only NACK is considered and transfer gets suspended, while
-other errors are ignored. Correct this and suspend the transfer
-for other errors as well. This avoids unnessecary 'timeouts' which
-happens when waiting for events that would never happen when there
-is already an error condition on the bus.
+On Fri, May 6, 2016 at 2:10 PM, Christian Lamparter
+<chunkeey@googlemail.com> wrote:
+> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>
+> This patch adds support for defining memory-mapped GPIOs which
+> are compatible with the existing gpio-mmio interface. The generic
+> library provides support for many memory-mapped GPIO controllers
+> that are found in various on-board FPGA and ASIC solutions that
+> are used to control board's switches, LEDs, chip-selects,
+> Ethernet/USB PHY power, etc.
+>
+> For setting GPIO's there are three configurations:
+>         1. single input/output register resource (named "dat"),
+>         2. set/clear pair (named "set" and "clr"),
+>         3. single output register resource and single input resource
+>            ("set" and dat").
+>
+> The configuration is detected by which resources are present.
+> For the single output register, this drives a 1 by setting a bit
+> and a zero by clearing a bit.  For the set clr pair, this drives
+> a 1 by setting a bit in the set register and clears it by setting
+> a bit in the clear register. The configuration is detected by
+> which resources are present.
+>
+> For setting the GPIO direction, there are three configurations:
+>         a. simple bidirectional GPIOs that requires no configuration.
+>         b. an output direction register (named "dirout")
+>            where a 1 bit indicates the GPIO is an output.
+>         c. an input direction register (named "dirin")
+>            where a 1 bit indicates the GPIO is an input.
+>
+> The first user for this binding is "wd,mbl-gpio".
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Reviewed-by: Andy Gross <andy.gross@linaro.org>
----
- drivers/i2c/busses/i2c-qup.c | 42 +++++++++++++++++++++++++++++-------------
- 1 file changed, 29 insertions(+), 13 deletions(-)
+Some (mostly) style issues below.
 
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index 8620e99..af52a47 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -310,6 +310,7 @@ static int qup_i2c_wait_ready(struct qup_i2c_dev *qup, int op, bool val,
- 	u32 opflags;
- 	u32 status;
- 	u32 shift = __ffs(op);
-+	int ret = 0;
- 
- 	len *= qup->one_byte_t;
- 	/* timeout after a wait of twice the max time */
-@@ -321,18 +322,31 @@ static int qup_i2c_wait_ready(struct qup_i2c_dev *qup, int op, bool val,
- 
- 		if (((opflags & op) >> shift) == val) {
- 			if ((op == QUP_OUT_NOT_EMPTY) && qup->is_last) {
--				if (!(status & I2C_STATUS_BUS_ACTIVE))
--					return 0;
-+				if (!(status & I2C_STATUS_BUS_ACTIVE)) {
-+					ret = 0;
-+					goto done;
-+				}
- 			} else {
--				return 0;
-+				ret = 0;
-+				goto done;
- 			}
- 		}
- 
--		if (time_after(jiffies, timeout))
--			return -ETIMEDOUT;
--
-+		if (time_after(jiffies, timeout)) {
-+			ret = -ETIMEDOUT;
-+			goto done;
-+		}
- 		usleep_range(len, len * 2);
- 	}
-+
-+done:
-+	if (qup->bus_err || qup->qup_err) {
-+		if (qup->bus_err & QUP_I2C_NACK_FLAG)
-+			dev_err(qup->dev, "NACK from %x\n", qup->msg->addr);
-+		ret = -EIO;
-+	}
-+
-+	return ret;
- }
- 
- static void qup_i2c_set_write_mode_v2(struct qup_i2c_dev *qup,
-@@ -796,7 +810,6 @@ static int qup_i2c_bam_do_xfer(struct qup_i2c_dev *qup, struct i2c_msg *msg,
- 		if (qup->bus_err & QUP_I2C_NACK_FLAG) {
- 			msg--;
- 			dev_err(qup->dev, "NACK from %x\n", msg->addr);
--			ret = -EIO;
- 
- 			if (qup_i2c_change_state(qup, QUP_RUN_STATE)) {
- 				dev_err(qup->dev, "change to run state timed out");
-@@ -818,6 +831,7 @@ static int qup_i2c_bam_do_xfer(struct qup_i2c_dev *qup, struct i2c_msg *msg,
- 
- 			qup_i2c_rel_dma(qup);
- 		}
-+		ret = -EIO;
- 	}
- 
- 	dma_unmap_sg(qup->dev, qup->btx.sg, tx_nents, DMA_TO_DEVICE);
-@@ -841,9 +855,6 @@ static int qup_i2c_bam_xfer(struct i2c_adapter *adap, struct i2c_msg *msg,
- 	if (ret)
- 		goto out;
- 
--	qup->bus_err = 0;
--	qup->qup_err = 0;
--
- 	writel(0, qup->base + QUP_MX_INPUT_CNT);
- 	writel(0, qup->base + QUP_MX_OUTPUT_CNT);
- 
-@@ -882,10 +893,9 @@ static int qup_i2c_wait_for_complete(struct qup_i2c_dev *qup,
- 	}
- 
- 	if (qup->bus_err || qup->qup_err) {
--		if (qup->bus_err & QUP_I2C_NACK_FLAG) {
-+		if (qup->bus_err & QUP_I2C_NACK_FLAG)
- 			dev_err(qup->dev, "NACK from %x\n", msg->addr);
--			ret = -EIO;
--		}
-+		ret = -EIO;
- 	}
- 
- 	return ret;
-@@ -1178,6 +1188,9 @@ static int qup_i2c_xfer(struct i2c_adapter *adap,
- 	if (ret < 0)
- 		goto out;
- 
-+	qup->bus_err = 0;
-+	qup->qup_err = 0;
-+
- 	writel(1, qup->base + QUP_SW_RESET);
- 	ret = qup_i2c_poll_state(qup, QUP_RESET_STATE);
- 	if (ret)
-@@ -1227,6 +1240,9 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
- 	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
- 	int ret, len, idx = 0, use_dma = 0;
- 
-+	qup->bus_err = 0;
-+	qup->qup_err = 0;
-+
- 	ret = pm_runtime_get_sync(qup->dev);
- 	if (ret < 0)
- 		goto out;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> @@ -569,6 +571,89 @@ static void __iomem *bgpio_map(struct platform_d=
+evice *pdev,
+>         return devm_ioremap_resource(&pdev->dev, r);
+>  }
+>
+> +#ifdef CONFIG_OF
+> +static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
+> +                                    struct bgpio_pdata *pdata,
+> +                                    unsigned long *flags)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       int err;
+> +
+> +       pdata->base =3D -1;
+
++ empty line
+
+> +       /* If ngpio property is not specified, of_property_read_u32
+> +        * will return -EINVAL. In this case the number of GPIOs is
+> +        * automatically determined by the register width. Any
+> +        * other error of of_property_read_u32 is due bad data and
+> +        * needs to be dealt with.
+
+Couple style issues:
+/*
+ * First sentence starts here. func() are going with parens.
+ */
+
+> +        */
+> +       err =3D of_property_read_u32(dev->of_node, "ngpio", &pdata->n=
+gpio);
+> +       if (err && err !=3D -EINVAL)
+> +               return err;
+> +
+> +       if (of_device_is_big_endian(dev->of_node))
+> +               *flags |=3D BGPIOF_BIG_ENDIAN_BYTE_ORDER;
+> +
+> +       if (of_property_read_bool(dev->of_node, "unreadable-reg-set")=
+)
+> +               *flags |=3D BGPIOF_UNREADABLE_REG_SET;
+> +
+> +       if (of_property_read_bool(dev->of_node, "unreadable-reg-dir")=
+)
+> +               *flags |=3D BGPIOF_UNREADABLE_REG_DIR;
+> +
+> +       if (of_property_read_bool(dev->of_node, "big-endian-byte-orde=
+r"))
+> +               *flags |=3D BGPIOF_BIG_ENDIAN;
+> +
+> +       if (of_property_read_bool(dev->of_node, "read-output-reg-set"=
+))
+> +               *flags |=3D BGPIOF_READ_OUTPUT_REG_SET;
+> +
+> +       if (of_property_read_bool(dev->of_node, "no-output"))
+> +               *flags |=3D BGPIOF_NO_OUTPUT;
+> +       return 0;
+> +}
+> +
+> +#define ADD_GPIO_OF(_name, _func) { .compatible =3D _name, .data =3D=
+ _func }
+> +
+> +static const struct of_device_id bgpio_of_match[] =3D {
+> +       ADD_GPIO_OF("wd,mbl-gpio", bgpio_basic_mmio_parse_dt),
+> +       { }
+> +};
+> +#undef ADD_GPIO_OF
+> +MODULE_DEVICE_TABLE(of, bgpio_of_match);
+> +
+> +static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pd=
+ev,
+> +                                         unsigned long *flags)
+> +{
+> +       const int (*parse_dt)(struct platform_device *,
+> +                             struct bgpio_pdata *, unsigned long *);
+> +       const struct device_node *node =3D pdev->dev.of_node;
+> +       const struct of_device_id *of_id;
+> +       struct bgpio_pdata *pdata;
+> +       int err =3D -ENODEV;
+
+(1)
+
+> +
+> +       of_id =3D of_match_node(bgpio_of_match, node);
+> +       if (!of_id)
+> +               return NULL;
+
+(2)
+
+Why so?
+
+> +
+> +       pdata =3D devm_kzalloc(&pdev->dev, sizeof(struct bgpio_pdata)=
+,
+> +                            GFP_KERNEL);
+> +       if (!pdata)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       parse_dt =3D (const void *)of_id->data;
+> +       if (parse_dt)
+> +               err =3D parse_dt(pdev, pdata, flags);
+> +       if (err)
+> +               return ERR_PTR(err);
+> +
+> +       return pdata;
+> +}
+> +#else
+> +static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pd=
+ev,
+> +                                         unsigned long *flags)
+> +{
+> +       return NULL;
+> +}
+> +#endif /* CONFIG_OF */
+
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
