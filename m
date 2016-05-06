@@ -1,125 +1,105 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v9 04/22] powerpc/powernv: Increase PE# capacity
-Date: Fri, 6 May 2016 21:05:42 +1000
-Message-ID: <20160506110541.GA5016@gwshan>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1462281773-26438-5-git-send-email-gwshan@linux.vnet.ibm.com>
- <2f2282ae-c1dc-1870-4beb-d5e4e8233496@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: [PATCH v7 0/3] gpio: add DT support for memory-mapped GPIOs
+Date: Fri,  6 May 2016 13:10:18 +0200
+Message-ID: <cover.1462372360.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2f2282ae-c1dc-1870-4beb-d5e4e8233496@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Christian Lamparter <chunkeey@googlemail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 06, 2016 at 05:17:25PM +1000, Alexey Kardashevskiy wrote:
->On 05/03/2016 11:22 PM, Gavin Shan wrote:
->>Each PHB maintains an array helping to translate 2-bytes Request
->>ID (RID) to PE# with the assumption that PE# takes one byte, meaning
->>that we can't have more than 256 PEs. However, pci_dn->pe_number
->>already had 4-bytes for the PE#.
->
->Can you possibly have more than 256 PEs? Or exactly 256? What patch in this
->series makes use of it?
->
->I probably asked but do not remember the answer :)
->
->Looks like waste of memory - you only used a small fraction of
->pe_rmap[0x10000] and now the waste is quadrupled.
->
+This patch series adds device tree support for generic memory-mapped GP=
+IOs.
+The GPIO library already allows drivers and architecture support code t=
+o
+reuse generic code for managing a GPIO chip. Currently, a developer has
+to create a platform device "basic-mmio-gpio" and attach a bgpio_pdata
+platform data structure to make use of it. However, for architectures
+which rely on the device tree to enumerate devices, creating custom
+platform devices is another extra step that can be avoided by having
+direct support via a device tree binding.
 
-The PE capacities on different hardware are different as below. So we're
-going to support 16-bits PE number in near future. That means the element
-in the array needs "unsigned short" at least and 2 pages (2 * 64KB) will
-be reserved for it.
+I initially came across this patch [0] from =C3=81lvaro Fern=C3=A1ndez =
+Rojas,
+while looking for an easy way to add support for the GPIO of my
+WD MyBook Live [1] (APM82181). His generic approach patch allowed
+me to easily get the GPIO (and the connected LEDs, buttons, gpiohogs)
+up and running. Even thought, Mr. Fernandez initially developed it
+for his work on the brcm63xx [2].
 
-P7IOC: 127        PHB3: 256
-PHB4:  65536      NPU1: 4        NPU2: 16
+The drivers for gpio-clps711x, gpio-ge, gpio-moxart and gpio-ts4800
+are now part of the gpio-mmio.c driver. The old driver files have
+been removed and the Kconfig, Makefile entries have been updated
+accordingly.
 
-I agree some memory is wasted and the wasted amount depends on the PCI
-topology. No memory will be wasted if 256 busses show on one particular
-PHB. Less busses one PHB has, more memory will be wasted. As I explained
-before, the total used memory is 4 pages (4 * 64KB). Considering the memory
-capacity on PPC64 (especially PowerNV), I guess it's fine. Note that the
-memory is allocated from memblock together with PHB instance.
+And finally, the most important stat about the series:
+	>>> 333 insertions(+), 411 deletions(-) <<<
+	It still removes more lines than it adds!
 
-The alternative solution (to avoid wasting memory) would be searching for
-the PE number according to the input BDFN through the PE list maintained
-in each PHB. Obviously, it will induce more logic and more CPU cycles will
-be used. So it's a kind of trade-off. If you really want to see this, I
-absolutely can do it in next revision. Another option would be to improve
-it later and keep the code as what we have. Please input your thought. 
+Thanks!
 
->
->>
->>This extends the PE# capacity for every PHB. After that, the PE number
->>is represented by 4-bytes value. Then we can reuse IODA_INVALID_PE to
->>check the PE# in phb->pe_rmap[] is valid or not.
->
->Looks like using IODA_INVALID_PE is the only reason for this patch.
->
+[0] <https://patchwork.ozlabs.org/patch/422121/>
+[1] <https://github.com/chunkeey/MBL-openwrt>
+[2] <https://wiki.openwrt.org/doc/hardware/soc/soc.broadcom.bcm63xx>
 
-For now, yes. In near future, It needs to be extended to represent 16-bits
-PE number for PHB4 as I explained above. 
+changelog:
 
->
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>Reviewed-by: Daniel Axtens <dja@axtens.net>
->>---
->> arch/powerpc/platforms/powernv/pci-ioda.c | 6 +++++-
->> arch/powerpc/platforms/powernv/pci.h      | 7 ++-----
->> 2 files changed, 7 insertions(+), 6 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index cbd4c0b..cf96cb5 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -768,7 +768,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
->>
->> 	/* Clear the reverse map */
->> 	for (rid = pe->rid; rid < rid_end; rid++)
->>-		phb->ioda.pe_rmap[rid] = 0;
->>+		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
->>
->> 	/* Release from all parents PELT-V */
->> 	while (parent) {
->>@@ -3406,6 +3406,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->> 	if (prop32)
->> 		phb->ioda.reserved_pe_idx = be32_to_cpup(prop32);
->>
->>+	/* Invalidate RID to PE# mapping */
->>+	for (segno = 0; segno < ARRAY_SIZE(phb->ioda.pe_rmap); segno++)
->>+		phb->ioda.pe_rmap[segno] = IODA_INVALID_PE;
->>+
->> 	/* Parse 64-bit MMIO range */
->> 	pnv_ioda_parse_m64_window(phb);
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index 904f60b..80f5326 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -156,11 +156,8 @@ struct pnv_phb {
->> 		struct list_head	pe_list;
->> 		struct mutex            pe_list_mutex;
->>
->>-		/* Reverse map of PEs, will have to extend if
->>-		 * we are to support more than 256 PEs, indexed
->>-		 * bus { bus, devfn }
->>-		 */
->>-		unsigned char		pe_rmap[0x10000];
->>+		/* Reverse map of PEs, indexed by {bus, devfn} */
->>+		unsigned int		pe_rmap[0x10000];
->>
->> 		/* TCE cache invalidate registers (physical and
->> 		 * remapped)
->>
->
->
->-- 
->Alexey
->
+v6 -> v7:
+	- finally made a PATCH series (based on linux-gpio devel branch)
+	- added Rob Herring's ACK to the dt bindings
+	- cc'd clps711x, gpio-ge, moxart and ts4800 authors for driver
+	  changes.
+
+v5 -> v6:
+	- rewrote bindings and driver patch to fit the wd,mbl-gpio
+	- unified parser code for gpio-ge, gpio-moxart and gpio-ts4800
+	- fixed gpio chip's base being overwritten with bogus "0"
+	- fixed compat driver crash when reload gpio-generic.ko module
+	- dropped already applied patches from the series
+	- rebased code on linus' devel tree
+	- moved dt bindings patch to the top of the series
+
+v4 -> v5:
+	- reverted rename of gpio-mmio.c back to gpio-generic.c
+	- fixed Andy Shevchenko's comments
+	- consolidated changes from clps711x, gpio-ge, gpio-moxart and
+	  gpio-ts4800 into one patch.
+
+v3 -> v4:
+	- renamed gpio-generic.c to gpio-mmio.c
+	- changed compat. string to "linux,gpio-mmio"
+	- integrated Cirrus clps711x driver
+	- integrated GE FGPA gpio-ge driver
+	- integrated MOXA ART GPIO driver
+	- integrated TS4800 gpio driver
+	- reshuffled patches, reworded commits, fixed spelling errors, etc.
+
+Christian Lamparter (2):
+  gpio: dt-bindings: add wd,mbl-gpio bindings
+  gpio: move clps711x, moxart, ts4800 and gpio-ge into gpio-mmio
+
+=C3=81lvaro Fern=C3=A1ndez Rojas (1):
+  gpio: mmio: add DT support for memory-mapped GPIOs
+
+ .../devicetree/bindings/gpio/wd,mbl-gpio.txt       |  38 +++
+ drivers/gpio/Kconfig                               |  43 +--
+ drivers/gpio/Makefile                              |   4 -
+ drivers/gpio/gpio-clps711x.c                       |  91 -------
+ drivers/gpio/gpio-ge.c                             | 114 --------
+ drivers/gpio/gpio-mmio.c                           | 289 +++++++++++++=
++++++++-
+ drivers/gpio/gpio-moxart.c                         |  84 ------
+ drivers/gpio/gpio-ts4800.c                         |  81 ------
+ 8 files changed, 333 insertions(+), 411 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.=
+txt
+ delete mode 100644 drivers/gpio/gpio-clps711x.c
+ delete mode 100644 drivers/gpio/gpio-ge.c
+ delete mode 100644 drivers/gpio/gpio-moxart.c
+ delete mode 100644 drivers/gpio/gpio-ts4800.c
+
+--=20
+2.8.1
