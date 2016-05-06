@@ -1,94 +1,82 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v9 04/22] powerpc/powernv: Increase PE# capacity
-Date: Fri, 6 May 2016 17:17:25 +1000
-Message-ID: <2f2282ae-c1dc-1870-4beb-d5e4e8233496@ozlabs.ru>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1462281773-26438-5-git-send-email-gwshan@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1462281773-26438-5-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v6 0/9] mfd: max8997: Add regmap support
+Date: Fri, 06 May 2016 09:21:20 +0200
+Message-ID: <1462519289-2356-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, rtc-linux@googlegroups.com
+Cc: r.baldyga@hackerion.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2016 11:22 PM, Gavin Shan wrote:
-> Each PHB maintains an array helping to translate 2-bytes Request
-> ID (RID) to PE# with the assumption that PE# takes one byte, meaning
-> that we can't have more than 256 PEs. However, pci_dn->pe_number
-> already had 4-bytes for the PE#.
-
-Can you possibly have more than 256 PEs? Or exactly 256? What patch in this 
-series makes use of it?
-
-I probably asked but do not remember the answer :)
-
-Looks like waste of memory - you only used a small fraction of 
-pe_rmap[0x10000] and now the waste is quadrupled.
+Hi,
 
 
->
-> This extends the PE# capacity for every PHB. After that, the PE number
-> is represented by 4-bytes value. Then we can reuse IODA_INVALID_PE to
-> check the PE# in phb->pe_rmap[] is valid or not.
+This is a rebase and extension of old Robert Baldyga's work. [0]
 
-Looks like using IODA_INVALID_PE is the only reason for this patch.
+Robert no longer works in Samsung.
+
+>From the original cover letter:
+"This patchset modifies max8997 driver and associated function drivers to use
+register maps instead of operating directly on i2c bus. This change allowed
+to simplify irq handling, and to move some initializations to individual
+function drivers. Hence now when some functions are not enabled, their i2c
+clients, regmaps and irqs are not registered."
 
 
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> Reviewed-by: Daniel Axtens <dja@axtens.net>
-> ---
->  arch/powerpc/platforms/powernv/pci-ioda.c | 6 +++++-
->  arch/powerpc/platforms/powernv/pci.h      | 7 ++-----
->  2 files changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index cbd4c0b..cf96cb5 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -768,7 +768,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
->
->  	/* Clear the reverse map */
->  	for (rid = pe->rid; rid < rid_end; rid++)
-> -		phb->ioda.pe_rmap[rid] = 0;
-> +		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
->
->  	/* Release from all parents PELT-V */
->  	while (parent) {
-> @@ -3406,6 +3406,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->  	if (prop32)
->  		phb->ioda.reserved_pe_idx = be32_to_cpup(prop32);
->
-> +	/* Invalidate RID to PE# mapping */
-> +	for (segno = 0; segno < ARRAY_SIZE(phb->ioda.pe_rmap); segno++)
-> +		phb->ioda.pe_rmap[segno] = IODA_INVALID_PE;
-> +
->  	/* Parse 64-bit MMIO range */
->  	pnv_ioda_parse_m64_window(phb);
->
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index 904f60b..80f5326 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -156,11 +156,8 @@ struct pnv_phb {
->  		struct list_head	pe_list;
->  		struct mutex            pe_list_mutex;
->
-> -		/* Reverse map of PEs, will have to extend if
-> -		 * we are to support more than 256 PEs, indexed
-> -		 * bus { bus, devfn }
-> -		 */
-> -		unsigned char		pe_rmap[0x10000];
-> +		/* Reverse map of PEs, indexed by {bus, devfn} */
-> +		unsigned int		pe_rmap[0x10000];
->
->  		/* TCE cache invalidate registers (physical and
->  		 * remapped)
->
+My changes (since Robert's v5)
+==============================
+1. Rebase on v4.6-rc6.
+2. Collect more acks.
+3. Add few fixes:
+   a. Haptic fix from Marek,
+   b. Extcon and RTC fix from me,
+   c. DTS fixes from Marek.
 
+DTS changes are independent but rest of them (extcon/input/MFD) rely
+on each other.
+
+One way of merging would be to pick everything (except DTS) through
+one tree. Or use tags.
+
+
+Best regards,
+Krzysztof
+
+[0] http://lkml.iu.edu/hypermail//linux/kernel/1411.1/03152.html
+
+
+Krzysztof Kozlowski (3):
+  extcon: max8997: Fix handling error code of regmap_irq_get_virq()
+  rtc: max8997: Check for ERRNO of regmap_irq_get_virq()
+  extcon: max8997: Fix inconsistent indenting
+
+Marek Szyprowski (3):
+  input: max8997-haptic: Fix NULL pointer dereference
+  ARM: dts: exynos: Fix regulator name to avoid forbidden character on
+    exynos4210-trats
+  ARM: dts: exynos: Add interrupt line to MAX8997 PMIC on
+    exynos4210-trats
+
+Robert Baldyga (3):
+  mfd: max8997: Use regmap to access registers
+  mfd: max8997: handle IRQs using regmap
+  mfd: max8997: Change irq names to upper case
+
+ arch/arm/boot/dts/exynos4210-trats.dts |   4 +-
+ drivers/extcon/extcon-max8997.c        |  72 ++++---
+ drivers/input/misc/max8997_haptic.c    |  40 ++--
+ drivers/leds/leds-max8997.c            |  13 +-
+ drivers/mfd/Kconfig                    |   3 +-
+ drivers/mfd/Makefile                   |   2 +-
+ drivers/mfd/max8997-irq.c              | 383 ---------------------------------
+ drivers/mfd/max8997.c                  | 245 ++++++++++++++-------
+ drivers/power/max8997_charger.c        |  33 +--
+ drivers/regulator/max8997.c            |  87 ++++----
+ drivers/rtc/rtc-max8997.c              |  60 +++---
+ include/linux/mfd/max8997-private.h    |  82 +++++--
+ 12 files changed, 392 insertions(+), 632 deletions(-)
+ delete mode 100644 drivers/mfd/max8997-irq.c
 
 -- 
-Alexey
+1.9.1
+
