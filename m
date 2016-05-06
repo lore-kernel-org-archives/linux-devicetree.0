@@ -1,76 +1,36 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v7 8/9] i2c: rk3x: add i2c support for rk3399 soc
-Date: Fri, 6 May 2016 11:00:02 -0700
-Message-ID: <CAD=FV=XOOAbKxqJsxGU4pXbNJtbq_Q4Pj2=9P48NCze5NTJyrw@mail.gmail.com>
-References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
-	<1462372609-6535-1-git-send-email-david.wu@rock-chips.com>
-	<CAD=FV=VhMJiowNWm+0=jzzK0vajg1=3PutaWbzhGPN_BU2+19w@mail.gmail.com>
-	<572C64B5.6080607@rock-chips.com>
+From: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: Input: add Atmel Atmegaxx captouch driver
+Date: Fri, 6 May 2016 11:29:14 -0700
+Message-ID: <CANEJEGtDSGL0gWVsHP8Dyy5n8s7juYhTVLJUmHq8Mn8Xf67_xA@mail.gmail.com>
+References: <1462295611-49684-1-git-send-email-grundler@chromium.org>
+	<20160504135123.GA4567@rob-hp-laptop>
+	<CANEJEGt1Ri7Q-g25U8_KTAb9Z8MfVWH0N5QLaLcdnDuF_wwrtw@mail.gmail.com>
+	<572C61B1.2040508@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <572C64B5.6080607@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: "David.Wu" <david.wu@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <572C61B1.2040508-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hung-yu Wu <hywu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Fri, May 6, 2016 at 2:19 AM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+...
+> Is it different from the Atmel QT1070 or QT2160 which have drivers
+> already available in Linux:  drivers/input/keyboard/qt1070.c
 
-On Fri, May 6, 2016 at 2:32 AM, David.Wu <david.wu@rock-chips.com> wrote:
->> Also (optional): once you do that, there becomes much less of a reason
->> to store "t_calc" in "struct rk3x_i2c".  Already you're never using
->> the "div_low" and "div_high" that you store in the "struct rk3x_i2c".
->> Of course, to do that you've got to change other places not to clobber
->> these bits in REG_CON.
->>
->
-> So, I only just need to store tuning value in the "struct rk3x_i2c", but not
-> to store the "div_low" and "div_high"?
+Yes.  What Daniel said.  I would describe it as "probe code and
+interrupt handling protocol are different" from both qt1070 and
+qt2160.
 
-I was suggesting not adding anything to what's stored in "struct
-rk3x_i2c" (AKA don't add t_calc there).  Just set the value directly
-in the register here then change all other bits of code to respect it.
+I'll add qt2160 is quite a bit more complex by adding LED driver
+support in a separate work handler and can handle a matrix of key
+codes. So very different protocol and linux device driver.
 
-That is:
-
-In rk3x_i2c_start(), write:
-
-  u32 val = i2c_readl(i2c, REG_CON) & REG_CON_TUNING_MASK;
-
-In rk3x_i2c_xfer(), write:
-  val = i2c_readl(i2c, REG_CON) & REG_CON_TUNING_MASK
-  val |= REG_CON_EN | REG_CON_STOP, REG_CON;
-  i2c_writel(i2c, val);
-
-
-You could get fancy and add a new "i2c_update_bits", but that might be overkill.
-
-
-> The patches we have already used in our projects, they are verified by the
-> basic tests. I would ask them to do more tests. Because we didn't change the
-> clock rate now, it was a fixed value when clk inited, so we could not find
-> the bug here.
-
-OK.  Presumably a rk3066 w/ DVS enabled would be a good test?  Reading
-the description of commit 249051f49907 ("i2c: rk3x: handle dynamic
-clock rate changes correctly"), I see:
-
-    The i2c input clock can change dynamically, e.g. on the RK3066 where
-    pclk_i2c0 and pclk_i2c1 are connected to the armclk, which changes
-    rate on cpu frequency scaling.
-
-
->> If you take that advice, you can get rid of all of the "if
->> (i2c->pclk)" statements in your code.
->>
->
-> It would make i2c->clk to be enabled and prepared twice when uses
-> rk3x_i2c_v0_calc_timings for old hardware. But if do the opposite
-> disabled and unprepated twice, that is okay.
-
-Right.  The same clock will get an enable / prepare count of "2"
-(instead of two different clocks getting a count of "1).  ...but
-nothing should be hurt by that.
-
--Doug
+cheers,
+grant
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
