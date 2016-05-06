@@ -1,74 +1,44 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v7 4/9] i2c: rk3x: Move setting STATE_START and add
- STATE_SETUP
-Date: Fri, 6 May 2016 11:20:41 +0800
-Message-ID: <572C0D89.9050708@rock-chips.com>
-References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
- <1462371194-5809-5-git-send-email-david.wu@rock-chips.com>
- <CAD=FV=WVKpJJbqc=UYbeObDurjte0iQOzvLL++i=wM9=TBeCDQ@mail.gmail.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH] mfd: lp873x: Add lp873x PMIC support
+Date: Fri, 6 May 2016 09:38:08 +0530
+Message-ID: <572C18A8.2060405@ti.com>
+References: <1462425040-18566-1-git-send-email-j-keerthy@ti.com>
+ <1462425040-18566-3-git-send-email-j-keerthy@ti.com>
+ <CAKDJKT7AmeBkwH9=JpK49ADrogDqF1XCyHmZFiv4Ouwn-k9Y6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WVKpJJbqc=UYbeObDurjte0iQOzvLL++i=wM9=TBeCDQ@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Tao Huang <huangtao@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eddie Cai <cf@rock-chips.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris <zyw@rock-chips.com>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKDJKT7AmeBkwH9=JpK49ADrogDqF1XCyHmZFiv4Ouwn-k9Y6g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manish Badarkhe <badarkhe.manish@gmail.com>, Keerthy <j-keerthy@ti.com>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
 
-=E5=9C=A8 2016/5/6 6:56, Doug Anderson =E5=86=99=E9=81=93:
-> David,
->
-> On Wed, May 4, 2016 at 7:13 AM, David Wu <david.wu@rock-chips.com> wr=
-ote:
->> Signed-off-by: David Wu <david.wu@rock-chips.com>
->> ---
->> Change in v7:
->> - none
->>
->>   drivers/i2c/busses/i2c-rk3x.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->
-> Probably this change could be dropped now.  Switching the location of
-> setting START_START was much more important when you were supporting
-> HIGH SPEED mode.  I don't think we need it anymore, right?
->
 
-Yes, I would drop it next version=EF=BC=8CSTATE_SETUP didn't make sense=
-, it was
-not much more important, because there was a error printk for=20
-rk3x_i2c_setup() called failed.
+On Thursday 05 May 2016 02:05 PM, Manish Badarkhe wrote:
+> Hi Keerthy,
+>
+>> + * struct tps65086 - state holder for the tps65086 driver
+>
+> need to change name over here in comment.
 
-> ...if we want to keep this change, I'd say:
+Thanks for catching this Manish! I will fix it in the next version.
+
 >
-> 1. Add a description, like maybe:
+>> + * Device data may be used to access the LP873X chip
+>> + */
+>> +struct lp873x {
+>> +       struct device *dev;
+>> +       unsigned long id;
+>> +       u8 rev;
+>> +       struct mutex lp873_lock;        /* lock guarding the data structure */
+>> +       struct regmap *regmap;
+>> +};
+>> +#endif /*  __LINUX_MFD_LP873X_H */
+>> --
 >
-> To help with debugging add a STATE_SETUP between STATE_IDLE and
-> STATE_START to make it more obvious that we're not actually idle but =
-we
-> also haven't initiated the start bit.  This change is not expected to
-> have any impact but it does delay the changing of state to STATE_STAR=
-T.
-> If previously we were getting an erroneous interrupt before we actual=
-ly
-> sent the start bit we'll now be treating that differently.  The new
-> behavior (catching the erroneous interrupt) should be better.
->
-> 2. Change "i2c->state =3D STATE_SETUP" to the _start_ of
-> rk3x_i2c_setup().  That would have a better chance of catching a
-> spurious interrupt.
->
-> 3. Add an error check at the start of rk3x_i2c_irq() similar to the
-> check for STATE_IDLE (or use the same check and modify the printk).
-> Specifically the justification for adding STATE_SETUP is to help with
-> debugging (catch interrupts that were unexpected and print more info
-> about our state), so we should make it useful for this.
->
->
-> -Doug
->
->
+> Regards
+> Manish Badarkhe
 >
