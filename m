@@ -1,49 +1,88 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: rockchip-dw-mshc: add rockchip,
- default-drv-phase
-Date: Fri,  6 May 2016 17:41:13 +0800
-Message-ID: <1462527673-24711-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1462527648-24443-1-git-send-email-shawn.lin@rock-chips.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v7 03/14] usb: hcd.h: Add OTG to HCD interface
+Date: Fri, 6 May 2016 17:41:03 +0800
+Message-ID: <20160506094103.GF32359@shlinux2.ap.freescale.net>
+References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
+ <1462191537-10314-4-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1462527648-24443-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462191537-10314-4-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: peter.chen@freescale.com, stern@rowland.harvard.edu, balbi@kernel.org, gregkh@linuxfoundation.org, dan.j.williams@intel.com, jun.li@freescale.com, mathias.nyman@linux.intel.com, tony@atomide.com, Joao.Pinto@synopsys.com, abrestic@chromium.org, yoshihiro.shimoda.uh@renesas.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-rockchip,default-drv-phase is used to set the default drv degrees.
-drv phases will decide the write timing of mmc controller.
+On Mon, May 02, 2016 at 03:18:46PM +0300, Roger Quadros wrote:
+> The OTG core will use struct otg_hcd_ops to interface
+> with the HCD controller.
+> 
+> The main purpose of this interface is to avoid directly
+> calling HCD APIs from the OTG core as they
+> wouldn't be defined in the built-in symbol table if
+> CONFIG_USB is m.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Acked-by: Peter Chen <peter.chen@nxp.com>
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Roger, after thinking more, I still think current dependency between
+OTG, HCD and gadget are too complicated. Since the OTG can't work
+if it is built as module, I suggest letting OTG depends on HCD &&
+USB_GADGET, and it is a boolean, in that case, we don't need to
+export any HCD and gadget ops, things will be much simpler.
+What's your opinion?
 
- Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Peter
 
-diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-index ea5614b..c48dba6 100644
---- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-@@ -29,6 +29,9 @@ Optional Properties:
-   probing, low speeds or in case where all phases work at tuning time.
-   If not specified 0 deg will be used.
- 
-+* rockchip,default-drv-phase: The default phase to set ciu_drv at probing
-+  for host to write data to devices. If not specified 180 deg will be used.
-+
- Example:
- 
- 	rkdwmmc0@12200000 {
+> ---
+>  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+> index b98f831..861ccaa 100644
+> --- a/include/linux/usb/hcd.h
+> +++ b/include/linux/usb/hcd.h
+> @@ -399,6 +399,30 @@ struct hc_driver {
+>  
+>  };
+>  
+> +/**
+> + * struct otg_hcd_ops - Interface between OTG core and HCD
+> + *
+> + * Provided by the HCD core to allow the OTG core to interface with the HCD
+> + *
+> + * @add: function to add the HCD
+> + * @remove: function to remove the HCD
+> + * @usb_bus_start_enum: function to immediately start bus enumeration
+> + * @usb_control_msg: function to build and send of a control urb
+> + * @usb_hub_find_child: function to get pointer to the child device
+> + */
+> +struct otg_hcd_ops {
+> +	int (*add)(struct usb_hcd *hcd,
+> +		   unsigned int irqnum, unsigned long irqflags);
+> +	void (*remove)(struct usb_hcd *hcd);
+> +	int (*usb_bus_start_enum)(struct usb_bus *bus, unsigned int port_num);
+> +	int (*usb_control_msg)(struct usb_device *dev, unsigned int pipe,
+> +			       __u8 request, __u8 requesttype, __u16 value,
+> +			       __u16 index, void *data, __u16 size,
+> +			       int timeout);
+> +	struct usb_device * (*usb_hub_find_child)(struct usb_device *hdev,
+> +						  int port1);
+> +};
+> +
+>  static inline int hcd_giveback_urb_in_bh(struct usb_hcd *hcd)
+>  {
+>  	return hcd->driver->flags & HCD_BH;
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
 -- 
-2.3.7
+
+Best Regards,
+Peter Chen
