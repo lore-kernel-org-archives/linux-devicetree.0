@@ -1,88 +1,125 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v7 03/14] usb: hcd.h: Add OTG to HCD interface
-Date: Fri, 6 May 2016 17:41:03 +0800
-Message-ID: <20160506094103.GF32359@shlinux2.ap.freescale.net>
-References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
- <1462191537-10314-4-git-send-email-rogerq@ti.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v9 04/22] powerpc/powernv: Increase PE# capacity
+Date: Fri, 6 May 2016 21:05:42 +1000
+Message-ID: <20160506110541.GA5016@gwshan>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1462281773-26438-5-git-send-email-gwshan@linux.vnet.ibm.com>
+ <2f2282ae-c1dc-1870-4beb-d5e4e8233496@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462191537-10314-4-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: peter.chen@freescale.com, stern@rowland.harvard.edu, balbi@kernel.org, gregkh@linuxfoundation.org, dan.j.williams@intel.com, jun.li@freescale.com, mathias.nyman@linux.intel.com, tony@atomide.com, Joao.Pinto@synopsys.com, abrestic@chromium.org, yoshihiro.shimoda.uh@renesas.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <2f2282ae-c1dc-1870-4beb-d5e4e8233496@ozlabs.ru>
+Sender: linux-pci-owner@vger.kernel.org
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 02, 2016 at 03:18:46PM +0300, Roger Quadros wrote:
-> The OTG core will use struct otg_hcd_ops to interface
-> with the HCD controller.
-> 
-> The main purpose of this interface is to avoid directly
-> calling HCD APIs from the OTG core as they
-> wouldn't be defined in the built-in symbol table if
-> CONFIG_USB is m.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Acked-by: Peter Chen <peter.chen@nxp.com>
+On Fri, May 06, 2016 at 05:17:25PM +1000, Alexey Kardashevskiy wrote:
+>On 05/03/2016 11:22 PM, Gavin Shan wrote:
+>>Each PHB maintains an array helping to translate 2-bytes Request
+>>ID (RID) to PE# with the assumption that PE# takes one byte, meaning
+>>that we can't have more than 256 PEs. However, pci_dn->pe_number
+>>already had 4-bytes for the PE#.
+>
+>Can you possibly have more than 256 PEs? Or exactly 256? What patch in this
+>series makes use of it?
+>
+>I probably asked but do not remember the answer :)
+>
+>Looks like waste of memory - you only used a small fraction of
+>pe_rmap[0x10000] and now the waste is quadrupled.
+>
 
-Roger, after thinking more, I still think current dependency between
-OTG, HCD and gadget are too complicated. Since the OTG can't work
-if it is built as module, I suggest letting OTG depends on HCD &&
-USB_GADGET, and it is a boolean, in that case, we don't need to
-export any HCD and gadget ops, things will be much simpler.
-What's your opinion?
+The PE capacities on different hardware are different as below. So we're
+going to support 16-bits PE number in near future. That means the element
+in the array needs "unsigned short" at least and 2 pages (2 * 64KB) will
+be reserved for it.
 
-Peter
+P7IOC: 127        PHB3: 256
+PHB4:  65536      NPU1: 4        NPU2: 16
 
-> ---
->  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-> index b98f831..861ccaa 100644
-> --- a/include/linux/usb/hcd.h
-> +++ b/include/linux/usb/hcd.h
-> @@ -399,6 +399,30 @@ struct hc_driver {
->  
->  };
->  
-> +/**
-> + * struct otg_hcd_ops - Interface between OTG core and HCD
-> + *
-> + * Provided by the HCD core to allow the OTG core to interface with the HCD
-> + *
-> + * @add: function to add the HCD
-> + * @remove: function to remove the HCD
-> + * @usb_bus_start_enum: function to immediately start bus enumeration
-> + * @usb_control_msg: function to build and send of a control urb
-> + * @usb_hub_find_child: function to get pointer to the child device
-> + */
-> +struct otg_hcd_ops {
-> +	int (*add)(struct usb_hcd *hcd,
-> +		   unsigned int irqnum, unsigned long irqflags);
-> +	void (*remove)(struct usb_hcd *hcd);
-> +	int (*usb_bus_start_enum)(struct usb_bus *bus, unsigned int port_num);
-> +	int (*usb_control_msg)(struct usb_device *dev, unsigned int pipe,
-> +			       __u8 request, __u8 requesttype, __u16 value,
-> +			       __u16 index, void *data, __u16 size,
-> +			       int timeout);
-> +	struct usb_device * (*usb_hub_find_child)(struct usb_device *hdev,
-> +						  int port1);
-> +};
-> +
->  static inline int hcd_giveback_urb_in_bh(struct usb_hcd *hcd)
->  {
->  	return hcd->driver->flags & HCD_BH;
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I agree some memory is wasted and the wasted amount depends on the PCI
+topology. No memory will be wasted if 256 busses show on one particular
+PHB. Less busses one PHB has, more memory will be wasted. As I explained
+before, the total used memory is 4 pages (4 * 64KB). Considering the memory
+capacity on PPC64 (especially PowerNV), I guess it's fine. Note that the
+memory is allocated from memblock together with PHB instance.
 
--- 
+The alternative solution (to avoid wasting memory) would be searching for
+the PE number according to the input BDFN through the PE list maintained
+in each PHB. Obviously, it will induce more logic and more CPU cycles will
+be used. So it's a kind of trade-off. If you really want to see this, I
+absolutely can do it in next revision. Another option would be to improve
+it later and keep the code as what we have. Please input your thought. 
 
-Best Regards,
-Peter Chen
+>
+>>
+>>This extends the PE# capacity for every PHB. After that, the PE number
+>>is represented by 4-bytes value. Then we can reuse IODA_INVALID_PE to
+>>check the PE# in phb->pe_rmap[] is valid or not.
+>
+>Looks like using IODA_INVALID_PE is the only reason for this patch.
+>
+
+For now, yes. In near future, It needs to be extended to represent 16-bits
+PE number for PHB4 as I explained above. 
+
+>
+>>
+>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>Reviewed-by: Daniel Axtens <dja@axtens.net>
+>>---
+>> arch/powerpc/platforms/powernv/pci-ioda.c | 6 +++++-
+>> arch/powerpc/platforms/powernv/pci.h      | 7 ++-----
+>> 2 files changed, 7 insertions(+), 6 deletions(-)
+>>
+>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>index cbd4c0b..cf96cb5 100644
+>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>@@ -768,7 +768,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>>
+>> 	/* Clear the reverse map */
+>> 	for (rid = pe->rid; rid < rid_end; rid++)
+>>-		phb->ioda.pe_rmap[rid] = 0;
+>>+		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
+>>
+>> 	/* Release from all parents PELT-V */
+>> 	while (parent) {
+>>@@ -3406,6 +3406,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>> 	if (prop32)
+>> 		phb->ioda.reserved_pe_idx = be32_to_cpup(prop32);
+>>
+>>+	/* Invalidate RID to PE# mapping */
+>>+	for (segno = 0; segno < ARRAY_SIZE(phb->ioda.pe_rmap); segno++)
+>>+		phb->ioda.pe_rmap[segno] = IODA_INVALID_PE;
+>>+
+>> 	/* Parse 64-bit MMIO range */
+>> 	pnv_ioda_parse_m64_window(phb);
+>>
+>>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>index 904f60b..80f5326 100644
+>>--- a/arch/powerpc/platforms/powernv/pci.h
+>>+++ b/arch/powerpc/platforms/powernv/pci.h
+>>@@ -156,11 +156,8 @@ struct pnv_phb {
+>> 		struct list_head	pe_list;
+>> 		struct mutex            pe_list_mutex;
+>>
+>>-		/* Reverse map of PEs, will have to extend if
+>>-		 * we are to support more than 256 PEs, indexed
+>>-		 * bus { bus, devfn }
+>>-		 */
+>>-		unsigned char		pe_rmap[0x10000];
+>>+		/* Reverse map of PEs, indexed by {bus, devfn} */
+>>+		unsigned int		pe_rmap[0x10000];
+>>
+>> 		/* TCE cache invalidate registers (physical and
+>> 		 * remapped)
+>>
+>
+>
+>-- 
+>Alexey
+>
