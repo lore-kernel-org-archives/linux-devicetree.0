@@ -1,55 +1,37 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v7 2/9] i2c: rk3x: use struct "rk3x_i2c_calced_timings"
-Date: Fri, 6 May 2016 10:19:13 +0800
-Message-ID: <572BFF21.6060500@rock-chips.com>
-References: <1462371194-5809-1-git-send-email-david.wu@rock-chips.com>
- <1462371194-5809-3-git-send-email-david.wu@rock-chips.com>
- <CAD=FV=WAbedAB78shifxwjmZ-od8rhOiNz80rpdqfwzRsdX6WQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] ARM: dts: Add binding documentation
+ for AXP20x pmic ac power supply
+Date: Fri, 6 May 2016 10:33:03 +0800
+Message-ID: <CAGb2v66yDCnaWrYUN4SYKVu0jgP_drFW8LURQM2uN-6Yn7XCaA@mail.gmail.com>
+References: <1462444508-9363-1-git-send-email-haas@computerlinguist.org>
+ <1462444508-9363-4-git-send-email-haas@computerlinguist.org> <20160505223058.GA28732@rob-hp-laptop>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WAbedAB78shifxwjmZ-od8rhOiNz80rpdqfwzRsdX6WQ@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB5MEWC4QKGQEOVYD45I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160505223058.GA28732@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
-
-=E5=9C=A8 2016/5/6 6:55, Doug Anderson =E5=86=99=E9=81=93:
-> David,
->
-> On Wed, May 4, 2016 at 7:13 AM, David Wu <david.wu@rock-chips.com> wr=
-ote:
->> Signed-off-by: David Wu <david.wu@rock-chips.com>
->
-> Usually folks like a description and not just a subject line.  I'd ad=
-d
-> a description like:
->
-> The "div_high" and "div_low" values are always used together.  Group =
-them
-> into a structure to make it easier to pass them both around.  This
-> structure also provides a place for future calculated timings.
->
-
-Okay, i will add it in next version, thanks.
-
->> ---
->> Change in v7:
->> - none
+On Fri, May 6, 2016 at 6:30 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, May 05, 2016 at 12:35:06PM +0200, Michael Haas wrote:
+>> Add binding documentation for the ac power supply part of the AXP20x
+>> pmic.
 >>
->>   drivers/i2c/busses/i2c-rk3x.c | 55 +++++++++++++++++++++++++------=
-------------
->>   1 file changed, 32 insertions(+), 23 deletions(-)
+>> Signed-off-by: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+>> ---
+>>  .../bindings/power_supply/axp20x_ac_power.txt           | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power_supply/axp20x_ac_power.txt
 >
-> Other than the description, I think this looks fine.
->
-> IMHO this can be applied any time independent of any earlier patches.
->
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->
->
->
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
