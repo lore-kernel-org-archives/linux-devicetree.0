@@ -1,103 +1,73 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Add MFC memory banks for Peach boards
-Date: Fri, 06 May 2016 16:13:59 +0200
-Message-ID: <572CA6A7.1040102@samsung.com>
-References: <1461871311-18344-1-git-send-email-javier@osg.samsung.com>
- <cef99c21-3886-c055-05bf-cd04e3b588b3@osg.samsung.com>
- <572CA2F3.4050407@samsung.com>
- <23883a5f-bfed-9474-51a7-14271b6c391f@osg.samsung.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V3 16/17] irqchip/gic: Prepare for adding platform
+ driver
+Date: Fri, 6 May 2016 15:27:24 +0100
+Message-ID: <20160506152724.32c9000b@arm.com>
+References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
+	<1462379130-11742-17-git-send-email-jonathanh@nvidia.com>
+	<572B54F4.2080103@arm.com>
+	<572CA5AF.7080504@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <23883a5f-bfed-9474-51a7-14271b6c391f@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <572CA5AF.7080504-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2016 04:12 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 05/06/2016 09:58 AM, Krzysztof Kozlowski wrote:
->> On 05/06/2016 03:44 PM, Javier Martinez Canillas wrote:
->>> Hello Krzysztof,
->>>
->>> On 04/28/2016 03:21 PM, Javier Martinez Canillas wrote:
->>>> The MFC nodes with the memory regions reserved for memory allocations
->>>> are missing in the Exynos5420 Peach Pit and Exynos5800 Peach Pi DTS.
->>>>
->>>> This causes the s5p-mfc driver probe to fail with the following error:
->>>>
->>>> [    4.140647] s5p_mfc_alloc_memdevs:1072: Failed to declare coherent memory for MFC device
->>>> [    4.216163] s5p-mfc: probe of 11000000.codec failed with error -12
->>>>
->>>> Add the missing nodes so the driver probes and the {en,de}coder video
->>>> nodes are registered correctly:
->>>>
->>>> [    4.096277] s5p-mfc 11000000.codec: decoder registered as /dev/video4
->>>> [    4.102282] s5p-mfc 11000000.codec: encoder registered as /dev/video5
->>>>
->>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>>>
->>>> ---
->>>>
->>>>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 5 +++++
->>>>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 5 +++++
->>>>  2 files changed, 10 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>>> index b644858231b6..f9d2e4f1a0e0 100644
->>>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>>> @@ -694,6 +694,11 @@
->>>>  	status = "okay";
->>>>  };
->>>>  
->>>> +&mfc {
->>>> +	samsung,mfc-r = <0x43000000 0x800000>;
->>>> +	samsung,mfc-l = <0x51000000 0x800000>;
->>>> +};
->>>> +
->>>>  &mmc_0 {
->>>>  	status = "okay";
->>>>  	num-slots = <1>;
->>>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>>> index 6ba9aec15485..62ceb89e073f 100644
->>>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>>> @@ -669,6 +669,11 @@
->>>>  	status = "okay";
->>>>  };
->>>>  
->>>> +&mfc {
->>>> +	samsung,mfc-r = <0x43000000 0x800000>;
->>>> +	samsung,mfc-l = <0x51000000 0x800000>;
->>>> +};
->>>> +
->>>>  &mmc_0 {
->>>>  	status = "okay";
->>>>  	num-slots = <1>;
->>>>
->>>
->>> Any comments about this patch?
->>
->> What is up with the rush now (a week for ping)? As I understand, this
-> 
-> Sorry about that... I should had waited for more time for the ping indeed.
-> I just thought the patch was trivial and you usually answer within days.
-> 
->> was broken for very long time on these boards (since adding DT support
->> in 2012?).
->>
-> 
-> Yes, that's correct. And in fact even the s5p-mfc driver is currently
-> not working in mainline. But I posted some fixes and will post more
-> patches from other people today to get it working. So I thought that
-> would be nice to have this in since one of my test machines is a Peach.
+On Fri, 6 May 2016 15:09:51 +0100
+Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-Okay, no problem. I have few more not-so-critical fixes. Queued for
-earliest possible release.
+Hi Jon,
 
-Best regards,
-Krzysztof
+[...]
+
+> > +int gic_of_setup(struct device_node *node, struct device *dev,
+> > +		 struct gic_chip_data **gicp)
+> > +{
+> > +	struct gic_chip_data *gic;
+> >  
+> > -	*cpu_base = of_iomap(node, 1);
+> > -	if (WARN(!*cpu_base, "unable to map gic cpu registers\n")) {
+> > -		iounmap(*dist_base);
+> > -		return -ENOMEM;
+> > +	if (!node || !gicp)
+> > +		return -EINVAL;
+> > +
+> > +	if (dev) {
+> > +		*gicp = devm_kzalloc(dev, sizeof(*gic), GFP_KERNEL);
+> > +		if (!*gicp)
+> > +			return -ENOMEM;
+> >  	}
+> >  
+> > -	if (of_property_read_u32(node, "cpu-offset", percpu_offset))
+> > -		*percpu_offset = 0;
+> > +	gic = *gicp;
+> > +
+> > +	gic->raw_dist_base = of_iomap(node, 0);
+> > +	if (WARN(!gic->raw_dist_base, "unable to map gic dist registers\n"))
+> > +		goto err;
+> > +
+> > +	gic->raw_cpu_base = of_iomap(node, 1);
+> > +	if (WARN(!gic->raw_cpu_base, "unable to map gic cpu registers\n"))
+> > +		goto err;
+> > +
+> > +	if (of_property_read_u32(node, "cpu-offset", &gic->percpu_offset))
+> > +		gic->percpu_offset = 0;
+> >  
+> > +	gic->chip.parent_device = dev;
+> 
+> We can't initialise the device here as it gets overwritten in the
+> gic_init_bases. So I have had to re-organise things a bit. Good news is
+> that I have eliminated the call from the platform driver to
+> gic_init_bases so we only have a single call to initialise the GIC.
+
+Ah, good. That sounds a lot better. Looking forward to v4.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
