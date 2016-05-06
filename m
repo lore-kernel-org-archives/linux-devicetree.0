@@ -1,68 +1,67 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH 2/2] drivers: i2c: qup: Fix error handling
-Date: Fri, 6 May 2016 09:39:18 +0530
-Message-ID: <001e01d1a74d$13c716b0$3b554410$@codeaurora.org>
-References: <1462166637-16778-1-git-send-email-sricharan@codeaurora.org> <1462166637-16778-3-git-send-email-sricharan@codeaurora.org> <20160505172219.GB6533@hector.attlocal.net>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] regulator: lp873x: Add support for lp873x PMIC
+ regulators
+Date: Fri, 6 May 2016 10:13:24 +0530
+Message-ID: <572C20EC.7000706@ti.com>
+References: <1462425040-18566-1-git-send-email-j-keerthy@ti.com>
+ <1462425040-18566-4-git-send-email-j-keerthy@ti.com>
+ <20160505153820.GF6292@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160505172219.GB6533@hector.attlocal.net>
-Content-Language: en-us
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: 'Andy Gross' <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160505153820.GF6292-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Mark,
 
-> -----Original Message-----
-> From: Andy Gross [mailto:andy.gross@linaro.org]
-> Sent: Thursday, May 05, 2016 10:52 PM
-> To: Sricharan R <sricharan@codeaurora.org>
-> Cc: devicetree@vger.kernel.org; architt@codeaurora.org; linux-arm-
-> msm@vger.kernel.org; ntelkar@codeaurora.org; galak@codeaurora.org;
-> linux-kernel@vger.kernel.org; linux-i2c@vger.kernel.org; iivanov@mm-
-> sol.com; agross@codeaurora.org; dmaengine@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH 2/2] drivers: i2c: qup: Fix error handling
-> 
-> On Mon, May 02, 2016 at 10:53:57AM +0530, Sricharan R wrote:
-> > Among the bus errors reported from the QUP_MASTER_STATUS register
-> only
-> > NACK is considered and transfer gets suspended, while other errors are
-> > ignored. Correct this and suspend the transfer for other errors as
-> > well. This avoids unnessecary 'timeouts' which happens when waiting
-> > for events that would never happen when there is already an error
-> > condition on the bus.
-> >
-> > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> > ---
-> >  drivers/i2c/busses/i2c-qup.c | 34 +++++++++++++++++++++++++---------
-> >  1 file changed, 25 insertions(+), 9 deletions(-)
-> 
-> Reviewed-by: Andy Gross <andy.gross@linaro.org>
-> 
- Thanks.
-> <snip>
-> 
-> > @@ -1227,6 +1240,9 @@ static int qup_i2c_xfer_v2(struct i2c_adapter
-> *adap,
-> >  	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
-> >  	int ret, len, idx = 0, use_dma = 0;
-> >
-> > +	qup->bus_err = 0;
-> > +	qup->qup_err = 0;
-> > +
-> 
-> What about the initial setting of these?  Does this need to be removed
-from
-> the main xfer function?
-  Thanks for the catch. Will remove in bam_xfer , redundant.
-  Now that there are i2x_xfer_v2 and i2c_xfer, 
-   its not set in the old i2c_xfer call, where as it should be set there
-   as well. I will change this and resend.
 
-Regards,
- Sricharan
+On Thursday 05 May 2016 09:08 PM, Mark Brown wrote:
+> On Thu, May 05, 2016 at 10:40:40AM +0530, Keerthy wrote:
+>
+>> +static const struct of_device_id of_lp873x_match_tbl[] = {
+>> +	{ .compatible = "ti,lp8733-regulators",},
+>> +	{ .compatible = "ti,lp8732-regulators",},
+>> +	{ .compatible = "ti,lp873x-regulators",},
+>> +	{},
+>> +};
+>
+> There should be no need for compatible strings here, we already know
+> what device this is from the parent.  The way we split drivers up for
+> Linux is something that's internal to Linux and shouldn't be in the
+> device tree.  If we do have explicit compatible strings then they should
+> (as always) be specific to a device, no wildcards.
+
+Thanks for the review.
+
+I am using of_platform_populate function in the mfd driver to create 
+platform devices for the child nodes, in my case regulators.
+
+of_platform_populate in turn calls on to of_platform_bus_create which 
+mandates compatible properties. It quietly skips device creation if 
+there are no compatible properties.
+
+When i enabled a debug print, i see this:
+skipping /ocp/i2c@48070000/lp8732@61/regulators, no compatible prop
+Hence i kept the compatible properties.
+
+The driver supports two variants of LP873x family:
+
+1) LP8732
+2) LP8733
+
+I will knock off the ti,lp873x-regulators compatible which is more 
+generic/wildcard entry.
+
+Let me know if this approach is fine.
+
+>
+> Otherwise this looks sensible.
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
