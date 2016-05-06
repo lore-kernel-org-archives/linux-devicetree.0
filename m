@@ -1,175 +1,124 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: am57xx-idk-common: Fix input supply names
-Date: Thu, 5 May 2016 19:05:25 -0500
-Message-ID: <1462493125-27832-1-git-send-email-nm@ti.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v9 22/22] PCI/hotplug: PowerPC PowerNV PCI hotplug driver
+Date: Fri, 6 May 2016 10:28:34 +1000
+Message-ID: <20160506002834.GA5509@gwshan>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1462281773-26438-23-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqLAYk2S80LNvF2z2ZzPfCWAbpz2LNKK-04OgSkabjWbxQ@mail.gmail.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLAYk2S80LNvF2z2ZzPfCWAbpz2LNKK-04OgSkabjWbxQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Alexey Kardashevskiy <aik@ozlabs.ru>, Bjorn Helgaas <bhelgaas@google.com>, dja@axtens.net, Alistair Popple <alistair@popple.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Palmas Regulator is an exception and does not follow the standard
-"vin-supply" common definitions for all regulators, as a result of this,
-the input supplies are not reported to regulator framework, with the
-obvious result of not being appropriately mapped. Fix the same.
+On Thu, May 05, 2016 at 12:04:49PM -0500, Rob Herring wrote:
+>On Tue, May 3, 2016 at 8:22 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>> This adds standalone driver to support PCI hotplug for PowerPC PowerNV
+>> platform that runs on top of skiboot firmware. The firmware identifies
+>> hotpluggable slots and marked their device tree node with proper
+>> "ibm,slot-pluggable" and "ibm,reset-by-firmware". The driver scans
+>> device tree nodes to create/register PCI hotplug slot accordingly.
+>>
+>> The PCI slots are organized in fashion of tree, which means one
+>> PCI slot might have parent PCI slot and parent PCI slot possibly
+>> contains multiple child PCI slots. At the plugging time, the parent
+>> PCI slot is populated before its children. The child PCI slots are
+>> removed before their parent PCI slot can be removed from the system.
+>>
+>> If the skiboot firmware doesn't support slot status retrieval, the PCI
+>> slot device node shouldn't have property "ibm,reset-by-firmware". In
+>> that case, none of valid PCI slots will be detected from device tree.
+>> The skiboot firmware doesn't export the capability to access attention
+>> LEDs yet and it's something for TBD.
+>>
+>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>
+>[...]
+>
+>> +static void pnv_php_handle_poweron(struct pnv_php_slot *php_slot)
+>> +{
+>> +       void *fdt, *fdt1, *dt;
+>> +       int confirm = PNV_PHP_POWER_CONFIRMED_SUCCESS;
+>> +       int ret;
+>> +
+>> +       /* We don't know the FDT blob size. We try to get it through
+>> +        * maximal memory chunk and then copy it to another chunk that
+>> +        * fits the real size.
+>> +        */
+>> +       fdt1 = kzalloc(0x10000, GFP_KERNEL);
+>> +       if (!fdt1)
+>> +               goto error;
+>> +
+>> +       ret = pnv_pci_get_device_tree(php_slot->dn->phandle, fdt1, 0x10000);
+>> +       if (ret)
+>> +               goto free_fdt1;
+>> +
+>> +       fdt = kzalloc(fdt_totalsize(fdt1), GFP_KERNEL);
+>> +       if (!fdt)
+>> +               goto free_fdt1;
+>> +
+>> +       /* Unflatten device tree blob */
+>> +       memcpy(fdt, fdt1, fdt_totalsize(fdt1));
+>
+>This is wrong. If the size is greater than 64K, then you will be
+>overrunning the fdt1 buffer. You need to fetch the FDT again if it is
+>bigger than 64KB.
+>
 
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
+Thanks for review, Rob. Sorry that I don't see how it's a problem. An
+errcode is returned from pnv_pci_get_device_tree() if the FDT blob
+size is greater than 64K. In this case, memcpy() won't be triggered.
+pnv_pci_get_device_tree() relies on firmware implementation which
+avoids overrunning the buffer.
 
-Based on next-20160504
-Log: http://pastebin.ubuntu.com/16248817/
+On the other hand, it would be reasonable to retry retriving the
+FDT blob if 64K buffer isn't enough. Also, kzalloc() can be replaced
+with alloc_pages() as 64K is the default page size on PPC64. I will
+have something like below until some one has more concerns. As the
+size of the allocated buffer will be greater than the real FDT blob
+size, some memory (not too much) is wasted. I guess it should be ok.
 
- arch/arm/boot/dts/am57xx-idk-common.dtsi | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+	struct page *page;
+	void *fdt;
+	unsigned int order;
+	int ret;
 
-diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
-index b01a5948cdd0..65ab31118140 100644
---- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
-@@ -60,10 +60,26 @@
- 
- 		tps659038_pmic {
- 			compatible = "ti,tps659038-pmic";
-+
-+			smps12-in-supply = <&vmain>;
-+			smps3-in-supply = <&vmain>;
-+			smps45-in-supply = <&vmain>;
-+			smps6-in-supply = <&vmain>;
-+			smps7-in-supply = <&vmain>;
-+			smps8-in-supply = <&vmain>;
-+			smps9-in-supply = <&vmain>;
-+			ldo1-in-supply = <&vmain>;
-+			ldo2-in-supply = <&vmain>;
-+			ldo3-in-supply = <&vmain>;
-+			ldo4-in-supply = <&vmain>;
-+			ldo9-in-supply = <&vmain>;
-+			ldoln-in-supply = <&vmain>;
-+			ldousb-in-supply = <&vmain>;
-+			ldortc-in-supply = <&vmain>;
-+
- 			regulators {
- 				smps12_reg: smps12 {
- 					/* VDD_MPU */
--					vin-supply = <&vmain>;
- 					regulator-name = "smps12";
- 					regulator-min-microvolt = <850000>;
- 					regulator-max-microvolt = <1250000>;
-@@ -73,7 +89,6 @@
- 
- 				smps3_reg: smps3 {
- 					/* VDD_DDR EMIF1 EMIF2 */
--					vin-supply = <&vmain>;
- 					regulator-name = "smps3";
- 					regulator-min-microvolt = <1350000>;
- 					regulator-max-microvolt = <1350000>;
-@@ -84,7 +99,6 @@
- 				smps45_reg: smps45 {
- 					/* VDD_DSPEVE on AM572 */
- 					/* VDD_IVA + VDD_DSP on AM571 */
--					vin-supply = <&vmain>;
- 					regulator-name = "smps45";
- 					regulator-min-microvolt = <850000>;
- 					regulator-max-microvolt = <1250000>;
-@@ -94,7 +108,6 @@
- 
- 				smps6_reg: smps6 {
- 					/* VDD_GPU */
--					vin-supply = <&vmain>;
- 					regulator-name = "smps6";
- 					regulator-min-microvolt = <850000>;
- 					regulator-max-microvolt = <1250000>;
-@@ -104,7 +117,6 @@
- 
- 				smps7_reg: smps7 {
- 					/* VDD_CORE */
--					vin-supply = <&vmain>;
- 					regulator-name = "smps7";
- 					regulator-min-microvolt = <850000>;
- 					regulator-max-microvolt = <1150000>;
-@@ -115,13 +127,11 @@
- 				smps8_reg: smps8 {
- 					/* 5728 - VDD_IVAHD */
- 					/* 5718 - N.C. test point */
--					vin-supply = <&vmain>;
- 					regulator-name = "smps8";
- 				};
- 
- 				smps9_reg: smps9 {
- 					/* VDD_3_3D */
--					vin-supply = <&vmain>;
- 					regulator-name = "smps9";
- 					regulator-min-microvolt = <3300000>;
- 					regulator-max-microvolt = <3300000>;
-@@ -132,7 +142,6 @@
- 				ldo1_reg: ldo1 {
- 					/* VDDSHV8 - VSDMMC  */
- 					/* NOTE: on rev 1.3a, data supply */
--					vin-supply = <&vmain>;
- 					regulator-name = "ldo1";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <3300000>;
-@@ -142,7 +151,6 @@
- 
- 				ldo2_reg: ldo2 {
- 					/* VDDSH18V */
--					vin-supply = <&vmain>;
- 					regulator-name = "ldo2";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
-@@ -152,7 +160,6 @@
- 
- 				ldo3_reg: ldo3 {
- 					/* R1.3a 572x V1_8PHY_LDO3: USB, SATA */
--					vin-supply = <&vmain>;
- 					regulator-name = "ldo3";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
-@@ -162,7 +169,6 @@
- 
- 				ldo4_reg: ldo4 {
- 					/* R1.3a 572x V1_8PHY_LDO4: PCIE, HDMI*/
--					vin-supply = <&vmain>;
- 					regulator-name = "ldo4";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
-@@ -174,7 +180,6 @@
- 
- 				ldo9_reg: ldo9 {
- 					/* VDD_RTC  */
--					vin-supply = <&vmain>;
- 					regulator-name = "ldo9";
- 					regulator-min-microvolt = <840000>;
- 					regulator-max-microvolt = <1160000>;
-@@ -184,7 +189,6 @@
- 
- 				ldoln_reg: ldoln {
- 					/* VDDA_1V8_PLL */
--					vin-supply = <&vmain>;
- 					regulator-name = "ldoln";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
-@@ -194,7 +198,6 @@
- 
- 				ldousb_reg: ldousb {
- 					/* VDDA_3V_USB: VDDA_USBHS33 */
--					vin-supply = <&vmain>;
- 					regulator-name = "ldousb";
- 					regulator-min-microvolt = <3300000>;
- 					regulator-max-microvolt = <3300000>;
-@@ -205,7 +208,6 @@
- 				ldortc_reg: ldortc {
- 					/* VDDA_RTC  */
- 					vin-supply = <&vmain>;
--					regulator-name = "ldortc";
- 					regulator-min-microvolt = <1800000>;
- 					regulator-max-microvolt = <1800000>;
- 					regulator-always-on;
--- 
-2.8.0
+	for (order = 0; order < MAX_ORDER; order++) {
+		page = alloc_pages(GFP_KERNEL, order);
+		if (page) {
+			fdt = page_address(page);
+			ret = pnv_pci_get_device_tree(php_slot->dn->phandle,
+						      fdt, (1 << order) * PAGE_SIZE);
+			if (ret) {
+				dev_dbg(&php_slot->pdev.dev, "Error %d getting device tree (%d)\n",
+					ret, order);
+				free_pages(fdt, order);
+				continue;
+			}
+		}
+	}
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	if (order >= MAX_ORDER) {
+		dev_warn(&php_slot->pdev.dev, "Cannot get device tree\n");
+		return;
+	}
+
+	/* Unflatten the blob without copying it to another allocated buffer */
+
+Thanks,
+Gavin
+
+>
+>> +       dt = of_fdt_unflatten_tree(fdt, php_slot->dn, NULL);
+>> +       if (!dt) {
+>> +               dev_warn(&php_slot->pdev->dev, "Cannot unflatten FDT\n");
+>> +               goto free_fdt;
+>> +       }
+>> +
+>
