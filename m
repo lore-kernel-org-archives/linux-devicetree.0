@@ -1,64 +1,220 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 2/3] gpio: mmio: add DT support for memory-mapped GPIOs
-Date: Fri, 6 May 2016 12:50:10 +0100
-Message-ID: <20160506114916.GA18053@leverpostej>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 3/3] gpio: move clps711x, moxart, ts4800 and gpio-ge
+ into gpio-mmio
+Date: Fri, 6 May 2016 14:53:24 +0300
+Message-ID: <CAHp75VeFjcPX+f3j+h+OL2jEpfGP+aqL78ymcsj4JwUfO0RvtA@mail.gmail.com>
 References: <cover.1462372360.git.chunkeey@googlemail.com>
- <50f7f506364f84effd5224677b21726fd2e511a4.1462372360.git.chunkeey@googlemail.com>
+	<e936c3c38deee5cd954862c5ed11f9cffa2ba6a9.1462372360.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50f7f506364f84effd5224677b21726fd2e511a4.1462372360.git.chunkeey@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <e936c3c38deee5cd954862c5ed11f9cffa2ba6a9.1462372360.git.chunkeey@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?utf-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Julien Grossholtz <julien.grossholtz@savoirfairelinux.com>, Martyn Welch <martyn.welch@ge.com>, Jonas Jensen <jonas.jensen@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, May 6, 2016 at 2:10 PM, Christian Lamparter
+<chunkeey@googlemail.com> wrote:
+> This patch integrates these GPIO drivers into gpio-mmio.
 
-On Fri, May 06, 2016 at 01:10:20PM +0200, Christian Lamparter wrote:
-> +static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
-> +				     struct bgpio_pdata *pdata,
-> +				     unsigned long *flags)
+Would be nice to repeat a list here.
+
+>  config GPIO_GENERIC_PLATFORM
+>         tristate "Generic memory-mapped GPIO controller support (MMIO platform device)"
+>         select GPIO_GENERIC
+>         help
+> +         Select this to support many generic memory-mapped GPIO controllers.
+> +
+> +         This driver also includes support for the following GPIOs:
+> +           CLPS711X SoCs
+> +           MOXA ART SoC
+> +           TS-4800 FPGA DIO blocks and compatibles.
+> +           GPIOs found on some GE Single Board Computers.
+> +
+>           Say yes here to support basic platform_device memory-mapped GPIO controllers.
+>
+>  config GPIO_GRGPIO
+> @@ -285,14 +274,6 @@ config GPIO_MM_LANTIQ
+>           (EBU) found on Lantiq SoCs. The gpios are output only as they are
+>           created by attaching a 16bit latch to the bus.
+>
+> -config GPIO_MOXART
+> -       bool "MOXART GPIO support"
+> -       depends on ARCH_MOXART || COMPILE_TEST
+> -       select GPIO_GENERIC
+> -       help
+> -         Select this option to enable GPIO driver for
+> -         MOXA ART SoC devices.
+> -
+
+Doesn't it change behaviour? So, as a user of old .config I expect to
+have driver enabled. How is it achieved now?
+
+> --- a/drivers/gpio/gpio-mmio.c
+> +++ b/drivers/gpio/gpio-mmio.c
+> @@ -610,10 +610,200 @@ static int bgpio_basic_mmio_parse_dt(struct platform_device *pdev,
+>         return 0;
+>  }
+>
+> +static int clps711x_parse_dt(struct platform_device *pdev,
+> +                            struct bgpio_pdata *pdata,
+> +                            unsigned long *flags)
 > +{
-> +	struct device *dev = &pdev->dev;
-> +	int err;
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct resource *res;
+> +       const char *dir_reg_name;
+> +       int id = np ? of_alias_get_id(np, "gpio") : pdev->id;
 > +
-> +	pdata->base = -1;
-> +	/* If ngpio property is not specified, of_property_read_u32
-> +	 * will return -EINVAL. In this case the number of GPIOs is
-> +	 * automatically determined by the register width. Any
-> +	 * other error of of_property_read_u32 is due bad data and
-> +	 * needs to be dealt with.
-> +	 */
-> +	err = of_property_read_u32(dev->of_node, "ngpio", &pdata->ngpio);
-> +	if (err && err != -EINVAL)
-> +		return err;
+> +       if ((id < 0) || (id > 4))
+> +               return -ENODEV;
 > +
-> +	if (of_device_is_big_endian(dev->of_node))
-> +		*flags |= BGPIOF_BIG_ENDIAN_BYTE_ORDER;
+
+> +       /* PORTE is 3 lines only */
+> +       pdata->ngpio = (id == 4) ? 3 : /* determined by register width */ 0;
 > +
-> +	if (of_property_read_bool(dev->of_node, "unreadable-reg-set"))
-> +		*flags |= BGPIOF_UNREADABLE_REG_SET;
+> +       /* PORTD is inverted logic for direction register */
+> +       dir_reg_name = (id == 3) ? "dirin" : "dirout",
+
+Just a nit: possible to use switch case?
+
 > +
-> +	if (of_property_read_bool(dev->of_node, "unreadable-reg-dir"))
-> +		*flags |= BGPIOF_UNREADABLE_REG_DIR;
+> +       pdata->base = id * 8;
 > +
-> +	if (of_property_read_bool(dev->of_node, "big-endian-byte-order"))
-> +		*flags |= BGPIOF_BIG_ENDIAN;
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (!res)
+> +               return -EINVAL;
+> +       if (!res->name || strcmp("dat", res->name))
+> +               res->name = devm_kstrdup(&pdev->dev, "dat", GFP_KERNEL);
 > +
-> +	if (of_property_read_bool(dev->of_node, "read-output-reg-set"))
-> +		*flags |= BGPIOF_READ_OUTPUT_REG_SET;
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +       if (!res)
+> +               return -EINVAL;
+> +       if (!res->name || strcmp(dir_reg_name, res->name))
+> +               res->name = devm_kstrdup(&pdev->dev, dir_reg_name, GFP_KERNEL);
 > +
-> +	if (of_property_read_bool(dev->of_node, "no-output"))
-> +		*flags |= BGPIOF_NO_OUTPUT;
-> +	return 0;
+> +       return 0;
+> +}
+> +
+> +static int ge_dt_cb(struct platform_device *pdev,
+> +                   struct bgpio_pdata *pdata,
+> +                   unsigned long *flags)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +
+> +       pdata->label = devm_kstrdup(&pdev->dev, np->full_name, GFP_KERNEL);
+> +       if (!pdata->label)
+> +               return -ENOMEM;
+> +
+> +       return 0;
+> +}
+> +
+> +static int moxart_dt_cb(struct platform_device *pdev,
+> +                       struct bgpio_pdata *pdata,
+> +                       unsigned long *flags)
+> +{
+> +       pdata->base = 0;
+> +       pdata->label = "moxart-gpio";
+> +       return 0;
+> +}
+> +
+> +
+> +static int ts4800_dt_cb(struct platform_device *pdev,
+> +                       struct bgpio_pdata *pdata,
+> +                       unsigned long *flags)
+> +{
+> +       int err;
+> +
+> +       err = of_property_read_u32(pdev->dev.of_node, "ngpios", &pdata->ngpio);
+> +       if (err == -EINVAL) {
+> +               pdata->ngpio = 16;
+> +               err = 0;
+
+return 0; ? (Up to you)
+
+> +       }
+> +       return err;
+> +}
+> +
+> +struct compat_gpio_device_data {
+> +       unsigned int expected_resource_size;
+> +       unsigned int ngpio;
+> +       resource_size_t register_width;
+> +       unsigned long flags;
+> +       int (*call_back)(struct platform_device *pdev,
+> +                        struct bgpio_pdata *pdata,
+> +                        unsigned long *flags);
+> +       struct resource_replacement {
+> +               resource_size_t start_offset;
+> +               const char *name;
+> +       } resources[5];
+
+I would define magic number with a description what are those 5.
+
+> +};
+
+[...]
+
+> +static int compat_parse_dt(struct platform_device *pdev,
+> +                          struct bgpio_pdata *pdata,
+> +                          unsigned long *flags)
+> +{
+> +       const struct device_node *node = pdev->dev.of_node;
+> +       const struct compat_gpio_device_data *entry;
+> +       const struct of_device_id *of_id;
+> +       struct resource *res;
+> +       int err;
+> +
+> +       of_id = of_match_node(compat_gpio_devices, node);
+> +       if (!of_id)
+> +               return -ENODEV;
+> +
+> +       entry = of_id->data;
+> +       if (!entry || !entry->resources[0].name)
+> +               return -EINVAL;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (!res)
+> +               return -EINVAL;
+> +
+> +       if (!res->name || strcmp(entry->resources[0].name, res->name)) {
+> +               struct resource nres[ARRAY_SIZE(entry->resources)];
+> +               int i;
+
+unsigned int i; ?
+
+> +
+> +               if (resource_size(res) != entry->expected_resource_size)
+> +                       return -EINVAL;
+> +
+> +               for (i = 0; i < ARRAY_SIZE(entry->resources); i++) {
+> +                       if (!entry->resources[i].name)
+> +                               continue;
+> +
+> +                       nres[i].name = devm_kstrdup(&pdev->dev,
+> +                               entry->resources[i].name, GFP_KERNEL);
+> +                       nres[i].start = res->start +
+> +                               entry->resources[i].start_offset;
+> +                       nres[i].end = nres[i].start +
+> +                               entry->register_width - 1;
+> +                       nres[i].flags = IORESOURCE_MEM;
+> +               }
+> +
+> +               err = platform_device_add_resources(pdev, nres, i);
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+> +       pdata->base = -1;
+> +       pdata->ngpio = entry->ngpio;
+> +       *flags = entry->flags;
+> +
+> +       if (entry->call_back)
+> +               err = entry->call_back(pdev, pdata, flags);
+> +
+> +       return err;
 > +}
 
-Other than no-output, none of these are in the wd,mbl-gpio binding.
-
-Please remove them for now. We can add them as/when other users of this
-binding appear and begin to need them.
-
-Thanks,
-Mark.
+-- 
+With Best Regards,
+Andy Shevchenko
