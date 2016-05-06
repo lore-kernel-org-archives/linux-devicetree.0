@@ -1,56 +1,63 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC v2 13/13] ARM: dts: exynos: Fix LAN and HUB after bootloader
- initialization on Odroid U3
-Date: Fri, 06 May 2016 08:28:48 +0200
-Message-ID: <572C39A0.8030701@samsung.com>
-References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
- <1462451666-17945-14-git-send-email-k.kozlowski@samsung.com>
- <9dff13ae-5863-2b45-0e6a-00b345a19019@osg.samsung.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v9 03/22] powerpc/powernv: Move
+ pnv_pci_ioda_setup_opal_tce_kill() around
+Date: Fri, 6 May 2016 16:36:11 +1000
+Message-ID: <fa00763e-c425-cd49-b606-70ad0ce61fce@ozlabs.ru>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1462281773-26438-4-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <9dff13ae-5863-2b45-0e6a-00b345a19019@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>
-Cc: tjakobi@math.uni-bielefeld.de, m.szyprowski@samsung.com, hverkuil@xs4all.nl, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1462281773-26438-4-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, robherring2@gmail.com, dja@axtens.net, alistair@popple.id.au
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2016 10:16 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 05/05/2016 08:34 AM, Krzysztof Kozlowski wrote:
->> On Odroid U3 (Exynos4412-based) board if USB was initialized by
->> bootloader (in U-Boot "usb start" before tftpboot), the HUB (usb3503)
->> and LAN (smsc95xx) after after successful probing were not visible in the
->> system ("lsusb").
->>
->> In such case the devices had to be fully reset before configuring.
->> Reset by GPIO (called RESET_N pin) and by RESET field in STCD register
->> in usb3503 HUB are not sufficient. Instead full reset has to be done by
->> disabling and enabling regulator.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
-> 
-> [snip]
-> 
->>  
->> +	lan_pwrseq: pwrseq2 {
->> +		compatible = "mmc-pwrseq-simple";
-> 
-> It feels strange to have a "mmc-pwrseq-simple" compatible for a USB power
-> sequence provider. As I mentioned in the other patch, I think there should
-> either be a DT binding for the USB pwrseq-simple with a "usb-pwrseq-simple"
-> compatible that binds to the same pwrseq-simple driver or maybe having a
-> generic DT binding for any device with a new "pwrseq-simple" compatible.
-> 
-> Patch looks good to me though, so after having a DT binding and changing
-> the compatible string:
-> 
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+On 05/03/2016 11:22 PM, Gavin Shan wrote:
+> pnv_pci_ioda_setup_opal_tce_kill() called by pnv_ioda_setup_dma()
+> to remap the TCE kill regiter. What's done in pnv_ioda_setup_dma()
+> will be covered in pcibios_setup_bridge() which is invoked on each
+> PCI bridge. It means we will possibly remap the TCE kill register
+> for multiple times and it's unnecessary.
+>
+> This moves pnv_pci_ioda_setup_opal_tce_kill() to where the PHB is
+> initialized (pnv_pci_init_ioda_phb()) to avoid above issue.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 
-Probably this will change after Rob's feedback. :)
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-Best regards,
-Krzysztof
+> ---
+>  arch/powerpc/platforms/powernv/pci-ioda.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 5ee8a57..cbd4c0b 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -2599,8 +2599,6 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>  	pr_info("PCI: Domain %04x has %d available 32-bit DMA segments\n",
+>  		hose->global_number, phb->ioda.dma32_count);
+>
+> -	pnv_pci_ioda_setup_opal_tce_kill(phb);
+> -
+>  	/* Walk our PE list and configure their DMA segments */
+>  	list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+>  		weight = pnv_pci_ioda_pe_dma_weight(pe);
+> @@ -3396,6 +3394,9 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>  	if (phb->regs == NULL)
+>  		pr_err("  Failed to map registers !\n");
+>
+> +	/* Initialize TCE kill register */
+> +	pnv_pci_ioda_setup_opal_tce_kill(phb);
+> +
+>  	/* Initialize more IODA stuff */
+>  	phb->ioda.total_pe_num = 1;
+>  	prop32 = of_get_property(np, "ibm,opal-num-pes", NULL);
+>
+
+
+-- 
+Alexey
