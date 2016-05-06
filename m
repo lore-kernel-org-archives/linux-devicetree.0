@@ -1,187 +1,95 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] leds: triggers: Allow to switch the trigger to
- "panic" on a kernel panic
-Date: Fri, 06 May 2016 11:03:42 +0200
-Message-ID: <572C5DEE.3070307@samsung.com>
-References: <1461881020-13964-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <1461881020-13964-2-git-send-email-ezequiel@vanguardiasur.com.ar>
- <57230B26.9010300@samsung.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 11/14] usb: otg: use dev_dbg() instead of VDBG()
+Date: Fri, 6 May 2016 17:04:25 +0800
+Message-ID: <20160506090425.GD32359@shlinux2.ap.freescale.net>
+References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
+ <1462191537-10314-12-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <57230B26.9010300-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462191537-10314-12-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/29/2016 09:20 AM, Jacek Anaszewski wrote:
-> Hi Ezequiel,
->
-> Thanks for the update. It's indeed reasonable to have all the
-> switching infrastructure in ledtrig-panic.c.
->
-> I've noticed two minor issues below.
+On Mon, May 02, 2016 at 03:18:54PM +0300, Roger Quadros wrote:
+> Now that we have a device reference in struct usb_otg
+> let's use dev_dbg() for debug messages.
+> 
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/usb/common/usb-otg-fsm.c | 19 +++++++------------
+>  1 file changed, 7 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/usb/common/usb-otg-fsm.c b/drivers/usb/common/usb-otg-fsm.c
+> index 2986b66..e6e58c2 100644
+> --- a/drivers/usb/common/usb-otg-fsm.c
+> +++ b/drivers/usb/common/usb-otg-fsm.c
+> @@ -30,13 +30,6 @@
+>  #include <linux/usb/otg.h>
+>  #include <linux/usb/otg-fsm.h>
+>  
+> -#ifdef VERBOSE
+> -#define VDBG(fmt, args...) pr_debug("[%s]  " fmt , \
+> -				 __func__, ## args)
+> -#else
+> -#define VDBG(stuff...)	do {} while (0)
+> -#endif
+> -
+>  /* Change USB protocol when there is a protocol change */
+>  static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
+>  {
+> @@ -44,8 +37,9 @@ static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
+>  	int ret = 0;
+>  
+>  	if (fsm->protocol != protocol) {
+> -		VDBG("Changing role fsm->protocol= %d; new protocol= %d\n",
+> -			fsm->protocol, protocol);
+> +		dev_vdbg(otg->dev,
+> +			 "Changing role fsm->protocol= %d; new protocol= %d\n",
+> +			 fsm->protocol, protocol);
+>  		/* stop old protocol */
+>  		if (fsm->protocol == PROTO_HOST)
+>  			ret = otg_start_host(otg, 0);
+> @@ -226,7 +220,7 @@ static int otg_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
+>  
+>  	if (otg->state == new_state)
+>  		return 0;
+> -	VDBG("Set state: %s\n", usb_otg_state_string(new_state));
+> +	dev_vdbg(otg->dev, "Set state: %s\n", usb_otg_state_string(new_state));
+>  	otg_leave_state(fsm, otg->state);
+>  	switch (new_state) {
+>  	case OTG_STATE_B_IDLE:
+> @@ -358,7 +352,7 @@ int otg_statemachine(struct usb_otg *otg)
+>  
+>  	switch (state) {
+>  	case OTG_STATE_UNDEFINED:
+> -		VDBG("fsm->id = %d\n", fsm->id);
+> +		dev_vdbg(otg->dev, "fsm->id = %d\n", fsm->id);
+>  		if (fsm->id)
+>  			otg_set_state(fsm, OTG_STATE_B_IDLE);
+>  		else
+> @@ -466,7 +460,8 @@ int otg_statemachine(struct usb_otg *otg)
+>  	}
+>  	mutex_unlock(&fsm->lock);
+>  
+> -	VDBG("quit statemachine, changed = %d\n", fsm->state_changed);
+> +	dev_vdbg(otg->dev, "quit statemachine, changed = %d\n",
+> +		 fsm->state_changed);
+>  	return fsm->state_changed;
+>  }
+>  EXPORT_SYMBOL_GPL(otg_statemachine);
+> -- 
 
-Since the merge window is imminent, I've addressed those issues by
-myself and applied the patch set to the for-next branch
-of linux-leds.git.
+Could you squash patch 2 with this one?
 
-Thanks,
-Jacek Anaszewski
+-- 
 
-> On 04/29/2016 12:03 AM, Ezequiel Garcia wrote:
->> This commit adds a new led_cdev flag LED_PANIC_INDICATOR, which
->> allows to mark a specific LED to be switched to the "panic"
->> trigger, on a kernel panic.
->>
->> This is useful to allow the user to assign a regular trigger
->> to a given LED, and still blink that LED on a kernel panic.
->>
->> Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->> ---
->>   drivers/leds/led-triggers.c          |  2 +-
->>   drivers/leds/leds.h                  |  1 +
->>   drivers/leds/trigger/Kconfig         |  3 +++
->>   drivers/leds/trigger/ledtrig-panic.c | 47
->> ++++++++++++++++++++++++++++++++++++
->>   include/linux/leds.h                 |  1 +
->>   5 files changed, 53 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
->> index 2181581795d3..55fa65e1ae03 100644
->> --- a/drivers/leds/led-triggers.c
->> +++ b/drivers/leds/led-triggers.c
->> @@ -26,7 +26,7 @@
->>    * Nests outside led_cdev->trigger_lock
->>    */
->>   static DECLARE_RWSEM(triggers_list_lock);
->> -static LIST_HEAD(trigger_list);
->> +LIST_HEAD(trigger_list);
->>
->>    /* Used by LED Class */
->>
->> diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
->> index db3f20da7221..7d38e6b9a740 100644
->> --- a/drivers/leds/leds.h
->> +++ b/drivers/leds/leds.h
->> @@ -30,5 +30,6 @@ void led_set_brightness_nosleep(struct led_classdev
->> *led_cdev,
->>
->>   extern struct rw_semaphore leds_list_lock;
->>   extern struct list_head leds_list;
->> +extern struct list_head trigger_list;
->>
->>   #endif    /* __LEDS_H_INCLUDED */
->> diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
->> index beac8c31c51b..4e4521c9072a 100644
->> --- a/drivers/leds/trigger/Kconfig
->> +++ b/drivers/leds/trigger/Kconfig
->> @@ -121,6 +121,9 @@ config LEDS_TRIGGER_PANIC
->>       depends on LEDS_TRIGGERS
->>       help
->>         This allows LEDs to be configured to blink on a kernel panic.
->> +      Enabling this option will allow to mark certain LEDs as
->> 'panic-indicators',
->
-> s/"panic-indicators"/panic indicators/
->
-> I understand that you referred here to the DT property name, but this
-> is not obvious at first glance, and it is an implementation detail.
->
->> +      allowing to blink them on a kernel panic, even if they are set to
->> +      a different trigger.
->>         If unsure, say Y.
->>
->>   endif # LEDS_TRIGGERS
->> diff --git a/drivers/leds/trigger/ b/drivers/leds/trigger/ledtrig-panic.c
->> index 627b350c5ec3..3e447bd2064a 100644
->> --- a/drivers/leds/trigger/ledtrig-panic.c
->> +++ b/drivers/leds/trigger/ledtrig-panic.c
->> @@ -11,10 +11,54 @@
->>
->>   #include <linux/kernel.h>
->>   #include <linux/init.h>
->> +#include <linux/notifier.h>
->>   #include <linux/leds.h>
->> +#include "../leds.h"
->>
->>   static struct led_trigger *trigger;
->>
->> +/*
->> + * This is a called in a special context by the atomic panic
->
-> s/is a/is/
->
->> + * notifier. This means the trigger can be changed without
->> + * worrying about locking.
->> + */
->> +static void led_trigger_set_panic(struct led_classdev *led_cdev)
->> +{
->> +    struct led_trigger *trig;
->> +
->> +    list_for_each_entry(trig, &trigger_list, next_trig) {
->> +        if (strcmp("panic", trig->name))
->> +            continue;
->> +        if (led_cdev->trigger)
->> +            list_del(&led_cdev->trig_list);
->> +        list_add_tail(&led_cdev->trig_list, &trig->led_cdevs);
->> +
->> +        /* Avoid the delayed blink path */
->> +        led_cdev->blink_delay_on = 0;
->> +        led_cdev->blink_delay_off = 0;
->> +
->> +        led_cdev->trigger = trig;
->> +        if (trig->activate)
->> +            trig->activate(led_cdev);
->> +        break;
->> +    }
->> +}
->> +
->> +static int led_trigger_panic_notifier(struct notifier_block *nb,
->> +                      unsigned long code, void *unused)
->> +{
->> +    struct led_classdev *led_cdev;
->> +
->> +    list_for_each_entry(led_cdev, &leds_list, node)
->> +        if (led_cdev->flags & LED_PANIC_INDICATOR)
->> +            led_trigger_set_panic(led_cdev);
->> +    return NOTIFY_DONE;
->> +}
->> +
->> +static struct notifier_block led_trigger_panic_nb = {
->> +    .notifier_call = led_trigger_panic_notifier,
->> +};
->> +
->>   static long led_panic_blink(int state)
->>   {
->>       led_trigger_event(trigger, state ? LED_FULL : LED_OFF);
->> @@ -23,6 +67,9 @@ static long led_panic_blink(int state)
->>
->>   static int __init ledtrig_panic_init(void)
->>   {
->> +    atomic_notifier_chain_register(&panic_notifier_list,
->> +                       &led_trigger_panic_nb);
->> +
->>       led_trigger_register_simple("panic", &trigger);
->>       panic_blink = led_panic_blink;
->>       return 0;
->> diff --git a/include/linux/leds.h b/include/linux/leds.h
->> index 19eb10278bea..7e9fb00e15e8 100644
->> --- a/include/linux/leds.h
->> +++ b/include/linux/leds.h
->> @@ -50,6 +50,7 @@ struct led_classdev {
->>   #define LED_SYSFS_DISABLE    (1 << 22)
->>   #define LED_DEV_CAP_FLASH    (1 << 23)
->>   #define LED_HW_PLUGGABLE    (1 << 24)
->> +#define LED_PANIC_INDICATOR    (1 << 25)
->>
->>       /* Set LED brightness level
->>        * Must not sleep. Use brightness_set_blocking for drivers
->>
->
+Best Regards,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
