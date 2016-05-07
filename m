@@ -1,30 +1,50 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v7 7/9] clk: mediatek: Enable critical clocks for MT2701
-Date: Fri, 6 May 2016 16:12:29 -0700
-Message-ID: <20160506231229.GJ3492@codeaurora.org>
-References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
- <1460621514-65191-8-git-send-email-jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v3 4/4] mfd: arizona: Add device tree binding
+ documentation for new clock driver
+Date: Fri, 6 May 2016 17:47:40 -0700
+Message-ID: <572D3B2C.8000304@codeaurora.org>
+References: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1452252582-20834-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1460621514-65191-8-git-send-email-jamesjj.liao@mediatek.com>
+In-Reply-To: <1452252582-20834-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, mturquette@baylibre.com, cw00.choi@samsung.com, lee.jones@linaro.org
+Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/14, James Liao wrote:
-> Some system clocks should be turned on by default on MT2701.
-> This patch enable these clocks when related clocks have
-> been registered.
-> 
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+On 01/08/2016 03:29 AM, Charles Keepax wrote:
+> Specify the device tree binding for the input clocks to Arizona devices.
+>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
+>
+> No changes since v2.
+>
+> Thanks,
+> Charles
+>
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index 18be0cb..39f76f8 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -45,6 +45,13 @@ Optional properties:
+>  
+>    - wlf,reset : GPIO specifier for the GPIO controlling /RESET
+>  
+> +  - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
+> +  - clock-names: Should contains two strings:
 
-critical clks got merged now (sorry I'm slowly getting back to
-looking at patches). Please use that flag.
+Can't this be clock-output-names instead? That's standard and already
+accepted per clock-bindings.txt
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
