@@ -1,131 +1,114 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH RFC 1/5] net: phy: sun8i-h3-ephy: Add bindings for
- Allwinner H3 Ethernet PHY
-Date: Sat, 7 May 2016 10:14:10 +0200
-Message-ID: <793b5915-1f14-b00f-1c3d-101e800eac3b@redhat.com>
-References: <1459786954-12649-1-git-send-email-wens@csie.org>
- <1459786954-12649-2-git-send-email-wens@csie.org>
- <570BF9B0.2090602@gmail.com>
- <CAGb2v662vHfYox2Ff9Mm=sXq4UHg92SQe2ihnKY9Aa4X9yss4Q@mail.gmail.com>
- <CAGb2v65qPMieWU-1CRJYL_zZ3JpUm83+AN477jGdrWYnjjJ66g@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFC PATCH 05/12] ARM: dts: exynos: Configure Exynos5410 pinctrl
+ for eMMC and SD card
+Date: Sat, 7 May 2016 11:49:14 +0200
+Message-ID: <20160507094914.GA3731@kozik-lap>
+References: <1462297949-13824-1-git-send-email-krzk@kernel.org>
+ <1462297949-13824-6-git-send-email-krzk@kernel.org>
+ <CAGOxZ52sH9vcN0MXxhX1ee7wr9Ao6Na=5X1bXxQo+6uvvWCbJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v65qPMieWU-1CRJYL_zZ3JpUm83+AN477jGdrWYnjjJ66g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, netdev <netdev@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGOxZ52sH9vcN0MXxhX1ee7wr9Ao6Na=5X1bXxQo+6uvvWCbJA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kevin Hilman <khilman@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Inki Dae <inki.dae@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, May 07, 2016 at 10:23:52AM +0530, Alim Akhtar wrote:
+> Hi Krzysztof,
+> 
+> On Tue, May 3, 2016 at 11:22 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > Configure the pinctrl for MMC0 (eMMC) and MMC2 (microSD card).
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > I am not sure about sd0_rclk. Also I wonder whether this should go to
+> > board DTS...
+> > ---
+> >  arch/arm/boot/dts/exynos5410-pinctrl.dtsi | 87 +++++++++++++++++++++++++++++++
+> >  1 file changed, 87 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+> > index f9aa6bb55464..dc12a79b8b32 100644
+> > --- a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+> > @@ -277,6 +277,93 @@
+> >                 interrupt-controller;
+> >                 #interrupt-cells = <2>;
+> >         };
+> > +
+> > +       sd0_clk: sd0-clk {
+> > +               samsung,pins = "gpc0-0";
+> > +               samsung,pin-function = <2>;
+> > +               samsung,pin-pud = <0>;
+> > +               samsung,pin-drv = <3>;
+> > +       };
+> > +
+> > +       sd0_cmd: sd0-cmd {
+> > +               samsung,pins = "gpc0-1";
+> > +               samsung,pin-function = <2>;
+> > +               samsung,pin-pud = <0>;
+> > +               samsung,pin-drv = <3>;
+> > +       };
+> > +
+> > +       sd0_cd: sd0-cd {
+> > +               samsung,pins = "gpc0-2";
+> > +               samsung,pin-function = <2>;
+> > +               samsung,pin-pud = <3>;
+> > +               samsung,pin-drv = <3>;
+> > +       };
+> > +
+> > +       sd0_bus1: sd0-bus-width1 {
+> > +               samsung,pins = "gpc0-3";
+> > +               samsung,pin-function = <2>;
+> > +               samsung,pin-pud = <3>;
+> > +               samsung,pin-drv = <3>;
+> > +       };
+> > +
+> > +       sd0_bus4: sd0-bus-width4 {
+> > +               samsung,pins = "gpc0-4", "gpc0-5", "gpc0-6";
+> > +               samsung,pin-function = <2>;
+> > +               samsung,pin-pud = <3>;
+> > +               samsung,pin-drv = <3>;
+> > +       };
+> > +
+> > +       sd0_bus8: sd0-bus-width8 {
+> > +               samsung,pins = "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3";
+> > +               samsung,pin-function = <2>;
+> > +               samsung,pin-pud = <3>;
+> > +               samsung,pin-drv = <3>;
+> > +       };
+> > +
+> > +       /* TODO: What's up with with rclk? On Odroid XU this is missing... */
+> > +       /*
+> > +       sd0_rclk: sd0-rclk {
+> > +               samsung,pins = "gpc0-7";
+> > +               samsung,pin-function = <2>;
+> > +               samsung,pin-pud = <1>;
+> > +               samsung,pin-drv = <3>;
+> > +       };
+> > +       */
+> > +
+> IF Odroid XU is populated with an eMMC5.0+ device && RCLK (Data
+> Strobe) is connected from AP to emmc device, THEN you should configure
+> this dedicated PIN.
+> Otherwise you can remove this TODO and uncomment the node and put a
+> comment saying that this feature (emmc5.0+) is not supported on this
+> SoC.
 
-On 07-05-16 07:30, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Tue, Apr 12, 2016 at 9:38 AM, Chen-Yu Tsai <wens@csie.org> wrote:
->> On Tue, Apr 12, 2016 at 3:23 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>> On 04/04/16 09:22, Chen-Yu Tsai wrote:
->>>> The Allwinner H3 SoC incorporates an Ethernet PHY. This is enabled and
->>>> configured through a memory mapped hardware register.
->>>>
->>>> This same register also configures the MAC interface mode and TX clock
->>>> source. Also covered by the register, but not supported in these bindings,
->>>> are TX/RX clock delay chains and inverters, and an RMII module.
->>>>
->>>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->>>> ---
->>>>  .../bindings/net/allwinner,sun8i-h3-ephy.txt       | 44 ++++++++++++++++++++++
->>>>  1 file changed, 44 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt
->>>> new file mode 100644
->>>> index 000000000000..146f227e6d88
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-h3-ephy.txt
->>>> @@ -0,0 +1,44 @@
->>>> +* Allwinner H3 E(thernet) PHY
->>>> +
->>>> +The Allwinner H3 integrates an MII ethernet PHY. As with external PHYs,
->>>> +before it can be configured over the MDIO bus and used, certain hardware
->>>> +features must be configured, such as the PHY address and LED polarity.
->>>
->>> Is the internal PHY address really configurable? Not that there is
->>> anything wrong with it, this is good.
->>
->> It is. Things that are configured or provided to a discrete PHY are routed
->> to registers in the SoC, things such as PHY address, clocks, resets.
->>
->>>> +The PHY must also be powered on and brought out of reset.
->>>> +
->>>> +This is accomplished with regulators and pull-up/downs for external PHYs.
->>>> +For this internal PHY, a hardware register is programmed.
->>>> +
->>>> +The same hardware register also contains clock and interface controls
->>>> +for the MAC. This is also present in earlier SoCs, and is covered by
->>>> +"allwinner,sun7i-a20-gmac-clk". The controls in the H3 are slightly
->>>> +different due to the inclusion of what appears to be an RMII-MII
->>>> +bridge.
->>>> +
->>>> +Required properties:
->>>> +- compatible: should be "allwinner,sun8i-h3-ephy"
->>>> +- reg: address and length of the register set for the device
->>>> +- clocks: A phandle to the reference clock for this device
->>>> +- resets: A phandle to the reset control for this device
->>>> +
->>>> +Ethernet PHY related properties:
->>>> +- allwinner,ephy-addr: the MDIO bus address the PHY should respond to.
->>>> +                    If this is not set, the external PHY is used, and
->>>> +                    everything else in this section is ignored.
->>>
->>> So we are going to put the same value here, and in the actual Ethernet
->>> PHY device tree node that should be hanging off the EMAC/MDIO bus
->>> controller, this is confusing and error prone.
->>
->> Yes, that would be an issue when writing the DTS.
->>>
->>>> +- allwinner,leds-active-low: LEDs are active low. Without this, LEDs are
->>>> +                          active high.
->>>> +
->>>> +Ethernet MAC clock related properties:
->>>> +- #clock-cells: should be 0
->>>> +- clock-output-names: "mac_tx"
->>>> +
->>>> +Example:
->>>> +
->>>> +ethernet-phy@01c00030 {
->>>> +     compatible = "allwinner,sun8i-h3-ephy";
->>>> +     reg = <0x01c00030 0x4>;
->>>
->>> Looking at this register space this looks more like an internal PHY SHIM
->>> that is needed to be configured before the internal PHY can be access,
->>> not a proper Ethernet PHY per-se, see replies in aptch 2.
->>>
->>> Should not this block be a second cell associated with the Ethernet MAC
->>> block? One or the other are not going to be very useful without
->>> knowledge of each other.
->>
->> True. However the lower half of the same register also controls the
->> MAC interface mode and TX clock source and delays. This we had a clock
->> driver that was used in conjuction with stmmac on earlier SoCs. I was
->> hoping to keep that model with the newer EMAC. At the time it was
->> argued that what seemed like a clock should be handled by a clock
->> driver, instead of just a "syscon". If this is reaching too far to
->> handle this new use case, I will happily just provide patches to merge
->> this into the MAC.
->
-> Maxime, Hans, any thoughts?
->
-> It seems like it'd be easier to just fold this into the EMAC driver.
-> The register is not part of the clock controller in these new SoCs,
-> so it's nicer than what we had in A20/A31. It's also not just a clock
-> control, but a bunch of various controls.
+I double checked and:
+1. Schematics say this pin is not connected,
+2. Hardkernel forum confirms that altough XU could support eMMC5.0 (SoC
+   supports it) but it was not tested and the pin (RCLK) should be wired
+   by consumer.
 
-I don't know the emac stuff well enough to really have an opinion,
-but with that said I've no objections against just folding this into
-the driver. If you believe that is best, go for it.
+With your help it seems solved. I'll remove the TODO and add a comment
+about not supported emmc5.
 
-Regards,
 
-Hans
+Best regards,
+Krzysztof
