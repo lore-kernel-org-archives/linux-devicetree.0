@@ -1,114 +1,67 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC PATCH 05/12] ARM: dts: exynos: Configure Exynos5410 pinctrl
- for eMMC and SD card
-Date: Sat, 7 May 2016 11:49:14 +0200
-Message-ID: <20160507094914.GA3731@kozik-lap>
-References: <1462297949-13824-1-git-send-email-krzk@kernel.org>
- <1462297949-13824-6-git-send-email-krzk@kernel.org>
- <CAGOxZ52sH9vcN0MXxhX1ee7wr9Ao6Na=5X1bXxQo+6uvvWCbJA@mail.gmail.com>
+From: Jesper Nilsson <jesper.nilsson@axis.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: add DT binding for Axis ARTPEC-6
+ PCIe controller
+Date: Sat, 7 May 2016 13:45:31 +0200
+Message-ID: <20160507114531.GI24250@axis.com>
+References: <1462362857-27481-1-git-send-email-niklass@axis.com>
+ <20160505220331.GA9225@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGOxZ52sH9vcN0MXxhX1ee7wr9Ao6Na=5X1bXxQo+6uvvWCbJA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kevin Hilman <khilman@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Inki Dae <inki.dae@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20160505220331.GA9225@rob-hp-laptop>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Niklas Cassel <niklass@axis.com>, jespern@axis.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 07, 2016 at 10:23:52AM +0530, Alim Akhtar wrote:
-> Hi Krzysztof,
+On Thu, May 05, 2016 at 05:03:31PM -0500, Rob Herring wrote:
+> On Wed, May 04, 2016 at 01:54:17PM +0200, Niklas Cassel wrote:
+> > From: Niklas Cassel <niklas.cassel@axis.com>
+> > 
+> > This commit adds the Device Tree binding documentation that allows to
+> > describe the PCIe controller found in the Axis ARTPEC-6 SoC.
+> > 
+> > Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+> > ---
+> >  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  | 45 ++++++++++++++++++++++
+> >  1 file changed, 45 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> > new file mode 100644
+> > index 0000000..fdac2a2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> > @@ -0,0 +1,45 @@
+> > +* Axis ARTPEC-6 PCIe interface
+> > +
+> > +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> > +and thus inherits all the common properties defined in designware-pcie.txt.
+> > +
+> > +Required properties:
+> > +- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
+> > +- reg: base addresses and lengths of the pcie controller (DBI),
+> > +	the phy controller, and configuration address space.
+> > +- reg-names: Must include the following entries:
+> > +	- "dbi"
+> > +	- "phy"
+> > +	- "config"
+> > +- interrupts: A list of interrupt outputs of the controller. Must contain an
+> > +  entry for each entry in the interrupt-names property.
+> > +- interrupt-names: Must include the following entries:
+> > +	- "msi": The interrupt that is asserted when an MSI is received
+> > +- syscon: Should contain a link to the syscon device node.
 > 
-> On Tue, May 3, 2016 at 11:22 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > Configure the pinctrl for MMC0 (eMMC) and MMC2 (microSD card).
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > I am not sure about sd0_rclk. Also I wonder whether this should go to
-> > board DTS...
-> > ---
-> >  arch/arm/boot/dts/exynos5410-pinctrl.dtsi | 87 +++++++++++++++++++++++++++++++
-> >  1 file changed, 87 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-> > index f9aa6bb55464..dc12a79b8b32 100644
-> > --- a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
-> > @@ -277,6 +277,93 @@
-> >                 interrupt-controller;
-> >                 #interrupt-cells = <2>;
-> >         };
-> > +
-> > +       sd0_clk: sd0-clk {
-> > +               samsung,pins = "gpc0-0";
-> > +               samsung,pin-function = <2>;
-> > +               samsung,pin-pud = <0>;
-> > +               samsung,pin-drv = <3>;
-> > +       };
-> > +
-> > +       sd0_cmd: sd0-cmd {
-> > +               samsung,pins = "gpc0-1";
-> > +               samsung,pin-function = <2>;
-> > +               samsung,pin-pud = <0>;
-> > +               samsung,pin-drv = <3>;
-> > +       };
-> > +
-> > +       sd0_cd: sd0-cd {
-> > +               samsung,pins = "gpc0-2";
-> > +               samsung,pin-function = <2>;
-> > +               samsung,pin-pud = <3>;
-> > +               samsung,pin-drv = <3>;
-> > +       };
-> > +
-> > +       sd0_bus1: sd0-bus-width1 {
-> > +               samsung,pins = "gpc0-3";
-> > +               samsung,pin-function = <2>;
-> > +               samsung,pin-pud = <3>;
-> > +               samsung,pin-drv = <3>;
-> > +       };
-> > +
-> > +       sd0_bus4: sd0-bus-width4 {
-> > +               samsung,pins = "gpc0-4", "gpc0-5", "gpc0-6";
-> > +               samsung,pin-function = <2>;
-> > +               samsung,pin-pud = <3>;
-> > +               samsung,pin-drv = <3>;
-> > +       };
-> > +
-> > +       sd0_bus8: sd0-bus-width8 {
-> > +               samsung,pins = "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3";
-> > +               samsung,pin-function = <2>;
-> > +               samsung,pin-pud = <3>;
-> > +               samsung,pin-drv = <3>;
-> > +       };
-> > +
-> > +       /* TODO: What's up with with rclk? On Odroid XU this is missing... */
-> > +       /*
-> > +       sd0_rclk: sd0-rclk {
-> > +               samsung,pins = "gpc0-7";
-> > +               samsung,pin-function = <2>;
-> > +               samsung,pin-pud = <1>;
-> > +               samsung,pin-drv = <3>;
-> > +       };
-> > +       */
-> > +
-> IF Odroid XU is populated with an eMMC5.0+ device && RCLK (Data
-> Strobe) is connected from AP to emmc device, THEN you should configure
-> this dedicated PIN.
-> Otherwise you can remove this TODO and uncomment the node and put a
-> comment saying that this feature (emmc5.0+) is not supported on this
-> SoC.
+> What is the syscon for? Perhaps a name that reflects the purpose.
 
-I double checked and:
-1. Schematics say this pin is not connected,
-2. Hardkernel forum confirms that altough XU could support eMMC5.0 (SoC
-   supports it) but it was not tested and the pin (RCLK) should be wired
-   by consumer.
+It's the SoC System Controller, and holds some chip-specific registers
+for the Synopsys IP control, clocks and some termination variables spring
+to mind. It was named sysctrl earlier, although that's not very much more
+descriptive.
 
-With your help it seems solved. I'll remove the TODO and add a comment
-about not supported emmc5.
+> Rob
 
-
-Best regards,
-Krzysztof
+/^JN - Jesper Nilsson
+-- 
+               Jesper Nilsson -- jesper.nilsson@axis.com
