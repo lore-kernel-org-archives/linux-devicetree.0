@@ -1,67 +1,76 @@
-From: Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: add DT binding for Axis ARTPEC-6
- PCIe controller
-Date: Sat, 7 May 2016 13:45:31 +0200
-Message-ID: <20160507114531.GI24250@axis.com>
-References: <1462362857-27481-1-git-send-email-niklass@axis.com>
- <20160505220331.GA9225@rob-hp-laptop>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
+ Tegra210 AGIC
+Date: Sat, 7 May 2016 16:10:54 +0200
+Message-ID: <CAMuHMdX+egbNPP4QQ2R28GbyVkg9qBrwYfUy8EE0PdB6od+LBg@mail.gmail.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+	<1461150237-15580-14-git-send-email-jonathanh@nvidia.com>
+	<20160422100052.GA10606@leverpostej>
+	<571A0739.3090502@nvidia.com>
+	<20160422112239.GF10606@leverpostej>
+	<5720DC1D.1080802@nvidia.com>
+	<20160427173810.GC7359@leverpostej>
+	<5721C597.1010105@nvidia.com>
+	<20160428095525.GB21145@leverpostej>
+	<572C56A6.7020408@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160505220331.GA9225@rob-hp-laptop>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Niklas Cassel <niklass@axis.com>, jespern@axis.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <572C56A6.7020408-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 05, 2016 at 05:03:31PM -0500, Rob Herring wrote:
-> On Wed, May 04, 2016 at 01:54:17PM +0200, Niklas Cassel wrote:
-> > From: Niklas Cassel <niklas.cassel@axis.com>
-> > 
-> > This commit adds the Device Tree binding documentation that allows to
-> > describe the PCIe controller found in the Axis ARTPEC-6 SoC.
-> > 
-> > Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-> > ---
-> >  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  | 45 ++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> > new file mode 100644
-> > index 0000000..fdac2a2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> > @@ -0,0 +1,45 @@
-> > +* Axis ARTPEC-6 PCIe interface
-> > +
-> > +This PCIe host controller is based on the Synopsis Designware PCIe IP
-> > +and thus inherits all the common properties defined in designware-pcie.txt.
-> > +
-> > +Required properties:
-> > +- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
-> > +- reg: base addresses and lengths of the pcie controller (DBI),
-> > +	the phy controller, and configuration address space.
-> > +- reg-names: Must include the following entries:
-> > +	- "dbi"
-> > +	- "phy"
-> > +	- "config"
-> > +- interrupts: A list of interrupt outputs of the controller. Must contain an
-> > +  entry for each entry in the interrupt-names property.
-> > +- interrupt-names: Must include the following entries:
-> > +	- "msi": The interrupt that is asserted when an MSI is received
-> > +- syscon: Should contain a link to the syscon device node.
-> 
-> What is the syscon for? Perhaps a name that reflects the purpose.
+Hi Jon,
 
-It's the SoC System Controller, and holds some chip-specific registers
-for the Synopsys IP control, clocks and some termination variables spring
-to mind. It was named sysctrl earlier, although that's not very much more
-descriptive.
+On Fri, May 6, 2016 at 10:32 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> The "nvidia,tegra210-agic" string can be taken as describing any
+>> Tegra-210 specific integration quirks, though I agree that's also not
+>> fantastic for extending PM support beyond Tegra 210 and variants
+>> thereof.
+>>
+>> So maybe the best approach is bailing out in the presence of clocks
+>> and/or power domains after all, on the assumption that nothing today has
+>> those properties, though I fear we may have problems with that later
+>> down the line if/when people describe those for the root GIC to describe
+>> those must be hogged, even if not explicitly managed.
+>
+> On further testing, by bailing out in the presence of clocks and/or
+> power-domains, the problem I now see is that although the primary gic-400
+> has been registered, we still try to probe it again later as it matches
+> the platform driver. One way to avoid this would be ...
+>
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index e7bfc175b8e1..631da7ad0dbf 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -556,6 +556,8 @@ void __init of_irq_init(const struct of_device_id *matches)
+>                          * its children can get processed in a subsequent pass.
+>                          */
+>                         list_add_tail(&desc->list, &intc_parent_list);
+> +
+> +                       of_node_set_flag(desc->dev, OF_POPULATED);
+>                 }
 
-> Rob
+That sounds like the right thing to do to me...
 
-/^JN - Jesper Nilsson
--- 
-               Jesper Nilsson -- jesper.nilsson@axis.com
+> If this is not appropriate then I guess I will just need to use
+> "tegra210-agic" for the compatibility flag.
+
+As I want this for plain gic-400, I'd be unhappy ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
