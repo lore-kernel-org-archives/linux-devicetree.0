@@ -1,82 +1,71 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [PATCH 5/7] ARM: OMAP: dmtimer: Do not call PM runtime functions when
- not needed.
-Date: Sat,  7 May 2016 18:21:46 +0300
-Message-ID: <1462634508-24961-6-git-send-email-ivo.g.dimitrov.75@gmail.com>
-References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
+ Tegra210 AGIC
+Date: Sun, 8 May 2016 13:25:14 +0100
+Message-ID: <572F302A.6010506@nvidia.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+ <1461150237-15580-14-git-send-email-jonathanh@nvidia.com>
+ <20160422100052.GA10606@leverpostej> <571A0739.3090502@nvidia.com>
+ <20160422112239.GF10606@leverpostej> <5720DC1D.1080802@nvidia.com>
+ <20160427173810.GC7359@leverpostej> <5721C597.1010105@nvidia.com>
+ <20160428095525.GB21145@leverpostej> <572C56A6.7020408@nvidia.com>
+ <CAMuHMdX+egbNPP4QQ2R28GbyVkg9qBrwYfUy8EE0PdB6od+LBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com
-Cc: devicetree@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdX+egbNPP4QQ2R28GbyVkg9qBrwYfUy8EE0PdB6od+LBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-once omap_dm_timer_start() is called, which calls omap_dm_timer_enable()
-and thus pm_runtime_get_sync(), it doesn't make sense to call PM runtime
-functions again before omap_dm_timer_stop is called(). Otherwise PM runtime
-functions called in omap_dm_timer_enable/disable lead to long and unneeded
-delays.
+Hi Geert,
 
-Fix that by implementing an "enabled" counter, so the PM runtime functions
-get called only when really needed.
+On 07/05/16 15:10, Geert Uytterhoeven wrote:
+> Hi Jon,
+> 
+> On Fri, May 6, 2016 at 10:32 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>> The "nvidia,tegra210-agic" string can be taken as describing any
+>>> Tegra-210 specific integration quirks, though I agree that's also not
+>>> fantastic for extending PM support beyond Tegra 210 and variants
+>>> thereof.
+>>>
+>>> So maybe the best approach is bailing out in the presence of clocks
+>>> and/or power domains after all, on the assumption that nothing today has
+>>> those properties, though I fear we may have problems with that later
+>>> down the line if/when people describe those for the root GIC to describe
+>>> those must be hogged, even if not explicitly managed.
+>>
+>> On further testing, by bailing out in the presence of clocks and/or
+>> power-domains, the problem I now see is that although the primary gic-400
+>> has been registered, we still try to probe it again later as it matches
+>> the platform driver. One way to avoid this would be ...
+>>
+>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+>> index e7bfc175b8e1..631da7ad0dbf 100644
+>> --- a/drivers/of/irq.c
+>> +++ b/drivers/of/irq.c
+>> @@ -556,6 +556,8 @@ void __init of_irq_init(const struct of_device_id *matches)
+>>                          * its children can get processed in a subsequent pass.
+>>                          */
+>>                         list_add_tail(&desc->list, &intc_parent_list);
+>> +
+>> +                       of_node_set_flag(desc->dev, OF_POPULATED);
+>>                 }
+> 
+> That sounds like the right thing to do to me...
 
-Without that patch Nokia N900 IR TX driver (ir-rx51) does not function.
+OK. The more I think about this, it does seem silly to create a device
+and pdata for a device that has already been instantiated.
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
----
- arch/arm/plat-omap/dmtimer.c              | 9 ++++++++-
- arch/arm/plat-omap/include/plat/dmtimer.h | 1 +
- 2 files changed, 9 insertions(+), 1 deletion(-)
+>> If this is not appropriate then I guess I will just need to use
+>> "tegra210-agic" for the compatibility flag.
+> 
+> As I want this for plain gic-400, I'd be unhappy ;-)
 
-diff --git a/arch/arm/plat-omap/dmtimer.c b/arch/arm/plat-omap/dmtimer.c
-index 7a327bd..f35a78c 100644
---- a/arch/arm/plat-omap/dmtimer.c
-+++ b/arch/arm/plat-omap/dmtimer.c
-@@ -365,6 +365,9 @@ void omap_dm_timer_enable(struct omap_dm_timer *timer)
- {
- 	int c;
- 
-+	if (timer->enabled++)
-+		return;
-+
- 	pm_runtime_get_sync(&timer->pdev->dev);
- 
- 	if (!(timer->capability & OMAP_TIMER_ALWON)) {
-@@ -383,7 +386,11 @@ EXPORT_SYMBOL_GPL(omap_dm_timer_enable);
- 
- void omap_dm_timer_disable(struct omap_dm_timer *timer)
- {
--	pm_runtime_put_sync(&timer->pdev->dev);
-+	if (timer->enabled == 1)
-+		pm_runtime_put_sync(&timer->pdev->dev);
-+
-+	if (timer->enabled)
-+		timer->enabled--;
- }
- EXPORT_SYMBOL_GPL(omap_dm_timer_disable);
- 
-diff --git a/arch/arm/plat-omap/include/plat/dmtimer.h b/arch/arm/plat-omap/include/plat/dmtimer.h
-index dd79f30..fc984e1 100644
---- a/arch/arm/plat-omap/include/plat/dmtimer.h
-+++ b/arch/arm/plat-omap/include/plat/dmtimer.h
-@@ -114,6 +114,7 @@ struct omap_dm_timer {
- 	unsigned long rate;
- 	unsigned reserved:1;
- 	unsigned posted:1;
-+	u32 enabled;
- 	struct timer_regs context;
- 	int (*get_context_loss_count)(struct device *);
- 	int ctx_loss_count;
--- 
-1.9.1
+No problem. However, there is more work that would be needed to get this
+to work for root controllers which I think that you want.
+
+Cheers
+Jon
