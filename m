@@ -1,54 +1,93 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [PATCH v8 2/3] gpio: mmio: add DT support for memory-mapped GPIOs
-Date: Sun, 08 May 2016 20:27:24 +0200
-Message-ID: <1946866.9Xyiz0Lzsg@debian64>
-References: <cover.1462543457.git.chunkeey@googlemail.com> <535f785bf6116c0fb6f46afbb77e6d4bd3ef5f60.1462543458.git.chunkeey@googlemail.com> <CAGhQ9VyG6yX+g=FjfB6VP0pUNYGYXo60CHkWmSiiOisjeX20cg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAGhQ9VyG6yX+g=FjfB6VP0pUNYGYXo60CHkWmSiiOisjeX20cg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Joachim Eastwood <manabian@gmail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 01/22] dt-bindings: clock: Add license and reformat Exynos5410 clock IDs
+Date: Sun,  8 May 2016 21:05:46 +0200
+Message-ID: <1462734367-5619-2-git-send-email-krzk@kernel.org>
+References: <1462734367-5619-1-git-send-email-krzk@kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1462734367-5619-1-git-send-email-krzk@kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, May 08, 2016 07:17:13 PM Joachim Eastwood wrote:
-> > +#define ADD(_name, _func) { .compatible = _name, .data = _func }
-> 
-> I don't see the point in having a macro for such a simple data
-> structure, but since this v8 and Linus hasn't complained I guess it's
-> fine.
->
-> Using a macro here makes it impossible to grep for 'compatible'. Doing
-> 'git grep compatible drivers/gpio/' is sometimes very useful to see
-> which hardware the driver actually supports.
+Add license and copyrights (file introduced in 2014) to header with
+Exynos5410 clock IDs. Additionally reformat it to improve readability.
 
-Ok. I'll definitely picking it up. I'll wait until Tuesday/Wednesday
-for more comments and then release a new series.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ include/dt-bindings/clock/exynos5410.h | 54 ++++++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 22 deletions(-)
+
+diff --git a/include/dt-bindings/clock/exynos5410.h b/include/dt-bindings/clock/exynos5410.h
+index 9b180f032e2d..213f19e02870 100644
+--- a/include/dt-bindings/clock/exynos5410.h
++++ b/include/dt-bindings/clock/exynos5410.h
+@@ -1,33 +1,43 @@
++/*
++ * Copyright (c) 2014 Samsung Electronics Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * Device Tree binding constants for Exynos5421 clock controller.
++*/
++
+ #ifndef _DT_BINDINGS_CLOCK_EXYNOS_5410_H
+ #define _DT_BINDINGS_CLOCK_EXYNOS_5410_H
  
-> > +static const struct of_device_id bgpio_of_match[] = {
-> > +       ADD("wd,mbl-gpio", bgpio_basic_mmio_parse_dt),
-> > +       { }
-> > +};
-> > +#undef ADD
-> > +MODULE_DEVICE_TABLE(of, bgpio_of_match);
-> > +
-> > +static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pdev,
-> > +                                         unsigned long *flags)
-> > +{
-[...]
-> > +       of_id = of_match_node(bgpio_of_match, node);
-> > +       if (!of_id)
-> > +               return NULL;
-[...]
-> You can retrieve OF match data using of_device_get_match_data().
-> Saves you a couple of lines and better explains what your doing.
-Yes thanks that's useful too since I don't need the of_id variable
-anymore.
+ /* core clocks */
+-#define CLK_FIN_PLL 1
+-#define CLK_FOUT_APLL 2
+-#define CLK_FOUT_CPLL 3
+-#define CLK_FOUT_MPLL 4
+-#define CLK_FOUT_BPLL 5
+-#define CLK_FOUT_KPLL 6
++#define CLK_FIN_PLL		1
++#define CLK_FOUT_APLL		2
++#define CLK_FOUT_CPLL		3
++#define CLK_FOUT_MPLL		4
++#define CLK_FOUT_BPLL		5
++#define CLK_FOUT_KPLL		6
+ 
+ /* gate for special clocks (sclk) */
+-#define CLK_SCLK_UART0 128
+-#define CLK_SCLK_UART1 129
+-#define CLK_SCLK_UART2 130
+-#define CLK_SCLK_UART3 131
+-#define CLK_SCLK_MMC0 132
+-#define CLK_SCLK_MMC1 133
+-#define CLK_SCLK_MMC2 134
++#define CLK_SCLK_UART0		128
++#define CLK_SCLK_UART1		129
++#define CLK_SCLK_UART2		130
++#define CLK_SCLK_UART3		131
++#define CLK_SCLK_MMC0		132
++#define CLK_SCLK_MMC1		133
++#define CLK_SCLK_MMC2		134
+ 
+ /* gate clocks */
+-#define CLK_UART0 257
+-#define CLK_UART1 258
+-#define CLK_UART2 259
+-#define CLK_UART3 260
+-#define CLK_MCT 315
+-#define CLK_MMC0 351
+-#define CLK_MMC1 352
+-#define CLK_MMC2 353
++#define CLK_UART0		257
++#define CLK_UART1		258
++#define CLK_UART2		259
++#define CLK_UART3		260
++#define CLK_MCT			315
++#define CLK_MMC0		351
++#define CLK_MMC1		352
++#define CLK_MMC2		353
+ 
+-#define CLK_NR_CLKS 512
++#define CLK_NR_CLKS		512
+ 
+ #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5410_H */
+-- 
+2.5.0
 
-Both improvements save a total of 8 lines. so it's 328 insertions(+)
-vs 380 deletions(-).
-
-Regards,
-Christian
