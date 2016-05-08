@@ -1,63 +1,54 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv4] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Sun, 8 May 2016 20:09:41 +0200
-Message-ID: <20160508180941.GC6167@lukather>
-References: <1462439332-26215-1-git-send-email-oliver@schinagl.nl>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: Re: [PATCH v8 2/3] gpio: mmio: add DT support for memory-mapped GPIOs
+Date: Sun, 08 May 2016 20:27:24 +0200
+Message-ID: <1946866.9Xyiz0Lzsg@debian64>
+References: <cover.1462543457.git.chunkeey@googlemail.com> <535f785bf6116c0fb6f46afbb77e6d4bd3ef5f60.1462543458.git.chunkeey@googlemail.com> <CAGhQ9VyG6yX+g=FjfB6VP0pUNYGYXo60CHkWmSiiOisjeX20cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZ4BX24QKGQENMQAEUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1462439332-26215-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tsvetan Usunov <tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, info-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAGhQ9VyG6yX+g=FjfB6VP0pUNYGYXo60CHkWmSiiOisjeX20cg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---DIOMP1UsTsWJauNi
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Sunday, May 08, 2016 07:17:13 PM Joachim Eastwood wrote:
+> > +#define ADD(_name, _func) { .compatible = _name, .data = _func }
+> 
+> I don't see the point in having a macro for such a simple data
+> structure, but since this v8 and Linus hasn't complained I guess it's
+> fine.
+>
+> Using a macro here makes it impossible to grep for 'compatible'. Doing
+> 'git grep compatible drivers/gpio/' is sometimes very useful to see
+> which hardware the driver actually supports.
 
-On Thu, May 05, 2016 at 11:08:52AM +0200, Olliver Schinagl wrote:
-> There are 3 kinds of OLinuXino Lime2 boards.
-> One without any on board storage, one with NAND storage and one with
-> eMMC storage. This patch adds the eMMC variant of boards.
-> 
-> eMMC storage is different from a regular SD card in that it is soldered
-> on the board and cannot be changed. Additionally, it shares pins with
-> the NAND module and with the second SPI port.
-> 
-> Changeslog:
-> 
-> v4:
->   Add board compatibles
-> 
-> v3:
->   Add pwr-seq-emmc with the reset gpio
-> 
-> v2:
->   Remove unsupported no-1.8-v property, add vqmmc property
-> 
-> v1:
->   Initial bare bone version
+Ok. I'll definitely picking it up. I'll wait until Tuesday/Wednesday
+for more comments and then release a new series.
+ 
+> > +static const struct of_device_id bgpio_of_match[] = {
+> > +       ADD("wd,mbl-gpio", bgpio_basic_mmio_parse_dt),
+> > +       { }
+> > +};
+> > +#undef ADD
+> > +MODULE_DEVICE_TABLE(of, bgpio_of_match);
+> > +
+> > +static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pdev,
+> > +                                         unsigned long *flags)
+> > +{
+[...]
+> > +       of_id = of_match_node(bgpio_of_match, node);
+> > +       if (!of_id)
+> > +               return NULL;
+[...]
+> You can retrieve OF match data using of_device_get_match_data().
+> Saves you a couple of lines and better explains what your doing.
+Yes thanks that's useful too since I don't need the of_id variable
+anymore.
 
-This is not something we want in the commit log. This should go below
-the --- so that it's dropped when applied.
+Both improvements save a total of 8 lines. so it's 328 insertions(+)
+vs 380 deletions(-).
 
-Removed and applied.
-
-Thanks,
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---DIOMP1UsTsWJauNi--
+Regards,
+Christian
