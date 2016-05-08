@@ -1,41 +1,125 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] devicetree: Add Creative Technology vendor id
-Date: Sun,  8 May 2016 22:33:22 +0200
-Message-ID: <1462739602-7396-1-git-send-email-marex@denx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v9 22/22] PCI/hotplug: PowerPC PowerNV PCI hotplug driver
+Date: Mon, 9 May 2016 09:51:25 +1000
+Message-ID: <20160508235125.GA7692@gwshan>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1462281773-26438-23-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqLAYk2S80LNvF2z2ZzPfCWAbpz2LNKK-04OgSkabjWbxQ@mail.gmail.com>
+ <20160506002834.GA5509@gwshan>
+ <CAL_JsqKQNyL7g71PL9unwqS9834A=D41X9mx5Zr0iX=NapWLJw@mail.gmail.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKQNyL7g71PL9unwqS9834A=D41X9mx5Zr0iX=NapWLJw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Alexey Kardashevskiy <aik@ozlabs.ru>, Bjorn Helgaas <bhelgaas@google.com>, dja@axtens.net, Alistair Popple <alistair@popple.id.au>
 List-Id: devicetree@vger.kernel.org
 
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, May 06, 2016 at 08:12:42AM -0500, Rob Herring wrote:
+>On Thu, May 5, 2016 at 7:28 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>> On Thu, May 05, 2016 at 12:04:49PM -0500, Rob Herring wrote:
+>>>On Tue, May 3, 2016 at 8:22 AM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>>>> This adds standalone driver to support PCI hotplug for PowerPC PowerNV
+>>>> platform that runs on top of skiboot firmware. The firmware identifies
+>>>> hotpluggable slots and marked their device tree node with proper
+>>>> "ibm,slot-pluggable" and "ibm,reset-by-firmware". The driver scans
+>>>> device tree nodes to create/register PCI hotplug slot accordingly.
+>>>>
+>>>> The PCI slots are organized in fashion of tree, which means one
+>>>> PCI slot might have parent PCI slot and parent PCI slot possibly
+>>>> contains multiple child PCI slots. At the plugging time, the parent
+>>>> PCI slot is populated before its children. The child PCI slots are
+>>>> removed before their parent PCI slot can be removed from the system.
+>>>>
+>>>> If the skiboot firmware doesn't support slot status retrieval, the PCI
+>>>> slot device node shouldn't have property "ibm,reset-by-firmware". In
+>>>> that case, none of valid PCI slots will be detected from device tree.
+>>>> The skiboot firmware doesn't export the capability to access attention
+>>>> LEDs yet and it's something for TBD.
+>>>>
+>>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>
+>>>[...]
+>>>
+>>>> +static void pnv_php_handle_poweron(struct pnv_php_slot *php_slot)
+>>>> +{
+>>>> +       void *fdt, *fdt1, *dt;
+>>>> +       int confirm = PNV_PHP_POWER_CONFIRMED_SUCCESS;
+>>>> +       int ret;
+>>>> +
+>>>> +       /* We don't know the FDT blob size. We try to get it through
+>>>> +        * maximal memory chunk and then copy it to another chunk that
+>>>> +        * fits the real size.
+>>>> +        */
+>>>> +       fdt1 = kzalloc(0x10000, GFP_KERNEL);
+>>>> +       if (!fdt1)
+>>>> +               goto error;
+>>>> +
+>>>> +       ret = pnv_pci_get_device_tree(php_slot->dn->phandle, fdt1, 0x10000);
+>>>> +       if (ret)
+>>>> +               goto free_fdt1;
+>>>> +
+>>>> +       fdt = kzalloc(fdt_totalsize(fdt1), GFP_KERNEL);
+>>>> +       if (!fdt)
+>>>> +               goto free_fdt1;
+>>>> +
+>>>> +       /* Unflatten device tree blob */
+>>>> +       memcpy(fdt, fdt1, fdt_totalsize(fdt1));
+>>>
+>>>This is wrong. If the size is greater than 64K, then you will be
+>>>overrunning the fdt1 buffer. You need to fetch the FDT again if it is
+>>>bigger than 64KB.
+>>>
+>>
+>> Thanks for review, Rob. Sorry that I don't see how it's a problem. An
+>> errcode is returned from pnv_pci_get_device_tree() if the FDT blob
+>> size is greater than 64K. In this case, memcpy() won't be triggered.
+>> pnv_pci_get_device_tree() relies on firmware implementation which
+>> avoids overrunning the buffer.
+>
+>Okay, I missed that pnv_pci_get_device_tree would error out.
+>
+>> On the other hand, it would be reasonable to retry retriving the
+>> FDT blob if 64K buffer isn't enough. Also, kzalloc() can be replaced
+>> with alloc_pages() as 64K is the default page size on PPC64. I will
+>> have something like below until some one has more concerns. As the
+>> size of the allocated buffer will be greater than the real FDT blob
+>> size, some memory (not too much) is wasted. I guess it should be ok.
+>>
+>>         struct page *page;
+>>         void *fdt;
+>>         unsigned int order;
+>>         int ret;
+>>
+>>         for (order = 0; order < MAX_ORDER; order++) {
+>>                 page = alloc_pages(GFP_KERNEL, order);
+>>                 if (page) {
+>>                         fdt = page_address(page);
+>>                         ret = pnv_pci_get_device_tree(php_slot->dn->phandle,
+>>                                                       fdt, (1 << order) * PAGE_SIZE);
+>>                         if (ret) {
+>>                                 dev_dbg(&php_slot->pdev.dev, "Error %d getting device tree (%d)\n",
+>>                                         ret, order);
+>>                                 free_pages(fdt, order);
+>>                                 continue;
+>>                         }
+>>                 }
+>>         }
+>
+>I would allocate a minimal buffer to read the header, get the actual
+>size, then allocate a new buffer. There's no point in looping. If you
+>know 64KB is the biggest size you should ever see, then how you had it
+>is reasonable, too.
+>
 
-Add vendor ID for Creative technology.
+The interface pnv_pci_get_device_tree() returns header and meta-data
+in one shoot as it was designed. Also, 64KB here is good enough as I
+can see. I will keep the code as-is. Thanks a lot for looking into
+details, Rob.
 
-Signed-off-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 7d95363..426aa75 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -61,6 +61,7 @@ cnxt	Conexant Systems, Inc.
- compulab	CompuLab Ltd.
- cortina	Cortina Systems, Inc.
- cosmic	Cosmic Circuits
-+creative	Creative Technology Ltd
- crystalfontz	Crystalfontz America, Inc.
- cubietech	Cubietech, Ltd.
- cypress	Cypress Semiconductor Corporation
--- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Gavin
