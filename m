@@ -1,57 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/6] docs: Document BCM23550 bindings
-Date: Mon, 9 May 2016 14:41:15 -0500
-Message-ID: <20160509194115.GA11594@rob-hp-laptop>
-References: <1462481334-8943-1-git-send-email-chris.brand@broadcom.com>
- <1462481334-8943-4-git-send-email-chris.brand@broadcom.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 02/22] dt-bindings: clock: Add PWM and USB clock IDs to
+ Exynos5410
+Date: Mon, 9 May 2016 15:41:02 -0400
+Message-ID: <b73e9ad3-6c5f-e4e1-8bcf-228cf889c05e@osg.samsung.com>
+References: <1462734367-5619-1-git-send-email-krzk@kernel.org>
+ <1462734367-5619-3-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462481334-8943-4-git-send-email-chris.brand@broadcom.com>
+In-Reply-To: <1462734367-5619-3-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Brand <chris.brand@broadcom.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Raymond Ngun <raymond.ngun@broadcom.com>, Markus Mayer <markus.mayer@broadcom.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 05, 2016 at 01:48:51PM -0700, Chris Brand wrote:
-> Add binding document for Broadcom BCM23550 SoC.
+Hello Krzysztof,
+
+On 05/08/2016 03:05 PM, Krzysztof Kozlowski wrote:
+> Add IDs for PWM and USB clocks to Exynos5410. Use the same number as for
+> Exynos5420 just in case in future these drivers were merged.
 > 
-> BCM23550 has a Cluster Dormant Control IP block that holds cores
-> in an idle state. Introduce a new CPU enable method in which the CDC is
-> accessed to bring the core online.
-> 
-> Signed-off-by: Chris Brand <chris.brand@broadcom.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  .../bindings/arm/bcm/brcm,bcm23550-cpu-method.txt  | 36 ++++++++++++++++++++++
->  .../devicetree/bindings/arm/bcm/brcm,bcm23550.txt  | 15 +++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->  3 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
-> new file mode 100644
-> index 000000000000..b1b16872bbca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm23550-cpu-method.txt
-> @@ -0,0 +1,36 @@
-> +Broadcom Kona Family CPU Enable Method
-> +--------------------------------------
-> +This binding defines the enable method used for starting secondary
-> +CPUs in the following Broadcom SoCs:
-> +  BCM23550
-> +
-> +The enable method is specified by defining the following required
-> +properties in the "cpu" device tree node:
-> +  - enable-method = "brcm,bcm23550-cpu-method";
 
-"-cpu-method" is a bit redundant. brcm,bc23550 is probably sufficient.
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-> +  - secondary-boot-reg = <...>;
-> +
-> +The secondary-boot-reg property is a u32 value that specifies the
-> +physical address of the register used to request the ROM holding pen
-> +code release a secondary CPU.  The value written to the register is
-> +formed by encoding the target CPU id into the low bits of the
-> +physical start address it should jump to.
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
