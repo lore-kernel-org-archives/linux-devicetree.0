@@ -1,87 +1,30 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: [PATCH v4 06/11] arm64: tegra: use tegra132-soctherm for Tegra132
-Date: Mon, 9 May 2016 14:53:59 +0800
-Message-ID: <1462776844-2152-7-git-send-email-wni@nvidia.com>
-References: <1462776844-2152-1-git-send-email-wni@nvidia.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH 0/2] mtd: atmel_nand: remove compatible "atmel,sama5d4-nfc"
+Date: Mon, 9 May 2016 14:51:17 +0800
+Message-ID: <1462776680-5284-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1462776844-2152-1-git-send-email-wni@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: edubezval@gmail.com, thierry.reding@gmail.com, robh+dt@kernel.org, rui.zhang@intel.com
-Cc: MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wei Ni <wni@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Josh Wu <rainyfeeling@outlook.com>, linux-arm-kernel@lists.infradead.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra132 has the specific settings for soctherm,
-so change to use campatible "nvidia,tegra132-soctherm" for it.
-And adds cpu, gpu, mem and pllx thermal zones.
+It is a datasheet bug, for current SoCs, the RB_EDGE3(i.e. bit 27)
+of HSMC_SR register does not exist, the RB_EDGE0 (i.e. bit 24) is
+the ready/busy line edge status bit. So the compatible
+"atmel,sama5d4-nfc" is unneeded.
 
-Signed-off-by: Wei Ni <wni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra132.dtsi | 36 ++++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-index 2013f8916084..e41d8e82d7ed 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/tegra124-soctherm.h>
- 
- / {
- 	compatible = "nvidia,tegra132", "nvidia,tegra124";
-@@ -727,8 +728,8 @@
- 	};
- 
- 	soctherm: thermal-sensor@700e2000 {
--		compatible = "nvidia,tegra124-soctherm";
--		reg = <0x0 0x700e2000 0x0 0x1000>;
-+		compatible = "nvidia,tegra132-soctherm";
-+		reg = <0x0 0x700e2000 0x0 0x600>;
- 		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&tegra_car TEGRA124_CLK_TSENSOR>,
- 			<&tegra_car TEGRA124_CLK_SOC_THERM>;
-@@ -738,6 +739,37 @@
- 		#thermal-sensor-cells = <1>;
- 	};
- 
-+	thermal-zones {
-+		cpu {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors =
-+				<&soctherm TEGRA124_SOCTHERM_SENSOR_CPU>;
-+		};
-+		mem {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors =
-+				<&soctherm TEGRA124_SOCTHERM_SENSOR_MEM>;
-+		};
-+		gpu {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors =
-+				<&soctherm TEGRA124_SOCTHERM_SENSOR_GPU>;
-+		};
-+		pllx {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors =
-+				<&soctherm TEGRA124_SOCTHERM_SENSOR_PLLX>;
-+		};
-+	};
-+
- 	ahub@70300000 {
- 		compatible = "nvidia,tegra124-ahub";
- 		reg = <0x0 0x70300000 0x0 0x200>,
+Wenyou Yang (2):
+  Revert "mtd: atmel_nand: Support variable RB_EDGE interrupts"
+  ARM: at91/dt: use "atmel,sama5d3-nfc" compatible for nfc
+
+ .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
+ arch/arm/boot/dts/sama5d2.dtsi                     |  2 +-
+ drivers/mtd/nand/atmel_nand.c                      | 35 +++++-----------------
+ drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
+ 4 files changed, 11 insertions(+), 31 deletions(-)
+
 -- 
-1.9.1
-
+2.7.4
