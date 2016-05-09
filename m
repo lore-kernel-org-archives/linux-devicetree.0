@@ -1,33 +1,36 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2 03/22] ARM: dts: exynos: Add fin_pll node for clock
- driver
-Date: Mon, 9 May 2016 15:53:11 -0400
-Message-ID: <978d6aba-e177-ee0a-2a6b-782a7e962646@osg.samsung.com>
-References: <1462734367-5619-1-git-send-email-krzk@kernel.org>
- <1462734367-5619-4-git-send-email-krzk@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] input: rmi4: Acquire and enable VDD and VIO
+ supplies
+Date: Mon, 9 May 2016 14:58:40 -0500
+Message-ID: <20160509195840.GA15582@rob-hp-laptop>
+References: <1462596008-21381-1-git-send-email-bjorn.andersson@linaro.org>
+ <1462596008-21381-3-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1462734367-5619-4-git-send-email-krzk@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462596008-21381-3-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrew Duggan <aduggan@synaptics.com>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 05/08/2016 03:05 PM, Krzysztof Kozlowski wrote:
-> For consistency between Exynos5410 and Exynos542x/5800 switch to similar
-> way of defining fin_pll/oscclk. Add a node early, before implementing
-> this in driver to preserve bisectability.
+On Fri, May 06, 2016 at 09:40:07PM -0700, Bjorn Andersson wrote:
+> For systems where the rmi4 device is not powered by always-on regulators
+> we need to acquire handles to VDD and VIO and enable these.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
+> 
+> Changes since v1:
+> - Added patch 1 and 3
+> - Moved regulator handling to the core driver
+> 
+>  .../devicetree/bindings/input/rmi4/rmi_i2c.txt       |  6 ++++++
+>  .../devicetree/bindings/input/rmi4/rmi_spi.txt       |  6 ++++++
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+>  drivers/input/rmi4/rmi_driver.c                      | 20 ++++++++++++++++++++
+>  include/linux/rmi.h                                  |  4 +++-
+>  4 files changed, 35 insertions(+), 1 deletion(-)
