@@ -1,30 +1,30 @@
-From: Florian Fainelli <florian.fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
  bindings
-Date: Mon, 9 May 2016 16:15:05 -0700
-Message-ID: <573119F9.3040509@broadcom.com>
+Date: Mon, 9 May 2016 16:15:11 -0700
+Message-ID: <573119FF.9000306@gmail.com>
 References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
  <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
  <20160509192641.GA4936@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160509192641.GA4936@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
 On 05/09/2016 12:26 PM, Rob Herring wrote:
 > On Thu, May 05, 2016 at 12:14:59PM -0700, Florian Fainelli wrote:
->> From: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> From: Jim Quinlan <jim2101024@gmail.com>
 >>
 >> This patchs adds the Device Tree bindings for the Broadcom STB PCIe root
 >> complex hardware.
 >>
->> Signed-off-by: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 >> ---
 >> Changes in v2:
 >>
@@ -163,7 +163,3 @@ can certainly drop that, since a) this is optional and b) we need to
 rework that in the driver anyway.
 -- 
 Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
