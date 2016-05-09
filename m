@@ -1,14 +1,13 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 1/2] doc/devicetree: Add Aspeed VIC bindings
-Date: Mon,  9 May 2016 23:28:36 +0930
-Message-ID: <1462802317-27086-2-git-send-email-joel@jms.id.au>
+Subject: [PATCH v2 0/2] irqchip: Support Aspeed IRQ controller
+Date: Mon,  9 May 2016 23:28:35 +0930
+Message-ID: <1462802317-27086-1-git-send-email-joel@jms.id.au>
 References: <462797239-14765-1-git-send-email-joel@jms.id.au>
- <1462802317-27086-1-git-send-email-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462802317-27086-1-git-send-email-joel@jms.id.au>
+In-Reply-To: <462797239-14765-1-git-send-email-joel@jms.id.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,44 +21,32 @@ To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
 Cc: devicetree@vger.kernel.org, baruch@tkos.co.il, arnd@arndb.de, benh@kernel.crashing.org, jk@ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
-v2:
-  Fix device tree binding example, thanks Baruch and Arnd for pointing this out
+Hello All,
 
- .../interrupt-controller/aspeed,ast2400-vic.txt    | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+This adds support for the IRQ controller found in the Aspeed ast2400 and
+ast2500 BMC SoCs.
+
+It's been tested on the ast2400 in an OpenPower Palmetto system, and on the
+ast2500-edk developer kit.
+
+V2 has a fix for the compatible string in the device tree bindings.
+
+Cheers,
+
+Joel
+
+Benjamin Herrenschmidt (1):
+  irqchip: Add irq controller for Aspeed
+
+Joel Stanley (1):
+  doc/devicetree: Add Aspeed VIC bindings
+
+ .../interrupt-controller/aspeed,ast2400-vic.txt    |  24 +++
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-aspeed-vic.c                   | 238 +++++++++++++++++++++
+ 3 files changed, 263 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
+ create mode 100644 drivers/irqchip/irq-aspeed-vic.c
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
-new file mode 100644
-index 000000000000..86dede1755a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
-@@ -0,0 +1,24 @@
-+Aspeed Vectored Interrupt Controller
-+
-+These bindings are for the Aspeed AST2400 interrupt controller register layout.
-+The SoC has an legacy register layout, but this driver does not support that
-+mode of operation.
-+
-+Required properties:
-+
-+- compatible : should be "aspeed,ast2400-vic".
-+
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 1.
-+- valid-sources : bitmask of valid irq sources
-+
-+Example:
-+
-+ vic: interrupt-controller {
-+      compatible = "aspeed,ast2400-vic";
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
-+      valid-sources = < 0xffffffff 0x0007ffff>;
-+      reg = <0x1e6c0080 0x80>;
-+ };
 -- 
 2.8.1
