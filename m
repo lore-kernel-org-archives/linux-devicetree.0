@@ -1,73 +1,45 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH 5/7] ARM: OMAP: dmtimer: Do not call PM runtime functions
- when not needed.
-Date: Mon, 9 May 2016 23:51:12 +0300
-Message-ID: <5730F840.3050807@gmail.com>
-References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1462634508-24961-6-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160509193624.GH5995@atomide.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v2 08/22] clk: samsung: exynos5410: Add serial3, USB and
+ PWM clocks
+Date: Mon, 9 May 2016 16:50:58 -0400
+Message-ID: <7a1772c3-d81a-3133-d775-0e8034fcee9d@osg.samsung.com>
+References: <1462734367-5619-1-git-send-email-krzk@kernel.org>
+ <1462734367-5619-9-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20160509193624.GH5995@atomide.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462734367-5619-9-git-send-email-krzk@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Krzysztof,
 
-On  9.05.2016 22:36, Tony Lindgren wrote:
-> * Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com> [160507 08:24]:
->> once omap_dm_timer_start() is called, which calls omap_dm_timer_enable()
->> and thus pm_runtime_get_sync(), it doesn't make sense to call PM runtime
->> functions again before omap_dm_timer_stop is called(). Otherwise PM runtime
->> functions called in omap_dm_timer_enable/disable lead to long and unneeded
->> delays.
->>
->> Fix that by implementing an "enabled" counter, so the PM runtime functions
->> get called only when really needed.
->>
->> Without that patch Nokia N900 IR TX driver (ir-rx51) does not function.
->
+On 05/08/2016 03:05 PM, Krzysztof Kozlowski wrote:
+> Just like other Exynos5 family SoCs, this one has four UARTs. Add
+> missing UART3 clocks to the Exynso5410 clock driver.
+> 
+> Add clocks for USB and PWM.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-Well, I just tested again, with the $subject patch reverted and 
-contradictory to my own words, it worked just fine. I believe the reason 
-is that I did hrtimer "migration" after I did the $subject patch. I was 
-thinking the reason for the slow transmission was PWM dmtimer, but now 
-it turns out it has been the "pulse" dmtimer. So, I think the $subject 
-patch should be dropped.
+I don't have an Exynos5410 SoC user manual to double check all values
+but assuming that are correct, the patch looks good to me.
 
-> We should use pm_runtime for the refcounting though and call PM runtime
-> unconditionally. Can you try to follow the standard PM runtime usage
-> like this:
->
-
-It works without that, but on the other hand, I finally have some 
-reference on how PM runtime API should be called :).
-
-> init:
-> pm_runtime_use_autosuspend(&timer->pdev->dev);
-> pm_runtime_set_autosuspend_delay(&timer->pdev->dev, 200);
-> pm_runtime_enable(&timer->pdev->dev);
-> ...
-> enable:
-> pm_runtime_get_sync(&timer->pdev->dev);
-> ...
-> disable:
-> pm_runtime_mark_last_busy(&timer->pdev->dev);
-> pm_runtime_put_autosuspend(&timer->pdev->dev);
-> ...
-> exit:
-> pm_runtime_dont_use_autosuspend(&timer->pdev->dev);
-> pm_runtime_put_sync(&timer->pdev->dev);
-> pm_runtime_disable(&timer->pdev->dev);
->
-> No idea what the timeout should be, maybe less than 200 ms. Also we need
-> to test that off idle still works with timer1, that might need special
-> handling.
->
-
-Thanks,
-Ivo
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+ 
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
