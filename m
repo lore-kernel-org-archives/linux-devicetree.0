@@ -1,13 +1,13 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 2/2] irqchip: Add irq controller for Aspeed
-Date: Mon,  9 May 2016 22:03:59 +0930
-Message-ID: <1462797239-14765-3-git-send-email-joel@jms.id.au>
-References: <1462797239-14765-1-git-send-email-joel@jms.id.au>
+Subject: [PATCH 3/4] drvers/clk: Support fifth generation Aspeed SoCs
+Date: Mon,  9 May 2016 22:01:50 +0930
+Message-ID: <1462797111-14271-4-git-send-email-joel@jms.id.au>
+References: <1462797111-14271-1-git-send-email-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462797239-14765-1-git-send-email-joel@jms.id.au>
+In-Reply-To: <1462797111-14271-1-git-send-email-joel@jms.id.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,272 +17,230 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, arnd@arndb.de, jk@ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, heiko@sntech.de, arnd@arndb.de, benh@kernel.crashing.org, jk@ozlabs.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+A basic driver to create fixed rate clock devices from strapping
+registers.
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Like the ast2400, the ast2500 clocks are derived from an external
+oscillator and the frequency of this can be determined from the
+strapping of the processor.
+
+The frequency of internal clocks can be derived from other registers in
+the SCU (System Control Unit). The layout of the internal clocks is a
+bit different to the ast2400, as are the divisor reigisters, so it has
+it's own driver.
+
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-aspeed-vic.c | 238 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 239 insertions(+)
- create mode 100644 drivers/irqchip/irq-aspeed-vic.c
+ drivers/clk/aspeed/Makefile |   1 +
+ drivers/clk/aspeed/clk-g5.c | 189 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 190 insertions(+)
+ create mode 100644 drivers/clk/aspeed/clk-g5.c
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b03cfcbbac6b..ec82e6e15a38 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -65,3 +65,4 @@ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
- obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
- obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
-+obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
-diff --git a/drivers/irqchip/irq-aspeed-vic.c b/drivers/irqchip/irq-aspeed-vic.c
+diff --git a/drivers/clk/aspeed/Makefile b/drivers/clk/aspeed/Makefile
+index d3457fbe3019..9ddb0f8f4356 100644
+--- a/drivers/clk/aspeed/Makefile
++++ b/drivers/clk/aspeed/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_MACH_ASPEED_G4) += clk-g4.o
++obj-$(CONFIG_MACH_ASPEED_G5) += clk-g5.o
+diff --git a/drivers/clk/aspeed/clk-g5.c b/drivers/clk/aspeed/clk-g5.c
 new file mode 100644
-index 000000000000..db15fc3e831a
+index 000000000000..812fd9accf30
 --- /dev/null
-+++ b/drivers/irqchip/irq-aspeed-vic.c
-@@ -0,0 +1,238 @@
++++ b/drivers/clk/aspeed/clk-g5.c
+@@ -0,0 +1,189 @@
 +/*
-+ *  Copyright (C) 2015 - Ben Herrenschmidt, IBM Corp.
++ * Copyright 2016 IBM Corporation
 + *
-+ *  Driver for Aspeed "new" VIC as found in SoC generation 3 and later
-+ *
-+ *  Based on irq-vic.c:
-+ *
-+ *  Copyright (C) 1999 - 2003 ARM Limited
-+ *  Copyright (C) 2000 Deep Blue Solutions Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
 + */
 +
-+#include <linux/export.h>
-+#include <linux/init.h>
-+#include <linux/list.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
 +#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
 +#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/syscore_ops.h>
-+#include <linux/device.h>
-+#include <linux/slab.h>
++#include <linux/clkdev.h>
 +
-+#include <asm/exception.h>
-+#include <asm/irq.h>
-+
-+/* These definitions correspond to the "new mapping" of the
-+ * register set that interleaves "high" and "low". The offsets
-+ * below are for the "low" register, add 4 to get to the high one
-+ */
-+#define AVIC_IRQ_STATUS		0x00
-+#define AVIC_FIQ_STATUS		0x08
-+#define AVIC_RAW_STATUS		0x10
-+#define AVIC_INT_SELECT		0x18
-+#define AVIC_INT_ENABLE		0x20
-+#define AVIC_INT_ENABLE_CLR	0x28
-+#define AVIC_INT_TRIGGER	0x30
-+#define AVIC_INT_TRIGGER_CLR	0x38
-+#define AVIC_INT_SENSE		0x40
-+#define AVIC_INT_DUAL_EDGE	0x48
-+#define AVIC_INT_EVENT		0x50
-+#define AVIC_EDGE_CLR		0x58
-+#define AVIC_EDGE_STATUS	0x60
-+
-+struct aspeed_vic {
-+	void __iomem		*base;
-+	u32			valid_sources[2];
-+	u32			edge_sources[2];
-+	struct irq_domain	*dom;
-+};
-+static struct aspeed_vic *system_avic;
-+
-+static void vic_init_hw(struct aspeed_vic *vic)
++static void __init aspeed_of_clkin_clk_init(struct device_node *node)
 +{
-+	u32 sense;
++	struct clk *clk;
++	void __iomem *base;
++	int reg, rate;
++	const char *name = node->name;
 +
-+	/* Disable all interrupts */
-+	writel(0xffffffff, vic->base + AVIC_INT_ENABLE_CLR);
-+	writel(0xffffffff, vic->base + AVIC_INT_ENABLE_CLR + 4);
++	of_property_read_string(node, "clock-output-names", &name);
 +
-+	/* Make sure no soft trigger is on */
-+	writel(0xffffffff, vic->base + AVIC_INT_TRIGGER_CLR);
-+	writel(0xffffffff, vic->base + AVIC_INT_TRIGGER_CLR + 4);
-+
-+	/* Set everything to be IRQ */
-+	writel(0, vic->base + AVIC_INT_SELECT);
-+	writel(0, vic->base + AVIC_INT_SELECT + 4);
-+
-+	/* Some interrupts have a programable high/low level trigger
-+	 * (4 GPIO direct inputs), for now we assume this was configured
-+	 * by firmware. We read which ones are edge now.
-+	 */
-+	sense = readl(vic->base + AVIC_INT_SENSE);
-+	vic->edge_sources[0] = ~sense;
-+	sense = readl(vic->base + AVIC_INT_SENSE + 4);
-+	vic->edge_sources[1] = ~sense;
-+
-+	/* Clear edge detection latches */
-+	writel(0xffffffff, vic->base + AVIC_EDGE_CLR);
-+	writel(0xffffffff, vic->base + AVIC_EDGE_CLR + 4);
-+}
-+
-+static void __exception_irq_entry avic_handle_irq(struct pt_regs *regs)
-+{
-+	struct aspeed_vic *vic = system_avic;
-+	u32 stat, irq;
-+
-+	for (;;) {
-+		irq = 0;
-+		stat = readl_relaxed(vic->base + AVIC_IRQ_STATUS);
-+		if (!stat) {
-+			stat = readl_relaxed(vic->base + AVIC_IRQ_STATUS + 4);
-+			irq = 32;
-+		}
-+		if (stat == 0)
-+			break;
-+		irq += ffs(stat) - 1;
-+		handle_domain_irq(vic->dom, irq, regs);
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: of_iomap failed\n", node->full_name);
++		return;
 +	}
-+}
++	/* Strap register SCU70 */
++	reg = readl(base) & BIT(23);
++	iounmap(base);
 +
-+static void avic_ack_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	/* Clear edge latch for edge interrupts, nop for level */
-+	if (vic->edge_sources[sidx] & sbit)
-+		writel(sbit, vic->base + AVIC_EDGE_CLR + sidx * 4);
-+}
-+
-+static void avic_mask_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	writel(sbit, vic->base + AVIC_INT_ENABLE_CLR + sidx * 4);
-+}
-+
-+static void avic_unmask_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	writel(sbit, vic->base + AVIC_INT_ENABLE + sidx * 4);
-+}
-+
-+/* For level irq, faster than going through a nop "ack" and mask */
-+static void avic_mask_ack_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	/* First mask */
-+	writel(sbit, vic->base + AVIC_INT_ENABLE_CLR + sidx * 4);
-+
-+	/* Then clear edge latch for edge interrupts */
-+	if (vic->edge_sources[sidx] & sbit)
-+		writel(sbit, vic->base + AVIC_EDGE_CLR + sidx * 4);
-+}
-+
-+static struct irq_chip avic_chip = {
-+	.name		= "AVIC",
-+	.irq_ack	= avic_ack_irq,
-+	.irq_mask	= avic_mask_irq,
-+	.irq_unmask	= avic_unmask_irq,
-+	.irq_mask_ack	= avic_mask_ack_irq,
-+};
-+
-+static int avic_map(struct irq_domain *d, unsigned int irq,
-+		    irq_hw_number_t hwirq)
-+{
-+	struct aspeed_vic *vic = d->host_data;
-+	unsigned int sidx = hwirq >> 5;
-+	unsigned int sbit = 1u << (hwirq & 0x1f);
-+
-+	/* Check if interrupt exists */
-+	if (sidx > 1 || !(vic->valid_sources[sidx] & sbit))
-+		return -EPERM;
-+
-+	if (vic->edge_sources[sidx] & sbit)
-+		irq_set_chip_and_handler(irq, &avic_chip, handle_edge_irq);
++	if (reg)
++		rate = 25 * 1000 * 1000;
 +	else
-+		irq_set_chip_and_handler(irq, &avic_chip, handle_level_irq);
-+	irq_set_chip_data(irq, vic);
-+	irq_set_probe(irq);
-+	return 0;
-+}
++		rate = 24 * 1000 * 1000;
 +
-+static struct irq_domain_ops avic_dom_ops = {
-+	.map = avic_map,
-+	.xlate = irq_domain_xlate_onetwocell,
-+};
-+
-+static int __init avic_of_init(struct device_node *node,
-+			       struct device_node *parent)
-+{
-+	void __iomem *regs;
-+	struct aspeed_vic *vic;
-+	int nirqs;
-+
-+	if (WARN(parent, "non-root Aspeed VIC not supported"))
-+		return -EINVAL;
-+	if (WARN(system_avic, "duplicate Aspeed VIC not supported"))
-+		return -EINVAL;
-+
-+	regs = of_iomap(node, 0);
-+	if (WARN_ON(!regs))
-+		return -EIO;
-+
-+	vic = kzalloc(sizeof(struct aspeed_vic), GFP_KERNEL);
-+	if (WARN_ON(!vic)) {
-+		iounmap(regs);
-+		return -ENOMEM;
++	clk = clk_register_fixed_rate(NULL, name, NULL, 0, rate);
++	if (IS_ERR(clk)) {
++		pr_err("%s: failed to register clock\n", node->full_name);
++		return;
 +	}
-+	vic->base = regs;
 +
-+	of_property_read_u32_index(node, "valid-sources", 0,
-+				   &vic->valid_sources[0]);
-+	of_property_read_u32_index(node, "valid-sources", 1,
-+				   &vic->valid_sources[1]);
-+
-+	nirqs = hweight32(vic->valid_sources[0]) +
-+		hweight32(vic->valid_sources[1]);
-+
-+	/* Initialize soures, all masked */
-+	vic_init_hw(vic);
-+
-+	/* Ready to receive interrupts */
-+	system_avic = vic;
-+	set_handle_irq(avic_handle_irq);
-+
-+	/* Register our domain */
-+	vic->dom = irq_domain_add_simple(node, nirqs, 0,
-+					 &avic_dom_ops, vic);
-+
-+	return 0;
++	clk_register_clkdev(clk, NULL, name);
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
 +}
++CLK_OF_DECLARE(aspeed_clkin_clock, "aspeed,g5-clkin-clock",
++	       aspeed_of_clkin_clk_init);
 +
-+IRQCHIP_DECLARE(aspeed_new_vic, "aspeed,ast2400-vic", avic_of_init);
++
++static void __init aspeed_of_hpll_clk_init(struct device_node *node)
++{
++	struct clk *clk, *clkin_clk;
++	void __iomem *base;
++	int reg, rate, clkin;
++	const char *name = node->name;
++	const char *parent_name;
++
++	of_property_read_string(node, "clock-output-names", &name);
++	parent_name = of_clk_get_parent_name(node, 0);
++
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: of_iomap failed\n", node->full_name);
++		return;
++	}
++	/* H-PLL parameter register SCU24 */
++	reg = readl(base);
++	iounmap(base);
++
++	clkin_clk = of_clk_get(node, 0);
++	if (IS_ERR(clkin_clk)) {
++		pr_err("%s: of_clk_get failed\n", node->full_name);
++		return;
++	}
++
++	clkin = clk_get_rate(clkin_clk);
++
++	if (reg & BIT(21)) {
++		rate = 0;
++	} else if (reg & BIT(20)) {
++		rate = clkin;
++	} else {
++		int p = (reg >> 13) & 0x3f;
++		int m = (reg >> 5) & 0xff;
++		int n = reg & 0x1f;
++
++		rate = clkin * ((m + 1) / (n + 1)) / (p + 1);
++	}
++
++	clk = clk_register_fixed_rate(NULL, name, parent_name, 0, rate);
++	if (IS_ERR(clk)) {
++		pr_err("%s: failed to register clock\n", node->full_name);
++		return;
++	}
++
++	clk_register_clkdev(clk, NULL, name);
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++CLK_OF_DECLARE(aspeed_hpll_clock, "aspeed,g5-hpll-clock",
++	       aspeed_of_hpll_clk_init);
++
++
++static void __init aspeed_of_ahb_clk_init(struct device_node *node)
++{
++	struct clk *clk, *hpll_clk;
++	void __iomem *base;
++	int reg, rate, hpll;
++	const char *name = node->name;
++	const char *parent_name;
++
++	of_property_read_string(node, "clock-output-names", &name);
++	parent_name = of_clk_get_parent_name(node, 0);
++
++	/* Strap register SCU70 */
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: of_iomap failed\n", node->full_name);
++		return;
++	}
++	reg = (readl(base) >> 9) & 0x03;
++	iounmap(base);
++
++	/* A value of zero is undefined */
++	WARN_ON(reg == 0);
++
++	hpll_clk = of_clk_get(node, 0);
++	if (IS_ERR(hpll_clk)) {
++		pr_err("%s: of_clk_get failed\n", node->full_name);
++		return;
++	}
++
++	hpll = clk_get_rate(hpll_clk);
++
++	rate = hpll / 2 / (reg + 1);
++
++	clk = clk_register_fixed_rate(NULL, name, parent_name, 0, rate);
++	if (IS_ERR(clk)) {
++		pr_err("%s: failed to register clock\n", node->full_name);
++		return;
++	}
++
++	clk_register_clkdev(clk, NULL, name);
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++CLK_OF_DECLARE(aspeed_ahb_clock, "aspeed,g5-ahb-clock",
++	       aspeed_of_ahb_clk_init);
++
++
++static void __init aspeed_of_apb_clk_init(struct device_node *node)
++{
++	struct clk *clk, *hpll_clk;
++	void __iomem *base;
++	int reg, rate;
++	const char *name = node->name;
++	const char *parent_name;
++
++	of_property_read_string(node, "clock-output-names", &name);
++	parent_name = of_clk_get_parent_name(node, 0);
++
++	/* Clock selection register SCU08 */
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: of_iomap failed\n", node->full_name);
++		return;
++	}
++	reg = readl(base) >> 23 & 0x3;
++	iounmap(base);
++
++	hpll_clk = of_clk_get(node, 0);
++	if (IS_ERR(hpll_clk)) {
++		pr_err("%s: of_clk_get failed\n", node->full_name);
++		return;
++	}
++
++	rate = clk_get_rate(hpll_clk) / (4 * (reg + 1));
++
++	clk = clk_register_fixed_rate(NULL, name, parent_name, 0, rate);
++	if (IS_ERR(clk)) {
++		pr_err("%s: failed to register clock\n", node->full_name);
++		return;
++	}
++
++	clk_register_clkdev(clk, NULL, name);
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++CLK_OF_DECLARE(aspeed_apb_clock, "aspeed,g5-apb-clock",
++	       aspeed_of_apb_clk_init);
 -- 
 2.8.1
