@@ -1,75 +1,62 @@
-From: Peng Fan <van.freenix@gmail.com>
-Subject: Re: [PATCH V2 3/3] nvmem: imx-ocotp: handling clock
-Date: Mon, 9 May 2016 20:41:43 +0800
-Message-ID: <20160509124140.GA20259@linux-7smt.suse>
-References: <1461173177-11930-1-git-send-email-van.freenix@gmail.com>
- <1461173177-11930-3-git-send-email-van.freenix@gmail.com>
- <5730825E.5030101@linaro.org>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH 1/2] doc/devicetree: Add Aspeed VIC bindings
+Date: Mon, 9 May 2016 15:50:00 +0300
+Message-ID: <20160509124959.GM4414@sapphire.tkos.co.il>
+References: <1462797239-14765-1-git-send-email-joel@jms.id.au>
+ <1462797239-14765-2-git-send-email-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <5730825E.5030101@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: shawnguo@kernel.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1462797239-14765-2-git-send-email-joel@jms.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, arnd@arndb.de, marc.zyngier@arm.com, benh@kernel.crashing.org, jk@ozlabs.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+Hi Joel,
 
-On Mon, May 09, 2016 at 01:28:14PM +0100, Srinivas Kandagatla wrote:
->Thanks for the Ping, I totally missed this thread.
->
->On 20/04/16 18:26, Peng Fan wrote:
->>Before access ocotp nvmem area, the clock should be enabled.
->>Or, `hexdump nvmem` will hang the system. So, use such flow:
->>"
->>   1. clock_enable_prepare
->>   2. read nvmem ocotp area
->>   3. clock_disable_unprepare
->>"
->>
->>Signed-off-by: Peng Fan <van.freenix@gmail.com>
->>Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
->>Cc: Shawn Guo <shawnguo@kernel.org>
->>---
->>
->>V2:
->>  Follow Fabio's comments, check return value of clk_prepare_enable
->>
->>  drivers/nvmem/imx-ocotp.c | 16 +++++++++++++++-
->>  1 file changed, 15 insertions(+), 1 deletion(-)
->
->Changes to the driver looks good to me,
->Only one comment, As the clock property is now made mandatory, you should
->update the dt-bindings with this info too.
+On Mon, May 09, 2016 at 10:03:58PM +0930, Joel Stanley wrote:
+> +Aspeed Vectored Interrupt Controller
+> +
+> +These bindings are for the Aspeed AST2400 interrupt controller register layout.
+> +The SoC has an legacy register layout, but this driver does not support that
+> +mode of operation.
+> +
+> +Required properties:
+> +
+> +- compatible : should be "aspeed,ast2400-vic".
+> +
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source. The value shall be 1.
+> +- valid-sources : bitmask of valid irq sources
+> +
+> +Example:
+> +
+> + vic: interrupt-controller {
+> +      compatible = "aspeed,ast2400-new-vic";
 
-In Documentation/devicetree/bindings/nvmem/imx-ocotp.txt,
-the clock property is already marked Required properties:
-"
-Required properties:
-- compatible: should be one of
-	"fsl,imx6q-ocotp" (i.MX6Q/D/DL/S),
-	"fsl,imx6sl-ocotp" (i.MX6SL), or
-	"fsl,imx6sx-ocotp" (i.MX6SX), followed by "syscon".
-- reg: Should contain the register base and length.
-- clocks: Should contain a phandle pointing to the gated peripheral clock.
+That doesn't match the compatible string documented above.
 
-Example:
+> +      interrupt-controller;
+> +      #interrupt-cells = <1>;
+> +      valid-sources = < 0xffffffff 0x0007ffff>;
+> +      reg = <0x1e6c0080 0x80>;
+> + };
 
-	ocotp: ocotp@021bc000 {
-		compatible = "fsl,imx6q-ocotp", "syscon";
-		reg = <0x021bc000 0x4000>;
-		clocks = <&clks IMX6QDL_CLK_IIM>;
-	};
-"
+baruch
 
-I think I do not need to update it, since it's already there -:)
-
-Thanks,
-Peng.
->
->
->thanks,
->srini
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
