@@ -1,47 +1,61 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 3/4] mfd: arizona: Switch to using clock driver for
- 32k clock
-Date: Mon, 9 May 2016 12:34:04 -0700
-Message-ID: <20160509193404.GP3492@codeaurora.org>
-References: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1452252582-20834-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20160507005510.GO3492@codeaurora.org>
- <20160509074459.GD8324@dell>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 5/7] ARM: OMAP: dmtimer: Do not call PM runtime functions
+ when not needed.
+Date: Mon, 9 May 2016 12:36:24 -0700
+Message-ID: <20160509193624.GH5995@atomide.com>
+References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1462634508-24961-6-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160509074459.GD8324@dell>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, mturquette@baylibre.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+In-Reply-To: <1462634508-24961-6-git-send-email-ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/09, Lee Jones wrote:
-> On Fri, 06 May 2016, Stephen Boyd wrote:
+* Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [160507 08:24]:
+> once omap_dm_timer_start() is called, which calls omap_dm_timer_enable()
+> and thus pm_runtime_get_sync(), it doesn't make sense to call PM runtime
+> functions again before omap_dm_timer_stop is called(). Otherwise PM runtime
+> functions called in omap_dm_timer_enable/disable lead to long and unneeded
+> delays.
 > 
-> > On 01/08, Charles Keepax wrote:
-> > > Now we have a clock driver that can control the 32k clock use this
-> > > rather than directly controlling the 32k clock from the MFD device.
-> > > 
-> > > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > > ---
-> > 
-> > Applied to clk-next
+> Fix that by implementing an "enabled" counter, so the PM runtime functions
+> get called only when really needed.
 > 
-> If you're going to take the set though the clk tree, don't forget to
-> sent out a pull-request of the immutable branch you created.  If
-> you're not happy to do that, drop the patch and I'll happily oblige.
-> 
+> Without that patch Nokia N900 IR TX driver (ir-rx51) does not function.
 
-Oh sorry, I got confused. I thought you acked this mfd patch so I could
-take it through the clk tree but it seems you acked them so you
-could apply it later without re-reviewing it?
+We should use pm_runtime for the refcounting though and call PM runtime
+unconditionally. Can you try to follow the standard PM runtime usage
+like this:
 
-Either way, I'm going to drop these patches for now and wait for
-a v4 because Charles has suggested there are some more issues to
-work out.
+init:
+pm_runtime_use_autosuspend(&timer->pdev->dev);
+pm_runtime_set_autosuspend_delay(&timer->pdev->dev, 200);
+pm_runtime_enable(&timer->pdev->dev);
+...
+enable:
+pm_runtime_get_sync(&timer->pdev->dev);
+...
+disable:
+pm_runtime_mark_last_busy(&timer->pdev->dev);
+pm_runtime_put_autosuspend(&timer->pdev->dev);
+...
+exit:
+pm_runtime_dont_use_autosuspend(&timer->pdev->dev);
+pm_runtime_put_sync(&timer->pdev->dev);
+pm_runtime_disable(&timer->pdev->dev);
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+No idea what the timeout should be, maybe less than 200 ms. Also we need
+to test that off idle still works with timer1, that might need special
+handling.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
