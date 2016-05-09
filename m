@@ -1,39 +1,257 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v7 7/9] clk: mediatek: Enable critical clocks for MT2701
-Date: Mon, 9 May 2016 13:40:26 +0800
-Message-ID: <1462772426.5344.7.camel@mtksdaap41>
-References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1460621514-65191-8-git-send-email-jamesjj.liao@mediatek.com>
-	 <20160506231229.GJ3492@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160506231229.GJ3492@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI with
+ CPU thermal nodes
+Date: Mon, 09 May 2016 08:19:49 +0200
+Message-ID: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Anand Moon <linux.amoon@gmail.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Include the CPU thermal nodes directly in Odroid XU3-family common DTS
+because it is the only user of it. Keeping it in separate DTSI node does
+not bring benefits because:
+1. It is not re-usable on other non-fan boards (fan is referenced),
+2. It won't be re-used on future Odroid XU board because different
+   CPU cluster behavior.
 
-On Fri, 2016-05-06 at 16:12 -0700, Stephen Boyd wrote:
-> On 04/14, James Liao wrote:
-> > Some system clocks should be turned on by default on MT2701.
-> > This patch enable these clocks when related clocks have
-> > been registered.
-> > 
-> > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> > ---
-> 
-> critical clks got merged now (sorry I'm slowly getting back to
-> looking at patches). Please use that flag.
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi      | 103 ---------------------
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  94 ++++++++++++++++++-
+ 2 files changed, 92 insertions(+), 105 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi
 
-I don't see critical clock support in v4.6-rc7. Is there a repo/branch
-that has critical clocks merged?
-
-
-Best regards,
-
-James
-
+diff --git a/arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi b/arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi
+deleted file mode 100644
+index 3e4c4ad96d63..000000000000
+--- a/arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi
++++ /dev/null
+@@ -1,103 +0,0 @@
+-/*
+- * Device tree sources for Exynos5422 thermal zone
+- *
+- * Copyright (c) 2015 Lukasz Majewski <l.majewski@samsung.com>
+- *			Anand Moon <linux.amoon@gmail.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- */
+-
+-#include <dt-bindings/thermal/thermal.h>
+-
+-/ {
+-	thermal-zones {
+-		cpu0_thermal: cpu0-thermal {
+-			thermal-sensors = <&tmu_cpu0 0>;
+-			polling-delay-passive = <250>;
+-			polling-delay = <0>;
+-			trips {
+-				cpu_alert0: cpu-alert-0 {
+-					temperature = <50000>; /* millicelsius */
+-					hysteresis = <5000>; /* millicelsius */
+-					type = "active";
+-				};
+-				cpu_alert1: cpu-alert-1 {
+-					temperature = <60000>; /* millicelsius */
+-					hysteresis = <5000>; /* millicelsius */
+-					type = "active";
+-				};
+-				cpu_alert2: cpu-alert-2 {
+-					temperature = <70000>; /* millicelsius */
+-					hysteresis = <5000>; /* millicelsius */
+-					type = "active";
+-				};
+-				cpu_crit0: cpu-crit-0 {
+-					temperature = <120000>; /* millicelsius */
+-					hysteresis = <0>; /* millicelsius */
+-					type = "critical";
+-				};
+-				/*
+-				 * Exyunos542x support only 4 trip-points
+-				 * so for these polling mode is required.
+-				 * Start polling at temperature level of last
+-				 * interrupt-driven trip: cpu_alert2
+-				 */
+-				cpu_alert3: cpu-alert-3 {
+-					temperature = <70000>; /* millicelsius */
+-					hysteresis = <10000>; /* millicelsius */
+-					type = "passive";
+-				};
+-				cpu_alert4: cpu-alert-4 {
+-					temperature = <85000>; /* millicelsius */
+-					hysteresis = <10000>; /* millicelsius */
+-					type = "passive";
+-				};
+-
+-			};
+-			cooling-maps {
+-				map0 {
+-				     trip = <&cpu_alert0>;
+-				     cooling-device = <&fan0 0 1>;
+-				};
+-				map1 {
+-				     trip = <&cpu_alert1>;
+-				     cooling-device = <&fan0 1 2>;
+-				};
+-				map2 {
+-				     trip = <&cpu_alert2>;
+-				     cooling-device = <&fan0 2 3>;
+-				};
+-				/*
+-				 * When reaching cpu_alert3, reduce CPU
+-				 * by 2 steps. On Exynos5422/5800 that would
+-				 * be: 1500 MHz and 1100 MHz.
+-				 */
+-				map3 {
+-				     trip = <&cpu_alert3>;
+-				     cooling-device = <&cpu0 0 2>;
+-				};
+-				map4 {
+-				     trip = <&cpu_alert3>;
+-				     cooling-device = <&cpu4 0 2>;
+-				};
+-
+-				/*
+-				 * When reaching cpu_alert4, reduce CPU
+-				 * further, down to 600 MHz (11 steps for big,
+-				 * 7 steps for LITTLE).
+-				 */
+-				map5 {
+-				     trip = <&cpu_alert4>;
+-				     cooling-device = <&cpu0 3 7>;
+-				};
+-				map6 {
+-				     trip = <&cpu_alert4>;
+-				     cooling-device = <&cpu4 3 11>;
+-				};
+-			};
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+index 2a4e10bc8801..ff05041835e5 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+@@ -1,9 +1,11 @@
+ /*
+  * Hardkernel Odroid XU3 board device tree source
+  *
+- * Copyright (c) 2014 Collabora Ltd.
+  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
++ * Copyright (c) 2014 Collabora Ltd.
++ * Copyright (c) 2015 Lukasz Majewski <l.majewski@samsung.com>
++ *                    Anand Moon <linux.amoon@gmail.com>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -16,7 +18,6 @@
+ #include <dt-bindings/sound/samsung-i2s.h>
+ #include "exynos5800.dtsi"
+ #include "exynos5422-cpus.dtsi"
+-#include "exynos5422-cpu-thermal.dtsi"
+ 
+ / {
+ 	memory {
+@@ -54,6 +55,95 @@
+ 		#cooling-cells = <2>;
+ 		cooling-levels = <0 130 170 230>;
+ 	};
++
++	thermal-zones {
++		cpu0_thermal: cpu0-thermal {
++			thermal-sensors = <&tmu_cpu0 0>;
++			polling-delay-passive = <250>;
++			polling-delay = <0>;
++			trips {
++				cpu_alert0: cpu-alert-0 {
++					temperature = <50000>; /* millicelsius */
++					hysteresis = <5000>; /* millicelsius */
++					type = "active";
++				};
++				cpu_alert1: cpu-alert-1 {
++					temperature = <60000>; /* millicelsius */
++					hysteresis = <5000>; /* millicelsius */
++					type = "active";
++				};
++				cpu_alert2: cpu-alert-2 {
++					temperature = <70000>; /* millicelsius */
++					hysteresis = <5000>; /* millicelsius */
++					type = "active";
++				};
++				cpu_crit0: cpu-crit-0 {
++					temperature = <120000>; /* millicelsius */
++					hysteresis = <0>; /* millicelsius */
++					type = "critical";
++				};
++				/*
++				 * Exynos542x supports only 4 trip-points
++				 * so for these polling mode is required.
++				 * Start polling at temperature level of last
++				 * interrupt-driven trip: cpu_alert2
++				 */
++				cpu_alert3: cpu-alert-3 {
++					temperature = <70000>; /* millicelsius */
++					hysteresis = <10000>; /* millicelsius */
++					type = "passive";
++				};
++				cpu_alert4: cpu-alert-4 {
++					temperature = <85000>; /* millicelsius */
++					hysteresis = <10000>; /* millicelsius */
++					type = "passive";
++				};
++
++			};
++			cooling-maps {
++				map0 {
++				     trip = <&cpu_alert0>;
++				     cooling-device = <&fan0 0 1>;
++				};
++				map1 {
++				     trip = <&cpu_alert1>;
++				     cooling-device = <&fan0 1 2>;
++				};
++				map2 {
++				     trip = <&cpu_alert2>;
++				     cooling-device = <&fan0 2 3>;
++				};
++				/*
++				 * When reaching cpu_alert3, reduce CPU
++				 * by 2 steps. On Exynos5422/5800 that would
++				 * be: 1500 MHz and 1100 MHz.
++				 */
++				map3 {
++				     trip = <&cpu_alert3>;
++				     cooling-device = <&cpu0 0 2>;
++				};
++				map4 {
++				     trip = <&cpu_alert3>;
++				     cooling-device = <&cpu4 0 2>;
++				};
++
++				/*
++				 * When reaching cpu_alert4, reduce CPU
++				 * further, down to 600 MHz (11 steps for big,
++				 * 7 steps for LITTLE).
++				 */
++				map5 {
++				     trip = <&cpu_alert4>;
++				     cooling-device = <&cpu0 3 7>;
++				};
++				map6 {
++				     trip = <&cpu_alert4>;
++				     cooling-device = <&cpu4 3 11>;
++				};
++			};
++		};
++	};
++
+ };
+ 
+ &bus_wcore {
+-- 
+1.9.1
