@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 4/7] phy: da8xx-usb: new driver for DA8xx SoC USB PHY
-Date: Mon,  9 May 2016 18:40:00 -0500
-Message-ID: <1462837203-12125-5-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 6/7] usb: musb: da8xx: Use devm in probe
+Date: Mon,  9 May 2016 18:40:02 -0500
+Message-ID: <1462837203-12125-7-git-send-email-david@lechnology.com>
 References: <1462837203-12125-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1462837203-12125-1-git-send-email-david@lechnology.com>
@@ -10,300 +10,64 @@ To: nsekhar@ti.com, khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel 
 Cc: David Lechner <david@lechnology.com>, petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a new phy driver for the SoC USB controllers on the TI DA8xx
-family of microcontrollers. The USB 1.1 PHY is just a simple on/off.
-The USB 2.0 PHY also allows overriding the VBUS and ID pins.
+Simplify things a bit by using devm functions where possible.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- drivers/phy/Kconfig         |  10 ++
- drivers/phy/Makefile        |   1 +
- drivers/phy/phy-da8xx-usb.c | 244 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 255 insertions(+)
- create mode 100644 drivers/phy/phy-da8xx-usb.c
+ drivers/usb/musb/da8xx.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 26566db..c1d315f 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -35,6 +35,16 @@ config ARMADA375_USBCLUSTER_PHY
- 	depends on OF && HAS_IOMEM
- 	select GENERIC_PHY
+diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+index b03d3b8..0c1997c 100644
+--- a/drivers/usb/musb/da8xx.c
++++ b/drivers/usb/musb/da8xx.c
+@@ -490,20 +490,18 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	struct da8xx_glue		*glue;
+ 	struct platform_device_info	pinfo;
+ 	struct clk			*clk;
++	int				ret;
  
-+config PHY_DA8XX_USB
-+	tristate "TI DA8xx USB PHY Driver"
-+	depends on ARCH_DAVINCI_DA8XX
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the USB PHY on DA8xx SoCs.
-+
-+	  This driver controls both the USB 1.1 PHY and the USB 2.0 PHY.
-+
- config PHY_DM816X_USB
- 	tristate "TI dm816x USB PHY driver"
- 	depends on ARCH_OMAP2PLUS
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 24596a9..722e01c 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -5,6 +5,7 @@
- obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
- obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
- obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
-+obj-$(CONFIG_PHY_DA8XX_USB)		+= phy-da8xx-usb.o
- obj-$(CONFIG_PHY_DM816X_USB)		+= phy-dm816x-usb.o
- obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
- obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
-diff --git a/drivers/phy/phy-da8xx-usb.c b/drivers/phy/phy-da8xx-usb.c
-new file mode 100644
-index 0000000..0c05488
---- /dev/null
-+++ b/drivers/phy/phy-da8xx-usb.c
-@@ -0,0 +1,244 @@
-+/*
-+ * phy-da8xx-usb - TI DaVinci DA8xx USB PHY driver
-+ *
-+ * Copyright (C) 2016 David Lechner <david@lechnology.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/mfd/da8xx-cfgchip.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+struct da8xx_usb_phy {
-+	struct phy_provider	*phy_provider;
-+	struct phy		*usb11_phy;
-+	struct phy		*usb20_phy;
-+	struct clk		*usb11_clk;
-+	struct clk		*usb20_clk;
-+	struct regmap		*regmap;
-+};
-+
-+static int da8xx_usb11_phy_power_on(struct phy *phy)
-+{
-+	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(d_phy->usb11_clk);
-+	if (ret)
-+		return ret;
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_USB1SUSPENDM,
-+			  CFGCHIP2_USB1SUSPENDM);
-+
-+	return 0;
-+}
-+
-+static int da8xx_usb11_phy_power_off(struct phy *phy)
-+{
-+	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_USB1SUSPENDM, 0);
-+
-+	clk_disable_unprepare(d_phy->usb11_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops da8xx_usb11_phy_ops = {
-+	.power_on	= da8xx_usb11_phy_power_on,
-+	.power_off	= da8xx_usb11_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int da8xx_usb20_phy_power_on(struct phy *phy)
-+{
-+	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(d_phy->usb20_clk);
-+	if (ret)
-+		return ret;
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_OTGPWRDN, 0);
-+
-+	return 0;
-+}
-+
-+static int da8xx_usb20_phy_power_off(struct phy *phy)
-+{
-+	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_OTGPWRDN,
-+			  CFGCHIP2_OTGPWRDN);
-+
-+	clk_disable_unprepare(d_phy->usb20_clk);
-+
-+	return 0;
-+}
-+
-+static int da8xx_usb20_phy_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
-+	u32 val;
-+
-+	switch (mode) {
-+	case PHY_MODE_USB_HOST:		/* Force VBUS valid, ID = 0 */
-+		val = CFGCHIP2_OTGMODE_FORCE_HOST;
-+		break;
-+	case PHY_MODE_USB_DEVICE:	/* Force VBUS valid, ID = 1 */
-+		val = CFGCHIP2_OTGMODE_FORCE_DEVICE;
-+		break;
-+	case PHY_MODE_USB_OTG:	/* Don't override the VBUS/ID comparators */
-+		val = CFGCHIP2_OTGMODE_NO_OVERRIDE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_OTGMODE_MASK, val);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops da8xx_usb20_phy_ops = {
-+	.power_on	= da8xx_usb20_phy_power_on,
-+	.power_off	= da8xx_usb20_phy_power_off,
-+	.set_mode	= da8xx_usb20_phy_set_mode,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static struct phy *da8xx_usb_phy_of_xlate(struct device *dev,
-+					 struct of_phandle_args *args)
-+{
-+	struct da8xx_usb_phy *d_phy = dev_get_drvdata(dev);
-+
-+	if (!d_phy)
-+		return ERR_PTR(-ENODEV);
-+
-+	switch (args->args[0]) {
-+	case 0:
-+		return d_phy->usb20_phy;
-+	case 1:
-+		return d_phy->usb11_phy;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
-+
-+static int da8xx_usb_phy_probe(struct platform_device *pdev)
-+{
-+	struct device		*dev = &pdev->dev;
-+	struct device_node	*node = dev->of_node;
-+	struct da8xx_usb_phy	*d_phy;
-+
-+	d_phy = devm_kzalloc(dev, sizeof(*d_phy), GFP_KERNEL);
-+	if (!d_phy)
+-	int				ret = -ENOMEM;
+-
+-	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
++	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
+ 	if (!glue) {
+ 		dev_err(&pdev->dev, "failed to allocate glue context\n");
+-		goto err0;
 +		return -ENOMEM;
-+
-+	if (node)
-+		d_phy->regmap = syscon_regmap_lookup_by_compatible(
-+							"ti,da830-cfgchip");
-+	else
-+		d_phy->regmap = syscon_regmap_lookup_by_pdevname("syscon.0");
-+	if (IS_ERR(d_phy->regmap)) {
-+		dev_err(dev, "Failed to get syscon\n");
-+		return PTR_ERR(d_phy->regmap);
-+	}
-+
-+	d_phy->usb11_clk = devm_clk_get(dev, "usb11_phy");
-+	if (IS_ERR(d_phy->usb11_clk)) {
-+		dev_err(dev, "Failed to get usb11_phy clock\n");
-+		return PTR_ERR(d_phy->usb11_clk);
-+	}
-+
-+	d_phy->usb20_clk = devm_clk_get(dev, "usb20_phy");
-+	if (IS_ERR(d_phy->usb20_clk)) {
-+		dev_err(dev, "Failed to get usb20_phy clock\n");
-+		return PTR_ERR(d_phy->usb20_clk);
-+	}
-+
-+	d_phy->usb11_phy = devm_phy_create(dev, node, &da8xx_usb11_phy_ops);
-+	if (IS_ERR(d_phy->usb11_phy)) {
-+		dev_err(dev, "Failed to create usb11 phy\n");
-+		return PTR_ERR(d_phy->usb11_phy);
-+	}
-+
-+	d_phy->usb20_phy = devm_phy_create(dev, node, &da8xx_usb20_phy_ops);
-+	if (IS_ERR(d_phy->usb20_phy)) {
-+		dev_err(dev, "Failed to create usb20 phy\n");
-+		return PTR_ERR(d_phy->usb20_phy);
-+	}
-+
-+	platform_set_drvdata(pdev, d_phy);
-+	phy_set_drvdata(d_phy->usb11_phy, d_phy);
-+	phy_set_drvdata(d_phy->usb20_phy, d_phy);
-+
-+	if (node) {
-+		d_phy->phy_provider = devm_of_phy_provider_register(dev,
-+							da8xx_usb_phy_of_xlate);
-+		if (IS_ERR(d_phy->phy_provider)) {
-+			dev_err(dev, "Failed to create phy provider\n");
-+			return PTR_ERR(d_phy->phy_provider);
-+		}
-+	} else {
-+		int ret;
-+
-+		ret = phy_create_lookup(d_phy->usb11_phy, "usb-phy", "ohci.0");
-+		if (ret)
-+			dev_warn(dev, "Failed to create usb11 phy lookup\n");
-+		ret = phy_create_lookup(d_phy->usb20_phy, "usb-phy",
-+					"musb-da8xx");
-+		if (ret)
-+			dev_warn(dev, "Failed to create usb20 phy lookup\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static int da8xx_usb_phy_remove(struct platform_device *pdev)
-+{
-+	struct da8xx_usb_phy *d_phy = platform_get_drvdata(pdev);
-+
-+	if (!pdev->dev.of_node) {
-+		phy_remove_lookup(d_phy->usb20_phy, "usb-phy", "musb-da8xx");
-+		phy_remove_lookup(d_phy->usb11_phy, "usb-phy", "ohci.0");
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id da8xx_usb_phy_ids[] = {
-+	{ .compatible = "ti,da830-usb-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, da8xx_usb_phy_ids);
-+
-+static struct platform_driver da8xx_usb_phy_driver = {
-+	.probe	= da8xx_usb_phy_probe,
-+	.remove	= da8xx_usb_phy_remove,
-+	.driver	= {
-+		.name	= "da8xx-usb-phy",
-+		.of_match_table = da8xx_usb_phy_ids,
-+	},
-+};
-+
-+module_platform_driver(da8xx_usb_phy_driver);
-+
-+MODULE_ALIAS("platform:da8xx-usb-phy");
-+MODULE_AUTHOR("David Lechner <david@lechnology.com>");
-+MODULE_DESCRIPTION("TI DA8xx USB PHY driver");
-+MODULE_LICENSE("GPL v2");
+ 	}
+ 
+-	clk = clk_get(&pdev->dev, "usb20");
++	clk = devm_clk_get(&pdev->dev, "usb20");
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "failed to get clock\n");
+-		ret = PTR_ERR(clk);
+-		goto err3;
++		return PTR_ERR(clk);
+ 	}
+ 
+ 	ret = clk_enable(clk);
+@@ -560,12 +558,7 @@ err5:
+ 	clk_disable(clk);
+ 
+ err4:
+-	clk_put(clk);
+-
+-err3:
+-	kfree(glue);
+ 
+-err0:
+ 	return ret;
+ }
+ 
+@@ -576,8 +569,6 @@ static int da8xx_remove(struct platform_device *pdev)
+ 	platform_device_unregister(glue->musb);
+ 	usb_phy_generic_unregister(glue->phy);
+ 	clk_disable(glue->clk);
+-	clk_put(glue->clk);
+-	kfree(glue);
+ 
+ 	return 0;
+ }
 -- 
 2.7.4
