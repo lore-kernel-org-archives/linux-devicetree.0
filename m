@@ -1,62 +1,79 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH 1/2] doc/devicetree: Add Aspeed VIC bindings
-Date: Mon, 9 May 2016 15:50:00 +0300
-Message-ID: <20160509124959.GM4414@sapphire.tkos.co.il>
-References: <1462797239-14765-1-git-send-email-joel@jms.id.au>
- <1462797239-14765-2-git-send-email-joel@jms.id.au>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [Kernel] [PATCH v2 4/5] ARM: dts: omap5: describe control for
+ ckobuffer
+Date: Mon, 9 May 2016 15:46:12 +0300
+Message-ID: <71c88d52-3737-6edb-52af-0b0f4a74efb2@ti.com>
+References: <cover.1461003660.git.hns@goldelico.com>
+ <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com>
+ <20160426172710.GI5995@atomide.com>
+ <70572DA1-BEB4-4681-BA6C-2E1C9002D730@goldelico.com>
+ <5720B107.4000907@ti.com>
+ <A90F1BFC-A834-4EC0-81F9-2C8222AAA010@goldelico.com>
+ <5720C85B.9010701@ti.com> <ce9a7840-e86f-0d0c-3ed6-a571eec6659d@ti.com>
+ <40536322-073F-48BD-9D07-32B9A9F07AF2@goldelico.com>
+ <5721C3D4.7040401@ti.com>
+ <2A9D82CD-9ACA-49F6-9D2B-9EACFC517914@goldelico.com>
+ <57220EDD.7080903@ti.com>
+ <F2BCD4BA-E4E4-43F4-B65C-B625ED3B2D13@goldelico.com>
+ <573079F5.7050507@ti.com> <145c9917-6a85-292b-c3c9-cf85ceb26f21@ti.com>
+ <f66cd508-fe53-af58-bda5-822c8213cf7d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1462797239-14765-2-git-send-email-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, arnd@arndb.de, marc.zyngier@arm.com, benh@kernel.crashing.org, jk@ozlabs.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f66cd508-fe53-af58-bda5-822c8213cf7d@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, Marek Belisko <marek@goldelico.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joel,
+On 05/09/16 15:32, Peter Ujfalusi wrote:
+> On 05/09/16 15:10, Peter Ujfalusi wrote:
+>=20
+>>>> finally I found some time to apply your patches. Sorry for the lon=
+g time.
+>>>>
+>>>> Unfortunately, it does not work. Neither on omap5evm nor on our om=
+ap5 hardware.
+>>>> I get no sound on the twl6040 - just white noise (which can be con=
+trolled in
+>>>> level through
+>>>> amixer so it is created on the digital input side of the twl6040).
+>>>>
+>>>> So I think your patch is missing a detail compared to my simple so=
+lution.
+>>>
+>>> Did you implement anything on the audio driver side? The audio driv=
+er must
+>>> enable the clock implemented by this patch.
+>>
+>> I did, can test it in 10 minutes or so...
+>=20
+> might work, but linux-next is not booting on omap5-uevm :o I don't kn=
+ow why...
 
-On Mon, May 09, 2016 at 10:03:58PM +0930, Joel Stanley wrote:
-> +Aspeed Vectored Interrupt Controller
-> +
-> +These bindings are for the Aspeed AST2400 interrupt controller register layout.
-> +The SoC has an legacy register layout, but this driver does not support that
-> +mode of operation.
-> +
-> +Required properties:
-> +
-> +- compatible : should be "aspeed,ast2400-vic".
-> +
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The value shall be 1.
-> +- valid-sources : bitmask of valid irq sources
-> +
-> +Example:
-> +
-> + vic: interrupt-controller {
-> +      compatible = "aspeed,ast2400-new-vic";
+Applying Tero's alone makes the board not to boot, so something there..=
+=2E I can
+not see anything even with low-level debugging enabled :( I can not deb=
+ug it
+further today, will look at this tomorrow.
 
-That doesn't match the compatible string documented above.
+> In any case I have attached the 3 patches I have for this, including =
+Tero's
+> ported to linux-next.
+>=20
+> Patch 3 might need to be done per board probably, but this should be =
+good for
+> testing.
+>=20
+>=20
+>=20
+> _______________________________________________
+> Kernel mailing list
+> Kernel@pyra-handheld.com
+> http://pyra-handheld.com/cgi-bin/mailman/listinfo/kernel
+>=20
 
-> +      interrupt-controller;
-> +      #interrupt-cells = <1>;
-> +      valid-sources = < 0xffffffff 0x0007ffff>;
-> +      reg = <0x1e6c0080 0x80>;
-> + };
 
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+--=20
+P=C3=A9ter
