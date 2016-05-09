@@ -1,38 +1,38 @@
-From: Grant Grundler <grundler@chromium.org>
-Subject: Re: Input: add Atmel Atmegaxx captouch driver
-Date: Mon, 9 May 2016 09:44:57 -0700
-Message-ID: <CANEJEGu=QkYwrDeS08JdNaUis1aVpOs_xnZCdFmC4FHF8uSRHA@mail.gmail.com>
-References: <1462295611-49684-1-git-send-email-grundler@chromium.org>
-	<20160504135123.GA4567@rob-hp-laptop>
-	<CANEJEGt1Ri7Q-g25U8_KTAb9Z8MfVWH0N5QLaLcdnDuF_wwrtw@mail.gmail.com>
-	<572C61B1.2040508@atmel.com>
-	<CAHHoo-j7145vPFNmJH=CvPu-BRCgRe0WNKH8QDkSc+c3koxHAQ@mail.gmail.com>
-	<20160509162948.GA15535@dtor-ws>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
+ with CPU thermal nodes
+Date: Mon, 9 May 2016 12:44:50 -0400
+Message-ID: <d7e37f87-c794-f0ad-73d1-8e976c37471b@osg.samsung.com>
+References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160509162948.GA15535@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Daniel Hung-yu Wu <hywu@google.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Grant Grundler <grundler@chromium.org>, Rob Herring <robh@kernel.org>, linux-input <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 9, 2016 at 9:29 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Fri, May 06, 2016 at 11:14:12PM +0800, Daniel Hung-yu Wu wrote:
->> The register set is different, and this chip does not support calibration.
->> The I2C protocol is not the same as well; there is an additional byte
->> indicating data length.
->>
->> Atmega88PA is a general-purpose MCU. In the future, we will add more
->> functionalities, such as firmware upgrade through I2C.
->
-> Is it Google who will be maintaining and extending the protocol or
-> Atmel? If it is Google then maybe we should switch compat string to
-> "google,captouch" or similar.
+Hello Krzysztof,
 
-My understanding was Atmel would extend the protocol to support FW update.
-No other extensions are planned.
+On 05/09/2016 02:19 AM, Krzysztof Kozlowski wrote:
+> Include the CPU thermal nodes directly in Odroid XU3-family common DTS
+> because it is the only user of it. Keeping it in separate DTSI node does
+> not bring benefits because:
+> 1. It is not re-usable on other non-fan boards (fan is referenced),
+> 2. It won't be re-used on future Odroid XU board because different
+>    CPU cluster behavior.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
 
-cheers,
-grant
+Agreed with both points and the patch looks good to me.
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
