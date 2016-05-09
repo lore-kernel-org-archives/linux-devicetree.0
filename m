@@ -1,99 +1,168 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] vf610-soc: Add Vybrid SoC device tree binding documentation
-Date: Mon, 9 May 2016 17:58:42 -0500
-Message-ID: <CAL_JsqL7sjdONYad6sXM1KXFCjooANuN7WYg-paV9LnKnuMTnA@mail.gmail.com>
-References: <cover.1462171989.git.maitysanchayan@gmail.com>
- <65f3a7bd7a9faf1b390644d7c599c69683c753c4.1462171990.git.maitysanchayan@gmail.com>
- <20160504023026.GB5382@rob-hp-laptop> <20160505082758.GB18151@Sanchayan-Arch.localdomain>
- <CAL_JsqL1qQu_u=6xosP8UmR3oXLawbVz=Hap0wDm7aN4mjK2GA@mail.gmail.com> <4ca82be6c1d434c612868b441e9f6e1f@agner.ch>
+From: Florian Fainelli <florian.fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
+ bindings
+Date: Mon, 9 May 2016 16:15:05 -0700
+Message-ID: <573119F9.3040509@broadcom.com>
+References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+ <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
+ <20160509192641.GA4936@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4ca82be6c1d434c612868b441e9f6e1f-XLVq0VzYD2Y@public.gmane.org>
+In-Reply-To: <20160509192641.GA4936@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 9, 2016 at 1:25 PM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
-> On 2016-05-09 10:14, Rob Herring wrote:
->> On Thu, May 5, 2016 at 3:27 AM,  <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Hello Rob,
->>>
->>> On 16-05-03 21:30:26, Rob Herring wrote:
->>>> On Mon, May 02, 2016 at 12:35:04PM +0530, Sanchayan Maity wrote:
->>>> > Add device tree binding documentation for Vybrid SoC.
->>>> >
->>>> > Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> > ---
->>>> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       | 35 ++++++++++++++++++++++
->>>> >  1 file changed, 35 insertions(+)
->>>> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->>>> >
->>>> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->>>> > new file mode 100644
->>>> > index 0000000..bdd95e8
->>>> > --- /dev/null
->>>> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->>>> > @@ -0,0 +1,35 @@
->>>> > +Vybrid System-on-Chip
->>>> > +---------------------
->>>> > +
->>>> > +Required properties:
->>>> > +
->>>> > +- #address-cells: must be 1
->>>> > +- #size-cells: must be 1
->>>> > +- compatible: "fsl,vf610-soc-bus", "simple-bus"
->>>>
->>>> If this is a bus, put the file in bindings/bus/...
->>>
->>> The fsl,vf610-soc-bus binding is used to bind the driver in question with
->>> an appropriate compatible node.
->>>
->>> Basically being a standalone platform driver, there was need of a compatible
->>> property to bind on. Introducing a separate device tree node for it's sake
->>> didn't seem appropriate so the alteration to SoC node's compatible.
+On 05/09/2016 12:26 PM, Rob Herring wrote:
+> On Thu, May 05, 2016 at 12:14:59PM -0700, Florian Fainelli wrote:
+>> From: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >>
->> Ah, so you are designing a node around the needs of a Linux specific
->> driver. Don't do that. DT describes the h/w and this node is not a h/w
->> block.
+>> This patchs adds the Device Tree bindings for the Broadcom STB PCIe root
+>> complex hardware.
 >>
->> Create a platform device based on a matching SOC compatible string
->> instead and make your driver find the information it needs directly
->> from the relevant nodes like the ROM node.
->
-> That reads like my words a year ago:
-> https://lkml.org/lkml/2015/5/22/408
->
-> Initially pretty much everything was hard-coded in the driver.
->
-> Arnd then pushed to use more descriptive in the device tree.
->
-> Of course, we should not end up making up relations which are not there
-> in hardware. We need to find the right balance.
->
-> Here is my suggestion:
-> 1. Add "fsl,vf610-soc-bus" as compatible string to the soc node, use it
-> to bind the "soc bus driver" as a platform driver located in driver/soc/
+>> Signed-off-by: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> Changes in v2:
+>>
+>> - rewrite the binding document almost from scratch to include many more
+>>   references to existing documents
+>> - describe missing properties
+>> - give better examples
+>>
+>>  .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  | 98 ++++++++++++++++++++++
+>>  1 file changed, 98 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+>> new file mode 100644
+>> index 000000000000..3682b0f0bc26
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+>> @@ -0,0 +1,98 @@
+>> +Broadcom STB PCIe Host Controller Device Tree Bindings
+>> +
+>> +This document describes the binding of the PCIe Root Complex hardware found in
+>> +Broadcom Set Top Box System-on-Chips such as BCM7425 (MIPS), BCM7435 (MIPS) and
+>> +BCM7445 (ARMv7).
+>> +
+>> +Required properties:
+>> +- compatible: must be one of: "brcm,bcm7425-pcie"
+>> +			      "brcm,bcm7435-pcie"
+>> +			      "brcm,bcm7445-pcie"
+>> +
+>> +- reg: specifies the physical base address of the controller registers and
+>> +  its length
+>> +
+>> +- interrupt-parent: must be a reference (phandle) to the parent interrupt
+>> +  controller in the system (7038-l1-intc on MIPS, GIC on ARM/ARM64)
+>> +
+>> +- interrrupts: first interrupt must be the Level 1 interrupt number corresponding
+>> +  to the main PCIe RC interrupt, second interrupt must be the MSI interrupt
+>> +  See the interrupt-parent documentation for the number of cells and their meaning:
+>> +  MIPS: Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+>> +  ARM/ARM64: Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+>> +
+>> +- interrupt-names: must be "pcie", and if present "msi"
+>> +
+>> +- interrupt-map: see pci.txt
+>> +
+>> +- interrupt-map-mask: see pci.txt
+>> +
+>> +- #address-cells: must be set to <3>, see pci.txt
+>> +
+>> +- #size-cells: must be set to <2>, see pci.txt
+>> +
+>> +- ranges: ranges for the PCI outbound windows, no I/O or prefetchable windows
+>> +  must be specified here, only non-prefetchable. 32-bits windows or 64-bits
+>> +  windows are allowed based on the host processor's capabilities (ARM w/ LPAE,
+>> +  ARM64).
+>> +
+>> +- #interrupt-cells: set to <1>, see pci.txt
+>> +
+>> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to PCIe space
+>> +  there must be exactly one value per memory controller present in the system
+>> +  (ranges from 1 to 3)
+>> +
+>> +Optional properties:
+>> +
+>> +- msi-controller: indicates that this is a MSI controller node (when supported)
+>> +
+>> +- clocks: phandle to the functional clock that feeds into the PCIe RC block
+>> +
+>> +- clock-names: the name(s) of the clocks specified in 'clocks'.  Note
+>> +  that if the 'clocks' property is given, 'clock-names' is mandatory,
+>> +  and the name of the clock is expected to be "pcie".
+>> +
+>> +- brcm,ssc: boolean that indicates usage of spread-spectrum clocking
+> 
+> Shouldn't this be a property of the phy? Is there no separate phy to 
+> control?
 
-I'm not convinced this is a h/w block. This keeps coming up and I
-think this is a kernel problem, not a DT problem. Let's face it that
-there are drivers at the SOC level which don't fit into a DT node.
-They may be the exception, but they are a common exception. My
-proposal for how to deal with these cases is here[1].
+No, the PHY is baked into the PCIe root complex, which is why this is a
+property of the root complex node since the two are conflated.
 
-I also think drivers/soc is a mess because it is randomly used or not.
-IMO, using it should not be at the whim of whomever does SOC support.
+> 
+>> +
+>> +- brcm,gen: integer that indicates desired forced generation of link: 1 => 2.5
+>> +  Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps. Will override the auto-negotation if
+>> +  specified.
+>> +
+>> +- <*>-supply: see Documentation/devicetree/bindings/regulator/regulator.txt
+>> +
+>> +- <*>-supply-names: see Documentation/devicetree/bindings/regulator/regulator.txt
+>> +
+>> +Example Node:
+>> +
+>> +This example assumes that the top-level #address-cells = <2> and #size-cells =
+>> +<2>, e.g: ARM LPAE configuration.
+>> +
+>> +	pcie0: pcie-controller@f0460000 {
+>> +		reg = <0x0 0xf0460000 0x0 0x9310>;
+>> +		interrupts = <0x0 0x33 0x4>, <0x0 0x34, 0x4>;
+>                                                       ^
+> typo
 
-> 2. Add ROM as syscon device (it is not erasable ROM memory, hence eeprom
-> seems not to be appropriate)
+Whoops, thanks.
 
-It is not a syscon. It is just memory. nvmem covers read-only memory,
-so I have no issue using that.
+> 
+>> +		interrupt-names = "pcie", "msi";
+>> +		compatible = "brcm,bcm7445-pcie";
+>> +		#address-cells = <3>;
+>> +		#size-cells = <2>;
+>> +
+>> +		/* Two non-prefetchable 32-bits memory space, each of 128MB
+>> + 		 * with the following mapping:
+>> +		 * PCIe address		=> CPU physical address space
+>> +		 * 0x00_0000_0000	=> 0x00_C000_0000
+>> +		 * 0x00_0800_0000	=> 0x00_C800_0000
+>> +		 */
+>> +		ranges = <0x02000000 0x00000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x08000000>,
+>> +			 <0x02000000 0x00000000 0x08000000 0x00000000 0xc8000000 0x00000000 0x08000000>;
+>> +		#interrupt-cells = <1>;
+>> +		interrupt-map-mask = <0xf800 0 0 7>;
+>> +		interrupt-map = <0 0 0 1 &intc 47 3
+>> +				 0 0 0 2 &intc 48 3
+>> +				 0 0 0 3 &intc 49 3
+>> +				 0 0 0 4 &intc 50 3>;
+>> +		clocks = <&pcie0>;
+>> +		clock-names = "pcie";
+>> +		brcm,ssc;
+>> +		brcm,log2-scb-sizes = <0x1e 0x1e 0x1e>;
+>> +		vreg-wifi-pwr-supply-names = "vreg-wifi-pwr";
+>> +		vreg-wifi-pwr-supply = <&vreg-wifi-pwr>;
+> 
+> The supply for the PCIE RC is called "vreg-wifi-pwr"? Seems a bit 
+> strange.
 
-Rob
-
-[1] https://lkml.org/lkml/2013/10/30/27
+It can be called anything, this just happens to be the example, but I
+can certainly drop that, since a) this is optional and b) we need to
+rework that in the driver anyway.
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
