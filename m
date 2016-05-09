@@ -1,86 +1,403 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 06/17] irqdomain: Don't set type when mapping an IRQ
-Date: Mon, 9 May 2016 16:44:56 +0100
-Message-ID: <5730B078.8090908@nvidia.com>
-References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
- <1462379130-11742-7-git-send-email-jonathanh@nvidia.com>
- <5730813B.7060206@arm.com> <57308D0D.4080800@nvidia.com>
- <5730A867.9070504@arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 03/11] mfd: altr_a10sr: Add Altera Arria10 DevKit System
+ Resource Chip
+Date: Mon, 9 May 2016 17:02:15 +0100
+Message-ID: <20160509160215.GF19473@dell>
+References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
+ <1461339219-15255-4-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5730A867.9070504-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1461339219-15255-4-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 22 Apr 2016, tthayer@opensource.altera.com wrote:
 
-On 09/05/16 16:10, Marc Zyngier wrote:
-> On 09/05/16 14:13, Jon Hunter wrote:
->> On 09/05/16 13:23, Marc Zyngier wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>=20
+> Add support for the Altera Arria10 Development Kit System Resource
+> chip which is implemented using a MAX5 as a external gpio extender,
+> and power supply alarm (hwmon) with the regmap framework over a SPI b=
+us.
+>=20
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  drivers/mfd/Kconfig              |   11 +++
+>  drivers/mfd/Makefile             |    2 +
+>  drivers/mfd/altera-a10sr.c       |  179 ++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/altera-a10sr.h |   87 ++++++++++++++++++
+>  4 files changed, 279 insertions(+)
+>  create mode 100644 drivers/mfd/altera-a10sr.c
+>  create mode 100644 include/linux/mfd/altera-a10sr.h
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index eea61e3..4fc27c6 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -18,6 +18,17 @@ config MFD_CS5535
+>  	  This is the core driver for CS5535/CS5536 MFD functions.  This is
+>            necessary for using the board's GPIO and MFGPT functionali=
+ty.
+> =20
+> +config MFD_ALTERA_A10SR
+> +       bool "Altera Arria10 DevKit System Resource chip"
+> +       depends on ARCH_SOCFPGA && SPI_MASTER=3Dy && OF
+> +       select REGMAP_SPI
+> +       select MFD_CORE
+> +       help
+> +         Support for the Altera Arria10 DevKit MAX5 System Resource =
+chip
+> +         using the SPI interface. This driver provides common suppor=
+t for
+> +         accessing the external gpio extender (LEDs & buttons) and
+> +         power supply alarms (hwmon).
+> +
+>  config MFD_ACT8945A
+>  	tristate "Active-semi ACT8945A"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 5eaa6465d..4f1ff91 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -203,3 +203,5 @@ intel-soc-pmic-objs		:=3D intel_soc_pmic_core.o i=
+ntel_soc_pmic_crc.o
+>  intel-soc-pmic-$(CONFIG_INTEL_PMC_IPC)	+=3D intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC)	+=3D intel-soc-pmic.o
+>  obj-$(CONFIG_MFD_MT6397)	+=3D mt6397-core.o
+> +
+> +obj-$(CONFIG_MFD_ALTERA_A10SR)	+=3D altera-a10sr.o
+> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
+> new file mode 100644
+> index 0000000..2ff08e3
+> --- /dev/null
+> +++ b/drivers/mfd/altera-a10sr.c
+> @@ -0,0 +1,179 @@
+> +/*
+> + * Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WI=
+THOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILIT=
+Y or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lic=
+ense for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License=
+ along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + * SPI access for Altera Arria10 MAX5 System Resource Chip
+> + *
+> + * Adapted from DA9052
+> + * Copyright(c) 2011 Dialog Semiconductor Ltd.
+> + * Author: David Dajun Chen <dchen@diasemi.com>
 
-[snip]
+You don't need to carry the copyright or authorship tags over.
 
->>> This patch have the effect of making misconfigured PPIs absolutely
->>> obvious. I still need to wrap my head around the root cause, but here's
->>> the findings I have so far:
->>>
->>> - kvmtool generates a DT with the wrong trigger information (edge
->>> instead of level) for the timer.
->>> - with this patch applied, "cyclictest -S" reliably locks up when run in
->>> a guest (missing a timer interrupt, goodbye CPU).
->>> - Either fixing kvmtool or reverting that patch makes it work reliably
->>> again.
->>>
->>> My gut feeling is that until that patch, the failing irq_set_irq_type()
->>> wasn't affecting the kernel's view of the trigger (it was still treated
->>> as level). With this patch, the kernel now trusts whatever is coming
->>> from the firmware, and the misconfiguration becomes obvious. And just
->>> grepping through the DT files for arm and arm64 sends makes me thing
->>> "Holly effin' crap!".
->>>
->>> I'm not saying that we shouldn't perform this change though. But it is
->>> quite obvious that it is going to break an awful lot of existing code
->>> and platforms. I'm also cooking a small patch for the arch timer (which
->>> seems to be described in DT with a fairly high level of brokenness), so
->>> that we can mop-up most of the brain damage.
->>
->> Hmmm ... yes I see. I wonder if we should make the setting of the type
->> here dependent upon PM being enabled for an irqchip? We could check to
->> see if the .parent_device is populated and if so only then save the type
->> and otherwise just set it as we do today.
-> 
-> I don't really like the idea of having multiple code paths for the same thing.
-> This is very error prone, and likely to bitrot pretty quickly.
+> + */
+> +
+> +#include <linux/mfd/altera-a10sr.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/spi/spi.h>
+> +
+> +static const struct mfd_cell altr_a10sr_subdev_info[] =3D {
+> +	{
+> +		.name =3D "altr_a10sr_gpio",
+> +		.of_compatible =3D "altr,a10sr-gpio",
+> +	},
+> +};
+> +
+> +static bool altr_a10sr_reg_readable(struct device *dev, unsigned int=
+ reg)
+> +{
+> +	switch (reg) {
+> +	case ALTR_A10SR_VERSION_READ:
+> +	case ALTR_A10SR_LED_REG:
+> +	case ALTR_A10SR_PBDSW_REG:
+> +	case ALTR_A10SR_PBDSW_IRQ_REG:
+> +	case ALTR_A10SR_PWR_GOOD1_REG:
+> +	case ALTR_A10SR_PWR_GOOD2_REG:
+> +	case ALTR_A10SR_PWR_GOOD3_REG:
+> +	case ALTR_A10SR_FMCAB_REG:
+> +	case ALTR_A10SR_HPS_RST_REG:
+> +	case ALTR_A10SR_USB_QSPI_REG:
+> +	case ALTR_A10SR_SFPA_REG:
+> +	case ALTR_A10SR_SFPB_REG:
+> +	case ALTR_A10SR_I2C_M_REG:
+> +	case ALTR_A10SR_WARM_RST_REG:
+> +	case ALTR_A10SR_WR_KEY_REG:
+> +	case ALTR_A10SR_PMBUS_REG:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool altr_a10sr_reg_writeable(struct device *dev, unsigned in=
+t reg)
+> +{
+> +	switch (reg) {
+> +	case ALTR_A10SR_LED_REG:
+> +	case ALTR_A10SR_PBDSW_IRQ_REG:
+> +	case ALTR_A10SR_FMCAB_REG:
+> +	case ALTR_A10SR_HPS_RST_REG:
+> +	case ALTR_A10SR_USB_QSPI_REG:
+> +	case ALTR_A10SR_SFPA_REG:
+> +	case ALTR_A10SR_SFPB_REG:
+> +	case ALTR_A10SR_WARM_RST_REG:
+> +	case ALTR_A10SR_WR_KEY_REG:
+> +	case ALTR_A10SR_PMBUS_REG:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool altr_a10sr_reg_volatile(struct device *dev, unsigned int=
+ reg)
+> +{
+> +	switch (reg) {
+> +	case ALTR_A10SR_PBDSW_REG:
+> +	case ALTR_A10SR_PBDSW_IRQ_REG:
+> +	case ALTR_A10SR_PWR_GOOD1_REG:
+> +	case ALTR_A10SR_PWR_GOOD2_REG:
+> +	case ALTR_A10SR_PWR_GOOD3_REG:
+> +	case ALTR_A10SR_HPS_RST_REG:
+> +	case ALTR_A10SR_I2C_M_REG:
+> +	case ALTR_A10SR_WARM_RST_REG:
+> +	case ALTR_A10SR_WR_KEY_REG:
+> +	case ALTR_A10SR_PMBUS_REG:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +const struct regmap_config altr_a10sr_regmap_config =3D {
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +
+> +	.cache_type =3D REGCACHE_NONE,
+> +
+> +	.use_single_rw =3D true,
+> +	.read_flag_mask =3D 1,
+> +	.write_flag_mask =3D 0,
+> +
+> +	.max_register =3D ALTR_A10SR_WR_KEY_REG,
+> +	.readable_reg =3D altr_a10sr_reg_readable,
+> +	.writeable_reg =3D altr_a10sr_reg_writeable,
+> +	.volatile_reg =3D altr_a10sr_reg_volatile,
+> +
+> +};
+> +
+> +static int altr_a10sr_spi_probe(struct spi_device *spi)
+> +{
+> +	int ret;
+> +	struct altr_a10sr *a10sr;
+> +
+> +	a10sr =3D devm_kzalloc(&spi->dev, sizeof(*a10sr),
+> +			     GFP_KERNEL);
+> +	if (!a10sr)
+> +		return -ENOMEM;
+> +
+> +	spi->mode =3D SPI_MODE_3;
+> +	spi->bits_per_word =3D 8;
+> +	spi_setup(spi);
+> +
+> +	a10sr->dev =3D &spi->dev;
+> +
+> +	spi_set_drvdata(spi, a10sr);
+> +
+> +	a10sr->regmap =3D devm_regmap_init_spi(spi, &altr_a10sr_regmap_conf=
+ig);
+> +	if (IS_ERR(a10sr->regmap)) {
+> +		ret =3D PTR_ERR(a10sr->regmap);
+> +		dev_err(&spi->dev, "Failed to allocate register map: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
 
-True. However, we really need this change for irqchips and runtime-pm.
-So to confirm what are you suggesting we do? We could add a WARN around
-irq_set_irq_type() in irq_create_fwspec_mapping() for v4.7 and see how
-many complaints we get :-)
+Is this regmap used it more than one driver?
 
->> We could add a WARN to the existing irq_set_irq_type() or may be just a
->> pr_warn() if a WARN is too verbose so people can fix up any issues.
->>
->> I am also wondering if patch 4/17 "iqdomain: Fix handling of type
->> settings for existing mappings" could generate a lot of reports
->> interrupts failing due to bad firmware? I wonder if I should tone this
->> patch down to a warning message as well as opposed to a complete failure.
-> 
-> We'll see. We can always tone it down a notch, should it prove to be too noisy...
-> So far, I haven't seen it firing. On the other hand, I get the following stuff
-> on my APM board:
-> 
-> [    0.000000] GIC: PPI0 is either secure or misconfigured
-> [    0.000000] GIC: PPI13 is either secure or misconfigured
-> [    0.000000] arm_arch_timer: WARNING: Invalid trigger for IRQ1, assuming level low
-> [    0.000000] arm_arch_timer: WARNING: Please fix your firmware
-> [    0.000000] arm_arch_timer: WARNING: Invalid trigger for IRQ2, assuming level low
-> [    0.000000] arm_arch_timer: WARNING: Please fix your firmware
-> 
-> Pretty awesome...
+> +	ret =3D mfd_add_devices(a10sr->dev, PLATFORM_DEVID_AUTO,
+> +			      altr_a10sr_subdev_info,
+> +			      ARRAY_SIZE(altr_a10sr_subdev_info),
+> +			      NULL, 0, NULL);
+> +	if (ret)
+> +		dev_err(a10sr->dev, "Failed to register sub-devices: %d\n",
+> +			ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int altr_a10sr_spi_remove(struct spi_device *spi)
+> +{
+> +	mfd_remove_devices(&spi->dev);
+> +
+> +	return 0;
+> +}
 
-Indeed.
+Use devm_mfd_add_devices() and remove this function.
 
-Jon
+> +static const struct of_device_id altr_a10sr_spi_of_match[] =3D {
+> +	{ .compatible =3D "altr,a10sr" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, altr_a10sr_spi_of_match);
+> +
+> +static struct spi_driver altr_a10sr_spi_driver =3D {
+> +	.probe =3D altr_a10sr_spi_probe,
+> +	.remove =3D altr_a10sr_spi_remove,
+
+Remove .remove.
+
+> +	.driver =3D {
+> +		.name =3D "altr_a10sr",
+> +		.of_match_table =3D of_match_ptr(altr_a10sr_spi_of_match),
+> +	},
+> +};
+> +
+> +module_spi_driver(altr_a10sr_spi_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Thor Thayer <tthayer@opensource.altera.com>");
+> +MODULE_DESCRIPTION("Altera Arria10 DevKit System Resource MFD Driver=
+");
+> diff --git a/include/linux/mfd/altera-a10sr.h b/include/linux/mfd/alt=
+era-a10sr.h
+> new file mode 100644
+> index 0000000..c869fe7
+> --- /dev/null
+> +++ b/include/linux/mfd/altera-a10sr.h
+> @@ -0,0 +1,87 @@
+> +/*
+> + * Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WI=
+THOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILIT=
+Y or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lic=
+ense for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License=
+ along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + * Declarations for Altera Arria10 MAX5 System Resource Chip
+> + *
+> + * Adapted from DA9052
+> + * Copyright(c) 2011 Dialog Semiconductor Ltd.
+> + * Author: David Dajun Chen <dchen@diasemi.com>
+
+Remove these two lines.
+
+> + */
+> +
+> +#ifndef __MFD_ALTERA_A10SR_H
+> +#define __MFD_ALTERA_A10SR_H
+> +
+> +#include <linux/completion.h>
+> +#include <linux/list.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +/* Write registers are always on even addresses */
+> +#define  WRITE_REG_MASK              0xFE
+> +/* Odd registers are always on odd addresses */
+> +#define  READ_REG_MASK               0x01
+> +
+> +#define ALTR_A10SR_BITS_PER_REGISTER  8
+> +/*
+> + * To find the correct register, we divide the input GPIO by
+> + * the number of GPIO in each register. We then need to multiply
+> + * by 2 because the reads are at odd addresses.
+> + */
+> +#define ALTR_A10SR_REG_OFFSET(X)     (((X) / ALTR_A10SR_BITS_PER_REG=
+ISTER) << 1)
+> +#define ALTR_A10SR_REG_BIT(X)        ((X) % ALTR_A10SR_BITS_PER_REGI=
+STER)
+> +#define ALTR_A10SR_REG_BIT_CHG(X, Y) ((X) << ALTR_A10SR_REG_BIT(Y))
+> +#define ALTR_A10SR_REG_BIT_MASK(X)   (1 << ALTR_A10SR_REG_BIT(X))
+> +
+> +/* Arria10 System Controller Register Defines */
+> +#define ALTR_A10SR_NOP                0x00    /* No Change */
+> +#define ALTR_A10SR_VERSION_READ       0x00    /* MAX5 Version Read *=
+/
+> +
+> +#define ALTR_A10SR_LED_REG            0x02    /* LED - Upper 4 bits =
+*/
+> +/* LED register Bit Definitions */
+> +#define ALTR_A10SR_LED_VALID_SHIFT        4       /* LED - Upper 4 b=
+its valid */
+> +#define ALTR_A10SR_OUT_VALID_RANGE_LO     ALTR_A10SR_LED_VALID_SHIFT
+> +#define ALTR_A10SR_OUT_VALID_RANGE_HI     7
+> +
+> +#define ALTR_A10SR_PBDSW_REG          0x04    /* PB & DIP SW - Input=
+ only */
+> +#define ALTR_A10SR_PBDSW_IRQ_REG      0x06    /* PB & DIP SW Flag Cl=
+ear */
+> +/* Pushbutton & DIP Switch Bit Definitions */
+> +#define ALTR_A10SR_IN_VALID_RANGE_LO      8
+> +#define ALTR_A10SR_IN_VALID_RANGE_HI      15
+> +
+> +#define ALTR_A10SR_PWR_GOOD1_REG      0x08    /* Power Good1 Read */
+> +#define ALTR_A10SR_PWR_GOOD2_REG      0x0A    /* Power Good2 Read */
+> +#define ALTR_A10SR_PWR_GOOD3_REG      0x0C    /* Power Good3 Read */
+> +#define ALTR_A10SR_FMCAB_REG          0x0E    /* FMCA/B & PCIe Pwr E=
+nable */
+> +#define ALTR_A10SR_HPS_RST_REG        0x10    /* HPS Reset */
+> +#define ALTR_A10SR_USB_QSPI_REG       0x12    /* USB, BQSPI, FILE Re=
+set */
+> +#define ALTR_A10SR_SFPA_REG           0x14    /* SFPA Control Reg */
+> +#define ALTR_A10SR_SFPB_REG           0x16    /* SFPB Control Reg */
+> +#define ALTR_A10SR_I2C_M_REG          0x18    /* I2C Master Select *=
+/
+> +#define ALTR_A10SR_WARM_RST_REG       0x1A    /* HPS Warm Reset */
+> +#define ALTR_A10SR_WR_KEY_REG         0x1C    /* HPS Warm Reset Key =
+*/
+> +#define ALTR_A10SR_PMBUS_REG          0x1E    /* HPS PM Bus */
+> +
+> +/**
+> + * struct altr_a10sr - Altera Max5 MFD device private data structure
+> + * @dev:  : this device
+> + * @regmap: the regmap assigned to the parent device.
+> + */
+> +struct altr_a10sr {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +};
+> +
+> +#endif /* __MFD_ALTERA_A10SR_H */
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
