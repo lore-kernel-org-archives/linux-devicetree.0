@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 2/4] of: dynamic: Add __of_node_dupv()
-Date: Mon,  9 May 2016 16:20:43 +0300
-Message-ID: <1462800045-10943-3-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH 4/4] of: unittest: changeset helpers
+Date: Mon,  9 May 2016 16:20:45 +0300
+Message-ID: <1462800045-10943-5-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1462800045-10943-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1462800045-10943-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,75 +10,84 @@ To: Rob Herring <robherring2@gmail.com>
 Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Add an __of_node_dupv() private method and make __of_node_dup() use it.
-This is required for the subsequent changeset accessors which will
-make use of it.
+Add a unitest specific for the new changeset helpers.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/dynamic.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ drivers/of/unittest.c | 54 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 4145b44..e4dea94 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -394,8 +394,9 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index e986e6e..ff6939b 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -543,6 +543,59 @@ static void __init of_unittest_changeset(void)
+ #endif
  }
  
- /**
-- * __of_node_dup() - Duplicate or create an empty device node dynamically.
-- * @fmt: Format string (plus vargs) for new full name of the device node
-+ * __of_node_dupv() - Duplicate or create an empty device node dynamically.
-+ * @fmt: Format string for new full name of the device node
-+ * @vargs: va_list containing the arugments for the node full name
-  *
-  * Create an device tree node, either by duplicating an empty node or by allocating
-  * an empty one suitable for further modification.  The node data are
-@@ -403,17 +404,15 @@ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags)
-  * OF_DETACHED bits set. Returns the newly allocated node or NULL on out of
-  * memory error.
-  */
--struct device_node *__of_node_dup(const struct device_node *np, const char *fmt, ...)
-+struct device_node *__of_node_dupv(const struct device_node *np,
-+		const char *fmt, va_list vargs)
- {
--	va_list vargs;
- 	struct device_node *node;
- 
- 	node = kzalloc(sizeof(*node), GFP_KERNEL);
- 	if (!node)
- 		return NULL;
--	va_start(vargs, fmt);
- 	node->full_name = kvasprintf(GFP_KERNEL, fmt, vargs);
--	va_end(vargs);
- 	if (!node->full_name) {
- 		kfree(node);
- 		return NULL;
-@@ -445,6 +444,24 @@ struct device_node *__of_node_dup(const struct device_node *np, const char *fmt,
- 	return NULL;
- }
- 
-+/**
-+ * __of_node_dup() - Duplicate or create an empty device node dynamically.
-+ * @fmt: Format string (plus vargs) for new full name of the device node
-+ *
-+ * See: __of_node_dupv()
-+ */
-+struct device_node *__of_node_dup(const struct device_node *np,
-+		const char *fmt, ...)
++static void __init of_unittest_changeset_helper(void)
 +{
-+	va_list vargs;
-+	struct device_node *node;
++#ifdef CONFIG_OF_DYNAMIC
++	struct device_node *n1, *n2, *n21, *parent, *np;
++	struct of_changeset chgset;
 +
-+	va_start(vargs, fmt);
-+	node = __of_node_dupv(np, fmt, vargs);
-+	va_end(vargs);
-+	return node;
++	of_changeset_init(&chgset);
++
++	parent = of_find_node_by_path("/testcase-data/changeset");
++
++	unittest(parent, "testcase setup failure\n");
++	n1 = of_changeset_create_device_node(&chgset,
++			parent, "/testcase-data/changeset/n1");
++	unittest(n1, "testcase setup failure\n");
++	n2 = of_changeset_create_device_node(&chgset,
++			parent, "/testcase-data/changeset/n2");
++	unittest(n2, "testcase setup failure\n");
++	n21 = of_changeset_create_device_node(&chgset, n2, "%s/%s",
++			"/testcase-data/changeset/n2", "n21");
++	unittest(n21, "testcase setup failure\n");
++
++	unittest(!of_changeset_add_property_string(&chgset, parent,
++				"prop-add", "foo"), "fail add prop\n");
++
++	unittest(!of_changeset_attach_node(&chgset, n1), "fail n1 attach\n");
++	unittest(!of_changeset_attach_node(&chgset, n2), "fail n2 attach\n");
++	unittest(!of_changeset_attach_node(&chgset, n21), "fail n21 attach\n");
++
++	unittest(!of_changeset_apply(&chgset), "apply failed\n");
++
++	/* Make sure node names are constructed correctly */
++	np = of_find_node_by_path("/testcase-data/changeset/n1");
++	unittest(np, "'%s' not added\n", n1->full_name);
++	of_node_put(np);
++
++	/* Make sure node names are constructed correctly */
++	np = of_find_node_by_path("/testcase-data/changeset/n2");
++	unittest(np, "'%s' not added\n", n2->full_name);
++	of_node_put(np);
++
++	np = of_find_node_by_path("/testcase-data/changeset/n2/n21");
++	unittest(np, "'%s' not added\n", n21->full_name);
++	of_node_put(np);
++
++	unittest(!of_changeset_revert(&chgset), "revert failed\n");
++
++	of_changeset_destroy(&chgset);
++
++	of_node_put(parent);
++#endif
 +}
 +
- static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
++
+ static void __init of_unittest_parse_interrupts(void)
  {
- 	of_node_put(ce->np);
+ 	struct device_node *np;
+@@ -1969,6 +2022,7 @@ static int __init of_unittest(void)
+ 	of_unittest_property_string();
+ 	of_unittest_property_copy();
+ 	of_unittest_changeset();
++	of_unittest_changeset_helper();
+ 	of_unittest_parse_interrupts();
+ 	of_unittest_parse_interrupts_extended();
+ 	of_unittest_match_node();
 -- 
 1.7.12
