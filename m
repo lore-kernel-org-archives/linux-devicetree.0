@@ -1,92 +1,84 @@
-From: Christo Radev <christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Mon, 9 May 2016 13:58:30 -0700 (PDT)
-Message-ID: <9fe7ebb6-6d74-4b73-b6d6-93b79650cdb6@googlegroups.com>
-References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
- <CAGb2v66E2TuN3+tYaAbniV3q67waDZOfqKAW14VJz6xZFomZ=Q@mail.gmail.com>
- <57285162.2000704@schinagl.nl>
- <CAGb2v66r9m7qVW6BszeT2wqs0KyEr4x5ivTJYqu2Fes=R9-Ltw@mail.gmail.com>
- <CANCTEQgjiuQXcaw=3Dr5kUsTPc3nsDQf2odwzs4nHvrkREAqrg@mail.gmail.com>
- <5729F07C.3080308@schinagl.nl>
- <948be370-4401-43cb-862e-d4376755a75d@googlegroups.com>
- <5729F6D6.8030100@schinagl.nl>
- <4704fa35-9a2a-4e6e-8fd4-f4778405c598@googlegroups.com>
- <572A0052.9060202@schinagl.nl>
- <2e745ef7-ddc0-40fc-b867-414543690276@googlegroups.com>
- <572A10B3.2020803@schinagl.nl>
- <4375220a-f939-4ed0-a6d7-2cf887b07509@googlegroups.com>
-Reply-To: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/7] [media] ir-rx51: add DT support to driver
+Date: Mon, 9 May 2016 16:07:35 -0500
+Message-ID: <CAL_JsqJPZS1ne_xAuBFtCc5L1HKFJf0LDUJ7CRSFXhc3adkTfA@mail.gmail.com>
+References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1462634508-24961-5-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160509200657.GA3379@rob-hp-laptop> <5730F8BA.5000402@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_2065_717416355.1462827510527"
-Return-path: <linux-sunxi+bncBD7ORYHCVECRB6PTYO4QKGQEETYJVKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <4375220a-f939-4ed0-a6d7-2cf887b07509-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslav.kolev-1W28NRE8jL9DPfheJLI6IQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5730F8BA.5000402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_2065_717416355.1462827510527
-Content-Type: multipart/alternative;
-	boundary="----=_Part_2066_1714136672.1462827510527"
-
-------=_Part_2066_1714136672.1462827510527
-Content-Type: text/plain; charset=UTF-8
-
-Hi to All,
-
-On Wednesday, May 4, 2016 at 10:40:37 PM UTC+3, Christo Radev wrote:
+On Mon, May 9, 2016 at 3:53 PM, Ivaylo Dimitrov
+<ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi,
 >
-> Hi Oliver,
+> On  9.05.2016 23:06, Rob Herring wrote:
+>>
+>> On Sat, May 07, 2016 at 06:21:45PM +0300, Ivaylo Dimitrov wrote:
+>>>
+>>> With the upcoming removal of legacy boot, lets add support to one of the
+>>> last N900 drivers remaining without it. As the driver still uses omap
+>>> dmtimer, add auxdata as well.
+>>>
+>>> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/media/nokia,lirc-rx51         | 19
+>>> +++++++++++++++++++
+>>>   arch/arm/mach-omap2/pdata-quirks.c                    |  6 +-----
+>>>   drivers/media/rc/ir-rx51.c                            | 11 ++++++++++-
+>>>   3 files changed, 30 insertions(+), 6 deletions(-)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/media/nokia,lirc-rx51
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/nokia,lirc-rx51
+>>> b/Documentation/devicetree/bindings/media/nokia,lirc-rx51
+>>> new file mode 100644
+>>> index 0000000..5b3081e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/nokia,lirc-rx51
+>>> @@ -0,0 +1,19 @@
+>>> +Device-Tree bindings for LIRC TX driver for Nokia N900(RX51)
+>>> +
+>>> +Required properties:
+>>> +       - compatible: should be "nokia,lirc-rx51".
+>>
+>>
+>> lirc is a Linux term. Also, nokia,rx51-... would be conventional
+>> ordering.
+>>
 >
-> I start performance tests for eMMC, SD/MMC, USB, SATA SSD devices and will 
-> post the result when ready.
+> I used the driver name ("lirc_rx51") to not bring confusion. Also, it
+> registers itself through lirc_register_driver() call, so having lirc in its
+> name somehow makes sense.
 >
+> I am not very good in inventing names, the best compatible I can think of is
+> "nokia,rx51-ir". Is that ok?
+
+Sure, but...
+
+>> Is this anything more than a PWM LED?
+>>
 >
-Some results from the performance tests done by me can be found on the 
-following  post:
-http://forum.armbian.com/index.php/topic/853-armbian-customization/page-4#entry8846
+> It is an IR LED connected through a driver to McSPI2_SIMO pin of OMAP3,
+> which pin can be configured as PWM or GPIO(there are other configurations,
+> but they don't make sense). In theory it could be used for various things
+> (like uni-directional serial TX, or stuff like that), but in practice it
+> allows N900 to be act as an IR remote controller. I guess that fits in
+> "nothing more than a PWM LED", more or less.
 
-Best regards
-Chris
+There's already a pwm-led binding that can be used. Though there may
+be missing consumer IR to LED subsystem support in the kernel. You
+could list both compatibles, use the rx51 IR driver now, and then move
+to pwm-led driver in the future.
 
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
-------=_Part_2066_1714136672.1462827510527
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi to All,<br><br>On Wednesday, May 4, 2016 at 10:40:37 PM=
- UTC+3, Christo Radev wrote:<blockquote class=3D"gmail_quote" style=3D"marg=
-in: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;"><d=
-iv dir=3D"ltr">Hi Oliver,<br><br>I start performance tests for eMMC, SD/MMC=
-, USB, SATA SSD devices and will post the result when ready.<br><br></div><=
-/blockquote><div><br>Some results from the performance tests done by me can=
- be found on the following=C2=A0 post:<br><a href=3D"http://forum.armbian.c=
-om/index.php/topic/853-armbian-customization/page-4#entry8846">http://forum=
-.armbian.com/index.php/topic/853-armbian-customization/page-4#entry8846</a>=
-<br><br>Best regards<br>Chris<br><br></div></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
-------=_Part_2066_1714136672.1462827510527--
-
-------=_Part_2065_717416355.1462827510527--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
