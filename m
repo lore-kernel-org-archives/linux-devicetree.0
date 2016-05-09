@@ -1,154 +1,100 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/4] drvers/clk: Support fourth generation Aspeed SoCs
-Date: Mon, 9 May 2016 15:49:53 -0700
-Message-ID: <20160509224953.GZ3492@codeaurora.org>
-References: <1462797111-14271-1-git-send-email-joel@jms.id.au>
- <1462797111-14271-3-git-send-email-joel@jms.id.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] vf610-soc: Add Vybrid SoC device tree binding documentation
+Date: Mon, 9 May 2016 17:58:42 -0500
+Message-ID: <CAL_JsqL7sjdONYad6sXM1KXFCjooANuN7WYg-paV9LnKnuMTnA@mail.gmail.com>
+References: <cover.1462171989.git.maitysanchayan@gmail.com>
+ <65f3a7bd7a9faf1b390644d7c599c69683c753c4.1462171990.git.maitysanchayan@gmail.com>
+ <20160504023026.GB5382@rob-hp-laptop> <20160505082758.GB18151@Sanchayan-Arch.localdomain>
+ <CAL_JsqL1qQu_u=6xosP8UmR3oXLawbVz=Hap0wDm7aN4mjK2GA@mail.gmail.com> <4ca82be6c1d434c612868b441e9f6e1f@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462797111-14271-3-git-send-email-joel@jms.id.au>
-Sender: linux-clk-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jk@ozlabs.org, benh@kernel.crashing.org, arnd@arndb.de, heiko@sntech.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4ca82be6c1d434c612868b441e9f6e1f-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/09, Joel Stanley wrote:
-> diff --git a/drivers/clk/aspeed/clk-g4.c b/drivers/clk/aspeed/clk-g4.c
-> new file mode 100644
-> index 000000000000..91677e9177f5
-> --- /dev/null
-> +++ b/drivers/clk/aspeed/clk-g4.c
-> @@ -0,0 +1,109 @@
-> +/*
-> + * Copyright 2016 IBM Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +#include <linux/clk.h>
+On Mon, May 9, 2016 at 1:25 PM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+> On 2016-05-09 10:14, Rob Herring wrote:
+>> On Thu, May 5, 2016 at 3:27 AM,  <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Hello Rob,
+>>>
+>>> On 16-05-03 21:30:26, Rob Herring wrote:
+>>>> On Mon, May 02, 2016 at 12:35:04PM +0530, Sanchayan Maity wrote:
+>>>> > Add device tree binding documentation for Vybrid SoC.
+>>>> >
+>>>> > Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> > ---
+>>>> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       | 35 ++++++++++++++++++++++
+>>>> >  1 file changed, 35 insertions(+)
+>>>> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+>>>> >
+>>>> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+>>>> > new file mode 100644
+>>>> > index 0000000..bdd95e8
+>>>> > --- /dev/null
+>>>> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
+>>>> > @@ -0,0 +1,35 @@
+>>>> > +Vybrid System-on-Chip
+>>>> > +---------------------
+>>>> > +
+>>>> > +Required properties:
+>>>> > +
+>>>> > +- #address-cells: must be 1
+>>>> > +- #size-cells: must be 1
+>>>> > +- compatible: "fsl,vf610-soc-bus", "simple-bus"
+>>>>
+>>>> If this is a bus, put the file in bindings/bus/...
+>>>
+>>> The fsl,vf610-soc-bus binding is used to bind the driver in question with
+>>> an appropriate compatible node.
+>>>
+>>> Basically being a standalone platform driver, there was need of a compatible
+>>> property to bind on. Introducing a separate device tree node for it's sake
+>>> didn't seem appropriate so the alteration to SoC node's compatible.
+>>
+>> Ah, so you are designing a node around the needs of a Linux specific
+>> driver. Don't do that. DT describes the h/w and this node is not a h/w
+>> block.
+>>
+>> Create a platform device based on a matching SOC compatible string
+>> instead and make your driver find the information it needs directly
+>> from the relevant nodes like the ROM node.
+>
+> That reads like my words a year ago:
+> https://lkml.org/lkml/2015/5/22/408
+>
+> Initially pretty much everything was hard-coded in the driver.
+>
+> Arnd then pushed to use more descriptive in the device tree.
+>
+> Of course, we should not end up making up relations which are not there
+> in hardware. We need to find the right balance.
+>
+> Here is my suggestion:
+> 1. Add "fsl,vf610-soc-bus" as compatible string to the soc node, use it
+> to bind the "soc bus driver" as a platform driver located in driver/soc/
 
-Hopefully this include isn't needed.
+I'm not convinced this is a h/w block. This keeps coming up and I
+think this is a kernel problem, not a DT problem. Let's face it that
+there are drivers at the SOC level which don't fit into a DT node.
+They may be the exception, but they are a common exception. My
+proposal for how to deal with these cases is here[1].
 
-> +#include <linux/clk-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clkdev.h>
-> +
-> +static void __init aspeed_of_hpll_clk_init(struct device_node *node)
-> +{
-> +	struct clk *clk, *clkin_clk;
-> +	void __iomem *base;
-> +	int reg, rate, clkin;
-> +	const char *name = node->name;
-> +	const char *parent_name;
-> +	const int rates[][4] = {
-> +		{384, 360, 336, 408},
-> +		{400, 375, 350, 425},
-> +	};
-> +
-> +	of_property_read_string(node, "clock-output-names", &name);
-> +	parent_name = of_clk_get_parent_name(node, 0);
-> +
-> +	base = of_iomap(node, 0);
-> +	if (!base) {
-> +		pr_err("%s: of_iomap failed\n", node->full_name);
-> +		return;
-> +	}
-> +	reg = readl(base);
-> +	iounmap(base);
-> +
-> +	clkin_clk = of_clk_get(node, 0);
-> +	if (IS_ERR(clkin_clk)) {
-> +		pr_err("%s: of_clk_get failed\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	clkin = clk_get_rate(clkin_clk);
-> +
-> +	reg = (reg >> 8) & 0x2;
-> +
-> +	if (clkin == 48000000 || clkin == 24000000)
-> +		rate = rates[0][reg] * 1000000;
-> +	else if (clkin == 25000000)
-> +		rate = rates[1][reg] * 1000000;
-> +	else {
-> +		pr_err("%s: unknown clkin frequency %dHz\n",
-> +				node->full_name, clkin);
-> +		WARN_ON(1);
-> +	}
-> +
-> +	clk = clk_register_fixed_rate(NULL, name, parent_name, 0, rate);
+I also think drivers/soc is a mess because it is randomly used or not.
+IMO, using it should not be at the whim of whomever does SOC support.
 
-Please write a proper clk driver that sets clkin to be the parent
-of this clk registered here and then calculates the frequency
-based on the parent clk rate and the strapping registers via the
-recalc rate callback. Also please move this to a platform driver
-instead of using CLK_OF_DECLARE assuming this isn't required for
-any timers in the system.
+> 2. Add ROM as syscon device (it is not erasable ROM memory, hence eeprom
+> seems not to be appropriate)
 
-> +	if (IS_ERR(clk)) {
-> +		pr_err("%s: failed to register clock\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	clk_register_clkdev(clk, NULL, name);
+It is not a syscon. It is just memory. nvmem covers read-only memory,
+so I have no issue using that.
 
-Do you have clkdev users? If not then please drop this.
+Rob
 
-> +	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +CLK_OF_DECLARE(aspeed_hpll_clock, "aspeed,g4-hpll-clock",
-> +	       aspeed_of_hpll_clk_init);
-> +
-> +static void __init aspeed_of_apb_clk_init(struct device_node *node)
-> +{
-> +	struct clk *clk, *hpll_clk;
-> +	void __iomem *base;
-> +	int reg, rate;
-> +	const char *name = node->name;
-> +	const char *parent_name;
-> +
-> +	of_property_read_string(node, "clock-output-names", &name);
-> +	parent_name = of_clk_get_parent_name(node, 0);
-> +
-> +	base = of_iomap(node, 0);
-> +	if (!base) {
-> +		pr_err("%s: of_iomap failed\n", node->full_name);
-> +		return;
-> +	}
-> +	reg = readl(base);
-> +	iounmap(base);
-> +
-> +	hpll_clk = of_clk_get(node, 0);
-> +	if (IS_ERR(hpll_clk)) {
-> +		pr_err("%s: of_clk_get failed\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	reg = (reg >> 23) & 0x3;
-> +	rate = clk_get_rate(hpll_clk) / (2 + 2 * reg);
-> +
-> +	clk = clk_register_fixed_rate(NULL, name, parent_name, 0, rate);
-> +	if (IS_ERR(clk)) {
-> +		pr_err("%s: failed to register clock\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	clk_register_clkdev(clk, NULL, name);
-> +	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +CLK_OF_DECLARE(aspeed_apb_clock, "aspeed,g4-apb-clock",
-> +	       aspeed_of_apb_clk_init);
-
-Following on Rob's comment, please combine this into one driver
-instead of having different DT nodes for different clks that are
-all really part of one clock controller hw block.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+[1] https://lkml.org/lkml/2013/10/30/27
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
