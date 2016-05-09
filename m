@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 3/7] phy: Add set_mode callback
-Date: Mon,  9 May 2016 18:39:59 -0500
-Message-ID: <1462837203-12125-4-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 2/7] dt-bindings: Add bindings for phy-da8xx-usb
+Date: Mon,  9 May 2016 18:39:58 -0500
+Message-ID: <1462837203-12125-3-git-send-email-david@lechnology.com>
 References: <1462837203-12125-1-git-send-email-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1462837203-12125-1-git-send-email-david@lechnology.com>
@@ -10,100 +10,60 @@ To: nsekhar@ti.com, khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel 
 Cc: David Lechner <david@lechnology.com>, petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The initial use for this is for PHYs that have a mode related to USB OTG.
-There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
-in the USB PHY to override OTG VBUS and ID signals.
+Device tree binding for new phy-da8xx-usb driver.
 
-Of course, the enum can be expaned in the future to include modes for
-other types of PHYs as well.
-
-Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: David Lechner <david@lechnology.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/phy/phy-core.c  | 15 +++++++++++++++
- include/linux/phy/phy.h | 17 +++++++++++++++++
- 2 files changed, 32 insertions(+)
+ .../devicetree/bindings/phy/phy-da8xx-usb.txt      | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index e7e574d..fe0344c 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
- }
- EXPORT_SYMBOL_GPL(phy_power_off);
- 
-+int phy_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
+new file mode 100644
+index 0000000..c26478b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
+@@ -0,0 +1,40 @@
++TI DA8xx/OMAP-L1xx/AM18xx USB PHY
 +
-+	if (!phy || !phy->ops->set_mode)
-+		return 0;
++Required properties:
++ - compatible: must be "ti,da830-usb-phy".
++ - #phy-cells: must be 1.
 +
-+	mutex_lock(&phy->mutex);
-+	ret = phy->ops->set_mode(phy, mode);
-+	mutex_unlock(&phy->mutex);
++This device controls the PHY for both the USB 1.1 OHCI and USB 2.0 OTG
++controllers on DA8xx SoCs. Consumers of this device should use index 0 for
++the USB 2.0 phy device and index 1 for the USB 1.1 phy device.
 +
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(phy_set_mode);
++It also requires a "syscon" node with compatible = "ti,da830-cfgchip", "syscon"
++to access the CFGCHIP2 register.
 +
- /**
-  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
-  * @np: device_node for which to get the phy
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 8cf05e3..4248ade 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -22,12 +22,20 @@
- 
- struct phy;
- 
-+enum phy_mode {
-+	PHY_MODE_INVALID,
-+	PHY_MODE_USB_HOST,
-+	PHY_MODE_USB_DEVICE,
-+	PHY_MODE_USB_OTG,
-+};
++Example:
 +
- /**
-  * struct phy_ops - set of function pointers for performing phy operations
-  * @init: operation to be performed for initializing phy
-  * @exit: operation to be performed while exiting
-  * @power_on: powering on the phy
-  * @power_off: powering off the phy
-+ * @set_mode: set the mode of the phy
-  * @owner: the module owner containing the ops
-  */
- struct phy_ops {
-@@ -35,6 +43,7 @@ struct phy_ops {
- 	int	(*exit)(struct phy *phy);
- 	int	(*power_on)(struct phy *phy);
- 	int	(*power_off)(struct phy *phy);
-+	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
- 	struct module *owner;
- };
- 
-@@ -119,6 +128,7 @@ int phy_init(struct phy *phy);
- int phy_exit(struct phy *phy);
- int phy_power_on(struct phy *phy);
- int phy_power_off(struct phy *phy);
-+int phy_set_mode(struct phy *phy, enum phy_mode mode);
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return phy->attrs.bus_width;
-@@ -224,6 +234,13 @@ static inline int phy_power_off(struct phy *phy)
- 	return -ENOSYS;
- }
- 
-+static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+	if (!phy)
-+		return 0;
-+	return -ENOSYS;
-+}
++	cfgchip: cfgchip@1417c {
++		compatible = "ti,da830-cfgchip", "syscon";
++		reg = <0x1417c 0x14>;
++	};
 +
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return -ENOSYS;
++	usb_phy: usb-phy {
++		compatible = "ti,da830-usb-phy";
++		#phy-cells = <1>;
++	};
++
++	usb20: usb@200000 {
++		compatible = "ti,da830-musb";
++		reg = <0x200000 0x1000>;
++		interrupts = <58>;
++		phys = <&usb_phy 0>;
++		phy-names = "usb-phy";
++	};
++
++	usb11: usb@225000 {
++		compatible = "ti,da830-ohci";
++		reg = <0x225000 0x1000>;
++		interrupts = <59>;
++		phys = <&usb_phy 1>;
++		phy-names = "usb-phy";
++	};
 -- 
 2.7.4
