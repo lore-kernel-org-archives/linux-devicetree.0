@@ -1,229 +1,109 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v5 5/7] usb: ohci-da8xx: Remove code that references mach
-Date: Mon,  9 May 2016 18:40:01 -0500
-Message-ID: <1462837203-12125-6-git-send-email-david@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v5 3/7] phy: Add set_mode callback
+Date: Mon,  9 May 2016 18:39:59 -0500
+Message-ID: <1462837203-12125-4-git-send-email-david@lechnology.com>
 References: <1462837203-12125-1-git-send-email-david@lechnology.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462837203-12125-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462837203-12125-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nsekhar@ti.com, khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>
+Cc: David Lechner <david@lechnology.com>, petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Including mach/* is frowned upon in device drivers, so get rid of it.
+The initial use for this is for PHYs that have a mode related to USB OTG.
+There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
+in the USB PHY to override OTG VBUS and ID signals.
 
-This replaces usb20_clk and code that pokes CFGCHIP2 with a proper phy
-driver.
+Of course, the enum can be expaned in the future to include modes for
+other types of PHYs as well.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
- drivers/usb/host/Kconfig      |   1 +
- drivers/usb/host/ohci-da8xx.c | 102 +++++++++++++++++++++++-------------------
- 2 files changed, 56 insertions(+), 47 deletions(-)
+ drivers/phy/phy-core.c  | 15 +++++++++++++++
+ include/linux/phy/phy.h | 17 +++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 3050b18..e4432c6 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -472,6 +472,7 @@ config USB_OHCI_HCD_DAVINCI
- 	bool "OHCI support for TI DaVinci DA8xx"
- 	depends on ARCH_DAVINCI_DA8XX
- 	depends on USB_OHCI_HCD=y
-+	select PHY_DA8XX_USB
- 	default y
- 	help
- 	  Enables support for the DaVinci DA8xx integrated OHCI
-diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
-index e5c33bc..3656d7c 100644
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -15,58 +15,50 @@
- #include <linux/jiffies.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
--
--#include <mach/da8xx.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_data/usb-davinci.h>
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index e7e574d..fe0344c 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
+ }
+ EXPORT_SYMBOL_GPL(phy_power_off);
  
- #ifndef CONFIG_ARCH_DAVINCI_DA8XX
- #error "This file is DA8xx bus glue.  Define CONFIG_ARCH_DAVINCI_DA8XX."
- #endif
- 
--#define CFGCHIP2	DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG)
--
- static struct clk *usb11_clk;
--static struct clk *usb20_clk;
-+static struct phy *usb11_phy;
- 
- /* Over-current indicator change bitmask */
- static volatile u16 ocic_mask;
- 
--static void ohci_da8xx_clock(int on)
-+static int ohci_da8xx_enable(void)
- {
--	u32 cfgchip2;
--
--	cfgchip2 = __raw_readl(CFGCHIP2);
--	if (on) {
--		clk_enable(usb11_clk);
--
--		/*
--		 * If USB 1.1 reference clock is sourced from USB 2.0 PHY, we
--		 * need to enable the USB 2.0 module clocking, start its PHY,
--		 * and not allow it to stop the clock during USB 2.0 suspend.
--		 */
--		if (!(cfgchip2 & CFGCHIP2_USB1PHYCLKMUX)) {
--			clk_enable(usb20_clk);
--
--			cfgchip2 &= ~(CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN);
--			cfgchip2 |= CFGCHIP2_PHY_PLLON;
--			__raw_writel(cfgchip2, CFGCHIP2);
--
--			pr_info("Waiting for USB PHY clock good...\n");
--			while (!(__raw_readl(CFGCHIP2) & CFGCHIP2_PHYCLKGD))
--				cpu_relax();
--		}
++int phy_set_mode(struct phy *phy, enum phy_mode mode)
++{
 +	int ret;
- 
--		/* Enable USB 1.1 PHY */
--		cfgchip2 |= CFGCHIP2_USB1SUSPENDM;
--	} else {
--		clk_disable(usb11_clk);
--		if (!(cfgchip2 & CFGCHIP2_USB1PHYCLKMUX))
--			clk_disable(usb20_clk);
-+	ret = clk_prepare_enable(usb11_clk);
-+	if (ret)
-+		return ret;
- 
--		/* Disable USB 1.1 PHY */
--		cfgchip2 &= ~CFGCHIP2_USB1SUSPENDM;
--	}
--	__raw_writel(cfgchip2, CFGCHIP2);
-+	ret = phy_init(usb11_phy);
-+	if (ret)
-+		goto err_phy_init;
 +
-+	ret = phy_power_on(usb11_phy);
-+	if (ret)
-+		goto err_phy_power_on;
++	if (!phy || !phy->ops->set_mode)
++		return 0;
 +
-+	return 0;
-+
-+err_phy_power_on:
-+	phy_exit(usb11_phy);
-+err_phy_init:
-+	clk_disable_unprepare(usb11_clk);
++	mutex_lock(&phy->mutex);
++	ret = phy->ops->set_mode(phy, mode);
++	mutex_unlock(&phy->mutex);
 +
 +	return ret;
 +}
++EXPORT_SYMBOL_GPL(phy_set_mode);
 +
-+static void ohci_da8xx_disable(void)
+ /**
+  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+  * @np: device_node for which to get the phy
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 8cf05e3..4248ade 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -22,12 +22,20 @@
+ 
+ struct phy;
+ 
++enum phy_mode {
++	PHY_MODE_INVALID,
++	PHY_MODE_USB_HOST,
++	PHY_MODE_USB_DEVICE,
++	PHY_MODE_USB_OTG,
++};
++
+ /**
+  * struct phy_ops - set of function pointers for performing phy operations
+  * @init: operation to be performed for initializing phy
+  * @exit: operation to be performed while exiting
+  * @power_on: powering on the phy
+  * @power_off: powering off the phy
++ * @set_mode: set the mode of the phy
+  * @owner: the module owner containing the ops
+  */
+ struct phy_ops {
+@@ -35,6 +43,7 @@ struct phy_ops {
+ 	int	(*exit)(struct phy *phy);
+ 	int	(*power_on)(struct phy *phy);
+ 	int	(*power_off)(struct phy *phy);
++	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
+ 	struct module *owner;
+ };
+ 
+@@ -119,6 +128,7 @@ int phy_init(struct phy *phy);
+ int phy_exit(struct phy *phy);
+ int phy_power_on(struct phy *phy);
+ int phy_power_off(struct phy *phy);
++int phy_set_mode(struct phy *phy, enum phy_mode mode);
+ static inline int phy_get_bus_width(struct phy *phy)
+ {
+ 	return phy->attrs.bus_width;
+@@ -224,6 +234,13 @@ static inline int phy_power_off(struct phy *phy)
+ 	return -ENOSYS;
+ }
+ 
++static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
 +{
-+	phy_power_off(usb11_phy);
-+	phy_exit(usb11_phy);
-+	clk_disable_unprepare(usb11_clk);
- }
- 
- /*
-@@ -92,7 +84,9 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
- 
- 	dev_dbg(dev, "starting USB controller\n");
- 
--	ohci_da8xx_clock(1);
-+	result = ohci_da8xx_enable();
-+	if (result < 0)
-+		return result;
- 
- 	/*
- 	 * DA8xx only have 1 port connected to the pins but the HC root hub
-@@ -101,8 +95,10 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
- 	ohci->num_ports = 1;
- 
- 	result = ohci_init(ohci);
--	if (result < 0)
-+	if (result < 0) {
-+		ohci_da8xx_disable();
- 		return result;
-+	}
- 
- 	/*
- 	 * Since we're providing a board-specific root hub port power control
-@@ -129,7 +125,7 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
- static void ohci_da8xx_stop(struct usb_hcd *hcd)
- {
- 	ohci_stop(hcd);
--	ohci_da8xx_clock(0);
-+	ohci_da8xx_disable();
- }
- 
- static int ohci_da8xx_start(struct usb_hcd *hcd)
-@@ -301,12 +297,18 @@ static int usb_hcd_da8xx_probe(const struct hc_driver *driver,
- 		return -ENODEV;
- 
- 	usb11_clk = devm_clk_get(&pdev->dev, "usb11");
--	if (IS_ERR(usb11_clk))
-+	if (IS_ERR(usb11_clk)) {
-+		if (PTR_ERR(usb11_clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get clock.\n");
- 		return PTR_ERR(usb11_clk);
-+	}
- 
--	usb20_clk = devm_clk_get(&pdev->dev, "usb20");
--	if (IS_ERR(usb20_clk))
--		return PTR_ERR(usb20_clk);
-+	usb11_phy = devm_phy_get(&pdev->dev, "usb-phy");
-+	if (IS_ERR(usb11_phy)) {
-+		if (PTR_ERR(usb11_phy) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get phy.\n");
-+		return PTR_ERR(usb11_phy);
-+	}
- 
- 	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
- 	if (!hcd)
-@@ -316,6 +318,7 @@ static int usb_hcd_da8xx_probe(const struct hc_driver *driver,
- 	hcd->regs = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(hcd->regs)) {
- 		error = PTR_ERR(hcd->regs);
-+		dev_err(&pdev->dev, "failed to map ohci.\n");
- 		goto err;
- 	}
- 	hcd->rsrc_start = mem->start;
-@@ -397,7 +400,7 @@ static int ohci_da8xx_suspend(struct platform_device *pdev,
- 	if (ret)
- 		return ret;
- 
--	ohci_da8xx_clock(0);
-+	ohci_da8xx_disable();
- 	hcd->state = HC_STATE_SUSPENDED;
- 
- 	return ret;
-@@ -407,14 +410,19 @@ static int ohci_da8xx_resume(struct platform_device *dev)
- {
- 	struct usb_hcd	*hcd	= platform_get_drvdata(dev);
- 	struct ohci_hcd	*ohci	= hcd_to_ohci(hcd);
-+	int ret;
- 
- 	if (time_before(jiffies, ohci->next_statechange))
- 		msleep(5);
- 	ohci->next_statechange = jiffies;
- 
--	ohci_da8xx_clock(1);
-+	ret = ohci_da8xx_enable();
-+	if (ret)
-+		return ret;
++	if (!phy)
++		return 0;
++	return -ENOSYS;
++}
 +
- 	dev->dev.power.power_state = PMSG_ON;
- 	usb_hcd_resume_root_hub(hcd);
-+
- 	return 0;
- }
- #endif
+ static inline int phy_get_bus_width(struct phy *phy)
+ {
+ 	return -ENOSYS;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
