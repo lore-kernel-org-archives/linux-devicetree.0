@@ -1,57 +1,95 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH 2/2] powerpc: Update of_remove_property() call sites to
- remove null checking
-Date: Mon, 09 May 2016 19:41:55 +1000
-Message-ID: <1462786915.5531.3.camel@ellerman.id.au>
-References: <1461821695-19204-1-git-send-email-sjitindarsingh@gmail.com>
-	 <1461821695-19204-2-git-send-email-sjitindarsingh@gmail.com>
-	 <57292702.5070507@linux.vnet.ibm.com>
-	 <1462431031.12473.3.camel@ellerman.id.au> <572C08DB.9000109@gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 03/14] usb: hcd.h: Add OTG to HCD interface
+Date: Mon, 9 May 2016 12:45:38 +0300
+Message-ID: <57305C42.90300@ti.com>
+References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
+ <1462191537-10314-4-git-send-email-rogerq@ti.com>
+ <20160506094103.GF32359@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <572C08DB.9000109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160506094103.GF32359-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suraj Jitindar Singh <sjitindarsingh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-05-06 at 13:00 +1000, Suraj Jitindar Singh wrote:
-> On 05/05/16 16:50, Michael Ellerman wrote:
-> > On Tue, 2016-05-03 at 15:32 -0700, Tyrel Datwyler wrote:
-> > > On 04/27/2016 10:34 PM, Suraj Jitindar Singh wrote:
-> > > > diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-> > > > index ceb18d3..a560a98 100644
-> > > > --- a/arch/powerpc/platforms/pseries/mobility.c
-> > > > +++ b/arch/powerpc/platforms/pseries/mobility.c
-> > > > @@ -191,8 +191,8 @@ static int update_dt_node(__be32 phandle, s32 scope)
-> > > >  				break;
-> > > >  
-> > > >  			case 0x80000000:
-> > > > -				prop = of_find_property(dn, prop_name, NULL);
-> > > > -				of_remove_property(dn, prop);
-> > > > +				of_remove_property(dn, of_find_property(dn,
-> > > > +							prop_name, NULL));
-> > > >  				prop = NULL;
-> > > >  				break;
-> > > > 
-> > > You haven't removed a NULL check here, as suggested by the changelog,
-> > > but instead made a cosmetic change to the code that still leaves behind
-> > > a now unnecessary "prop = NULL;" to bit rot.
+On 06/05/16 12:41, Peter Chen wrote:
+> On Mon, May 02, 2016 at 03:18:46PM +0300, Roger Quadros wrote:
+>> The OTG core will use struct otg_hcd_ops to interface
+>> with the HCD controller.
+>>
+>> The main purpose of this interface is to avoid directly
+>> calling HCD APIs from the OTG core as they
+>> wouldn't be defined in the built-in symbol table if
+>> CONFIG_USB is m.
+>>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> Acked-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> 
+> Roger, after thinking more, I still think current dependency between
+> OTG, HCD and gadget are too complicated. Since the OTG can't work
+> if it is built as module, I suggest letting OTG depends on HCD &&
+> USB_GADGET, and it is a boolean, in that case, we don't need to
+> export any HCD and gadget ops, things will be much simpler.
+> What's your opinion?
 
-> > Yeah I think you're right. Though it's not very clear how prop is used in that
-> > function.
->
-> I didn't delete the prop = NULL; initially as I didn't fully understand
-> how it was used in the rest of the function and the effect of deleting
-> it.
+How will it work if HCD and USB_GADGET are modules and OTG is built-in?
 
-Yeah, it's pretty convoluted. I don't think you can actually prove it's safe to
-remove the prop = NULL for arbitrary inputs.
+cheers,
+-roger
 
-cheers
-
+> 
+> Peter
+> 
+>> ---
+>>  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>
+>> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+>> index b98f831..861ccaa 100644
+>> --- a/include/linux/usb/hcd.h
+>> +++ b/include/linux/usb/hcd.h
+>> @@ -399,6 +399,30 @@ struct hc_driver {
+>>  
+>>  };
+>>  
+>> +/**
+>> + * struct otg_hcd_ops - Interface between OTG core and HCD
+>> + *
+>> + * Provided by the HCD core to allow the OTG core to interface with the HCD
+>> + *
+>> + * @add: function to add the HCD
+>> + * @remove: function to remove the HCD
+>> + * @usb_bus_start_enum: function to immediately start bus enumeration
+>> + * @usb_control_msg: function to build and send of a control urb
+>> + * @usb_hub_find_child: function to get pointer to the child device
+>> + */
+>> +struct otg_hcd_ops {
+>> +	int (*add)(struct usb_hcd *hcd,
+>> +		   unsigned int irqnum, unsigned long irqflags);
+>> +	void (*remove)(struct usb_hcd *hcd);
+>> +	int (*usb_bus_start_enum)(struct usb_bus *bus, unsigned int port_num);
+>> +	int (*usb_control_msg)(struct usb_device *dev, unsigned int pipe,
+>> +			       __u8 request, __u8 requesttype, __u16 value,
+>> +			       __u16 index, void *data, __u16 size,
+>> +			       int timeout);
+>> +	struct usb_device * (*usb_hub_find_child)(struct usb_device *hdev,
+>> +						  int port1);
+>> +};
+>> +
+>>  static inline int hcd_giveback_urb_in_bh(struct usb_hcd *hcd)
+>>  {
+>>  	return hcd->driver->flags & HCD_BH;
+>> -- 
+>> 2.7.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
