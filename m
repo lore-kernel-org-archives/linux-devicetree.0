@@ -1,118 +1,86 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 09/11] mfd: altr_a10sr: Add Altera A10-SR power supply
- alarms
-Date: Mon, 9 May 2016 16:53:53 +0100
-Message-ID: <20160509155353.GD19473@dell>
-References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
- <1461339219-15255-10-git-send-email-tthayer@opensource.altera.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 06/17] irqdomain: Don't set type when mapping an IRQ
+Date: Mon, 9 May 2016 16:44:56 +0100
+Message-ID: <5730B078.8090908@nvidia.com>
+References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
+ <1462379130-11742-7-git-send-email-jonathanh@nvidia.com>
+ <5730813B.7060206@arm.com> <57308D0D.4080800@nvidia.com>
+ <5730A867.9070504@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1461339219-15255-10-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5730A867.9070504-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Apr 2016, tthayer@opensource.altera.com wrote:
 
-> From: Thor Thayer <tthayer@opensource.altera.com>
->=20
-> Add support for power supply alarms to the Altera Arria10
-> Development Kit System Resource chip.
->=20
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
->  drivers/mfd/altera-a10sr.c       |    4 ++++
->  include/linux/mfd/altera-a10sr.h |   24 ++++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
+On 09/05/16 16:10, Marc Zyngier wrote:
+> On 09/05/16 14:13, Jon Hunter wrote:
+>> On 09/05/16 13:23, Marc Zyngier wrote:
 
-=46or my own reference:
-  Acked-by: Lee Jones <lee.jones@linaro.org>
- =20
-> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-> index 2ff08e3..2b2a90c 100644
-> --- a/drivers/mfd/altera-a10sr.c
-> +++ b/drivers/mfd/altera-a10sr.c
-> @@ -31,6 +31,10 @@ static const struct mfd_cell altr_a10sr_subdev_inf=
-o[] =3D {
->  		.name =3D "altr_a10sr_gpio",
->  		.of_compatible =3D "altr,a10sr-gpio",
->  	},
-> +	{
-> +		.name =3D "altr_a10sr_hwmon",
-> +		.of_compatible =3D "altr,a10sr-hwmon",
-> +	},
->  };
-> =20
->  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int=
- reg)
-> diff --git a/include/linux/mfd/altera-a10sr.h b/include/linux/mfd/alt=
-era-a10sr.h
-> index c869fe7..22aa830 100644
-> --- a/include/linux/mfd/altera-a10sr.h
-> +++ b/include/linux/mfd/altera-a10sr.h
-> @@ -62,8 +62,32 @@
->  #define ALTR_A10SR_IN_VALID_RANGE_HI      15
-> =20
->  #define ALTR_A10SR_PWR_GOOD1_REG      0x08    /* Power Good1 Read */
-> +/* Power Good #1 Register Bit Definitions */
-> +#define ALTR_A10SR_PG1_OP_FLAG_SHIFT    7       /* Power On Complete=
- */
-> +#define ALTR_A10SR_PG1_1V8_SHIFT        6       /* 1.8V Power Good *=
-/
-> +#define ALTR_A10SR_PG1_2V5_SHIFT        5       /* 2.5V Power Good *=
-/
-> +#define ALTR_A10SR_PG1_3V3_SHIFT        4       /* 3.3V Power Good *=
-/
-> +#define ALTR_A10SR_PG1_5V0_SHIFT        3       /* 5.0V Power Good *=
-/
-> +#define ALTR_A10SR_PG1_0V9_SHIFT        2       /* 0.9V Power Good *=
-/
-> +#define ALTR_A10SR_PG1_0V95_SHIFT       1       /* 0.95V Power Good =
-*/
-> +#define ALTR_A10SR_PG1_1V0_SHIFT        0       /* 1.0V Power Good *=
-/
-> +
->  #define ALTR_A10SR_PWR_GOOD2_REG      0x0A    /* Power Good2 Read */
-> +/* Power Good #2 Register Bit Definitions */
-> +#define ALTR_A10SR_PG2_HPS_SHIFT        7       /* HPS Power Good */
-> +#define ALTR_A10SR_PG2_HL_HPS_SHIFT     6       /* HILOHPS_VDD Power=
- Good */
-> +#define ALTR_A10SR_PG2_HL_VDD_SHIFT     5       /* HILO VDD Power Go=
-od */
-> +#define ALTR_A10SR_PG2_HL_VDDQ_SHIFT    4       /* HILO VDDQ Power G=
-ood */
-> +#define ALTR_A10SR_PG2_FMCAVADJ_SHIFT   3       /* FMCA VADJ Power G=
-ood */
-> +#define ALTR_A10SR_PG2_FMCBVADJ_SHIFT   2       /* FMCB VADJ Power G=
-ood */
-> +#define ALTR_A10SR_PG2_FAC2MP_SHIFT     1       /* FAC2MP Power Good=
- */
-> +#define ALTR_A10SR_PG2_FBC2MP_SHIFT     0       /* FBC2MP Power Good=
- */
-> +
->  #define ALTR_A10SR_PWR_GOOD3_REG      0x0C    /* Power Good3 Read */
-> +/* Power Good #3 Register Bit Definitions */
-> +#define ALTR_A10SR_PG3_FAM2C_SHIFT      7       /* FAM2C Power Good =
-*/
-> +#define ALTR_A10SR_PG3_10V_FAIL_SHIFT   6       /* 10V Fail n */
-> +
->  #define ALTR_A10SR_FMCAB_REG          0x0E    /* FMCA/B & PCIe Pwr E=
-nable */
->  #define ALTR_A10SR_HPS_RST_REG        0x10    /* HPS Reset */
->  #define ALTR_A10SR_USB_QSPI_REG       0x12    /* USB, BQSPI, FILE Re=
-set */
+[snip]
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> This patch have the effect of making misconfigured PPIs absolutely
+>>> obvious. I still need to wrap my head around the root cause, but here's
+>>> the findings I have so far:
+>>>
+>>> - kvmtool generates a DT with the wrong trigger information (edge
+>>> instead of level) for the timer.
+>>> - with this patch applied, "cyclictest -S" reliably locks up when run in
+>>> a guest (missing a timer interrupt, goodbye CPU).
+>>> - Either fixing kvmtool or reverting that patch makes it work reliably
+>>> again.
+>>>
+>>> My gut feeling is that until that patch, the failing irq_set_irq_type()
+>>> wasn't affecting the kernel's view of the trigger (it was still treated
+>>> as level). With this patch, the kernel now trusts whatever is coming
+>>> from the firmware, and the misconfiguration becomes obvious. And just
+>>> grepping through the DT files for arm and arm64 sends makes me thing
+>>> "Holly effin' crap!".
+>>>
+>>> I'm not saying that we shouldn't perform this change though. But it is
+>>> quite obvious that it is going to break an awful lot of existing code
+>>> and platforms. I'm also cooking a small patch for the arch timer (which
+>>> seems to be described in DT with a fairly high level of brokenness), so
+>>> that we can mop-up most of the brain damage.
+>>
+>> Hmmm ... yes I see. I wonder if we should make the setting of the type
+>> here dependent upon PM being enabled for an irqchip? We could check to
+>> see if the .parent_device is populated and if so only then save the type
+>> and otherwise just set it as we do today.
+> 
+> I don't really like the idea of having multiple code paths for the same thing.
+> This is very error prone, and likely to bitrot pretty quickly.
+
+True. However, we really need this change for irqchips and runtime-pm.
+So to confirm what are you suggesting we do? We could add a WARN around
+irq_set_irq_type() in irq_create_fwspec_mapping() for v4.7 and see how
+many complaints we get :-)
+
+>> We could add a WARN to the existing irq_set_irq_type() or may be just a
+>> pr_warn() if a WARN is too verbose so people can fix up any issues.
+>>
+>> I am also wondering if patch 4/17 "iqdomain: Fix handling of type
+>> settings for existing mappings" could generate a lot of reports
+>> interrupts failing due to bad firmware? I wonder if I should tone this
+>> patch down to a warning message as well as opposed to a complete failure.
+> 
+> We'll see. We can always tone it down a notch, should it prove to be too noisy...
+> So far, I haven't seen it firing. On the other hand, I get the following stuff
+> on my APM board:
+> 
+> [    0.000000] GIC: PPI0 is either secure or misconfigured
+> [    0.000000] GIC: PPI13 is either secure or misconfigured
+> [    0.000000] arm_arch_timer: WARNING: Invalid trigger for IRQ1, assuming level low
+> [    0.000000] arm_arch_timer: WARNING: Please fix your firmware
+> [    0.000000] arm_arch_timer: WARNING: Invalid trigger for IRQ2, assuming level low
+> [    0.000000] arm_arch_timer: WARNING: Please fix your firmware
+> 
+> Pretty awesome...
+
+Indeed.
+
+Jon
