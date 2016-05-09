@@ -1,7 +1,7 @@
 From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 4/4] drivers/clocksource/moxart: Add Aspeed support
-Date: Mon,  9 May 2016 22:02:49 +0930
-Message-ID: <1462797169-14512-5-git-send-email-joel@jms.id.au>
+Subject: [PATCH 2/4] drivers/clocksource/moxart: Refactor enable/disable
+Date: Mon,  9 May 2016 22:02:47 +0930
+Message-ID: <1462797169-14512-3-git-send-email-joel@jms.id.au>
 References: <1462797169-14512-1-git-send-email-joel@jms.id.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1462797169-14512-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
@@ -10,92 +10,69 @@ To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Aspeed SoC has timer IP with a very similar register layout to the
-moxart timer. This patch adds support for the fourth and fifth gen
-aspeed SoCs, and has been tested on the ast2400 and ast2500.
-
 Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- .../bindings/timer/moxa,moxart-timer.txt           |  4 ++-
- drivers/clocksource/moxart_timer.c                 | 32 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 1 deletion(-)
+ drivers/clocksource/moxart_timer.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-index da2d510cae47..e207c11630af 100644
---- a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-@@ -2,7 +2,9 @@ MOXA ART timer
- 
- Required properties:
- 
--- compatible : Must be "moxa,moxart-timer"
-+- compatible : Must be one of:
-+ 	- "moxa,moxart-timer"
-+ 	- "aspeed,ast2400-timer"
- - reg : Should contain registers location and length
- - interrupts : Should contain the timer interrupt number
- - clocks : Should contain phandle for the clock that drives the counter
 diff --git a/drivers/clocksource/moxart_timer.c b/drivers/clocksource/moxart_timer.c
-index d17e3eface87..83ffa2727699 100644
+index 19857af651c1..b00b2b21e8b3 100644
 --- a/drivers/clocksource/moxart_timer.c
 +++ b/drivers/clocksource/moxart_timer.c
-@@ -56,6 +56,23 @@
- #define MOXART_TIMER1_ENABLE	(MOXART_CR_2_ENABLE | MOXART_CR_1_ENABLE)
- #define MOXART_TIMER1_DISABLE	(MOXART_CR_2_ENABLE)
+@@ -58,15 +58,25 @@
+ static void __iomem *base;
+ static unsigned int clock_count_per_tick;
  
-+/*
-+ * The ASpeed variant of the IP block has a different layout
-+ * for the control register
-+ */
-+#define ASPEED_CR_1_ENABLE	BIT(0)
-+#define ASPEED_CR_1_CLOCK	BIT(1)
-+#define ASPEED_CR_1_INT		BIT(2)
-+#define ASPEED_CR_2_ENABLE	BIT(4)
-+#define ASPEED_CR_2_CLOCK	BIT(5)
-+#define ASPEED_CR_2_INT		BIT(6)
-+#define ASPEED_CR_3_ENABLE	BIT(8)
-+#define ASPEED_CR_3_CLOCK	BIT(9)
-+#define ASPEED_CR_3_INT		BIT(10)
+-static int moxart_shutdown(struct clock_event_device *evt)
++static inline void moxart_disable(struct clock_event_device *evt)
+ {
+ 	writel(TIMER1_DISABLE, base + TIMER_CR);
++}
 +
-+#define ASPEED_TIMER1_ENABLE   (ASPEED_CR_2_ENABLE | ASPEED_CR_1_ENABLE)
-+#define ASPEED_TIMER1_DISABLE  (ASPEED_CR_2_ENABLE)
++static inline void moxart_enable(struct clock_event_device *evt)
++{
++	writel(TIMER1_ENABLE, base + TIMER_CR);
++}
 +
- struct moxart_timer {
- 	void __iomem *base;
- 	unsigned int t1_disable_val;
-@@ -159,6 +176,9 @@ static void __init moxart_timer_init(struct device_node *node)
- 	if (of_device_is_compatible(node, "moxa,moxart-timer")) {
- 		timer->t1_enable_val = MOXART_TIMER1_ENABLE;
- 		timer->t1_disable_val = MOXART_TIMER1_DISABLE;
-+	} else if (of_device_is_compatible(node, "aspeed,ast2400-timer")) {
-+		timer->t1_enable_val = ASPEED_TIMER1_ENABLE;
-+		timer->t1_disable_val = ASPEED_TIMER1_DISABLE;
- 	} else
- 		panic("%s: unknown platform\n", node->full_name);
- 
-@@ -189,6 +209,17 @@ static void __init moxart_timer_init(struct device_node *node)
- 	if (ret)
- 		panic("%s: setup_irq failed\n", node->full_name);
- 
-+	/* Clear match registers */
-+	writel(0, timer->base + TIMER1_BASE + REG_MATCH1);
-+	writel(0, timer->base + TIMER1_BASE + REG_MATCH2);
-+	writel(0, timer->base + TIMER2_BASE + REG_MATCH1);
-+	writel(0, timer->base + TIMER2_BASE + REG_MATCH2);
-+
-+	/*
-+	 * Start timer 2 rolling as our main wall clock source, keep timer 1
-+	 * disabled
-+	 */
-+	writel(0, timer->base + TIMER_CR);
- 	writel(~0, timer->base + TIMER2_BASE + REG_LOAD);
- 	writel(timer->t1_disable_val, timer->base + TIMER_CR);
- 
-@@ -201,3 +232,4 @@ static void __init moxart_timer_init(struct device_node *node)
- 	clockevents_config_and_register(&timer->clkevt, pclk, 0x4, 0xfffffffe);
++static int moxart_shutdown(struct clock_event_device *evt)
++{
++	moxart_disable(evt);
+ 	return 0;
  }
- CLOCKSOURCE_OF_DECLARE(moxart, "moxa,moxart-timer", moxart_timer_init);
-+CLOCKSOURCE_OF_DECLARE(aspeed, "aspeed,ast2400-timer", moxart_timer_init);
+ 
+ static int moxart_set_oneshot(struct clock_event_device *evt)
+ {
+-	writel(TIMER1_DISABLE, base + TIMER_CR);
++	moxart_disable(evt);
+ 	writel(~0, base + TIMER1_BASE + REG_LOAD);
+ 	return 0;
+ }
+@@ -74,21 +84,21 @@ static int moxart_set_oneshot(struct clock_event_device *evt)
+ static int moxart_set_periodic(struct clock_event_device *evt)
+ {
+ 	writel(clock_count_per_tick, base + TIMER1_BASE + REG_LOAD);
+-	writel(TIMER1_ENABLE, base + TIMER_CR);
++	moxart_enable(evt);
+ 	return 0;
+ }
+ 
+ static int moxart_clkevt_next_event(unsigned long cycles,
+-				    struct clock_event_device *unused)
++				    struct clock_event_device *evt)
+ {
+ 	u32 u;
+ 
+-	writel(TIMER1_DISABLE, base + TIMER_CR);
++	moxart_disable(evt);
+ 
+ 	u = readl(base + TIMER1_BASE + REG_COUNT) - cycles;
+ 	writel(u, base + TIMER1_BASE + REG_MATCH1);
+ 
+-	writel(TIMER1_ENABLE, base + TIMER_CR);
++	moxart_enable(evt);
+ 
+ 	return 0;
+ }
 -- 
 2.8.1
 
