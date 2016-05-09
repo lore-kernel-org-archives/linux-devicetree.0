@@ -1,362 +1,318 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/4] of: changesets: Introduce changeset helper methods
-Date: Mon, 9 May 2016 17:34:19 +0300
-Message-ID: <F8E336E9-E400-4918-8E65-B3EFFC943D20@konsulko.com>
-References: <1462800045-10943-1-git-send-email-pantelis.antoniou@konsulko.com> <1462800045-10943-4-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqJY7BcKV2djvSGq8KoQKPyFdFvs395w4L2o5+Lbc3ng4Q@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJY7BcKV2djvSGq8KoQKPyFdFvs395w4L2o5+Lbc3ng4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/2] watchdog: Add Aspeed watchdog driver
+Date: Mon, 9 May 2016 07:48:25 -0700
+Message-ID: <5730A339.80006@roeck-us.net>
+References: <1462797277-14969-1-git-send-email-joel@jms.id.au>
+ <1462797277-14969-3-git-send-email-joel@jms.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462797277-14969-3-git-send-email-joel@jms.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>, wim@iguana.be
+Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, arnd@arndb.de, benh@kernel.crashing.org, jk@ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Joel,
 
-> On May 9, 2016, at 17:27 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->=20
-> On Mon, May 9, 2016 at 8:20 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> Changesets are very powerful, but the lack of a helper API
->> makes using them cumbersome. Introduce a simple copy based
->> API that makes things considerably easier.
->>=20
->> To wit, adding a property using the raw API.
->>=20
->>        struct property *prop;
->>        prop =3D kzalloc(sizeof(*prop)), GFP_KERNEL);
->>        prop->name =3D kstrdup("compatible");
->>        prop->value =3D kstrdup("foo,bar");
->>        prop->length =3D strlen(prop->value) + 1;
->>        of_changeset_add_property(ocs, np, prop);
->>=20
->> while using the helper API
->>=20
->>        of_changeset_add_property_string(ocs, np, "compatible",
->>                        "foo,bar");
->=20
-> Seems useful. Do we not have any users that can be converted?
->=20
+On 05/09/2016 05:34 AM, Joel Stanley wrote:
+> Provides generic watchdog features as well as reboot support for the
+> Apeed SoC.
+>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>   drivers/watchdog/Kconfig      |  13 +++
+>   drivers/watchdog/Makefile     |   1 +
+>   drivers/watchdog/aspeed_wdt.c | 199 ++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 213 insertions(+)
+>   create mode 100644 drivers/watchdog/aspeed_wdt.c
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index fb947655badd..4f0e2ded4785 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -661,6 +661,19 @@ config ATLAS7_WATCHDOG
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called atlas7_wdt.
+>
+> +config ASPEED_WATCHDOG
+> +	tristate "Aspeed 2400 watchdog support"
+> +	depends on ARCH_ASPEED || COMPILE_TEST
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for the watchdog timer
+> +	  in Apseed BMC SoCs.
+> +
+> +	  This driver is required to reboot the SoC.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called aspeed_wdt.
+> +
+>   # AVR32 Architecture
+>
+>   config AT32AP700X_WDT
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index feb6270fdbde..36855375e0ce 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -73,6 +73,7 @@ obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
+>   obj-$(CONFIG_LPC18XX_WATCHDOG) += lpc18xx_wdt.o
+>   obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+>   obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+> +obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+>
+>   # AVR32 Architecture
+>   obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+> new file mode 100644
+> index 000000000000..46cc71963c62
+> --- /dev/null
+> +++ b/drivers/watchdog/aspeed_wdt.c
+> @@ -0,0 +1,199 @@
+> +/*
+> + * Copyright 2016 IBM Corporation
+> + *
+> + * Joel Stanley <joel@jms.id.au>
+> + *
+> + * Based on the qcom-watchdog driver
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/watchdog.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/io.h>
+> +
+> +struct aspeed_wdt {
+> +	struct watchdog_device	wdd;
+> +	unsigned long		rate;
+> +	void __iomem		*base;
+> +	u32			ctrl;
+> +};
+> +
+> +static const struct of_device_id aspeed_wdt_of_table[] = {
+> +	{ .compatible = "aspeed,wdt" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
+> +
+> +#define WDT_STATUS		0x00
+> +#define WDT_RELOAD_VALUE	0x04
+> +#define WDT_RESTART		0x08
+> +#define WDT_CTRL		0x0C
+> +#define   WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
+> +#define   WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
+> +#define	  WDT_CTRL_1MHZ_CLK		BIT(4)
+> +#define	  WDT_CTRL_WDT_EXT		BIT(3)
+> +#define	  WDT_CTRL_WDT_INTR		BIT(2)
+> +#define   WDT_CTRL_RESET_SYSTEM		BIT(1)
+> +#define   WDT_CTRL_ENABLE		BIT(0)
+> +
+> +#define	WDT_RESTART_MAGIC	0x4755
 
-There is a user for this, which will be shortly posted.
+Please don't use tabs after #define.
 
+> +
+> +static struct aspeed_wdt *to_aspeed_wdt(struct watchdog_device *wdd)
+> +{
+> +	return container_of(wdd, struct aspeed_wdt, wdd);
+> +}
+> +
+> +
+Please no double empty lines.
 
-> [...]
->=20
->> +static int __of_changeset_add_update_property_copy(struct of_change=
-set *ocs,
->> +               struct device_node *np, const char *name, const void=
- *value,
->> +               int length, bool update)
->> +{
->> +       struct property *prop;
->> +       char *new_name;
->> +       void *new_value;
->> +       int ret =3D -ENOMEM;
->> +
->> +       prop =3D kzalloc(sizeof(*prop), GFP_KERNEL);
->> +       if (!prop)
->> +               goto out_no_prop;
->=20
-> Just return here.
->=20
+> +static void aspeed_wdt_enable(struct aspeed_wdt *wdt, int count)
+> +{
+> +	wdt->ctrl |= WDT_CTRL_ENABLE;
+> +
+> +	writel(0, wdt->base + WDT_CTRL);
+> +	writel(count, wdt->base + WDT_RELOAD_VALUE);
+> +	writel(WDT_RESTART_MAGIC, wdt->base + WDT_RESTART);
+> +	writel(wdt->ctrl, wdt->base + WDT_CTRL);
 
-OK
+Is it really necessary to write 0 into the ctrl register when enabling
+the watchdog ? Problem with it is two-fold: It changes the clock rate
+for a brief period of time, and it disables the watchdog while updating
+the timeout. Both is undesirable unless really needed.
 
->> +
->> +       new_name =3D kstrdup(name, GFP_KERNEL);
->> +       if (!new_name)
->> +               goto out_no_name;
->> +
->> +       /*
->> +        * NOTE: There is no check for zero length value.
->> +        * In case of a boolean property, this will allocate a value
->> +        * of zero bytes. We do this to work around the use
->> +        * of of_get_property() calls on boolean values.
->> +        */
->> +       new_value =3D kmemdup(value, length, GFP_KERNEL);
->> +       if (!new_value)
->> +               goto out_no_value;
->> +
->> +       of_property_set_flag(prop, OF_DYNAMIC);
->> +
->> +       prop->name =3D new_name;
->> +       prop->value =3D new_value;
->> +       prop->length =3D length;
->> +
->> +       if (!update)
->> +               ret =3D of_changeset_add_property(ocs, np, prop);
->> +       else
->> +               ret =3D of_changeset_update_property(ocs, np, prop);
->> +
->> +       if (ret !=3D 0)
->=20
-> if (!ret)
->  return 0;
->=20
->=20
+> +}
+> +
+> +static int aspeed_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
+> +
+> +	dev_dbg(wdd->parent, "starting with timeout of %d (rate %lu)\n",
+> +			wdd->timeout, wdt->rate);
 
->> +               goto out_no_add;
->> +
->> +       return 0;
->> +
->> +out_no_add:
->=20
-> ... and remove all this.
->=20
+Are those dev_dbg() really useful ?
 
-Err, there=E2=80=99s an exit path here from kmemdup (goto err_no_value)=
-=2E
-We=E2=80=99ll be leaking memory on error.
+> +	aspeed_wdt_enable(wdt, wdd->timeout * wdt->rate);
+> +
+> +	return 0;
+> +}
+> +
+> +static int aspeed_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
+> +
+> +	wdt->ctrl &= ~WDT_CTRL_ENABLE;
+> +	writel(wdt->ctrl, wdt->base + WDT_CTRL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int aspeed_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
+> +
+> +	dev_dbg(wdd->parent, "ping\n");
+> +	writel(WDT_RESTART_MAGIC, wdt->base + WDT_RESTART);
+> +	return 0;
+> +}
+> +
+> +static int aspeed_wdt_set_timeout(struct watchdog_device *wdd,
+> +				  unsigned int timeout)
+> +{
+> +	dev_dbg(wdd->parent, "timeout set to %u\n", timeout);
+> +	wdd->timeout = timeout;
+> +
+> +	return aspeed_wdt_start(wdd);
+> +}
+> +
+> +static int aspeed_wdt_restart(struct watchdog_device *wdd,
+> +			      unsigned long action, void *data)
+> +{
+> +	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
+> +
+> +	aspeed_wdt_enable(wdt, 128 * wdt->rate / 1000);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_ops aspeed_wdt_ops = {
+> +	.start		= aspeed_wdt_start,
+> +	.stop		= aspeed_wdt_stop,
+> +	.ping		= aspeed_wdt_ping,
+> +	.set_timeout	= aspeed_wdt_set_timeout,
+> +	.restart	= aspeed_wdt_restart,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct watchdog_info aspeed_wdt_info = {
+> +	.options	= WDIOF_KEEPALIVEPING
+> +			| WDIOF_MAGICCLOSE
+> +			| WDIOF_SETTIMEOUT,
+> +	.identity	= KBUILD_MODNAME,
+> +};
+> +
+> +static int aspeed_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct aspeed_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(&wdt->wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static int aspeed_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct aspeed_wdt *wdt;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(wdt->base))
+> +		return PTR_ERR(wdt->base);
+> +
+> +	/*
+> +	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
+> +	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
+> +	 * good reason to have a faster watchdog counter.
+> +	 */
+> +	wdt->rate = 1000000;
 
->> +       kfree(prop->value);
->> +out_no_value:
->> +       kfree(prop->name);
->> +out_no_name:
->> +       kfree(prop);
->> +out_no_prop:
->> +       return ret;
->> +}
->> +
->> +static int __of_changeset_add_update_property_string(struct of_chan=
-geset *ocs,
->> +               struct device_node *np, const char *name, const char=
- *str,
->> +               bool update)
->> +{
->> +       return __of_changeset_add_update_property_copy(ocs, np, name=
-, str,
->> +                       strlen(str) + 1, update);
->> +}
->> +
->> +static int __of_changeset_add_update_property_stringv(struct of_cha=
-ngeset *ocs,
->> +               struct device_node *np, const char *name,
->> +               const char *fmt, va_list vargs, bool update)
->> +{
->> +       char *str;
->> +       int ret;
->> +
->> +       str =3D kvasprintf(GFP_KERNEL, fmt, vargs);
->> +       if (!str)
->> +               return -ENOMEM;
->> +
->> +       ret =3D __of_changeset_add_update_property_string(ocs, np, n=
-ame, str, update);
->> +
->> +       kfree(str);
->> +
->> +       return ret;
->> +}
->> +
->> +static int __of_changeset_add_update_property_string_list(
->> +               struct of_changeset *ocs, struct device_node *np, co=
-nst char *name,
->> +               const char **strs, int count, bool update)
->> +{
->> +       int total =3D 0, i, ret;
->> +       char *value, *s;
->> +
->> +       for (i =3D 0; i < count; i++) {
->> +               /* check if  it's NULL */
->> +               if (!strs[i])
->> +                       return -EINVAL;
->> +               total +=3D strlen(strs[i]) + 1;
->> +       }
->> +
->> +       value =3D kmalloc(total, GFP_KERNEL);
->> +       if (!value)
->> +               return -ENOMEM;
->> +
->> +       for (i =3D 0, s =3D value; i < count; i++) {
->> +               /* no need to check for NULL, check above */
->> +               strcpy(s, strs[i]);
->> +               s +=3D strlen(strs[i]) + 1;
->> +       }
->> +
->> +       ret =3D __of_changeset_add_update_property_copy(ocs, np, nam=
-e, value,
->> +                       total, update);
->> +
->> +       kfree(value);
->> +
->> +       return ret;
->> +}
->> +
->> +static int __of_changeset_add_update_property_u32(struct of_changes=
-et *ocs,
->> +               struct device_node *np, const char *name, u32 val, b=
-ool update)
->> +{
->> +       /* in place */
->> +       val =3D cpu_to_be32(val);
->=20
-> Kill this function and move this to the 2 callers.
->=20
->> +       return __of_changeset_add_update_property_copy(ocs, np, name=
-, &val,
->> +                       sizeof(val), update);
->> +}
->> +
->> +static int __of_changeset_add_update_property_bool(struct of_change=
-set *ocs,
->> +               struct device_node *np, const char *name, bool updat=
-e)
->> +{
->=20
-> I think this intermediate function could be killed off too.
->=20
->> +       return __of_changeset_add_update_property_copy(ocs, np, name=
-, "", 0,
->> +                       update);
->> +}
->=20
-> [...]
->=20
->> +static struct device_node *
->> +__of_changeset_node_move_one(struct of_changeset *ocs,
->> +               struct device_node *np, struct device_node *new_pare=
-nt)
->> +{
->> +       struct device_node *np2;
->> +       const char *unitname;
->> +       int err;
->> +
->> +       err =3D of_changeset_detach_node(ocs, np);
->> +       if (err)
->> +               return ERR_PTR(err);
->> +
->> +       unitname =3D strrchr(np->full_name, '/');
->> +       if (!unitname)
->> +               unitname =3D np->full_name;
->> +
->> +       np2 =3D __of_node_dup(np, "%s/%s",
->> +                       new_parent->full_name, unitname);
->> +       if (!np2)
->> +               return ERR_PTR(-ENOMEM);
->> +       np2->parent =3D new_parent;
->> +
->> +       err =3D of_changeset_attach_node(ocs, np2);
->> +       if (err)
->> +               return ERR_PTR(err);
->> +
->> +       return np2;
->> +}
->> +
->> +/**
->> + * of_changeset_node_move_to - Moves a subtree to a new place in
->> + *                             the tree
->> + *
->> + * @ocs:       changeset pointer
->> + * @np:                device node pointer to be moved
->> + * @to:                device node of the new parent
->> + *
->> + * Moves a subtree to a new place in the tree.
->> + * Note that a move is a safe operation because the phandles
->> + * remain valid.
->=20
-> I'm having a hard time imagining a usecase for this one. I would drop
-> until we have a user in tree.
->=20
+Why not just use a define ?
 
-There=E2=80=99s a use case - it will be apparent with the next patches.
-=20
->> + *
->> + * Returns zero on success, a negative error value otherwise.
->> + */
->> +int of_changeset_node_move(struct of_changeset *ocs,
->> +               struct device_node *np, struct device_node *new_pare=
-nt)
->> +{
->> +       struct device_node *npc, *nppc;
->> +
->> +       /* move the root first */
->> +       nppc =3D __of_changeset_node_move_one(ocs, np, new_parent);
->> +       if (IS_ERR(nppc))
->> +               return PTR_ERR(nppc);
->> +
->> +       /* move the subtrees next */
->> +       for_each_child_of_node(np, npc) {
->> +               nppc =3D __of_changeset_node_move_one(ocs, npc, nppc=
-);
->> +               if (IS_ERR(nppc)) {
->> +                       of_node_put(npc);
->> +                       return PTR_ERR(nppc);
->> +               }
->> +       }
->> +
->> +       return 0;
->> +}
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index 3175803..f015911 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -1037,6 +1037,42 @@ static inline int of_changeset_update_propert=
-y(struct of_changeset *ocs,
->> {
->>        return of_changeset_action(ocs, OF_RECONFIG_UPDATE_PROPERTY, =
-np, prop);
->> }
->> +
->> +struct device_node *of_changeset_create_device_nodev(
->> +       struct of_changeset *ocs, struct device_node *parent,
->> +       const char *fmt, va_list vargs);
->> +__printf(3, 4) struct device_node *of_changeset_create_device_node(
->> +       struct of_changeset *ocs, struct device_node *parent,
->> +       const char *fmt, ...);
->> +int of_changeset_add_property_copy(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name,
->> +       const void *value, int length);
->> +int of_changeset_add_property_string(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name, const char *str);
->> +__printf(4, 5) int of_changeset_add_property_stringf(struct of_chan=
-geset *ocs,
->> +               struct device_node *np, const char *name, const char=
- *fmt, ...);
->> +int of_changeset_add_property_string_list(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name, const char **strs,=
- int count);
->> +int of_changeset_add_property_u32(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name, u32 val);
->> +int of_changeset_add_property_bool(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name);
->> +int of_changeset_update_property_copy(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name,
->> +       const void *value, int length);
->> +int of_changeset_update_property_string(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name, const char *str);
->> +__printf(4, 5) int of_changeset_update_property_stringf(struct of_c=
-hangeset *ocs,
->> +               struct device_node *np, const char *name, const char=
- *fmt, ...);
->> +int of_changeset_update_property_string_list(struct of_changeset *o=
-cs,
->> +       struct device_node *np, const char *name, const char **strs,=
- int count);
->> +int of_changeset_update_property_u32(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name, u32 val);
->> +int of_changeset_update_property_bool(struct of_changeset *ocs,
->> +       struct device_node *np, const char *name);
->> +int of_changeset_node_move(struct of_changeset *ocs,
->> +       struct device_node *np, struct device_node *new_parent);
->=20
-> A bunch of these can be static inline wrappers.
->=20
-> You need EXPORT_SYMBOL_GPL on these as well.
->=20
+> +	wdt->wdd.info = &aspeed_wdt_info;
+> +	wdt->wdd.ops = &aspeed_wdt_ops;
+> +	wdt->wdd.min_timeout = 1;
+> +	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+> +	wdt->wdd.parent = &pdev->dev;
+> +
+> +	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
 
-I will add the exports.
+Pretty much the same here. Since max_timeout is a constant,
+it is well known that it is larger than 30 seconds.
+Might as well use defines for max_timeout and timeout.
 
-> Rob
+> +	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+> +
+> +	wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
 
-Regards
+Only reset tha SoC ? Are you sure this is what you want ?
 
-=E2=80=94 Pantelis
+> +		WDT_CTRL_1MHZ_CLK |
+> +		WDT_CTRL_RESET_SYSTEM;
+> +
+> +	/* Ensure hardware is in consistent state */
+> +	aspeed_wdt_stop(&wdt->wdd);
+> +
+An alternative might be to check if the watchdog is running, and inform
+the watchdog core about it so it can generate heartbeats as required
+until user space opens the watchdog device. This would ensure that the
+system is protected during boot.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ctrl is really static except for the enable flag. Not really sure
+if having a variable for it has any real benefits - you might as well
+just read the register and update the enable flag instead as needed when
+starting or stopping the watchdog. Is there a reason for not doing that ?
+
+> +	ret = watchdog_register_device(&wdt->wdd);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register\n");
+> +		goto err;
+
+Unnecessary goto. Just return.
+
+> +	}
+> +
+> +	dev_info(&pdev->dev, "rate %lu, max timeout %u, timeout %d\n",
+> +		 wdt->rate, wdt->wdd.max_timeout, wdt->wdd.timeout);
+> +
+> +	platform_set_drvdata(pdev, wdt);
+> +err:
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver aspeed_watchdog_driver = {
+> +	.probe = aspeed_wdt_probe,
+> +	.remove = aspeed_wdt_remove,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = of_match_ptr(aspeed_wdt_of_table),
+> +	},
+> +};
+> +module_platform_driver(aspeed_watchdog_driver);
+> +
+> +MODULE_DESCRIPTION("Aspeed Watchdog Driver");
+> +MODULE_LICENSE("GPL");
+>
