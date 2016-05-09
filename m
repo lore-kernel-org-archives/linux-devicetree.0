@@ -1,294 +1,299 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] ARM: dts: omap5: describe control for ckobuffer
-Date: Mon, 9 May 2016 14:52:21 +0300
-Message-ID: <573079F5.7050507@ti.com>
-References: <cover.1461003660.git.hns@goldelico.com>
- <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com>
- <20160426172710.GI5995@atomide.com>
- <70572DA1-BEB4-4681-BA6C-2E1C9002D730@goldelico.com>
- <5720B107.4000907@ti.com>
- <A90F1BFC-A834-4EC0-81F9-2C8222AAA010@goldelico.com>
- <5720C85B.9010701@ti.com> <ce9a7840-e86f-0d0c-3ed6-a571eec6659d@ti.com>
- <40536322-073F-48BD-9D07-32B9A9F07AF2@goldelico.com>
- <5721C3D4.7040401@ti.com>
- <2A9D82CD-9ACA-49F6-9D2B-9EACFC517914@goldelico.com>
- <57220EDD.7080903@ti.com>
- <F2BCD4BA-E4E4-43F4-B65C-B625ED3B2D13@goldelico.com>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] mmc: core: implement enhanced strobe support
+Date: Mon, 9 May 2016 14:56:38 +0300
+Message-ID: <57307AF6.8030401@intel.com>
+References: <1461897751-28810-1-git-send-email-shawn.lin@rock-chips.com>
+ <1461898029-28944-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <F2BCD4BA-E4E4-43F4-B65C-B625ED3B2D13-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <1461898029-28944-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/16 14:18, H. Nikolaus Schaller wrote:
-> Hi,
->
->> Am 28.04.2016 um 15:23 schrieb Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>:
->>
->> On 28/04/16 12:12, H. Nikolaus Schaller wrote:
->>> Hi Tero,
->>>
->>>> Am 28.04.2016 um 10:03 schrieb Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>:
->>>>
->>>> On 27/04/16 17:35, H. Nikolaus Schaller wrote:
->>>>> HI,
->>>>>
->>>>>> Am 27.04.2016 um 16:23 schrieb Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>:
->>>>>>
->>>>>> On 04/27/2016 05:10 PM, Tero Kristo wrote:
->>>>>>> On 27/04/16 16:10, H. Nikolaus Schaller wrote:
->>>>>>>>
->>>>>>>>> Am 27.04.2016 um 14:31 schrieb Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>:
->>>>>>>>>
->>>>>>>>> On 27/04/16 09:04, H. Nikolaus Schaller wrote:
->>>>>>>>>>
->>>>>>>>>>> Am 26.04.2016 um 19:27 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
->>>>>>>>>>>
->>>>>>>>>>> Tero,
->>>>>>>>>>>
->>>>>>>>>>> * H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160418 11:23]:
->>>>>>>>>>>> OMAP5 has a register to control if the ckobuffer is enabled
->>>>>>>>>>>> and defines the polarity. ckobuffer is required to drive a twl6040
->>>>>>>>>>>> with the system clock. Hence, add the pinctrl,single to the
->>>>>>>>>>>> OMAP5 SoC description so that omap5-board-common can
->>>>>>>>>>>> set up the ckobuffer as required.
->>>>>>>>>>>
->>>>>>>>>>> Is this really a mux or should it be a mux clock?
->>>>>>>>>>
->>>>>>>>>> It is a pinmux setting for the clock out buffer to choose what signal
->>>>>>>>>> (and polarity) is presented on the fref_xtal_clk pad.
->>>>>>>>>>
->>>>>>>>>> The register is part of the CTRL_MODULE_WKUP.
->>>>>>>>>> The clock signal is the xtal master clock of the whole SoC.
->>>>>>>>>>
->>>>>>>>>> Although there is a bit to choose an alternate clock, there is no
->>>>>>>>>> alternate in the OMAP5 silicon.
->>>>>>>>>>
->>>>>>>>>> Therefore I would say it is about padconf and not clock or clock mux
->>>>>>>>>> related.
->>>>>>>>>>
->>>>>>>>>> It just happens to be a clock signal which can be routed to this
->>>>>>>>>> pad.
->>>>>>>>>
->>>>>>>>> The two could very well be implemented as clock nodes, a mux and a gate.
->>>>>>>>> This would describe the hardware functionality better imo, if the
->>>>>>>>> assumptions made here are correct. Implementing the control as pinctrl
->>>>>>>>> hacks looks rather weird to me.
->>>>>>>>
->>>>>>>> Why do you consider it a "pinctrl hack"? IMHO it is not a hack, but 100%
->>>>>>>> proper use of pinctrl.
->>>>>>>
->>>>>>> It is just the level of abstraction we are talking about here. If it is a
->>>>>>> clock we are controlling, we should rather control it as a clock (higher level
->>>>>>> abstraction), not a pin.
->>>>>>
->>>>>> I second this. I think it is better to have a simple gate clock and handle
->>>>>> only CONTROL_CKOBUFFER:CKOBUFFER_CLK_EN (bit 28) only as the other bits does
->>>>>> not have real use.
->>>>>>
->>>>>> Then we can add clk API support for this. On most OMAP4 devices the clock is
->>>>>> always on,
->>>>>
->>>>> this is why I am raising the question if we really want to control it on the omap5 or just
->>>>> turn it on for all omap5 boards like the omap4 appears to do... I.e. if turning the pin on
->>>>> as a pinctrl is IMHO sufficient for all practical purposes.
->>>>>
->>>>>> so the board DTS file need to provide a dummy clock, or we can make
->>>>>> the high precision clock also as optional (on panda both OMAP4 and twl6040
->>>>>> uses the same reference clock).
->>>>>
->>>>> Hm. It looks as if implementing this (and clock gating) is beyond my experiences.
->>>>> But I am happy to test a proposal on our omap5 board.
->>>>>
->>>>> BR and thanks,
->>>>> Nikolaus
->>>>
->>>> See the inline patch, this implements the fref_xtal_ck. I had to add some kernel code also to cope with the new SCM area, but the same area can now be accessed via syscon also if needed.
->>>
->>> Looks interesting, although quite complex to enable a single SoC pad at boot time...
->>
->> Yea it gives plenty of other things for you also. syscon, integration with clock framework, etc.
->>
->>>
->>> Will asap study how it works and test. And of course report results.
->>
->> Thanks, Tero.
->>
->>>
->>> Thanks and BR,
->>> Nikolaus
->>>
->>>>
->>>> From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->>>> Date: Thu, 28 Apr 2016 11:00:57 +0300
->>>> Subject: [PATCH] ARM: omap5: add support for fref_xtal_ck
->>>>
->>>> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>> arch/arm/boot/dts/omap5.dtsi           | 22 ++++++++++++++++++++++
->>>> arch/arm/boot/dts/omap54xx-clocks.dtsi | 10 ++++++++++
->>>> arch/arm/mach-omap2/control.c          | 20 ++++++++++++++++----
->>>> include/linux/clk/ti.h                 |  1 +
->>>> 4 files changed, 49 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
->>>> index 38805eb..bdc6528 100644
->>>> --- a/arch/arm/boot/dts/omap5.dtsi
->>>> +++ b/arch/arm/boot/dts/omap5.dtsi
->>>> @@ -277,6 +277,28 @@
->>>> 				pinctrl-single,register-width = <16>;
->>>> 				pinctrl-single,function-mask = <0x7fff>;
->>>> 			};
->>>> +
->>>> +			omap5_scm_wkup_pad_conf: omap5_scm_wkup_pad_conf@cda0 {
->>>> +				compatible = "ti,omap5-scm-wkup-pad-conf",
->>>> +					     "simple-bus";
->>>> +				reg = <0xcda0 0x60>;
->>>> +				#address-cells = <1>;
->>>> +				#size-cells = <1>;
->>>> +				ranges = <0 0xcda0 0x60>;
->>>> +
->>>> +				scm_wkup_pad_conf: scm_conf@0 {
->>>> +					compatible = "syscon", "simple-bus";
->>>> +					reg = <0x0 0x60>;
->>>> +					#address-cells = <1>;
->>>> +					#size-cells = <1>;
->>>> +					ranges = <0 0x0 0x60>;
->>>> +
->>>> +					scm_wkup_pad_conf_clocks: clocks@0 {
->>>> +						#address-cells = <1>;
->>>> +						#size-cells = <0>;
->>>> +					};
->>>> +				};
->>>> +			};
->>>> 		};
->>>>
->>>> 		ocmcram: ocmcram@40300000 {
->>>> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>>> index 83b425f..f970dac 100644
->>>> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>>> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>>> @@ -1388,3 +1388,13 @@
->>>> 		reg = <0x021c>;
->>>> 	};
->>>> };
->>>> +
->>>> +&scm_wkup_pad_conf_clocks {
->>>> +	fref_xtal_ck: fref_xtal_ck {
->>>> +		#clocks-cells = <0>;
->>>> +		compatible = "ti,gate-clock";
->>>> +		clocks = <&sys_clkin>;
->>>> +		ti,bit-shift = <28>;
->>>> +		reg = <0x14>;
->>>> +	};
->>>> +};
->>>> diff --git a/arch/arm/mach-omap2/control.c b/arch/arm/mach-omap2/control.c
->>>> index 1662071..5956641 100644
->>>> --- a/arch/arm/mach-omap2/control.c
->>>> +++ b/arch/arm/mach-omap2/control.c
->>>> @@ -623,6 +623,7 @@ void __init omap3_ctrl_init(void)
->>>>
->>>> struct control_init_data {
->>>> 	int index;
->>>> +	void __iomem *mem;
->>>> 	s16 offset;
->>>> };
->>>>
->>>> @@ -635,6 +636,10 @@ static const struct control_init_data omap2_ctrl_data = {
->>>> 	.offset = -OMAP2_CONTROL_GENERAL,
->>>> };
->>>>
->>>> +static const struct control_init_data ctrl_aux_data = {
->>>> +	.index = TI_CLKM_CTRL_AUX,
->>>> +};
->>>> +
->>>> static const struct of_device_id omap_scrm_dt_match_table[] = {
->>>> 	{ .compatible = "ti,am3-scm", .data = &ctrl_data },
->>>> 	{ .compatible = "ti,am4-scm", .data = &ctrl_data },
->>>> @@ -644,6 +649,7 @@ static const struct of_device_id omap_scrm_dt_match_table[] = {
->>>> 	{ .compatible = "ti,dm816-scrm", .data = &ctrl_data },
->>>> 	{ .compatible = "ti,omap4-scm-core", .data = &ctrl_data },
->>>> 	{ .compatible = "ti,omap5-scm-core", .data = &ctrl_data },
->>>> +	{ .compatible = "ti,omap5-scm-wkup-pad-conf", .data = &ctrl_aux_data },
->>>> 	{ .compatible = "ti,dra7-scm-core", .data = &ctrl_data },
->>>> 	{ }
->>>> };
->>>> @@ -660,15 +666,21 @@ int __init omap2_control_base_init(void)
->>>> 	struct device_node *np;
->>>> 	const struct of_device_id *match;
->>>> 	struct control_init_data *data;
->>>> +	void __iomem *mem;
->>>>
->>>> 	for_each_matching_node_and_match(np, omap_scrm_dt_match_table, &match) {
->>>> 		data = (struct control_init_data *)match->data;
->>>>
->>>> -		omap2_ctrl_base = of_iomap(np, 0);
->>>> -		if (!omap2_ctrl_base)
->>>> +		mem = of_iomap(np, 0);
->>>> +		if (!mem)
->>>> 			return -ENOMEM;
->>>>
->>>> -		omap2_ctrl_offset = data->offset;
->>>> +		if (data->index == TI_CLKM_CTRL) {
->>>> +			omap2_ctrl_base = mem;
->>>> +			omap2_ctrl_offset = data->offset;
->>>> +		}
->>>> +
->>>> +		data->mem = mem;
->>>> 	}
->>>>
->>>> 	return 0;
->>>> @@ -713,7 +725,7 @@ int __init omap_control_init(void)
->>>> 		} else {
->>>> 			/* No scm_conf found, direct access */
->>>> 			ret = omap2_clk_provider_init(np, data->index, NULL,
->>>> -						      omap2_ctrl_base);
->>>> +						      data->mem);
->>>> 			if (ret)
->>>> 				return ret;
->>>> 		}
->>>> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
->>>> index dc5164a..be25aa8 100644
->>>> --- a/include/linux/clk/ti.h
->>>> +++ b/include/linux/clk/ti.h
->>>> @@ -195,6 +195,7 @@ enum {
->>>> 	TI_CLKM_PRM,
->>>> 	TI_CLKM_SCRM,
->>>> 	TI_CLKM_CTRL,
->>>> +	TI_CLKM_CTRL_AUX,
->>>> 	TI_CLKM_PLLSS,
->>>> 	CLK_MAX_MEMMAPS
->>>> };
->>>
->>
->
-> finally I found some time to apply your patches. Sorry for the long time.
->
-> Unfortunately, it does not work. Neither on omap5evm nor on our omap5 hardware.
-> I get no sound on the twl6040 - just white noise (which can be controlled in level through
-> amixer so it is created on the digital input side of the twl6040).
->
-> So I think your patch is missing a detail compared to my simple solution.
+On 29/04/16 05:47, Shawn Lin wrote:
+> Controllers use data strobe line to latch data from devices
+> under hs400 mode, but not for cmd line. So since emmc 5.1, JEDEC
+> introduces enhanced strobe mode for latching cmd response from
+> emmc devices to host controllers. This new feature is optional,
+> so it depends both on device's cap and host's cap to decide
+> whether to use it or not.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Did you implement anything on the audio driver side? The audio driver 
-must enable the clock implemented by this patch.
+Thanks for doing this.  There are a couple of comments below, but generally
+I tend to think you should split out selecting HS400ES as a separate function.
 
--Tero
+> ---
+> 
+> Changes in v2: None
+> 
+>  drivers/mmc/core/bus.c   |  3 +-
+>  drivers/mmc/core/mmc.c   | 77 ++++++++++++++++++++++++++++++++++++++++++++----
+>  include/linux/mmc/card.h |  1 +
+>  include/linux/mmc/host.h | 12 ++++++++
+>  include/linux/mmc/mmc.h  |  3 ++
+>  5 files changed, 89 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+> index 4bc48f1..7e94b9d 100644
+> --- a/drivers/mmc/core/bus.c
+> +++ b/drivers/mmc/core/bus.c
+> @@ -332,12 +332,13 @@ int mmc_add_card(struct mmc_card *card)
+>  			mmc_card_ddr52(card) ? "DDR " : "",
+>  			type);
+>  	} else {
+> -		pr_info("%s: new %s%s%s%s%s card at address %04x\n",
+> +		pr_info("%s: new %s%s%s%s%s%s card at address %04x\n",
+>  			mmc_hostname(card->host),
+>  			mmc_card_uhs(card) ? "ultra high speed " :
+>  			(mmc_card_hs(card) ? "high speed " : ""),
+>  			mmc_card_hs400(card) ? "HS400 " :
+>  			(mmc_card_hs200(card) ? "HS200 " : ""),
+> +			mmc_card_hs400es(card) ? "Enhanced strobe" : "",
+>  			mmc_card_ddr52(card) ? "DDR " : "",
+>  			uhs_bus_speed_mode, type, card->rca);
+>  	}
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index 28b477d..f45ed10 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -235,6 +235,12 @@ static void mmc_select_card_type(struct mmc_card *card)
+>  		avail_type |= EXT_CSD_CARD_TYPE_HS400_1_2V;
+>  	}
+>  
+> +	if ((caps2 & MMC_CAP2_HS400_ENHANCED_STROBE) &&
+> +	    card->ext_csd.strobe_support &&
+> +	    ((card_type & EXT_CSD_CARD_TYPE_HS400_1_2V) ||
+> +	     (card_type & EXT_CSD_CARD_TYPE_HS400_1_8V)))
 
->
-> BR,
-> Nikolaus
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+Could use just "card_type & EXT_CSD_CARD_TYPE_HS400" here
+
+> +		avail_type |= EXT_CSD_CARD_TYPE_HS400ES;
+> +
+>  	card->ext_csd.hs_max_dtr = hs_max_dtr;
+>  	card->ext_csd.hs200_max_dtr = hs200_max_dtr;
+>  	card->mmc_avail_type = avail_type;
+> @@ -383,6 +389,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+>  			mmc_card_set_blockaddr(card);
+>  	}
+>  
+> +	card->ext_csd.strobe_support = ext_csd[EXT_CSD_STROBE_SUPPORT];
+>  	card->ext_csd.raw_card_type = ext_csd[EXT_CSD_CARD_TYPE];
+>  	mmc_select_card_type(card);
+>  
+> @@ -1062,9 +1069,10 @@ static int mmc_select_hs400(struct mmc_card *card)
+>  	u8 val;
+>  
+>  	/*
+> -	 * HS400 mode requires 8-bit bus width
+> +	 * HS400(ES) mode requires 8-bit bus width
+>  	 */
+> -	if (!(card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400 &&
+> +	if (!(((card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400) ||
+> +		(card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES)) &&
+>  	      host->ios.bus_width == MMC_BUS_WIDTH_8))
+>  		return 0;
+>  
+> @@ -1097,9 +1105,26 @@ static int mmc_select_hs400(struct mmc_card *card)
+>  	}
+>  
+>  	/* Switch card to DDR */
+> +	val = EXT_CSD_DDR_BUS_WIDTH_8;
+> +	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES) {
+> +		val |= EXT_CSD_BUS_WIDTH_STROBE;
+> +		/*
+> +		* Make sure we are in non-enhanced strobe mode before we
+> +		* actually enable it in ext_csd.
+> +		*/
+> +		if (host->ops->prepare_enhanced_strobe)
+> +			err = host->ops->prepare_enhanced_strobe(host, false);
+> +
+> +		if (err) {
+> +			pr_err("%s: unprepare_enhanced strobe failed, err:%d\n",
+> +				mmc_hostname(host), err);
+> +			return err;
+> +		}
+> +	}
+> +
+>  	err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+>  			 EXT_CSD_BUS_WIDTH,
+> -			 EXT_CSD_DDR_BUS_WIDTH_8,
+> +			 val,
+>  			 card->ext_csd.generic_cmd6_time);
+>  	if (err) {
+>  		pr_err("%s: switch to bus width for hs400 failed, err:%d\n",
+> @@ -1124,6 +1149,35 @@ static int mmc_select_hs400(struct mmc_card *card)
+>  	mmc_set_timing(host, MMC_TIMING_MMC_HS400);
+>  	mmc_set_bus_speed(card);
+>  
+> +	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES) {
+> +		/* Controller enable enhanced strobe function */
+> +		if (host->ops->prepare_enhanced_strobe)
+> +			err = host->ops->prepare_enhanced_strobe(host, true);
+> +
+> +		if (err) {
+> +			pr_err("%s: prepare enhanced strobe failed, err:%d\n",
+> +				mmc_hostname(host), err);
+> +			return err;
+> +		}
+> +
+> +		/*
+> +		 * After switching to hs400 enhanced strobe mode, we expect to
+> +		 * verify whether it works or not. If controller can't handle
+> +		 * bus width test, compare ext_csd previously read in 1 bit mode
+> +		 * against ext_csd at new bus width
+> +		 */
+
+I don't think we need this.  Just checking (host->caps & MMC_CAP_8_BIT_DATA)
+ought to be enough.  But if you want to play if safe, you could use
+mmc_select_bus_width() in advance.
+
+> +		if (!(host->caps & MMC_CAP_BUS_WIDTH_TEST))
+> +			err = mmc_compare_ext_csds(card, MMC_BUS_WIDTH_8);
+> +		else
+> +			err = mmc_bus_test(card, MMC_BUS_WIDTH_8);
+> +
+> +		if (err) {
+> +			pr_warn("%s: switch to enhanced strobe failed\n",
+> +				mmc_hostname(host));
+> +			return err;
+> +		}
+> +	}
+> +
+>  	if (!send_status) {
+>  		err = mmc_switch_status(card);
+>  		if (err)
+> @@ -1297,7 +1351,8 @@ err:
+>  }
+>  
+>  /*
+> - * Activate High Speed or HS200 mode if supported.
+> + * Activate High Speed or HS200 mode if supported. For HS400
+> + * with enhanced strobe mode, we should activate High Speed.
+>   */
+>  static int mmc_select_timing(struct mmc_card *card)
+>  {
+> @@ -1306,7 +1361,9 @@ static int mmc_select_timing(struct mmc_card *card)
+>  	if (!mmc_can_ext_csd(card))
+>  		goto bus_speed;
+>  
+> -	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
+> +	if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES)
+> +		err = mmc_select_hs(card);
+
+In my view, you should just make a new function: mmc_select_hs400es()
+
+> +	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS200)
+>  		err = mmc_select_hs200(card);
+>  	else if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS)
+>  		err = mmc_select_hs(card);
+> @@ -1578,7 +1635,15 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
+>  	} else if (mmc_card_hs(card)) {
+>  		/* Select the desired bus width optionally */
+>  		err = mmc_select_bus_width(card);
+> -		if (!IS_ERR_VALUE(err)) {
+> +		if (IS_ERR_VALUE(err))
+> +			goto free_card;
+> +
+> +		if (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES) {
+> +			/* Directly from HS to HS400-ES */
+> +			err = mmc_select_hs400(card);
+> +			if (err)
+> +				goto free_card;
+> +		} else {
+>  			err = mmc_select_hs_ddr(card);
+>  			if (err)
+>  				goto free_card;
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index eb0151b..22defc2 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -95,6 +95,7 @@ struct mmc_ext_csd {
+>  	u8			raw_partition_support;	/* 160 */
+>  	u8			raw_rpmb_size_mult;	/* 168 */
+>  	u8			raw_erased_mem_count;	/* 181 */
+> +	u8			strobe_support;		/* 184 */
+>  	u8			raw_ext_csd_structure;	/* 194 */
+>  	u8			raw_card_type;		/* 196 */
+>  	u8			raw_driver_strength;	/* 197 */
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 11e89d3..19de56c 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -19,6 +19,7 @@
+>  
+>  #include <linux/mmc/core.h>
+>  #include <linux/mmc/card.h>
+> +#include <linux/mmc/mmc.h>
+>  #include <linux/mmc/pm.h>
+>  
+>  struct mmc_ios {
+> @@ -143,6 +144,8 @@ struct mmc_host_ops {
+>  
+>  	/* Prepare HS400 target operating frequency depending host driver */
+>  	int	(*prepare_hs400_tuning)(struct mmc_host *host, struct mmc_ios *ios);
+> +	/* Prepare enhanced strobe depending host driver */
+> +	int	(*prepare_enhanced_strobe)(struct mmc_host *host, bool enable);
+
+I don't see any need for an error return, so maybe make this return void.
+Also, we could put "bool enhanced_strobe" in struct mmc_ios and pass ios
+instead of enable.
+
+>  	int	(*select_drive_strength)(struct mmc_card *card,
+>  					 unsigned int max_dtr, int host_drv,
+>  					 int card_drv, int *drv_type);
+> @@ -518,6 +521,15 @@ static inline bool mmc_card_hs400(struct mmc_card *card)
+>  	return card->host->ios.timing == MMC_TIMING_MMC_HS400;
+>  }
+>  
+> +static inline bool mmc_card_hs400es(struct mmc_card *card)
+> +{
+> +	if (mmc_card_hs400(card) &&
+> +	    (card->mmc_avail_type & EXT_CSD_CARD_TYPE_HS400ES))
+> +		return 1;
+
+We shouldn't assume that we are using it, just because it is available.
+How about putting "bool enhanced_strobe" in struct mmc_ios and checking that.
+
+> +
+> +	return 0;
+> +}
+> +
+>  void mmc_retune_timer_stop(struct mmc_host *host);
+>  
+>  static inline void mmc_retune_needed(struct mmc_host *host)
+> diff --git a/include/linux/mmc/mmc.h b/include/linux/mmc/mmc.h
+> index 15f2c4a..c376209 100644
+> --- a/include/linux/mmc/mmc.h
+> +++ b/include/linux/mmc/mmc.h
+> @@ -297,6 +297,7 @@ struct _mmc_csd {
+>  #define EXT_CSD_PART_CONFIG		179	/* R/W */
+>  #define EXT_CSD_ERASED_MEM_CONT		181	/* RO */
+>  #define EXT_CSD_BUS_WIDTH		183	/* R/W */
+> +#define EXT_CSD_STROBE_SUPPORT		184	/* RO */
+>  #define EXT_CSD_HS_TIMING		185	/* R/W */
+>  #define EXT_CSD_POWER_CLASS		187	/* R/W */
+>  #define EXT_CSD_REV			192	/* RO */
+> @@ -380,12 +381,14 @@ struct _mmc_csd {
+>  #define EXT_CSD_CARD_TYPE_HS400_1_2V	(1<<7)	/* Card can run at 200MHz DDR, 1.2V */
+>  #define EXT_CSD_CARD_TYPE_HS400		(EXT_CSD_CARD_TYPE_HS400_1_8V | \
+>  					 EXT_CSD_CARD_TYPE_HS400_1_2V)
+> +#define EXT_CSD_CARD_TYPE_HS400ES	(1<<8)	/* Card can run at HS400ES */
+>  
+>  #define EXT_CSD_BUS_WIDTH_1	0	/* Card is in 1 bit mode */
+>  #define EXT_CSD_BUS_WIDTH_4	1	/* Card is in 4 bit mode */
+>  #define EXT_CSD_BUS_WIDTH_8	2	/* Card is in 8 bit mode */
+>  #define EXT_CSD_DDR_BUS_WIDTH_4	5	/* Card is in 4 bit DDR mode */
+>  #define EXT_CSD_DDR_BUS_WIDTH_8	6	/* Card is in 8 bit DDR mode */
+> +#define EXT_CSD_BUS_WIDTH_STROBE BIT(7)	/* Enhanced strobe mode */
+>  
+>  #define EXT_CSD_TIMING_BC	0	/* Backwards compatility */
+>  #define EXT_CSD_TIMING_HS	1	/* High speed */
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
