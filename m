@@ -1,73 +1,229 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v5 6/7] usb: musb: da8xx: Use devm in probe
-Date: Mon,  9 May 2016 18:40:02 -0500
-Message-ID: <1462837203-12125-7-git-send-email-david@lechnology.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v5 5/7] usb: ohci-da8xx: Remove code that references mach
+Date: Mon,  9 May 2016 18:40:01 -0500
+Message-ID: <1462837203-12125-6-git-send-email-david@lechnology.com>
 References: <1462837203-12125-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462837203-12125-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nsekhar@ti.com, khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>
-Cc: David Lechner <david@lechnology.com>, petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462837203-12125-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Simplify things a bit by using devm functions where possible.
+Including mach/* is frowned upon in device drivers, so get rid of it.
 
-Signed-off-by: David Lechner <david@lechnology.com>
+This replaces usb20_clk and code that pokes CFGCHIP2 with a proper phy
+driver.
+
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 ---
- drivers/usb/musb/da8xx.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/usb/host/Kconfig      |   1 +
+ drivers/usb/host/ohci-da8xx.c | 102 +++++++++++++++++++++++-------------------
+ 2 files changed, 56 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
-index b03d3b8..0c1997c 100644
---- a/drivers/usb/musb/da8xx.c
-+++ b/drivers/usb/musb/da8xx.c
-@@ -490,20 +490,18 @@ static int da8xx_probe(struct platform_device *pdev)
- 	struct da8xx_glue		*glue;
- 	struct platform_device_info	pinfo;
- 	struct clk			*clk;
-+	int				ret;
- 
--	int				ret = -ENOMEM;
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 3050b18..e4432c6 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -472,6 +472,7 @@ config USB_OHCI_HCD_DAVINCI
+ 	bool "OHCI support for TI DaVinci DA8xx"
+ 	depends on ARCH_DAVINCI_DA8XX
+ 	depends on USB_OHCI_HCD=y
++	select PHY_DA8XX_USB
+ 	default y
+ 	help
+ 	  Enables support for the DaVinci DA8xx integrated OHCI
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index e5c33bc..3656d7c 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -15,58 +15,50 @@
+ #include <linux/jiffies.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
 -
--	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
-+	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
- 	if (!glue) {
- 		dev_err(&pdev->dev, "failed to allocate glue context\n");
--		goto err0;
-+		return -ENOMEM;
- 	}
+-#include <mach/da8xx.h>
++#include <linux/phy/phy.h>
+ #include <linux/platform_data/usb-davinci.h>
  
--	clk = clk_get(&pdev->dev, "usb20");
-+	clk = devm_clk_get(&pdev->dev, "usb20");
- 	if (IS_ERR(clk)) {
- 		dev_err(&pdev->dev, "failed to get clock\n");
--		ret = PTR_ERR(clk);
--		goto err3;
-+		return PTR_ERR(clk);
- 	}
+ #ifndef CONFIG_ARCH_DAVINCI_DA8XX
+ #error "This file is DA8xx bus glue.  Define CONFIG_ARCH_DAVINCI_DA8XX."
+ #endif
  
- 	ret = clk_enable(clk);
-@@ -560,12 +558,7 @@ err5:
- 	clk_disable(clk);
- 
- err4:
--	clk_put(clk);
+-#define CFGCHIP2	DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG)
 -
--err3:
--	kfree(glue);
+ static struct clk *usb11_clk;
+-static struct clk *usb20_clk;
++static struct phy *usb11_phy;
  
--err0:
- 	return ret;
+ /* Over-current indicator change bitmask */
+ static volatile u16 ocic_mask;
+ 
+-static void ohci_da8xx_clock(int on)
++static int ohci_da8xx_enable(void)
+ {
+-	u32 cfgchip2;
+-
+-	cfgchip2 = __raw_readl(CFGCHIP2);
+-	if (on) {
+-		clk_enable(usb11_clk);
+-
+-		/*
+-		 * If USB 1.1 reference clock is sourced from USB 2.0 PHY, we
+-		 * need to enable the USB 2.0 module clocking, start its PHY,
+-		 * and not allow it to stop the clock during USB 2.0 suspend.
+-		 */
+-		if (!(cfgchip2 & CFGCHIP2_USB1PHYCLKMUX)) {
+-			clk_enable(usb20_clk);
+-
+-			cfgchip2 &= ~(CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN);
+-			cfgchip2 |= CFGCHIP2_PHY_PLLON;
+-			__raw_writel(cfgchip2, CFGCHIP2);
+-
+-			pr_info("Waiting for USB PHY clock good...\n");
+-			while (!(__raw_readl(CFGCHIP2) & CFGCHIP2_PHYCLKGD))
+-				cpu_relax();
+-		}
++	int ret;
+ 
+-		/* Enable USB 1.1 PHY */
+-		cfgchip2 |= CFGCHIP2_USB1SUSPENDM;
+-	} else {
+-		clk_disable(usb11_clk);
+-		if (!(cfgchip2 & CFGCHIP2_USB1PHYCLKMUX))
+-			clk_disable(usb20_clk);
++	ret = clk_prepare_enable(usb11_clk);
++	if (ret)
++		return ret;
+ 
+-		/* Disable USB 1.1 PHY */
+-		cfgchip2 &= ~CFGCHIP2_USB1SUSPENDM;
+-	}
+-	__raw_writel(cfgchip2, CFGCHIP2);
++	ret = phy_init(usb11_phy);
++	if (ret)
++		goto err_phy_init;
++
++	ret = phy_power_on(usb11_phy);
++	if (ret)
++		goto err_phy_power_on;
++
++	return 0;
++
++err_phy_power_on:
++	phy_exit(usb11_phy);
++err_phy_init:
++	clk_disable_unprepare(usb11_clk);
++
++	return ret;
++}
++
++static void ohci_da8xx_disable(void)
++{
++	phy_power_off(usb11_phy);
++	phy_exit(usb11_phy);
++	clk_disable_unprepare(usb11_clk);
  }
  
-@@ -576,8 +569,6 @@ static int da8xx_remove(struct platform_device *pdev)
- 	platform_device_unregister(glue->musb);
- 	usb_phy_generic_unregister(glue->phy);
- 	clk_disable(glue->clk);
--	clk_put(glue->clk);
--	kfree(glue);
+ /*
+@@ -92,7 +84,9 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
  
+ 	dev_dbg(dev, "starting USB controller\n");
+ 
+-	ohci_da8xx_clock(1);
++	result = ohci_da8xx_enable();
++	if (result < 0)
++		return result;
+ 
+ 	/*
+ 	 * DA8xx only have 1 port connected to the pins but the HC root hub
+@@ -101,8 +95,10 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
+ 	ohci->num_ports = 1;
+ 
+ 	result = ohci_init(ohci);
+-	if (result < 0)
++	if (result < 0) {
++		ohci_da8xx_disable();
+ 		return result;
++	}
+ 
+ 	/*
+ 	 * Since we're providing a board-specific root hub port power control
+@@ -129,7 +125,7 @@ static int ohci_da8xx_init(struct usb_hcd *hcd)
+ static void ohci_da8xx_stop(struct usb_hcd *hcd)
+ {
+ 	ohci_stop(hcd);
+-	ohci_da8xx_clock(0);
++	ohci_da8xx_disable();
+ }
+ 
+ static int ohci_da8xx_start(struct usb_hcd *hcd)
+@@ -301,12 +297,18 @@ static int usb_hcd_da8xx_probe(const struct hc_driver *driver,
+ 		return -ENODEV;
+ 
+ 	usb11_clk = devm_clk_get(&pdev->dev, "usb11");
+-	if (IS_ERR(usb11_clk))
++	if (IS_ERR(usb11_clk)) {
++		if (PTR_ERR(usb11_clk) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get clock.\n");
+ 		return PTR_ERR(usb11_clk);
++	}
+ 
+-	usb20_clk = devm_clk_get(&pdev->dev, "usb20");
+-	if (IS_ERR(usb20_clk))
+-		return PTR_ERR(usb20_clk);
++	usb11_phy = devm_phy_get(&pdev->dev, "usb-phy");
++	if (IS_ERR(usb11_phy)) {
++		if (PTR_ERR(usb11_phy) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get phy.\n");
++		return PTR_ERR(usb11_phy);
++	}
+ 
+ 	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+ 	if (!hcd)
+@@ -316,6 +318,7 @@ static int usb_hcd_da8xx_probe(const struct hc_driver *driver,
+ 	hcd->regs = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(hcd->regs)) {
+ 		error = PTR_ERR(hcd->regs);
++		dev_err(&pdev->dev, "failed to map ohci.\n");
+ 		goto err;
+ 	}
+ 	hcd->rsrc_start = mem->start;
+@@ -397,7 +400,7 @@ static int ohci_da8xx_suspend(struct platform_device *pdev,
+ 	if (ret)
+ 		return ret;
+ 
+-	ohci_da8xx_clock(0);
++	ohci_da8xx_disable();
+ 	hcd->state = HC_STATE_SUSPENDED;
+ 
+ 	return ret;
+@@ -407,14 +410,19 @@ static int ohci_da8xx_resume(struct platform_device *dev)
+ {
+ 	struct usb_hcd	*hcd	= platform_get_drvdata(dev);
+ 	struct ohci_hcd	*ohci	= hcd_to_ohci(hcd);
++	int ret;
+ 
+ 	if (time_before(jiffies, ohci->next_statechange))
+ 		msleep(5);
+ 	ohci->next_statechange = jiffies;
+ 
+-	ohci_da8xx_clock(1);
++	ret = ohci_da8xx_enable();
++	if (ret)
++		return ret;
++
+ 	dev->dev.power.power_state = PMSG_ON;
+ 	usb_hcd_resume_root_hub(hcd);
++
  	return 0;
  }
+ #endif
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
