@@ -1,47 +1,29 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v7 8/9] clk: mediatek: Add config options for MT2701
- subsystem clocks
-Date: Mon, 9 May 2016 15:13:39 -0700
-Message-ID: <20160509221339.GU3492@codeaurora.org>
-References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
- <1460621514-65191-9-git-send-email-jamesjj.liao@mediatek.com>
- <20160506230214.GH3492@codeaurora.org>
- <1462772246.5344.4.camel@mtksdaap41>
+From: Chris Brand <chris.brand@broadcom.com>
+Subject: Re: [PATCH 3/6] docs: Document BCM23550 bindings
+Date: Mon, 9 May 2016 15:27:49 -0700
+Message-ID: <CAMsMSK-da2GstXrrYVpoJh2fo-Gi70gD7WFxi8TM9M=Zmqu1Rg@mail.gmail.com>
+References: <1462481334-8943-1-git-send-email-chris.brand@broadcom.com>
+	<1462481334-8943-4-git-send-email-chris.brand@broadcom.com>
+	<20160509194115.GA11594@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462772246.5344.4.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160509194115.GA11594@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@arm.linux.org.uk>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Raymond Ngun <raymond.ngun@broadcom.com>, Markus Mayer <markus.mayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/09, James Liao wrote:
-> HI Stephen,
-> 
-> On Fri, 2016-05-06 at 16:02 -0700, Stephen Boyd wrote:
-> > On 04/14, James Liao wrote:
-> > > MT2701 subsystem clocks are optional and should be enabled only if
-> > > their subsystem drivers are ready to control these clocks.
-> > > 
-> > > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > 
-> > Why is this patch split off from the patch that introduces the
-> > file?
-> 
-> I was looking for comments about how to make subsystem clocks optional.
-> So I used a separated patch to do it. Is it an acceptable way to use
-> config options to enable subsystem clock support?
-> 
+On Mon, May 9, 2016 at 12:41 PM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, May 05, 2016 at 01:48:51PM -0700, Chris Brand wrote:
+>> Add binding document for Broadcom BCM23550 SoC.
+[...]
+>> +The enable method is specified by defining the following required
+>> +properties in the "cpu" device tree node:
+>> +  - enable-method = "brcm,bcm23550-cpu-method";
+>
+> "-cpu-method" is a bit redundant. brcm,bc23550 is probably sufficient.
 
-Yes config options are fine.
+Fair enough. Thanks, Rob!
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chris
