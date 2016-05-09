@@ -1,75 +1,75 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 1/4] drivers/clocksouree/moxart: Add kbuild symbol
-Date: Mon,  9 May 2016 22:02:46 +0930
-Message-ID: <1462797169-14512-2-git-send-email-joel@jms.id.au>
-References: <1462797169-14512-1-git-send-email-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462797169-14512-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+From: Peng Fan <van.freenix@gmail.com>
+Subject: Re: [PATCH V2 3/3] nvmem: imx-ocotp: handling clock
+Date: Mon, 9 May 2016 20:41:43 +0800
+Message-ID: <20160509124140.GA20259@linux-7smt.suse>
+References: <1461173177-11930-1-git-send-email-van.freenix@gmail.com>
+ <1461173177-11930-3-git-send-email-van.freenix@gmail.com>
+ <5730825E.5030101@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5730825E.5030101@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: shawnguo@kernel.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a Kconfig entry for this driver so other SoCs can select it. This
-updates the moxart Kconfig in order to select the symbol.
+Hi Srinivas,
 
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
----
- arch/arm/mach-moxart/Kconfig | 2 +-
- drivers/clocksource/Kconfig  | 9 +++++++++
- drivers/clocksource/Makefile | 2 +-
- 3 files changed, 11 insertions(+), 2 deletions(-)
+On Mon, May 09, 2016 at 01:28:14PM +0100, Srinivas Kandagatla wrote:
+>Thanks for the Ping, I totally missed this thread.
+>
+>On 20/04/16 18:26, Peng Fan wrote:
+>>Before access ocotp nvmem area, the clock should be enabled.
+>>Or, `hexdump nvmem` will hang the system. So, use such flow:
+>>"
+>>   1. clock_enable_prepare
+>>   2. read nvmem ocotp area
+>>   3. clock_disable_unprepare
+>>"
+>>
+>>Signed-off-by: Peng Fan <van.freenix@gmail.com>
+>>Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+>>Cc: Shawn Guo <shawnguo@kernel.org>
+>>---
+>>
+>>V2:
+>>  Follow Fabio's comments, check return value of clk_prepare_enable
+>>
+>>  drivers/nvmem/imx-ocotp.c | 16 +++++++++++++++-
+>>  1 file changed, 15 insertions(+), 1 deletion(-)
+>
+>Changes to the driver looks good to me,
+>Only one comment, As the clock property is now made mandatory, you should
+>update the dt-bindings with this info too.
 
-diff --git a/arch/arm/mach-moxart/Kconfig b/arch/arm/mach-moxart/Kconfig
-index 180d9d216719..505fab683b81 100644
---- a/arch/arm/mach-moxart/Kconfig
-+++ b/arch/arm/mach-moxart/Kconfig
-@@ -3,9 +3,9 @@ menuconfig ARCH_MOXART
- 	depends on ARCH_MULTI_V4
- 	select CPU_FA526
- 	select ARM_DMA_MEM_BUFFERABLE
--	select CLKSRC_MMIO
- 	select GENERIC_IRQ_CHIP
- 	select ARCH_REQUIRE_GPIOLIB
-+	select MOXART_TIMER
- 	select PHYLIB if NETDEVICES
- 	help
- 	  Say Y here if you want to run your kernel on hardware with a
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index c346be650892..9a54d1ce4ce7 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -411,4 +411,13 @@ config CLKSRC_ST_LPC
- 	  Enable this option to use the Low Power controller timer
- 	  as clocksource.
- 
-+config MOXART_TIMER
-+	bool "Moxart timer" if COMPILE_TEST
-+	depends on GENERIC_CLOCKEVENTS && HAS_IOMEM
-+	select CLKSRC_OF
-+	select CLKSRC_MMIO
-+	help
-+	  Enables the support for the timer used in the Moxart and Aspeed
-+	  system on chips.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index dc2b8997f6e6..14fe8172c174 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -22,7 +22,7 @@ obj-$(CONFIG_ORION_TIMER)	+= time-orion.o
- obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835_timer.o
- obj-$(CONFIG_ARCH_CLPS711X)	+= clps711x-timer.o
- obj-$(CONFIG_ARCH_ATLAS7)	+= timer-atlas7.o
--obj-$(CONFIG_ARCH_MOXART)	+= moxart_timer.o
-+obj-$(CONFIG_MOXART_TIMER)	+= moxart_timer.o
- obj-$(CONFIG_ARCH_MXS)		+= mxs_timer.o
- obj-$(CONFIG_CLKSRC_PXA)	+= pxa_timer.o
- obj-$(CONFIG_ARCH_PRIMA2)	+= timer-prima2.o
--- 
-2.8.1
+In Documentation/devicetree/bindings/nvmem/imx-ocotp.txt,
+the clock property is already marked Required properties:
+"
+Required properties:
+- compatible: should be one of
+	"fsl,imx6q-ocotp" (i.MX6Q/D/DL/S),
+	"fsl,imx6sl-ocotp" (i.MX6SL), or
+	"fsl,imx6sx-ocotp" (i.MX6SX), followed by "syscon".
+- reg: Should contain the register base and length.
+- clocks: Should contain a phandle pointing to the gated peripheral clock.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Example:
+
+	ocotp: ocotp@021bc000 {
+		compatible = "fsl,imx6q-ocotp", "syscon";
+		reg = <0x021bc000 0x4000>;
+		clocks = <&clks IMX6QDL_CLK_IIM>;
+	};
+"
+
+I think I do not need to update it, since it's already there -:)
+
+Thanks,
+Peng.
+>
+>
+>thanks,
+>srini
