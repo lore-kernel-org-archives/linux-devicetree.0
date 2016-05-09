@@ -1,100 +1,58 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 11/14] usb: otg: use dev_dbg() instead of VDBG()
-Date: Mon, 9 May 2016 12:48:28 +0300
-Message-ID: <57305CEC.5010604@ti.com>
-References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
- <1462191537-10314-12-git-send-email-rogerq@ti.com>
- <20160506090425.GD32359@shlinux2.ap.freescale.net>
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCHv4] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
+Date: Mon, 9 May 2016 11:53:16 +0200
+Message-ID: <57305E0C.8040304@schinagl.nl>
+References: <1462439332-26215-1-git-send-email-oliver@schinagl.nl>
+ <20160508180941.GC6167@lukather>
+Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160506090425.GD32359-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDC2JNWXZAJBBF54YG4QKGQEUXWG3YY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160508180941.GC6167@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tsvetan Usunov <tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, info-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/16 12:04, Peter Chen wrote:
-> On Mon, May 02, 2016 at 03:18:54PM +0300, Roger Quadros wrote:
->> Now that we have a device reference in struct usb_otg
->> let's use dev_dbg() for debug messages.
->>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>  drivers/usb/common/usb-otg-fsm.c | 19 +++++++------------
->>  1 file changed, 7 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/usb/common/usb-otg-fsm.c b/drivers/usb/common/usb-otg-fsm.c
->> index 2986b66..e6e58c2 100644
->> --- a/drivers/usb/common/usb-otg-fsm.c
->> +++ b/drivers/usb/common/usb-otg-fsm.c
->> @@ -30,13 +30,6 @@
->>  #include <linux/usb/otg.h>
->>  #include <linux/usb/otg-fsm.h>
->>  
->> -#ifdef VERBOSE
->> -#define VDBG(fmt, args...) pr_debug("[%s]  " fmt , \
->> -				 __func__, ## args)
->> -#else
->> -#define VDBG(stuff...)	do {} while (0)
->> -#endif
->> -
->>  /* Change USB protocol when there is a protocol change */
->>  static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
->>  {
->> @@ -44,8 +37,9 @@ static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
->>  	int ret = 0;
->>  
->>  	if (fsm->protocol != protocol) {
->> -		VDBG("Changing role fsm->protocol= %d; new protocol= %d\n",
->> -			fsm->protocol, protocol);
->> +		dev_vdbg(otg->dev,
->> +			 "Changing role fsm->protocol= %d; new protocol= %d\n",
->> +			 fsm->protocol, protocol);
->>  		/* stop old protocol */
->>  		if (fsm->protocol == PROTO_HOST)
->>  			ret = otg_start_host(otg, 0);
->> @@ -226,7 +220,7 @@ static int otg_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
->>  
->>  	if (otg->state == new_state)
->>  		return 0;
->> -	VDBG("Set state: %s\n", usb_otg_state_string(new_state));
->> +	dev_vdbg(otg->dev, "Set state: %s\n", usb_otg_state_string(new_state));
->>  	otg_leave_state(fsm, otg->state);
->>  	switch (new_state) {
->>  	case OTG_STATE_B_IDLE:
->> @@ -358,7 +352,7 @@ int otg_statemachine(struct usb_otg *otg)
->>  
->>  	switch (state) {
->>  	case OTG_STATE_UNDEFINED:
->> -		VDBG("fsm->id = %d\n", fsm->id);
->> +		dev_vdbg(otg->dev, "fsm->id = %d\n", fsm->id);
->>  		if (fsm->id)
->>  			otg_set_state(fsm, OTG_STATE_B_IDLE);
->>  		else
->> @@ -466,7 +460,8 @@ int otg_statemachine(struct usb_otg *otg)
->>  	}
->>  	mutex_unlock(&fsm->lock);
->>  
->> -	VDBG("quit statemachine, changed = %d\n", fsm->state_changed);
->> +	dev_vdbg(otg->dev, "quit statemachine, changed = %d\n",
->> +		 fsm->state_changed);
->>  	return fsm->state_changed;
->>  }
->>  EXPORT_SYMBOL_GPL(otg_statemachine);
->> -- 
-> 
-> Could you squash patch 2 with this one?
-> 
+Hey Maxime,
 
-We can't because at patch 2, otg->dev is not defined and we need patch 2
-before patch 8 to prevent the build warning. This patch can come only
-after patch 8 where we add otg->dev.
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 08-05-16 20:09, Maxime Ripard wrote:
+> On Thu, May 05, 2016 at 11:08:52AM +0200, Olliver Schinagl wrote:
+>> There are 3 kinds of OLinuXino Lime2 boards.
+>> One without any on board storage, one with NAND storage and one with
+>> eMMC storage. This patch adds the eMMC variant of boards.
+>>
+>> eMMC storage is different from a regular SD card in that it is soldered
+>> on the board and cannot be changed. Additionally, it shares pins with
+>> the NAND module and with the second SPI port.
+>>
+>> Changeslog:
+>>
+>> v4:
+>>    Add board compatibles
+>>
+>> v3:
+>>    Add pwr-seq-emmc with the reset gpio
+>>
+>> v2:
+>>    Remove unsupported no-1.8-v property, add vqmmc property
+>>
+>> v1:
+>>    Initial bare bone version
+> This is not something we want in the commit log. This should go below
+> the --- so that it's dropped when applied.
+Sorry about that, I didn't know the --- trick. ChenYu reminded of it 
+however, so that'll go into my toolblox.
+>
+> Removed and applied.
+Thanks for fixing it, much appreciated :)
+>
+> Thanks,
+> Maxime
+>
