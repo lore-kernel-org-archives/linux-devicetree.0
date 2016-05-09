@@ -1,41 +1,265 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/6] of: overlays: New target methods
-Date: Mon,  9 May 2016 21:05:41 +0300
-Message-ID: <1462817147-7620-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH 1/6] of: overlay: Implement indirect target support
+Date: Mon,  9 May 2016 21:05:42 +0300
+Message-ID: <1462817147-7620-2-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1462817147-7620-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462817147-7620-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset implement two new target methods.
-A target-indirect method which allows selecting different
-targets according to an argument using an extended API and
-a target root method that fences the target only
-to a specific given root.
+Some applications require applying the same overlay to a different
+target according to some external condition (for instance depending
+on the slot a card has been inserted, the overlay target is different).
 
-Documentation and unit-tests are included.
+The indirect target use requires using the new
+of_overlay_create_indirect() API which uses a text selector.
 
-Pantelis Antoniou (6):
-  of: overlay: Implement indirect target support
-  of: unittest: Add indirect overlay target test
-  doc: dt: Document the indirect overlay method.
-  of: overlay: Introduce target root capability.
-  of: unittest: Unit-tests for target root overlays.
-  doc: dt: Document the target root overlay method
+The format requires the use of a target-indirect node as follows:
 
- Documentation/devicetree/overlay-notes.txt  |  21 +++
- drivers/of/overlay.c                        | 219 +++++++++++++++++++---
- drivers/of/unittest-data/testcases.dts      |  14 ++
- drivers/of/unittest-data/tests-overlay.dtsi |  67 +++++++
- drivers/of/unittest.c                       | 272 ++++++++++++++++++++++++++++
- include/linux/of.h                          |  16 ++
- 6 files changed, 582 insertions(+), 27 deletions(-)
+	fragment@0 {
+		target-indirect {
+			foo { target = <&foo_target>; };
+			bar { target = <&bar_target>; };
+		};
+	};
 
+Calling of_overlay_create_indirect() with a "foo" argument selects
+the foo_target and so on.
+
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ drivers/of/overlay.c | 126 +++++++++++++++++++++++++++++++++++++++++----------
+ include/linux/of.h   |   8 ++++
+ 2 files changed, 110 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index fdfc487..364b619 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -75,6 +75,7 @@ struct of_overlay {
+ 	const struct attribute_group **attr_groups;
+ 	struct of_changeset cset;
+ 	struct kobject kobj;
++	char *indirect_id;
+ };
+ 
+ /* master enable switch; once set to 0 can't be re-enabled */
+@@ -220,14 +221,8 @@ static int of_overlay_apply(struct of_overlay *ov)
+ 	return 0;
+ }
+ 
+-/*
+- * Find the target node using a number of different strategies
+- * in order of preference
+- *
+- * "target" property containing the phandle of the target
+- * "target-path" property containing the path of the target
+- */
+-static struct device_node *find_target_node(struct device_node *info_node)
++static struct device_node *find_target_node_direct(struct of_overlay *ov,
++		struct device_node *info_node)
+ {
+ 	const char *path;
+ 	u32 val;
+@@ -238,17 +233,66 @@ static struct device_node *find_target_node(struct device_node *info_node)
+ 	if (ret == 0)
+ 		return of_find_node_by_phandle(val);
+ 
+-	/* now try to locate by path */
++	/* failed, try to locate by path */
+ 	ret = of_property_read_string(info_node, "target-path", &path);
+ 	if (ret == 0)
+ 		return of_find_node_by_path(path);
+ 
+-	pr_err("%s: Failed to find target for node %p (%s)\n", __func__,
+-		info_node, info_node->name);
+-
+ 	return NULL;
+ }
+ 
++/*
++ * Find the target node using a number of different strategies
++ * in order of preference. Respects the indirect id if available.
++ *
++ * "target" property containing the phandle of the target
++ * "target-path" property containing the path of the target
++ */
++static struct device_node *find_target_node(struct of_overlay *ov,
++		struct device_node *info_node)
++{
++	struct device_node *target;
++	struct device_node *target_indirect;
++	struct device_node *indirect;
++
++	/* try direct target */
++	target = find_target_node_direct(ov, info_node);
++	if (target)
++		return target;
++
++	/* try indirect if there */
++	if (!ov->indirect_id)
++		return NULL;
++
++	target_indirect = of_get_child_by_name(info_node, "target-indirect");
++	if (!target_indirect) {
++		pr_err("%s: Failed to find target-indirect node at %s\n",
++				__func__,
++				of_node_full_name(info_node));
++		return NULL;
++	}
++
++	indirect = of_get_child_by_name(target_indirect, ov->indirect_id);
++	of_node_put(target_indirect);
++	if (!indirect) {
++		pr_err("%s: Failed to find indirect child node \"%s\" at %s\n",
++				__func__, ov->indirect_id,
++				of_node_full_name(info_node));
++		return NULL;
++	}
++
++	target = find_target_node_direct(ov, indirect);
++
++	if (!target) {
++		pr_err("%s: Failed to find target for \"%s\" at %s\n",
++				__func__, ov->indirect_id,
++				of_node_full_name(indirect));
++	}
++	of_node_put(indirect);
++
++	return target;
++}
++
+ /**
+  * of_fill_overlay_info() - Fill an overlay info structure
+  * @ov		Overlay to fill
+@@ -270,7 +314,7 @@ static int of_fill_overlay_info(struct of_overlay *ov,
+ 	if (ovinfo->overlay == NULL)
+ 		goto err_fail;
+ 
+-	ovinfo->target = find_target_node(info_node);
++	ovinfo->target = find_target_node(ov, info_node);
+ 	if (ovinfo->target == NULL)
+ 		goto err_fail;
+ 
+@@ -418,6 +462,7 @@ void of_overlay_release(struct kobject *kobj)
+ {
+ 	struct of_overlay *ov = kobj_to_overlay(kobj);
+ 
++	kfree(ov->indirect_id);
+ 	kfree(ov);
+ }
+ 
+@@ -473,17 +518,8 @@ static struct kobj_type of_overlay_ktype = {
+ 
+ static struct kset *ov_kset;
+ 
+-/**
+- * of_overlay_create() - Create and apply an overlay
+- * @tree:	Device node containing all the overlays
+- *
+- * Creates and applies an overlay while also keeping track
+- * of the overlay in a list. This list can be used to prevent
+- * illegal overlay removals.
+- *
+- * Returns the id of the created overlay, or a negative error number
+- */
+-int of_overlay_create(struct device_node *tree)
++static int __of_overlay_create(struct device_node *tree,
++		const char *indirect_id)
+ {
+ 	struct of_overlay *ov;
+ 	int err, id;
+@@ -498,6 +534,14 @@ int of_overlay_create(struct device_node *tree)
+ 		return -ENOMEM;
+ 	ov->id = -1;
+ 
++	if (indirect_id) {
++		ov->indirect_id = kstrdup(indirect_id, GFP_KERNEL);
++		if (!ov->indirect_id) {
++			err = -ENOMEM;
++			goto err_no_mem;
++		}
++	}
++
+ 	INIT_LIST_HEAD(&ov->node);
+ 
+ 	of_changeset_init(&ov->cset);
+@@ -572,13 +616,47 @@ err_free_idr:
+ 	idr_remove(&ov_idr, ov->id);
+ err_destroy_trans:
+ 	of_changeset_destroy(&ov->cset);
++err_no_mem:
++	kfree(ov->indirect_id);
+ 	kfree(ov);
+ 	mutex_unlock(&of_mutex);
+ 
+ 	return err;
+ }
++
++/**
++ * of_overlay_create() - Create and apply an overlay
++ * @tree:	Device node containing all the overlays
++ *
++ * Creates and applies an overlay while also keeping track
++ * of the overlay in a list. This list can be used to prevent
++ * illegal overlay removals.
++ *
++ * Returns the id of the created overlay, or a negative error number
++ */
++int of_overlay_create(struct device_node *tree)
++{
++	return __of_overlay_create(tree, NULL);
++}
+ EXPORT_SYMBOL_GPL(of_overlay_create);
+ 
++/**
++ * of_overlay_create_indirect() - Create and apply an overlay
++ * @tree:	Device node containing all the overlays
++ * @id:		Indirect property phandle
++ *
++ * Creates and applies an overlay while also keeping track
++ * of the overlay in a list. This list can be used to prevent
++ * illegal overlay removals.
++ *
++ * Returns the id of the created overlay, or a negative error number
++ */
++int of_overlay_create_indirect(struct device_node *tree, const char *id)
++{
++	return __of_overlay_create(tree, id);
++}
++EXPORT_SYMBOL_GPL(of_overlay_create_indirect);
++
+ /* check whether the given node, lies under the given tree */
+ static int overlay_subtree_check(struct device_node *tree,
+ 		struct device_node *dn)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index f015911..4c220fb 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1226,6 +1226,8 @@ int of_overlay_create(struct device_node *tree);
+ int of_overlay_destroy(int id);
+ int of_overlay_destroy_all(void);
+ 
++int of_overlay_create_indirect(struct device_node *tree, const char *id);
++
+ #else
+ 
+ static inline int of_overlay_create(struct device_node *tree)
+@@ -1243,6 +1245,12 @@ static inline int of_overlay_destroy_all(void)
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int of_overlay_create_indirect(struct device_node *tree,
++		const char *id)
++{
++	return -ENOTSUPP;
++}
++
+ #endif
+ 
+ #endif /* _LINUX_OF_H */
 -- 
 1.7.12
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
