@@ -1,272 +1,451 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] ARM: dts: omap5: describe control for ckobuffer
-Date: Mon, 9 May 2016 13:18:06 +0200
-Message-ID: <F2BCD4BA-E4E4-43F4-B65C-B625ED3B2D13@goldelico.com>
-References: <cover.1461003660.git.hns@goldelico.com> <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com> <20160426172710.GI5995@atomide.com> <70572DA1-BEB4-4681-BA6C-2E1C9002D730@goldelico.com> <5720B107.4000907@ti.com> <A90F1BFC-A834-4EC0-81F9-2C8222AAA010@goldelico.com> <5720C85B.9010701@ti.com> <ce9a7840-e86f-0d0c-3ed6-a571eec6659d@ti.com> <40536322-073F-48BD-9D07-32B9A9F07AF2@goldelico.com> <5721C3D4.7040401@ti.com> <2A9D82CD-9ACA-49F6-9D2B-9EACFC517914@goldelico.com> <57220EDD.7080903@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57220EDD.7080903-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
+From: Christo Radev <christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
+Date: Mon, 9 May 2016 04:30:37 -0700 (PDT)
+Message-ID: <13fce120-e6c9-4e27-a2fe-497da668e83e@googlegroups.com>
+References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
+ <CAGb2v66E2TuN3+tYaAbniV3q67waDZOfqKAW14VJz6xZFomZ=Q@mail.gmail.com>
+ <57285162.2000704@schinagl.nl>
+ <CAGb2v66r9m7qVW6BszeT2wqs0KyEr4x5ivTJYqu2Fes=R9-Ltw@mail.gmail.com>
+ <CANCTEQgjiuQXcaw=3Dr5kUsTPc3nsDQf2odwzs4nHvrkREAqrg@mail.gmail.com>
+ <5729F07C.3080308@schinagl.nl>
+ <948be370-4401-43cb-862e-d4376755a75d@googlegroups.com>
+ <5729F6D6.8030100@schinagl.nl>
+ <4704fa35-9a2a-4e6e-8fd4-f4778405c598@googlegroups.com>
+ <572A0052.9060202@schinagl.nl>
+ <2e745ef7-ddc0-40fc-b867-414543690276@googlegroups.com>
+ <572A10B3.2020803@schinagl.nl>
+ <4375220a-f939-4ed0-a6d7-2cf887b07509@googlegroups.com>
+ <572B07C0.7080601@schinagl.nl>
+Reply-To: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_Part_256_657442798.1462793437431"
+Return-path: <linux-sunxi+bncBD7ORYHCVECRBXXJYG4QKGQE2LDWGAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <572B07C0.7080601-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslav.kolev-1W28NRE8jL9DPfheJLI6IQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+------=_Part_256_657442798.1462793437431
+Content-Type: multipart/alternative;
+	boundary="----=_Part_257_1198564685.1462793437433"
 
-> Am 28.04.2016 um 15:23 schrieb Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>:
-> 
-> On 28/04/16 12:12, H. Nikolaus Schaller wrote:
->> Hi Tero,
->> 
->>> Am 28.04.2016 um 10:03 schrieb Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>:
->>> 
->>> On 27/04/16 17:35, H. Nikolaus Schaller wrote:
->>>> HI,
->>>> 
->>>>> Am 27.04.2016 um 16:23 schrieb Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>:
->>>>> 
->>>>> On 04/27/2016 05:10 PM, Tero Kristo wrote:
->>>>>> On 27/04/16 16:10, H. Nikolaus Schaller wrote:
->>>>>>> 
->>>>>>>> Am 27.04.2016 um 14:31 schrieb Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>:
->>>>>>>> 
->>>>>>>> On 27/04/16 09:04, H. Nikolaus Schaller wrote:
->>>>>>>>> 
->>>>>>>>>> Am 26.04.2016 um 19:27 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
->>>>>>>>>> 
->>>>>>>>>> Tero,
->>>>>>>>>> 
->>>>>>>>>> * H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> [160418 11:23]:
->>>>>>>>>>> OMAP5 has a register to control if the ckobuffer is enabled
->>>>>>>>>>> and defines the polarity. ckobuffer is required to drive a twl6040
->>>>>>>>>>> with the system clock. Hence, add the pinctrl,single to the
->>>>>>>>>>> OMAP5 SoC description so that omap5-board-common can
->>>>>>>>>>> set up the ckobuffer as required.
->>>>>>>>>> 
->>>>>>>>>> Is this really a mux or should it be a mux clock?
->>>>>>>>> 
->>>>>>>>> It is a pinmux setting for the clock out buffer to choose what signal
->>>>>>>>> (and polarity) is presented on the fref_xtal_clk pad.
->>>>>>>>> 
->>>>>>>>> The register is part of the CTRL_MODULE_WKUP.
->>>>>>>>> The clock signal is the xtal master clock of the whole SoC.
->>>>>>>>> 
->>>>>>>>> Although there is a bit to choose an alternate clock, there is no
->>>>>>>>> alternate in the OMAP5 silicon.
->>>>>>>>> 
->>>>>>>>> Therefore I would say it is about padconf and not clock or clock mux
->>>>>>>>> related.
->>>>>>>>> 
->>>>>>>>> It just happens to be a clock signal which can be routed to this
->>>>>>>>> pad.
->>>>>>>> 
->>>>>>>> The two could very well be implemented as clock nodes, a mux and a gate.
->>>>>>>> This would describe the hardware functionality better imo, if the
->>>>>>>> assumptions made here are correct. Implementing the control as pinctrl
->>>>>>>> hacks looks rather weird to me.
->>>>>>> 
->>>>>>> Why do you consider it a "pinctrl hack"? IMHO it is not a hack, but 100%
->>>>>>> proper use of pinctrl.
->>>>>> 
->>>>>> It is just the level of abstraction we are talking about here. If it is a
->>>>>> clock we are controlling, we should rather control it as a clock (higher level
->>>>>> abstraction), not a pin.
->>>>> 
->>>>> I second this. I think it is better to have a simple gate clock and handle
->>>>> only CONTROL_CKOBUFFER:CKOBUFFER_CLK_EN (bit 28) only as the other bits does
->>>>> not have real use.
->>>>> 
->>>>> Then we can add clk API support for this. On most OMAP4 devices the clock is
->>>>> always on,
->>>> 
->>>> this is why I am raising the question if we really want to control it on the omap5 or just
->>>> turn it on for all omap5 boards like the omap4 appears to do... I.e. if turning the pin on
->>>> as a pinctrl is IMHO sufficient for all practical purposes.
->>>> 
->>>>> so the board DTS file need to provide a dummy clock, or we can make
->>>>> the high precision clock also as optional (on panda both OMAP4 and twl6040
->>>>> uses the same reference clock).
->>>> 
->>>> Hm. It looks as if implementing this (and clock gating) is beyond my experiences.
->>>> But I am happy to test a proposal on our omap5 board.
->>>> 
->>>> BR and thanks,
->>>> Nikolaus
->>> 
->>> See the inline patch, this implements the fref_xtal_ck. I had to add some kernel code also to cope with the new SCM area, but the same area can now be accessed via syscon also if needed.
->> 
->> Looks interesting, although quite complex to enable a single SoC pad at boot time...
-> 
-> Yea it gives plenty of other things for you also. syscon, integration with clock framework, etc.
-> 
->> 
->> Will asap study how it works and test. And of course report results.
-> 
-> Thanks, Tero.
-> 
->> 
->> Thanks and BR,
->> Nikolaus
->> 
->>> 
->>> From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->>> Date: Thu, 28 Apr 2016 11:00:57 +0300
->>> Subject: [PATCH] ARM: omap5: add support for fref_xtal_ck
->>> 
->>> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->>> ---
->>> arch/arm/boot/dts/omap5.dtsi           | 22 ++++++++++++++++++++++
->>> arch/arm/boot/dts/omap54xx-clocks.dtsi | 10 ++++++++++
->>> arch/arm/mach-omap2/control.c          | 20 ++++++++++++++++----
->>> include/linux/clk/ti.h                 |  1 +
->>> 4 files changed, 49 insertions(+), 4 deletions(-)
->>> 
->>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
->>> index 38805eb..bdc6528 100644
->>> --- a/arch/arm/boot/dts/omap5.dtsi
->>> +++ b/arch/arm/boot/dts/omap5.dtsi
->>> @@ -277,6 +277,28 @@
->>> 				pinctrl-single,register-width = <16>;
->>> 				pinctrl-single,function-mask = <0x7fff>;
->>> 			};
->>> +
->>> +			omap5_scm_wkup_pad_conf: omap5_scm_wkup_pad_conf@cda0 {
->>> +				compatible = "ti,omap5-scm-wkup-pad-conf",
->>> +					     "simple-bus";
->>> +				reg = <0xcda0 0x60>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <1>;
->>> +				ranges = <0 0xcda0 0x60>;
->>> +
->>> +				scm_wkup_pad_conf: scm_conf@0 {
->>> +					compatible = "syscon", "simple-bus";
->>> +					reg = <0x0 0x60>;
->>> +					#address-cells = <1>;
->>> +					#size-cells = <1>;
->>> +					ranges = <0 0x0 0x60>;
->>> +
->>> +					scm_wkup_pad_conf_clocks: clocks@0 {
->>> +						#address-cells = <1>;
->>> +						#size-cells = <0>;
->>> +					};
->>> +				};
->>> +			};
->>> 		};
->>> 
->>> 		ocmcram: ocmcram@40300000 {
->>> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>> index 83b425f..f970dac 100644
->>> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>> @@ -1388,3 +1388,13 @@
->>> 		reg = <0x021c>;
->>> 	};
->>> };
->>> +
->>> +&scm_wkup_pad_conf_clocks {
->>> +	fref_xtal_ck: fref_xtal_ck {
->>> +		#clocks-cells = <0>;
->>> +		compatible = "ti,gate-clock";
->>> +		clocks = <&sys_clkin>;
->>> +		ti,bit-shift = <28>;
->>> +		reg = <0x14>;
->>> +	};
->>> +};
->>> diff --git a/arch/arm/mach-omap2/control.c b/arch/arm/mach-omap2/control.c
->>> index 1662071..5956641 100644
->>> --- a/arch/arm/mach-omap2/control.c
->>> +++ b/arch/arm/mach-omap2/control.c
->>> @@ -623,6 +623,7 @@ void __init omap3_ctrl_init(void)
->>> 
->>> struct control_init_data {
->>> 	int index;
->>> +	void __iomem *mem;
->>> 	s16 offset;
->>> };
->>> 
->>> @@ -635,6 +636,10 @@ static const struct control_init_data omap2_ctrl_data = {
->>> 	.offset = -OMAP2_CONTROL_GENERAL,
->>> };
->>> 
->>> +static const struct control_init_data ctrl_aux_data = {
->>> +	.index = TI_CLKM_CTRL_AUX,
->>> +};
->>> +
->>> static const struct of_device_id omap_scrm_dt_match_table[] = {
->>> 	{ .compatible = "ti,am3-scm", .data = &ctrl_data },
->>> 	{ .compatible = "ti,am4-scm", .data = &ctrl_data },
->>> @@ -644,6 +649,7 @@ static const struct of_device_id omap_scrm_dt_match_table[] = {
->>> 	{ .compatible = "ti,dm816-scrm", .data = &ctrl_data },
->>> 	{ .compatible = "ti,omap4-scm-core", .data = &ctrl_data },
->>> 	{ .compatible = "ti,omap5-scm-core", .data = &ctrl_data },
->>> +	{ .compatible = "ti,omap5-scm-wkup-pad-conf", .data = &ctrl_aux_data },
->>> 	{ .compatible = "ti,dra7-scm-core", .data = &ctrl_data },
->>> 	{ }
->>> };
->>> @@ -660,15 +666,21 @@ int __init omap2_control_base_init(void)
->>> 	struct device_node *np;
->>> 	const struct of_device_id *match;
->>> 	struct control_init_data *data;
->>> +	void __iomem *mem;
->>> 
->>> 	for_each_matching_node_and_match(np, omap_scrm_dt_match_table, &match) {
->>> 		data = (struct control_init_data *)match->data;
->>> 
->>> -		omap2_ctrl_base = of_iomap(np, 0);
->>> -		if (!omap2_ctrl_base)
->>> +		mem = of_iomap(np, 0);
->>> +		if (!mem)
->>> 			return -ENOMEM;
->>> 
->>> -		omap2_ctrl_offset = data->offset;
->>> +		if (data->index == TI_CLKM_CTRL) {
->>> +			omap2_ctrl_base = mem;
->>> +			omap2_ctrl_offset = data->offset;
->>> +		}
->>> +
->>> +		data->mem = mem;
->>> 	}
->>> 
->>> 	return 0;
->>> @@ -713,7 +725,7 @@ int __init omap_control_init(void)
->>> 		} else {
->>> 			/* No scm_conf found, direct access */
->>> 			ret = omap2_clk_provider_init(np, data->index, NULL,
->>> -						      omap2_ctrl_base);
->>> +						      data->mem);
->>> 			if (ret)
->>> 				return ret;
->>> 		}
->>> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
->>> index dc5164a..be25aa8 100644
->>> --- a/include/linux/clk/ti.h
->>> +++ b/include/linux/clk/ti.h
->>> @@ -195,6 +195,7 @@ enum {
->>> 	TI_CLKM_PRM,
->>> 	TI_CLKM_SCRM,
->>> 	TI_CLKM_CTRL,
->>> +	TI_CLKM_CTRL_AUX,
->>> 	TI_CLKM_PLLSS,
->>> 	CLK_MAX_MEMMAPS
->>> };
->> 
-> 
+------=_Part_257_1198564685.1462793437433
+Content-Type: text/plain; charset=UTF-8
 
-finally I found some time to apply your patches. Sorry for the long time.
+Hi Olliver,
 
-Unfortunately, it does not work. Neither on omap5evm nor on our omap5 hardware.
-I get no sound on the twl6040 - just white noise (which can be controlled in level through
-amixer so it is created on the digital input side of the twl6040).
+Sorry for the delay but I was on a place without Internet access.
 
-So I think your patch is missing a detail compared to my simple solution.
+Is there something wrong with the logs?
 
-BR,
-Nikolaus
+On Thursday, May 5, 2016 at 11:43:49 AM UTC+3, Olliver Schinagl wrote:
+>
+> Hey Christo,
+>
+> On 04-05-16 21:40, Christo Radev wrote:
+>
+> Hi Oliver,
+>
+> I start performance tests for eMMC, SD/MMC, USB, SATA SSD devices and will 
+> post the result when ready.
+>
+> As a beginning I can say that eMMC is accessed via 4-bit bus without 
+> matter of the patch used.
+> There you are the content of /sys/kernel/debug/mmcX/ios (where X is number 
+> of eMMC or SD/MMC device).
+> Booted from SD card with 8-bit patched kernel
+> root@egpr:~# dmesg | grep mmc
+> [    3.599625] sunxi-mmc 1c0f000.mmc: Got CD GPIO
+> [    3.631883] sunxi-mmc 1c0f000.mmc: base:0xf08da000 irq:26
+> [    3.669058] mmc0: host does not support reading read-only switch, 
+> assuming write-enable
+> [    3.671674] sunxi-mmc 1c11000.mmc: base:0xf08de000 irq:27
+> [    3.672064] mmc0: new high speed SDHC card at address 0007
+> [    3.673068] mmcblk0: mmc0:0007 SD04G 3.71 GiB
+> [    3.674785]  mmcblk0: p1
+> [    3.682261] sunxi-mmc 1c11000.mmc: smc 1 err, cmd 8, RTO !!
+> [    3.689280] sunxi-mmc 1c11000.mmc: smc 1 err, cmd 55, RTO !!
+> [    3.690146] sunxi-mmc 1c11000.mmc: smc 1 err, cmd 55, RTO !!
+> [    3.690977] sunxi-mmc 1c11000.mmc: smc 1 err, cmd 55, RTO !!
+> [    3.691808] sunxi-mmc 1c11000.mmc: smc 1 err, cmd 55, RTO !!
+> [    3.745505] mmc1: MAN_BKOPS_EN bit is not set
+> [    3.749187] sunxi-mmc 1c11000.mmc: smc 1 err, cmd 8, RD EBE !!
+> [    3.749229] sunxi-mmc 1c11000.mmc: data error, sending stop command
+> [    3.749247] sunxi-mmc 1c11000.mmc: send stop command failed
+> [    3.749268] mmc1: switch to bus width 2 failed
+> [    3.753586] mmc1: new high speed MMC card at address 0001
+> [    3.754479] mmcblk1: mmc1:0001 P1XXXX 3.60 GiB
+> [    3.754961] mmcblk1boot0: mmc1:0001 P1XXXX partition 1 16.0 MiB
+> [    3.755604] mmcblk1boot1: mmc1:0001 P1XXXX partition 2 16.0 MiB
+> [    3.757045]  mmcblk1: p1
+> [    4.216879] EXT4-fs (mmcblk0p1): mounted filesystem with writeback 
+> data mode. Opts: (null)
+> [    7.907002] EXT4-fs (mmcblk0p1): re-mounted. Opts: commit=600,errors=
+> remount-ro
+>
+> root@egpr:~# cat /sys/kernel/debug/mmc0/ios
+> clock:          50000000 Hz
+> vdd:            21 (3.3 ~ 3.4 V)
+> bus mode:       2 (push-pull)
+> chip select:    0 (don't care)
+> power mode:     2 (on)
+> bus width:      2 (4 bits)
+> timing spec:    2 (sd high-speed)
+> signal voltage: 0 (3.30 V)
+> driver type:    0 (driver type B)
+> root@egpr:~# cat /sys/kernel/debug/mmc1/ios
+> clock:          50000000 Hz
+> vdd:            21 (3.3 ~ 3.4 V)
+> bus mode:       2 (push-pull)
+> chip select:    0 (don't care)
+> power mode:     2 (on)
+> bus width:      2 (4 bits)
+> timing spec:    1 (mmc high-speed)
+> signal voltage: 0 (3.30<span s
+>
+>
 
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------=_Part_257_1198564685.1462793437433
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Olliver,<br><br>Sorry for the delay but I was on a plac=
+e without Internet access.<br><br>Is there something wrong with the logs?<b=
+r><br>On Thursday, May 5, 2016 at 11:43:49 AM UTC+3, Olliver Schinagl wrote=
+:<blockquote class=3D"gmail_quote" style=3D"margin: 0;margin-left: 0.8ex;bo=
+rder-left: 1px #ccc solid;padding-left: 1ex;">
+ =20
+   =20
+ =20
+  <div bgcolor=3D"#FFFFFF" text=3D"#000000">
+    Hey Christo,<br>
+    <br>
+    <div>On 04-05-16 21:40, Christo Radev wrote:<br>
+    </div>
+    <blockquote type=3D"cite">
+      <div dir=3D"ltr">Hi Oliver,<br>
+        <br>
+        I start performance tests for eMMC, SD/MMC, USB, SATA SSD
+        devices and will post the result when ready.<br>
+        <br>
+        As a beginning I can say that eMMC is accessed via 4-bit bus
+        without matter of the patch used.<br>
+        There you are the content of /sys/kernel/debug/mmcX/ios (where X
+        is number of eMMC or SD/MMC device).<br>
+        <div style=3D"background-color:rgb(250,250,250);border-color:rgb(18=
+7,187,187);border-style:solid;border-width:1px;word-wrap:break-word"><code>
+            <div><span style=3D"color:#606">Booted</span><span style=3D"col=
+or:#000"> </span><span style=3D"color:#008">from</span><span style=3D"color=
+:#000"> SD card
+              </span><span style=3D"color:#008">with</span><span style=3D"c=
+olor:#000"> </span><span style=3D"color:#066">8</span><span style=3D"color:=
+#660">-</span><span style=3D"color:#000">bit
+                patched kernel<br>
+                root@egpr</span><span style=3D"color:#660">:~</span><span s=
+tyle=3D"color:#800"># dmesg | grep mmc</span><span style=3D"color:#000"><br=
+>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.599625</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c0f000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> </span><span style=3D"color:#606">Got</span><spa=
+n style=3D"color:#000"> CD GPIO<br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.631883</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c0f000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> </span><span style=3D"color:#008">base</span><sp=
+an style=3D"color:#660">:</span><span style=3D"color:#066">0xf08da000</span=
+><span style=3D"color:#000"> irq</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#066">26</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.669058</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> mmc0</span><span=
+ style=3D"color:#660">:</span><span style=3D"color:#000"> host
+                does </span><span style=3D"color:#008">not</span><span styl=
+e=3D"color:#000"> support reading read</span><span style=3D"color:#660">-</=
+span><span style=3D"color:#000">only </span><span style=3D"color:#008">swit=
+ch</span><span style=3D"color:#660">,</span><span style=3D"color:#000">
+                assuming write</span><span style=3D"color:#660">-</span><sp=
+an style=3D"color:#000">enable<br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.671674</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> </span><span style=3D"color:#008">base</span><sp=
+an style=3D"color:#660">:</span><span style=3D"color:#066">0xf08de000</span=
+><span style=3D"color:#000"> irq</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#066">27</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.672064</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> mmc0</span><span=
+ style=3D"color:#660">:</span><span style=3D"color:#000"> </span><span styl=
+e=3D"color:#008">new</span><span style=3D"color:#000"> high
+                speed SDHC card at address </span><span style=3D"color:#066=
+">0007</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.673068</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> mmcblk0</span><s=
+pan style=3D"color:#660">:</span><span style=3D"color:#000"> mmc0</span><sp=
+an style=3D"color:#660">:</span><span style=3D"color:#066">0007</span><span=
+ style=3D"color:#000"> SD04G </span><span style=3D"color:#066">3.71</span><=
+span style=3D"color:#000"> </span><span style=3D"color:#606">GiB</span><spa=
+n style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.674785</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000">
+                =C2=A0mmcblk0</span><span style=3D"color:#660">:</span><spa=
+n style=3D"color:#000"> p1<br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.682261</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> smc </span><span style=3D"color:#066">1</span><s=
+pan style=3D"color:#000"> err</span><span style=3D"color:#660">,</span><spa=
+n style=3D"color:#000"> cmd </span><span style=3D"color:#066">8</span><span=
+ style=3D"color:#660">,</span><span style=3D"color:#000"> RTO </span><span =
+style=3D"color:#660">!!</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.689280</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> smc </span><span style=3D"color:#066">1</span><s=
+pan style=3D"color:#000"> err</span><span style=3D"color:#660">,</span><spa=
+n style=3D"color:#000"> cmd </span><span style=3D"color:#066">55</span><spa=
+n style=3D"color:#660">,</span><span style=3D"color:#000"> RTO </span><span=
+ style=3D"color:#660">!!</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.690146</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> smc </span><span style=3D"color:#066">1</span><s=
+pan style=3D"color:#000"> err</span><span style=3D"color:#660">,</span><spa=
+n style=3D"color:#000"> cmd </span><span style=3D"color:#066">55</span><spa=
+n style=3D"color:#660">,</span><span style=3D"color:#000"> RTO </span><span=
+ style=3D"color:#660">!!</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.690977</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> smc </span><span style=3D"color:#066">1</span><s=
+pan style=3D"color:#000"> err</span><span style=3D"color:#660">,</span><spa=
+n style=3D"color:#000"> cmd </span><span style=3D"color:#066">55</span><spa=
+n style=3D"color:#660">,</span><span style=3D"color:#000"> RTO </span><span=
+ style=3D"color:#660">!!</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.691808</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> smc </span><span style=3D"color:#066">1</span><s=
+pan style=3D"color:#000"> err</span><span style=3D"color:#660">,</span><spa=
+n style=3D"color:#000"> cmd </span><span style=3D"color:#066">55</span><spa=
+n style=3D"color:#660">,</span><span style=3D"color:#000"> RTO </span><span=
+ style=3D"color:#660">!!</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.745505</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> mmc1</span><span=
+ style=3D"color:#660">:</span><span style=3D"color:#000">
+                MAN_BKOPS_EN bit </span><span style=3D"color:#008">is</span=
+><span style=3D"color:#000"> </span><span style=3D"color:#008">not</span><s=
+pan style=3D"color:#000"> </span><span style=3D"color:#008">set</span><span=
+ style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.749187</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> smc </span><span style=3D"color:#066">1</span><s=
+pan style=3D"color:#000"> err</span><span style=3D"color:#660">,</span><spa=
+n style=3D"color:#000"> cmd </span><span style=3D"color:#066">8</span><span=
+ style=3D"color:#660">,</span><span style=3D"color:#000"> RD EBE
+              </span><span style=3D"color:#660">!!</span><span style=3D"col=
+or:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.749229</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> data
+                error</span><span style=3D"color:#660">,</span><span style=
+=3D"color:#000"> sending stop command<br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.749247</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> sunxi</span><spa=
+n style=3D"color:#660">-</span><span style=3D"color:#000">mmc </span><span =
+style=3D"color:#066">1c11000.mmc</span><span style=3D"color:#660">:</span><=
+span style=3D"color:#000"> send
+                stop command failed<br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.749268</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> mmc1</span><span=
+ style=3D"color:#660">:</span><span style=3D"color:#000"> </span><span styl=
+e=3D"color:#008">switch</span><span style=3D"color:#000"> to bus
+                width </span><span style=3D"color:#066">2</span><span style=
+=3D"color:#000"> failed<br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.753586</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> mmc1</span><span=
+ style=3D"color:#660">:</span><span style=3D"color:#000"> </span><span styl=
+e=3D"color:#008">new</span><span style=3D"color:#000"> high
+                speed MMC card at address </span><span style=3D"color:#066"=
+>0001</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.754479</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> mmcblk1</span><s=
+pan style=3D"color:#660">:</span><span style=3D"color:#000"> mmc1</span><sp=
+an style=3D"color:#660">:</span><span style=3D"color:#066">0001</span><span=
+ style=3D"color:#000"> P1XXXX
+              </span><span style=3D"color:#066">3.60</span><span style=3D"c=
+olor:#000"> </span><span style=3D"color:#606">GiB</span><span style=3D"colo=
+r:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.754961</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000">
+                mmcblk1boot0</span><span style=3D"color:#660">:</span><span=
+ style=3D"color:#000"> mmc1</span><span style=3D"color:#660">:</span><span =
+style=3D"color:#066">0001</span><span style=3D"color:#000"> P1XXXX
+                partition </span><span style=3D"color:#066">1</span><span s=
+tyle=3D"color:#000"> </span><span style=3D"color:#066">16.0</span><span sty=
+le=3D"color:#000"> </span><span style=3D"color:#606">MiB</span><span style=
+=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.755604</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000">
+                mmcblk1boot1</span><span style=3D"color:#660">:</span><span=
+ style=3D"color:#000"> mmc1</span><span style=3D"color:#660">:</span><span =
+style=3D"color:#066">0001</span><span style=3D"color:#000"> P1XXXX
+                partition </span><span style=3D"color:#066">2</span><span s=
+tyle=3D"color:#000"> </span><span style=3D"color:#066">16.0</span><span sty=
+le=3D"color:#000"> </span><span style=3D"color:#606">MiB</span><span style=
+=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">3.757045</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000">
+                =C2=A0mmcblk1</span><span style=3D"color:#660">:</span><spa=
+n style=3D"color:#000"> p1<br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">4.216879</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> EXT4</span><span=
+ style=3D"color:#660">-</span><span style=3D"color:#000">fs </span><span st=
+yle=3D"color:#660">(</span><span style=3D"color:#000">mmcblk0p1</span><span=
+ style=3D"color:#660">):</span><span style=3D"color:#000"> mounted
+                filesystem </span><span style=3D"color:#008">with</span><sp=
+an style=3D"color:#000">
+                writeback data mode</span><span style=3D"color:#660">.</spa=
+n><span style=3D"color:#000"> </span><span style=3D"color:#606">Opts</span>=
+<span style=3D"color:#660">:</span><span style=3D"color:#000"> </span><span=
+ style=3D"color:#660">(</span><span style=3D"color:#008">null</span><span s=
+tyle=3D"color:#660">)</span><span style=3D"color:#000"><br>
+              </span><span style=3D"color:#660">[</span><span style=3D"colo=
+r:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">7.907002</span><spa=
+n style=3D"color:#660">]</span><span style=3D"color:#000"> EXT4</span><span=
+ style=3D"color:#660">-</span><span style=3D"color:#000">fs </span><span st=
+yle=3D"color:#660">(</span><span style=3D"color:#000">mmcblk0p1</span><span=
+ style=3D"color:#660">):</span><span style=3D"color:#000"> re</span><span s=
+tyle=3D"color:#660">-</span><span style=3D"color:#000">mounted</span><span =
+style=3D"color:#660">.</span><span style=3D"color:#000"> </span><span style=
+=3D"color:#606">Opts</span><span style=3D"color:#660">:</span><span style=
+=3D"color:#000"> commit</span><span style=3D"color:#660">=3D</span><span st=
+yle=3D"color:#066">600</span><span style=3D"color:#660">,</span><span style=
+=3D"color:#000">errors</span><span style=3D"color:#660">=3D</span><span sty=
+le=3D"color:#000">remount</span><span style=3D"color:#660">-</span><span st=
+yle=3D"color:#000">ro<br>
+                <br>
+                root@egpr</span><span style=3D"color:#660">:~</span><span s=
+tyle=3D"color:#800"># cat
+                /sys/kernel/debug/mmc0/ios</span><span style=3D"color:#000"=
+><br>
+                clock</span><span style=3D"color:#660">:</span><span style=
+=3D"color:#000"> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</span><span style=3D"co=
+lor:#066">50000000</span><span style=3D"color:#000"> </span><span style=3D"=
+color:#606">Hz</span><span style=3D"color:#000"><br>
+                vdd</span><span style=3D"color:#660">:</span><span style=3D=
+"color:#000"> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0</span><span style=
+=3D"color:#066">21</span><span style=3D"color:#000"> </span><span style=3D"=
+color:#660">(</span><span style=3D"color:#066">3.3</span><span style=3D"col=
+or:#000"> </span><span style=3D"color:#660">~</span><span style=3D"color:#0=
+00"> </span><span style=3D"color:#066">3.4</span><span style=3D"color:#000"=
+> V</span><span style=3D"color:#660">)</span><span style=3D"color:#000"><br=
+>
+                bus mode</span><span style=3D"color:#660">:</span><span sty=
+le=3D"color:#000"> =C2=A0 =C2=A0 =C2=A0 </span><span style=3D"color:#066">2=
+</span><span style=3D"color:#000"> </span><span style=3D"color:#660">(</spa=
+n><span style=3D"color:#000">push</span><span style=3D"color:#660">-</span>=
+<span style=3D"color:#000">pull</span><span style=3D"color:#660">)</span><s=
+pan style=3D"color:#000"><br>
+                chip </span><span style=3D"color:#008">select</span><span s=
+tyle=3D"color:#660">:</span><span style=3D"color:#000"> =C2=A0 =C2=A0</span=
+><span style=3D"color:#066">0</span><span style=3D"color:#000"> </span><spa=
+n style=3D"color:#660">(</span><span style=3D"color:#000">don</span><span s=
+tyle=3D"color:#080">&#39;t care)<br>
+                power mode: =C2=A0 =C2=A0 2 (on)<br>
+                bus width: =C2=A0 =C2=A0 =C2=A02 (4 bits)<br>
+                timing spec: =C2=A0 =C2=A02 (sd high-speed)<br>
+                signal voltage: 0 (3.30 V)<br>
+                driver type: =C2=A0 =C2=A00 (driver type B)<br>
+                root@egpr:~# cat /sys/kernel/debug/mmc1/ios<br>
+                clock: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A050000000 Hz<br>
+                vdd: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A021 (3.3 ~ 3.4=
+ V)<br>
+                bus mode: =C2=A0 =C2=A0 =C2=A0 2 (push-pull)<br>
+                chip select: =C2=A0 =C2=A00 (don&#39;</span><span style=3D"=
+color:#000">t care</span><span style=3D"color:#660">)</span><span style=3D"=
+color:#000"><br>
+                power mode</span><span style=3D"color:#660">:</span><span s=
+tyle=3D"color:#000"> =C2=A0 =C2=A0 </span><span style=3D"color:#066">2</spa=
+n><span style=3D"color:#000"> </span><span style=3D"color:#660">(</span><sp=
+an style=3D"color:#000">on</span><span style=3D"color:#660">)</span><span s=
+tyle=3D"color:#000"><br>
+                bus width</span><span style=3D"color:#660">:</span><span st=
+yle=3D"color:#000"> =C2=A0 =C2=A0 =C2=A0</span><span style=3D"color:#066">2=
+</span><span style=3D"color:#000"> </span><span style=3D"color:#660">(</spa=
+n><span style=3D"color:#066">4</span><span style=3D"color:#000"> bits</span=
+><span style=3D"color:#660">)</span><span style=3D"color:#000"><br>
+                timing spec</span><span style=3D"color:#660">:</span><span =
+style=3D"color:#000"> =C2=A0 =C2=A0</span><span style=3D"color:#066">1</spa=
+n><span style=3D"color:#000"> </span><span style=3D"color:#660">(</span><sp=
+an style=3D"color:#000">mmc high</span><span style=3D"color:#660">-</span><=
+span style=3D"color:#000">speed</span><span style=3D"color:#660">)</span><s=
+pan style=3D"color:#000"><br>
+                signal voltage</span><span style=3D"color:#660">:</span><sp=
+an style=3D"color:#000"> </span><span style=3D"color:#066">0</span><span st=
+yle=3D"color:#000"> </span><span style=3D"color:#660">(</span><span style=
+=3D"color:#066">3.30</span>&lt;span
+                s</div></code></div></div></blockquote></div></blockquote><=
+div><br></div></div>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+------=_Part_257_1198564685.1462793437433--
+
+------=_Part_256_657442798.1462793437431--
