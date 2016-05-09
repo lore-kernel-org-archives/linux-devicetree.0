@@ -1,133 +1,354 @@
 From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v5 3/5] ARM: davinci: da8xx: Add USB PHY platform declaration
-Date: Mon,  9 May 2016 18:46:50 -0500
-Message-ID: <1462837612-7803-4-git-send-email-david@lechnology.com>
+Subject: [PATCH v5 1/5] ARM: davinci: da8xx: add usb phy clocks
+Date: Mon,  9 May 2016 18:46:48 -0500
+Message-ID: <1462837612-7803-2-git-send-email-david@lechnology.com>
 References: <1462837612-7803-1-git-send-email-david@lechnology.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1462837612-7803-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is now a proper phy driver for the DA8xx SoC USB PHY. This adds the
-platform device declarations needed to use it.
+Up to this point, the USB phy clock configuration was handled manually in
+the board files and in the usb drivers. This adds proper clocks so that
+the usb drivers can use clk_get and clk_enable and not have to worry about
+the details. Also, the related code is removed from the board files and
+replaced with the new clock registration functions.
 
 Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 ---
- arch/arm/mach-davinci/board-da830-evm.c     | 28 +++++-----------------------
- arch/arm/mach-davinci/board-omapl138-hawk.c |  5 +++++
- arch/arm/mach-davinci/include/mach/da8xx.h  |  1 +
- arch/arm/mach-davinci/usb-da8xx.c           | 11 +++++++++++
- 4 files changed, 22 insertions(+), 23 deletions(-)
+ arch/arm/mach-davinci/board-da830-evm.c     |  22 ++-
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  16 +-
+ arch/arm/mach-davinci/include/mach/da8xx.h  |   3 +
+ arch/arm/mach-davinci/usb-da8xx.c           | 219 +++++++++++++++++++++++++++-
+ 4 files changed, 239 insertions(+), 21 deletions(-)
 
 diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index 3051cb6..c62766e 100644
+index 3d8cf8c..605d444 100644
 --- a/arch/arm/mach-davinci/board-da830-evm.c
 +++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -26,7 +26,6 @@
- #include <linux/platform_data/mtd-davinci.h>
- #include <linux/platform_data/mtd-davinci-aemif.h>
- #include <linux/platform_data/spi-davinci.h>
--#include <linux/platform_data/usb-davinci.h>
+@@ -115,18 +115,6 @@ static __init void da830_evm_usb_init(void)
+ 	 */
+ 	cfgchip2 = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
  
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-@@ -106,30 +105,8 @@ static irqreturn_t da830_evm_usb_ocic_irq(int irq, void *dev_id)
- 
- static __init void da830_evm_usb_init(void)
- {
--	u32 cfgchip2;
- 	int ret;
- 
--	/*
--	 * Set up USB clock/mode in the CFGCHIP2 register.
--	 * FYI:  CFGCHIP2 is 0x0000ef00 initially.
--	 */
--	cfgchip2 = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+-	/* USB2.0 PHY reference clock is 24 MHz */
+-	cfgchip2 &= ~CFGCHIP2_REFFREQ;
+-	cfgchip2 |=  CFGCHIP2_REFFREQ_24MHZ;
 -
 -	/*
--	 * We have to override VBUS/ID signals when MUSB is configured into the
--	 * host-only mode -- ID pin will float if no cable is connected, so the
--	 * controller won't be able to drive VBUS thinking that it's a B-device.
--	 * Otherwise, we want to use the OTG mode and enable VBUS comparators.
+-	 * Select internal reference clock for USB 2.0 PHY
+-	 * and use it as a clock source for USB 1.1 PHY
+-	 * (this is the default setting anyway).
 -	 */
--	cfgchip2 &= ~CFGCHIP2_OTGMODE;
--#ifdef	CONFIG_USB_MUSB_HOST
--	cfgchip2 |=  CFGCHIP2_FORCE_HOST;
--#else
--	cfgchip2 |=  CFGCHIP2_SESENDEN | CFGCHIP2_VBDTCTEN;
--#endif
+-	cfgchip2 &= ~CFGCHIP2_USB1PHYCLKMUX;
+-	cfgchip2 |=  CFGCHIP2_USB2PHYCLKMUX;
 -
--	__raw_writel(cfgchip2, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--
+ 	/*
+ 	 * We have to override VBUS/ID signals when MUSB is configured into the
+ 	 * host-only mode -- ID pin will float if no cable is connected, so the
+@@ -143,6 +131,16 @@ static __init void da830_evm_usb_init(void)
+ 	__raw_writel(cfgchip2, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+ 
  	/* USB_REFCLKIN is not used. */
- 	ret = da8xx_register_usb20_phy_clk(false);
- 	if (ret)
-@@ -141,6 +118,11 @@ static __init void da830_evm_usb_init(void)
- 		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
- 			__func__, ret);
- 
-+	ret = da8xx_register_usb_phy();
++	ret = da8xx_register_usb20_phy_clk(false);
 +	if (ret)
-+		pr_warn("%s: USB PHY registration failed: %d\n",
++		pr_warn("%s: USB 2.0 PHY CLK registration failed: %d\n",
++			__func__, ret);
++
++	ret = da8xx_register_usb11_phy_clk(false);
++	if (ret)
++		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
 +			__func__, ret);
 +
  	ret = davinci_cfg_reg(DA830_USB0_DRVVBUS);
  	if (ret)
  		pr_warn("%s: USB 2.0 PinMux setup failed: %d\n", __func__, ret);
 diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index 8691a25..c5cb8d9 100644
+index ee62486..d4930b6 100644
 --- a/arch/arm/mach-davinci/board-omapl138-hawk.c
 +++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -260,6 +260,11 @@ static __init void omapl138_hawk_usb_init(void)
- 		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
- 			__func__, ret);
+@@ -243,7 +243,6 @@ static irqreturn_t omapl138_hawk_usb_ocic_irq(int irq, void *dev_id)
+ static __init void omapl138_hawk_usb_init(void)
+ {
+ 	int ret;
+-	u32 cfgchip2;
  
-+	ret = da8xx_register_usb_phy();
+ 	ret = davinci_cfg_reg_list(da850_hawk_usb11_pins);
+ 	if (ret) {
+@@ -251,12 +250,15 @@ static __init void omapl138_hawk_usb_init(void)
+ 		return;
+ 	}
+ 
+-	/* Setup the Ref. clock frequency for the HAWK at 24 MHz. */
+-
+-	cfgchip2 = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+-	cfgchip2 &= ~CFGCHIP2_REFFREQ;
+-	cfgchip2 |=  CFGCHIP2_REFFREQ_24MHZ;
+-	__raw_writel(cfgchip2, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++	/* USB_REFCLKIN is not used. */
++	ret = da8xx_register_usb20_phy_clk(false);
 +	if (ret)
-+		pr_warn("%s: USB PHY registration failed: %d\n",
++		pr_warn("%s: USB 2.0 PHY CLK registration failed: %d\n",
 +			__func__, ret);
-+
++	ret = da8xx_register_usb11_phy_clk(false);
++	if (ret)
++		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
++			__func__, ret);
+ 
  	ret = gpio_request_one(DA850_USB1_VBUS_PIN,
  			GPIOF_DIR_OUT, "USB1 VBUS");
- 	if (ret < 0) {
 diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-index c32444b..38d932e 100644
+index f9f9713..c367530 100644
 --- a/arch/arm/mach-davinci/include/mach/da8xx.h
 +++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-@@ -92,6 +92,7 @@ int da8xx_register_watchdog(void);
- int da8xx_register_usb_refclkin(int rate);
- int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
- int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
-+int da8xx_register_usb_phy(void);
+@@ -88,6 +88,9 @@ int da850_register_edma(struct edma_rsv_info *rsv[2]);
+ int da8xx_register_i2c(int instance, struct davinci_i2c_platform_data *pdata);
+ int da8xx_register_spi_bus(int instance, unsigned num_chipselect);
+ int da8xx_register_watchdog(void);
++int da8xx_register_usb_refclkin(int rate);
++int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
++int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
  int da8xx_register_usb20(unsigned mA, unsigned potpgt);
  int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
  int da8xx_register_emac(void);
 diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
-index c524d9e..9e41a7f 100644
+index f141f51..c524d9e 100644
 --- a/arch/arm/mach-davinci/usb-da8xx.c
 +++ b/arch/arm/mach-davinci/usb-da8xx.c
-@@ -7,6 +7,7 @@
+@@ -1,20 +1,235 @@
+ /*
+  * DA8xx USB
+  */
+-#include <linux/dma-mapping.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/init.h>
  #include <linux/platform_data/usb-davinci.h>
  #include <linux/platform_device.h>
- #include <linux/mfd/da8xx-cfgchip.h>
-+#include <linux/phy/phy.h>
++#include <linux/mfd/da8xx-cfgchip.h>
  #include <linux/usb/musb.h>
  
- #include <mach/clock.h>
-@@ -230,6 +231,16 @@ int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
- 	return ret;
- }
++#include <mach/clock.h>
+ #include <mach/common.h>
+ #include <mach/cputype.h>
+ #include <mach/da8xx.h>
+-#include <mach/irqs.h>
++
++#include "clock.h"
  
-+static struct platform_device da8xx_usb_phy = {
-+	.name		= "da8xx-usb-phy",
-+	.id		= 0,
+ #define DA8XX_USB0_BASE		0x01e00000
+ #define DA8XX_USB1_BASE		0x01e25000
+ 
++static struct clk usb_refclkin = {
++	.name		= "usb_refclkin",
++	.set_rate	= davinci_simple_set_rate,
 +};
 +
-+int __init da8xx_register_usb_phy(void)
++static struct clk_lookup usb_refclkin_lookup =
++	CLK(NULL, "usb_refclkin", &usb_refclkin);
++
++/**
++ * da8xx_register_usb_refclkin - register USB_REFCLKIN clock
++ *
++ * @rate: The clock rate in Hz
++ *
++ * This clock is only needed if the board provides an external USB_REFCLKIN
++ * signal, in which case it will be used as the parent of usb20_phy_clk and/or
++ * usb11_phy_clk.
++ */
++int __init da8xx_register_usb_refclkin(int rate)
 +{
-+	return platform_device_register(&da8xx_usb_phy);
++	int ret;
++
++	usb_refclkin.rate = rate;
++	ret = clk_register(&usb_refclkin);
++	if (ret)
++		return ret;
++
++	clkdev_add(&usb_refclkin_lookup);
++
++	return 0;
++}
++
++static void usb20_phy_clk_enable(struct clk *clk)
++{
++	u32 val;
++	u32 timeout = 500000; /* 500 msec */
++
++	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++	/*
++	 * Turn on the USB 2.0 PHY, but just the PLL, and not OTG. The USB 1.1
++	 * host may use the PLL clock without USB 2.0 OTG being used.
++	 */
++	val &= ~(CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN);
++	val |= CFGCHIP2_PHY_PLLON;
++
++	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++	while (--timeout) {
++		val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++		if (val & CFGCHIP2_PHYCLKGD)
++			return;
++		udelay(1);
++	}
++
++	pr_err("Timeout waiting for USB 2.0 PHY clock good.\n");
++}
++
++static void usb20_phy_clk_disable(struct clk *clk)
++{
++	u32 val;
++
++	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++	val |= CFGCHIP2_PHYPWRDN;
++	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++}
++
++static int usb20_phy_clk_set_parent(struct clk *clk, struct clk *parent)
++{
++	u32 val;
++
++	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++	/* Set the mux depending on the parent clock. */
++	if (parent == &usb_refclkin) {
++		val &= ~CFGCHIP2_USB2PHYCLKMUX;
++	} else if (strcmp(parent->name, "pll0_aux_clk") == 0) {
++		val |= CFGCHIP2_USB2PHYCLKMUX;
++	} else {
++		pr_err("Bad parent on USB 2.0 PHY clock.\n");
++		return -EINVAL;
++	}
++
++	/* reference frequency also comes from parent clock */
++	val &= ~CFGCHIP2_REFFREQ_MASK;
++	switch (clk_get_rate(parent)) {
++	case 12000000:
++		val |= CFGCHIP2_REFFREQ_12MHZ;
++		break;
++	case 13000000:
++		val |= CFGCHIP2_REFFREQ_13MHZ;
++		break;
++	case 19200000:
++		val |= CFGCHIP2_REFFREQ_19_2MHZ;
++		break;
++	case 20000000:
++		val |= CFGCHIP2_REFFREQ_20MHZ;
++		break;
++	case 24000000:
++		val |= CFGCHIP2_REFFREQ_24MHZ;
++		break;
++	case 26000000:
++		val |= CFGCHIP2_REFFREQ_26MHZ;
++		break;
++	case 38400000:
++		val |= CFGCHIP2_REFFREQ_38_4MHZ;
++		break;
++	case 40000000:
++		val |= CFGCHIP2_REFFREQ_40MHZ;
++		break;
++	case 48000000:
++		val |= CFGCHIP2_REFFREQ_48MHZ;
++		break;
++	default:
++		pr_err("Bad parent clock rate on USB 2.0 PHY clock.\n");
++		return -EINVAL;
++	}
++
++	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++	return 0;
++}
++
++static struct clk usb20_phy_clk = {
++	.name		= "usb20_phy",
++	.clk_enable	= usb20_phy_clk_enable,
++	.clk_disable	= usb20_phy_clk_disable,
++	.set_parent	= usb20_phy_clk_set_parent,
++};
++
++static struct clk_lookup usb20_phy_clk_lookup =
++	CLK(NULL, "usb20_phy", &usb20_phy_clk);
++
++/**
++ * da8xx_register_usb20_phy_clk - register USB0PHYCLKMUX clock
++ *
++ * @use_usb_refclkin: Selects the parent clock - either "usb_refclkin" if true
++ *	or "pll0_aux" if false.
++ */
++int __init da8xx_register_usb20_phy_clk(bool use_usb_refclkin)
++{
++	struct clk *parent;
++	int ret = 0;
++
++	parent = clk_get(NULL, use_usb_refclkin ? "usb_refclkin" : "pll0_aux");
++	if (IS_ERR(parent))
++		return PTR_ERR(parent);
++
++	usb20_phy_clk.parent = parent;
++	ret = clk_register(&usb20_phy_clk);
++	if (!ret)
++		clkdev_add(&usb20_phy_clk_lookup);
++
++	clk_put(parent);
++
++	return ret;
++}
++
++static int usb11_phy_clk_set_parent(struct clk *clk, struct clk *parent)
++{
++	u32 val;
++
++	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++	/* Set the USB 1.1 PHY clock mux based on the parent clock. */
++	if (parent == &usb20_phy_clk) {
++		val &= ~CFGCHIP2_USB1PHYCLKMUX;
++	} else if (parent == &usb_refclkin) {
++		val |= CFGCHIP2_USB1PHYCLKMUX;
++	} else {
++		pr_err("Bad parent on USB 1.1 PHY clock.\n");
++		return -EINVAL;
++	}
++
++	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++
++	return 0;
++}
++
++static struct clk usb11_phy_clk = {
++	.name		= "usb11_phy",
++	.set_parent	= usb11_phy_clk_set_parent,
++};
++
++static struct clk_lookup usb11_phy_clk_lookup =
++	CLK(NULL, "usb11_phy", &usb11_phy_clk);
++
++/**
++ * da8xx_register_usb11_phy_clk - register USB1PHYCLKMUX clock
++ *
++ * @use_usb_refclkin: Selects the parent clock - either "usb_refclkin" if true
++ *	or "usb20_phy" if false.
++ */
++int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
++{
++	struct clk *parent;
++	int ret = 0;
++
++	parent = clk_get(NULL, use_usb_refclkin ? "usb_refclkin" : "usb20_phy");
++	if (IS_ERR(parent))
++		return PTR_ERR(parent);
++
++	usb11_phy_clk.parent = parent;
++	ret = clk_register(&usb11_phy_clk);
++	if (!ret)
++		clkdev_add(&usb11_phy_clk_lookup);
++
++	clk_put(parent);
++
++	return ret;
 +}
 +
  #if IS_ENABLED(CONFIG_USB_MUSB_HDRC)
@@ -137,6 +358,6 @@ index c524d9e..9e41a7f 100644
 2.7.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
