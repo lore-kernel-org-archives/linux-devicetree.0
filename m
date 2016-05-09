@@ -1,87 +1,79 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
-Date: Mon, 9 May 2016 11:34:38 +0300
-Message-ID: <57304B9E.50201@ti.com>
-References: <1461925297-9734-1-git-send-email-peter.ujfalusi@ti.com>
- <6ee9d67a-e907-715a-f3f5-d90a470314c3@ti.com>
- <20160504172634.GS5995@atomide.com> <572A38FD.9050801@ti.com>
- <20160505184609.GB5995@atomide.com>
- <a6969765-d07d-6d0e-36df-b78b485d9644@ti.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 0/3] Add support for Tegra210 ADMA
+Date: Mon, 9 May 2016 09:48:26 +0100
+Message-ID: <57304EDA.3050704@nvidia.com>
+References: <1461940758-25722-1-git-send-email-jonathanh@nvidia.com>
+ <5729AD19.2010807@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="TW65cEVHpwqomBoVaBrJow58ljupqTp5V"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a6969765-d07d-6d0e-36df-b78b485d9644@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Enric Balletbo i Serra <eballetbo@iseebcn.com>, =?UTF-8?Q?Agust=c3=ad_Fontquerni?= <af@iseebcn.com>, Eduard Gavin <egavin@iseebcn.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5729AD19.2010807-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---TW65cEVHpwqomBoVaBrJow58ljupqTp5V
-Content-Type: multipart/mixed; boundary="1OHtDBFS51bdo30A8xKbMUoR984bOu26J"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>,
- Nishanth Menon <nm@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Enric Balletbo i Serra <eballetbo@iseebcn.com>,
- =?UTF-8?Q?Agust=c3=ad_Fontquerni?= <af@iseebcn.com>,
- Eduard Gavin <egavin@iseebcn.com>
-Message-ID: <57304B9E.50201@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
-References: <1461925297-9734-1-git-send-email-peter.ujfalusi@ti.com>
- <6ee9d67a-e907-715a-f3f5-d90a470314c3@ti.com>
- <20160504172634.GS5995@atomide.com> <572A38FD.9050801@ti.com>
- <20160505184609.GB5995@atomide.com>
- <a6969765-d07d-6d0e-36df-b78b485d9644@ti.com>
-In-Reply-To: <a6969765-d07d-6d0e-36df-b78b485d9644@ti.com>
+Hi Vinod,
 
---1OHtDBFS51bdo30A8xKbMUoR984bOu26J
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Ping?
 
+Jon
 
-On 09/05/16 11:25, Peter Ujfalusi wrote:
-
-> Tomi: what do you think?
->=20
-> According to the OMAP5 data manual the vdda_hdmi can be in 1.5V or 1.8V=
- mode,
-> 2V is not mentioned in the recommended operating conditions table.
-
-I thought vdda_hdmi should always be 1.8V, but you're right, on omap5
-1.5V is allowed according to DM. On later SoCs it's only 1.8V. I suggest
-we use 1.8V on all boards, as that's what's known to work.
-
-2V is definitely wrong.
-
- Tomi
-
-
---1OHtDBFS51bdo30A8xKbMUoR984bOu26J--
-
---TW65cEVHpwqomBoVaBrJow58ljupqTp5V
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXMEueAAoJEPo9qoy8lh71rPcP/i5UGj0rRYIVd9cyTQxmKm+m
-0W0yJmPl3332DfCc9M8GXI2RVQCCLjgqLSeWR4+okPyUjGSJgDwSWYXc2yCWK2/6
-j4TPFWnvgZHO+FsnIbw1Skj7c/Y526JHGXb/EUPTgeHZF7ngeJo9z8U8fAnkQXar
-jeQVDV11LLMD09IOVb/BzyQiipHYKifPaDmAP3zJ99lemXMZjZGJ4n28fS1T8oCZ
-nMY2utWKhXjgdzB2bO88TYsyMhC5LQvDS4Q/stlMLr+9L75BTchj8vsigj8eMpKr
-/qExsIFdKY/l8WAv5MTvfffU0KsXEznG3sdINpveaSlUqdXxLUOk8hsZ2Evx+GLB
-VwM259PTb4ORIaG8beMdKZ9NIIWwwsCZiPYr/2tbnzWIL8eYDXtiAJr+D+b9TDaC
-pJg2a+KMnIZFV+x5hqpYi06V+ueThOxTYb3uHjtgNHTcpdktH4DDv/Owsn3v5o4L
-Cik8Vbau0HcefMuvsDXMjImZtjhihGYi26MuoV8UlpM2g4pbkEOG33/y42keoRjP
-QJomE5EEiO4BS8gHbhaBs1gOvrtUteCLBrhoVmwUpS9dfunMHT8f4pHCykVMKbed
-hD20IeOormkRT3lI+Ug1hUwcEbDlzhtbmuhc8/PwGetosd9kJS5yYbgFXQpGGy3B
-vKo6HiMCYamqmb+QK6Nv
-=b75O
------END PGP SIGNATURE-----
-
---TW65cEVHpwqomBoVaBrJow58ljupqTp5V--
+On 04/05/16 09:04, Jon Hunter wrote:
+> Hi Vinod,
+> 
+> Let me know if you are ok to pick up this version?
+> 
+> Cheers
+> Jon
+> 
+> On 29/04/16 15:39, Jon Hunter wrote:
+>> Add support for the Tegra210 Audio DMA (ADMA) controller which is part
+>> of the Audio Processing Engine and used for transferring audio data.
+>>
+>> V5 changes:
+>> - Removed APE and APE2APB clocks as these clocks rightfully belong
+>>   in the ACONNECT bus driver [0] and the ADMA is child of this device.
+>>   Dropped power-domain from DT binding as this will be handled by
+>>   ACONNECT bus driver as well.
+>> - Minor update to case statement formatting based upon feedback from
+>>   Vinod.
+>> - Make ADMA dependent on Tegra210 as this is the only device
+>>   (currently) that supports it.
+>>
+>> V4 changes:
+>> - Updated DT binding to include 'power-domains' entry for handling
+>>   the APE power domain inconjunction with runtime-pm.
+>> - Added missing clocks to the DT binding that were being handled by
+>>   the bootloader.
+>> - Added support for PM_CLK to simplify clock handling
+>>
+>> V3 changes:
+>> - Updated DT binding per feedback from Mark and Stephen
+>> - Fixed up items mentioned by Vinod
+>>
+>> V2 changes:
+>> - Re-worked device-tree binding
+>>
+>> [0] http://marc.info/?l=devicetree&m=146193804830747&w=2
+>>
+>> Jon Hunter (3):
+>>   Documentation: DT: Add binding documentation for NVIDIA ADMA
+>>   dmaengine: tegra-adma: Add support for Tegra210 ADMA
+>>   MAINTAINERS: Update Tegra DMA maintainers
+>>
+>>  .../bindings/dma/nvidia,tegra210-adma.txt          |  57 ++
+>>  MAINTAINERS                                        |   5 +-
+>>  drivers/dma/Kconfig                                |  14 +
+>>  drivers/dma/Makefile                               |   1 +
+>>  drivers/dma/tegra210-adma.c                        | 853 +++++++++++++++++++++
+>>  5 files changed, 928 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+>>  create mode 100644 drivers/dma/tegra210-adma.c
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
