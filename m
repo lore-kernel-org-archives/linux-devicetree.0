@@ -1,27 +1,42 @@
-Return-Path: <mtk07307@kernel.org>
-From: Weiqing Kong <weiqing.kong@mediatek.com>
-Subject: [PATCH 0/3] Support Mediatek Soc MT2701 disp pwm
-Date: Mon, 16 May 2016 16:14:21 +0800
-Message-ID: <1463386464-15707-1-git-send-email-weiqing.kong@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, weiqing.kong@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
+In-Reply-To: <CANEJEGu=QkYwrDeS08JdNaUis1aVpOs_xnZCdFmC4FHF8uSRHA@mail.gmail.com>
+References: <1462295611-49684-1-git-send-email-grundler@chromium.org>
+	<20160504135123.GA4567@rob-hp-laptop>
+	<CANEJEGt1Ri7Q-g25U8_KTAb9Z8MfVWH0N5QLaLcdnDuF_wwrtw@mail.gmail.com>
+	<572C61B1.2040508@atmel.com>
+	<CAHHoo-j7145vPFNmJH=CvPu-BRCgRe0WNKH8QDkSc+c3koxHAQ@mail.gmail.com>
+	<20160509162948.GA15535@dtor-ws>
+	<CANEJEGu=QkYwrDeS08JdNaUis1aVpOs_xnZCdFmC4FHF8uSRHA@mail.gmail.com>
+Date: Mon, 9 May 2016 11:51:25 -0500
+Message-ID: <CAL_JsqJprQtjQOPZORS4ncqNgMYLHk36qZfcgNbeZ=qeunB_oQ@mail.gmail.com>
+Subject: Re: Input: add Atmel Atmegaxx captouch driver
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Grant Grundler <grundler@chromium.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Hung-yu Wu <hywu@google.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-input <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-These series patches modify pwm-mtk-disp.c
-and dts/dtsi config to support MT2701 disp pwm.
+On Mon, May 9, 2016 at 11:44 AM, Grant Grundler <grundler@chromium.org> wrote:
+> On Mon, May 9, 2016 at 9:29 AM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>> On Fri, May 06, 2016 at 11:14:12PM +0800, Daniel Hung-yu Wu wrote:
+>>> The register set is different, and this chip does not support calibration.
+>>> The I2C protocol is not the same as well; there is an additional byte
+>>> indicating data length.
+>>>
+>>> Atmega88PA is a general-purpose MCU. In the future, we will add more
+>>> functionalities, such as firmware upgrade through I2C.
+>>
+>> Is it Google who will be maintaining and extending the protocol or
+>> Atmel? If it is Google then maybe we should switch compat string to
+>> "google,captouch" or similar.
+>
+> My understanding was Atmel would extend the protocol to support FW update.
+> No other extensions are planned.
 
-Weiqing Kong (3):
-  dt-bindings: pwm: Add MediaTek display PWM bindings
-  pwm: Add MediaTek MT2701 display PWM driver support
-  dts: Add disp bls dsti and dts config for MT2701
+Is the protocol version discoverable? If not then you have a more specific compatible string.
 
- .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |  5 +-
- arch/arm/boot/dts/mt2701-evb.dts                   | 29 +++++++
- arch/arm/boot/dts/mt2701.dtsi                      |  9 +++
- drivers/pwm/pwm-mtk-disp.c                         | 89 +++++++++++++++++-----
- 4 files changed, 113 insertions(+), 19 deletions(-)
-
--- 
-1.9.1
+The compatible string here is really defining the function of the firmware. As long as the 
+>
+> cheers,
+> grant
