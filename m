@@ -1,165 +1,266 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
- bindings
-Date: Mon, 9 May 2016 16:15:11 -0700
-Message-ID: <573119FF.9000306@gmail.com>
-References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
- <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
- <20160509192641.GA4936@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160509192641.GA4936@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com, arnd@arndb.de
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v5 7/7] usb: musb: da8xx: Remove mach code
+Date: Mon,  9 May 2016 18:40:03 -0500
+Message-ID: <1462837203-12125-8-git-send-email-david@lechnology.com>
+References: <1462837203-12125-1-git-send-email-david@lechnology.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462837203-12125-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/09/2016 12:26 PM, Rob Herring wrote:
-> On Thu, May 05, 2016 at 12:14:59PM -0700, Florian Fainelli wrote:
->> From: Jim Quinlan <jim2101024@gmail.com>
->>
->> This patchs adds the Device Tree bindings for the Broadcom STB PCIe root
->> complex hardware.
->>
->> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->> Changes in v2:
->>
->> - rewrite the binding document almost from scratch to include many more
->>   references to existing documents
->> - describe missing properties
->> - give better examples
->>
->>  .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  | 98 ++++++++++++++++++++++
->>  1 file changed, 98 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
->> new file mode 100644
->> index 000000000000..3682b0f0bc26
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
->> @@ -0,0 +1,98 @@
->> +Broadcom STB PCIe Host Controller Device Tree Bindings
->> +
->> +This document describes the binding of the PCIe Root Complex hardware found in
->> +Broadcom Set Top Box System-on-Chips such as BCM7425 (MIPS), BCM7435 (MIPS) and
->> +BCM7445 (ARMv7).
->> +
->> +Required properties:
->> +- compatible: must be one of: "brcm,bcm7425-pcie"
->> +			      "brcm,bcm7435-pcie"
->> +			      "brcm,bcm7445-pcie"
->> +
->> +- reg: specifies the physical base address of the controller registers and
->> +  its length
->> +
->> +- interrupt-parent: must be a reference (phandle) to the parent interrupt
->> +  controller in the system (7038-l1-intc on MIPS, GIC on ARM/ARM64)
->> +
->> +- interrrupts: first interrupt must be the Level 1 interrupt number corresponding
->> +  to the main PCIe RC interrupt, second interrupt must be the MSI interrupt
->> +  See the interrupt-parent documentation for the number of cells and their meaning:
->> +  MIPS: Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
->> +  ARM/ARM64: Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
->> +
->> +- interrupt-names: must be "pcie", and if present "msi"
->> +
->> +- interrupt-map: see pci.txt
->> +
->> +- interrupt-map-mask: see pci.txt
->> +
->> +- #address-cells: must be set to <3>, see pci.txt
->> +
->> +- #size-cells: must be set to <2>, see pci.txt
->> +
->> +- ranges: ranges for the PCI outbound windows, no I/O or prefetchable windows
->> +  must be specified here, only non-prefetchable. 32-bits windows or 64-bits
->> +  windows are allowed based on the host processor's capabilities (ARM w/ LPAE,
->> +  ARM64).
->> +
->> +- #interrupt-cells: set to <1>, see pci.txt
->> +
->> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to PCIe space
->> +  there must be exactly one value per memory controller present in the system
->> +  (ranges from 1 to 3)
->> +
->> +Optional properties:
->> +
->> +- msi-controller: indicates that this is a MSI controller node (when supported)
->> +
->> +- clocks: phandle to the functional clock that feeds into the PCIe RC block
->> +
->> +- clock-names: the name(s) of the clocks specified in 'clocks'.  Note
->> +  that if the 'clocks' property is given, 'clock-names' is mandatory,
->> +  and the name of the clock is expected to be "pcie".
->> +
->> +- brcm,ssc: boolean that indicates usage of spread-spectrum clocking
-> 
-> Shouldn't this be a property of the phy? Is there no separate phy to 
-> control?
+Use the new phy-da8xx-usb driver to take the place of the mach code that
+pokes CFGCHIP2 in the da8xx musb glue driver. This unbreaks the driver.
 
-No, the PHY is baked into the PCIe root complex, which is why this is a
-property of the root complex node since the two are conflated.
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+---
+ drivers/usb/musb/Kconfig |   2 +-
+ drivers/usb/musb/da8xx.c | 135 ++++++++++++++++++-----------------------------
+ 2 files changed, 51 insertions(+), 86 deletions(-)
 
-> 
->> +
->> +- brcm,gen: integer that indicates desired forced generation of link: 1 => 2.5
->> +  Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps. Will override the auto-negotation if
->> +  specified.
->> +
->> +- <*>-supply: see Documentation/devicetree/bindings/regulator/regulator.txt
->> +
->> +- <*>-supply-names: see Documentation/devicetree/bindings/regulator/regulator.txt
->> +
->> +Example Node:
->> +
->> +This example assumes that the top-level #address-cells = <2> and #size-cells =
->> +<2>, e.g: ARM LPAE configuration.
->> +
->> +	pcie0: pcie-controller@f0460000 {
->> +		reg = <0x0 0xf0460000 0x0 0x9310>;
->> +		interrupts = <0x0 0x33 0x4>, <0x0 0x34, 0x4>;
->                                                       ^
-> typo
-
-Whoops, thanks.
-
-> 
->> +		interrupt-names = "pcie", "msi";
->> +		compatible = "brcm,bcm7445-pcie";
->> +		#address-cells = <3>;
->> +		#size-cells = <2>;
->> +
->> +		/* Two non-prefetchable 32-bits memory space, each of 128MB
->> + 		 * with the following mapping:
->> +		 * PCIe address		=> CPU physical address space
->> +		 * 0x00_0000_0000	=> 0x00_C000_0000
->> +		 * 0x00_0800_0000	=> 0x00_C800_0000
->> +		 */
->> +		ranges = <0x02000000 0x00000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x08000000>,
->> +			 <0x02000000 0x00000000 0x08000000 0x00000000 0xc8000000 0x00000000 0x08000000>;
->> +		#interrupt-cells = <1>;
->> +		interrupt-map-mask = <0xf800 0 0 7>;
->> +		interrupt-map = <0 0 0 1 &intc 47 3
->> +				 0 0 0 2 &intc 48 3
->> +				 0 0 0 3 &intc 49 3
->> +				 0 0 0 4 &intc 50 3>;
->> +		clocks = <&pcie0>;
->> +		clock-names = "pcie";
->> +		brcm,ssc;
->> +		brcm,log2-scb-sizes = <0x1e 0x1e 0x1e>;
->> +		vreg-wifi-pwr-supply-names = "vreg-wifi-pwr";
->> +		vreg-wifi-pwr-supply = <&vreg-wifi-pwr>;
-> 
-> The supply for the PCIE RC is called "vreg-wifi-pwr"? Seems a bit 
-> strange.
-
-It can be called anything, this just happens to be the example, but I
-can certainly drop that, since a) this is optional and b) we need to
-rework that in the driver anyway.
--- 
-Florian
+diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+index 886526b..c73221a 100644
+--- a/drivers/usb/musb/Kconfig
++++ b/drivers/usb/musb/Kconfig
+@@ -82,7 +82,7 @@ config USB_MUSB_DA8XX
+ 	tristate "DA8xx/OMAP-L1x"
+ 	depends on ARCH_DAVINCI_DA8XX
+ 	depends on NOP_USB_XCEIV
+-	depends on BROKEN
++	select PHY_DA8XX_USB
+ 
+ config USB_MUSB_TUSB6010
+ 	tristate "TUSB6010"
+diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+index 0c1997c..6af8c3d 100644
+--- a/drivers/usb/musb/da8xx.c
++++ b/drivers/usb/musb/da8xx.c
+@@ -30,13 +30,11 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
++#include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/usb/usb_phy_generic.h>
+ 
+-#include <mach/da8xx.h>
+-#include <linux/platform_data/usb-davinci.h>
+-
+ #include "musb_core.h"
+ 
+ /*
+@@ -80,61 +78,15 @@
+ 
+ #define DA8XX_MENTOR_CORE_OFFSET 0x400
+ 
+-#define CFGCHIP2	IO_ADDRESS(DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP2_REG)
+-
+ struct da8xx_glue {
+ 	struct device		*dev;
+ 	struct platform_device	*musb;
+-	struct platform_device	*phy;
++	struct platform_device	*usb_phy;
+ 	struct clk		*clk;
++	struct phy		*phy;
+ };
+ 
+ /*
+- * REVISIT (PM): we should be able to keep the PHY in low power mode most
+- * of the time (24 MHz oscillator and PLL off, etc.) by setting POWER.D0
+- * and, when in host mode, autosuspending idle root ports... PHY_PLLON
+- * (overriding SUSPENDM?) then likely needs to stay off.
+- */
+-
+-static inline void phy_on(void)
+-{
+-	u32 cfgchip2 = __raw_readl(CFGCHIP2);
+-
+-	/*
+-	 * Start the on-chip PHY and its PLL.
+-	 */
+-	cfgchip2 &= ~(CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN | CFGCHIP2_OTGPWRDN);
+-	cfgchip2 |= CFGCHIP2_PHY_PLLON;
+-	__raw_writel(cfgchip2, CFGCHIP2);
+-
+-	pr_info("Waiting for USB PHY clock good...\n");
+-	while (!(__raw_readl(CFGCHIP2) & CFGCHIP2_PHYCLKGD))
+-		cpu_relax();
+-}
+-
+-static inline void phy_off(void)
+-{
+-	u32 cfgchip2 = __raw_readl(CFGCHIP2);
+-
+-	/*
+-	 * Ensure that USB 1.1 reference clock is not being sourced from
+-	 * USB 2.0 PHY.  Otherwise do not power down the PHY.
+-	 */
+-	if (!(cfgchip2 & CFGCHIP2_USB1PHYCLKMUX) &&
+-	     (cfgchip2 & CFGCHIP2_USB1SUSPENDM)) {
+-		pr_warning("USB 1.1 clocked from USB 2.0 PHY -- "
+-			   "can't power it down\n");
+-		return;
+-	}
+-
+-	/*
+-	 * Power down the on-chip PHY.
+-	 */
+-	cfgchip2 |= CFGCHIP2_PHYPWRDN | CFGCHIP2_OTGPWRDN;
+-	__raw_writel(cfgchip2, CFGCHIP2);
+-}
+-
+-/*
+  * Because we don't set CTRL.UINT, it's "important" to:
+  *	- not read/write INTRUSB/INTRUSBE (except during
+  *	  initial setup, as a workaround);
+@@ -385,29 +337,29 @@ static irqreturn_t da8xx_musb_interrupt(int irq, void *hci)
+ 
+ static int da8xx_musb_set_mode(struct musb *musb, u8 musb_mode)
+ {
+-	u32 cfgchip2 = __raw_readl(CFGCHIP2);
++	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
++	enum phy_mode phy_mode;
+ 
+-	cfgchip2 &= ~CFGCHIP2_OTGMODE;
+ 	switch (musb_mode) {
+ 	case MUSB_HOST:		/* Force VBUS valid, ID = 0 */
+-		cfgchip2 |= CFGCHIP2_FORCE_HOST;
++		phy_mode = PHY_MODE_USB_HOST;
+ 		break;
+ 	case MUSB_PERIPHERAL:	/* Force VBUS valid, ID = 1 */
+-		cfgchip2 |= CFGCHIP2_FORCE_DEVICE;
++		phy_mode = PHY_MODE_USB_DEVICE;
+ 		break;
+ 	case MUSB_OTG:		/* Don't override the VBUS/ID comparators */
+-		cfgchip2 |= CFGCHIP2_NO_OVERRIDE;
++		phy_mode = PHY_MODE_USB_OTG;
+ 		break;
+ 	default:
+-		dev_dbg(musb->controller, "Trying to set unsupported mode %u\n", musb_mode);
++		return -EINVAL;
+ 	}
+ 
+-	__raw_writel(cfgchip2, CFGCHIP2);
+-	return 0;
++	return phy_set_mode(glue->phy, phy_mode);
+ }
+ 
+ static int da8xx_musb_init(struct musb *musb)
+ {
++	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
+ 	void __iomem *reg_base = musb->ctrl_base;
+ 	u32 rev;
+ 	int ret = -ENODEV;
+@@ -425,32 +377,56 @@ static int da8xx_musb_init(struct musb *musb)
+ 		goto fail;
+ 	}
+ 
++	ret = clk_prepare_enable(glue->clk);
++	if (ret) {
++		dev_err(glue->dev, "failed to enable clock\n");
++		goto fail;
++	}
++
+ 	setup_timer(&otg_workaround, otg_timer, (unsigned long)musb);
+ 
+ 	/* Reset the controller */
+ 	musb_writel(reg_base, DA8XX_USB_CTRL_REG, DA8XX_SOFT_RESET_MASK);
+ 
+ 	/* Start the on-chip PHY and its PLL. */
+-	phy_on();
++	ret = phy_init(glue->phy);
++	if (ret) {
++		dev_err(glue->dev, "Failed to init phy.\n");
++		goto err_phy_init;
++	}
++
++	ret = phy_power_on(glue->phy);
++	if (ret) {
++		dev_err(glue->dev, "Failed to power on phy.\n");
++		goto err_phy_power_on;
++	}
+ 
+ 	msleep(5);
+ 
+ 	/* NOTE: IRQs are in mixed mode, not bypass to pure MUSB */
+-	pr_debug("DA8xx OTG revision %08x, PHY %03x, control %02x\n",
+-		 rev, __raw_readl(CFGCHIP2),
++	pr_debug("DA8xx OTG revision %08x, control %02x\n", rev,
+ 		 musb_readb(reg_base, DA8XX_USB_CTRL_REG));
+ 
+ 	musb->isr = da8xx_musb_interrupt;
+ 	return 0;
++
++err_phy_power_on:
++	phy_exit(glue->phy);
++err_phy_init:
++	clk_disable_unprepare(glue->clk);
+ fail:
+ 	return ret;
+ }
+ 
+ static int da8xx_musb_exit(struct musb *musb)
+ {
++	struct da8xx_glue *glue = dev_get_drvdata(musb->controller->parent);
++
+ 	del_timer_sync(&otg_workaround);
+ 
+-	phy_off();
++	phy_power_off(glue->phy);
++	phy_exit(glue->phy);
++	clk_disable_unprepare(glue->clk);
+ 
+ 	usb_put_phy(musb->xceiv);
+ 
+@@ -504,10 +480,10 @@ static int da8xx_probe(struct platform_device *pdev)
+ 		return PTR_ERR(clk);
+ 	}
+ 
+-	ret = clk_enable(clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to enable clock\n");
+-		goto err4;
++	glue->phy = devm_phy_get(&pdev->dev, "usb-phy");
++	if (IS_ERR(glue->phy)) {
++		dev_err(&pdev->dev, "failed to get phy\n");
++		return PTR_ERR(glue->phy);
+ 	}
+ 
+ 	glue->dev			= &pdev->dev;
+@@ -515,10 +491,10 @@ static int da8xx_probe(struct platform_device *pdev)
+ 
+ 	pdata->platform_ops		= &da8xx_ops;
+ 
+-	glue->phy = usb_phy_generic_register();
+-	if (IS_ERR(glue->phy)) {
+-		ret = PTR_ERR(glue->phy);
+-		goto err5;
++	glue->usb_phy = usb_phy_generic_register();
++	if (IS_ERR(glue->usb_phy)) {
++		dev_err(&pdev->dev, "failed to register usb_phy\n");
++		return PTR_ERR(glue->usb_phy);
+ 	}
+ 	platform_set_drvdata(pdev, glue);
+ 
+@@ -544,22 +520,12 @@ static int da8xx_probe(struct platform_device *pdev)
+ 
+ 	glue->musb = musb = platform_device_register_full(&pinfo);
+ 	if (IS_ERR(musb)) {
+-		ret = PTR_ERR(musb);
+ 		dev_err(&pdev->dev, "failed to register musb device: %d\n", ret);
+-		goto err6;
++		usb_phy_generic_unregister(glue->usb_phy);
++		return PTR_ERR(musb);
+ 	}
+ 
+ 	return 0;
+-
+-err6:
+-	usb_phy_generic_unregister(glue->phy);
+-
+-err5:
+-	clk_disable(clk);
+-
+-err4:
