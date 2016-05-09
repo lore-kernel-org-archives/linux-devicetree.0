@@ -1,126 +1,150 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 1/3] of: rename *_node_sysfs to _node_post
-Date: Mon,  9 May 2016 21:11:26 +0300
-Message-ID: <1462817488-8370-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 3/3] of: overlay: Pick up label symbols from overlays.
+Date: Mon,  9 May 2016 21:11:28 +0300
+Message-ID: <1462817488-8370-4-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1462817488-8370-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462817488-8370-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462817488-8370-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/of/base.c       |  4 ++--
- drivers/of/dynamic.c    | 10 +++++-----
- drivers/of/of_private.h |  4 ++--
- drivers/of/unittest.c   |  4 ++--
- 4 files changed, 11 insertions(+), 11 deletions(-)
+Insert overlay symbols to the base tree when applied.
+This makes it possible to apply an overlay that references a label
+that a previously inserted overlay had.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 9bbca56..20bbc2f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -156,7 +156,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
- 	return rc;
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Tested-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+---
+ drivers/of/overlay.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index a274d65..a7956a2 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -514,6 +514,101 @@ static int of_free_overlay_info(struct of_overlay *ov)
+ 	return 0;
  }
  
--int __of_attach_node_sysfs(struct device_node *np)
-+int __of_attach_node_post(struct device_node *np)
- {
- 	const char *name;
- 	struct property *pp;
-@@ -203,7 +203,7 @@ void __init of_core_init(void)
- 		return;
++static int of_overlay_add_symbols(
++		struct device_node *tree,
++		struct of_overlay *ov)
++{
++	struct of_overlay_info *ovinfo;
++	struct device_node *root_sym = NULL;
++	struct device_node *child = NULL;
++	struct property *prop;
++	const char *path, *s;
++	char *new_path;
++	int i, len, err;
++
++	/* this may fail (if no fixups are required) */
++	root_sym = of_find_node_by_path("/__symbols__");
++
++	/* do nothing if no root symbols */
++	if (!root_sym)
++		return 0;
++
++	/* locate the symbols & fixups nodes on resolve */
++	for_each_child_of_node(tree, child) {
++		if (of_node_cmp(child->name, "__symbols__") == 0)
++			goto found;
++	}
++	/* no symbols, no problem */
++	of_node_put(root_sym);
++	return 0;
++
++found:
++	err = -EINVAL;
++	for_each_property_of_node(child, prop) {
++
++		/* skip properties added automatically */
++		if (of_prop_cmp(prop->name, "name") == 0)
++			continue;
++
++		err = of_property_read_string(child,
++				prop->name, &path);
++		if (err != 0) {
++			pr_err("%s: Could not find symbol '%s'\n",
++					__func__, prop->name);
++			continue;
++		}
++
++
++		/* now find fragment index */
++		s = path;
++
++		/* compare paths to find fragment index */
++		ovinfo = NULL;
++		len = -1;
++		for (i = 0; i < ov->count; i++) {
++			ovinfo = &ov->ovinfo_tab[i];
++
++			pr_debug("%s: #%d: overlay->name=%s target->name=%s\n",
++					__func__, i, ovinfo->overlay->full_name,
++					ovinfo->target->full_name);
++
++			len = strlen(ovinfo->overlay->full_name);
++			if (strncasecmp(path, ovinfo->overlay->full_name,
++						len) == 0 && path[len] == '/')
++				break;
++		}
++
++		if (i >= ov->count)
++			continue;
++
++		pr_debug("%s: found target at #%d\n", __func__, i);
++		new_path = kasprintf(GFP_KERNEL, "%s%s",
++				ovinfo->target->full_name,
++				path + len);
++		if (!new_path) {
++			pr_err("%s: Failed to allocate propname for \"%s\"\n",
++					__func__, prop->name);
++			continue;
++		}
++
++		err = of_changeset_add_property_string(&ov->cset, root_sym,
++				prop->name, new_path);
++
++		/* free always */
++		kfree(new_path);
++
++		if (err) {
++			pr_err("%s: Failed to add property for \"%s\"\n",
++					__func__, prop->name);
++		}
++	}
++
++	of_node_put(child);
++	of_node_put(root_sym);
++
++	return 0;
++}
++
+ static LIST_HEAD(ov_list);
+ static DEFINE_IDR(ov_idr);
+ 
+@@ -642,6 +737,13 @@ static int __of_overlay_create(struct device_node *tree,
+ 		goto err_abort_trans;
  	}
- 	for_each_of_allnodes(np)
--		__of_attach_node_sysfs(np);
-+		__of_attach_node_post(np);
- 	mutex_unlock(&of_mutex);
  
- 	/* Symlink in /proc as required by userspace ABI */
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 350b1cf..eb31a55 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -41,7 +41,7 @@ void of_node_put(struct device_node *node)
- }
- EXPORT_SYMBOL(of_node_put);
- 
--void __of_detach_node_sysfs(struct device_node *np)
-+void __of_detach_node_post(struct device_node *np)
- {
- 	struct property *pp;
- 
-@@ -251,7 +251,7 @@ int of_attach_node(struct device_node *np)
- 	__of_attach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	__of_attach_node_sysfs(np);
-+	__of_attach_node_post(np);
- 	mutex_unlock(&of_mutex);
- 
- 	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
-@@ -304,7 +304,7 @@ int of_detach_node(struct device_node *np)
- 	__of_detach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	__of_detach_node_sysfs(np);
-+	__of_detach_node_post(np);
- 	mutex_unlock(&of_mutex);
- 
- 	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
-@@ -628,10 +628,10 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
- 
- 	switch (ce->action) {
- 	case OF_RECONFIG_ATTACH_NODE:
--		__of_attach_node_sysfs(ce->np);
-+		__of_attach_node_post(ce->np);
- 		break;
- 	case OF_RECONFIG_DETACH_NODE:
--		__of_detach_node_sysfs(ce->np);
-+		__of_detach_node_post(ce->np);
- 		break;
- 	case OF_RECONFIG_ADD_PROPERTY:
- 		/* ignore duplicate names */
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 092cba7..10b0342 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -79,9 +79,9 @@ extern void __of_update_property_sysfs(struct device_node *np,
- 		struct property *newprop, struct property *oldprop);
- 
- extern void __of_attach_node(struct device_node *np);
--extern int __of_attach_node_sysfs(struct device_node *np);
-+extern int __of_attach_node_post(struct device_node *np);
- extern void __of_detach_node(struct device_node *np);
--extern void __of_detach_node_sysfs(struct device_node *np);
-+extern void __of_detach_node_post(struct device_node *np);
- 
- /* iterators for transactions, used for overlays */
- /* forward iterator */
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index e5a5ec0..7ea3689 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -931,7 +931,7 @@ static int attach_node_and_children(struct device_node *np)
- 	of_node_clear_flag(np, OF_DETACHED);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	__of_attach_node_sysfs(np);
-+	__of_attach_node_post(np);
- 	mutex_unlock(&of_mutex);
- 
- 	while (child) {
-@@ -989,7 +989,7 @@ static int __init unittest_data_add(void)
- 	if (!of_root) {
- 		of_root = unittest_data_node;
- 		for_each_of_allnodes(np)
--			__of_attach_node_sysfs(np);
-+			__of_attach_node_post(np);
- 		of_aliases = of_find_node_by_path("/aliases");
- 		of_chosen = of_find_node_by_path("/chosen");
- 		return 0;
++	err = of_overlay_add_symbols(tree, ov);
++	if (err) {
++		pr_err("%s: of_overlay_add_symbols() failed for tree@%s\n",
++				__func__, tree->full_name);
++		goto err_abort_trans;
++	}
++
+ 	/* apply the changeset */
+ 	err = __of_changeset_apply(&ov->cset);
+ 	if (err) {
 -- 
 1.7.12
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
