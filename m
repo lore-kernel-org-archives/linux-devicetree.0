@@ -1,385 +1,73 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V4 1/2] vfio, platform: add support for ACPI during probe
- and reset
-Date: Mon, 9 May 2016 15:45:13 -0400
-Message-ID: <5730E8C9.8060707@codeaurora.org>
-References: <1462136872-17590-1-git-send-email-okaya@codeaurora.org>
- <1462136872-17590-2-git-send-email-okaya@codeaurora.org>
- <5730B0FA.1040303@linaro.org>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [Kernel] [PATCH v2 4/5] ARM: dts: omap5: describe control for
+ ckobuffer
+Date: Mon, 9 May 2016 22:44:38 +0300
+Message-ID: <ce5a9afb-77c3-b3b7-d651-aa3c1602f0db@ti.com>
+References: <cover.1461003660.git.hns@goldelico.com>
+ <a5fb89737594a656318896a8e43814c21ca992eb.1461003660.git.hns@goldelico.com>
+ <20160426172710.GI5995@atomide.com>
+ <70572DA1-BEB4-4681-BA6C-2E1C9002D730@goldelico.com>
+ <5720B107.4000907@ti.com>
+ <A90F1BFC-A834-4EC0-81F9-2C8222AAA010@goldelico.com>
+ <5720C85B.9010701@ti.com> <ce9a7840-e86f-0d0c-3ed6-a571eec6659d@ti.com>
+ <40536322-073F-48BD-9D07-32B9A9F07AF2@goldelico.com>
+ <5721C3D4.7040401@ti.com>
+ <2A9D82CD-9ACA-49F6-9D2B-9EACFC517914@goldelico.com>
+ <57220EDD.7080903@ti.com>
+ <F2BCD4BA-E4E4-43F4-B65C-B625ED3B2D13@goldelico.com>
+ <573079F5.7050507@ti.com> <145c9917-6a85-292b-c3c9-cf85ceb26f21@ti.com>
+ <f66cd508-fe53-af58-bda5-822c8213cf7d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5730B0FA.1040303@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Auger <eric.auger@linaro.org>, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f66cd508-fe53-af58-bda5-822c8213cf7d-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/9/2016 11:47 AM, Eric Auger wrote:
-> Hi Sinan,
-> On 05/01/2016 11:07 PM, Sinan Kaya wrote:
->> The code is using the compatible DT string to associate a reset driver with
->> the actual device itself. The compatible string does not exist on ACPI
->> based systems. HID is the unique identifier for a device driver instead.
+On 05/09/2016 03:32 PM, Peter Ujfalusi wrote:
+> On 05/09/16 15:10, Peter Ujfalusi wrote:
+>=20
+>>>> finally I found some time to apply your patches. Sorry for the lon=
+g time.
+>>>>
+>>>> Unfortunately, it does not work. Neither on omap5evm nor on our om=
+ap5 hardware.
+>>>> I get no sound on the twl6040 - just white noise (which can be con=
+trolled in
+>>>> level through
+>>>> amixer so it is created on the digital input side of the twl6040).
+>>>>
+>>>> So I think your patch is missing a detail compared to my simple so=
+lution.
+>>>
+>>> Did you implement anything on the audio driver side? The audio driv=
+er must
+>>> enable the clock implemented by this patch.
 >>
->> When ACPI is enabled, the change will query the presence of _RST method
->> and will call it instead of querying an external reset driver.
->>
->> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
->> ---
->>  drivers/vfio/platform/vfio_platform_common.c  | 176 +++++++++++++++++++++-----
->>  drivers/vfio/platform/vfio_platform_private.h |   7 +-
->>  2 files changed, 147 insertions(+), 36 deletions(-)
->>
->> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
->> index e65b142..528ec04 100644
->> --- a/drivers/vfio/platform/vfio_platform_common.c
->> +++ b/drivers/vfio/platform/vfio_platform_common.c
->> @@ -13,6 +13,7 @@
->>   */
->>  
->>  #include <linux/device.h>
->> +#include <linux/acpi.h>
->>  #include <linux/iommu.h>
->>  #include <linux/module.h>
->>  #include <linux/mutex.h>
->> @@ -41,7 +42,7 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
->>  		if (!strcmp(iter->compat, compat) &&
->>  			try_module_get(iter->owner)) {
->>  			*module = iter->owner;
->> -			reset_fn = iter->reset;
->> +			reset_fn = iter->of_reset;
->>  			break;
->>  		}
->>  	}
->> @@ -49,20 +50,111 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
->>  	return reset_fn;
->>  }
->>  
->> -static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
->> +
->> +#ifdef CONFIG_ACPI
->> +int vfio_platform_acpi_probe(struct vfio_platform_device *vdev,
->> +			     struct device *dev)
->>  {
->> -	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
->> -						&vdev->reset_module);
->> -	if (!vdev->reset) {
->> -		request_module("vfio-reset:%s", vdev->compat);
->> -		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
->> -							 &vdev->reset_module);
->> +	struct acpi_device *adev = ACPI_COMPANION(dev);
->> +
->> +	if (acpi_disabled)
->> +		return -ENODEV;
->> +
->> +	if (!adev)
->> +		return -ENODEV;
->> +
->> +	vdev->acpihid = acpi_device_hid(adev);
->> +	if (!vdev->acpihid) {
->> +		pr_err("VFIO: cannot find ACPI HID for %s\n",
->> +		       vdev->name);
->> +		return -ENODEV;
->>  	}
->> +	return 0;
->> +}
->> +
->> +static int vfio_platform_acpi_call_reset(struct vfio_platform_device *vdev)
->> +{
->> +	struct device *dev = vdev->device;
->> +	acpi_handle handle = ACPI_HANDLE(dev);
->> +	acpi_status acpi_ret;
->> +	unsigned long long val;
->> +
->> +	acpi_ret = acpi_evaluate_integer(handle, "_RST", NULL, &val);
->> +	if (ACPI_FAILURE(acpi_ret))
->> +		return -EINVAL;
->> +
->> +	return 0;
->> +}
->> +
->> +static int vfio_platform_acpi_has_reset(struct vfio_platform_device *vdev)
->> +{
->> +	struct device *dev = vdev->device;
->> +	acpi_handle handle = ACPI_HANDLE(dev);
->> +
->> +	if (acpi_has_method(handle, "_RST"))
->> +		return 0;
-> Can't you directly return acpi_has_method(handle, "_RST"), hence return
-> a boolean?
+>> I did, can test it in 10 minutes or so...
+>=20
+> might work, but linux-next is not booting on omap5-uevm :o I don't kn=
+ow why...
+>=20
+> In any case I have attached the 3 patches I have for this, including =
+Tero's
+> ported to linux-next.
+>=20
+> Patch 3 might need to be done per board probably, but this should be =
+good for
+> testing.
 
-Makes sense. I'll do that on the next post. 
+Please ignore these patches, I got HPPLL mode working, I need to clean =
+the
+patches up first and I will send it for testing tomorrow.
 
->> +
->> +	return -EINVAL;
->> +}
->> +#else
->> +int vfio_platform_acpi_probe(struct vfio_platform_device *vdev,
->> +			     struct device *dev)
->> +{
->> +	return -EINVAL;
->> +}
->> +
->> +static int vfio_platform_acpi_call_reset(struct vfio_platform_device *vdev)
->> +{
->> +	return -EINVAL;
->> +}
->> +
->> +static int vfio_platform_acpi_has_reset(struct vfio_platform_device *vdev)
->> +{
->> +	return -EINVAL;
->> +}
->> +#endif
->> +
->> +static int vfio_platform_has_reset(struct vfio_platform_device *vdev)
->> +{
-> return a boolean?
-
-OK
-
->> +	if (vdev->acpihid)
->> +		return vfio_platform_acpi_has_reset(vdev);
->> +
->> +	if (vdev->of_reset)
->> +		return 0;
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
->> +{
->> +	int rc;
->> +
->> +	if (vdev->acpihid)
->> +		return vfio_platform_acpi_has_reset(vdev);
->> +
->> +	vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
->> +						    &vdev->reset_module);
->> +	if (vdev->of_reset)
->> +		return 0;
->> +
->> +	rc = request_module("vfio-reset:%s", vdev->compat);
->> +	if (rc)
->> +		return rc;
->> +
->> +	vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
->> +						    &vdev->reset_module);
->> +	if (vdev->of_reset)
->> +		return 0;
->> +
->> +	return -EINVAL;
->>  }
->>  
->>  static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
->>  {
->> -	if (vdev->reset)
->> +	if (vdev->acpihid)
->> +		return;
->> +
->> +	if (vdev->of_reset)
->>  		module_put(vdev->reset_module);
->>  }
->>  
->> @@ -134,6 +226,20 @@ static void vfio_platform_regions_cleanup(struct vfio_platform_device *vdev)
->>  	kfree(vdev->regions);
->>  }
->>  
->> +static int vfio_platform_call_reset(struct vfio_platform_device *vdev)
->> +{
->> +	if (vdev->of_reset) {
->> +		dev_info(vdev->device, "reset\n");
->> +		vdev->of_reset(vdev);
-> return vdev->of_reset(vdev) to align with acpi reset behavior.
-
-OK. I didn't realize it was returning a value. 
-
->> +		return 0;
->> +	} else if (vdev->acpihid) {
->> +		return vfio_platform_acpi_call_reset(vdev);
-> I think it would make sense to have the same dev_info traces for dt and
-> acpi.
->> +	}
->> +
->> +	dev_warn(vdev->device, "no reset function found!\n");
->> +	return -EINVAL;
->> +}
->> +
->>  static void vfio_platform_release(void *device_data)
->>  {
->>  	struct vfio_platform_device *vdev = device_data;
->> @@ -141,12 +247,7 @@ static void vfio_platform_release(void *device_data)
->>  	mutex_lock(&driver_lock);
->>  
->>  	if (!(--vdev->refcnt)) {
->> -		if (vdev->reset) {
->> -			dev_info(vdev->device, "reset\n");
->> -			vdev->reset(vdev);
->> -		} else {
->> -			dev_warn(vdev->device, "no reset function found!\n");
->> -		}
->> +		vfio_platform_call_reset(vdev);
->>  		vfio_platform_regions_cleanup(vdev);
->>  		vfio_platform_irq_cleanup(vdev);
->>  	}
->> @@ -175,12 +276,9 @@ static int vfio_platform_open(void *device_data)
->>  		if (ret)
->>  			goto err_irq;
->>  
->> -		if (vdev->reset) {
->> -			dev_info(vdev->device, "reset\n");
->> -			vdev->reset(vdev);
->> -		} else {
->> -			dev_warn(vdev->device, "no reset function found!\n");
->> -		}
->> +		ret = vfio_platform_call_reset(vdev);
->> +		if (ret)
->> +			goto err_irq;
-> This change should be in next patch since if you fail finding a reset
-> function, you clean things up, mandating a reset function to exist.
-> 
-> Also in case the reset function fails you change the behavior which is
-> not detailed in the commit msg.
-
-I admitted this on another patch. Yes, I'll fix this.
-
->>  	}
->>  
->>  	vdev->refcnt++;
->> @@ -213,7 +311,7 @@ static long vfio_platform_ioctl(void *device_data,
->>  		if (info.argsz < minsz)
->>  			return -EINVAL;
->>  
->> -		if (vdev->reset)
->> +		if (!vfio_platform_has_reset(vdev))
->>  			vdev->flags |= VFIO_DEVICE_FLAGS_RESET;
->>  		info.flags = vdev->flags;
->>  		info.num_regions = vdev->num_regions;
->> @@ -312,10 +410,7 @@ static long vfio_platform_ioctl(void *device_data,
->>  		return ret;
->>  
->>  	} else if (cmd == VFIO_DEVICE_RESET) {
->> -		if (vdev->reset)
->> -			return vdev->reset(vdev);
->> -		else
->> -			return -EINVAL;
->> +		return vfio_platform_call_reset(vdev);
-> Here you also change the behavior: before, in case the dt reset failed
-> we returned an error. Now we return 0.
-
-Yes, I'll fix it. 
-> 
-> To me this patch would deserve to be split into 2 parts: ACPI probing
-> without reset and then ACPI reset. In case you change the behavior of
-> existing dt reset, please put that in a separate patch.
-
-Sure, I'll move vfio_platform_probe_common changes to a seperate patch.
-I'll try to break it as much as I can before the post.
-
-> 
-> Best Regards
-> 
-> Eric
->>  	}
->>  
->>  	return -ENOTTY;
->> @@ -544,6 +639,21 @@ static const struct vfio_device_ops vfio_platform_ops = {
->>  	.mmap		= vfio_platform_mmap,
->>  };
->>  
->> +int vfio_platform_of_probe(struct vfio_platform_device *vdev,
->> +			   struct device *dev)
->> +{
->> +	int ret;
->> +
->> +	ret = device_property_read_string(dev, "compatible",
->> +					  &vdev->compat);
->> +	if (ret) {
->> +		pr_err("VFIO: cannot retrieve compat for %s\n",
->> +			vdev->name);
->> +		return ret;
->> +	}
->> +	return 0;
->> +}
->> +
->>  int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->>  			       struct device *dev)
->>  {
->> @@ -553,14 +663,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->>  	if (!vdev)
->>  		return -EINVAL;
->>  
->> -	ret = device_property_read_string(dev, "compatible", &vdev->compat);
->> -	if (ret) {
->> -		pr_err("VFIO: cannot retrieve compat for %s\n", vdev->name);
->> -		return -EINVAL;
->> -	}
->> +	ret = vfio_platform_acpi_probe(vdev, dev);
->> +	if (ret)
->> +		ret = vfio_platform_of_probe(vdev, dev);
->>  
->> -	vdev->device = dev;
->> +	if (ret)
->> +		return ret;
->>  
->> +	vdev->device = dev;
->>  	group = iommu_group_get(dev);
->>  	if (!group) {
->>  		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
->> @@ -611,7 +721,7 @@ void vfio_platform_unregister_reset(const char *compat,
->>  
->>  	mutex_lock(&driver_lock);
->>  	list_for_each_entry_safe(iter, temp, &reset_list, link) {
->> -		if (!strcmp(iter->compat, compat) && (iter->reset == fn)) {
->> +		if (!strcmp(iter->compat, compat) && (iter->of_reset == fn)) {
->>  			list_del(&iter->link);
->>  			break;
->>  		}
->> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
->> index 42816dd..ba9e4f8 100644
->> --- a/drivers/vfio/platform/vfio_platform_private.h
->> +++ b/drivers/vfio/platform/vfio_platform_private.h
->> @@ -58,6 +58,7 @@ struct vfio_platform_device {
->>  	struct mutex			igate;
->>  	struct module			*parent_module;
->>  	const char			*compat;
->> +	const char			*acpihid;
->>  	struct module			*reset_module;
->>  	struct device			*device;
->>  
->> @@ -71,7 +72,7 @@ struct vfio_platform_device {
->>  	struct resource*
->>  		(*get_resource)(struct vfio_platform_device *vdev, int i);
->>  	int	(*get_irq)(struct vfio_platform_device *vdev, int i);
->> -	int	(*reset)(struct vfio_platform_device *vdev);
->> +	int	(*of_reset)(struct vfio_platform_device *vdev);
->>  };
->>  
->>  typedef int (*vfio_platform_reset_fn_t)(struct vfio_platform_device *vdev);
->> @@ -80,7 +81,7 @@ struct vfio_platform_reset_node {
->>  	struct list_head link;
->>  	char *compat;
->>  	struct module *owner;
->> -	vfio_platform_reset_fn_t reset;
->> +	vfio_platform_reset_fn_t of_reset;
->>  };
->>  
->>  extern int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->> @@ -103,7 +104,7 @@ extern void vfio_platform_unregister_reset(const char *compat,
->>  static struct vfio_platform_reset_node __reset ## _node = {	\
->>  	.owner = THIS_MODULE,					\
->>  	.compat = __compat,					\
->> -	.reset = __reset,					\
->> +	.of_reset = __reset,					\
->>  };								\
->>  __vfio_platform_register_reset(&__reset ## _node)
->>  
->>
-> 
-
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+--=20
+P=C3=A9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
