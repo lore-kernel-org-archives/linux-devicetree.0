@@ -1,46 +1,45 @@
 From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 0/4] clocksource: Add support for Aspeed timer
-Date: Mon,  9 May 2016 22:02:45 +0930
-Message-ID: <1462797169-14512-1-git-send-email-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Subject: [PATCH 1/2] doc/devicetree: Add Aspeed watchdog timer bindings
+Date: Mon,  9 May 2016 22:04:36 +0930
+Message-ID: <1462797277-14969-2-git-send-email-joel@jms.id.au>
+References: <1462797277-14969-1-git-send-email-joel@jms.id.au>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462797277-14969-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello All,
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
 
-This adds support for the Aspeed ast2400 and ast2500 families of BMC SoCs to
-the moxart driver.
-
-I've addressed the feedback from Daniel and spent a bit of time trying to
-ensure the series makes sense.
-
-I've not included a patch that renames the driver to fttmr010, from Faraday
-Tech, as I wasn't sure if we had consensus. If you would prefer I do so then
-let me know.
-
-Cheers,
-
-Joel
-
-Joel Stanley (4):
-  drivers/clocksouree/moxart: Add kbuild symbol
-  drivers/clocksource/moxart: Refactor enable/disable
-  drivers/clocksource/moxart: Use struct to hold state
-  drivers/clocksource/moxart: Add Aspeed support
-
- .../bindings/timer/moxa,moxart-timer.txt           |   4 +-
- arch/arm/mach-moxart/Kconfig                       |   2 +-
- drivers/clocksource/Kconfig                        |   9 +
- drivers/clocksource/Makefile                       |   2 +-
- drivers/clocksource/moxart_timer.c                 | 191 ++++++++++++++-------
- 5 files changed, 143 insertions(+), 65 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+new file mode 100644
+index 000000000000..58184b161e0d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+@@ -0,0 +1,14 @@
++Aspeed Watchdog Timer
++
++Required properties:
++ - compatible: must be "aspeed,wdt"
++ - reg: physical base address of the controller and length of memory mapped
++   region
++
++Example:
++
++	wdt1: wdt@1e785000 {
++		compatible = "aspeed,wdt";
++		reg = <0x1e785000 0x1c>;
++		interrupts = <27>;
++	};
 -- 
 2.8.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
