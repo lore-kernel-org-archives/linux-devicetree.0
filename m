@@ -1,83 +1,188 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] mfd: axp20x: Add a cell for the ac
- power_supply part of the axp20x PMICs
-Date: Mon, 9 May 2016 09:06:31 +0100
-Message-ID: <20160509080631.GF8324@dell>
-References: <1462511991-1911-1-git-send-email-haas@computerlinguist.org>
- <1462511991-1911-3-git-send-email-haas@computerlinguist.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] iio: ad5755: Add DT binding documentation
+Date: Mon, 9 May 2016 10:16:59 +0200
+Message-ID: <8a7b1dcb-205a-8801-737f-6aa1c39f6605@prevas.dk>
+References: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
+ <1457705561-12253-2-git-send-email-sean.nyekjaer@prevas.dk>
+ <56E3E121.9030400@kernel.org> <56F94A21.6070804@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBB7EJYG4QKGQEJDMJZSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1462511991-1911-3-git-send-email-haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56F94A21.6070804-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 06 May 2016, Michael Haas wrote:
 
-> As a counterpart to the usb power_supply cell, this commit adds an AC
-> power_supply cell to the axp20x driver.
->=20
-> Still missing are the RTC backup battery and the main battery charger
-> cells.
->=20
-> Signed-off-by: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  drivers/mfd/axp20x.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
 
-Applied, thanks.
-
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index a57d6e9..aa6ef08 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -128,6 +128,12 @@ static struct resource axp152_pek_resources[] =3D {
->  	DEFINE_RES_IRQ_NAMED(AXP152_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
->  };
-> =20
-> +static struct resource axp20x_ac_power_supply_resources[] =3D {
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_PLUGIN, "ACIN_PLUGIN"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_REMOVAL, "ACIN_REMOVAL"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_OVER_V, "ACIN_OVER_V"),
-> +};
-> +
->  static struct resource axp20x_pek_resources[] =3D {
->  	{
->  		.name	=3D "PEK_DBR",
-> @@ -436,6 +442,11 @@ static struct mfd_cell axp20x_cells[] =3D {
->  	}, {
->  		.name		=3D "axp20x-regulator",
->  	}, {
-> +		.name		=3D "axp20x-ac-power-supply",
-> +		.of_compatible	=3D "x-powers,axp202-ac-power-supply",
-> +		.num_resources	=3D ARRAY_SIZE(axp20x_ac_power_supply_resources),
-> +		.resources	=3D axp20x_ac_power_supply_resources,
-> +	}, {
->  		.name		=3D "axp20x-usb-power-supply",
->  		.of_compatible	=3D "x-powers,axp202-usb-power-supply",
->  		.num_resources	=3D ARRAY_SIZE(axp20x_usb_power_supply_resources),
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+On 2016-03-28 17:13, Jonathan Cameron wrote:
+> On 12/03/16 09:28, Jonathan Cameron wrote:
+>> On 11/03/16 14:12, Sean Nyekjaer wrote:
+>>> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+>> Looks much better to me.
+>>
+>> Looking for Acks from Lars and a device tree binding maintainer
+>> on this one though.
+>> (added CCs)
+> Lars?
+No response...
+Is there anything wrong with this?
+>> As an aside Device Tree bindings maintainers, do you prefer a personal cc
+>> or just getting them directly from the devicetree list?
+>>
+>> Jonthan
+>>> ---
+>>> Changes since v4:
+>>> - Appended -hz to dc-dc-freq
+>>> - Added adi,dc-dc-max-microvolt
+>>> - Added reg property
+>>>
+>>> Changes since v3:
+>>> - replaced '_' with '-'
+>>> - Now used actual values instead of register values.
+>>>
+>>> Changes since v2:
+>>>   - Removed defines, alot easier to read
+>>>
+>>>   .../devicetree/bindings/iio/dac/ad5755.txt         | 124 +++++++++++++++++++++
+>>>   1 file changed, 124 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5755.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+>>> new file mode 100644
+>>> index 0000000..f0bbd7e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+>>> @@ -0,0 +1,124 @@
+>>> +* Analog Device AD5755 IIO Multi-Channel DAC Linux Driver
+>>> +
+>>> +Required properties:
+>>> + - compatible: Has to contain one of the following:
+>>> +	adi,ad5755
+>>> +	adi,ad5755-1
+>>> +	adi,ad5757
+>>> +	adi,ad5735
+>>> +	adi,ad5737
+>>> +
+>>> + - reg: spi chip select number for the device
+>>> + - spi-cpha or spi-cpol: is the only modes that is supported
+>>> +
+>>> +Recommended properties:
+>>> + - spi-max-frequency: Definition as per
+>>> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+>>> +
+>>> +Optional properties:
+>>> +See include/dt-bindings/iio/ad5755.h
+>>> + - adi,ext-dc-dc-compenstation-resistor: boolean set if the hardware have an
+>>> +					 external resistor and thereby bypasses
+>>> +					 the internal compensation resistor.
+>>> + - adi,dc-dc-phase:
+>>> +	Valid values for DC DC Phase control is:
+>>> +	0: All dc-to-dc converters clock on the same edge.
+>>> +	1: Channel A and Channel B clock on the same edge,
+>>> +	   Channel C and Channel D clock on opposite edges.
+>>> +	2: Channel A and Channel C clock on the same edge,
+>>> +	   Channel B and Channel D clock on opposite edges.
+>>> +	3: Channel A, Channel B, Channel C, and Channel D
+>>> +	   clock 90 degrees out of phase from each other.
+>>> + - adi,dc-dc-freq-hz:
+>>> +	Valid values for DC DC frequency is [Hz]:
+>>> +	250000
+>>> +	410000
+>>> +	650000
+>>> + - adi,dc-dc-max-microvolt:
+>>> +	Valid values for the maximum allowed Vboost voltage supplied by
+>>> +	the dc-to-dc converter is:
+>>> +	23000000
+>>> +	24500000
+>>> +	27000000
+>>> +	29500000
+>>> +
+>>> +Optional for every channel:
+>>> + - adi,mode:
+>>> +	Valid values for DAC modes is:
+>>> +	0: 0 V to 5 V voltage range.
+>>> +	1: 0 V to 10 V voltage range.
+>>> +	2: Plus minus 5 V voltage range.
+>>> +	3: Plus minus 10 V voltage range.
+>>> +	4: 4 mA to 20 mA current range.
+>>> +	5: 0 mA to 20 mA current range.
+>>> +	6: 0 mA to 24 mA current range.
+>>> + - adi,ext-current-sense-resistor: boolean set if the hardware a external
+>>> +				   current sense resistor.
+>>> + - adi,enable-voltage-overrange: boolean enable voltage overrange
+>>> + - adi,slew: Array of slewrate settings should contain 3 fields:
+>>> +	1: Should be either 0 or 1 in order to enable or disable slewrate.
+>>> +	2: Slew rate settings:
+>>> +		Valid values for the slew rate update frequency:
+>>> +		64000
+>>> +		32000
+>>> +		16000
+>>> +		8000
+>>> +		4000
+>>> +		2000
+>>> +		1000
+>>> +		500
+>>> +		250
+>>> +		125
+>>> +		64
+>>> +		32
+>>> +		16
+>>> +		8
+>>> +		4
+>>> +		0
+>>> +	3: Slew step size:
+>>> +		Valid values for the step size LSBs:
+>>> +		1
+>>> +		2
+>>> +		4
+>>> +		16
+>>> +		32
+>>> +		64
+>>> +		128
+>>> +		256
+>>> +
+>>> +Example:
+>>> +dac@0 {
+>>> +	#address-cells = <1>;
+>>> +	#size-cells = <0>;
+>>> +	compatible = "adi,ad5755";
+>>> +	reg = <0>;
+>>> +	spi-max-frequency = <1000000>;
+>>> +	spi-cpha;
+>>> +	adi,dc-dc-phase = <0>;
+>>> +	adi,dc-dc-freq-hz = <410000>;
+>>> +	adi,dc-dc-max-microvolt = <23000000>;
+>>> +	channel@0 {
+>>> +		reg = <0>;
+>>> +		adi,mode = <4>;
+>>> +		adi,ext-current-sense-resistor;
+>>> +		adi,slew = <0 64000 1>;
+>>> +	};
+>>> +	channel@1 {
+>>> +		reg = <1>;
+>>> +		adi,mode = <4>;
+>>> +		adi,ext-current-sense-resistor;
+>>> +		adi,slew = <0 64000 1>;
+>>> +	};
+>>> +	channel@2 {
+>>> +		reg = <2>;
+>>> +		adi,mode = <4>;
+>>> +		adi,ext-current-sense-resistor;
+>>> +		adi,slew = <0 64000 1>;
+>>> +	};
+>>> +	channel@3 {
+>>> +		reg = <3>;
+>>> +		adi,mode = <4>;
+>>> +		adi,ext-current-sense-resistor;
+>>> +		adi,slew = <0 64000 1>;
+>>> +	};
+>>> +};
+>>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
