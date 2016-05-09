@@ -1,134 +1,288 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH V3 06/17] irqdomain: Don't set type when mapping an IRQ
-Date: Mon, 9 May 2016 13:23:23 +0100
-Message-ID: <5730813B.7060206@arm.com>
-References: <1462379130-11742-1-git-send-email-jonathanh@nvidia.com>
- <1462379130-11742-7-git-send-email-jonathanh@nvidia.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 2/2] irqchip: Add irq controller for Aspeed
+Date: Mon,  9 May 2016 22:03:59 +0930
+Message-ID: <1462797239-14765-3-git-send-email-joel@jms.id.au>
+References: <1462797239-14765-1-git-send-email-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462379130-11742-7-git-send-email-jonathanh@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462797239-14765-1-git-send-email-joel@jms.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, arnd@arndb.de, jk@ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/16 17:25, Jon Hunter wrote:
-> Some IRQ chips, such as GPIO controllers or secondary level interrupt
-> controllers, may require require additional runtime power management
-> control to ensure they are accessible. For such IRQ chips, it makes sense
-> to enable the IRQ chip when interrupts are requested and disabled them
-> again once all interrupts have been freed.
-> 
-> When mapping an IRQ, the IRQ type settings are read and then programmed.
-> The mapping of the IRQ happens before the IRQ is requested and so the
-> programming of the type settings occurs before the IRQ is requested. This
-> is a problem for IRQ chips that require additional power management
-> control because they may not be accessible yet. Therefore, when mapping
-> the IRQ, don't program the type settings, just save them and then program
-> these saved settings when the IRQ is requested (so long as if they are not
-> overridden via the call to request the IRQ).
-> 
-> Add a stub function for irq_domain_free_irqs() to avoid any compilation
-> errors when CONFIG_IRQ_DOMAIN_HIERARCHY is not selected.
-> 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  include/linux/irqdomain.h |  3 +++
->  kernel/irq/irqdomain.c    | 23 ++++++++++++++++++-----
->  2 files changed, 21 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-> index 2aed04396210..fc66876d1965 100644
-> --- a/include/linux/irqdomain.h
-> +++ b/include/linux/irqdomain.h
-> @@ -440,6 +440,9 @@ static inline int irq_domain_alloc_irqs(struct irq_domain *domain,
->  	return -1;
->  }
->  
-> +static inline void irq_domain_free_irqs(unsigned int virq,
-> +					unsigned int nr_irqs) { }
-> +
->  static inline bool irq_domain_is_hierarchy(struct irq_domain *domain)
->  {
->  	return false;
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index d68371213fc9..bbf5b9b8ac3d 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -564,6 +564,7 @@ static void of_phandle_args_to_fwspec(struct of_phandle_args *irq_data,
->  unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  {
->  	struct irq_domain *domain;
-> +	struct irq_data *irq_data;
->  	irq_hw_number_t hwirq;
->  	unsigned int type = IRQ_TYPE_NONE;
->  	int virq;
-> @@ -613,7 +614,11 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  		 * it now and return the interrupt number.
->  		 */
->  		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
-> -			irq_set_irq_type(virq, type);
-> +			irq_data = irq_get_irq_data(virq);
-> +			if (!irq_data)
-> +				return 0;
-> +
-> +			irqd_set_trigger_type(irq_data, type);
->  			return virq;
->  		}
->  
-> @@ -633,10 +638,18 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
->  			return virq;
->  	}
->  
-> -	/* Set type if specified and different than the current one */
-> -	if (type != IRQ_TYPE_NONE &&
-> -	    type != irq_get_trigger_type(virq))
-> -		irq_set_irq_type(virq, type);
-> +	irq_data = irq_get_irq_data(virq);
-> +	if (!irq_data) {
-> +		if (irq_domain_is_hierarchy(domain))
-> +			irq_domain_free_irqs(virq, 1);
-> +		else
-> +			irq_dispose_mapping(virq);
-> +		return 0;
-> +	}
-> +
-> +	/* Store trigger type */
-> +	irqd_set_trigger_type(irq_data, type);
-> +
->  	return virq;
->  }
->  EXPORT_SYMBOL_GPL(irq_create_fwspec_mapping);
-> 
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-This patch have the effect of making misconfigured PPIs absolutely
-obvious. I still need to wrap my head around the root cause, but here's
-the findings I have so far:
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/irqchip/Makefile         |   1 +
+ drivers/irqchip/irq-aspeed-vic.c | 238 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 239 insertions(+)
+ create mode 100644 drivers/irqchip/irq-aspeed-vic.c
 
-- kvmtool generates a DT with the wrong trigger information (edge
-instead of level) for the timer.
-- with this patch applied, "cyclictest -S" reliably locks up when run in
-a guest (missing a timer interrupt, goodbye CPU).
-- Either fixing kvmtool or reverting that patch makes it work reliably
-again.
-
-My gut feeling is that until that patch, the failing irq_set_irq_type()
-wasn't affecting the kernel's view of the trigger (it was still treated
-as level). With this patch, the kernel now trusts whatever is coming
-from the firmware, and the misconfiguration becomes obvious. And just
-grepping through the DT files for arm and arm64 sends makes me thing
-"Holly effin' crap!".
-
-I'm not saying that we shouldn't perform this change though. But it is
-quite obvious that it is going to break an awful lot of existing code
-and platforms. I'm also cooking a small patch for the arch timer (which
-seems to be described in DT with a fairly high level of brokenness), so
-that we can mop-up most of the brain damage.
-
-Thanks,
-
-	M.
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index b03cfcbbac6b..ec82e6e15a38 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -65,3 +65,4 @@ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
+ obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
+ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
+ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
++obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
+diff --git a/drivers/irqchip/irq-aspeed-vic.c b/drivers/irqchip/irq-aspeed-vic.c
+new file mode 100644
+index 000000000000..db15fc3e831a
+--- /dev/null
++++ b/drivers/irqchip/irq-aspeed-vic.c
+@@ -0,0 +1,238 @@
++/*
++ *  Copyright (C) 2015 - Ben Herrenschmidt, IBM Corp.
++ *
++ *  Driver for Aspeed "new" VIC as found in SoC generation 3 and later
++ *
++ *  Based on irq-vic.c:
++ *
++ *  Copyright (C) 1999 - 2003 ARM Limited
++ *  Copyright (C) 2000 Deep Blue Solutions Ltd
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <linux/export.h>
++#include <linux/init.h>
++#include <linux/list.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/syscore_ops.h>
++#include <linux/device.h>
++#include <linux/slab.h>
++
++#include <asm/exception.h>
++#include <asm/irq.h>
++
++/* These definitions correspond to the "new mapping" of the
++ * register set that interleaves "high" and "low". The offsets
++ * below are for the "low" register, add 4 to get to the high one
++ */
++#define AVIC_IRQ_STATUS		0x00
++#define AVIC_FIQ_STATUS		0x08
++#define AVIC_RAW_STATUS		0x10
++#define AVIC_INT_SELECT		0x18
++#define AVIC_INT_ENABLE		0x20
++#define AVIC_INT_ENABLE_CLR	0x28
++#define AVIC_INT_TRIGGER	0x30
++#define AVIC_INT_TRIGGER_CLR	0x38
++#define AVIC_INT_SENSE		0x40
++#define AVIC_INT_DUAL_EDGE	0x48
++#define AVIC_INT_EVENT		0x50
++#define AVIC_EDGE_CLR		0x58
++#define AVIC_EDGE_STATUS	0x60
++
++struct aspeed_vic {
++	void __iomem		*base;
++	u32			valid_sources[2];
++	u32			edge_sources[2];
++	struct irq_domain	*dom;
++};
++static struct aspeed_vic *system_avic;
++
++static void vic_init_hw(struct aspeed_vic *vic)
++{
++	u32 sense;
++
++	/* Disable all interrupts */
++	writel(0xffffffff, vic->base + AVIC_INT_ENABLE_CLR);
++	writel(0xffffffff, vic->base + AVIC_INT_ENABLE_CLR + 4);
++
++	/* Make sure no soft trigger is on */
++	writel(0xffffffff, vic->base + AVIC_INT_TRIGGER_CLR);
++	writel(0xffffffff, vic->base + AVIC_INT_TRIGGER_CLR + 4);
++
++	/* Set everything to be IRQ */
++	writel(0, vic->base + AVIC_INT_SELECT);
++	writel(0, vic->base + AVIC_INT_SELECT + 4);
++
++	/* Some interrupts have a programable high/low level trigger
++	 * (4 GPIO direct inputs), for now we assume this was configured
++	 * by firmware. We read which ones are edge now.
++	 */
++	sense = readl(vic->base + AVIC_INT_SENSE);
++	vic->edge_sources[0] = ~sense;
++	sense = readl(vic->base + AVIC_INT_SENSE + 4);
++	vic->edge_sources[1] = ~sense;
++
++	/* Clear edge detection latches */
++	writel(0xffffffff, vic->base + AVIC_EDGE_CLR);
++	writel(0xffffffff, vic->base + AVIC_EDGE_CLR + 4);
++}
++
++static void __exception_irq_entry avic_handle_irq(struct pt_regs *regs)
++{
++	struct aspeed_vic *vic = system_avic;
++	u32 stat, irq;
++
++	for (;;) {
++		irq = 0;
++		stat = readl_relaxed(vic->base + AVIC_IRQ_STATUS);
++		if (!stat) {
++			stat = readl_relaxed(vic->base + AVIC_IRQ_STATUS + 4);
++			irq = 32;
++		}
++		if (stat == 0)
++			break;
++		irq += ffs(stat) - 1;
++		handle_domain_irq(vic->dom, irq, regs);
++	}
++}
++
++static void avic_ack_irq(struct irq_data *d)
++{
++	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
++	unsigned int sidx = d->hwirq >> 5;
++	unsigned int sbit = 1u << (d->hwirq & 0x1f);
++
++	/* Clear edge latch for edge interrupts, nop for level */
++	if (vic->edge_sources[sidx] & sbit)
++		writel(sbit, vic->base + AVIC_EDGE_CLR + sidx * 4);
++}
++
++static void avic_mask_irq(struct irq_data *d)
++{
++	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
++	unsigned int sidx = d->hwirq >> 5;
++	unsigned int sbit = 1u << (d->hwirq & 0x1f);
++
++	writel(sbit, vic->base + AVIC_INT_ENABLE_CLR + sidx * 4);
++}
++
++static void avic_unmask_irq(struct irq_data *d)
++{
++	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
++	unsigned int sidx = d->hwirq >> 5;
++	unsigned int sbit = 1u << (d->hwirq & 0x1f);
++
++	writel(sbit, vic->base + AVIC_INT_ENABLE + sidx * 4);
++}
++
++/* For level irq, faster than going through a nop "ack" and mask */
++static void avic_mask_ack_irq(struct irq_data *d)
++{
++	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
++	unsigned int sidx = d->hwirq >> 5;
++	unsigned int sbit = 1u << (d->hwirq & 0x1f);
++
++	/* First mask */
++	writel(sbit, vic->base + AVIC_INT_ENABLE_CLR + sidx * 4);
++
++	/* Then clear edge latch for edge interrupts */
++	if (vic->edge_sources[sidx] & sbit)
++		writel(sbit, vic->base + AVIC_EDGE_CLR + sidx * 4);
++}
++
++static struct irq_chip avic_chip = {
++	.name		= "AVIC",
++	.irq_ack	= avic_ack_irq,
++	.irq_mask	= avic_mask_irq,
++	.irq_unmask	= avic_unmask_irq,
++	.irq_mask_ack	= avic_mask_ack_irq,
++};
++
++static int avic_map(struct irq_domain *d, unsigned int irq,
++		    irq_hw_number_t hwirq)
++{
++	struct aspeed_vic *vic = d->host_data;
++	unsigned int sidx = hwirq >> 5;
++	unsigned int sbit = 1u << (hwirq & 0x1f);
++
++	/* Check if interrupt exists */
++	if (sidx > 1 || !(vic->valid_sources[sidx] & sbit))
++		return -EPERM;
++
++	if (vic->edge_sources[sidx] & sbit)
++		irq_set_chip_and_handler(irq, &avic_chip, handle_edge_irq);
++	else
++		irq_set_chip_and_handler(irq, &avic_chip, handle_level_irq);
++	irq_set_chip_data(irq, vic);
++	irq_set_probe(irq);
++	return 0;
++}
++
++static struct irq_domain_ops avic_dom_ops = {
++	.map = avic_map,
++	.xlate = irq_domain_xlate_onetwocell,
++};
++
++static int __init avic_of_init(struct device_node *node,
++			       struct device_node *parent)
++{
++	void __iomem *regs;
++	struct aspeed_vic *vic;
++	int nirqs;
++
++	if (WARN(parent, "non-root Aspeed VIC not supported"))
++		return -EINVAL;
++	if (WARN(system_avic, "duplicate Aspeed VIC not supported"))
++		return -EINVAL;
++
++	regs = of_iomap(node, 0);
++	if (WARN_ON(!regs))
++		return -EIO;
++
++	vic = kzalloc(sizeof(struct aspeed_vic), GFP_KERNEL);
++	if (WARN_ON(!vic)) {
++		iounmap(regs);
++		return -ENOMEM;
++	}
++	vic->base = regs;
++
++	of_property_read_u32_index(node, "valid-sources", 0,
++				   &vic->valid_sources[0]);
++	of_property_read_u32_index(node, "valid-sources", 1,
++				   &vic->valid_sources[1]);
++
++	nirqs = hweight32(vic->valid_sources[0]) +
++		hweight32(vic->valid_sources[1]);
++
++	/* Initialize soures, all masked */
++	vic_init_hw(vic);
++
++	/* Ready to receive interrupts */
++	system_avic = vic;
++	set_handle_irq(avic_handle_irq);
++
++	/* Register our domain */
++	vic->dom = irq_domain_add_simple(node, nirqs, 0,
++					 &avic_dom_ops, vic);
++
++	return 0;
++}
++
++IRQCHIP_DECLARE(aspeed_new_vic, "aspeed,ast2400-vic", avic_of_init);
 -- 
-Jazz is not dead. It just smells funny...
+2.8.1
