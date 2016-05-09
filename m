@@ -1,271 +1,96 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 2/2] watchdog: Add Aspeed watchdog driver
-Date: Mon,  9 May 2016 22:04:37 +0930
-Message-ID: <1462797277-14969-3-git-send-email-joel@jms.id.au>
-References: <1462797277-14969-1-git-send-email-joel@jms.id.au>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462797277-14969-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 4/4] drivers/clk: Support Aspeed UART clock divisor
+Date: Mon,  9 May 2016 22:01:51 +0930
+Message-ID: <1462797111-14271-5-git-send-email-joel@jms.id.au>
+References: <1462797111-14271-1-git-send-email-joel@jms.id.au>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1462797111-14271-1-git-send-email-joel@jms.id.au>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jk@ozlabs.org, benh@kernel.crashing.org, arnd@arndb.de, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-Provides generic watchdog features as well as reboot support for the
-Apeed SoC.
+The Aspeed BMC SoCs have UART IP that derive their clocks from
+a 24MHz reference. It's not clear where this reference comes from, so it
+is hard coded in the driver.
 
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+This clock may be divided down by 13 if a certain register is set. This
+driver reads this register and creates a struct clk for the UARTs to
+consume.
+
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/watchdog/Kconfig      |  13 +++
- drivers/watchdog/Makefile     |   1 +
- drivers/watchdog/aspeed_wdt.c | 199 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 213 insertions(+)
- create mode 100644 drivers/watchdog/aspeed_wdt.c
+ drivers/clk/aspeed/Makefile   |  1 +
+ drivers/clk/aspeed/clk-uart.c | 52 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 drivers/clk/aspeed/clk-uart.c
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index fb947655badd..4f0e2ded4785 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -661,6 +661,19 @@ config ATLAS7_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called atlas7_wdt.
- 
-+config ASPEED_WATCHDOG
-+	tristate "Aspeed 2400 watchdog support"
-+	depends on ARCH_ASPEED || COMPILE_TEST
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include support for the watchdog timer
-+	  in Apseed BMC SoCs.
-+
-+	  This driver is required to reboot the SoC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called aspeed_wdt.
-+
- # AVR32 Architecture
- 
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index feb6270fdbde..36855375e0ce 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -73,6 +73,7 @@ obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
- obj-$(CONFIG_LPC18XX_WATCHDOG) += lpc18xx_wdt.o
- obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
- obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
-+obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
- 
- # AVR32 Architecture
- obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+diff --git a/drivers/clk/aspeed/Makefile b/drivers/clk/aspeed/Makefile
+index 9ddb0f8f4356..9d5754c086eb 100644
+--- a/drivers/clk/aspeed/Makefile
++++ b/drivers/clk/aspeed/Makefile
+@@ -1,2 +1,3 @@
++obj-y += clk-uart.o
+ obj-$(CONFIG_MACH_ASPEED_G4) += clk-g4.o
+ obj-$(CONFIG_MACH_ASPEED_G5) += clk-g5.o
+diff --git a/drivers/clk/aspeed/clk-uart.c b/drivers/clk/aspeed/clk-uart.c
 new file mode 100644
-index 000000000000..46cc71963c62
+index 000000000000..8cd23a758887
 --- /dev/null
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -0,0 +1,199 @@
++++ b/drivers/clk/aspeed/clk-uart.c
+@@ -0,0 +1,52 @@
 +/*
 + * Copyright 2016 IBM Corporation
-+ *
-+ * Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-+ *
-+ * Based on the qcom-watchdog driver
 + *
 + * This program is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU General Public License
 + * as published by the Free Software Foundation; either version
 + * 2 of the License, or (at your option) any later version.
 + */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/watchdog.h>
-+#include <linux/platform_device.h>
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
 +#include <linux/io.h>
++#include <linux/of_address.h>
++#include <linux/clkdev.h>
 +
-+struct aspeed_wdt {
-+	struct watchdog_device	wdd;
-+	unsigned long		rate;
-+	void __iomem		*base;
-+	u32			ctrl;
-+};
-+
-+static const struct of_device_id aspeed_wdt_of_table[] = {
-+	{ .compatible = "aspeed,wdt" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
-+
-+#define WDT_STATUS		0x00
-+#define WDT_RELOAD_VALUE	0x04
-+#define WDT_RESTART		0x08
-+#define WDT_CTRL		0x0C
-+#define   WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
-+#define   WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
-+#define	  WDT_CTRL_1MHZ_CLK		BIT(4)
-+#define	  WDT_CTRL_WDT_EXT		BIT(3)
-+#define	  WDT_CTRL_WDT_INTR		BIT(2)
-+#define   WDT_CTRL_RESET_SYSTEM		BIT(1)
-+#define   WDT_CTRL_ENABLE		BIT(0)
-+
-+#define	WDT_RESTART_MAGIC	0x4755
-+
-+static struct aspeed_wdt *to_aspeed_wdt(struct watchdog_device *wdd)
++static void __init aspeed_of_uart_clk_init(struct device_node *node)
 +{
-+	return container_of(wdd, struct aspeed_wdt, wdd);
-+}
++	struct clk *clk;
++	void __iomem *base;
++	int reg, rate;
++	const char *name = node->name;
 +
++	of_property_read_string(node, "clock-output-names", &name);
 +
-+static void aspeed_wdt_enable(struct aspeed_wdt *wdt, int count)
-+{
-+	wdt->ctrl |= WDT_CTRL_ENABLE;
-+
-+	writel(0, wdt->base + WDT_CTRL);
-+	writel(count, wdt->base + WDT_RELOAD_VALUE);
-+	writel(WDT_RESTART_MAGIC, wdt->base + WDT_RESTART);
-+	writel(wdt->ctrl, wdt->base + WDT_CTRL);
-+}
-+
-+static int aspeed_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
-+
-+	dev_dbg(wdd->parent, "starting with timeout of %d (rate %lu)\n",
-+			wdd->timeout, wdt->rate);
-+	aspeed_wdt_enable(wdt, wdd->timeout * wdt->rate);
-+
-+	return 0;
-+}
-+
-+static int aspeed_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
-+
-+	wdt->ctrl &= ~WDT_CTRL_ENABLE;
-+	writel(wdt->ctrl, wdt->base + WDT_CTRL);
-+
-+	return 0;
-+}
-+
-+static int aspeed_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
-+
-+	dev_dbg(wdd->parent, "ping\n");
-+	writel(WDT_RESTART_MAGIC, wdt->base + WDT_RESTART);
-+	return 0;
-+}
-+
-+static int aspeed_wdt_set_timeout(struct watchdog_device *wdd,
-+				  unsigned int timeout)
-+{
-+	dev_dbg(wdd->parent, "timeout set to %u\n", timeout);
-+	wdd->timeout = timeout;
-+
-+	return aspeed_wdt_start(wdd);
-+}
-+
-+static int aspeed_wdt_restart(struct watchdog_device *wdd,
-+			      unsigned long action, void *data)
-+{
-+	struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
-+
-+	aspeed_wdt_enable(wdt, 128 * wdt->rate / 1000);
-+
-+	return 0;
-+}
-+
-+static const struct watchdog_ops aspeed_wdt_ops = {
-+	.start		= aspeed_wdt_start,
-+	.stop		= aspeed_wdt_stop,
-+	.ping		= aspeed_wdt_ping,
-+	.set_timeout	= aspeed_wdt_set_timeout,
-+	.restart	= aspeed_wdt_restart,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct watchdog_info aspeed_wdt_info = {
-+	.options	= WDIOF_KEEPALIVEPING
-+			| WDIOF_MAGICCLOSE
-+			| WDIOF_SETTIMEOUT,
-+	.identity	= KBUILD_MODNAME,
-+};
-+
-+static int aspeed_wdt_remove(struct platform_device *pdev)
-+{
-+	struct aspeed_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdd);
-+
-+	return 0;
-+}
-+
-+static int aspeed_wdt_probe(struct platform_device *pdev)
-+{
-+	struct aspeed_wdt *wdt;
-+	struct resource *res;
-+	int ret;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(wdt->base))
-+		return PTR_ERR(wdt->base);
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: of_iomap failed\n", node->full_name);
++		return;
++	}
++	reg = readl(base);
++	iounmap(base);
 +
 +	/*
-+	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
-+	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
-+	 * good reason to have a faster watchdog counter.
++	 * The documentation does not indicate where this 24MHz clock is
++	 * derived from.
 +	 */
-+	wdt->rate = 1000000;
-+	wdt->wdd.info = &aspeed_wdt_info;
-+	wdt->wdd.ops = &aspeed_wdt_ops;
-+	wdt->wdd.min_timeout = 1;
-+	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
-+	wdt->wdd.parent = &pdev->dev;
++	rate = 24000000;
 +
-+	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
-+	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
++	if (reg & BIT(12))
++		rate /= 13;
 +
-+	wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
-+		WDT_CTRL_1MHZ_CLK |
-+		WDT_CTRL_RESET_SYSTEM;
-+
-+	/* Ensure hardware is in consistent state */
-+	aspeed_wdt_stop(&wdt->wdd);
-+
-+	ret = watchdog_register_device(&wdt->wdd);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register\n");
-+		goto err;
++	clk = clk_register_fixed_rate(NULL, name, NULL, 0, rate);
++	if (IS_ERR(clk)) {
++		pr_err("%s: failed to register clock\n", node->full_name);
++		return;
 +	}
 +
-+	dev_info(&pdev->dev, "rate %lu, max timeout %u, timeout %d\n",
-+		 wdt->rate, wdt->wdd.max_timeout, wdt->wdd.timeout);
-+
-+	platform_set_drvdata(pdev, wdt);
-+err:
-+	return ret;
++	clk_register_clkdev(clk, NULL, name);
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
 +}
-+
-+static struct platform_driver aspeed_watchdog_driver = {
-+	.probe = aspeed_wdt_probe,
-+	.remove = aspeed_wdt_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = of_match_ptr(aspeed_wdt_of_table),
-+	},
-+};
-+module_platform_driver(aspeed_watchdog_driver);
-+
-+MODULE_DESCRIPTION("Aspeed Watchdog Driver");
-+MODULE_LICENSE("GPL");
++CLK_OF_DECLARE(aspeed_uart_clock, "aspeed,uart-clock",
++	       aspeed_of_uart_clk_init);
 -- 
 2.8.1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
