@@ -1,150 +1,182 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/3] of: overlay: Pick up label symbols from overlays.
-Date: Mon,  9 May 2016 21:11:28 +0300
-Message-ID: <1462817488-8370-4-git-send-email-pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH 2/3] of: Support hashtable lookups for phandles
+Date: Mon,  9 May 2016 21:11:27 +0300
+Message-ID: <1462817488-8370-3-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1462817488-8370-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462817488-8370-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462817488-8370-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Insert overlay symbols to the base tree when applied.
-This makes it possible to apply an overlay that references a label
-that a previously inserted overlay had.
-
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Tested-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/overlay.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ drivers/of/base.c       | 35 ++++++++++++++++++++++++++++++++---
+ drivers/of/dynamic.c    |  8 ++++++++
+ drivers/of/of_private.h | 31 +++++++++++++++++++++++++++++++
+ include/linux/of.h      |  2 ++
+ 4 files changed, 73 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index a274d65..a7956a2 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -514,6 +514,101 @@ static int of_free_overlay_info(struct of_overlay *ov)
- 	return 0;
- }
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 20bbc2f..770cb95 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -27,6 +27,7 @@
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/proc_fs.h>
++#include <linux/rhashtable.h>
  
-+static int of_overlay_add_symbols(
-+		struct device_node *tree,
-+		struct of_overlay *ov)
-+{
-+	struct of_overlay_info *ovinfo;
-+	struct device_node *root_sym = NULL;
-+	struct device_node *child = NULL;
-+	struct property *prop;
-+	const char *path, *s;
-+	char *new_path;
-+	int i, len, err;
+ #include "of_private.h"
+ 
+@@ -41,6 +42,16 @@ static const char *of_stdout_options;
+ 
+ struct kset *of_kset;
+ 
++const struct rhashtable_params of_phandle_ht_params = {
++	.key_offset = offsetof(struct device_node, phandle), /* base offset */
++	.key_len = sizeof(phandle),
++	.head_offset = offsetof(struct device_node, ht_node),
++	.automatic_shrinking = true,
++};
 +
-+	/* this may fail (if no fixups are required) */
-+	root_sym = of_find_node_by_path("/__symbols__");
++struct rhashtable of_phandle_ht;
++bool of_phandle_ht_initialized;
 +
-+	/* do nothing if no root symbols */
-+	if (!root_sym)
-+		return 0;
-+
-+	/* locate the symbols & fixups nodes on resolve */
-+	for_each_child_of_node(tree, child) {
-+		if (of_node_cmp(child->name, "__symbols__") == 0)
-+			goto found;
+ /*
+  * Used to protect the of_aliases, to hold off addition of nodes to sysfs.
+  * This mutex must be held whenever modifications are being made to the
+@@ -162,6 +173,12 @@ int __of_attach_node_post(struct device_node *np)
+ 	struct property *pp;
+ 	int rc;
+ 
++	if (of_phandle_ht_available()) {
++		rc = of_phandle_ht_insert(np);
++		WARN(rc, "insert to phandle hash fail @%s\n",
++				of_node_full_name(np));
 +	}
-+	/* no symbols, no problem */
-+	of_node_put(root_sym);
-+	return 0;
 +
-+found:
-+	err = -EINVAL;
-+	for_each_property_of_node(child, prop) {
+ 	if (!IS_ENABLED(CONFIG_SYSFS))
+ 		return 0;
+ 
+@@ -194,6 +211,13 @@ void __init of_core_init(void)
+ 	struct device_node *np;
+ 	int ret;
+ 
++	ret = rhashtable_init(&of_phandle_ht, &of_phandle_ht_params);
++	if (ret) {
++		pr_warn("devicetree: Failed to initialize hashtable\n");
++		return;
++	}
++	of_phandle_ht_initialized = 1;
 +
-+		/* skip properties added automatically */
-+		if (of_prop_cmp(prop->name, "name") == 0)
-+			continue;
-+
-+		err = of_property_read_string(child,
-+				prop->name, &path);
-+		if (err != 0) {
-+			pr_err("%s: Could not find symbol '%s'\n",
-+					__func__, prop->name);
-+			continue;
-+		}
-+
-+
-+		/* now find fragment index */
-+		s = path;
-+
-+		/* compare paths to find fragment index */
-+		ovinfo = NULL;
-+		len = -1;
-+		for (i = 0; i < ov->count; i++) {
-+			ovinfo = &ov->ovinfo_tab[i];
-+
-+			pr_debug("%s: #%d: overlay->name=%s target->name=%s\n",
-+					__func__, i, ovinfo->overlay->full_name,
-+					ovinfo->target->full_name);
-+
-+			len = strlen(ovinfo->overlay->full_name);
-+			if (strncasecmp(path, ovinfo->overlay->full_name,
-+						len) == 0 && path[len] == '/')
+ 	/* Create the kset, and register existing nodes */
+ 	mutex_lock(&of_mutex);
+ 	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+@@ -1073,9 +1097,14 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+ 		return NULL;
+ 
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+-	for_each_of_allnodes(np)
+-		if (np->phandle == handle)
+-			break;
++	/* when we're ready use the hash table */
++	if (of_phandle_ht_available() && !in_interrupt())
++		np = of_phandle_ht_lookup(handle);
++	else { /* fallback */
++		for_each_of_allnodes(np)
++			if (np->phandle == handle)
 +				break;
-+		}
-+
-+		if (i >= ov->count)
-+			continue;
-+
-+		pr_debug("%s: found target at #%d\n", __func__, i);
-+		new_path = kasprintf(GFP_KERNEL, "%s%s",
-+				ovinfo->target->full_name,
-+				path + len);
-+		if (!new_path) {
-+			pr_err("%s: Failed to allocate propname for \"%s\"\n",
-+					__func__, prop->name);
-+			continue;
-+		}
-+
-+		err = of_changeset_add_property_string(&ov->cset, root_sym,
-+				prop->name, new_path);
-+
-+		/* free always */
-+		kfree(new_path);
-+
-+		if (err) {
-+			pr_err("%s: Failed to add property for \"%s\"\n",
-+					__func__, prop->name);
-+		}
 +	}
+ 	of_node_get(np);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index eb31a55..bdebdf5 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -11,6 +11,7 @@
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/proc_fs.h>
++#include <linux/rhashtable.h>
+ 
+ #include "of_private.h"
+ 
+@@ -44,6 +45,13 @@ EXPORT_SYMBOL(of_node_put);
+ void __of_detach_node_post(struct device_node *np)
+ {
+ 	struct property *pp;
++	int rc;
 +
-+	of_node_put(child);
-+	of_node_put(root_sym);
++	if (of_phandle_ht_available()) {
++		rc = of_phandle_ht_remove(np);
++		WARN(rc, "remove from phandle hash fail @%s\n",
++				of_node_full_name(np));
++	}
+ 
+ 	if (!IS_ENABLED(CONFIG_SYSFS))
+ 		return;
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 10b0342..88b3b8f 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -101,4 +101,35 @@ static inline int of_overlay_init(void)
+ }
+ #endif
+ 
++extern const struct rhashtable_params of_phandle_ht_params;
++extern struct rhashtable of_phandle_ht;
++extern bool of_phandle_ht_initialized;
 +
-+	return 0;
++static inline bool of_phandle_ht_available(void)
++{
++	return of_phandle_ht_initialized;
 +}
 +
- static LIST_HEAD(ov_list);
- static DEFINE_IDR(ov_idr);
- 
-@@ -642,6 +737,13 @@ static int __of_overlay_create(struct device_node *tree,
- 		goto err_abort_trans;
- 	}
- 
-+	err = of_overlay_add_symbols(tree, ov);
-+	if (err) {
-+		pr_err("%s: of_overlay_add_symbols() failed for tree@%s\n",
-+				__func__, tree->full_name);
-+		goto err_abort_trans;
-+	}
++static inline int of_phandle_ht_insert(struct device_node *np)
++{
++	if (!np || !np->phandle)
++		return 0;
++	return rhashtable_insert_fast(&of_phandle_ht,
++		&np->ht_node, of_phandle_ht_params);
++}
 +
- 	/* apply the changeset */
- 	err = __of_changeset_apply(&ov->cset);
- 	if (err) {
++static inline int of_phandle_ht_remove(struct device_node *np)
++{
++	if (!np || !np->phandle)
++		return 0;
++	return rhashtable_remove_fast(&of_phandle_ht,
++		&np->ht_node, of_phandle_ht_params);
++}
++
++static inline struct device_node *of_phandle_ht_lookup(phandle handle)
++{
++	return rhashtable_lookup_fast(&of_phandle_ht,
++			&handle, of_phandle_ht_params);
++}
++
+ #endif /* _LINUX_OF_PRIVATE_H */
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 582bc45..56bb62d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -25,6 +25,7 @@
+ #include <linux/notifier.h>
+ #include <linux/property.h>
+ #include <linux/list.h>
++#include <linux/rhashtable.h>
+ 
+ #include <asm/byteorder.h>
+ #include <asm/errno.h>
+@@ -52,6 +53,7 @@ struct device_node {
+ 	phandle phandle;
+ 	const char *full_name;
+ 	struct fwnode_handle fwnode;
++	struct rhash_head ht_node;
+ 
+ 	struct	property *properties;
+ 	struct	property *deadprops;	/* removed properties */
 -- 
 1.7.12
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
