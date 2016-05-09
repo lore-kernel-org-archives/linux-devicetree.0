@@ -1,283 +1,65 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH v2 2/2] irqchip: Add irq controller for Aspeed
-Date: Mon,  9 May 2016 23:28:37 +0930
-Message-ID: <1462802317-27086-3-git-send-email-joel@jms.id.au>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 1/2] doc/devicetree: Add Aspeed VIC bindings
+Date: Mon,  9 May 2016 23:28:36 +0930
+Message-ID: <1462802317-27086-2-git-send-email-joel@jms.id.au>
 References: <462797239-14765-1-git-send-email-joel@jms.id.au>
  <1462802317-27086-1-git-send-email-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462802317-27086-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462802317-27086-1-git-send-email-joel@jms.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: devicetree@vger.kernel.org, baruch@tkos.co.il, arnd@arndb.de, benh@kernel.crashing.org, jk@ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-
-Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-aspeed-vic.c | 238 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 239 insertions(+)
- create mode 100644 drivers/irqchip/irq-aspeed-vic.c
+v2:
+  Fix device tree binding example, thanks Baruch and Arnd for pointing this out
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b03cfcbbac6b..ec82e6e15a38 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -65,3 +65,4 @@ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
- obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
- obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
-+obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
-diff --git a/drivers/irqchip/irq-aspeed-vic.c b/drivers/irqchip/irq-aspeed-vic.c
+ .../interrupt-controller/aspeed,ast2400-vic.txt    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
 new file mode 100644
-index 000000000000..db15fc3e831a
+index 000000000000..86dede1755a2
 --- /dev/null
-+++ b/drivers/irqchip/irq-aspeed-vic.c
-@@ -0,0 +1,238 @@
-+/*
-+ *  Copyright (C) 2015 - Ben Herrenschmidt, IBM Corp.
-+ *
-+ *  Driver for Aspeed "new" VIC as found in SoC generation 3 and later
-+ *
-+ *  Based on irq-vic.c:
-+ *
-+ *  Copyright (C) 1999 - 2003 ARM Limited
-+ *  Copyright (C) 2000 Deep Blue Solutions Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
++++ b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
+@@ -0,0 +1,24 @@
++Aspeed Vectored Interrupt Controller
 +
-+#include <linux/export.h>
-+#include <linux/init.h>
-+#include <linux/list.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/syscore_ops.h>
-+#include <linux/device.h>
-+#include <linux/slab.h>
++These bindings are for the Aspeed AST2400 interrupt controller register layout.
++The SoC has an legacy register layout, but this driver does not support that
++mode of operation.
 +
-+#include <asm/exception.h>
-+#include <asm/irq.h>
++Required properties:
 +
-+/* These definitions correspond to the "new mapping" of the
-+ * register set that interleaves "high" and "low". The offsets
-+ * below are for the "low" register, add 4 to get to the high one
-+ */
-+#define AVIC_IRQ_STATUS		0x00
-+#define AVIC_FIQ_STATUS		0x08
-+#define AVIC_RAW_STATUS		0x10
-+#define AVIC_INT_SELECT		0x18
-+#define AVIC_INT_ENABLE		0x20
-+#define AVIC_INT_ENABLE_CLR	0x28
-+#define AVIC_INT_TRIGGER	0x30
-+#define AVIC_INT_TRIGGER_CLR	0x38
-+#define AVIC_INT_SENSE		0x40
-+#define AVIC_INT_DUAL_EDGE	0x48
-+#define AVIC_INT_EVENT		0x50
-+#define AVIC_EDGE_CLR		0x58
-+#define AVIC_EDGE_STATUS	0x60
++- compatible : should be "aspeed,ast2400-vic".
 +
-+struct aspeed_vic {
-+	void __iomem		*base;
-+	u32			valid_sources[2];
-+	u32			edge_sources[2];
-+	struct irq_domain	*dom;
-+};
-+static struct aspeed_vic *system_avic;
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++- valid-sources : bitmask of valid irq sources
 +
-+static void vic_init_hw(struct aspeed_vic *vic)
-+{
-+	u32 sense;
++Example:
 +
-+	/* Disable all interrupts */
-+	writel(0xffffffff, vic->base + AVIC_INT_ENABLE_CLR);
-+	writel(0xffffffff, vic->base + AVIC_INT_ENABLE_CLR + 4);
-+
-+	/* Make sure no soft trigger is on */
-+	writel(0xffffffff, vic->base + AVIC_INT_TRIGGER_CLR);
-+	writel(0xffffffff, vic->base + AVIC_INT_TRIGGER_CLR + 4);
-+
-+	/* Set everything to be IRQ */
-+	writel(0, vic->base + AVIC_INT_SELECT);
-+	writel(0, vic->base + AVIC_INT_SELECT + 4);
-+
-+	/* Some interrupts have a programable high/low level trigger
-+	 * (4 GPIO direct inputs), for now we assume this was configured
-+	 * by firmware. We read which ones are edge now.
-+	 */
-+	sense = readl(vic->base + AVIC_INT_SENSE);
-+	vic->edge_sources[0] = ~sense;
-+	sense = readl(vic->base + AVIC_INT_SENSE + 4);
-+	vic->edge_sources[1] = ~sense;
-+
-+	/* Clear edge detection latches */
-+	writel(0xffffffff, vic->base + AVIC_EDGE_CLR);
-+	writel(0xffffffff, vic->base + AVIC_EDGE_CLR + 4);
-+}
-+
-+static void __exception_irq_entry avic_handle_irq(struct pt_regs *regs)
-+{
-+	struct aspeed_vic *vic = system_avic;
-+	u32 stat, irq;
-+
-+	for (;;) {
-+		irq = 0;
-+		stat = readl_relaxed(vic->base + AVIC_IRQ_STATUS);
-+		if (!stat) {
-+			stat = readl_relaxed(vic->base + AVIC_IRQ_STATUS + 4);
-+			irq = 32;
-+		}
-+		if (stat == 0)
-+			break;
-+		irq += ffs(stat) - 1;
-+		handle_domain_irq(vic->dom, irq, regs);
-+	}
-+}
-+
-+static void avic_ack_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	/* Clear edge latch for edge interrupts, nop for level */
-+	if (vic->edge_sources[sidx] & sbit)
-+		writel(sbit, vic->base + AVIC_EDGE_CLR + sidx * 4);
-+}
-+
-+static void avic_mask_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	writel(sbit, vic->base + AVIC_INT_ENABLE_CLR + sidx * 4);
-+}
-+
-+static void avic_unmask_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	writel(sbit, vic->base + AVIC_INT_ENABLE + sidx * 4);
-+}
-+
-+/* For level irq, faster than going through a nop "ack" and mask */
-+static void avic_mask_ack_irq(struct irq_data *d)
-+{
-+	struct aspeed_vic *vic = irq_data_get_irq_chip_data(d);
-+	unsigned int sidx = d->hwirq >> 5;
-+	unsigned int sbit = 1u << (d->hwirq & 0x1f);
-+
-+	/* First mask */
-+	writel(sbit, vic->base + AVIC_INT_ENABLE_CLR + sidx * 4);
-+
-+	/* Then clear edge latch for edge interrupts */
-+	if (vic->edge_sources[sidx] & sbit)
-+		writel(sbit, vic->base + AVIC_EDGE_CLR + sidx * 4);
-+}
-+
-+static struct irq_chip avic_chip = {
-+	.name		= "AVIC",
-+	.irq_ack	= avic_ack_irq,
-+	.irq_mask	= avic_mask_irq,
-+	.irq_unmask	= avic_unmask_irq,
-+	.irq_mask_ack	= avic_mask_ack_irq,
-+};
-+
-+static int avic_map(struct irq_domain *d, unsigned int irq,
-+		    irq_hw_number_t hwirq)
-+{
-+	struct aspeed_vic *vic = d->host_data;
-+	unsigned int sidx = hwirq >> 5;
-+	unsigned int sbit = 1u << (hwirq & 0x1f);
-+
-+	/* Check if interrupt exists */
-+	if (sidx > 1 || !(vic->valid_sources[sidx] & sbit))
-+		return -EPERM;
-+
-+	if (vic->edge_sources[sidx] & sbit)
-+		irq_set_chip_and_handler(irq, &avic_chip, handle_edge_irq);
-+	else
-+		irq_set_chip_and_handler(irq, &avic_chip, handle_level_irq);
-+	irq_set_chip_data(irq, vic);
-+	irq_set_probe(irq);
-+	return 0;
-+}
-+
-+static struct irq_domain_ops avic_dom_ops = {
-+	.map = avic_map,
-+	.xlate = irq_domain_xlate_onetwocell,
-+};
-+
-+static int __init avic_of_init(struct device_node *node,
-+			       struct device_node *parent)
-+{
-+	void __iomem *regs;
-+	struct aspeed_vic *vic;
-+	int nirqs;
-+
-+	if (WARN(parent, "non-root Aspeed VIC not supported"))
-+		return -EINVAL;
-+	if (WARN(system_avic, "duplicate Aspeed VIC not supported"))
-+		return -EINVAL;
-+
-+	regs = of_iomap(node, 0);
-+	if (WARN_ON(!regs))
-+		return -EIO;
-+
-+	vic = kzalloc(sizeof(struct aspeed_vic), GFP_KERNEL);
-+	if (WARN_ON(!vic)) {
-+		iounmap(regs);
-+		return -ENOMEM;
-+	}
-+	vic->base = regs;
-+
-+	of_property_read_u32_index(node, "valid-sources", 0,
-+				   &vic->valid_sources[0]);
-+	of_property_read_u32_index(node, "valid-sources", 1,
-+				   &vic->valid_sources[1]);
-+
-+	nirqs = hweight32(vic->valid_sources[0]) +
-+		hweight32(vic->valid_sources[1]);
-+
-+	/* Initialize soures, all masked */
-+	vic_init_hw(vic);
-+
-+	/* Ready to receive interrupts */
-+	system_avic = vic;
-+	set_handle_irq(avic_handle_irq);
-+
-+	/* Register our domain */
-+	vic->dom = irq_domain_add_simple(node, nirqs, 0,
-+					 &avic_dom_ops, vic);
-+
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(aspeed_new_vic, "aspeed,ast2400-vic", avic_of_init);
++ vic: interrupt-controller {
++      compatible = "aspeed,ast2400-vic";
++      interrupt-controller;
++      #interrupt-cells = <1>;
++      valid-sources = < 0xffffffff 0x0007ffff>;
++      reg = <0x1e6c0080 0x80>;
++ };
 -- 
 2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
