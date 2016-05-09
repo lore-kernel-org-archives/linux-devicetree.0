@@ -1,283 +1,373 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v4 1/4] power: Add an axp20x-ac-power driver
-Date: Tue, 10 May 2016 00:33:01 +0800
-Message-ID: <CAGb2v674DpbHHx-ra6N4QMVDPfGbT30rn8hPt=X-f1no7jM4Xg@mail.gmail.com>
-References: <1462511991-1911-1-git-send-email-haas@computerlinguist.org> <1462511991-1911-2-git-send-email-haas@computerlinguist.org>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCH 03/11] mfd: altr_a10sr: Add Altera Arria10 DevKit System
+ Resource Chip
+Date: Mon, 9 May 2016 11:48:25 -0500
+Message-ID: <5730BF59.4070905@opensource.altera.com>
+References: <1461339219-15255-1-git-send-email-tthayer@opensource.altera.com>
+ <1461339219-15255-4-git-send-email-tthayer@opensource.altera.com>
+ <20160509160215.GF19473@dell>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1462511991-1911-2-git-send-email-haas@computerlinguist.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Michael Haas <haas@computerlinguist.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Hans De Goede <hdegoede@redhat.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, devicetree <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160509160215.GF19473@dell>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 6, 2016 at 1:19 PM, Michael Haas <haas@computerlinguist.org=
-> wrote:
-> This adds a driver for the ac power_supply bits of the axp20x
-> PMICs.
+
+
+On 05/09/2016 11:02 AM, Lee Jones wrote:
+> On Fri, 22 Apr 2016, tthayer@opensource.altera.com wrote:
 >
-> This submission is taken directly from Bruno Pr=C3=A9monts 2015 RFC [=
-0].
-> The original RFC contains drivers for AC, battery and backup
-> battery. This commit only adds the AC driver for now.
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> Add support for the Altera Arria10 Development Kit System Resource
+>> chip which is implemented using a MAX5 as a external gpio extender,
+>> and power supply alarm (hwmon) with the regmap framework over a SPI bus.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+>> ---
+>>   drivers/mfd/Kconfig              |   11 +++
+>>   drivers/mfd/Makefile             |    2 +
+>>   drivers/mfd/altera-a10sr.c       |  179 ++++++++++++++++++++++++++++++++++++++
+>>   include/linux/mfd/altera-a10sr.h |   87 ++++++++++++++++++
+>>   4 files changed, 279 insertions(+)
+>>   create mode 100644 drivers/mfd/altera-a10sr.c
+>>   create mode 100644 include/linux/mfd/altera-a10sr.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index eea61e3..4fc27c6 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -18,6 +18,17 @@ config MFD_CS5535
+>>   	  This is the core driver for CS5535/CS5536 MFD functions.  This is
+>>             necessary for using the board's GPIO and MFGPT functionality.
+>>
+>> +config MFD_ALTERA_A10SR
+>> +       bool "Altera Arria10 DevKit System Resource chip"
+>> +       depends on ARCH_SOCFPGA && SPI_MASTER=y && OF
+>> +       select REGMAP_SPI
+>> +       select MFD_CORE
+>> +       help
+>> +         Support for the Altera Arria10 DevKit MAX5 System Resource chip
+>> +         using the SPI interface. This driver provides common support for
+>> +         accessing the external gpio extender (LEDs & buttons) and
+>> +         power supply alarms (hwmon).
+>> +
+>>   config MFD_ACT8945A
+>>   	tristate "Active-semi ACT8945A"
+>>   	select MFD_CORE
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 5eaa6465d..4f1ff91 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -203,3 +203,5 @@ intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
+>>   intel-soc-pmic-$(CONFIG_INTEL_PMC_IPC)	+= intel_soc_pmic_bxtwc.o
+>>   obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+>>   obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
+>> +
+>> +obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+>> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
+>> new file mode 100644
+>> index 0000000..2ff08e3
+>> --- /dev/null
+>> +++ b/drivers/mfd/altera-a10sr.c
+>> @@ -0,0 +1,179 @@
+>> +/*
+>> + * Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + *
+>> + * SPI access for Altera Arria10 MAX5 System Resource Chip
+>> + *
+>> + * Adapted from DA9052
+>> + * Copyright(c) 2011 Dialog Semiconductor Ltd.
+>> + * Author: David Dajun Chen <dchen@diasemi.com>
 >
-> [0] http://permalink.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/=
-17980
+> You don't need to carry the copyright or authorship tags over.
 >
-> Signed-off-by: Michael Haas <haas@computerlinguist.org>
-> ---
->  drivers/power/Makefile          |   2 +-
->  drivers/power/axp20x_ac_power.c | 181 ++++++++++++++++++++++++++++++=
-++++++++++
->  2 files changed, 182 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/power/axp20x_ac_power.c
+OK. Thanks,
+
+>> + */
+>> +
+>> +#include <linux/mfd/altera-a10sr.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/spi/spi.h>
+>> +
+>> +static const struct mfd_cell altr_a10sr_subdev_info[] = {
+>> +	{
+>> +		.name = "altr_a10sr_gpio",
+>> +		.of_compatible = "altr,a10sr-gpio",
+>> +	},
+>> +};
+>> +
+>> +static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
+>> +{
+>> +	switch (reg) {
+>> +	case ALTR_A10SR_VERSION_READ:
+>> +	case ALTR_A10SR_LED_REG:
+>> +	case ALTR_A10SR_PBDSW_REG:
+>> +	case ALTR_A10SR_PBDSW_IRQ_REG:
+>> +	case ALTR_A10SR_PWR_GOOD1_REG:
+>> +	case ALTR_A10SR_PWR_GOOD2_REG:
+>> +	case ALTR_A10SR_PWR_GOOD3_REG:
+>> +	case ALTR_A10SR_FMCAB_REG:
+>> +	case ALTR_A10SR_HPS_RST_REG:
+>> +	case ALTR_A10SR_USB_QSPI_REG:
+>> +	case ALTR_A10SR_SFPA_REG:
+>> +	case ALTR_A10SR_SFPB_REG:
+>> +	case ALTR_A10SR_I2C_M_REG:
+>> +	case ALTR_A10SR_WARM_RST_REG:
+>> +	case ALTR_A10SR_WR_KEY_REG:
+>> +	case ALTR_A10SR_PMBUS_REG:
+>> +		return true;
+>> +	default:
+>> +		return false;
+>> +	}
+>> +}
+>> +
+>> +static bool altr_a10sr_reg_writeable(struct device *dev, unsigned int reg)
+>> +{
+>> +	switch (reg) {
+>> +	case ALTR_A10SR_LED_REG:
+>> +	case ALTR_A10SR_PBDSW_IRQ_REG:
+>> +	case ALTR_A10SR_FMCAB_REG:
+>> +	case ALTR_A10SR_HPS_RST_REG:
+>> +	case ALTR_A10SR_USB_QSPI_REG:
+>> +	case ALTR_A10SR_SFPA_REG:
+>> +	case ALTR_A10SR_SFPB_REG:
+>> +	case ALTR_A10SR_WARM_RST_REG:
+>> +	case ALTR_A10SR_WR_KEY_REG:
+>> +	case ALTR_A10SR_PMBUS_REG:
+>> +		return true;
+>> +	default:
+>> +		return false;
+>> +	}
+>> +}
+>> +
+>> +static bool altr_a10sr_reg_volatile(struct device *dev, unsigned int reg)
+>> +{
+>> +	switch (reg) {
+>> +	case ALTR_A10SR_PBDSW_REG:
+>> +	case ALTR_A10SR_PBDSW_IRQ_REG:
+>> +	case ALTR_A10SR_PWR_GOOD1_REG:
+>> +	case ALTR_A10SR_PWR_GOOD2_REG:
+>> +	case ALTR_A10SR_PWR_GOOD3_REG:
+>> +	case ALTR_A10SR_HPS_RST_REG:
+>> +	case ALTR_A10SR_I2C_M_REG:
+>> +	case ALTR_A10SR_WARM_RST_REG:
+>> +	case ALTR_A10SR_WR_KEY_REG:
+>> +	case ALTR_A10SR_PMBUS_REG:
+>> +		return true;
+>> +	default:
+>> +		return false;
+>> +	}
+>> +}
+>> +
+>> +const struct regmap_config altr_a10sr_regmap_config = {
+>> +	.reg_bits = 8,
+>> +	.val_bits = 8,
+>> +
+>> +	.cache_type = REGCACHE_NONE,
+>> +
+>> +	.use_single_rw = true,
+>> +	.read_flag_mask = 1,
+>> +	.write_flag_mask = 0,
+>> +
+>> +	.max_register = ALTR_A10SR_WR_KEY_REG,
+>> +	.readable_reg = altr_a10sr_reg_readable,
+>> +	.writeable_reg = altr_a10sr_reg_writeable,
+>> +	.volatile_reg = altr_a10sr_reg_volatile,
+>> +
+>> +};
+>> +
+>> +static int altr_a10sr_spi_probe(struct spi_device *spi)
+>> +{
+>> +	int ret;
+>> +	struct altr_a10sr *a10sr;
+>> +
+>> +	a10sr = devm_kzalloc(&spi->dev, sizeof(*a10sr),
+>> +			     GFP_KERNEL);
+>> +	if (!a10sr)
+>> +		return -ENOMEM;
+>> +
+>> +	spi->mode = SPI_MODE_3;
+>> +	spi->bits_per_word = 8;
+>> +	spi_setup(spi);
+>> +
+>> +	a10sr->dev = &spi->dev;
+>> +
+>> +	spi_set_drvdata(spi, a10sr);
+>> +
+>> +	a10sr->regmap = devm_regmap_init_spi(spi, &altr_a10sr_regmap_config);
+>> +	if (IS_ERR(a10sr->regmap)) {
+>> +		ret = PTR_ERR(a10sr->regmap);
+>> +		dev_err(&spi->dev, "Failed to allocate register map: %d\n",
+>> +			ret);
+>> +		return ret;
+>> +	}
 >
-> diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-> index e46b75d..3a785cc 100644
-> --- a/drivers/power/Makefile
-> +++ b/drivers/power/Makefile
-> @@ -9,7 +9,7 @@ obj-$(CONFIG_GENERIC_ADC_BATTERY)       +=3D generic-=
-adc-battery.o
+> Is this regmap used it more than one driver?
 >
->  obj-$(CONFIG_PDA_POWER)                +=3D pda_power.o
->  obj-$(CONFIG_APM_POWER)                +=3D apm_power.o
-> -obj-$(CONFIG_AXP20X_POWER)     +=3D axp20x_usb_power.o
-> +obj-$(CONFIG_AXP20X_POWER)     +=3D axp20x_usb_power.o axp20x_ac_pow=
-er.o
+Yes, Currently, both the subdevices (GPIO & HWMON) use this regmap to 
+communicate to the SPI registers.
 
-Sort the file names please.
-
->  obj-$(CONFIG_MAX8925_POWER)    +=3D max8925_power.o
->  obj-$(CONFIG_WM831X_BACKUP)    +=3D wm831x_backup.o
->  obj-$(CONFIG_WM831X_POWER)     +=3D wm831x_power.o
-> diff --git a/drivers/power/axp20x_ac_power.c b/drivers/power/axp20x_a=
-c_power.c
-> new file mode 100644
-> index 0000000..0d1ca0e
-> --- /dev/null
-> +++ b/drivers/power/axp20x_ac_power.c
-> @@ -0,0 +1,181 @@
-> +/*
-> + * AXP20x PMIC AC power driver
-> + *
-> + * Copyright 2014-2015 Bruno Pr=C3=A9mont <bonbons@linux-vserver.org=
+>> +	ret = mfd_add_devices(a10sr->dev, PLATFORM_DEVID_AUTO,
+>> +			      altr_a10sr_subdev_info,
+>> +			      ARRAY_SIZE(altr_a10sr_subdev_info),
+>> +			      NULL, 0, NULL);
+>> +	if (ret)
+>> +		dev_err(a10sr->dev, "Failed to register sub-devices: %d\n",
+>> +			ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int altr_a10sr_spi_remove(struct spi_device *spi)
+>> +{
+>> +	mfd_remove_devices(&spi->dev);
+>> +
+>> +	return 0;
+>> +}
 >
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify it
-> + * under  the terms of the GNU General  Public License as published =
-by the
-> + * Free Software Foundation;  either version 2 of the License, or (a=
-t your
-> + * option) any later version.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/mfd/axp20x.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define DRVNAME "axp20x-ac-power"
-> +
-> +
-> +/* Fields of AXP20X_PWR_INPUT_STATUS */
-> +#define AXP20X_PWR_STATUS_AC_PRESENT     BIT(7)
-> +#define AXP20X_PWR_STATUS_AC_AVAILABLE   BIT(6)
+> Use devm_mfd_add_devices() and remove this function.
+>
+OK.
 
-> +#define AXP20X_PWR_STATUS_AC_VBUS_SHORT  BIT(1)
-> +#define AXP20X_PWR_STATUS_AC_VBUS_SEL    BIT(0)
+>> +static const struct of_device_id altr_a10sr_spi_of_match[] = {
+>> +	{ .compatible = "altr,a10sr" },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, altr_a10sr_spi_of_match);
+>> +
+>> +static struct spi_driver altr_a10sr_spi_driver = {
+>> +	.probe = altr_a10sr_spi_probe,
+>> +	.remove = altr_a10sr_spi_remove,
+>
+> Remove .remove.
+>
+>> +	.driver = {
+>> +		.name = "altr_a10sr",
+>> +		.of_match_table = of_match_ptr(altr_a10sr_spi_of_match),
+>> +	},
+>> +};
+>> +
+>> +module_spi_driver(altr_a10sr_spi_driver);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_AUTHOR("Thor Thayer <tthayer@opensource.altera.com>");
+>> +MODULE_DESCRIPTION("Altera Arria10 DevKit System Resource MFD Driver");
+>> diff --git a/include/linux/mfd/altera-a10sr.h b/include/linux/mfd/altera-a10sr.h
+>> new file mode 100644
+>> index 0000000..c869fe7
+>> --- /dev/null
+>> +++ b/include/linux/mfd/altera-a10sr.h
+>> @@ -0,0 +1,87 @@
+>> +/*
+>> + * Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + *
+>> + * Declarations for Altera Arria10 MAX5 System Resource Chip
+>> + *
+>> + * Adapted from DA9052
+>> + * Copyright(c) 2011 Dialog Semiconductor Ltd.
+>> + * Author: David Dajun Chen <dchen@diasemi.com>
+>
+> Remove these two lines.
+>
+Will do. Thanks for reviewing!
 
-These 2 aren't used anymore. Please remove them.
-
-> +
-> +/* Fields of AXP20X_ADC_EN1 */
-> +#define AXP20X_ADC_EN1_ACIN_VOLT BIT(5)
-> +#define AXP20X_ADC_EN1_ACIN_CURR BIT(4)
-> +
-> +
-> +struct axp20x_ac_power {
-> +       struct regmap *regmap;
-> +       struct power_supply *supply;
-> +};
-> +
-> +static int axp20x_ac_power_get_property(struct power_supply *psy,
-> +                                       enum power_supply_property ps=
-p,
-> +                                       union power_supply_propval *v=
-al)
-> +{
-> +       struct axp20x_ac_power *power =3D power_supply_get_drvdata(ps=
-y);
-> +       unsigned int input;
-> +       int r;
-> +
-> +       switch (psp) {
-> +       case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> +               r =3D axp20x_read_variable_width(power->regmap,
-> +                                              AXP20X_ACIN_V_ADC_H, 1=
-2);
-> +               if (r < 0)
-> +                       return r;
-> +
-> +               val->intval =3D r * 1700; /* 1 step =3D 1.7 mV */
-> +               return 0;
-> +       case POWER_SUPPLY_PROP_CURRENT_NOW:
-> +               r =3D axp20x_read_variable_width(power->regmap,
-> +                                              AXP20X_ACIN_I_ADC_H, 1=
-2);
-> +               if (r < 0)
-> +                       return r;
-> +
-> +               val->intval =3D r * 375; /* 1 step =3D 0.375 mA */
-
-The step for ACIN is 0.625 mA. 0.375 is for VBUS.
-
-> +               return 0;
-> +       default:
-> +               break;
-> +       }
-> +
-> +       /* All the properties below need the input-status reg value *=
-/
-> +       r =3D regmap_read(power->regmap, AXP20X_PWR_INPUT_STATUS, &in=
-put);
-> +       if (r)
-> +               return r;
-> +
-> +       switch (psp) {
-> +       case POWER_SUPPLY_PROP_PRESENT:
-> +               val->intval =3D !!(input & AXP20X_PWR_STATUS_AC_PRESE=
-NT);
-> +               break;
-> +       case POWER_SUPPLY_PROP_ONLINE:
-> +               val->intval =3D !!(input & AXP20X_PWR_STATUS_AC_AVAIL=
-ABLE);
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static enum power_supply_property axp20x_ac_power_properties[] =3D {
-> +       POWER_SUPPLY_PROP_PRESENT,
-> +       POWER_SUPPLY_PROP_ONLINE,
-> +       POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +       POWER_SUPPLY_PROP_CURRENT_NOW,
-> +};
-> +
-> +static const struct power_supply_desc axp20x_ac_power_desc =3D {
-> +       .name =3D "axp20x-ac",
-> +       .type =3D POWER_SUPPLY_TYPE_MAINS,
-> +       .properties =3D axp20x_ac_power_properties,
-> +       .num_properties =3D ARRAY_SIZE(axp20x_ac_power_properties),
-> +       .get_property =3D axp20x_ac_power_get_property,
-> +};
-> +
-> +static irqreturn_t axp20x_irq_ac_handler(int irq, void *devid)
-> +{
-> +       struct axp20x_ac_power *power =3D devid;
-> +
-> +       power_supply_changed(power->supply);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int axp20x_ac_power_probe(struct platform_device *pdev)
-> +{
-> +       struct axp20x_dev *axp20x =3D dev_get_drvdata(pdev->dev.paren=
-t);
-> +       struct power_supply_config psy_cfg =3D {};
-> +       struct axp20x_ac_power *power;
-> +       static const char * const irq_names[] =3D { "ACIN_PLUGIN",
-> +               "ACIN_REMOVAL", "ACIN_OVER_V" };
-> +       int i, irq, r;
-> +
-> +       power =3D devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL=
-);
-> +       if (!power)
-> +               return -ENOMEM;
-> +
-> +       power->regmap =3D axp20x->regmap;
-> +
-> +       /* Enable ac voltage and current measurement */
-> +       r =3D regmap_update_bits(power->regmap, AXP20X_ADC_EN1,
-> +                       AXP20X_ADC_EN1_ACIN_CURR | AXP20X_ADC_EN1_ACI=
-N_VOLT,
-> +                       AXP20X_ADC_EN1_ACIN_CURR | AXP20X_ADC_EN1_ACI=
-N_VOLT);
-> +       if (r)
-> +               return r;
-> +
-> +       psy_cfg.of_node =3D pdev->dev.of_node;
-> +       psy_cfg.drv_data =3D power;
-> +
-> +       power->supply =3D devm_power_supply_register(&pdev->dev,
-> +                                       &axp20x_ac_power_desc, &psy_c=
-fg);
-> +       if (IS_ERR(power->supply))
-> +               return PTR_ERR(power->supply);
-> +
-> +       /* Request irqs after registering, as irqs may trigger immedi=
-ately */
-> +       for (i =3D 0; i < ARRAY_SIZE(irq_names); i++) {
-> +               irq =3D platform_get_irq_byname(pdev, irq_names[i]);
-> +               if (irq < 0) {
-> +                       dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
-> +                                irq_names[i], irq);
-> +                       continue;
-> +               }
-> +               irq =3D regmap_irq_get_virq(axp20x->regmap_irqc, irq)=
-;
-> +               r =3D devm_request_any_context_irq(&pdev->dev, irq,
-> +                               axp20x_irq_ac_handler, 0, DRVNAME, po=
-wer);
-> +               if (r < 0)
-> +                       dev_warn(&pdev->dev, "Error requesting %s IRQ=
-: %d\n",
-> +                                irq_names[i], r);
-
-Won't missing IRQs hinder the usage of this driver / hardware?
-A power supply isn't much use if the system isn't told when
-it's gone.
-
-
-Regards
-ChenYu
-
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id axp20x_ac_power_match[] =3D {
-> +       { .compatible =3D "x-powers,axp202-ac-power-supply" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, axp20x_ac_power_match);
-> +
-> +static struct platform_driver axp20x_ac_power_driver =3D {
-> +       .probe =3D axp20x_ac_power_probe,
-> +       .driver =3D {
-> +               .name =3D DRVNAME,
-> +               .of_match_table =3D axp20x_ac_power_match,
-> +       },
-> +};
-> +
-> +module_platform_driver(axp20x_ac_power_driver);
-> +
-> +MODULE_AUTHOR("Bruno Pr=C3=A9mont <bonbons@linux-vserver.org>");
-> +MODULE_DESCRIPTION("AXP20x PMIC AC power supply status driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.8.2
+>> + */
+>> +
+>> +#ifndef __MFD_ALTERA_A10SR_H
+>> +#define __MFD_ALTERA_A10SR_H
+>> +
+>> +#include <linux/completion.h>
+>> +#include <linux/list.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/slab.h>
+>> +
+>> +/* Write registers are always on even addresses */
+>> +#define  WRITE_REG_MASK              0xFE
+>> +/* Odd registers are always on odd addresses */
+>> +#define  READ_REG_MASK               0x01
+>> +
+>> +#define ALTR_A10SR_BITS_PER_REGISTER  8
+>> +/*
+>> + * To find the correct register, we divide the input GPIO by
+>> + * the number of GPIO in each register. We then need to multiply
+>> + * by 2 because the reads are at odd addresses.
+>> + */
+>> +#define ALTR_A10SR_REG_OFFSET(X)     (((X) / ALTR_A10SR_BITS_PER_REGISTER) << 1)
+>> +#define ALTR_A10SR_REG_BIT(X)        ((X) % ALTR_A10SR_BITS_PER_REGISTER)
+>> +#define ALTR_A10SR_REG_BIT_CHG(X, Y) ((X) << ALTR_A10SR_REG_BIT(Y))
+>> +#define ALTR_A10SR_REG_BIT_MASK(X)   (1 << ALTR_A10SR_REG_BIT(X))
+>> +
+>> +/* Arria10 System Controller Register Defines */
+>> +#define ALTR_A10SR_NOP                0x00    /* No Change */
+>> +#define ALTR_A10SR_VERSION_READ       0x00    /* MAX5 Version Read */
+>> +
+>> +#define ALTR_A10SR_LED_REG            0x02    /* LED - Upper 4 bits */
+>> +/* LED register Bit Definitions */
+>> +#define ALTR_A10SR_LED_VALID_SHIFT        4       /* LED - Upper 4 bits valid */
+>> +#define ALTR_A10SR_OUT_VALID_RANGE_LO     ALTR_A10SR_LED_VALID_SHIFT
+>> +#define ALTR_A10SR_OUT_VALID_RANGE_HI     7
+>> +
+>> +#define ALTR_A10SR_PBDSW_REG          0x04    /* PB & DIP SW - Input only */
+>> +#define ALTR_A10SR_PBDSW_IRQ_REG      0x06    /* PB & DIP SW Flag Clear */
+>> +/* Pushbutton & DIP Switch Bit Definitions */
+>> +#define ALTR_A10SR_IN_VALID_RANGE_LO      8
+>> +#define ALTR_A10SR_IN_VALID_RANGE_HI      15
+>> +
+>> +#define ALTR_A10SR_PWR_GOOD1_REG      0x08    /* Power Good1 Read */
+>> +#define ALTR_A10SR_PWR_GOOD2_REG      0x0A    /* Power Good2 Read */
+>> +#define ALTR_A10SR_PWR_GOOD3_REG      0x0C    /* Power Good3 Read */
+>> +#define ALTR_A10SR_FMCAB_REG          0x0E    /* FMCA/B & PCIe Pwr Enable */
+>> +#define ALTR_A10SR_HPS_RST_REG        0x10    /* HPS Reset */
+>> +#define ALTR_A10SR_USB_QSPI_REG       0x12    /* USB, BQSPI, FILE Reset */
+>> +#define ALTR_A10SR_SFPA_REG           0x14    /* SFPA Control Reg */
+>> +#define ALTR_A10SR_SFPB_REG           0x16    /* SFPB Control Reg */
+>> +#define ALTR_A10SR_I2C_M_REG          0x18    /* I2C Master Select */
+>> +#define ALTR_A10SR_WARM_RST_REG       0x1A    /* HPS Warm Reset */
+>> +#define ALTR_A10SR_WR_KEY_REG         0x1C    /* HPS Warm Reset Key */
+>> +#define ALTR_A10SR_PMBUS_REG          0x1E    /* HPS PM Bus */
+>> +
+>> +/**
+>> + * struct altr_a10sr - Altera Max5 MFD device private data structure
+>> + * @dev:  : this device
+>> + * @regmap: the regmap assigned to the parent device.
+>> + */
+>> +struct altr_a10sr {
+>> +	struct device *dev;
+>> +	struct regmap *regmap;
+>> +};
+>> +
+>> +#endif /* __MFD_ALTERA_A10SR_H */
 >
