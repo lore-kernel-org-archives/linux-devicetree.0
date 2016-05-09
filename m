@@ -1,96 +1,55 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 4/4] drivers/clk: Support Aspeed UART clock divisor
-Date: Mon,  9 May 2016 22:01:51 +0930
-Message-ID: <1462797111-14271-5-git-send-email-joel@jms.id.au>
-References: <1462797111-14271-1-git-send-email-joel@jms.id.au>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1462797111-14271-1-git-send-email-joel@jms.id.au>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jk@ozlabs.org, benh@kernel.crashing.org, arnd@arndb.de, heiko@sntech.de
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH 1/2] doc/devicetree: Add Aspeed VIC bindings
+Date: Mon,  9 May 2016 22:03:58 +0930
+Message-ID: <1462797239-14765-2-git-send-email-joel@jms.id.au>
+References: <1462797239-14765-1-git-send-email-joel@jms.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462797239-14765-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Aspeed BMC SoCs have UART IP that derive their clocks from
-a 24MHz reference. It's not clear where this reference comes from, so it
-is hard coded in the driver.
-
-This clock may be divided down by 13 if a certain register is set. This
-driver reads this register and creates a struct clk for the UARTs to
-consume.
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- drivers/clk/aspeed/Makefile   |  1 +
- drivers/clk/aspeed/clk-uart.c | 52 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 drivers/clk/aspeed/clk-uart.c
+ .../interrupt-controller/aspeed,ast2400-vic.txt    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
 
-diff --git a/drivers/clk/aspeed/Makefile b/drivers/clk/aspeed/Makefile
-index 9ddb0f8f4356..9d5754c086eb 100644
---- a/drivers/clk/aspeed/Makefile
-+++ b/drivers/clk/aspeed/Makefile
-@@ -1,2 +1,3 @@
-+obj-y += clk-uart.o
- obj-$(CONFIG_MACH_ASPEED_G4) += clk-g4.o
- obj-$(CONFIG_MACH_ASPEED_G5) += clk-g5.o
-diff --git a/drivers/clk/aspeed/clk-uart.c b/drivers/clk/aspeed/clk-uart.c
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
 new file mode 100644
-index 000000000000..8cd23a758887
+index 000000000000..10ed0c20ee6f
 --- /dev/null
-+++ b/drivers/clk/aspeed/clk-uart.c
-@@ -0,0 +1,52 @@
-+/*
-+ * Copyright 2016 IBM Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
-+ */
++++ b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
+@@ -0,0 +1,24 @@
++Aspeed Vectored Interrupt Controller
 +
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/of_address.h>
-+#include <linux/clkdev.h>
++These bindings are for the Aspeed AST2400 interrupt controller register layout.
++The SoC has an legacy register layout, but this driver does not support that
++mode of operation.
 +
-+static void __init aspeed_of_uart_clk_init(struct device_node *node)
-+{
-+	struct clk *clk;
-+	void __iomem *base;
-+	int reg, rate;
-+	const char *name = node->name;
++Required properties:
 +
-+	of_property_read_string(node, "clock-output-names", &name);
++- compatible : should be "aspeed,ast2400-vic".
 +
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s: of_iomap failed\n", node->full_name);
-+		return;
-+	}
-+	reg = readl(base);
-+	iounmap(base);
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++- valid-sources : bitmask of valid irq sources
 +
-+	/*
-+	 * The documentation does not indicate where this 24MHz clock is
-+	 * derived from.
-+	 */
-+	rate = 24000000;
++Example:
 +
-+	if (reg & BIT(12))
-+		rate /= 13;
-+
-+	clk = clk_register_fixed_rate(NULL, name, NULL, 0, rate);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: failed to register clock\n", node->full_name);
-+		return;
-+	}
-+
-+	clk_register_clkdev(clk, NULL, name);
-+	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+CLK_OF_DECLARE(aspeed_uart_clock, "aspeed,uart-clock",
-+	       aspeed_of_uart_clk_init);
++ vic: interrupt-controller {
++      compatible = "aspeed,ast2400-new-vic";
++      interrupt-controller;
++      #interrupt-cells = <1>;
++      valid-sources = < 0xffffffff 0x0007ffff>;
++      reg = <0x1e6c0080 0x80>;
++ };
 -- 
 2.8.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
