@@ -1,84 +1,56 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/3] soc: renesas: rcar-sysc: Add support for R-Car M3-W power areas
-Date: Mon, 09 May 2016 15:01:42 +0300
-Message-ID: <3527039.nIMxVx4mej@avalon>
-References: <1462372570-31979-1-git-send-email-geert+renesas@glider.be>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] mmc: debugfs: add HS400 enhanced strobe
+ description
+Date: Mon, 9 May 2016 15:00:05 +0300
+Message-ID: <57307BC5.50301@intel.com>
+References: <1461897751-28810-1-git-send-email-shawn.lin@rock-chips.com>
+ <1461898092-28985-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1462372570-31979-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1461898092-28985-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On 29/04/16 05:48, Shawn Lin wrote:
+> We inctroduce HS400 with enhanced strobe function, so we need
 
-Thank you for the patches.
+inctroduce -> introduced
 
-For the whole series,
+> add it for debug show.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+add -> to add
 
-On Wednesday 04 May 2016 16:36:07 Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
 > 
-> This patch series adds support for the power areas exposed by the System
-> Controller on the Renesas R-Car M3-W SoC.
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
 > 
-> /sys/kernel/debug/pm_genpd/pm_genpd_summary output:
+> Changes in v2: None
 > 
->     domain                          status          slaves
-> 	/device                                             runtime status
->     ----------------------------------------------------------------------
->     clock-controller                on
->     a3ir                            off-0
->     3dg-b                           off-0
->     3dg-a                           off-0           3dg-b
->     a2vc1                           off-0
->     a2vc0                           off-0
->     a3vc                            off-0           a2vc0, a2vc1
->     cr7                             off-0
->     ca53-cpu3                       on
->     ca53-cpu2                       on
->     ca53-cpu1                       on
->     ca53-cpu0                       on
->     ca53-scu                        on              ca53-cpu0, ca53-cpu1,
-> ca53-cpu2, ca53-cpu3 ca57-cpu1                       on
->     ca57-cpu0                       on
->     ca57-scu                        on              ca57-cpu0, ca57-cpu1
->     always-on                       on              ca57-scu, ca53-scu, cr7,
-> a3vc, 3dg-a, a3ir /devices/platform/soc/e6e88000.serial              
-> active
+>  drivers/mmc/core/debugfs.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> For your convenience, I've pushed this series to the
-> topic/r8a7796-sysc-v1 branch of
-> https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git.
+> diff --git a/drivers/mmc/core/debugfs.c b/drivers/mmc/core/debugfs.c
+> index 9382a57..51d7c38 100644
+> --- a/drivers/mmc/core/debugfs.c
+> +++ b/drivers/mmc/core/debugfs.c
+> @@ -148,7 +148,9 @@ static int mmc_ios_show(struct seq_file *s, void *data)
+>  		str = "mmc HS200";
+>  		break;
+>  	case MMC_TIMING_MMC_HS400:
+> -		str = "mmc HS400";
+> +		mmc_card_hs400es(host->card) ?
+> +			(str = "mmc HS400 enhanced strobe") :
+> +			(str = "mmc HS400");
+>  		break;
+>  	default:
+>  		str = "invalid";
 > 
-> Integration with renesas-drivers-2016-04-26-v4.6-rc5, and minimal board
-> integration for testing is available in the topic/gen3-latest branch.
-> 
-> This has received minimal testing on r8a7796/salvator-x.
-> 
-> Thanks for your comments!
-> 
-> Geert Uytterhoeven (3):
->   soc: renesas: rcar-sysc: Document r8a7796 support
->   soc: renesas: Add r8a7796 SYSC PM Domain Binding Definitions
->   soc: renesas: rcar-sysc: Add support for R-Car M3-W power areas
-> 
->  .../bindings/power/renesas,rcar-sysc.txt           |  1 +
->  drivers/soc/renesas/Makefile                       |  1 +
->  drivers/soc/renesas/r8a7796-sysc.c                 | 48 +++++++++++++++++++
->  drivers/soc/renesas/rcar-sysc.c                    |  3 ++
->  drivers/soc/renesas/rcar-sysc.h                    |  1 +
->  include/dt-bindings/power/r8a7796-sysc.h           | 36 ++++++++++++++++
->  6 files changed, 90 insertions(+)
->  create mode 100644 drivers/soc/renesas/r8a7796-sysc.c
->  create mode 100644 include/dt-bindings/power/r8a7796-sysc.h
 
--- 
-Regards,
-
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
