@@ -1,68 +1,84 @@
-From: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal
- implementation
-Date: Mon, 9 May 2016 08:48:59 +0000
-Message-ID: <AM2PR04MB072250B43DE37A38E374679989700@AM2PR04MB0722.eurprd04.prod.outlook.com>
-References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
- <1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
- <20160427152532.GX3217@sirena.org.uk>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [RESEND PATCH 2/2 v6] arc: axs10x: Add DT bindings for I2S PLL
+ Clock
+Date: Mon, 9 May 2016 10:12:18 +0100
+Message-ID: <57305472.2000507@synopsys.com>
+References: <cover.1461258787.git.joabreu@synopsys.com>
+ <e98c3f738b3a8f6755793959d89b4e43c9410fb1.1461258787.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160427152532.GX3217-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <e98c3f738b3a8f6755793959d89b4e43c9410fb1.1461258787.git.joabreu@synopsys.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: linux-clk@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark Brown,
-
-There are two problems we have found for use regmap up to now.
-
-1, Regmap will read device value depends on endian in .dtsi(DSPI in .dtsi file is big-endian) and readl()(readl() in arm64 is le32_to_cpu read) in system.  
-That is the value read out is fixed regardless the kernel were compiled with CONFIG_CPU_BIG_ENDIAN yes or no. That makes the value(read from DSPI)can't be recognized in one endian mode(CONFIG_CPU_BIG_ENDIAN be set or not).
-The result is: DSPI can't working with CONFIG_CPU_BIG_ENDIAN set.
-
-2, Sometimes regmap will generate some issues. Some regmap issues will cause the DSPI do not working.
-At 2016.4 we find the DSPI was not work, then we found that the regmap R/W the controller register sometimes not right. 
-The result is: DSPI can't working with REGMAP API.
-Although the regmap issues was fast fixed by some giving person. But I'm still tend to use the reliable way.
-
-Regmap is nice and Maybe I should try to fix regmap instead of replacing regmap in my driver.
-But regmap is really very large and complex for DSPI driver.
-
-I think maybe the suitable way is the best way even the regmap is so good as everyone says.
-
-So I strongly suggest to use the dspi_writel / dspi_readl  to instead of the regmap in DSPI driver.
-
-Best Regards,
-Yuan Yao
+Hi Vineet,
 
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Wednesday, April 27, 2016 11:26 PM
-> To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-
-> devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org; linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>; Yang-Leo Li
-> <leoyang.li-3arQi8VN3Tc@public.gmane.org>; Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
-> Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal
-> implementation
-> 
-> On Wed, Apr 27, 2016 at 04:12:35PM +0800, Yuan Yao wrote:
-> 
-> > At first we use regmap to cover this issue.
-> > But the regmap is designed too large and complex.
-> > The issue for regmap often effect the DSPI's stability.
-> 
-> I'm not convinced that open coding things is going to make life much easier
-> here.  If there's problems in the underlying code then fixing those seems like a
-> more generally useful approach to things.  What are the actual problems this is
-> intended to fix?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02-05-2016 10:39, Jose Abreu wrote:
+> Add device tree bindings for AXS10X I2S PLL Clock driver.
+>
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+> Acked-by: Vineet Gupta <vgupta@synopsys.com>
+> ---
+>
+> Changes v5 -> v6:
+> * Added 'clocks' field
+>
+> This patch was only introduced in v5.
+>
+> Cc: Carlos Palminha <palminha@synopsys.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Alexey Brodkin <abrodkin@synopsys.com>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+>
+>  arch/arc/boot/dts/axs10x_mb.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+> index ab5d570..5c6489e 100644
+> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
+> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+> @@ -16,7 +16,20 @@
+>  		ranges = <0x00000000 0xe0000000 0x10000000>;
+>  		interrupt-parent = <&mb_intc>;
+>  
+> +		i2sclk: i2sclk@100a0 {
+> +			compatible = "snps,axs10x-i2s-pll-clock";
+> +			reg = <0x100a0 0x10>;
+> +			clocks = <&i2spll_clk>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+>  		clocks {
+> +			i2spll_clk: i2spll_clk {
+> +				compatible = "fixed-clock";
+> +				clock-frequency = <27000000>;
+> +				#clock-cells = <0>;
+> +			};
+> +
+>  			i2cclk: i2cclk {
+>  				compatible = "fixed-clock";
+>  				clock-frequency = <50000000>;
+
+Can you apply this to arc-next? Main driver was already merged into clk-next. We
+still have to check how to deal with the parent clock frequency that will change
+in the next firmware release.
+
+Best regards,
+Jose Miguel Abreu
+
