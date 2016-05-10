@@ -1,42 +1,64 @@
-From: Wadim Egorov <w.egorov@phytec.de>
-Subject: [PATCH v5 6/6] rtc: Kconfig: Name RK818 in Kconfig for RTC_DRV_RK808
-Date: Tue, 10 May 2016 15:19:00 +0200
-Message-ID: <1462886340-7893-7-git-send-email-w.egorov@phytec.de>
-References: <1462886340-7893-1-git-send-email-w.egorov@phytec.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462886340-7893-1-git-send-email-w.egorov@phytec.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] watchdog: Add Aspeed watchdog driver
+Date: Tue, 10 May 2016 06:25:09 -0700
+Message-ID: <5731E135.8000100@roeck-us.net>
+References: <1462797277-14969-1-git-send-email-joel@jms.id.au>
+ <1462797277-14969-3-git-send-email-joel@jms.id.au>
+ <5730A339.80006@roeck-us.net>
+ <CACPK8XfK4Qt2GaSL7eVoNkCawbtXqFX9bGRcgyAyq7R2yuSZkA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACPK8XfK4Qt2GaSL7eVoNkCawbtXqFX9bGRcgyAyq7R2yuSZkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The RK808 and RK818 PMICs are using a similar register map.
-We can reuse the rtc driver for the RK818 PMIC. So let's add
-the RK818 in the Kconfig description.
+Hi Joel,
 
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- drivers/rtc/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 05/10/2016 04:10 AM, Joel Stanley wrote:
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 18639e0..2faed74 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -324,11 +324,11 @@ config RTC_DRV_MAX77686
- 	  will be called rtc-max77686.
- 
- config RTC_DRV_RK808
--	tristate "Rockchip RK808 RTC"
-+	tristate "Rockchip RK808/RK818 RTC"
- 	depends on MFD_RK808
- 	help
- 	  If you say yes here you will get support for the
--	  RTC of RK808 PMIC.
-+	  RTC of RK808 and RK818 PMIC.
- 
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rk808-rtc.
--- 
-1.9.1
+[ ... ]
+
+>>> +
+>>> +       /*
+>>> +        * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
+>>> +        * runs at 1MHz. We chose to always run at 1MHz, as there's no
+>>> +        * good reason to have a faster watchdog counter.
+>>> +        */
+>>> +       wdt->rate = 1000000;
+>>
+>>
+>> Why not just use a define ?
+>
+> I will add one.
+>
+> The comment is informative though for people who read the ast2400
+> datasheet and wonder why we don't provide the option clocking with
+> pclk, I will leave it in.
+>
+
+The comment is ok. I just find it unnecessary to have a variable
+instead of a constant.
+
+[ ... ]
+>
+>> ctrl is really static except for the enable flag. Not really sure
+>> if having a variable for it has any real benefits - you might as well
+>> just read the register and update the enable flag instead as needed when
+>> starting or stopping the watchdog. Is there a reason for not doing that ?
+>
+> Not really. I find it cleaner to keep a copy of the register instead
+> of read-modify-write, but if you feel strongly about it I can change.
+>
+
+No worries. Not worth arguing about.
+
+Guenter
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
