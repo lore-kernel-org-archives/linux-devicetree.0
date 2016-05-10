@@ -1,48 +1,113 @@
-From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/6] regulator: rk808: Add regulator driver for RK818
-Date: Tue, 10 May 2016 16:15:23 +0200
-Message-ID: <5731ECFB.2000207@phytec.de>
-References: <1462886340-7893-1-git-send-email-w.egorov@phytec.de>
- <1462886340-7893-4-git-send-email-w.egorov@phytec.de>
- <20160510140320.GO19473@dell>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
+ registers
+Date: Tue, 10 May 2016 15:17:54 +0100
+Message-ID: <5731ED92.6080804@arm.com>
+References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
+ <CAMuHMdV6XOSiSv-mwovnCAMEPsgOc_vEhPPu0aYCgz74EF242g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160510140320.GO19473@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV6XOSiSv-mwovnCAMEPsgOc_vEhPPu0aYCgz74EF242g@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, julien.grall@arm.com, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10.05.2016 16:03, Lee Jones wrote:
-> On Tue, 10 May 2016, Wadim Egorov wrote:
->
->> Add support for the rk818 regulator. The regulator module consists
->> of 4 DCDCs, 9 LDOs, 1 switch and 1 BOOST converter which is used to
->> power OTG and HDMI5V.
+On 10/05/16 14:33, Geert Uytterhoeven wrote:
+> CC Marc, lakml
+> 
+> On Tue, Apr 19, 2016 at 8:29 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+>> From: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
 >>
->> The output voltages are configurable and are meant to supply power
->> to the main processor and other components.
+>> There are some requirements about the GIC-400 memory layout and its
+>> mapping if using 64k aligned base addresses like on r8a7795.
 >>
->> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+>> See e.g.
+>>
+>> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
+>>
+>> Map the whole memory range instead of only 0x2000. This will fix
+>> the issue that some hypervisors, e.g. Xen, fail to handle the
+>> interrupts correctly.
+>>
+>> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> 
+> Based on my understanding below
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
 >> ---
->>  drivers/regulator/Kconfig           |   4 +-
->>  drivers/regulator/rk808-regulator.c | 143 ++++++++++++++++++++++++++++++++++--
->>  2 files changed, 138 insertions(+), 9 deletions(-)
-> Needs an Ack before I can take the set.
->
+>> Note: This patch is against renesas-drivers-2016-04-12-v4.6-rc3
+>>
+>>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> index 8be9424..d880fd4 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> @@ -160,9 +160,9 @@
+>>                         #address-cells = <0>;
+>>                         interrupt-controller;
+>>                         reg = <0x0 0xf1010000 0 0x1000>,
+>> -                             <0x0 0xf1020000 0 0x2000>,
+>> +                             <0x0 0xf1020000 0 0x20000>,
+>>                               <0x0 0xf1040000 0 0x20000>,
+>> -                             <0x0 0xf1060000 0 0x2000>;
+>> +                             <0x0 0xf1060000 0 0x20000>;
+>>                         interrupts = <GIC_PPI 9
+>>                                         (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>>                 };
+> 
+> Region 0:
+>     4 KiB-pages 0xf1011000-0xf101ffff are aliased to 0xf1010000-0xf1010fff,
+>     but we need the first 4 KiB only.
+> 
+> Region 1:
+>     4 KiB-pages 0xf1021000-0xf102ffff are aliased to 0xf1020000-0xf1020fff,
+>     4 KiB-pages 0xf1030000-0xf103ffff are all zeroes, probably due to
+>     non-secure mode?
 
-Mark acked this patch in v3.
-After small changes I removed the ack again. I don't know if it is ok to
-keep an Acked-by with small changes in the patch.
+No. This 4kB page only contain a single register (GICC_DIR), which is
+WO/RAZ.
+
+> 
+> Region 2:
+>     4 KiB-pages 0xf1041000-0xf104ffff are aliased to 0xf1040000-0xf1040fff,
+>     4 KiB-pages 0xf1050000-0xf105ffff are all zeroes, probably due to
+>     non-secure mode?
+
+Neither. The aliases are an unused feature of GIC400 exposing the other
+CPUs view of the same registers...
+
+> 
+> Region 3:
+>     4 KiB-pages 0xf1061000-0xf106ffff are aliased to 0xf1060000-0xf1060fff,
+>     4 KiB-pages 0xf1070000-0xf107ffff are all zeroes, probably due to
+>     non-secure mode?
+
+Same as region 1.
+
+> 
+> Region 2 already had a 128 KiB size before, which allowed to use 8 KiB at
+> 0xf104f000.
+
+No. This region (GICH) only needs the first 256 bytes or so. The rest is
+either RAZ/WI or useless stuff.
+
+> 
+> An 8 KiB size for regions 1 and 3 indeed didn't make much sense, as this
+> covered two identical (aliased) 4 KiB pages, instead of two different pages
+> at offset 0xf000.
+
+While we're at it, adding a pointer to the documentation (GIC400 and
+SBSA) would be tremendously useful, as it'd avoid misinterpreting the
+various bits.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
