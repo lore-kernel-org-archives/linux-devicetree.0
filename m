@@ -1,112 +1,45 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v7 03/14] usb: hcd.h: Add OTG to HCD interface
-Date: Tue, 10 May 2016 10:34:49 +0300
-Message-ID: <57318F19.7000506@ti.com>
-References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
- <1462191537-10314-4-git-send-email-rogerq@ti.com>
- <20160506094103.GF32359@shlinux2.ap.freescale.net> <57305C42.90300@ti.com>
- <20160510031401.GA3748@shlinux2.ap.freescale.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC 3/4] clk: renesas: r8a7796: Add Z clock
+Date: Tue, 10 May 2016 09:39:44 +0200
+Message-ID: <CAMuHMdVtw564ZQbhGPLbZoReCHmnevedEWMFj5Ndf49chkpL7Q@mail.gmail.com>
+References: <1462372543-31835-1-git-send-email-geert+renesas@glider.be>
+	<573166EB.70908@rvc.renesas.com>
+	<5731672B.9040204@rvc.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160510031401.GA3748@shlinux2.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: peter.chen@freescale.com, stern@rowland.harvard.edu, balbi@kernel.org, gregkh@linuxfoundation.org, dan.j.williams@intel.com, jun.li@freescale.com, mathias.nyman@linux.intel.com, tony@atomide.com, Joao.Pinto@synopsys.com, abrestic@chromium.org, yoshihiro.shimoda.uh@renesas.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <5731672B.9040204@rvc.renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Toru Oishi <toru.oishi.zj@rvc.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/16 06:14, Peter Chen wrote:
-> On Mon, May 09, 2016 at 12:45:38PM +0300, Roger Quadros wrote:
->> On 06/05/16 12:41, Peter Chen wrote:
->>> On Mon, May 02, 2016 at 03:18:46PM +0300, Roger Quadros wrote:
->>>> The OTG core will use struct otg_hcd_ops to interface
->>>> with the HCD controller.
->>>>
->>>> The main purpose of this interface is to avoid directly
->>>> calling HCD APIs from the OTG core as they
->>>> wouldn't be defined in the built-in symbol table if
->>>> CONFIG_USB is m.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> Acked-by: Peter Chen <peter.chen@nxp.com>
->>>
->>> Roger, after thinking more, I still think current dependency between
->>> OTG, HCD and gadget are too complicated. Since the OTG can't work
->>> if it is built as module, I suggest letting OTG depends on HCD &&
->>> USB_GADGET, and it is a boolean, in that case, we don't need to
->>> export any HCD and gadget ops, things will be much simpler.
->>> What's your opinion?
->>
->> How will it work if HCD and USB_GADGET are modules and OTG is built-in?
->>
-> 
-> The OTG will not be compiled at this situation, since it is boolean.
-> In fact, like I mentioned at above, OTG or USB function can't work if
-> it is built as module.
+Hi Khiem,
 
-Isn't this a limitation?
-As per the current implementation dual role works fine even with both
-USB_GADGET and HCD as module.
+On Tue, May 10, 2016 at 6:44 AM, Khiem Nguyen
+<khiem.nguyen.xt@rvc.renesas.com> wrote:
+> index c84b549..7368805 100644
+> --- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
+> +++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
+> @@ -94,6 +94,8 @@ static const struct cpg_core_clk r8a7796_core_clks[]
+> __initconst = {
+>
+>         DEF_FIXED("cl",         R8A7796_CLK_CL,    CLK_PLL1_DIV2, 48, 1),
+>         DEF_FIXED("cp",         R8A7796_CLK_CP,    CLK_EXTAL,      2, 1),
+> +
+> +       DEF_BASE("z",           R8A7795_CLK_Z,   CLK_TYPE_GEN3_Z,   CLK_PLL0),
 
-In the real world it is unlikely that GADGET and HCD will be built-in.
+R8A7796_CLK_Z?
 
-cheers,
--roger
+How could that work?
 
-> 
-> Peter
->> cheers,
->> -roger
->>
->>>
->>> Peter
->>>
->>>> ---
->>>>  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
->>>>  1 file changed, 24 insertions(+)
->>>>
->>>> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
->>>> index b98f831..861ccaa 100644
->>>> --- a/include/linux/usb/hcd.h
->>>> +++ b/include/linux/usb/hcd.h
->>>> @@ -399,6 +399,30 @@ struct hc_driver {
->>>>  
->>>>  };
->>>>  
->>>> +/**
->>>> + * struct otg_hcd_ops - Interface between OTG core and HCD
->>>> + *
->>>> + * Provided by the HCD core to allow the OTG core to interface with the HCD
->>>> + *
->>>> + * @add: function to add the HCD
->>>> + * @remove: function to remove the HCD
->>>> + * @usb_bus_start_enum: function to immediately start bus enumeration
->>>> + * @usb_control_msg: function to build and send of a control urb
->>>> + * @usb_hub_find_child: function to get pointer to the child device
->>>> + */
->>>> +struct otg_hcd_ops {
->>>> +	int (*add)(struct usb_hcd *hcd,
->>>> +		   unsigned int irqnum, unsigned long irqflags);
->>>> +	void (*remove)(struct usb_hcd *hcd);
->>>> +	int (*usb_bus_start_enum)(struct usb_bus *bus, unsigned int port_num);
->>>> +	int (*usb_control_msg)(struct usb_device *dev, unsigned int pipe,
->>>> +			       __u8 request, __u8 requesttype, __u16 value,
->>>> +			       __u16 index, void *data, __u16 size,
->>>> +			       int timeout);
->>>> +	struct usb_device * (*usb_hub_find_child)(struct usb_device *hdev,
->>>> +						  int port1);
->>>> +};
->>>> +
->>>>  static inline int hcd_giveback_urb_in_bh(struct usb_hcd *hcd)
->>>>  {
->>>>  	return hcd->driver->flags & HCD_BH;
->>>> -- 
->>>> 2.7.4
->>>>
->>>> --
->>>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->>>> the body of a message to majordomo@vger.kernel.org
->>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
