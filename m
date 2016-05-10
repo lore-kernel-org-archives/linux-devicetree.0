@@ -1,99 +1,64 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped registers
-Date: Tue, 10 May 2016 15:33:43 +0200
-Message-ID: <CAMuHMdV6XOSiSv-mwovnCAMEPsgOc_vEhPPu0aYCgz74EF242g@mail.gmail.com>
-References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: Support hashtable lookups for phandles
+Date: Tue, 10 May 2016 16:45:20 +0300
+Message-ID: <B0B8EAD0-838D-43BF-9B54-B8F7E30FF226@konsulko.com>
+References: <1462817488-8370-1-git-send-email-pantelis.antoniou@konsulko.com> <1462817488-8370-3-git-send-email-pantelis.antoniou@konsulko.com> <CAMuHMdXBnxTaKB4io4j4jbbUh+QU0b_Fj8zYi_K_7NZSE33YpQ@mail.gmail.com> <CAL_JsqLsztrWr8mQwCHzA+qkrRev0Kfr--BkMiPVRVycZp0A=Q@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461047395-6532-1-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAL_JsqLsztrWr8mQwCHzA+qkrRev0Kfr--BkMiPVRVycZp0A=Q@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, julien.grall-5wv7dgnIgG8@public.gmane.org, Pooya Keshavarzi <Pooya.Keshavarzi-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC Marc, lakml
+Hi Rob,
 
-On Tue, Apr 19, 2016 at 8:29 AM, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org> wrote:
-> From: Pooya Keshavarzi <Pooya.Keshavarzi-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
->
-> There are some requirements about the GIC-400 memory layout and its
-> mapping if using 64k aligned base addresses like on r8a7795.
->
-> See e.g.
->
-> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
->
-> Map the whole memory range instead of only 0x2000. This will fix
-> the issue that some hypervisors, e.g. Xen, fail to handle the
-> interrupts correctly.
->
-> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> On May 10, 2016, at 00:11 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
+:
+>=20
+> On Mon, May 9, 2016 at 3:38 PM, Geert Uytterhoeven <geert@linux-m68k.=
+org> wrote:
+>> Hi Pantelis,
+>>=20
+>> On Mon, May 9, 2016 at 8:11 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>=20
+>>> @@ -1073,9 +1097,14 @@ struct device_node *of_find_node_by_phandle(=
+phandle handle)
+>>>                return NULL;
+>>>=20
+>>>        raw_spin_lock_irqsave(&devtree_lock, flags);
+>>> -       for_each_of_allnodes(np)
+>>> -               if (np->phandle =3D=3D handle)
+>>> -                       break;
+>>> +       /* when we're ready use the hash table */
+>>> +       if (of_phandle_ht_available() && !in_interrupt())
+>>=20
+>> I guess the !in_interrupt() test is because of the locking inside
+>> rhashtable_lookup_fast()?
+>=20
+> Not a use we should support. Just warn for anyone parsing DT in
+> interrupt context.
+>=20
 
-Based on my understanding below
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+That=E2=80=99s not about users calling in interrupt context. It=E2=80=99=
+s when we=E2=80=99re
+very early in the boot sequence we=E2=80=99re under interrupt context a=
+nd
+calls to the hash methods cannot be made.
 
-> ---
-> Note: This patch is against renesas-drivers-2016-04-12-v4.6-rc3
->
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 8be9424..d880fd4 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -160,9 +160,9 @@
->                         #address-cells = <0>;
->                         interrupt-controller;
->                         reg = <0x0 0xf1010000 0 0x1000>,
-> -                             <0x0 0xf1020000 0 0x2000>,
-> +                             <0x0 0xf1020000 0 0x20000>,
->                               <0x0 0xf1040000 0 0x20000>,
-> -                             <0x0 0xf1060000 0 0x2000>;
-> +                             <0x0 0xf1060000 0 0x20000>;
->                         interrupts = <GIC_PPI 9
->                                         (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->                 };
+> Rob
 
-Region 0:
-    4 KiB-pages 0xf1011000-0xf101ffff are aliased to 0xf1010000-0xf1010fff,
-    but we need the first 4 KiB only.
+Regards
 
-Region 1:
-    4 KiB-pages 0xf1021000-0xf102ffff are aliased to 0xf1020000-0xf1020fff,
-    4 KiB-pages 0xf1030000-0xf103ffff are all zeroes, probably due to
-    non-secure mode?
-
-Region 2:
-    4 KiB-pages 0xf1041000-0xf104ffff are aliased to 0xf1040000-0xf1040fff,
-    4 KiB-pages 0xf1050000-0xf105ffff are all zeroes, probably due to
-    non-secure mode?
-
-Region 3:
-    4 KiB-pages 0xf1061000-0xf106ffff are aliased to 0xf1060000-0xf1060fff,
-    4 KiB-pages 0xf1070000-0xf107ffff are all zeroes, probably due to
-    non-secure mode?
-
-Region 2 already had a 128 KiB size before, which allowed to use 8 KiB at
-0xf104f000.
-
-An 8 KiB size for regions 1 and 3 indeed didn't make much sense, as this
-covered two identical (aliased) 4 KiB pages, instead of two different pages
-at offset 0xf000.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+=E2=80=94 Pantelis
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
