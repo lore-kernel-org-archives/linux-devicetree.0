@@ -1,206 +1,118 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: Re: [PATCH RESEND 2/3] pwm: kona: Add support for Broadcom iproc pwm controller
-Date: Tue, 10 May 2016 20:41:59 +0530
-Message-ID: <CAL2FKYkyBF9aiMjnse6407HzcCyp+7cmcdmERcDLc5+FJgEnhw@mail.gmail.com>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
+ registers
+Date: Tue, 10 May 2016 17:29:08 +0200
+Message-ID: <5731FE44.8010906@gmail.com>
+References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
+ <CAMuHMdV6XOSiSv-mwovnCAMEPsgOc_vEhPPu0aYCgz74EF242g@mail.gmail.com>
+ <5731ED92.6080804@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <5731ED92.6080804@arm.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, julien.grall@arm.com, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+On 10.05.2016 16:17, Marc Zyngier wrote:
+> On 10/05/16 14:33, Geert Uytterhoeven wrote:
+>> CC Marc, lakml
+>>
+>> On Tue, Apr 19, 2016 at 8:29 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+>>> From: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+>>>
+>>> There are some requirements about the GIC-400 memory layout and its
+>>> mapping if using 64k aligned base addresses like on r8a7795.
+>>>
+>>> See e.g.
+>>>
+>>> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
+>>>
+>>> Map the whole memory range instead of only 0x2000. This will fix
+>>> the issue that some hypervisors, e.g. Xen, fail to handle the
+>>> interrupts correctly.
+>>>
+>>> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+>>
+>> Based on my understanding below
+>> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>>> ---
+>>> Note: This patch is against renesas-drivers-2016-04-12-v4.6-rc3
+>>>
+>>>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> index 8be9424..d880fd4 100644
+>>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> @@ -160,9 +160,9 @@
+>>>                          #address-cells = <0>;
+>>>                          interrupt-controller;
+>>>                          reg = <0x0 0xf1010000 0 0x1000>,
+>>> -                             <0x0 0xf1020000 0 0x2000>,
+>>> +                             <0x0 0xf1020000 0 0x20000>,
+>>>                                <0x0 0xf1040000 0 0x20000>,
+>>> -                             <0x0 0xf1060000 0 0x2000>;
+>>> +                             <0x0 0xf1060000 0 0x20000>;
+>>>                          interrupts = <GIC_PPI 9
+>>>                                          (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>>>                  };
+>>
+>> Region 0:
+>>      4 KiB-pages 0xf1011000-0xf101ffff are aliased to 0xf1010000-0xf1010fff,
+>>      but we need the first 4 KiB only.
+>>
+>> Region 1:
+>>      4 KiB-pages 0xf1021000-0xf102ffff are aliased to 0xf1020000-0xf1020fff,
+>>      4 KiB-pages 0xf1030000-0xf103ffff are all zeroes, probably due to
+>>      non-secure mode?
+>
+> No. This 4kB page only contain a single register (GICC_DIR), which is
+> WO/RAZ.
+>
+>>
+>> Region 2:
+>>      4 KiB-pages 0xf1041000-0xf104ffff are aliased to 0xf1040000-0xf1040fff,
+>>      4 KiB-pages 0xf1050000-0xf105ffff are all zeroes, probably due to
+>>      non-secure mode?
+>
+> Neither. The aliases are an unused feature of GIC400 exposing the other
+> CPUs view of the same registers...
+>
+>>
+>> Region 3:
+>>      4 KiB-pages 0xf1061000-0xf106ffff are aliased to 0xf1060000-0xf1060fff,
+>>      4 KiB-pages 0xf1070000-0xf107ffff are all zeroes, probably due to
+>>      non-secure mode?
+>
+> Same as region 1.
+>
+>>
+>> Region 2 already had a 128 KiB size before, which allowed to use 8 KiB at
+>> 0xf104f000.
+>
+> No. This region (GICH) only needs the first 256 bytes or so. The rest is
+> either RAZ/WI or useless stuff.
+>
+>>
+>> An 8 KiB size for regions 1 and 3 indeed didn't make much sense, as this
+>> covered two identical (aliased) 4 KiB pages, instead of two different pages
+>> at offset 0xf000.
+>
+> While we're at it, adding a pointer to the documentation (GIC400 and
+> SBSA) would be tremendously useful, as it'd avoid misinterpreting the
+> various bits.
 
-On Tue, May 10, 2016 at 8:10 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Tue, Mar 29, 2016 at 10:22:29AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
->> Update the kona driver to support Broadcom iproc pwm controller
->>
->> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
->> ---
->>  drivers/pwm/Kconfig        |   6 +-
->>  drivers/pwm/pwm-bcm-kona.c | 183 +++++++++++++++++++++++++++++++++++++++------
->>  2 files changed, 163 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index c182efc..e45ea33 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -76,9 +76,11 @@ config PWM_ATMEL_TCB
->>
->>  config PWM_BCM_KONA
->>       tristate "Kona PWM support"
->> -     depends on ARCH_BCM_MOBILE
->> +     depends on ARCH_BCM_MOBILE || ARCH_BCM_IPROC
->> +     default ARCH_BCM_IPROC
->
-> Why the default? Typically you'd enable this in one or more of the
-> default configurations. default ARCH_* is really only useful if the
-> driver is essential. PWM doesn't usually fall into this category.
->
->> diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
->> index c634183..ef152e3a 100644
->> --- a/drivers/pwm/pwm-bcm-kona.c
->> +++ b/drivers/pwm/pwm-bcm-kona.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/math64.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->> +#include <linux/of_device.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/pwm.h>
->>  #include <linux/slab.h>
->> @@ -47,30 +48,90 @@
->>
->>  #define PWM_CONTROL_OFFSET                   (0x00000000)
->>  #define PWM_CONTROL_SMOOTH_SHIFT(chan)               (24 + (chan))
->> -#define PWM_CONTROL_TYPE_SHIFT(chan)         (16 + (chan))
->> +#define PWM_CONTROL_TYPE_SHIFT(shift, chan)  (shift + chan)
->
-> You need to put the parameters into parentheses to avoid expansion from
-> potentially messing up the expression.
->
->>  #define PWM_CONTROL_POLARITY_SHIFT(chan)     (8 + (chan))
->>  #define PWM_CONTROL_TRIGGER_SHIFT(chan)              (chan)
->>
->>  #define PRESCALE_OFFSET                              (0x00000004)
->> -#define PRESCALE_SHIFT(chan)                 ((chan) << 2)
->> -#define PRESCALE_MASK(chan)                  (0x7 << PRESCALE_SHIFT(chan))
->> +#define PRESCALE_SHIFT                               (0x00000004)
->> +#define PRESCALE_MASK                                (0x00000007)
->
-> Hmm... this looks odd. Why are you dropping the chan parameter here?
->
->>  #define PRESCALE_MIN                         (0x00000000)
->>  #define PRESCALE_MAX                         (0x00000007)
->>
->> -#define PERIOD_COUNT_OFFSET(chan)            (0x00000008 + ((chan) << 3))
->> +#define PERIOD_COUNT_OFFSET(offset, chan)    (offset + (chan << 3))
->
-> Need parentheses here as well.
->
->>  #define PERIOD_COUNT_MIN                     (0x00000002)
->>  #define PERIOD_COUNT_MAX                     (0x00ffffff)
->> +#define KONA_PERIOD_COUNT_OFFSET             (0x00000008)
->>
->> -#define DUTY_CYCLE_HIGH_OFFSET(chan)         (0x0000000c + ((chan) << 3))
->> +#define DUTY_CYCLE_HIGH_OFFSET(offset, chan) (offset + (chan << 3))
->>  #define DUTY_CYCLE_HIGH_MIN                  (0x00000000)
->>  #define DUTY_CYCLE_HIGH_MAX                  (0x00ffffff)
->> +#define KONA_DUTY_CYCLE_HIGH_OFFSET          (0x0000000c)
->> +
->> +#define PWM_CHANNEL_CNT                              (0x00000006)
->> +#define SIGNAL_PUSH_PULL                     (0x00000001)
->> +#define PWMOUT_TYPE_SHIFT                    (0x00000010)
->> +
->> +#define IPROC_PRESCALE_OFFSET                        (0x00000024)
->> +#define IPROC_PRESCALE_SHIFT                 (0x00000006)
->> +#define IPROC_PRESCALE_MAX                   (0x0000003f)
->> +
->> +#define IPROC_PERIOD_COUNT_OFFSET            (0x00000004)
->> +#define IPROC_PERIOD_COUNT_MIN                       (0x00000002)
->> +#define IPROC_PERIOD_COUNT_MAX                       (0x0000ffff)
->> +
->> +#define IPROC_DUTY_CYCLE_HIGH_OFFSET         (0x00000008)
->> +#define IPROC_DUTY_CYCLE_HIGH_MIN            (0x00000000)
->> +#define IPROC_DUTY_CYCLE_HIGH_MAX            (0x0000ffff)
->> +
->> +#define IPROC_PWM_CHANNEL_CNT                        (0x00000004)
->> +#define IPROC_SIGNAL_PUSH_PULL                       (0x00000000)
->> +#define IPROC_PWMOUT_TYPE_SHIFT                      (0x0000000f)
->> +
->> +/*
->> + * pwm controller reg structure
->> + *
->> + * @prescale_offset: prescale register offset
->> + * @period_offset: period register offset
->> + * @duty_offset: duty register offset
->> + * @no_of_channels: number of channels
->> + * @out_type_shift: out type shift in the register
->> + * @signal_type: push-pull or open drain
->> + * @prescale_max: prescale max
->> + * @prescale_shift: prescale shift in register
->> + * @prescale_ch_ascending: prescale ch order in prescale register
->> + * @duty_cycle_max: value of max duty cycle
->> + * @duty_cycle_min: value of min duty cycle
->> + * @period_count_max: max period count val
->> + * @period_count_min: min period count val
->> + * @smooth_output_support: pwm smooth output support
->> + */
->> +struct kona_pwmc_reg {
->> +     u32 prescale_offset;
->> +     u32 period_offset;
->> +     u32 duty_offset;
->> +     u32 no_of_channels;
->> +     u32 out_type_shift;
->> +     u32 signal_type;
->> +     u32 prescale_max;
->> +     u32 prescale_shift;
->> +     bool prescale_ch_ascending;
->> +     u32 duty_cycle_max;
->> +     u32 duty_cycle_min;
->> +     u32 period_count_max;
->> +     u32 period_count_min;
->> +     bool smooth_output_support;
->> +};
->
-> This is rather tedious. It looks to me like this isn't very similar to
-> the existing driver. Register offsets move around, bitfield positions
-> change, feature set is different. Might be better off turning this into
-> a separate driver after all.
->
->> +static const struct kona_pwmc_reg kona_pwmc_reg_data = {
->> +     .prescale_offset = PRESCALE_OFFSET,
->> +     .period_offset = KONA_PERIOD_COUNT_OFFSET,
->> +     .duty_offset = KONA_DUTY_CYCLE_HIGH_OFFSET,
->> +     .no_of_channels = PWM_CHANNEL_CNT,
->> +     .out_type_shift = PWMOUT_TYPE_SHIFT,
->> +     .signal_type = SIGNAL_PUSH_PULL,
->> +     .prescale_max = PRESCALE_MAX,
->> +     .prescale_shift = PRESCALE_SHIFT,
->> +     .prescale_ch_ascending = false,
->> +     .duty_cycle_max = DUTY_CYCLE_HIGH_MAX,
->> +     .duty_cycle_min = DUTY_CYCLE_HIGH_MIN,
->> +     .period_count_max = PERIOD_COUNT_MAX,
->> +     .period_count_min = PERIOD_COUNT_MIN,
->> +     .smooth_output_support = true,
->> +};
->> +
->> +static const struct kona_pwmc_reg iproc_pwmc_reg_data = {
->> +     .prescale_offset = IPROC_PRESCALE_OFFSET,
->> +     .period_offset = IPROC_PERIOD_COUNT_OFFSET,
->> +     .duty_offset = IPROC_DUTY_CYCLE_HIGH_OFFSET,
->> +     .no_of_channels = IPROC_PWM_CHANNEL_CNT,
->> +     .out_type_shift = IPROC_PWMOUT_TYPE_SHIFT,
->> +     .signal_type = IPROC_SIGNAL_PUSH_PULL,
->> +     .prescale_max = IPROC_PRESCALE_MAX,
->> +     .prescale_shift = IPROC_PRESCALE_SHIFT,
->> +     .prescale_ch_ascending = true,
->> +     .duty_cycle_max = IPROC_DUTY_CYCLE_HIGH_MAX,
->> +     .duty_cycle_min = IPROC_DUTY_CYCLE_HIGH_MIN,
->> +     .period_count_max = IPROC_PERIOD_COUNT_MAX,
->> +     .period_count_min = IPROC_PERIOD_COUNT_MIN,
->> +     .smooth_output_support = false,
->> +};
->
-> This looks like you could possible support a lot more hardware with this
-> driver because it's now almost completely parameterized.
->
-> I don't see much sense in keeping this in the same driver and I think
-> it'd be better to write a new one from scratch, even if that means
-> slight duplication.
->
 
-These two variants have the same block with different reg offsets and
-bit fields. I thought of having a same driver, will address the fixes for
-both if any. I will generate a new one as suggested and submit a
-v2 version.
+If anybody could give a short description I could copy & paste into 
+the commit message that would be quite helpful :)
 
-> Or you'll have to make a very compelling argument as to why this is the
-> better option.
->
-> Thierry
 
-Thanks
-Dhananjay
+Best regards
+
+Dirk
