@@ -1,45 +1,66 @@
-From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: [PATCH] devicetree: sunxi: Add OLinuXino Lime2 eMMC to
- the Makefile
-Date: Tue, 10 May 2016 21:00:20 +0200
-Message-ID: <1462906820-5203-1-git-send-email-oliver@schinagl.nl>
-Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+From: Priit Laes <plaes@plaes.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v4 01/11] clk: sunxi: Add display and
+ TCON0 clocks driver
+Date: Tue, 10 May 2016 22:10:59 +0300
+Message-ID: <1462907459.9981.0.camel@plaes.org>
+References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
+	 <1461590572-4027-2-git-send-email-maxime.ripard@free-electrons.com>
+	 <20160506223002.GE3492@codeaurora.org> <20160508200308.GF6167@lukather>
+	 <20160509223238.GW3492@codeaurora.org>
+	 <20160509223924.GX3492@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDC2JNWXZAJBBSO7ZC4QKGQEIMAE7TI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160509223924.GX3492@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Alexander Kaplan <alex@nextthing.co>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-ARM: dts: sunxi: Add a olinuxino-lime2-emmc added the new emmc equipped
-lime2 but forgot its Makefile. This patch adds an entry to the Makefile.
+On Mon, 2016-05-09 at 15:39 -0700, Stephen Boyd wrote:
+> On 05/09, Stephen Boyd wrote:
+> >=20
+> >=20
+> > Ok I applied this one to clk-next.
+> >=20
+> And I squashed this in to silence the following checker warning.
+>=20
+> drivers/clk/sunxi/clk-sun4i-display.c:110:33: warning: Variable
+> length array is used.
+>=20
+> ---8<---
+> diff --git a/drivers/clk/sunxi/clk-sun4i-display.c
+> b/drivers/clk/sunxi/clk-sun4i-display.c
+> index f02e250e64ed..f8ff6c4a5633 100644
+> --- a/drivers/clk/sunxi/clk-sun4i-display.c
+> +++ b/drivers/clk/sunxi/clk-sun4i-display.c
+> @@ -107,7 +107,7 @@ static int sun4i_a10_display_reset_xlate(struct
+> reset_controller_dev *rcdev,
+> =C2=A0static void __init sun4i_a10_display_init(struct device_node *n=
+ode,
+> =C2=A0					=C2=A0=C2=A0const struct
+> sun4i_a10_display_clk_data *data)
+> =C2=A0{
+> -	const char *parents[data->parents];
+> +	const char *parents[4];
+> =C2=A0	const char *clk_name =3D node->name;
+> =C2=A0	struct reset_data *reset_data;
+> =C2=A0	struct clk_divider *div =3D NULL;
+> @@ -126,8 +126,8 @@ static void __init sun4i_a10_display_init(struct
+> device_node *node,
+> =C2=A0		return;
+> =C2=A0	}
+> =C2=A0
+> -	ret =3D of_clk_parent_fill(node, parents, data->parents);
+> -	if (ret !=3D data->parents) {
+> +	ret =3D of_clk_parent_fill(node, parents,
+> ARRAY_SIZE(parents));
+> +	if (ret !=3D ARRAY_SIZE(parents)) {
+> =C2=A0		pr_err("%s: Could not retrieve the parents\n",
+> clk_name);
+> =C2=A0		goto unmap;
+> =C2=A0	}
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
----
-Maxime, I'm sorry for ommitting the Makefile initially, if it is not merged yet,
-maybe just squash it with the previous patch?
+This change breaks at least de_[bf]e clocks which have 3 clock parents.
 
- arch/arm/boot/dts/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923..07f4cf8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -695,6 +695,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-olimex-som-evb.dtb \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
-+	sun7i-a20-olinuxino-lime2-emmc.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
- 	sun7i-a20-orangepi.dtb \
- 	sun7i-a20-orangepi-mini.dtb \
--- 
-2.8.1
