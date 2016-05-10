@@ -1,48 +1,71 @@
-From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: [PATCH] mmc: sdhci-st: correct name of sd-uhs-sdr50 property
-Date: Tue, 10 May 2016 09:14:24 +0900
-Message-ID: <1462839264-13300-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+From: Andrew Duggan <aduggan@synaptics.com>
+Subject: Re: [PATCH v2 0/3] input: rmi4: Regulator supply support
+Date: Mon, 9 May 2016 17:36:11 -0700
+Message-ID: <57312CFB.2040304@synaptics.com>
+References: <1462596008-21381-1-git-send-email-bjorn.andersson@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1462596008-21381-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christopher Heiny <cheiny@synaptics.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Correct what appears to be a typo in the name of the sd-uhs-sdr50.
+Hi Bjorn,
 
-Also fix mixed tab/space indentation.
+On 05/06/2016 09:40 PM, Bjorn Andersson wrote:
+> The first version of the regulator support patch suffered from being
+> implemented in the transport driver, as a work around for resource availability
+> racing (EPROBE_DEFER of the core driver) with the interrupt handler.
+>
+> After reconsidering the solutions discussed following that I concluded that the
+> interrupt management is not really part of the transport, neither conceptually
+> or electrically. I therefor here suggest (patch 1/3) to move the interrupt
+> registration and handling to the core rmi driver.
 
-Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
- Documentation/devicetree/bindings/mmc/sdhci-st.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+My concern with moving interrupt processing to the core is that not all 
+transports report attn to the rmi core using an irq. The HID and SMBus 
+transports which are currently in development, reside a little higher in 
+the stack and attention is reported using different mechanisms. We moved 
+interrupt handling to the transport drivers so that they could handle 
+the differences in how attn is reported.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-st.txt b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-index 18d950df2749..88faa91125bf 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-@@ -38,7 +38,7 @@ Optional properties:
- - bus-width:		Number of data lines.
- 			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
- 
--- max-frequency: 	Can be 200MHz, 100Mz or 50MHz (default) and used for
-+- max-frequency:	Can be 200MHz, 100Mz or 50MHz (default) and used for
- 			configuring the CCONFIG3 in the mmcss.
- 			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
- 
-@@ -48,7 +48,7 @@ Optional properties:
- - vqmmc-supply:		Phandle to the regulator dt node, mentioned as the vcc/vdd
- 			supply in eMMC/SD specs.
- 
--- sd-uhs--sdr50:	To enable the SDR50 in the mmcss.
-+- sd-uhs-sdr50:	To enable the SDR50 in the mmcss.
- 			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
- 
- - sd-uhs-sdr104:	To enable the SDR104 in the mmcss.
--- 
-2.1.4
+This message has some of the previous discussion regarding interrupt 
+processing:
+https://lkml.org/lkml/2015/11/28/123
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Similarly, not all transports will need support for regulators. 
+Implementing both in the transport drivers avoids the EPROBE_DEFER 
+racing and avoids adding checks in the core to see if it needs to handle 
+interrupts and manage regulators.
+
+Thanks,
+Andrew
+
+> This solves the potential race of interrupts being delivered in the transport
+> driver before the core driver have been given a chance to recover from probe
+> deferral.
+>
+> Patch 2/3 then add the necessary code for acquiring regulator handles and
+> enabling these.
+>
+> Patch 3/3 removes the set_page() done in the transport drivers, as we can't
+> rely on the chip becoming available at any time during the initialization/probe
+> phase.
+>
+> Bjorn Andersson (3):
+>    input: rmi4: Move IRQ handling to rmi_driver
+>    input: rmi4: Acquire and enable VDD and VIO supplies
+>    input: rmi4: Remove set_page() call before core is initialized
+>
+>   .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  6 ++
+>   .../devicetree/bindings/input/rmi4/rmi_spi.txt     |  6 ++
+>   drivers/input/rmi4/rmi_driver.c                    | 89 +++++++++++++++++++++-
+>   drivers/input/rmi4/rmi_i2c.c                       | 84 ++------------------
+>   drivers/input/rmi4/rmi_spi.c                       | 83 ++------------------
+>   include/linux/rmi.h                                | 11 ++-
+>   6 files changed, 118 insertions(+), 161 deletions(-)
+>
+
