@@ -1,162 +1,74 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Tue, 10 May 2016 12:07:42 +0100
-Message-ID: <20160510110742.GI687@leverpostej>
-References: <1461845007-23139-1-git-send-email-boris.brezillon@free-electrons.com>
- <1461845007-23139-2-git-send-email-boris.brezillon@free-electrons.com>
- <20160503164019.GA1604@rob-hp-laptop>
- <20160503185153.5cfddc32@bbrezillon>
- <CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
- <20160504113852.10a2dd84@bbrezillon>
- <CAL_Jsq+4aL5znA3zOKdcJb+pEXhVOQthkFF6DN2+P6U37t2o6g@mail.gmail.com>
- <20160504153547.60d736bb@bbrezillon>
- <20160510100448.49834120@bbrezillon>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/3] Patches to allow consistent mmc / mmcblk numbering
+Date: Tue, 10 May 2016 13:09:12 +0200
+Message-ID: <CAPDyKFqqxoczDH5B5Pmf0RH5uSC06UyKtEYvddO3tAsiqgoXig@mail.gmail.com>
+References: <1461884805-29466-1-git-send-email-dianders@chromium.org>
+	<1659435.FBgTBXnguZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160510100448.49834120@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1659435.FBgTBXnguZ@wuerfel>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Douglas Anderson <dianders@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Stefan Agner <stefan@agner.ch>, linux-mmc <linux-mmc@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Venu Byravarasu <vbyravarasu@nvidia.com>, =?UTF-8?B?SnVzdGluIFdhbmcgKOeOi+S4gSk=?= <justin.wang@spreadtrum.com>, Ken Sumrall <ksumrall@android.com>, Lars-Peter Clausen <lars@metafoo.de>, Dmitry Torokhov <dtor@chromium.org>, Jon Hunter <jonathanh@nvidia.com>, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Luca Porzio (lporzio)" <lporzi>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2016 at 10:04:48AM +0200, Boris Brezillon wrote:
-> On Wed, 4 May 2016 15:35:47 +0200
-> Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
-> 
-> > On Wed, 4 May 2016 08:06:10 -0500
-> > Rob Herring <robh@kernel.org> wrote:
-> > 
-> > > On Wed, May 4, 2016 at 4:38 AM, Boris Brezillon
-> > > <boris.brezillon@free-electrons.com> wrote:  
-> > > > Hi Rob,
-> > > >
-> > > > On Tue, 3 May 2016 14:11:04 -0500
-> > > > Rob Herring <robh@kernel.org> wrote:
-> > > >    
-> > > >> On Tue, May 3, 2016 at 11:51 AM, Boris Brezillon
-> > > >> <boris.brezillon@free-electrons.com> wrote:    
-> > > >> > Hi Rob,
-> > > >> >
-> > > >> > On Tue, 3 May 2016 11:40:19 -0500
-> > > >> > Rob Herring <robh@kernel.org> wrote:
-> > > >> >    
-> > > >> >> On Thu, Apr 28, 2016 at 02:03:27PM +0200, Boris Brezillon wrote:    
-> > > >> >> > The EBI (External Bus Interface) is used to access external peripherals
-> > > >> >> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> > > >> >> > Each device is assigned a CS line and an address range and can have its
-> > > >> >> > own configuration (timings, access mode, bus width, ...).
-> > > >> >> > This driver provides a generic DT binding to configure a device according
-> > > >> >> > to its requirements.
-> > > >> >> > For specific device controllers (like the NAND one) the SMC timings
-> > > >> >> > should be configured by the controller driver through the matrix and smc
-> > > >> >> > syscon regmaps.    
-> > > 
-> > > [...]
-> > >   
-> > > >> >> > +EBI bus configuration associated with specific chip-select will be defined in
-> > > >> >> > +the configs subnode. This configs node will in turn contain several subnodes
-> > > >> >> > +named config-<cs-id>, each of them containing the following properties.    
-> > > >> >>
-> > > >> >> This is a bit unusual. Why not just part of the child device nodes?    
-> > > >> >
-> > > >> > Oh, come on! I reworked the binding because Mark complained about the
-> > > >> > previous binding which was doing exactly what you're suggesting. Can
-> > > >> > you please be consistent in your reviews...    
-> > > >>
-> > > >> No, Mark and I both have our opinions. Which part of this patch
-> > > >> explains the history?    
-> > > >
-> > > > Hm, it's in patch 1/2 (just dropped the cover letter, which might not
-> > > > be such a good idea).
-> > > >    
-> > > >> If the revision history is not in the patch, I'm
-> > > >> not looking at it.
-> > > >>
-> > > >> My issue with it this way is that it has invented yet another way to
-> > > >> describe timings. I would like to be consistent across external bus
-> > > >> descriptions, but we're not very consistent to begin with though. The
-> > > >> most common seems to be the way you first did it. But I agree that it
-> > > >> is kind of screwy to have an intermediate node unless the controller
-> > > >> itself has sub-blocks within it and is not the established way to
-> > > >> describe a bus with chip selects. I would either put the properties
-> > > >> directly in the child nodes (e.g. flash@0,0) or put your config nodes
-> > > >> in the device node. I'd call it timings instead of config, but that's
-> > > >> just bikeshedding.    
-> > > >
-> > > > Well, it's not only describing timings (see atmel,bus-width,
-> > > > atmel,byte-access-type, ...), but I'm fine with either names :).
-> > > >    
-> > > >>
-> > > >> memory-controller@1000 {
-> > > >>   ...
-> > > >>   flash@0,0 {
-> > > >>     timings {
-> > > >>       ...
-> > > >>     };
-> > > >>   };
-> > > >> };    
-> > > >
-> > > > Okay. Mark, what do you think of this approach?
-> > > >
-> > > > Note that one of my previous version was defining timings directly in
-> > > > the EBI device node, and Arnd noted that doing so may cause problems
-> > > > if one of the EBI property (or the config/timing node name) conflict
-> > > > with the sub-device binding, which is why I decided to put the EBI
-> > > > config definitions in a separate subnode.    
-> > > 
-> > > You have vendor prefixes on all the properties so I don't think a
-> > > collision is really a problem. It's also an established pattern in
-> > > i.MX WEIM and OMAP GPMC (which are hiding in bindings/bus/) and I
-> > > prefer consistency.  
-> > 
-> > So let's summarize that.
-> > 
-> > memory-controller@1000 {
-> > 	...
-> > 	flash@0,0 {
-> > 		atmel,<ebi-prop-name> = <value>;
-> > 		...
-> > 		<flash-device-prop> = <value>;
-> > 	};
-> > };
-> > 
-> > Would everyone agree on this representation?
-> > 
-> > With this approach, it's a bit more complicated to detect the case
-> > where we want to keep bootloader/firmware config, but it should be
-> > doable (it's much more easier to test for the presence of a
-> > config/timing node than verifying that either all or none of the
-> > mandatory properties are here).
-> > 
-> > Still remains the problem mentioned by Jean-Jacques: what if the
-> > sub-device takes 2 CS lines. Should we apply the same setting to those
-> > slots?
-> > 
-> 
-> Rob, Mark, Arnd, can you take a decision regarding this binding? This
-> driver is floating around for quite some time, and we were asked to
-> rework the binding several times (in time in an opposite direction).
-> 
-> For the record, here is the thread I mentioned earlier [1]. In his
-> answer, Arnd suggests to put timing and bus config description
-> outside of the sub-device node. Mark recently complained about this
-> representation, which led me to the configs/config-X appraoch, and now
-> Rob suggests to go back to the first proposal.
-> 
-> I'm fine doing that, but can you please all confirm that you agree on
-> this binding?
+On 29 April 2016 at 19:39, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 28 April 2016 16:06:42 Douglas Anderson wrote:
+>> This series picks patches from various different places to produce what
+>> I consider the best solution to getting consistent mmc and mmcblk
+>> ordering.
+>>
+>> Why consistent ordering and why not just use UUIDs?  IMHO consistent
+>> ordering solves a few different problems:
+>>
+>> 1. For poor, feeble-minded humans like me, have sane numbering for
+>>    devices helps a lot.  When grepping through dmesg it's terribly handy
+>>    if a given SDMMC device has a consistent number.  I know that I can
+>>    do "dmesg | grep mmc0" or "dmesg | grep mmcblk0" to find info about
+>>    the eMMC.  I know that I can do "dmesg | grep mmc1" to find info
+>>    about the SD card slot.  I don't want it to matter which one probed
+>>    first, I don't want it to matter if I'm working on a variant of the
+>>    hardware that has the SD card slot disabled, and I don't want to care
+>>    what my boot device was.  Worrying about what device number I got
+>>    increases my cognitive load.
+>>
+>> 2. There are cases where it's not trivially easy during development to
+>>    use the UUID.  Specifically I work a lot with coreboot / depthcharge
+>>    as a BIOS.  When configured properly, that BIOS has a nice feature to
+>>    allow you to fetch the kernel and kernel command line from TFTP by
+>>    pressing Ctrl-N.  In this particular case the BIOS doesn't actually
+>>    know which disk I'd like for my root filesystem, so it's not so easy
+>>    for it to put the right UUID into the command line.  For this
+>>    purpose, knowing that "mmcblk0" will always refer to eMMC is handy.
+>>
+>>
+>> Jaehoon Chung (1):
+>>   Documentation: mmc: Document mmc aliases
+>>
+>> Stefan Agner (2):
+>>   mmc: read mmc alias from device tree
+>>   mmc: use SD/MMC host ID for block device name ID
+>>
+>>  Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
+>>  drivers/mmc/card/block.c                      |  3 ++-
+>>  drivers/mmc/core/host.c                       | 25 ++++++++++++++++++++-----
+>>  3 files changed, 33 insertions(+), 6 deletions(-)
+>
+>
+> Does this mean we can revert 9aaf343 ("mmc: block: Use the mmc host
+> device index as the mmcblk device index") for now and wait until this
+> is in as well?
 
-Sorry for the delay in getting round to this, and sorry that this
-appears to be going in circles.
+No, as that one fixes an issue for a widely deployed product (family).
 
-Please go with Rob's suggestion.
+>
+> The commit I mention here breaks a significant number of boots
+> on Olof's test build setup, and it would be nice to avoid breaking
+> them again when we get yet another device numbering system.
 
-I'm not sure about the case where a device takes 2 CS lines. I would
-assume that in practice that a sub-device covered my multiple CS lines
-expects the same timings for all its MMIO space, and so having that
-uniform makes sense. Do we have a counter-example?
+They don't have to break *again*. He just have to convert *once* to
+use UUID/PARTID which is really what most should be doing.
 
-Thanks,
-Mark.
+Kind regards
+Uffe
