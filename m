@@ -1,155 +1,103 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH 1/2] Revert "mtd: atmel_nand: Support variable RB_EDGE
- interrupts"
-Date: Tue, 10 May 2016 08:59:44 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D64880F8@penmbx01>
-References: <1462776680-5284-1-git-send-email-wenyou.yang@atmel.com>
-	<1462776680-5284-2-git-send-email-wenyou.yang@atmel.com>
- <20160510105549.50b60d8c@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/5] Add enhanced strobe support for emmc version 5.1 or later
+Date: Tue, 10 May 2016 17:09:03 +0800
+Message-ID: <1462871343-32361-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160510105549.50b60d8c@bbrezillon>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQm9yaXMgQnJlemlsbG9u
-IFttYWlsdG86Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbV0NCj4gU2VudDogMjAx
-NsTqNdTCMTDI1SAxNjo1Ng0KPiBUbzogWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5j
-b20+OyBSb21haW4gSXphcmQNCj4gPHJvbWFpbi5pemFyZC5wcm9AZ21haWwuY29tPg0KPiBDYzog
-QnJpYW4gTm9ycmlzIDxjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20+OyBEYXZpZCBXb29kaG91
-c2UNCj4gPGR3bXcyQGluZnJhZGVhZC5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwu
-b3JnPjsgUGF3ZWwgTW9sbA0KPiA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBCcm93biA8YnJv
-b25pZUBrZXJuZWwub3JnPjsgSWFuIENhbXBiZWxsDQo+IDxpamMrZGV2aWNldHJlZUBoZWxsaW9u
-Lm9yZy51az47IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsNCj4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IFJ1c3NlbGwgS2luZyA8bGludXhAYXJtLmxpbnV4Lm9yZy51az47
-IEpvc2ggV3UNCj4gPHJhaW55ZmVlbGluZ0BvdXRsb29rLmNvbT47IEZlcnJlLCBOaWNvbGFzIDxO
-aWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBmcmVlLQ0KPiBlbGVjdHJvbnMu
-Y29tPjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IEplYW4tQ2hyaXN0b3BoZSBQbGFn
-bmlvbC1WaWxsYXJkDQo+IDxwbGFnbmlvakBqY3Jvc29mdC5jb20+OyBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIFJldmVydCAi
-bXRkOiBhdG1lbF9uYW5kOiBTdXBwb3J0IHZhcmlhYmxlIFJCX0VER0UNCj4gaW50ZXJydXB0cyIN
-Cj4gDQo+IEhpIFdlbnlvdSwNCj4gDQo+IENhbiB5b3UgYWRkIE5BTkQgbWFpbnRhaW5lcnMvcmV2
-aWV3ZXJzIGluIENjIG5leHQgdGltZS4gQW5kIHNpbmNlIHlvdSByZXZlcnQgYQ0KPiBjb21taXQs
-IHlvdSBzaG91bGQgYWxzbyBhZGQgdGhlIGNvbW1pdCBhdXRob3IgaW4gdGhlIGxvb3AuDQo+IA0K
-PiBPbiBNb24sIDkgTWF5IDIwMTYgMTQ6NTE6MTggKzA4MDANCj4gV2VueW91IFlhbmcgPHdlbnlv
-dS55YW5nQGF0bWVsLmNvbT4gd3JvdGU6DQo+IA0KPiA+IFRoaXMgcmV2ZXJ0cyBjb21taXQgNWRk
-YzdiZDQzY2NjICgibXRkOiBhdG1lbF9uYW5kOiBTdXBwb3J0IHZhcmlhYmxlDQo+ID4gUkJfRURH
-RSBpbnRlcnJ1cHRzIikNCj4gPg0KPiA+IEJlY2F1c2UgZm9yIGN1cnJlbnQgU29DcywgdGhlIFJC
-X0VER0UzKGkuZS4gYml0IDI3KSBvZiBIU01DX1NSDQo+ID4gcmVnaXN0ZXIgZG9lcyBub3QgZXhp
-c3QsIHRoZSBSQl9FREdFMCAoaS5lLiBiaXQgMjQpIGlzIHRoZSByZWFkeS9idXN5DQo+ID4gbGlu
-ZSBlZGdlIHN0YXR1cyBiaXQuIEl0IGlzIGEgZGF0YXNoZWV0IGJ1Zy4NCj4gDQo+IFJvbWFpbiwg
-SSB0aG91Z2h0IHlvdSBoYWQgYSByZWFsIHVzZSBjYXNlIG9uIHNhbWE1ZDQgd2hlcmUgdGhpcyBw
-YXRjaCB3YXMNCj4gbmVlZGVkIHRvIG1ha2UgdGhlIHdob2xlIHRoaW5nIHdvcmsuIE5vdCBzdXJl
-IHdoeSB5b3Ugc3VibWl0dGVkIHRoaXMgcGF0Y2ggaWYNCj4geW91IGNvdWxkbid0IHRlc3QgaXQg
-b24gYSByZWFsIGJvYXJkLg0KPiANCj4gV2VueW91LCBjYW4geW91IGNvbmZpcm0gdGhhdCBub25l
-IG9mIHRoZSBleGlzdGluZyBTb0NzIHN1cHBvcnQgbW9yZSB0aGFuIG9uZQ0KPiAibmF0aXZlIiBS
-L0IgcGluPw0KDQpZZXMsIEkgY29uZmlybWVkLiANCg0KPiANCj4gVGhhbmtzLA0KPiANCj4gQm9y
-aXMNCj4gDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdA
-YXRtZWwuY29tPg0KPiA+IC0tLQ0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
-ZC9hdG1lbC1uYW5kLnR4dCAgICAgICAgIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9tdGQvbmFuZC9h
-dG1lbF9uYW5kLmMgICAgICAgICAgICAgICAgICAgICAgfCAzNSArKysrKy0tLS0tLS0tLS0tLS0t
-LS0tDQo+ID4gIGRyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZF9uZmMuaCAgICAgICAgICAgICAg
-ICAgIHwgIDMgKy0NCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAzMCBk
-ZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0DQo+ID4gaW5kZXggZDUzYWJhOS4uM2U3
-ZWU5OSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bXRkL2F0bWVsLW5hbmQudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL210ZC9hdG1lbC1uYW5kLnR4dA0KPiA+IEBAIC0zOSw3ICszOSw3IEBAIE9wdGlvbmFs
-IHByb3BlcnRpZXM6DQo+ID4NCj4gPiAgTmFuZCBGbGFzaCBDb250cm9sbGVyKE5GQykgaXMgYW4g
-b3B0aW9uYWwgc3ViLW5vZGUgIFJlcXVpcmVkDQo+ID4gcHJvcGVydGllczoNCj4gPiAtLSBjb21w
-YXRpYmxlIDogImF0bWVsLHNhbWE1ZDMtbmZjIiBvciAiYXRtZWwsc2FtYTVkNC1uZmMiLg0KPiA+
-ICstIGNvbXBhdGlibGUgOiAiYXRtZWwsc2FtYTVkMy1uZmMiLg0KPiA+ICAtIHJlZyA6IHNob3Vs
-ZCBzcGVjaWZ5IHRoZSBhZGRyZXNzIGFuZCBzaXplIHVzZWQgZm9yIE5GQyBjb21tYW5kIHJlZ2lz
-dGVycywNCj4gPiAgICAgICAgICBORkMgcmVnaXN0ZXJzIGFuZCBORkMgU1JBTS4gTkZDIFNSQU0g
-YWRkcmVzcyBhbmQgc2l6ZSBjYW4gYmUNCj4gYWJzZW50DQo+ID4gICAgICAgICAgaWYgZG9uJ3Qg
-d2FudCB0byB1c2UgaXQuDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvYXRtZWxf
-bmFuZC5jDQo+ID4gYi9kcml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmQuYyBpbmRleCBlZmM4ZWEy
-Li42OGI5MTYwIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZC5j
-DQo+ID4gKysrIGIvZHJpdmVycy9tdGQvbmFuZC9hdG1lbF9uYW5kLmMNCj4gPiBAQCAtNjcsMTAg
-KzY3LDYgQEAgc3RydWN0IGF0bWVsX25hbmRfY2FwcyB7DQo+ID4gIAl1aW50OF90IHBtZWNjX21h
-eF9jb3JyZWN0aW9uOw0KPiA+ICB9Ow0KPiA+DQo+ID4gLXN0cnVjdCBhdG1lbF9uYW5kX25mY19j
-YXBzIHsNCj4gPiAtCXVpbnQzMl90IHJiX21hc2s7DQo+ID4gLX07DQo+ID4gLQ0KPiA+ICAvKg0K
-PiA+ICAgKiBvb2IgbGF5b3V0IGZvciBsYXJnZSBwYWdlIHNpemUNCj4gPiAgICogYmFkIGJsb2Nr
-IGluZm8gaXMgb24gYnl0ZXMgMCBhbmQgMSBAQCAtMTI5LDcgKzEyNSw2IEBAIHN0cnVjdA0KPiA+
-IGF0bWVsX25mYyB7DQo+ID4gIAkvKiBQb2ludCB0byB0aGUgc3JhbSBiYW5rIHdoaWNoIGluY2x1
-ZGUgcmVhZGVkIGRhdGEgdmlhIE5GQyAqLw0KPiA+ICAJdm9pZAkJCSpkYXRhX2luX3NyYW07DQo+
-ID4gIAlib29sCQkJd2lsbF93cml0ZV9zcmFtOw0KPiA+IC0JY29uc3Qgc3RydWN0IGF0bWVsX25h
-bmRfbmZjX2NhcHMgKmNhcHM7DQo+ID4gIH07DQo+ID4gIHN0YXRpYyBzdHJ1Y3QgYXRtZWxfbmZj
-CW5hbmRfbmZjOw0KPiA+DQo+ID4gQEAgLTE3MTUsOSArMTcxMCw5IEBAIHN0YXRpYyBpcnFyZXR1
-cm5fdCBoc21jX2ludGVycnVwdChpbnQgaXJxLCB2b2lkICpkZXZfaWQpDQo+ID4gIAkJbmZjX3dy
-aXRlbChob3N0LT5uZmMtPmhzbWNfcmVncywgSURSLCBORkNfU1JfWEZSX0RPTkUpOw0KPiA+ICAJ
-CXJldCA9IElSUV9IQU5ETEVEOw0KPiA+ICAJfQ0KPiA+IC0JaWYgKHBlbmRpbmcgJiBob3N0LT5u
-ZmMtPmNhcHMtPnJiX21hc2spIHsNCj4gPiArCWlmIChwZW5kaW5nICYgTkZDX1NSX1JCX0VER0Up
-IHsNCj4gPiAgCQljb21wbGV0ZSgmaG9zdC0+bmZjLT5jb21wX3JlYWR5KTsNCj4gPiAtCQluZmNf
-d3JpdGVsKGhvc3QtPm5mYy0+aHNtY19yZWdzLCBJRFIsIGhvc3QtPm5mYy0+Y2Fwcy0NCj4gPnJi
-X21hc2spOw0KPiA+ICsJCW5mY193cml0ZWwoaG9zdC0+bmZjLT5oc21jX3JlZ3MsIElEUiwgTkZD
-X1NSX1JCX0VER0UpOw0KPiA+ICAJCXJldCA9IElSUV9IQU5ETEVEOw0KPiA+ICAJfQ0KPiA+ICAJ
-aWYgKHBlbmRpbmcgJiBORkNfU1JfQ01EX0RPTkUpIHsNCj4gPiBAQCAtMTczNSw3ICsxNzMwLDcg
-QEAgc3RhdGljIHZvaWQgbmZjX3ByZXBhcmVfaW50ZXJydXB0KHN0cnVjdA0KPiBhdG1lbF9uYW5k
-X2hvc3QgKmhvc3QsIHUzMiBmbGFnKQ0KPiA+ICAJaWYgKGZsYWcgJiBORkNfU1JfWEZSX0RPTkUp
-DQo+ID4gIAkJaW5pdF9jb21wbGV0aW9uKCZob3N0LT5uZmMtPmNvbXBfeGZlcl9kb25lKTsNCj4g
-Pg0KPiA+IC0JaWYgKGZsYWcgJiBob3N0LT5uZmMtPmNhcHMtPnJiX21hc2spDQo+ID4gKwlpZiAo
-ZmxhZyAmIE5GQ19TUl9SQl9FREdFKQ0KPiA+ICAJCWluaXRfY29tcGxldGlvbigmaG9zdC0+bmZj
-LT5jb21wX3JlYWR5KTsNCj4gPg0KPiA+ICAJaWYgKGZsYWcgJiBORkNfU1JfQ01EX0RPTkUpDQo+
-ID4gQEAgLTE3NTMsNyArMTc0OCw3IEBAIHN0YXRpYyBpbnQgbmZjX3dhaXRfaW50ZXJydXB0KHN0
-cnVjdCBhdG1lbF9uYW5kX2hvc3QNCj4gKmhvc3QsIHUzMiBmbGFnKQ0KPiA+ICAJaWYgKGZsYWcg
-JiBORkNfU1JfWEZSX0RPTkUpDQo+ID4gIAkJY29tcFtpbmRleCsrXSA9ICZob3N0LT5uZmMtPmNv
-bXBfeGZlcl9kb25lOw0KPiA+DQo+ID4gLQlpZiAoZmxhZyAmIGhvc3QtPm5mYy0+Y2Fwcy0+cmJf
-bWFzaykNCj4gPiArCWlmIChmbGFnICYgTkZDX1NSX1JCX0VER0UpDQo+ID4gIAkJY29tcFtpbmRl
-eCsrXSA9ICZob3N0LT5uZmMtPmNvbXBfcmVhZHk7DQo+ID4NCj4gPiAgCWlmIChmbGFnICYgTkZD
-X1NSX0NNRF9ET05FKQ0KPiA+IEBAIC0xODIxLDcgKzE4MTYsNyBAQCBzdGF0aWMgaW50IG5mY19k
-ZXZpY2VfcmVhZHkoc3RydWN0IG10ZF9pbmZvICptdGQpDQo+ID4gIAkJZGV2X2Vycihob3N0LT5k
-ZXYsICJMb3N0IHRoZSBpbnRlcnJ1cHQgZmxhZ3M6IDB4JTA4eFxuIiwNCj4gPiAgCQkJCW1hc2sg
-JiBzdGF0dXMpOw0KPiA+DQo+ID4gLQlyZXR1cm4gc3RhdHVzICYgaG9zdC0+bmZjLT5jYXBzLT5y
-Yl9tYXNrOw0KPiA+ICsJcmV0dXJuIHN0YXR1cyAmIE5GQ19TUl9SQl9FREdFOw0KPiA+ICB9DQo+
-ID4NCj4gPiAgc3RhdGljIHZvaWQgbmZjX3NlbGVjdF9jaGlwKHN0cnVjdCBtdGRfaW5mbyAqbXRk
-LCBpbnQgY2hpcCkgQEANCj4gPiAtMTk5NCw4ICsxOTg5LDggQEAgc3RhdGljIHZvaWQgbmZjX25h
-bmRfY29tbWFuZChzdHJ1Y3QgbXRkX2luZm8gKm10ZCwNCj4gdW5zaWduZWQgaW50IGNvbW1hbmQs
-DQo+ID4gIAkJfQ0KPiA+ICAJCS8qIGZhbGwgdGhyb3VnaCAqLw0KPiA+ICAJZGVmYXVsdDoNCj4g
-PiAtCQluZmNfcHJlcGFyZV9pbnRlcnJ1cHQoaG9zdCwgaG9zdC0+bmZjLT5jYXBzLT5yYl9tYXNr
-KTsNCj4gPiAtCQluZmNfd2FpdF9pbnRlcnJ1cHQoaG9zdCwgaG9zdC0+bmZjLT5jYXBzLT5yYl9t
-YXNrKTsNCj4gPiArCQluZmNfcHJlcGFyZV9pbnRlcnJ1cHQoaG9zdCwgTkZDX1NSX1JCX0VER0Up
-Ow0KPiA+ICsJCW5mY193YWl0X2ludGVycnVwdChob3N0LCBORkNfU1JfUkJfRURHRSk7DQo+ID4g
-IAl9DQo+ID4gIH0NCj4gPg0KPiA+IEBAIC0yNDI2LDExICsyNDIxLDYgQEAgc3RhdGljIGludCBh
-dG1lbF9uYW5kX25mY19wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+
-ICAJCX0NCj4gPiAgCX0NCj4gPg0KPiA+IC0JbmZjLT5jYXBzID0gKGNvbnN0IHN0cnVjdCBhdG1l
-bF9uYW5kX25mY19jYXBzICopDQo+ID4gLQkJb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2
-LT5kZXYpOw0KPiA+IC0JaWYgKCFuZmMtPmNhcHMpDQo+ID4gLQkJcmV0dXJuIC1FTk9ERVY7DQo+
-ID4gLQ0KPiA+ICAJbmZjX3dyaXRlbChuZmMtPmhzbWNfcmVncywgSURSLCAweGZmZmZmZmZmKTsN
-Cj4gPiAgCW5mY19yZWFkbChuZmMtPmhzbWNfcmVncywgU1IpOwkvKiBjbGVhciB0aGUgTkZDX1NS
-ICovDQo+ID4NCj4gPiBAQCAtMjQ1OSwxNyArMjQ0OSw4IEBAIHN0YXRpYyBpbnQgYXRtZWxfbmFu
-ZF9uZmNfcmVtb3ZlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlyZXR1
-cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gLXN0YXRpYyBjb25zdCBzdHJ1Y3QgYXRtZWxfbmFuZF9u
-ZmNfY2FwcyBzYW1hNWQzX25mY19jYXBzID0gew0KPiA+IC0JLnJiX21hc2sgPSBORkNfU1JfUkJf
-RURHRTAsDQo+ID4gLX07DQo+ID4gLQ0KPiA+IC1zdGF0aWMgY29uc3Qgc3RydWN0IGF0bWVsX25h
-bmRfbmZjX2NhcHMgc2FtYTVkNF9uZmNfY2FwcyA9IHsNCj4gPiAtCS5yYl9tYXNrID0gTkZDX1NS
-X1JCX0VER0UzLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
-ZXZpY2VfaWQgYXRtZWxfbmFuZF9uZmNfbWF0Y2hbXSA9IHsNCj4gPiAtCXsgLmNvbXBhdGlibGUg
-PSAiYXRtZWwsc2FtYTVkMy1uZmMiLCAuZGF0YSA9ICZzYW1hNWQzX25mY19jYXBzIH0sDQo+ID4g
-LQl7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDQtbmZjIiwgLmRhdGEgPSAmc2FtYTVkNF9u
-ZmNfY2FwcyB9LA0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJhdG1lbCxzYW1hNWQzLW5mYyIgfSwN
-Cj4gPiAgCXsgLyogc2VudGluZWwgKi8gfQ0KPiA+ICB9Ow0KPiA+ICBNT0RVTEVfREVWSUNFX1RB
-QkxFKG9mLCBhdG1lbF9uYW5kX25mY19tYXRjaCk7IGRpZmYgLS1naXQNCj4gPiBhL2RyaXZlcnMv
-bXRkL25hbmQvYXRtZWxfbmFuZF9uZmMuaA0KPiA+IGIvZHJpdmVycy9tdGQvbmFuZC9hdG1lbF9u
-YW5kX25mYy5oDQo+ID4gaW5kZXggMGJiYzFmYS4uNGQ1ZDI2MiAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmRfbmZjLmgNCj4gPiArKysgYi9kcml2ZXJzL210ZC9u
-YW5kL2F0bWVsX25hbmRfbmZjLmgNCj4gPiBAQCAtNDIsOCArNDIsNyBAQA0KPiA+ICAjZGVmaW5l
-CQlORkNfU1JfVU5ERUYJCSgxIDw8IDIxKQ0KPiA+ICAjZGVmaW5lCQlORkNfU1JfQVdCCQkoMSA8
-PCAyMikNCj4gPiAgI2RlZmluZQkJTkZDX1NSX0FTRQkJKDEgPDwgMjMpDQo+ID4gLSNkZWZpbmUJ
-CU5GQ19TUl9SQl9FREdFMAkJKDEgPDwgMjQpDQo+ID4gLSNkZWZpbmUJCU5GQ19TUl9SQl9FREdF
-MwkJKDEgPDwgMjcpDQo+ID4gKyNkZWZpbmUJCU5GQ19TUl9SQl9FREdFCQkoMSA8PCAyNCkNCj4g
-Pg0KPiA+ICAjZGVmaW5lIEFUTUVMX0hTTUNfTkZDX0lFUgkweDBjDQo+ID4gICNkZWZpbmUgQVRN
-RUxfSFNNQ19ORkNfSURSCTB4MTANCj4gDQo+IA0KPiANCj4gLS0NCj4gQm9yaXMgQnJlemlsbG9u
-LCBGcmVlIEVsZWN0cm9ucw0KPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5n
-DQo+IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20NCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3Ug
-WWFuZw0K
+
+Hello Ulf and Adrian,
+
+This patch is going to support enhanced strobe function
+for emmc version 5.1+ introduced by JEDEC recently.
+
+Enchanced strobe is a optional function, so we add a new cap* for drivers to
+decide whether to use it.
+
+When introduing hs400 mode, JEDEC asks controllers to use data strobe line
+to latch the data from emmc devives. But for cmd-reponse, not mentioned yet.
+Since emmc version 5.1 published, JEDEC adds enhanced strobe function to deal
+with cmd-response the same way as data-read. This feature is optional.
+
+>From the spec(section 6.6.2.3), the standard scenario to select HS400 enhanced
+strobe mode illustrated like this:
+(1) set HS_TIMIMG (Highspeed)
+(2) Host change freq to <= 52Mhz
+(3) set the bus width to Enhanced strobe and DDR8Bit(CMD6), EXT_CSD[183] = 0x86
+instead of 0x80
+(4) set HS_TIMING to 0x3 (HS400)
+(5) Host change freq to <= 200Mhz
+(6) Host select HS400 enhanced strobe complete
+
+I can't find a upstreamed controller claimed to support it, as well as the
+mmc stack. But my "arasan,sdhci-5.1" actually supports this function. So I decide
+to work for this part.
+
+By looking into the SDHCI spec, I find there isn't any registers to enable the
+enhanced strobe function. But from my "arasan,sdhci-5.1" databook, it describes a
+register called VENDOR_REGISTER(0x78) to trigger this mode. So I guess other sdhci
+variant drivers may also need s vendor specific register to deal with it.
+
+If we are sure that our controller supports enhanced strobe mode, just add
+mmc-hs400-enhanced-strobe in DT. Once emmc devices claims to support this mode,
+we enable it automatically. Of course, other sdhci*/non-sdhci drivers should
+implement/overwrite the prepare_enhanced_strobe by themselves. I believe all of the
+platforms which need to support this mode should do some basic preparation for their
+controllers. Currently I just limit the callback within ths scope of arasan,sdhci-5.1,
+but I prone to believe arasan will use VENDOR_REGISTER to tirgger this mode from now on
+because I do believe vendor will consider the registers' compatibility.
+
+With this patchset applied, we can successfully run in HS400 enhanced strobe mode on
+RK3399 platform with Samsung eMMC KLMBG2JENB-B041(v5.1, 16GB).
+
+mmc1: new HS400 Enhanced strobe MMC card at address 0001
+mmcblk0: mmc1:0001 AJNB4R 14.6 GiB
+mmcblk0boot0: mmc1:0001 AJNB4R partition 1 4.00 MiB
+mmcblk0boot1: mmc1:0001 AJNB4R partition 2 4.00 MiB
+mmcblk0rpmb: mmc1:0001 AJNB4R partition 3 4.00 MiB
+
+Also I check this patchset with removing some caps to make sure
+all the init sequences for hs400/hs200/DDR52/HighSpeed is correct.
+
+
+Changes in v3:
+- remove helper function and shorten cap2 to MMC_CAP2_HS400_ES
+- rename callback to hs400_enhanced_strobe and make it return void
+- add enhanced_strobe in mmc_ios and pass it to hs400_enhanced_strobe
+- disable host's enhanced strobe in mmc_set_initial_state
+- remove bus checking after switching hs400es
+- add new function for hs400es timing selection
+- fix wrong judgement of mmc_card_hs400es
+
+Changes in v2:
+- switch to HS400ES from Highspeed mode directly
+
+Shawn Lin (5):
+  Documentation: mmc: add mmc-hs400-enhanced-strobe
+  mmc: core: add mmc-hs400-enhanced-strobe support
+  mmc: core: implement enhanced strobe support
+  mmc: debugfs: add HS400 enhanced strobe description
+  mmc: sdhci-of-arasan: implement enhanced strobe callback
+
+ Documentation/devicetree/bindings/mmc/mmc.txt |  1 +
+ drivers/mmc/core/bus.c                        |  3 +-
+ drivers/mmc/core/core.c                       |  8 +++
+ drivers/mmc/core/debugfs.c                    |  4 +-
+ drivers/mmc/core/host.c                       |  2 +
+ drivers/mmc/core/mmc.c                        | 79 ++++++++++++++++++++++++++-
+ drivers/mmc/host/sdhci-of-arasan.c            | 20 +++++++
+ include/linux/mmc/card.h                      |  1 +
+ include/linux/mmc/host.h                      | 12 ++++
+ include/linux/mmc/mmc.h                       |  3 +
+ 10 files changed, 129 insertions(+), 4 deletions(-)
+
+-- 
+2.3.7
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
