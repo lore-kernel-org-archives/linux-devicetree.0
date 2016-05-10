@@ -1,71 +1,55 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [RFC PATCH] drivers/of: Fix depth when unflattening devicetree
-Date: Tue, 10 May 2016 18:43:14 -0400
-Message-ID: <1462920194-28803-1-git-send-email-rklein@nvidia.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Tue, 10 May 2016 18:18:28 -0500
+Message-ID: <57326C44.8020906@codeaurora.org>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com> <571915F5.5070504@codeaurora.org>
+ <571A7F3D.1070609@codeaurora.org> <571A8207.60704@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <571A8207.60704@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-When the implementation for unflatten_dt_node() changed from being
-recursive to being non-recursive, it had a side effect of increasing the
-depth passed to fdt_next_node() by 1. This is fine most of the time, but
-it seems that when the end of the dtb is being parsed, it will cause the
-FDT_END condition in fdt_next_node() to return a different value
-(returning nextoffset instead of -FDT_ERR_NOTFOUND). This ends up passing
-an FDT_ERR_TRUNCATED error back to the unflatten_dt_node() which then
-sees that and complains "Error -8 processing FDT" causing boot to fail.
+Florian Fainelli wrote:
+> Are you utilizing the PHYLIB APIs properly? You need at least a
+> phy_start() to start the PHY state machine, and an adjust_link callback
+> to be provided to phy_connect() (or of_phy_connect()) to manage link
+> state changes. And that's the very basic minimum here, there could be
+> additional APIs that you may end up using.
+>
+> There are tons of example in tree of drivers doing this, bcmgenet,
+> bcmsysport, tg3 etc.
 
-This patch simply avoids incrementing depth and uses modified accesses
-for local array indices so that the depth is the same as it was before
-the change as far as fdt_next_node() is concerned.
+Thank you.  I think I finally got phylib working, more or less.
 
-This problem was discovered trying to boot Tegra210-Smaug platforms.
+Unfortunately, it seems I have some kind of race condition.  The driver 
+has a lot that's wrong with it, and I'm trying to fix it all.  One crazy 
+the driver does is it create a workqueue to handle a lot of the tasks 
+that would normally be handled in the interrupt handler itself.
 
-Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/fdt.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+With phylib support, I know my driver can call phy_mac_interrupt() when 
+it gets a link status change interrupt.  I then have an .adjust_link 
+callback which starts or stops the mac accordingly.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index f3da1878eea2..8855ba4f7470 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -407,24 +407,24 @@ static int unflatten_dt_node(const void *blob,
- 
- 	root = dad;
- 	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
--	nps[depth++] = dad;
-+	nps[depth+1] = dad;
- 	for (offset = 0;
- 	     offset >= 0;
- 	     offset = fdt_next_node(blob, offset, &depth)) {
- 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
- 			continue;
- 
--		fpsizes[depth] = populate_node(blob, offset, &mem,
--					       nps[depth - 1],
--					       fpsizes[depth - 1],
--					       &nps[depth], dryrun);
--		if (!fpsizes[depth])
-+		fpsizes[depth+1] = populate_node(blob, offset, &mem,
-+					       nps[depth],
-+					       fpsizes[depth],
-+					       &nps[depth+1], dryrun);
-+		if (!fpsizes[depth+1])
- 			return mem - base;
- 
- 		if (!dryrun && nodepp && !*nodepp)
--			*nodepp = nps[depth];
-+			*nodepp = nps[depth+1];
- 		if (!dryrun && !root)
--			root = nps[depth];
-+			root = nps[depth+1];
- 	}
- 
- 	if (offset < 0 && offset != -FDT_ERR_NOTFOUND) {
+My problem is that I'm not really sure what adjust_link is supposed to 
+be doing.  In addition, it seems that I need to keep the workqueue 
+running, otherwise the interface will not function.  I bring the 
+interface up, and the driver reports success, but pings do not work.
+
+I'm getting really frustrated.  The sample code isn't really helping a 
+whole lot, because I lack a fundamental understanding of what needs to 
+be done.  None of the documentation I've read is helpful, and I don't 
+know how to debug it.
+
+Can you give me some advice on how to debug this?
+
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
