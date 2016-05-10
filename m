@@ -1,142 +1,103 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH 1/3] of: rename *_node_sysfs to _node_post
-Date: Tue, 10 May 2016 16:57:07 +0300
-Message-ID: <A91ED547-2B22-43FD-8B2B-F3DB86BC4750@konsulko.com>
-References: <1462817488-8370-1-git-send-email-pantelis.antoniou@konsulko.com> <1462817488-8370-2-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqLZuQhDouK_Qd3WWuDHik2iYogeSyAY5+Bn8VDGdWiX4w@mail.gmail.com>
+Subject: Re: [PATCH 3/6] doc: dt: Document the indirect overlay method.
+Date: Tue, 10 May 2016 16:59:06 +0300
+Message-ID: <2A7DBC29-2A70-4076-8229-E2F517BFDE10@konsulko.com>
+References: <1462817147-7620-1-git-send-email-pantelis.antoniou@konsulko.com> <1462817147-7620-4-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqL6fTdUDNW_v0gb++vTK+hnDcR1vFEFevUxbg+s7khUqg@mail.gmail.com>
 Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLZuQhDouK_Qd3WWuDHik2iYogeSyAY5+Bn8VDGdWiX4w@mail.gmail.com>
+In-Reply-To: <CAL_JsqL6fTdUDNW_v0gb++vTK+hnDcR1vFEFevUxbg+s7khUqg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
 
-> On May 10, 2016, at 00:49 , Rob Herring <robherring2@gmail.com> wrote:
-> 
-> On Mon, May 9, 2016 at 1:11 PM, Pantelis Antoniou
+> On May 10, 2016, at 00:59 , Rob Herring <robherring2@gmail.com> wrote=
+:
+>=20
+> On Mon, May 9, 2016 at 1:05 PM, Pantelis Antoniou
 > <pantelis.antoniou@konsulko.com> wrote:
-> 
-> The "why" goes here.
-> 
-
-OK.
-
+>> Add a description of the indirect overlay method to the overlay
+>> documention file.
+>=20
+> Why? Please write some decent commit messages.
+>=20
 >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 >> ---
->> drivers/of/base.c       |  4 ++--
->> drivers/of/dynamic.c    | 10 +++++-----
->> drivers/of/of_private.h |  4 ++--
->> drivers/of/unittest.c   |  4 ++--
->> 4 files changed, 11 insertions(+), 11 deletions(-)
->> 
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index 9bbca56..20bbc2f 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -156,7 +156,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
->>        return rc;
->> }
->> 
->> -int __of_attach_node_sysfs(struct device_node *np)
->> +int __of_attach_node_post(struct device_node *np)
->> {
->>        const char *name;
->>        struct property *pp;
->> @@ -203,7 +203,7 @@ void __init of_core_init(void)
->>                return;
->>        }
->>        for_each_of_allnodes(np)
->> -               __of_attach_node_sysfs(np);
->> +               __of_attach_node_post(np);
->>        mutex_unlock(&of_mutex);
->> 
->>        /* Symlink in /proc as required by userspace ABI */
->> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->> index 350b1cf..eb31a55 100644
->> --- a/drivers/of/dynamic.c
->> +++ b/drivers/of/dynamic.c
->> @@ -41,7 +41,7 @@ void of_node_put(struct device_node *node)
->> }
->> EXPORT_SYMBOL(of_node_put);
->> 
->> -void __of_detach_node_sysfs(struct device_node *np)
->> +void __of_detach_node_post(struct device_node *np)
->> {
->>        struct property *pp;
->> 
->> @@ -251,7 +251,7 @@ int of_attach_node(struct device_node *np)
->>        __of_attach_node(np);
->>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
->> 
->> -       __of_attach_node_sysfs(np);
->> +       __of_attach_node_post(np);
->>        mutex_unlock(&of_mutex);
->> 
->>        of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
->> @@ -304,7 +304,7 @@ int of_detach_node(struct device_node *np)
->>        __of_detach_node(np);
->>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
->> 
->> -       __of_detach_node_sysfs(np);
->> +       __of_detach_node_post(np);
->>        mutex_unlock(&of_mutex);
->> 
->>        of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
->> @@ -628,10 +628,10 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
->> 
->>        switch (ce->action) {
->>        case OF_RECONFIG_ATTACH_NODE:
->> -               __of_attach_node_sysfs(ce->np);
->> +               __of_attach_node_post(ce->np);
->>                break;
->>        case OF_RECONFIG_DETACH_NODE:
->> -               __of_detach_node_sysfs(ce->np);
->> +               __of_detach_node_post(ce->np);
->>                break;
->>        case OF_RECONFIG_ADD_PROPERTY:
->>                /* ignore duplicate names */
->> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
->> index 092cba7..10b0342 100644
->> --- a/drivers/of/of_private.h
->> +++ b/drivers/of/of_private.h
->> @@ -79,9 +79,9 @@ extern void __of_update_property_sysfs(struct device_node *np,
->>                struct property *newprop, struct property *oldprop);
->> 
->> extern void __of_attach_node(struct device_node *np);
->> -extern int __of_attach_node_sysfs(struct device_node *np);
->> +extern int __of_attach_node_post(struct device_node *np);
->> extern void __of_detach_node(struct device_node *np);
->> -extern void __of_detach_node_sysfs(struct device_node *np);
->> +extern void __of_detach_node_post(struct device_node *np);
->> 
->> /* iterators for transactions, used for overlays */
->> /* forward iterator */
->> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
->> index e5a5ec0..7ea3689 100644
->> --- a/drivers/of/unittest.c
->> +++ b/drivers/of/unittest.c
->> @@ -931,7 +931,7 @@ static int attach_node_and_children(struct device_node *np)
->>        of_node_clear_flag(np, OF_DETACHED);
->>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
->> 
->> -       __of_attach_node_sysfs(np);
->> +       __of_attach_node_post(np);
->>        mutex_unlock(&of_mutex);
->> 
->>        while (child) {
->> @@ -989,7 +989,7 @@ static int __init unittest_data_add(void)
->>        if (!of_root) {
->>                of_root = unittest_data_node;
->>                for_each_of_allnodes(np)
->> -                       __of_attach_node_sysfs(np);
->> +                       __of_attach_node_post(np);
->>                of_aliases = of_find_node_by_path("/aliases");
->>                of_chosen = of_find_node_by_path("/chosen");
->>                return 0;
+>> Documentation/devicetree/overlay-notes.txt | 13 +++++++++++++
+>> 1 file changed, 13 insertions(+)
+>>=20
+>> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentat=
+ion/devicetree/overlay-notes.txt
+>> index d418a6c..dd595e6 100644
+>> --- a/Documentation/devicetree/overlay-notes.txt
+>> +++ b/Documentation/devicetree/overlay-notes.txt
+>> @@ -100,6 +100,10 @@ Finally, if you need to remove all overlays in =
+one-go, just call
+>> of_overlay_destroy_all() which will remove every single one in the c=
+orrect
+>> order.
+>>=20
+>> +If your board has multiple slots/places where a single overlay can =
+work
+>> +and each slot is defined by a node, you can use the of_overlay_crea=
+te_indirect()
+>> +method to select the target.
+>> +
+>> Overlay DTS Format
+>> ------------------
+>>=20
+>> @@ -113,6 +117,11 @@ The DTS of an overlay should have the following=
+ format:
+>>                target=3D<phandle>;       /* phandle target of the ov=
+erlay */
+>>        or
+>>                target-path=3D"/path";    /* target path of the overl=
+ay */
+>=20
+> Why not just let these take multiple values and the user just selects=
+ index?
+>=20
+
+Implementation details. Usually there=E2=80=99s a descriptive label use=
+d for each
+different target point. It could be a slot# or it could be a label=E2=80=
+=A6
+
+A string selector maps better IMO.
+
+
+>> +       or
+>> +               target-indirect {       /* indirect target selector =
+*/
+>> +                       foo { target|target-path ... };
+>> +                       bar { .... };
+>> +               };
+>>=20
+>>                __overlay__ {
+>>                        property-a;     /* add property-a to the targ=
+et */
+>> @@ -131,3 +140,7 @@ Using the non-phandle based target method allows=
+ one to use a base DT which does
+>> not contain a __symbols__ node, i.e. it was not compiled with the -@=
+ option.
+>> The __symbols__ node is only required for the target=3D<phandle> met=
+hod, since it
+>> contains the information required to map from a phandle to a tree lo=
+cation.
+>> +
+>> +The indirect target requires the use of a selector target on the ca=
+ll to
+>> +of_overlay_create_indirect(). I.e. passing the "foo" id will select=
+ the target
+>> +in the foo node, "bar" in bar node, etc.
 >> --
 >> 1.7.12
->> 
+>>=20
+
+Regards
+
+=E2=80=94 Pantelis
