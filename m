@@ -1,68 +1,61 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 0/3] power: Remove the deprecated extcon functions
-Date: Tue, 10 May 2016 09:54:58 +0900
-Message-ID: <57313162.20208@samsung.com>
-References: <1461232535-3959-1-git-send-email-cw00.choi@samsung.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 0/5] clk: bcm2835: add flags for mash and parent clocks
+Date: Mon, 09 May 2016 18:05:41 -0700
+Message-ID: <87h9e6yb6i.fsf@eliezer.anholt.net>
+References: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1461232535-3959-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462463608-22940-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ping.
+--=-=-=
+Content-Type: text/plain
 
-Could you review this patch?
+kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
 
-Thanks,
-Chanwoo Choi
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> Allow flags to be set on a per clock index basis, which control:
+> * the parent clocks selected when not setting clocks explicitly
 
-On 2016=EB=85=84 04=EC=9B=94 21=EC=9D=BC 18:55, Chanwoo Choi wrote:
-> This patch-set removes the deprecated notifier API of extcon framewor=
-k and
-> then use the new extcon API[2] with the unique id[1] to indicate the =
-each
-> external connector. Alter deprecated API as following:
-> - extcon_register_interest() -> extcon_register_notifier()
-> - extcon_unregister_interest() -> extcon_unregister_notifier()
-> - extcon_set_cable_state() -> extcon_set_cable_state_()
-> - extcon_get_cable_state() -> extcon_get_cable_state_()
->=20
-> And, extcon alters the name of USB charger connector in patch[3] as f=
-ollowing:
-> - EXTCON_CHG_USB_SDP /* Standard Downstream Port */
-> - EXTCON_CHG_USB_DCP /* Dedicated Charging Port */
-> - EXTCON_CHG_USB_CDP /* Charging Downstream Port */
-> - EXTCON_CHG_USB_ACA /* Accessory Charger Adapter */
->=20
-> [1] Commit 2a9de9c0f08d61
-> - ("extcon: Use the unique id for external connector instead of strin=
-g)
-> [2] Commit 046050f6e623e4
-> - ("extcon: Update the prototype of extcon_register_notifier() with e=
-num extcon
-> [3] Commit 11eecf910bd81d
-> - ("extcon: Modify the id and name of external connector")
->=20
-> Changes from v1:
-> - Fix the typo (EXTCON_CHG_USB_SDP -> EXTCON_CHG_USB_CDP) on axp288_c=
-harger.c
->=20
-> Chanwoo Choi (3):
->   power: charger-manager: Replace deprecatd API of extcon
->   power: axp288_charger: Replace deprecatd API of extcon
->   extcon: Remove the deprecated extcon functions
->=20
->  .../bindings/power_supply/charger-manager.txt      |   4 +-
->  drivers/extcon/extcon.c                            | 201 +++--------=
-----------
->  drivers/power/axp288_charger.c                     |  77 +++++---
->  drivers/power/charger-manager.c                    |  31 ++--
->  include/linux/extcon.h                             |  59 ------
->  include/linux/power/charger-manager.h              |   4 +-
->  6 files changed, 101 insertions(+), 275 deletions(-)
->=20
+I don't think we need this other than avoiding PLLC.  What else do you
+want to filter, and why?
 
+> * the clock mode with regards to integer only or higher order mash
+
+Please provide justification in the commit message explaining why there
+is no obvious mash setting to just implement in clk-bcm2835.c, but that
+that a better policy can be encoded in the DT.
+
+Overall, I'm skeptical of this series.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXMTPmAAoJELXWKTbR/J7oxKgP/0xD2f60vjRKnNaDmmIunYGF
+Pb3ViIdWgEL3A3t9vzAkmap8DS29wBiX7rTB4h0zVy2Ps5y1T+1KChJQb662vk+q
+7CqWfdx4WIkSk0fQ/HBB6wKmOWmZvzo/3z9tZN99syvhYWHCqkhdnQC6xkQ7WMBz
+avZMSB9JPRKjR55tbTToqLCv+/4g7zkChnnV83RvedsiOvxHGlZyZgEy5mD1B2OY
+c6coqZPIIDpcl77WpYCY+uALwvNuVRPGdh3/9nZJeyRsDn9UCFa70E9Z7PHOM1PG
+V6iuuHZuLvpgJqM6zPSFtX+ALZCj1+T3Y4NIN7vxc0Au1AO+MOiuLUurMvq3Nz9D
+VJ9GgKXddAOFwHGF2L+C0ovFNBx97CRx9c+yydtdr4RTZaZgy8YsYnBmHa2sNTPY
+K7jk6ROMTxhIXrmLEkP3PwiIVQOAy+AzrSBKT7nGuJi4K5RYS9rDYeRH3sBfdVmX
+AzgouCpWHzxNV/Rn1qksM/t8EXvr0JYkkW5XTxVdDajznvU03sUNQKkwvOEBdaT0
+aVn7Nfusq+lZjra8EyE+IsQ/JsA8RuIjo1ulZ0NAusM/rmsKgWSBnZ5d7WQfbOP+
+Al/SqO5GeqMdYRb5modiylkTKdOKL7whc4keUrLOXqOc6ngXa1W4rpUWUljebqgG
+NdsfvNW+LEoLAjnMxFvE
+=/GE5
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
