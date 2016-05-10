@@ -1,45 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 3/5] ARM: davinci: da8xx: Add USB PHY platform
- declaration
-Date: Tue, 10 May 2016 14:24:12 +0300
-Message-ID: <01040628-8116-f0db-dc20-f511f6d3a2b0@cogentembedded.com>
-References: <1462837612-7803-1-git-send-email-david@lechnology.com>
- <1462837612-7803-4-git-send-email-david@lechnology.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 1/2] doc/devicetree: Add Aspeed watchdog timer bindings
+Date: Tue, 10 May 2016 20:54:01 +0930
+Message-ID: <CACPK8XeAhn=h=-LKjFZJ9UibnXiYLvy5R=1=FsNZJn0Hk1O36Q@mail.gmail.com>
+References: <1462797277-14969-1-git-send-email-joel@jms.id.au>
+ <1462797277-14969-2-git-send-email-joel@jms.id.au> <20160509203831.GA20352@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462837612-7803-4-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, nsekhar@ti.com, khilman@kernel.org
-Cc: petr@barix.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160509203831.GA20352@rob-hp-laptop>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 5/10/2016 2:46 AM, David Lechner wrote:
-
-> There is now a proper phy driver for the DA8xx SoC USB PHY. This adds the
-> platform device declarations needed to use it.
+On Tue, May 10, 2016 at 6:08 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, May 09, 2016 at 10:04:36PM +0930, Joel Stanley wrote:
+>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+>> new file mode 100644
+>> index 000000000000..58184b161e0d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+>> @@ -0,0 +1,14 @@
+>> +Aspeed Watchdog Timer
+>> +
+>> +Required properties:
+>> + - compatible: must be "aspeed,wdt"
 >
-> Signed-off-by: David Lechner <david@lechnology.com>
+> This should have the specific SOCs listed.
 
-[...]
-> diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-> index c32444b..38d932e 100644
-> --- a/arch/arm/mach-davinci/include/mach/da8xx.h
-> +++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-[...]
-> @@ -230,6 +231,16 @@ int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
->  	return ret;
->  }
+Thanks, I'll fix it.
+
+In the cases where the drivers had no change in the IP between
+versions of the soc I wondered if it was neater to have a generic
+string. You're saying that's wrong and we prefer using multiple
+strings for all the SoCs instead?
+
+>> +     wdt1: wdt@1e785000 {
 >
-> +static struct platform_device da8xx_usb_phy = {
-> +	.name		= "da8xx-usb-phy",
-> +	.id		= 0,
+> IIRC, "watchdog@..." is the correct generic name.
 
-    I'd have used -1 here, as this PHY device is singular.
+Cheers,
 
-[...]
-
-MBR, Sergei
+Joel
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
