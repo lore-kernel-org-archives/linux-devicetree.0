@@ -1,113 +1,51 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
- registers
-Date: Tue, 10 May 2016 15:17:54 +0100
-Message-ID: <5731ED92.6080804@arm.com>
-References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
- <CAMuHMdV6XOSiSv-mwovnCAMEPsgOc_vEhPPu0aYCgz74EF242g@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] of: overlay: Pick up label symbols from overlays.
+Date: Tue, 10 May 2016 09:23:43 -0500
+Message-ID: <CAL_JsqJkX9fs0a_Xcqm6He04_43UBDjVevnYEDrgJ2hBis_g=A@mail.gmail.com>
+References: <1462817488-8370-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1462817488-8370-4-git-send-email-pantelis.antoniou@konsulko.com>
+ <CAL_JsqLVnQ12AS-2CNfsf5PsyGvELrMjDDGfRcv7opijgJkGdw@mail.gmail.com> <2B34FBA8-A9DB-4DB5-BF95-4FE752EAF128@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV6XOSiSv-mwovnCAMEPsgOc_vEhPPu0aYCgz74EF242g@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Dirk Behme <dirk.behme@de.bosch.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, julien.grall@arm.com, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2B34FBA8-A9DB-4DB5-BF95-4FE752EAF128-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/16 14:33, Geert Uytterhoeven wrote:
-> CC Marc, lakml
-> 
-> On Tue, Apr 19, 2016 at 8:29 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
->> From: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
+On Tue, May 10, 2016 at 8:56 AM, Pantelis Antoniou
+<panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> Hi Rob,
+>
+>> On May 10, 2016, at 00:47 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
 >>
->> There are some requirements about the GIC-400 memory layout and its
->> mapping if using 64k aligned base addresses like on r8a7795.
+>> On Mon, May 9, 2016 at 1:11 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> Insert overlay symbols to the base tree when applied.
+>>> This makes it possible to apply an overlay that references a label
+>>> that a previously inserted overlay had.
+
+[...]
+
+>>> +       /* locate the symbols & fixups nodes on resolve */
+>>> +       for_each_child_of_node(tree, child) {
+>>> +               if (of_node_cmp(child->name, "__symbols__") =3D=3D =
+0)
+>>> +                       goto found;
 >>
->> See e.g.
+>> Doesn't of_get_child_by_name work here?
 >>
->> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
->>
->> Map the whole memory range instead of only 0x2000. This will fix
->> the issue that some hypervisors, e.g. Xen, fail to handle the
->> interrupts correctly.
->>
->> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
->> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-> 
-> Based on my understanding below
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
->> ---
->> Note: This patch is against renesas-drivers-2016-04-12-v4.6-rc3
->>
->>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> index 8be9424..d880fd4 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> @@ -160,9 +160,9 @@
->>                         #address-cells = <0>;
->>                         interrupt-controller;
->>                         reg = <0x0 0xf1010000 0 0x1000>,
->> -                             <0x0 0xf1020000 0 0x2000>,
->> +                             <0x0 0xf1020000 0 0x20000>,
->>                               <0x0 0xf1040000 0 0x20000>,
->> -                             <0x0 0xf1060000 0 0x2000>;
->> +                             <0x0 0xf1060000 0 0x20000>;
->>                         interrupts = <GIC_PPI 9
->>                                         (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->>                 };
-> 
-> Region 0:
->     4 KiB-pages 0xf1011000-0xf101ffff are aliased to 0xf1010000-0xf1010fff,
->     but we need the first 4 KiB only.
-> 
-> Region 1:
->     4 KiB-pages 0xf1021000-0xf102ffff are aliased to 0xf1020000-0xf1020fff,
->     4 KiB-pages 0xf1030000-0xf103ffff are all zeroes, probably due to
->     non-secure mode?
+>
+> No, we=E2=80=99re holding of_mutex.
 
-No. This 4kB page only contain a single register (GICC_DIR), which is
-WO/RAZ.
+So. Go look at the function.
 
-> 
-> Region 2:
->     4 KiB-pages 0xf1041000-0xf104ffff are aliased to 0xf1040000-0xf1040fff,
->     4 KiB-pages 0xf1050000-0xf105ffff are all zeroes, probably due to
->     non-secure mode?
-
-Neither. The aliases are an unused feature of GIC400 exposing the other
-CPUs view of the same registers...
-
-> 
-> Region 3:
->     4 KiB-pages 0xf1061000-0xf106ffff are aliased to 0xf1060000-0xf1060fff,
->     4 KiB-pages 0xf1070000-0xf107ffff are all zeroes, probably due to
->     non-secure mode?
-
-Same as region 1.
-
-> 
-> Region 2 already had a 128 KiB size before, which allowed to use 8 KiB at
-> 0xf104f000.
-
-No. This region (GICH) only needs the first 256 bytes or so. The rest is
-either RAZ/WI or useless stuff.
-
-> 
-> An 8 KiB size for regions 1 and 3 indeed didn't make much sense, as this
-> covered two identical (aliased) 4 KiB pages, instead of two different pages
-> at offset 0xf000.
-
-While we're at it, adding a pointer to the documentation (GIC400 and
-SBSA) would be tremendously useful, as it'd avoid misinterpreting the
-various bits.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
