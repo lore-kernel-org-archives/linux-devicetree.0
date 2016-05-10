@@ -1,837 +1,458 @@
-Return-Path: <bjdooks@googlemail.com>
+Return-Path: <dianders@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1464520323-19531-2-git-send-email-carlo@caione.org>
-References: <1464520323-19531-1-git-send-email-carlo@caione.org>
-	<1464520323-19531-2-git-send-email-carlo@caione.org>
-Date: Sun, 29 May 2016 12:27:37 +0100
-Message-ID: <CANe6Qb8ECk_1S=pyJBACUwSRyNUi7ROF-GvybcpYLTks4L38fg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] firmware: Amlogic: Add secure monitor driver
-From: Ben Dooks <bjdooks@googlemail.com>
-Content-Type: multipart/alternative; boundary=089e011609da58e1230533f96d7f
-To: Carlo Caione <carlo@caione.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, linux@endlessm.com, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@endlessm.com>, robh+dt@kernel.org, linux-amlogic@lists.infradead.org
+Sender: dianders@google.com
+In-Reply-To: <1f2f43c7-2672-e448-eddb-2d613bb8dc48@rock-chips.com>
+References: <1462527648-24443-1-git-send-email-shawn.lin@rock-chips.com>
+	<1462527673-24711-1-git-send-email-shawn.lin@rock-chips.com>
+	<CAD=FV=WSkBwBjVsRoDsfjD+sNfR70mKGRA0khjPKKW0zS2=PTw@mail.gmail.com>
+	<b15dcb4f-1584-8219-2fe0-97eecb0c64a6@rock-chips.com>
+	<CAD=FV=XToSzqSh=SShHuQU9W_m7gfyQn8wRXkLy79t+tnqZknA@mail.gmail.com>
+	<1f2f43c7-2672-e448-eddb-2d613bb8dc48@rock-chips.com>
+Date: Tue, 10 May 2016 08:52:13 -0700
+Message-ID: <CAD=FV=X4h9sEeiEchbT-Qy2EmdLnKy27RFr=nfbq2yQj8hWK1w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: rockchip-dw-mshc: add rockchip,default-drv-phase
+From: Doug Anderson <dianders@chromium.org>
+Content-Type: multipart/alternative; boundary=001a114e1ff49ac31205327ee803
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---089e011609da58e1230533f96d7f
+--001a114e1ff49ac31205327ee803
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 29 May 2016 12:13, "Carlo Caione" <carlo@caione.org> wrote:
->
-> From: Carlo Caione <carlo@endlessm.com>
->
-> Introduce a driver to provide calls into secure monitor mode.
->
-> In the Amlogic SoCs these calls are used for multiple reasons: access to
-> NVMEM, set USB boot, enable JTAG, etc...
->
-> Signed-off-by: Carlo Caione <carlo@endlessm.com>
-> ---
->  drivers/firmware/Kconfig                |   1 +
->  drivers/firmware/Makefile               |   1 +
->  drivers/firmware/meson/Kconfig          |   8 ++
->  drivers/firmware/meson/Makefile         |   1 +
->  drivers/firmware/meson/meson_sm.c       | 223
-++++++++++++++++++++++++++++++++
->  include/linux/firmware/meson/meson_sm.h |  32 +++++
->  6 files changed, 266 insertions(+)
->  create mode 100644 drivers/firmware/meson/Kconfig
->  create mode 100644 drivers/firmware/meson/Makefile
->  create mode 100644 drivers/firmware/meson/meson_sm.c
->  create mode 100644 include/linux/firmware/meson/meson_sm.h
->
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 6664f11..686e395 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -199,5 +199,6 @@ config HAVE_ARM_SMCCC
->  source "drivers/firmware/broadcom/Kconfig"
->  source "drivers/firmware/google/Kconfig"
->  source "drivers/firmware/efi/Kconfig"
-> +source "drivers/firmware/meson/Kconfig"
->
->  endmenu
-> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-> index 474bada..fc4bb09 100644
-> --- a/drivers/firmware/Makefile
-> +++ b/drivers/firmware/Makefile
-> @@ -21,6 +21,7 @@ obj-$(CONFIG_QCOM_SCM_32)     += qcom_scm-32.o
->  CFLAGS_qcom_scm-32.o :=$(call as-instr,.arch armv7-a\n.arch_extension
-sec,-DREQUIRES_SEC=1) -march=armv7-a
->
->  obj-y                          += broadcom/
-> +obj-y                          += meson/
->  obj-$(CONFIG_GOOGLE_FIRMWARE)  += google/
->  obj-$(CONFIG_EFI)              += efi/
->  obj-$(CONFIG_UEFI_CPER)                += efi/
-> diff --git a/drivers/firmware/meson/Kconfig
-b/drivers/firmware/meson/Kconfig
-> new file mode 100644
-> index 0000000..fff11a3
-> --- /dev/null
-> +++ b/drivers/firmware/meson/Kconfig
-> @@ -0,0 +1,8 @@
-> +#
-> +# Amlogic Secure Monitor driver
-> +#
-> +config MESON_SM
-> +       bool
-> +       default ARCH_MESON
-> +       help
-> +         Say y here to enable the Amlogic secure monitor driver
-> diff --git a/drivers/firmware/meson/Makefile
-b/drivers/firmware/meson/Makefile
-> new file mode 100644
-> index 0000000..9ab3884
-> --- /dev/null
-> +++ b/drivers/firmware/meson/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_MESON_SM) +=      meson_sm.o
-> diff --git a/drivers/firmware/meson/meson_sm.c
-b/drivers/firmware/meson/meson_sm.c
-> new file mode 100644
-> index 0000000..e1ce487
-> --- /dev/null
-> +++ b/drivers/firmware/meson/meson_sm.c
-> @@ -0,0 +1,223 @@
-> +/*
-> + * Amlogic Secure Monitor driver
-> + *
-> + * Copyright (C) 2016 Endless Mobile, Inc.
-> + * Author: Carlo Caione <carlo@endlessm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <stdarg.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/compiler.h>
-> +#include <linux/arm-smccc.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/smp.h>
-> +#include <linux/firmware/meson/meson_sm.h>
-> +
-> +struct meson_sm_cmd {
-> +       unsigned int index;
-> +       u32 smc_id;
-> +};
-> +#define CMD(d, s) { .index = (d), .smc_id = (s), }
-> +
-> +struct meson_sm_chip {
-> +       unsigned int shmem_size;
-> +       u32 cmd_shmem_in_base;
-> +       u32 cmd_shmem_out_base;
-> +       struct meson_sm_cmd cmd[];
-> +};
-> +
-> +struct meson_sm_firmware {
-> +       struct device *dev;
-> +       const struct meson_sm_chip *chip;
-> +       void __iomem *sm_shmem_in_base;
-> +       void __iomem *sm_shmem_out_base;
-> +};
-> +
-> +struct meson_sm_chip gxbb_chip = {
-> +       .shmem_size             = 0x1000,
-> +       .cmd_shmem_in_base      = 0x82000020,
-> +       .cmd_shmem_out_base     = 0x82000021,
-> +       .cmd = {
-> +               CMD(SM_EFUSE_READ,      0x82000030),
-> +               CMD(SM_EFUSE_WRITE,     0x82000031),
-> +               CMD(SM_EFUSE_USER_MAX,  0x82000033),
-> +               { /* sentinel */ },
-> +       },
-> +};
-> +
-> +static u32 meson_sm_get_cmd(const struct meson_sm_chip *chip, unsigned
-int cmd_index)
-> +{
-> +       unsigned int i;
-> +
-> +       for (i = 0; chip->cmd[i].smc_id; i++)
-> +               if (chip->cmd[i].index == cmd_index)
-> +                       return chip->cmd[i].smc_id;
-> +
-> +       return 0;
-> +}
-> +
-> +static u32 __meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32
-arg3, u32 arg4)
-> +{
-> +       struct arm_smccc_res res;
-> +
-> +       arm_smccc_smc(cmd, arg0, arg1, arg2, arg3, arg4, 0, 0, &res);
-> +       return res.a0;
-> +}
-> +
-> +u32 meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
-> +                 u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
-> +{
-> +       u32 cmd;
-> +
-> +       if (!fw)
-> +               return -EINVAL;
-> +
-> +       cmd = meson_sm_get_cmd(fw->chip, cmd_index);
-> +       if (!cmd)
-> +               return -EINVAL;
-> +
-> +       return __meson_sm_call(cmd, arg0, arg1, arg2, arg3, arg4);
-> +}
-> +EXPORT_SYMBOL(meson_sm_call);
-> +
-> +u32 meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
-> +                      unsigned int cmd_index, u32 arg0, u32 arg1,
-> +                      u32 arg2, u32 arg3, u32 arg4)
-> +{
-> +       u32 size;
-> +
-> +       if (!fw->chip->cmd_shmem_out_base)
-> +               return -EINVAL;
-> +
-> +       size = meson_sm_call(fw, cmd_index, arg0, arg1, arg2, arg3, arg4);
-> +       if (size <= 0 || size > fw->chip->shmem_size)
-> +               return -EINVAL;
-> +
-u32 cannot be less than 0
+Shawn,
 
-> +       memcpy(buffer, fw->sm_shmem_out_base, size);
-> +
-> +       return size;
-> +}
-> +EXPORT_SYMBOL(meson_sm_call_read);
-> +
-> +u32 meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
-> +                       unsigned int b_size, unsigned int cmd_index,
-> +                       u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
-> +{
-> +       u32 size;
-> +
-> +       if (b_size > fw->chip->shmem_size)
-> +               return -EINVAL;
-> +
-> +       if (!fw->chip->cmd_shmem_in_base)
-> +               return -EINVAL;
-> +
-> +       memcpy(fw->sm_shmem_in_base, buffer, b_size);
-> +
-> +       size = meson_sm_call(fw, cmd_index, arg0, arg1, arg2, arg3, arg4);
-> +       if (size <= 0)
-> +               return -EINVAL;
-> +
-> +       return size;
-> +}
-> +EXPORT_SYMBOL(meson_sm_call_write);
-> +
-> +static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int size)
-> +{
-> +       u32 sm_phy_base;
-> +
-> +       sm_phy_base = __meson_sm_call(cmd_shmem, 0, 0, 0, 0, 0);
-> +       if (!sm_phy_base)
-> +               return 0;
-> +
-> +       return ioremap_cache(sm_phy_base, size);
-> +}
-> +
-> +static int meson_sm_probe(struct platform_device *pdev)
-> +{
-> +       const struct meson_sm_chip *chip;
-> +       struct meson_sm_firmware *fw;
-> +
-> +       fw = devm_kzalloc(&pdev->dev, sizeof(*fw), GFP_KERNEL);
-> +       if (!fw)
-> +               return -ENOMEM;
-> +
-> +       fw->dev = &pdev->dev;
-> +
-> +       chip = of_device_get_match_data(fw->dev);
-> +       if (!chip) {
-> +               dev_err(fw->dev, "Unable to setup secure-monitor data\n");
-> +               return -ENODEV;
-> +       }
--ENODEV not best return here. Return -EINVAL better. -ENODEV won't get
-reported by device layer
-
-> +       if (chip->cmd_shmem_in_base) {
-> +               fw->sm_shmem_in_base =
-meson_sm_map_shmem(chip->cmd_shmem_in_base,
-> +
- chip->shmem_size);
-> +               if (!fw->sm_shmem_in_base)
-> +                       goto out;
-> +       }
-  Maybe use WarnOn here
-> +       if (chip->cmd_shmem_out_base) {
-> +               fw->sm_shmem_out_base =
-meson_sm_map_shmem(chip->cmd_shmem_out_base,
-> +
-chip->shmem_size);
-> +               if (!fw->sm_shmem_out_base)
-> +                       goto out;
-> +       }
-> +
-> +       fw->chip = chip;
-> +       platform_set_drvdata(pdev, fw);
-> +
-> +       dev_info(fw->dev, "secure-monitor enabled\n");
-> +
-> +       return 0;
-> +
-> +out:
-> +       if (fw->sm_shmem_in_base)
-> +               iounmap(fw->sm_shmem_in_base);
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +struct meson_sm_firmware *meson_sm_get_fw(struct device_node
-*firmware_node)
-> +{
-> +       struct platform_device *pdev =
-of_find_device_by_node(firmware_node);
-> +
-> +       /*
-> +        * Returns NULL is the firmware device is not ready.
-> +        */
-> +       if (!pdev)
-> +               return NULL;
-> +
-> +       return platform_get_drvdata(pdev);
-> +}
-> +EXPORT_SYMBOL(meson_sm_get_fw);
-> +
-> +static const struct of_device_id meson_sm_ids[] = {
-> +       { .compatible = "amlogic,meson-gxbb-sm", .data = &gxbb_chip },
-> +       { /* sentinel */},
-> +};
-> +MODULE_DEVICE_TABLE(of, meson_sm_ids);
-> +
-> +static struct platform_driver meson_sm_platform_driver = {
-> +       .probe  = meson_sm_probe,
-> +       .driver = {
-> +               .name           = "secure-monitor",
-> +               .of_match_table = meson_sm_ids,
-> +       },
-> +};
-> +module_platform_driver(meson_sm_platform_driver);
-> +
-> +MODULE_AUTHOR("Carlo Caione <carlo@endlessm.com>");
-> +MODULE_DESCRIPTION("Amlogic secure monitor driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/firmware/meson/meson_sm.h
-b/include/linux/firmware/meson/meson_sm.h
-> new file mode 100644
-> index 0000000..f653916
-> --- /dev/null
-> +++ b/include/linux/firmware/meson/meson_sm.h
-> @@ -0,0 +1,32 @@
-> +/*
-> + * Copyright (C) 2016 Endless Mobile, Inc.
-> + * Author: Carlo Caione <carlo@endlessm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef _MESON_SM_FW_H_
-> +#define _MESON_SM_FW_H_
-> +
-> +#define SM_EFUSE_READ          0
-> +#define SM_EFUSE_WRITE         1
-> +#define SM_EFUSE_USER_MAX      2
-> +
-> +struct meson_sm_firmware;
-> +
-> +u32 meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
-> +                 u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-> +u32 meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
-> +                       unsigned int b_size, unsigned int cmd_index,
-> +                       u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-> +u32 meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
-> +                      unsigned int cmd_index, u32 arg0, u32 arg1,
-> +                      u32 arg2, u32 arg3, u32 arg4);
-> +struct meson_sm_firmware *meson_sm_get_fw(struct device_node
-*firmware_node);
-> +
-> +#endif /* _MESON_SM_FW_H_ */
-> --
-> 2.7.4
+On Tue, May 10, 2016 at 3:19 AM, Shawn Lin <shawn.lin@rock-chips.com> wrote=
+:
+> =E5=9C=A8 2016/5/10 0:31, Doug Anderson =E5=86=99=E9=81=93:
+>>
+>> Hi,
+>>
+>> On Mon, May 9, 2016 at 4:12 AM, Shawn Lin <shawn.lin@rock-chips.com>
+>> wrote:
+>>>>
+>>>> 1. Specifying a single number for this property in terms of "degrees"
+>>>> is probably not right.  The whole point of setting the "drive phase"
+>>>> is to meet hold times, which are specified in the spec in terms of ns
+>>>> in the spec and also specified differently for different SD/MMC speed
+>>>> modes.  Note also that "phase" translates to very different delays (in
+>>>> terms of ns) depending on the clock rate:
+>>>>
+>>>> At 400 kHz, period is 2.5 us, so 90 degree phase offset is a delay of
+>>>> 625
+>>>> ns
+>>>> At 25 MHz, period is 40 ns, so a 90 degree phase offset represents a
+>>>> delay of 10 ns.
+>>>> At 50 MHz, period is 20 ns, so a 90 degree phase offset represents a
+>>>> delay of 5 ns.
+>>>> At 200 MHz, period is period is 5 ns, so a 90 degree phase offset
+>>>> represents a delay of 1.25 ns.
+>>>
+>>>
+>>>
+>>> yes, if we use degrees only(0/90/180/270), the timing is always right.
+>>> But considering the delay number, we need to do some crazy calculation
+>>> in the set_ios callback.
+>>
+>>
+>> Great, so let's limit it to 0/90/180/270 for the drive phase offset.
+>> We don't need lots of precision for the drive phase offset (right?)
+>> and accuracy is more important.
 >
 >
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> yes.
+>
+>>
+>>
+>>>> 2. As I understand it, the value needed for the drive phase is not
+>>>> board specific unless you've got super crazy layout on a board (where
+>>>> the clock line takes a very different path than everything else).
+>>>> It's also not even terribly SoC-specific unless you've got some very
+>>>> strange incarnation of dw_mmc that has very different internal delays
+>>>> than everyone else.  Said another way, until we see an instance of an
+>>>> SoC/board that really needs to do things special I'd say that we
+>>>> should just implement this all in code (no device tree bindings).
+>>>>
+>>>
+>>> I'm prone to think it should be Soc specific if making sure the layout
+>>> for data lines is in equal length.
+>>
+>>
+>> Sure, it can be SoC specific.  ...though at the moment, I'd bet that
+>> you can come up with a single rule for the drive phase offset that
+>> will work for every Rockchip SoC produced so far, especially if you
+>> are using only 0/90/180/270.  I'd imagine that they all have similar
+>> enough internal delays.
+>
+>
+> For a specific Soc, it's the basic rule to make sure the internal delays
+> is the same(nearly the same) for all of the lines.
 
---089e011609da58e1230533f96d7f
+Right.  I was saying that not only are all lines within a given SoC similar
+in terms of delay, but I was suggesting that perhaps the internal delay for
+rk3188, rk3288, rk3228, ... is probably fairly similar.  That's only a
+guess, though.
+
+
+>>>> 3. If this property was actually board specific and actually needed to
+>>>> be tuned board-by-board, you'd have a bug because your new device tree
+>>>> bindings are not backward compatible and you'd probably be breaking
+>>>> old boards.  Specifically you're changing the definition of what
+>>>> happens when "rockchip,default-drv-phase" is not specified.  Old
+>>>> behavior was to leave the value that was setup by the firmware (or
+>>>> perhaps the hardware default if the firmware didn't touch this).
+>>>
+>>>
+>>>
+>>> drv_phase is for all the data lines instead of tuning the lines
+>>> one-by-one. So this patch can't save the terrible board layout.
+>>> But I agree that it will break the compatibility backward if firware
+>>> touch this value.
+>>>
+>>>>
+>>>> ---
+>>>>
+>>>> OK, so what should we do?
+>>>>
+>>>> We could certainly do lots of crazy math to come up with the ideal
+>>>> hold time for all different speed modes and all different types of
+>>>> cards.  With my reading of the Designware Databook this would mean
+>>>> that somewhere we'd want to specify which delay method we're using
+>>>> (phase shift vs. delay line) and how long all the delays timings all
+>>>> are on your particular SoC.  That all sounds quite difficult, though.
+>>>
+>>>
+>>>
+>>> delay line is diff from chip to chip, soc-to-soc, board-to-board. For
+>>> sample-phase we have tuning process and re-tune, but not for drv-phase.
+>>> So We bascially should avoid to use it for drv-phase. Another
+>>> consideration is the temperature drift of delay line.
+>>>
+>>> Maybe we should do some tricky limitation on clk-mmc-phase to only
+>>> support fixed degrees?
+>>
+>>
+>> As per above, let's not use delay line for drive delay.  On all
+>> Rockchip SoCs that I have seen it's possible to make 0/90/180/270 very
+>> accurately.  That means no board-to-board differences.  Current
+>> mainline Linux kernel source code will always make 0/90/180/270 using
+>> phase offset (not delay line).
+>
+>
+> yes, 0/90/180/270 is very accurate and mainline kernel use phase offset
+> for these four phase.
+>
+>>
+>> For sampling we use tuning and using the delay elements makes some
+>> sense (since 90 degrees is not quite accurate enough to fully tune
+>> UHS).  ...but for driving where the only requirement is hold times we
+>> don't need delay elements.
+>
+>
+> Right. We care hold time here.
+>
+>>
+>>
+>>>> Probably you could just add a simple function that looked at the clock
+>>>> and speed mode and always chose an offset of 90 or 180 degrees.  At
+>>>> least on Rockchip devices you can be certain that you can make 90 and
+>>>> 180 degrees using phase shifts and thus the timings should be
+>>>> consistent.  By default you could just always choose 180.  The
+>>>> Designware databook has some examples where it picked 90 degrees
+>>>> (SDR50, DDR50, SDR25, MMC High Speed), but I'm not enough of an MMC
+>>>> expert to know if there is some benefit to choosing 90.  Would we
+>>>> violate any specs if we just chose 180 degrees all the time everywhere
+>>>> on all Rockchip devices?
+>>>
+>>>
+>>>
+>>> It needs more waveform test to see how things going. But most of
+>>> rockchip platforms in the pass years didn't touch drv-phase stuff not
+>>> only in kernel but also in firmware, then we still cannot see the
+>>> violation against the spec when using defalut reset value, namely 180,
+>>> for
+>>> drv-phase.
+>>
+>>
+>> Right, most Rockchip platforms simply don't touch this and it works
+>> OK.  ...but I don't think it defaults to 180.  Grepping through on my
+>> veyron (rk3288) device shows
+>>
+>>        sdio1_drv - 90
+>>        sdio0_drv - 90
+>>        sdmmc_drv - 90
+>>        emmc_drv -180
+>>
+>> ...and, as we've seen, these values appear to be 270 on some other SoCs.
+>>
+>
+> Have your code touched them? I check the TRM and find it should be 180
+> always.
+>
+> Also for rk3036/3368/3399/3228.... the reset vaule is 180...
+
+I have less faith than you in the TRM.  The TRM is full of minor errors and
+is often wrong about the default state of things.  IMHO the only true way
+to find out is to boot up some SoCs and check.
+
+As far as whether code touches these values:
+
+   - I'm 100% certain that the kernel on rk3288 I tested doesn't touch.
+   - I'm 100% certain that the kernel on rk3399 I tested doesn't touch.
+   - I'm 95% certain that the BIOS (coreboot/depthcharge) on rk3288 I
+   tested doesn't touch.
+   - I'm 95% certain that the BIOS (coreboot/depthcharge) on rk3399 I
+   tested doesn't touch.  Note that the TRM on rk3399 does say 180 degrees =
+is
+   the default, but I believe you have also verified that it comes up as 27=
+0.
+   Have you found any reason for this?
+
+Also note that I look at V1.1 of the rk3288 TRM in the CRU section and I
+see:
+
+* CRU_SDMMC_CON0: drive degree defaults to 0x1
+* CRU_SDIO0_CON0: drive degree defaults to 0x1
+* CRU_SDIO1_CON0: drive degree defaults to 0x1
+* CRU_EMMC_CON0: drive degree defaults to 0x1
+
+That actually means that they default to 90.  Of course you can also see
+that the TRM is probably flawed because it claims that all the bits here
+are "WO" (write only).  They are clearly not.
+
+The TRM is also internally inconsistent.  When I then go into the Mobile
+Storage Host section (Variable Delay/Clock Generation), I see that it does
+in fact claim that the default is 180.
+
+
+>> The claim from the Designware Databook says that SDR104 and SDR12, and
+>> identification mode need 180 degrees to work properly.  It would be
+>> interesting to hook up rk3288 to a signal analyzer and see hold times
+>> are OK or if we need to move up to 180 degrees for those modes.
+>>
+>> Note that the Designware Databook assumes "Delay_O" of 1.4ns.  If
+>> yours is shorter then maybe 90 degrees is OK for those modes?
+>>
+>
+> maybe. But I think 180(downside) is the better.
+
+I'm OK with using 180 always as long as SD cards continue to work OK.  Best
+would be if someone could actually run a protocol analyzer for all the
+different speed modes.
+
+
+>> Also: I still haven't heard whether there is any downside to using 180
+>> degrees for modes that only require 90 degrees.  Does it cause
+>> problems to just always use 180 degrees?  If not, we could possibly
+>> use 180 degrees everywhere and just hardcode it?
+>
+>
+> From tons of test on rockchip products which always use 180, I didn't
+> see failure. Hardcoding it doesn't look so decent maybe... but anyway
+> it works.
+
+Hardcoding in this case is much better than putting in a device tree
+binding.  I'm nearly certain that having a device tree binding that doesn't
+account for different clock rates / speed modes is not a good idea, and
+device tree bindings are supposed to be "set in stone".  Let's just
+hardcode it for now.
+
+I can post up a CL.
+
+
+>> ...but if 180 is ideal everywhere, can you answer:
+>>
+>> * Why does dw_mmc manual spend so much time talking about it?  It
+>> could just say "set to 180 degrees".
+>
+>
+> I'm sure all the rockchip Socs defaultly use 180 for drv_phase if I got
+> the right TRMs these years.
+>
+> Anyway let me check it with my ASIC team and I will let you know
+> the result.
+
+You probably have the right TRMs.  The TRMs are just not accurate.  ;)
+
+--001a114e1ff49ac31205327ee803
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<p dir=3D"ltr"><br>
-On 29 May 2016 12:13, &quot;Carlo Caione&quot; &lt;<a href=3D"mailto:carlo@=
-caione.org">carlo@caione.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; From: Carlo Caione &lt;<a href=3D"mailto:carlo@endlessm.com">carlo@end=
-lessm.com</a>&gt;<br>
-&gt;<br>
-&gt; Introduce a driver to provide calls into secure monitor mode.<br>
-&gt;<br>
-&gt; In the Amlogic SoCs these calls are used for multiple reasons: access =
-to<br>
-&gt; NVMEM, set USB boot, enable JTAG, etc...<br>
-&gt;<br>
-&gt; Signed-off-by: Carlo Caione &lt;<a href=3D"mailto:carlo@endlessm.com">=
-carlo@endlessm.com</a>&gt;<br>
-&gt; ---<br>
-&gt; =C2=A0drivers/firmware/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A01 +<br>
-&gt; =C2=A0drivers/firmware/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A01 +<br>
-&gt; =C2=A0drivers/firmware/meson/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- |=C2=A0 =C2=A08 ++<br>
-&gt; =C2=A0drivers/firmware/meson/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0|=C2=A0 =C2=A01 +<br>
-&gt; =C2=A0drivers/firmware/meson/meson_sm.c=C2=A0 =C2=A0 =C2=A0 =C2=A0| 22=
-3 ++++++++++++++++++++++++++++++++<br>
-&gt; =C2=A0include/linux/firmware/meson/meson_sm.h |=C2=A0 32 +++++<br>
-&gt; =C2=A06 files changed, 266 insertions(+)<br>
-&gt; =C2=A0create mode 100644 drivers/firmware/meson/Kconfig<br>
-&gt; =C2=A0create mode 100644 drivers/firmware/meson/Makefile<br>
-&gt; =C2=A0create mode 100644 drivers/firmware/meson/meson_sm.c<br>
-&gt; =C2=A0create mode 100644 include/linux/firmware/meson/meson_sm.h<br>
-&gt;<br>
-&gt; diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig<br>
-&gt; index 6664f11..686e395 100644<br>
-&gt; --- a/drivers/firmware/Kconfig<br>
-&gt; +++ b/drivers/firmware/Kconfig<br>
-&gt; @@ -199,5 +199,6 @@ config HAVE_ARM_SMCCC<br>
-&gt; =C2=A0source &quot;drivers/firmware/broadcom/Kconfig&quot;<br>
-&gt; =C2=A0source &quot;drivers/firmware/google/Kconfig&quot;<br>
-&gt; =C2=A0source &quot;drivers/firmware/efi/Kconfig&quot;<br>
-&gt; +source &quot;drivers/firmware/meson/Kconfig&quot;<br>
-&gt;<br>
-&gt; =C2=A0endmenu<br>
-&gt; diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile<br>
-&gt; index 474bada..fc4bb09 100644<br>
-&gt; --- a/drivers/firmware/Makefile<br>
-&gt; +++ b/drivers/firmware/Makefile<br>
-&gt; @@ -21,6 +21,7 @@ obj-$(CONFIG_QCOM_SCM_32)=C2=A0 =C2=A0 =C2=A0+=3D qc=
-om_scm-32.o<br>
-&gt; =C2=A0CFLAGS_qcom_scm-32.o :=3D$(call as-instr,.arch armv7-a\n.arch_ex=
-tension sec,-DREQUIRES_SEC=3D1) -march=3Darmv7-a<br>
-&gt;<br>
-&gt; =C2=A0obj-y=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 +=3D broadcom/<br>
-&gt; +obj-y=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=3D meson/<br>
-&gt; =C2=A0obj-$(CONFIG_GOOGLE_FIRMWARE)=C2=A0 +=3D google/<br>
-&gt; =C2=A0obj-$(CONFIG_EFI)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 +=3D efi/<br>
-&gt; =C2=A0obj-$(CONFIG_UEFI_CPER)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 +=3D efi/<br>
-&gt; diff --git a/drivers/firmware/meson/Kconfig b/drivers/firmware/meson/K=
-config<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..fff11a3<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/drivers/firmware/meson/Kconfig<br>
-&gt; @@ -0,0 +1,8 @@<br>
-&gt; +#<br>
-&gt; +# Amlogic Secure Monitor driver<br>
-&gt; +#<br>
-&gt; +config MESON_SM<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0bool<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0default ARCH_MESON<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0help<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Say y here to enable the Amlogic se=
-cure monitor driver<br>
-&gt; diff --git a/drivers/firmware/meson/Makefile b/drivers/firmware/meson/=
-Makefile<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..9ab3884<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/drivers/firmware/meson/Makefile<br>
-&gt; @@ -0,0 +1 @@<br>
-&gt; +obj-$(CONFIG_MESON_SM) +=3D=C2=A0 =C2=A0 =C2=A0 meson_sm.o<br>
-&gt; diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meso=
-n/meson_sm.c<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..e1ce487<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/drivers/firmware/meson/meson_sm.c<br>
-&gt; @@ -0,0 +1,223 @@<br>
-&gt; +/*<br>
-&gt; + * Amlogic Secure Monitor driver<br>
-&gt; + *<br>
-&gt; + * Copyright (C) 2016 Endless Mobile, Inc.<br>
-&gt; + * Author: Carlo Caione &lt;<a href=3D"mailto:carlo@endlessm.com">car=
-lo@endlessm.com</a>&gt;<br>
-&gt; + *<br>
-&gt; + * This program is free software; you can redistribute it and/or<br>
-&gt; + * modify it under the terms of the GNU General Public License<br>
-&gt; + * version 2 as published by the Free Software Foundation.<br>
-&gt; + *<br>
-&gt; + * You should have received a copy of the GNU General Public License<=
-br>
-&gt; + * along with this program. If not, see &lt;<a href=3D"http://www.gnu=
-.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.<br>
-&gt; + */<br>
-&gt; +<br>
-&gt; +#include &lt;stdarg.h&gt;<br>
-&gt; +#include &lt;asm/cacheflush.h&gt;<br>
-&gt; +#include &lt;asm/compiler.h&gt;<br>
-&gt; +#include &lt;linux/arm-smccc.h&gt;<br>
-&gt; +#include &lt;linux/io.h&gt;<br>
-&gt; +#include &lt;linux/ioport.h&gt;<br>
-&gt; +#include &lt;linux/module.h&gt;<br>
-&gt; +#include &lt;linux/platform_device.h&gt;<br>
-&gt; +#include &lt;linux/of.h&gt;<br>
-&gt; +#include &lt;linux/of_device.h&gt;<br>
-&gt; +#include &lt;linux/smp.h&gt;<br>
-&gt; +#include &lt;linux/firmware/meson/meson_sm.h&gt;<br>
-&gt; +<br>
-&gt; +struct meson_sm_cmd {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int index;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 smc_id;<br>
-&gt; +};<br>
-&gt; +#define CMD(d, s) { .index =3D (d), .smc_id =3D (s), }<br>
-&gt; +<br>
-&gt; +struct meson_sm_chip {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int shmem_size;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 cmd_shmem_in_base;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 cmd_shmem_out_base;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct meson_sm_cmd cmd[];<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; +struct meson_sm_firmware {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct device *dev;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0const struct meson_sm_chip *chip;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0void __iomem *sm_shmem_in_base;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0void __iomem *sm_shmem_out_base;<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; +struct meson_sm_chip gxbb_chip =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0.shmem_size=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D 0x1000,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0.cmd_shmem_in_base=C2=A0 =C2=A0 =C2=A0 =3D=
- 0x82000020,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0.cmd_shmem_out_base=C2=A0 =C2=A0 =C2=A0=3D=
- 0x82000021,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0.cmd =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0CMD(SM_EFUSE_R=
-EAD,=C2=A0 =C2=A0 =C2=A0 0x82000030),<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0CMD(SM_EFUSE_W=
-RITE,=C2=A0 =C2=A0 =C2=A00x82000031),<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0CMD(SM_EFUSE_U=
-SER_MAX,=C2=A0 0x82000033),<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0{ /* sentinel =
-*/ },<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0},<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; +static u32 meson_sm_get_cmd(const struct meson_sm_chip *chip, unsigne=
-d int cmd_index)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned int i;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0for (i =3D 0; chip-&gt;cmd[i].smc_id; i++)=
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (chip-&gt;c=
-md[i].index =3D=3D cmd_index)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0return chip-&gt;cmd[i].smc_id;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static u32 __meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32=
- arg3, u32 arg4)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct arm_smccc_res res;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0arm_smccc_smc(cmd, arg0, arg1, arg2, arg3,=
- arg4, 0, 0, &amp;res);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return res.a0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +u32 meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_inde=
-x,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0u32 arg=
-0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 cmd;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!fw)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL=
-;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0cmd =3D meson_sm_get_cmd(fw-&gt;chip, cmd_=
-index);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!cmd)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL=
-;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return __meson_sm_call(cmd, arg0, arg1, ar=
-g2, arg3, arg4);<br>
-&gt; +}<br>
-&gt; +EXPORT_SYMBOL(meson_sm_call);<br>
-&gt; +<br>
-&gt; +u32 meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 unsigned int cmd_index, u32 arg0, u32 arg1,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 u32 arg2, u32 arg3, u32 arg4)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 size;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!fw-&gt;chip-&gt;cmd_shmem_out_base)<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL=
-;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0size =3D meson_sm_call(fw, cmd_index, arg0=
-, arg1, arg2, arg3, arg4);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (size &lt;=3D 0 || size &gt; fw-&gt;chi=
-p-&gt;shmem_size)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL=
-;<br>
-&gt; +<br>
-u32 cannot be less than 0</p>
-<p dir=3D"ltr">&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0memcpy(buffer, fw-&gt;sm_sh=
-mem_out_base, size);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return size;<br>
-&gt; +}<br>
-&gt; +EXPORT_SYMBOL(meson_sm_call_read);<br>
-&gt; +<br>
-&gt; +u32 meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0unsigned int b_size, unsigned int cmd_index,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 size;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (b_size &gt; fw-&gt;chip-&gt;shmem_size=
-)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL=
-;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!fw-&gt;chip-&gt;cmd_shmem_in_base)<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL=
-;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0memcpy(fw-&gt;sm_shmem_in_base, buffer, b_=
-size);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0size =3D meson_sm_call(fw, cmd_index, arg0=
-, arg1, arg2, arg3, arg4);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (size &lt;=3D 0)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL=
-;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return size;<br>
-&gt; +}<br>
-&gt; +EXPORT_SYMBOL(meson_sm_call_write);<br>
-&gt; +<br>
-&gt; +static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int s=
-ize)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 sm_phy_base;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0sm_phy_base =3D __meson_sm_call(cmd_shmem,=
- 0, 0, 0, 0, 0);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!sm_phy_base)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return ioremap_cache(sm_phy_base, size);<b=
-r>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int meson_sm_probe(struct platform_device *pdev)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0const struct meson_sm_chip *chip;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct meson_sm_firmware *fw;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0fw =3D devm_kzalloc(&amp;pdev-&gt;dev, siz=
-eof(*fw), GFP_KERNEL);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!fw)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOMEM=
-;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0fw-&gt;dev =3D &amp;pdev-&gt;dev;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0chip =3D of_device_get_match_data(fw-&gt;d=
-ev);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!chip) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(fw-&gt=
-;dev, &quot;Unable to setup secure-monitor data\n&quot;);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENODEV=
-;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
--ENODEV not best return here. Return -EINVAL better. -ENODEV won&#39;t get =
-reported by device layer</p>
-<p dir=3D"ltr">&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (chip-&gt;cmd_shmem_in_b=
-ase) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fw-&gt;sm_shme=
-m_in_base =3D meson_sm_map_shmem(chip-&gt;cmd_shmem_in_base,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0chip-&gt;shmem_s=
-ize);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (!fw-&gt;sm=
-_shmem_in_base)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0goto out;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-=C2=A0 Maybe use WarnOn here <br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (chip-&gt;cmd_shmem_out_base) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fw-&gt;sm_shme=
-m_out_base =3D meson_sm_map_shmem(chip-&gt;cmd_shmem_out_base,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 chip-&gt;shmem_=
-size);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (!fw-&gt;sm=
-_shmem_out_base)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0goto out;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0fw-&gt;chip =3D chip;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0platform_set_drvdata(pdev, fw);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0dev_info(fw-&gt;dev, &quot;secure-monitor =
-enabled\n&quot;);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +<br>
-&gt; +out:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (fw-&gt;sm_shmem_in_base)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0iounmap(fw-&gt=
-;sm_shmem_in_base);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return -EINVAL;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +struct meson_sm_firmware *meson_sm_get_fw(struct device_node *firmwar=
-e_node)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0struct platform_device *pdev =3D of_find_d=
-evice_by_node(firmware_node);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 * Returns NULL is the firmware device is =
-not ready.<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!pdev)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return NULL;<b=
-r>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0return platform_get_drvdata(pdev);<br>
-&gt; +}<br>
-&gt; +EXPORT_SYMBOL(meson_sm_get_fw);<br>
-&gt; +<br>
-&gt; +static const struct of_device_id meson_sm_ids[] =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0{ .compatible =3D &quot;amlogic,meson-gxbb=
--sm&quot;, .data =3D &amp;gxbb_chip },<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0{ /* sentinel */},<br>
-&gt; +};<br>
-&gt; +MODULE_DEVICE_TABLE(of, meson_sm_ids);<br>
-&gt; +<br>
-&gt; +static struct platform_driver meson_sm_platform_driver =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0.probe=C2=A0 =3D meson_sm_probe,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0.driver =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;secure-monitor&quot;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.of_match_tabl=
-e =3D meson_sm_ids,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0},<br>
-&gt; +};<br>
-&gt; +module_platform_driver(meson_sm_platform_driver);<br>
-&gt; +<br>
-&gt; +MODULE_AUTHOR(&quot;Carlo Caione &lt;<a href=3D"mailto:carlo@endlessm=
-.com">carlo@endlessm.com</a>&gt;&quot;);<br>
-&gt; +MODULE_DESCRIPTION(&quot;Amlogic secure monitor driver&quot;);<br>
-&gt; +MODULE_LICENSE(&quot;GPL&quot;);<br>
-&gt; diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/f=
-irmware/meson/meson_sm.h<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..f653916<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/include/linux/firmware/meson/meson_sm.h<br>
-&gt; @@ -0,0 +1,32 @@<br>
-&gt; +/*<br>
-&gt; + * Copyright (C) 2016 Endless Mobile, Inc.<br>
-&gt; + * Author: Carlo Caione &lt;<a href=3D"mailto:carlo@endlessm.com">car=
-lo@endlessm.com</a>&gt;<br>
-&gt; + *<br>
-&gt; + * This program is free software; you can redistribute it and/or<br>
-&gt; + * modify it under the terms of the GNU General Public License<br>
-&gt; + * version 2 as published by the Free Software Foundation.<br>
-&gt; + *<br>
-&gt; + * You should have received a copy of the GNU General Public License<=
-br>
-&gt; + * along with this program. If not, see &lt;<a href=3D"http://www.gnu=
-.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.<br>
-&gt; + */<br>
-&gt; +<br>
-&gt; +#ifndef _MESON_SM_FW_H_<br>
-&gt; +#define _MESON_SM_FW_H_<br>
-&gt; +<br>
-&gt; +#define SM_EFUSE_READ=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 0<br>
-&gt; +#define SM_EFUSE_WRITE=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A01<br>
-&gt; +#define SM_EFUSE_USER_MAX=C2=A0 =C2=A0 =C2=A0 2<br>
-&gt; +<br>
-&gt; +struct meson_sm_firmware;<br>
-&gt; +<br>
-&gt; +u32 meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_inde=
-x,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0u32 arg=
-0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);<br>
-&gt; +u32 meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0unsigned int b_size, unsigned int cmd_index,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);<br>
-&gt; +u32 meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 unsigned int cmd_index, u32 arg0, u32 arg1,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 u32 arg2, u32 arg3, u32 arg4);<br>
-&gt; +struct meson_sm_firmware *meson_sm_get_fw(struct device_node *firmwar=
-e_node);<br>
-&gt; +<br>
-&gt; +#endif /* _MESON_SM_FW_H_ */<br>
-&gt; --<br>
-&gt; 2.7.4<br>
-&gt;<br>
-&gt;<br>
-&gt; _______________________________________________<br>
-&gt; linux-amlogic mailing list<br>
-&gt; <a href=3D"mailto:linux-amlogic@lists.infradead.org">linux-amlogic@lis=
-ts.infradead.org</a><br>
-&gt; <a href=3D"http://lists.infradead.org/mailman/listinfo/linux-amlogic">=
-http://lists.infradead.org/mailman/listinfo/linux-amlogic</a><br>
-</p>
+<div dir=3D"ltr">Shawn,<br><br>On Tue, May 10, 2016 at 3:19 AM, Shawn Lin &=
+lt;<a href=3D"mailto:shawn.lin@rock-chips.com">shawn.lin@rock-chips.com</a>=
+&gt; wrote:<br>&gt; =E5=9C=A8 2016/5/10 0:31, Doug Anderson =E5=86=99=E9=81=
+=93:<br>&gt;&gt;<br>&gt;&gt; Hi,<br>&gt;&gt;<br>&gt;&gt; On Mon, May 9, 201=
+6 at 4:12 AM, Shawn Lin &lt;<a href=3D"mailto:shawn.lin@rock-chips.com">sha=
+wn.lin@rock-chips.com</a>&gt;<br>&gt;&gt; wrote:<br>&gt;&gt;&gt;&gt;<br>&gt=
+;&gt;&gt;&gt; 1. Specifying a single number for this property in terms of &=
+quot;degrees&quot;<br>&gt;&gt;&gt;&gt; is probably not right.=C2=A0 The who=
+le point of setting the &quot;drive phase&quot;<br>&gt;&gt;&gt;&gt; is to m=
+eet hold times, which are specified in the spec in terms of ns<br>&gt;&gt;&=
+gt;&gt; in the spec and also specified differently for different SD/MMC spe=
+ed<br>&gt;&gt;&gt;&gt; modes.=C2=A0 Note also that &quot;phase&quot; transl=
+ates to very different delays (in<br>&gt;&gt;&gt;&gt; terms of ns) dependin=
+g on the clock rate:<br>&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt; At 400 kHz, pe=
+riod is 2.5 us, so 90 degree phase offset is a delay of<br>&gt;&gt;&gt;&gt;=
+ 625<br>&gt;&gt;&gt;&gt; ns<br>&gt;&gt;&gt;&gt; At 25 MHz, period is 40 ns,=
+ so a 90 degree phase offset represents a<br>&gt;&gt;&gt;&gt; delay of 10 n=
+s.<br>&gt;&gt;&gt;&gt; At 50 MHz, period is 20 ns, so a 90 degree phase off=
+set represents a<br>&gt;&gt;&gt;&gt; delay of 5 ns.<br>&gt;&gt;&gt;&gt; At =
+200 MHz, period is period is 5 ns, so a 90 degree phase offset<br>&gt;&gt;&=
+gt;&gt; represents a delay of 1.25 ns.<br>&gt;&gt;&gt;<br>&gt;&gt;&gt;<br>&=
+gt;&gt;&gt;<br>&gt;&gt;&gt; yes, if we use degrees only(0/90/180/270), the =
+timing is always right.<br>&gt;&gt;&gt; But considering the delay number, w=
+e need to do some crazy calculation<br>&gt;&gt;&gt; in the set_ios callback=
+.<br>&gt;&gt;<br>&gt;&gt;<br>&gt;&gt; Great, so let&#39;s limit it to 0/90/=
+180/270 for the drive phase offset.<br>&gt;&gt; We don&#39;t need lots of p=
+recision for the drive phase offset (right?)<br>&gt;&gt; and accuracy is mo=
+re important.<br>&gt;<br>&gt;<br>&gt; yes.<br>&gt;<br>&gt;&gt;<br>&gt;&gt;<=
+br>&gt;&gt;&gt;&gt; 2. As I understand it, the value needed for the drive p=
+hase is not<br>&gt;&gt;&gt;&gt; board specific unless you&#39;ve got super =
+crazy layout on a board (where<br>&gt;&gt;&gt;&gt; the clock line takes a v=
+ery different path than everything else).<br>&gt;&gt;&gt;&gt; It&#39;s also=
+ not even terribly SoC-specific unless you&#39;ve got some very<br>&gt;&gt;=
+&gt;&gt; strange incarnation of dw_mmc that has very different internal del=
+ays<br>&gt;&gt;&gt;&gt; than everyone else.=C2=A0 Said another way, until w=
+e see an instance of an<br>&gt;&gt;&gt;&gt; SoC/board that really needs to =
+do things special I&#39;d say that we<br>&gt;&gt;&gt;&gt; should just imple=
+ment this all in code (no device tree bindings).<br>&gt;&gt;&gt;&gt;<br>&gt=
+;&gt;&gt;<br>&gt;&gt;&gt; I&#39;m prone to think it should be Soc specific =
+if making sure the layout<br>&gt;&gt;&gt; for data lines is in equal length=
+.<br>&gt;&gt;<br>&gt;&gt;<br>&gt;&gt; Sure, it can be SoC specific. =C2=A0.=
+..though at the moment, I&#39;d bet that<br>&gt;&gt; you can come up with a=
+ single rule for the drive phase offset that<br>&gt;&gt; will work for ever=
+y Rockchip SoC produced so far, especially if you<br>&gt;&gt; are using onl=
+y 0/90/180/270.=C2=A0 I&#39;d imagine that they all have similar<br>&gt;&gt=
+; enough internal delays.<br>&gt;<br>&gt;<br>&gt; For a specific Soc, it&#3=
+9;s the basic rule to make sure the internal delays<br>&gt; is the same(nea=
+rly the same) for all of the lines.<div><br></div><div>Right.=C2=A0 I was s=
+aying that not only are all lines within a given SoC similar in terms of de=
+lay, but I was suggesting that perhaps the internal delay for rk3188, rk328=
+8, rk3228, ... is probably fairly similar.=C2=A0 That&#39;s only a guess, t=
+hough.</div><div><br><br></div><div>&gt;&gt;&gt;&gt; 3. If this property wa=
+s actually board specific and actually needed to<br>&gt;&gt;&gt;&gt; be tun=
+ed board-by-board, you&#39;d have a bug because your new device tree<br>&gt=
+;&gt;&gt;&gt; bindings are not backward compatible and you&#39;d probably b=
+e breaking<br>&gt;&gt;&gt;&gt; old boards.=C2=A0 Specifically you&#39;re ch=
+anging the definition of what<br>&gt;&gt;&gt;&gt; happens when &quot;rockch=
+ip,default-drv-phase&quot; is not specified.=C2=A0 Old<br>&gt;&gt;&gt;&gt; =
+behavior was to leave the value that was setup by the firmware (or<br>&gt;&=
+gt;&gt;&gt; perhaps the hardware default if the firmware didn&#39;t touch t=
+his).<br>&gt;&gt;&gt;<br>&gt;&gt;&gt;<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; drv_p=
+hase is for all the data lines instead of tuning the lines<br>&gt;&gt;&gt; =
+one-by-one. So this patch can&#39;t save the terrible board layout.<br>&gt;=
+&gt;&gt; But I agree that it will break the compatibility backward if firwa=
+re<br>&gt;&gt;&gt; touch this value.<br>&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt;<br=
+>&gt;&gt;&gt;&gt; ---<br>&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt; OK, so what s=
+hould we do?<br>&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt; We could certainly do =
+lots of crazy math to come up with the ideal<br>&gt;&gt;&gt;&gt; hold time =
+for all different speed modes and all different types of<br>&gt;&gt;&gt;&gt=
+; cards.=C2=A0 With my reading of the Designware Databook this would mean<b=
+r>&gt;&gt;&gt;&gt; that somewhere we&#39;d want to specify which delay meth=
+od we&#39;re using<br>&gt;&gt;&gt;&gt; (phase shift vs. delay line) and how=
+ long all the delays timings all<br>&gt;&gt;&gt;&gt; are on your particular=
+ SoC.=C2=A0 That all sounds quite difficult, though.<br>&gt;&gt;&gt;<br>&gt=
+;&gt;&gt;<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; delay line is diff from chip to c=
+hip, soc-to-soc, board-to-board. For<br>&gt;&gt;&gt; sample-phase we have t=
+uning process and re-tune, but not for drv-phase.<br>&gt;&gt;&gt; So We bas=
+cially should avoid to use it for drv-phase. Another<br>&gt;&gt;&gt; consid=
+eration is the temperature drift of delay line.<br>&gt;&gt;&gt;<br>&gt;&gt;=
+&gt; Maybe we should do some tricky limitation on clk-mmc-phase to only<br>=
+&gt;&gt;&gt; support fixed degrees?<br>&gt;&gt;<br>&gt;&gt;<br>&gt;&gt; As =
+per above, let&#39;s not use delay line for drive delay.=C2=A0 On all<br>&g=
+t;&gt; Rockchip SoCs that I have seen it&#39;s possible to make 0/90/180/27=
+0 very<br>&gt;&gt; accurately.=C2=A0 That means no board-to-board differenc=
+es.=C2=A0 Current<br>&gt;&gt; mainline Linux kernel source code will always=
+ make 0/90/180/270 using<br>&gt;&gt; phase offset (not delay line).<br>&gt;=
+<br>&gt;<br>&gt; yes, 0/90/180/270 is very accurate and mainline kernel use=
+ phase offset<br>&gt; for these four phase.<br>&gt;<br>&gt;&gt;<br>&gt;&gt;=
+ For sampling we use tuning and using the delay elements makes some<br>&gt;=
+&gt; sense (since 90 degrees is not quite accurate enough to fully tune<br>=
+&gt;&gt; UHS). =C2=A0...but for driving where the only requirement is hold =
+times we<br>&gt;&gt; don&#39;t need delay elements.<br>&gt;<br>&gt;<br>&gt;=
+ Right. We care hold time here.<br>&gt;<br>&gt;&gt;<br>&gt;&gt;<br>&gt;&gt;=
+&gt;&gt; Probably you could just add a simple function that looked at the c=
+lock<br>&gt;&gt;&gt;&gt; and speed mode and always chose an offset of 90 or=
+ 180 degrees.=C2=A0 At<br>&gt;&gt;&gt;&gt; least on Rockchip devices you ca=
+n be certain that you can make 90 and<br>&gt;&gt;&gt;&gt; 180 degrees using=
+ phase shifts and thus the timings should be<br>&gt;&gt;&gt;&gt; consistent=
+.=C2=A0 By default you could just always choose 180.=C2=A0 The<br>&gt;&gt;&=
+gt;&gt; Designware databook has some examples where it picked 90 degrees<br=
+>&gt;&gt;&gt;&gt; (SDR50, DDR50, SDR25, MMC High Speed), but I&#39;m not en=
+ough of an MMC<br>&gt;&gt;&gt;&gt; expert to know if there is some benefit =
+to choosing 90.=C2=A0 Would we<br>&gt;&gt;&gt;&gt; violate any specs if we =
+just chose 180 degrees all the time everywhere<br>&gt;&gt;&gt;&gt; on all R=
+ockchip devices?<br>&gt;&gt;&gt;<br>&gt;&gt;&gt;<br>&gt;&gt;&gt;<br>&gt;&gt=
+;&gt; It needs more waveform test to see how things going. But most of<br>&=
+gt;&gt;&gt; rockchip platforms in the pass years didn&#39;t touch drv-phase=
+ stuff not<br>&gt;&gt;&gt; only in kernel but also in firmware, then we sti=
+ll cannot see the<br>&gt;&gt;&gt; violation against the spec when using def=
+alut reset value, namely 180,<br>&gt;&gt;&gt; for<br>&gt;&gt;&gt; drv-phase=
+.<br>&gt;&gt;<br>&gt;&gt;<br>&gt;&gt; Right, most Rockchip platforms simply=
+ don&#39;t touch this and it works<br>&gt;&gt; OK. =C2=A0...but I don&#39;t=
+ think it defaults to 180.=C2=A0 Grepping through on my<br>&gt;&gt; veyron =
+(rk3288) device shows<br>&gt;&gt;<br>&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0sd=
+io1_drv - 90<br>&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0sdio0_drv - 90<br>&gt;&=
+gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0sdmmc_drv - 90<br>&gt;&gt; =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0emmc_drv -180<br>&gt;&gt;<br>&gt;&gt; ...and, as we&#39;ve seen, =
+these values appear to be 270 on some other SoCs.<br>&gt;&gt;<br>&gt;<br>&g=
+t; Have your code touched them? I check the TRM and find it should be 180<b=
+r>&gt; always.<br>&gt;<br>&gt; Also for rk3036/3368/3399/3228.... the reset=
+ vaule is 180...</div><div><br></div><div>I have less faith than you in the=
+ TRM.=C2=A0 The TRM is full of minor errors and is often wrong about the de=
+fault state of things.=C2=A0 IMHO the only true way to find out is to boot =
+up some SoCs and check.</div><div><br></div><div>As far as whether code tou=
+ches these values:</div><div><ul><li>I&#39;m 100% certain that the kernel o=
+n rk3288 I tested doesn&#39;t touch.</li><li>I&#39;m 100% certain that the =
+kernel on rk3399=C2=A0I tested=C2=A0doesn&#39;t touch.</li><li>I&#39;m 95% =
+certain that the BIOS (coreboot/depthcharge) on rk3288=C2=A0I tested=C2=A0d=
+oesn&#39;t touch.</li><li>I&#39;m 95% certain that the BIOS (coreboot/depth=
+charge) on rk3399=C2=A0I tested=C2=A0doesn&#39;t touch.=C2=A0 Note that the=
+ TRM on rk3399 does say 180 degrees is the default, but I believe you have =
+also verified that it comes up as 270.=C2=A0 Have you found any reason for =
+this?</li></ul><div>Also note that I look at V1.1 of the rk3288 TRM in the =
+CRU section and I see:<br></div></div><div><br></div><div>*=C2=A0CRU_SDMMC_=
+CON0: drive degree defaults to 0x1</div><div>*=C2=A0CRU_SDIO0_CON0: drive d=
+egree defaults to 0x1</div><div>* CRU_SDIO1_CON0:=C2=A0drive degree default=
+s to 0x1</div><div>*=C2=A0CRU_EMMC_CON0: drive degree defaults to 0x1</div>=
+<div><br></div><div>That actually means that they default to 90.=C2=A0 Of c=
+ourse you can also see that the TRM is probably flawed because it claims th=
+at all the bits here are &quot;WO&quot; (write only).=C2=A0 They are clearl=
+y not.</div><div><br></div><div>The TRM is also internally inconsistent.=C2=
+=A0 When I then go into the Mobile Storage Host section (Variable Delay/Clo=
+ck Generation), I see that it does in fact claim that the default is 180.</=
+div><div><br></div><div><br></div><div>&gt;&gt; The claim from the Designwa=
+re Databook says that SDR104 and SDR12, and<br></div><div>&gt;&gt; identifi=
+cation mode need 180 degrees to work properly.=C2=A0 It would be<br>&gt;&gt=
+; interesting to hook up rk3288 to a signal analyzer and see hold times<br>=
+&gt;&gt; are OK or if we need to move up to 180 degrees for those modes.<br=
+>&gt;&gt;<br>&gt;&gt; Note that the Designware Databook assumes &quot;Delay=
+_O&quot; of 1.4ns.=C2=A0 If<br>&gt;&gt; yours is shorter then maybe 90 degr=
+ees is OK for those modes?<br>&gt;&gt;<br>&gt;<br>&gt; maybe. But I think 1=
+80(downside) is the better.</div><div><br></div><div>I&#39;m OK with using =
+180 always as long as SD cards continue to work OK.=C2=A0 Best would be if =
+someone could actually run a protocol analyzer for all the different speed =
+modes.</div><div><br></div><div><br></div><div>&gt;&gt; Also: I still haven=
+&#39;t heard whether there is any downside to using 180<br>&gt;&gt; degrees=
+ for modes that only require 90 degrees.=C2=A0 Does it cause<br>&gt;&gt; pr=
+oblems to just always use 180 degrees?=C2=A0 If not, we could possibly<br>&=
+gt;&gt; use 180 degrees everywhere and just hardcode it?<br>&gt;<br>&gt;<br=
+>&gt; From tons of test on rockchip products which always use 180, I didn&#=
+39;t<br>&gt; see failure. Hardcoding it doesn&#39;t look so decent maybe...=
+ but anyway<br>&gt; it works.</div><div><br></div><div>Hardcoding in this c=
+ase is much better than putting in a device tree binding.=C2=A0 I&#39;m nea=
+rly certain that having a device tree binding that doesn&#39;t account for =
+different clock rates / speed modes is not a good idea, and device tree bin=
+dings are supposed to be &quot;set in stone&quot;.=C2=A0 Let&#39;s just har=
+dcode it for now.</div><div><br></div><div>I can post up a CL.</div><div><b=
+r></div><div><br>&gt;&gt; ...but if 180 is ideal everywhere, can you answer=
+:<br>&gt;&gt;<br>&gt;&gt; * Why does dw_mmc manual spend so much time talki=
+ng about it?=C2=A0 It<br>&gt;&gt; could just say &quot;set to 180 degrees&q=
+uot;.<br>&gt;<br>&gt;<br>&gt; I&#39;m sure all the rockchip Socs defaultly =
+use 180 for drv_phase if I got<br>&gt; the right TRMs these years.<br>&gt;<=
+br>&gt; Anyway let me check it with my ASIC team and I will let you know<br=
+>&gt; the result.<br><br></div><div>You probably have the right TRMs.=C2=A0=
+ The TRMs are just not accurate. =C2=A0;)</div></div>
 
---089e011609da58e1230533f96d7f--
+--001a114e1ff49ac31205327ee803--
