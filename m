@@ -1,275 +1,179 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 2/2] watchdog: Add Aspeed watchdog driver
-Date: Tue, 10 May 2016 20:40:21 +0930
-Message-ID: <CACPK8XfK4Qt2GaSL7eVoNkCawbtXqFX9bGRcgyAyq7R2yuSZkA@mail.gmail.com>
-References: <1462797277-14969-1-git-send-email-joel@jms.id.au>
- <1462797277-14969-3-git-send-email-joel@jms.id.au> <5730A339.80006@roeck-us.net>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 2/4] drvers/clk: Support fourth generation Aspeed SoCs
+Date: Tue, 10 May 2016 20:50:11 +0930
+Message-ID: <CACPK8Xfq=Pfy=7GYuS7LJs-CFJOimBUoHA=Y6NHb4=DRcOnvfQ@mail.gmail.com>
+References: <1462797111-14271-1-git-send-email-joel@jms.id.au>
+ <1462797111-14271-3-git-send-email-joel@jms.id.au> <20160509224953.GZ3492@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5730A339.80006-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160509224953.GZ3492@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hey Guenter,
-
-Thanks for the review.
-
-On Tue, May 10, 2016 at 12:18 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->> +#define WDT_STATUS             0x00
->> +#define WDT_RELOAD_VALUE       0x04
->> +#define WDT_RESTART            0x08
->> +#define WDT_CTRL               0x0C
->> +#define   WDT_CTRL_RESET_MODE_SOC      (0x00 << 5)
->> +#define   WDT_CTRL_RESET_MODE_FULL_CHIP        (0x01 << 5)
->> +#define          WDT_CTRL_1MHZ_CLK             BIT(4)
->> +#define          WDT_CTRL_WDT_EXT              BIT(3)
->> +#define          WDT_CTRL_WDT_INTR             BIT(2)
->> +#define   WDT_CTRL_RESET_SYSTEM                BIT(1)
->> +#define   WDT_CTRL_ENABLE              BIT(0)
+On Tue, May 10, 2016 at 8:19 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 05/09, Joel Stanley wrote:
+>> diff --git a/drivers/clk/aspeed/clk-g4.c b/drivers/clk/aspeed/clk-g4.c
+>> new file mode 100644
+>> index 000000000000..91677e9177f5
+>> --- /dev/null
+>> +++ b/drivers/clk/aspeed/clk-g4.c
+>> @@ -0,0 +1,109 @@
+>> +/*
+>> + * Copyright 2016 IBM Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * as published by the Free Software Foundation; either version
+>> + * 2 of the License, or (at your option) any later version.
+>> + */
 >> +
->> +#define        WDT_RESTART_MAGIC       0x4755
+>> +#include <linux/clk.h>
 >
->
-> Please don't use tabs after #define.
+> Hopefully this include isn't needed.
 
-Oops, typo. Thanks.
+It was required for clk_get_rate in aspeed_of_pclk_clk_init. As I
+mention below, I reworked it to avoid this.
 
 >
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/clkdev.h>
 >> +
->> +static struct aspeed_wdt *to_aspeed_wdt(struct watchdog_device *wdd)
+>> +static void __init aspeed_of_hpll_clk_init(struct device_node *node)
 >> +{
->> +       return container_of(wdd, struct aspeed_wdt, wdd);
+>> +     struct clk *clk, *clkin_clk;
+>> +     void __iomem *base;
+>> +     int reg, rate, clkin;
+>> +     const char *name = node->name;
+>> +     const char *parent_name;
+>> +     const int rates[][4] = {
+>> +             {384, 360, 336, 408},
+>> +             {400, 375, 350, 425},
+>> +     };
+>> +
+>> +     of_property_read_string(node, "clock-output-names", &name);
+>> +     parent_name = of_clk_get_parent_name(node, 0);
+>> +
+>> +     base = of_iomap(node, 0);
+>> +     if (!base) {
+>> +             pr_err("%s: of_iomap failed\n", node->full_name);
+>> +             return;
+>> +     }
+>> +     reg = readl(base);
+>> +     iounmap(base);
+>> +
+>> +     clkin_clk = of_clk_get(node, 0);
+>> +     if (IS_ERR(clkin_clk)) {
+>> +             pr_err("%s: of_clk_get failed\n", node->full_name);
+>> +             return;
+>> +     }
+>> +
+>> +     clkin = clk_get_rate(clkin_clk);
+>> +
+>> +     reg = (reg >> 8) & 0x2;
+>> +
+>> +     if (clkin == 48000000 || clkin == 24000000)
+>> +             rate = rates[0][reg] * 1000000;
+>> +     else if (clkin == 25000000)
+>> +             rate = rates[1][reg] * 1000000;
+>> +     else {
+>> +             pr_err("%s: unknown clkin frequency %dHz\n",
+>> +                             node->full_name, clkin);
+>> +             WARN_ON(1);
+>> +     }
+>> +
+>> +     clk = clk_register_fixed_rate(NULL, name, parent_name, 0, rate);
+>
+> Please write a proper clk driver that sets clkin to be the parent
+> of this clk registered here and then calculates the frequency
+> based on the parent clk rate and the strapping registers via the
+> recalc rate callback.
+
+After a few goes I understood what you meant here.
+
+Is the pclk part okay? I modified the pclk part use a fixed factor
+clock instead of the fixed clock, so I could drop the pclk_get_rate
+call below.
+
+> Also please move this to a platform driver
+> instead of using CLK_OF_DECLARE assuming this isn't required for
+> any timers in the system.
+
+Can you clarify here? We do use the rate of pclk (the apb clock) in
+the clocksource driver to calculate our count_per_tick value.
+
+>
+>> +     if (IS_ERR(clk)) {
+>> +             pr_err("%s: failed to register clock\n", node->full_name);
+>> +             return;
+>> +     }
+>> +
+>> +     clk_register_clkdev(clk, NULL, name);
+>
+> Do you have clkdev users? If not then please drop this.
+
+I think the answer is no. I will drop.
+
+>> +     of_clk_add_provider(node, of_clk_src_simple_get, clk);
 >> +}
+>> +CLK_OF_DECLARE(aspeed_hpll_clock, "aspeed,g4-hpll-clock",
+>> +            aspeed_of_hpll_clk_init);
 >> +
->> +
->
-> Please no double empty lines.
->
->> +static void aspeed_wdt_enable(struct aspeed_wdt *wdt, int count)
+>> +static void __init aspeed_of_apb_clk_init(struct device_node *node)
 >> +{
->> +       wdt->ctrl |= WDT_CTRL_ENABLE;
+>> +     struct clk *clk, *hpll_clk;
+>> +     void __iomem *base;
+>> +     int reg, rate;
+>> +     const char *name = node->name;
+>> +     const char *parent_name;
 >> +
->> +       writel(0, wdt->base + WDT_CTRL);
->> +       writel(count, wdt->base + WDT_RELOAD_VALUE);
->> +       writel(WDT_RESTART_MAGIC, wdt->base + WDT_RESTART);
->> +       writel(wdt->ctrl, wdt->base + WDT_CTRL);
->
->
-> Is it really necessary to write 0 into the ctrl register when enabling
-> the watchdog ? Problem with it is two-fold: It changes the clock rate
-> for a brief period of time, and it disables the watchdog while updating
-> the timeout. Both is undesirable unless really needed.
-
-In general I agree. However, the datasheet explicitly spells out these
-four steps in this order. Writing zero is a shortcut; I could write
-ctrl with the enable bit set to zero.
-
-We've been using the driver in this fashion for the past year.
-
+>> +     of_property_read_string(node, "clock-output-names", &name);
+>> +     parent_name = of_clk_get_parent_name(node, 0);
+>> +
+>> +     base = of_iomap(node, 0);
+>> +     if (!base) {
+>> +             pr_err("%s: of_iomap failed\n", node->full_name);
+>> +             return;
+>> +     }
+>> +     reg = readl(base);
+>> +     iounmap(base);
+>> +
+>> +     hpll_clk = of_clk_get(node, 0);
+>> +     if (IS_ERR(hpll_clk)) {
+>> +             pr_err("%s: of_clk_get failed\n", node->full_name);
+>> +             return;
+>> +     }
+>> +
+>> +     reg = (reg >> 23) & 0x3;
+>> +     rate = clk_get_rate(hpll_clk) / (2 + 2 * reg);
+>> +
+>> +     clk = clk_register_fixed_rate(NULL, name, parent_name, 0, rate);
+>> +     if (IS_ERR(clk)) {
+>> +             pr_err("%s: failed to register clock\n", node->full_name);
+>> +             return;
+>> +     }
+>> +
+>> +     clk_register_clkdev(clk, NULL, name);
+>> +     of_clk_add_provider(node, of_clk_src_simple_get, clk);
 >> +}
->> +
->> +static int aspeed_wdt_start(struct watchdog_device *wdd)
->> +{
->> +       struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
->> +
->> +       dev_dbg(wdd->parent, "starting with timeout of %d (rate %lu)\n",
->> +                       wdd->timeout, wdt->rate);
+>> +CLK_OF_DECLARE(aspeed_apb_clock, "aspeed,g4-apb-clock",
+>> +            aspeed_of_apb_clk_init);
 >
->
-> Are those dev_dbg() really useful ?
+> Following on Rob's comment, please combine this into one driver
+> instead of having different DT nodes for different clks that are
+> all really part of one clock controller hw block.
 
-I did use them in writing the driver. They can go.
+Ok, I have had a go at this. In our case the clock registers are part
+of the "SCU" IP; a collection of disparate functions that happen to
+include clock control. Is syscon the right thing to use here?
 
->
->> +       aspeed_wdt_enable(wdt, wdd->timeout * wdt->rate);
->> +
->> +       return 0;
->> +}
->> +
->> +static int aspeed_wdt_stop(struct watchdog_device *wdd)
->> +{
->> +       struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
->> +
->> +       wdt->ctrl &= ~WDT_CTRL_ENABLE;
->> +       writel(wdt->ctrl, wdt->base + WDT_CTRL);
->> +
->> +       return 0;
->> +}
->> +
->> +static int aspeed_wdt_ping(struct watchdog_device *wdd)
->> +{
->> +       struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
->> +
->> +       dev_dbg(wdd->parent, "ping\n");
->> +       writel(WDT_RESTART_MAGIC, wdt->base + WDT_RESTART);
->> +       return 0;
->> +}
->> +
->> +static int aspeed_wdt_set_timeout(struct watchdog_device *wdd,
->> +                                 unsigned int timeout)
->> +{
->> +       dev_dbg(wdd->parent, "timeout set to %u\n", timeout);
->> +       wdd->timeout = timeout;
->> +
->> +       return aspeed_wdt_start(wdd);
->> +}
->> +
->> +static int aspeed_wdt_restart(struct watchdog_device *wdd,
->> +                             unsigned long action, void *data)
->> +{
->> +       struct aspeed_wdt *wdt = to_aspeed_wdt(wdd);
->> +
->> +       aspeed_wdt_enable(wdt, 128 * wdt->rate / 1000);
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct watchdog_ops aspeed_wdt_ops = {
->> +       .start          = aspeed_wdt_start,
->> +       .stop           = aspeed_wdt_stop,
->> +       .ping           = aspeed_wdt_ping,
->> +       .set_timeout    = aspeed_wdt_set_timeout,
->> +       .restart        = aspeed_wdt_restart,
->> +       .owner          = THIS_MODULE,
->> +};
->> +
->> +static const struct watchdog_info aspeed_wdt_info = {
->> +       .options        = WDIOF_KEEPALIVEPING
->> +                       | WDIOF_MAGICCLOSE
->> +                       | WDIOF_SETTIMEOUT,
->> +       .identity       = KBUILD_MODNAME,
->> +};
->> +
->> +static int aspeed_wdt_remove(struct platform_device *pdev)
->> +{
->> +       struct aspeed_wdt *wdt = platform_get_drvdata(pdev);
->> +
->> +       watchdog_unregister_device(&wdt->wdd);
->> +
->> +       return 0;
->> +}
->> +
->> +static int aspeed_wdt_probe(struct platform_device *pdev)
->> +{
->> +       struct aspeed_wdt *wdt;
->> +       struct resource *res;
->> +       int ret;
->> +
->> +       wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
->> +       if (!wdt)
->> +               return -ENOMEM;
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       wdt->base = devm_ioremap_resource(&pdev->dev, res);
->> +       if (IS_ERR(wdt->base))
->> +               return PTR_ERR(wdt->base);
->> +
->> +       /*
->> +        * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
->> +        * runs at 1MHz. We chose to always run at 1MHz, as there's no
->> +        * good reason to have a faster watchdog counter.
->> +        */
->> +       wdt->rate = 1000000;
->
->
-> Why not just use a define ?
+regmap = syscon_regmap_lookup_by_compatible("aspeed,ast2400-syscon-scu");
+ret = regmap_read(hpll->regmap, 0x70, &reg);
 
-I will add one.
+Cheers,
 
-The comment is informative though for people who read the ast2400
-datasheet and wonder why we don't provide the option clocking with
-pclk, I will leave it in.
-
->> +       wdt->wdd.info = &aspeed_wdt_info;
->> +       wdt->wdd.ops = &aspeed_wdt_ops;
->> +       wdt->wdd.min_timeout = 1;
->> +       wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
->> +       wdt->wdd.parent = &pdev->dev;
->> +
->> +       wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
->
->
-> Pretty much the same here. Since max_timeout is a constant,
-> it is well known that it is larger than 30 seconds.
-> Might as well use defines for max_timeout and timeout.
-
-Ok.
-
->
->> +       watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
->> +
->> +       wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
->
->
-> Only reset tha SoC ? Are you sure this is what you want ?
-
-I think this is left over from experiments when tracking down a reset
-bug in u-boot. I will confirm and change it back to FULL_CHIP.
-
->
->> +               WDT_CTRL_1MHZ_CLK |
->> +               WDT_CTRL_RESET_SYSTEM;
->> +
->> +       /* Ensure hardware is in consistent state */
->> +       aspeed_wdt_stop(&wdt->wdd);
->> +
->
-> An alternative might be to check if the watchdog is running, and inform
-> the watchdog core about it so it can generate heartbeats as required
-> until user space opens the watchdog device. This would ensure that the
-> system is protected during boot.
-
-I will implement this.
-
-> ctrl is really static except for the enable flag. Not really sure
-> if having a variable for it has any real benefits - you might as well
-> just read the register and update the enable flag instead as needed when
-> starting or stopping the watchdog. Is there a reason for not doing that ?
-
-Not really. I find it cleaner to keep a copy of the register instead
-of read-modify-write, but if you feel strongly about it I can change.
-
->
->> +       ret = watchdog_register_device(&wdt->wdd);
->> +       if (ret) {
->> +               dev_err(&pdev->dev, "failed to register\n");
->> +               goto err;
->
->
-> Unnecessary goto. Just return.
-
-Ok.
-
->
->
->> +       }
->> +
->> +       dev_info(&pdev->dev, "rate %lu, max timeout %u, timeout %d\n",
->> +                wdt->rate, wdt->wdd.max_timeout, wdt->wdd.timeout);
->> +
->> +       platform_set_drvdata(pdev, wdt);
->> +err:
->> +       return ret;
->> +}
->> +
->> +static struct platform_driver aspeed_watchdog_driver = {
->> +       .probe = aspeed_wdt_probe,
->> +       .remove = aspeed_wdt_remove,
->> +       .driver = {
->> +               .name = KBUILD_MODNAME,
->> +               .of_match_table = of_match_ptr(aspeed_wdt_of_table),
->> +       },
->> +};
->> +module_platform_driver(aspeed_watchdog_driver);
->> +
->> +MODULE_DESCRIPTION("Aspeed Watchdog Driver");
->> +MODULE_LICENSE("GPL");
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joel
