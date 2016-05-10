@@ -1,90 +1,82 @@
-From: Christo Radev <christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Tue, 10 May 2016 16:21:04 -0700 (PDT)
-Message-ID: <6bfa242e-c0ce-4dc5-9144-b3f16d8fb75c@googlegroups.com>
-References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
- <CAGb2v66E2TuN3+tYaAbniV3q67waDZOfqKAW14VJz6xZFomZ=Q@mail.gmail.com>
- <57285162.2000704@schinagl.nl>
- <CAGb2v66r9m7qVW6BszeT2wqs0KyEr4x5ivTJYqu2Fes=R9-Ltw@mail.gmail.com>
- <CANCTEQgjiuQXcaw=3Dr5kUsTPc3nsDQf2odwzs4nHvrkREAqrg@mail.gmail.com>
- <5729F07C.3080308@schinagl.nl>
- <948be370-4401-43cb-862e-d4376755a75d@googlegroups.com>
- <5729F6D6.8030100@schinagl.nl>
- <4704fa35-9a2a-4e6e-8fd4-f4778405c598@googlegroups.com>
- <572A0052.9060202@schinagl.nl>
- <2e745ef7-ddc0-40fc-b867-414543690276@googlegroups.com>
- <572A10B3.2020803@schinagl.nl>
- <4375220a-f939-4ed0-a6d7-2cf887b07509@googlegroups.com>
- <9fe7ebb6-6d74-4b73-b6d6-93b79650cdb6@googlegroups.com>
- <9745a80b-5444-43f7-b772-68684c96c9e5@googlegroups.com>
- <57322C8D.5060806@schinagl.nl>
- <8afbe753-4e74-4b30-ad7e-a12027d28264@googlegroups.com>
- <57323CAB.7090202@schinagl.nl>
- <f959ee5c-fa63-48f6-9819-4822c055b928@googlegroups.com>
-Reply-To: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] [v4] net: emac: emac gigabit ethernet controller
+ driver
+Date: Tue, 10 May 2016 16:26:00 -0700
+Message-ID: <57326E08.40803@gmail.com>
+References: <1460570393-19838-1-git-send-email-timur@codeaurora.org>
+ <570EC541.6080603@gmail.com> <570FFB6B.5060305@codeaurora.org>
+ <57100962.40404@gmail.com> <571915F5.5070504@codeaurora.org>
+ <571A7F3D.1070609@codeaurora.org> <571A8207.60704@gmail.com>
+ <57326C44.8020906@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_4930_476330754.1462922464828"
-Return-path: <linux-sunxi+bncBD7ORYHCVECRBYOZZG4QKGQEIQWFIFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <f959ee5c-fa63-48f6-9819-4822c055b928-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslav.kolev-1W28NRE8jL9DPfheJLI6IQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57326C44.8020906@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, Shanker Donthineni <shankerd@codeaurora.org>, Greg Kroah-Hartman <greg@kroah.com>, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, Rob Herring <robh+dt@kernel.org>, andrew@lunn.ch, bjorn.andersson@linaro.org, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_4930_476330754.1462922464828
-Content-Type: multipart/alternative;
-	boundary="----=_Part_4931_245224211.1462922464829"
+On 05/10/2016 04:18 PM, Timur Tabi wrote:
+> Florian Fainelli wrote:
+>> Are you utilizing the PHYLIB APIs properly? You need at least a
+>> phy_start() to start the PHY state machine, and an adjust_link callback
+>> to be provided to phy_connect() (or of_phy_connect()) to manage link
+>> state changes. And that's the very basic minimum here, there could be
+>> additional APIs that you may end up using.
+>>
+>> There are tons of example in tree of drivers doing this, bcmgenet,
+>> bcmsysport, tg3 etc.
+> 
+> Thank you.  I think I finally got phylib working, more or less.
+> 
+> Unfortunately, it seems I have some kind of race condition.  The driver
+> has a lot that's wrong with it, and I'm trying to fix it all.  One crazy
+> the driver does is it create a workqueue to handle a lot of the tasks
+> that would normally be handled in the interrupt handler itself.
 
-------=_Part_4931_245224211.1462922464829
-Content-Type: text/plain; charset=UTF-8
+That sounds like a typicall top half/bottom half split, fair enough.
 
-Hi to All,
+> 
+> With phylib support, I know my driver can call phy_mac_interrupt() when
+> it gets a link status change interrupt.  I then have an .adjust_link
+> callback which starts or stops the mac accordingly.
 
-I have extend performance tests with measurement of eMMC, SD/MMC and SATA 
-SSD R/W speed with kernel 4.6-rc7.
+The Ethernet MAC should be started in ndo_open() and stopped in
+ndo_close(), in between, there are link state changes, but you are not
+supposed to stop or start your Ethernet MAC and its DMA for instance
+during link change, if that is a HW requirement, your HW is pretty funky.
 
-The results and comments are posted on: 
-http://forum.armbian.com/index.php/topic/853-armbian-customization/page-4#entry8908
+> 
+> My problem is that I'm not really sure what adjust_link is supposed to
+> be doing.
 
-Best regards
-Chris
+Well, it's pretty simple, it is about re-configuring your Ethernet MAC
+based on what the PHY link state mandates: duplex, pause, speed changes,
+EEE etc is what this callback is supposed to take care of, at the
+Ethernet MAC level.
 
+>  In addition, it seems that I need to keep the workqueue
+> running, otherwise the interface will not function.  I bring the
+> interface up, and the driver reports success, but pings do not work.
+> 
+> I'm getting really frustrated.  The sample code isn't really helping a
+> whole lot, because I lack a fundamental understanding of what needs to
+> be done.  None of the documentation I've read is helpful, and I don't
+> know how to debug it.
+
+Seriously, no documentation is helpful? The PHY library seems pretty
+well documented to me, but I suppose I have a bias, oh, and patches are
+welcome of course.
+
+> 
+> Can you give me some advice on how to debug this?
+
+Take a look at drivers/net/ethernet/broadcom/genet/bcmgenet.c and see
+how it deals with managing link state changes for instance. The code is
+pretty straight forward: link interrupt (and other causes) trigger a
+workqueue schedule, which then processes link state changes and calls
+phy_mac_interrupt(), which in turn makes the PHY library adjust the
+interface carrier state.
 -- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
-------=_Part_4931_245224211.1462922464829
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><span style=3D"font-family: arial,sans-serif;"><code><span=
- style=3D"font-family: arial,sans-serif;">Hi to All,</span><br></code><br>I=
- have extend performance tests with measurement of eMMC, SD/MMC and SATA SS=
-D R/W speed with kernel 4.6-rc7.<br><br>The results and comments are posted=
- on: <a href=3D"http://forum.armbian.com/index.php/topic/853-armbian-custom=
-ization/page-4#entry8908">http://forum.armbian.com/index.php/topic/853-armb=
-ian-customization/page-4#entry8908</a><br><br>Best regards<br>Chris<br></sp=
-an><br></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
-------=_Part_4931_245224211.1462922464829--
-
-------=_Part_4930_476330754.1462922464828--
+Florian
