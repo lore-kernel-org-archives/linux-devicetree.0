@@ -1,78 +1,103 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 2/5] ARM: davinci: da8xx: Add CFGCHIP syscon platform
- declaration.
-Date: Tue, 10 May 2016 11:44:22 -0500
-Message-ID: <57320FE6.60003@lechnology.com>
-References: <1462837612-7803-1-git-send-email-david@lechnology.com>
- <1462837612-7803-3-git-send-email-david@lechnology.com>
- <7e0373cf-2ae9-e205-2226-0ded6894b709@cogentembedded.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe
+ bindings
+Date: Tue, 10 May 2016 10:00:12 -0700
+Message-ID: <5732139C.80101@gmail.com>
+References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+ <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
+ <4513390.VWu0VVAxOl@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7e0373cf-2ae9-e205-2226-0ded6894b709@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, nsekhar@ti.com, khilman@kernel.org
-Cc: petr@barix.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <4513390.VWu0VVAxOl@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/2016 06:26 AM, Sergei Shtylyov wrote:
-> On 5/10/2016 2:46 AM, David Lechner wrote:
->
->> The CFGCHIP registers are used by a number of devices, so using a syscon
->> device to share them. The first consumer of this will by the
->> phy-da8xx-usb
->> driver.
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
-> [...]
->> diff --git a/arch/arm/mach-davinci/devices-da8xx.c
->> b/arch/arm/mach-davinci/devices-da8xx.c
->> index 725e693..69d11a1 100644
->> --- a/arch/arm/mach-davinci/devices-da8xx.c
->> +++ b/arch/arm/mach-davinci/devices-da8xx.c
->> @@ -11,6 +11,7 @@
->>   * (at your option) any later version.
->>   */
->>  #include <linux/init.h>
->> +#include <linux/platform_data/syscon.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/dma-contiguous.h>
->>  #include <linux/serial_8250.h>
->> @@ -1109,3 +1110,30 @@ int __init da850_register_sata(unsigned long
->> refclkpn)
->>      return platform_device_register(&da850_sata_device);
->>  }
->>  #endif
+On 05/05/2016 02:15 PM, Arnd Bergmann wrote:
+>> +Required properties:
+>> +- compatible: must be one of: "brcm,bcm7425-pcie"
+>> +			      "brcm,bcm7435-pcie"
+>> +			      "brcm,bcm7445-pcie"
 >> +
->> +static struct syscon_platform_data da8xx_cfgchip_platform_data = {
->> +    .label    = "cfgchip",
->> +};
+>> +- reg: specifies the physical base address of the controller registers and
+>> +  its length
 >> +
->> +static struct resource da8xx_cfgchip_resources[] = {
->> +    {
->> +        .start    = DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP0_REG,
->> +        .end    = DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP4_REG + 3,
->> +        .flags    = IORESOURCE_MEM,
->> +    },
->> +};
+>> +- interrupt-parent: must be a reference (phandle) to the parent interrupt
+>> +  controller in the system (7038-l1-intc on MIPS, GIC on ARM/ARM64)
 >> +
->> +static struct platform_device da8xx_cfgchip_device = {
->> +    .name    = "syscon",
->> +    .id    = 0,
->
->     Again, -1.
->
-> [...]
->
-> MBR, Sergei
->
+>> +- interrrupts: first interrupt must be the Level 1 interrupt number corresponding
+>> +  to the main PCIe RC interrupt, second interrupt must be the MSI interrupt
+>> +  See the interrupt-parent documentation for the number of cells and their meaning:
+>> +  MIPS: Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+>> +  ARM/ARM64: Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+>> +
+>> +- interrupt-names: must be "pcie", and if present "msi"
+> 
+> When I suggested splitting out the MSI support, I was thinking (but not writing)
+> that you'd use an msi-parent property to refer to the node that holds the
+> msi-controller as well.
 
-I wish you would have noticed this when I first submitted it. I remember 
-going back and forth about this. But it has been too long and I can't 
-remember the reason why I chose to go this way.
+Oh got it now, and it can actually refer to iself.
 
-It seems like changing it broke something with either this one or the 
-phy device and I opted to keep it this way on both to be consistent. For 
-example, the USB devices both use id = 0 as well even though there are 
-only one of each type.
+> 
+>> +- ranges: ranges for the PCI outbound windows, no I/O or prefetchable windows
+>> +  must be specified here, only non-prefetchable. 32-bits windows or 64-bits
+>> +  windows are allowed based on the host processor's capabilities (ARM w/ LPAE,
+>> +  ARM64).
+> 
+> So this supports 64-bit non-prefetchable windows? Usually 64-bit windows
+> are prefetchable.
+
+I have yet to verify this, but on ARM64-based STB this should indeed be
+the case.
+
+> 
+>> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to PCIe space
+>> +  there must be exactly one value per memory controller present in the system
+>> +  (ranges from 1 to 3)
+> 
+> I'm still not too happy with this property. I see no reason for the log2
+> format (rather than length in bytes, or offset/length tuples, or dma-ranges,
+> or phandles pointing to the memory controllers). I think we need to discuss
+> this some more.
+
+The two critical pieces of information that the PCIe RC needs are:
+
+- number of memory controllers present in the system to avoid
+configuring a window to a non-existing or non-populated memory controller
+
+- size of the memory populated on the memory controller
+
+You would think that we should somehow be able to derive this
+information from the "memory" node, but there are a few caveats:
+
+- on MIPS platforms, we have discontiguous physical memory ranges (256MB
+@ 0x0, then 768MB or 1792MB @ 0x 0x20000000 and 1GB @ 0x90000000), yet
+the PCIe RC does not know about the hole(s)
+
+- on ARM platforms, we have an identiy mapping for the PAs below 4GB,
+but when we cross it, we have additional non-linear memory regions
+
+Both of these memory nodes would imply we know how to identify which
+physical address belongs to which memory controller, while this is
+actually possible and known, it creates a dependency on another piece of
+driver to provide that information.
+
+We do have memory controller nodes populated in the Device Tree, however
+their binding (out of tree for the moment) does only specify their
+programmable register interface, and not how how much physical memory
+and where they provide to the system.
+
+It does seem like we should be able to utilize the "dma-ranges" property
+to determine both the memory controller number and their respective
+populated memory sizes.
+
+In the case where we have an identiy mapping though, this seems a little
+redundant, but less of a stretch than our custom properties and nodes.
+
+Does that sound reasonable to you?
+-- 
+Florian
