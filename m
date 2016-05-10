@@ -1,78 +1,63 @@
-From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: dra7: Add ocmcram nodes
-Date: Tue, 10 May 2016 14:49:41 -0500
-Message-ID: <1462909782-14639-2-git-send-email-d-gerlach@ti.com>
-References: <1462909782-14639-1-git-send-email-d-gerlach@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB PCIe bindings
+Date: Tue, 10 May 2016 21:51:47 +0200
+Message-ID: <2533093.jsjycoq8tW@wuerfel>
+References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com> <4513390.VWu0VVAxOl@wuerfel> <5732139C.80101@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462909782-14639-1-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5732139C.80101@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, bhelgaas@google.com
 List-Id: devicetree@vger.kernel.org
 
-Add all ocmcram nodes to dra7.dtsi using the generic mmio-sram driver.
-DRA7xx and AM57xx families of SoCs can contain three ocmcram regions of
-SRAM, one of 512kb and also an optional two additional of 1Mb each. Mark
-the two additional 1MB regions of SRAM as disabled as only ocmcmram1 is
-on all variants of the SoCs, then depending on which specific variant
-is in use the ocmcram2 and ocmcram3 nodes can be enabled in the board
-dts file if the data manual for that part number indicates the ocmcram
-region is available.
+On Tuesday 10 May 2016 10:00:12 Florian Fainelli wrote:
+> 
+> The two critical pieces of information that the PCIe RC needs are:
+> 
+> - number of memory controllers present in the system to avoid
+> configuring a window to a non-existing or non-populated memory controller
+> 
+> - size of the memory populated on the memory controller
+> 
+> You would think that we should somehow be able to derive this
+> information from the "memory" node, but there are a few caveats:
+> 
+> - on MIPS platforms, we have discontiguous physical memory ranges (256MB
+> @ 0x0, then 768MB or 1792MB @ 0x 0x20000000 and 1GB @ 0x90000000), yet
+> the PCIe RC does not know about the hole(s)
 
-Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+That sounds like you need a dma-ranges property anyway to describe how
+the DMA addresses are mapped.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 13ac88279427..fd6f74856bd3 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -286,6 +286,38 @@
- 			};
- 		};
- 
-+		ocmcram1: ocmcram@40300000 {
-+			compatible = "mmio-sram";
-+			reg = <0x40300000 0x80000>;
-+			ranges = <0x0 0x40300000 0x80000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
-+
-+		/*
-+		 * NOTE: ocmcram2 and ocmcram3 are not available on all
-+		 * DRA7xx and AM57xx variants. Confirm availability in
-+		 * the data manual for the exact part number in use
-+		 * before enabling these nodes in the board dts file.
-+		 */
-+		ocmcram2: ocmcram@40400000 {
-+			status = "disabled";
-+			compatible = "mmio-sram";
-+			reg = <0x40400000 0x100000>;
-+			ranges = <0x0 0x40400000 0x100000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
-+
-+		ocmcram3: ocmcram@40500000 {
-+			status = "disabled";
-+			compatible = "mmio-sram";
-+			reg = <0x40500000 0x100000>;
-+			ranges = <0x0 0x40500000 0x100000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
-+
- 		bandgap: bandgap@4a0021e0 {
- 			reg = <0x4a0021e0 0xc
- 				0x4a00232c 0xc
--- 
-2.7.3
+> - on ARM platforms, we have an identiy mapping for the PAs below 4GB,
+> but when we cross it, we have additional non-linear memory regions
+> 
+> Both of these memory nodes would imply we know how to identify which
+> physical address belongs to which memory controller, while this is
+> actually possible and known, it creates a dependency on another piece of
+> driver to provide that information.
+> 
+> We do have memory controller nodes populated in the Device Tree, however
+> their binding (out of tree for the moment) does only specify their
+> programmable register interface, and not how how much physical memory
+> and where they provide to the system.
+> 
+> It does seem like we should be able to utilize the "dma-ranges" property
+> to determine both the memory controller number and their respective
+> populated memory sizes.
+> 
+> In the case where we have an identiy mapping though, this seems a little
+> redundant, but less of a stretch than our custom properties and nodes.
+> 
+> Does that sound reasonable to you?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd have to look at an example first. Ideally, each line in the
+dma-ranges property would refer to one memory controller, and
+that would be very easy to mandate, but it sounds like in the MIPS
+case you end up with an extra entry for the first 256MB that is
+on the same memory controller as the second 768MB.
+
+	Arnd
