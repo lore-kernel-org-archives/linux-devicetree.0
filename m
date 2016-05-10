@@ -1,141 +1,75 @@
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v7 03/14] usb: hcd.h: Add OTG to HCD interface
-Date: Tue, 10 May 2016 08:03:20 +0000
-Message-ID: <AM4PR04MB2130A378F6E7A103FAF3486989710@AM4PR04MB2130.eurprd04.prod.outlook.com>
-References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
- <1462191537-10314-4-git-send-email-rogerq@ti.com>
- <20160506094103.GF32359@shlinux2.ap.freescale.net> <57305C42.90300@ti.com>
- <20160510031401.GA3748@shlinux2.ap.freescale.net> <57318F19.7000506@ti.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Add MediaTek USB3 DRD Driver
+Date: Tue, 10 May 2016 16:23:28 +0800
+Message-ID: <1462868614-20602-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57318F19.7000506@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Peter Chen <hzpeterchen@gmail.com>
-Cc: "peter.chen@freescale.com" <peter.chen@freescale.com>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, "balbi@kernel.org" <balbi@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "abrestic@chromium.org" <abrestic@chromium.org>, "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Biao Huang <biao.huang@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+>From 5e3e992dc3c02eda12f5cf984a18a57f0207333d Mon Sep 17 00:00:00 2001
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Date: Tue, 10 May 2016 16:04:25 +0800
+Subject: [PATCH 0/6] Add MediaTek USB3 DRD Driver
 
-> -----Original Message-----
-> From: Roger Quadros [mailto:rogerq@ti.com]
-> Sent: Tuesday, May 10, 2016 3:35 PM
-> To: Peter Chen <hzpeterchen@gmail.com>
-> Cc: peter.chen@freescale.com; stern@rowland.harvard.edu; balbi@kernel.org;
-> gregkh@linuxfoundation.org; dan.j.williams@intel.com; jun.li@freescale.com;
-> mathias.nyman@linux.intel.com; tony@atomide.com; Joao.Pinto@synopsys.com;
-> abrestic@chromium.org; yoshihiro.shimoda.uh@renesas.com; linux-
-> usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> omap@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v7 03/14] usb: hcd.h: Add OTG to HCD interface
-> 
-> On 10/05/16 06:14, Peter Chen wrote:
-> > On Mon, May 09, 2016 at 12:45:38PM +0300, Roger Quadros wrote:
-> >> On 06/05/16 12:41, Peter Chen wrote:
-> >>> On Mon, May 02, 2016 at 03:18:46PM +0300, Roger Quadros wrote:
-> >>>> The OTG core will use struct otg_hcd_ops to interface with the HCD
-> >>>> controller.
-> >>>>
-> >>>> The main purpose of this interface is to avoid directly calling HCD
-> >>>> APIs from the OTG core as they wouldn't be defined in the built-in
-> >>>> symbol table if CONFIG_USB is m.
-> >>>>
-> >>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >>>> Acked-by: Peter Chen <peter.chen@nxp.com>
-> >>>
-> >>> Roger, after thinking more, I still think current dependency between
-> >>> OTG, HCD and gadget are too complicated. Since the OTG can't work if
-> >>> it is built as module, I suggest letting OTG depends on HCD &&
-> >>> USB_GADGET, and it is a boolean, in that case, we don't need to
-> >>> export any HCD and gadget ops, things will be much simpler.
-> >>> What's your opinion?
-> >>
-> >> How will it work if HCD and USB_GADGET are modules and OTG is built-in?
-> >>
-> >
-> > The OTG will not be compiled at this situation, since it is boolean.
-> > In fact, like I mentioned at above, OTG or USB function can't work if
-> > it is built as module.
-> 
-> Isn't this a limitation?
-> As per the current implementation dual role works fine even with both
-> USB_GADGET and HCD as module.
+These patches introduce the MediaTek USB3 dual-role controller
+driver.
 
-My understand: only make sense for pass build, host can't work before
-gadget modules loaded; gadget can't work before hcd loaded, nothing
-can work before all drivers are loaded.
+The driver can be configured as Dual-Role Device (DRD),
+Peripheral Only and Host Only (xHCI) modes. It works well
+with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
+tested on MT8173 platform which only contains USB2.0 device IP,
+and on MT6290 platform which contains USB3.0 device IP.
 
-> 
-> In the real world it is unlikely that GADGET and HCD will be built-in.
 
-Why? User enable USB_OTG means both drivers should be enabled anyway.
-Even in non-OTG case, both may be built-in for machine with 2 ports
-(one port is host only, the other one is peripheral only).
+Chunfeng Yun (6):
+  dt-bindings: mt8173-xhci: support host side of dual-role mode
+  usb: xhci-mtk: make IPPC register optional
+  dt-bindings: mtu3: add devicetree bindings
+  usb: Add MediaTek USB3 DRD Driver
+  arm64: dts: mediatek: add USB3 DRD driver
+  pinctrl: mt8173: set GPIO16 to usb iddig mode
 
-A general question, 2 drivers depends on each other, allowable?
+ .../devicetree/bindings/usb/mt8173-xhci.txt        |   48 ++
+ Documentation/devicetree/bindings/usb/mtu3.txt     |   86 ++
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |   46 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   28 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8173.h      |    2 +-
+ drivers/usb/Kconfig                                |    2 +
+ drivers/usb/Makefile                               |    1 +
+ drivers/usb/host/xhci-mtk.c                        |   32 +-
+ drivers/usb/mtu3/Kconfig                           |   47 ++
+ drivers/usb/mtu3/Makefile                          |   20 +
+ drivers/usb/mtu3/mtu3.h                            |  422 ++++++++++
+ drivers/usb/mtu3/mtu3_core.c                       |  877 +++++++++++++++++++
+ drivers/usb/mtu3/mtu3_dr.c                         |  353 ++++++++
+ drivers/usb/mtu3/mtu3_dr.h                         |  108 +++
+ drivers/usb/mtu3/mtu3_gadget.c                     |  735 ++++++++++++++++
+ drivers/usb/mtu3/mtu3_gadget_ep0.c                 |  889 ++++++++++++++++++++
+ drivers/usb/mtu3/mtu3_host.c                       |  294 +++++++
+ drivers/usb/mtu3/mtu3_hw_regs.h                    |  474 +++++++++++
+ drivers/usb/mtu3/mtu3_plat.c                       |  496 +++++++++++
+ drivers/usb/mtu3/mtu3_qmu.c                        |  599 +++++++++++++
+ drivers/usb/mtu3/mtu3_qmu.h                        |   43 +
+ 21 files changed, 5587 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/mtu3.txt
+ create mode 100644 drivers/usb/mtu3/Kconfig
+ create mode 100644 drivers/usb/mtu3/Makefile
+ create mode 100644 drivers/usb/mtu3/mtu3.h
+ create mode 100644 drivers/usb/mtu3/mtu3_core.c
+ create mode 100644 drivers/usb/mtu3/mtu3_dr.c
+ create mode 100644 drivers/usb/mtu3/mtu3_dr.h
+ create mode 100644 drivers/usb/mtu3/mtu3_gadget.c
+ create mode 100644 drivers/usb/mtu3/mtu3_gadget_ep0.c
+ create mode 100644 drivers/usb/mtu3/mtu3_host.c
+ create mode 100644 drivers/usb/mtu3/mtu3_hw_regs.h
+ create mode 100644 drivers/usb/mtu3/mtu3_plat.c
+ create mode 100644 drivers/usb/mtu3/mtu3_qmu.c
+ create mode 100644 drivers/usb/mtu3/mtu3_qmu.h
 
-> 
-> cheers,
-> -roger
-> 
-> >
-> > Peter
-> >> cheers,
-> >> -roger
-> >>
-> >>>
-> >>> Peter
-> >>>
-> >>>> ---
-> >>>>  include/linux/usb/hcd.h | 24 ++++++++++++++++++++++++
-> >>>>  1 file changed, 24 insertions(+)
-> >>>>
-> >>>> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-> >>>> index b98f831..861ccaa 100644
-> >>>> --- a/include/linux/usb/hcd.h
-> >>>> +++ b/include/linux/usb/hcd.h
-> >>>> @@ -399,6 +399,30 @@ struct hc_driver {
-> >>>>
-> >>>>  };
-> >>>>
-> >>>> +/**
-> >>>> + * struct otg_hcd_ops - Interface between OTG core and HCD
-> >>>> + *
-> >>>> + * Provided by the HCD core to allow the OTG core to interface
-> >>>> +with the HCD
-> >>>> + *
-> >>>> + * @add: function to add the HCD
-> >>>> + * @remove: function to remove the HCD
-> >>>> + * @usb_bus_start_enum: function to immediately start bus
-> >>>> +enumeration
-> >>>> + * @usb_control_msg: function to build and send of a control urb
-> >>>> + * @usb_hub_find_child: function to get pointer to the child
-> >>>> +device  */ struct otg_hcd_ops {
-> >>>> +	int (*add)(struct usb_hcd *hcd,
-> >>>> +		   unsigned int irqnum, unsigned long irqflags);
-> >>>> +	void (*remove)(struct usb_hcd *hcd);
-> >>>> +	int (*usb_bus_start_enum)(struct usb_bus *bus, unsigned int
-> port_num);
-> >>>> +	int (*usb_control_msg)(struct usb_device *dev, unsigned int
-> pipe,
-> >>>> +			       __u8 request, __u8 requesttype, __u16 value,
-> >>>> +			       __u16 index, void *data, __u16 size,
-> >>>> +			       int timeout);
-> >>>> +	struct usb_device * (*usb_hub_find_child)(struct usb_device
-> *hdev,
-> >>>> +						  int port1);
-> >>>> +};
-> >>>> +
-> >>>>  static inline int hcd_giveback_urb_in_bh(struct usb_hcd *hcd)  {
-> >>>>  	return hcd->driver->flags & HCD_BH;
-> >>>> --
-> >>>> 2.7.4
-> >>>>
-> >>>> --
-> >>>> To unsubscribe from this list: send the line "unsubscribe
-> >>>> linux-usb" in the body of a message to majordomo@vger.kernel.org
-> >>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >>>
-> >
+-- 
+1.7.9.5
+
