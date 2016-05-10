@@ -1,162 +1,87 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Tue, 10 May 2016 10:04:48 +0200
-Message-ID: <20160510100448.49834120@bbrezillon>
-References: <1461845007-23139-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1461845007-23139-2-git-send-email-boris.brezillon@free-electrons.com>
-	<20160503164019.GA1604@rob-hp-laptop>
-	<20160503185153.5cfddc32@bbrezillon>
-	<CAL_Jsq+cTvW=wUUQmD2R-nZ9m3U5E00yEfLy=-Z_X6EQZRO4NQ@mail.gmail.com>
-	<20160504113852.10a2dd84@bbrezillon>
-	<CAL_Jsq+4aL5znA3zOKdcJb+pEXhVOQthkFF6DN2+P6U37t2o6g@mail.gmail.com>
-	<20160504153547.60d736bb@bbrezillon>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v7 03/14] usb: hcd.h: Add OTG to HCD interface
+Date: Tue, 10 May 2016 11:12:32 +0300
+Message-ID: <87twi6ib67.fsf@linux.intel.com>
+References: <1462191537-10314-1-git-send-email-rogerq@ti.com> <1462191537-10314-4-git-send-email-rogerq@ti.com> <20160506094103.GF32359@shlinux2.ap.freescale.net> <57305C42.90300@ti.com> <20160510031401.GA3748@shlinux2.ap.freescale.net> <57318F19.7000506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160504153547.60d736bb@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57318F19.7000506@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Peter Chen <hzpeterchen@gmail.com>
+Cc: peter.chen@freescale.com, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, dan.j.williams@intel.com, jun.li@freescale.com, mathias.nyman@linux.intel.com, tony@atomide.com, Joao.Pinto@synopsys.com, abrestic@chromium.org, yoshihiro.shimoda.uh@renesas.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 4 May 2016 15:35:47 +0200
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, 4 May 2016 08:06:10 -0500
-> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> 
-> > On Wed, May 4, 2016 at 4:38 AM, Boris Brezillon
-> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:  
-> > > Hi Rob,
-> > >
-> > > On Tue, 3 May 2016 14:11:04 -0500
-> > > Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > >    
-> > >> On Tue, May 3, 2016 at 11:51 AM, Boris Brezillon
-> > >> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:    
-> > >> > Hi Rob,
-> > >> >
-> > >> > On Tue, 3 May 2016 11:40:19 -0500
-> > >> > Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > >> >    
-> > >> >> On Thu, Apr 28, 2016 at 02:03:27PM +0200, Boris Brezillon wrote:    
-> > >> >> > The EBI (External Bus Interface) is used to access external peripherals
-> > >> >> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> > >> >> > Each device is assigned a CS line and an address range and can have its
-> > >> >> > own configuration (timings, access mode, bus width, ...).
-> > >> >> > This driver provides a generic DT binding to configure a device according
-> > >> >> > to its requirements.
-> > >> >> > For specific device controllers (like the NAND one) the SMC timings
-> > >> >> > should be configured by the controller driver through the matrix and smc
-> > >> >> > syscon regmaps.    
-> > 
-> > [...]
-> >   
-> > >> >> > +EBI bus configuration associated with specific chip-select will be defined in
-> > >> >> > +the configs subnode. This configs node will in turn contain several subnodes
-> > >> >> > +named config-<cs-id>, each of them containing the following properties.    
-> > >> >>
-> > >> >> This is a bit unusual. Why not just part of the child device nodes?    
-> > >> >
-> > >> > Oh, come on! I reworked the binding because Mark complained about the
-> > >> > previous binding which was doing exactly what you're suggesting. Can
-> > >> > you please be consistent in your reviews...    
-> > >>
-> > >> No, Mark and I both have our opinions. Which part of this patch
-> > >> explains the history?    
-> > >
-> > > Hm, it's in patch 1/2 (just dropped the cover letter, which might not
-> > > be such a good idea).
-> > >    
-> > >> If the revision history is not in the patch, I'm
-> > >> not looking at it.
-> > >>
-> > >> My issue with it this way is that it has invented yet another way to
-> > >> describe timings. I would like to be consistent across external bus
-> > >> descriptions, but we're not very consistent to begin with though. The
-> > >> most common seems to be the way you first did it. But I agree that it
-> > >> is kind of screwy to have an intermediate node unless the controller
-> > >> itself has sub-blocks within it and is not the established way to
-> > >> describe a bus with chip selects. I would either put the properties
-> > >> directly in the child nodes (e.g. flash@0,0) or put your config nodes
-> > >> in the device node. I'd call it timings instead of config, but that's
-> > >> just bikeshedding.    
-> > >
-> > > Well, it's not only describing timings (see atmel,bus-width,
-> > > atmel,byte-access-type, ...), but I'm fine with either names :).
-> > >    
-> > >>
-> > >> memory-controller@1000 {
-> > >>   ...
-> > >>   flash@0,0 {
-> > >>     timings {
-> > >>       ...
-> > >>     };
-> > >>   };
-> > >> };    
-> > >
-> > > Okay. Mark, what do you think of this approach?
-> > >
-> > > Note that one of my previous version was defining timings directly in
-> > > the EBI device node, and Arnd noted that doing so may cause problems
-> > > if one of the EBI property (or the config/timing node name) conflict
-> > > with the sub-device binding, which is why I decided to put the EBI
-> > > config definitions in a separate subnode.    
-> > 
-> > You have vendor prefixes on all the properties so I don't think a
-> > collision is really a problem. It's also an established pattern in
-> > i.MX WEIM and OMAP GPMC (which are hiding in bindings/bus/) and I
-> > prefer consistency.  
-> 
-> So let's summarize that.
-> 
-> memory-controller@1000 {
-> 	...
-> 	flash@0,0 {
-> 		atmel,<ebi-prop-name> = <value>;
-> 		...
-> 		<flash-device-prop> = <value>;
-> 	};
-> };
-> 
-> Would everyone agree on this representation?
-> 
-> With this approach, it's a bit more complicated to detect the case
-> where we want to keep bootloader/firmware config, but it should be
-> doable (it's much more easier to test for the presence of a
-> config/timing node than verifying that either all or none of the
-> mandatory properties are here).
-> 
-> Still remains the problem mentioned by Jean-Jacques: what if the
-> sub-device takes 2 CS lines. Should we apply the same setting to those
-> slots?
-> 
 
-Rob, Mark, Arnd, can you take a decision regarding this binding? This
-driver is floating around for quite some time, and we were asked to
-rework the binding several times (in time in an opposite direction).
+Hi,
 
-For the record, here is the thread I mentioned earlier [1]. In his
-answer, Arnd suggests to put timing and bus config description
-outside of the sub-device node. Mark recently complained about this
-representation, which led me to the configs/config-X appraoch, and now
-Rob suggests to go back to the first proposal.
+Roger Quadros <rogerq@ti.com> writes:
+> On 10/05/16 06:14, Peter Chen wrote:
+>> On Mon, May 09, 2016 at 12:45:38PM +0300, Roger Quadros wrote:
+>>> On 06/05/16 12:41, Peter Chen wrote:
+>>>> On Mon, May 02, 2016 at 03:18:46PM +0300, Roger Quadros wrote:
+>>>>> The OTG core will use struct otg_hcd_ops to interface
+>>>>> with the HCD controller.
+>>>>>
+>>>>> The main purpose of this interface is to avoid directly
+>>>>> calling HCD APIs from the OTG core as they
+>>>>> wouldn't be defined in the built-in symbol table if
+>>>>> CONFIG_USB is m.
+>>>>>
+>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>>> Acked-by: Peter Chen <peter.chen@nxp.com>
+>>>>
+>>>> Roger, after thinking more, I still think current dependency between
+>>>> OTG, HCD and gadget are too complicated. Since the OTG can't work
+>>>> if it is built as module, I suggest letting OTG depends on HCD &&
+>>>> USB_GADGET, and it is a boolean, in that case, we don't need to
+>>>> export any HCD and gadget ops, things will be much simpler.
+>>>> What's your opinion?
+>>>
+>>> How will it work if HCD and USB_GADGET are modules and OTG is built-in?
+>>>
+>>=20
+>> The OTG will not be compiled at this situation, since it is boolean.
+>> In fact, like I mentioned at above, OTG or USB function can't work if
+>> it is built as module.
+>
+> Isn't this a limitation?
 
-I'm fine doing that, but can you please all confirm that you agree on
-this binding?
+I agree, it should work built-in or module.
 
-Thanks,
+> As per the current implementation dual role works fine even with both
+> USB_GADGET and HCD as module.
+>
+> In the real world it is unlikely that GADGET and HCD will be built-in.
 
-Boris
+we can't make this assumption, however :-)
 
-[1]http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/222438.html
+=2D-=20
+balbi
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXMZfxAAoJEIaOsuA1yqRE0v0P/1Cq2/hiwSqK5XSEead2gNDT
+EEqATXrusScuG6mYUuYOHJcFLWVSRk3XY2GlyGrYD+yFNg+rKWigNGGcwSAI53f2
+X/EMAtxTwz8QvYPQT3bR52ydwccEXJClzTk/u00Zyo5rgmpwMWh2JFlSQLvP3rP5
+BFFSQPk6eG6/q6BP4dzS5f30gZb8cTWVAwr4tJkxbAXobSGlQR+ljn9t9MYwHcgr
+b23EUv37G8hVZ6Q0oOQnv/D8Y4RAgY5XXVUbnAiu0aIz/0wf3nw4hVX1nbRRUO4l
+B2UhI7IrK/H7R3BD9Xc6rNZzzhqKxx32tL5Bot3u+K5uavJ1M/BkSIJcWCcyRi6B
+qZHQx1mDz1GbIMvlzU2YYpqv6y5izRufqt2XwvKyxl6xd/xpIuD55Y5nDThzScT5
+sQO9gLmAOT1vbvBtovCDSxnhgJiTmSO390TGQGnWJljbgD5HFA8jfrv/35kI0mnM
+qgWEWGwrZXTB0/4Rt8rUHXA7wBbwxsdLXlXTC1xEh7inn70TFgBCX5JSVJC1gJDy
+QeADIHxiUWQ3HFE4BLUo3uVA3IGVkkYkgrrCs6iSGNAUrpsv+9iHYQmvh7lJaUUJ
+JvOU9gFT3kaH8AaMBTVIh76bmoFsOfmWiZqb/hxctXy9uIZrumqm9n9lcoE/gBnN
+GPNMIw5Fbrwz7F/p+OtS
+=ZkuX
+-----END PGP SIGNATURE-----
+--=-=-=--
