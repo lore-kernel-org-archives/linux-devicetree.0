@@ -1,128 +1,78 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
- registers
-Date: Tue, 10 May 2016 17:03:46 +0100
-Message-ID: <57320662.9010807@arm.com>
-References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
- <CAMuHMdV6XOSiSv-mwovnCAMEPsgOc_vEhPPu0aYCgz74EF242g@mail.gmail.com>
- <5731ED92.6080804@arm.com> <5731FE44.8010906@gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v5 2/5] ARM: davinci: da8xx: Add CFGCHIP syscon platform
+ declaration.
+Date: Tue, 10 May 2016 11:44:22 -0500
+Message-ID: <57320FE6.60003@lechnology.com>
+References: <1462837612-7803-1-git-send-email-david@lechnology.com>
+ <1462837612-7803-3-git-send-email-david@lechnology.com>
+ <7e0373cf-2ae9-e205-2226-0ded6894b709@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <5731FE44.8010906@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, julien.grall@arm.com, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7e0373cf-2ae9-e205-2226-0ded6894b709@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, nsekhar@ti.com, khilman@kernel.org
+Cc: petr@barix.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/16 16:29, Dirk Behme wrote:
-> On 10.05.2016 16:17, Marc Zyngier wrote:
->> On 10/05/16 14:33, Geert Uytterhoeven wrote:
->>> CC Marc, lakml
->>>
->>> On Tue, Apr 19, 2016 at 8:29 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
->>>> From: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
->>>>
->>>> There are some requirements about the GIC-400 memory layout and its
->>>> mapping if using 64k aligned base addresses like on r8a7795.
->>>>
->>>> See e.g.
->>>>
->>>> http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
->>>>
->>>> Map the whole memory range instead of only 0x2000. This will fix
->>>> the issue that some hypervisors, e.g. Xen, fail to handle the
->>>> interrupts correctly.
->>>>
->>>> Signed-off-by: Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>
->>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
->>>
->>> Based on my understanding below
->>> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>>> ---
->>>> Note: This patch is against renesas-drivers-2016-04-12-v4.6-rc3
->>>>
->>>>   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 4 ++--
->>>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->>>> index 8be9424..d880fd4 100644
->>>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->>>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->>>> @@ -160,9 +160,9 @@
->>>>                          #address-cells = <0>;
->>>>                          interrupt-controller;
->>>>                          reg = <0x0 0xf1010000 0 0x1000>,
->>>> -                             <0x0 0xf1020000 0 0x2000>,
->>>> +                             <0x0 0xf1020000 0 0x20000>,
->>>>                                <0x0 0xf1040000 0 0x20000>,
->>>> -                             <0x0 0xf1060000 0 0x2000>;
->>>> +                             <0x0 0xf1060000 0 0x20000>;
->>>>                          interrupts = <GIC_PPI 9
->>>>                                          (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->>>>                  };
->>>
->>> Region 0:
->>>      4 KiB-pages 0xf1011000-0xf101ffff are aliased to 0xf1010000-0xf1010fff,
->>>      but we need the first 4 KiB only.
->>>
->>> Region 1:
->>>      4 KiB-pages 0xf1021000-0xf102ffff are aliased to 0xf1020000-0xf1020fff,
->>>      4 KiB-pages 0xf1030000-0xf103ffff are all zeroes, probably due to
->>>      non-secure mode?
+On 05/10/2016 06:26 AM, Sergei Shtylyov wrote:
+> On 5/10/2016 2:46 AM, David Lechner wrote:
+>
+>> The CFGCHIP registers are used by a number of devices, so using a syscon
+>> device to share them. The first consumer of this will by the
+>> phy-da8xx-usb
+>> driver.
 >>
->> No. This 4kB page only contain a single register (GICC_DIR), which is
->> WO/RAZ.
->>
->>>
->>> Region 2:
->>>      4 KiB-pages 0xf1041000-0xf104ffff are aliased to 0xf1040000-0xf1040fff,
->>>      4 KiB-pages 0xf1050000-0xf105ffff are all zeroes, probably due to
->>>      non-secure mode?
->>
->> Neither. The aliases are an unused feature of GIC400 exposing the other
->> CPUs view of the same registers...
->>
->>>
->>> Region 3:
->>>      4 KiB-pages 0xf1061000-0xf106ffff are aliased to 0xf1060000-0xf1060fff,
->>>      4 KiB-pages 0xf1070000-0xf107ffff are all zeroes, probably due to
->>>      non-secure mode?
->>
->> Same as region 1.
->>
->>>
->>> Region 2 already had a 128 KiB size before, which allowed to use 8 KiB at
->>> 0xf104f000.
->>
->> No. This region (GICH) only needs the first 256 bytes or so. The rest is
->> either RAZ/WI or useless stuff.
->>
->>>
->>> An 8 KiB size for regions 1 and 3 indeed didn't make much sense, as this
->>> covered two identical (aliased) 4 KiB pages, instead of two different pages
->>> at offset 0xf000.
->>
->> While we're at it, adding a pointer to the documentation (GIC400 and
->> SBSA) would be tremendously useful, as it'd avoid misinterpreting the
->> various bits.
-> 
-> 
-> If anybody could give a short description I could copy & paste into 
-> the commit message that would be quite helpful :)
+>> Signed-off-by: David Lechner <david@lechnology.com>
+> [...]
+>> diff --git a/arch/arm/mach-davinci/devices-da8xx.c
+>> b/arch/arm/mach-davinci/devices-da8xx.c
+>> index 725e693..69d11a1 100644
+>> --- a/arch/arm/mach-davinci/devices-da8xx.c
+>> +++ b/arch/arm/mach-davinci/devices-da8xx.c
+>> @@ -11,6 +11,7 @@
+>>   * (at your option) any later version.
+>>   */
+>>  #include <linux/init.h>
+>> +#include <linux/platform_data/syscon.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/dma-contiguous.h>
+>>  #include <linux/serial_8250.h>
+>> @@ -1109,3 +1110,30 @@ int __init da850_register_sata(unsigned long
+>> refclkpn)
+>>      return platform_device_register(&da850_sata_device);
+>>  }
+>>  #endif
+>> +
+>> +static struct syscon_platform_data da8xx_cfgchip_platform_data = {
+>> +    .label    = "cfgchip",
+>> +};
+>> +
+>> +static struct resource da8xx_cfgchip_resources[] = {
+>> +    {
+>> +        .start    = DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP0_REG,
+>> +        .end    = DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP4_REG + 3,
+>> +        .flags    = IORESOURCE_MEM,
+>> +    },
+>> +};
+>> +
+>> +static struct platform_device da8xx_cfgchip_device = {
+>> +    .name    = "syscon",
+>> +    .id    = 0,
+>
+>     Again, -1.
+>
+> [...]
+>
+> MBR, Sergei
+>
 
-Well, there is my reply to an earlier email in this very thread, as well
-as the xen commit which quotes my original commit (which you could also
-refer to).
+I wish you would have noticed this when I first submitted it. I remember 
+going back and forth about this. But it has been too long and I can't 
+remember the reason why I chose to go this way.
 
-I'll leave it to you to eradicate the swear words (or to leave them in
-place as a testimony of what 4 years of GIC hacking can do to an
-otherwise sane person).
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+It seems like changing it broke something with either this one or the 
+phy device and I opted to keep it this way on both to be consistent. For 
+example, the USB devices both use id = 0 as well even though there are 
+only one of each type.
