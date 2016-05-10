@@ -1,61 +1,151 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 0/5] clk: bcm2835: add flags for mash and parent clocks
-Date: Mon, 09 May 2016 18:05:41 -0700
-Message-ID: <87h9e6yb6i.fsf@eliezer.anholt.net>
-References: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
+From: =?UTF-8?B?SG9uZ2h1aSBaaGFuZyAo5byg5rSq6L6JKQ==?=
+	<honghui.zhang@mediatek.com>
+Subject: Re: [PATCH 1/5] dt-bindings: mediatek: add descriptions for mediatek
+ mt2701 iommu and smi
+Date: Tue, 10 May 2016 09:13:07 +0800
+Message-ID: <c06cbea8-3882-9021-22f8-b0e378018ec2@mediatek.com>
+References: <1462780816-5288-1-git-send-email-honghui.zhang@mediatek.com>
+ <1462780816-5288-2-git-send-email-honghui.zhang@mediatek.com>
+ <20160509202236.GA23951@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462463608-22940-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160509202236.GA23951@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: joro@8bytes.org, treding@nvidia.com, mark.rutland@arm.com, matthias.bgg@gmail.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pebolle@tiscali.nl, kendrick.hsu@mediatek.com, arnd@arndb.de, srv_heupstream@mediatek.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, tfiga@google.com, iommu@lists.linux-foundation.org, djkurtz@google.com, kernel@pengutronix.de, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, erin.lo@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On 5/10/2016 4:22 AM, Rob Herring wrote:
+> On Mon, May 09, 2016 at 04:00:12PM +0800, honghui.zhang@mediatek.com wrote:
+>> From: Honghui Zhang <honghui.zhang@mediatek.com>
+>>
+>> This patch defines the local arbitor port IDs for mediatek SoC MT2701 and
+>> add descriptions of binding for mediatek generation one iommu and smi.
+>>
+>> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+>> ---
+>>  .../devicetree/bindings/iommu/mediatek,iommu.txt   | 13 +++-
+>>  .../memory-controllers/mediatek,smi-common.txt     | 21 +++++-
+>>  .../memory-controllers/mediatek,smi-larb.txt       |  4 +-
+>>  include/dt-bindings/memory/mt2701-larb-port.h      | 85 ++++++++++++++++++++++
+>>  4 files changed, 115 insertions(+), 8 deletions(-)
+>>  create mode 100644 include/dt-bindings/memory/mt2701-larb-port.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+>> index cd1b1cd..9a4a5b5 100644
+>> --- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+>> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+>> @@ -1,7 +1,9 @@
+>>  * Mediatek IOMMU Architecture Implementation
+>>  
+>> -  Some Mediatek SOCs contain a Multimedia Memory Management Unit (M4U) which
+>> -uses the ARM Short-Descriptor translation table format for address translation.
+>> +  Some Mediatek SOCs contain a Multimedia Memory Management Unit (M4U), and
+>> +this M4U have two generations of HW architecture. Generation one use flat
+> 
+> s/use/uses/
 
-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
+Hi, Rob,
+Thank you very much, I will fix all of those in the next version.
 
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->
-> Allow flags to be set on a per clock index basis, which control:
-> * the parent clocks selected when not setting clocks explicitly
-
-I don't think we need this other than avoiding PLLC.  What else do you
-want to filter, and why?
-
-> * the clock mode with regards to integer only or higher order mash
-
-Please provide justification in the commit message explaining why there
-is no obvious mash setting to just implement in clk-bcm2835.c, but that
-that a better policy can be encoded in the DT.
-
-Overall, I'm skeptical of this series.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXMTPmAAoJELXWKTbR/J7oxKgP/0xD2f60vjRKnNaDmmIunYGF
-Pb3ViIdWgEL3A3t9vzAkmap8DS29wBiX7rTB4h0zVy2Ps5y1T+1KChJQb662vk+q
-7CqWfdx4WIkSk0fQ/HBB6wKmOWmZvzo/3z9tZN99syvhYWHCqkhdnQC6xkQ7WMBz
-avZMSB9JPRKjR55tbTToqLCv+/4g7zkChnnV83RvedsiOvxHGlZyZgEy5mD1B2OY
-c6coqZPIIDpcl77WpYCY+uALwvNuVRPGdh3/9nZJeyRsDn9UCFa70E9Z7PHOM1PG
-V6iuuHZuLvpgJqM6zPSFtX+ALZCj1+T3Y4NIN7vxc0Au1AO+MOiuLUurMvq3Nz9D
-VJ9GgKXddAOFwHGF2L+C0ovFNBx97CRx9c+yydtdr4RTZaZgy8YsYnBmHa2sNTPY
-K7jk6ROMTxhIXrmLEkP3PwiIVQOAy+AzrSBKT7nGuJi4K5RYS9rDYeRH3sBfdVmX
-AzgouCpWHzxNV/Rn1qksM/t8EXvr0JYkkW5XTxVdDajznvU03sUNQKkwvOEBdaT0
-aVn7Nfusq+lZjra8EyE+IsQ/JsA8RuIjo1ulZ0NAusM/rmsKgWSBnZ5d7WQfbOP+
-Al/SqO5GeqMdYRb5modiylkTKdOKL7whc4keUrLOXqOc6ngXa1W4rpUWUljebqgG
-NdsfvNW+LEoLAjnMxFvE
-=/GE5
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> +pagetable, and only support 4K size page mapping. Generation two uses the
+> 
+> s/support/supports/
+> 
+>> +ARM Short-Descriptor translation table format for address translation.
+>>  
+>>    About the M4U Hardware Block Diagram, please check below:
+>>  
+>> @@ -36,7 +38,9 @@ in each larb. Take a example, There are many ports like MC, PP, VLD in the
+>>  video decode local arbiter, all these ports are according to the video HW.
+>>  
+>>  Required properties:
+>> -- compatible : must be "mediatek,mt8173-m4u".
+>> +- compatible : must be one of the following string:
+>> +	"mediatek,mt2701-m4u" for mt2701 which use generation one m4u HW.
+>> +	"mediatek,mt8173-m4u" for mt8173 which use generation two m4u HW.
+>>  - reg : m4u register base and size.
+>>  - interrupts : the interrupt of m4u.
+>>  - clocks : must contain one entry for each clock-names.
+>> @@ -46,7 +50,8 @@ Required properties:
+>>  	according to the local arbiter index, like larb0, larb1, larb2...
+>>  - iommu-cells : must be 1. This is the mtk_m4u_id according to the HW.
+>>  	Specifies the mtk_m4u_id as defined in
+>> -	dt-binding/memory/mt8173-larb-port.h.
+>> +	dt-binding/memory/mt2701-larb-port.h for mt2701 and
+>> +	dt-binding/memory/mt8173-larb-port.h for mt8173
+>>  
+>>  Example:
+>>  	iommu: iommu@10205000 {
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+>> index 06a83ce..80c0e22 100644
+>> --- a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
+>> @@ -2,16 +2,31 @@ SMI (Smart Multimedia Interface) Common
+>>  
+>>  The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
+>>  
+>> +Mediatek SMI have two generation HW architecture, mt8173 use the secondary
+> 
+> s/generation/generations of/
+> s/use/uses/
+> s/secondary/second/
+> 
+>> +generation of SMI HW while mt2701 use the first generation HW of SMI.
+> 
+> s/use/uses/
+> 
+>> +
+>> +There's slight differences between the two SMI, for generation 2, the
+>> +register which control the iommu port is at each larb's register base. But
+>> +for generation 1, the register is at smi ao base(smi always on register
+>> +base). Besides that, the smi async clock should be prepare and enabled for
+> 
+> s/prepare/prepared/
+> 
+>> +SMI generation 1 to transform the smi clock into emi clock domain, but no
+> 
+> s/no/that is not/
+> 
+>> +needed for SMI generation 2.
+>> +
+>>  Required properties:
+>> -- compatible : must be "mediatek,mt8173-smi-common"
+>> +- compatible : must be one of :
+>> +	"mediatek,mt2701-smi-common"
+>> +	"mediatek,mt8173-smi-common"
+>>  - reg : the register and size of the SMI block.
+>>  - power-domains : a phandle to the power domain of this local arbiter.
+>>  - clocks : Must contain an entry for each entry in clock-names.
+>> -- clock-names : must contain 2 entries, as follows:
+>> +- clock-names : must contain 3 entries for generation 1 smi HW and 2 entries
+>> +  for generation 2 smi HW as follows:
+>>    - "apb" : Advanced Peripheral Bus clock, It's the clock for setting
+>>  	    the register.
+>>    - "smi" : It's the clock for transfer data and command.
+>> -  They may be the same if both source clocks are the same.
+>> +	    They may be the same if both source clocks are the same.
+>> +  - "async" : asynchronous clock, it help transform the smi clock into the emi
+>> +	      clock domain, this clock is only needed by generation 1 smi HW.
+>>  
+>>  Example:
+>>  	smi_common: smi@14022000 {
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+>> index 55ff3b7..21277a5 100644
+>> --- a/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+>> @@ -3,7 +3,9 @@ SMI (Smart Multimedia Interface) Local Arbiter
+>>  The hardware block diagram please check bindings/iommu/mediatek,iommu.txt
+>>  
+>>  Required properties:
+>> -- compatible : must be "mediatek,mt8173-smi-larb"
+>> +- compatible : must be one of :
+>> +		"mediatek,mt8173-smi-larb"
+>> +		"mediatek,mt2701-smi-larb"
+>>  - reg : the register and size of this local arbiter.
+>>  - mediatek,smi : a phandle to the smi_common node.
+>>  - power-domains : a phandle to the power domain of this local arbiter.
+> 
