@@ -1,106 +1,50 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
- with CPU thermal nodes
-Date: Wed, 11 May 2016 01:15:33 +0530
-Message-ID: <CANAwSgQGhrBca7=Ow8+Hh9t0W9HWp=F43KR0Frfpx9fGngPSaw@mail.gmail.com>
-References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
- <CANAwSgT9SY3kj8+beMpc1xGoC=rMBSya+2v2dyZQp6ykH+V0=g@mail.gmail.com>
- <573198BE.6020900@samsung.com> <CANAwSgTy6p9AVmmOWATpSO1JqVbwE0v+y_y-RLd+32RnNJTA+Q@mail.gmail.com>
- <5731D764.8070007@samsung.com> <CANAwSgRsjdQh6ygT__5XcH8-cF9Ch+zbk8oupebwYzY1kCZu6g@mail.gmail.com>
- <5731EA1B.4070201@samsung.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: dra7: Add OCMCRAM nodes
+Date: Tue, 10 May 2016 14:49:40 -0500
+Message-ID: <1462909782-14639-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5731EA1B.4070201-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi,
+This series adds ocmcram nodes to use the mmio-sram driver to dra7.dtsi
+for use by all dra7xx and am57xx platforms. Not all ocmcram regions are
+present on every SoC variant so all possible nodes are added to the parent
+dtsi with the optional nodes marked "disabled". Board dts files that are
+known to have silicon supporting them can then enable them as needed.
 
-On 10 May 2016 at 19:33, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 05/10/2016 04:00 PM, Anand Moon wrote:
->> Hi Krzysztof,
->>
->> On 10 May 2016 at 18:13, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> On 05/10/2016 11:29 AM, Anand Moon wrote:
->>>>>
->>>>> I am sorry but I do not understand.
->>>>> 1. Are you saying that my patch causes the issue?
->>>>> 2. Are you saying that I should not send some patches because of
->>>>> conflicting work? (that would be peculiar...)
->>>>> 3. Are you saying that I should not apply this patch to me tree because
->>>>> of conflicting work?
->>>>> 4. Other?
->>>>>
->>>>> Best regards.
->>>>> Krzysztof
->>>>>
->>>>>
->>>>
->>>> Sorry for the confusion it's not about you patch.
->>>> The feature is not working correctly as per my testing with the
->>>> original source code.
->>>> It need to be more tuned or some other approach to the issue need to found.
->>>
->>> Known issue. You don't have cpufreq cooling enabled. I sent patches for
->>> that and they are in the mainline. However cpufreq cooling requires
->>> cpufreq which cannot work with BL_SWITCHER and on Exynos542x on
->>> exynos_defconfig BL_SWITCHER is enabled.
->>>
->>> Just disable the BL_Krzysztof.
->>>
->>> Best regards,
->>> Krzysztof
->>
->> I have already disabled BL_SWITCHER in my exynos_defconfig. to support
->> CONFIG_CPUFREQ_DT.
->>
->> But how about adjust the  the cputemp so that all the core will have
->> same tip points.
->
->
-> I don't understand you. All of the cores have same trip points.
->
-> Best regards,
-> Krzysztof
->
->>
->> xcpu0-t 0:[ 44][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     A50
->>      A60       P70            P85                                C120
->> ]
->> xcpu1-t 1:[ 46][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>                               A85               A103   A110      C120
->> ]
->> xcpu2-t 2:[ 51][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>                          A85               A103   A110      C120 ]
->> xcpu3-t 3:[ 47][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>                              A85               A103   A110      C120 ]
->> xgpu-th 4:[ 48][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
->>                             A85               A103   A110      C120 ]
->
->
+Patch two adds a "dummy" reserved region in the ocmcram1 node that acts
+as a placeholder for the region that is needed by secure software running
+on secure variants of the SoC. It is left as size zero with the intention
+that either:
 
-Sorry I am not able to explain my self clearly.
-But I have once gain tested these changes.
+- The bootloader will step in and adjust the size based on what the
+  secure software that is in use requires.
+- A board dts with specific requirements will override the node with
+  appropriate size.
 
-Only could you append with following changes.
---------------------------------------------------------
-+                               cpu_crit0: cpu-crit-0 {
-+                                       temperature = <120000>; /*
-millicelsius */
-+                                       hysteresis = <5000>; /* millicelsius */
-+                                       type = "critical";
-+                               };
---------------------------------------------------------
-hysteresis time help to adjust the present and past temperature inputs
-before critical shutdown.
+The SRAM bindings in use are described in this patch [1] that is part of a
+series that adds SRAM regions for OMAP3 platforms.
 
-Tested-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Regards,
+Dave
 
-Best Regards
--Anand Moon
+[1] http://marc.info/?l=linux-omap&m=146283061230440&w=2
+
+Dave Gerlach (2):
+  ARM: dts: dra7: Add ocmcram nodes
+  ARM: dts: dra7: Add ti,secure-ram node to ocmcram1 node
+
+ arch/arm/boot/dts/dra7.dtsi | 47 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+-- 
+2.7.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
