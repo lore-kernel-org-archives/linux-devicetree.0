@@ -1,89 +1,231 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/6] doc: dt: Document the indirect overlay method.
-Date: Tue, 10 May 2016 09:36:46 -0500
-Message-ID: <CAL_JsqLQnVGsd8GkTocR4zeL-MU2wZ7V4s+FqCKt02GCBVHrMg@mail.gmail.com>
-References: <1462817147-7620-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1462817147-7620-4-git-send-email-pantelis.antoniou@konsulko.com>
- <CAL_JsqL6fTdUDNW_v0gb++vTK+hnDcR1vFEFevUxbg+s7khUqg@mail.gmail.com> <2A7DBC29-2A70-4076-8229-E2F517BFDE10@konsulko.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH RESEND 2/3] pwm: kona: Add support for Broadcom iproc pwm
+ controller
+Date: Tue, 10 May 2016 16:40:24 +0200
+Message-ID: <20160510144024.GA7149@ulmo.ba.sec>
+References: <1459261350-23851-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1459261350-23851-3-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2A7DBC29-2A70-4076-8229-E2F517BFDE10-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459261350-23851-3-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2016 at 8:59 AM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
->> On May 10, 2016, at 00:59 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
-e:
->>
->> On Mon, May 9, 2016 at 1:05 PM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>> Add a description of the indirect overlay method to the overlay
->>> documention file.
->>
->> Why? Please write some decent commit messages.
->>
->>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>> ---
->>> Documentation/devicetree/overlay-notes.txt | 13 +++++++++++++
->>> 1 file changed, 13 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documenta=
-tion/devicetree/overlay-notes.txt
->>> index d418a6c..dd595e6 100644
->>> --- a/Documentation/devicetree/overlay-notes.txt
->>> +++ b/Documentation/devicetree/overlay-notes.txt
->>> @@ -100,6 +100,10 @@ Finally, if you need to remove all overlays in=
- one-go, just call
->>> of_overlay_destroy_all() which will remove every single one in the =
-correct
->>> order.
->>>
->>> +If your board has multiple slots/places where a single overlay can=
- work
->>> +and each slot is defined by a node, you can use the of_overlay_cre=
-ate_indirect()
->>> +method to select the target.
->>> +
->>> Overlay DTS Format
->>> ------------------
->>>
->>> @@ -113,6 +117,11 @@ The DTS of an overlay should have the followin=
-g format:
->>>                target=3D<phandle>;       /* phandle target of the o=
-verlay */
->>>        or
->>>                target-path=3D"/path";    /* target path of the over=
-lay */
->>
->> Why not just let these take multiple values and the user just select=
-s index?
->>
->
-> Implementation details. Usually there=E2=80=99s a descriptive label u=
-sed for each
-> different target point. It could be a slot# or it could be a label=E2=
-=80=A6
->
-> A string selector maps better IMO.
 
-Then add "target-names" perhaps.
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What I really don't like is 3 different ways to specify the target and
-having to maintain them (I'm not sure why we allowed 2 to start
-with.). Come up with a single way that works for 1 or more targets. If
-that is different than the current way, then let's deprecate the old
-way.
+On Tue, Mar 29, 2016 at 10:22:29AM -0400, Yendapally Reddy Dhananjaya Reddy=
+ wrote:
+> Update the kona driver to support Broadcom iproc pwm controller
+>=20
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadc=
+om.com>
+> ---
+>  drivers/pwm/Kconfig        |   6 +-
+>  drivers/pwm/pwm-bcm-kona.c | 183 +++++++++++++++++++++++++++++++++++++++=
+------
+>  2 files changed, 163 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index c182efc..e45ea33 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -76,9 +76,11 @@ config PWM_ATMEL_TCB
+> =20
+>  config PWM_BCM_KONA
+>  	tristate "Kona PWM support"
+> -	depends on ARCH_BCM_MOBILE
+> +	depends on ARCH_BCM_MOBILE || ARCH_BCM_IPROC
+> +	default ARCH_BCM_IPROC
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why the default? Typically you'd enable this in one or more of the
+default configurations. default ARCH_* is really only useful if the
+driver is essential. PWM doesn't usually fall into this category.
+
+> diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
+> index c634183..ef152e3a 100644
+> --- a/drivers/pwm/pwm-bcm-kona.c
+> +++ b/drivers/pwm/pwm-bcm-kona.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/math64.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/slab.h>
+> @@ -47,30 +48,90 @@
+> =20
+>  #define PWM_CONTROL_OFFSET			(0x00000000)
+>  #define PWM_CONTROL_SMOOTH_SHIFT(chan)		(24 + (chan))
+> -#define PWM_CONTROL_TYPE_SHIFT(chan)		(16 + (chan))
+> +#define PWM_CONTROL_TYPE_SHIFT(shift, chan)	(shift + chan)
+
+You need to put the parameters into parentheses to avoid expansion from
+potentially messing up the expression.
+
+>  #define PWM_CONTROL_POLARITY_SHIFT(chan)	(8 + (chan))
+>  #define PWM_CONTROL_TRIGGER_SHIFT(chan)		(chan)
+> =20
+>  #define PRESCALE_OFFSET				(0x00000004)
+> -#define PRESCALE_SHIFT(chan)			((chan) << 2)
+> -#define PRESCALE_MASK(chan)			(0x7 << PRESCALE_SHIFT(chan))
+> +#define PRESCALE_SHIFT				(0x00000004)
+> +#define PRESCALE_MASK				(0x00000007)
+
+Hmm... this looks odd. Why are you dropping the chan parameter here?
+
+>  #define PRESCALE_MIN				(0x00000000)
+>  #define PRESCALE_MAX				(0x00000007)
+> =20
+> -#define PERIOD_COUNT_OFFSET(chan)		(0x00000008 + ((chan) << 3))
+> +#define PERIOD_COUNT_OFFSET(offset, chan)	(offset + (chan << 3))
+
+Need parentheses here as well.
+
+>  #define PERIOD_COUNT_MIN			(0x00000002)
+>  #define PERIOD_COUNT_MAX			(0x00ffffff)
+> +#define KONA_PERIOD_COUNT_OFFSET		(0x00000008)
+> =20
+> -#define DUTY_CYCLE_HIGH_OFFSET(chan)		(0x0000000c + ((chan) << 3))
+> +#define DUTY_CYCLE_HIGH_OFFSET(offset, chan)	(offset + (chan << 3))
+>  #define DUTY_CYCLE_HIGH_MIN			(0x00000000)
+>  #define DUTY_CYCLE_HIGH_MAX			(0x00ffffff)
+> +#define KONA_DUTY_CYCLE_HIGH_OFFSET		(0x0000000c)
+> +
+> +#define PWM_CHANNEL_CNT				(0x00000006)
+> +#define SIGNAL_PUSH_PULL			(0x00000001)
+> +#define PWMOUT_TYPE_SHIFT			(0x00000010)
+> +
+> +#define IPROC_PRESCALE_OFFSET			(0x00000024)
+> +#define IPROC_PRESCALE_SHIFT			(0x00000006)
+> +#define IPROC_PRESCALE_MAX			(0x0000003f)
+> +
+> +#define IPROC_PERIOD_COUNT_OFFSET		(0x00000004)
+> +#define IPROC_PERIOD_COUNT_MIN			(0x00000002)
+> +#define IPROC_PERIOD_COUNT_MAX			(0x0000ffff)
+> +
+> +#define IPROC_DUTY_CYCLE_HIGH_OFFSET		(0x00000008)
+> +#define IPROC_DUTY_CYCLE_HIGH_MIN		(0x00000000)
+> +#define IPROC_DUTY_CYCLE_HIGH_MAX		(0x0000ffff)
+> +
+> +#define IPROC_PWM_CHANNEL_CNT			(0x00000004)
+> +#define IPROC_SIGNAL_PUSH_PULL			(0x00000000)
+> +#define IPROC_PWMOUT_TYPE_SHIFT			(0x0000000f)
+> +
+> +/*
+> + * pwm controller reg structure
+> + *
+> + * @prescale_offset: prescale register offset
+> + * @period_offset: period register offset
+> + * @duty_offset: duty register offset
+> + * @no_of_channels: number of channels
+> + * @out_type_shift: out type shift in the register
+> + * @signal_type: push-pull or open drain
+> + * @prescale_max: prescale max
+> + * @prescale_shift: prescale shift in register
+> + * @prescale_ch_ascending: prescale ch order in prescale register
+> + * @duty_cycle_max: value of max duty cycle
+> + * @duty_cycle_min: value of min duty cycle
+> + * @period_count_max: max period count val
+> + * @period_count_min: min period count val
+> + * @smooth_output_support: pwm smooth output support
+> + */
+> +struct kona_pwmc_reg {
+> +	u32 prescale_offset;
+> +	u32 period_offset;
+> +	u32 duty_offset;
+> +	u32 no_of_channels;
+> +	u32 out_type_shift;
+> +	u32 signal_type;
+> +	u32 prescale_max;
+> +	u32 prescale_shift;
+> +	bool prescale_ch_ascending;
+> +	u32 duty_cycle_max;
+> +	u32 duty_cycle_min;
+> +	u32 period_count_max;
+> +	u32 period_count_min;
+> +	bool smooth_output_support;
+> +};
+
+This is rather tedious. It looks to me like this isn't very similar to
+the existing driver. Register offsets move around, bitfield positions
+change, feature set is different. Might be better off turning this into
+a separate driver after all.
+
+> +static const struct kona_pwmc_reg kona_pwmc_reg_data =3D {
+> +	.prescale_offset =3D PRESCALE_OFFSET,
+> +	.period_offset =3D KONA_PERIOD_COUNT_OFFSET,
+> +	.duty_offset =3D KONA_DUTY_CYCLE_HIGH_OFFSET,
+> +	.no_of_channels =3D PWM_CHANNEL_CNT,
+> +	.out_type_shift =3D PWMOUT_TYPE_SHIFT,
+> +	.signal_type =3D SIGNAL_PUSH_PULL,
+> +	.prescale_max =3D PRESCALE_MAX,
+> +	.prescale_shift =3D PRESCALE_SHIFT,
+> +	.prescale_ch_ascending =3D false,
+> +	.duty_cycle_max =3D DUTY_CYCLE_HIGH_MAX,
+> +	.duty_cycle_min =3D DUTY_CYCLE_HIGH_MIN,
+> +	.period_count_max =3D PERIOD_COUNT_MAX,
+> +	.period_count_min =3D PERIOD_COUNT_MIN,
+> +	.smooth_output_support =3D true,
+> +};
+> +
+> +static const struct kona_pwmc_reg iproc_pwmc_reg_data =3D {
+> +	.prescale_offset =3D IPROC_PRESCALE_OFFSET,
+> +	.period_offset =3D IPROC_PERIOD_COUNT_OFFSET,
+> +	.duty_offset =3D IPROC_DUTY_CYCLE_HIGH_OFFSET,
+> +	.no_of_channels =3D IPROC_PWM_CHANNEL_CNT,
+> +	.out_type_shift =3D IPROC_PWMOUT_TYPE_SHIFT,
+> +	.signal_type =3D IPROC_SIGNAL_PUSH_PULL,
+> +	.prescale_max =3D IPROC_PRESCALE_MAX,
+> +	.prescale_shift =3D IPROC_PRESCALE_SHIFT,
+> +	.prescale_ch_ascending =3D true,
+> +	.duty_cycle_max =3D IPROC_DUTY_CYCLE_HIGH_MAX,
+> +	.duty_cycle_min =3D IPROC_DUTY_CYCLE_HIGH_MIN,
+> +	.period_count_max =3D IPROC_PERIOD_COUNT_MAX,
+> +	.period_count_min =3D IPROC_PERIOD_COUNT_MIN,
+> +	.smooth_output_support =3D false,
+> +};
+
+This looks like you could possible support a lot more hardware with this
+driver because it's now almost completely parameterized.
+
+I don't see much sense in keeping this in the same driver and I think
+it'd be better to write a new one from scratch, even if that means
+slight duplication.
+
+Or you'll have to make a very compelling argument as to why this is the
+better option.
+
+Thierry
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXMfLVAAoJEN0jrNd/PrOhppQQALl97HseFhnUY9JkFrKHKygm
+WZdTpOeay7T88ho4KX2XL4B8wOWy1zQy86F/awaw5h6ARaIiPhjo0Nyp5qfFofX9
+z1txudcsyWwxFhoDANvW9DLGwLKbZpbx/wws8a0hze56s7EzAGN3iTrHxmNIwZFx
+1yHczhjFYTenyBZLEJuqeEONiIDWyGsm6YHdCn3r7wl4OTLwgjRKUsEXvS10fC8a
+O/Afvs+UbQ3Q0qxgo95XJzSm640Yyujt/d23myLLnLBf5eXnLlNJEMwhD2jf0OWS
+OcKIomDgbTEGBSODsUVN+p2OmpnMfHEYalXNGt9EeJb5XeF6eoFIG3IVifHZ2pcL
+rNymfriHGlftXqGhiDGaiGA3pN/eYI/sEHOpO6VDnDnfaw+Ev3zGdQpajOlS+ct2
+IeDGwFSkLjj1Le3eieuoo6MEakkzZICtvTOSMsf4F+IkD6b4X21nFZ5x+1OkVxJ9
+EQw7igOQnKQLXdGwP7YuIU23EqfdHDN3v6rKzNt+8vJr3+BbjfoC1NRwyaMb4jKm
+U+7MJ+fHXelilddRpgRJIFcyGi1Kcp7WeuGZXKpg1tByD6ltDfGGFCTxfq7SY7jT
+bOyB7Hb+Rf45khalWho/dbm9mFihu8hN9mlM4PMv4zKrTGbC/dfUVKIoBMAf1t2g
+bZXMHBL9rk2r03eW/lou
+=t7/b
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
