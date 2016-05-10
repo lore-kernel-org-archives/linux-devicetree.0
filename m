@@ -1,66 +1,57 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 01/11] clk: sunxi: Add display and
- TCON0 clocks driver
-Date: Tue, 10 May 2016 22:10:59 +0300
-Message-ID: <1462907459.9981.0.camel@plaes.org>
-References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
-	 <1461590572-4027-2-git-send-email-maxime.ripard@free-electrons.com>
-	 <20160506223002.GE3492@codeaurora.org> <20160508200308.GF6167@lukather>
-	 <20160509223238.GW3492@codeaurora.org>
-	 <20160509223924.GX3492@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Tue, 10 May 2016 22:11:54 +0300
+Message-ID: <5732327A.6080203@cogentembedded.com>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <3641492.klKRrvS8tr@wasted.cogentembedded.com> <5732294F.3060606@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160509223924.GX3492@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: sboyd@codeaurora.org, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Alexander Kaplan <alex@nextthing.co>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5732294F.3060606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-05-09 at 15:39 -0700, Stephen Boyd wrote:
-> On 05/09, Stephen Boyd wrote:
-> >=20
-> >=20
-> > Ok I applied this one to clk-next.
-> >=20
-> And I squashed this in to silence the following checker warning.
->=20
-> drivers/clk/sunxi/clk-sun4i-display.c:110:33: warning: Variable
-> length array is used.
->=20
-> ---8<---
-> diff --git a/drivers/clk/sunxi/clk-sun4i-display.c
-> b/drivers/clk/sunxi/clk-sun4i-display.c
-> index f02e250e64ed..f8ff6c4a5633 100644
-> --- a/drivers/clk/sunxi/clk-sun4i-display.c
-> +++ b/drivers/clk/sunxi/clk-sun4i-display.c
-> @@ -107,7 +107,7 @@ static int sun4i_a10_display_reset_xlate(struct
-> reset_controller_dev *rcdev,
-> =C2=A0static void __init sun4i_a10_display_init(struct device_node *n=
-ode,
-> =C2=A0					=C2=A0=C2=A0const struct
-> sun4i_a10_display_clk_data *data)
-> =C2=A0{
-> -	const char *parents[data->parents];
-> +	const char *parents[4];
-> =C2=A0	const char *clk_name =3D node->name;
-> =C2=A0	struct reset_data *reset_data;
-> =C2=A0	struct clk_divider *div =3D NULL;
-> @@ -126,8 +126,8 @@ static void __init sun4i_a10_display_init(struct
-> device_node *node,
-> =C2=A0		return;
-> =C2=A0	}
-> =C2=A0
-> -	ret =3D of_clk_parent_fill(node, parents, data->parents);
-> -	if (ret !=3D data->parents) {
-> +	ret =3D of_clk_parent_fill(node, parents,
-> ARRAY_SIZE(parents));
-> +	if (ret !=3D ARRAY_SIZE(parents)) {
-> =C2=A0		pr_err("%s: Could not retrieve the parents\n",
-> clk_name);
-> =C2=A0		goto unmap;
-> =C2=A0	}
+Hello.
 
-This change breaks at least de_[bf]e clocks which have 3 clock parents.
+On 05/10/2016 09:32 PM, Florian Fainelli wrote:
 
+>> The PHY devices sometimes do have their reset signal (maybe even power
+>> supply?) tied to some GPIO and sometimes it also does happen that a boot
+>> loader does not leave it deasserted. So far this issue has been attacked
+>> from (as I believe) a wrong angle: by teaching the MAC driver to manipulate
+>> the GPIO in question; that solution, when applied to the device trees, led
+>> to adding the PHY reset GPIO properties to the MAC device node, with one
+>> exception: Cadence MACB driver which could handle the "reset-gpios" prop
+>> in a PHY device subnode. I believe that the correct approach is to teach
+>> the 'phylib' to get the MDIO device reset GPIO from the device tree node
+>> corresponding to this device -- which this patch is doing...
+>>
+>> Note that I had to modify the  AT803x PHY driver as it would stop working
+>> otherwise as it made use of the reset GPIO for its own purposes...
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>
+> This looks good to me:
+>
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+    Thank you! I'll send v3 without [RFT] then.
+
+> Can you follow up with changes in phy_{suspend,resume}
+
+    I'm not sure what changes you mean -- powering down the PHYs?
+
+> if that is also
+> an use case that you have?
+
+    No, I'm not into power management.
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
