@@ -1,61 +1,93 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] nvmem: imx-ocotp: handling clock
-Date: Tue, 10 May 2016 11:31:45 +0100
-Message-ID: <5731B891.4040303@linaro.org>
-References: <1461173177-11930-1-git-send-email-van.freenix@gmail.com>
- <1461173177-11930-3-git-send-email-van.freenix@gmail.com>
- <5730825E.5030101@linaro.org> <20160509124140.GA20259@linux-7smt.suse>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
+Date: Tue, 10 May 2016 13:02:08 +0200
+Message-ID: <CAPDyKFq2=mqujFjvJSYxg2nVmK=OrBKLtFfb-ErNJO3Zr_LMVw@mail.gmail.com>
+References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
+	<20160505224240.GA31429@rob-hp-laptop>
+	<CAPDyKFqpoi03Egfuvd8qJXnn_+FBgPXAb7S4UvkxVs8BA+zwnA@mail.gmail.com>
+	<20160509181829.GA19687@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160509124140.GA20259-UjNudPizn+S3Qbzl2UAKHw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20160509181829.GA19687@rob-hp-laptop>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-usb@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, hverkuil@xs4all.nl, tjakobi@math.uni-bielefeld.de, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
++ Arnd
 
+[...]
 
-On 09/05/16 13:41, Peng Fan wrote:
-> Hi Srinivas,
->
-> On Mon, May 09, 2016 at 01:28:14PM +0100, Srinivas Kandagatla wrote:
->> Thanks for the Ping, I totally missed this thread.
+>> >> Solution
+>> >> ========
+>> >> This is very similar to the MMC pwrseq behavior so the idea is to:
+>> >> 1. Move MMC pwrseq drivers to generic place,
+>> >
+>> > You can do that, but I'm going to NAK any use of pwrseq bindings outside
+>> > of MMC. I think it is the wrong way to do things. The DT should describe
 >>
->> On 20/04/16 18:26, Peng Fan wrote:
->>> Before access ocotp nvmem area, the clock should be enabled.
->>> Or, `hexdump nvmem` will hang the system. So, use such flow:
->>> "
->>>    1. clock_enable_prepare
->>>    2. read nvmem ocotp area
->>>    3. clock_disable_unprepare
->>> "
->>>
->>> Signed-off-by: Peng Fan <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>>
->>> V2:
->>>   Follow Fabio's comments, check return value of clk_prepare_enable
->>>
->>>   drivers/nvmem/imx-ocotp.c | 16 +++++++++++++++-
->>>   1 file changed, 15 insertions(+), 1 deletion(-)
->>
->> Changes to the driver looks good to me,
->> Only one comment, As the clock property is now made mandatory, you should
->> update the dt-bindings with this info too.
+>> Huh, I didn't know that was your view of the mmc pwrseq bindings. Why
+>> didn't you NAK them before?
 >
-> In Documentation/devicetree/bindings/nvmem/imx-ocotp.txt,
-> the clock property is already marked Required properties:
+> Unfortunately, either I missed it or it was a time I couldn't spend much
+> time on reviews.
 
-Ok, I can take this patch, dt patch should go via the dt maintainers.
+Okay, I guess it's common issue among maintainers. The problem with DT
+is that it gets really hard to be fixed up later. :-)
 
-thanks,
---srini
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> > the devices. If they happen to be "simple" then the core can walk the
+>> > tree and do any setup. For example, look for "reset-gpios" and toggle
+>> > that GPIO. There is no need for a special node.
+>> >
+>> >> 2. Extend the pwrseq-simple with regulator toggling,
+>> >> 3. Add support to USB hub and port core for pwrseq,
+>> >
+>> > We discussed this for USB already[1] and is why we defined how to add
+>> > USB child devices. The idea is not to add pwrseq to that.
+>>
+>> I am not familiar with the USB discussion.
+>>
+>> Still, let me give you some more background to the mmc pwrseq. The
+>> idea from the mmc pwrseq bindings comes from the power-domain DT
+>> bindings, as I thought these things were a bit related.
+>> In both cases they are not directly a property of the device, but more
+>> describing a HW dependency to allow the device to work.
+>
+> I could see this as a board level power domain. However the difference
+> is we are not generally exposing internal SOC details the same way as
+> board level components. Perhaps we could extend power domains to board
+> level, but that is not what was done here.
+>
+>> One could probably use a child node instead of a phandle, but that
+>> wasn't chosen back then. Of course you are the DT expert, but could
+>> you perhaps tell me why a child node is better for cases like this?
+>
+> If there is a control path hierarchy, then we try to model that in DT
+> with child nodes. In cases of SDIO and USB, there is a clear hierarchy.
+> Ignoring the discovery ordering problem, we already have defined ways to
+> describe GPIO connections, regulators, etc. to devices. Describing those
+> things separately from the device to solve a particular issue that is
+> really a kernel limitation is what I don't like.
+
+Okay, I see.
+
+To move forward in trying to make mmc pwrseq a generic pwrseq, could
+we perhaps allow both cases?
+
+In the mmc case, there are already deployed bindings so we need to
+cope with these by using the phandle option, but for USB etc we could
+force the child node option.
+As long as we agree that we keep using a compatible string for the
+child node as well, both options should be able to co-exist and we
+should probably be able to managed them both from a common pwrseq
+driver framework.
+
+Although, I do remember from an older conversations around some of
+mine submission for the mmc pwrseq code, that some people (maybe
+Arnd?) wasn't keen on adding a new framework for this. Perhaps that
+has changed?
+
+Kind regards
+Uffe
