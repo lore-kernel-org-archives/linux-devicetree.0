@@ -1,362 +1,239 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
- with CPU thermal nodes
-Date: Tue, 10 May 2016 14:59:27 +0530
-Message-ID: <CANAwSgTy6p9AVmmOWATpSO1JqVbwE0v+y_y-RLd+32RnNJTA+Q@mail.gmail.com>
-References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
- <CANAwSgT9SY3kj8+beMpc1xGoC=rMBSya+2v2dyZQp6ykH+V0=g@mail.gmail.com> <573198BE.6020900@samsung.com>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 01/11] of: Add bindings of hw throttle for Tegra soctherm
+Date: Tue, 10 May 2016 17:32:17 +0800
+Message-ID: <5731AAA1.9030202@nvidia.com>
+References: <1462776844-2152-1-git-send-email-wni@nvidia.com> <1462776844-2152-2-git-send-email-wni@nvidia.com> <20160509201538.GA21382@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <573198BE.6020900@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160509201538.GA21382@rob-hp-laptop>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 10 May 2016 at 13:45, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> On 05/10/2016 08:43 AM, Anand Moon wrote:
->> Hi Krzysztof ,
->>
->> On 9 May 2016 at 11:49, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
->>> Include the CPU thermal nodes directly in Odroid XU3-family common DTS
->>> because it is the only user of it. Keeping it in separate DTSI node does
->>> not bring benefits because:
->>> 1. It is not re-usable on other non-fan boards (fan is referenced),
->>> 2. It won't be re-used on future Odroid XU board because different
->>>    CPU cluster behavior.
->>>
->>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>> ---
->>>  arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi      | 103 ---------------------
->>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  94 ++++++++++++++++++-
->>>  2 files changed, 92 insertions(+), 105 deletions(-)
->>>  delete mode 100644 arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi b/arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi
->>> deleted file mode 100644
->>> index 3e4c4ad96d63..000000000000
->>> --- a/arch/arm/boot/dts/exynos5422-cpu-thermal.dtsi
->>> +++ /dev/null
->>> @@ -1,103 +0,0 @@
->>> -/*
->>> - * Device tree sources for Exynos5422 thermal zone
->>> - *
->>> - * Copyright (c) 2015 Lukasz Majewski <l.majewski@samsung.com>
->>> - *                     Anand Moon <linux.amoon@gmail.com>
->>> - *
->>> - * This program is free software; you can redistribute it and/or modify
->>> - * it under the terms of the GNU General Public License version 2 as
->>> - * published by the Free Software Foundation.
->>> - *
->>> - */
->>> -
->>> -#include <dt-bindings/thermal/thermal.h>
->>> -
->>> -/ {
->>> -       thermal-zones {
->>> -               cpu0_thermal: cpu0-thermal {
->>> -                       thermal-sensors = <&tmu_cpu0 0>;
->>> -                       polling-delay-passive = <250>;
->>> -                       polling-delay = <0>;
->>> -                       trips {
->>> -                               cpu_alert0: cpu-alert-0 {
->>> -                                       temperature = <50000>; /* millicelsius */
->>> -                                       hysteresis = <5000>; /* millicelsius */
->>> -                                       type = "active";
->>> -                               };
->>> -                               cpu_alert1: cpu-alert-1 {
->>> -                                       temperature = <60000>; /* millicelsius */
->>> -                                       hysteresis = <5000>; /* millicelsius */
->>> -                                       type = "active";
->>> -                               };
->>> -                               cpu_alert2: cpu-alert-2 {
->>> -                                       temperature = <70000>; /* millicelsius */
->>> -                                       hysteresis = <5000>; /* millicelsius */
->>> -                                       type = "active";
->>> -                               };
->>> -                               cpu_crit0: cpu-crit-0 {
->>> -                                       temperature = <120000>; /* millicelsius */
->>> -                                       hysteresis = <0>; /* millicelsius */
->>> -                                       type = "critical";
->>> -                               };
->>> -                               /*
->>> -                                * Exyunos542x support only 4 trip-points
->>> -                                * so for these polling mode is required.
->>> -                                * Start polling at temperature level of last
->>> -                                * interrupt-driven trip: cpu_alert2
->>> -                                */
->>> -                               cpu_alert3: cpu-alert-3 {
->>> -                                       temperature = <70000>; /* millicelsius */
->>> -                                       hysteresis = <10000>; /* millicelsius */
->>> -                                       type = "passive";
->>> -                               };
->>> -                               cpu_alert4: cpu-alert-4 {
->>> -                                       temperature = <85000>; /* millicelsius */
->>> -                                       hysteresis = <10000>; /* millicelsius */
->>> -                                       type = "passive";
->>> -                               };
->>> -
->>> -                       };
->>> -                       cooling-maps {
->>> -                               map0 {
->>> -                                    trip = <&cpu_alert0>;
->>> -                                    cooling-device = <&fan0 0 1>;
->>> -                               };
->>> -                               map1 {
->>> -                                    trip = <&cpu_alert1>;
->>> -                                    cooling-device = <&fan0 1 2>;
->>> -                               };
->>> -                               map2 {
->>> -                                    trip = <&cpu_alert2>;
->>> -                                    cooling-device = <&fan0 2 3>;
->>> -                               };
->>> -                               /*
->>> -                                * When reaching cpu_alert3, reduce CPU
->>> -                                * by 2 steps. On Exynos5422/5800 that would
->>> -                                * be: 1500 MHz and 1100 MHz.
->>> -                                */
->>> -                               map3 {
->>> -                                    trip = <&cpu_alert3>;
->>> -                                    cooling-device = <&cpu0 0 2>;
->>> -                               };
->>> -                               map4 {
->>> -                                    trip = <&cpu_alert3>;
->>> -                                    cooling-device = <&cpu4 0 2>;
->>> -                               };
->>> -
->>> -                               /*
->>> -                                * When reaching cpu_alert4, reduce CPU
->>> -                                * further, down to 600 MHz (11 steps for big,
->>> -                                * 7 steps for LITTLE).
->>> -                                */
->>> -                               map5 {
->>> -                                    trip = <&cpu_alert4>;
->>> -                                    cooling-device = <&cpu0 3 7>;
->>> -                               };
->>> -                               map6 {
->>> -                                    trip = <&cpu_alert4>;
->>> -                                    cooling-device = <&cpu4 3 11>;
->>> -                               };
->>> -                       };
->>> -               };
->>> -       };
->>> -};
->>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>> index 2a4e10bc8801..ff05041835e5 100644
->>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
->>> @@ -1,9 +1,11 @@
->>>  /*
->>>   * Hardkernel Odroid XU3 board device tree source
->>>   *
->>> - * Copyright (c) 2014 Collabora Ltd.
->>>   * Copyright (c) 2013 Samsung Electronics Co., Ltd.
->>>   *             http://www.samsung.com
->>> + * Copyright (c) 2014 Collabora Ltd.
->>> + * Copyright (c) 2015 Lukasz Majewski <l.majewski@samsung.com>
->>> + *                    Anand Moon <linux.amoon@gmail.com>
->>>   *
->>>   * This program is free software; you can redistribute it and/or modify
->>>   * it under the terms of the GNU General Public License version 2 as
->>> @@ -16,7 +18,6 @@
->>>  #include <dt-bindings/sound/samsung-i2s.h>
->>>  #include "exynos5800.dtsi"
->>>  #include "exynos5422-cpus.dtsi"
->>> -#include "exynos5422-cpu-thermal.dtsi"
->>>
->>>  / {
->>>         memory {
->>> @@ -54,6 +55,95 @@
->>>                 #cooling-cells = <2>;
->>>                 cooling-levels = <0 130 170 230>;
->>>         };
->>> +
->>> +       thermal-zones {
->>> +               cpu0_thermal: cpu0-thermal {
->>> +                       thermal-sensors = <&tmu_cpu0 0>;
->>> +                       polling-delay-passive = <250>;
->>> +                       polling-delay = <0>;
->>> +                       trips {
->>> +                               cpu_alert0: cpu-alert-0 {
->>> +                                       temperature = <50000>; /* millicelsius */
->>> +                                       hysteresis = <5000>; /* millicelsius */
->>> +                                       type = "active";
->>> +                               };
->>> +                               cpu_alert1: cpu-alert-1 {
->>> +                                       temperature = <60000>; /* millicelsius */
->>> +                                       hysteresis = <5000>; /* millicelsius */
->>> +                                       type = "active";
->>> +                               };
->>> +                               cpu_alert2: cpu-alert-2 {
->>> +                                       temperature = <70000>; /* millicelsius */
->>> +                                       hysteresis = <5000>; /* millicelsius */
->>> +                                       type = "active";
->>> +                               };
->>> +                               cpu_crit0: cpu-crit-0 {
->>> +                                       temperature = <120000>; /* millicelsius */
->>> +                                       hysteresis = <0>; /* millicelsius */
->>> +                                       type = "critical";
->>> +                               };
->>> +                               /*
->>> +                                * Exynos542x supports only 4 trip-points
->>> +                                * so for these polling mode is required.
->>> +                                * Start polling at temperature level of last
->>> +                                * interrupt-driven trip: cpu_alert2
->>> +                                */
->>> +                               cpu_alert3: cpu-alert-3 {
->>> +                                       temperature = <70000>; /* millicelsius */
->>> +                                       hysteresis = <10000>; /* millicelsius */
->>> +                                       type = "passive";
->>> +                               };
->>> +                               cpu_alert4: cpu-alert-4 {
->>> +                                       temperature = <85000>; /* millicelsius */
->>> +                                       hysteresis = <10000>; /* millicelsius */
->>> +                                       type = "passive";
->>> +                               };
->>> +
->>> +                       };
->>> +                       cooling-maps {
->>> +                               map0 {
->>> +                                    trip = <&cpu_alert0>;
->>> +                                    cooling-device = <&fan0 0 1>;
->>> +                               };
->>> +                               map1 {
->>> +                                    trip = <&cpu_alert1>;
->>> +                                    cooling-device = <&fan0 1 2>;
->>> +                               };
->>> +                               map2 {
->>> +                                    trip = <&cpu_alert2>;
->>> +                                    cooling-device = <&fan0 2 3>;
->>> +                               };
->>> +                               /*
->>> +                                * When reaching cpu_alert3, reduce CPU
->>> +                                * by 2 steps. On Exynos5422/5800 that would
->>> +                                * be: 1500 MHz and 1100 MHz.
->>> +                                */
->>> +                               map3 {
->>> +                                    trip = <&cpu_alert3>;
->>> +                                    cooling-device = <&cpu0 0 2>;
->>> +                               };
->>> +                               map4 {
->>> +                                    trip = <&cpu_alert3>;
->>> +                                    cooling-device = <&cpu4 0 2>;
->>> +                               };
->>> +
->>> +                               /*
->>> +                                * When reaching cpu_alert4, reduce CPU
->>> +                                * further, down to 600 MHz (11 steps for big,
->>> +                                * 7 steps for LITTLE).
->>> +                                */
->>> +                               map5 {
->>> +                                    trip = <&cpu_alert4>;
->>> +                                    cooling-device = <&cpu0 3 7>;
->>> +                               };
->>> +                               map6 {
->>> +                                    trip = <&cpu_alert4>;
->>> +                                    cooling-device = <&cpu4 3 11>;
->>> +                               };
->>> +                       };
->>> +               };
->>> +       };
->>> +
->>>  };
->>>
->>>  &bus_wcore {
->>> --
->>> 1.9.1
->>>
->>
->> Could you defer this patch, during my testing with pm-qa from linaro.
->>
->> git://git.linaro.org/tools/pm-qa.git
->>
->> When their is running of thermal test case cpu usage reaches around
->> 300+ percentage
->> and some time's the Odroid XU4 hang down.
->> -------------------------------------------------------------------------
->> [ 1028.056619] CPU4: shutdown
->> [ 1148.510372] IRQ54 no longer affine to CPU5
->> [ 1148.511864] CPU5: shutdown
->> [ 1268.921073] IRQ55 no longer affine to CPU6
->> [ 1268.922564] CPU6: shutdown
->> [ 1389.271930] cpu cpu4: Failed to find opp_table: -19
->> [ 1389.301668] IRQ56 no longer affine to CPU7
->> [ 1389.303132] CPU7: shutdown
->> [ 1510.538424] cpu cpu4: opp_list_debug_create_link: Failed to create link
->> [ 1510.543762] cpu cpu4: _add_opp_dev: Failed to register opp debugfs (-12)
->> [ 1510.550625] cpu cpu7: opp_list_debug_create_link: Failed to create link
->> [ 1510.557037] cpu cpu7: _add_opp_dev: Failed to register opp debugfs (-12)
->> [ 1510.664649] cpu cpu5: cpufreq_init: failed to get clk: -2
->> [ 1510.720567] cpu cpu6: cpufreq_init: failed to get clk: -2
->> [ 1510.788280] cpu cpu7: cpufreq_init: failed to get clk: -2
->> root@odroidxu4l:/home/odroid/study/linaro/pm-qa# killall heat_cpu
->>
->> -------------------------------------------------------------------------
->> And some time I observed that the board will poweroff on reaching
->> temperature 120 degree C.
->> when I am compiling the kernel with or above. make -j8
->> -------------------------------------------------------------------------
->> root@odroidxu4l:~#  * Starting NTP server ntpd                           [ OK ]
->> saned disabled; edit /etc/default/saned
->> [ 4118.924470] thermal thermal_zone3: critical temperature reached(121
->> C),shutting down
->> [ 4119.014327] thermal thermal_zone3: critical temperature reached(121
->> C),shutting down
->>
->> Broadcast message from root@odroidxu4l
->>         (unknown) at 20:41 ...
->>
->> The system is going down for power off NOW!
->>
->> Broadcast message from root@odroidxu4l
->>         (unknown) at 20:41 ...
->>
->> The system is going down for power off NOW!
->> [ 4119.431386] thermal thermal_zone3: critical temperature reached(121
->> C),shutting down
->> [ 4120.206709] thermal thermal_zone3: critical temperature reached(120
->> C),shutting down
->>
->> Broadcast message from root@odroidxu4l
->>         (unknown) at 20:41 ...
->>
->> The system is going down for power off NOW!
->> wait-for-state stop/waiting
->> [ 4157.574406] reboo
->>
->> U-Boot 2016.03-00665-g563d8d9-dirty (Apr 04 2016 - 22:27:07 +0930) for
->> ODROID-XU3
->>
->> CPU:   Exynos5422 @ 800 MHz
->> Model: Odroid XU3 based on EXYNOS5422
->> Board: Odroid XU3 based on EXYNOS5422
->> Type:  xu4
->> DRAM:  2 GiB
->> MMC:   EXYNOS DWMMC: 0, EXYNOS DWMMC: 1
->> *** Warning - bad CRC, using default environment
->> -------------------------------------------------------------------------
->> Once the thermal issue is fixed we can redo this changes.
->
-> I am sorry but I do not understand.
-> 1. Are you saying that my patch causes the issue?
-> 2. Are you saying that I should not send some patches because of
-> conflicting work? (that would be peculiar...)
-> 3. Are you saying that I should not apply this patch to me tree because
-> of conflicting work?
-> 4. Other?
->
-> Best regards.
-> Krzysztof
->
->
 
-Sorry for the confusion it's not about you patch.
-The feature is not working correctly as per my testing with the
-original source code.
-It need to be more tuned or some other approach to the issue need to found.
+On 2016=E5=B9=B405=E6=9C=8810=E6=97=A5 04:15, Rob Herring wrote:
+> On Mon, May 09, 2016 at 02:53:54PM +0800, Wei Ni wrote:
+>> Add HW throttle configuration sub-node for soctherm, which
+>> is used to describe the throttle event, and worked as a
+>> cooling device. The "hot" type trip in thermal zone can
+>> be bound to this cooling device, and trigger the throttle
+>> function.
+>>
+>> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 121 ++++++++++=
+++++++++++-
+>>  1 file changed, 119 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra1=
+24-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegr=
+a124-soctherm.txt
+>> index edebfa0a985e..f691f63da567 100644
+>> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soct=
+herm.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soct=
+herm.txt
+>> @@ -10,8 +10,14 @@ Required properties :
+>>  - compatible : For Tegra124, must contain "nvidia,tegra124-soctherm=
+".
+>>    For Tegra132, must contain "nvidia,tegra132-soctherm".
+>>    For Tegra210, must contain "nvidia,tegra210-soctherm".
+>> -- reg : Should contain 1 entry:
+>> +- reg : Should contain at least 2 entries for each entry in reg-nam=
+es:
+>>    - SOCTHERM register set
+>> +  - Tegra CAR register set: Required for Tegra124 and Tegra210.
+>> +  - CCROC register set: Required for Tegra132.
+>> +- reg-names :  Should contain at least 2 entries:
+>> +  - soctherm-reg
+>> +  - car-reg
+>> +  - ccroc-reg
+>>  - interrupts : Defines the interrupt used by SOCTHERM
+>>  - clocks : Must contain an entry for each entry in clock-names.
+>>    See ../clocks/clock-bindings.txt for details.
+>> @@ -25,17 +31,45 @@ Required properties :
+>>  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a desc=
+ription
+>>      of this property. See <dt-bindings/thermal/tegra124-soctherm.h>=
+ for a
+>>      list of valid values when referring to thermal sensors.
+>> +- nvidia,throttle-cfgs: A sub-node which is a container of configur=
+ation for
+>> +    each hardware throttle events. These events can be set as cooli=
+ng devices.
+>> +  * throttle events: Sub-nodes must be named as "nvidia,light" or "=
+nvidia,heavy".
+>> +      Properties:
+>> +      - nvidia,priority: Each throttles has its own throttle settin=
+gs, so the
+>> +        SW need to set priorities for various throttle, the HW arbi=
+ter can select
+>> +        the final throttle settings.
+>> +        Bigger value indicates higher priority, In general, higher =
+priority
+>> +        translates to lower target frequency. SW needs to ensure th=
+at critical
+>> +        thermal alarms are given higher priority, and ensure that t=
+here is
+>> +        no race if priority of two vectors is set to the same value=
+=2E
+>> +        The range of this value is 1~100.
+>> +      - nvidia,cpu-throt-percent: This property is for Tegra124 and=
+ Tegra210.
+>> +        It is the throttling depth of pulse skippers, it's the perc=
+entage
+>> +        throttling.
+>> +      - nvidia,cpu-throt-level: This property is only for Tegra132,=
+ it is the
+>> +        level of pulse skippers, which used to throttle clock frequ=
+encies. It
+>> +        indicates cpu clock throttling depth, and the depth can be =
+programmed.
+>> +        Must set as following values:
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_LOW, TEGRA_SOCTHERM_THROT_LEVEL_=
+MED
+>> +        TEGRA_SOCTHERM_THROT_LEVEL_HIGH, TEGRA_SOCTHERM_THROT_LEVEL=
+_NONE
+>> +      - #cooling-cells: Should be 1. This cooling device only suppo=
+rt on/off state.
+>> +        See ./thermal.txt for a description of this property.
+>> =20
+>>  Note:
+>>  - the "critical" type trip points will be set to SOC_THERM hardware=
+ as the
+>>  shut down temperature. Once the temperature of this thermal zone is=
+ higher
+>>  than it, the system will be shutdown or reset by hardware.
+>> +- the "hot" type trip points will be set to SOC_THERM hardware as t=
+he throttle
+>> +temperature. Once the the temperature of this thermal zone is highe=
+r
+>> +than it, it will trigger the HW throttle event.
+>> =20
+>>  Example :
+>> =20
+>>  	soctherm@700e2000 {
+>>  		compatible =3D "nvidia,tegra124-soctherm";
+>> -		reg =3D <0x0 0x700e2000 0x0 0x1000>;
+>> +		reg =3D <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
+>> +			0x0 0x60006000 0x0 0x400 /* CAR reg_base */
+>> +		reg-names =3D "soctherm-reg", "car-reg";
+>>  		interrupts =3D <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>>  		clocks =3D <&tegra_car TEGRA124_CLK_TSENSOR>,
+>>  			<&tegra_car TEGRA124_CLK_SOC_THERM>;
+>> @@ -44,6 +78,76 @@ Example :
+>>  		reset-names =3D "soctherm";
+>> =20
+>>  		#thermal-sensor-cells =3D <1>;
+>> +
+>> +		throttle-cfgs {
+>> +			/*
+>> +			 * When the "heavy" cooling device triggered,
+>> +			 * the HW will skip cpu clock's pulse in 85% depth
+>> +			 */
+>> +			throttle_heavy: nvidia,heavy {
+>=20
+> Still need to drop vendor prefix in the node names here and elsewhere=
+=2E
 
-Best Regards
--Anand Moon
+Sorry, it's my mistake, will fix it.
+
+>=20
+>> +				nvidia,priority =3D <100>;
+>> +				nvidia,cpu-throt-percent =3D <85>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>> +			};
+>> +
+>> +			/*
+>> +			 * When the "light" cooling device triggered,
+>> +			 * the HW will skip cpu clock's pulse in 50% depth
+>> +			 */
+>> +			throttle_light: nvidia,light {
+>> +				nvidia,priority =3D <80>;
+>> +				nvidia,cpu-throt-percent =3D <50>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>> +			};
+>> +
+>> +			/*
+>> +			 * If these two devices are triggered in same time, the HW throt=
+tle
+>> +			 * arbiter will select the highest priority as the final throttl=
+e
+>> +			 * settings to skip cpu pulse.
+>> +			 */
+>> +		};
+>> +	};
+>> +
+>> +Example: referring to Tegra132's "reg", "reg-names" and "throttle-c=
+fgs" :
+>> +
+>> +	soctherm@700e2000 {
+>> +		compatible =3D "nvidia,tegra132-soctherm";
+>> +		reg =3D <0x0 0x700e2000 0x0 0x600  /* SOC_THERM reg_base */
+>> +			0x0 0x70040000 0x0 0x200>; /* CCROC reg_base */;
+>> +		reg-names =3D "soctherm-reg", "ccroc-reg";
+>> +
+>> +		throttle-cfgs {
+>> +			/*
+>> +			 * When the "heavy" cooling device triggered,
+>> +			 * the HW will skip cpu clock's pulse in HIGH level
+>> +			 */
+>> +			throttle_heavy: nvidia,heavy {
+>> +				nvidia,priority =3D <100>;
+>> +				nvidia,cpu-throt-level =3D <TEGRA_SOCTHERM_THROT_LEVEL_HIGH>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>> +			};
+>> +
+>> +			/*
+>> +			 * When the "light" cooling device triggered,
+>> +			 * the HW will skip cpu clock's pulse in MED level
+>> +			 */
+>> +			throttle_light: nvidia,light {
+>> +				nvidia,priority =3D <80>;
+>> +				nvidia,cpu-throt-level =3D <TEGRA_SOCTHERM_THROT_LEVEL_MED>;
+>> +
+>> +				#cooling-cells =3D <1>;
+>> +			};
+>> +
+>> +			/*
+>> +			 * If these two devices are triggered in same time, the HW throt=
+tle
+>> +			 * arbiter will select the highest priority as the final throttl=
+e
+>> +			 * settings to skip cpu pulse.
+>> +			 */
+>> +
+>> +		};
+>>  	};
+>> =20
+>>  Example: referring to thermal sensors :
+>> @@ -62,6 +166,19 @@ Example: referring to thermal sensors :
+>>  					hysteresis =3D <1000>;
+>>  					type =3D "critical";
+>>  				};
+>> +
+>> +				cpu_throttle_trip: throttle-trip {
+>> +					temperature =3D <100000>;
+>> +					hysteresis =3D <1000>;
+>> +					type =3D "hot";
+>> +				};
+>> +			};
+>> +
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip =3D <&cpu_throttle_trip>;
+>> +					cooling-device =3D <&throttle_heavy 1 1>;
+>> +				};
+>>  			};
+>>                  };
+>>  	};
+>> --=20
+>> 1.9.1
+>>
