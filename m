@@ -1,193 +1,155 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] Revert "mtd: atmel_nand: Support variable RB_EDGE
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 1/2] Revert "mtd: atmel_nand: Support variable RB_EDGE
  interrupts"
-Date: Tue, 10 May 2016 10:55:49 +0200
-Message-ID: <20160510105549.50b60d8c@bbrezillon>
+Date: Tue, 10 May 2016 08:59:44 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D64880F8@penmbx01>
 References: <1462776680-5284-1-git-send-email-wenyou.yang@atmel.com>
 	<1462776680-5284-2-git-send-email-wenyou.yang@atmel.com>
+ <20160510105549.50b60d8c@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462776680-5284-2-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160510105549.50b60d8c@bbrezillon>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wenyou,
-
-Can you add NAND maintainers/reviewers in Cc next time. And since you
-revert a commit, you should also add the commit author in the loop.
-
-On Mon, 9 May 2016 14:51:18 +0800
-Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-
-> This reverts commit 5ddc7bd43ccc ("mtd: atmel_nand: Support variable
-> RB_EDGE interrupts")
-> 
-> Because for current SoCs, the RB_EDGE3(i.e. bit 27) of HSMC_SR
-> register does not exist, the RB_EDGE0 (i.e. bit 24) is the ready/busy
-> line edge status bit. It is a datasheet bug.
-
-Romain, I thought you had a real use case on sama5d4 where this patch
-was needed to make the whole thing work. Not sure why you submitted this
-patch if you couldn't test it on a real board.
-
-Wenyou, can you confirm that none of the existing SoCs support more
-than one "native" R/B pin?
-
-Thanks,
-
-Boris
-
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
-> 
->  .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
->  drivers/mtd/nand/atmel_nand.c                      | 35 +++++-----------------
->  drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
->  3 files changed, 10 insertions(+), 30 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> index d53aba9..3e7ee99 100644
-> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> @@ -39,7 +39,7 @@ Optional properties:
->  
->  Nand Flash Controller(NFC) is an optional sub-node
->  Required properties:
-> -- compatible : "atmel,sama5d3-nfc" or "atmel,sama5d4-nfc".
-> +- compatible : "atmel,sama5d3-nfc".
->  - reg : should specify the address and size used for NFC command registers,
->          NFC registers and NFC SRAM. NFC SRAM address and size can be absent
->          if don't want to use it.
-> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-> index efc8ea2..68b9160 100644
-> --- a/drivers/mtd/nand/atmel_nand.c
-> +++ b/drivers/mtd/nand/atmel_nand.c
-> @@ -67,10 +67,6 @@ struct atmel_nand_caps {
->  	uint8_t pmecc_max_correction;
->  };
->  
-> -struct atmel_nand_nfc_caps {
-> -	uint32_t rb_mask;
-> -};
-> -
->  /*
->   * oob layout for large page size
->   * bad block info is on bytes 0 and 1
-> @@ -129,7 +125,6 @@ struct atmel_nfc {
->  	/* Point to the sram bank which include readed data via NFC */
->  	void			*data_in_sram;
->  	bool			will_write_sram;
-> -	const struct atmel_nand_nfc_caps *caps;
->  };
->  static struct atmel_nfc	nand_nfc;
->  
-> @@ -1715,9 +1710,9 @@ static irqreturn_t hsmc_interrupt(int irq, void *dev_id)
->  		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_XFR_DONE);
->  		ret = IRQ_HANDLED;
->  	}
-> -	if (pending & host->nfc->caps->rb_mask) {
-> +	if (pending & NFC_SR_RB_EDGE) {
->  		complete(&host->nfc->comp_ready);
-> -		nfc_writel(host->nfc->hsmc_regs, IDR, host->nfc->caps->rb_mask);
-> +		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_RB_EDGE);
->  		ret = IRQ_HANDLED;
->  	}
->  	if (pending & NFC_SR_CMD_DONE) {
-> @@ -1735,7 +1730,7 @@ static void nfc_prepare_interrupt(struct atmel_nand_host *host, u32 flag)
->  	if (flag & NFC_SR_XFR_DONE)
->  		init_completion(&host->nfc->comp_xfer_done);
->  
-> -	if (flag & host->nfc->caps->rb_mask)
-> +	if (flag & NFC_SR_RB_EDGE)
->  		init_completion(&host->nfc->comp_ready);
->  
->  	if (flag & NFC_SR_CMD_DONE)
-> @@ -1753,7 +1748,7 @@ static int nfc_wait_interrupt(struct atmel_nand_host *host, u32 flag)
->  	if (flag & NFC_SR_XFR_DONE)
->  		comp[index++] = &host->nfc->comp_xfer_done;
->  
-> -	if (flag & host->nfc->caps->rb_mask)
-> +	if (flag & NFC_SR_RB_EDGE)
->  		comp[index++] = &host->nfc->comp_ready;
->  
->  	if (flag & NFC_SR_CMD_DONE)
-> @@ -1821,7 +1816,7 @@ static int nfc_device_ready(struct mtd_info *mtd)
->  		dev_err(host->dev, "Lost the interrupt flags: 0x%08x\n",
->  				mask & status);
->  
-> -	return status & host->nfc->caps->rb_mask;
-> +	return status & NFC_SR_RB_EDGE;
->  }
->  
->  static void nfc_select_chip(struct mtd_info *mtd, int chip)
-> @@ -1994,8 +1989,8 @@ static void nfc_nand_command(struct mtd_info *mtd, unsigned int command,
->  		}
->  		/* fall through */
->  	default:
-> -		nfc_prepare_interrupt(host, host->nfc->caps->rb_mask);
-> -		nfc_wait_interrupt(host, host->nfc->caps->rb_mask);
-> +		nfc_prepare_interrupt(host, NFC_SR_RB_EDGE);
-> +		nfc_wait_interrupt(host, NFC_SR_RB_EDGE);
->  	}
->  }
->  
-> @@ -2426,11 +2421,6 @@ static int atmel_nand_nfc_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> -	nfc->caps = (const struct atmel_nand_nfc_caps *)
-> -		of_device_get_match_data(&pdev->dev);
-> -	if (!nfc->caps)
-> -		return -ENODEV;
-> -
->  	nfc_writel(nfc->hsmc_regs, IDR, 0xffffffff);
->  	nfc_readl(nfc->hsmc_regs, SR);	/* clear the NFC_SR */
->  
-> @@ -2459,17 +2449,8 @@ static int atmel_nand_nfc_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct atmel_nand_nfc_caps sama5d3_nfc_caps = {
-> -	.rb_mask = NFC_SR_RB_EDGE0,
-> -};
-> -
-> -static const struct atmel_nand_nfc_caps sama5d4_nfc_caps = {
-> -	.rb_mask = NFC_SR_RB_EDGE3,
-> -};
-> -
->  static const struct of_device_id atmel_nand_nfc_match[] = {
-> -	{ .compatible = "atmel,sama5d3-nfc", .data = &sama5d3_nfc_caps },
-> -	{ .compatible = "atmel,sama5d4-nfc", .data = &sama5d4_nfc_caps },
-> +	{ .compatible = "atmel,sama5d3-nfc" },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
-> diff --git a/drivers/mtd/nand/atmel_nand_nfc.h b/drivers/mtd/nand/atmel_nand_nfc.h
-> index 0bbc1fa..4d5d262 100644
-> --- a/drivers/mtd/nand/atmel_nand_nfc.h
-> +++ b/drivers/mtd/nand/atmel_nand_nfc.h
-> @@ -42,8 +42,7 @@
->  #define		NFC_SR_UNDEF		(1 << 21)
->  #define		NFC_SR_AWB		(1 << 22)
->  #define		NFC_SR_ASE		(1 << 23)
-> -#define		NFC_SR_RB_EDGE0		(1 << 24)
-> -#define		NFC_SR_RB_EDGE3		(1 << 27)
-> +#define		NFC_SR_RB_EDGE		(1 << 24)
->  
->  #define ATMEL_HSMC_NFC_IER	0x0c
->  #define ATMEL_HSMC_NFC_IDR	0x10
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQm9yaXMgQnJlemlsbG9u
+IFttYWlsdG86Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbV0NCj4gU2VudDogMjAx
+NsTqNdTCMTDI1SAxNjo1Ng0KPiBUbzogWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0BhdG1lbC5j
+b20+OyBSb21haW4gSXphcmQNCj4gPHJvbWFpbi5pemFyZC5wcm9AZ21haWwuY29tPg0KPiBDYzog
+QnJpYW4gTm9ycmlzIDxjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20+OyBEYXZpZCBXb29kaG91
+c2UNCj4gPGR3bXcyQGluZnJhZGVhZC5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwu
+b3JnPjsgUGF3ZWwgTW9sbA0KPiA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBCcm93biA8YnJv
+b25pZUBrZXJuZWwub3JnPjsgSWFuIENhbXBiZWxsDQo+IDxpamMrZGV2aWNldHJlZUBoZWxsaW9u
+Lm9yZy51az47IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IFJ1c3NlbGwgS2luZyA8bGludXhAYXJtLmxpbnV4Lm9yZy51az47
+IEpvc2ggV3UNCj4gPHJhaW55ZmVlbGluZ0BvdXRsb29rLmNvbT47IEZlcnJlLCBOaWNvbGFzIDxO
+aWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBmcmVlLQ0KPiBlbGVjdHJvbnMu
+Y29tPjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IEplYW4tQ2hyaXN0b3BoZSBQbGFn
+bmlvbC1WaWxsYXJkDQo+IDxwbGFnbmlvakBqY3Jvc29mdC5jb20+OyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIFJldmVydCAi
+bXRkOiBhdG1lbF9uYW5kOiBTdXBwb3J0IHZhcmlhYmxlIFJCX0VER0UNCj4gaW50ZXJydXB0cyIN
+Cj4gDQo+IEhpIFdlbnlvdSwNCj4gDQo+IENhbiB5b3UgYWRkIE5BTkQgbWFpbnRhaW5lcnMvcmV2
+aWV3ZXJzIGluIENjIG5leHQgdGltZS4gQW5kIHNpbmNlIHlvdSByZXZlcnQgYQ0KPiBjb21taXQs
+IHlvdSBzaG91bGQgYWxzbyBhZGQgdGhlIGNvbW1pdCBhdXRob3IgaW4gdGhlIGxvb3AuDQo+IA0K
+PiBPbiBNb24sIDkgTWF5IDIwMTYgMTQ6NTE6MTggKzA4MDANCj4gV2VueW91IFlhbmcgPHdlbnlv
+dS55YW5nQGF0bWVsLmNvbT4gd3JvdGU6DQo+IA0KPiA+IFRoaXMgcmV2ZXJ0cyBjb21taXQgNWRk
+YzdiZDQzY2NjICgibXRkOiBhdG1lbF9uYW5kOiBTdXBwb3J0IHZhcmlhYmxlDQo+ID4gUkJfRURH
+RSBpbnRlcnJ1cHRzIikNCj4gPg0KPiA+IEJlY2F1c2UgZm9yIGN1cnJlbnQgU29DcywgdGhlIFJC
+X0VER0UzKGkuZS4gYml0IDI3KSBvZiBIU01DX1NSDQo+ID4gcmVnaXN0ZXIgZG9lcyBub3QgZXhp
+c3QsIHRoZSBSQl9FREdFMCAoaS5lLiBiaXQgMjQpIGlzIHRoZSByZWFkeS9idXN5DQo+ID4gbGlu
+ZSBlZGdlIHN0YXR1cyBiaXQuIEl0IGlzIGEgZGF0YXNoZWV0IGJ1Zy4NCj4gDQo+IFJvbWFpbiwg
+SSB0aG91Z2h0IHlvdSBoYWQgYSByZWFsIHVzZSBjYXNlIG9uIHNhbWE1ZDQgd2hlcmUgdGhpcyBw
+YXRjaCB3YXMNCj4gbmVlZGVkIHRvIG1ha2UgdGhlIHdob2xlIHRoaW5nIHdvcmsuIE5vdCBzdXJl
+IHdoeSB5b3Ugc3VibWl0dGVkIHRoaXMgcGF0Y2ggaWYNCj4geW91IGNvdWxkbid0IHRlc3QgaXQg
+b24gYSByZWFsIGJvYXJkLg0KPiANCj4gV2VueW91LCBjYW4geW91IGNvbmZpcm0gdGhhdCBub25l
+IG9mIHRoZSBleGlzdGluZyBTb0NzIHN1cHBvcnQgbW9yZSB0aGFuIG9uZQ0KPiAibmF0aXZlIiBS
+L0IgcGluPw0KDQpZZXMsIEkgY29uZmlybWVkLiANCg0KPiANCj4gVGhhbmtzLA0KPiANCj4gQm9y
+aXMNCj4gDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdA
+YXRtZWwuY29tPg0KPiA+IC0tLQ0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
+ZC9hdG1lbC1uYW5kLnR4dCAgICAgICAgIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9tdGQvbmFuZC9h
+dG1lbF9uYW5kLmMgICAgICAgICAgICAgICAgICAgICAgfCAzNSArKysrKy0tLS0tLS0tLS0tLS0t
+LS0tDQo+ID4gIGRyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZF9uZmMuaCAgICAgICAgICAgICAg
+ICAgIHwgIDMgKy0NCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAzMCBk
+ZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0DQo+ID4gaW5kZXggZDUzYWJhOS4uM2U3
+ZWU5OSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bXRkL2F0bWVsLW5hbmQudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL210ZC9hdG1lbC1uYW5kLnR4dA0KPiA+IEBAIC0zOSw3ICszOSw3IEBAIE9wdGlvbmFs
+IHByb3BlcnRpZXM6DQo+ID4NCj4gPiAgTmFuZCBGbGFzaCBDb250cm9sbGVyKE5GQykgaXMgYW4g
+b3B0aW9uYWwgc3ViLW5vZGUgIFJlcXVpcmVkDQo+ID4gcHJvcGVydGllczoNCj4gPiAtLSBjb21w
+YXRpYmxlIDogImF0bWVsLHNhbWE1ZDMtbmZjIiBvciAiYXRtZWwsc2FtYTVkNC1uZmMiLg0KPiA+
+ICstIGNvbXBhdGlibGUgOiAiYXRtZWwsc2FtYTVkMy1uZmMiLg0KPiA+ICAtIHJlZyA6IHNob3Vs
+ZCBzcGVjaWZ5IHRoZSBhZGRyZXNzIGFuZCBzaXplIHVzZWQgZm9yIE5GQyBjb21tYW5kIHJlZ2lz
+dGVycywNCj4gPiAgICAgICAgICBORkMgcmVnaXN0ZXJzIGFuZCBORkMgU1JBTS4gTkZDIFNSQU0g
+YWRkcmVzcyBhbmQgc2l6ZSBjYW4gYmUNCj4gYWJzZW50DQo+ID4gICAgICAgICAgaWYgZG9uJ3Qg
+d2FudCB0byB1c2UgaXQuDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvYXRtZWxf
+bmFuZC5jDQo+ID4gYi9kcml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmQuYyBpbmRleCBlZmM4ZWEy
+Li42OGI5MTYwIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZC5j
+DQo+ID4gKysrIGIvZHJpdmVycy9tdGQvbmFuZC9hdG1lbF9uYW5kLmMNCj4gPiBAQCAtNjcsMTAg
+KzY3LDYgQEAgc3RydWN0IGF0bWVsX25hbmRfY2FwcyB7DQo+ID4gIAl1aW50OF90IHBtZWNjX21h
+eF9jb3JyZWN0aW9uOw0KPiA+ICB9Ow0KPiA+DQo+ID4gLXN0cnVjdCBhdG1lbF9uYW5kX25mY19j
+YXBzIHsNCj4gPiAtCXVpbnQzMl90IHJiX21hc2s7DQo+ID4gLX07DQo+ID4gLQ0KPiA+ICAvKg0K
+PiA+ICAgKiBvb2IgbGF5b3V0IGZvciBsYXJnZSBwYWdlIHNpemUNCj4gPiAgICogYmFkIGJsb2Nr
+IGluZm8gaXMgb24gYnl0ZXMgMCBhbmQgMSBAQCAtMTI5LDcgKzEyNSw2IEBAIHN0cnVjdA0KPiA+
+IGF0bWVsX25mYyB7DQo+ID4gIAkvKiBQb2ludCB0byB0aGUgc3JhbSBiYW5rIHdoaWNoIGluY2x1
+ZGUgcmVhZGVkIGRhdGEgdmlhIE5GQyAqLw0KPiA+ICAJdm9pZAkJCSpkYXRhX2luX3NyYW07DQo+
+ID4gIAlib29sCQkJd2lsbF93cml0ZV9zcmFtOw0KPiA+IC0JY29uc3Qgc3RydWN0IGF0bWVsX25h
+bmRfbmZjX2NhcHMgKmNhcHM7DQo+ID4gIH07DQo+ID4gIHN0YXRpYyBzdHJ1Y3QgYXRtZWxfbmZj
+CW5hbmRfbmZjOw0KPiA+DQo+ID4gQEAgLTE3MTUsOSArMTcxMCw5IEBAIHN0YXRpYyBpcnFyZXR1
+cm5fdCBoc21jX2ludGVycnVwdChpbnQgaXJxLCB2b2lkICpkZXZfaWQpDQo+ID4gIAkJbmZjX3dy
+aXRlbChob3N0LT5uZmMtPmhzbWNfcmVncywgSURSLCBORkNfU1JfWEZSX0RPTkUpOw0KPiA+ICAJ
+CXJldCA9IElSUV9IQU5ETEVEOw0KPiA+ICAJfQ0KPiA+IC0JaWYgKHBlbmRpbmcgJiBob3N0LT5u
+ZmMtPmNhcHMtPnJiX21hc2spIHsNCj4gPiArCWlmIChwZW5kaW5nICYgTkZDX1NSX1JCX0VER0Up
+IHsNCj4gPiAgCQljb21wbGV0ZSgmaG9zdC0+bmZjLT5jb21wX3JlYWR5KTsNCj4gPiAtCQluZmNf
+d3JpdGVsKGhvc3QtPm5mYy0+aHNtY19yZWdzLCBJRFIsIGhvc3QtPm5mYy0+Y2Fwcy0NCj4gPnJi
+X21hc2spOw0KPiA+ICsJCW5mY193cml0ZWwoaG9zdC0+bmZjLT5oc21jX3JlZ3MsIElEUiwgTkZD
+X1NSX1JCX0VER0UpOw0KPiA+ICAJCXJldCA9IElSUV9IQU5ETEVEOw0KPiA+ICAJfQ0KPiA+ICAJ
+aWYgKHBlbmRpbmcgJiBORkNfU1JfQ01EX0RPTkUpIHsNCj4gPiBAQCAtMTczNSw3ICsxNzMwLDcg
+QEAgc3RhdGljIHZvaWQgbmZjX3ByZXBhcmVfaW50ZXJydXB0KHN0cnVjdA0KPiBhdG1lbF9uYW5k
+X2hvc3QgKmhvc3QsIHUzMiBmbGFnKQ0KPiA+ICAJaWYgKGZsYWcgJiBORkNfU1JfWEZSX0RPTkUp
+DQo+ID4gIAkJaW5pdF9jb21wbGV0aW9uKCZob3N0LT5uZmMtPmNvbXBfeGZlcl9kb25lKTsNCj4g
+Pg0KPiA+IC0JaWYgKGZsYWcgJiBob3N0LT5uZmMtPmNhcHMtPnJiX21hc2spDQo+ID4gKwlpZiAo
+ZmxhZyAmIE5GQ19TUl9SQl9FREdFKQ0KPiA+ICAJCWluaXRfY29tcGxldGlvbigmaG9zdC0+bmZj
+LT5jb21wX3JlYWR5KTsNCj4gPg0KPiA+ICAJaWYgKGZsYWcgJiBORkNfU1JfQ01EX0RPTkUpDQo+
+ID4gQEAgLTE3NTMsNyArMTc0OCw3IEBAIHN0YXRpYyBpbnQgbmZjX3dhaXRfaW50ZXJydXB0KHN0
+cnVjdCBhdG1lbF9uYW5kX2hvc3QNCj4gKmhvc3QsIHUzMiBmbGFnKQ0KPiA+ICAJaWYgKGZsYWcg
+JiBORkNfU1JfWEZSX0RPTkUpDQo+ID4gIAkJY29tcFtpbmRleCsrXSA9ICZob3N0LT5uZmMtPmNv
+bXBfeGZlcl9kb25lOw0KPiA+DQo+ID4gLQlpZiAoZmxhZyAmIGhvc3QtPm5mYy0+Y2Fwcy0+cmJf
+bWFzaykNCj4gPiArCWlmIChmbGFnICYgTkZDX1NSX1JCX0VER0UpDQo+ID4gIAkJY29tcFtpbmRl
+eCsrXSA9ICZob3N0LT5uZmMtPmNvbXBfcmVhZHk7DQo+ID4NCj4gPiAgCWlmIChmbGFnICYgTkZD
+X1NSX0NNRF9ET05FKQ0KPiA+IEBAIC0xODIxLDcgKzE4MTYsNyBAQCBzdGF0aWMgaW50IG5mY19k
+ZXZpY2VfcmVhZHkoc3RydWN0IG10ZF9pbmZvICptdGQpDQo+ID4gIAkJZGV2X2Vycihob3N0LT5k
+ZXYsICJMb3N0IHRoZSBpbnRlcnJ1cHQgZmxhZ3M6IDB4JTA4eFxuIiwNCj4gPiAgCQkJCW1hc2sg
+JiBzdGF0dXMpOw0KPiA+DQo+ID4gLQlyZXR1cm4gc3RhdHVzICYgaG9zdC0+bmZjLT5jYXBzLT5y
+Yl9tYXNrOw0KPiA+ICsJcmV0dXJuIHN0YXR1cyAmIE5GQ19TUl9SQl9FREdFOw0KPiA+ICB9DQo+
+ID4NCj4gPiAgc3RhdGljIHZvaWQgbmZjX3NlbGVjdF9jaGlwKHN0cnVjdCBtdGRfaW5mbyAqbXRk
+LCBpbnQgY2hpcCkgQEANCj4gPiAtMTk5NCw4ICsxOTg5LDggQEAgc3RhdGljIHZvaWQgbmZjX25h
+bmRfY29tbWFuZChzdHJ1Y3QgbXRkX2luZm8gKm10ZCwNCj4gdW5zaWduZWQgaW50IGNvbW1hbmQs
+DQo+ID4gIAkJfQ0KPiA+ICAJCS8qIGZhbGwgdGhyb3VnaCAqLw0KPiA+ICAJZGVmYXVsdDoNCj4g
+PiAtCQluZmNfcHJlcGFyZV9pbnRlcnJ1cHQoaG9zdCwgaG9zdC0+bmZjLT5jYXBzLT5yYl9tYXNr
+KTsNCj4gPiAtCQluZmNfd2FpdF9pbnRlcnJ1cHQoaG9zdCwgaG9zdC0+bmZjLT5jYXBzLT5yYl9t
+YXNrKTsNCj4gPiArCQluZmNfcHJlcGFyZV9pbnRlcnJ1cHQoaG9zdCwgTkZDX1NSX1JCX0VER0Up
+Ow0KPiA+ICsJCW5mY193YWl0X2ludGVycnVwdChob3N0LCBORkNfU1JfUkJfRURHRSk7DQo+ID4g
+IAl9DQo+ID4gIH0NCj4gPg0KPiA+IEBAIC0yNDI2LDExICsyNDIxLDYgQEAgc3RhdGljIGludCBh
+dG1lbF9uYW5kX25mY19wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+
+ICAJCX0NCj4gPiAgCX0NCj4gPg0KPiA+IC0JbmZjLT5jYXBzID0gKGNvbnN0IHN0cnVjdCBhdG1l
+bF9uYW5kX25mY19jYXBzICopDQo+ID4gLQkJb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2
+LT5kZXYpOw0KPiA+IC0JaWYgKCFuZmMtPmNhcHMpDQo+ID4gLQkJcmV0dXJuIC1FTk9ERVY7DQo+
+ID4gLQ0KPiA+ICAJbmZjX3dyaXRlbChuZmMtPmhzbWNfcmVncywgSURSLCAweGZmZmZmZmZmKTsN
+Cj4gPiAgCW5mY19yZWFkbChuZmMtPmhzbWNfcmVncywgU1IpOwkvKiBjbGVhciB0aGUgTkZDX1NS
+ICovDQo+ID4NCj4gPiBAQCAtMjQ1OSwxNyArMjQ0OSw4IEBAIHN0YXRpYyBpbnQgYXRtZWxfbmFu
+ZF9uZmNfcmVtb3ZlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlyZXR1
+cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gLXN0YXRpYyBjb25zdCBzdHJ1Y3QgYXRtZWxfbmFuZF9u
+ZmNfY2FwcyBzYW1hNWQzX25mY19jYXBzID0gew0KPiA+IC0JLnJiX21hc2sgPSBORkNfU1JfUkJf
+RURHRTAsDQo+ID4gLX07DQo+ID4gLQ0KPiA+IC1zdGF0aWMgY29uc3Qgc3RydWN0IGF0bWVsX25h
+bmRfbmZjX2NhcHMgc2FtYTVkNF9uZmNfY2FwcyA9IHsNCj4gPiAtCS5yYl9tYXNrID0gTkZDX1NS
+X1JCX0VER0UzLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgYXRtZWxfbmFuZF9uZmNfbWF0Y2hbXSA9IHsNCj4gPiAtCXsgLmNvbXBhdGlibGUg
+PSAiYXRtZWwsc2FtYTVkMy1uZmMiLCAuZGF0YSA9ICZzYW1hNWQzX25mY19jYXBzIH0sDQo+ID4g
+LQl7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDQtbmZjIiwgLmRhdGEgPSAmc2FtYTVkNF9u
+ZmNfY2FwcyB9LA0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJhdG1lbCxzYW1hNWQzLW5mYyIgfSwN
+Cj4gPiAgCXsgLyogc2VudGluZWwgKi8gfQ0KPiA+ICB9Ow0KPiA+ICBNT0RVTEVfREVWSUNFX1RB
+QkxFKG9mLCBhdG1lbF9uYW5kX25mY19tYXRjaCk7IGRpZmYgLS1naXQNCj4gPiBhL2RyaXZlcnMv
+bXRkL25hbmQvYXRtZWxfbmFuZF9uZmMuaA0KPiA+IGIvZHJpdmVycy9tdGQvbmFuZC9hdG1lbF9u
+YW5kX25mYy5oDQo+ID4gaW5kZXggMGJiYzFmYS4uNGQ1ZDI2MiAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmRfbmZjLmgNCj4gPiArKysgYi9kcml2ZXJzL210ZC9u
+YW5kL2F0bWVsX25hbmRfbmZjLmgNCj4gPiBAQCAtNDIsOCArNDIsNyBAQA0KPiA+ICAjZGVmaW5l
+CQlORkNfU1JfVU5ERUYJCSgxIDw8IDIxKQ0KPiA+ICAjZGVmaW5lCQlORkNfU1JfQVdCCQkoMSA8
+PCAyMikNCj4gPiAgI2RlZmluZQkJTkZDX1NSX0FTRQkJKDEgPDwgMjMpDQo+ID4gLSNkZWZpbmUJ
+CU5GQ19TUl9SQl9FREdFMAkJKDEgPDwgMjQpDQo+ID4gLSNkZWZpbmUJCU5GQ19TUl9SQl9FREdF
+MwkJKDEgPDwgMjcpDQo+ID4gKyNkZWZpbmUJCU5GQ19TUl9SQl9FREdFCQkoMSA8PCAyNCkNCj4g
+Pg0KPiA+ICAjZGVmaW5lIEFUTUVMX0hTTUNfTkZDX0lFUgkweDBjDQo+ID4gICNkZWZpbmUgQVRN
+RUxfSFNNQ19ORkNfSURSCTB4MTANCj4gDQo+IA0KPiANCj4gLS0NCj4gQm9yaXMgQnJlemlsbG9u
+LCBGcmVlIEVsZWN0cm9ucw0KPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5n
+DQo+IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20NCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3Ug
+WWFuZw0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
