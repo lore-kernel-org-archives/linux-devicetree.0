@@ -1,119 +1,61 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 5/5] vf610-soc: Add Vybrid SoC device tree binding
- documentation
-Date: Mon, 09 May 2016 18:13:05 -0700
-Message-ID: <cab9edb2184ec13341a1dae1de9c7ebc@agner.ch>
-References: <cover.1462171989.git.maitysanchayan@gmail.com>
- <65f3a7bd7a9faf1b390644d7c599c69683c753c4.1462171990.git.maitysanchayan@gmail.com>
- <20160504023026.GB5382@rob-hp-laptop>
- <20160505082758.GB18151@Sanchayan-Arch.localdomain>
- <CAL_JsqL1qQu_u=6xosP8UmR3oXLawbVz=Hap0wDm7aN4mjK2GA@mail.gmail.com>
- <4ca82be6c1d434c612868b441e9f6e1f@agner.ch>
- <CAL_JsqL7sjdONYad6sXM1KXFCjooANuN7WYg-paV9LnKnuMTnA@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v6 5/9] extcon: max8997: Fix handling error code of
+ regmap_irq_get_virq()
+Date: Tue, 10 May 2016 10:23:45 +0900
+Message-ID: <57313821.4050309@samsung.com>
+References: <1462519289-2356-2-git-send-email-k.kozlowski@samsung.com>
+ <1462519636-3250-1-git-send-email-k.kozlowski@samsung.com>
+ <1462519636-3250-4-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL7sjdONYad6sXM1KXFCjooANuN7WYg-paV9LnKnuMTnA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sanchayan Maity <maitysanchayan@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-reply-to: <1462519636-3250-4-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, rtc-linux@googlegroups.com
+Cc: r.baldyga@hackerion.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-05-09 15:58, Rob Herring wrote:
-> On Mon, May 9, 2016 at 1:25 PM, Stefan Agner <stefan@agner.ch> wrote:
->> On 2016-05-09 10:14, Rob Herring wrote:
->>> On Thu, May 5, 2016 at 3:27 AM,  <maitysanchayan@gmail.com> wrote:
->>>> Hello Rob,
->>>>
->>>> On 16-05-03 21:30:26, Rob Herring wrote:
->>>>> On Mon, May 02, 2016 at 12:35:04PM +0530, Sanchayan Maity wrote:
->>>>> > Add device tree binding documentation for Vybrid SoC.
->>>>> >
->>>>> > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
->>>>> > ---
->>>>> >  .../bindings/arm/freescale/fsl,vf610-soc.txt       | 35 ++++++++++++++++++++++
->>>>> >  1 file changed, 35 insertions(+)
->>>>> >  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->>>>> >
->>>>> > diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->>>>> > new file mode 100644
->>>>> > index 0000000..bdd95e8
->>>>> > --- /dev/null
->>>>> > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-soc.txt
->>>>> > @@ -0,0 +1,35 @@
->>>>> > +Vybrid System-on-Chip
->>>>> > +---------------------
->>>>> > +
->>>>> > +Required properties:
->>>>> > +
->>>>> > +- #address-cells: must be 1
->>>>> > +- #size-cells: must be 1
->>>>> > +- compatible: "fsl,vf610-soc-bus", "simple-bus"
->>>>>
->>>>> If this is a bus, put the file in bindings/bus/...
->>>>
->>>> The fsl,vf610-soc-bus binding is used to bind the driver in question with
->>>> an appropriate compatible node.
->>>>
->>>> Basically being a standalone platform driver, there was need of a compatible
->>>> property to bind on. Introducing a separate device tree node for it's sake
->>>> didn't seem appropriate so the alteration to SoC node's compatible.
->>>
->>> Ah, so you are designing a node around the needs of a Linux specific
->>> driver. Don't do that. DT describes the h/w and this node is not a h/w
->>> block.
->>>
->>> Create a platform device based on a matching SOC compatible string
->>> instead and make your driver find the information it needs directly
->>> from the relevant nodes like the ROM node.
->>
->> That reads like my words a year ago:
->> https://lkml.org/lkml/2015/5/22/408
->>
->> Initially pretty much everything was hard-coded in the driver.
->>
->> Arnd then pushed to use more descriptive in the device tree.
->>
->> Of course, we should not end up making up relations which are not there
->> in hardware. We need to find the right balance.
->>
->> Here is my suggestion:
->> 1. Add "fsl,vf610-soc-bus" as compatible string to the soc node, use it
->> to bind the "soc bus driver" as a platform driver located in driver/soc/
-> 
-> I'm not convinced this is a h/w block. This keeps coming up and I
-> think this is a kernel problem, not a DT problem. Let's face it that
-> there are drivers at the SOC level which don't fit into a DT node.
-> They may be the exception, but they are a common exception. My
-> proposal for how to deal with these cases is here[1].
+Hi Krzysztof,
 
-Probably "fsl,vf610-soc" would be better than "fsl,vf610-soc-bus".
+On 2016=EB=85=84 05=EC=9B=94 06=EC=9D=BC 16:27, Krzysztof Kozlowski wro=
+te:
+> The regmap_irq_get_virq() can return negative ERRNO, so its result
+> should not be stored in unsigned int because error would be ignored.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  drivers/extcon/extcon-max8997.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/extcon/extcon-max8997.c b/drivers/extcon/extcon-=
+max8997.c
+> index 68754ac2c8ea..0afa3e8b5dc3 100644
+> --- a/drivers/extcon/extcon-max8997.c
+> +++ b/drivers/extcon/extcon-max8997.c
+> @@ -660,11 +660,11 @@ static int max8997_muic_probe(struct platform_d=
+evice *pdev)
+> =20
+>  	for (i =3D 0; i < ARRAY_SIZE(muic_irqs); i++) {
+>  		struct max8997_muic_irq *muic_irq =3D &muic_irqs[i];
+> -		unsigned int virq =3D 0;
+> +		int virq =3D 0;
+> =20
+>  		virq =3D regmap_irq_get_virq(max8997->irq_data_muic,
+>  					muic_irq->irq);
+> -		if (!virq) {
+> +		if (virq <=3D 0) {
+>  			ret =3D -EINVAL;
+>  			goto err_irq;
+>  		}
+>=20
 
-But the SoC is definitely a h/w block! Despite all the individual
-silicon in there, I can even touch the SoC ;-)
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-But yeah, I understand what you are saying... We model it as a
-container, and do not attribute any specific thing directly to it. But
-aren't there other containers where we bind to? Is it wrong to bind a
-driver to a container, if that driver implements issues concerning that
-level..?
-
-The two drivers under drivers/soc/ which implement the SoC bus API and
-both use a compatible string on a container level (e.g.
-arm,realview-pb11mp-soc in arch/arm/boot/dts/arm-realview-pb11mp.dts).
-
-> 
-> I also think drivers/soc is a mess because it is randomly used or not.
-> IMO, using it should not be at the whim of whomever does SOC support.
-
-Are you talking about random drivers under drivers/soc/ or the ones
-which implement the SoC bus API? I think that is not the same...
-
-If SoC bus, agreed, it is a mess. Not only its adoption is sparse, the
-specification is also interpreted differently across different SoC's,
-which I brought up in the past:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333765.html
-
-But it exports really useful information to user space, and that has
-real value in practice.
+Thanks,
+Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
