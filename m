@@ -1,191 +1,86 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v4] gpio: of: make it possible to name GPIO lines
-Date: Tue, 10 May 2016 11:50:19 +0200
-Message-ID: <1462873819-7622-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, David Mandala <david.mandala@linaro.org>, Lee Campbell <leecam@google.com>, devicetree@vger.kernel.org
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 2/4] clk: arizona: Add clock driver for the Arizona
+ devices
+Date: Tue, 10 May 2016 10:58:48 +0100
+Message-ID: <20160510095848.GI1646@localhost.localdomain>
+References: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1452252582-20834-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20160507005501.GN3492@codeaurora.org>
+ <20160509104728.GG1646@localhost.localdomain>
+ <20160509214829.GQ3492@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160509214829.GQ3492@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: mturquette@baylibre.com, cw00.choi@samsung.com, lee.jones@linaro.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Make it possible to name the producer side of a GPIO line using
-a "gpio-line-names" property array, modeled on the
-"clock-output-names" property from the clock bindings.
+On Mon, May 09, 2016 at 02:48:29PM -0700, Stephen Boyd wrote:
+> On 05/09, Charles Keepax wrote:
+> > On Fri, May 06, 2016 at 05:55:01PM -0700, Stephen Boyd wrote:
+> > > I've applied this to clk-next but still have a question, see
+> > > below.
+> > > 
+> > > On 01/08, Charles Keepax wrote:
+> > Apologies, I have been working on a v4 that includes these
+> > improvements. It does indeed look much nicer using assigned
+> > parents etc. I think it might be best to drop these for now until
+> > those are ready to send.
+> 
+> Ok sure. I've dropped them.
 
-This naming is especially useful for:
+Cool thanks.
 
-- Debugging: lines are named after function, not just opaque
-  offset numbers.
+> 
+> > 
+> > The only problem I really have left to sort out before I can send
+> > it are some locking issues. It is quite tricky to get interaction
+> > between the clocking and SPI frameworks to play nicely. The SPI
+> > framework will sometimes punt the actually processing for the
+> > transfer to a worker thread which will often perform operations
+> > on clocks required for the SPI. Because this is a seperate
+> > thread it isn't handled by the re-enterant locking in the clock
+> > framework. I had been working around this using async transfers
+> > for the SPI, but even then I have since found you can get lockdep
+> > warnings because of the potential mutex inversion (SPI mutex and
+> > the clock one).
+> > 
+> > Any suggestions on this front would be greatly appreciated?
+> > 
+> 
+> The fix is to always prepare the first clk right? That way we
+> avoid any deadlock scenario.
 
-- Exploration: systems where some or all GPIO lines are available
-  to end users, such as prototyping, one-off's "makerspace usecases"
-  users are helped by the names of the GPIO lines when tinkering.
-  This usecase has been surfacing recently.
+Yeah, been looking at that, the problem is our parts get used
+in a fairly wide array of places and it tends to be up to the
+individual SPI driver how the clocks are controlled. So feels a
+bit like SPI driver whack a mole, perhaps something could be done
+through the SPI core itself through.
 
-The gpio-line-names attribute is completely optional.
+> 
+> We've been slowly working our way toward an alternate solution,
+> which is to have one mutex per clk so that different parts of the
+> clk tree can be locked independently, but so far that's blocked
+> on drivers re-entering the clk framework with clk consumer APIs
+> from within the clk_ops callbacks. Hopefully coordinated clk rate
+> switches will allow us to get rid of those situations and then we
+> can go and make sure all drivers aren't relying on the big
+> prepare mutex to keep their drivers safe from concurrent accesses
+> and finally move to one mutex per clk. This is a long term goal
+> though so I wouldn't depend on this happening anytime soon.
 
-Example output from lsgpio on a patched Snowball tree:
+Thanks, really good to hear some thoughts on this.  I had been
+coming to the conclusion here that individual prepare locks was
+the right course of action. I had tried some changes to allow
+individual clock drivers to specify prepare_lock and unlock
+callbacks and then having the clock core fall back to the global
+lock if the driver didn't have these. Which is a sort of half way
+house to individual locks, but its still quite easy to run into
+mutex inversions with all the other clocks still sharing a global
+lock.
 
-GPIO chip: gpiochip6, "8000e180.gpio", 32 GPIO lines
-        line  0: unnamed unused
-        line  1: "AP_GPIO161" "extkb3" [kernel]
-        line  2: "AP_GPIO162" "extkb4" [kernel]
-        line  3: "ACCELEROMETER_INT1_RDY" unused [kernel]
-        line  4: "ACCELEROMETER_INT2" unused
-        line  5: "MAG_DRDY" unused [kernel]
-        line  6: "GYRO_DRDY" unused [kernel]
-        line  7: "RSTn_MLC" unused
-        line  8: "RSTn_SLC" unused
-        line  9: "GYRO_INT" unused
-        line 10: "UART_WAKE" unused
-        line 11: "GBF_RESET" unused
-        line 12: unnamed unused
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: David Mandala <david.mandala@linaro.org>
-Cc: Lee Campbell <leecam@google.com>
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Michael Welling <mwelling@ieee.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v3->v4:
-- Do not use the bool accessor to see if a line is there, use
-  the return value from counting the strings to bail out if
-  <= 0.
-- Augment the naming loop to be smarter.
-- Merging this now as there is no further feedback from the DT
-  people in weeks.
-ChangeLog v2->v3:
-- Swap "gpio-names" for "gpio-line-names" as "gpio-names" indicate
-  a consumer endpoint in DT terminology.
-- Index to either:
-  (A) The end of the gpio-names array or
-  (B) ngpios
-  So we don't risk going out of bounds on either
-ChangeLog v1->v2:
-- Make the naming function return void: we continue at all times
-  and always return 0 anyway.
-- Fix a return value check.
-
-This has been discussed at some length now.
-
-Why we are not using hogs: these are consumer side, not producer
-side. The gpio-controller in DT (gpio_chip in Linux) is a
-producer, not a consumer.
-
-This patch is not about assigning initial values to GPIO lines.
-That is an orthogonal usecase. This is just about naming lines.
----
- Documentation/devicetree/bindings/gpio/gpio.txt | 19 ++++++++++
- drivers/gpio/gpiolib-of.c                       | 49 +++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index c88d2ccb05ca..68d28f62a6f4 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -152,6 +152,21 @@ additional bitmask is needed to specify which GPIOs are actually in use,
- and which are dummies. The bindings for this case has not yet been
- specified, but should be specified if/when such hardware appears.
- 
-+Optionally, a GPIO controller may have a "gpio-line-names" property. This is
-+an array of strings defining the names of the GPIO lines going out of the
-+GPIO controller. This name should be the most meaningful producer name
-+for the system, such as a rail name indicating the usage. Package names
-+such as pin name are discouraged: such lines have opaque names (since they
-+are by definition generic purpose) and such names are usually not very
-+helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
-+reasonable line names as they describe what the line is used for. "GPIO0"
-+is not a good name to give to a GPIO line. Placeholders are discouraged:
-+rather use the "" (blank string) if the use of the GPIO line is undefined
-+in your design. The names are assigned starting from line offset 0 from
-+left to right from the passed array. An incomplete array (where the number
-+of passed named are less than ngpios) will still be used up until the last
-+provided valid line index.
-+
- Example:
- 
- gpio-controller@00000000 {
-@@ -160,6 +175,10 @@ gpio-controller@00000000 {
- 	gpio-controller;
- 	#gpio-cells = <2>;
- 	ngpios = <18>;
-+	gpio-line-names = "MMC-CD", "MMC-WP", "VDD eth", "RST eth", "LED R",
-+		"LED G", "LED B", "Col A", "Col B", "Col C", "Col D",
-+		"Row A", "Row B", "Row C", "Row D", "NMI button",
-+		"poweroff", "reset";
- }
- 
- The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index d81dbd8e90d9..d22dcc38179d 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -196,6 +196,51 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- }
- 
- /**
-+ * of_gpiochip_set_names() - set up the names of the lines
-+ * @chip: GPIO chip whose lines should be named, if possible
-+ */
-+static void of_gpiochip_set_names(struct gpio_chip *gc)
-+{
-+	struct gpio_device *gdev = gc->gpiodev;
-+	struct device_node *np = gc->of_node;
-+	int i;
-+	int nstrings;
-+
-+	nstrings = of_property_count_strings(np, "gpio-line-names");
-+	if (nstrings <= 0)
-+		/* Lines names not present */
-+		return;
-+
-+	/* This is normally not what you want */
-+	if (gdev->ngpio != nstrings)
-+		dev_info(&gdev->dev, "gpio-line-names specifies %d line "
-+			 "names but there are %d lines on the chip\n",
-+			 nstrings, gdev->ngpio);
-+
-+	/*
-+	 * Make sure to not index beyond the end of the number of descriptors
-+	 * of the GPIO device.
-+	 */
-+	for (i = 0; i < gdev->ngpio; i++) {
-+		const char *name;
-+		int ret;
-+
-+		ret = of_property_read_string_index(np,
-+						    "gpio-line-names",
-+						    i,
-+						    &name);
-+		if (ret) {
-+			if (ret != -ENODATA)
-+                                dev_err(&gdev->dev,
-+                                        "unable to name line %d: %d\n",
-+                                        i, ret);
-+			break;
-+		}
-+		gdev->descs[i].name = name;
-+	}
-+}
-+
-+/**
-  * of_gpiochip_scan_gpios - Scan gpio-controller for gpio definitions
-  * @chip:	gpio chip to act on
-  *
-@@ -445,6 +490,10 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 	if (status)
- 		return status;
- 
-+	/* If the chip defines names itself, these take precedence */
-+	if (!chip->names)
-+		of_gpiochip_set_names(chip);
-+
- 	of_node_get(chip->of_node);
- 
- 	return of_gpiochip_scan_gpios(chip);
--- 
-2.4.11
-
+Thanks,
+Charles
