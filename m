@@ -1,45 +1,80 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/6] regulator: rk808: Add regulator driver for RK818
-Date: Tue, 10 May 2016 15:03:20 +0100
-Message-ID: <20160510140320.GO19473@dell>
-References: <1462886340-7893-1-git-send-email-w.egorov@phytec.de>
- <1462886340-7893-4-git-send-email-w.egorov@phytec.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
+ with CPU thermal nodes
+Date: Tue, 10 May 2016 16:03:07 +0200
+Message-ID: <5731EA1B.4070201@samsung.com>
+References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
+ <CANAwSgT9SY3kj8+beMpc1xGoC=rMBSya+2v2dyZQp6ykH+V0=g@mail.gmail.com>
+ <573198BE.6020900@samsung.com>
+ <CANAwSgTy6p9AVmmOWATpSO1JqVbwE0v+y_y-RLd+32RnNJTA+Q@mail.gmail.com>
+ <5731D764.8070007@samsung.com>
+ <CANAwSgRsjdQh6ygT__5XcH8-cF9Ch+zbk8oupebwYzY1kCZu6g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462886340-7893-4-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CANAwSgRsjdQh6ygT__5XcH8-cF9Ch+zbk8oupebwYzY1kCZu6g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 May 2016, Wadim Egorov wrote:
+On 05/10/2016 04:00 PM, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> On 10 May 2016 at 18:13, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+>> On 05/10/2016 11:29 AM, Anand Moon wrote:
+>>>>
+>>>> I am sorry but I do not understand.
+>>>> 1. Are you saying that my patch causes the issue?
+>>>> 2. Are you saying that I should not send some patches because of
+>>>> conflicting work? (that would be peculiar...)
+>>>> 3. Are you saying that I should not apply this patch to me tree because
+>>>> of conflicting work?
+>>>> 4. Other?
+>>>>
+>>>> Best regards.
+>>>> Krzysztof
+>>>>
+>>>>
+>>>
+>>> Sorry for the confusion it's not about you patch.
+>>> The feature is not working correctly as per my testing with the
+>>> original source code.
+>>> It need to be more tuned or some other approach to the issue need to found.
+>>
+>> Known issue. You don't have cpufreq cooling enabled. I sent patches for
+>> that and they are in the mainline. However cpufreq cooling requires
+>> cpufreq which cannot work with BL_SWITCHER and on Exynos542x on
+>> exynos_defconfig BL_SWITCHER is enabled.
+>>
+>> Just disable the BL_Krzysztof.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> I have already disabled BL_SWITCHER in my exynos_defconfig. to support
+> CONFIG_CPUFREQ_DT.
+> 
+> But how about adjust the  the cputemp so that all the core will have
+> same tip points.
 
-> Add support for the rk818 regulator. The regulator module consists
-> of 4 DCDCs, 9 LDOs, 1 switch and 1 BOOST converter which is used to
-> power OTG and HDMI5V.
->=20
-> The output voltages are configurable and are meant to supply power
-> to the main processor and other components.
->=20
-> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/regulator/Kconfig           |   4 +-
->  drivers/regulator/rk808-regulator.c | 143 ++++++++++++++++++++++++++=
-++++++++--
->  2 files changed, 138 insertions(+), 9 deletions(-)
 
-Needs an Ack before I can take the set.
+I don't understand you. All of the cores have same trip points.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
+
+> 
+> xcpu0-t 0:[ 44][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     A50
+>      A60       P70            P85                                C120
+> ]
+> xcpu1-t 1:[ 46][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>                               A85               A103   A110      C120
+> ]
+> xcpu2-t 2:[ 51][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>                          A85               A103   A110      C120 ]
+> xcpu3-t 3:[ 47][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>                              A85               A103   A110      C120 ]
+> xgpu-th 4:[ 48][>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>                             A85               A103   A110      C120 ]
