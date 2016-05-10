@@ -1,93 +1,98 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [RFC v2 00/13] usb/mmc/power: Fix USB/LAN when TFTP booting
-Date: Tue, 10 May 2016 13:02:08 +0200
-Message-ID: <CAPDyKFq2=mqujFjvJSYxg2nVmK=OrBKLtFfb-ErNJO3Zr_LMVw@mail.gmail.com>
-References: <1462451666-17945-1-git-send-email-k.kozlowski@samsung.com>
-	<20160505224240.GA31429@rob-hp-laptop>
-	<CAPDyKFqpoi03Egfuvd8qJXnn_+FBgPXAb7S4UvkxVs8BA+zwnA@mail.gmail.com>
-	<20160509181829.GA19687@rob-hp-laptop>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 2/4] drivers/clocksource/moxart: Refactor enable/disable
+Date: Tue, 10 May 2016 20:36:50 +0930
+Message-ID: <CACPK8XfJ2e1kr-WftidvqsoYew7LqPiNo0sw7opgh8UH=3q_3A@mail.gmail.com>
+References: <1462797169-14512-1-git-send-email-joel@jms.id.au> <1462797169-14512-3-git-send-email-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20160509181829.GA19687@rob-hp-laptop>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-usb@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, hverkuil@xs4all.nl, tjakobi@math.uni-bielefeld.de, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462797169-14512-3-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Arnd
+Hi Daniel,
 
-[...]
+Here's a commit message for this patch. If you'd prefer me to resend
+the entire series with this included then I can do that.
 
->> >> Solution
->> >> ========
->> >> This is very similar to the MMC pwrseq behavior so the idea is to:
->> >> 1. Move MMC pwrseq drivers to generic place,
->> >
->> > You can do that, but I'm going to NAK any use of pwrseq bindings outside
->> > of MMC. I think it is the wrong way to do things. The DT should describe
->>
->> Huh, I didn't know that was your view of the mmc pwrseq bindings. Why
->> didn't you NAK them before?
+This patch abstracts the enable and disable register writes into their
+own functions in preparation for future changes to use SoC specific
+values for the writes.
+
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+>  drivers/clocksource/moxart_timer.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
 >
-> Unfortunately, either I missed it or it was a time I couldn't spend much
-> time on reviews.
-
-Okay, I guess it's common issue among maintainers. The problem with DT
-is that it gets really hard to be fixed up later. :-)
-
+> diff --git a/drivers/clocksource/moxart_timer.c b/drivers/clocksource/moxart_timer.c
+> index 19857af651c1..b00b2b21e8b3 100644
+> --- a/drivers/clocksource/moxart_timer.c
+> +++ b/drivers/clocksource/moxart_timer.c
+> @@ -58,15 +58,25 @@
+>  static void __iomem *base;
+>  static unsigned int clock_count_per_tick;
 >
->> > the devices. If they happen to be "simple" then the core can walk the
->> > tree and do any setup. For example, look for "reset-gpios" and toggle
->> > that GPIO. There is no need for a special node.
->> >
->> >> 2. Extend the pwrseq-simple with regulator toggling,
->> >> 3. Add support to USB hub and port core for pwrseq,
->> >
->> > We discussed this for USB already[1] and is why we defined how to add
->> > USB child devices. The idea is not to add pwrseq to that.
->>
->> I am not familiar with the USB discussion.
->>
->> Still, let me give you some more background to the mmc pwrseq. The
->> idea from the mmc pwrseq bindings comes from the power-domain DT
->> bindings, as I thought these things were a bit related.
->> In both cases they are not directly a property of the device, but more
->> describing a HW dependency to allow the device to work.
+> -static int moxart_shutdown(struct clock_event_device *evt)
+> +static inline void moxart_disable(struct clock_event_device *evt)
+>  {
+>         writel(TIMER1_DISABLE, base + TIMER_CR);
+> +}
+> +
+> +static inline void moxart_enable(struct clock_event_device *evt)
+> +{
+> +       writel(TIMER1_ENABLE, base + TIMER_CR);
+> +}
+> +
+> +static int moxart_shutdown(struct clock_event_device *evt)
+> +{
+> +       moxart_disable(evt);
+>         return 0;
+>  }
 >
-> I could see this as a board level power domain. However the difference
-> is we are not generally exposing internal SOC details the same way as
-> board level components. Perhaps we could extend power domains to board
-> level, but that is not what was done here.
+>  static int moxart_set_oneshot(struct clock_event_device *evt)
+>  {
+> -       writel(TIMER1_DISABLE, base + TIMER_CR);
+> +       moxart_disable(evt);
+>         writel(~0, base + TIMER1_BASE + REG_LOAD);
+>         return 0;
+>  }
+> @@ -74,21 +84,21 @@ static int moxart_set_oneshot(struct clock_event_device *evt)
+>  static int moxart_set_periodic(struct clock_event_device *evt)
+>  {
+>         writel(clock_count_per_tick, base + TIMER1_BASE + REG_LOAD);
+> -       writel(TIMER1_ENABLE, base + TIMER_CR);
+> +       moxart_enable(evt);
+>         return 0;
+>  }
 >
->> One could probably use a child node instead of a phandle, but that
->> wasn't chosen back then. Of course you are the DT expert, but could
->> you perhaps tell me why a child node is better for cases like this?
+>  static int moxart_clkevt_next_event(unsigned long cycles,
+> -                                   struct clock_event_device *unused)
+> +                                   struct clock_event_device *evt)
+>  {
+>         u32 u;
 >
-> If there is a control path hierarchy, then we try to model that in DT
-> with child nodes. In cases of SDIO and USB, there is a clear hierarchy.
-> Ignoring the discovery ordering problem, we already have defined ways to
-> describe GPIO connections, regulators, etc. to devices. Describing those
-> things separately from the device to solve a particular issue that is
-> really a kernel limitation is what I don't like.
-
-Okay, I see.
-
-To move forward in trying to make mmc pwrseq a generic pwrseq, could
-we perhaps allow both cases?
-
-In the mmc case, there are already deployed bindings so we need to
-cope with these by using the phandle option, but for USB etc we could
-force the child node option.
-As long as we agree that we keep using a compatible string for the
-child node as well, both options should be able to co-exist and we
-should probably be able to managed them both from a common pwrseq
-driver framework.
-
-Although, I do remember from an older conversations around some of
-mine submission for the mmc pwrseq code, that some people (maybe
-Arnd?) wasn't keen on adding a new framework for this. Perhaps that
-has changed?
-
-Kind regards
-Uffe
+> -       writel(TIMER1_DISABLE, base + TIMER_CR);
+> +       moxart_disable(evt);
+>
+>         u = readl(base + TIMER1_BASE + REG_COUNT) - cycles;
+>         writel(u, base + TIMER1_BASE + REG_MATCH1);
+>
+> -       writel(TIMER1_ENABLE, base + TIMER_CR);
+> +       moxart_enable(evt);
+>
+>         return 0;
+>  }
+> --
+> 2.8.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
