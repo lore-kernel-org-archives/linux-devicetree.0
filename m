@@ -1,118 +1,194 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 0/5] clk: bcm2835: add flags for mash and parent clocks
-Date: Tue, 10 May 2016 10:32:09 +0200
-Message-ID: <57319C89.7040705@martin.sperl.org>
-References: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
- <87h9e6yb6i.fsf@eliezer.anholt.net>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] Revert "mtd: atmel_nand: Support variable RB_EDGE
+ interrupts"
+Date: Tue, 10 May 2016 10:55:49 +0200
+Message-ID: <20160510105549.50b60d8c@bbrezillon>
+References: <1462776680-5284-1-git-send-email-wenyou.yang@atmel.com>
+	<1462776680-5284-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <87h9e6yb6i.fsf@eliezer.anholt.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462776680-5284-2-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Wenyou,
+
+Can you add NAND maintainers/reviewers in Cc next time. And since you
+revert a commit, you should also add the commit author in the loop.
+
+On Mon, 9 May 2016 14:51:18 +0800
+Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+
+> This reverts commit 5ddc7bd43ccc ("mtd: atmel_nand: Support variable
+> RB_EDGE interrupts")
+> 
+> Because for current SoCs, the RB_EDGE3(i.e. bit 27) of HSMC_SR
+> register does not exist, the RB_EDGE0 (i.e. bit 24) is the ready/busy
+> line edge status bit. It is a datasheet bug.
+
+Romain, I thought you had a real use case on sama5d4 where this patch
+was needed to make the whole thing work. Not sure why you submitted this
+patch if you couldn't test it on a real board.
+
+Wenyou, can you confirm that none of the existing SoCs support more
+than one "native" R/B pin?
+
+Thanks,
+
+Boris
+
+> 
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+>  .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
+>  drivers/mtd/nand/atmel_nand.c                      | 35 +++++-----------------
+>  drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
+>  3 files changed, 10 insertions(+), 30 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> index d53aba9..3e7ee99 100644
+> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> @@ -39,7 +39,7 @@ Optional properties:
+>  
+>  Nand Flash Controller(NFC) is an optional sub-node
+>  Required properties:
+> -- compatible : "atmel,sama5d3-nfc" or "atmel,sama5d4-nfc".
+> +- compatible : "atmel,sama5d3-nfc".
+>  - reg : should specify the address and size used for NFC command registers,
+>          NFC registers and NFC SRAM. NFC SRAM address and size can be absent
+>          if don't want to use it.
+> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+> index efc8ea2..68b9160 100644
+> --- a/drivers/mtd/nand/atmel_nand.c
+> +++ b/drivers/mtd/nand/atmel_nand.c
+> @@ -67,10 +67,6 @@ struct atmel_nand_caps {
+>  	uint8_t pmecc_max_correction;
+>  };
+>  
+> -struct atmel_nand_nfc_caps {
+> -	uint32_t rb_mask;
+> -};
+> -
+>  /*
+>   * oob layout for large page size
+>   * bad block info is on bytes 0 and 1
+> @@ -129,7 +125,6 @@ struct atmel_nfc {
+>  	/* Point to the sram bank which include readed data via NFC */
+>  	void			*data_in_sram;
+>  	bool			will_write_sram;
+> -	const struct atmel_nand_nfc_caps *caps;
+>  };
+>  static struct atmel_nfc	nand_nfc;
+>  
+> @@ -1715,9 +1710,9 @@ static irqreturn_t hsmc_interrupt(int irq, void *dev_id)
+>  		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_XFR_DONE);
+>  		ret = IRQ_HANDLED;
+>  	}
+> -	if (pending & host->nfc->caps->rb_mask) {
+> +	if (pending & NFC_SR_RB_EDGE) {
+>  		complete(&host->nfc->comp_ready);
+> -		nfc_writel(host->nfc->hsmc_regs, IDR, host->nfc->caps->rb_mask);
+> +		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_RB_EDGE);
+>  		ret = IRQ_HANDLED;
+>  	}
+>  	if (pending & NFC_SR_CMD_DONE) {
+> @@ -1735,7 +1730,7 @@ static void nfc_prepare_interrupt(struct atmel_nand_host *host, u32 flag)
+>  	if (flag & NFC_SR_XFR_DONE)
+>  		init_completion(&host->nfc->comp_xfer_done);
+>  
+> -	if (flag & host->nfc->caps->rb_mask)
+> +	if (flag & NFC_SR_RB_EDGE)
+>  		init_completion(&host->nfc->comp_ready);
+>  
+>  	if (flag & NFC_SR_CMD_DONE)
+> @@ -1753,7 +1748,7 @@ static int nfc_wait_interrupt(struct atmel_nand_host *host, u32 flag)
+>  	if (flag & NFC_SR_XFR_DONE)
+>  		comp[index++] = &host->nfc->comp_xfer_done;
+>  
+> -	if (flag & host->nfc->caps->rb_mask)
+> +	if (flag & NFC_SR_RB_EDGE)
+>  		comp[index++] = &host->nfc->comp_ready;
+>  
+>  	if (flag & NFC_SR_CMD_DONE)
+> @@ -1821,7 +1816,7 @@ static int nfc_device_ready(struct mtd_info *mtd)
+>  		dev_err(host->dev, "Lost the interrupt flags: 0x%08x\n",
+>  				mask & status);
+>  
+> -	return status & host->nfc->caps->rb_mask;
+> +	return status & NFC_SR_RB_EDGE;
+>  }
+>  
+>  static void nfc_select_chip(struct mtd_info *mtd, int chip)
+> @@ -1994,8 +1989,8 @@ static void nfc_nand_command(struct mtd_info *mtd, unsigned int command,
+>  		}
+>  		/* fall through */
+>  	default:
+> -		nfc_prepare_interrupt(host, host->nfc->caps->rb_mask);
+> -		nfc_wait_interrupt(host, host->nfc->caps->rb_mask);
+> +		nfc_prepare_interrupt(host, NFC_SR_RB_EDGE);
+> +		nfc_wait_interrupt(host, NFC_SR_RB_EDGE);
+>  	}
+>  }
+>  
+> @@ -2426,11 +2421,6 @@ static int atmel_nand_nfc_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> -	nfc->caps = (const struct atmel_nand_nfc_caps *)
+> -		of_device_get_match_data(&pdev->dev);
+> -	if (!nfc->caps)
+> -		return -ENODEV;
+> -
+>  	nfc_writel(nfc->hsmc_regs, IDR, 0xffffffff);
+>  	nfc_readl(nfc->hsmc_regs, SR);	/* clear the NFC_SR */
+>  
+> @@ -2459,17 +2449,8 @@ static int atmel_nand_nfc_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct atmel_nand_nfc_caps sama5d3_nfc_caps = {
+> -	.rb_mask = NFC_SR_RB_EDGE0,
+> -};
+> -
+> -static const struct atmel_nand_nfc_caps sama5d4_nfc_caps = {
+> -	.rb_mask = NFC_SR_RB_EDGE3,
+> -};
+> -
+>  static const struct of_device_id atmel_nand_nfc_match[] = {
+> -	{ .compatible = "atmel,sama5d3-nfc", .data = &sama5d3_nfc_caps },
+> -	{ .compatible = "atmel,sama5d4-nfc", .data = &sama5d4_nfc_caps },
+> +	{ .compatible = "atmel,sama5d3-nfc" },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
+> diff --git a/drivers/mtd/nand/atmel_nand_nfc.h b/drivers/mtd/nand/atmel_nand_nfc.h
+> index 0bbc1fa..4d5d262 100644
+> --- a/drivers/mtd/nand/atmel_nand_nfc.h
+> +++ b/drivers/mtd/nand/atmel_nand_nfc.h
+> @@ -42,8 +42,7 @@
+>  #define		NFC_SR_UNDEF		(1 << 21)
+>  #define		NFC_SR_AWB		(1 << 22)
+>  #define		NFC_SR_ASE		(1 << 23)
+> -#define		NFC_SR_RB_EDGE0		(1 << 24)
+> -#define		NFC_SR_RB_EDGE3		(1 << 27)
+> +#define		NFC_SR_RB_EDGE		(1 << 24)
+>  
+>  #define ATMEL_HSMC_NFC_IER	0x0c
+>  #define ATMEL_HSMC_NFC_IDR	0x10
 
 
-On 10.05.2016 03:05, Eric Anholt wrote:
-> kernel@martin.sperl.org writes:
->
->> From: Martin Sperl <kernel@martin.sperl.org>
->>
->> Allow flags to be set on a per clock index basis, which control:
->> * the parent clocks selected when not setting clocks explicitly
->
-> I don't think we need this other than avoiding PLLC.  What else do you
-> want to filter, and why?
-What about potentially disabling PLLA_per or PLLH_aux?
-Under some circumstances it may make sense to avoid those clocks.
-(or testdebug for that matter).
 
-One of the reasons can be to avoid low dividers - see also mash below
-
->
->> * the clock mode with regards to integer only or higher order mash
->
-> Please provide justification in the commit message explaining why there
-> is no obvious mash setting to just implement in clk-bcm2835.c, but that
-> that a better policy can be encoded in the DT.
-
-The normal fractional divider will vary the effective period length
-between int(div)/Fparent and (int(div)+1)/Fparent.
-
-So the device (say DAC or other) connected needs to support in
-principle Fparent/int(div) as a clock.
-
-But for higher order mash the HW will spread the period length between:
-(int(div)-3)/Fparent and (int(div)+4)/Fparent.
-
-This value may be outside of the frequencies supported by the attached
-HW. That is why mash is not enabled by default for mash clocks - only
-div.
-
-That is also why we need to have this configurable.
-
-Also obviously higher parent clock frequencies result in higher dividers
-for the same target-frequency. So the above effect is less dramatic
-when using plld_per (or pllc for that matter) compared to the main
-19.2MHz oscillator, as for 32bit stereo audio at 96kHz (equivalent to
-6144000Hz) in the first case we have a divider of 81.38 while for the
-second (osc) case we have a divider of 3.125.
-
-The use of mash3 is impossible for osc but the use of mash 2 would
-spread the frequencies between 9.6MHz (div=2) and 3.84MHz (div=5).
-
-For plld_per as parent using mash3 instead we get the range:
-6410256.4Hz (div=78) and 5882352.9Hz (div=85), which is a much more
-acceptable range and should not impact the device that much.
-
-So enabling mash 3 by default is not in the best interest hence it is
-not done.
-
-This also shows why with some devices it may be preferable to configure
-that only pllc is used and then with mash 3.
-
-So this patchset tries to accomodate that - even if not in a
-perfect way - I would have preferred to have this in the dt-node that
-is claiming that clock, but I did not want to go that far (yet) adding
-another method to clock_op.
-
-To answer your comments on the patches themselves:
-I had also been investigating the use of "assigned-clock-parents".
-Something like this will not work:
-i2s@... {
-   clock = <&preman PCM>;
-   assigned-clocks = <&cprman PCM>, <&pcrman PCM>
-   assigned-clock-parents = <&osc>, <&cprman PLLD_PER>;
-}
-because what it does it:
-* call clk_set_parent(pcm, osc);
-* call clk_set_parent(pcm, plld_per);
-
-(if you add "assigned-clock-rates" into the mix then
-clk_set_rate(pcm, rate) is also called separately).
-
-So there is no way to "keep" track of the parent clocks we wanted
-assigned.
-
-As far as I can see the only thing that would work is to implement
-an extension to the dt that would define "assigned-clock-flags"
-and have a set_flags(struct clk_hw *, u32 flags) method in
-clk_ops.
-
-So maybe someone has some better ideas of how to solve this.
-
-Martin
-
-As a side note: selection of parent oscillator and corresponding mash
-may have distinct noise behavior on the same device, where for
-32bit*2@48k it is the main oscillator with mash3 while the second best
-match would be pllc with mash2 - not mash3, which has the worsted SN
-from all tested!
-
-This behavior obviously changes with different "target frequencies"
-so it may even be necessary to account for the different target
-frequencies.
-
-But that is for a different discussion.
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
