@@ -1,99 +1,126 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [PATCH v8 2/3] gpio: mmio: add DT support for memory-mapped GPIOs
-Date: Tue, 10 May 2016 21:55:15 +0200
-Message-ID: <3359834.V76Y1cJiRU@debian64>
-References: <cover.1462543457.git.chunkeey@googlemail.com> <535f785bf6116c0fb6f46afbb77e6d4bd3ef5f60.1462543458.git.chunkeey@googlemail.com> <CACRpkdaeZ14hfz-gRetRcdj8NzzyqigV1ZtDSWAwveFxwAgt0w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaeZ14hfz-gRetRcdj8NzzyqigV1ZtDSWAwveFxwAgt0w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexander Shiyan <shc_work@mail.ru>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 00/27] ARM: dts: exynos: Add initial support for Odroid XU
+Date: Tue, 10 May 2016 22:09:03 +0200
+Message-ID: <1462910970-1812-1-git-send-email-krzk@kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, May 10, 2016 02:08:45 PM Linus Walleij wrote:
-> On Sun, May 8, 2016 at 3:08 PM, Christian Lamparter
-> <chunkeey@googlemail.com> wrote:
->=20
-> > From: =C1lvaro Fern=E1ndez Rojas <noltari@gmail.com>
-> >
-> > This patch adds support for defining memory-mapped GPIOs which
-> > are compatible with the existing gpio-mmio interface.
->=20
-> Overall very nice, just waiting for the next version.
+Hi,
 
-K, will deliver. I noticed that you sent a mail in which you stated
-that you applied the dt binding already. Can you update your devel
-branch on git.kernel.org's linux-gpio? Then, I'll simply rebase my
-series and sent the remaining two patches.
-(unless you tell me otherwise).
-=20
-> > The first user for this binding is "wd,mbl-gpio".
->=20
-> And that binding defines that we have a register named "dat".
+Patchset adds necessary clocks, reorganizes existing stuff and finally
+adds Odroid XU support.
 
-Yeah, I had to remove all non wd related bits. But since this=20
-series was posted (over and over :D) on a public mailing-list
-the original  "generic" linux-mmio binding is available for
-everybody to perusal[0] and study. I think what we can make
-would be something like a devicetree template out of it. This
-way people can remove unused flags and regnames for their
-compatible device tree binding. (But first: need to finish
-that ppc-gpio.txt).
 
-> > +       if (of_property_read_bool(dev->of_node, "no-output"))
->=20
-> And then this too.
->=20
-> Do we want these generic MMIO bindings (dat, no-output)
-> in a special document like
-> Documentation/devicetree/bindings/gpio/gpio-mmio.txt?
->=20
-> Going forward?
-Ah, I was thinking about Documentation/gpio... Since there's no
-way it would go in the devicetree/bindings without having a compatible?
-(And there's technically none). As far as I know the problem here is no=
-t
-that it would be impossible to do that (updating a .dts file is "easy".=
-=2E.),
-but updating .dtb to a tiny flash-rom on the device might not be. So we
-have to make every effort to preserve compatibility for those devices
-(and old/incomplete/broken dtbs) as long as the device is supported.
+Changes since v2
+================
+1. Got global-ack from Stephen for the clock changes. I think merging
+   everything through arm-soc might be the easiest but:
+   a. In such case I will prepare a tag with clock changes,
+   b. Anyway I will wait for response from Sylwester and Tomasz.
+2. Applied comments from Javier and added his Reviewed-by.
+3. Patch 22: added ack from Rob.
+4. Minor improvements in existing patches.
+5. Five new patches at the end: 23-27 (not reviewed yet).
+   Some of them could be squashed with existing ones but existing
+   changes got reviews. Although the final Odroid XU DTS works fine but
+   in general this is still work-in-progress so I suspect it will grow.
+   I am releasing it early following Linux concept. :)
 
-About adding new device:
-This will work in the following way:=20
- 1. new drives will need to supply their hardware-specific devicetree
-    binding file to the dt maintainers (This "vendor,device.txt" file
-    will be like the wd,mbl-gpio.txt - but modified for the hardware
-    (this is where the template would be handy)
+Patchset is available at my private repo @github:
+https://github.com/krzk/linux.git for-next/odroid-xu-v3
 
- 2. Make a one-liner patch which adds a compatible string to
-    gpio-mmio.c's bgpio_of_match table:
+(previous version is in for-next/odroid-xu-v2 branch, if someone would
+like to compare them)
 
-+	{ .compatible =3D "vendor,device", .data =3D bgpio_basic_mmio_parse_d=
-t },
 
-(Of course, not having parses for the "ngpio" property and the flags li=
-ke
-big-endian, reg-output-reg,set, unreadable-reg-dir, ... properties from
-the get-go is sad, these can add back once a driver/binding needs it).
+Changes since v1
+================
+1. A lot of new patches.
+2. Removed some TODO notes (eMMC 4.5 so no RCLK pin).
+3. New clocks, more reorganization.
+4. New common DTSI: exynos54xx.dtsi. I know, it is getting more
+   and more complicated but this might help removing duplications
+   and keeping everything under control.
 
-I think brcm63xx will be following shortly. So we can test the
-procedure.
-> This patch set mainly deals with refactorings, but in the
-> long run we want to slim things down a bit and use standard
-> bindings I think.
-Well, to do that, I think we need to collect enough devices to
-make it a real "class" of devices first.
 
-Regards,
-Christian
 
-[0] <https://lkml.org/lkml/2016/4/28/921>
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Merging strategy
+================
+Complicated! The clock dt-bindings and driver changes can go to clock
+tree. However there are three DTS patches in the middle.
+a. This has to go in before adding "fin_pll_new" to clock driver:
+   - [PATCH v2 03/22] ARM: dts: exynos: Add fin_pll node for clock driver
+
+b. This should go in before renaming "fin_pll_new" back to original name:
+   - [PATCH v2 05/22] ARM: dts: exynos: Switch MCT node to a new fin_pll clock
+   - [PATCH v2 06/22] ARM: dts: exynos: Remove old fixed-clock provider on SMDK5410
+
+The order of patches in the patchset is really how it should go in
+to reduce any bisectability glitches.
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (27):
+  dt-bindings: clock: Add license and reformat Exynos5410 clock IDs
+  dt-bindings: clock: Add PWM and USB clock IDs to Exynos5410
+  ARM: dts: exynos: Add fin_pll node for clock driver
+  clk: samsung: exynos5410: Provide fin_pll external fixed clock
+  ARM: dts: exynos: Switch MCT node to a new fin_pll clock
+  ARM: dts: exynos: Remove old fixed-clock provider on SMDK5410
+  clk: samsung: exynos5410: Rename fin_pll from temporary to regular
+    name
+  clk: samsung: exynos5410: Add serial3, USB and PWM clocks
+  ARM: dts: exynos: Re-order alphabetically Exynos5420 SD0/SD1 pinctrl
+    nodes
+  ARM: dts: exynos: Use lowercase for Exynos5410 CPU node labels
+  ARM: dts: exynos: Configure Exynos5410 pinctrl for eMMC and SD card
+  ARM: dts: exynos: Split Odroid XU3 LEDs to separate DTSI
+  ARM: dts: exynos: Move common nodes to exynos5.dtsi
+  ARM: dts: exynos: Prepare for inclusion of exynos5.dtsi in
+    exynos5410.dtsi
+  ARM: dts: exynos: Use phandle to get parent node in exynos5250-snow
+  ARM: dts: exynos: Move Exynos5250 and Exynos5420 nodes under soc
+  ARM: dts: exynos: Include common exynos5 in exynos5410.dtsi
+  ARM: dts: exynos: Enable UART3 on Exynos5410
+  ARM: dts: exynos: MCT is not an interrupt controller and extend length
+    of iomap
+  ARM: dts: exynos: Move common Exynos5410/542x/5800 nodes to new DTSI
+  ARM: dts: exynos: Add USB to Exynos5410
+  ARM: dts: exynos: Add initial support for Odroid XU board
+  dt-bindings: clock: Add I2C, HSI2C and RTC clock IDs to Exynos5410
+  clk: samsung: exynos5410: Add I2C, HSI2C and RTC clocks
+  ARM: dts: exynos: Move HSI2C nodes to exynos54xx.dtsi
+  ARM: dts: exynos: Add I2C, PWM and UART pinctrl to Exynos5410
+  ARM: dts: exynos: Add RTC and I2C to Exynos5410
+
+ .../bindings/arm/samsung/samsung-boards.txt        |    1 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/exynos5.dtsi                     |  215 ++-
+ arch/arm/boot/dts/exynos5250-snow-common.dtsi      |    2 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  | 1701 ++++++++---------
+ arch/arm/boot/dts/exynos5410-odroidxu.dts          |  121 ++
+ arch/arm/boot/dts/exynos5410-pinctrl.dtsi          |  210 +++
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |   16 +-
+ arch/arm/boot/dts/exynos5410.dtsi                  |  270 +--
+ arch/arm/boot/dts/exynos5420-pinctrl.dtsi          |   12 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  | 1992 +++++++++-----------
+ arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |   35 +-
+ arch/arm/boot/dts/exynos5422-odroidxu3.dts         |   35 +-
+ arch/arm/boot/dts/exynos54xx-odroidxu-leds.dtsi    |   50 +
+ arch/arm/boot/dts/exynos54xx.dtsi                  |  188 ++
+ drivers/clk/samsung/clk-exynos5410.c               |   61 +
+ include/dt-bindings/clock/exynos5410.h             |   73 +-
+ 17 files changed, 2758 insertions(+), 2225 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos5410-odroidxu.dts
+ create mode 100644 arch/arm/boot/dts/exynos54xx-odroidxu-leds.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos54xx.dtsi
+
+-- 
+2.5.0
+
