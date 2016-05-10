@@ -1,55 +1,69 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 7/9] extcon: max8997: Fix inconsistent indenting
-Date: Tue, 10 May 2016 10:24:28 +0900
-Message-ID: <5731384C.6000209@samsung.com>
-References: <1462519289-2356-2-git-send-email-k.kozlowski@samsung.com>
- <1462519636-3250-1-git-send-email-k.kozlowski@samsung.com>
- <1462519636-3250-6-git-send-email-k.kozlowski@samsung.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 4/7] [media] ir-rx51: add DT support to driver
+Date: Tue, 10 May 2016 04:18:27 +0200
+Message-ID: <20160510021826.GE1129@earth>
+References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1462634508-24961-5-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160509200657.GA3379@rob-hp-laptop>
+ <5730F8BA.5000402@gmail.com>
+ <CAL_JsqJPZS1ne_xAuBFtCc5L1HKFJf0LDUJ7CRSFXhc3adkTfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1462519636-3250-6-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: r.baldyga-anjuHVi6/WSaMJb+Lgu22Q@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJPZS1ne_xAuBFtCc5L1HKFJf0LDUJ7CRSFXhc3adkTfA@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 2016=EB=85=84 05=EC=9B=94 06=EC=9D=BC 16:27, Krzysztof Kozlowski wro=
-te:
-> Fix smatch warning:
-> 	max8997_muic_probe() warn: inconsistent indenting
->=20
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/extcon/extcon-max8997.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/extcon/extcon-max8997.c b/drivers/extcon/extcon-=
-max8997.c
-> index 0afa3e8b5dc3..cf8de5be2405 100644
-> --- a/drivers/extcon/extcon-max8997.c
-> +++ b/drivers/extcon/extcon-max8997.c
-> @@ -737,7 +737,7 @@ static int max8997_muic_probe(struct platform_dev=
-ice *pdev)
->  	}
-> =20
->  	/* Set initial path for UART */
-> -	 max8997_muic_set_path(info, info->path_uart, true);
-> +	max8997_muic_set_path(info, info->path_uart, true);
-> =20
->  	/* Set ADC debounce time */
->  	max8997_muic_set_debounce_time(info, ADC_DEBOUNCE_TIME_25MS);
->=20
+--ZInfyf7laFu/Kiw7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Hi,
 
-Thanks,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, May 09, 2016 at 04:07:35PM -0500, Rob Herring wrote:
+> There's already a pwm-led binding that can be used. Though there
+> may be missing consumer IR to LED subsystem support in the kernel.
+> You could list both compatibles, use the rx51 IR driver now, and
+> then move to pwm-led driver in the future.
+
+Well from a purely HW point of view it's a PWM connected led. The
+usage is completely different though. Usually PWM is used to control
+the LED's brightness via the duty cycle (basic concept: enabling led
+only 50% of time reduces brightness to 50%).
+
+In the IR led's case the aim is generating a specific serial pattern
+instead. For this task it uses a dmtimer in PWM mode and a second
+one to reconfigure the pwm timer.
+
+I don't know about a good name, but rx51 should be replaced with
+n900 in the compatible string. So maybe "nokia,n900-infrared-diode".
+
+-- Sebastian
+
+--ZInfyf7laFu/Kiw7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXMUTwAAoJENju1/PIO/qa77EQAKot0fwGiJ6h6yBcLzxrGfkB
+v7Iscq+mL9pFfOx09N7HouBsT55nSp2rwhn8Zf+pqWU1gCo+G6P/HbPt63az8ec0
+lVbW7dHySUGPLN0tsTizHGljyUKtI4x4+R3hfhKe+rUhNjx7fGjNF7OsU2XxmDwl
+0keHNIHs0q+KHjrwcUnRsTIGt6AsbwjNfRfmpCVxWPoqT0iwO7NOmUE1P2NSG0dW
+dwGhomBvfapfc+YVnivm4W0hKP2OGJfaykExkbfU8NVJXM2rsh50OskIETp4XNqi
++PbCrCGRcC4+FOaY4lZ+THjuT5fdGn5a/6UJhpqpWsFOi9BUG6DiSjQdL/4+IpE7
+Zn/PCIe/dJdteudbOBx7Rcru9gWTQSgvK1PytxgtLTYEqcisvhSG3+aJpjsMqDOE
+8rZ9sWvZI9zYqtVJeBp1xebqMZ0bRhBjUM+zGT7s7h0DphWANjOrsJoGFktph5UY
+QiKIyLXbZ6GoRUMM62TA76r3Kb79S+wJ5g9GMz7uOkKge7DV2VHtaWkLroq6qzNE
+/xyFs0ZkC3xuSFaaHeyu6SPQgVi0XUbFBTRI+DweBUPs0ONJj35JuF89rwWW8Uc7
+UeYBrlkk9OwbBzeefBKmQlBmp+J5R3c/kIEepDLTLoKV31GFN4PMAFZS0BrXEQcj
+v0d7Qc/MIskTuTWJsbFE
+=6DvW
+-----END PGP SIGNATURE-----
+
+--ZInfyf7laFu/Kiw7--
