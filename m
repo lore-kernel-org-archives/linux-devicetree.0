@@ -1,103 +1,53 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v7 11/14] usb: otg: use dev_dbg() instead of VDBG()
-Date: Wed, 11 May 2016 16:43:31 +0800
-Message-ID: <20160511084331.GI16910@shlinux2.ap.freescale.net>
-References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
- <1462191537-10314-12-git-send-email-rogerq@ti.com>
- <20160506090425.GD32359@shlinux2.ap.freescale.net>
- <57305CEC.5010604@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] documentation: Add compatibles for Amlogic Meson
+ GXBB pin controllers
+Date: Wed, 11 May 2016 10:52:46 +0200
+Message-ID: <CACRpkdZQHX2YFh7CFpaagrY+BBtyAejdUs4F7ow+3+9+F6mU-A@mail.gmail.com>
+References: <1462176138-29433-1-git-send-email-carlo@caione.org>
+	<1462176138-29433-3-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57305CEC.5010604@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: peter.chen@freescale.com, stern@rowland.harvard.edu, balbi@kernel.org, gregkh@linuxfoundation.org, dan.j.williams@intel.com, jun.li@freescale.com, mathias.nyman@linux.intel.com, tony@atomide.com, Joao.Pinto@synopsys.com, abrestic@chromium.org, yoshihiro.shimoda.uh@renesas.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462176138-29433-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 09, 2016 at 12:48:28PM +0300, Roger Quadros wrote:
-> On 06/05/16 12:04, Peter Chen wrote:
-> > On Mon, May 02, 2016 at 03:18:54PM +0300, Roger Quadros wrote:
-> >> Now that we have a device reference in struct usb_otg
-> >> let's use dev_dbg() for debug messages.
-> >>
-> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >> ---
-> >>  drivers/usb/common/usb-otg-fsm.c | 19 +++++++------------
-> >>  1 file changed, 7 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/drivers/usb/common/usb-otg-fsm.c b/drivers/usb/common/usb-otg-fsm.c
-> >> index 2986b66..e6e58c2 100644
-> >> --- a/drivers/usb/common/usb-otg-fsm.c
-> >> +++ b/drivers/usb/common/usb-otg-fsm.c
-> >> @@ -30,13 +30,6 @@
-> >>  #include <linux/usb/otg.h>
-> >>  #include <linux/usb/otg-fsm.h>
-> >>  
-> >> -#ifdef VERBOSE
-> >> -#define VDBG(fmt, args...) pr_debug("[%s]  " fmt , \
-> >> -				 __func__, ## args)
-> >> -#else
-> >> -#define VDBG(stuff...)	do {} while (0)
-> >> -#endif
-> >> -
-> >>  /* Change USB protocol when there is a protocol change */
-> >>  static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
-> >>  {
-> >> @@ -44,8 +37,9 @@ static int otg_set_protocol(struct otg_fsm *fsm, int protocol)
-> >>  	int ret = 0;
-> >>  
-> >>  	if (fsm->protocol != protocol) {
-> >> -		VDBG("Changing role fsm->protocol= %d; new protocol= %d\n",
-> >> -			fsm->protocol, protocol);
-> >> +		dev_vdbg(otg->dev,
-> >> +			 "Changing role fsm->protocol= %d; new protocol= %d\n",
-> >> +			 fsm->protocol, protocol);
-> >>  		/* stop old protocol */
-> >>  		if (fsm->protocol == PROTO_HOST)
-> >>  			ret = otg_start_host(otg, 0);
-> >> @@ -226,7 +220,7 @@ static int otg_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
-> >>  
-> >>  	if (otg->state == new_state)
-> >>  		return 0;
-> >> -	VDBG("Set state: %s\n", usb_otg_state_string(new_state));
-> >> +	dev_vdbg(otg->dev, "Set state: %s\n", usb_otg_state_string(new_state));
-> >>  	otg_leave_state(fsm, otg->state);
-> >>  	switch (new_state) {
-> >>  	case OTG_STATE_B_IDLE:
-> >> @@ -358,7 +352,7 @@ int otg_statemachine(struct usb_otg *otg)
-> >>  
-> >>  	switch (state) {
-> >>  	case OTG_STATE_UNDEFINED:
-> >> -		VDBG("fsm->id = %d\n", fsm->id);
-> >> +		dev_vdbg(otg->dev, "fsm->id = %d\n", fsm->id);
-> >>  		if (fsm->id)
-> >>  			otg_set_state(fsm, OTG_STATE_B_IDLE);
-> >>  		else
-> >> @@ -466,7 +460,8 @@ int otg_statemachine(struct usb_otg *otg)
-> >>  	}
-> >>  	mutex_unlock(&fsm->lock);
-> >>  
-> >> -	VDBG("quit statemachine, changed = %d\n", fsm->state_changed);
-> >> +	dev_vdbg(otg->dev, "quit statemachine, changed = %d\n",
-> >> +		 fsm->state_changed);
-> >>  	return fsm->state_changed;
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(otg_statemachine);
-> >> -- 
-> > 
-> > Could you squash patch 2 with this one?
-> > 
-> 
-> We can't because at patch 2, otg->dev is not defined and we need patch 2
-> before patch 8 to prevent the build warning. This patch can come only
-> after patch 8 where we add otg->dev.
-> 
+On Mon, May 2, 2016 at 10:02 AM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
 
-Acked-by: Peter Chen <peter.chen@nxp.com>
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> Add the two new compatibles for the Amlogic Meson GXBB pin controllers.
+>
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> index 32f4a2d..fe7fe0b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> @@ -5,6 +5,8 @@ Required properties for the root node:
+>                       "amlogic,meson8b-cbus-pinctrl"
+>                       "amlogic,meson8-aobus-pinctrl"
+>                       "amlogic,meson8b-aobus-pinctrl"
+> +                     "amlogic,meson-gxbb-periphs-pinctrl"
+> +                     "amlogic,meson-gxbb-aobus-pinctrl"
+>   - reg: address and size of registers controlling irq functionality
 
--- 
+This does NOT apply to the pin control tree because upstream does
+NOT look like this. It looks like that in linux-next however.
 
-Best Regards,
-Peter Chen
+So I guess this must be patched somewhere else
+than the pin control tree, so apply it there:
+
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
