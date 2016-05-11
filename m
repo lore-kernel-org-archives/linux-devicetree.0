@@ -1,43 +1,104 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM64: dts: rockchip: enable eMMC for rk3399 EVB
-Date: Thu, 12 May 2016 00:36:20 +0200
-Message-ID: <8868581.lJFUogXGzy@phil>
-References: <1462924975-69072-1-git-send-email-briannorris@chromium.org> <4355979.JCGxOmTVBW@phil> <20160511223233.GB65449@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/2] arm64: dts: NS2: Add all of the UARTs
+Date: Wed, 11 May 2016 18:56:08 -0400
+Message-ID: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160511223233.GB65449-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 11. Mai 2016, 15:32:33 schrieb Brian Norris:
-> On Wed, May 11, 2016 at 04:51:58PM +0200, Heiko Stuebner wrote:
-> > Hi Brian,
-> > 
-> > Am Dienstag, 10. Mai 2016, 17:02:55 schrieb Brian Norris:
-> > > The 'mmc-hs400-enhanced-strobe' property has been acked by Rob
-> > > Herring,
-> > > though it's still not merged.
-> > 
-> > The commit message should describe the actual change not the volatile
-> > environment surrounding it :-) .
-> > 
-> > When I apply this patch the property-binding will have made it into a
-> > maintainer-tree so is not valid anymore then. That is more material for
-> > the "comment-section" below the "---"
-> 
-> Of course. I think I just felt guilty without a commit message :)
+Add all of the UARTs present on NS2 and enable them in the SVK device
+tree file.  Also, do some magic to make sure that uart3 is discovered as
+ttyS0 (as that is the console UART).
 
-I really prefer a (even simple) message being there - although I'm not as 
-strict as Greg and Felipe ;-) , and in cases like this I think something 
-like "enable the newly added emmc node on the rk3399 evaluation board" 
-should be sufficient.
+Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts | 16 ++++++++++++++++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi    | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-
-Heiko
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+index 7cd3640..b062a44 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
++++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+@@ -40,10 +40,14 @@
+ 
+ 	aliases {
+ 		serial0 = &uart3;
++		serial1 = &uart0;
++		serial2 = &uart1;
++		serial3 = &uart2;
+ 	};
+ 
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
++		bootargs = "earlycon=uart8250,mmio32,0x66130000";
+ 	};
+ 
+ 	memory {
+@@ -68,6 +72,18 @@
+ 	status = "ok";
+ };
+ 
++&uart0 {
++	status = "ok";
++};
++
++&uart1 {
++	status = "ok";
++};
++
++&uart2 {
++	status = "ok";
++};
++
+ &uart3 {
+ 	status = "ok";
+ };
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index 788ed8f..c77a9e8 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -357,6 +357,36 @@
+ 			status = "disabled";
+ 		};
+ 
++		uart0: serial@66100000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x66100000 0x100>;
++			interrupts = <GIC_SPI 390 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&iprocslow>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			status = "disabled";
++		};
++
++		uart1: serial@66110000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x66110000 0x100>;
++			interrupts = <GIC_SPI 391 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&iprocslow>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			status = "disabled";
++		};
++
++		uart2: serial@66120000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x66120000 0x100>;
++			interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&iprocslow>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			status = "disabled";
++		};
++
+ 		uart3: serial@66130000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x66130000 0x100>;
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
