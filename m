@@ -1,69 +1,36 @@
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v2.1] dt-bindings: Add Renesas R-Car FCP DT bindings
-Date: Wed, 11 May 2016 15:36:30 +0300
-Message-ID: <1462970190-588-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1461620198-13428-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v3 26/27] ARM: dts: exynos: Add I2C, PWM and UART pinctrl
+ to Exynos5410
+Date: Wed, 11 May 2016 08:36:34 -0400
+Message-ID: <1d8b5479-3e29-9523-1862-4dc5fe5da384@osg.samsung.com>
+References: <1462910970-1812-1-git-send-email-krzk@kernel.org>
+ <1462910970-1812-27-git-send-email-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1461620198-13428-2-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+In-Reply-To: <1462910970-1812-27-git-send-email-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The FCP is a companion module of video processing modules in the Renesas
-R-Car Gen3 SoCs. It provides data compression and decompression, data
-caching, and conversion of AXI transactions in order to reduce the
-memory bandwidth.
+Hello Krzysztof,
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
- .../devicetree/bindings/media/renesas,fcp.txt      | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/renesas,fcp.txt
+On 05/10/2016 04:09 PM, Krzysztof Kozlowski wrote:
+> Add pincontrol groups for HSI2C (USI), I2C, PWM and UART to Exynos5410.
+> This allows configuring these pins to specific functions.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-new file mode 100644
-index 000000000000..6a12960609d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-@@ -0,0 +1,32 @@
-+Renesas R-Car Frame Compression Processor (FCP)
-+-----------------------------------------------
-+
-+The FCP is a companion module of video processing modules in the Renesas R-Car
-+Gen3 SoCs. It provides data compression and decompression, data caching, and
-+conversion of AXI transactions in order to reduce the memory bandwidth.
-+
-+There are three types of FCP: FCP for Codec (FCPC), FCP for VSP (FCPV) and FCP
-+for FDP (FCPF). Their configuration and behaviour depend on the module they
-+are paired with. These DT bindings currently support the FCPV only.
-+
-+ - compatible: Must be one or more of the following
-+
-+   - "renesas,r8a7795-fcpv" for R8A7795 (R-Car H3) compatible 'FCP for VSP'
-+   - "renesas,fcpv" for generic compatible 'FCP for VSP'
-+
-+   When compatible with the generic version, nodes must list the
-+   SoC-specific version corresponding to the platform first, followed by the
-+   family-specific and/or generic versions.
-+
-+ - reg: the register base and size for the device registers
-+ - clocks: Reference to the functional clock
-+
-+
-+Device node example
-+-------------------
-+
-+	fcpvd1: fcp@fea2f000 {
-+		compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
-+		reg = <0 0xfea2f000 0 0x200>;
-+		clocks = <&cpg CPG_MOD 602>;
-+	};
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+
+Best regards,
 -- 
-Regards,
-
-Laurent Pinchart
-
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
