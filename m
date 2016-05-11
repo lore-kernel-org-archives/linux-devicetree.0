@@ -1,94 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Update iProc GPIO bindings
-Date: Wed, 11 May 2016 09:06:18 -0500
-Message-ID: <20160511140618.GA29113@rob-hp-laptop>
-References: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
- <1462222308-4869-2-git-send-email-ray.jui@broadcom.com>
- <20160504132020.GA21065@rob-hp-laptop>
- <6fe293c1-505d-2af9-711a-09e5b5a83e58@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 9/9] dt-bindings: msm/dsi: Add assigned clocks bindings
+Date: Wed, 11 May 2016 09:08:44 -0500
+Message-ID: <20160511140844.GA3064@rob-hp-laptop>
+References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
+ <1462273081-5814-10-git-send-email-architt@codeaurora.org>
+ <20160504134416.GA1235@rob-hp-laptop>
+ <572A39B7.5020008@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6fe293c1-505d-2af9-711a-09e5b5a83e58@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+In-Reply-To: <572A39B7.5020008-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 04, 2016 at 09:29:04AM -0700, Ray Jui wrote:
-> Hi Rob,
+On Wed, May 04, 2016 at 11:34:39PM +0530, Archit Taneja wrote:
 > 
-> On 5/4/2016 6:20 AM, Rob Herring wrote:
-> >On Mon, May 02, 2016 at 01:51:47PM -0700, Ray Jui wrote:
-> >>Update the iProc GPIO binding document to add new compatible strings
-> >>"brcm,iproc-gpio-v2" and "brcm,iproc-gpio-v3" for the 2nd and 3rd
-> >>generation of the iProc GPIO controllers
+> 
+> On 5/4/2016 7:14 PM, Rob Herring wrote:
+> >On Tue, May 03, 2016 at 04:28:01PM +0530, Archit Taneja wrote:
+> >>The PLL in the DSI PHY block generates 2 clock outputs (Byte and Pixel
+> >>clocks) that are fed into the Multimedia Clock Controller (MMCC). The MMCC
+> >>uses these as source clocks for some of its RCGs to generate clocks that
+> >>finally feed to the DSI host controller.
 > >>
-> >>Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> >>Use the assigned clocks DT bindings to set up the MMCC RCGs that feed to
+> >>the DSI host. Use the DSI PHY provided clocks to set up the parents
+> >>of these assigned clocks.
+> >>
+> >>Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > >>---
-> >> Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 11 ++++++++++-
-> >> 1 file changed, 10 insertions(+), 1 deletion(-)
+> >>  Documentation/devicetree/bindings/display/msm/dsi.txt | 15 +++++++++++++++
+> >>  1 file changed, 15 insertions(+)
 > >>
-> >>diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-> >>index e427792..3a56649 100644
-> >>--- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-> >>+++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
-> >>@@ -4,7 +4,16 @@ Required properties:
-> >>
-> >> - compatible:
-> >>     Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
-> >>-    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
-> >>+    or "brcm,cygnus-crmu-gpio" for Cygnus SoCs
-> >>+
-> >>+    "brcm,iproc-gpio" for the first generation of the GPIO controller that
-> >>+    supports full-featured pinctrl and GPIO functions used in iProc based SoCs
-> >>+
-> >>+    "brcm,iproc-gpio-v2" for the second generation of the GPIO controller that
-> >>+    has the drive strength pinctrl support disabled, e.g., in the iProc NSP SoC
-> >>+
-> >>+    "brcm,iproc-gpio-v3" for the third generation of the GPIO controller that
-> >>+    has the general pinctrl support completely disabled
+> >>diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> >>index 0223f06..686f475 100644
+> >>--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> >>+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> >>@@ -22,6 +22,10 @@ Required properties:
+> >>    * "core_clk"
+> >>    For DSIv2, we need an additional clock:
+> >>     * "src_clk"
+> >>+- assigned-clocks: Parents of "byte_clk" and "pixel_clk" for the given platform.
+> >>+  See [1] for more details.
+> >>+- assigned-clock-parents: The Byte clock and Pixel clock PLL outputs provided
+> >>+  by a DSI PHY block.
+> >>  - vdd-supply: phandle to vdd regulator device node
+> >>  - vddio-supply: phandle to vdd-io regulator device node
+> >>  - vdda-supply: phandle to vdda regulator device node
+> >>@@ -90,6 +94,8 @@ Required properties:
+> >>    * "dsi_pll"
+> >>    * "dsi_phy"
+> >>    * "dsi_phy_regulator"
+> >>+- clock-cells: Must be 1. The DSI PHY block acts as a clock provider, creating
+> >>+  2 clocks: A byte clock (index 0), and a pixel clock (index 1).
 > >
-> >You can have these for driver matching, but you still need SoC specific
-> >compatible strings.
-> >
-> >Rob
-> >
+> >You can't really add new required properties unless they are for a new
+> >compatible string.
 > 
-> I think I'm missing something and hope you can help to clarify here. It
-> looks like the notion of v2, v3 should only be used if there's an indeed an
-> revision update on the controller IP itself, correct?
+> Does this hold even when currently there isn't any device tree file in
+> the kernel that has this DT node in it?
 
-Yes, but only if v2, v3 is actually a meaningful number rather than 
-something made up. You have to have a well defined process of IP 
-revisions which I have not seen during my time in chip companies, so I'm 
-generally suspicious of version numbers. The exception is FPGA IP 
-blocks.
+Generally it should, but in this case that is fine.
 
-> In our case, if the same revision of GPIO controller is used but instead
-> synthesized differently with different SoCs, then you are suggesting here
-> that it should be dealt with SoC specific compatible string, correct?
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Yes, that and/or integration differences is why you need SoC specific 
-compatible strings. A block could be "identical" but have different max 
-frequency for example.
- 
-> For example, for the GPIO controller on NSP where drive strength is
-> disabled, the compatible string in DT should look like this?
-> 
-> compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-nsp";
+> I was trying to get all the properties in place before posting out
+> patches that actually add the nodes into the platform files. Currently,
+> they exist only DT files in downstream kernels.
 
-Yes, but reverse the order. Most specific to least specific.
+"If it is not upstream, it doesn't exist." :)
 
-> 
-> For the GPIO controller on Stingray where pinconf is completely disabled,
-> the compatible string in DT should look like:
-> 
-> compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-stingray";
-> 
-> Is that correct?
-> 
-> Thanks,
-> 
-> Ray
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
