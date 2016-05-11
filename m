@@ -1,52 +1,82 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] ASoC: Davinci: McBSP: add device tree support for
- McBSP
-Date: Wed, 11 May 2016 15:57:17 +0100
-Message-ID: <20160511145717.GJ6261@sirena.org.uk>
-References: <1462804522-29544-1-git-send-email-petr@barix.com>
- <1462804522-29544-3-git-send-email-petr@barix.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v8 1/8] i2c: rk3x: add documentation to fields in "struct rk3x_i2c"
+Date: Wed, 11 May 2016 17:04:49 +0200
+Message-ID: <4217955.sKb92Wcadr@phil>
+References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com> <1462908252-27016-2-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2fjX3cMESU3XgGmZ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462804522-29544-3-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, brain-wDf7oJUeT2I@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462908252-27016-2-git-send-email-david.wu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: wsa@the-dreams.de, robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Am Mittwoch, 11. Mai 2016, 03:24:05 schrieb David Wu:
 
---2fjX3cMESU3XgGmZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In general, all patches should have a commit message (even if it's obvious) 
+and some maintainers even enforce this in a hard way.
 
-On Mon, May 09, 2016 at 04:35:20PM +0200, Petr Kulhavy wrote:
-> This adds DT support for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx McBSP driver.
->=20
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+How about something like:
 
-How did this manage to get review but not the accompanying binding?
+----
+Add kernel-doc documentation for the elements of the previously
+undocumented struct rk3x_i2c.
+----
 
---2fjX3cMESU3XgGmZ
-Content-Type: application/pgp-signature; name="signature.asc"
+Some minor nitpicks below, otherwise
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Change in v8:
+> - none
+> 
+>  drivers/i2c/busses/i2c-rk3x.c | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+> index 80bed02..7e45d51 100644
+> --- a/drivers/i2c/busses/i2c-rk3x.c
+> +++ b/drivers/i2c/busses/i2c-rk3x.c
+> @@ -90,6 +90,26 @@ struct rk3x_i2c_soc_data {
+>  	int grf_offset;
+>  };
+> 
+> +/**
+> + * struct rk3x_i2c - private data of the controller
+> + * @adap: corresponding I2C adapter
+> + * @dev: device for this controller
+> + * @soc_data: related soc data struct
+> + * @regs: virtual memory area
+> + * @clk: clock of i2c bus
+> + * @clk_rate_nb: i2c clk rate change notify
+		^ i2c clk rate change notifier block
 
-iQEcBAEBCAAGBQJXM0hMAAoJECTWi3JdVIfQuVAH/j0bcW7B0NZF4zwYMCc62bjI
-oPe99MaV9RdbqnrRIq5+ttpT5tUgYmiYoB4oOAgHPGARD8bpgw67uQD7BPDaLyW2
-Ku+YyZvkAlT4AgeHfWfR/8+tEfJVMAcIQm+D+mhu0Qj6964iPUscKtSeDctd9T3V
-WptGetyL+TsMfm8WN0n20BI7YiZLJ9goVl7Uzbcss4y99ovh4ykJw8Hl73sSTzhF
-ZaiSOkggO1RpjfmoINjTkrNbZbOkxmlyG9NoQCmZG+zqzrylCnoQVtn7LwJWYye9
-MToU0pNH+aLCLQtBqm8iLr3l4L0+s6+bj0QKtM5s2lNGW5bLIERvuIySrfR/2zU=
-=tD4R
------END PGP SIGNATURE-----
+> + * @t: I2C known timing information
+> + * @lock: spinlock for the i2c bus
+> + * @wait: the waitqueue to wait for i2c transfer
+> + * @busy: the condition for the event to wait for
+> + * @msg: current i2c message
+> + * @addr: addr of i2c slave device
+> + * @mode: mode of i2c transfer
+> + * @is_last_msg: flag determines whether it is the last msg in this
+> transfer + * @state: state of i2c transfer
+> + * @processed: byte length which has been send or received
+										^ sent (with a "t")
 
---2fjX3cMESU3XgGmZ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> + * @error: error code for i2c transfer
+> + */
+>  struct rk3x_i2c {
+>  	struct i2c_adapter adap;
+>  	struct device *dev;
+> @@ -116,7 +136,7 @@ struct rk3x_i2c {
+> 
+>  	/* I2C state machine */
+>  	enum rk3x_i2c_state state;
+> -	unsigned int processed; /* sent/received bytes */
+> +	unsigned int processed;
+>  	int error;
+>  };
