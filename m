@@ -1,47 +1,52 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
- with CPU thermal nodes
-Date: Wed, 11 May 2016 07:49:19 +0200
-Message-ID: <5732C7DF.2080800@samsung.com>
-References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
- <CANAwSgT9SY3kj8+beMpc1xGoC=rMBSya+2v2dyZQp6ykH+V0=g@mail.gmail.com>
- <573198BE.6020900@samsung.com>
- <CANAwSgTy6p9AVmmOWATpSO1JqVbwE0v+y_y-RLd+32RnNJTA+Q@mail.gmail.com>
- <5731D764.8070007@samsung.com>
- <CANAwSgRsjdQh6ygT__5XcH8-cF9Ch+zbk8oupebwYzY1kCZu6g@mail.gmail.com>
- <5731EA1B.4070201@samsung.com>
- <CANAwSgQGhrBca7=Ow8+Hh9t0W9HWp=F43KR0Frfpx9fGngPSaw@mail.gmail.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 3/8] mfd: tps65218: Use mfd_add_devices instead of of_platform_populate
+Date: Wed, 11 May 2016 11:18:06 +0530
+Message-ID: <1462945691-904-4-git-send-email-j-keerthy@ti.com>
+References: <1462945691-904-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CANAwSgQGhrBca7=Ow8+Hh9t0W9HWp=F43KR0Frfpx9fGngPSaw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462945691-904-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nikita@compulab.co.il, nm@ti.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/2016 09:45 PM, Anand Moon wrote:
-> Hi Krzysztof,
-> 
-> Sorry I am not able to explain my self clearly.
-> But I have once gain tested these changes.
-> 
-> Only could you append with following changes.
-> --------------------------------------------------------
-> +                               cpu_crit0: cpu-crit-0 {
-> +                                       temperature = <120000>; /*
-> millicelsius */
-> +                                       hysteresis = <5000>; /* millicelsius */
-> +                                       type = "critical";
-> +                               };
-> --------------------------------------------------------
-> hysteresis time help to adjust the present and past temperature inputs
-> before critical shutdown.
+mfd_add_devices enables parsing device tree nodes without compatibles
+for child nodes. Replace of_platform_populate with mfd_add_devices.
 
-I need more details why you want this patch. What is the point of
-hysteresis on critical trip point? When reaching this trip point the
-system shutdowns... there is nothing more to do, I think.
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+---
+ drivers/mfd/tps65218.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+index f20a531..b8b3a58 100644
+--- a/drivers/mfd/tps65218.c
++++ b/drivers/mfd/tps65218.c
+@@ -33,6 +33,10 @@
+ 
+ #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
+ 
++static const struct mfd_cell tps65218_cells[] = {
++	{ .name = "tps65218-regulator", },
++};
++
+ /**
+  * tps65218_reg_write: Write a single tps65218 register.
+  *
+@@ -236,8 +240,10 @@ static int tps65218_probe(struct i2c_client *client,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = of_platform_populate(client->dev.of_node, NULL, NULL,
+-				   &client->dev);
++	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
++			      ARRAY_SIZE(tps65218_cells), NULL, 0,
++			      regmap_irq_get_domain(tps->irq_data));
++
+ 	if (ret < 0)
+ 		goto err_irq;
+ 
+-- 
+1.9.1
