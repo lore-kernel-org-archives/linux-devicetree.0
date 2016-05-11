@@ -1,107 +1,141 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
- with CPU thermal nodes
-Date: Wed, 11 May 2016 12:58:30 +0530
-Message-ID: <CANAwSgQHHE=USgjea4DpySC7T2+t7Ta8LuyL36cz3DpiyDgaWg@mail.gmail.com>
-References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
- <CANAwSgT9SY3kj8+beMpc1xGoC=rMBSya+2v2dyZQp6ykH+V0=g@mail.gmail.com>
- <573198BE.6020900@samsung.com> <CANAwSgTy6p9AVmmOWATpSO1JqVbwE0v+y_y-RLd+32RnNJTA+Q@mail.gmail.com>
- <5731D764.8070007@samsung.com> <CANAwSgRsjdQh6ygT__5XcH8-cF9Ch+zbk8oupebwYzY1kCZu6g@mail.gmail.com>
- <5731EA1B.4070201@samsung.com> <CANAwSgQGhrBca7=Ow8+Hh9t0W9HWp=F43KR0Frfpx9fGngPSaw@mail.gmail.com>
- <5732C7DF.2080800@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5732C7DF.2080800@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 2/2] dt-bindings: Add Oxford Semiconductor OXNAS pinctrl and gpio bindings
+Date: Wed, 11 May 2016 09:34:22 +0200
+Message-ID: <1462952062-5316-3-git-send-email-narmstrong@baylibre.com>
+References: <1462952062-5316-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462952062-5316-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Add pinctrl and gpio DT bindings for Oxford Semiconductor OXNAS SoC Family.
+This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
 
-On 11 May 2016 at 11:19, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> On 05/10/2016 09:45 PM, Anand Moon wrote:
->> Hi Krzysztof,
->>
->> Sorry I am not able to explain my self clearly.
->> But I have once gain tested these changes.
->>
->> Only could you append with following changes.
->> --------------------------------------------------------
->> +                               cpu_crit0: cpu-crit-0 {
->> +                                       temperature = <120000>; /*
->> millicelsius */
->> +                                       hysteresis = <5000>; /* millicelsius */
->> +                                       type = "critical";
->> +                               };
->> --------------------------------------------------------
->> hysteresis time help to adjust the present and past temperature inputs
->> before critical shutdown.
->
-> I need more details why you want this patch. What is the point of
-> hysteresis on critical trip point? When reaching this trip point the
-> system shutdowns... there is nothing more to do, I think.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/gpio/gpio_oxnas.txt        | 47 ++++++++++++++++++
+ .../devicetree/bindings/pinctrl/oxnas,pinctrl.txt  | 57 ++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
 
-Ok you are correct and I am completely wrong, It dose not critical
-temperate so easily.
-
->
-> Best regards,
-> Krzysztof
->
-
-I have enable CONFIG_DYNAMIC_DEBUG and tested with following.
-
-# echo 'module thermal_sys +fp' > /sys/kernel/debug/dynamic_debug/control
-
-Below is the  output of console for stress testing.
-[ 1728.744182] update_temperature: thermal thermal_zone3:
-last_temperature=92000, current_temperature=92000
-[ 1728.744211] thermal_zone_trip_update: thermal thermal_zone3:
-Trip0[type=0,temp=85000]:trend=0,throttle=1
-[ 1728.744231] thermal_zone_trip_update: thermal thermal_zone3:
-Trip1[type=0,temp=103000]:trend=0,throttle=0
-[ 1728.744248] thermal_zone_trip_update: thermal thermal_zone3:
-Trip2[type=0,temp=110000]:trend=0,throttle=0
-[ 1728.755227] update_temperature: thermal thermal_zone2:
-last_temperature=86000, current_temperature=86000
-[ 1728.755269] thermal_zone_trip_update: thermal thermal_zone2:
-Trip0[type=0,temp=85000]:trend=0,throttle=1
-[ 1728.755306] thermal_zone_trip_update: thermal thermal_zone2:
-Trip1[type=0,temp=103000]:trend=0,throttle=0
-[ 1728.755340] thermal_zone_trip_update: thermal thermal_zone2:
-Trip2[type=0,temp=110000]:trend=0,throttle=0
-[ 1728.964753] update_temperature: thermal thermal_zone0:
-last_temperature=78000, current_temperature=83000
-[ 1728.964782] thermal_zone_trip_update: thermal thermal_zone0:
-Trip0[type=0,temp=50000]:trend=1,throttle=1
-[ 1728.964797] get_target_state: thermal cooling_device0: cur_state=2
-[ 1728.964810] thermal_zone_trip_update: thermal cooling_device0:
-old_target=1, target=1
-[ 1728.964837] thermal_zone_trip_update: thermal thermal_zone0:
-Trip1[type=0,temp=60000]:trend=1,throttle=1
-[ 1728.964850] get_target_state: thermal cooling_device0: cur_state=2
-[ 1728.964861] thermal_zone_trip_update: thermal cooling_device0:
-old_target=1, target=2
-[ 1728.964875] thermal_cdev_update: thermal cooling_device0: zone0->target=1
-[ 1728.964886] thermal_cdev_update: thermal cooling_device0: zone0->target=2
-[ 1728.964897] thermal_cdev_update: thermal cooling_device0: zone0->target=2
-[ 1728.964909] thermal_cdev_update: thermal cooling_device0: set to state 2
-[ 1728.964925] thermal_zone_trip_update: thermal thermal_zone0:
-Trip2[type=0,temp=70000]:trend=1,throttle=1
-[ 1728.964937] get_target_state: thermal cooling_device0: cur_state=2
-[ 1728.964948] thermal_zone_trip_update: thermal cooling_device0:
-old_target=2, target=3
-[ 1728.964962] thermal_cdev_update: thermal cooling_device0: zone0->target=1
-[ 1728.964973] thermal_cdev_update: thermal cooling_device0: zone0->target=2
-[ 1728.964983] thermal_cdev_update: thermal cooling_device0: zone0->target=3
-[ 1728.965000] thermal_cdev_update: thermal cooling_device0: set to state 3
-[ 1728.965019] thermal_zone_trip_update: thermal thermal_zone0:
-Trip4[type=1,temp=70000]:trend=1,throttle=1
-
-Ok I admit that thermal throttle is working correctly on my Odroid XU4.
-Opps .... Sorry for the trouble.
-
-Best Regards
--Anand Moon
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+new file mode 100644
+index 0000000..928ed4f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+@@ -0,0 +1,47 @@
++* Oxford Semiconductor OXNAS SoC GPIO Controller
++
++Please refer to gpio.txt for generic information regarding GPIO bindings.
++
++Required properties:
++ - compatible: "oxsemi,ox810se-gpio"
++ - reg: Base address and length for the device.
++ - interrupts: The port interrupt shared by all pins.
++ - gpio-controller: Marks the port as GPIO controller.
++ - #gpio-cells: Two. The first cell is the pin number and
++   the second cell is used to specify the gpio polarity as defined in
++   defined in <dt-bindings/gpio/gpio.h>:
++      0 = GPIO_ACTIVE_HIGH
++      1 = GPIO_ACTIVE_LOW
++ - interrupt-controller: Marks the device node as an interrupt controller.
++ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
++   is used to specify the trigger type as defined in
++   <dt-bindings/interrupt-controller/irq.h>:
++      IRQ_TYPE_EDGE_RISING
++      IRQ_TYPE_EDGE_FALLING
++      IRQ_TYPE_EDGE_BOTH
++ - gpio-ranges: Interaction with the PINCTRL subsystem, it also specifies the
++   gpio base and count, should be in the format of numeric-gpio-range as
++   specified in the gpio.txt file.
++
++Example:
++
++gpio0: gpio@0 {
++	compatible = "oxsemi,ox810se-gpio";
++	reg = <0x000000 0x100000>;
++	interrupts = <21>;
++	#gpio-cells = <2>;
++	gpio-controller;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	gpio-ranges = <&pinctrl 0 0 32>;
++};
++
++keys {
++	...
++
++	button-esc {
++		label = "ESC";
++		linux,code = <1>;
++		gpios = <&gpio0 12 0>;
++	};
++};
+diff --git a/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+new file mode 100644
+index 0000000..d607432
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+@@ -0,0 +1,57 @@
++* Oxford Semiconductor OXNAS SoC Family Pin Controller
++
++Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
++../interrupt-controller/interrupts.txt for generic information regarding
++pin controller, GPIO, and interrupt bindings.
++
++OXNAS 'pin configuration node' is a node of a group of pins which can be
++used for a specific device or function. This node represents configurations of
++pins, optional function, and optional mux related configuration.
++
++Required properties for pin controller node:
++ - compatible: "oxsemi,ox810se-pinctrl"
++ - oxsemi,sys-ctrl: a phandle to the system controller syscon node
++
++Required properties for pin configuration sub-nodes:
++ - pins: List of pins to which the configuration applies.
++
++Optional properties for pin configuration sub-nodes:
++----------------------------------------------------
++ - function: Mux function for the specified pins.
++ - bias-pull-up: Enable weak pull-up.
++
++Example:
++
++pinctrl: pinctrl {
++	compatible = "oxsemi,ox810se-pinctrl";
++
++	/* Regmap for sys registers */
++	oxsemi,sys-ctrl = <&sys>;
++
++	pinctrl_uart2: pinctrl_uart2 {
++		uart2a {
++			pins = "gpio31";
++			function = "fct3";
++		};
++		uart2b {
++			pins = "gpio32";
++			function = "fct3";
++		};
++	};
++};
++
++uart2: serial@900000 {
++	compatible = "ns16550a";
++	reg = <0x900000 0x100000>;
++	clocks = <&sysclk>;
++	interrupts = <29>;
++	reg-shift = <0>;
++	fifo-size = <16>;
++	reg-io-width = <1>;
++	current-speed = <115200>;
++	no-loopback-test;
++	status = "disabled";
++	resets = <&reset 22>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++};
+-- 
+1.9.1
