@@ -1,28 +1,47 @@
 From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH v2 0/3] ARM: dts: bcm5301x: Add TWD, I2C, and syscon
-Date: Wed, 11 May 2016 19:19:07 -0400
-Message-ID: <1463008750-13902-1-git-send-email-jonmason@broadcom.com>
+Subject: [PATCH v2 3/3] arm: dts: bcm5301x: Add syscon based reboot in DT
+Date: Wed, 11 May 2016 19:19:10 -0400
+Message-ID: <1463008750-13902-4-git-send-email-jonmason@broadcom.com>
+References: <1463008750-13902-1-git-send-email-jonmason@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463008750-13902-1-git-send-email-jonmason@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Reviving, correcting, and resending this patch series from December
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/395155.html
+Add the ability to reboot via a reset of the processor.  This is
+achieved via a write of 0x39 to the CRU Reset Register.  Unfortunately,
+this only resets the core and not the other IP blocks.  So if possible,
+other methods should be used on the individual boards.
 
-In v2:
-* Corrected TWD DT names, per Sergei Shtylyov
-* Modified syscon size, per Arnd Bergmann (or atleast my rough
-  understanding of what he was trying to say)
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ arch/arm/boot/dts/bcm5301x.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Jon Mason (3):
-  ARM: dts: bcm5301x: Add TWD WD Support to DT
-  ARM: dts: bcm5301x: Add I2C support to the DT
-  arm: dts: bcm5301x: Add syscon based reboot in DT
-
- arch/arm/boot/dts/bcm5301x.dtsi | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index ffc4a9b..d4e1672 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -246,6 +246,18 @@
+ 				     "sata2";
+ 	};
+ 
++	cru: cru@1800c184 {
++		compatible = "syscon";
++		reg = <0x1800c184 0x4>;
++	};
++
++	reboot@1800c184 {
++		compatible ="syscon-reboot";
++		regmap = <&cru>;
++		offset = <0>;
++		mask = <0x39>;
++	};
++
+ 	nand: nand@18028000 {
+ 		compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
+ 		reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
 -- 
 1.9.1
