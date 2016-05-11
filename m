@@ -1,269 +1,51 @@
-From: Alistair Popple <alistair@popple.id.au>
-Subject: Re: [PATCH v9 15/22] powerpc/powernv: Functions to get/set PCI slot state
-Date: Wed, 11 May 2016 13:28:33 +1000
-Message-ID: <1823859.Eeh9G9LL4L@new-mexico>
-References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com> <1462281773-26438-16-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 2/2] dt-bindings: rockchip-dw-mshc: add rockchip,default-drv-phase
+Date: Tue, 10 May 2016 20:50:12 -0700
+Message-ID: <CAD=FV=UyYCqMYKScjVEASrbzO75014kPCEt39uOSTsgq9M==YQ@mail.gmail.com>
+References: <1462527648-24443-1-git-send-email-shawn.lin@rock-chips.com>
+	<1462527673-24711-1-git-send-email-shawn.lin@rock-chips.com>
+	<CAD=FV=WSkBwBjVsRoDsfjD+sNfR70mKGRA0khjPKKW0zS2=PTw@mail.gmail.com>
+	<b15dcb4f-1584-8219-2fe0-97eecb0c64a6@rock-chips.com>
+	<CAD=FV=XToSzqSh=SShHuQU9W_m7gfyQn8wRXkLy79t+tnqZknA@mail.gmail.com>
+	<1f2f43c7-2672-e448-eddb-2d613bb8dc48@rock-chips.com>
+	<CAD=FV=UGbrJRyUbbgzbcYf9GjPG+Fh_gpQ3rX2G=wi2w5Lw=Sg@mail.gmail.com>
+	<e202f663-88d7-693b-a765-c130e68d1c2d@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1462281773-26438-16-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net, Stewart Smith <stewart@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <e202f663-88d7-693b-a765-c130e68d1c2d@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Gavin,
+Hi,
 
-On Tue, 3 May 2016 23:22:46 Gavin Shan wrote:
-> This exports 4 functions, which base on the corresponding OPAL
-> APIs to get/set PCI slot status. Those functions are going to
-> be used by PowerNV PCI hotplug driver:
-> 
->    pnv_pci_get_device_tree()    opal_get_device_tree()
->    pnv_pci_get_presence_state() opal_pci_get_presence_state()
->    pnv_pci_get_power_state()    opal_pci_get_power_state()
->    pnv_pci_set_power_state()    opal_pci_set_power_state()
-> 
-> Besides, the patch also exports pnv_pci_hotplug_notifier_{register,
-> unregister}() to allow registration and unregistration of PCI hotplug
-> notifier, which will be used to receive PCI hotplug message from
-> skiboot firmware in PowerNV PCI hotplug driver.
-> 
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> ---
->  arch/powerpc/include/asm/opal-api.h            |  18 ++++-
->  arch/powerpc/include/asm/opal.h                |   5 ++
->  arch/powerpc/include/asm/pnv-pci.h             |   7 ++
->  arch/powerpc/platforms/powernv/opal-wrappers.S |   5 ++
->  arch/powerpc/platforms/powernv/pci.c           | 102 
-+++++++++++++++++++++++++
->  5 files changed, 136 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/include/asm/opal-api.h 
-b/arch/powerpc/include/asm/opal-api.h
-> index 9bb8ddf..728e04e 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -158,7 +158,12 @@
->  #define OPAL_LEDS_SET_INDICATOR			115
->  #define OPAL_CEC_REBOOT2			116
->  #define OPAL_CONSOLE_FLUSH			117
-> -#define OPAL_LAST				117
-> +#define OPAL_GET_DEVICE_TREE			118
-> +#define OPAL_PCI_GET_PRESENCE_STATE		119
-> +#define OPAL_PCI_GET_POWER_STATE		120
-> +#define OPAL_PCI_SET_POWER_STATE		121
-> +#define OPAL_PCI_POLL2				122
-> +#define OPAL_LAST				122
->  
->  /* Device tree flags */
->  
-> @@ -344,6 +349,16 @@ enum OpalPciResetState {
->  	OPAL_ASSERT_RESET   = 1
->  };
->  
-> +enum OpalPciSlotPresentenceState {
-> +	OPAL_PCI_SLOT_EMPTY	= 0,
-> +	OPAL_PCI_SLOT_PRESENT	= 1
-> +};
-> +
-> +enum OpalPciSlotPowerState {
-> +	OPAL_PCI_SLOT_POWER_OFF	= 0,
-> +	OPAL_PCI_SLOT_POWER_ON	= 1
-> +};
-> +
->  enum OpalSlotLedType {
->  	OPAL_SLOT_LED_TYPE_ID = 0,	/* IDENTIFY LED */
->  	OPAL_SLOT_LED_TYPE_FAULT = 1,	/* FAULT LED */
-> @@ -378,6 +393,7 @@ enum opal_msg_type {
->  	OPAL_MSG_DPO		= 5,
->  	OPAL_MSG_PRD		= 6,
->  	OPAL_MSG_OCC		= 7,
-> +	OPAL_MSG_PCI_HOTPLUG	= 8,
->  	OPAL_MSG_TYPE_MAX,
->  };
->  
-> diff --git a/arch/powerpc/include/asm/opal.h 
-b/arch/powerpc/include/asm/opal.h
-> index 348132c..1a83c80 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -209,6 +209,11 @@ int64_t opal_flash_write(uint64_t id, uint64_t offset, 
-uint64_t buf,
->  		uint64_t size, uint64_t token);
->  int64_t opal_flash_erase(uint64_t id, uint64_t offset, uint64_t size,
->  		uint64_t token);
-> +int64_t opal_get_device_tree(uint32_t phandle, uint64_t buf, uint64_t len);
-> +int64_t opal_pci_get_presence_state(uint64_t id, uint64_t data);
-> +int64_t opal_pci_get_power_state(uint64_t id, uint64_t data);
-> +int64_t opal_pci_set_power_state(uint64_t id, uint64_t data);
-> +int64_t opal_pci_poll2(uint64_t id, uint64_t data);
->  
->  /* Internal functions */
->  extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
-> diff --git a/arch/powerpc/include/asm/pnv-pci.h 
-b/arch/powerpc/include/asm/pnv-pci.h
-> index c607902..8db7439 100644
-> --- a/arch/powerpc/include/asm/pnv-pci.h
-> +++ b/arch/powerpc/include/asm/pnv-pci.h
-> @@ -17,6 +17,13 @@
->  #define PCI_SLOT_ID(phb_id, bdfn)	\
->  	(PCI_SLOT_ID_PREFIX | ((uint64_t)(bdfn) << 16) | (phb_id))
->  
-> +extern int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t 
-len);
-> +extern int pnv_pci_get_presence_state(uint64_t id, uint8_t *state);
-> +extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
-> +extern int pnv_pci_set_power_state(uint64_t id, uint8_t state);
-> +extern int pnv_pci_hotplug_notifier_register(struct notifier_block *nb);
-> +extern int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb);
-> +
->  int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
->  int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
->  			   unsigned int virq);
-> diff --git a/arch/powerpc/platforms/powernv/opal-wrappers.S 
-b/arch/powerpc/platforms/powernv/opal-wrappers.S
-> index e45b88a..60397d2 100644
-> --- a/arch/powerpc/platforms/powernv/opal-wrappers.S
-> +++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
-> @@ -302,3 +302,8 @@ OPAL_CALL(opal_prd_msg,				
-OPAL_PRD_MSG);
->  OPAL_CALL(opal_leds_get_ind,			OPAL_LEDS_GET_INDICATOR);
->  OPAL_CALL(opal_leds_set_ind,			OPAL_LEDS_SET_INDICATOR);
->  OPAL_CALL(opal_console_flush,			OPAL_CONSOLE_FLUSH);
-> +OPAL_CALL(opal_get_device_tree,			OPAL_GET_DEVICE_TREE);
-> +OPAL_CALL(opal_pci_get_presence_state,		
-OPAL_PCI_GET_PRESENCE_STATE);
-> +OPAL_CALL(opal_pci_get_power_state,		OPAL_PCI_GET_POWER_STATE);
-> +OPAL_CALL(opal_pci_set_power_state,		OPAL_PCI_SET_POWER_STATE);
-> +OPAL_CALL(opal_pci_poll2,			OPAL_PCI_POLL2);
-> diff --git a/arch/powerpc/platforms/powernv/pci.c 
-b/arch/powerpc/platforms/powernv/pci.c
-> index 67a33e9..6e10ac4 100644
-> --- a/arch/powerpc/platforms/powernv/pci.c
-> +++ b/arch/powerpc/platforms/powernv/pci.c
-> @@ -42,6 +42,108 @@
->  #define cfg_dbg(fmt...)	do { } while(0)
->  //#define cfg_dbg(fmt...)	printk(fmt)
->  
-> +int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len)
-> +{
-> +	int64_t rc;
-> +
-> +	if (!opal_check_token(OPAL_GET_DEVICE_TREE))
-> +		return -ENXIO;
-> +
-> +	rc = opal_get_device_tree(phandle, (uint64_t)buf, len);
-> +	if (rc != OPAL_SUCCESS)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_pci_get_device_tree);
-> +
-> +static int pnv_pci_poll2(uint64_t id, uint8_t *state)
-> +{
-> +	int64_t rc;
-> +
-> +	if (!opal_check_token(OPAL_PCI_POLL2))
-> +		return -ENXIO;
-> +
-> +	while (1) {
-> +		rc = opal_pci_poll2(id, (uint64_t)state);
-> +		if (rc <= OPAL_SUCCESS)
-> +			break;
-> +
-> +		if (system_state < SYSTEM_RUNNING)
-> +			udelay(1000 * rc);
-> +		else
-> +			msleep(rc);
+On Tue, May 10, 2016 at 7:50 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>>> maybe. But I think 180(downside) is the better.
+>
+>
+> NAK my previous comments here. Downside is better for SRD, but won't
+> work for DDR mode. When running in DDR mode, we should use 90 instead.
+>
+> So let me elaborate a bit more here.
+> For DDR mode, one single clk cycle should sending two data bits outside
+> to the devices. We need a hold time for both. If 180 is used, the first
+> bit occurs around the downside area, which won't be sampled by devices
+> on the upside.  So on the upside, the devices will see a zero bit if you
+> actually send a one-bit, which makes the devices  generate CRC finally.
+>
+>
+> For this above, 180 for all SDR mode is ok, but 90 should be deployed
+> for DDR mode. So simply checking the timing to hardcode it should be
+> fine.
 
-As we discussed offline I think this interface needs to change. Skiboot now 
-has good support for timers which can be scheduled for cranking state 
-machines, etc. rather than relying on the kernel.
+OK, I sent out a patch for 180 always.  I can send v2 to use 90 for
+DDR modes tomorrow.  ...or feel free to post that yourself if you
+want.
 
-If the kernel needs to wait for completion it can poll on a relevant status by 
-using opal_pci_get_power_state() to return the current state for example, or 
-perhaps better it could wait to receive a message or interrupt asynchronously.
+We want 90 for all DDR modes?  So MMC_TIMING_UHS_DDR50,
+MMC_TIMING_MMC_DDR52, MMC_TIMING_MMC_HS400? (not that we support HS400
+in dw_mmc on Rockchip).
 
-Regards,
-
-Alistair
-
-> +	}
-> +
-> +	if (rc != OPAL_SUCCESS)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +int pnv_pci_get_presence_state(uint64_t id, uint8_t *state)
-> +{
-> +	int64_t rc;
-> +
-> +	if (!opal_check_token(OPAL_PCI_GET_PRESENCE_STATE))
-> +		return -ENXIO;
-> +
-> +	rc = opal_pci_get_presence_state(id, (uint64_t)state);
-> +	if (rc == OPAL_SUCCESS)
-> +		return 0;
-> +	else if (rc < OPAL_SUCCESS)
-> +		return -EIO;
-> +
-> +	return pnv_pci_poll2(id, state);
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_pci_get_presence_state);
-> +
-> +int pnv_pci_get_power_state(uint64_t id, uint8_t *state)
-> +{
-> +	int64_t rc;
-> +
-> +	if (!opal_check_token(OPAL_PCI_GET_POWER_STATE))
-> +		return -ENXIO;
-> +
-> +	rc = opal_pci_get_power_state(id, (uint64_t)state);
-> +	if (rc == OPAL_SUCCESS)
-> +		return 0;
-> +	else if (rc < OPAL_SUCCESS)
-> +		return -EIO;
-> +
-> +	return pnv_pci_poll2(id, state);
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_pci_get_power_state);
-> +
-> +int pnv_pci_set_power_state(uint64_t id, uint8_t state)
-> +{
-> +	int64_t rc;
-> +
-> +	if (!opal_check_token(OPAL_PCI_SET_POWER_STATE))
-> +		return -ENXIO;
-> +
-> +	rc = opal_pci_set_power_state(id, (uint64_t)&state);
-> +	if (rc == OPAL_SUCCESS)
-> +		return 0;
-> +	else if (rc < OPAL_SUCCESS)
-> +		return -EIO;
-> +
-> +	return pnv_pci_poll2(id, &state);
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_pci_set_power_state);
-> +
-> +int pnv_pci_hotplug_notifier_register(struct notifier_block *nb)
-> +{
-> +	return opal_message_notifier_register(OPAL_MSG_PCI_HOTPLUG, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_register);
-> +
-> +int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb)
-> +{
-> +	return opal_message_notifier_unregister(OPAL_MSG_PCI_HOTPLUG, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_unregister);
-> +
->  #ifdef CONFIG_PCI_MSI
->  int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
->  {
-> 
+-Doug
