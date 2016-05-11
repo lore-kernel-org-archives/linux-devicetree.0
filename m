@@ -1,143 +1,269 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [v10, 7/7] mmc: sdhci-of-esdhc: fix host version for
-	T4240-R1.0-R2.0
-Date: Tue, 10 May 2016 22:26:26 -0500
-Message-ID: <1462937186.16584.77.camel@buserror.net>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
-	<4448030.Zs8fVnr3nm@wuerfel>
-	<HE1PR04MB0889B52134A43C0E7A452B7BF87C0@HE1PR04MB0889.eurprd04.prod.outlook.com>
-	<5159406.HOFrj7pRfW@wuerfel>
+From: Alistair Popple <alistair@popple.id.au>
+Subject: Re: [PATCH v9 15/22] powerpc/powernv: Functions to get/set PCI slot state
+Date: Wed, 11 May 2016 13:28:33 +1000
+Message-ID: <1823859.Eeh9G9LL4L@new-mexico>
+References: <1462281773-26438-1-git-send-email-gwshan@linux.vnet.ibm.com> <1462281773-26438-16-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5159406.HOFrj7pRfW@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xi
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1462281773-26438-16-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, robherring2@gmail.com, bhelgaas@google.com, dja@axtens.net, Stewart Smith <stewart@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-05-05 at 13:10 +0200, Arnd Bergmann wrote:
-> On Thursday 05 May 2016 09:41:32 Yangbo Lu wrote:
-> > > -----Original Message-----
-> > > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> > > Sent: Thursday, May 05, 2016 4:32 PM
-> > > To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > > Cc: Yangbo Lu; linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > > linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> > > foundation.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland;
-> > > ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Russell King; Bhupesh Sharma; Joerg Roedel;
-> > > Santosh Shilimkar; Yang-Leo Li; Scott Wood; Rob Herring; Claudiu Manoil;
-> > > Kumar Gala; Xiaobo Xie; Qiang Zhao
-> > > Subject: Re: [v10, 7/7] mmc: sdhci-of-esdhc: fix host version for T4240-
-> > > R1.0-R2.0
-> > > 
-> > > On Thursday 05 May 2016 11:12:30 Yangbo Lu wrote:
-> > > > IIRC, it is the same IP block as i.MX and Arnd's point is this won't
-> > > > even compile on !PPC. It is things like this that prevent sharing the
-> > > > driver.
-> > 
-> > The whole point of using the MMIO SVR instead of the PPC SPR is so that
-> > it will work on ARM...  The guts driver should build on any platform as
-> > long as OF is enabled, and if it doesn't find a node to bind to it will
-> > return 0 for SVR, and the eSDHC driver will continue (after printing an
-> > error that should be removed) without the ability to test for errata
-> > based on SVR.
+Gavin,
+
+On Tue, 3 May 2016 23:22:46 Gavin Shan wrote:
+> This exports 4 functions, which base on the corresponding OPAL
+> APIs to get/set PCI slot status. Those functions are going to
+> be used by PowerNV PCI hotplug driver:
 > 
-> It feels like a bad design to have to come up with a different
-> method for each SoC type here when they all do the same thing
-> and want to identify some variant of the chip to do device
-> specific quirks.
+>    pnv_pci_get_device_tree()    opal_get_device_tree()
+>    pnv_pci_get_presence_state() opal_pci_get_presence_state()
+>    pnv_pci_get_power_state()    opal_pci_get_power_state()
+>    pnv_pci_set_power_state()    opal_pci_set_power_state()
 > 
-> As far as I'm concerned, every driver in drivers/soc that needs to
-> export a symbol to be used by a device driver is an indication that
-> we don't have the right set of abstractions yet. There are cases
-> that are not worth abstracting because the functionality is rather
-> obscure and only a couple of drivers for one particular chip
-> ever need it.
+> Besides, the patch also exports pnv_pci_hotplug_notifier_{register,
+> unregister}() to allow registration and unregistration of PCI hotplug
+> notifier, which will be used to receive PCI hotplug message from
+> skiboot firmware in PowerNV PCI hotplug driver.
 > 
-> Finding out the version of the SoC does not look like this case.
-
-I'm open to new ways of abstracting this, but can that please be discussed
-after these patches are merged?  This patchset is fixing a problem, the
-existing abstraction is unappealing and not widely adopted, a new abstraction
-is not ready, and we're only touching code for our hardware.
-
-Oh, and the existing abstraction isn't even "existing".  I don't see any
-examples where soc_device is being used like this -- or even any way for a
-driver (the one consuming the information, not the soc "driver") to get a
-reference to the soc_device that's been registered short of searching for the
-device object by name -- and you're asking for new functionality in
-drivers/base/soc.c.
-
-> > > I think the first four patches take care of building for ARM,
-> > > but the problem remains if you want to enable COMPILE_TEST as
-> > > we need for certain automated checking.
-> > 
-> > What specific problem is there with COMPILE_TEST?
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> ---
+>  arch/powerpc/include/asm/opal-api.h            |  18 ++++-
+>  arch/powerpc/include/asm/opal.h                |   5 ++
+>  arch/powerpc/include/asm/pnv-pci.h             |   7 ++
+>  arch/powerpc/platforms/powernv/opal-wrappers.S |   5 ++
+>  arch/powerpc/platforms/powernv/pci.c           | 102 
++++++++++++++++++++++++++
+>  5 files changed, 136 insertions(+), 1 deletion(-)
 > 
-> COMPILE_TEST is solvable here and the way it is implemented in this
-> case (selecting FSL_GUTS from the driver) indeed looks like it works
-> correctly, but it's still awkward that this means building the
-> SoC specific ID stuff into the vmlinux binary for any driver that
-> uses something like that for a particular SoC.
+> diff --git a/arch/powerpc/include/asm/opal-api.h 
+b/arch/powerpc/include/asm/opal-api.h
+> index 9bb8ddf..728e04e 100644
+> --- a/arch/powerpc/include/asm/opal-api.h
+> +++ b/arch/powerpc/include/asm/opal-api.h
+> @@ -158,7 +158,12 @@
+>  #define OPAL_LEDS_SET_INDICATOR			115
+>  #define OPAL_CEC_REBOOT2			116
+>  #define OPAL_CONSOLE_FLUSH			117
+> -#define OPAL_LAST				117
+> +#define OPAL_GET_DEVICE_TREE			118
+> +#define OPAL_PCI_GET_PRESENCE_STATE		119
+> +#define OPAL_PCI_GET_POWER_STATE		120
+> +#define OPAL_PCI_SET_POWER_STATE		121
+> +#define OPAL_PCI_POLL2				122
+> +#define OPAL_LAST				122
+>  
+>  /* Device tree flags */
+>  
+> @@ -344,6 +349,16 @@ enum OpalPciResetState {
+>  	OPAL_ASSERT_RESET   = 1
+>  };
+>  
+> +enum OpalPciSlotPresentenceState {
+> +	OPAL_PCI_SLOT_EMPTY	= 0,
+> +	OPAL_PCI_SLOT_PRESENT	= 1
+> +};
+> +
+> +enum OpalPciSlotPowerState {
+> +	OPAL_PCI_SLOT_POWER_OFF	= 0,
+> +	OPAL_PCI_SLOT_POWER_ON	= 1
+> +};
+> +
+>  enum OpalSlotLedType {
+>  	OPAL_SLOT_LED_TYPE_ID = 0,	/* IDENTIFY LED */
+>  	OPAL_SLOT_LED_TYPE_FAULT = 1,	/* FAULT LED */
+> @@ -378,6 +393,7 @@ enum opal_msg_type {
+>  	OPAL_MSG_DPO		= 5,
+>  	OPAL_MSG_PRD		= 6,
+>  	OPAL_MSG_OCC		= 7,
+> +	OPAL_MSG_PCI_HOTPLUG	= 8,
+>  	OPAL_MSG_TYPE_MAX,
+>  };
+>  
+> diff --git a/arch/powerpc/include/asm/opal.h 
+b/arch/powerpc/include/asm/opal.h
+> index 348132c..1a83c80 100644
+> --- a/arch/powerpc/include/asm/opal.h
+> +++ b/arch/powerpc/include/asm/opal.h
+> @@ -209,6 +209,11 @@ int64_t opal_flash_write(uint64_t id, uint64_t offset, 
+uint64_t buf,
+>  		uint64_t size, uint64_t token);
+>  int64_t opal_flash_erase(uint64_t id, uint64_t offset, uint64_t size,
+>  		uint64_t token);
+> +int64_t opal_get_device_tree(uint32_t phandle, uint64_t buf, uint64_t len);
+> +int64_t opal_pci_get_presence_state(uint64_t id, uint64_t data);
+> +int64_t opal_pci_get_power_state(uint64_t id, uint64_t data);
+> +int64_t opal_pci_set_power_state(uint64_t id, uint64_t data);
+> +int64_t opal_pci_poll2(uint64_t id, uint64_t data);
+>  
+>  /* Internal functions */
+>  extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
+> diff --git a/arch/powerpc/include/asm/pnv-pci.h 
+b/arch/powerpc/include/asm/pnv-pci.h
+> index c607902..8db7439 100644
+> --- a/arch/powerpc/include/asm/pnv-pci.h
+> +++ b/arch/powerpc/include/asm/pnv-pci.h
+> @@ -17,6 +17,13 @@
+>  #define PCI_SLOT_ID(phb_id, bdfn)	\
+>  	(PCI_SLOT_ID_PREFIX | ((uint64_t)(bdfn) << 16) | (phb_id))
+>  
+> +extern int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t 
+len);
+> +extern int pnv_pci_get_presence_state(uint64_t id, uint8_t *state);
+> +extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
+> +extern int pnv_pci_set_power_state(uint64_t id, uint8_t state);
+> +extern int pnv_pci_hotplug_notifier_register(struct notifier_block *nb);
+> +extern int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb);
+> +
+>  int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
+>  int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
+>  			   unsigned int virq);
+> diff --git a/arch/powerpc/platforms/powernv/opal-wrappers.S 
+b/arch/powerpc/platforms/powernv/opal-wrappers.S
+> index e45b88a..60397d2 100644
+> --- a/arch/powerpc/platforms/powernv/opal-wrappers.S
+> +++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
+> @@ -302,3 +302,8 @@ OPAL_CALL(opal_prd_msg,				
+OPAL_PRD_MSG);
+>  OPAL_CALL(opal_leds_get_ind,			OPAL_LEDS_GET_INDICATOR);
+>  OPAL_CALL(opal_leds_set_ind,			OPAL_LEDS_SET_INDICATOR);
+>  OPAL_CALL(opal_console_flush,			OPAL_CONSOLE_FLUSH);
+> +OPAL_CALL(opal_get_device_tree,			OPAL_GET_DEVICE_TREE);
+> +OPAL_CALL(opal_pci_get_presence_state,		
+OPAL_PCI_GET_PRESENCE_STATE);
+> +OPAL_CALL(opal_pci_get_power_state,		OPAL_PCI_GET_POWER_STATE);
+> +OPAL_CALL(opal_pci_set_power_state,		OPAL_PCI_SET_POWER_STATE);
+> +OPAL_CALL(opal_pci_poll2,			OPAL_PCI_POLL2);
+> diff --git a/arch/powerpc/platforms/powernv/pci.c 
+b/arch/powerpc/platforms/powernv/pci.c
+> index 67a33e9..6e10ac4 100644
+> --- a/arch/powerpc/platforms/powernv/pci.c
+> +++ b/arch/powerpc/platforms/powernv/pci.c
+> @@ -42,6 +42,108 @@
+>  #define cfg_dbg(fmt...)	do { } while(0)
+>  //#define cfg_dbg(fmt...)	printk(fmt)
+>  
+> +int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len)
+> +{
+> +	int64_t rc;
+> +
+> +	if (!opal_check_token(OPAL_GET_DEVICE_TREE))
+> +		return -ENXIO;
+> +
+> +	rc = opal_get_device_tree(phandle, (uint64_t)buf, len);
+> +	if (rc != OPAL_SUCCESS)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_pci_get_device_tree);
+> +
+> +static int pnv_pci_poll2(uint64_t id, uint8_t *state)
+> +{
+> +	int64_t rc;
+> +
+> +	if (!opal_check_token(OPAL_PCI_POLL2))
+> +		return -ENXIO;
+> +
+> +	while (1) {
+> +		rc = opal_pci_poll2(id, (uint64_t)state);
+> +		if (rc <= OPAL_SUCCESS)
+> +			break;
+> +
+> +		if (system_state < SYSTEM_RUNNING)
+> +			udelay(1000 * rc);
+> +		else
+> +			msleep(rc);
 
-Please keep in mind that this is a Freescale-specific driver... it's not as if
-we're attaching this dependency to common SDHCI code.
+As we discussed offline I think this interface needs to change. Skiboot now 
+has good support for timers which can be scheduled for cranking state 
+machines, etc. rather than relying on the kernel.
 
+If the kernel needs to wait for completion it can poll on a relevant status by 
+using opal_pci_get_power_state() to return the current state for example, or 
+perhaps better it could wait to receive a message or interrupt asynchronously.
+
+Regards,
+
+Alistair
+
+> +	}
+> +
+> +	if (rc != OPAL_SUCCESS)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +int pnv_pci_get_presence_state(uint64_t id, uint8_t *state)
+> +{
+> +	int64_t rc;
+> +
+> +	if (!opal_check_token(OPAL_PCI_GET_PRESENCE_STATE))
+> +		return -ENXIO;
+> +
+> +	rc = opal_pci_get_presence_state(id, (uint64_t)state);
+> +	if (rc == OPAL_SUCCESS)
+> +		return 0;
+> +	else if (rc < OPAL_SUCCESS)
+> +		return -EIO;
+> +
+> +	return pnv_pci_poll2(id, state);
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_pci_get_presence_state);
+> +
+> +int pnv_pci_get_power_state(uint64_t id, uint8_t *state)
+> +{
+> +	int64_t rc;
+> +
+> +	if (!opal_check_token(OPAL_PCI_GET_POWER_STATE))
+> +		return -ENXIO;
+> +
+> +	rc = opal_pci_get_power_state(id, (uint64_t)state);
+> +	if (rc == OPAL_SUCCESS)
+> +		return 0;
+> +	else if (rc < OPAL_SUCCESS)
+> +		return -EIO;
+> +
+> +	return pnv_pci_poll2(id, state);
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_pci_get_power_state);
+> +
+> +int pnv_pci_set_power_state(uint64_t id, uint8_t state)
+> +{
+> +	int64_t rc;
+> +
+> +	if (!opal_check_token(OPAL_PCI_SET_POWER_STATE))
+> +		return -ENXIO;
+> +
+> +	rc = opal_pci_set_power_state(id, (uint64_t)&state);
+> +	if (rc == OPAL_SUCCESS)
+> +		return 0;
+> +	else if (rc < OPAL_SUCCESS)
+> +		return -EIO;
+> +
+> +	return pnv_pci_poll2(id, &state);
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_pci_set_power_state);
+> +
+> +int pnv_pci_hotplug_notifier_register(struct notifier_block *nb)
+> +{
+> +	return opal_message_notifier_register(OPAL_MSG_PCI_HOTPLUG, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_register);
+> +
+> +int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb)
+> +{
+> +	return opal_message_notifier_unregister(OPAL_MSG_PCI_HOTPLUG, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_unregister);
+> +
+>  #ifdef CONFIG_PCI_MSI
+>  int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+>  {
 > 
-> > > > Dealing with Si revs is a common problem. We should have a
-> > > > common solution. There is soc_device for this purpose.
-> > > 
-> > > Exactly. The last time this came up, I think we agreed to implement a
-> > > helper using glob_match() on the soc_device strings. Unfortunately
-> > > this hasn't happened then, but I'd still prefer that over yet another
-> > > vendor-specific way of dealing with the generic issue.
-> > 
-> > soc_device would require encoding the SVR as a string and then decoding
-> > the string, which is more complicated and error prone than having
-> > platform-specific code test a platform-specific number. 
-> 
-> You already need to encode it as a string to register the soc_device,
-
-No we don't, because we don't already register a soc_device on arm64 or ppc
-(and it looks like whatever does get registered on at least some relevant
-arm32 chips is not particularly useful).
-
-> and the driver just needs to pass a glob string, so the only part that
-> is missing is the generic function that takes the string from the
-> driver and passes that to glob_match for the soc_device.
-
-"just"
-
-And what would the glob look like?
-
-I'd rather not write kernel code as if it were a shell/Perl script.
-
-> > And when would it get registered on arm64, which doesn't have
-> > platform code?
-> 
-> Whenever the soc driver is loaded, as is the case now. The match
-> function can return -EPROBE_DEFER if no SoC device is registered
-> yet.
-
-That's too late for some places where we need access to SVR, e.g. clock
-drivers (which use CLK_OF_DECLARE and are initialized very early, not as part
-of the driver model and thus can't defer).  Currently we have an #ifdef
-CONFIG_PPC for this in drivers/clk/clk-qoriq.c... Maybe we should have done
-that here as well, and saved some grief. :-)  At least until an erratum pops
-up on an ARM-based chip.
-
-And what happens if we're running on arm32, and thus the arch code already
-registered an soc_device with a different (and less useful) encoding?
-
--Scott
