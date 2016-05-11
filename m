@@ -1,75 +1,54 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 0/2] ARM: dts: sun6i: Drop constraints on dc1sw regulator
-Date: Wed, 11 May 2016 14:43:44 +0200
-Message-ID: <20160511124344.GO3733@lukather>
-References: <1462944194-6920-1-git-send-email-wens@csie.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v3 27/27] ARM: dts: exynos: Add RTC and I2C to Exynos5410
+Date: Wed, 11 May 2016 08:44:16 -0400
+Message-ID: <b1f47282-f70e-4354-9146-9b4b27ba1726@osg.samsung.com>
+References: <1462910970-1812-1-git-send-email-krzk@kernel.org>
+ <1462910970-1812-28-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tjOMJDssiV0CZSJH"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462944194-6920-1-git-send-email-wens@csie.org>
+In-Reply-To: <1462910970-1812-28-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Mark Brown <broonie@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Krzysztof,
 
---tjOMJDssiV0CZSJH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 05/10/2016 04:09 PM, Krzysztof Kozlowski wrote:
+> Configure Exynos5410-specific properties of RTC, I2C and HSI2C nodes.
+> This still does not enable them on the board level though.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos5410.dtsi | 66 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+> index dd4d6d752865..ae64cb0a8efd 100644
+> --- a/arch/arm/boot/dts/exynos5410.dtsi
+> +++ b/arch/arm/boot/dts/exynos5410.dtsi
+> @@ -114,6 +114,9 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		/* i2c_0-3 are defined in exynos5.dtsi */
+> +		/* hsi2c_4-7 are defined in exynos5xx.dtsi */
+> +
 
-On Wed, May 11, 2016 at 01:23:12PM +0800, Chen-Yu Tsai wrote:
-> Hi Arnd, Olof,
->=20
-> Here are 2 last minute fixes for 4.6. The 2 patches drop constaints on
-> the dc1sw regulator for 2 A31s tablets. I checked with Maxime and he said
-> to send them directly to you.
->=20
-> The issue was first brought up and fixed for A23/A33 Q8 tablets in commit
-> dcf5341f0150 ("ARM: dts: sun8i-q8-common: Do not set constraints on dc1sw
-> regulator"). It was brought up again yesterday on IRC, and I realized that
-> 2 sun6i A31s tablet DTS files also had this setting. The setting causes
-> PMIC regulator registration to fail, and since among other things, mmc
-> depends on the regulators, the system will likely hang.
->=20
-> There seems to be a fix for this queued up for 4.7: commit 45389c47526d
-> ("regulator: core: Add early supply resolution for regulators") in the
-> regulator "supply" topic branch. So we should be able to revert these
-> fixes in 4.7.
+I don't think these comments are needed. For each DTS, there are usually a lot of
+nodes defined in higher levels of the DT hierarchy but isn't common to mention it.
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Specially since the mentioned nodes are referenced here by their labels so it is
+implicit that are defined in one of the included DTSI (or dtc will fail to build).
 
-For the two patches.
+The actual change looks good to me though:
 
-Thanks!
-Maxime
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---tjOMJDssiV0CZSJH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXMykAAAoJEBx+YmzsjxAguAYP/i0idg2ZWj3ukzj2YyDJeQiC
-vWFxjqHg+FLm1YJmeyDB+HAOtmnGsC1X8lKZcmSvqdsUTMz7FmOpdEgMrhxwZlOF
-9O1N55CPI21VRFhm+cPzeUjbVQ+ZcP9famhYNqfLaJx3kx7W3sAYj9fTsfMxH9Ar
-V4wjsBltqiTIpCv88hN5cKgsx4osexrs+0Yts02MgOONehL+gbo70eoDxhO3PBgn
-YE7Uhkd1R7Se/txZYr7Jb47VKCRwTIOzYGL4Zpy2nTj06FZIUUwGtTwVrGj1X4s9
-9bIoTuE/ZY6fb341tr92gKXwAKwzrfmqd2Vrv5dfabhsnnUFD1ixAl0il/zsb5uL
-XdrgD5ahK9ahSCkwIZ+K1LA/gp6sib69lNCKsc8gKoE4JPByjN6ADycFl8ocIq1l
-NuCrbb4TjD4GSbHfmbbbnbPGXAanHleY7T3GrPNcKVYW8bM01Vqfq9IVwwXeoRri
-yGUQAmT2M+rSn1X8/1W+eaWD8d79EGFz3D5KOOxjLSZZfDtC8uFEsFjXsE9tOT26
-/1dV7yp5WEf0USUPsUya1b904ZF6KpUuYyFgoBhdsuiKqYnuDn+DftKdXYAQYid3
-KgMsKpPNNhS423b1oxSV1fJTz+E2Wc9FK1lmYMK2Tn+KGI5hb4Fg/tpLcAW1ekoo
-yiIVB93brGJKFTXSrvfy
-=+I8O
------END PGP SIGNATURE-----
-
---tjOMJDssiV0CZSJH--
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
