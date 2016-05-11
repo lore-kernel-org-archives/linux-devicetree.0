@@ -1,173 +1,70 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: RE: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB
- PCIe bindings
-Date: Wed, 11 May 2016 14:45:51 +0000
-Message-ID: <8520D5D51A55D047800579B094147198258955CE@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
- <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/2] regulator: Add support for parsing operation
+ mode
+Date: Wed, 11 May 2016 15:46:32 +0100
+Message-ID: <20160511144632.GH6261@sirena.org.uk>
+References: <1462959090-2877-1-git-send-email-henryc.chen@mediatek.com>
+ <1462959090-2877-2-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jim2101024@gmail.com" <jim2101024@gmail.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xQmOcGOVkeO43v2v"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462959090-2877-2-git-send-email-henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> 
->  .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  | 98
-> ++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
-> b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
-> new file mode 100644
-> index 000000000000..3682b0f0bc26
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
-> @@ -0,0 +1,98 @@
-> +Broadcom STB PCIe Host Controller Device Tree Bindings
-> +
-> +This document describes the binding of the PCIe Root Complex hardware
-> +found in Broadcom Set Top Box System-on-Chips such as BCM7425 (MIPS),
-> +BCM7435 (MIPS) and
-> +BCM7445 (ARMv7).
-> +
-> +Required properties:
-> +- compatible: must be one of: "brcm,bcm7425-pcie"
-> +			      "brcm,bcm7435-pcie"
-> +			      "brcm,bcm7445-pcie"
-> +
-> +- reg: specifies the physical base address of the controller registers
-> +and
-> +  its length
-> +
-> +- interrupt-parent: must be a reference (phandle) to the parent
-> +interrupt
-> +  controller in the system (7038-l1-intc on MIPS, GIC on ARM/ARM64)
-> +
-> +- interrrupts: first interrupt must be the Level 1 interrupt number
-> +corresponding
-> +  to the main PCIe RC interrupt, second interrupt must be the MSI
-> +interrupt
-> +  See the interrupt-parent documentation for the number of cells and their
-> meaning:
-> +  MIPS:
-> +Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-
-> l1-
-> +intc.txt
-> +  ARM/ARM64:
-> +Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
-> +
-> +- interrupt-names: must be "pcie", and if present "msi"
-> +
-> +- interrupt-map: see pci.txt
-> +
-> +- interrupt-map-mask: see pci.txt
-> +
-> +- #address-cells: must be set to <3>, see pci.txt
-> +
-> +- #size-cells: must be set to <2>, see pci.txt
-> +
-> +- ranges: ranges for the PCI outbound windows, no I/O or prefetchable
-> +windows
-> +  must be specified here, only non-prefetchable. 32-bits windows or
-> +64-bits
-> +  windows are allowed based on the host processor's capabilities (ARM
-> +w/ LPAE,
-> +  ARM64).
-> +
-> +- #interrupt-cells: set to <1>, see pci.txt
-> +
-> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to
-> +PCIe space
-> +  there must be exactly one value per memory controller present in the
-> +system
-> +  (ranges from 1 to 3)
 
-Can you please give more insight on what does this property do ?
+--xQmOcGOVkeO43v2v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bharat
-> +
-> +Optional properties:
-> +
-> +- msi-controller: indicates that this is a MSI controller node (when
-> +supported)
-> +
-> +- clocks: phandle to the functional clock that feeds into the PCIe RC
-> +block
-> +
-> +- clock-names: the name(s) of the clocks specified in 'clocks'.  Note
-> +  that if the 'clocks' property is given, 'clock-names' is mandatory,
-> +  and the name of the clock is expected to be "pcie".
-> +
-> +- brcm,ssc: boolean that indicates usage of spread-spectrum clocking
-> +
-> +- brcm,gen: integer that indicates desired forced generation of link: 1
-> +=> 2.5
-> +  Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps. Will override the auto-negotation
-> +if
-> +  specified.
-> +
-> +- <*>-supply: see
-> +Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +- <*>-supply-names: see
-> +Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +Example Node:
-> +
-> +This example assumes that the top-level #address-cells = <2> and
-> +#size-cells = <2>, e.g: ARM LPAE configuration.
-> +
-> +	pcie0: pcie-controller@f0460000 {
-> +		reg = <0x0 0xf0460000 0x0 0x9310>;
-> +		interrupts = <0x0 0x33 0x4>, <0x0 0x34, 0x4>;
-> +		interrupt-names = "pcie", "msi";
-> +		compatible = "brcm,bcm7445-pcie";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +
-> +		/* Two non-prefetchable 32-bits memory space, each of
-> 128MB
-> + 		 * with the following mapping:
-> +		 * PCIe address		=> CPU physical address space
-> +		 * 0x00_0000_0000	=> 0x00_C000_0000
-> +		 * 0x00_0800_0000	=> 0x00_C800_0000
-> +		 */
-> +		ranges = <0x02000000 0x00000000 0x00000000 0x00000000
-> 0xc0000000 0x00000000 0x08000000>,
-> +			 <0x02000000 0x00000000 0x08000000 0x00000000
-> 0xc8000000 0x00000000 0x08000000>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0xf800 0 0 7>;
-> +		interrupt-map = <0 0 0 1 &intc 47 3
-> +				 0 0 0 2 &intc 48 3
-> +				 0 0 0 3 &intc 49 3
-> +				 0 0 0 4 &intc 50 3>;
-> +		clocks = <&pcie0>;
-> +		clock-names = "pcie";
-> +		brcm,ssc;
-> +		brcm,log2-scb-sizes = <0x1e 0x1e 0x1e>;
-> +		vreg-wifi-pwr-supply-names = "vreg-wifi-pwr";
-> +		vreg-wifi-pwr-supply = <&vreg-wifi-pwr>;
-> +	};
-> --
-> 2.1.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in the
-> body of a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+On Wed, May 11, 2016 at 05:31:29PM +0800, Henry Chen wrote:
+
+> +- regulator-allow-change-mode: allow the regulator mode to be configured
+> +- regulator-supported-modes: Regulators can run in a variety of different operating
+> +  modes depending on output load. This allows further system power savings by
+> +  selecting the best (and most efficient) regulator mode for a desired load.
+> +  The definition for each of these operation is defined at
+> +  include/linux/regulator/consumer.h
+
+It really isn't OK for a DT binding to be documented by referencing
+Linux kernel internals.
+
+> +	0: FAST.
+> +	1: NORMAL.
+> +	2: IDLE.
+> +	3: STANDBY.
+
+The problem with these is that they don't really mean anything outside
+of a specific regulator.  This makes it very hard to make them at all
+interoperable, and is also incompatible with the way we're currently
+handling the modes elsewhere in the bindings.  If we're going to make an
+ABI of this we need to have something with abstraction in it but it's
+hard to see how to abstract modes since they're so implementation
+specific, even if the mechanisms are similar the different load ranges
+that regulators support mean that what's a very taxing load for one
+regulator may be nothing to another.
+
+--xQmOcGOVkeO43v2v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXM0XGAAoJECTWi3JdVIfQXaEH/ir8TUe8a3SqSLLwGwueng6o
+MdcL0Ae3iEaFhdT59kKRHgB70ORdEBRFQnt8I4uG3acHyuupy+JTyuP/7V3RXQJ5
+unGcqP30uXuhAgWMOCk0c3j/FAzH8Cd3TEymKn6qxQLRDLuRfdOf3DFes17WV0Qh
+t9DhOYGMSZeSRbUVN3zwlw3kFn612lqkuOegb5nrGes8Emp1db2g2e3hLz1vcDMR
+hAZ5PGpQlR0rW3EhHH/p35RUF5H2HpBs2EQLDWElSE9o5TepDyU2zgz8Ur/xrDEk
+5GYQL5emoS9lQIQ/J39yT/ci5R63Rcw20YXNRDbmqspafF5aAadaL9c18sM1Q6c=
+=JSAM
+-----END PGP SIGNATURE-----
+
+--xQmOcGOVkeO43v2v--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
