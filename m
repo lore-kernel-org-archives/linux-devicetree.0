@@ -1,90 +1,230 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v8 8/8] i2c: rk3x: support fast-mode plus for rk3399
-Date: Wed, 11 May 2016 23:09:43 +0200
-Message-ID: <5153288.jNhUuzGC3g@phil>
-References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com> <1462908794-27333-1-git-send-email-david.wu@rock-chips.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Patch v4 6/8] firmware: qcom: scm: Add support for ARM64 SoCs
+Date: Wed, 11 May 2016 14:21:23 -0700
+Message-ID: <20160511212123.GY1256@tuxbot>
+References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
+ <1462976158-26016-7-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462908794-27333-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462976158-26016-7-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 11. Mai 2016, 03:33:14 schrieb David Wu:
+On Wed 11 May 07:15 PDT 2016, Andy Gross wrote:
 
-please always try to also provide some sort of commit message.
+[..]
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+[..]
+> +
+> +#define QCOM_SCM_ARGS_IMPL(num, a, b, c, d, e, f, g, h, i, j, ...) (\
+> +			   (((a) & 0xff) << 4) | \
+> +			   (((b) & 0xff) << 6) | \
+> +			   (((c) & 0xff) << 8) | \
+> +			   (((d) & 0xff) << 10) | \
+> +			   (((e) & 0xff) << 12) | \
+> +			   (((f) & 0xff) << 14) | \
+> +			   (((g) & 0xff) << 16) | \
+> +			   (((h) & 0xff) << 18) | \
+> +			   (((i) & 0xff) << 20) | \
+> +			   (((j) & 0xff) << 22) | \
+> +			   (num & 0xffff))
 
----
-Implement fast mode plus that allows bus speeds of up to 1MHz.
-.....
+Sorry, haven't payed attention to the body of this macro before; but
+it's "wrong".
 
----
+num is 4 bits all other entries are 2 bits each. So it should be:
 
-Additionally, the i2c-noob in me would wish for a short sentence on where 
-the timing values come from (measured, somewhere in the TRM I didn't find or 
-something completely different).
+#define QCOM_SCM_ARGS_IMPL(num, a, b, c, d, e, f, g, h, i, j, ...) (\
+			   (((a) & 0x3) << 4) | \
+			   (((b) & 0x3) << 6) | \
+			   (((c) & 0x3) << 8) | \
+			   (((d) & 0x3) << 10) | \
+			   (((e) & 0x3) << 12) | \
+			   (((f) & 0x3) << 14) | \
+			   (((g) & 0x3) << 16) | \
+			   (((h) & 0x3) << 18) | \
+			   (((i) & 0x3) << 20) | \
+			   (((j) & 0x3) << 22) | \
+			   (num & 0xf))
 
-
-Patch content itself looks good, so with a suitable commit message,
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> Change in v8:
-> - None
-> 
->  drivers/i2c/busses/i2c-rk3x.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> index 25ed1ad..0ba25ee 100644
-> --- a/drivers/i2c/busses/i2c-rk3x.c
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -126,6 +126,17 @@ static const struct i2c_spec_values fast_mode_spec =
-> { .min_hold_buffer_ns = 1300,
->  };
-> 
-> +static const struct i2c_spec_values fast_mode_plus_spec = {
-> +	.min_hold_start_ns = 260,
-> +	.min_low_ns = 500,
-> +	.min_high_ns = 260,
-> +	.min_setup_start_ns = 260,
-> +	.max_data_hold_ns = 400,
-> +	.min_data_setup_ns = 50,
-> +	.min_setup_stop_ns = 260,
-> +	.min_hold_buffer_ns = 500,
+> +
+> +#define QCOM_SCM_ARGS(...) QCOM_SCM_ARGS_IMPL(__VA_ARGS__, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+> +
+> +/**
+> + * struct qcom_scm_desc
+> + * @arginfo:	Metadata describing the arguments in args[]
+> + * @args:	The array of arguments for the secure syscall
+> + * @res:	The values returned by the secure syscall
+> + */
+> +struct qcom_scm_desc {
+> +	u32 arginfo;
+> +	u64 args[MAX_QCOM_SCM_ARGS];
+> +	struct arm_smccc_res res;
 > +};
 > +
+> +static u64 qcom_smccc_convention = -1;
+> +static DEFINE_MUTEX(qcom_scm_lock);
+> +
+> +#define QCOM_SCM_EBUSY_WAIT_MS 30
+> +#define QCOM_SCM_EBUSY_MAX_RETRY 20
+> +
+> +#define N_EXT_QCOM_SCM_ARGS 7
+> +#define FIRST_EXT_ARG_IDX 3
+> +#define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
+> +
+> +/**
+> + * qcom_scm_call() - Invoke a syscall in the secure world
+> + * @dev:	device
+> + * @svc_id:	service identifier
+> + * @cmd_id:	command identifier
+> + * @fn_id:	The function ID for this syscall
+
+You don't have a fn_id parameter anymore.
+
+> + * @desc:	Descriptor structure containing arguments and return values
+> + *
+> + * Sends a command to the SCM and waits for the command to finish processing.
+> + * This should *only* be called in pre-emptible context.
+> +*/
+> +static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+> +			 struct qcom_scm_desc *desc)
+> +{
+> +	int arglen = desc->arginfo & 0xf;
+> +	int ret, retry_count = 0, i;
+> +	u32 fn_id = QCOM_SCM_FNID(svc_id, cmd_id);
+> +	u64 cmd, x5 = desc->args[FIRST_EXT_ARG_IDX];
+> +	dma_addr_t args_phys = 0;
+> +	void *args_virt = NULL;
+> +	size_t alloc_len;
+> +
+> +	if (unlikely(arglen > N_REGISTER_ARGS)) {
+> +		alloc_len = N_EXT_QCOM_SCM_ARGS * sizeof(u64);
+> +		args_virt = kzalloc(PAGE_ALIGN(alloc_len), GFP_KERNEL);
+> +
+> +		if (!args_virt)
+> +			return qcom_scm_remap_error(-ENOMEM);
+> +
+> +		if (qcom_smccc_convention == ARM_SMCCC_SMC_32) {
+> +			__le32 *args = args_virt;
+> +
+> +			for (i = 0; i < N_EXT_QCOM_SCM_ARGS; i++)
+> +				args[i] = cpu_to_le32(desc->args[i +
+> +						      FIRST_EXT_ARG_IDX]);
+> +		} else {
+> +			__le64 *args = args_virt;
+> +
+> +			for (i = 0; i < N_EXT_QCOM_SCM_ARGS; i++)
+> +				args[i] = cpu_to_le64(desc->args[i +
+> +						      FIRST_EXT_ARG_IDX]);
+> +		}
+> +
+> +		args_phys = dma_map_single(dev, args_virt, alloc_len,
+> +					   DMA_TO_DEVICE);
+> +
+> +		if (dma_mapping_error(dev, args_phys)) {
+> +			kfree(args_virt);
+> +			return qcom_scm_remap_error(-ENOMEM);
+> +		}
+> +
+> +		x5 = args_phys;
+> +	}
+> +
+> +	do {
+> +		mutex_lock(&qcom_scm_lock);
+> +
+> +		cmd = ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL,
+> +					 qcom_smccc_convention,
+> +					 ARM_SMCCC_OWNER_SIP, fn_id);
+> +
+> +		do {
+> +			arm_smccc_smc(cmd, arglen, desc->args[0], desc->args[1],
+> +				      desc->args[2], x5, 0, 0, &desc->res);
+
+Looking at downstream you should pass the entirety of arginfo as the
+second parameter. Currently you only set the num bits, but there are a
+few cases when these bits should be set.
+
+> +		} while (desc->res.a0 == QCOM_SCM_INTERRUPTED);
+> +
+> +		mutex_unlock(&qcom_scm_lock);
+> +
+> +		if (desc->res.a0 == QCOM_SCM_V2_EBUSY) {
+> +			if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
+> +				break;
+> +			msleep(QCOM_SCM_EBUSY_WAIT_MS);
+> +		}
+> +	}  while (desc->res.a0 == QCOM_SCM_V2_EBUSY);
+> +
+> +	if (args_virt) {
+> +		dma_unmap_single(dev, args_phys, alloc_len, DMA_TO_DEVICE);
+> +		kfree(args_virt);
+> +	}
+> +
+> +	if (desc->res.a0 < 0)
+> +		return qcom_scm_remap_error(ret);
+
+Probably not ret, as this is unused.
+
+> +
+> +	return 0;
+> +}
+>  
 >  /**
->   * struct rk3x_i2c_calced_timings:
->   * @div_low: Divider output for low
-> @@ -531,8 +542,10 @@ static const struct i2c_spec_values
-> *rk3x_i2c_get_spec(unsigned int speed) {
->  	if (speed <= 100000)
->  		return &standard_mode_spec;
-> -	else
-> +	else if (speed <= 400000)
->  		return &fast_mode_spec;
-> +	else
-> +		return &fast_mode_plus_spec;
+>   * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
+> - * @entry: Entry point function for the cpus
+> - * @cpus: The cpumask of cpus that will use the entry point
+> + * @entry:	Entry point function for the cpus
+> + * @cpus:	The cpumask of cpus that will use the entry point
+
+Unnecessary indentation change.
+
+>   *
+>   * Set the cold boot address of the cpus. Any cpu outside the supported
+>   * range would be removed from the cpu present mask.
+> @@ -29,20 +165,21 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
+>  
+>  /**
+>   * qcom_scm_set_warm_boot_addr() - Set the warm boot address for cpus
+> - * @entry: Entry point function for the cpus
+> - * @cpus: The cpumask of cpus that will use the entry point
+> + * @entry:	Entry point function for the cpus
+> + * @cpus:	The cpumask of cpus that will use the entry point
+
+Unnecessary indentation change, and you missed adding "dev".
+
+>   *
+>   * Set the Linux entry point for the SCM to transfer control to when coming
+>   * out of a power down. CPU power down may be executed on cpuidle or hotplug.
+>   */
+> -int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
+> +int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
+> +				  const cpumask_t *cpus)
+>  {
+>  	return -ENOTSUPP;
 >  }
-> 
+>  
 >  /**
-> @@ -743,9 +756,9 @@ static int rk3x_i2c_v1_calc_timings(unsigned long
-> clk_rate, const struct i2c_spec_values *spec;
->  	int ret = 0;
-> 
-> -	/* Support standard-mode and fast-mode */
-> -	if (WARN_ON(t->bus_freq_hz > 400000))
-> -		t->bus_freq_hz = 400000;
-> +	/* Support standard-mode, fast-mode and fast-mode plus */
-> +	if (WARN_ON(t->bus_freq_hz > 1000000))
-> +		t->bus_freq_hz = 1000000;
-> 
->  	/* prevent scl_rate_khz from becoming 0 */
->  	if (WARN_ON(t->bus_freq_hz < 1000))
+>   * qcom_scm_cpu_power_down() - Power down the cpu
+> - * @flags - Flags to flush cache
+> + * @flags:	Flags to flush cache
+
+I presume this one is ok...
+
+>   *
+>   * This is an end point to power down cpu. If there was a pending interrupt,
+>   * the control would return from this function, otherwise, the cpu jumps to the
+> @@ -52,12 +189,63 @@ void __qcom_scm_cpu_power_down(u32 flags)
+>  {
+>  }
+>  
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
