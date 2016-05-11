@@ -1,118 +1,176 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH] ASoC: MAX9860: new driver
-Date: Wed, 11 May 2016 22:28:12 +0200
-Message-ID: <be1f0f5c-5dbe-65f8-d55c-df07a92a558e@axentia.se>
-References: <1462892797-1147-1-git-send-email-peda@axentia.se>
- <20160511152950.GL6261@sirena.org.uk>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Patch v4 5/8] firmware: qcom: scm: Convert to streaming DMA APIS
+Date: Wed, 11 May 2016 13:34:44 -0700
+Message-ID: <20160511203444.GX1256@tuxbot>
+References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
+ <1462976158-26016-6-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160511152950.GL6261-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462976158-26016-6-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-05-11 17:29, Mark Brown wrote:
-> On Tue, May 10, 2016 at 05:06:37PM +0200, Peter Rosin wrote:
+On Wed 11 May 07:15 PDT 2016, Andy Gross wrote:
+
+> This patch converts the Qualcomm SCM driver to use the streaming DMA APIs
+> for communication buffers.
 > 
->> +		if (master) {
->> +			switch (max9860->pclk_rate) {
->> +			case 12000000:
->> +				sysclk = MAX9860_FREQ_12MHZ;
->> +				break;
->> +			case 13000000:
->> +				sysclk = MAX9860_FREQ_13MHZ;
->> +				break;
->> +			case 19200000:
->> +				sysclk = MAX9860_FREQ_19_2MHZ;
->> +				break;
->> +			}
+
+Some style issues in qcom_scm_call(), but functionality wise I think
+this looks good (with the open question on packing of rsp and rps->buf).
+
+> Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/firmware/qcom_scm-32.c | 152 +++++++++++++----------------------------
+>  drivers/firmware/qcom_scm.c    |   6 +-
+>  drivers/firmware/qcom_scm.h    |  10 +--
+>  3 files changed, 58 insertions(+), 110 deletions(-)
 > 
-> What if we have another PCLK rate?
+> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+[..]
+>  /**
+>   * qcom_scm_call() - Send an SCM command
+> - * @svc_id: service identifier
+> - * @cmd_id: command identifier
+> - * @cmd_buf: command buffer
+> - * @cmd_len: length of the command buffer
+> - * @resp_buf: response buffer
+> - * @resp_len: length of the response buffer
+> + * @dev:	struct device
+> + * @svc_id:	service identifier
+> + * @cmd_id:	command identifier
+> + * @cmd_buf:	command buffer
+> + * @cmd_len:	length of the command buffer
+> + * @resp_buf:	response buffer
+> + * @resp_len:	length of the response buffer
 
-In that case the sysclk variable will remain cleared (0) and the
-code that follows will trigger the PLL section with the N divider
-for clock master mode (that mode is always used in clock slave mode).
+Leaving the indentation alone clarifies that your changes is just the
+addition of "dev".
 
->> +#ifdef CONFIG_PM
->> +static int max9860_suspend(struct device *dev)
->> +{
->> +	struct max9860_priv *max9860 = dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	ret = regmap_update_bits(max9860->regmap, MAX9860_SYSCLK,
->> +				 MAX9860_PSCLK, MAX9860_PSCLK_OFF);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to disable clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int max9860_resume(struct device *dev)
->> +{
->> +	struct max9860_priv *max9860 = dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	regcache_cache_only(max9860->regmap, false);
->> +	ret = regcache_sync(max9860->regmap);
-> 
-> We didn't go into cache only mode on suspend?  I'd also expect to see
-> the regulators disabled over suspend and some system PM ops.
+>   *
+>   * Sends a command to the SCM and waits for the command to finish processing.
+>   *
+> @@ -247,42 +172,60 @@ static void qcom_scm_inv_range(unsigned long start, unsigned long end)
+>   * and response buffers is taken care of by qcom_scm_call; however, callers are
+>   * responsible for any other cached buffers passed over to the secure world.
+>   */
+> -static int qcom_scm_call(u32 svc_id, u32 cmd_id, const void *cmd_buf,
+> -			size_t cmd_len, void *resp_buf, size_t resp_len)
+> +static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+> +			 const void *cmd_buf, size_t cmd_len, void *resp_buf,
+> +			 size_t resp_len)
+>  {
+>  	int ret;
+>  	struct qcom_scm_command *cmd;
+>  	struct qcom_scm_response *rsp;
+> -	unsigned long start, end;
+> +	size_t alloc_len = sizeof(*cmd) + sizeof(struct qcom_scm_response) +
+> +			   cmd_len + resp_len;
 
-Ooops, that is a leftover, and I think it can be removed. However, your
-comment suggests that I have misunderstood the workings of
-SND_SOC_DAPM_REGULATOR_SUPPLY. I thought dapm would take care of the
-regulators (and the clocks for SND_SOC_DAPM_CLOCK_SUPPLY) so that
-disabling regulators over suspend was handled by the asoc core?
+This would be cleaner if written:
 
->> +static int max9860_mclk_rate(struct device *dev, unsigned long *mclk_rate)
->> +{
->> +	struct clk *mclk = clk_get(dev, "mclk");
-> 
-> Request resources on probe, not at some random point in driver
-> execution.  That will mean probe deferral works properly and that we
-> don't get broken devices instantiated in userspace.
+size_t alloc_len = sizeof(*cmd) + cmd_len + sizeof(*rsp) + resp_len;
 
-This function is only called during probe, but yes, it needs to
-do probe deferral. I'll fix that for the next version.
+> +	dma_addr_t cmd_phys;
+> +	u32 offset;
+>  
+> -	cmd = alloc_qcom_scm_command(cmd_len, resp_len);
+> +	cmd = kzalloc(PAGE_ALIGN(alloc_len), GFP_KERNEL);
+>  	if (!cmd)
+>  		return -ENOMEM;
+>  
+> +	cmd->len = cpu_to_le32(alloc_len);
+> +	offset = offsetof(struct qcom_scm_command, buf);
+> +	cmd->buf_offset = cpu_to_le32(offset);
 
->> +	ret = clk_prepare_enable(mclk);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable MCLK: %d\n", ret);
->> +		clk_put(mclk);
->> +		return ret;
->> +	}
->> +
->> +	*mclk_rate = clk_get_rate(mclk);
->> +
->> +	clk_disable_unprepare(mclk);
-> 
-> This is definitely confused too.  Enabling the clock to read the
-> programmed frequency is at best odd, and obviously if we do get the rate
-> this will ensure that MCLK is disabled which probably isn't ideal.
+Sure this is the offset of the buf in *cmd, but based on the rest of my
+comments below I would have dropped the offset variable and just used
+sizeof(*cmd).
 
-This is the same situation as for the regulators, I thought dapm
-handled it and would prep/enable clocks when they were needed?
+> +	cmd->resp_hdr_offset = cpu_to_le32(offset + cmd_len);
 
->> +err_pm:
->> +	pm_runtime_disable(dev);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(max9860_probe);
-> 
-> I've no idea why this is exported...
+But this would be more intuitive as sizeof(*cmd) + cmd_len;
 
-Me neither. I'll kill that export for the next round.
+> +
+>  	cmd->id = cpu_to_le32((svc_id << 10) | cmd_id);
+>  	if (cmd_buf)
+>  		memcpy(qcom_scm_get_command_buffer(cmd), cmd_buf, cmd_len);
 
-I'll wait for further input on the regulator/clock interaction with dapm
-before I send a v2.
+Somewhat unrelated, but we should probably just inline this helper in
+favour of writing "cmd->buf".
 
-Thanks,
-Peter
+>  
+> +	cmd_phys = dma_map_single(dev, cmd, alloc_len, DMA_TO_DEVICE);
+
+Unless there's a guarantee that the resp buffer is packed onto the
+response we should probably map the entire page(s).
+
+> +	if (dma_mapping_error(dev, cmd_phys)) {
+> +		kfree(cmd);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	mutex_lock(&qcom_scm_lock);
+> -	ret = __qcom_scm_call(cmd);
+> +	ret = smc(cmd_phys);
+> +	if (ret < 0)
+> +		ret = qcom_scm_remap_error(ret);
+>  	mutex_unlock(&qcom_scm_lock);
+>  	if (ret)
+>  		goto out;
+>  
+>  	rsp = qcom_scm_command_to_response(cmd);
+> -	start = (unsigned long)rsp;
+>  
+>  	do {
+> -		qcom_scm_inv_range(start, start + sizeof(*rsp));
+> +		dma_sync_single_for_cpu(dev, cmd_phys + cmd_len + offset,
+
+Same here, would be easier to read if it was
+  cmd_phys + sizeof(*cmd) + cmd_len;
+
+Or even:
+  cmd_phys + le32_to_cpu(cmd->resp_hdr_offset);
+
+> +					sizeof(*rsp), DMA_FROM_DEVICE);
+>  	} while (!rsp->is_complete);
+>  
+> -	end = (unsigned long)qcom_scm_get_response_buffer(rsp) + resp_len;
+> -	qcom_scm_inv_range(start, end);
+> -
+> -	if (resp_buf)
+> +	if (resp_buf) {
+> +		dma_sync_single_for_cpu(dev, cmd_phys + alloc_len - resp_len,
+
+Do we know that the firmware always set
+  rsp->buf_offset = sizeof(*rsp)
+
+Would be clearer (and safe from this assumption) if you have it as:
+  cmd_phys + le32_to_cpu(cmd->resp_hdr_offset) + le32_to_cpu(rsp->buf_offset);
+
+> +					resp_len, DMA_FROM_DEVICE);
+>  		memcpy(resp_buf, qcom_scm_get_response_buffer(rsp), resp_len);
+
+And as we just calculated that offset, we can drop the
+qcom_scm_get_response_buffer() single use helper.
+
+> +	}
+>  out:
+> -	free_qcom_scm_command(cmd);
+> +	dma_unmap_single(dev, cmd_phys, alloc_len, DMA_TO_DEVICE);
+> +	kfree(cmd);
+>  	return ret;
+>  }
+>  
+
+The rest looks good.
+
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
