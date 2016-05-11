@@ -1,65 +1,88 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 00/12] Fixing TI Keystone2 kexec
-Date: Wed, 11 May 2016 10:32:55 +0100
-Message-ID: <20160511093255.GO19428@n2100.arm.linux.org.uk>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <20160511082923.GC8995@dhcp-128-65.nay.redhat.com>
- <20160511085203.GN19428@n2100.arm.linux.org.uk>
- <20160511091338.GC10825@dhcp-128-65.nay.redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160511091338.GC10825@dhcp-128-65.nay.redhat.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v8 0/2] memory: add Atmel EBI (External Bus Interface) driver
+Date: Wed, 11 May 2016 12:13:06 +0200
+Message-ID: <1462961588-23004-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 05:13:38PM +0800, Dave Young wrote:
-> On 05/11/16 at 09:52am, Russell King - ARM Linux wrote:
-> > I think you're confusing things.  DT doesn't contain the boot alias
-> > memory ranges - it's not a separate chunk of memory.  It's an alias
-> > of the same physical address space found higher in the physical
-> > address range.
-> 
-> Hmm, if we forget about kexec how does the 1st kernel get boot memory?
-> not from DT?
+The EBI (External Bus Interface) is used to access external peripherals
+(NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+Each device is assigned a CS line and an address range and can have its
+own configuration (timings, access mode, bus width, ...).
+This driver provides a generic DT binding to configure a device according
+to its requirements.
+For specific device controllers (like the NAND one) the SMC timings
+should be configured by the controller driver through the matrix and
+smc syscon regmaps.
 
-Just like any other ARM system, it pulls itself up by its shoe laces.
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-The kernel assumes that it has been placed into RAM with at least 32KiB
-of writable memory below it, which it uses for the initial page tables.
-It "guesses" that the executing address, rounded down to I-forget-what-
-boundary gives the base address of physical memory.
+Changes since v7:
+- move EBI bus config properties directly in the sub-device node
+- prefix all EBI/SMC properties with atmel,smc-
+- rework the driver to take the new binding into account
+- disable the subdevice when EBI implementation fails to configure
+  the bus as requested
 
-It sets the page table up using that assumption.  The kernel gets going
-with C code, and only _then_ parses the DTB.
+Changes since v6:
+- rework the binding to put per-device config information into a
+  separate subnode and have devices connected to the EBI bus
+  defined as direct children of the EBI node
+- make all EBI timings mandatory
+- keep adding sub-devices when a failure occurs on one of them
 
-If we then find that we're running on TI Keystone 2, part of the early
-platform initialisation specifies to the ARM core code that the kernel
-is to switch a high physical address space > 4GiB, and this provokes
-a "dance" where we tear the MMU back down, run some more assembly code
-to fix up the page tables, and re-initialise the MMU before returning
-to the kernel C code, this time running in the high physical address
-space.  This break-modify-make is an architecture requirement.  We
-also record the physical address delta between the original physical
-address space and the high physical address space so that we can reverse
-the translation for code which needs identity mapping (eg, SMP bringup.)
+Changes since v5:
+- remove the "atmel,specialized-logic" property: now all devices are
+  are attached to the SMC logic by default, and specialized drivers
+  (like the NAND controller one), should change this configuration
+  manually.
+- provide hardware readout to allow partial config description.
+  This is mainly here to keep existing platforms (where everything
+  is configured by the bootloader/bootstrap) in working state.
+- rename "atmel,tdf-optimized" into "atmel,tdf-mode" and switch from
+  a boolean to string property to properly support partial config
 
-The DTB only contains the high physical address space memory information,
-and the kernel now parses the DTB, and sets the page tables up properly
-for the running system.
+Changes since v4:
+- fix inconsistencies in SMC and MATRIX registers definition
+- add missing compatible strings for at91sam9rl SoC
+- fix DT bindings documentation
+- replace "atmel,generic-dev" property by "atmel,specialized-logic"
 
-> > If we put it in DT, then we need a way to also describe that it is an
-> > alias of some other bit of physical memory.
-> 
-> I may missed the background, I just want kexec to get infomation just like
-> the normal kernel.
+Changes since v3:
+- added AT91_MATRIX_USBPUCR_PUON definition
+- removed useless macros (those directly returning SoC specific register
+  offsets)
+- use syscon_regmap_lookup_by_phandle instead of of_parse_phandle +
+  syscon_node_to_regmap
+- drop AT91_EBICSA_REGFIELD and AT91_MULTI_EBICSA_REGFIELD macros
 
-See above.  What you're asking for isn't really possible.
+Changes since v2:
+- minor fixes int DT bindings doc
+- fix SMC macros
+- make use of SMC macros defined in include/linux/mfd/syscon/atmel-smc.h
+
+Changes since v1:
+- almost everything :-)
+
+Boris Brezillon (2):
+  memory: add Atmel EBI (External Bus Interface) driver
+  memory: atmel-ebi: add DT bindings documentation
+
+ .../bindings/memory-controllers/atmel,ebi.txt      | 136 ++++
+ drivers/memory/Kconfig                             |  11 +
+ drivers/memory/Makefile                            |   1 +
+ drivers/memory/atmel-ebi.c                         | 771 +++++++++++++++++++++
+ 4 files changed, 919 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+ create mode 100644 drivers/memory/atmel-ebi.c
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
