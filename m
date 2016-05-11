@@ -1,55 +1,70 @@
-From: Matt Fleming <matt@codeblueprint.co.uk>
-Subject: Re: [PATCH] Xen: EFI: Parse DT parameters for Xen specific UEFI
-Date: Thu, 12 May 2016 00:24:44 +0100
-Message-ID: <20160511232444.GY2839@codeblueprint.co.uk>
-References: <1462523526-3172-1-git-send-email-zhaoshenglong@huawei.com>
- <20160511122730.GU2839@codeblueprint.co.uk>
- <57333533.2030206@linaro.org>
+From: Andrew Duggan <aduggan@synaptics.com>
+Subject: Re: [PATCH v2 0/3] input: rmi4: Regulator supply support
+Date: Wed, 11 May 2016 16:30:16 -0700
+Message-ID: <5733C088.1090700@synaptics.com>
+References: <1462596008-21381-1-git-send-email-bjorn.andersson@linaro.org>
+ <57312CFB.2040304@synaptics.com> <20160510154904.GI1256@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57333533.2030206@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shannon Zhao <shannon.zhao@linaro.org>
-Cc: Shannon Zhao <zhaoshenglong@huawei.com>, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, sstabellini@kernel.org, stefano@aporeto.com, julien.grall@arm.com, ard.biesheuvel@linaro.org, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, peter.huangpeng@huawei.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160510154904.GI1256@tuxbot>
+Sender: linux-input-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 May, at 09:35:47PM, Shannon Zhao wrote:
-> > 
-> > Also, why do you need to setup efi.runtime_version here? Isn't that
-> > done inside uefi_init()?
-> > 
-> I don't see any codes which setup efi.runtime_version in uefi_init().
- 
-Look in the EFI tree,
+Hi Bjorn,
 
-  https://git.kernel.org/cgit/linux/kernel/git/mfleming/efi.git/tree/drivers/firmware/efi/arm-init.c?h=next#n120
+On 05/10/2016 08:49 AM, Bjorn Andersson wrote:
+> On Mon 09 May 17:36 PDT 2016, Andrew Duggan wrote:
+>
+>> Hi Bjorn,
+>>
+>> On 05/06/2016 09:40 PM, Bjorn Andersson wrote:
+>>> The first version of the regulator support patch suffered from being
+>>> implemented in the transport driver, as a work around for resource availability
+>>> racing (EPROBE_DEFER of the core driver) with the interrupt handler.
+>>>
+>>> After reconsidering the solutions discussed following that I concluded that the
+>>> interrupt management is not really part of the transport, neither conceptually
+>>> or electrically. I therefor here suggest (patch 1/3) to move the interrupt
+>>> registration and handling to the core rmi driver.
+>> My concern with moving interrupt processing to the core is that not all
+>> transports report attn to the rmi core using an irq. The HID and SMBus
+>> transports which are currently in development, reside a little higher in the
+>> stack and attention is reported using different mechanisms. We moved
+>> interrupt handling to the transport drivers so that they could handle the
+>> differences in how attn is reported.
+>>
+> I suspected that to be the case.
+>
+>> This message has some of the previous discussion regarding interrupt
+>> processing:
+>> https://lkml.org/lkml/2015/11/28/123
+>>
+>> Similarly, not all transports will need support for regulators. Implementing
+>> both in the transport drivers avoids the EPROBE_DEFER racing and avoids
+>> adding checks in the core to see if it needs to handle interrupts and manage
+>> regulators.
+>>
+> So either we duplicate the regulator support in spi/i2c or we make them
+> optional in the core driver. Sounds like you prefer the prior, i.e. v1
+> of my patch.
 
-> > Here is how I would have expected this patch to look:
-> > 
-> >   - Add FDT code to find hypervisor EFI params
-> > 
-> >   - Force enable EFI_RUNTIME_SERVICES for Xen and call
-> >     xen_efi_runtime_setup() inside xen_guest_init()
-> > 
-> >   - Change arm_enable_runtime_services() to handle the case where
-> >     EFI_RUNTIME_SERVICES is already set
-> > 
-> > Am I misunderstanding some ordering issues?
-> 
-> Since xen_guest_init() and arm_enable_runtime_services() are both
-> early_initcall and the calling order is random I think.
+Yes, after all this I think it makes sense to put regulator support in 
+the spi/i2c transports like in your v1 patch. I essentially duplicated 
+the irq handling code in both transports so I would be ok with 
+duplicating regulator support too. It doesn't seem like that much code. 
+But, if this is too much duplication we could create some sort of common 
+file and put the common irq and regulator support functions which could 
+be called in the transports. Similar to how rmi_2d_sensor.c defines some 
+common functions shared between rmi_f11 and rmi_f12.
 
-Urgh, right, I missed that.
 
-> And when we call xen_efi_runtime_setup() and setup
-> efi.runtime_version in xen_guest_init(), the efi.systab might be
-> NULL. So it needs to map the systanle explicitly before we use
-> efi.systab.
+Thanks,
+Andrew
 
-Could you explain why you need to copy efi.runtime_version instead of
-letting the existing code in uefi_init() set it up?
+> Regards,
+> Bjorn
 
-Also, efi.systab isn't used by xen_efi_runtime_setup() as far I can
-see, not sure why you need that either?
