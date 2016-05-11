@@ -1,104 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: MAX9860: new driver
-Date: Wed, 11 May 2016 21:53:53 +0100
-Message-ID: <20160511205353.GV6261@sirena.org.uk>
-References: <1462892797-1147-1-git-send-email-peda@axentia.se>
- <20160511152950.GL6261@sirena.org.uk>
- <be1f0f5c-5dbe-65f8-d55c-df07a92a558e@axentia.se>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v8 8/8] i2c: rk3x: support fast-mode plus for rk3399
+Date: Wed, 11 May 2016 23:09:43 +0200
+Message-ID: <5153288.jNhUuzGC3g@phil>
+References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com> <1462908794-27333-1-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1AtvaQRkIQxkm1Oe"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <be1f0f5c-5dbe-65f8-d55c-df07a92a558e-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462908794-27333-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: wsa@the-dreams.de, robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Am Mittwoch, 11. Mai 2016, 03:33:14 schrieb David Wu:
 
---1AtvaQRkIQxkm1Oe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+please always try to also provide some sort of commit message.
 
-On Wed, May 11, 2016 at 10:28:12PM +0200, Peter Rosin wrote:
-> On 2016-05-11 17:29, Mark Brown wrote:
-> > On Tue, May 10, 2016 at 05:06:37PM +0200, Peter Rosin wrote:
+---
+Implement fast mode plus that allows bus speeds of up to 1MHz.
+.....
 
-> >> +		if (master) {
-> >> +			switch (max9860->pclk_rate) {
-> >> +			case 12000000:
-> >> +				sysclk = MAX9860_FREQ_12MHZ;
-> >> +				break;
-> >> +			case 13000000:
-> >> +				sysclk = MAX9860_FREQ_13MHZ;
-> >> +				break;
-> >> +			case 19200000:
-> >> +				sysclk = MAX9860_FREQ_19_2MHZ;
-> >> +				break;
-> >> +			}
+---
 
-> > What if we have another PCLK rate?
+Additionally, the i2c-noob in me would wish for a short sentence on where 
+the timing values come from (measured, somewhere in the TRM I didn't find or 
+something completely different).
 
-> In that case the sysclk variable will remain cleared (0) and the
-> code that follows will trigger the PLL section with the N divider
-> for clock master mode (that mode is always used in clock slave mode).
 
-The code needs to make it clear that this is an intentional fallthrough,
-an explicit default case would help a lot.
+Patch content itself looks good, so with a suitable commit message,
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-> > We didn't go into cache only mode on suspend?  I'd also expect to see
-> > the regulators disabled over suspend and some system PM ops.
 
-> Ooops, that is a leftover, and I think it can be removed. However, your
-> comment suggests that I have misunderstood the workings of
-> SND_SOC_DAPM_REGULATOR_SUPPLY. I thought dapm would take care of the
-> regulators (and the clocks for SND_SOC_DAPM_CLOCK_SUPPLY) so that
-> disabling regulators over suspend was handled by the asoc core?
-
-It will disable the regulators but that's not going to end well if
-you're including core supplies required to maintain the register map,
-it'll disable before runtime suspend and enable after runtime resume.
-The regulator supply widget is intended for supplies that power
-particular components on the CODEC.
-
-> >> +	ret = clk_prepare_enable(mclk);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "Failed to enable MCLK: %d\n", ret);
-> >> +		clk_put(mclk);
-> >> +		return ret;
-> >> +	}
-
-> >> +	*mclk_rate = clk_get_rate(mclk);
-
-> >> +	clk_disable_unprepare(mclk);
-
-> > This is definitely confused too.  Enabling the clock to read the
-> > programmed frequency is at best odd, and obviously if we do get the rate
-> > this will ensure that MCLK is disabled which probably isn't ideal.
-
-> This is the same situation as for the regulators, I thought dapm
-> handled it and would prep/enable clocks when they were needed?
-
-That still doesn't explain the bouncing on and off here.
-
---1AtvaQRkIQxkm1Oe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXM5vhAAoJECTWi3JdVIfQdNgH/1Fqs/C1wA3GFyeGyOlpLXUy
-DsKNDfpO6t1AgGBbWZT3Yt8H//mdkRMeY7Puu33bJCOX7AOy7ZFdckxj7k1YwcpP
-RN/RfgMKqS7f5lJyRZGot/16nZmL9a7UaiArBVPOSwkOYNTa4cJj+2COww1EsB7J
-ipPz1xqJvlN5EhZLDtSM3q/QkL9ml20aOCxg2qgjEkuzTOy0JFB7BY/dkLSfSCKn
-jheiHednBF/9fcoHfu97WWxMBi3c9FkkcH6yrOcH080KuXlsDmop4TNiFNP7ar7c
-VnAjeSUSuIPFwPJEZ9StytBoXpTRKlBBz/u9ESCL3v5eIvXeKIWRoJOPXT9gigQ=
-=s+WP
------END PGP SIGNATURE-----
-
---1AtvaQRkIQxkm1Oe--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Change in v8:
+> - None
+> 
+>  drivers/i2c/busses/i2c-rk3x.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+> index 25ed1ad..0ba25ee 100644
+> --- a/drivers/i2c/busses/i2c-rk3x.c
+> +++ b/drivers/i2c/busses/i2c-rk3x.c
+> @@ -126,6 +126,17 @@ static const struct i2c_spec_values fast_mode_spec =
+> { .min_hold_buffer_ns = 1300,
+>  };
+> 
+> +static const struct i2c_spec_values fast_mode_plus_spec = {
+> +	.min_hold_start_ns = 260,
+> +	.min_low_ns = 500,
+> +	.min_high_ns = 260,
+> +	.min_setup_start_ns = 260,
+> +	.max_data_hold_ns = 400,
+> +	.min_data_setup_ns = 50,
+> +	.min_setup_stop_ns = 260,
+> +	.min_hold_buffer_ns = 500,
+> +};
+> +
+>  /**
+>   * struct rk3x_i2c_calced_timings:
+>   * @div_low: Divider output for low
+> @@ -531,8 +542,10 @@ static const struct i2c_spec_values
+> *rk3x_i2c_get_spec(unsigned int speed) {
+>  	if (speed <= 100000)
+>  		return &standard_mode_spec;
+> -	else
+> +	else if (speed <= 400000)
+>  		return &fast_mode_spec;
+> +	else
+> +		return &fast_mode_plus_spec;
+>  }
+> 
+>  /**
+> @@ -743,9 +756,9 @@ static int rk3x_i2c_v1_calc_timings(unsigned long
+> clk_rate, const struct i2c_spec_values *spec;
+>  	int ret = 0;
+> 
+> -	/* Support standard-mode and fast-mode */
+> -	if (WARN_ON(t->bus_freq_hz > 400000))
+> -		t->bus_freq_hz = 400000;
+> +	/* Support standard-mode, fast-mode and fast-mode plus */
+> +	if (WARN_ON(t->bus_freq_hz > 1000000))
+> +		t->bus_freq_hz = 1000000;
+> 
+>  	/* prevent scl_rate_khz from becoming 0 */
+>  	if (WARN_ON(t->bus_freq_hz < 1000))
