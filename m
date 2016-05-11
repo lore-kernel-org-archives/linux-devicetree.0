@@ -1,79 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 9/9] dt-bindings: msm/dsi: Add assigned clocks bindings
-Date: Wed, 11 May 2016 09:08:44 -0500
-Message-ID: <20160511140844.GA3064@rob-hp-laptop>
-References: <1462273081-5814-1-git-send-email-architt@codeaurora.org>
- <1462273081-5814-10-git-send-email-architt@codeaurora.org>
- <20160504134416.GA1235@rob-hp-laptop>
- <572A39B7.5020008@codeaurora.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 10/14] usb: otg: add hcd companion support
+Date: Wed, 11 May 2016 17:13:19 +0300
+Message-ID: <57333DFF.3090609@ti.com>
+References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
+ <1462191537-10314-11-git-send-email-rogerq@ti.com>
+ <20160504131700.GA20184@rob-hp-laptop> <5729FD66.4020704@ti.com>
+ <20160511135426.GA25762@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <572A39B7.5020008-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20160511135426.GA25762@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org
+Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 04, 2016 at 11:34:39PM +0530, Archit Taneja wrote:
+
+
+On 11/05/16 16:54, Rob Herring wrote:
+> On Wed, May 04, 2016 at 04:47:18PM +0300, Roger Quadros wrote:
+>> On 04/05/16 16:17, Rob Herring wrote:
+>>> On Mon, May 02, 2016 at 03:18:53PM +0300, Roger Quadros wrote:
+>>>> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>>>
+>>>> Since some host controller (e.g. EHCI) needs a companion host controller
+>>>> (e.g. OHCI), this patch adds such a configuration to use it in the OTG
+>>>> core.
+>>>>
+>>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/usb/generic.txt |  3 +++
+>>>>  drivers/usb/common/usb-otg.c                      | 32 ++++++++++++++++-------
+>>>>  include/linux/usb/otg.h                           |  7 ++++-
+>>>>  3 files changed, 32 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+>>>> index f6866c1..1db1c33 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/generic.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/generic.txt
+>>>> @@ -27,6 +27,9 @@ Optional properties:
+>>>>   - otg-controller: phandle to otg controller. Host or gadget controllers can
+>>>>  			contain this property to link it to a particular OTG
+>>>>  			controller.
+>>>> + - hcd-needs-companion: must be present if otg controller is dealing with
+>>>> +			EHCI host controller that needs a companion OHCI host
+>>>> +			controller.
+>>>
+>>> Don't you need to have a link to the companion controller node?
+>>
+>> primary and companion controllers are totally independent of each other
+>> e.g. EHCI and OHCI. They are enabled by separate Kconfig options and
+>> the system can operate with either or both of them enabled.
+>>
+>> At the OTG layer we don't have information as to whether we should be waiting
+>> for both of them to register or not and hence need this "hcd-needs-companion" flag.
 > 
+> What I mean is if you have 2 EHCI controllers with 2 companion 
+> controllers, don't you need to know which companion goes with which EHCI 
+> controller? Just like you do for the otg-controller property.
 > 
-> On 5/4/2016 7:14 PM, Rob Herring wrote:
-> >On Tue, May 03, 2016 at 04:28:01PM +0530, Archit Taneja wrote:
-> >>The PLL in the DSI PHY block generates 2 clock outputs (Byte and Pixel
-> >>clocks) that are fed into the Multimedia Clock Controller (MMCC). The MMCC
-> >>uses these as source clocks for some of its RCGs to generate clocks that
-> >>finally feed to the DSI host controller.
-> >>
-> >>Use the assigned clocks DT bindings to set up the MMCC RCGs that feed to
-> >>the DSI host. Use the DSI PHY provided clocks to set up the parents
-> >>of these assigned clocks.
-> >>
-> >>Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >>---
-> >>  Documentation/devicetree/bindings/display/msm/dsi.txt | 15 +++++++++++++++
-> >>  1 file changed, 15 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> >>index 0223f06..686f475 100644
-> >>--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-> >>+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> >>@@ -22,6 +22,10 @@ Required properties:
-> >>    * "core_clk"
-> >>    For DSIv2, we need an additional clock:
-> >>     * "src_clk"
-> >>+- assigned-clocks: Parents of "byte_clk" and "pixel_clk" for the given platform.
-> >>+  See [1] for more details.
-> >>+- assigned-clock-parents: The Byte clock and Pixel clock PLL outputs provided
-> >>+  by a DSI PHY block.
-> >>  - vdd-supply: phandle to vdd regulator device node
-> >>  - vddio-supply: phandle to vdd-io regulator device node
-> >>  - vdda-supply: phandle to vdda regulator device node
-> >>@@ -90,6 +94,8 @@ Required properties:
-> >>    * "dsi_pll"
-> >>    * "dsi_phy"
-> >>    * "dsi_phy_regulator"
-> >>+- clock-cells: Must be 1. The DSI PHY block acts as a clock provider, creating
-> >>+  2 clocks: A byte clock (index 0), and a pixel clock (index 1).
-> >
-> >You can't really add new required properties unless they are for a new
-> >compatible string.
-> 
-> Does this hold even when currently there isn't any device tree file in
-> the kernel that has this DT node in it?
 
-Generally it should, but in this case that is fine.
+That is a very good point. I'm not very sure and it seems that current code won't work
+with multiple EHCI + companion instances.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Alan, does USB core even know which EHCI and OHCI are linked to the same port
+or the handoff is software transparent?
 
-> I was trying to get all the properties in place before posting out
-> patches that actually add the nodes into the platform files. Currently,
-> they exist only DT files in downstream kernels.
-
-"If it is not upstream, it doesn't exist." :)
-
-Rob
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
