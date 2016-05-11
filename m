@@ -1,30 +1,39 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [Patch v4 3/8] firmware: qcom: scm: Use atomic SCM for cold boot
-Date: Wed, 11 May 2016 12:56:03 -0700
-Message-ID: <20160511195603.GW1256@tuxbot>
-References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
- <1462976158-26016-4-git-send-email-andy.gross@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462976158-26016-4-git-send-email-andy.gross@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: [PATCH] of/unittest: Remove unnecessary module.h header inclusion
+Date: Wed, 11 May 2016 16:26:18 -0400
+Message-ID: <1462998379-25819-1-git-send-email-javier@osg.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 11 May 07:15 PDT 2016, Andy Gross wrote:
+The OF_UNITTEST Kconfig symbol is bool so this unittest can only be
+built-in and not build as a module. Also, nothing defined in this
+header file used so is not necessary to include it.
 
-> This patch changes the cold_set_boot_addr function to use atomic SCM
-> calls.  cold_set_boot_addr required adding qcom_scm_call_atomic2 to
-> support the two arguments going to the smc call.  Using atomic removes
-> the need for memory allocation and instead places all arguments in
-> registers.
-> 
-> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+---
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+ drivers/of/unittest.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Regards,
-Bjorn
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index fd6318a91fa3..f34ed9310323 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -8,7 +8,6 @@
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/hashtable.h>
+-#include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_irq.h>
+-- 
+2.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
