@@ -1,389 +1,283 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-	<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: [PATCHv3 2/4] ARM: dts: r8a7791: Reference both DMA controllers
-Date: Wed, 11 May 2016 15:13:56 +0200
-Message-ID: <1462972438-20797-3-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-References: <1462972438-20797-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Xen: EFI: Parse DT parameters for Xen specific UEFI
+Date: Wed, 11 May 2016 21:35:47 +0800
+Message-ID: <57333533.2030206@linaro.org>
+References: <1462523526-3172-1-git-send-email-zhaoshenglong@huawei.com>
+ <20160511122730.GU2839@codeblueprint.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462972438-20797-1-git-send-email-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160511122730.GU2839-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefano-yd54mjeZNzVBDgjK7y7TUQ@public.gmane.org, julien.grall-5wv7dgnIgG8@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-R-Car Gen2 have two DMA controllers, which are equivalent. Add
-references to both dmac0 and dmac1 so the driver can choose which one t=
-o
-use.
+On 2016=E5=B9=B405=E6=9C=8811=E6=97=A5 20:27, Matt Fleming wrote:
+> On Fri, 06 May, at 04:32:06PM, Shannon Zhao wrote:
+>> > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >=20
+>> > Add a new function to parse DT parameters for Xen specific UEFI ju=
+st
+>> > like the way for normal UEFI. Then it could reuse the existing cod=
+es.
+>> >=20
+>> > If Xen supports EFI, initialize runtime services.
+> =20
+> This commit log would benefit from a little expansion. I'd like to se=
+e
+> information that answers the following questions,
+>=20
+>  - How do the Xen DT paramters differ from bare metal?
+>  - What existing code is reused with your patch?
+>  - How are Xen runtime services different from bare metal?
+>  - Why is it OK to force enable EFI runtime services for Xen?
+>=20
+> I think it would also be good to explicitly state that we do not
+> expect to find both Xen EFI DT parameters and bare metal EFI DT
+> parameters when performing the search; the two should be mutually
+> exclusive.
+>=20
+>> > CC: Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>
+>> > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> > Drop using of EFI_PARAVIRT. Discussion can be found from [1].
+>> > [1] https://lkml.org/lkml/2016/4/29/8
+>> > ---
+>> >  arch/arm/include/asm/efi.h         |  2 +
+>> >  arch/arm/xen/enlighten.c           | 16 ++++++++
+>> >  arch/arm64/include/asm/efi.h       |  2 +
+>> >  drivers/firmware/efi/arm-runtime.c | 70 +++++++++++++++++++++++--=
+-------
+>> >  drivers/firmware/efi/efi.c         | 81 +++++++++++++++++++++++++=
++++++--------
+>> >  5 files changed, 137 insertions(+), 34 deletions(-)
+>> >=20
+>> > diff --git a/arch/arm/include/asm/efi.h b/arch/arm/include/asm/efi=
+=2Eh
+>> > index e0eea72..5ba4343 100644
+>> > --- a/arch/arm/include/asm/efi.h
+>> > +++ b/arch/arm/include/asm/efi.h
+>> > @@ -52,9 +52,11 @@ static inline void efi_set_pgd(struct mm_struct=
+ *mm)
+>> > =20
+>> >  void efi_virtmap_load(void);
+>> >  void efi_virtmap_unload(void);
+>> > +int xen_arm_enable_runtime_services(void);
+>> > =20
+>> >  #else
+>> >  #define efi_init()
+>> > +#define xen_arm_enable_runtime_services() (0)
+>> >  #endif /* CONFIG_EFI */
+>> > =20
+>> >  /* arch specific definitions used by the stub code */
+>> > diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+>> > index 13e3e9f..3362870 100644
+>> > --- a/arch/arm/xen/enlighten.c
+>> > +++ b/arch/arm/xen/enlighten.c
+>> > @@ -16,6 +16,7 @@
+>> >  #include <asm/xen/hypervisor.h>
+>> >  #include <asm/xen/hypercall.h>
+>> >  #include <asm/system_misc.h>
+>> > +#include <asm/efi.h>
+>> >  #include <linux/interrupt.h>
+>> >  #include <linux/irqreturn.h>
+>> >  #include <linux/module.h>
+>> > @@ -261,6 +262,13 @@ static int __init fdt_find_hyper_node(unsigne=
+d long node, const char *uname,
+>> >  	    !strncmp(hyper_node.prefix, s, strlen(hyper_node.prefix)))
+>> >  		hyper_node.version =3D s + strlen(hyper_node.prefix);
+>> > =20
+>> > +	if (IS_ENABLED(CONFIG_XEN_EFI)) {
+>> > +		/* Check if Xen supports EFI */
+>> > +		if ((of_get_flat_dt_subnode_by_name(node, "uefi") > 0) &&
+>> > +		    !efi_runtime_disabled())
+>> > +			set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+>> > +	}
+>> > +
+>> >  	return 0;
+>> >  }
+>> > =20
+> The above comment could do with including similar information to the
+> commit log as to why we want to force enable runtime services. For x8=
+6
+> we have this,
+>=20
+> 	 *
+> 	 * When EFI_PARAVIRT is in force then we could not map runtime
+> 	 * service memory region because we do not have direct access to it.
+> 	 * However, runtime services are available through proxy functions
+> 	 * (e.g. in case of Xen dom0 EFI implementation they call special
+> 	 * hypercall which executes relevant EFI functions) and that is why
+> 	 * they are always enabled.
+> 	 */
+>=20
+> We need something similar here.
+>=20
+>> > @@ -338,6 +346,7 @@ static int __init xen_guest_init(void)
+>> >  {
+>> >  	struct xen_add_to_physmap xatp;
+>> >  	struct shared_info *shared_info_page =3D NULL;
+>> > +	int ret;
+>> > =20
+>> >  	if (!xen_domain())
+>> >  		return 0;
+>> > @@ -352,6 +361,13 @@ static int __init xen_guest_init(void)
+>> >  		return -ENODEV;
+>> >  	}
+>> > =20
+>> > +	if (IS_ENABLED(CONFIG_XEN_EFI) && efi_enabled(EFI_BOOT) &&
+>> > +	    efi_enabled(EFI_RUNTIME_SERVICES)) {
+>> > +		ret =3D xen_arm_enable_runtime_services();
+>> > +		if (ret)
+>> > +			return ret;
+>> > +	}
+>> > +
+> Is it ever possible to have EFI_RUNTIME_SERVICES set but
+> efi_enabled(EFI_BOOT) and IS_ENABLED(CONFIG_XEN_EFI) be false inside
+> this function? If the answer is "no", I'd suggest just reducing this
+> down to,
+>=20
+> 	/*
+> 	 * The fdt parsing code will have set EFI_RUNTIME_SERVICES if
+> 	 * it found Xen EFI parameters. Force enable runtime services.
+> 	 */=20
+> 	if (efi_enabled(EFI_RUNTIME_SERVICES)) {
+> 		ret =3D xen_arm_enable_runtime_services();
+> 		if (ret)
+> 			return ret;
+> 	}
+>=20
+> But first, see my comments below.
+>=20
+>> > @@ -39,6 +40,33 @@ static struct mm_struct efi_mm =3D {
+>> >  	.mmlist			=3D LIST_HEAD_INIT(efi_mm.mmlist),
+>> >  };
+>> > =20
+>> > +static int __init efi_remap_init(void)
+>> > +{
+>> > +	u64 mapsize;
+>> > +
+>> > +	pr_info("Remapping and enabling EFI services.\n");
+>> > +
+>> > +	mapsize =3D memmap.map_end - memmap.map;
+>> > +	memmap.map =3D (__force void *)ioremap_cache(memmap.phys_map,
+>> > +						   mapsize);
+>> > +	if (!memmap.map) {
+>> > +		pr_err("Failed to remap EFI memory map\n");
+>> > +		return -ENOMEM;
+>> > +	}
+>> > +	memmap.map_end =3D memmap.map + mapsize;
+>> > +	efi.memmap =3D &memmap;
+>> > +
+>> > +	efi.systab =3D (__force void *)ioremap_cache(efi_system_table,
+>> > +						   sizeof(efi_system_table_t));
+>> > +	if (!efi.systab) {
+>> > +		pr_err("Failed to remap EFI System Table\n");
+>> > +		return -ENOMEM;
+>> > +	}
+>> > +	set_bit(EFI_SYSTEM_TABLES, &efi.flags);
+>> > +
+>> > +	return 0;
+>> > +}
+>> > +
+>> >  static bool __init efi_virtmap_init(void)
+>> >  {
+>> >  	efi_memory_desc_t *md;
+>> > @@ -75,7 +103,7 @@ static bool __init efi_virtmap_init(void)
+>> >   */
+>> >  static int __init arm_enable_runtime_services(void)
+>> >  {
+>> > -	u64 mapsize;
+>> > +	int ret;
+>> > =20
+>> >  	if (!efi_enabled(EFI_BOOT)) {
+>> >  		pr_info("EFI services will not be available.\n");
+>> > @@ -87,25 +115,14 @@ static int __init arm_enable_runtime_services=
+(void)
+>> >  		return 0;
+>> >  	}
+>> > =20
+>> > -	pr_info("Remapping and enabling EFI services.\n");
+>> > -
+>> > -	mapsize =3D memmap.map_end - memmap.map;
+>> > -	memmap.map =3D (__force void *)ioremap_cache(memmap.phys_map,
+>> > -						   mapsize);
+>> > -	if (!memmap.map) {
+>> > -		pr_err("Failed to remap EFI memory map\n");
+>> > -		return -ENOMEM;
+>> > +	if (efi_enabled(EFI_RUNTIME_SERVICES)) {
+>> > +		pr_info("EFI runtime services access via paravirt.\n");
+>> > +		return 0;
+>> >  	}
+>> > -	memmap.map_end =3D memmap.map + mapsize;
+>> > -	efi.memmap =3D &memmap;
+>> > =20
+>> > -	efi.systab =3D (__force void *)ioremap_cache(efi_system_table,
+>> > -						   sizeof(efi_system_table_t));
+>> > -	if (!efi.systab) {
+>> > -		pr_err("Failed to remap EFI System Table\n");
+>> > -		return -ENOMEM;
+>> > -	}
+>> > -	set_bit(EFI_SYSTEM_TABLES, &efi.flags);
+>> > +	ret =3D efi_remap_init();
+>> > +	if (ret)
+>> > +		return ret;
+>> > =20
+>> >  	if (!efi_virtmap_init()) {
+>> >  		pr_err("No UEFI virtual mapping was installed -- runtime servic=
+es will not be available\n");
+>> > @@ -122,6 +139,23 @@ static int __init arm_enable_runtime_services=
+(void)
+>> >  }
+>> >  early_initcall(arm_enable_runtime_services);
+>> > =20
+>> > +int __init xen_arm_enable_runtime_services(void)
+>> > +{
+>> > +	int ret;
+>> > +
+>> > +	ret =3D efi_remap_init();
+>> > +	if (ret)
+>> > +		return ret;
+>> > +
+>> > +	if (IS_ENABLED(CONFIG_XEN_EFI)) {
+>> > +		/* Set up runtime services function pointers for Xen Dom0 */
+>> > +		xen_efi_runtime_setup();
+>> > +		efi.runtime_version =3D efi.systab->hdr.revision;
+>> > +	}
+>> > +
+>> > +	return 0;
+>> > +}
+> Since you call efi_remap_init() in both of these functions, couldn't
+> you leave the existing code alone and bail after setting up the memor=
+y
+> map and systab in arm_enable_runtime_services()?
+>=20
+> Also, why do you need to setup efi.runtime_version here? Isn't that
+> done inside uefi_init()?
+>=20
+I don't see any codes which setup efi.runtime_version in uefi_init().
 
-Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
-h.se>
----
- arch/arm/boot/dts/r8a7791.dtsi | 145 ++++++++++++++++++++++++---------=
---------
- 1 file changed, 87 insertions(+), 58 deletions(-)
+> Here is how I would have expected this patch to look:
+>=20
+>   - Add FDT code to find hypervisor EFI params
+>=20
+>   - Force enable EFI_RUNTIME_SERVICES for Xen and call
+>     xen_efi_runtime_setup() inside xen_guest_init()
+>=20
+>   - Change arm_enable_runtime_services() to handle the case where
+>     EFI_RUNTIME_SERVICES is already set
+>=20
+> Am I misunderstanding some ordering issues?
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791=
-=2Edtsi
-index db67e34..2f92414 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -514,8 +514,9 @@
- 		reg =3D <0 0xe60b0000 0 0x425>;
- 		interrupts =3D <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp9_clks R8A7791_CLK_IICDVFS>;
--		dmas =3D <&dmac0 0x77>, <&dmac0 0x78>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x77>, <&dmac0 0x78>,
-+		       <&dmac1 0x77>, <&dmac1 0x78>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -527,8 +528,9 @@
- 		reg =3D <0 0xe6500000 0 0x425>;
- 		interrupts =3D <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_IIC0>;
--		dmas =3D <&dmac0 0x61>, <&dmac0 0x62>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x61>, <&dmac0 0x62>,
-+		       <&dmac1 0x61>, <&dmac1 0x62>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -540,8 +542,9 @@
- 		reg =3D <0 0xe6510000 0 0x425>;
- 		interrupts =3D <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_IIC1>;
--		dmas =3D <&dmac0 0x65>, <&dmac0 0x66>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x65>, <&dmac0 0x66>,
-+		       <&dmac1 0x65>, <&dmac1 0x66>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -556,8 +559,9 @@
- 		reg =3D <0 0xee200000 0 0x80>;
- 		interrupts =3D <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_MMCIF0>;
--		dmas =3D <&dmac0 0xd1>, <&dmac0 0xd2>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xd1>, <&dmac0 0xd2>,
-+		       <&dmac1 0xd1>, <&dmac1 0xd2>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		reg-io-width =3D <4>;
- 		status =3D "disabled";
-@@ -569,8 +573,9 @@
- 		reg =3D <0 0xee100000 0 0x328>;
- 		interrupts =3D <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI0>;
--		dmas =3D <&dmac1 0xcd>, <&dmac1 0xce>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xcd>, <&dmac0 0xce>,
-+		       <&dmac1 0xcd>, <&dmac1 0xce>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -580,8 +585,9 @@
- 		reg =3D <0 0xee140000 0 0x100>;
- 		interrupts =3D <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI1>;
--		dmas =3D <&dmac1 0xc1>, <&dmac1 0xc2>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xc1>, <&dmac0 0xc2>,
-+		       <&dmac1 0xc1>, <&dmac1 0xc2>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -591,8 +597,9 @@
- 		reg =3D <0 0xee160000 0 0x100>;
- 		interrupts =3D <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI2>;
--		dmas =3D <&dmac1 0xd3>, <&dmac1 0xd4>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xd3>, <&dmac0 0xd4>,
-+		       <&dmac1 0xd3>, <&dmac1 0xd4>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -604,8 +611,9 @@
- 		interrupts =3D <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFA0>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>,
-+		       <&dmac1 0x21>, <&dmac1 0x22>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -617,8 +625,9 @@
- 		interrupts =3D <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFA1>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>,
-+		       <&dmac1 0x25>, <&dmac1 0x26>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -630,8 +639,9 @@
- 		interrupts =3D <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFA2>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>,
-+		       <&dmac1 0x27>, <&dmac1 0x28>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -643,8 +653,9 @@
- 		interrupts =3D <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7791_CLK_SCIFA3>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>,
-+		       <&dmac1 0x1b>, <&dmac1 0x1c>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -656,8 +667,9 @@
- 		interrupts =3D <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7791_CLK_SCIFA4>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>,
-+		       <&dmac1 0x1f>, <&dmac1 0x20>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -669,8 +681,9 @@
- 		interrupts =3D <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7791_CLK_SCIFA5>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>,
-+		       <&dmac1 0x23>, <&dmac1 0x24>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -682,8 +695,9 @@
- 		interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFB0>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x3d>, <&dmac0 0x3e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x3d>, <&dmac0 0x3e>,
-+		       <&dmac1 0x3d>, <&dmac1 0x3e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -695,8 +709,9 @@
- 		interrupts =3D <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFB1>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x19>, <&dmac0 0x1a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x19>, <&dmac0 0x1a>,
-+		       <&dmac1 0x19>, <&dmac1 0x1a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -708,8 +723,9 @@
- 		interrupts =3D <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFB2>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x1d>, <&dmac0 0x1e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1d>, <&dmac0 0x1e>,
-+		       <&dmac1 0x1d>, <&dmac1 0x1e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -722,8 +738,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF0>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>,
-+		       <&dmac1 0x29>, <&dmac1 0x2a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -736,8 +753,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF1>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>,
-+		       <&dmac1 0x2d>, <&dmac1 0x2e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -750,8 +768,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF2>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>,
-+		       <&dmac1 0x2b>, <&dmac1 0x2c>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -764,8 +783,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF3>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x2f>, <&dmac0 0x30>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x2f>, <&dmac0 0x30>,
-+		       <&dmac1 0x2f>, <&dmac1 0x30>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -778,8 +798,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF4>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0xfb>, <&dmac0 0xfc>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xfb>, <&dmac0 0xfc>,
-+		       <&dmac1 0xfb>, <&dmac1 0xfc>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -792,8 +813,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF5>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0xfd>, <&dmac0 0xfe>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xfd>, <&dmac0 0xfe>,
-+		       <&dmac1 0xfd>, <&dmac1 0xfe>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -806,8 +828,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_HSCIF0>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>,
-+		       <&dmac1 0x39>, <&dmac1 0x3a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -820,8 +843,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_HSCIF1>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>,
-+		       <&dmac1 0x4d>, <&dmac1 0x4e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -834,8 +858,9 @@
- 		clocks =3D <&mstp7_clks R8A7791_CLK_HSCIF2>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x3b>, <&dmac0 0x3c>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x3b>, <&dmac0 0x3c>,
-+		       <&dmac1 0x3b>, <&dmac1 0x3c>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -1478,8 +1503,9 @@
- 		reg =3D <0 0xe6b10000 0 0x2c>;
- 		interrupts =3D <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp9_clks R8A7791_CLK_QSPI_MOD>;
--		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>,
-+		       <&dmac1 0x17>, <&dmac1 0x18>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		num-cs =3D <1>;
- 		#address-cells =3D <1>;
-@@ -1492,8 +1518,9 @@
- 		reg =3D <0 0xe6e20000 0 0x0064>;
- 		interrupts =3D <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp0_clks R8A7791_CLK_MSIOF0>;
--		dmas =3D <&dmac0 0x51>, <&dmac0 0x52>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x51>, <&dmac0 0x52>,
-+		       <&dmac1 0x51>, <&dmac1 0x52>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
-@@ -1505,8 +1532,9 @@
- 		reg =3D <0 0xe6e10000 0 0x0064>;
- 		interrupts =3D <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_MSIOF1>;
--		dmas =3D <&dmac0 0x55>, <&dmac0 0x56>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x55>, <&dmac0 0x56>,
-+		       <&dmac1 0x55>, <&dmac1 0x56>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
-@@ -1518,8 +1546,9 @@
- 		reg =3D <0 0xe6e00000 0 0x0064>;
- 		interrupts =3D <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_MSIOF2>;
--		dmas =3D <&dmac0 0x41>, <&dmac0 0x42>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x41>, <&dmac0 0x42>,
-+		       <&dmac1 0x41>, <&dmac1 0x42>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7791_PD_ALWAYS_ON>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
+Since xen_guest_init() and arm_enable_runtime_services() are both
+early_initcall and the calling order is random I think. And when we cal=
+l
+xen_efi_runtime_setup() and setup efi.runtime_version in
+xen_guest_init(), the efi.systab might be NULL. So it needs to map the
+systanle explicitly before we use efi.systab.
+
+Thanks,
 --=20
-2.8.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shannon
