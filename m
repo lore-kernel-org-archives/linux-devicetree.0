@@ -1,37 +1,36 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v3 26/27] ARM: dts: exynos: Add I2C, PWM and UART pinctrl
- to Exynos5410
-Date: Wed, 11 May 2016 08:36:34 -0400
-Message-ID: <1d8b5479-3e29-9523-1862-4dc5fe5da384@osg.samsung.com>
-References: <1462910970-1812-1-git-send-email-krzk@kernel.org>
- <1462910970-1812-27-git-send-email-krzk@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2.1] dt-bindings: Add Renesas R-Car FCP DT bindings
+Date: Wed, 11 May 2016 14:38:48 +0200
+Message-ID: <CAMuHMdV07YFMf4z-pBv-xzMMteH49OKKEgYD7tMRWUWT8Zv7+A@mail.gmail.com>
+References: <1461620198-13428-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1462970190-588-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462910970-1812-27-git-send-email-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1462970190-588-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On Wed, May 11, 2016 at 2:36 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
+> The FCP is a companion module of video processing modules in the Renesas
+> R-Car Gen3 SoCs. It provides data compression and decompression, data
+> caching, and conversion of AXI transactions in order to reduce the
+> memory bandwidth.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-On 05/10/2016 04:09 PM, Krzysztof Kozlowski wrote:
-> Add pincontrol groups for HSI2C (USI), I2C, PWM and UART to Exynos5410.
-> This allows configuring these pins to specific functions.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Gr{oetje,eeting}s,
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
