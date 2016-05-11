@@ -1,49 +1,73 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] drivers/of: Fix depth when unflattening devicetree
-Date: Wed, 11 May 2016 10:37:33 -0500
-Message-ID: <CAL_JsqJN1M_1GZGJHMcymDbDokJQtCqUsbWQ_zqjDvR2SyD_Dw@mail.gmail.com>
-References: <1462920194-28803-1-git-send-email-rklein@nvidia.com>
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH 3/5] ARM: dts: Add I2C1 support for STM32F429 SoC
+Date: Wed, 11 May 2016 17:36:12 +0200
+Message-ID: <1462980974-22091-4-git-send-email-cedric.madianga@gmail.com>
+References: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462920194-28803-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mcoquelin.stm32@gmail.com, patrice.chotard@st.com, wsa@the-dreams.de, robh+dt@kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2016 at 5:43 PM, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> When the implementation for unflatten_dt_node() changed from being
-> recursive to being non-recursive, it had a side effect of increasing the
-> depth passed to fdt_next_node() by 1. This is fine most of the time, but
-> it seems that when the end of the dtb is being parsed, it will cause the
-> FDT_END condition in fdt_next_node() to return a different value
-> (returning nextoffset instead of -FDT_ERR_NOTFOUND). This ends up passing
-> an FDT_ERR_TRUNCATED error back to the unflatten_dt_node() which then
-> sees that and complains "Error -8 processing FDT" causing boot to fail.
->
-> This patch simply avoids incrementing depth and uses modified accesses
-> for local array indices so that the depth is the same as it was before
-> the change as far as fdt_next_node() is concerned.
->
-> This problem was discovered trying to boot Tegra210-Smaug platforms.
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Please reference the commit hash and summary. It is stable at this point.
-
-> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/of/fdt.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index f3da1878eea2..8855ba4f7470 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -407,24 +407,24 @@ static int unflatten_dt_node(const void *blob,
-
-This needs to be based on the top of my dt/next (or linux-next) branch
-which renamed this function.
-
-Otherwise, looks fine to me.
-
-Rob
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 434d4b9..cbfeb4e 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -323,6 +323,18 @@
+ 					slew-rate = <2>;
+ 				};
+ 			};
++
++			i2c1_sda_pin: i2c1_sda@0 {
++				pins {
++					pinmux = <STM32F429_PB9_FUNC_I2C1_SDA>;
++					drive-open-drain;
++				};
++			};
++			i2c1_scl_pin: i2c1_scl@0 {
++				pins {
++					pinmux = <STM32F429_PB6_FUNC_I2C1_SCL>;
++				};
++			};
+ 		};
+ 
+ 		rcc: rcc@40023800 {
+@@ -395,6 +407,18 @@
+ 			interrupts = <80>;
+ 			clocks = <&rcc 0 38>;
+ 		};
++
++		i2c1: i2c@40005400 {
++			compatible = "st,i2c-stm32f4";
++			reg = <0x40005400 0x400>;
++			interrupts = <31>,
++				     <32>;
++			resets = <&rcc 277>;
++			clocks = <&rcc 0 149>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+-- 
+1.9.1
