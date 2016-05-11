@@ -1,74 +1,79 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: Re: [PATCH v4 01/11] clk: sunxi: Add display and
- TCON0 clocks driver
-Date: Wed, 11 May 2016 15:15:41 -0700
-Message-ID: <20160511221541.GG3492@codeaurora.org>
-References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
- <1461590572-4027-2-git-send-email-maxime.ripard@free-electrons.com>
- <20160506223002.GE3492@codeaurora.org>
- <20160508200308.GF6167@lukather>
- <20160509223238.GW3492@codeaurora.org>
- <20160509223924.GX3492@codeaurora.org>
- <1462907459.9981.0.camel@plaes.org>
-Reply-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Leo Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal implementation
+Date: Wed, 11 May 2016 17:20:25 -0500
+Message-ID: <CADRPPNT2OpNxdQV8f_-S_DJjySEOu=SyegLMKU650hxuvr3CYw@mail.gmail.com>
+References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
+	<1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
+	<20160427152532.GX3217@sirena.org.uk>
+	<AM2PR04MB072250B43DE37A38E374679989700@AM2PR04MB0722.eurprd04.prod.outlook.com>
+	<20160509102840.GB6292@sirena.org.uk>
+	<AM2PR04MB0722180ABF5DB9406F56162B89700@AM2PR04MB0722.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDHZXHXDRAMBBEG6Z24QKGQERLOSP4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1462907459.9981.0.camel-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <AM2PR04MB0722180ABF5DB9406F56162B89700-IPoeDzmMJYrzmGvksFXQpM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/10, Priit Laes wrote:
-> On Mon, 2016-05-09 at 15:39 -0700, Stephen Boyd wrote:
-> > On 05/09, Stephen Boyd wrote:
-> > >=20
-> > >=20
-> > > Ok I applied this one to clk-next.
-> > >=20
-> > And I squashed this in to silence the following checker warning.
-> >=20
-> > drivers/clk/sunxi/clk-sun4i-display.c:110:33: warning: Variable
-> > length array is used.
-> >=20
-> > ---8<---
-> > diff --git a/drivers/clk/sunxi/clk-sun4i-display.c
-> > b/drivers/clk/sunxi/clk-sun4i-display.c
-> > index f02e250e64ed..f8ff6c4a5633 100644
-> > --- a/drivers/clk/sunxi/clk-sun4i-display.c
-> > +++ b/drivers/clk/sunxi/clk-sun4i-display.c
-> > @@ -107,7 +107,7 @@ static int sun4i_a10_display_reset_xlate(struct
-> > reset_controller_dev *rcdev,
-> > =C2=A0static void __init sun4i_a10_display_init(struct device_node *nod=
-e,
-> > =C2=A0					=C2=A0=C2=A0const struct
-> > sun4i_a10_display_clk_data *data)
-> > =C2=A0{
-> > -	const char *parents[data->parents];
-> > +	const char *parents[4];
->=20
-> This change breaks at least de_[bf]e clocks which have 3 clock parents.
->=20
+On Mon, May 9, 2016 at 5:58 AM, Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org> wrote:
+> On Mon, May 09, 2016 at 06:29:59AM +0800, Mark Brown wrote:
+>> On Mon, May 09, 2016 at 08:48:59AM +0000, Yao Yuan wrote:
+>> > Hi Mark Brown,
+>>
+>> Please don't top post, reply in line with needed context.  This allows readers to
+>> readily follow the flow of conversation and understand what you are talking
+>> about and also helps ensure that everything in the discussion is being
+>> addressed.
+>>
+>> Please fix your mail client to word wrap within paragraphs at something
+>> substantially less than 80 columns.  Doing this makes your messages much
+>> easier to read and reply to.
+>>
+>
+> Ok, Thanks.
+>
+>> > There are two problems we have found for use regmap up to now.
+>>
+>> > 1, Regmap will read device value depends on endian in .dtsi(DSPI in .dtsi file is
+>> big-endian) and readl()(readl() in arm64 is le32_to_cpu read) in system.
+>> > That is the value read out is fixed regardless the kernel were compiled with
+>> CONFIG_CPU_BIG_ENDIAN yes or no. That makes the value(read from
+>> DSPI)can't be recognized in one endian mode(CONFIG_CPU_BIG_ENDIAN be
+>> set or not).
+>> > The result is: DSPI can't working with CONFIG_CPU_BIG_ENDIAN set.
+>>
+>> This doesn't make sense.  If the endianness of the device is specified in DT then
+>> the endianness of the CPU won't make a difference.
+>>
+>
+> For example, if DSPI controller register is BE, so I set big-endian in DT.
+> That means we should R/W the DSPI controller register with big-endian.
+> Then I can think all of the value we R/W to/from DSPI controller register, we can
+> Think they are the BE.
+> So that we can understand it easy.
+>
+> That means no matter core is LE or BE, we both need get the value from DSPI register
+> with big endian.
+>
+> But from regmap is not.
+> When the core is little endian, I can get the big endian value form register like:0xaabbccdd.
+> Then we can analysis and process this value.
+> But once config the core to big endian, I get the value like:0xddccbbaa. It's the little endian.
+> That's terrible for my driver to understand the value.
 
-I just used the largest data->parents number, which was 4. How
-does that break anything?
+This is just the result.  Are you able to dig deeper to explain why
+this is happening?
 
---=20
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I checked the LS1043 reference manual, the register definition looks
+like little endian instead of the big endian defined in the LS1043
+device tree.  Can you confirm if the block is actually having big
+endian registers or little endian registers.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards,
+Leo
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
