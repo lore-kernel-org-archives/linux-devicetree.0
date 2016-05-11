@@ -1,52 +1,38 @@
-From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: [PATCH 1/1] devicetree: sunxi: Add OLinuXino Lime2 eMMC
- to the Makefile
-Date: Wed, 11 May 2016 10:27:07 +0200
-Message-ID: <1462955227-4454-1-git-send-email-oliver@schinagl.nl>
-Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 00/12] Fixing TI Keystone2 kexec
+Date: Wed, 11 May 2016 16:29:23 +0800
+Message-ID: <20160511082923.GC8995@dhcp-128-65.nay.redhat.com>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDC2JNWXZAJBBZ6ZZO4QKGQEIVCQBUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-ARM: dts: sunxi: Add a olinuxino-lime2-emmc added the new emmc equipped
-lime2 but forgot its Makefile. This patch adds an entry to the Makefile.
+Hi, Russell
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
----
-Hi list,
+On 04/28/16 at 10:26am, Russell King - ARM Linux wrote:
+> These changes are required for TI Keystone2 kexec to be functional.  TI
+> Keystone2 has the run-time view of physical memory above 4GiB, but with
+> a boot time alias below 4GiB which can only be used during the early
+> boot.
+> 
+> This means we need to translate run-time physical addresses (which the
+> kernel uses) to boot-time physical addresses, which, having discussed
+> with Eric, is what the kexec tools and kexec kernel API requires.
+> 
+> We publish a special set of boot time resources in /proc/iomem, which
+> the (modified) kexec tools look for in preference to the normal resources.
+> Hence, if these are found, the kexec tools make use of these resources,
+> and thus kexec tools use the boot-time view of physical memory.
 
-would it be possible to squash or atleast add this patch with/to my previous
-patch, ARM: dts: sunxi: Add a olinuxino-lime2-emmc? I mistakenly forgot to
-add the changes to the Makefile in the patch.
+I think getting memory ranges from device tree will be better than
+adding more stuff to /proc/iomem. Geoff's arm64 kexec patches is using dtb
+you can refer to the patchset.
 
-Sorry, and thank you!
-
-Olliver
-
- arch/arm/boot/dts/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923..07f4cf8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -695,6 +695,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-olimex-som-evb.dtb \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
-+	sun7i-a20-olinuxino-lime2-emmc.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
- 	sun7i-a20-orangepi.dtb \
- 	sun7i-a20-orangepi-mini.dtb \
--- 
-2.8.1
+Thanks
+Dave
