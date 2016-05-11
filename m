@@ -1,547 +1,195 @@
-From: Chris Brand <chris.brand@broadcom.com>
-Subject: [PATCH v2 6/6] arm: dt: bcm23550: Add device tree files
-Date: Wed, 11 May 2016 14:36:22 -0700
-Message-ID: <1463002582-6875-7-git-send-email-chris.brand@broadcom.com>
-References: <1463002582-6875-1-git-send-email-chris.brand@broadcom.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1463002582-6875-1-git-send-email-chris.brand@broadcom.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 2/2] dt-bindings: rockchip-dw-mshc: add rockchip,default-drv-phase
+Date: Wed, 11 May 2016 14:42:40 -0700
+Message-ID: <CAD=FV=V1dOsZkcFCd50N7F5qCVFMn789n3Hsopd7MDmdupim3Q@mail.gmail.com>
+References: <1462527648-24443-1-git-send-email-shawn.lin@rock-chips.com>
+	<1462527673-24711-1-git-send-email-shawn.lin@rock-chips.com>
+	<CAD=FV=WSkBwBjVsRoDsfjD+sNfR70mKGRA0khjPKKW0zS2=PTw@mail.gmail.com>
+	<b15dcb4f-1584-8219-2fe0-97eecb0c64a6@rock-chips.com>
+	<CAD=FV=XToSzqSh=SShHuQU9W_m7gfyQn8wRXkLy79t+tnqZknA@mail.gmail.com>
+	<1f2f43c7-2672-e448-eddb-2d613bb8dc48@rock-chips.com>
+	<CAD=FV=UGbrJRyUbbgzbcYf9GjPG+Fh_gpQ3rX2G=wi2w5Lw=Sg@mail.gmail.com>
+	<e202f663-88d7-693b-a765-c130e68d1c2d@rock-chips.com>
+	<CAD=FV=UyYCqMYKScjVEASrbzO75014kPCEt39uOSTsgq9M==YQ@mail.gmail.com>
+	<2994d365-2cf2-0990-6c10-2abeebb42eef@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <2994d365-2cf2-0990-6c10-2abeebb42eef@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree files for the Broadcom BCM23550 SoC and the
-Broadcom Sparrow board.
+Shawn,
 
-Signed-off-by: Chris Brand <chris.brand@broadcom.com>
+On Wed, May 11, 2016 at 1:25 AM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> On 2016/5/11 11:50, Doug Anderson wrote:
+>>
+>> Hi,
+>>
+>> On Tue, May 10, 2016 at 7:50 PM, Shawn Lin <shawn.lin@rock-chips.com>
+>> wrote:
+>>>>>
+>>>>> maybe. But I think 180(downside) is the better.
+>>>
+>>>
+>>>
+>>> NAK my previous comments here. Downside is better for SRD, but won't
+>>> work for DDR mode. When running in DDR mode, we should use 90 instead.
+>>>
+>>> So let me elaborate a bit more here.
+>>> For DDR mode, one single clk cycle should sending two data bits outside
+>>> to the devices. We need a hold time for both. If 180 is used, the first
+>>> bit occurs around the downside area, which won't be sampled by devices
+>>> on the upside.  So on the upside, the devices will see a zero bit if you
+>>> actually send a one-bit, which makes the devices  generate CRC finally.
+>>>
+>>>
+>>> For this above, 180 for all SDR mode is ok, but 90 should be deployed
+>>> for DDR mode. So simply checking the timing to hardcode it should be
+>>> fine.
+>>
+>>
+>> OK, I sent out a patch for 180 always.  I can send v2 to use 90 for
+>> DDR modes tomorrow.  ...or feel free to post that yourself if you
+>> want.
+>>
+>> We want 90 for all DDR modes?  So MMC_TIMING_UHS_DDR50,
+>> MMC_TIMING_MMC_DDR52, MMC_TIMING_MMC_HS400? (not that we support HS400
+>> in dw_mmc on Rockchip).
+>
+>
+> Right.
+
+OK, so I dug into this more.  I don't think it's actually quite that
+simple.  The Designware databook explicitly states that 'MMC DDR
+8-bit' should use 180, not 90.  ...but that's probably explained by
+the fact that "cclk_in" for MMC-DDR 8-bit is double what you'd expect.
+You can see that in code:
+
+if (ios->bus_width == MMC_BUS_WIDTH_8 &&
+    ios->timing == MMC_TIMING_MMC_DDR52)
+      cclkin = 2 * ios->clock * RK3288_CLKGEN_DIV;
+
 ---
- arch/arm/boot/dts/Makefile             |   3 +-
- arch/arm/boot/dts/bcm23550-sparrow.dts |  80 +++++++
- arch/arm/boot/dts/bcm23550.dtsi        | 415 +++++++++++++++++++++++++++++++++
- 3 files changed, 497 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm23550-sparrow.dts
- create mode 100644 arch/arm/boot/dts/bcm23550.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923ce6fa..72ab80fa9079 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -95,7 +95,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
- 	bcm958305k.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
- 	bcm28155-ap.dtb \
--	bcm21664-garnet.dtb
-+	bcm21664-garnet.dtb \
-+	bcm23550-sparrow.dtb
- dtb-$(CONFIG_ARCH_BCM_NSP) += \
- 	bcm958625k.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
-diff --git a/arch/arm/boot/dts/bcm23550-sparrow.dts b/arch/arm/boot/dts/bcm23550-sparrow.dts
-new file mode 100644
-index 000000000000..4d525ccb48c8
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm23550-sparrow.dts
-@@ -0,0 +1,80 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2016 Broadcom.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+#include "bcm23550.dtsi"
-+
-+/ {
-+	model = "BCM23550 Sparrow board";
-+	compatible = "brcm,bcm23550-sparrow", "brcm,bcm23550";
-+
-+	chosen {
-+		stdout-path = "/slaves@3e000000/serial@0:115200n8";
-+		bootargs = "console=ttyS0,115200n8";
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+};
-+
-+&uartb {
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
-+
-+&sdio1 {
-+	max-frequency = <48000000>;
-+	status = "okay";
-+};
-+
-+&sdio2 {
-+	non-removable;
-+	max-frequency = <48000000>;
-+	status = "okay";
-+};
-+
-+&sdio4 {
-+	max-frequency = <48000000>;
-+	cd-gpios = <&gpio 91 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm23550.dtsi b/arch/arm/boot/dts/bcm23550.dtsi
-new file mode 100644
-index 000000000000..a7a643f38385
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm23550.dtsi
-@@ -0,0 +1,415 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2016 Broadcom.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/* BCM23550 and BCM21664 have almost identical clocks */
-+#include "dt-bindings/clock/bcm21664.h"
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	model = "BCM23550 SoC";
-+	compatible = "brcm,bcm23550";
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+			clock-frequency = <1000000000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			enable-method = "brcm,bcm23550";
-+			secondary-boot-reg = <0x35004178>;
-+			reg = <1>;
-+			clock-frequency = <1000000000>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			enable-method = "brcm,bcm23550";
-+			secondary-boot-reg = <0x35004178>;
-+			reg = <2>;
-+			clock-frequency = <1000000000>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			enable-method = "brcm,bcm23550";
-+			secondary-boot-reg = <0x35004178>;
-+			reg = <3>;
-+			clock-frequency = <1000000000>;
-+		};
-+	};
-+
-+	/* Hub bus */
-+	hub@34000000 {
-+		compatible = "simple-bus";
-+		ranges = <0 0x34000000 0x102f83ac>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		smc@4e000 {
-+			compatible = "brcm,bcm23550-smc", "brcm,kona-smc";
-+			reg = <0x0004e000 0x400>; /* 1 KiB in SRAM */
-+		};
-+
-+		resetmgr: reset-controller@1001f00 {
-+			compatible = "brcm,bcm21664-resetmgr";
-+			reg = <0x01001f00 0x24>;
-+		};
-+
-+		gpio: gpio@1003000 {
-+			compatible = "brcm,bcm23550-gpio", "brcm,kona-gpio";
-+			reg = <0x01003000 0x524>;
-+			interrupts =
-+			       <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH
-+				GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH
-+				GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH
-+				GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			interrupt-controller;
-+		};
-+
-+		timer@1006000 {
-+			compatible = "brcm,kona-timer";
-+			reg = <0x01006000 0x1c>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&aon_ccu BCM21664_AON_CCU_HUB_TIMER>;
-+		};
-+	};
-+
-+	/* Slaves bus */
-+	slaves@3e000000 {
-+		compatible = "simple-bus";
-+		ranges = <0 0x3e000000 0x0001c070>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		uartb: serial@0 {
-+			compatible = "snps,dw-apb-uart";
-+			status = "disabled";
-+			reg = <0x00000000 0x118>;
-+			clocks = <&slave_ccu BCM21664_SLAVE_CCU_UARTB>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		uartb2: serial@1000 {
-+			compatible = "snps,dw-apb-uart";
-+			status = "disabled";
-+			reg = <0x00001000 0x118>;
-+			clocks = <&slave_ccu BCM21664_SLAVE_CCU_UARTB2>;
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		uartb3: serial@2000 {
-+			compatible = "snps,dw-apb-uart";
-+			status = "disabled";
-+			reg = <0x00002000 0x118>;
-+			clocks = <&slave_ccu BCM21664_SLAVE_CCU_UARTB3>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		bsc1: i2c@16000 {
-+			compatible = "brcm,kona-i2c";
-+			reg = <0x00016000 0x70>;
-+			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&slave_ccu BCM21664_SLAVE_CCU_BSC1>;
-+			status = "disabled";
-+		};
-+
-+		bsc2: i2c@17000 {
-+			compatible = "brcm,kona-i2c";
-+			reg = <0x00017000 0x70>;
-+			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&slave_ccu BCM21664_SLAVE_CCU_BSC2>;
-+			status = "disabled";
-+		};
-+
-+		bsc3: i2c@18000 {
-+			compatible = "brcm,kona-i2c";
-+			reg = <0x00018000 0x70>;
-+			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&slave_ccu BCM21664_SLAVE_CCU_BSC3>;
-+			status = "disabled";
-+		};
-+
-+		bsc4: i2c@1c000 {
-+			compatible = "brcm,kona-i2c";
-+			reg = <0x0001c000 0x70>;
-+			interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&slave_ccu BCM21664_SLAVE_CCU_BSC4>;
-+			status = "disabled";
-+		};
-+	};
-+
-+	/* Apps bus */
-+	apps@3e300000 {
-+		compatible = "simple-bus";
-+		ranges = <0 0x3e300000 0x01b77000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		usbotg: usb@e20000 {
-+			compatible = "snps,dwc2";
-+			reg = <0x00e20000 0x10000>;
-+			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&usb_otg_ahb_clk>;
-+			clock-names = "otg";
-+			phys = <&usbphy>;
-+			phy-names = "usb2-phy";
-+			status = "disabled";
-+		};
-+
-+		usbphy: usb-phy@e30000 {
-+			compatible = "brcm,kona-usb2-phy";
-+			reg = <0x00e30000 0x28>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		sdio1: sdio@e80000 {
-+			compatible = "brcm,kona-sdhci";
-+			reg = <0x00e80000 0x801c>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&master_ccu BCM21664_MASTER_CCU_SDIO1>;
-+			status = "disabled";
-+		};
-+
-+		sdio2: sdio@e90000 {
-+			compatible = "brcm,kona-sdhci";
-+			reg = <0x00e90000 0x801c>;
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&master_ccu BCM21664_MASTER_CCU_SDIO2>;
-+			status = "disabled";
-+		};
-+
-+		sdio3: sdio@ea0000 {
-+			compatible = "brcm,kona-sdhci";
-+			reg = <0x00ea0000 0x801c>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&master_ccu BCM21664_MASTER_CCU_SDIO3>;
-+			status = "disabled";
-+		};
-+
-+		sdio4: sdio@eb0000 {
-+			compatible = "brcm,kona-sdhci";
-+			reg = <0x00eb0000 0x801c>;
-+			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&master_ccu BCM21664_MASTER_CCU_SDIO4>;
-+			status = "disabled";
-+		};
-+
-+		cdc: cdc@1b0e000 {
-+			compatible = "brcm,bcm23550-cdc";
-+			reg = <0x01b0e000 0x78>;
-+		};
-+
-+		gic: interrupt-controller@1b21000 {
-+			compatible = "arm,cortex-a9-gic";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x01b21000 0x1000>,
-+			      <0x01b22000 0x1000>;
-+		};
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		/*
-+		 * Fixed clocks are defined before CCUs whose
-+		 * clocks may depend on them.
-+		 */
-+
-+		ref_32k_clk: ref_32k {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+		};
-+
-+		bbl_32k_clk: bbl_32k {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+		};
-+
-+		ref_13m_clk: ref_13m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+		};
-+
-+		var_13m_clk: var_13m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+		};
-+
-+		dft_19_5m_clk: dft_19_5m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <19500000>;
-+		};
-+
-+		ref_crystal_clk: ref_crystal {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <26000000>;
-+		};
-+
-+		ref_52m_clk: ref_52m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <52000000>;
-+		};
-+
-+		var_52m_clk: var_52m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <52000000>;
-+		};
-+
-+		usb_otg_ahb_clk: usb_otg_ahb {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <52000000>;
-+		};
-+
-+		ref_96m_clk: ref_96m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <96000000>;
-+		};
-+
-+		var_96m_clk: var_96m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <96000000>;
-+		};
-+
-+		ref_104m_clk: ref_104m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <104000000>;
-+		};
-+
-+		var_104m_clk: var_104m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <104000000>;
-+		};
-+
-+		ref_156m_clk: ref_156m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <156000000>;
-+		};
-+
-+		var_156m_clk: var_156m {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <156000000>;
-+		};
-+
-+		root_ccu: root_ccu {
-+			compatible = BCM21664_DT_ROOT_CCU_COMPAT;
-+			reg = <0x35001000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "frac_1m";
-+		};
-+
-+		aon_ccu: aon_ccu {
-+			compatible = BCM21664_DT_AON_CCU_COMPAT;
-+			reg = <0x35002000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "hub_timer";
-+		};
-+
-+		slave_ccu: slave_ccu {
-+			compatible = BCM21664_DT_SLAVE_CCU_COMPAT;
-+			reg = <0x3e011000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "uartb",
-+					     "uartb2",
-+					     "uartb3",
-+					     "bsc1",
-+					     "bsc2",
-+					     "bsc3",
-+					     "bsc4";
-+		};
-+
-+		master_ccu: master_ccu {
-+			compatible = BCM21664_DT_MASTER_CCU_COMPAT;
-+			reg = <0x3f001000 0x0f00>;
-+			#clock-cells = <1>;
-+			clock-output-names = "sdio1",
-+					     "sdio2",
-+					     "sdio3",
-+					     "sdio4",
-+					     "sdio1_sleep",
-+					     "sdio2_sleep",
-+					     "sdio3_sleep",
-+					     "sdio4_sleep";
-+		};
-+	};
-+};
--- 
-1.9.1
+tl;dr of all the below:
 
+* For SD: use 180 for SDR104 to get margin, use 90 elsewhere.
+* For mmc, use 180 for DDR52 to meet timings, use 180 for HS200 to get
+margin, use 90 elsewhere
+
+
+The nice thing about this is, at least for rk3288, things don't change
+much from today where we use 90 degrees for most SD cards.
+
+---
+
+For new patch, see: <https://patchwork.kernel.org/patch/9075141/>
+
+---
+
+Details:
+
+So assuming measurements I saw from an EE are correct, measured
+"delay_o_ns" is ~ .5 ns for rk3399.  With that, we can do some math.
+Please correct any mistakes.  Math is hard.  Note that on all Rockchip
+devices I've seen pins are limited to 150 MHz and when we choose 150
+MHz we end up at 148.5 MHz.  Calculations aren't too different if we
+use 150 for that case.
+
+
+MMC_TIMING_MMC_DDR52:
+  min hold time = 2.5 ns
+  min data delay = 2.5 ns + .5 ns = 3 ns
+  with 100 MHz clock, 90 degree: 2.5 ns
+  with 100 MHz clock, 180 degree: 5.0 ns
+
+  ...need 180 degree
+
+--
+
+SD DDR50:
+  min hold time = .8 ns
+  min data delay = .8 ns + .5 ns = 1.3 ns
+  with 50 MHz clock, 90 degree: 5 ns
+  with 50 MHz clock, 180 degree: 10 ns
+
+  ...90 degree is good and 180 is massive overkill.  Use 90.
+
+--
+
+SD SDR104 (limited to 148.5 MHz on existing Rockchip parts):
+  min hold time = .8 ns
+  min data delay = .8 ns + .5 ns = 1.3 ns
+  with 148.5 MHz clock, 90 degree: 1.68 ns
+  with 148.5 MHz clock, 180 degree: 3.37 ns
+
+  ...so 90 degrees would probably work OK, but 180 degrees gives more margin.
+  ...probably explains why existing rk3288 devices w/ 90 degree work OK.
+
+  if we had 200 MHz clock, 90 degree: 1.25 ns
+  if we had 200 MHz clock, 180 degree: 2.50 ns
+
+--
+
+SD SDR50:
+  min hold time = .8 ns
+  min data delay = .8 ns + .5 ns = 1.3 ns
+  with 100 MHz clock, 90 degree: 2.5 ns
+  with 100 MHz clock, 180 degree: 5.0 ns
+
+  ...90 degree is great w/ plenty of margin
+
+--
+
+SD SDR25:
+  min hold time = 2 ns
+  min data delay = 2 ns + .5 ns = 2.5 ns
+  with 50 MHz clock, 90 degree: 5 ns
+  with 50 MHz clock, 180 degree: 10 ns
+
+ ...90 degree is good and 180 is massive overkill.  Use 90.
+
+--
+
+SD SDR12 (databook shows cclk_in as 50 MHz here we'll get 25 MHz):
+  min hold time = 5 ns
+  min data delay = 5 ns + .5 ns = 5.5 ns
+  with 25 MHz clock, 90 degree: 10 ns
+  with 25 MHz clock, 180 degree: 20 ns
+
+  ...90 degree is good (databook suggests 180 for this mode due to cclk_in = 50)
+
+--
+
+ID Mode
+  min hold time = 5 ns
+  min data delay = 5 ns + .5 ns = 5.5 ns
+  with 400 kHz clock, 90 degree: 625 ns
+  with 400 kHz clock, 180 degree: 1250 ns
+
+  ...90 degree is good  (databook suggests 180 for this mode due to
+cclk_in = 50)
+
+--
+
+MMC High speed:
+  min hold time = 2.5 ns
+  min data delay = 2.5 ns + .5 ns = 3 ns
+  with 50 MHz clock, 90 degree: 5 ns
+  with 50 MHz clock, 180 degree: 10 ns
+
+  ...90 degree is good
+
+--
+
+HS200:
+  min hold time (tIH from JEDEC spec):  .8 ns
+  ...math all works out the same as SDR104.
+
+--
+
+HS400:
+  we don't support it anyway
