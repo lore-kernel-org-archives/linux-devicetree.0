@@ -1,59 +1,52 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] ARM: dts: exynos: Enable AX88760 USB hub on Origen board
-Date: Wed, 11 May 2016 09:06:52 +0200
-Message-ID: <1462950412-16681-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Matthew Leach <matthew@mattleach.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] devicetree: sunxi: Add OLinuXino Lime2 eMMC
+ to the Makefile
+Date: Wed, 11 May 2016 09:12:06 +0200
+Message-ID: <20160511071206.GN3733@lukather>
+References: <1462906820-5203-1-git-send-email-oliver@schinagl.nl>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uX2tiToO0oGq+LKk"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBR5WZO4QKGQE2ZKA2MA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1462906820-5203-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Leach <matthew@mattleach.net>
+--uX2tiToO0oGq+LKk
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Enable the Origen's usb phy and ohci devices in the device tree.  Also
-add the "samsung,vbus-gpio" property to enable the GPX3(5) gpio pin so
-the AX88760 hub is powered.
+Hi Oliver,
 
-Signed-off-by: Matthew Leach <matthew@mattleach.net>
-[k.kozlowski: Extend nodes by label notation instead of path]
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos4412-origen.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+On Tue, May 10, 2016 at 09:00:20PM +0200, Olliver Schinagl wrote:
+> ARM: dts: sunxi: Add a olinuxino-lime2-emmc added the new emmc equipped
+> lime2 but forgot its Makefile. This patch adds an entry to the Makefile.
+> 
+> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> ---
+> Maxime, I'm sorry for ommitting the Makefile initially, if it is not merged yet,
+> maybe just squash it with the previous patch?
 
-diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
-index 8bca699b7f20..4c59bdb0e6f3 100644
---- a/arch/arm/boot/dts/exynos4412-origen.dts
-+++ b/arch/arm/boot/dts/exynos4412-origen.dts
-@@ -77,12 +77,29 @@
- 			clock-frequency = <24000000>;
- 		};
- 	};
-+
- };
- 
- &cpu0 {
- 	cpu0-supply = <&buck2_reg>;
- };
- 
-+&exynos_usbphy {
-+	status = "okay";
-+};
-+
-+&ehci {
-+	samsung,vbus-gpio = <&gpx3 5 1>;
-+	status = "okay";
-+
-+	port@1{
-+		status = "okay";
-+	};
-+	port@2 {
-+		status = "okay";
-+	};
-+};
-+
- &fimd {
- 	pinctrl-0 = <&lcd_clk &lcd_data24 &pwm1_out>;
- 	pinctrl-names = "default";
+It's merged, and have been sent to armsoc.
+
+Please resend with arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, asking them to apply it directly
+(and keep chen-yu and I in cc).
+
+Thanks!
+Maxime
+
 -- 
-1.9.1
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--uX2tiToO0oGq+LKk--
