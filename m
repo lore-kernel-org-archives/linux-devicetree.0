@@ -1,88 +1,70 @@
-From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] Documentation: Add documentation for APM X-Gene
- SoC PMU DTS binding
-Date: Tue, 10 May 2016 16:43:30 -0700
-Message-ID: <CACgAJHyHEOe70pOG2yi-XUQS3BYdGmfYD-yTE0wFM9knDtHOiQ@mail.gmail.com>
-References: <1460510547-17611-1-git-send-email-ttnguyen@apm.com>
-	<1460510547-17611-3-git-send-email-ttnguyen@apm.com>
-	<20160418170009.GA15338@rob-hp-laptop>
-	<CACgAJHyBbO_LXwtfNVK1f=dY3v1Jfxwxq1dw98EZ0aYdhjPpAg@mail.gmail.com>
-	<20160420113121.GE2514@arm.com>
-	<20160502205648.GA7374@rob-hp-laptop>
-	<CACgAJHyT31DuVNoyRQZVKjv=zM5Fc-EY0gy=y=pHHrBTT+1Xow@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 1/2] ARM64: dts: rockchip: add sdhci/emmc for rk3399
+Date: Tue, 10 May 2016 17:02:54 -0700
+Message-ID: <1462924975-69072-1-git-send-email-briannorris@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACgAJHyT31DuVNoyRQZVKjv=zM5Fc-EY0gy=y=pHHrBTT+1Xow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob/Mark,
+The bindings for rk3399's SDHCI + eMMC PHY have been accepted, so let's
+support eMMC now.
 
-Do you have any more comments, please?
+Note that 'rockchip,rk3399-sdhci-5.1' is not documented, but per Heiko's
+previous suggestion, we don't want to clutter the arasan doc, and it's
+just a precautionary measure to have it.
 
-Thanks,
-Tai
+Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-On Mon, May 2, 2016 at 2:46 PM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Mon, May 2, 2016 at 1:56 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Apr 20, 2016 at 12:31:22PM +0100, Will Deacon wrote:
->>> On Mon, Apr 18, 2016 at 01:04:53PM -0700, Tai Tri Nguyen wrote:
->>> > >> +Required properties for MCB subnode:
->>> > >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
->>> > >> +- reg                        : First resource shall be the MCB PMU resource.
->>> > >> +- index                      : Instance number of the MCB PMU.
->>> > >> +
->>> > >> +Required properties for MC subnode:
->>> > >> +- compatible         : Shall be "apm,xgene-pmu-mc".
->>> > >> +- reg                        : First resource shall be the MC PMU resource.
->>> > >> +- index                      : Instance number of the MC PMU.
->>> > >
->>> > > Don't use indexes. You probably need phandles to the nodes these are
->>> > > related to.
->>> > >
->>> > > How many variations of child nodes do you expect to have? 2, 10, 50? You
->>> > > might want to just collapse all this down to a single node and put this
->>> > > information in the driver if it is fixed for each SoC and there's only a
->>> > > handful.
->>> > >
->>> >
->>> > For each kind of PMU, for example memory controller PMU, I expect to
->>> > have the number of instances up to 8.
->>> > They are actually all independent PMU nodes and have their own CSR memory bases.
->>> > The indexes are used for exposing the devices to perf user only. It
->>> > doesn't have an impact on the programming model.
->>> > Mark also had the same concern.
->>>
->>> Regardless, I'll need an ack from Rob or Mark before I can merge this.
->>
->> I still have a concern with this. Needing an index to expose to the user
->> is generally not a valid reason. That's OS specific and therefore
->> doesn't belong in DT.
->>
->> Rob
->
-> I can use device name here. However, the perf event names will be
-> different between DT and ACPI which I want to avoid.
-> And the names don't look good at all.
-> Also, specifically for MC and MCB PMUs, the indexes are compared
-> against the active MC/MCB mask to find out whether they are populated
-> or not.
-> Without using the index property, I will also need a mapping function
-> of physical device addresses and their physical ids.
->
-> Thanks,
-> --
-> Tai
-
-
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 46f325a143b0..947d1221592d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -215,6 +215,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	sdhci: sdhci@fe330000 {
++		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
++		reg = <0x0 0xfe330000 0x0 0x10000>;
++		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
++		clock-names = "clk_xin", "clk_ahb";
++		phys = <&emmc_phy>;
++		phy-names = "phy_arasan";
++		status = "disabled";
++	};
++
+ 	usb_host0_ehci: usb@fe380000 {
+ 		compatible = "generic-ehci";
+ 		reg = <0x0 0xfe380000 0x0 0x20000>;
+@@ -481,8 +492,18 @@
+ 	};
+ 
+ 	grf: syscon@ff770000 {
+-		compatible = "rockchip,rk3399-grf", "syscon";
++		compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+ 		reg = <0x0 0xff770000 0x0 0x10000>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		emmc_phy: phy@f780 {
++			compatible = "rockchip,rk3399-emmc-phy";
++			reg = <0xf780 0x20>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	watchdog@ff840000 {
 -- 
-Tai
+2.8.0.rc3.226.g39d4020
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
