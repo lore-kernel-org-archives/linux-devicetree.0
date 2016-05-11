@@ -1,57 +1,50 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: NS2: Add CCI-400 PMU support
-Date: Wed, 11 May 2016 18:56:09 -0400
-Message-ID: <1463007369-13071-2-git-send-email-jonmason@broadcom.com>
-References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463007369-13071-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH v2 1/3] ARM: dts: bcm5301x: Add TWD WD Support to DT
+Date: Wed, 11 May 2016 19:19:08 -0400
+Message-ID: <1463008750-13902-2-git-send-email-jonmason@broadcom.com>
+References: <1463008750-13902-1-git-send-email-jonmason@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463008750-13902-1-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to the Northstar 2 Device tree file for the ARM CCI-400 PMU.
+Add support for the ARM TWD Watchdog to the bcm5301x device tree.  The
+ARM TWD timer allocated the register space for the WDT, so this patch
+necessitated shrinking that.  Also, the GIC masks were added for these.
 
-Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
 ---
- arch/arm64/boot/dts/broadcom/ns2.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/bcm5301x.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index c77a9e8..d1dc812 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -279,6 +279,26 @@
- 				      IRQ_TYPE_LEVEL_HIGH)>;
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index 65a1309..4b9887f 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -66,10 +66,19 @@
+ 			clocks = <&periph_clk>;
  		};
  
-+		cci@65590000 {
-+			compatible = "arm,cci-400";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x65590000 0x1000>;
-+			ranges = <0 0x65590000 0x10000>;
-+
-+			pmu@9000 {
-+				compatible = "arm,cci-400-pmu,r1",
-+					     "arm,cci-400-pmu";
-+				reg = <0x9000 0x4000>;
-+				interrupts = <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 348 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 349 IRQ_TYPE_LEVEL_HIGH>;
-+			};
+-		local-timer@20600 {
++		timer@20600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+-			reg = <0x20600 0x100>;
+-			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x20600 0x20>;
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
++						  IRQ_TYPE_LEVEL_HIGH)>;
++			clocks = <&periph_clk>;
 +		};
 +
- 		timer0: timer@66030000 {
- 			compatible = "arm,sp804", "arm,primecell";
- 			reg = <0x66030000 0x1000>;
++		watchdog@20620 {
++			compatible = "arm,cortex-a9-twd-wdt";
++			reg = <0x20620 0x20>;
++			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
++						  IRQ_TYPE_LEVEL_HIGH)>;
+ 			clocks = <&periph_clk>;
+ 		};
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
