@@ -1,69 +1,36 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/2] regulator: Add support for parsing operation
- mode
-Date: Wed, 11 May 2016 15:46:32 +0100
-Message-ID: <20160511144632.GH6261@sirena.org.uk>
-References: <1462959090-2877-1-git-send-email-henryc.chen@mediatek.com>
- <1462959090-2877-2-git-send-email-henryc.chen@mediatek.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v7 10/14] usb: otg: add hcd companion support
+Date: Wed, 11 May 2016 10:47:20 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1605111043030.1882-100000@iolanthe.rowland.org>
+References: <57333DFF.3090609@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xQmOcGOVkeO43v2v"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462959090-2877-2-git-send-email-henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <57333DFF.3090609-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 11 May 2016, Roger Quadros wrote:
 
---xQmOcGOVkeO43v2v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > What I mean is if you have 2 EHCI controllers with 2 companion 
+> > controllers, don't you need to know which companion goes with which EHCI 
+> > controller? Just like you do for the otg-controller property.
+> > 
+> 
+> That is a very good point. I'm not very sure and it seems that current code won't work
+> with multiple EHCI + companion instances.
+> 
+> Alan, does USB core even know which EHCI and OHCI are linked to the same port
+> or the handoff is software transparent?
 
-On Wed, May 11, 2016 at 05:31:29PM +0800, Henry Chen wrote:
+The core knows.  It doesn't use the information for a whole lot of 
+things, but it does use it in a couple of places.  Search for 
+"companion" in core/hcd-pci.c and you'll see.
 
-> +- regulator-allow-change-mode: allow the regulator mode to be configured
-> +- regulator-supported-modes: Regulators can run in a variety of different operating
-> +  modes depending on output load. This allows further system power savings by
-> +  selecting the best (and most efficient) regulator mode for a desired load.
-> +  The definition for each of these operation is defined at
-> +  include/linux/regulator/consumer.h
+Alan Stern
 
-It really isn't OK for a DT binding to be documented by referencing
-Linux kernel internals.
-
-> +	0: FAST.
-> +	1: NORMAL.
-> +	2: IDLE.
-> +	3: STANDBY.
-
-The problem with these is that they don't really mean anything outside
-of a specific regulator.  This makes it very hard to make them at all
-interoperable, and is also incompatible with the way we're currently
-handling the modes elsewhere in the bindings.  If we're going to make an
-ABI of this we need to have something with abstraction in it but it's
-hard to see how to abstract modes since they're so implementation
-specific, even if the mechanisms are similar the different load ranges
-that regulators support mean that what's a very taxing load for one
-regulator may be nothing to another.
-
---xQmOcGOVkeO43v2v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXM0XGAAoJECTWi3JdVIfQXaEH/ir8TUe8a3SqSLLwGwueng6o
-MdcL0Ae3iEaFhdT59kKRHgB70ORdEBRFQnt8I4uG3acHyuupy+JTyuP/7V3RXQJ5
-unGcqP30uXuhAgWMOCk0c3j/FAzH8Cd3TEymKn6qxQLRDLuRfdOf3DFes17WV0Qh
-t9DhOYGMSZeSRbUVN3zwlw3kFn612lqkuOegb5nrGes8Emp1db2g2e3hLz1vcDMR
-hAZ5PGpQlR0rW3EhHH/p35RUF5H2HpBs2EQLDWElSE9o5TepDyU2zgz8Ur/xrDEk
-5GYQL5emoS9lQIQ/J39yT/ci5R63Rcw20YXNRDbmqspafF5aAadaL9c18sM1Q6c=
-=JSAM
------END PGP SIGNATURE-----
-
---xQmOcGOVkeO43v2v--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
