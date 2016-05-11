@@ -1,59 +1,48 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [Patch v4 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Wed, 11 May 2016 12:49:05 -0700
-Message-ID: <20160511194905.GU1256@tuxbot>
-References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
- <1462976158-26016-2-git-send-email-andy.gross@linaro.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
+ Tegra210 AGIC
+Date: Wed, 11 May 2016 20:49:31 +0100
+Message-ID: <57338CCB.2080805@nvidia.com>
+References: <20160427173810.GC7359@leverpostej> <5721C597.1010105@nvidia.com>
+ <20160428095525.GB21145@leverpostej> <572C56A6.7020408@nvidia.com>
+ <CAMuHMdX+egbNPP4QQ2R28GbyVkg9qBrwYfUy8EE0PdB6od+LBg@mail.gmail.com>
+ <CAL_Jsq+HSH7e1T9y47nHV_x5NvZ-52cfDEKKFkr16ax671FxSw@mail.gmail.com>
+ <573358F9.6000108@nvidia.com> <57335AD3.7070109@nvidia.com>
+ <CAL_Jsq+ZhwUOSfQG-8V9xgxiXBj2j3Q6k48d=BWtWK9pEHH_MQ@mail.gmail.com>
+ <57336397.4000401@nvidia.com> <20160511172823.GC18829@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462976158-26016-2-git-send-email-andy.gross@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160511172823.GC18829@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 11 May 07:15 PDT 2016, Andy Gross wrote:
 
-> This patch adds the device tree support for the Qualcomm SCM firmware.
+On 11/05/16 18:28, Mark Rutland wrote:
+> On Wed, May 11, 2016 at 05:53:43PM +0100, Jon Hunter wrote:
+>> Hi Rob, Mark,
+>>
+>> On 11/05/16 17:30, Rob Herring wrote:
+>>> A platform driver for just gic-400 is wrong IMO until we have platform
+>>> drivers for all interrupt controllers.
+>>
+>> Yes, that is fine with me, but can we decide on whether the platform
+>> driver should match "tegra210-agic" or the early driver should bail-out
+>> if clocks/power-domains are present?
+>>
+>> I am fine with either, but I think that Rob prefers the tegra210-agic
+>> compat string and Mark prefers to bail-out of the early driver if
+>> clocks/power-domains are present.
 > 
-> Signed-off-by: Andy Gross <andy.gross@linaro.org>
-> ---
->  .../devicetree/bindings/firmware/qcom,scm.txt      | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> If anything, I wasn't too keen on bailing out becuase of those
+> properties, as I mentioned for the case of a root interrupt controller.
 > 
-> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> new file mode 100644
-> index 0000000..0c5f1ff
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> @@ -0,0 +1,28 @@
-> +QCOM Secure Channel Manager (SCM)
-> +
-> +Qualcomm processors include an interface to communicate to the secure firmware.
-> +This interface allows for clients to request different types of actions.  These
-> +can include CPU power up/down, HDCP requests, loading of firmware, and other
-> +assorted actions.
-> +
-> +Required properties:
-> +- compatible: must contain one of the following:
-> + * "qcom,scm-apq8064" for APQ8064 platforms
-> + * "qcom,scm-msm8660" for MSM8660 platforms
-> + * "qcom,scm-msm8690" for MSM8690 platforms
-> + * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
-> +- clocks: One to three clocks may be required based on compatible.
-> + * Only core clock required for "qcom,scm-apq8084", "qcom,scm-msm8660", and "qcom,scm-msm8960"
-> + * Core, iface, and bus clocks required for "qcom,scm"
-> +- clock-names: Must contain "core" for the core clock, "iface" for the interface
-> +  clock and "bus" for the bus clock per the requirements of the compatible.
+> I am happy to match the "tegra210-agic" string specifically.
 
-I like this split of generic binding and the special cases, gives the
-wanted clarity for the outliers without the added churn in the common
-case.
+Thanks guys. I will stick with tegra210-agic for now.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
+Cheers
+Jon
