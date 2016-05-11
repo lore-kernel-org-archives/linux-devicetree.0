@@ -1,45 +1,70 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH 2/2] ARM64: dts: rockchip: enable eMMC for rk3399 EVB
-Date: Tue, 10 May 2016 17:02:55 -0700
-Message-ID: <1462924975-69072-2-git-send-email-briannorris@chromium.org>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM64: dts: rockchip: enable eMMC for rk3399 EVB
+Date: Wed, 11 May 2016 08:59:24 +0800
+Message-ID: <d8dc5609-3cf6-80ce-462b-d46f0ea6dcff@rock-chips.com>
 References: <1462924975-69072-1-git-send-email-briannorris@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462924975-69072-1-git-send-email-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>
+ <1462924975-69072-2-git-send-email-briannorris@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462924975-69072-2-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The 'mmc-hs400-enhanced-strobe' property has been acked by Rob Herring,
-though it's still not merged.
+On 2016/5/11 8:02, Brian Norris wrote:
+> The 'mmc-hs400-enhanced-strobe' property has been acked by Rob Herring,
+> though it's still not merged.
+>
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hi Brain,
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-index 1a3eb1482050..ccfd2bcf02e1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -89,6 +89,18 @@
- 	status = "okay";
- };
- 
-+&emmc_phy {
-+	status = "okay";
-+};
-+
-+&sdhci {
-+	bus-width = <8>;
-+	mmc-hs400-1_8v;
-+	non-removable;
-+	mmc-hs400-enhanced-strobe;
-+	status = "okay";
-+};
-+
- &uart2 {
- 	status = "okay";
- };
+I'm not sure whether it's acceptable to upstream new property which
+isn't merged yet. My major concern is that as the patchset supporting
+h400es will go through mmc tree, so if Ulf should want to shorten the
+name (e.g mmc-hs400-es), you would respin this patch.
+
+
+Thanks.
+
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> index 1a3eb1482050..ccfd2bcf02e1 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> @@ -89,6 +89,18 @@
+>  	status = "okay";
+>  };
+>
+> +&emmc_phy {
+> +	status = "okay";
+> +};
+> +
+> +&sdhci {
+> +	bus-width = <8>;
+> +	mmc-hs400-1_8v;
+> +	non-removable;
+> +	mmc-hs400-enhanced-strobe;
+> +	status = "okay";
+> +};
+> +
+>  &uart2 {
+>  	status = "okay";
+>  };
+>
+
+
 -- 
-2.8.0.rc3.226.g39d4020
+Best Regards
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
