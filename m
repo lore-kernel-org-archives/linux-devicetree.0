@@ -1,46 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] [media] ir-rx51: add DT support to driver
-Date: Wed, 11 May 2016 09:14:29 -0500
-Message-ID: <20160511141429.GA5894@rob-hp-laptop>
-References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1462634508-24961-5-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160509200657.GA3379@rob-hp-laptop>
- <5730F8BA.5000402@gmail.com>
- <CAL_JsqJPZS1ne_xAuBFtCc5L1HKFJf0LDUJ7CRSFXhc3adkTfA@mail.gmail.com>
- <20160510021826.GE1129@earth>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160510021826.GE1129@earth>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: [Patch v4 0/8] Qualcomm SCM Rework
+Date: Wed, 11 May 2016 09:15:50 -0500
+Message-ID: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2016 at 04:18:27AM +0200, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Mon, May 09, 2016 at 04:07:35PM -0500, Rob Herring wrote:
-> > There's already a pwm-led binding that can be used. Though there
-> > may be missing consumer IR to LED subsystem support in the kernel.
-> > You could list both compatibles, use the rx51 IR driver now, and
-> > then move to pwm-led driver in the future.
-> 
-> Well from a purely HW point of view it's a PWM connected led. The
-> usage is completely different though. Usually PWM is used to control
-> the LED's brightness via the duty cycle (basic concept: enabling led
-> only 50% of time reduces brightness to 50%).
-> 
-> In the IR led's case the aim is generating a specific serial pattern
-> instead. For this task it uses a dmtimer in PWM mode and a second
-> one to reconfigure the pwm timer.
+The following set of patches does a bit of rework on the existing
+Qualcomm SCM firmware.  The first couple of patches deals with turning
+the current SCM into a platform driver.  The next couple are cleanups
+that make adding the 64 support a little easier.  I added in a patch to
+convert the scm-32 to use DMA streaming APIs.
 
-In that case, it will probably never be a generic driver.
+I took Kumar's 64 bit support patch and modified it to use the arm_smccc
+calls.  This simplified things quite a bit.
 
-> I don't know about a good name, but rx51 should be replaced with
-> n900 in the compatible string. So maybe "nokia,n900-infrared-diode".
+Lastly, there are a few DT patches to add the firmware node for a couple of the
+supported platforms.
 
-That's fine, but the shorter '-ir' was too.
+Changes from v3:
+  * Added compatibles for the specific platforms requiring one clock.
+  * All other platforms will use the generic binding that requires 3 clocks.
 
-Rob
+Changes from v2:
+  * Added use of streaming DMA APIs for scm-32.
+  * Changed DT binding to simplify compats.
+  * Removed Kconfig.platform change that selected QCOM_SCM for ARM64
+  * Fixed misc comments
+  * Changed init function to populate the device differently.
+  * Fixed missing of_node_put
+
+Changes from v1:
+  * Changed binding to reflect proper firmware node usage
+  * Added arch_initcall to populate the firmware device, if present
+  * Fixed various review comments
+  * Removed extraneous includes from SCM 64 file.
+
+Andy Gross (7):
+  dt/bindings: firmware: Add Qualcomm SCM binding
+  firmware: qcom: scm: Convert SCM to platform driver
+  firmware: qcom: scm: Use atomic SCM for cold boot
+  firmware: qcom: scm: Generalize shared error map
+  firmware: qcom: scm: Convert to streaming DMA APIS
+  dts: qcom: apq8084: Add SCM firmware node
+  arm64: dts: msm8916: Add SCM firmware node
+
+Kumar Gala (1):
+  firmware: qcom: scm: Add support for ARM64 SoCs
+
+ .../devicetree/bindings/firmware/qcom,scm.txt      |  28 +++
+ arch/arm/boot/dts/qcom-apq8084.dtsi                |   8 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |   8 +
+ drivers/firmware/qcom_scm-32.c                     | 234 +++++++++------------
+ drivers/firmware/qcom_scm-64.c                     | 208 +++++++++++++++++-
+ drivers/firmware/qcom_scm.c                        | 171 ++++++++++++++-
+ drivers/firmware/qcom_scm.h                        |  31 ++-
+ 7 files changed, 526 insertions(+), 162 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+
+-- 
+1.9.1
