@@ -1,79 +1,94 @@
-From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCHv3 1/4] ARM: dts: r8a7790: Reference both DMA controllers
-Date: Wed, 11 May 2016 16:03:08 +0200
-Message-ID: <20160511140308.GD3256@bigcity.dyn.berto.se>
-References: <1462972438-20797-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
- <1462972438-20797-2-git-send-email-niklas.soderlund+renesas@ragnatech.se>
- <CAMuHMdWoPThi0w6siA5LJ60oEH6JMv4x80b_Spg5aF-uHq3WqQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Update iProc GPIO bindings
+Date: Wed, 11 May 2016 09:06:18 -0500
+Message-ID: <20160511140618.GA29113@rob-hp-laptop>
+References: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
+ <1462222308-4869-2-git-send-email-ray.jui@broadcom.com>
+ <20160504132020.GA21065@rob-hp-laptop>
+ <6fe293c1-505d-2af9-711a-09e5b5a83e58@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWoPThi0w6siA5LJ60oEH6JMv4x80b_Spg5aF-uHq3WqQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <6fe293c1-505d-2af9-711a-09e5b5a83e58@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-05-11 15:45:17 +0200, Geert Uytterhoeven wrote:
-> Hi Niklas,
->=20
-> On Wed, May 11, 2016 at 3:13 PM, Niklas S=F6derlund
-> <niklas.soderlund+renesas@ragnatech.se> wrote:
-> > R-Car Gen2 have two DMA controllers, which are equivalent. Add
-> > references to both dmac0 and dmac1 so the driver can choose which o=
-ne to
-> > use.
+On Wed, May 04, 2016 at 09:29:04AM -0700, Ray Jui wrote:
+> Hi Rob,
+> 
+> On 5/4/2016 6:20 AM, Rob Herring wrote:
+> >On Mon, May 02, 2016 at 01:51:47PM -0700, Ray Jui wrote:
+> >>Update the iProc GPIO binding document to add new compatible strings
+> >>"brcm,iproc-gpio-v2" and "brcm,iproc-gpio-v3" for the 2nd and 3rd
+> >>generation of the iProc GPIO controllers
+> >>
+> >>Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> >>---
+> >> Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 11 ++++++++++-
+> >> 1 file changed, 10 insertions(+), 1 deletion(-)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> >>index e427792..3a56649 100644
+> >>--- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> >>+++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
+> >>@@ -4,7 +4,16 @@ Required properties:
+> >>
+> >> - compatible:
+> >>     Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
+> >>-    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
+> >>+    or "brcm,cygnus-crmu-gpio" for Cygnus SoCs
+> >>+
+> >>+    "brcm,iproc-gpio" for the first generation of the GPIO controller that
+> >>+    supports full-featured pinctrl and GPIO functions used in iProc based SoCs
+> >>+
+> >>+    "brcm,iproc-gpio-v2" for the second generation of the GPIO controller that
+> >>+    has the drive strength pinctrl support disabled, e.g., in the iProc NSP SoC
+> >>+
+> >>+    "brcm,iproc-gpio-v3" for the third generation of the GPIO controller that
+> >>+    has the general pinctrl support completely disabled
 > >
-> > Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnate=
-ch.se>
-> > ---
-> >  arch/arm/boot/dts/r8a7790.dtsi | 131 ++++++++++++++++++++++++-----=
-------------
-> >  1 file changed, 78 insertions(+), 53 deletions(-)
+> >You can have these for driver matching, but you still need SoC specific
+> >compatible strings.
 > >
-> > diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a=
-7790.dtsi
-> > index 83cf23c..14fcd19 100644
-> > --- a/arch/arm/boot/dts/r8a7790.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7790.dtsi
->=20
-> > @@ -755,9 +773,9 @@
-> >                 clocks =3D <&mstp3_clks R8A7790_CLK_SCIF2>, <&zs_cl=
-k>,
-> >                          <&scif_clk>;
-> >                 clock-names =3D "fck", "brg_int", "scif_clk";
-> > -               dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>;
-> > -               dma-names =3D "tx", "rx";
-> > -               power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
->=20
-> Please keep the above line.
+> >Rob
+> >
+> 
+> I think I'm missing something and hope you can help to clarify here. It
+> looks like the notion of v2, v3 should only be used if there's an indeed an
+> revision update on the controller IP itself, correct?
 
-My mistake, the above line was not meant to be removed.. thanks for=20
-pointing it out.
+Yes, but only if v2, v3 is actually a meaningful number rather than 
+something made up. You have to have a well defined process of IP 
+revisions which I have not seen during my time in chip companies, so I'm 
+generally suspicious of version numbers. The exception is FPGA IP 
+blocks.
 
->=20
-> > +               dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>,
-> > +                      <&dmac1 0x2b>, <&dmac1 0x2c>;
-> > +               dma-names =3D "tx", "rx", "tx", "rx";
-> >                 status =3D "disabled";
-> >         };
->=20
-> Gr{oetje,eeting}s,
->=20
->                         Geert
->=20
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
-x-m68k.org
->=20
-> In personal conversations with technical people, I call myself a hack=
-er. But
-> when I'm talking to journalists I just say "programmer" or something =
-like that.
->                                 -- Linus Torvalds
+> In our case, if the same revision of GPIO controller is used but instead
+> synthesized differently with different SoCs, then you are suggesting here
+> that it should be dealt with SoC specific compatible string, correct?
 
---=20
-Regards,
-Niklas S=F6derlund
+Yes, that and/or integration differences is why you need SoC specific 
+compatible strings. A block could be "identical" but have different max 
+frequency for example.
+ 
+> For example, for the GPIO controller on NSP where drive strength is
+> disabled, the compatible string in DT should look like this?
+> 
+> compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-nsp";
+
+Yes, but reverse the order. Most specific to least specific.
+
+> 
+> For the GPIO controller on Stingray where pinconf is completely disabled,
+> the compatible string in DT should look like:
+> 
+> compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-stingray";
+> 
+> Is that correct?
+> 
+> Thanks,
+> 
+> Ray
