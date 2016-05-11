@@ -1,76 +1,75 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 1/2] ARM64: dts: rockchip: add sdhci/emmc for rk3399
-Date: Wed, 11 May 2016 15:31:14 -0700
-Message-ID: <20160511223114.GA65449@google.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM64: dts: rockchip: enable eMMC for rk3399 EVB
+Date: Wed, 11 May 2016 15:32:33 -0700
+Message-ID: <20160511223233.GB65449@google.com>
 References: <1462924975-69072-1-git-send-email-briannorris@chromium.org>
- <3e257ce2-056a-592a-9481-970da1fe0627@rock-chips.com>
+ <1462924975-69072-2-git-send-email-briannorris@chromium.org>
+ <4355979.JCGxOmTVBW@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3e257ce2-056a-592a-9481-970da1fe0627@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, h <hl@rock-chips.com>
+In-Reply-To: <4355979.JCGxOmTVBW@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 09:17:38AM +0800, Shawn Lin wrote:
-> + Huang Lin
+On Wed, May 11, 2016 at 04:51:58PM +0200, Heiko Stuebner wrote:
+> Hi Brian,
 > 
-> On 2016/5/11 8:02, Brian Norris wrote:
-> >The bindings for rk3399's SDHCI + eMMC PHY have been accepted, so let's
-> >support eMMC now.
-> >
-> >Note that 'rockchip,rk3399-sdhci-5.1' is not documented, but per Heiko's
-> >previous suggestion, we don't want to clutter the arasan doc, and it's
-> >just a precautionary measure to have it.
-> >
-> >Signed-off-by: Brian Norris <briannorris@chromium.org>
-> >---
-> > arch/arm64/boot/dts/rockchip/rk3399.dtsi | 23 ++++++++++++++++++++++-
-> > 1 file changed, 22 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >index 46f325a143b0..947d1221592d 100644
-> >--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >@@ -215,6 +215,17 @@
-> > 		status = "disabled";
-> > 	};
-> >
-> >+	sdhci: sdhci@fe330000 {
-> >+		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
-> >+		reg = <0x0 0xfe330000 0x0 0x10000>;
-> >+		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> >+		clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
+> Am Dienstag, 10. Mai 2016, 17:02:55 schrieb Brian Norris:
+> > The 'mmc-hs400-enhanced-strobe' property has been acked by Rob Herring,
+> > though it's still not merged.
 > 
-> sdhci doesn't call clk_set_rate to explicitly assign clk_xin to 200MHz
-> as it always assumes sdhci controller should meet the highest speed of
-> each timing mode. And the internal divider will be used. So IMHO,
-> clk-rockchip for 3399 *haven't* made clk_xin to be 200MHz. Let's assign
-> the clk stuff to make sure it's 200MHz.
+> The commit message should describe the actual change not the volatile 
+> environment surrounding it :-) .
 > 
-> Another problem is that emmc_phy contains a configuration which should
-> be consistent with clk_out(namely clk_xin/internal dividor). Now I don't
-> submit unpstream patchset to expose these configurarion, but in
-> prevention of some misleading, I think it's better to to it.
-> 
-> How about adding these?
-> 
-> assigned-clocks = <&cru SCLK_EMMC>;
-> assigned-clock-parents = <&cru PLL_CPLL>; //may not need
-> assigned-clock-rates = <200000000>;
+> When I apply this patch the property-binding will have made it into a 
+> maintainer-tree so is not valid anymore then. That is more material for the 
+> "comment-section" below the "---"
 
-Makes sense. Will add these.
+Of course. I think I just felt guilty without a commit message :)
 
-> Still you limit your clk_out by adding max-frequency in dts for
-> specific requirment.
+> > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> > b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts index
+> > 1a3eb1482050..ccfd2bcf02e1 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> > @@ -89,6 +89,18 @@
+> >  	status = "okay";
+> >  };
+> > 
+> > +&emmc_phy {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&sdhci {
+> > +	bus-width = <8>;
+> > +	mmc-hs400-1_8v;
+> > +	non-removable;
+> > +	mmc-hs400-enhanced-strobe;
 > 
-> We here manually assigne the clk_xin to be 200MHz, so defaultly
-> when it's runing in HS200/HS400(ES) mode, internal divider won't
-> be used(by-pass mode). So the clk jitter is better when by-passing the
-> clock.
-> 
-> Thanks.
+> alphabetic ordering of properties please
 
+Will fix.
+
+Thanks,
 Brian
+
+> > +	status = "okay";
+> > +};
+> > +
+> >  &uart2 {
+> >  	status = "okay";
+> >  };
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
