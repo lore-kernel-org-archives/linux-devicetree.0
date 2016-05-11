@@ -1,41 +1,67 @@
 From: Andy Gross <andy.gross@linaro.org>
-Subject: [Patch v4 7/8] dts: qcom: apq8084: Add SCM firmware node
-Date: Wed, 11 May 2016 09:15:57 -0500
-Message-ID: <1462976158-26016-8-git-send-email-andy.gross@linaro.org>
+Subject: [Patch v4 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Wed, 11 May 2016 09:15:51 -0500
+Message-ID: <1462976158-26016-2-git-send-email-andy.gross@linaro.org>
 References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the firmware node for the SCM
+This patch adds the device tree support for the Qualcomm SCM firmware.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Andy Gross <andy.gross@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8084.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/firmware/qcom,scm.txt      | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index a33a09f..7c2df06 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -86,6 +86,14 @@
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+new file mode 100644
+index 0000000..0c5f1ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -0,0 +1,28 @@
++QCOM Secure Channel Manager (SCM)
++
++Qualcomm processors include an interface to communicate to the secure firmware.
++This interface allows for clients to request different types of actions.  These
++can include CPU power up/down, HDCP requests, loading of firmware, and other
++assorted actions.
++
++Required properties:
++- compatible: must contain one of the following:
++ * "qcom,scm-apq8064" for APQ8064 platforms
++ * "qcom,scm-msm8660" for MSM8660 platforms
++ * "qcom,scm-msm8690" for MSM8690 platforms
++ * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
++- clocks: One to three clocks may be required based on compatible.
++ * Only core clock required for "qcom,scm-apq8084", "qcom,scm-msm8660", and "qcom,scm-msm8960"
++ * Core, iface, and bus clocks required for "qcom,scm"
++- clock-names: Must contain "core" for the core clock, "iface" for the interface
++  clock and "bus" for the bus clock per the requirements of the compatible.
++
++Example for MSM8916:
++
 +	firmware {
 +		scm {
 +			compatible = "qcom,scm";
-+			clocks = <&gcc GCC_CE1_CLK> , <&gcc GCC_CE1_AXI_CLK>, <&gcc GCC_CE1_AHB_CLK>;
++			clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
 +			clock-names = "core", "bus", "iface";
 +		};
 +	};
-+
- 	cpu-pmu {
- 		compatible = "qcom,krait-pmu";
- 		interrupts = <1 7 0xf04>;
 -- 
 1.9.1
