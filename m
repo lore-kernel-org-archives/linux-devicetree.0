@@ -1,73 +1,56 @@
-From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH 3/5] ARM: dts: Add I2C1 support for STM32F429 SoC
-Date: Wed, 11 May 2016 17:36:12 +0200
-Message-ID: <1462980974-22091-4-git-send-email-cedric.madianga@gmail.com>
-References: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH v3 00/27] ARM: dts: exynos: Add initial support for Odroid
+ XU
+Date: Wed, 11 May 2016 11:41:34 -0400
+Message-ID: <09dcc771-40e2-8be0-de73-bc1db37d6804@osg.samsung.com>
+References: <1462910970-1812-1-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462980974-22091-1-git-send-email-cedric.madianga@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mcoquelin.stm32@gmail.com, patrice.chotard@st.com, wsa@the-dreams.de, robh+dt@kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1462910970-1812-1-git-send-email-krzk@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Hello Krzysztof,
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 434d4b9..cbfeb4e 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -323,6 +323,18 @@
- 					slew-rate = <2>;
- 				};
- 			};
-+
-+			i2c1_sda_pin: i2c1_sda@0 {
-+				pins {
-+					pinmux = <STM32F429_PB9_FUNC_I2C1_SDA>;
-+					drive-open-drain;
-+				};
-+			};
-+			i2c1_scl_pin: i2c1_scl@0 {
-+				pins {
-+					pinmux = <STM32F429_PB6_FUNC_I2C1_SCL>;
-+				};
-+			};
- 		};
- 
- 		rcc: rcc@40023800 {
-@@ -395,6 +407,18 @@
- 			interrupts = <80>;
- 			clocks = <&rcc 0 38>;
- 		};
-+
-+		i2c1: i2c@40005400 {
-+			compatible = "st,i2c-stm32f4";
-+			reg = <0x40005400 0x400>;
-+			interrupts = <31>,
-+				     <32>;
-+			resets = <&rcc 277>;
-+			clocks = <&rcc 0 149>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
- };
- 
+On 05/10/2016 04:09 PM, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Patchset adds necessary clocks, reorganizes existing stuff and finally
+> adds Odroid XU support.
+> 
+> 
+> Changes since v2
+> ================
+> 1. Got global-ack from Stephen for the clock changes. I think merging
+>    everything through arm-soc might be the easiest but:
+>    a. In such case I will prepare a tag with clock changes,
+>    b. Anyway I will wait for response from Sylwester and Tomasz.
+> 2. Applied comments from Javier and added his Reviewed-by.
+> 3. Patch 22: added ack from Rob.
+> 4. Minor improvements in existing patches.
+> 5. Five new patches at the end: 23-27 (not reviewed yet).
+>    Some of them could be squashed with existing ones but existing
+>    changes got reviews. Although the final Odroid XU DTS works fine but
+>    in general this is still work-in-progress so I suspect it will grow.
+>    I am releasing it early following Linux concept. :)
+> 
+> Patchset is available at my private repo @github:
+> https://github.com/krzk/linux.git for-next/odroid-xu-v3
+> 
+
+I have tested this branch on both an Exynos5422 Odroid XU4 board and an
+Exynos5800 Peach Pi Chromebook. All the peripherals are working correctly.
+
+So for all patches affecting Exynos54xx/5800 (9,12,13,14,16,19,20,21,25):
+
+Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
 -- 
-1.9.1
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
