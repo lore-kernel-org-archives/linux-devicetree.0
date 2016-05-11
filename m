@@ -1,56 +1,47 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 1/2] ARM: dts: sun6i: primo81: Drop constraints on dc1sw regulator
-Date: Wed, 11 May 2016 13:23:13 +0800
-Message-ID: <1462944194-6920-2-git-send-email-wens@csie.org>
-References: <1462944194-6920-1-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462944194-6920-1-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mark Brown <broonie@kernel.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
+ with CPU thermal nodes
+Date: Wed, 11 May 2016 07:49:19 +0200
+Message-ID: <5732C7DF.2080800@samsung.com>
+References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
+ <CANAwSgT9SY3kj8+beMpc1xGoC=rMBSya+2v2dyZQp6ykH+V0=g@mail.gmail.com>
+ <573198BE.6020900@samsung.com>
+ <CANAwSgTy6p9AVmmOWATpSO1JqVbwE0v+y_y-RLd+32RnNJTA+Q@mail.gmail.com>
+ <5731D764.8070007@samsung.com>
+ <CANAwSgRsjdQh6ygT__5XcH8-cF9Ch+zbk8oupebwYzY1kCZu6g@mail.gmail.com>
+ <5731EA1B.4070201@samsung.com>
+ <CANAwSgQGhrBca7=Ow8+Hh9t0W9HWp=F43KR0Frfpx9fGngPSaw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CANAwSgQGhrBca7=Ow8+Hh9t0W9HWp=F43KR0Frfpx9fGngPSaw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the same issue fixed in commit dcf5341f0150 ("ARM: dts:
-sun8i-q8-common: Do not set constraints on dc1sw regulator").
-Commit message copied:
+On 05/10/2016 09:45 PM, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> Sorry I am not able to explain my self clearly.
+> But I have once gain tested these changes.
+> 
+> Only could you append with following changes.
+> --------------------------------------------------------
+> +                               cpu_crit0: cpu-crit-0 {
+> +                                       temperature = <120000>; /*
+> millicelsius */
+> +                                       hysteresis = <5000>; /* millicelsius */
+> +                                       type = "critical";
+> +                               };
+> --------------------------------------------------------
+> hysteresis time help to adjust the present and past temperature inputs
+> before critical shutdown.
 
-dc1sw is an on/off only regulator and as such it cannot have constraints.
+I need more details why you want this patch. What is the point of
+hysteresis on critical trip point? When reaching this trip point the
+system shutdowns... there is nothing more to do, I think.
 
-This is a limitation of the kernel regulator implementation which resolves
-supplies on the first regulator_get(), which is done after applying
-constraints, and applying the constrains will fail because it calls
-_regulator_get_voltage() and _regulator_do_set_voltage() both of which
-will fail on a switch regulator when there is no supply (yet).
-
-This causes registering of all axp22x regulators to fail with the
-following errors:
-
-[    1.395249] vcc-lcd: failed to get the current voltage(-22)
-[    1.405131] axp20x-regulator axp20x-regulator: Failed to register dc1sw
-[    1.412436] axp20x-regulator: probe of axp20x-regulator failed with error -22
-
-This commit removes the constrains on dc1sw / vcc-lcd fixing this problem.
-Note that dcdc1 itself is contrained to the exact same values, so this
-does not change anything.
-
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun6i-a31s-primo81.dts | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-index 68b479b8772c..73c133f5e79c 100644
---- a/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-+++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-@@ -176,8 +176,6 @@
- };
- 
- &reg_dc1sw {
--	regulator-min-microvolt = <3000000>;
--	regulator-max-microvolt = <3000000>;
- 	regulator-name = "vcc-lcd";
- };
- 
--- 
-2.8.1
+Best regards,
+Krzysztof
