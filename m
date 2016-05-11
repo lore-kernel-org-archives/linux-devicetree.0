@@ -1,48 +1,55 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM: dts: bcm5301x: Add I2C support to the DT
-Date: Wed, 11 May 2016 19:19:09 -0400
-Message-ID: <1463008750-13902-3-git-send-email-jonmason@broadcom.com>
-References: <1463008750-13902-1-git-send-email-jonmason@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463008750-13902-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Matt Fleming <matt@codeblueprint.co.uk>
+Subject: Re: [PATCH] Xen: EFI: Parse DT parameters for Xen specific UEFI
+Date: Thu, 12 May 2016 00:24:44 +0100
+Message-ID: <20160511232444.GY2839@codeblueprint.co.uk>
+References: <1462523526-3172-1-git-send-email-zhaoshenglong@huawei.com>
+ <20160511122730.GU2839@codeblueprint.co.uk>
+ <57333533.2030206@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57333533.2030206@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shannon Zhao <shannon.zhao@linaro.org>
+Cc: Shannon Zhao <zhaoshenglong@huawei.com>, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, sstabellini@kernel.org, stefano@aporeto.com, julien.grall@arm.com, ard.biesheuvel@linaro.org, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, peter.huangpeng@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Add I2C support to the bcm5301x Device Tree.  Since no driver changes
-are needed to enable this hardware, only the device tree changes are
-required to make this functional.
-
-Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/bcm5301x.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 4b9887f..ffc4a9b 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -218,6 +218,15 @@
- 		};
- 	};
+On Wed, 11 May, at 09:35:47PM, Shannon Zhao wrote:
+> > 
+> > Also, why do you need to setup efi.runtime_version here? Isn't that
+> > done inside uefi_init()?
+> > 
+> I don't see any codes which setup efi.runtime_version in uefi_init().
  
-+	i2c0: i2c@18009000 {
-+		compatible = "brcm,iproc-i2c";
-+		reg = <0x18009000 0x50>;
-+		interrupts = <GIC_SPI 121 IRQ_TYPE_NONE>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clock-frequency = <100000>;
-+	};
-+
- 	lcpll0: lcpll0@1800c100 {
- 		#clock-cells = <1>;
- 		compatible = "brcm,nsp-lcpll0";
--- 
-1.9.1
+Look in the EFI tree,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  https://git.kernel.org/cgit/linux/kernel/git/mfleming/efi.git/tree/drivers/firmware/efi/arm-init.c?h=next#n120
+
+> > Here is how I would have expected this patch to look:
+> > 
+> >   - Add FDT code to find hypervisor EFI params
+> > 
+> >   - Force enable EFI_RUNTIME_SERVICES for Xen and call
+> >     xen_efi_runtime_setup() inside xen_guest_init()
+> > 
+> >   - Change arm_enable_runtime_services() to handle the case where
+> >     EFI_RUNTIME_SERVICES is already set
+> > 
+> > Am I misunderstanding some ordering issues?
+> 
+> Since xen_guest_init() and arm_enable_runtime_services() are both
+> early_initcall and the calling order is random I think.
+
+Urgh, right, I missed that.
+
+> And when we call xen_efi_runtime_setup() and setup
+> efi.runtime_version in xen_guest_init(), the efi.systab might be
+> NULL. So it needs to map the systanle explicitly before we use
+> efi.systab.
+
+Could you explain why you need to copy efi.runtime_version instead of
+letting the existing code in uefi_init() set it up?
+
+Also, efi.systab isn't used by xen_efi_runtime_setup() as far I can
+see, not sure why you need that either?
