@@ -1,31 +1,173 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] Documentation: mfd: LP873X: Add information for
- the mfd and regulator drivers
-Date: Wed, 11 May 2016 09:35:55 -0500
-Message-ID: <20160511143555.GA22321@rob-hp-laptop>
-References: <1462853079-10708-1-git-send-email-j-keerthy@ti.com>
- <1462853079-10708-2-git-send-email-j-keerthy@ti.com>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH v2 1/2] Documentation: DT: bindings: Add Broadcom STB
+ PCIe bindings
+Date: Wed, 11 May 2016 14:45:51 +0000
+Message-ID: <8520D5D51A55D047800579B094147198258955CE@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1462475700-1654-1-git-send-email-f.fainelli@gmail.com>
+ <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462853079-10708-2-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1462475700-1654-2-git-send-email-f.fainelli@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jim2101024@gmail.com" <jim2101024@gmail.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2016 at 09:34:37AM +0530, Keerthy wrote:
-> Add information for the mfd and regulator drivers.
 > 
-> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/lp873x.txt | 55 ++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lp873x.txt
+>  .../devicetree/bindings/pci/brcm,brcmstb-pcie.txt  | 98
+> ++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+> b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+> new file mode 100644
+> index 000000000000..3682b0f0bc26
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,brcmstb-pcie.txt
+> @@ -0,0 +1,98 @@
+> +Broadcom STB PCIe Host Controller Device Tree Bindings
+> +
+> +This document describes the binding of the PCIe Root Complex hardware
+> +found in Broadcom Set Top Box System-on-Chips such as BCM7425 (MIPS),
+> +BCM7435 (MIPS) and
+> +BCM7445 (ARMv7).
+> +
+> +Required properties:
+> +- compatible: must be one of: "brcm,bcm7425-pcie"
+> +			      "brcm,bcm7435-pcie"
+> +			      "brcm,bcm7445-pcie"
+> +
+> +- reg: specifies the physical base address of the controller registers
+> +and
+> +  its length
+> +
+> +- interrupt-parent: must be a reference (phandle) to the parent
+> +interrupt
+> +  controller in the system (7038-l1-intc on MIPS, GIC on ARM/ARM64)
+> +
+> +- interrrupts: first interrupt must be the Level 1 interrupt number
+> +corresponding
+> +  to the main PCIe RC interrupt, second interrupt must be the MSI
+> +interrupt
+> +  See the interrupt-parent documentation for the number of cells and their
+> meaning:
+> +  MIPS:
+> +Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-
+> l1-
+> +intc.txt
+> +  ARM/ARM64:
+> +Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+> +
+> +- interrupt-names: must be "pcie", and if present "msi"
+> +
+> +- interrupt-map: see pci.txt
+> +
+> +- interrupt-map-mask: see pci.txt
+> +
+> +- #address-cells: must be set to <3>, see pci.txt
+> +
+> +- #size-cells: must be set to <2>, see pci.txt
+> +
+> +- ranges: ranges for the PCI outbound windows, no I/O or prefetchable
+> +windows
+> +  must be specified here, only non-prefetchable. 32-bits windows or
+> +64-bits
+> +  windows are allowed based on the host processor's capabilities (ARM
+> +w/ LPAE,
+> +  ARM64).
+> +
+> +- #interrupt-cells: set to <1>, see pci.txt
+> +
+> +- brcm,log2-scb-sizes: log2 size of the SCB window that is mapped to
+> +PCIe space
+> +  there must be exactly one value per memory controller present in the
+> +system
+> +  (ranges from 1 to 3)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you please give more insight on what does this property do ?
+
+Bharat
+> +
+> +Optional properties:
+> +
+> +- msi-controller: indicates that this is a MSI controller node (when
+> +supported)
+> +
+> +- clocks: phandle to the functional clock that feeds into the PCIe RC
+> +block
+> +
+> +- clock-names: the name(s) of the clocks specified in 'clocks'.  Note
+> +  that if the 'clocks' property is given, 'clock-names' is mandatory,
+> +  and the name of the clock is expected to be "pcie".
+> +
+> +- brcm,ssc: boolean that indicates usage of spread-spectrum clocking
+> +
+> +- brcm,gen: integer that indicates desired forced generation of link: 1
+> +=> 2.5
+> +  Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps. Will override the auto-negotation
+> +if
+> +  specified.
+> +
+> +- <*>-supply: see
+> +Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +- <*>-supply-names: see
+> +Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +Example Node:
+> +
+> +This example assumes that the top-level #address-cells = <2> and
+> +#size-cells = <2>, e.g: ARM LPAE configuration.
+> +
+> +	pcie0: pcie-controller@f0460000 {
+> +		reg = <0x0 0xf0460000 0x0 0x9310>;
+> +		interrupts = <0x0 0x33 0x4>, <0x0 0x34, 0x4>;
+> +		interrupt-names = "pcie", "msi";
+> +		compatible = "brcm,bcm7445-pcie";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +
+> +		/* Two non-prefetchable 32-bits memory space, each of
+> 128MB
+> + 		 * with the following mapping:
+> +		 * PCIe address		=> CPU physical address space
+> +		 * 0x00_0000_0000	=> 0x00_C000_0000
+> +		 * 0x00_0800_0000	=> 0x00_C800_0000
+> +		 */
+> +		ranges = <0x02000000 0x00000000 0x00000000 0x00000000
+> 0xc0000000 0x00000000 0x08000000>,
+> +			 <0x02000000 0x00000000 0x08000000 0x00000000
+> 0xc8000000 0x00000000 0x08000000>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0xf800 0 0 7>;
+> +		interrupt-map = <0 0 0 1 &intc 47 3
+> +				 0 0 0 2 &intc 48 3
+> +				 0 0 0 3 &intc 49 3
+> +				 0 0 0 4 &intc 50 3>;
+> +		clocks = <&pcie0>;
+> +		clock-names = "pcie";
+> +		brcm,ssc;
+> +		brcm,log2-scb-sizes = <0x1e 0x1e 0x1e>;
+> +		vreg-wifi-pwr-supply-names = "vreg-wifi-pwr";
+> +		vreg-wifi-pwr-supply = <&vreg-wifi-pwr>;
+> +	};
+> --
+> 2.1.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in the
+> body of a message to majordomo@vger.kernel.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
