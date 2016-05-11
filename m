@@ -1,70 +1,32 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: Re: [PATCH v2 0/3] input: rmi4: Regulator supply support
-Date: Wed, 11 May 2016 16:30:16 -0700
-Message-ID: <5733C088.1090700@synaptics.com>
-References: <1462596008-21381-1-git-send-email-bjorn.andersson@linaro.org>
- <57312CFB.2040304@synaptics.com> <20160510154904.GI1256@tuxbot>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v8 8/8] i2c: rk3x: support fast-mode plus for rk3399
+Date: Wed, 11 May 2016 16:41:54 -0700
+Message-ID: <CAD=FV=VzQ8PRokgAaTV00L31mcXFEzBG8c1NB4+Rqyx75hwwDg@mail.gmail.com>
+References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com>
+	<1462908794-27333-1-git-send-email-david.wu@rock-chips.com>
+	<5153288.jNhUuzGC3g@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160510154904.GI1256@tuxbot>
-Sender: linux-input-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <5153288.jNhUuzGC3g@phil>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: David Wu <david.wu@rock-chips.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Heiko,
 
-On 05/10/2016 08:49 AM, Bjorn Andersson wrote:
-> On Mon 09 May 17:36 PDT 2016, Andrew Duggan wrote:
->
->> Hi Bjorn,
->>
->> On 05/06/2016 09:40 PM, Bjorn Andersson wrote:
->>> The first version of the regulator support patch suffered from being
->>> implemented in the transport driver, as a work around for resource availability
->>> racing (EPROBE_DEFER of the core driver) with the interrupt handler.
->>>
->>> After reconsidering the solutions discussed following that I concluded that the
->>> interrupt management is not really part of the transport, neither conceptually
->>> or electrically. I therefor here suggest (patch 1/3) to move the interrupt
->>> registration and handling to the core rmi driver.
->> My concern with moving interrupt processing to the core is that not all
->> transports report attn to the rmi core using an irq. The HID and SMBus
->> transports which are currently in development, reside a little higher in the
->> stack and attention is reported using different mechanisms. We moved
->> interrupt handling to the transport drivers so that they could handle the
->> differences in how attn is reported.
->>
-> I suspected that to be the case.
->
->> This message has some of the previous discussion regarding interrupt
->> processing:
->> https://lkml.org/lkml/2015/11/28/123
->>
->> Similarly, not all transports will need support for regulators. Implementing
->> both in the transport drivers avoids the EPROBE_DEFER racing and avoids
->> adding checks in the core to see if it needs to handle interrupts and manage
->> regulators.
->>
-> So either we duplicate the regulator support in spi/i2c or we make them
-> optional in the core driver. Sounds like you prefer the prior, i.e. v1
-> of my patch.
+On Wed, May 11, 2016 at 2:09 PM, Heiko Stuebner <heiko@sntech.de> wrote:
+> Additionally, the i2c-noob in me would wish for a short sentence on where
+> the timing values come from (measured, somewhere in the TRM I didn't find or
+> something completely different).
 
-Yes, after all this I think it makes sense to put regulator support in 
-the spi/i2c transports like in your v1 patch. I essentially duplicated 
-the irq handling code in both transports so I would be ok with 
-duplicating regulator support too. It doesn't seem like that much code. 
-But, if this is too much duplication we could create some sort of common 
-file and put the common irq and regulator support functions which could 
-be called in the transports. Similar to how rmi_2d_sensor.c defines some 
-common functions shared between rmi_f11 and rmi_f12.
+If you search for "UM10204" you'll find the first link is
+<http://www.nxp.com/documents/user_manual/UM10204.pdf>.  That appears
+to be the official standard.  At least that's what
+<http://www.i2c-bus.org/fast-mode-plus/> says (though they have an old
+link).
 
+Agree that it wouldn't hurt to mention that in the commit message.
 
-Thanks,
-Andrew
-
-> Regards,
-> Bjorn
-
+-Doug
