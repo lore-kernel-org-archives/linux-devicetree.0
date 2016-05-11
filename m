@@ -1,82 +1,45 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v8 1/8] i2c: rk3x: add documentation to fields in "struct rk3x_i2c"
-Date: Wed, 11 May 2016 17:04:49 +0200
-Message-ID: <4217955.sKb92Wcadr@phil>
-References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com> <1462908252-27016-2-git-send-email-david.wu@rock-chips.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: MAX9860: new driver
+Date: Wed, 11 May 2016 16:09:37 +0100
+Message-ID: <20160511150937.GK6261@sirena.org.uk>
+References: <1462892797-1147-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="F55Y67F01HNW3AgB"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462908252-27016-2-git-send-email-david.wu@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <1462892797-1147-1-git-send-email-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, dianders@chromium.org, andy.shevchenko@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, briannorris@google.com, davidriley@google.com, huangtao@rock-chips.com, hl@rock-chips.com, xjq@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 11. Mai 2016, 03:24:05 schrieb David Wu:
 
-In general, all patches should have a commit message (even if it's obvious) 
-and some maintainers even enforce this in a hard way.
+--F55Y67F01HNW3AgB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-How about something like:
+On Tue, May 10, 2016 at 05:06:37PM +0200, Peter Rosin wrote:
 
-----
-Add kernel-doc documentation for the elements of the previously
-undocumented struct rk3x_i2c.
-----
+> This driver does not support sidetone since the DVST register field is
+> backwards with the mute near the maximum level instead of the minimum.
 
-Some minor nitpicks below, otherwise
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Why would that be an issue?  We support volume controls in either
+direction.
 
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> Change in v8:
-> - none
-> 
->  drivers/i2c/busses/i2c-rk3x.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> index 80bed02..7e45d51 100644
-> --- a/drivers/i2c/busses/i2c-rk3x.c
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -90,6 +90,26 @@ struct rk3x_i2c_soc_data {
->  	int grf_offset;
->  };
-> 
-> +/**
-> + * struct rk3x_i2c - private data of the controller
-> + * @adap: corresponding I2C adapter
-> + * @dev: device for this controller
-> + * @soc_data: related soc data struct
-> + * @regs: virtual memory area
-> + * @clk: clock of i2c bus
-> + * @clk_rate_nb: i2c clk rate change notify
-		^ i2c clk rate change notifier block
+--F55Y67F01HNW3AgB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> + * @t: I2C known timing information
-> + * @lock: spinlock for the i2c bus
-> + * @wait: the waitqueue to wait for i2c transfer
-> + * @busy: the condition for the event to wait for
-> + * @msg: current i2c message
-> + * @addr: addr of i2c slave device
-> + * @mode: mode of i2c transfer
-> + * @is_last_msg: flag determines whether it is the last msg in this
-> transfer + * @state: state of i2c transfer
-> + * @processed: byte length which has been send or received
-										^ sent (with a "t")
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> + * @error: error code for i2c transfer
-> + */
->  struct rk3x_i2c {
->  	struct i2c_adapter adap;
->  	struct device *dev;
-> @@ -116,7 +136,7 @@ struct rk3x_i2c {
-> 
->  	/* I2C state machine */
->  	enum rk3x_i2c_state state;
-> -	unsigned int processed; /* sent/received bytes */
-> +	unsigned int processed;
->  	int error;
->  };
+iQEcBAEBCAAGBQJXM0swAAoJECTWi3JdVIfQZYUH/jpIE5iKaQ/bUt3p03+nBYTr
+eRkpdb2t4MMRSZP+jwNnF0enjQIPSCsUFwg5cij8k8qVvKexyJ4gwoj70/77QLDF
+tAXOOvBWxdOLeaGyDgVp4nzlNXeyrEuVoKsUuVfv8GLobcUdyJCGUwiZ54CgjUVj
+FyAwXV1THI8BcJbaTA4oZM5QWTcAY2cVehQM8i5qAdxH9DOAuz5M03wJdVG7Tbrv
+KFnzEc7KakwmuksF3WjVaGTkOMxDw60AT979X7dYgw+Ot0fGpc2UMTQEXotGmJq9
+yNu53PCt6b9ohU+MQ+hkj3+ETD/siO5B0D/gBHxTOO8Zt4T/G9adxvECdzQ+l4k=
+=4p8j
+-----END PGP SIGNATURE-----
+
+--F55Y67F01HNW3AgB--
