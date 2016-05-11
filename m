@@ -1,52 +1,107 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] devicetree: sunxi: Add OLinuXino Lime2 eMMC
- to the Makefile
-Date: Wed, 11 May 2016 09:12:06 +0200
-Message-ID: <20160511071206.GN3733@lukather>
-References: <1462906820-5203-1-git-send-email-oliver@schinagl.nl>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Only Odroid XU3-family boards use DTSI
+ with CPU thermal nodes
+Date: Wed, 11 May 2016 12:58:30 +0530
+Message-ID: <CANAwSgQHHE=USgjea4DpySC7T2+t7Ta8LuyL36cz3DpiyDgaWg@mail.gmail.com>
+References: <1462774789-15360-1-git-send-email-k.kozlowski@samsung.com>
+ <CANAwSgT9SY3kj8+beMpc1xGoC=rMBSya+2v2dyZQp6ykH+V0=g@mail.gmail.com>
+ <573198BE.6020900@samsung.com> <CANAwSgTy6p9AVmmOWATpSO1JqVbwE0v+y_y-RLd+32RnNJTA+Q@mail.gmail.com>
+ <5731D764.8070007@samsung.com> <CANAwSgRsjdQh6ygT__5XcH8-cF9Ch+zbk8oupebwYzY1kCZu6g@mail.gmail.com>
+ <5731EA1B.4070201@samsung.com> <CANAwSgQGhrBca7=Ow8+Hh9t0W9HWp=F43KR0Frfpx9fGngPSaw@mail.gmail.com>
+ <5732C7DF.2080800@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uX2tiToO0oGq+LKk"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBR5WZO4QKGQE2ZKA2MA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1462906820-5203-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5732C7DF.2080800@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---uX2tiToO0oGq+LKk
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Krzysztof,
 
-Hi Oliver,
+On 11 May 2016 at 11:19, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> On 05/10/2016 09:45 PM, Anand Moon wrote:
+>> Hi Krzysztof,
+>>
+>> Sorry I am not able to explain my self clearly.
+>> But I have once gain tested these changes.
+>>
+>> Only could you append with following changes.
+>> --------------------------------------------------------
+>> +                               cpu_crit0: cpu-crit-0 {
+>> +                                       temperature = <120000>; /*
+>> millicelsius */
+>> +                                       hysteresis = <5000>; /* millicelsius */
+>> +                                       type = "critical";
+>> +                               };
+>> --------------------------------------------------------
+>> hysteresis time help to adjust the present and past temperature inputs
+>> before critical shutdown.
+>
+> I need more details why you want this patch. What is the point of
+> hysteresis on critical trip point? When reaching this trip point the
+> system shutdowns... there is nothing more to do, I think.
 
-On Tue, May 10, 2016 at 09:00:20PM +0200, Olliver Schinagl wrote:
-> ARM: dts: sunxi: Add a olinuxino-lime2-emmc added the new emmc equipped
-> lime2 but forgot its Makefile. This patch adds an entry to the Makefile.
-> 
-> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> ---
-> Maxime, I'm sorry for ommitting the Makefile initially, if it is not merged yet,
-> maybe just squash it with the previous patch?
+Ok you are correct and I am completely wrong, It dose not critical
+temperate so easily.
 
-It's merged, and have been sent to armsoc.
+>
+> Best regards,
+> Krzysztof
+>
 
-Please resend with arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, asking them to apply it directly
-(and keep chen-yu and I in cc).
+I have enable CONFIG_DYNAMIC_DEBUG and tested with following.
 
-Thanks!
-Maxime
+# echo 'module thermal_sys +fp' > /sys/kernel/debug/dynamic_debug/control
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---uX2tiToO0oGq+LKk--
+Below is the  output of console for stress testing.
+[ 1728.744182] update_temperature: thermal thermal_zone3:
+last_temperature=92000, current_temperature=92000
+[ 1728.744211] thermal_zone_trip_update: thermal thermal_zone3:
+Trip0[type=0,temp=85000]:trend=0,throttle=1
+[ 1728.744231] thermal_zone_trip_update: thermal thermal_zone3:
+Trip1[type=0,temp=103000]:trend=0,throttle=0
+[ 1728.744248] thermal_zone_trip_update: thermal thermal_zone3:
+Trip2[type=0,temp=110000]:trend=0,throttle=0
+[ 1728.755227] update_temperature: thermal thermal_zone2:
+last_temperature=86000, current_temperature=86000
+[ 1728.755269] thermal_zone_trip_update: thermal thermal_zone2:
+Trip0[type=0,temp=85000]:trend=0,throttle=1
+[ 1728.755306] thermal_zone_trip_update: thermal thermal_zone2:
+Trip1[type=0,temp=103000]:trend=0,throttle=0
+[ 1728.755340] thermal_zone_trip_update: thermal thermal_zone2:
+Trip2[type=0,temp=110000]:trend=0,throttle=0
+[ 1728.964753] update_temperature: thermal thermal_zone0:
+last_temperature=78000, current_temperature=83000
+[ 1728.964782] thermal_zone_trip_update: thermal thermal_zone0:
+Trip0[type=0,temp=50000]:trend=1,throttle=1
+[ 1728.964797] get_target_state: thermal cooling_device0: cur_state=2
+[ 1728.964810] thermal_zone_trip_update: thermal cooling_device0:
+old_target=1, target=1
+[ 1728.964837] thermal_zone_trip_update: thermal thermal_zone0:
+Trip1[type=0,temp=60000]:trend=1,throttle=1
+[ 1728.964850] get_target_state: thermal cooling_device0: cur_state=2
+[ 1728.964861] thermal_zone_trip_update: thermal cooling_device0:
+old_target=1, target=2
+[ 1728.964875] thermal_cdev_update: thermal cooling_device0: zone0->target=1
+[ 1728.964886] thermal_cdev_update: thermal cooling_device0: zone0->target=2
+[ 1728.964897] thermal_cdev_update: thermal cooling_device0: zone0->target=2
+[ 1728.964909] thermal_cdev_update: thermal cooling_device0: set to state 2
+[ 1728.964925] thermal_zone_trip_update: thermal thermal_zone0:
+Trip2[type=0,temp=70000]:trend=1,throttle=1
+[ 1728.964937] get_target_state: thermal cooling_device0: cur_state=2
+[ 1728.964948] thermal_zone_trip_update: thermal cooling_device0:
+old_target=2, target=3
+[ 1728.964962] thermal_cdev_update: thermal cooling_device0: zone0->target=1
+[ 1728.964973] thermal_cdev_update: thermal cooling_device0: zone0->target=2
+[ 1728.964983] thermal_cdev_update: thermal cooling_device0: zone0->target=3
+[ 1728.965000] thermal_cdev_update: thermal cooling_device0: set to state 3
+[ 1728.965019] thermal_zone_trip_update: thermal thermal_zone0:
+Trip4[type=1,temp=70000]:trend=1,throttle=1
+
+Ok I admit that thermal throttle is working correctly on my Odroid XU4.
+Opps .... Sorry for the trouble.
+
+Best Regards
+-Anand Moon
