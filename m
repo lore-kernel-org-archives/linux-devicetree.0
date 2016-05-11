@@ -1,88 +1,90 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: rockchip-dw-mshc: add
- rockchip,default-drv-phase
-Date: Wed, 11 May 2016 10:50:17 +0800
-Message-ID: <e202f663-88d7-693b-a765-c130e68d1c2d@rock-chips.com>
-References: <1462527648-24443-1-git-send-email-shawn.lin@rock-chips.com>
- <1462527673-24711-1-git-send-email-shawn.lin@rock-chips.com>
- <CAD=FV=WSkBwBjVsRoDsfjD+sNfR70mKGRA0khjPKKW0zS2=PTw@mail.gmail.com>
- <b15dcb4f-1584-8219-2fe0-97eecb0c64a6@rock-chips.com>
- <CAD=FV=XToSzqSh=SShHuQU9W_m7gfyQn8wRXkLy79t+tnqZknA@mail.gmail.com>
- <1f2f43c7-2672-e448-eddb-2d613bb8dc48@rock-chips.com>
- <CAD=FV=UGbrJRyUbbgzbcYf9GjPG+Fh_gpQ3rX2G=wi2w5Lw=Sg@mail.gmail.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v7 7/9] clk: mediatek: Enable critical clocks for MT2701
+Date: Wed, 11 May 2016 10:51:29 +0800
+Message-ID: <1462935089.28773.11.camel@mtksdaap41>
+References: <1460621514-65191-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1460621514-65191-8-git-send-email-jamesjj.liao@mediatek.com>
+	 <20160506231229.GJ3492@codeaurora.org> <1462772426.5344.7.camel@mtksdaap41>
+	 <20160509221321.GT3492@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=UGbrJRyUbbgzbcYf9GjPG+Fh_gpQ3rX2G=wi2w5Lw=Sg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160509221321.GT3492@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 2016/5/10 23:57, Doug Anderson wrote:
-> (again, but not HTML)
->
+Hi Stephen, Mike, Lee,
 
-------8<------------------
+On Mon, 2016-05-09 at 15:13 -0700, Stephen Boyd wrote:
+> On 05/09, James Liao wrote:
+> > Hi Stephen,
+> > 
+> > On Fri, 2016-05-06 at 16:12 -0700, Stephen Boyd wrote:
+> > > On 04/14, James Liao wrote:
+> > > > Some system clocks should be turned on by default on MT2701.
+> > > > This patch enable these clocks when related clocks have
+> > > > been registered.
+> > > > 
+> > > > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> > > > ---
+> > > 
+> > > critical clks got merged now (sorry I'm slowly getting back to
+> > > looking at patches). Please use that flag.
+> > 
+> > I don't see critical clock support in v4.6-rc7. Is there a repo/branch
+> > that has critical clocks merged?
+> > 
+> 
+> Right, it's in clk-next in the clk tree.
 
->
-> I have less faith than you in the TRM.  The TRM is full of minor
-> errors and is often wrong about the default state of things.  IMHO the
-> only true way to find out is to boot up some SoCs and check.
->
+I got the latest code from clk-next and tried to use CLK_IS_CRITICAL fro
+critical clocks. But There is something wrong with CLK_IS_CRITICAL. For
+example, if we set vdec_sel as a critical clock, we'll get the following
+result:
 
-Okay, I should not have too much confidence on my TRM maybe :).
+    vdecpll                               0            0
+       vdecpll_ck                         1            1
+          vdec_sel                        1            1
 
-Again, We SHOULD refer to the Mobile Storage Host section (Variable
-Delay/Clock Generation) instead of CRU section, otherwise even you will
-see inconsistent decription of mmc_clock->shift.
+vdec_sel and vdecpll_ck are TOPCKGEN clocks. vdecpll is a APMIXEDSYS
+PLL, which will be registered after TOPCKGEN clocks. The prepare and
+enable count are incorrect in this case.
 
+We may need to prepare/enable a parent clock if an enabled orphan clock
+re-parent to it. I tried the following modification and it can resolve
+this issue. But I'm not sure it's a correct place to enable parent
+clcoks. May I have your comment on this?
 
+------------------------------------------------------------
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index ce39add..db1bc3a 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2388,8 +2388,15 @@ static int __clk_core_init(struct clk_core *core)
+        hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list,
+child_node) {
+                struct clk_core *parent = __clk_init_parent(orphan);
 
-> As far as whether code touches these values:
->
+-               if (parent)
++               if (parent) {
+                        clk_core_reparent(orphan, parent);
++
++                       if (orphan->prepare_count)
++                               clk_core_prepare(parent);
++
++                       if (orphan->enable_count )
++                               clk_core_enable(parent);
++               }
+        }
 
----------8<-----------------
-
->>
->> maybe. But I think 180(downside) is the better.
-
-NAK my previous comments here. Downside is better for SRD, but won't
-work for DDR mode. When running in DDR mode, we should use 90 instead.
-
-So let me elaborate a bit more here.
-For DDR mode, one single clk cycle should sending two data bits outside
-to the devices. We need a hold time for both. If 180 is used, the first
-bit occurs around the downside area, which won't be sampled by devices
-on the upside.  So on the upside, the devices will see a zero bit if you
-actually send a one-bit, which makes the devices  generate CRC finally.
-
-
-For this above, 180 for all SDR mode is ok, but 90 should be deployed
-for DDR mode. So simply checking the timing to hardcode it should be
-fine.
-
->
-> I'm OK with using 180 always as long as SD cards continue to work OK.
-> Best would be if someone could actually run a protocol analyzer for
-> all the different speed modes.
->
->
->>> Also: I still haven't heard whether there is any downside to using 180
->>> degrees for modes that only require 90 degrees.  Does it cause
->>> problems to just always use 180 degrees?  If not, we could possibly
->>> use 180 degrees everywhere and just hardcode it?
->>
->>
+        /*
+------------------------------------------------------------
 
 
+Best regards,
 
--- 
-Best Regards
-Shawn Lin
+James
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
