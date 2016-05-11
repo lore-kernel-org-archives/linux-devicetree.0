@@ -1,29 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2.1] dt-bindings: Add Renesas R-Car FCP DT bindings
-Date: Wed, 11 May 2016 08:05:18 -0500
-Message-ID: <20160511130518.GA1383@rob-hp-laptop>
-References: <1461620198-13428-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1462970190-588-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: dra7: Add ocmcram nodes
+Date: Wed, 11 May 2016 08:07:41 -0500
+Message-ID: <20160511130741.GR20461@borg.dal.design.ti.com>
+References: <1462909782-14639-1-git-send-email-d-gerlach@ti.com>
+ <1462909782-14639-2-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1462970190-588-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+In-Reply-To: <1462909782-14639-2-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 03:36:30PM +0300, Laurent Pinchart wrote:
-> The FCP is a companion module of video processing modules in the Renesas
-> R-Car Gen3 SoCs. It provides data compression and decompression, data
-> caching, and conversion of AXI transactions in order to reduce the
-> memory bandwidth.
+On Tue, May 10, 2016 at 02:49:41PM -0500, Dave Gerlach wrote:
+> Add all ocmcram nodes to dra7.dtsi using the generic mmio-sram driver.
+> DRA7xx and AM57xx families of SoCs can contain three ocmcram regions of
+> SRAM, one of 512kb and also an optional two additional of 1Mb each. Mark
+> the two additional 1MB regions of SRAM as disabled as only ocmcmram1 is
+> on all variants of the SoCs, then depending on which specific variant
+> is in use the ocmcram2 and ocmcram3 nodes can be enabled in the board
+> dts file if the data manual for that part number indicates the ocmcram
+> region is available.
 > 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../devicetree/bindings/media/renesas,fcp.txt      | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,fcp.txt
+> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+
+
+Regards,
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
