@@ -1,176 +1,67 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Patch v4 5/8] firmware: qcom: scm: Convert to streaming DMA APIS
-Date: Wed, 11 May 2016 13:34:44 -0700
-Message-ID: <20160511203444.GX1256@tuxbot>
-References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
- <1462976158-26016-6-git-send-email-andy.gross@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: MAX9860: new driver
+Date: Wed, 11 May 2016 21:50:52 +0100
+Message-ID: <20160511205052.GU6261@sirena.org.uk>
+References: <1462892797-1147-1-git-send-email-peda@axentia.se>
+ <20160511150937.GK6261@sirena.org.uk>
+ <65bdbaea-fe4e-bbd5-335d-a8d594936cbe@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="JcGvecxLhm+LytDG"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1462976158-26016-6-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <65bdbaea-fe4e-bbd5-335d-a8d594936cbe-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 11 May 07:15 PDT 2016, Andy Gross wrote:
 
-> This patch converts the Qualcomm SCM driver to use the streaming DMA APIs
-> for communication buffers.
-> 
+--JcGvecxLhm+LytDG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Some style issues in qcom_scm_call(), but functionality wise I think
-this looks good (with the open question on packing of rsp and rps->buf).
+On Wed, May 11, 2016 at 10:12:56PM +0200, Peter Rosin wrote:
+> On 2016-05-11 17:09, Mark Brown wrote:
+> > On Tue, May 10, 2016 at 05:06:37PM +0200, Peter Rosin wrote:
 
-> Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/firmware/qcom_scm-32.c | 152 +++++++++++++----------------------------
->  drivers/firmware/qcom_scm.c    |   6 +-
->  drivers/firmware/qcom_scm.h    |  10 +--
->  3 files changed, 58 insertions(+), 110 deletions(-)
-> 
-> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-[..]
->  /**
->   * qcom_scm_call() - Send an SCM command
-> - * @svc_id: service identifier
-> - * @cmd_id: command identifier
-> - * @cmd_buf: command buffer
-> - * @cmd_len: length of the command buffer
-> - * @resp_buf: response buffer
-> - * @resp_len: length of the response buffer
-> + * @dev:	struct device
-> + * @svc_id:	service identifier
-> + * @cmd_id:	command identifier
-> + * @cmd_buf:	command buffer
-> + * @cmd_len:	length of the command buffer
-> + * @resp_buf:	response buffer
-> + * @resp_len:	length of the response buffer
+> >> This driver does not support sidetone since the DVST register field is
+> >> backwards with the mute near the maximum level instead of the minimum.
 
-Leaving the indentation alone clarifies that your changes is just the
-addition of "dev".
+> > Why would that be an issue?  We support volume controls in either
+> > direction.
 
->   *
->   * Sends a command to the SCM and waits for the command to finish processing.
->   *
-> @@ -247,42 +172,60 @@ static void qcom_scm_inv_range(unsigned long start, unsigned long end)
->   * and response buffers is taken care of by qcom_scm_call; however, callers are
->   * responsible for any other cached buffers passed over to the secure world.
->   */
-> -static int qcom_scm_call(u32 svc_id, u32 cmd_id, const void *cmd_buf,
-> -			size_t cmd_len, void *resp_buf, size_t resp_len)
-> +static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
-> +			 const void *cmd_buf, size_t cmd_len, void *resp_buf,
-> +			 size_t resp_len)
->  {
->  	int ret;
->  	struct qcom_scm_command *cmd;
->  	struct qcom_scm_response *rsp;
-> -	unsigned long start, end;
-> +	size_t alloc_len = sizeof(*cmd) + sizeof(struct qcom_scm_response) +
-> +			   cmd_len + resp_len;
+> I asked about this last week (or so), maybe that question explains the
+> situation?
 
-This would be cleaner if written:
+> http://www.spinics.net/lists/alsa-devel/msg49675.html
 
-size_t alloc_len = sizeof(*cmd) + cmd_len + sizeof(*rsp) + resp_len;
+If you don't CC maintainers the chances are your mails just won't get
+seen...
 
-> +	dma_addr_t cmd_phys;
-> +	u32 offset;
->  
-> -	cmd = alloc_qcom_scm_command(cmd_len, resp_len);
-> +	cmd = kzalloc(PAGE_ALIGN(alloc_len), GFP_KERNEL);
->  	if (!cmd)
->  		return -ENOMEM;
->  
-> +	cmd->len = cpu_to_le32(alloc_len);
-> +	offset = offsetof(struct qcom_scm_command, buf);
-> +	cmd->buf_offset = cpu_to_le32(offset);
+You should change DAPM so that it understands what your control is
+doing, possibly by using custom accessors though it seems like something
+in the vein of the invert flag ought to do the trick.  You don't want to
+actually use the invert flag since increasing values do mean increasing
+volume but something along those lines.  Possibly doing it by parsing
+the TLV for a mute value at probe time might make sense?
 
-Sure this is the offset of the buf in *cmd, but based on the rest of my
-comments below I would have dropped the offset variable and just used
-sizeof(*cmd).
+--JcGvecxLhm+LytDG
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	cmd->resp_hdr_offset = cpu_to_le32(offset + cmd_len);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-But this would be more intuitive as sizeof(*cmd) + cmd_len;
+iQEcBAEBCAAGBQJXM5srAAoJECTWi3JdVIfQSlwH+QHYeaXljwmyRmDYmlAWP9Eb
+QXi7Gk+LYSlR0vh705aOGdi9oK3cWGEK7MA9yzex9hSB6gRMQsXLdSgVoHU92WWJ
+E9WZSeTXuszSMEvqIOCGp6QaSA8HFMeH9ZzwOgOS9CP6pR+KBvJ/BZv4maUbcCw5
+l0dYUdwSaR+Hrm2iwcpTpllIlRvXtjryYJSIYATGMChs73o67GUxnv5YR9NH9x8I
+79HnhjOGTV77SHwJIRrdOgIxIk5I6hbsjCClr8y/vm/AHsoj/ROImVaL14Qn+OCD
++H6nGgTdzDQQUl0LcHnnU4wVFx3tsJhpopjtLkXlZN6HdS1IiKyLQ1UHRNVAWCU=
+=oSLw
+-----END PGP SIGNATURE-----
 
-> +
->  	cmd->id = cpu_to_le32((svc_id << 10) | cmd_id);
->  	if (cmd_buf)
->  		memcpy(qcom_scm_get_command_buffer(cmd), cmd_buf, cmd_len);
-
-Somewhat unrelated, but we should probably just inline this helper in
-favour of writing "cmd->buf".
-
->  
-> +	cmd_phys = dma_map_single(dev, cmd, alloc_len, DMA_TO_DEVICE);
-
-Unless there's a guarantee that the resp buffer is packed onto the
-response we should probably map the entire page(s).
-
-> +	if (dma_mapping_error(dev, cmd_phys)) {
-> +		kfree(cmd);
-> +		return -ENOMEM;
-> +	}
-> +
->  	mutex_lock(&qcom_scm_lock);
-> -	ret = __qcom_scm_call(cmd);
-> +	ret = smc(cmd_phys);
-> +	if (ret < 0)
-> +		ret = qcom_scm_remap_error(ret);
->  	mutex_unlock(&qcom_scm_lock);
->  	if (ret)
->  		goto out;
->  
->  	rsp = qcom_scm_command_to_response(cmd);
-> -	start = (unsigned long)rsp;
->  
->  	do {
-> -		qcom_scm_inv_range(start, start + sizeof(*rsp));
-> +		dma_sync_single_for_cpu(dev, cmd_phys + cmd_len + offset,
-
-Same here, would be easier to read if it was
-  cmd_phys + sizeof(*cmd) + cmd_len;
-
-Or even:
-  cmd_phys + le32_to_cpu(cmd->resp_hdr_offset);
-
-> +					sizeof(*rsp), DMA_FROM_DEVICE);
->  	} while (!rsp->is_complete);
->  
-> -	end = (unsigned long)qcom_scm_get_response_buffer(rsp) + resp_len;
-> -	qcom_scm_inv_range(start, end);
-> -
-> -	if (resp_buf)
-> +	if (resp_buf) {
-> +		dma_sync_single_for_cpu(dev, cmd_phys + alloc_len - resp_len,
-
-Do we know that the firmware always set
-  rsp->buf_offset = sizeof(*rsp)
-
-Would be clearer (and safe from this assumption) if you have it as:
-  cmd_phys + le32_to_cpu(cmd->resp_hdr_offset) + le32_to_cpu(rsp->buf_offset);
-
-> +					resp_len, DMA_FROM_DEVICE);
->  		memcpy(resp_buf, qcom_scm_get_response_buffer(rsp), resp_len);
-
-And as we just calculated that offset, we can drop the
-qcom_scm_get_response_buffer() single use helper.
-
-> +	}
->  out:
-> -	free_qcom_scm_command(cmd);
-> +	dma_unmap_single(dev, cmd_phys, alloc_len, DMA_TO_DEVICE);
-> +	kfree(cmd);
->  	return ret;
->  }
->  
-
-The rest looks good.
-
-Regards,
-Bjorn
+--JcGvecxLhm+LytDG--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
