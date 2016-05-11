@@ -1,105 +1,69 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Update iProc GPIO bindings
-Date: Wed, 11 May 2016 08:50:30 -0700
-Message-ID: <549befe2-9455-ab4b-0c91-d005d9993fdb@broadcom.com>
-References: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
- <1462222308-4869-2-git-send-email-ray.jui@broadcom.com>
- <20160504132020.GA21065@rob-hp-laptop>
- <6fe293c1-505d-2af9-711a-09e5b5a83e58@broadcom.com>
- <20160511140618.GA29113@rob-hp-laptop>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 13/14] dt-bindings: arm-gic: Add documentation for
+ Tegra210 AGIC
+Date: Wed, 11 May 2016 10:51:57 -0500
+Message-ID: <CAL_Jsq+HSH7e1T9y47nHV_x5NvZ-52cfDEKKFkr16ax671FxSw@mail.gmail.com>
+References: <1461150237-15580-1-git-send-email-jonathanh@nvidia.com>
+ <1461150237-15580-14-git-send-email-jonathanh@nvidia.com> <20160422100052.GA10606@leverpostej>
+ <571A0739.3090502@nvidia.com> <20160422112239.GF10606@leverpostej>
+ <5720DC1D.1080802@nvidia.com> <20160427173810.GC7359@leverpostej>
+ <5721C597.1010105@nvidia.com> <20160428095525.GB21145@leverpostej>
+ <572C56A6.7020408@nvidia.com> <CAMuHMdX+egbNPP4QQ2R28GbyVkg9qBrwYfUy8EE0PdB6od+LBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160511140618.GA29113@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdX+egbNPP4QQ2R28GbyVkg9qBrwYfUy8EE0PdB6od+LBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 5/11/2016 7:06 AM, Rob Herring wrote:
-> On Wed, May 04, 2016 at 09:29:04AM -0700, Ray Jui wrote:
->> Hi Rob,
->>
->> On 5/4/2016 6:20 AM, Rob Herring wrote:
->>> On Mon, May 02, 2016 at 01:51:47PM -0700, Ray Jui wrote:
->>>> Update the iProc GPIO binding document to add new compatible strings
->>>> "brcm,iproc-gpio-v2" and "brcm,iproc-gpio-v3" for the 2nd and 3rd
->>>> generation of the iProc GPIO controllers
->>>>
->>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>>> ---
->>>> Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt | 11 ++++++++++-
->>>> 1 file changed, 10 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
->>>> index e427792..3a56649 100644
->>>> --- a/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
->>>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,iproc-gpio.txt
->>>> @@ -4,7 +4,16 @@ Required properties:
->>>>
->>>> - compatible:
->>>>     Must be "brcm,cygnus-ccm-gpio", "brcm,cygnus-asiu-gpio",
->>>> -    "brcm,cygnus-crmu-gpio" or "brcm,iproc-gpio"
->>>> +    or "brcm,cygnus-crmu-gpio" for Cygnus SoCs
->>>> +
->>>> +    "brcm,iproc-gpio" for the first generation of the GPIO controller that
->>>> +    supports full-featured pinctrl and GPIO functions used in iProc based SoCs
->>>> +
->>>> +    "brcm,iproc-gpio-v2" for the second generation of the GPIO controller that
->>>> +    has the drive strength pinctrl support disabled, e.g., in the iProc NSP SoC
->>>> +
->>>> +    "brcm,iproc-gpio-v3" for the third generation of the GPIO controller that
->>>> +    has the general pinctrl support completely disabled
+On Sat, May 7, 2016 at 9:10 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Jon,
+>
+> On Fri, May 6, 2016 at 10:32 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>> The "nvidia,tegra210-agic" string can be taken as describing any
+>>> Tegra-210 specific integration quirks, though I agree that's also not
+>>> fantastic for extending PM support beyond Tegra 210 and variants
+>>> thereof.
 >>>
->>> You can have these for driver matching, but you still need SoC specific
->>> compatible strings.
->>>
->>> Rob
->>>
+>>> So maybe the best approach is bailing out in the presence of clocks
+>>> and/or power domains after all, on the assumption that nothing today has
+>>> those properties, though I fear we may have problems with that later
+>>> down the line if/when people describe those for the root GIC to describe
+>>> those must be hogged, even if not explicitly managed.
 >>
->> I think I'm missing something and hope you can help to clarify here. It
->> looks like the notion of v2, v3 should only be used if there's an indeed an
->> revision update on the controller IP itself, correct?
+>> On further testing, by bailing out in the presence of clocks and/or
+>> power-domains, the problem I now see is that although the primary gic-400
+>> has been registered, we still try to probe it again later as it matches
+>> the platform driver. One way to avoid this would be ...
+>>
+>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+>> index e7bfc175b8e1..631da7ad0dbf 100644
+>> --- a/drivers/of/irq.c
+>> +++ b/drivers/of/irq.c
+>> @@ -556,6 +556,8 @@ void __init of_irq_init(const struct of_device_id *matches)
+>>                          * its children can get processed in a subsequent pass.
+>>                          */
+>>                         list_add_tail(&desc->list, &intc_parent_list);
+>> +
+>> +                       of_node_set_flag(desc->dev, OF_POPULATED);
+>>                 }
 >
-> Yes, but only if v2, v3 is actually a meaningful number rather than
-> something made up. You have to have a well defined process of IP
-> revisions which I have not seen during my time in chip companies, so I'm
-> generally suspicious of version numbers. The exception is FPGA IP
-> blocks.
->
->> In our case, if the same revision of GPIO controller is used but instead
->> synthesized differently with different SoCs, then you are suggesting here
->> that it should be dealt with SoC specific compatible string, correct?
->
-> Yes, that and/or integration differences is why you need SoC specific
-> compatible strings. A block could be "identical" but have different max
-> frequency for example.
->
->> For example, for the GPIO controller on NSP where drive strength is
->> disabled, the compatible string in DT should look like this?
->>
->> compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-nsp";
->
-> Yes, but reverse the order. Most specific to least specific.
->
->>
->> For the GPIO controller on Stingray where pinconf is completely disabled,
->> the compatible string in DT should look like:
->>
->> compatible = "brcm,iproc-gpio", "brcm,iproc-gpio-stingray";
->>
->> Is that correct?
->>
->> Thanks,
->>
->> Ray
+> That sounds like the right thing to do to me...
 
-Thanks for the clarification. I think I've got all the information I 
-need. Will revise and send out PATCH v3 when I get a chance.
+Seems fine to me, but it would be a problem since this is a global
+decision if you wanted to have some hand-off from an "early driver" to
+a platform driver. I guess setting the flag could move to drivers that
+need it although I don't think drivers should be touching the flags.
 
-Thanks,
+>> If this is not appropriate then I guess I will just need to use
+>> "tegra210-agic" for the compatibility flag.
+>
+> As I want this for plain gic-400, I'd be unhappy ;-)
 
-Ray
+IMO, the plain gic-400 should not have these dependencies and you
+should use SoC specific compatible strings should you need to deal
+with this problem.
+
+Rob
