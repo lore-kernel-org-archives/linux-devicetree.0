@@ -1,48 +1,56 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] ARM64: Kconfig: Select the Amlogic Meson pin
- controller driver
-Date: Wed, 11 May 2016 20:41:04 +0200
-Message-ID: <CAOQ7t2aLORBKiuZEp1BZ1+O-Yr5xvM9bjkFnfA9Yn9oZZefSnw@mail.gmail.com>
-References: <1462176138-29433-1-git-send-email-carlo@caione.org>
-	<1462176138-29433-4-git-send-email-carlo@caione.org>
-	<CACRpkdbTr7YUrzSQQci929ugBhTkJKWvpjdf5Wo3HkfVKFhGLw@mail.gmail.com>
-	<3200982.vJgYKNLqaA@wuerfel>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Enable AX88760 USB hub on Origen board
+Date: Wed, 11 May 2016 20:53:38 +0200
+Message-ID: <20160511185338.GA10164@kozik-lap>
+References: <1462950412-16681-1-git-send-email-k.kozlowski@samsung.com>
+ <87y47gwj9k.fsf@mattleach.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3200982.vJgYKNLqaA@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87y47gwj9k.fsf@mattleach.net>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Matthew Leach <matthew@mattleach.net>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 12:56 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 11 May 2016 10:53:35 Linus Walleij wrote:
->> On Mon, May 2, 2016 at 10:02 AM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
->>
->> > From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->> >
->> > Select the Meson pin controller driver also for the AArch64 Meson
->> > platform.
->> >
->> > Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->>
->> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> I guess this should get merged through the ARM SoC tree.
->>
->
-> I'd keep it together with the other changes for clarity and
-> merge it through your tree.
+On Wed, May 11, 2016 at 07:18:31PM +0100, Matthew Leach wrote:
+> Hi Krzysztof,
+> 
+> Sorry for not acting on the feedback sooner - I lost the email in my
+> Inbox!
+> 
+> I've tested the patch on my Origen board and it works fine.  One small
+> comment in-line.
+> 
+> Krzysztof Kozlowski <k.kozlowski@samsung.com> writes:
+> 
+> > From: Matthew Leach <matthew@mattleach.net>
+> >
+> > Enable the Origen's usb phy and ohci devices in the device tree.  Also
+> > add the "samsung,vbus-gpio" property to enable the GPX3(5) gpio pin so
+> > the AX88760 hub is powered.
+> >
+> > Signed-off-by: Matthew Leach <matthew@mattleach.net>
+> > [k.kozlowski: Extend nodes by label notation instead of path]
+> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos4412-origen.dts | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+> > index 8bca699b7f20..4c59bdb0e6f3 100644
+> > --- a/arch/arm/boot/dts/exynos4412-origen.dts
+> > +++ b/arch/arm/boot/dts/exynos4412-origen.dts
+> > @@ -77,12 +77,29 @@
+> >  			clock-frequency = <24000000>;
+> >  		};
+> >  	};
+> > +
+> 
+> I think we could loose this line break?
 
-Linus,
-did you take it? otherwise I can merge it through my repo.
+Yeah, that slipped through my fingers.
 
-Cheers,
-
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for testing,
+Krzysztof
