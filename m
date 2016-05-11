@@ -1,47 +1,59 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dts: sunxi: Add display clocks to sun[47]i.dtsi
-Date: Wed, 11 May 2016 21:12:13 +0200
-Message-ID: <20160511191213.GV3733@lukather>
-References: <1462908247-10474-1-git-send-email-plaes@plaes.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [Patch v4 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
+Date: Wed, 11 May 2016 12:49:05 -0700
+Message-ID: <20160511194905.GU1256@tuxbot>
+References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
+ <1462976158-26016-2-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z8OPzjJiggy3JOV2"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBD4IZ24QKGQENCIRDUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462908247-10474-1-git-send-email-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1462976158-26016-2-git-send-email-andy.gross@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---z8OPzjJiggy3JOV2
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Wed 11 May 07:15 PDT 2016, Andy Gross wrote:
 
-On Tue, May 10, 2016 at 10:24:05PM +0300, Priit Laes wrote:
-> Enable the display and TCON clocks that are needed to drive the display
-> engine, tcon and TV encoders.
+> This patch adds the device tree support for the Qualcomm SCM firmware.
 > 
-> Please note that currently the parent handling for clocks using 
-> 'allwinner,sun4i-a10-display-clk' compatible with number of parents !=4
-> is broken (like de_[bf]e[01]_clk clocks present in patches).
+> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+> ---
+>  .../devicetree/bindings/firmware/qcom,scm.txt      | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
 > 
-> Priit Laes (2):
->   ARM: sun4i: A10: Add display and TCON clocks
->   ARM: sun7i: A20: Add display and TCON clocks
+> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> new file mode 100644
+> index 0000000..0c5f1ff
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> @@ -0,0 +1,28 @@
+> +QCOM Secure Channel Manager (SCM)
+> +
+> +Qualcomm processors include an interface to communicate to the secure firmware.
+> +This interface allows for clients to request different types of actions.  These
+> +can include CPU power up/down, HDCP requests, loading of firmware, and other
+> +assorted actions.
+> +
+> +Required properties:
+> +- compatible: must contain one of the following:
+> + * "qcom,scm-apq8064" for APQ8064 platforms
+> + * "qcom,scm-msm8660" for MSM8660 platforms
+> + * "qcom,scm-msm8690" for MSM8690 platforms
+> + * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
+> +- clocks: One to three clocks may be required based on compatible.
+> + * Only core clock required for "qcom,scm-apq8084", "qcom,scm-msm8660", and "qcom,scm-msm8960"
+> + * Core, iface, and bus clocks required for "qcom,scm"
+> +- clock-names: Must contain "core" for the core clock, "iface" for the interface
+> +  clock and "bus" for the bus clock per the requirements of the compatible.
 
-Applied both for 4.8, thanks!
-Maxime
+I like this split of generic binding and the special cases, gives the
+wanted clarity for the outliers without the added churn in the common
+case.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---z8OPzjJiggy3JOV2--
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
