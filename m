@@ -1,73 +1,54 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v8 7/8] i2c: rk3x: add i2c support for rk3399 soc
-Date: Wed, 11 May 2016 10:37:57 -0700
-Message-ID: <CAD=FV=Uf-U3RBpgFbR3LkPAJTWqz3d02+H7iyA-SS-y=r3cXjA@mail.gmail.com>
-References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com>
-	<1462908698-27284-1-git-send-email-david.wu@rock-chips.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] ARM: dts: meson8b: Add MMC nodes
+Date: Wed, 11 May 2016 19:57:28 +0200
+Message-ID: <m24ma47a0n.fsf@baylibre.com>
+References: <1456596108-1406-1-git-send-email-carlo@caione.org>
+	<1456596108-1406-4-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1462908698-27284-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456596108-1406-4-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> (Carlo
+	Caione's message of "Sat, 27 Feb 2016 19:01:47 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Carlo,
 
-On Tue, May 10, 2016 at 12:31 PM, David Wu <david.wu@rock-chips.com> wrote:
->  static void rk3x_i2c_adapt_div(struct rk3x_i2c *i2c, unsigned long clk_rate)
->  {
->         struct i2c_timings *t = &i2c->t;
->         struct rk3x_i2c_calced_timings calc;
->         u64 t_low_ns, t_high_ns;
-> +       u32 val;
->         int ret;
+Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
+
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 >
-> -       ret = rk3x_i2c_calc_divs(clk_rate, t, &calc);
-> +       ret = i2c->soc_data->calc_timings(clk_rate, t, &calc);
->         WARN_ONCE(ret != 0, "Could not reach SCL freq %u", t->bus_freq_hz);
+> Enable the MMC for the Meson8b platforms.
 >
-> -       clk_enable(i2c->clk);
-> +       clk_enable(i2c->pclk);
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+
+[...]
+
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> index 8bad557..25d795c 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -187,6 +187,22 @@
+>  					function = "uart_ao";
+>  				};
+>  			};
 > +
->         i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low & 0xffff),
->                    REG_CLKDIV);
-> -       clk_disable(i2c->clk);
-> +
-> +       val = i2c_readl(i2c, REG_CON);
-> +       val &= ~REG_CON_TUNING_MASK;
-> +       val |= calc.tuning;
-> +       i2c_writel(i2c, val, REG_CON);
+> +			mmc0_sd_b_pins: mmc0_sd_b {
+> +				mux {
+> +					groups = "sd_d1_b", "sd_d0_b", "sd_clk_b", "sd_cmd_b",
+> +						 "sd_d3_b", "sd_d2_b";
+> +					function = "sd_b";
+> +				};
+> +			};
 
-Another subtle bug here.  You need to be holding the spinlock here
-since you're doing a read-modify-write of a register that is also
-touched by the interrupt handler.  We never needed it before because
-the previous register update wasn't touched by anyone else and it was
-a single atomic write.
+These pins are added under pinctrl_aobus, but in the pinctrl driver,
+they're under cbus.  If I move this into the pinctrl_cbus node, I get it
+to work on my odroid-c1, and am able to mount/use an MMC rootfs.
 
-Also: technically if we are midway through a transfer when all this
-happens then there will be a very short period of time when the two
-timing-related registers won't match with each other.  I have no idea
-how much that would matter, but in the very least it seems wise to
-minimize the time where they mismatch.  So I'd probably write:
-
-       spin_lock_irqsave(&i2c->lock, flags);
-       val = i2c_readl(i2c, REG_CON);
-       val &= ~REG_CON_TUNING_MASK;
-       val |= calc.tuning;
-       i2c_writel(i2c, val, REG_CON);
-       i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low & 0xffff),
-                  REG_CLKDIV);
-       spin_unlock_irqrestore(&i2c->lock, flags);
-
-...if we really end up with on a system with a dynamically changing
-clock that uses the new-style timing and we see real problems, we can
-always try to come up with a way to avoid any problems.  Sound OK?
-
-
-Otherwise, I think things look good to me.  Caesar's comments would
-also be good to fix.
-
-
--Doug
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
