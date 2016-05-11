@@ -1,73 +1,73 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] drivers/of: Fix depth when unflattening devicetree
-Date: Wed, 11 May 2016 13:36:57 -0400
-Message-ID: <1462988217-29314-1-git-send-email-rklein@nvidia.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v8 7/8] i2c: rk3x: add i2c support for rk3399 soc
+Date: Wed, 11 May 2016 10:37:57 -0700
+Message-ID: <CAD=FV=Uf-U3RBpgFbR3LkPAJTWqz3d02+H7iyA-SS-y=r3cXjA@mail.gmail.com>
+References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com>
+	<1462908698-27284-1-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1462908698-27284-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-When the implementation for unflatten_dt_node() changed from being
-recursive to being non-recursive, it had a side effect of increasing the
-depth passed to fdt_next_node() by 1. This is fine most of the time, but
-it seems that when the end of the dtb is being parsed, it will cause the
-FDT_END condition in fdt_next_node() to return a different value
-(returning nextoffset instead of -FDT_ERR_NOTFOUND). This ends up passing
-an FDT_ERR_TRUNCATED error back to the unflatten_dt_node() which then
-sees that and complains "Error -8 processing FDT" causing boot to fail.
+Hi,
 
-This patch simply avoids incrementing depth and uses modified accesses
-for local array indices so that the depth is the same as it was before
-the change as far as fdt_next_node() is concerned.
+On Tue, May 10, 2016 at 12:31 PM, David Wu <david.wu@rock-chips.com> wrote:
+>  static void rk3x_i2c_adapt_div(struct rk3x_i2c *i2c, unsigned long clk_rate)
+>  {
+>         struct i2c_timings *t = &i2c->t;
+>         struct rk3x_i2c_calced_timings calc;
+>         u64 t_low_ns, t_high_ns;
+> +       u32 val;
+>         int ret;
+>
+> -       ret = rk3x_i2c_calc_divs(clk_rate, t, &calc);
+> +       ret = i2c->soc_data->calc_timings(clk_rate, t, &calc);
+>         WARN_ONCE(ret != 0, "Could not reach SCL freq %u", t->bus_freq_hz);
+>
+> -       clk_enable(i2c->clk);
+> +       clk_enable(i2c->pclk);
+> +
+>         i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low & 0xffff),
+>                    REG_CLKDIV);
+> -       clk_disable(i2c->clk);
+> +
+> +       val = i2c_readl(i2c, REG_CON);
+> +       val &= ~REG_CON_TUNING_MASK;
+> +       val |= calc.tuning;
+> +       i2c_writel(i2c, val, REG_CON);
 
-This problem was discovered trying to boot Tegra210-Smaug platforms.
+Another subtle bug here.  You need to be holding the spinlock here
+since you're doing a read-modify-write of a register that is also
+touched by the interrupt handler.  We never needed it before because
+the previous register update wasn't touched by anyone else and it was
+a single atomic write.
 
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Fixes: 9ffa9eb41763 ("drivers/of: Avoid recursively calling unflatten_dt_node()")
-Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/fdt.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Also: technically if we are midway through a transfer when all this
+happens then there will be a very short period of time when the two
+timing-related registers won't match with each other.  I have no idea
+how much that would matter, but in the very least it seems wise to
+minimize the time where they mismatch.  So I'd probably write:
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index df9f4e8dfa00..becb025702d7 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -407,24 +407,24 @@ static int unflatten_dt_nodes(const void *blob,
- 
- 	root = dad;
- 	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
--	nps[depth++] = dad;
-+	nps[depth+1] = dad;
- 	for (offset = 0;
- 	     offset >= 0;
- 	     offset = fdt_next_node(blob, offset, &depth)) {
- 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
- 			continue;
- 
--		fpsizes[depth] = populate_node(blob, offset, &mem,
--					       nps[depth - 1],
--					       fpsizes[depth - 1],
--					       &nps[depth], dryrun);
--		if (!fpsizes[depth])
-+		fpsizes[depth+1] = populate_node(blob, offset, &mem,
-+						 nps[depth],
-+						 fpsizes[depth],
-+						 &nps[depth+1], dryrun);
-+		if (!fpsizes[depth+1])
- 			return mem - base;
- 
- 		if (!dryrun && nodepp && !*nodepp)
--			*nodepp = nps[depth];
-+			*nodepp = nps[depth+1];
- 		if (!dryrun && !root)
--			root = nps[depth];
-+			root = nps[depth+1];
- 	}
- 
- 	if (offset < 0 && offset != -FDT_ERR_NOTFOUND) {
--- 
-1.9.1
+       spin_lock_irqsave(&i2c->lock, flags);
+       val = i2c_readl(i2c, REG_CON);
+       val &= ~REG_CON_TUNING_MASK;
+       val |= calc.tuning;
+       i2c_writel(i2c, val, REG_CON);
+       i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low & 0xffff),
+                  REG_CLKDIV);
+       spin_unlock_irqrestore(&i2c->lock, flags);
+
+...if we really end up with on a system with a dynamically changing
+clock that uses the new-style timing and we see real problems, we can
+always try to come up with a way to avoid any problems.  Sound OK?
+
+
+Otherwise, I think things look good to me.  Caesar's comments would
+also be good to fix.
+
+
+-Doug
