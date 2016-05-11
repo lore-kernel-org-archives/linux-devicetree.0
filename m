@@ -1,69 +1,52 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH 2/2] dt-bindings: rockchip-dw-mshc: add
- rockchip,default-drv-phase
-Date: Wed, 11 May 2016 16:25:33 +0800
-Message-ID: <2994d365-2cf2-0990-6c10-2abeebb42eef@rock-chips.com>
-References: <1462527648-24443-1-git-send-email-shawn.lin@rock-chips.com>
- <1462527673-24711-1-git-send-email-shawn.lin@rock-chips.com>
- <CAD=FV=WSkBwBjVsRoDsfjD+sNfR70mKGRA0khjPKKW0zS2=PTw@mail.gmail.com>
- <b15dcb4f-1584-8219-2fe0-97eecb0c64a6@rock-chips.com>
- <CAD=FV=XToSzqSh=SShHuQU9W_m7gfyQn8wRXkLy79t+tnqZknA@mail.gmail.com>
- <1f2f43c7-2672-e448-eddb-2d613bb8dc48@rock-chips.com>
- <CAD=FV=UGbrJRyUbbgzbcYf9GjPG+Fh_gpQ3rX2G=wi2w5Lw=Sg@mail.gmail.com>
- <e202f663-88d7-693b-a765-c130e68d1c2d@rock-chips.com>
- <CAD=FV=UyYCqMYKScjVEASrbzO75014kPCEt39uOSTsgq9M==YQ@mail.gmail.com>
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: [PATCH 1/1] devicetree: sunxi: Add OLinuXino Lime2 eMMC
+ to the Makefile
+Date: Wed, 11 May 2016 10:27:07 +0200
+Message-ID: <1462955227-4454-1-git-send-email-oliver@schinagl.nl>
+Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UyYCqMYKScjVEASrbzO75014kPCEt39uOSTsgq9M==YQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDC2JNWXZAJBBZ6ZZO4QKGQEIVCQBUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/5/11 11:50, Doug Anderson wrote:
-> Hi,
->
-> On Tue, May 10, 2016 at 7:50 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
->>>> maybe. But I think 180(downside) is the better.
->>
->>
->> NAK my previous comments here. Downside is better for SRD, but won't
->> work for DDR mode. When running in DDR mode, we should use 90 instead.
->>
->> So let me elaborate a bit more here.
->> For DDR mode, one single clk cycle should sending two data bits outside
->> to the devices. We need a hold time for both. If 180 is used, the first
->> bit occurs around the downside area, which won't be sampled by devices
->> on the upside.  So on the upside, the devices will see a zero bit if you
->> actually send a one-bit, which makes the devices  generate CRC finally.
->>
->>
->> For this above, 180 for all SDR mode is ok, but 90 should be deployed
->> for DDR mode. So simply checking the timing to hardcode it should be
->> fine.
->
-> OK, I sent out a patch for 180 always.  I can send v2 to use 90 for
-> DDR modes tomorrow.  ...or feel free to post that yourself if you
-> want.
->
-> We want 90 for all DDR modes?  So MMC_TIMING_UHS_DDR50,
-> MMC_TIMING_MMC_DDR52, MMC_TIMING_MMC_HS400? (not that we support HS400
-> in dw_mmc on Rockchip).
+ARM: dts: sunxi: Add a olinuxino-lime2-emmc added the new emmc equipped
+lime2 but forgot its Makefile. This patch adds an entry to the Makefile.
 
-Right.
+Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+---
+Hi list,
 
->
-> -Doug
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+would it be possible to squash or atleast add this patch with/to my previous
+patch, ARM: dts: sunxi: Add a olinuxino-lime2-emmc? I mistakenly forgot to
+add the changes to the Makefile in the patch.
 
+Sorry, and thank you!
 
+Olliver
+
+ arch/arm/boot/dts/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 95c1923..07f4cf8 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -695,6 +695,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-olimex-som-evb.dtb \
+ 	sun7i-a20-olinuxino-lime.dtb \
+ 	sun7i-a20-olinuxino-lime2.dtb \
++	sun7i-a20-olinuxino-lime2-emmc.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb \
+ 	sun7i-a20-orangepi.dtb \
+ 	sun7i-a20-orangepi-mini.dtb \
 -- 
-Best Regards
-Shawn Lin
-
+2.8.1
