@@ -1,34 +1,75 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 0/2] Additional iProc GPIO support
-Date: Wed, 11 May 2016 11:29:54 +0200
-Message-ID: <CACRpkdb-4bE6kBcesqpmqrHJ2gnn6BaKrYKtD6v-H-WZn3P6qQ@mail.gmail.com>
-References: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: [PATCH RESEND 1/2] regulator: Add support for parsing operation mode
+Date: Wed, 11 May 2016 17:31:29 +0800
+Message-ID: <1462959090-2877-2-git-send-email-henryc.chen@mediatek.com>
+References: <1462959090-2877-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1462222308-4869-1-git-send-email-ray.jui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462959090-2877-1-git-send-email-henryc.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Henry Chen <henryc.chen@mediatek.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 2, 2016 at 10:51 PM, Ray Jui <ray.jui@broadcom.com> wrote:
+Some regulators support their operating mode to be changed by
+consumers for module specific purpose.
 
-> Add support to the iProc GPIO driver for v2 and v3 revisions of the iProc GPIO
-> controllers. The v2 revision is used on NSP with drive strength pinconf
-> feature disabled and the v3 revision is used on Stingray with all pinconf
-> features disabled
->
-> Changes from v1:
->  - Changed to use compatible strings "brcm,iproc-gpio-v2" and
-> "brcm,iproc-gpio-v3" to deal with differences among various iProc based SoCs
->  - Removed DT header "include/dt-bindings/pinctrl/brcm,iproc-gpio.h"
->
-> Patch series is developed based on Linux v4.6-rc1 and available at:
-> https://github.com/Broadcom/cygnus-linux/tree/iproc-gpio-v2
+This patch adds support to parse those properties and fill the
+regulator constraints so the regulator core can call the
+regualtor_set_mode to change the modes.
 
-I'm waiting for the discussion about the compatible strings
-to resolve.
+Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+---
+ Documentation/devicetree/bindings/regulator/regulator.txt | 10 ++++++++++
+ drivers/regulator/of_regulator.c                          | 14 ++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index ecfc593..88f98f0 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -49,6 +49,16 @@ Optional properties:
+ 	0: Disable active discharge.
+ 	1: Enable active discharge.
+ 	Absence of this property will leave configuration to default.
++- regulator-allow-change-mode: allow the regulator mode to be configured
++- regulator-supported-modes: Regulators can run in a variety of different operating
++  modes depending on output load. This allows further system power savings by
++  selecting the best (and most efficient) regulator mode for a desired load.
++  The definition for each of these operation is defined at
++  include/linux/regulator/consumer.h
++	0: FAST.
++	1: NORMAL.
++	2: IDLE.
++	3: STANDBY.
+ 
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 6b0aa80..12fe8c8 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -167,6 +167,20 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 		suspend_state = NULL;
+ 		suspend_np = NULL;
+ 	}
++
++	if (of_property_read_bool(np, "regulator-allow-change-mode"))
++		constraints->valid_ops_mask |= REGULATOR_CHANGE_MODE;
++
++	ret = of_property_count_elems_of_size(np,
++					      "regulator-supported-modes",
++					      sizeof(u32));
++	for (i = 0; i < ret; i++) {
++		u32 mode;
++
++		of_property_read_u32_index(np, "regulator-supported-modes",
++					   i, &mode);
++		constraints->valid_modes_mask |= (1 << mode);
++	}
+ }
+ 
+ /**
+-- 
+1.8.1.1.dirty
