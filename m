@@ -1,77 +1,43 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] doc/devicetree: Add Aspeed VIC bindings
-Date: Wed, 11 May 2016 09:33:13 -0500
-Message-ID: <20160511143313.GA7426@rob-hp-laptop>
-References: <462797239-14765-1-git-send-email-joel@jms.id.au>
- <1462802317-27086-1-git-send-email-joel@jms.id.au>
- <1462802317-27086-2-git-send-email-joel@jms.id.au>
+Subject: Re: [PATCH v5 1/4] ASoC: davinci-mcbsp: add binding for McBSP
+Date: Wed, 11 May 2016 09:34:22 -0500
+Message-ID: <20160511143422.GA21634@rob-hp-laptop>
+References: <1462804522-29544-1-git-send-email-petr@barix.com>
+ <1462804522-29544-2-git-send-email-petr@barix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1462802317-27086-2-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <1462804522-29544-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, brain-wDf7oJUeT2I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 09, 2016 at 11:28:36PM +0930, Joel Stanley wrote:
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+On Mon, May 09, 2016 at 04:35:19PM +0200, Petr Kulhavy wrote:
+> Add devicetree binding for the TI DA850/OMAP-L138/AM18xx
+> MultiChannel Buffered Serial Port (McBSP)
+> 
+> The optional register range "dat" is not implemented at the moment.
+> The current driver supports only DMA into RX/TX registers but no FIFO.
+> Once the FIFO is implemented in the driver the "dat" range will be used.
+> 
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 > ---
-> v2:
->   Fix device tree binding example, thanks Baruch and Arnd for pointing this out
+> v1: initial
+> v2: add missing TC channel in dmas properties (for compatibility with the new EDMA3 binding)
+>     remove "-audio" postfix from the compatible string
+>     remove "channel-combine" property
+> v3: remove the index note from the "mpu" property.
+>     specify exactly the supported platforms in compatible string
+> v4: minor correction in the example ("interrupt names"), re-added index note to the "mpu" property.
+> v5: example updated to match da850.dtsi: using "sound@" and removed leading zeros from the reg property
 > 
->  .../interrupt-controller/aspeed,ast2400-vic.txt    | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
-> new file mode 100644
-> index 000000000000..86dede1755a2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
-> @@ -0,0 +1,24 @@
-> +Aspeed Vectored Interrupt Controller
-> +
-> +These bindings are for the Aspeed AST2400 interrupt controller register layout.
-> +The SoC has an legacy register layout, but this driver does not support that
-> +mode of operation.
-> +
-> +Required properties:
-> +
-> +- compatible : should be "aspeed,ast2400-vic".
-> +
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The value shall be 1.
+>  .../devicetree/bindings/sound/davinci-mcbsp.txt    | 52 ++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
 
-No need for level vs. edge flags?
-
-> +- valid-sources : bitmask of valid irq sources
-
-Drop this. Either all interrupt controllers need this or none of 
-them do. The valid sources are the ones described in the DT.
-
-> +
-> +Example:
-> +
-> + vic: interrupt-controller {
-
-Needs a unit address.
-
-> +      compatible = "aspeed,ast2400-vic";
-> +      interrupt-controller;
-> +      #interrupt-cells = <1>;
-> +      valid-sources = < 0xffffffff 0x0007ffff>;
-> +      reg = <0x1e6c0080 0x80>;
-> + };
-> -- 
-> 2.8.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
