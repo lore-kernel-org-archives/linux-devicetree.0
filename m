@@ -1,67 +1,84 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: [Patch v4 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Wed, 11 May 2016 09:15:51 -0500
-Message-ID: <1462976158-26016-2-git-send-email-andy.gross@linaro.org>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [Patch v4 4/8] firmware: qcom: scm: Generalize shared error map
+Date: Wed, 11 May 2016 09:15:54 -0500
+Message-ID: <1462976158-26016-5-git-send-email-andy.gross@linaro.org>
 References: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1462976158-26016-1-git-send-email-andy.gross@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1462976158-26016-1-git-send-email-andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jilai wang <jilaiw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree support for the Qualcomm SCM firmware.
+This patch moves the qcom_scm_remap_error function to the include file
+where can be used by both the 32 and 64 bit versions of the code.
 
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/firmware/qcom,scm.txt      | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+ drivers/firmware/qcom_scm-32.c | 17 -----------------
+ drivers/firmware/qcom_scm.h    | 16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-new file mode 100644
-index 0000000..0c5f1ff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -0,0 +1,28 @@
-+QCOM Secure Channel Manager (SCM)
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 5be6a12..4388d13 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -168,23 +168,6 @@ static inline void *qcom_scm_get_response_buffer(const struct qcom_scm_response
+ 	return (void *)rsp + le32_to_cpu(rsp->buf_offset);
+ }
+ 
+-static int qcom_scm_remap_error(int err)
+-{
+-	pr_err("qcom_scm_call failed with error code %d\n", err);
+-	switch (err) {
+-	case QCOM_SCM_ERROR:
+-		return -EIO;
+-	case QCOM_SCM_EINVAL_ADDR:
+-	case QCOM_SCM_EINVAL_ARG:
+-		return -EINVAL;
+-	case QCOM_SCM_EOPNOTSUPP:
+-		return -EOPNOTSUPP;
+-	case QCOM_SCM_ENOMEM:
+-		return -ENOMEM;
+-	}
+-	return -EINVAL;
+-}
+-
+ static u32 smc(u32 cmd_addr)
+ {
+ 	int context_id;
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index 2cce75c..7dcc733 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -44,4 +44,20 @@ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+ #define QCOM_SCM_ERROR		-1
+ #define QCOM_SCM_INTERRUPTED	1
+ 
++static inline int qcom_scm_remap_error(int err)
++{
++	switch (err) {
++	case QCOM_SCM_ERROR:
++		return -EIO;
++	case QCOM_SCM_EINVAL_ADDR:
++	case QCOM_SCM_EINVAL_ARG:
++		return -EINVAL;
++	case QCOM_SCM_EOPNOTSUPP:
++		return -EOPNOTSUPP;
++	case QCOM_SCM_ENOMEM:
++		return -ENOMEM;
++	}
++	return -EINVAL;
++}
 +
-+Qualcomm processors include an interface to communicate to the secure firmware.
-+This interface allows for clients to request different types of actions.  These
-+can include CPU power up/down, HDCP requests, loading of firmware, and other
-+assorted actions.
-+
-+Required properties:
-+- compatible: must contain one of the following:
-+ * "qcom,scm-apq8064" for APQ8064 platforms
-+ * "qcom,scm-msm8660" for MSM8660 platforms
-+ * "qcom,scm-msm8690" for MSM8690 platforms
-+ * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
-+- clocks: One to three clocks may be required based on compatible.
-+ * Only core clock required for "qcom,scm-apq8084", "qcom,scm-msm8660", and "qcom,scm-msm8960"
-+ * Core, iface, and bus clocks required for "qcom,scm"
-+- clock-names: Must contain "core" for the core clock, "iface" for the interface
-+  clock and "bus" for the bus clock per the requirements of the compatible.
-+
-+Example for MSM8916:
-+
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm";
-+			clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
-+			clock-names = "core", "bus", "iface";
-+		};
-+	};
+ #endif
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
