@@ -1,79 +1,76 @@
-From: Leo Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal implementation
-Date: Wed, 11 May 2016 17:20:25 -0500
-Message-ID: <CADRPPNT2OpNxdQV8f_-S_DJjySEOu=SyegLMKU650hxuvr3CYw@mail.gmail.com>
-References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
-	<1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
-	<20160427152532.GX3217@sirena.org.uk>
-	<AM2PR04MB072250B43DE37A38E374679989700@AM2PR04MB0722.eurprd04.prod.outlook.com>
-	<20160509102840.GB6292@sirena.org.uk>
-	<AM2PR04MB0722180ABF5DB9406F56162B89700@AM2PR04MB0722.eurprd04.prod.outlook.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 1/2] ARM64: dts: rockchip: add sdhci/emmc for rk3399
+Date: Wed, 11 May 2016 15:31:14 -0700
+Message-ID: <20160511223114.GA65449@google.com>
+References: <1462924975-69072-1-git-send-email-briannorris@chromium.org>
+ <3e257ce2-056a-592a-9481-970da1fe0627@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM2PR04MB0722180ABF5DB9406F56162B89700-IPoeDzmMJYrzmGvksFXQpM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3e257ce2-056a-592a-9481-970da1fe0627@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, h <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 9, 2016 at 5:58 AM, Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org> wrote:
-> On Mon, May 09, 2016 at 06:29:59AM +0800, Mark Brown wrote:
->> On Mon, May 09, 2016 at 08:48:59AM +0000, Yao Yuan wrote:
->> > Hi Mark Brown,
->>
->> Please don't top post, reply in line with needed context.  This allows readers to
->> readily follow the flow of conversation and understand what you are talking
->> about and also helps ensure that everything in the discussion is being
->> addressed.
->>
->> Please fix your mail client to word wrap within paragraphs at something
->> substantially less than 80 columns.  Doing this makes your messages much
->> easier to read and reply to.
->>
->
-> Ok, Thanks.
->
->> > There are two problems we have found for use regmap up to now.
->>
->> > 1, Regmap will read device value depends on endian in .dtsi(DSPI in .dtsi file is
->> big-endian) and readl()(readl() in arm64 is le32_to_cpu read) in system.
->> > That is the value read out is fixed regardless the kernel were compiled with
->> CONFIG_CPU_BIG_ENDIAN yes or no. That makes the value(read from
->> DSPI)can't be recognized in one endian mode(CONFIG_CPU_BIG_ENDIAN be
->> set or not).
->> > The result is: DSPI can't working with CONFIG_CPU_BIG_ENDIAN set.
->>
->> This doesn't make sense.  If the endianness of the device is specified in DT then
->> the endianness of the CPU won't make a difference.
->>
->
-> For example, if DSPI controller register is BE, so I set big-endian in DT.
-> That means we should R/W the DSPI controller register with big-endian.
-> Then I can think all of the value we R/W to/from DSPI controller register, we can
-> Think they are the BE.
-> So that we can understand it easy.
->
-> That means no matter core is LE or BE, we both need get the value from DSPI register
-> with big endian.
->
-> But from regmap is not.
-> When the core is little endian, I can get the big endian value form register like:0xaabbccdd.
-> Then we can analysis and process this value.
-> But once config the core to big endian, I get the value like:0xddccbbaa. It's the little endian.
-> That's terrible for my driver to understand the value.
+On Wed, May 11, 2016 at 09:17:38AM +0800, Shawn Lin wrote:
+> + Huang Lin
+> 
+> On 2016/5/11 8:02, Brian Norris wrote:
+> >The bindings for rk3399's SDHCI + eMMC PHY have been accepted, so let's
+> >support eMMC now.
+> >
+> >Note that 'rockchip,rk3399-sdhci-5.1' is not documented, but per Heiko's
+> >previous suggestion, we don't want to clutter the arasan doc, and it's
+> >just a precautionary measure to have it.
+> >
+> >Signed-off-by: Brian Norris <briannorris@chromium.org>
+> >---
+> > arch/arm64/boot/dts/rockchip/rk3399.dtsi | 23 ++++++++++++++++++++++-
+> > 1 file changed, 22 insertions(+), 1 deletion(-)
+> >
+> >diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >index 46f325a143b0..947d1221592d 100644
+> >--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >@@ -215,6 +215,17 @@
+> > 		status = "disabled";
+> > 	};
+> >
+> >+	sdhci: sdhci@fe330000 {
+> >+		compatible = "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1";
+> >+		reg = <0x0 0xfe330000 0x0 0x10000>;
+> >+		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> >+		clocks = <&cru SCLK_EMMC>, <&cru ACLK_EMMC>;
+> 
+> sdhci doesn't call clk_set_rate to explicitly assign clk_xin to 200MHz
+> as it always assumes sdhci controller should meet the highest speed of
+> each timing mode. And the internal divider will be used. So IMHO,
+> clk-rockchip for 3399 *haven't* made clk_xin to be 200MHz. Let's assign
+> the clk stuff to make sure it's 200MHz.
+> 
+> Another problem is that emmc_phy contains a configuration which should
+> be consistent with clk_out(namely clk_xin/internal dividor). Now I don't
+> submit unpstream patchset to expose these configurarion, but in
+> prevention of some misleading, I think it's better to to it.
+> 
+> How about adding these?
+> 
+> assigned-clocks = <&cru SCLK_EMMC>;
+> assigned-clock-parents = <&cru PLL_CPLL>; //may not need
+> assigned-clock-rates = <200000000>;
 
-This is just the result.  Are you able to dig deeper to explain why
-this is happening?
+Makes sense. Will add these.
 
-I checked the LS1043 reference manual, the register definition looks
-like little endian instead of the big endian defined in the LS1043
-device tree.  Can you confirm if the block is actually having big
-endian registers or little endian registers.
+> Still you limit your clk_out by adding max-frequency in dts for
+> specific requirment.
+> 
+> We here manually assigne the clk_xin to be 200MHz, so defaultly
+> when it's runing in HS200/HS400(ES) mode, internal divider won't
+> be used(by-pass mode). So the clk jitter is better when by-passing the
+> clock.
+> 
+> Thanks.
 
-Regards,
-Leo
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
