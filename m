@@ -1,201 +1,154 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 05/14] usb: otg-fsm: move host controller operations
- into usb_otg->hcd_ops
-Date: Thu, 12 May 2016 11:29:24 +0300
-Message-ID: <57343EE4.7000802@ti.com>
-References: <1462191537-10314-1-git-send-email-rogerq@ti.com>
- <1462191537-10314-6-git-send-email-rogerq@ti.com>
- <20160511061001.GA16910@shlinux2.ap.freescale.net> <5733113D.2030009@ti.com>
- <5733265E.2040105@ti.com> <20160512081843.GA23083@shlinux2.ap.freescale.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v4 01/11] clk: sunxi: Add display and
+ TCON0 clocks driver
+Date: Thu, 12 May 2016 10:30:47 +0200
+Message-ID: <20160512083047.GY3733@lukather>
+References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1461590572-4027-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160506223002.GE3492@codeaurora.org>
+ <20160508200308.GF6167@lukather>
+ <20160509223238.GW3492@codeaurora.org>
+ <20160509223924.GX3492@codeaurora.org>
+ <1462907459.9981.0.camel@plaes.org>
+ <20160511221541.GG3492@codeaurora.org>
+ <1463024360.16747.4.camel@plaes.org>
+ <20160512065943.GX3733@lukather>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160512081843.GA23083-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8VKnE9k7k7imdYv5"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOP62C4QKGQENQQNCEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160512065943.GX3733@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/16 11:18, Peter Chen wrote:
-> On Wed, May 11, 2016 at 03:32:30PM +0300, Roger Quadros wrote:
->> Peter,
->>
->> On 11/05/16 14:02, Roger Quadros wrote:
->>> On 11/05/16 09:10, Peter Chen wrote:
->>>> On Mon, May 02, 2016 at 03:18:48PM +0300, Roger Quadros wrote:
->>>>> This is to prevent missing symbol build error if OTG is
->>>>> enabled (built-in) and HCD core (CONFIG_USB) is module.
->>>>>
->>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>>>> Acked-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
->>>>> ---
->>>>>  drivers/usb/chipidea/otg_fsm.c   |  7 +++++++
->>>>>  drivers/usb/common/usb-otg-fsm.c | 15 +++++++++++----
->>>>>  drivers/usb/phy/phy-fsl-usb.c    |  7 +++++++
->>>>>  include/linux/usb/otg.h          |  2 ++
->>>>>  4 files changed, 27 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/usb/chipidea/otg_fsm.c b/drivers/usb/chipidea/otg_fsm.c
->>>>> index 1c0c750..2d8d659 100644
->>>>> --- a/drivers/usb/chipidea/otg_fsm.c
->>>>> +++ b/drivers/usb/chipidea/otg_fsm.c
->>>>> @@ -582,6 +582,12 @@ static struct otg_fsm_ops ci_otg_ops = {
->>>>>  	.start_gadget = ci_otg_start_gadget,
->>>>>  };
->>>>>  
->>>>> +static struct otg_hcd_ops ci_hcd_ops = {
->>>>> +	.usb_bus_start_enum = usb_bus_start_enum,
->>>>> +	.usb_control_msg = usb_control_msg,
->>>>> +	.usb_hub_find_child = usb_hub_find_child,
->>>>> +};
->>>>> +
->>>>
->>>> Is it possible have default otg_hcd_ops during OTG register to
->>>> avoid define it at every dual-role driver?
->>>
->>> Yes, I'll do that.
->>
->> Every OTG driver doesn't need to do this as this is provided by
->> hcd.c during usb_otg_add_hcd().
->>
->> So proper fix is that chipidea driver must use usb_otg_add_hcd().
->>
-> 
-> But the chipidea is not ready to merge with framework that this patch
-> set introduces. So, as a solution, we need this patch, and can remove
-> the redundant information after the OTG driver uses this framework?
+--8VKnE9k7k7imdYv5
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That is fine, but I don't want to create a default otg_hcd_ops as we
-don't want to encourage its use. Do you agree?
+On Thu, May 12, 2016 at 08:59:43AM +0200, Maxime Ripard wrote:
+> On Thu, May 12, 2016 at 06:39:20AM +0300, Priit Laes wrote:
+> > On Wed, 2016-05-11 at 15:15 -0700, Stephen Boyd wrote:
+> > > On 05/10, Priit Laes wrote:
+> > > >=20
+> > > > On Mon, 2016-05-09 at 15:39 -0700, Stephen Boyd wrote:
+> > > > >=20
+> > > > > On 05/09, Stephen Boyd wrote:
+> > > > > >=20
+> > > > > >=20
+> > > > > >=20
+> > > > > > Ok I applied this one to clk-next.
+> > > > > >=20
+> > > > > And I squashed this in to silence the following checker warning.
+> > > > >=20
+> > > > > drivers/clk/sunxi/clk-sun4i-display.c:110:33: warning: Variable
+> > > > > length array is used.
+> > > > >=20
+> > > > > ---8<---
+> > > > > diff --git a/drivers/clk/sunxi/clk-sun4i-display.c
+> > > > > b/drivers/clk/sunxi/clk-sun4i-display.c
+> > > > > index f02e250e64ed..f8ff6c4a5633 100644
+> > > > > --- a/drivers/clk/sunxi/clk-sun4i-display.c
+> > > > > +++ b/drivers/clk/sunxi/clk-sun4i-display.c
+> > > > > @@ -107,7 +107,7 @@ static int
+> > > > > sun4i_a10_display_reset_xlate(struct
+> > > > > reset_controller_dev *rcdev,
+> > > > > =C2=A0static void __init sun4i_a10_display_init(struct device_nod=
+e
+> > > > > *node,
+> > > > > =C2=A0					=C2=A0=C2=A0const struct
+> > > > > sun4i_a10_display_clk_data *data)
+> > > > > =C2=A0{
+> > > > > -	const char *parents[data->parents];
+> > > > > +	const char *parents[4];
+> > > > This change breaks at least de_[bf]e clocks which have 3 clock
+> > > > parents.
+> >=20
+> > > I just used the largest data->parents number, which was 4. How
+> > > does that break anything?
+> >=20
+> > If you look at the=C2=A0sun4i_a10_display_init, it contains this block:
+> >=20
+> > =C2=A0 =C2=A0 ret =3D of_clk_parent_fill(node, parents, ARRAY_SIZE(pare=
+nts));
+> > =C2=A0=C2=A0=C2=A0=C2=A0if (ret !=3D ARRAY_SIZE(parents)) {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_err("%s: Could not r=
+etrieve the parents\n", clk_name);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto unmap;
+> > =C2=A0=C2=A0=C2=A0=C2=A0}
+> >=20
+> > of_clk_parent_fill returns 3 for de_be/de_fe nodes, and
+> > ARRAY_SIZE(parents) is 4.
+>=20
+> Replacing both ARRAY_SIZE(parents) by data->parents would work though.
 
-cheers,
--roger
+I just tested on top of current next, and indeed the following patch
+is needed.
 
->>
->>>
->>>>>  int ci_otg_fsm_work(struct ci_hdrc *ci)
->>>>>  {
->>>>>  	/*
->>>>> @@ -804,6 +810,7 @@ int ci_hdrc_otg_fsm_init(struct ci_hdrc *ci)
->>>>>  	ci->otg.fsm.id = hw_read_otgsc(ci, OTGSC_ID) ? 1 : 0;
->>>>>  	ci->otg.state = OTG_STATE_UNDEFINED;
->>>>>  	ci->otg.fsm.ops = &ci_otg_ops;
->>>>> +	ci->otg.hcd_ops = &ci_hcd_ops;
->>>>>  	ci->gadget.hnp_polling_support = 1;
->>>>>  	ci->otg.fsm.host_req_flag = devm_kzalloc(ci->dev, 1, GFP_KERNEL);
->>>>>  	if (!ci->otg.fsm.host_req_flag)
->>>>> diff --git a/drivers/usb/common/usb-otg-fsm.c b/drivers/usb/common/usb-otg-fsm.c
->>>>> index 4bfc6a5..2986b66 100644
->>>>> --- a/drivers/usb/common/usb-otg-fsm.c
->>>>> +++ b/drivers/usb/common/usb-otg-fsm.c
->>>>> @@ -141,11 +141,16 @@ static void otg_hnp_polling_work(struct work_struct *work)
->>>>>  	enum usb_otg_state state = otg->state;
->>>>>  	u8 flag;
->>>>>  	int retval;
->>>>> +	struct otg_hcd_ops *hcd_ops = otg->hcd_ops;
->>>>>  
->>>>>  	if (state != OTG_STATE_A_HOST && state != OTG_STATE_B_HOST)
->>>>>  		return;
->>>>>  
->>>>> -	udev = usb_hub_find_child(otg->host->root_hub, 1);
->>>>> +	if (!hcd_ops || !hcd_ops->usb_control_msg ||
->>>>> +	    !hcd_ops->usb_hub_find_child)
->>>>> +		return;
->>>>> +
->>>>> +	udev = hcd_ops->usb_hub_find_child(otg->host->root_hub, 1);
->>>>>  	if (!udev) {
->>>>>  		dev_err(otg->host->controller,
->>>>>  			"no usb dev connected, can't start HNP polling\n");
->>>>> @@ -154,7 +159,7 @@ static void otg_hnp_polling_work(struct work_struct *work)
->>>>>  
->>>>>  	*fsm->host_req_flag = 0;
->>>>>  	/* Get host request flag from connected USB device */
->>>>> -	retval = usb_control_msg(udev,
->>>>> +	retval = hcd_ops->usb_control_msg(udev,
->>>>>  				usb_rcvctrlpipe(udev, 0),
->>>>>  				USB_REQ_GET_STATUS,
->>>>>  				USB_DIR_IN | USB_RECIP_DEVICE,
->>>>> @@ -183,7 +188,7 @@ static void otg_hnp_polling_work(struct work_struct *work)
->>>>>  	if (state == OTG_STATE_A_HOST) {
->>>>>  		/* Set b_hnp_enable */
->>>>>  		if (!otg->host->b_hnp_enable) {
->>>>> -			retval = usb_control_msg(udev,
->>>>> +			retval = hcd_ops->usb_control_msg(udev,
->>>>>  					usb_sndctrlpipe(udev, 0),
->>>>>  					USB_REQ_SET_FEATURE, 0,
->>>>>  					USB_DEVICE_B_HNP_ENABLE,
->>>>> @@ -262,7 +267,9 @@ static int otg_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
->>>>>  		otg_loc_conn(otg, 0);
->>>>>  		otg_loc_sof(otg, 1);
->>>>>  		otg_set_protocol(fsm, PROTO_HOST);
->>>>> -		usb_bus_start_enum(otg->host, otg->host->otg_port);
->>>>> +		if (otg->hcd_ops && otg->hcd_ops->usb_bus_start_enum)
->>>>> +			otg->hcd_ops->usb_bus_start_enum(otg->host,
->>>>> +							 otg->host->otg_port);
->>>>>  		otg_start_hnp_polling(fsm);
->>>>>  		break;
->>>>>  	case OTG_STATE_A_IDLE:
->>>>> diff --git a/drivers/usb/phy/phy-fsl-usb.c b/drivers/usb/phy/phy-fsl-usb.c
->>>>> index 587a187..9dbd9f0 100644
->>>>> --- a/drivers/usb/phy/phy-fsl-usb.c
->>>>> +++ b/drivers/usb/phy/phy-fsl-usb.c
->>>>> @@ -792,6 +792,12 @@ static struct otg_fsm_ops fsl_otg_ops = {
->>>>>  	.start_gadget = fsl_otg_start_gadget,
->>>>>  };
->>>>>  
->>>>> +static struct otg_hcd_ops fsl_hcd_ops = {
->>>>> +	.usb_bus_start_enum = usb_bus_start_enum,
->>>>> +	.usb_control_msg = usb_control_msg,
->>>>> +	.usb_hub_find_child = usb_hub_find_child,
->>>>> +};
->>>>> +
->>>>>  /* Initialize the global variable fsl_otg_dev and request IRQ for OTG */
->>>>>  static int fsl_otg_conf(struct platform_device *pdev)
->>>>>  {
->>>>> @@ -820,6 +826,7 @@ static int fsl_otg_conf(struct platform_device *pdev)
->>>>>  
->>>>>  	/* Set OTG state machine operations */
->>>>>  	fsl_otg_tc->otg.fsm.ops = &fsl_otg_ops;
->>>>> +	fsl_otg_tc->otg.hcd_ops = &fsl_hcd_ops;
->>>>>  
->>>>>  	/* initialize the otg structure */
->>>>>  	fsl_otg_tc->phy.label = DRIVER_DESC;
->>>>> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
->>>>> index e8a14dc..85b8fb5 100644
->>>>> --- a/include/linux/usb/otg.h
->>>>> +++ b/include/linux/usb/otg.h
->>>>> @@ -12,6 +12,7 @@
->>>>>  #include <linux/phy/phy.h>
->>>>>  #include <linux/usb/phy.h>
->>>>>  #include <linux/usb/otg-fsm.h>
->>>>> +#include <linux/usb/hcd.h>
->>>>>  
->>>>>  struct usb_otg {
->>>>>  	u8			default_a;
->>>>> @@ -24,6 +25,7 @@ struct usb_otg {
->>>>>  
->>>>>  	enum usb_otg_state	state;
->>>>>  	struct otg_fsm fsm;
->>>>> +	struct otg_hcd_ops	*hcd_ops;
->>>>>  
->>>>>  	/* bind/unbind the host controller */
->>>>>  	int	(*set_host)(struct usb_otg *otg, struct usb_bus *host);
->>>>> -- 
->>>>> 2.7.4
->>>>>
->>>>> --
->>>>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->>>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stephen, could you squash it in the former patch?
+
+diff --git a/drivers/clk/sunxi/clk-sun4i-display.c b/drivers/clk/sunxi/clk-=
+sun4i-display.c
+index 70803aa7028c..9780fac6d029 100644
+--- a/drivers/clk/sunxi/clk-sun4i-display.c
++++ b/drivers/clk/sunxi/clk-sun4i-display.c
+@@ -128,8 +128,8 @@ static void __init sun4i_a10_display_init(struct device=
+_node *node,
+ 		return;
+ 	}
+=20
+-	ret =3D of_clk_parent_fill(node, parents, ARRAY_SIZE(parents));
+-	if (ret !=3D ARRAY_SIZE(parents)) {
++	ret =3D of_clk_parent_fill(node, parents, data->parents);
++	if (ret !=3D data->parents) {
+ 		pr_err("%s: Could not retrieve the parents\n", clk_name);
+ 		goto unmap;
+ 	}
+
+Thanks!
+Maxime					 =20
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--8VKnE9k7k7imdYv5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXND83AAoJEBx+YmzsjxAgf1IQAJ1UEiWAWz/bJ6uEhMjY9ZWz
+8fBlBkRyjllOW+WMgMUSv9r8VJhUjQ/0g9g2lyS0k0U0l24s9hTvcGdfrDXqDVMJ
+E6aSdiQEGnSZkSseioTLd1MMtgACb29ilb71LQDjna7bYydsUZRVa7TOgN/Rs28p
+t+w/GJTFxJFpxWLoD0z/jKy3eb0a/ec1X6nar/cWYqC62o27gGCzolgSis0ZcT1v
+9/9SRlKaenE4a+xTt4fVnCnfIe+86itvTTyv0BN+TOqVtRTQKoPQQ6IgVzp0tAH8
+XLsnHtOss/jKM6YU2hBOD/yaOILlukTgJGb7IfEr7b1AbpAgNUp2cUQO6/b64CJE
+zbWHMNd9gMWquED1WUwM3NF1wyLQbD+Pc33dRr+MA9yGR5U+RU6c7KgbT3iEuyFq
+wdCOhT3T4Fhl/LoS5ryc30/X2qpMIdiCiMig6D/UihTiftCWiM2bydFBZfpXx5kE
+9FfF4MMcgPi1IfdDBESw/lLJiwVSjRktNobUCQcUkCh8KPQgctHQDWR9roJ9urNC
+jJ/ULcTnqWl9qY/hDylzxY73C+KVV0iHWh6WerYtMgcRKcNixFa4idFvta419QIZ
+1jfMqPvB6piVIAjQW/krbu5HGNVmL38M9fmXNbD4qFajRzrNP1kc4P1x+F90xDsH
+ot7VHWLsQ26r5+aZV1Pl
+=N8ET
+-----END PGP SIGNATURE-----
+
+--8VKnE9k7k7imdYv5--
