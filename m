@@ -1,55 +1,106 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 1/3] dt-bindings: drm/mediatek: Add display binding for
- Mediatek SoC MT2701
-Date: Thu, 12 May 2016 22:59:44 +0800
-Message-ID: <1463065184.17225.2.camel@mtksdaap41>
-References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
-	 <1463053795-55455-2-git-send-email-yt.shen@mediatek.com>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH v8 7/8] i2c: rk3x: add i2c support for rk3399 soc
+Date: Thu, 12 May 2016 23:07:34 +0800
+Message-ID: <57349C36.4030401@rock-chips.com>
+References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com>
+ <1462908698-27284-1-git-send-email-david.wu@rock-chips.com>
+ <CAD=FV=Uf-U3RBpgFbR3LkPAJTWqz3d02+H7iyA-SS-y=r3cXjA@mail.gmail.com>
+ <5733D7AA.1060500@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463053795-55455-2-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <5733D7AA.1060500@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-05-12 at 19:49 +0800, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add device tree binding documentation for the display subsystem in
-> Mediatek SoC MT2701
-> 
-> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/display/mediatek/mediatek,disp.txt    |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> index db6e77e..53b3cc3 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> @@ -40,6 +40,7 @@ Required properties (all function blocks):
->  	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
->  	"mediatek,<chip>-disp-mutex" - display mutex
->  	"mediatek,<chip>-disp-od"    - overdrive
-> +	"mediatek,<chip>-disp-bls"   - backlight
->  - reg: Physical base address and length of the function block register space
->  - interrupts: The interrupt signal from the function block (required, except for
->    merge and split function blocks).
+Hi Doug=EF=BC=8C
 
+=E5=9C=A8 2016/5/12 9:08, David.Wu =E5=86=99=E9=81=93:
+> Hi Doug,
+>
+> =E5=9C=A8 2016/5/12 1:37, Doug Anderson =E5=86=99=E9=81=93:
+>> Hi,
+>>
+>> On Tue, May 10, 2016 at 12:31 PM, David Wu <david.wu@rock-chips.com>
+>> wrote:
+>>>   static void rk3x_i2c_adapt_div(struct rk3x_i2c *i2c, unsigned lon=
+g
+>>> clk_rate)
+>>>   {
+>>>          struct i2c_timings *t =3D &i2c->t;
+>>>          struct rk3x_i2c_calced_timings calc;
+>>>          u64 t_low_ns, t_high_ns;
+>>> +       u32 val;
+>>>          int ret;
+>>>
+>>> -       ret =3D rk3x_i2c_calc_divs(clk_rate, t, &calc);
+>>> +       ret =3D i2c->soc_data->calc_timings(clk_rate, t, &calc);
+>>>          WARN_ONCE(ret !=3D 0, "Could not reach SCL freq %u",
+>>> t->bus_freq_hz);
+>>>
+>>> -       clk_enable(i2c->clk);
+>>> +       clk_enable(i2c->pclk);
+>>> +
+>>>          i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low &
+>>> 0xffff),
+>>>                     REG_CLKDIV);
+>>> -       clk_disable(i2c->clk);
+>>> +
+>>> +       val =3D i2c_readl(i2c, REG_CON);
+>>> +       val &=3D ~REG_CON_TUNING_MASK;
+>>> +       val |=3D calc.tuning;
+>>> +       i2c_writel(i2c, val, REG_CON);
+>>
+>> Another subtle bug here.  You need to be holding the spinlock here
+>> since you're doing a read-modify-write of a register that is also
+>> touched by the interrupt handler.  We never needed it before because
+>> the previous register update wasn't touched by anyone else and it wa=
+s
+>> a single atomic write.
+>>
+>> Also: technically if we are midway through a transfer when all this
+>> happens then there will be a very short period of time when the two
+>> timing-related registers won't match with each other.  I have no ide=
+a
+>> how much that would matter, but in the very least it seems wise to
+>> minimize the time where they mismatch.  So I'd probably write:
+>>
+>>         spin_lock_irqsave(&i2c->lock, flags);
+>>         val =3D i2c_readl(i2c, REG_CON);
+>>         val &=3D ~REG_CON_TUNING_MASK;
+>>         val |=3D calc.tuning;
+>>         i2c_writel(i2c, val, REG_CON);
+>>         i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low & 0xff=
+ff),
+>>                    REG_CLKDIV);
+>>         spin_unlock_irqrestore(&i2c->lock, flags);
+>>
+>> ...if we really end up with on a system with a dynamically changing
+>> clock that uses the new-style timing and we see real problems, we ca=
+n
+>> always try to come up with a way to avoid any problems.  Sound OK?
+>>
+>>
+>
+> Good, add spin_lock is very necessary for atomic write here, thanks f=
+or
+> your advice.
 
-Hi,
+I also found a subtle bug, it would clean the con register by use=20
+"i2c_writel(i2c, 0, REG_CON)" in rk3x_i2c_stop(). So i think it would b=
+e=20
+fixed by using read-modify-write way here in next version.
 
-This one is in conflict with "Support Mediatek Soc MT2701 disp pwm"
-series Weiqing sent last week, which add disp-bls support to display pwm
-driver.
-
-Joe.C
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> Otherwise, I think things look good to me.  Caesar's comments would
+>> also be good to fix.
+>>
+>>
+>> -Doug
+>>
+>>
+>>
