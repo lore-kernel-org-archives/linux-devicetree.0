@@ -1,81 +1,48 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] phy: add support for a reset-gpio specification
-Date: Thu, 12 May 2016 12:00:33 +0200
-Message-ID: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>
+Subject: Re: [PATCH] Xen: EFI: Parse DT parameters for Xen specific UEFI
+Date: Thu, 12 May 2016 11:04:10 +0100
+Message-ID: <20160512100410.GA2728@codeblueprint.co.uk>
+References: <1462523526-3172-1-git-send-email-zhaoshenglong@huawei.com>
+ <20160511122730.GU2839@codeblueprint.co.uk>
+ <57333533.2030206@linaro.org>
+ <20160511232444.GY2839@codeblueprint.co.uk>
+ <5733E8CF.3070004@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5733E8CF.3070004-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefano-yd54mjeZNzVBDgjK7y7TUQ@public.gmane.org, julien.grall-5wv7dgnIgG8@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The framework only asserts (for now) that the reset gpio is not active.
+On Thu, 12 May, at 10:22:07AM, Shannon Zhao wrote:
+> 
+> As said above, I will rebase this patch on top of the EFI next branch.
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/devicetree/bindings/net/phy.txt | 3 +++
- drivers/net/phy/phy_device.c                  | 8 ++++++++
- 2 files changed, 11 insertions(+)
+OK thanks.
 
-diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentat=
-ion/devicetree/bindings/net/phy.txt
-index bc1c3c8bf8fa..c00a9a894547 100644
---- a/Documentation/devicetree/bindings/net/phy.txt
-+++ b/Documentation/devicetree/bindings/net/phy.txt
-@@ -35,6 +35,8 @@ Optional Properties:
- - broken-turn-around: If set, indicates the PHY device does not correc=
-tly
-   release the turn around line low at the end of a MDIO transaction.
-=20
-+- reset-gpios: Reference to a GPIO used to reset the phy.
-+
- Example:
-=20
- ethernet-phy@0 {
-@@ -42,4 +44,5 @@ ethernet-phy@0 {
- 	interrupt-parent =3D <40000>;
- 	interrupts =3D <35 1>;
- 	reg =3D <0>;
-+	reset-gpios =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
- };
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.=
-c
-index e551f3a89cfd..7d666ab47271 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -34,6 +34,7 @@
- #include <linux/io.h>
- #include <linux/uaccess.h>
- #include <linux/of.h>
-+#include <linux/gpio/consumer.h>
-=20
- #include <asm/irq.h>
-=20
-@@ -1569,9 +1570,16 @@ static int phy_probe(struct device *dev)
- 	struct device_driver *drv =3D phydev->mdio.dev.driver;
- 	struct phy_driver *phydrv =3D to_phy_driver(drv);
- 	int err =3D 0;
-+	struct gpio_descs *reset_gpios;
-=20
- 	phydev->drv =3D phydrv;
-=20
-+	/* take phy out of reset */
-+	reset_gpios =3D devm_gpiod_get_array_optional(dev, "reset",
-+						    GPIOD_OUT_LOW);
-+	if (IS_ERR(reset_gpios))
-+		return PTR_ERR(reset_gpios);
-+
- 	/* Disable the interrupt if the PHY doesn't support it
- 	 * but the interrupt is still a valid one
- 	 */
---=20
-2.8.0.rc3
+Note that it is not possible to escape merge conflicts, since there
+are changes in the xen tip tree that are not in the EFI next branch
+and vice versa.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For example these commits from xen/linux-next look relevant,
+
+  8e147fcc3ffa ("FDT: Add a helper to get the subnode by given name")
+  37060935dc04 ("ARM64: XEN: Add a function to initialize Xen specific UEFI runtime services")
+  acb2c923a860 ("XEN: EFI: Move x86 specific codes to architecture directory")
+  055be2d42408 ("ARM: Xen: Document UEFI support on Xen ARM virtual platforms")
+  3915fea959b6 ("ARM: XEN: Move xen_early_init() before efi_init()")
+
+Linus, Stefano, tip-folks: I'm soliciting opinions on the correct way
+to handle this inter-tree dependency where we've got changes to EFI
+code in two separate trees and Shannon wants to write patches on top
+of both.
+
+I'm guessing the best solution is to merge xen/linux-next and efi/next
+into a topic branch either in the EFI tree or Xen tree, but I want to
+be cautious of the branch history that will create.
+
+(In hindsight all of these change should have probably gone via the
+EFI tree.)
