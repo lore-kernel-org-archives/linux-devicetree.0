@@ -1,56 +1,103 @@
-From: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Xen: EFI: Parse DT parameters for Xen specific UEFI
-Date: Thu, 12 May 2016 11:58:04 +0100 (BST)
-Message-ID: <alpine.DEB.2.10.1605121138500.2494@sstabellini-ThinkPad-X260>
-References: <1462523526-3172-1-git-send-email-zhaoshenglong@huawei.com> <20160511122730.GU2839@codeblueprint.co.uk> <57333533.2030206@linaro.org> <20160511232444.GY2839@codeblueprint.co.uk> <5733E8CF.3070004@huawei.com>
- <20160512100410.GA2728@codeblueprint.co.uk>
+From: Tiffany Lin <tiffany.lin@mediatek.com>
+Subject: [PATCH v2 4/9] dt-bindings: Add a binding for Mediatek Video Decoder
+Date: Thu, 12 May 2016 19:24:05 +0800
+Message-ID: <1463052250-38262-5-git-send-email-tiffany.lin@mediatek.com>
+References: <1463052250-38262-1-git-send-email-tiffany.lin@mediatek.com>
+ <1463052250-38262-2-git-send-email-tiffany.lin@mediatek.com>
+ <1463052250-38262-3-git-send-email-tiffany.lin@mediatek.com>
+ <1463052250-38262-4-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160512100410.GA2728-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>
-Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefano-yd54mjeZNzVBDgjK7y7TUQ@public.gmane.org, julien.grall-5wv7dgnIgG8@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463052250-38262-4-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Tiffany.lin@mediatek.com, Tiffany Lin <tiffany.lin@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 May 2016, Matt Fleming wrote:
-> On Thu, 12 May, at 10:22:07AM, Shannon Zhao wrote:
-> > 
-> > As said above, I will rebase this patch on top of the EFI next branch.
-> 
-> OK thanks.
-> 
-> Note that it is not possible to escape merge conflicts, since there
-> are changes in the xen tip tree that are not in the EFI next branch
-> and vice versa.
-> 
-> For example these commits from xen/linux-next look relevant,
-> 
->   8e147fcc3ffa ("FDT: Add a helper to get the subnode by given name")
->   37060935dc04 ("ARM64: XEN: Add a function to initialize Xen specific UEFI runtime services")
->   acb2c923a860 ("XEN: EFI: Move x86 specific codes to architecture directory")
->   055be2d42408 ("ARM: Xen: Document UEFI support on Xen ARM virtual platforms")
->   3915fea959b6 ("ARM: XEN: Move xen_early_init() before efi_init()")
+Add a DT binding documentation of Video Decoder for the
+MT8173 SoC from Mediatek.
 
->From a diffstat perspective, the changes introduced by these commits
-affect drivers/of/fdt.c, arch/arm/xen, arch/x86/xen, drivers/xen and
-little else. I don't think they should cause merge troubles.
+Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+---
+ .../devicetree/bindings/media/mediatek-vcodec.txt  |   50 ++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 4 deletions(-)
 
-
-> Linus, Stefano, tip-folks: I'm soliciting opinions on the correct way
-> to handle this inter-tree dependency where we've got changes to EFI
-> code in two separate trees and Shannon wants to write patches on top
-> of both.
-> 
-> I'm guessing the best solution is to merge xen/linux-next and efi/next
-> into a topic branch either in the EFI tree or Xen tree, but I want to
-> be cautious of the branch history that will create.
-
-I am OK with that. You and I will have to be careful with the pull
-requests.
-
-
-> (In hindsight all of these change should have probably gone via the
-> EFI tree.)
-
-That is still possible if deemed best. 
+diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+index 59a47a5..9aa8848 100644
+--- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
++++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+@@ -1,25 +1,67 @@
+ Mediatek Video Codec
+ 
+ Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
+-supports high resolution encoding functionalities.
++supports high resolution encoding and decoding functionalities.
+ 
+ Required properties:
+ - compatible : "mediatek,mt8173-vcodec-enc" for encoder
++  "mediatek,mt8173-vcodec-dec" for decoder.
+ - reg : Physical base address of the video codec registers and length of
+   memory mapped region.
+ - interrupts : interrupt number to the cpu.
+ - mediatek,larb : must contain the local arbiters in the current Socs.
+ - clocks : list of clock specifiers, corresponding to entries in
+   the clock-names property.
+-- clock-names: encoder must contain "venc_sel_src", "venc_sel",
+-- "venc_lt_sel_src", "venc_lt_sel".
++- clock-names: encoder must contain "venc_sel_src", "venc_sel",,
++  "venc_lt_sel_src", "venc_lt_sel", decoder must contain "vcodecpll",
++  "univpll_d2", "clk_cci400_sel", "vdec_sel", "vdecpll".
+ - iommus : should point to the respective IOMMU block with master port as
+   argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+   for details.
+ - mediatek,vpu : the node of video processor unit
+ 
++
+ Example:
+-vcodec_enc: vcodec@0x18002000 {
++
++vcodec_dec: vcodec@16000000 {
++    compatible = "mediatek,mt8173-vcodec-dec";
++    reg = <0 0x16000000 0 0x100>,   /*VDEC_SYS*/
++          <0 0x16020000 0 0x1000>,  /*VDEC_MISC*/
++          <0 0x16021000 0 0x800>,   /*VDEC_LD*/
++          <0 0x16021800 0 0x800>,   /*VDEC_TOP*/
++          <0 0x16022000 0 0x1000>,  /*VDEC_CM*/
++          <0 0x16023000 0 0x1000>,  /*VDEC_AD*/
++          <0 0x16024000 0 0x1000>,  /*VDEC_AV*/
++          <0 0x16025000 0 0x1000>,  /*VDEC_PP*/
++          <0 0x16026800 0 0x800>,   /*VP8_VD*/
++          <0 0x16027000 0 0x800>,   /*VP6_VD*/
++          <0 0x16027800 0 0x800>,   /*VP8_VL*/
++          <0 0x16028400 0 0x400>;   /*VP9_VD*/
++    interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_LOW>;
++    mediatek,larb = <&larb1>;
++    iommus = <&iommu M4U_PORT_HW_VDEC_MC_EXT>,
++             <&iommu M4U_PORT_HW_VDEC_PP_EXT>,
++             <&iommu M4U_PORT_HW_VDEC_AVC_MV_EXT>,
++             <&iommu M4U_PORT_HW_VDEC_PRED_RD_EXT>,
++             <&iommu M4U_PORT_HW_VDEC_PRED_WR_EXT>,
++             <&iommu M4U_PORT_HW_VDEC_UFO_EXT>,
++             <&iommu M4U_PORT_HW_VDEC_VLD_EXT>,
++             <&iommu M4U_PORT_HW_VDEC_VLD2_EXT>;
++    mediatek,vpu = <&vpu>;
++    power-domains = <&scpsys MT8173_POWER_DOMAIN_VDEC>;
++    clocks = <&apmixedsys CLK_APMIXED_VCODECPLL>,
++             <&topckgen CLK_TOP_UNIVPLL_D2>,
++             <&topckgen CLK_TOP_CCI400_SEL>,  
++             <&topckgen CLK_TOP_VDEC_SEL>,
++             <&topckgen CLK_TOP_VCODECPLL>;
++    clock-names = "vcodecpll",
++                  "univpll_d2",
++                  "clk_cci400_sel",   
++                  "vdec_sel",  
++                  "vdecpll";
++  };
++
++  vcodec_enc: vcodec@0x18002000 {
+     compatible = "mediatek,mt8173-vcodec-enc";
+     reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
+           <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
+-- 
+1.7.9.5
