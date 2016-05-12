@@ -1,353 +1,94 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-	<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: [PATCHv4 1/4] ARM: dts: r8a7790: Reference both DMA controllers
-Date: Thu, 12 May 2016 10:54:42 +0200
-Message-ID: <1463043285-14702-2-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-References: <1463043285-14702-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V5 2/3] dmaengine: tegra-adma: Add support for Tegra210
+ ADMA
+Date: Thu, 12 May 2016 10:02:07 +0100
+Message-ID: <5734468F.7010906@nvidia.com>
+References: <1461940758-25722-1-git-send-email-jonathanh@nvidia.com>
+ <1461940758-25722-3-git-send-email-jonathanh@nvidia.com>
+ <20160512060748.GZ2274@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463043285-14702-1-git-send-email-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160512060748.GZ2274@localhost>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-R-Car Gen2 have two DMA controllers, which are equivalent. Add
-references to both dmac0 and dmac1 so the driver can choose which one t=
-o
-use.
 
-Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
-h.se>
----
- arch/arm/boot/dts/r8a7790.dtsi | 130 ++++++++++++++++++++++++---------=
---------
- 1 file changed, 78 insertions(+), 52 deletions(-)
+On 12/05/16 07:07, Vinod Koul wrote:
+> On Fri, Apr 29, 2016 at 03:39:17PM +0100, Jon Hunter wrote:
+> 
+>> +static struct dma_async_tx_descriptor *tegra_adma_prep_slave_sg(
+>> +	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
+>> +	enum dma_transfer_direction direction, unsigned long flags,
+>> +	void *context)
+>> +{
+>> +	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
+>> +
+>> +	dev_warn(tdc2dev(tdc), "scatter-gather transfers are not supported\n");
+>> +
+>> +	return NULL;
+>> +}
+> 
+> we don't need a place holder, please remove this
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790=
-=2Edtsi
-index 83cf23c..ac80db4 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -517,8 +517,9 @@
- 		reg =3D <0 0xe6500000 0 0x425>;
- 		interrupts =3D <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_IIC0>;
--		dmas =3D <&dmac0 0x61>, <&dmac0 0x62>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x61>, <&dmac0 0x62>,
-+		       <&dmac1 0x61>, <&dmac1 0x62>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -530,8 +531,9 @@
- 		reg =3D <0 0xe6510000 0 0x425>;
- 		interrupts =3D <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_IIC1>;
--		dmas =3D <&dmac0 0x65>, <&dmac0 0x66>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x65>, <&dmac0 0x66>,
-+		       <&dmac1 0x65>, <&dmac1 0x66>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -543,8 +545,9 @@
- 		reg =3D <0 0xe6520000 0 0x425>;
- 		interrupts =3D <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_IIC2>;
--		dmas =3D <&dmac0 0x69>, <&dmac0 0x6a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x69>, <&dmac0 0x6a>,
-+		       <&dmac1 0x69>, <&dmac1 0x6a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -556,8 +559,9 @@
- 		reg =3D <0 0xe60b0000 0 0x425>;
- 		interrupts =3D <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp9_clks R8A7790_CLK_IICDVFS>;
--		dmas =3D <&dmac0 0x77>, <&dmac0 0x78>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x77>, <&dmac0 0x78>,
-+		       <&dmac1 0x77>, <&dmac1 0x78>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -567,8 +571,9 @@
- 		reg =3D <0 0xee200000 0 0x80>;
- 		interrupts =3D <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_MMCIF0>;
--		dmas =3D <&dmac0 0xd1>, <&dmac0 0xd2>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xd1>, <&dmac0 0xd2>,
-+		       <&dmac1 0xd1>, <&dmac1 0xd2>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		reg-io-width =3D <4>;
- 		status =3D "disabled";
-@@ -580,8 +585,9 @@
- 		reg =3D <0 0xee220000 0 0x80>;
- 		interrupts =3D <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_MMCIF1>;
--		dmas =3D <&dmac0 0xe1>, <&dmac0 0xe2>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xe1>, <&dmac0 0xe2>,
-+		       <&dmac1 0xe1>, <&dmac1 0xe2>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		reg-io-width =3D <4>;
- 		status =3D "disabled";
-@@ -598,8 +604,9 @@
- 		reg =3D <0 0xee100000 0 0x328>;
- 		interrupts =3D <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_SDHI0>;
--		dmas =3D <&dmac1 0xcd>, <&dmac1 0xce>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xcd>, <&dmac0 0xce>,
-+		       <&dmac1 0xcd>, <&dmac1 0xce>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		max-frequency =3D <195000000>;
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
-@@ -610,8 +617,9 @@
- 		reg =3D <0 0xee120000 0 0x328>;
- 		interrupts =3D <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_SDHI1>;
--		dmas =3D <&dmac1 0xc9>, <&dmac1 0xca>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xc9>, <&dmac0 0xca>,
-+		       <&dmac1 0xc9>, <&dmac1 0xca>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		max-frequency =3D <195000000>;
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
-@@ -622,8 +630,9 @@
- 		reg =3D <0 0xee140000 0 0x100>;
- 		interrupts =3D <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_SDHI2>;
--		dmas =3D <&dmac1 0xc1>, <&dmac1 0xc2>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xc1>, <&dmac0 0xc2>,
-+		       <&dmac1 0xc1>, <&dmac1 0xc2>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		max-frequency =3D <97500000>;
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
-@@ -634,8 +643,9 @@
- 		reg =3D <0 0xee160000 0 0x100>;
- 		interrupts =3D <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7790_CLK_SDHI3>;
--		dmas =3D <&dmac1 0xd3>, <&dmac1 0xd4>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0xd3>, <&dmac0 0xd4>,
-+		       <&dmac1 0xd3>, <&dmac1 0xd4>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		max-frequency =3D <97500000>;
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
-@@ -648,8 +658,9 @@
- 		interrupts =3D <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_SCIFA0>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>,
-+		       <&dmac1 0x21>, <&dmac1 0x22>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -661,8 +672,9 @@
- 		interrupts =3D <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_SCIFA1>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>,
-+		       <&dmac1 0x25>, <&dmac1 0x26>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -674,8 +686,9 @@
- 		interrupts =3D <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_SCIFA2>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>,
-+		       <&dmac1 0x27>, <&dmac1 0x28>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -687,8 +700,9 @@
- 		interrupts =3D <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_SCIFB0>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x3d>, <&dmac0 0x3e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x3d>, <&dmac0 0x3e>,
-+		       <&dmac1 0x3d>, <&dmac1 0x3e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -700,8 +714,9 @@
- 		interrupts =3D <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_SCIFB1>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x19>, <&dmac0 0x1a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x19>, <&dmac0 0x1a>,
-+		       <&dmac1 0x19>, <&dmac1 0x1a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -713,8 +728,9 @@
- 		interrupts =3D <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_SCIFB2>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x1d>, <&dmac0 0x1e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1d>, <&dmac0 0x1e>,
-+		       <&dmac1 0x1d>, <&dmac1 0x1e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -727,8 +743,9 @@
- 		clocks =3D <&mstp7_clks R8A7790_CLK_SCIF0>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>,
-+		       <&dmac1 0x29>, <&dmac1 0x2a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -741,8 +758,9 @@
- 		clocks =3D <&mstp7_clks R8A7790_CLK_SCIF1>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>,
-+		       <&dmac1 0x2d>, <&dmac1 0x2e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -755,8 +773,9 @@
- 		clocks =3D <&mstp3_clks R8A7790_CLK_SCIF2>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>,
-+		       <&dmac1 0x2b>, <&dmac1 0x2c>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -769,8 +788,9 @@
- 		clocks =3D <&mstp7_clks R8A7790_CLK_HSCIF0>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>,
-+		       <&dmac1 0x39>, <&dmac1 0x3a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -783,8 +803,9 @@
- 		clocks =3D <&mstp7_clks R8A7790_CLK_HSCIF1>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>,
-+		       <&dmac1 0x4d>, <&dmac1 0x4e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		status =3D "disabled";
- 	};
-@@ -1469,8 +1490,9 @@
- 		reg =3D <0 0xe6b10000 0 0x2c>;
- 		interrupts =3D <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp9_clks R8A7790_CLK_QSPI_MOD>;
--		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>,
-+		       <&dmac1 0x17>, <&dmac1 0x18>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		num-cs =3D <1>;
- 		#address-cells =3D <1>;
-@@ -1483,8 +1505,9 @@
- 		reg =3D <0 0xe6e20000 0 0x0064>;
- 		interrupts =3D <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp0_clks R8A7790_CLK_MSIOF0>;
--		dmas =3D <&dmac0 0x51>, <&dmac0 0x52>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x51>, <&dmac0 0x52>,
-+		       <&dmac1 0x51>, <&dmac1 0x52>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
-@@ -1496,8 +1519,9 @@
- 		reg =3D <0 0xe6e10000 0 0x0064>;
- 		interrupts =3D <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_MSIOF1>;
--		dmas =3D <&dmac0 0x55>, <&dmac0 0x56>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x55>, <&dmac0 0x56>,
-+		       <&dmac1 0x55>, <&dmac1 0x56>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
-@@ -1509,8 +1533,9 @@
- 		reg =3D <0 0xe6e00000 0 0x0064>;
- 		interrupts =3D <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_MSIOF2>;
--		dmas =3D <&dmac0 0x41>, <&dmac0 0x42>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x41>, <&dmac0 0x42>,
-+		       <&dmac1 0x41>, <&dmac1 0x42>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
-@@ -1522,8 +1547,9 @@
- 		reg =3D <0 0xe6c90000 0 0x0064>;
- 		interrupts =3D <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7790_CLK_MSIOF3>;
--		dmas =3D <&dmac0 0x45>, <&dmac0 0x46>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x45>, <&dmac0 0x46>,
-+		       <&dmac1 0x45>, <&dmac1 0x46>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&sysc R8A7790_PD_ALWAYS_ON>;
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
---=20
-2.8.2
+OK. I will remove this now you have added commit 757d12e5849b
+("dmaengine: ensure dmaengine helpers check valid callback").
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+>> +{
+>> +	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
+>> +	int ret;
+>> +
+>> +	ret = request_irq(tdc->irq, tegra_adma_isr, 0, dma_chan_name(dc), tdc);
+>> +	if (ret) {
+>> +		dev_err(tdc2dev(tdc), "failed to get interrupt for %s\n",
+>> +			dma_chan_name(dc));
+>> +		return ret;
+>> +	}
+> 
+> Okay why are we requesting and freeing up irq while allocating channels..?
+> Btw since he usage is cyclic the sound core grabs the channel at start and
+> never releases it
+
+The interrupt controller used by this DMA is a 2nd level interrupt
+controller in a different power-domain. I am currently in the process of
+adding support for this interrupt controller and it requires runtime
+power-management and in discussions with tglx the only way to allow the
+interrupt controller to idle is by releasing the interrupt. Hence, here
+we will acquire and release the interrupts as they are used. Please note
+that probing the DMA controller will be deferred until the interrupt
+controller is present because we still map the interrupt in the probe.
+
+>> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+>> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+>> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
+> 
+> You should set only cyclic, btw why do you support only one. Cyclic is
+> actually a special case for SLAVE, so ideally you should support slave
+> too...
+
+Only CYCLIC is supported for now because this DMA is only used for
+audio. There is another DMA for Tegra210 (the APB-DMA) which is a more
+general purpose DMA and should be used for all other DMA activity.
+Hence, I am not sure if it is best to keep the PRIVATE flag as I assume
+that means that not anyone can request a channel. We only should use
+this DMA for audio.
+
+We discussed the setting of the DMA_SLAVE flag before [0] and I need to
+set DMA_SLAVE because I am using dma_get_any_slave_channel() in the
+xlate. May be you forgot? I know you would prefer we don't, but as I
+explained in this case (and as for other DMAs) this is the most
+appropriate API to use. We agreed in that discussion with Arnd Bergmann
+that this is ok.
+
+I will drop the tegra_adma_prep_slave_sg() function. Please let me know
+if you are ok with the other items given my explanation and I will send
+a V6. I would like to get this merged for v4.7 if possible.
+
+Cheers
+Jon
+
+[0] http://marc.info/?l=linux-tegra&m=145805743128145&w=2
