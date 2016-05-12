@@ -1,52 +1,79 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: rcar: add DMA support
-Date: Thu, 12 May 2016 23:35:51 +0200
-Message-ID: <20160512213551.GA1641@katana>
-References: <1462365503-8451-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
- <20160505220625.GA18367@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] phy: add support for a reset-gpio specification
+Date: Fri, 13 May 2016 00:41:47 +0300
+Message-ID: <4363f9c0-d447-5fc1-3ac9-382a172a7087@cogentembedded.com>
+References: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160505220625.GA18367@rob-hp-laptop>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
+Cc: kernel@pengutronix.de, "Andrew F . Davis" <afd@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 05/12/2016 01:00 PM, Uwe Kleine-K=C3=B6nig wrote:
 
---0F1p//8PRICkK4MW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> The framework only asserts (for now) that the reset gpio is not activ=
+e.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/net/phy.txt | 3 +++
+>  drivers/net/phy/phy_device.c                  | 8 ++++++++
+>  2 files changed, 11 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Document=
+ation/devicetree/bindings/net/phy.txt
+> index bc1c3c8bf8fa..c00a9a894547 100644
+> --- a/Documentation/devicetree/bindings/net/phy.txt
+> +++ b/Documentation/devicetree/bindings/net/phy.txt
+> @@ -35,6 +35,8 @@ Optional Properties:
+>  - broken-turn-around: If set, indicates the PHY device does not corr=
+ectly
+>    release the turn around line low at the end of a MDIO transaction.
+>
+> +- reset-gpios: Reference to a GPIO used to reset the phy.
+> +
+>  Example:
+>
+>  ethernet-phy@0 {
+> @@ -42,4 +44,5 @@ ethernet-phy@0 {
+>  	interrupt-parent =3D <40000>;
+>  	interrupts =3D <35 1>;
+>  	reg =3D <0>;
+> +	reset-gpios =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
+ >  };
 
+    OK, the example has PHY ID specified in the "compatible" prop. It's=
+ a=20
+vital detail, you should mention it somewhere...
 
-> Is DMA actually faster or less cpu usage? I'm doubtful.
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devic=
+e.c
+> index e551f3a89cfd..7d666ab47271 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+[...]
+> @@ -1569,9 +1570,16 @@ static int phy_probe(struct device *dev)
+>  	struct device_driver *drv =3D phydev->mdio.dev.driver;
+>  	struct phy_driver *phydrv =3D to_phy_driver(drv);
+>  	int err =3D 0;
+> +	struct gpio_descs *reset_gpios;
+>
+>  	phydev->drv =3D phydrv;
+>
+> +	/* take phy out of reset */
+> +	reset_gpios =3D devm_gpiod_get_array_optional(dev, "reset",
+> +						    GPIOD_OUT_LOW);
+> +	if (IS_ERR(reset_gpios))
+> +		return PTR_ERR(reset_gpios);
+> +
 
-No need to be faster at 100/400kHz :) The key here is way less
-interrupts for bigger transfers. The threshold value is hard to measure,
-however.
+    It would have been logical to assert back the reset GPIO in phy_rem=
+ove(),=20
+no? Also, you'd need to store the GPIO permanently somewhere...
 
-
---0F1p//8PRICkK4MW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXNPc3AAoJEBQN5MwUoCm2rq8P/3V6/RHRLfC4iSWbFPEfsVYT
-CBWgccvl6CjHE6M7tIPpOho+ADh7V/edz9uUv41vbUyxRhafqU0S/HEL5u9+i0ep
-ymemGrZFO7CzzX/DYRX0RPBUH5PkMjFvr91EGO5hMZQoXo1D8mq0js7zL+MVwelT
-Eu0dtZVco5LIGov540XHJ64HmwtCkXE9HVd5034Ju8kUk+wkWdZZDckCaB+ZbtIq
-ownlprn9+Jn75Ng5oLVf0ZR6OIJ4JSHo68UWaikpB+9EhD+KwL07gF8eo2COGGr3
-aSXap7GdFYP9A5R+0fPuk/dAgveoGqTYCegkmGp14tcjlX+SgCgLiktVVfDzkfaw
-HOcn8o4FPumsKODBXCv3zwhEywTvCfhHr5RdGiCjTo7eiFKz1ThnUVrJcaqS2xZ/
-Ch5KnQrtI91DWZxI/bMX4gSBzlxy+OvC6nenjzTerxA24DUXTqYGh3/BIxBuXnCt
-zV1Da2yuYMiFgzO8jpUTqQB3pK9PUQPMoQfna5flxFwZjs/7ySKe4INSuObBexC5
-gYnGBHPMJzkksKRGjtv0o2ZwEudtxS4SRtao4I3bUR44HEqkr/c5wnKuqIVHkNZN
-1jOj/xJ4GoT7bNHm03Do0PXcDkJxLiPk1IhJ7DXytu/PLCLY0pZ59LiU7Rem6lwc
-ftt8pq0mFJ/ZjxDozWPO
-=xbcF
------END PGP SIGNATURE-----
-
---0F1p//8PRICkK4MW--
+MBR, Sergei
