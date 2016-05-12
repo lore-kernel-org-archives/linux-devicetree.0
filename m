@@ -1,160 +1,137 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCHv1 0/6] leds: pca9653x: support inverted outputs and
- cleanups
-Date: Thu, 12 May 2016 11:07:19 +0200
-Message-ID: <573447C7.1060100@schinagl.nl>
-References: <1461051650-18824-1-git-send-email-oliver@schinagl.nl>
- <5715F927.3030102@samsung.com> <5715FCE8.7080106@schinagl.nl>
- <CAPybu_02_5pZ6pMkXwaHtjJAfXiWPniWEHcayRoCMypfgeLD_w@mail.gmail.com>
- <57163252.5090000@schinagl.nl>
- <CAPybu_2uZqR4exnS08taVYyr=ziK+EzuJy+_FxhbtqSiOE_=mw@mail.gmail.com>
- <57172DFA.9030107@schinagl.nl>
- <CAPybu_2fys29MUTBCDPb+tpfCgbr9SL+LXq061Tq20_z7UO-Vg@mail.gmail.com>
- <5717430D.30702@schinagl.nl>
- <CAPybu_3=VdXR_X_00EiYMyhRPLsR40GW1kHS5rzdOkSzrCMVWg@mail.gmail.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 0/5] clk: bcm2835: add flags for mash and parent clocks
+Date: Thu, 12 May 2016 11:19:43 +0200
+Message-ID: <57344AAF.8000205@martin.sperl.org>
+References: <1462463608-22940-1-git-send-email-kernel@martin.sperl.org>
+ <87h9e6yb6i.fsf@eliezer.anholt.net> <57319C89.7040705@martin.sperl.org>
+ <877ff1yfg8.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_3=VdXR_X_00EiYMyhRPLsR40GW1kHS5rzdOkSzrCMVWg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <877ff1yfg8.fsf@eliezer.anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Ricardo,
 
-On 11-05-16 23:38, Ricardo Ribalda Delgado wrote:
-> Some update
+
+On 10.05.2016 19:45, Eric Anholt wrote:
+> Martin Sperl <kernel@martin.sperl.org> writes:
 >
-> I have not received anything to test it and I will be out of the
-> office from today until the 30th :S. So it seems that I have not way
-> to test the changes.
-That's understandable, meanwhile I've been running some experiments and 
-mostly reading the datasheet more closely. You hadn't replied to my 
-earlier mention of it so I'll only talk about that now.
-
-Right now, the GDC (e.g. GRPPWM) register is set via some math using the 
-period:
-     /*
-      * From manual: duty cycle = (GDC / 256) ->
-      *    (time_on / period) = (GDC / 256) ->
-      *        GDC = ((time_on * 256) / period)
-      */
-     gdc = (time_on * 256) / period;
-
-This is wrong in my opinion, as the manual states:
-
-When DMBLNK bit is programmed with 1, GRPPWM and GRPFREQ registers define a
-global blinking pattern, where GRPFREQ contains the blinking period 
-(from 24 Hz to
-10.73 s) and GRPPWM the duty cycle (ON/OFF ratio in %).
-
-First, when DMBLNK is programmed with 0, GRPFREQ is a don't care, so no 
-'blinking' takes place. Which means, since we want blink_set to work, we 
-need DMBLNK and that can be enabled by default, as the LDR register 
-controls whether we can blink at all (11b vs 10b)
-
-Then the GRPFREQ register, as done now, sets a frequency for the blink 
-between 41ms and 10.73 seconds.
-
-Finally, the GRPPWM/gdc register can be used to globally control the 
-brightness of leds which are linked (via LDR=11b). So if we have a color 
-setup, e.g. #4488FF and we globally dim this color via gdc to 10%, we 
-get #04080F on the output. To add this behavior we'd be adding some more 
-hacks as the led framework doesn't really support linked outputs at all, 
-(nice new feature, to link leds together with a global control?, other 
-subsystems do something like that, cpufreq i guess) who decides the 
-value of gdc. There is no toggle to set the global brightness. What 
-could be possible, is to leave whatever setting is in the brightness and 
-read/report the individual led brightness as it where the gdc. Which 
-could actually work thinking about it. But (and I think it is impossible 
-now anyway) it would break individual color control during the blink. 
-e.g. /sys/class/led/[red,green,blue]/brightness are always equal and 
-writing to either during blink sets the global brightness.
-
-But that should be a separate patch that I'm thinking a bit more about.
-
-So for now, I recommend to set GRPPWM initially to 0xff, e.g. leds full 
-on, until the above patch is added. We then blink at whatever color is 
-set to the output and only control the blink via the GRPFREQ, without 
-the possibility to change brightness during a blink.
-
-Olliver
-> Sorry about that.
+>> On 10.05.2016 03:05, Eric Anholt wrote:
+>>> kernel@martin.sperl.org writes:
+>>>
+>>>> From: Martin Sperl <kernel@martin.sperl.org>
+>>>>
+>>>> Allow flags to be set on a per clock index basis, which control:
+>>>> * the parent clocks selected when not setting clocks explicitly
+>>>
+>>> I don't think we need this other than avoiding PLLC.  What else do you
+>>> want to filter, and why?
+>> What about potentially disabling PLLA_per or PLLH_aux?
+>> Under some circumstances it may make sense to avoid those clocks.
+>> (or testdebug for that matter).
 >
-> Regards!
+> PLLH and its descendents are only used by vc4, and the parent choice
+> done by this driver for pllh is correct.
 >
-> On Fri, Apr 22, 2016 at 10:48 AM, Ricardo Ribalda Delgado
-> <ricardo.ribalda@gmail.com>  wrote:
->> Hi
->>
->> I  am on trip until next monday. I have arranged also some hw to be sent to
->> me that day.
->>
->> Can we continue the conversation then? I know I told you that I will review
->> this yesterday, but I did not have the time , sorry
->>
->> Regards!
->>
->> On 22 Apr 2016 09:21, "Olliver Schinagl"<oliver@schinagl.nl>  wrote:
->>
->> Hi Ricardo,
->>
->>
->> On 20-04-16 11:17, Ricardo Ribalda Delgado wrote:
->>> Hello again
+> I don't know what you mean by "potentially disabling PLLA_PER".
+>
+> We don't expose the testdebug parents, because they're of no use to us.
+For all practical purposes we still have all the clocks as potential
+parents during automatic clock selection - and that includes:
+PLLA_PER, PLLH_AUX and TESTDEBUGX.
+
+Not all of them are enabled, but some are - so If I select an i2s 
+frequency of "3903125" then plla_per will get used with a divider of 2.
+
+>>>> * the clock mode with regards to integer only or higher order mash
 >>>
->>> On Wed, Apr 20, 2016 at 11:06 AM, Olliver Schinagl<oliver@schinagl.nl>
->>> wrote:
->>>
->>>> The devil is in the details :)
->>> :)
->>>>> Saving mode2 sounds like a good compromise then.
->>>>>
->>>>> But I still believe that we should limit the lock to ledout. No matter
->>>>> what we do, we cannot have two leds blinking at different frequencies
->>>>> on the same chip.
->>>> So to save a mutex a little bit, we take the risk that nobody else
->>>> enables
->>>> the blink or if they do, enable it in the same way?
->>>> If it saves so much, then I guess its worth the risk I suppose?
->>> Give me a day to go through the chip doc and see if I can find a good
->>> compromise, that at least warranties that the leds that are enable
->>> stay enabled ;)
->> Right, I also went over the datasheet, and I think we can simplyfy two
->> things.
+>>> Please provide justification in the commit message explaining why there
+>>> is no obvious mash setting to just implement in clk-bcm2835.c, but that
+>>> that a better policy can be encoded in the DT.
 >>
->> For one, yes, move the mode2 register completly to the probe section. Set
->> the DMBLINK led to always 1. It does not get cleared, I was wrong. We have
->> to set it to as with 0 we do not get any blinking at all (grpfreq gets
->> ignored).
+>> The normal fractional divider will vary the effective period length
+>> between int(div)/Fparent and (int(div)+1)/Fparent.
 >>
->> Furthermore, we should change:
->>   -    gdc = (time_on * 256) / period;
->> +   gdc = 0x00;
+>> So the device (say DAC or other) connected needs to support in
+>> principle Fparent/int(div) as a clock.
 >>
->> Because the calculation does not make sense. GDC is the global
->> brightness/pwm/dimming control. It is used to uniformly change the blink
->> rate on all the linked leds.
+>> But for higher order mash the HW will spread the period length between:
+>> (int(div)-3)/Fparent and (int(div)+4)/Fparent.
 >>
->> "General brightness for the 16 outputs is controlled through 256 linear
->> steps to FFh"
->> I don't think that is the intention of the gdc is it? Looking at the
->> original gdc code, it thus sets the global BRIGHTNESS based on the
->> period/on_time. I don't think that is what we expect when we enable blink.
+>> This value may be outside of the frequencies supported by the attached
+>> HW. That is why mash is not enabled by default for mash clocks - only
+>> div.
 >>
->>  From my understanding, the grppwm is super-imposed, thus by setting gdc to
->> 0, we do not superimpose anything and the original brightness is retained.
->> (If i'm wrong here, we need to set gdc to 0xff.
+>> That is also why we need to have this configurable.
 >>
->> Because of this, I even recommend removing gdc all together, which saves
->> another i2c write.
+>> Also obviously higher parent clock frequencies result in higher dividers
+>> for the same target-frequency. So the above effect is less dramatic
+>> when using plld_per (or pllc for that matter) compared to the main
+>> 19.2MHz oscillator, as for 32bit stereo audio at 96kHz (equivalent to
+>> 6144000Hz) in the first case we have a divider of 81.38 while for the
+>> second (osc) case we have a divider of 3.125.
 >>
->> Or am I wrong here?
+>> The use of mash3 is impossible for osc but the use of mash 2 would
+>> spread the frequencies between 9.6MHz (div=2) and 3.84MHz (div=5).
 >>
->> Olliver
->>> Regards!
->>>
->>>
->>>
+>> For plld_per as parent using mash3 instead we get the range:
+>> 6410256.4Hz (div=78) and 5882352.9Hz (div=85), which is a much more
+>> acceptable range and should not impact the device that much.
+>>
+>> So enabling mash 3 by default is not in the best interest hence it is
+>> not done.
+>
+> It sounds like you're optimizing for reducing frequency spread.  That
+> sounds fairly easy to do in the parent-choice function.
+
+You misunderstand my argument here!
+
+I know that it may be automated, but you may have different devices
+connected to: i2s/pcm, pwm, gp and slim.
+
+Some of them need the audio spreading, while others need a stable
+waveform - as mentioned mash3 varies the period between:
+(divi-2)/fparent and (divi+4)/fparent in discrete steps
+For this the worsted case is a requested frequency that results
+in a divider between 4 and 5.
+
+Also some DAC require a STABLE clock waveform on i2s with
+specific requirements for ton/(ton+toff) between 40% and 60%,
+as they have their own internal PLL, while others do not need
+this kind of behavior and can handle variable period-length.
+But then these DAC still have a minimum period length, which we
+may not exceed.
+
+So making an automatic selection is not possible hence
+we need a means to configure the supported mash level
+to get the best results in all cases.
+
+>
+>> As a side note: selection of parent oscillator and corresponding mash
+>> may have distinct noise behavior on the same device, where for
+>> 32bit*2@48k it is the main oscillator with mash3 while the second best
+>> match would be pllc with mash2 - not mash3, which has the worsted SN
+>> from all tested!
+>
+> But PLLC continues to be unusable, since it's changed at runtime, and
+> evaluating its noise characteristics based on a snapshot of its
+> frequency doesn't make any sense.
+That was a general side note not necessarily related to PLLC.
+But this may be better handled by a generic clock driver
+similar to clk-fixed-factor.
+
+>
+>> This behavior obviously changes with different "target frequencies"
+>> so it may even be necessary to account for the different target
+>> frequencies.
+>
+> This is why encoding mash in the DT doesn't make any sense to me.  You
+> need a runtime policy for choosing the mash setting based on the
+> frequency requested, so let's figure out what policy we actually want.
+See the argument of different devices/DAC with different requirements.
+There is no way for any of this to work automatically and make every
+client happy.
+
