@@ -1,33 +1,61 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM64: dts: rockchip: add sdhci/emmc for rk3399
-Date: Thu, 12 May 2016 15:22:23 -0700
-Message-ID: <20160512222223.GA57835@google.com>
-References: <1462924975-69072-1-git-send-email-briannorris@chromium.org>
- <3e257ce2-056a-592a-9481-970da1fe0627@rock-chips.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 0/4] bcm2835: add thermal driver
+Date: Thu, 12 May 2016 15:58:55 -0700
+Message-ID: <87ziruano0.fsf@eliezer.anholt.net>
+References: <1463063738-11506-1-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3e257ce2-056a-592a-9481-970da1fe0627-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1463063738-11506-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, h <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 09:17:38AM +0800, Shawn Lin wrote:
-> How about adding these?
-> 
-> assigned-clocks = <&cru SCLK_EMMC>;
-> assigned-clock-parents = <&cru PLL_CPLL>; //may not need
+--=-=-=
+Content-Type: text/plain
 
-BTW, even if I assign the parent here, it's not actually taking effect
-on my system. Presumably the common clock framework is finding a
-"better" way to satisfy 200 MHz through GPLL instead. So I'm dropping
-the assigned-clock-parents for v2.
+kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
 
-> assigned-clock-rates = <200000000>;
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> Add thermal driver for the bcm2835 SOC.
+>
+> Right now this driver does not set up the thermal device
+> itself, but relies on the fact that the firmware is setting
+> the device up correctly.
+>
+> Also it is currently only reading from the register-set.
+>
+> The driver also exposes the registers via debugfs.
 
-Brian
+I had looked through before and decided that the FW was turning the
+tempsens clock on and off at runtime so we'd have to go through it for
+checking temperature.  Looking at it now, though, it keeps the clock
+running the entire time and just does a read periodically.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXNQqwAAoJELXWKTbR/J7opekQAIKHfHZ85R8Vm8SfRWvcMcnf
+Y4GUVkfoXdszl8NJfTQKwMqCNBMBkuR/7JICmnABpx3c6C3KK03Sxu5qwhue9MuH
+I/IFkcCAzUIS4ihiNxF9cWdeDVTNFaS0NqglM6lGI6dhV3abMlTV6jVtWyYe3kg1
+MmUqrn9xhZUBAh9XWIJra46A6W6VNEX+MjyHjBvFqQ4Ar7Z4gI6YzzJhB7F03+qT
+l+fuCGmWK5juvhjm2rGmnTuiHtidNN4SsgAXP3JCyrBeQOf6w2R/+EA8ZoALCsV/
+W2oShopLsP/GvKN31UDk7c9tIT9pN0JTbKCtlhEPclxuGcY8HRRDy3m0QrwMfgiZ
+Dkexaw1zKU1DPPYvQLVgZHvao42jp+/WBhDKJIRZU8nDuYGFfWUUacDz2W/f+wGB
+auWo5L1P241SekPPMVLsYgeyNXrQ3okLskArNz7RQdMBcvuxGjTs5lajpnmPfolA
+svJ1yZqwOW4pipitbX/jTPQIVoWCGP6JVyheajStKz0AEihB/JNcc0oF53bTiA2x
+n4Gml9iXOkuMOOVmHEg7LRzC9E+0BwfdCYZWTXbF4p2HSD+lEDg+4iLH2OcuJcWt
+AbUFZ8xw/oacg0JAg3YzHj3FMoGnJv872IxKYFqG746hWplL5C0QWAcJQe32I/32
+NZwwXDSP9i9neUoSNit/
+=Pm3C
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
