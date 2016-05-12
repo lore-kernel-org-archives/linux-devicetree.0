@@ -1,53 +1,27 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RESEND 0/4] arm: dts: am57xx: Correct the thermal
- thresholds
-Date: Thu, 12 May 2016 13:35:06 -0700
-Message-ID: <20160512203505.GV5995@atomide.com>
-References: <1461837949-11116-1-git-send-email-j-keerthy@ti.com>
- <57316262.80003@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/6] Add R8A7794/SILK sound DT support
+Date: Thu, 12 May 2016 23:38:08 +0300
+Message-ID: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57316262.80003-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-* Keerthy <a0393675-l0cyMroinI0@public.gmane.org> [160509 21:25]:
-> Tony,
-> 
-> On Thursday 28 April 2016 03:35 PM, Keerthy wrote:
-> >Noticed that earlier post had a wrong list name hence resending the
-> >series.
-> >
-> >Currently all the am57xx versions are wrongly re-using the dra7  thermal
-> >threholds. Introduing the correct thermal thresholds based on industrial
-> >or commercial grade silicon present on the individual boards.
-> >
-> >Tested on AM57XX-BEAGLE-X15 (Commercial) and AM572X-IDK(Industrial)
-> >for the trip_point node sysfs temperatures.
-> >
-> 
-> A Gentle ping on this series.
+   Here's the set of 6 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20160509-v4.6-rc7' tag. I'm adding the sound device tree support
+for the R8A7794 SoC based SILK board.
 
-I already have these in Linux next for v4.7 merge window:
+[1/6] ARM: dts: r8a7794: add audio clocks
+[2/6] ARM: dts: r8a7794: add MSTP5 clocks
+[3/6] ARM: dts: r8a7794: add MSTP10 clocks
+[4/6] ARM: dts: r8a7794: add Audio-DMAC support
+[5/6] ARM: dts: r8a7794: add sound support
+[6/6] ARM: dts: silk: add sound support
 
-5b6042237dc8 ("ARM: dts: am57xx-idk: Include Industrial grade  thermal thresholds")
-266e62f97539 ("ARM: dts: am57xx-beagle-x15: Include the commercial grade thresholds")
-cf9b7d5e9cfd ("ARM: dts: am57xx: Introduce industrial grade thermal thresholds")
-286db0a516e0 ("ARM: dts: am57xx: Introduce commercial grade thermal thresholds")
-
-Care to check if those are OK? If fixes are needed, please post an
-incremental patch against current Linux next.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+WBR, Sergei
