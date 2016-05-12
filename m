@@ -1,54 +1,78 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] ARM/ASoC: OMAP3: Fix McBSP2/3 sidetone support
-Date: Thu, 12 May 2016 09:42:01 -0700
-Message-ID: <20160512164201.GQ5995@atomide.com>
-References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
- <69ff65ee-e5d1-09fb-fd91-8d7b4d8fdda4@ti.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH 1/2] arm64: dts: NS2: Add all of the UARTs
+Date: Thu, 12 May 2016 09:52:31 -0700
+Message-ID: <befabac6-aae2-fb3b-2faa-5463b7287b2a@broadcom.com>
+References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
+ <57341FCE.6050403@huawei.com>
+ <CAC3K-4qbkt3DCgd6qurNo3V+++x70bbFC--aunR0DbCTBvBNZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <69ff65ee-e5d1-09fb-fd91-8d7b4d8fdda4-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAC3K-4qbkt3DCgd6qurNo3V+++x70bbFC--aunR0DbCTBvBNZg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>, Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160511 01:46]:
-> Tony, Paul,
-> 
-> On 04/29/16 13:53, Peter Ujfalusi wrote:
-> > Hi,
-> > 
-> > Based on the ongoing discussion on v2 (ARM: OMAP3: Fix McBSP2/3 hwmod setup for
-> > sidetone) I have dropped the removal of the sidetone hwmod and only corrected
-> > it. The series now includes all related changes needed to have correct sidetone
-> > support whenever we boot in legacy or in DT mode.
-> > 
-> > This time the ASoC part have dependency on earlier patches so they can not be
-> > applied separately.
-> 
-> How should we proceed from here? I don't want to start designing the ST
-> separation infrastructure which would be based on this series, but if there
-> are outstanding issues found on this, I would need to go back to the drawing
-> board.
-> The separation will be mostly new code and code shuffle in ASoC, but for
-> legacy I will need to build up something in arch as well, so I would need at
-> least one release cycle to start with things.
+Hi Kefeng,
 
-Well looks like we have all the acks, so I can apply these. We have
-not heard from Paul on this for a while, so let's wait few days for
-that.
+On 5/12/2016 7:46 AM, Jon Mason wrote:
+>
+>
+> On Thu, May 12, 2016 at 2:16 AM, Kefeng Wang <wangkefeng.wang@huawei.com
+> <mailto:wangkefeng.wang@huawei.com>> wrote:
+>
+>
+>
+>     On 2016/5/12 6:56, Jon Mason wrote:
+>     > Add all of the UARTs present on NS2 and enable them in the SVK device
+>     > tree file.  Also, do some magic to make sure that uart3 is discovered as
+>     > ttyS0 (as that is the console UART).
+>     >
+>     > Signed-off-by: Jon Mason <jonmason@broadcom.com <mailto:jonmason@broadcom.com>>
+>     > ---
+>     >  arch/arm64/boot/dts/broadcom/ns2-svk.dts | 16 ++++++++++++++++
+>     >  arch/arm64/boot/dts/broadcom/ns2.dtsi    | 30 ++++++++++++++++++++++++++++++
+>     >  2 files changed, 46 insertions(+)
+>     >
+>     > diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+>     > index 7cd3640..b062a44 100644
+>     > --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+>     > +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+>     > @@ -40,10 +40,14 @@
+>     >
+>     >       aliases {
+>     >               serial0 = &uart3;
+>     > +             serial1 = &uart0;
+>     > +             serial2 = &uart1;
+>     > +             serial3 = &uart2;
+>     >       };
+>     >
+>     >       chosen {
+>     >               stdout-path = "serial0:115200n8";
+>     > +             bootargs = "earlycon=uart8250,mmio32,0x66130000";
+>
+>     Hi Jon,
+>
+>     I submit a patch[1], with it, we can use earlycon without option to
+>     enable early console
+>     for "snps,dw-apb-uart", could you help me to test it, thanks.
+>
+>
+> Adding your change and removing the line above does not cause earlycon
+> to work for me.  Is there any additional changes necessary for this to work?
+>
+> Thanks,
+> Jon
+>
 
-Meanwhile, Mark wanted to fix the subject for one of the patches, care
-to repost that at least? Or the whole series with acks, could be a
-pull request too against v4.6-rc1 :)
+"OF_EARLYCON_DECLARE" doesn't seem to have a way to deal with DT 
+properties? In the case of UART for NS2, it needs mmio32, configured 
+with DT property "reg-io-width" set to 4. I don't think 
+"OF_EARLYCON_DECLARE" is parsing that, which is likely the reason why it 
+doesn't work for devices that required mmio32.
 
-Regards,
+Thanks,
 
-Tony
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ray
