@@ -1,63 +1,67 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 2/3] dmaengine: tegra-adma: Add support for Tegra210
- ADMA
-Date: Thu, 12 May 2016 21:33:18 +0530
-Message-ID: <20160512160318.GD2274@localhost>
-References: <1463063025-28605-1-git-send-email-jonathanh@nvidia.com>
- <1463063025-28605-3-git-send-email-jonathanh@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463063025-28605-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ASoC: wm8985: add device tree binding for WM8985
+Date: Thu, 12 May 2016 17:58:49 +0200
+Message-ID: <1463068730-18817-1-git-send-email-petr@barix.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 12, 2016 at 03:23:44PM +0100, Jon Hunter wrote:
-> Add support for the Tegra210 Audio DMA controller that is used for
-> transferring data between system memory and the Audio sub-system.
-> The driver only supports cyclic transfers because this is being solely
-> used for audio.
-> 
-> This driver is based upon the work by Dara Ramesh <dramesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
-> 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  diff.txt                    |  10 +
->  drivers/dma/Kconfig         |  14 +
->  drivers/dma/Makefile        |   1 +
->  drivers/dma/tegra210-adma.c | 840 ++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 865 insertions(+)
->  create mode 100644 diff.txt
->  create mode 100644 drivers/dma/tegra210-adma.c
-> 
-> diff --git a/diff.txt b/diff.txt
-> new file mode 100644
-> index 000000000000..0562f35b6e82
-> --- /dev/null
-> +++ b/diff.txt
-> @@ -0,0 +1,10 @@
-> + drivers/i2c/i2c-core.c                             |    61 +-
-> + drivers/i2c/i2c-mux.c                              |   170 +-
-> + drivers/i2c/muxes/i2c-mux-gpio.c                   |    18 +
-> + drivers/i2c/muxes/i2c-mux-pinctrl.c                |    38 +
-> + drivers/irqchip/irq-gic-common.c                   |    13 +
-> + drivers/irqchip/irq-gic-common.h                   |     3 +
-> + drivers/irqchip/irq-gic.c                          |    87 +-
-> + sound/core/timer.c                                 |     3 +
-> + sound/soc/codecs/rt5645.c                          |    10 +-
-> + sound/soc/soc-topology.c                           |     2 +
+Add device tree binding for the WM8985 codec driver.
 
-???
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/wm8985.txt | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/wm8985.txt
 
-
-> + * ADMA driver for Nvidia's Tegra210 ADMA controller.
-> + *
-> + * Copyright (c) 2015, NVIDIA CORPORATION.  All rights reserved.
-
-2016?
-
+diff --git a/Documentation/devicetree/bindings/sound/wm8985.txt b/Documentation/devicetree/bindings/sound/wm8985.txt
+new file mode 100644
+index 000000000000..788d64766257
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/wm8985.txt
+@@ -0,0 +1,36 @@
++Wolfson Microelectronics WM8985 and WM8758 audio codecs
++
++These devices support both I2C and SPI (configured with pin strapping
++on the board).
++
++Required properties:
++
++  - compatible : "wlf,wm8985" or "wlf,wm8758"
++
++  - reg : the I2C address of the device for I2C, the chip select
++          number for SPI.
++
++Pins on the device for linking into audio routes:
++
++  * LIN      : left microphone pre-amp negative input
++  * LIP      : left microphone pre-amp positive input
++  * RIN      : right microphone pre-amp negative input
++  * RIP      : right microphone pre-amp positive input
++  * L2       : left line input / secondary pre-amp positive input
++  * R2       : right line input / secondary pre-amp positive input
++  * AUXL     : left auxiliary input (WM8985 only)
++  * AUXR     : right auxiliary input (WM8985 only)
++
++  * HPL      : left headphone / line output (the LOUT1 pin)
++  * HPR      : right headphone / line output (the ROUT1 pin)
++  * SPKL     : left headphone / line output (the LOUT2 pin)
++  * SPKR     : right headphone / line output (the ROUT2 pin)
++  * Mic Bias : microphone bias
++
++
++Example:
++
++wm8758: audio-codec@1a {
++	compatible = "wlf,wm8758";
++	reg = <0x1a>;
++};
 -- 
-~Vinod
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
