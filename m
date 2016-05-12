@@ -1,66 +1,157 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v7 10/14] usb: otg: add hcd companion support
-Date: Thu, 12 May 2016 04:00:29 +0000
-Message-ID: <SG2PR06MB09194AB523C3ABDB425285C7D8730@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <57333DFF.3090609@ti.com>
- <Pine.LNX.4.44L0.1605111043030.1882-100000@iolanthe.rowland.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 04/18] dmaengine: st_fdma: Add xp70 firmware loading
+ mechanism.
+Date: Thu, 12 May 2016 11:10:20 +0530
+Message-ID: <20160512054020.GW2274@localhost>
+References: <1461236675-10176-1-git-send-email-peter.griffin@linaro.org>
+ <1461236675-10176-5-git-send-email-peter.griffin@linaro.org>
+ <20160426170048.GS2274@localhost>
+ <20160511075740.GB25540@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1605111043030.1882-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160511075740.GB25540@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, broonie@kernel.org, ludovic.barre@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> From: Alan Stern
-> Sent: Wednesday, May 11, 2016 11:47 PM
+On Wed, May 11, 2016 at 08:57:40AM +0100, Peter Griffin wrote:
+> > Above two seem to be generic code and should be moved to core, this way
+> > other drivers using ELF firmware binaries can reuse...
 > 
-> On Wed, 11 May 2016, Roger Quadros wrote:
+> Do you mean add to dmaengine.c?
+
+Nope this is not specfic to dmaengine. Perhaps drivers/base/..
+
+> Certainly st_fdma_elf_sanity_check is fairly generic. st_fdma_elf_load_segments
+> is less so, especially st_fdma_seg_to_mem().
 > 
-> > > What I mean is if you have 2 EHCI controllers with 2 companion
-> > > controllers, don't you need to know which companion goes with which EHCI
-> > > controller? Just like you do for the otg-controller property.
-> > >
-> >
-> > That is a very good point. I'm not very sure and it seems that current code won't work
-> > with multiple EHCI + companion instances.
-
-I may misunderstand this topic, but if I use the following environment, it works correctly.
-
-< My environment >
-- an otg controller: Sets hcd-needs-companion.
-- ehci0 and ohci0 and a function: They connect to the otg controller using "otg-controller" property.
-- ehci1 and ohci1: No "otg-controller" property.
-- ehci2 and ohci2: No "otg-controller" property.
-
-In this environment, all hosts works correctly.
-Also I think if we have 2 otg controlelrs, it should be work because otg_dev instance differs.
-Or, does this topic assume an otg controller handles 2 EHCI controllers?
-I'm not sure such environment actually exists.
-
-> > Alan, does USB core even know which EHCI and OHCI are linked to the same port
-> > or the handoff is software transparent?
+> > 
+> > > @@ -738,6 +925,15 @@ static int st_fdma_slave_config(struct dma_chan *chan,
+> > >  				struct dma_slave_config *slave_cfg)
+> > >  {
+> > >  	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
+> > > +	int ret;
+> > > +
+> > > +	if (!atomic_read(&fchan->fdev->fw_loaded)) {
+> > > +		ret = st_fdma_get_fw(fchan->fdev);
+> > 
+> > this seems quite an odd place to load firmware, can you explain why
+> > 
 > 
-> The core knows.  It doesn't use the information for a whole lot of
-> things, but it does use it in a couple of places.  Search for
-> "companion" in core/hcd-pci.c and you'll see.
+> Good question :) I've been round the houses a bit on the firmware loading.
+> 
+> I will try and document here what I've tried and the different advantages /
+> disadvantages I've encountered.
 
-Thank you for the information. I didn't know this code.
-If my understanding is correct, the core/hcd-pci.c code will not be used by non-PCI devices.
-In other words, nobody sets "hcd->self.hs_companion" if we use such a device.
-So, I will try to add such a code if needed.
+Per Linus, driver should load firmware on first open. So either you should
+do it while channel allocation or first descriptor allocation.
 
-Best regards,
-Yoshihiro Shimoda
+> 
+> In V3 patches, I used the device_config() hook. This can sleep (I think..it isn't
+> documented here [1]). This hook happens very close to the dma starting and the
+> rootfs / firmware is likely to be present. However I've sinced learnt that it
+> doesn't get  called in the memcpy case so is not a sufficient solution.
+> 
+> In part putting it here was to try and get firmware loading out of probe() based
+> on your feedback to v1 [2].
+> 
+> In V1 patches: - I was using request_firmware_nowait() in probe() in conjunction with
+> the CONFIG_FW_LOADER_USER_HELPER kernel option. I've since also learnt that this
+> kernel option is deprecated and shouldn't be used.
 
-> Alan Stern
+I think nowait version is better. Why do you need
+CONFIG_FW_LOADER_USER_HELPER?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Your feedback in v1 was to move firmware loading to device open [2]. However
+> what classes is  device open in the dmaengine context is not obvious.
+
+channel allocation or descriptor allocation
+
+> 
+> ===
+> 
+> device_alloc_chan_resources() hook
+> 
+> This is probably the hook closest to a device open in dmaengine context.
+> This hook can sleep so request_firmware can be called. However if all drivers
+> are built-in firmware loading still fails as ALSA drivers calls
+> devm_snd_dmaengine_pcm_register() which requests dma channels during *its* probe().
+> This happens way before the rootfs is present and thus firmware loading still
+> fails, and is still being done indirectly from a probe() anyway.
+> 
+> I had some discussion with Mark and Arnd on IRC, about the possibility of ALSA
+> not rquesting DMA channels during their probe(). Marks opinion I believe was
+> this wasn't a good solution as ALSA would be presenting devices to userspace 
+> that potentially don't exist & can't work.
+
+Hmmm, there are two parts, one is requesting the firmware and second is the
+loading part.
+
+Since descriptor allocation is atomic in nature, I think we should load the
+firmware using nowait version and if you can atomically copy then do so at
+first descriptor allocation. If not then you should copy in nowait handler
+
+> ===
+> 
+> *_prep_*() hooks
+> 
+> + Always get called before a DMA is started
+> 
+> - *prep* hooks can be called from atomic context so can't sleep [1] and can't use
+>   request_firmware().
+> - I tried using request_firmwqare_nowait() with GFP_ATOMIC flag firmware. This
+>   half works but firmware loading doesn't complete before the DMA is started which
+>   means it often fails on the first DMA attempt.
+> 
+>  ===
+> 
+> Suggested solution for v4 patches: -
+> 
+> Both Arnd, Mark and Lee initial suggestion on irc was that if the device is useless
+> without firmware, and the firmware isn't available then the driver should call
+> request_firmware() in probe() and -EPROBE_DEFER if not available.
+> 
+> This solution works well, in both the built-in and modules case. As the deffered
+> fdma driver re-probes after the rootfs has been mounted when the firmware is
+> available. The other ALSA depedencies then also re-probe and everything works
+> nicely (and you can be assured that the devices will actually work at this point).
+> 
+> This fdma driver and the ALSA ones will be enabled in multi_v7_defconfig as modules,
+> so it is only likely to be used as a module. However using -EPROBE_DEFER
+> mechanism, has the nice quality that if it is compiled as built-in you still end
+> up with a working system (albeit with a longer boot time).
+
+I think that makes sense, relying on deferred probing seems a better way to
+manage
+
+> 
+> Failing that the only other solution I can see is extending the dmaengine API to
+> provide another hook which can sleep, and must be called before a DMA
+> transation is started. Note that firmware isn't actually *required* until we
+> start the dma transaction, but the device is useless without this firmware. In fact
+> its "registers" are really just offsets into its DMEM so in theory even the
+> registers are totally firmware dependent.
+> 
+> Also I notice the only other dmaengine driver imx-sdma.c using firmware calls
+> request_firmware_nowait from its probe().
+> 
+> Are you happy with my proposed solutiion for v4? If not how would you like me to
+> implement this?
+> 
+> regards,
+> 
+> Peter.
+> 
+> [1] https://www.kernel.org/doc/Documentation/dmaengine/provider.txt
+> 
+> [2] https://lkml.org/lkml/2015/10/13/278
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+~Vinod
