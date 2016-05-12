@@ -1,714 +1,176 @@
-From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 7/9] [media] vcodec: mediatek: Add Mediatek VP8 Video
- Decoder Driver
-Date: Thu, 12 May 2016 19:24:08 +0800
-Message-ID: <1463052250-38262-8-git-send-email-tiffany.lin@mediatek.com>
-References: <1463052250-38262-1-git-send-email-tiffany.lin@mediatek.com>
- <1463052250-38262-2-git-send-email-tiffany.lin@mediatek.com>
- <1463052250-38262-3-git-send-email-tiffany.lin@mediatek.com>
- <1463052250-38262-4-git-send-email-tiffany.lin@mediatek.com>
- <1463052250-38262-5-git-send-email-tiffany.lin@mediatek.com>
- <1463052250-38262-6-git-send-email-tiffany.lin@mediatek.com>
- <1463052250-38262-7-git-send-email-tiffany.lin@mediatek.com>
+From: =?UTF-8?B?SG9uZ2h1aSBaaGFuZyAo5byg5rSq6L6JKQ==?=
+	<honghui.zhang@mediatek.com>
+Subject: Re: [PATCH 4/5] iommu/mediatek: add support for mtk iommu generation
+ one HW
+Date: Thu, 12 May 2016 19:26:36 +0800
+Message-ID: <bf2077e7-da8f-ba27-4f75-999c007f36b4@mediatek.com>
+References: <1462780816-5288-1-git-send-email-honghui.zhang@mediatek.com>
+ <1462780816-5288-5-git-send-email-honghui.zhang@mediatek.com>
+ <5731B7D8.8040304@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1463052250-38262-7-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, PC Chen <pc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5731B7D8.8040304@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, joro@8bytes.org, treding@nvidia.com, mark.rutland@arm.com, matthias.bgg@gmail.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, youlin.pei@mediatek.com, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, kendrick.hsu@mediatek.com, kernel@pengutronix.de, arnd@arndb.de, tfiga@google.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, pebolle@tiscali.nl, srv_heupstream@mediatek.com, erin.lo@mediatek.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, djkurtz@google.com, p.zabel@pengutronix.de, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add vp8 decoder driver for MT8173
+hi, Robin, thanks very much for your comments.
 
-Signed-off-by: PC Chen <pc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/media/platform/mtk-vcodec/Makefile         |    1 +
- .../media/platform/mtk-vcodec/vdec/vdec_vp8_if.c   |  632 ++++++++++++++++++++
- drivers/media/platform/mtk-vcodec/vdec_drv_if.c    |    3 +
- 3 files changed, 636 insertions(+)
- create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+On 5/10/2016 6:28 PM, Robin Murphy wrote:
+> On 09/05/16 09:00, honghui.zhang@mediatek.com wrote:
+> [...]
+>> +static void *mtk_iommu_alloc_pgt(struct device *dev, size_t size, gfp_t gfp)
+>> +{
+>> +    dma_addr_t dma;
+>> +    void *pages = alloc_pages_exact(size, gfp | __GFP_ZERO);
+>> +
+>> +    if (!pages)
+>> +        return NULL;
+>> +
+>> +    dma = dma_map_single(dev, pages, size, DMA_TO_DEVICE);
+>> +    if (dma_mapping_error(dev, dma))
+>> +        goto out_free;
+>> +    /*
+>> +     * We depend on the IOMMU being able to work with any physical
+>> +     * address directly, so if the DMA layer suggests otherwise by
+>> +     * translating or truncating them, that bodes very badly...
+>> +     */
+>> +    if (dma != virt_to_phys(pages))
+>> +        goto out_unmap;
+> 
+> Given that you've only got a single table to allocate, and at 4MB it has a fair chance of failing beyond early boot time, just use dma_alloc_coherent() - you don't need to care about the dma <-> phys relationship because you don't have multi-level tables to walk. That way, you can get rid of all the awkward streaming DMA stuff, and also benefit from CMA to avoid allocation failures.
+> 
 
-diff --git a/drivers/media/platform/mtk-vcodec/Makefile b/drivers/media/platform/mtk-vcodec/Makefile
-index 58243ed..7743c81 100644
---- a/drivers/media/platform/mtk-vcodec/Makefile
-+++ b/drivers/media/platform/mtk-vcodec/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_VIDEO_MEDIATEK_VCODEC) += mtk-vcodec-dec.o \
- 				       mtk-vcodec-common.o
- 
- mtk-vcodec-dec-y := vdec/vdec_h264_if.o \
-+		vdec/vdec_vp8_if.o \
- 		mtk_vcodec_dec_drv.o \
- 		vdec_drv_if.o \
- 		vdec_vpu_if.o \
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-new file mode 100644
-index 0000000..cd9b190
---- /dev/null
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-@@ -0,0 +1,632 @@
-+/*
-+ * Copyright (c) 2016 MediaTek Inc.
-+ * Author: Jungchang Tsao <jungchang.tsao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *	   PC Chen <pc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "../mtk_vcodec_intr.h"
-+#include "../vdec_vpu_if.h"
-+#include "../vdec_drv_base.h"
-+
-+/* Decoding picture buffer size (3 reference frames plus current frame) */
-+#define VP8_DPB_SIZE			4
-+
-+/* HW working buffer size (bytes) */
-+#define VP8_WORKING_BUF_SZ		(45 * 4096)
-+
-+/* HW control register address */
-+#define VP8_SEGID_DRAM_ADDR		0x3c
-+#define VP8_HW_VLD_ADDR			0x93C
-+#define VP8_HW_VLD_VALUE		0x940
-+#define VP8_BSASET			0x100
-+#define VP8_BSDSET			0x104
-+#define VP8_RW_CKEN_SET			0x0
-+#define VP8_RW_DCM_CON			0x18
-+#define VP8_WO_VLD_SRST			0x108
-+#define VP8_RW_MISC_SYS_SEL		0x84
-+#define VP8_RW_MISC_SPEC_CON		0xC8
-+#define VP8_WO_VLD_SRST			0x108
-+#define VP8_RW_VP8_CTRL			0xA4
-+#define VP8_RW_MISC_DCM_CON		0xEC
-+#define VP8_RW_MISC_SRST		0xF4
-+#define VP8_RW_MISC_FUNC_CON		0xCC
-+
-+#define VP8_MAX_FRM_BUF_NUM		5
-+#define VP8_MAX_FRM_BUF_NODE_NUM	(VP8_MAX_FRM_BUF_NUM * 2)
-+
-+/* required buffer size (bytes) to store decode information */
-+#define VP8_HW_SEGMENT_DATA_SZ		272
-+#define VP8_HW_SEGMENT_UINT		4
-+
-+#define VP8_DEC_TABLE_PROC_LOOP		96
-+#define VP8_DEC_TABLE_UNIT		3
-+#define VP8_DEC_TABLE_SZ		300
-+#define VP8_DEC_TABLE_OFFSET		2
-+#define VP8_DEC_TABLE_RW_UNIT		4
-+
-+/**
-+ * struct vdec_vp8_dec_info - decode misc information
-+ * @working_buf_dma   : working buffer dma address
-+ * @prev_y_dma        : previous decoded frame buffer Y plane address
-+ * @cur_y_fb_dma      : current plane Y frame buffer dma address
-+ * @cur_c_fb_dma      : current plane C frame buffer dma address
-+ * @bs_dma	      : bitstream dma address
-+ * @bs_sz	      : bitstream size
-+ * @resolution_changed: resolution change flag 1 - changed,  0 - not change
-+ * @show_frame	      : display this frame or not
-+ * @wait_key_frame    : wait key frame coming
-+ */
-+struct vdec_vp8_dec_info {
-+	uint64_t working_buf_dma;
-+	uint64_t prev_y_dma;
-+	uint64_t cur_y_fb_dma;
-+	uint64_t cur_c_fb_dma;
-+	uint64_t bs_dma;
-+	uint32_t bs_sz;
-+	uint32_t resolution_changed;
-+	uint32_t show_frame;
-+	uint32_t wait_key_frame;
-+};
-+
-+/**
-+ * struct vdec_vp8_vsi - VPU shared information
-+ * @dec			: decoding information
-+ * @pic			: picture information
-+ * @dec_table		: decoder coefficient table
-+ * @segment_buf		: segmentation buffer
-+ * @load_data		: flag to indicate reload decode data
-+ */
-+struct vdec_vp8_vsi {
-+	struct vdec_vp8_dec_info dec;
-+	struct vdec_pic_info pic;
-+	uint32_t dec_table[VP8_DEC_TABLE_SZ];
-+	uint32_t segment_buf[VP8_HW_SEGMENT_DATA_SZ][VP8_HW_SEGMENT_UINT];
-+	uint32_t load_data;
-+};
-+
-+/**
-+ * struct vdec_vp8_hw_reg_base - HW register base
-+ * @sys		: base address for sys
-+ * @misc	: base address for misc
-+ * @ld		: base address for ld
-+ * @top		: base address for top
-+ * @cm		: base address for cm
-+ * @hwd		: base address for hwd
-+ * @hwb		: base address for hwb
-+*/
-+struct vdec_vp8_hw_reg_base {
-+	void __iomem *sys;
-+	void __iomem *misc;
-+	void __iomem *ld;
-+	void __iomem *top;
-+	void __iomem *cm;
-+	void __iomem *hwd;
-+	void __iomem *hwb;
-+};
-+
-+/**
-+ * struct vdec_vp8_vpu_inst - VPU instance for VP8 decode
-+ * @wq_hd	: Wait queue to wait VPU message ack
-+ * @signaled	: 1 - Host has received ack message from VPU, 0 - not recevie
-+ * @failure	: VPU execution result status 0 - success, others - fail
-+ * @inst_addr	: VPU decoder instance address
-+ */
-+struct vdec_vp8_vpu_inst {
-+	wait_queue_head_t wq_hd;
-+	int signaled;
-+	int failure;
-+	uint32_t inst_addr;
-+};
-+
-+/* frame buffer (fb) list
-+ * [available_fb_node_list]  - decode fb are initialized to 0 and populated in
-+ * [fb_use_list]  - fb is set after decode and is moved to this list
-+ * [fb_free_list] - fb is not needed for reference will be moved from
-+ *		     [fb_use_list] to [fb_free_list] and
-+ *		     once user remove fb from [fb_free_list],
-+ *		     it is circulated back to [available_fb_node_list]
-+ * [fb_disp_list] - fb is set after decode and is moved to this list
-+ *                   once user remove fb from [fb_disp_list] it is
-+ *                   circulated back to [available_fb_node_list]
-+ */
-+
-+/**
-+ * struct vdec_vp8_inst - VP8 decoder instance
-+ * @cur_fb		   : current frame buffer
-+ * @dec_fb		   : decode frame buffer node
-+ * @available_fb_node_list : list to store available frame buffer node
-+ * @fb_use_list		   : list to store frame buffer in use
-+ * @fb_free_list	   : list to store free frame buffer
-+ * @fb_disp_list	   : list to store display ready frame buffer
-+ * @working_buf		   : HW decoder working buffer
-+ * @reg_base		   : HW register base address
-+ * @frm_cnt		   : decode frame count
-+ * @ctx			   : V4L2 context
-+ * @dev			   : platform device
-+ * @vpu			   : VPU instance for decoder
-+ * @vsi			   : VPU share information
-+ */
-+struct vdec_vp8_inst {
-+	struct vdec_fb *cur_fb;
-+	struct vdec_fb_node dec_fb[VP8_MAX_FRM_BUF_NODE_NUM];
-+	struct list_head available_fb_node_list;
-+	struct list_head fb_use_list;
-+	struct list_head fb_free_list;
-+	struct list_head fb_disp_list;
-+	struct mtk_vcodec_mem working_buf;
-+	struct vdec_vp8_hw_reg_base reg_base;
-+	unsigned int frm_cnt;
-+	struct mtk_vcodec_ctx *ctx;
-+	struct vdec_vpu_inst vpu;
-+	struct vdec_vp8_vsi *vsi;
-+};
-+
-+static void get_hw_reg_base(struct vdec_vp8_inst *inst)
-+{
-+	inst->reg_base.top = mtk_vcodec_get_reg_addr(inst->ctx, VDEC_TOP);
-+	inst->reg_base.cm = mtk_vcodec_get_reg_addr(inst->ctx, VDEC_CM);
-+	inst->reg_base.hwd = mtk_vcodec_get_reg_addr(inst->ctx, VDEC_HWD);
-+	inst->reg_base.sys = mtk_vcodec_get_reg_addr(inst->ctx, VDEC_SYS);
-+	inst->reg_base.misc = mtk_vcodec_get_reg_addr(inst->ctx, VDEC_MISC);
-+	inst->reg_base.ld = mtk_vcodec_get_reg_addr(inst->ctx, VDEC_LD);
-+	inst->reg_base.hwb = mtk_vcodec_get_reg_addr(inst->ctx, VDEC_HWB);
-+}
-+
-+static void write_hw_segmentation_data(struct vdec_vp8_inst *inst)
-+{
-+	int i, j;
-+	u32 seg_id_addr;
-+	u32 val;
-+	void __iomem *cm = inst->reg_base.cm;
-+	struct vdec_vp8_vsi *vsi = inst->vsi;
-+
-+	seg_id_addr = readl(inst->reg_base.top + VP8_SEGID_DRAM_ADDR) >> 4;
-+
-+	for (i = 0; i < ARRAY_SIZE(vsi->segment_buf); i++) {
-+		for (j = ARRAY_SIZE(vsi->segment_buf[i]) - 1; j >= 0; j--) {
-+			val = (1 << 16) + ((seg_id_addr + i) << 2) + j;
-+			writel(val, cm + VP8_HW_VLD_ADDR);
-+
-+			val = vsi->segment_buf[i][j];
-+			writel(val, cm + VP8_HW_VLD_VALUE);
-+		}
-+	}
-+}
-+
-+static void read_hw_segmentation_data(struct vdec_vp8_inst *inst)
-+{
-+	int i, j;
-+	u32 seg_id_addr;
-+	u32 val;
-+	void __iomem *cm = inst->reg_base.cm;
-+	struct vdec_vp8_vsi *vsi = inst->vsi;
-+
-+	seg_id_addr = readl(inst->reg_base.top + VP8_SEGID_DRAM_ADDR) >> 4;
-+
-+	for (i = 0; i < ARRAY_SIZE(vsi->segment_buf); i++) {
-+		for (j = ARRAY_SIZE(vsi->segment_buf[i]) - 1; j >= 0; j--) {
-+			val = ((seg_id_addr + i) << 2) + j;
-+			writel(val, cm + VP8_HW_VLD_ADDR);
-+
-+			val = readl(cm + VP8_HW_VLD_VALUE);
-+			vsi->segment_buf[i][j] = val;
-+		}
-+	}
-+}
-+
-+/* reset HW and enable HW read/write data function */
-+static void enable_hw_rw_function(struct vdec_vp8_inst *inst)
-+{
-+	u32 val = 0;
-+	void __iomem *sys = inst->reg_base.sys;
-+	void __iomem *misc = inst->reg_base.misc;
-+	void __iomem *ld = inst->reg_base.ld;
-+	void __iomem *hwb = inst->reg_base.hwb;
-+	void __iomem *hwd = inst->reg_base.hwd;
-+
-+	writel(0x1, sys + VP8_RW_CKEN_SET);
-+	writel(0x101, ld + VP8_WO_VLD_SRST);
-+	writel(0x101, hwb + VP8_WO_VLD_SRST);
-+
-+	writel(1, sys);
-+	val = readl(misc + VP8_RW_MISC_SRST);
-+	writel((val & 0xFFFFFFFE), misc + VP8_RW_MISC_SRST);
-+
-+	writel(0x1, misc + VP8_RW_MISC_SYS_SEL);
-+	writel(0x17F, misc + VP8_RW_MISC_SPEC_CON);
-+	writel(0x71201100, misc + VP8_RW_MISC_FUNC_CON);
-+	writel(0x0, ld + VP8_WO_VLD_SRST);
-+	writel(0x0, hwb + VP8_WO_VLD_SRST);
-+	writel(0x1, sys + VP8_RW_DCM_CON);
-+	writel(0x1, misc + VP8_RW_MISC_DCM_CON);
-+	writel(0x1, hwd + VP8_RW_VP8_CTRL);
-+}
-+
-+static void store_dec_table(struct vdec_vp8_inst *inst)
-+{
-+	int i, j;
-+	u32 addr = 0, val = 0;
-+	void __iomem *hwd = inst->reg_base.hwd;
-+	u32 *p = &inst->vsi->dec_table[VP8_DEC_TABLE_OFFSET];
-+
-+	for (i = 0; i < VP8_DEC_TABLE_PROC_LOOP; i++) {
-+		writel(addr, hwd + VP8_BSASET);
-+		for (j = 0; j < VP8_DEC_TABLE_UNIT ; j++) {
-+			val = *p++;
-+			writel(val, hwd + VP8_BSDSET);
-+		}
-+		addr += VP8_DEC_TABLE_RW_UNIT;
-+	}
-+}
-+
-+static void load_dec_table(struct vdec_vp8_inst *inst)
-+{
-+	int i;
-+	u32 addr = 0;
-+	u32 *p = &inst->vsi->dec_table[VP8_DEC_TABLE_OFFSET];
-+	void __iomem *hwd = inst->reg_base.hwd;
-+
-+	for (i = 0; i < VP8_DEC_TABLE_PROC_LOOP; i++) {
-+		writel(addr, hwd + VP8_BSASET);
-+		/* read total 11 bytes */
-+		*p++ = readl(hwd + VP8_BSDSET);
-+		*p++ = readl(hwd + VP8_BSDSET);
-+		*p++ = readl(hwd + VP8_BSDSET) & 0xFFFFFF;
-+		addr += VP8_DEC_TABLE_RW_UNIT;
-+	}
-+}
-+
-+static void get_pic_info(struct vdec_vp8_inst *inst, struct vdec_pic_info *pic)
-+{
-+	*pic = inst->vsi->pic;
-+
-+	mtk_vcodec_debug(inst, "pic(%d, %d), buf(%d, %d)",
-+			 pic->pic_w, pic->pic_h, pic->buf_w, pic->buf_h);
-+	mtk_vcodec_debug(inst, "Y(%d, %d), C(%d, %d)", pic->y_bs_sz,
-+			 pic->y_len_sz, pic->c_bs_sz, pic->c_len_sz);
-+}
-+
-+static void vp8_dec_finish(struct vdec_vp8_inst *inst)
-+{
-+	struct vdec_fb_node *node;
-+	uint64_t prev_y_dma = inst->vsi->dec.prev_y_dma;
-+
-+	mtk_vcodec_debug(inst, "prev fb base dma=%llx", prev_y_dma);
-+
-+	/* put last decode ok frame to fb_free_list */
-+	if (0 != prev_y_dma) {
-+		list_for_each_entry(node, &inst->fb_use_list, list) {
-+			struct vdec_fb *fb = (struct vdec_fb *)node->fb;
-+
-+			if (prev_y_dma == (uint64_t)fb->base_y.dma_addr) {
-+				list_move_tail(&node->list,
-+					       &inst->fb_free_list);
-+				break;
-+			}
-+		}
-+	}
-+
-+	/* available_fb_node_list -> fb_use_list */
-+	node = list_first_entry(&inst->available_fb_node_list,
-+				struct vdec_fb_node, list);
-+	node->fb = inst->cur_fb;
-+	list_move_tail(&node->list, &inst->fb_use_list);
-+
-+	/* available_fb_node_list -> fb_disp_list */
-+	if (inst->vsi->dec.show_frame) {
-+		node = list_first_entry(&inst->available_fb_node_list,
-+					struct vdec_fb_node, list);
-+		node->fb = inst->cur_fb;
-+		list_move_tail(&node->list, &inst->fb_disp_list);
-+	}
-+}
-+
-+static void move_fb_list_use_to_free(struct vdec_vp8_inst *inst)
-+{
-+	struct vdec_fb_node *node, *tmp;
-+
-+	list_for_each_entry_safe(node, tmp, &inst->fb_use_list, list)
-+		list_move_tail(&node->list, &inst->fb_free_list);
-+}
-+
-+static void init_list(struct vdec_vp8_inst *inst)
-+{
-+	int i;
-+
-+	INIT_LIST_HEAD(&inst->available_fb_node_list);
-+	INIT_LIST_HEAD(&inst->fb_use_list);
-+	INIT_LIST_HEAD(&inst->fb_free_list);
-+	INIT_LIST_HEAD(&inst->fb_disp_list);
-+
-+	for (i = 0; i < ARRAY_SIZE(inst->dec_fb); i++) {
-+		INIT_LIST_HEAD(&inst->dec_fb[i].list);
-+		inst->dec_fb[i].fb = NULL;
-+		list_add_tail(&inst->dec_fb[i].list,
-+			      &inst->available_fb_node_list);
-+	}
-+}
-+
-+static void add_fb_to_free_list(struct vdec_vp8_inst *inst, void *fb)
-+{
-+	struct vdec_fb_node *node;
-+
-+	if (fb) {
-+		node = list_first_entry(&inst->available_fb_node_list,
-+					struct vdec_fb_node, list);
-+		node->fb = fb;
-+		list_move_tail(&node->list, &inst->fb_free_list);
-+	}
-+}
-+
-+static int alloc_working_buf(struct vdec_vp8_inst *inst)
-+{
-+	int err;
-+	struct mtk_vcodec_mem *mem = &inst->working_buf;
-+
-+	mem->size = VP8_WORKING_BUF_SZ;
-+	err = mtk_vcodec_mem_alloc(inst->ctx, mem);
-+	if (err) {
-+		mtk_vcodec_err(inst, "Cannot allocate working buffer");
-+		return err;
-+	}
-+
-+	inst->vsi->dec.working_buf_dma = (uint64_t)mem->dma_addr;
-+	return 0;
-+}
-+
-+static void free_working_buf(struct vdec_vp8_inst *inst)
-+{
-+	struct mtk_vcodec_mem *mem = &inst->working_buf;
-+
-+	if (mem->va)
-+		mtk_vcodec_mem_free(inst->ctx, mem);
-+
-+	inst->vsi->dec.working_buf_dma = 0;
-+}
-+
-+static int vdec_vp8_init(struct mtk_vcodec_ctx *ctx, unsigned long *h_vdec)
-+{
-+	struct vdec_vp8_inst *inst;
-+	int err;
-+
-+	inst = kzalloc(sizeof(*inst), GFP_KERNEL);
-+	if (!inst)
-+		return  -ENOMEM;
-+
-+	inst->ctx = ctx;
-+
-+	inst->vpu.id = IPI_VDEC_VP8;
-+	inst->vpu.dev = ctx->dev->vpu_plat_dev;
-+	inst->vpu.ctx = ctx;
-+	inst->vpu.handler = vpu_dec_ipi_handler;
-+
-+	err = vpu_dec_init(&inst->vpu);
-+	if (err) {
-+		mtk_vcodec_err(inst, "vdec_vp8 init err=%d", err);
-+		goto error_free_inst;
-+	}
-+
-+	inst->vsi = (struct vdec_vp8_vsi *)inst->vpu.vsi;
-+	init_list(inst);
-+	err = alloc_working_buf(inst);
-+	if (err)
-+		goto error_deinit;
-+
-+	get_hw_reg_base(inst);
-+	mtk_vcodec_debug(inst, "VP8 Instance >> %p", inst);
-+
-+	*h_vdec = (unsigned long)inst;
-+	return 0;
-+
-+error_deinit:
-+	vpu_dec_deinit(&inst->vpu);
-+error_free_inst:
-+	kfree(inst);
-+	return err;
-+}
-+
-+static int vdec_vp8_decode(unsigned long h_vdec, struct mtk_vcodec_mem *bs,
-+			   struct vdec_fb *fb, bool *res_chg)
-+{
-+	struct vdec_vp8_inst *inst = (struct vdec_vp8_inst *)h_vdec;
-+	struct vdec_vp8_dec_info *dec = &inst->vsi->dec;
-+	struct vdec_vpu_inst *vpu = &inst->vpu;
-+	unsigned char *bs_va;
-+	unsigned int data;
-+	int err = 0;
-+	uint64_t y_fb_dma;
-+	uint64_t c_fb_dma;
-+
-+	/* bs NULL means flush decoder */
-+	if (bs == NULL) {
-+		move_fb_list_use_to_free(inst);
-+		return vpu_dec_reset(vpu);
-+	}
-+
-+	y_fb_dma = fb ? (u64)fb->base_y.dma_addr : 0;
-+	c_fb_dma = fb ? (u64)fb->base_c.dma_addr : 0;
-+
-+	mtk_vcodec_debug(inst, "+ [%d] FB y_dma=%llx c_dma=%llx fb=%p",
-+			 inst->frm_cnt, y_fb_dma, c_fb_dma, fb);
-+
-+	inst->cur_fb = fb;
-+	dec->bs_dma = (unsigned long)bs->dma_addr;
-+	dec->bs_sz = bs->size;
-+	dec->cur_y_fb_dma = y_fb_dma;
-+	dec->cur_c_fb_dma = c_fb_dma;
-+
-+	mtk_vcodec_debug(inst, "\n + FRAME[%d] +\n", inst->frm_cnt);
-+
-+	write_hw_segmentation_data(inst);
-+	enable_hw_rw_function(inst);
-+	store_dec_table(inst);
-+
-+	bs_va = (unsigned char *)bs->va;
-+
-+	/* retrieve width/hight and scale info from header */
-+	data = (*(bs_va + 9) << 24) | (*(bs_va + 8) << 16) |
-+	       (*(bs_va + 7) << 8) | *(bs_va + 6);
-+	err = vpu_dec_start(vpu, &data, 1);
-+	if (err) {
-+		add_fb_to_free_list(inst, fb);
-+		if (dec->wait_key_frame) {
-+			mtk_vcodec_debug(inst, "wait key frame !");
-+			return 0;
-+		}
-+
-+		goto error;
-+	}
-+
-+	if (dec->resolution_changed) {
-+		mtk_vcodec_debug(inst, "- resolution_changed -");
-+		*res_chg = true;
-+		add_fb_to_free_list(inst, fb);
-+		return 0;
-+	}
-+
-+	/* wait decoder done interrupt */
-+	mtk_vcodec_wait_for_done_ctx(inst->ctx, MTK_INST_IRQ_RECEIVED,
-+				     WAIT_INTR_TIMEOUT_MS);
-+
-+	if (inst->vsi->load_data)
-+		load_dec_table(inst);
-+
-+	vp8_dec_finish(inst);
-+	read_hw_segmentation_data(inst);
-+
-+	err = vpu_dec_end(vpu);
-+	if (err)
-+		goto error;
-+
-+	mtk_vcodec_debug(inst, "\n - FRAME[%d] - show=%d\n", inst->frm_cnt,
-+			 dec->show_frame);
-+	inst->frm_cnt++;
-+	*res_chg = false;
-+	return 0;
-+
-+error:
-+	mtk_vcodec_err(inst, "\n - FRAME[%d] - err=%d\n", inst->frm_cnt, err);
-+	return err;
-+}
-+
-+static void get_disp_fb(struct vdec_vp8_inst *inst, struct vdec_fb **out_fb)
-+{
-+	struct vdec_fb_node *node;
-+	struct vdec_fb *fb;
-+
-+	node = list_first_entry_or_null(&inst->fb_disp_list,
-+					struct vdec_fb_node, list);
-+	if (node) {
-+		list_move_tail(&node->list, &inst->available_fb_node_list);
-+		fb = (struct vdec_fb *)node->fb;
-+		fb->status |= FB_ST_DISPLAY;
-+		mtk_vcodec_debug(inst, "[FB] get disp fb %p st=%d",
-+				 node->fb, fb->status);
-+	} else {
-+		fb = NULL;
-+		mtk_vcodec_debug(inst, "[FB] there is no disp fb");
-+	}
-+
-+	*out_fb = fb;
-+}
-+
-+static void get_free_fb(struct vdec_vp8_inst *inst, struct vdec_fb **out_fb)
-+{
-+	struct vdec_fb_node *node;
-+	struct vdec_fb *fb;
-+
-+	node = list_first_entry_or_null(&inst->fb_free_list,
-+					struct vdec_fb_node, list);
-+	if (node) {
-+		list_move_tail(&node->list, &inst->available_fb_node_list);
-+		fb = (struct vdec_fb *)node->fb;
-+		fb->status |= FB_ST_FREE;
-+		mtk_vcodec_debug(inst, "[FB] get free fb %p st=%d",
-+				 node->fb, fb->status);
-+	} else {
-+		fb = NULL;
-+		mtk_vcodec_debug(inst, "[FB] there is no free fb");
-+	}
-+
-+	*out_fb = fb;
-+}
-+
-+static void get_crop_info(struct vdec_vp8_inst *inst, struct v4l2_rect *cr)
-+{
-+	cr->left = 0;
-+	cr->top = 0;
-+	cr->width = inst->vsi->pic.pic_w;
-+	cr->height = inst->vsi->pic.pic_h;
-+	mtk_vcodec_debug(inst, "get crop info l=%d, t=%d, w=%d, h=%d",
-+			 cr->left, cr->top, cr->width, cr->height);
-+}
-+
-+static int vdec_vp8_get_param(unsigned long h_vdec,
-+			      enum vdec_get_param_type type, void *out)
-+{
-+	struct vdec_vp8_inst *inst = (struct vdec_vp8_inst *)h_vdec;
-+
-+	switch (type) {
-+	case GET_PARAM_DISP_FRAME_BUFFER:
-+		get_disp_fb(inst, out);
-+		break;
-+
-+	case GET_PARAM_FREE_FRAME_BUFFER:
-+		get_free_fb(inst, out);
-+		break;
-+
-+	case GET_PARAM_PIC_INFO:
-+		get_pic_info(inst, out);
-+		break;
-+
-+	case GET_PARAM_CROP_INFO:
-+		get_crop_info(inst, out);
-+		break;
-+
-+	case GET_PARAM_DPB_SIZE:
-+		*((unsigned int *)out) = VP8_DPB_SIZE;
-+		break;
-+
-+	default:
-+		mtk_vcodec_err(inst, "invalid get parameter type=%d", type);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int vdec_vp8_deinit(unsigned long h_vdec)
-+{
-+	struct vdec_vp8_inst *inst = (struct vdec_vp8_inst *)h_vdec;
-+
-+	mtk_vcodec_debug_enter(inst);
-+
-+	vpu_dec_deinit(&inst->vpu);
-+	free_working_buf(inst);
-+	kfree(inst);
-+
-+	return 0;
-+}
-+
-+static struct vdec_common_if vdec_vp8_if = {
-+	vdec_vp8_init,
-+	vdec_vp8_decode,
-+	vdec_vp8_get_param,
-+	vdec_vp8_deinit,
-+};
-+
-+struct vdec_common_if *get_vp8_dec_comm_if(void);
-+
-+struct vdec_common_if *get_vp8_dec_comm_if(void)
-+{
-+	return &vdec_vp8_if;
-+}
-diff --git a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-index 576920c..6e2f065 100644
---- a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-@@ -25,6 +25,7 @@
- #include "mtk_vpu.h"
- 
- struct vdec_common_if *get_h264_dec_comm_if(void);
-+struct vdec_common_if *get_vp8_dec_comm_if(void);
- 
- int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
- {
-@@ -35,6 +36,8 @@ int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
- 		ctx->dec_if = get_h264_dec_comm_if();
- 		break;
- 	case V4L2_PIX_FMT_VP8:
-+		ctx->dec_if = get_vp8_dec_comm_if();
-+		break;
- 	case V4L2_PIX_FMT_VP9:
- 	default:
- 		return -EINVAL;
--- 
-1.7.9.5
+thanks, use dma_alloc_coherent is good for me.
+
+>> +    kmemleak_ignore(pages);
+>> +    return pages;
+>> +
+>> +out_unmap:
+>> +    dev_err(dev, "Cannot accommodate DMA translation for IOMMU page tables\n");
+>> +    dma_unmap_single(dev, dma, size, DMA_TO_DEVICE);
+>> +out_free:
+>> +    free_pages_exact(pages, size);
+>> +    return NULL;
+>> +
+>> +}
+>> +
+>> +static void mtk_iommu_free_pgt(struct device *dev, void *pages, size_t size)
+>> +{
+>> +    dma_unmap_single(dev, (dma_addr_t)virt_to_phys(pages),
+>> +             size, DMA_TO_DEVICE);
+>> +    free_pages_exact(pages, size);
+>> +}
+>> +
+>> +static int mtk_iommu_domain_finalise(struct mtk_iommu_data *data)
+>> +{
+>> +    struct mtk_iommu_domain *dom = data->m4u_dom;
+>> +
+>> +    spin_lock_init(&dom->pgtlock);
+>> +
+>> +    dom->pgt_va = mtk_iommu_alloc_pgt(data->dev,
+>> +                dom->pgt_size, GFP_KERNEL);
+>> +    if (!dom->pgt_va)
+>> +        return -ENOMEM;
+>> +
+>> +    dom->pgt_pa = virt_to_phys(dom->pgt_va);
+>> +
+>> +    writel(dom->pgt_pa, data->base + REG_MMU_PT_BASE_ADDR);
+>> +
+>> +    dom->cookie = (void *)data;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
+>> +{
+>> +    struct mtk_iommu_domain *dom;
+>> +
+>> +    if (type != IOMMU_DOMAIN_UNMANAGED)
+>> +        return NULL;
+>> +
+>> +    dom = kzalloc(sizeof(*dom), GFP_KERNEL);
+>> +    if (!dom)
+>> +        return NULL;
+>> +
+>> +    /*
+>> +     * MTK m4u support 4GB iova address space, and oly support 4K page
+>> +     * mapping. So the pagetable size should be exactly as 4M.
+>> +     */
+>> +    dom->pgt_size = SZ_4M;
+> 
+> If the table size is fixed, then why bother having a variable at all?
+> 
+>> +    return &dom->domain;
+>> +}
+>> +
+>> +static void mtk_iommu_domain_free(struct iommu_domain *domain)
+>> +{
+>> +    kfree(to_mtk_domain(domain));
+>> +}
+>> +
+> 
+> [...]
+> 
+>> +static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
+>> +             phys_addr_t paddr, size_t size, int prot)
+>> +{
+>> +    struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+>> +    struct mtk_iommu_data *data = dom->cookie;
+>> +    unsigned int page_num = size >> MTK_IOMMU_PAGE_SHIFT;
+> 
+> Since you only advertise a single page size, this will always be 1, so you could either get rid of the loop here...
+> 
+
+I would prefer your following advise to change the pgsize_bitmap. 
+I would follow your advise in the next version.
+Thanks very much.
+
+>> +    unsigned long flags;
+>> +    unsigned int i;
+>> +    u32 *pgt_base_iova;
+>> +    u32 pabase = (u32)paddr;
+>> +    int map_size = 0;
+>> +
+>> +    spin_lock_irqsave(&dom->pgtlock, flags);
+>> +    pgt_base_iova = dom->pgt_va + (iova  >> MTK_IOMMU_PAGE_SHIFT);
+>> +    for (i = 0; i < page_num; i++) {
+>> +        pgt_base_iova[i] = pabase | F_DESC_VALID | F_DESC_NONSEC;
+>> +        pabase += MTK_IOMMU_PAGE_SIZE;
+>> +        map_size += MTK_IOMMU_PAGE_SIZE;
+>> +    }
+>> +    dma_sync_single_for_device(data->dev,
+>> +            dom->pgt_pa + (iova >> MTK_IOMMU_PAGE_SHIFT),
+>> +            (size >> MTK_IOMMU_PAGE_SHIFT) * sizeof(u32),
+>> +            DMA_TO_DEVICE);
+>> +    spin_unlock_irqrestore(&dom->pgtlock, flags);
+>> +
+>> +    mtk_iommu_tlb_flush_range(data, iova, size);
+>> +
+>> +    return map_size;
+>> +}
+> 
+> [...]
+> 
+>> +static struct iommu_ops mtk_iommu_ops = {
+>> +    .domain_alloc    = mtk_iommu_domain_alloc,
+>> +    .domain_free    = mtk_iommu_domain_free,
+>> +    .attach_dev    = mtk_iommu_attach_device,
+>> +    .detach_dev    = mtk_iommu_detach_device,
+>> +    .map        = mtk_iommu_map,
+>> +    .unmap        = mtk_iommu_unmap,
+>> +    .map_sg        = default_iommu_map_sg,
+>> +    .iova_to_phys    = mtk_iommu_iova_to_phys,
+>> +    .add_device    = mtk_iommu_add_device,
+>> +    .remove_device    = mtk_iommu_remove_device,
+>> +    .device_group    = mtk_iommu_device_group,
+>> +    .pgsize_bitmap    = MTK_IOMMU_PAGE_SIZE,
+>> +};
+> 
+> ...or perhaps advertise .pgsize_bitmap = ~0UL << MTK_IOMMU_PAGE_SHIFT here, so you actually can handle multiple entries at once for larger mappings - given how simple the page table format is that doesn't seem too unreasonable, especially since it should give you a big efficiency win in terms of TLB maintenance.
+> 
+> Robin.
+> 
