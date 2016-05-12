@@ -1,99 +1,70 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 10/14] usb: otg: add hcd companion support
-Date: Thu, 12 May 2016 12:31:39 +0300
-Message-ID: <57344D7B.3050005@ti.com>
-References: <57333DFF.3090609@ti.com>
- <Pine.LNX.4.44L0.1605111043030.1882-100000@iolanthe.rowland.org>
- <SG2PR06MB09194AB523C3ABDB425285C7D8730@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <57343FFC.9090105@ti.com>
+From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [RESEND PATCH v4 2/3] Documentation: DT: vdma: Add clock support for dmas
+Date: Thu, 12 May 2016 15:13:47 +0530
+Message-ID: <1463046228-21651-3-git-send-email-appanad@xilinx.com>
+References: <1463046228-21651-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57343FFC.9090105-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1463046228-21651-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch updates the binding doc with clock description
+for AXI DMA's.
 
-On 12/05/16 11:34, Roger Quadros wrote:
-> On 12/05/16 07:00, Yoshihiro Shimoda wrote:
->> Hi,
->>
->>> From: Alan Stern
->>> Sent: Wednesday, May 11, 2016 11:47 PM
->>>
->>> On Wed, 11 May 2016, Roger Quadros wrote:
->>>
->>>>> What I mean is if you have 2 EHCI controllers with 2 companion
->>>>> controllers, don't you need to know which companion goes with which EHCI
->>>>> controller? Just like you do for the otg-controller property.
->>>>>
->>>>
->>>> That is a very good point. I'm not very sure and it seems that current code won't work
->>>> with multiple EHCI + companion instances.
->>
->> I may misunderstand this topic, but if I use the following environment, it works correctly.
->>
->> < My environment >
->> - an otg controller: Sets hcd-needs-companion.
->> - ehci0 and ohci0 and a function: They connect to the otg controller using "otg-controller" property.
->> - ehci1 and ohci1: No "otg-controller" property.
->> - ehci2 and ohci2: No "otg-controller" property.
->>
->> In this environment, all hosts works correctly.
->> Also I think if we have 2 otg controlelrs, it should be work because otg_dev instance differs.
-> 
-> The topic is about more than one otg controllers and how to tie the right ehci and ohci
-> to the correct otg_dev instance especially in cases where we can't depend on probe order.
-> 
->> Or, does this topic assume an otg controller handles 2 EHCI controllers?
->> I'm not sure such environment actually exists.
-> 
-> No it is not about that.
-> 
->>
->>>> Alan, does USB core even know which EHCI and OHCI are linked to the same port
->>>> or the handoff is software transparent?
->>>
->>> The core knows.  It doesn't use the information for a whole lot of
->>> things, but it does use it in a couple of places.  Search for
->>> "companion" in core/hcd-pci.c and you'll see.
->>
->> Thank you for the information. I didn't know this code.
->> If my understanding is correct, the core/hcd-pci.c code will not be used by non-PCI devices.
-> 
-> That is correct.
-> 
->> In other words, nobody sets "hcd->self.hs_companion" if we use such a device.
->> So, I will try to add such a code if needed.
-> 
-> I think OTG core would have to rely on USB core in providing the right companion device,
-> just like we rely on it for the primary vs shared HCD case.
-> 
+Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt        | 15 +++++++=
+++++++++
+ 1 file changed, 15 insertions(+)
 
-OK, it is not so simple.
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.t=
+xt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+index fcc2b65..a1f2683 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+@@ -21,6 +21,18 @@ Required properties:
+ - dma-channel child node: Should have at least one channel and can hav=
+e up to
+ 	two channels per device. This node specifies the properties of each
+ 	DMA channel (see child node properties below).
++- clocks: Input clock specifier. Refer to common clock bindings.
++- clock-names: List of input clocks
++	For VDMA:
++	Required elements: "s_axi_lite_aclk"
++	Optional elements: "m_axi_mm2s_aclk" "m_axi_s2mm_aclk",
++			   "m_axis_mm2s_aclk", "s_axis_s2mm_aclk"
++	For CDMA:
++	Required elements: "s_axi_lite_aclk", "m_axi_aclk"
++	FOR AXIDMA:
++	Required elements: "s_axi_lite_aclk"
++	Optional elements: "m_axi_mm2s_aclk", "m_axi_s2mm_aclk",
++			   "m_axi_sg_aclk"
+=20
+ Required properties for VDMA:
+ - xlnx,num-fstores: Should be the number of framebuffers as configured=
+ in h/w.
+@@ -60,6 +72,9 @@ axi_vdma_0: axivdma@40030000 {
+ 	xlnx,num-fstores =3D <0x8>;
+ 	xlnx,flush-fsync =3D <0x1>;
+ 	xlnx,addrwidth =3D <0x20>;
++	clocks =3D <&clk 0>, <&clk 1>, <&clk 2>, <&clk 3>, <&clk 4>;
++	clock-names =3D "s_axi_lite_aclk", "m_axi_mm2s_aclk", "m_axi_s2mm_acl=
+k",
++		      "m_axis_mm2s_aclk", "s_axis_s2mm_aclk";
+ 	dma-channel@40030000 {
+ 		compatible =3D "xlnx,axi-vdma-mm2s-channel";
+ 		interrupts =3D < 0 54 4 >;
+--=20
+2.1.1
 
-EHCI and companion port handoff is really meant to be software transparent.
-
-non-PCI devices really don't have knowledge of which OHCI instance is companion to the EHCI.
-With device tree we could provide this mapping but for non-device tree case we can't do
-anything.
-
-So my suggestion would be to keep dual role implementation limited to one instance for
-EHCI + companion case for non-DT.
-For PCI case I don't see how dual role can be implemented. I don't think we have any
-dual-role PCI cards.
-For DT case we could have a DT binding to tie the EHCI and companion and use that
-in the OTG framework.
-
-Any objections?
-
-cheers,
--roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
