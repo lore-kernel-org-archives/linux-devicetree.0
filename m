@@ -1,167 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
-Date: Fri, 13 May 2016 00:35:50 +0300
-Message-ID: <f1fae99f-2464-8a42-deb8-c27cccf8df12@cogentembedded.com>
-References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
- <3641492.klKRrvS8tr@wasted.cogentembedded.com>
- <20160512184233.GJ30822@pengutronix.de>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: rcar: add DMA support
+Date: Thu, 12 May 2016 23:35:51 +0200
+Message-ID: <20160512213551.GA1641@katana>
+References: <1462365503-8451-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+ <20160505220625.GA18367@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160512184233.GJ30822@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160505220625.GA18367@rob-hp-laptop>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 05/12/2016 09:42 PM, Uwe Kleine-K=F6nig wrote:
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> [we already talked about this patch in #armlinux, I'm now just
-> forwarding my comments on the list. Background was that I sent an eas=
-ier
-> and less complete patch with the same idea. See
-> http://patchwork.ozlabs.org/patch/621418/]
->
-> [added Linus Walleij to Cc, there is a question for you/him below]
->
-> On Fri, Apr 29, 2016 at 01:12:54AM +0300, Sergei Shtylyov wrote:
->> --- net-next.orig/Documentation/devicetree/bindings/net/phy.txt
->> +++ net-next/Documentation/devicetree/bindings/net/phy.txt
->> @@ -35,6 +35,8 @@ Optional Properties:
->>  - broken-turn-around: If set, indicates the PHY device does not cor=
-rectly
->>    release the turn around line low at the end of a MDIO transaction=
-=2E
->>
->> +- reset-gpios: The GPIO phandle and specifier for the PHY reset sig=
-nal.
->> +
->>  Example:
->>
->>  ethernet-phy@0 {
->
-> This is great.
->
->> Index: net-next/drivers/net/phy/at803x.c
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> --- net-next.orig/drivers/net/phy/at803x.c
->> +++ net-next/drivers/net/phy/at803x.c
->> @@ -65,7 +65,6 @@ MODULE_LICENSE("GPL");
->> [...]
->
-> My patch breaks this driver. I wasn't aware of it.
 
-    I tried to be as careful as I could but still it looks that I didn'=
-t=20
-succeed at that too...
+> Is DMA actually faster or less cpu usage? I'm doubtful.
 
-[...]
->> Index: net-next/drivers/net/phy/mdio_device.c
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> --- net-next.orig/drivers/net/phy/mdio_device.c
->> +++ net-next/drivers/net/phy/mdio_device.c
-[...]
->> @@ -117,9 +126,16 @@ static int mdio_probe(struct device *dev
->>  	struct mdio_driver *mdiodrv =3D to_mdio_driver(drv);
->>  	int err =3D 0;
->>
->> -	if (mdiodrv->probe)
->> +	if (mdiodrv->probe) {
->> +		/* Deassert the reset signal */
->> +		mdio_device_reset(mdiodev, 0);
->> +
->>  		err =3D mdiodrv->probe(mdiodev);
->>
->> +		/* Assert the reset signal */
->> +		mdio_device_reset(mdiodev, 1);
->
-> I wonder if it's safe to do this in general. What if ->probe does
-> something with the phy that is lost by resetting but that is relied o=
-n
-> later?
+No need to be faster at 100/400kHz :) The key here is way less
+interrupts for bigger transfers. The threshold value is hard to measure,
+however.
 
-    Well, I thought that config_init() method is designed for that but =
-indeed=20
-the LXT driver writes to BMCR in its probe() method and hence is broken=
-=2E Thank=20
-you for noticing...
 
-[...]
->> Index: net-next/drivers/of/of_mdio.c
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> --- net-next.orig/drivers/of/of_mdio.c
->> +++ net-next/drivers/of/of_mdio.c
->> @@ -44,6 +44,7 @@ static int of_get_phy_id(struct device_n
->>  static void of_mdiobus_register_phy(struct mii_bus *mdio,
->>  				    struct device_node *child, u32 addr)
->>  {
->> +	struct gpio_desc *gpiod;
->>  	struct phy_device *phy;
->>  	bool is_c45;
->>  	int rc;
->> @@ -52,10 +53,17 @@ static void of_mdiobus_register_phy(stru
->>  	is_c45 =3D of_device_is_compatible(child,
->>  					 "ethernet-phy-ieee802.3-c45");
->>
->> +	gpiod =3D fwnode_get_named_gpiod(&child->fwnode, "reset-gpios");
->> +	/* Deassert the reset signal */
->> +	if (!IS_ERR(gpiod))
->> +		gpiod_direction_output(gpiod, 0);
->
-> This is wrong I think. You must only ignore -ENODEV, all other error
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    At least -ENOSYS should also be ignored (it's returned when gpiolib=
- is not=20
-configured), right? When does -ENODEV gets returned (it's not easy to f=
-ollow)?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> codes should be passed to the caller.
+iQIcBAEBAgAGBQJXNPc3AAoJEBQN5MwUoCm2rq8P/3V6/RHRLfC4iSWbFPEfsVYT
+CBWgccvl6CjHE6M7tIPpOho+ADh7V/edz9uUv41vbUyxRhafqU0S/HEL5u9+i0ep
+ymemGrZFO7CzzX/DYRX0RPBUH5PkMjFvr91EGO5hMZQoXo1D8mq0js7zL+MVwelT
+Eu0dtZVco5LIGov540XHJ64HmwtCkXE9HVd5034Ju8kUk+wkWdZZDckCaB+ZbtIq
+ownlprn9+Jn75Ng5oLVf0ZR6OIJ4JSHo68UWaikpB+9EhD+KwL07gF8eo2COGGr3
+aSXap7GdFYP9A5R+0fPuk/dAgveoGqTYCegkmGp14tcjlX+SgCgLiktVVfDzkfaw
+HOcn8o4FPumsKODBXCv3zwhEywTvCfhHr5RdGiCjTo7eiFKz1ThnUVrJcaqS2xZ/
+Ch5KnQrtI91DWZxI/bMX4gSBzlxy+OvC6nenjzTerxA24DUXTqYGh3/BIxBuXnCt
+zV1Da2yuYMiFgzO8jpUTqQB3pK9PUQPMoQfna5flxFwZjs/7ySKe4INSuObBexC5
+gYnGBHPMJzkksKRGjtv0o2ZwEudtxS4SRtao4I3bUR44HEqkr/c5wnKuqIVHkNZN
+1jOj/xJ4GoT7bNHm03Do0PXcDkJxLiPk1IhJ7DXytu/PLCLY0pZ59LiU7Rem6lwc
+ftt8pq0mFJ/ZjxDozWPO
+=xbcF
+-----END PGP SIGNATURE-----
 
-    The caller doesn't care anyway...
-
-> (I see that's not trivial because
-> of_mdiobus_register_phy returns void.)
-
-    I've made this function *void* in net-next.
-
-> In my patch I used devm_gpiod_get_array which has the nice property t=
-hat
-> I can already pass GPIOD_OUT_LOW in flags. Also this binds the lifeti=
-me
-> of the gpio to the device which is nice and IMHO the right direction =
-for
-> the phylib (i.e. better embracing of the device model).
->
-> This cannot be used here easily however because there is no struct
-> device yet and this is only created after the phy id is determined.
-
-    Your last patch [1] didn't make use of the managed device API (devm=
-)=20
-either, I didn't quite get to the bottom of that...
-
-> The
-> phy id is either read from the device tree or must be read from the p=
-hy
-> which might fail if reset is not deasserted.
-
-> Principally there is no reason however that the phy_id must be known
-> before the struct device is created however.
-
-    It's just that the code is cleaner that way...
-
-[1] http://paste.debian.net/683630/
-
-> Best regards
-> Uwe
-
-MBR, Sergei
+--0F1p//8PRICkK4MW--
