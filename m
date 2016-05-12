@@ -1,119 +1,91 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] ASoC: wm8985: add device-tree support
-Date: Thu, 12 May 2016 17:58:50 +0200
-Message-ID: <1463068730-18817-2-git-send-email-petr@barix.com>
-References: <1463068730-18817-1-git-send-email-petr@barix.com>
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835: add the bcm2835-sdram-controller to the dt
+Date: Thu, 12 May 2016 18:00:07 +0200
+Message-ID: <0DF5210B-0269-4E49-A8E4-A4A83FCAABCF@martin.sperl.org>
+References: <1463056732-5607-1-git-send-email-kernel@martin.sperl.org> <1463056732-5607-4-git-send-email-kernel@martin.sperl.org> <73859954.21004.36a104a6-5284-487f-b397-da7ff0407f1f.open-xchange@email.1und1.de>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463068730-18817-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <73859954.21004.36a104a6-5284-487f-b397-da7ff0407f1f.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree support to the WM8985 driver.
 
-Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
----
- sound/soc/codecs/wm8985.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+> On 12.05.2016, at 16:56, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote=
+:
+>=20
+> Hi,
+>=20
+>> kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org hat am 12. Mai 2016 um 14:38 geschrieben:
+>>=20
+>>=20
+>> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>>=20
+>> Add the bcm2835 sdram controller to the device tree.
+>>=20
+>> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>> ---
+>> arch/arm/boot/dts/bcm283x.dtsi | 6 ++++++
+>> 1 file changed, 6 insertions(+)
+>>=20
+>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm2=
+83x.dtsi
+>> index 8aaf193..9db9d97 100644
+>> --- a/arch/arm/boot/dts/bcm283x.dtsi
+>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+>> @@ -22,6 +22,12 @@
+>> 		#address-cells =3D <1>;
+>> 		#size-cells =3D <1>;
+>>=20
+>> +		memory-controller@7e002000 {
+>> +			compatible =3D "brcm,bcm2835-sdram";
+>> +			reg =3D <0x7e002000 0x58>, <0x7e002800 0x58>;
+>=20
+> where do you get these addresses?
+I took this info based on the shared headers by broadcom:
+https://github.com/msperl/rpi-registers/blob/master/md/README.md
 
-diff --git a/sound/soc/codecs/wm8985.c b/sound/soc/codecs/wm8985.c
-index bbf25a1ad51d..fa5b391c24bd 100644
---- a/sound/soc/codecs/wm8985.c
-+++ b/sound/soc/codecs/wm8985.c
-@@ -32,6 +32,7 @@
- #include <sound/soc.h>
- #include <sound/initval.h>
- #include <sound/tlv.h>
-+#include <linux/of_device.h>
- 
- #include "wm8985.h"
- 
-@@ -1323,11 +1324,19 @@ static const struct wm8xxx_chip wm8758_chip = {
- 	.codec_dev	= &soc_codec_dev_wm8758,
- };
- 
-+static const struct of_device_id wm8985_of_match[] = {
-+	{ .compatible = "wlf,wm8985", .data = &wm8985_chip},
-+	{ .compatible = "wlf,wm8758", .data = &wm8758_chip},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wm8985_of_match);
- 
- #if defined(CONFIG_SPI_MASTER)
- static int wm8985_spi_probe(struct spi_device *spi)
- {
- 	struct wm8985_priv *wm8985;
-+	const struct wm8xxx_chip *chip;
-+	const struct of_device_id *of_id;
- 	int ret;
- 
- 	wm8985 = devm_kzalloc(&spi->dev, sizeof *wm8985, GFP_KERNEL);
-@@ -1336,6 +1345,12 @@ static int wm8985_spi_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, wm8985);
- 
-+	of_id = of_match_device(wm8985_of_match, &spi->dev);
-+	if (of_id)
-+		chip = of_id->data;
-+	else
-+		chip = &wm8985_chip;
-+
- 	wm8985->regmap = devm_regmap_init_spi(spi, &wm8985_regmap);
- 	if (IS_ERR(wm8985->regmap)) {
- 		ret = PTR_ERR(wm8985->regmap);
-@@ -1345,7 +1360,7 @@ static int wm8985_spi_probe(struct spi_device *spi)
- 	}
- 
- 	ret = snd_soc_register_codec(&spi->dev,
--				     &soc_codec_dev_wm8985, &wm8985_dai, 1);
-+				     chip->codec_dev, chip->dai, 1);
- 	return ret;
- }
- 
-@@ -1358,6 +1373,7 @@ static int wm8985_spi_remove(struct spi_device *spi)
- static struct spi_driver wm8985_spi_driver = {
- 	.driver = {
- 		.name = "wm8985",
-+		.of_match_table = wm8985_of_match,
- 	},
- 	.probe = wm8985_spi_probe,
- 	.remove = wm8985_spi_remove
-@@ -1369,7 +1385,8 @@ static int wm8985_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
- 	struct wm8985_priv *wm8985;
--	struct wm8xxx_chip *chip = (void *) id->driver_data;
-+	const struct wm8xxx_chip *chip;
-+	const struct of_device_id *of_id;
- 	int ret;
- 
- 	wm8985 = devm_kzalloc(&i2c->dev, sizeof *wm8985, GFP_KERNEL);
-@@ -1378,6 +1395,12 @@ static int wm8985_i2c_probe(struct i2c_client *i2c,
- 
- 	i2c_set_clientdata(i2c, wm8985);
- 
-+	of_id = of_match_device(wm8985_of_match, &i2c->dev);
-+	if (of_id)
-+		chip = of_id->data;
-+	else
-+		chip = (void *) id->driver_data;
-+
- 	wm8985->regmap = devm_regmap_init_i2c(i2c, &wm8985_regmap);
- 	if (IS_ERR(wm8985->regmap)) {
- 		ret = PTR_ERR(wm8985->regmap);
-@@ -1407,6 +1430,7 @@ MODULE_DEVICE_TABLE(i2c, wm8985_i2c_id);
- static struct i2c_driver wm8985_i2c_driver = {
- 	.driver = {
- 		.name = "wm8985",
-+		.of_match_table = wm8985_of_match,
- 	},
- 	.probe = wm8985_i2c_probe,
- 	.remove = wm8985_i2c_remove,
--- 
-1.9.1
+And the bootrom code showed something similar that would point to
+these registers.
+
+Ic0 and ic1 register values also show the valid memory regions:
+Especially IC[01]_SRC0 contains reference to the SRAM
+size on the CM - 0x20000000
+here the fump of devmem2:=20
+Value at address 0x3F00200C (0x76f3300c): 0x20000000.
+
+But as you point out that may also be the interrupt controller for the =
+VC4
+cores=E2=80=A6
+
+It is probably the location where the VC4 interrupt table is situated.
+
+
+> According to register documentation [1] the adresses belong to the in=
+terrupt
+> controller.
+>=20
+> Maybe 0x7ee00000 is the right address.
+This would also fall in range with the cache register ranges:
+0x7ee00000 SD
+0x7ee01000 L2
+0x7ee02000 L1=20
+
+L1 contains also IC0 and IC1 register names (L1_IC0_CONTROL et.al.)
+so I guess this is what has set me in the wrong direction...
+
+Thanks for pointing it out...
+
+I guess I will need to amend the patchset for that=E2=80=A6
+
+Martin
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
