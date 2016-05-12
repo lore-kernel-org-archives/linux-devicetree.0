@@ -1,106 +1,91 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v8 7/8] i2c: rk3x: add i2c support for rk3399 soc
-Date: Thu, 12 May 2016 23:07:34 +0800
-Message-ID: <57349C36.4030401@rock-chips.com>
-References: <1462908252-27016-1-git-send-email-david.wu@rock-chips.com>
- <1462908698-27284-1-git-send-email-david.wu@rock-chips.com>
- <CAD=FV=Uf-U3RBpgFbR3LkPAJTWqz3d02+H7iyA-SS-y=r3cXjA@mail.gmail.com>
- <5733D7AA.1060500@rock-chips.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 0/9] Add support for Tegra210 AGIC
+Date: Thu, 12 May 2016 16:19:23 +0100
+Message-ID: <1463066372-13115-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <5733D7AA.1060500@rock-chips.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug=EF=BC=8C
+The Tegra210 has a 2nd level interrupt controller located in a separate
+power domain to the main GIC interrupt controller and hence requires
+runtime-pm support.
 
-=E5=9C=A8 2016/5/12 9:08, David.Wu =E5=86=99=E9=81=93:
-> Hi Doug,
->
-> =E5=9C=A8 2016/5/12 1:37, Doug Anderson =E5=86=99=E9=81=93:
->> Hi,
->>
->> On Tue, May 10, 2016 at 12:31 PM, David Wu <david.wu@rock-chips.com>
->> wrote:
->>>   static void rk3x_i2c_adapt_div(struct rk3x_i2c *i2c, unsigned lon=
-g
->>> clk_rate)
->>>   {
->>>          struct i2c_timings *t =3D &i2c->t;
->>>          struct rk3x_i2c_calced_timings calc;
->>>          u64 t_low_ns, t_high_ns;
->>> +       u32 val;
->>>          int ret;
->>>
->>> -       ret =3D rk3x_i2c_calc_divs(clk_rate, t, &calc);
->>> +       ret =3D i2c->soc_data->calc_timings(clk_rate, t, &calc);
->>>          WARN_ONCE(ret !=3D 0, "Could not reach SCL freq %u",
->>> t->bus_freq_hz);
->>>
->>> -       clk_enable(i2c->clk);
->>> +       clk_enable(i2c->pclk);
->>> +
->>>          i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low &
->>> 0xffff),
->>>                     REG_CLKDIV);
->>> -       clk_disable(i2c->clk);
->>> +
->>> +       val =3D i2c_readl(i2c, REG_CON);
->>> +       val &=3D ~REG_CON_TUNING_MASK;
->>> +       val |=3D calc.tuning;
->>> +       i2c_writel(i2c, val, REG_CON);
->>
->> Another subtle bug here.  You need to be holding the spinlock here
->> since you're doing a read-modify-write of a register that is also
->> touched by the interrupt handler.  We never needed it before because
->> the previous register update wasn't touched by anyone else and it wa=
-s
->> a single atomic write.
->>
->> Also: technically if we are midway through a transfer when all this
->> happens then there will be a very short period of time when the two
->> timing-related registers won't match with each other.  I have no ide=
-a
->> how much that would matter, but in the very least it seems wise to
->> minimize the time where they mismatch.  So I'd probably write:
->>
->>         spin_lock_irqsave(&i2c->lock, flags);
->>         val =3D i2c_readl(i2c, REG_CON);
->>         val &=3D ~REG_CON_TUNING_MASK;
->>         val |=3D calc.tuning;
->>         i2c_writel(i2c, val, REG_CON);
->>         i2c_writel(i2c, (calc.div_high << 16) | (calc.div_low & 0xff=
-ff),
->>                    REG_CLKDIV);
->>         spin_unlock_irqrestore(&i2c->lock, flags);
->>
->> ...if we really end up with on a system with a dynamically changing
->> clock that uses the new-style timing and we see real problems, we ca=
-n
->> always try to come up with a way to avoid any problems.  Sound OK?
->>
->>
->
-> Good, add spin_lock is very necessary for atomic write here, thanks f=
-or
-> your advice.
+Add a platform driver for the GICs that require runtime-pm and make the
+necessary changes to the genirq and irqdomain core to support IRQ chips
+that require runtime-pm.
 
-I also found a subtle bug, it would clean the con register by use=20
-"i2c_writel(i2c, 0, REG_CON)" in rk3x_i2c_stop(). So i think it would b=
-e=20
-fixed by using read-modify-write way here in next version.
+This series is based upon Marc Z's irq/irqchip-v4.7 branch [0].
 
->
->> Otherwise, I think things look good to me.  Caesar's comments would
->> also be good to fix.
->>
->>
->> -Doug
->>
->>
->>
+Changes since V3:
+- Split the series into two, placing the clean-up/fixes patches into
+  another series [1]. The remaining patches in this series are for
+  adding runtime-pm support for irqchips and adding a platform driver
+  of second level GICs.
+- Dropped the patch to prevent early init of GICs if 'clocks' or
+  'power-domains' properties are present and re-added the patch to add
+  the compatibilty string for the Tegra210 AGIC.
+
+Changes since V2:
+- Corrected RPM support for irqchips in genirq core as pointed out by
+  Kevin Hilman.
+- Corrected patch to save the irq type when mapping the interrupt.
+- Dropped changes to DT binding documentation and added patch to prevent
+  early init of GICs if the 'clocks' and/or 'power-domains' DT
+  properties are present (as we have discussed).
+- Moved platform driver code into it's own source file.
+- Separate changes for preparing for the platform driver into 3 patches
+  in an attempt to make it more readable!
+- Added fix for checking an interrupt descriptor is valid during IRQ
+  setup.
+
+Changes since V1:
+- Updated GIC to only WARN and not return an error if configuring a PPI
+  fails but will still return an error if an SPI fails (per discussion
+  with Marc).
+- Dropped change to mask sense bits for GIC-v3 (as this is not
+  necessary)
+- Split patch to avoid setting interrupt type when mapping the IRQ into
+  two patches per TGLX's feedback.
+- Changed name of irqchip device structure to "parent_device"
+- Moved call to irq_chip_pm_get() outside of chip_bus_lock().
+- Dropped patch to remove clock names from GIC DT documentation and
+  added AGIC clock names.
+- Update GIC platform driver to look-up clocks names from static list.
+
+[0] http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/irqchip-4.7
+[1] http://marc.info/?l=linux-tegra&m=146289329915585&w=2
+
+Jon Hunter (9):
+  irqdomain: Fix handling of type settings for existing mappings
+  genirq: Look-up trigger type if not specified by caller
+  irqdomain: Don't set type when mapping an IRQ
+  genirq: Add runtime power management support for IRQ chips
+  irqchip/gic: Isolate early GIC initialisation code
+  irqchip/gic: Add helper function for chip initialisation
+  irqchip/gic: Prepare for adding platform driver
+  dt-bindings: arm-gic: Add documentation for Tegra210 AGIC
+  irqchip/gic: Add platform driver for non-root GICs that require RPM
+
+ .../bindings/interrupt-controller/arm,gic.txt      |   3 +-
+ drivers/irqchip/Kconfig                            |   6 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-gic-common.c                   |   4 +-
+ drivers/irqchip/irq-gic-pm.c                       | 187 +++++++++++++++++++++
+ drivers/irqchip/irq-gic.c                          | 136 ++++++++++-----
+ drivers/irqchip/irq-gic.h                          |  30 ++++
+ include/linux/irq.h                                |   4 +
+ include/linux/irqdomain.h                          |   3 +
+ kernel/irq/chip.c                                  |  35 ++++
+ kernel/irq/internals.h                             |   1 +
+ kernel/irq/irqdomain.c                             |  58 ++++++-
+ kernel/irq/manage.c                                |  38 ++++-
+ 13 files changed, 451 insertions(+), 55 deletions(-)
+ create mode 100644 drivers/irqchip/irq-gic-pm.c
+ create mode 100644 drivers/irqchip/irq-gic.h
+
+-- 
+2.1.4
