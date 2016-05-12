@@ -1,59 +1,36 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 0/4] add minimal bcm2835-sdram driver
-Date: Thu, 12 May 2016 11:15:27 -0700
-Message-ID: <87twi39m80.fsf@eliezer.anholt.net>
-References: <1463056732-5607-1-git-send-email-kernel@martin.sperl.org>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: RE: [PATCH v7 10/14] usb: otg: add hcd companion support
+Date: Thu, 12 May 2016 14:16:38 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1605121413060.5957-100000@netrider.rowland.org>
+References: <SG2PR06MB09194AB523C3ABDB425285C7D8730@SG2PR06MB0919.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463056732-5607-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB09194AB523C3ABDB425285C7D8730@SG2PR06MB0919.apcprd06.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Roger Quadros <rogerq@ti.com>, Rob Herring <robh@kernel.org>, "peter.chen@freescale.com" <peter.chen@freescale.com>, "balbi@kernel.org" <balbi@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "jun.li@freescale.com" <jun.li@freescale.com>, "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "abrestic@chromium.org" <abrestic@chromium.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Thu, 12 May 2016, Yoshihiro Shimoda wrote:
 
-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
+> > > Alan, does USB core even know which EHCI and OHCI are linked to the same port
+> > > or the handoff is software transparent?
+> > 
+> > The core knows.  It doesn't use the information for a whole lot of
+> > things, but it does use it in a couple of places.  Search for
+> > "companion" in core/hcd-pci.c and you'll see.
+> 
+> Thank you for the information. I didn't know this code.
+> If my understanding is correct, the core/hcd-pci.c code will not be used by non-PCI devices.
+> In other words, nobody sets "hcd->self.hs_companion" if we use such a device.
 
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->
-> As the sdram clock is a critical clock to the system
-> the minimal bcm2835-sdram driver claims (and enables)
-> this clock and also exposes the corresponding sdram
-> registers via debugfs.
+That's right.
 
-I don't think this is a good solution to the problem you are trying to
-work around.  You're relying on the fact that this driver gets
-successfully probed before a driver that would -EPROBE_DEFER on a
-sibling clock, which is not a guarantee.
+> So, I will try to add such a code if needed.
 
-Let's please continue the debugging of clock management on linux-clk.
+The main thing to watch out for is during system resume.  The EHCI
+controller must not be resumed until all of its companion controllers
+have been resumed.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXNMhAAAoJELXWKTbR/J7oo9wP/3yRUXPwlXDPORYo24VQ98R7
-IlL/sTSwQHx9eLN6Q/8i0Hge1PRIaofR2gogfTDXjB9muqHw0pbkZm3n8rvVxeif
-3muuZF1kEIALX5n9Acl4C/7F+rajh630Y5eXjraStB5EEL7Blzgr5J+PjjeVZAPQ
-7lhy+f+krZArTA+cEG18EVe7tY3KkiJA0nW0lyabZyd6NnYQ5wUXnthiNJNBvEm4
-KhFUVNRQZ5gEAqq4/fVAwexHpZmoOJU2/E6DgXiteuMXBGsE2Djs7s25NN4bO6+y
-o6d+TBYE1Ia/WJ9TQW+EIu2qzuCPaSOayk0tyzZrPI+1n11oX6vs0oKCY0GFyt5Q
-nCTPSiKp83cqVlBiZPAgjJGg9X1dkE752w1a6U16lOOd2Cl5n3KZJ2A+sjHnt/n3
-r5X/GVSVsgEJBl/lY1C+GSJaDUG8nAE8OMQcekNXUm0NUStpmT6/DIJKLp2fsFk4
-3ukcf6+GjU0Y2KuO7Zms6oQt01bRvzKGJ6+OWdckBtUL1vLS3DjCV1B70hj8N9kL
-kt7HCRo/IG64+gk7fhYv4QQfYkd17TtosKCfOTPZdMNMGtPODGPkYiHBsKS3caZv
-FIowvY6QnQFJFqc8iRtYe1MpdqngDEY8U9OWL7XSocHzZ15klt/ang8CaGaCHkK7
-R3nckrbt3z4E1muFk6ki
-=k9MJ
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alan Stern
