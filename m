@@ -1,66 +1,55 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835: add the bcm2835-sdram-controller
- to the dt
-Date: Thu, 12 May 2016 16:56:59 +0200 (CEST)
-Message-ID: <73859954.21004.36a104a6-5284-487f-b397-da7ff0407f1f.open-xchange@email.1und1.de>
-References: <1463056732-5607-1-git-send-email-kernel@martin.sperl.org>
- <1463056732-5607-4-git-send-email-kernel@martin.sperl.org>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC 1/3] dt-bindings: drm/mediatek: Add display binding for
+ Mediatek SoC MT2701
+Date: Thu, 12 May 2016 22:59:44 +0800
+Message-ID: <1463065184.17225.2.camel@mtksdaap41>
+References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
+	 <1463053795-55455-2-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463056732-5607-4-git-send-email-kernel@martin.sperl.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kernel@martin.sperl.org
-Cc: Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463053795-55455-2-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+On Thu, 2016-05-12 at 19:49 +0800, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add device tree binding documentation for the display subsystem in
+> Mediatek SoC MT2701
+> 
+> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../bindings/display/mediatek/mediatek,disp.txt    |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index db6e77e..53b3cc3 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -40,6 +40,7 @@ Required properties (all function blocks):
+>  	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
+>  	"mediatek,<chip>-disp-mutex" - display mutex
+>  	"mediatek,<chip>-disp-od"    - overdrive
+> +	"mediatek,<chip>-disp-bls"   - backlight
+>  - reg: Physical base address and length of the function block register space
+>  - interrupts: The interrupt signal from the function block (required, except for
+>    merge and split function blocks).
+
 
 Hi,
 
-> kernel@martin.sperl.org hat am 12. Mai 2016 um 14:38 geschrieben:
-> 
-> 
-> From: Martin Sperl <kernel@martin.sperl.org>
-> 
-> Add the bcm2835 sdram controller to the device tree.
-> 
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> ---
->  arch/arm/boot/dts/bcm283x.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index 8aaf193..9db9d97 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -22,6 +22,12 @@
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  
-> +		memory-controller@7e002000 {
-> +			compatible = "brcm,bcm2835-sdram";
-> +			reg = <0x7e002000 0x58>, <0x7e002800 0x58>;
+This one is in conflict with "Support Mediatek Soc MT2701 disp pwm"
+series Weiqing sent last week, which add disp-bls support to display pwm
+driver.
 
-where do you get these addresses?
+Joe.C
 
-According to register documentation [1] the adresses belong to the interrupt
-controller.
 
-Maybe 0x7ee00000 is the right address.
-
-[1] - https://github.com/hermanhermitage/videocoreiv/wiki/Register-Documentation
-
-> +			clocks = <&clocks BCM2835_CLOCK_SDRAM>;
-> +		};
-> +
->  		timer@7e003000 {
->  			compatible = "brcm,bcm2835-system-timer";
->  			reg = <0x7e003000 0x1000>;
-> -- 
-> 2.1.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
