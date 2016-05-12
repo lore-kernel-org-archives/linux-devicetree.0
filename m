@@ -1,57 +1,63 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH v2 0/2] watchdog: Add Aspeed watchdog driver
-Date: Thu, 12 May 2016 23:47:09 +0930
-Message-ID: <1463062631-16432-1-git-send-email-joel@jms.id.au>
-References: <1462797277-14969-1-git-send-email-joel@jms.id.au>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1462797277-14969-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V6 0/3] Add support for Tegra210 ADMA
+Date: Thu, 12 May 2016 15:23:42 +0100
+Message-ID: <1463063025-28605-1-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add support for the Tegra210 Audio DMA (ADMA) controller which is part
+of the Audio Processing Engine and used for transferring audio data.
 
-These patches add support for the watchdog timer found in Aspeed ast2400 and
-ast2500 BMC SoCs.
+V6 changes:
+- Removed stub function tegra_adma_prep_slave_sg() as it is no longer
+  needed.
 
-The u-boot that ships on the edk and with many systems leaves the watchdog
-running when jumping to the kernel, making this driver required for operation.
+V5 changes:
+- Removed APE and APE2APB clocks as these clocks rightfully belong
+  in the ACONNECT bus driver [0] and the ADMA is child of this device.
+  Dropped power-domain from DT binding as this will be handled by
+  ACONNECT bus driver as well.
+- Minor update to case statement formatting based upon feedback from
+  Vinod.
+- Make ADMA dependent on Tegra210 as this is the only device
+  (currently) that supports it.
 
-It has been tested on the ast2400 in an OpenPower Palmetto, and the ast2500-edk
-dev board.
+V4 changes:
+- Updated DT binding to include 'power-domains' entry for handling
+  the APE power domain inconjunction with runtime-pm.
+- Added missing clocks to the DT binding that were being handled by
+  the bootloader.
+- Added support for PM_CLK to simplify clock handling
 
-Changes in v2:
+V3 changes:
+- Updated DT binding per feedback from Mark and Stephen
+- Fixed up items mentioned by Vinod
 
-Addressed review from Guenter:
- - dropped the drv_dbgs
- - added defines for all of the constants
- - clarified the type of reset we want
- - leaves the watchdog running
+V2 changes:
+- Re-worked device-tree binding
 
-This also updates the device tree compatible string following review from Rob.
-As Arnd already took my device tree tree, I will send him a patch to fix that.
+[0] http://marc.info/?l=devicetree&m=146193804830747&w=2
 
-Cheers,
+Jon Hunter (3):
+  Documentation: DT: Add binding documentation for NVIDIA ADMA
+  dmaengine: tegra-adma: Add support for Tegra210 ADMA
+  MAINTAINERS: Update Tegra DMA maintainers
 
-Joel
-
-Joel Stanley (2):
-  doc/devicetree: Add Aspeed watchdog timer bindings
-  watchdog: Add Aspeed watchdog driver
-
- .../devicetree/bindings/watchdog/aspeed-wdt.txt    |  16 ++
- drivers/watchdog/Kconfig                           |  13 ++
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/aspeed_wdt.c                      | 209 +++++++++++++++++++++
- 4 files changed, 239 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
- create mode 100644 drivers/watchdog/aspeed_wdt.c
+ .../bindings/dma/nvidia,tegra210-adma.txt          |  55 ++
+ MAINTAINERS                                        |   5 +-
+ diff.txt                                           |  10 +
+ drivers/dma/Kconfig                                |  14 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/tegra210-adma.c                        | 840 +++++++++++++++++++++
+ 6 files changed, 923 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+ create mode 100644 diff.txt
+ create mode 100644 drivers/dma/tegra210-adma.c
 
 -- 
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
