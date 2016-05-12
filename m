@@ -1,75 +1,66 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 01/11] clk: sunxi: Add display and
- TCON0 clocks driver
-Date: Thu, 12 May 2016 06:39:20 +0300
-Message-ID: <1463024360.16747.4.camel@plaes.org>
-References: <1461590572-4027-1-git-send-email-maxime.ripard@free-electrons.com>
-	 <1461590572-4027-2-git-send-email-maxime.ripard@free-electrons.com>
-	 <20160506223002.GE3492@codeaurora.org> <20160508200308.GF6167@lukather>
-	 <20160509223238.GW3492@codeaurora.org>
-	 <20160509223924.GX3492@codeaurora.org> <1462907459.9981.0.camel@plaes.org>
-	 <20160511221541.GG3492@codeaurora.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v7 10/14] usb: otg: add hcd companion support
+Date: Thu, 12 May 2016 04:00:29 +0000
+Message-ID: <SG2PR06MB09194AB523C3ABDB425285C7D8730@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <57333DFF.3090609@ti.com>
+ <Pine.LNX.4.44L0.1605111043030.1882-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160511221541.GG3492@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Alexander Kaplan <alex@nextthing.co>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1605111043030.1882-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Content-Language: ja-JP
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-05-11 at 15:15 -0700, Stephen Boyd wrote:
-> On 05/10, Priit Laes wrote:
-> >=20
-> > On Mon, 2016-05-09 at 15:39 -0700, Stephen Boyd wrote:
-> > >=20
-> > > On 05/09, Stephen Boyd wrote:
-> > > >=20
-> > > >=20
-> > > >=20
-> > > > Ok I applied this one to clk-next.
-> > > >=20
-> > > And I squashed this in to silence the following checker warning.
-> > >=20
-> > > drivers/clk/sunxi/clk-sun4i-display.c:110:33: warning: Variable
-> > > length array is used.
-> > >=20
-> > > ---8<---
-> > > diff --git a/drivers/clk/sunxi/clk-sun4i-display.c
-> > > b/drivers/clk/sunxi/clk-sun4i-display.c
-> > > index f02e250e64ed..f8ff6c4a5633 100644
-> > > --- a/drivers/clk/sunxi/clk-sun4i-display.c
-> > > +++ b/drivers/clk/sunxi/clk-sun4i-display.c
-> > > @@ -107,7 +107,7 @@ static int
-> > > sun4i_a10_display_reset_xlate(struct
-> > > reset_controller_dev *rcdev,
-> > > =C2=A0static void __init sun4i_a10_display_init(struct device_nod=
-e
-> > > *node,
-> > > =C2=A0					=C2=A0=C2=A0const struct
-> > > sun4i_a10_display_clk_data *data)
-> > > =C2=A0{
-> > > -	const char *parents[data->parents];
-> > > +	const char *parents[4];
-> > This change breaks at least de_[bf]e clocks which have 3 clock
-> > parents.
+Hi,
 
-> I just used the largest data->parents number, which was 4. How
-> does that break anything?
+> From: Alan Stern
+> Sent: Wednesday, May 11, 2016 11:47 PM
+> 
+> On Wed, 11 May 2016, Roger Quadros wrote:
+> 
+> > > What I mean is if you have 2 EHCI controllers with 2 companion
+> > > controllers, don't you need to know which companion goes with which EHCI
+> > > controller? Just like you do for the otg-controller property.
+> > >
+> >
+> > That is a very good point. I'm not very sure and it seems that current code won't work
+> > with multiple EHCI + companion instances.
 
-If you look at the=C2=A0sun4i_a10_display_init, it contains this block:
+I may misunderstand this topic, but if I use the following environment, it works correctly.
 
-=C2=A0 =C2=A0 ret =3D of_clk_parent_fill(node, parents, ARRAY_SIZE(pare=
-nts));
-=C2=A0=C2=A0=C2=A0=C2=A0if (ret !=3D ARRAY_SIZE(parents)) {
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_err("%s: Could not r=
-etrieve the parents\n", clk_name);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto unmap;
-=C2=A0=C2=A0=C2=A0=C2=A0}
+< My environment >
+- an otg controller: Sets hcd-needs-companion.
+- ehci0 and ohci0 and a function: They connect to the otg controller using "otg-controller" property.
+- ehci1 and ohci1: No "otg-controller" property.
+- ehci2 and ohci2: No "otg-controller" property.
 
-of_clk_parent_fill returns 3 for de_be/de_fe nodes, and
-ARRAY_SIZE(parents) is 4.
+In this environment, all hosts works correctly.
+Also I think if we have 2 otg controlelrs, it should be work because otg_dev instance differs.
+Or, does this topic assume an otg controller handles 2 EHCI controllers?
+I'm not sure such environment actually exists.
 
-P=C3=A4ikest,
-Priit :)
+> > Alan, does USB core even know which EHCI and OHCI are linked to the same port
+> > or the handoff is software transparent?
+> 
+> The core knows.  It doesn't use the information for a whole lot of
+> things, but it does use it in a couple of places.  Search for
+> "companion" in core/hcd-pci.c and you'll see.
+
+Thank you for the information. I didn't know this code.
+If my understanding is correct, the core/hcd-pci.c code will not be used by non-PCI devices.
+In other words, nobody sets "hcd->self.hs_companion" if we use such a device.
+So, I will try to add such a code if needed.
+
+Best regards,
+Yoshihiro Shimoda
+
+> Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
