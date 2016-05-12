@@ -1,79 +1,51 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] phy: add support for a reset-gpio specification
-Date: Fri, 13 May 2016 00:41:47 +0300
-Message-ID: <4363f9c0-d447-5fc1-3ac9-382a172a7087@cogentembedded.com>
-References: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v4 01/11] clk: sunxi: Add display and
+ TCON0 clocks driver
+Date: Thu, 12 May 2016 14:47:02 -0700
+Message-ID: <20160512214702.GL3492@codeaurora.org>
+References: <1461590572-4027-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160506223002.GE3492@codeaurora.org>
+ <20160508200308.GF6167@lukather>
+ <20160509223238.GW3492@codeaurora.org>
+ <20160509223924.GX3492@codeaurora.org>
+ <1462907459.9981.0.camel@plaes.org>
+ <20160511221541.GG3492@codeaurora.org>
+ <1463024360.16747.4.camel@plaes.org>
+ <20160512065943.GX3733@lukather> <20160512083047.GY3733@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
-Cc: kernel@pengutronix.de, "Andrew F . Davis" <afd@ti.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20160512083047.GY3733@lukather>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Priit Laes <plaes@plaes.org>, Mike Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Alexander Kaplan <alex@nextthing.co>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2016 01:00 PM, Uwe Kleine-K=C3=B6nig wrote:
-
-> The framework only asserts (for now) that the reset gpio is not activ=
-e.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/net/phy.txt | 3 +++
->  drivers/net/phy/phy_device.c                  | 8 ++++++++
->  2 files changed, 11 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Document=
-ation/devicetree/bindings/net/phy.txt
-> index bc1c3c8bf8fa..c00a9a894547 100644
-> --- a/Documentation/devicetree/bindings/net/phy.txt
-> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> @@ -35,6 +35,8 @@ Optional Properties:
->  - broken-turn-around: If set, indicates the PHY device does not corr=
-ectly
->    release the turn around line low at the end of a MDIO transaction.
->
-> +- reset-gpios: Reference to a GPIO used to reset the phy.
-> +
->  Example:
->
->  ethernet-phy@0 {
-> @@ -42,4 +44,5 @@ ethernet-phy@0 {
->  	interrupt-parent =3D <40000>;
->  	interrupts =3D <35 1>;
->  	reg =3D <0>;
-> +	reset-gpios =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
- >  };
-
-    OK, the example has PHY ID specified in the "compatible" prop. It's=
- a=20
-vital detail, you should mention it somewhere...
-
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devic=
-e.c
-> index e551f3a89cfd..7d666ab47271 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-[...]
-> @@ -1569,9 +1570,16 @@ static int phy_probe(struct device *dev)
->  	struct device_driver *drv =3D phydev->mdio.dev.driver;
->  	struct phy_driver *phydrv =3D to_phy_driver(drv);
->  	int err =3D 0;
-> +	struct gpio_descs *reset_gpios;
->
->  	phydev->drv =3D phydrv;
->
-> +	/* take phy out of reset */
-> +	reset_gpios =3D devm_gpiod_get_array_optional(dev, "reset",
-> +						    GPIOD_OUT_LOW);
-> +	if (IS_ERR(reset_gpios))
-> +		return PTR_ERR(reset_gpios);
-> +
-
-    It would have been logical to assert back the reset GPIO in phy_rem=
-ove(),=20
-no? Also, you'd need to store the GPIO permanently somewhere...
-
-MBR, Sergei
+T24gMDUvMTIsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Y2xrL3N1bnhpL2Nsay1zdW40aS1kaXNwbGF5LmMgYi9kcml2ZXJzL2Nsay9zdW54aS9jbGstc3Vu
+NGktZGlzcGxheS5jCj4gaW5kZXggNzA4MDNhYTcwMjhjLi45NzgwZmFjNmQwMjkgMTAwNjQ0Cj4g
+LS0tIGEvZHJpdmVycy9jbGsvc3VueGkvY2xrLXN1bjRpLWRpc3BsYXkuYwo+ICsrKyBiL2RyaXZl
+cnMvY2xrL3N1bnhpL2Nsay1zdW40aS1kaXNwbGF5LmMKPiBAQCAtMTI4LDggKzEyOCw4IEBAIHN0
+YXRpYyB2b2lkIF9faW5pdCBzdW40aV9hMTBfZGlzcGxheV9pbml0KHN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqbm9kZSwKPiAgCQlyZXR1cm47Cj4gIAl9Cj4gIAo+IC0JcmV0ID0gb2ZfY2xrX3BhcmVudF9m
+aWxsKG5vZGUsIHBhcmVudHMsIEFSUkFZX1NJWkUocGFyZW50cykpOwo+IC0JaWYgKHJldCAhPSBB
+UlJBWV9TSVpFKHBhcmVudHMpKSB7Cj4gKwlyZXQgPSBvZl9jbGtfcGFyZW50X2ZpbGwobm9kZSwg
+cGFyZW50cywgZGF0YS0+cGFyZW50cyk7Cj4gKwlpZiAocmV0ICE9IGRhdGEtPnBhcmVudHMpIHsK
+PiAgCQlwcl9lcnIoIiVzOiBDb3VsZCBub3QgcmV0cmlldmUgdGhlIHBhcmVudHNcbiIsIGNsa19u
+YW1lKTsKPiAgCQlnb3RvIHVubWFwOwo+ICAJfQoKQWggb2suIFRoYW5rcyBmb3IgY2F0Y2hpbmcg
+dGhhdCB0aGlua28gYW5kIHNlbmRpbmcgYSBwYXRjaC4KCi0tIApRdWFsY29tbSBJbm5vdmF0aW9u
+IENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBG
+b3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
