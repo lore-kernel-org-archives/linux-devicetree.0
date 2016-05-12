@@ -1,69 +1,64 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V6 2/3] dmaengine: tegra-adma: Add support for Tegra210
- ADMA
-Date: Thu, 12 May 2016 17:22:45 +0100
-Message-ID: <5734ADD5.5040800@nvidia.com>
-References: <1463063025-28605-1-git-send-email-jonathanh@nvidia.com>
- <1463063025-28605-3-git-send-email-jonathanh@nvidia.com>
- <20160512160318.GD2274@localhost>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal
+ implementation
+Date: Thu, 12 May 2016 17:31:31 +0100
+Message-ID: <20160512163131.GF6261@sirena.org.uk>
+References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
+ <1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
+ <20160427152532.GX3217@sirena.org.uk>
+ <AM2PR04MB072250B43DE37A38E374679989700@AM2PR04MB0722.eurprd04.prod.outlook.com>
+ <20160509102840.GB6292@sirena.org.uk>
+ <AM2PR04MB0722180ABF5DB9406F56162B89700@AM2PR04MB0722.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160512160318.GD2274@localhost>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ULkDCyeHsmlwbqED"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AM2PR04MB0722180ABF5DB9406F56162B89700-IPoeDzmMJYrzmGvksFXQpM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Cc: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 12/05/16 17:03, Vinod Koul wrote:
-> On Thu, May 12, 2016 at 03:23:44PM +0100, Jon Hunter wrote:
->> Add support for the Tegra210 Audio DMA controller that is used for
->> transferring data between system memory and the Audio sub-system.
->> The driver only supports cyclic transfers because this is being solely
->> used for audio.
->>
->> This driver is based upon the work by Dara Ramesh <dramesh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  diff.txt                    |  10 +
->>  drivers/dma/Kconfig         |  14 +
->>  drivers/dma/Makefile        |   1 +
->>  drivers/dma/tegra210-adma.c | 840 ++++++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 865 insertions(+)
->>  create mode 100644 diff.txt
->>  create mode 100644 drivers/dma/tegra210-adma.c
->>
->> diff --git a/diff.txt b/diff.txt
->> new file mode 100644
->> index 000000000000..0562f35b6e82
->> --- /dev/null
->> +++ b/diff.txt
->> @@ -0,0 +1,10 @@
->> + drivers/i2c/i2c-core.c                             |    61 +-
->> + drivers/i2c/i2c-mux.c                              |   170 +-
->> + drivers/i2c/muxes/i2c-mux-gpio.c                   |    18 +
->> + drivers/i2c/muxes/i2c-mux-pinctrl.c                |    38 +
->> + drivers/irqchip/irq-gic-common.c                   |    13 +
->> + drivers/irqchip/irq-gic-common.h                   |     3 +
->> + drivers/irqchip/irq-gic.c                          |    87 +-
->> + sound/core/timer.c                                 |     3 +
->> + sound/soc/codecs/rt5645.c                          |    10 +-
->> + sound/soc/soc-topology.c                           |     2 +
-> 
-> ???
+--ULkDCyeHsmlwbqED
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ugh ... sorry some left over debug.
+On Mon, May 09, 2016 at 10:58:08AM +0000, Yao Yuan wrote:
 
-> 
->> + * ADMA driver for Nvidia's Tegra210 ADMA controller.
->> + *
->> + * Copyright (c) 2015, NVIDIA CORPORATION.  All rights reserved.
-> 
-> 2016?
+> For example, if DSPI controller register is BE, so I set big-endian in DT.
+> That means we should R/W the DSPI controller register with big-endian.
+> Then I can think all of the value we R/W to/from DSPI controller register, we can
+> Think they are the BE.
+> So that we can understand it easy.
 
-Yes will fix.
+> That means no matter core is LE or BE, we both need get the value from DSPI register
+> with big endian.
 
-Jon
+That's not how regmap is intended to be used, the intention is that the
+driver will interact with native endian values and regmap will hide the
+endianness changes.  You could mask this with some cpu_to_be() and
+be_to_cpu() usage but I'm not sure it's a great idea or what it's buying
+you.
+
+--ULkDCyeHsmlwbqED
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXNK/iAAoJECTWi3JdVIfQTtIH/jOoIqmqJRFrGFiiuOzvwcZl
+LuGO+au9/oAq6tWxVTSF+84WVzTstHVLFoX4xx2N356XPKstUf8V38gjuuAMP4n4
+hdrUVkr+R8iNLRsoHv2D0FV3cUiUHnGmMAkuuikwWHP1clCmQl6554HNtFYHMIHR
+APmo7YBG3sv+w5N/D7ztvBlabscdrUOBiz6W3xYmYmBCnkpq7o/7qGxbBB5oqVKJ
+tOGX2yMLVyxsMSVGLAaV835URmAApvvYwI9tTVpk4OjrF0Oys5vwLyHKcMCpFrh9
+ud2XyS1G9V+pseyMQkZFraeD9aBlXtlPvA+SE6RWcIiniGF1Kz/F3+DBfl37oIA=
+=rHFK
+-----END PGP SIGNATURE-----
+
+--ULkDCyeHsmlwbqED--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
