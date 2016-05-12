@@ -1,64 +1,54 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal
- implementation
-Date: Thu, 12 May 2016 17:31:31 +0100
-Message-ID: <20160512163131.GF6261@sirena.org.uk>
-References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
- <1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
- <20160427152532.GX3217@sirena.org.uk>
- <AM2PR04MB072250B43DE37A38E374679989700@AM2PR04MB0722.eurprd04.prod.outlook.com>
- <20160509102840.GB6292@sirena.org.uk>
- <AM2PR04MB0722180ABF5DB9406F56162B89700@AM2PR04MB0722.eurprd04.prod.outlook.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] ARM/ASoC: OMAP3: Fix McBSP2/3 sidetone support
+Date: Thu, 12 May 2016 09:42:01 -0700
+Message-ID: <20160512164201.GQ5995@atomide.com>
+References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
+ <69ff65ee-e5d1-09fb-fd91-8d7b4d8fdda4@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ULkDCyeHsmlwbqED"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AM2PR04MB0722180ABF5DB9406F56162B89700-IPoeDzmMJYrzmGvksFXQpM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-Cc: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <69ff65ee-e5d1-09fb-fd91-8d7b4d8fdda4-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160511 01:46]:
+> Tony, Paul,
+> 
+> On 04/29/16 13:53, Peter Ujfalusi wrote:
+> > Hi,
+> > 
+> > Based on the ongoing discussion on v2 (ARM: OMAP3: Fix McBSP2/3 hwmod setup for
+> > sidetone) I have dropped the removal of the sidetone hwmod and only corrected
+> > it. The series now includes all related changes needed to have correct sidetone
+> > support whenever we boot in legacy or in DT mode.
+> > 
+> > This time the ASoC part have dependency on earlier patches so they can not be
+> > applied separately.
+> 
+> How should we proceed from here? I don't want to start designing the ST
+> separation infrastructure which would be based on this series, but if there
+> are outstanding issues found on this, I would need to go back to the drawing
+> board.
+> The separation will be mostly new code and code shuffle in ASoC, but for
+> legacy I will need to build up something in arch as well, so I would need at
+> least one release cycle to start with things.
 
---ULkDCyeHsmlwbqED
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well looks like we have all the acks, so I can apply these. We have
+not heard from Paul on this for a while, so let's wait few days for
+that.
 
-On Mon, May 09, 2016 at 10:58:08AM +0000, Yao Yuan wrote:
+Meanwhile, Mark wanted to fix the subject for one of the patches, care
+to repost that at least? Or the whole series with acks, could be a
+pull request too against v4.6-rc1 :)
 
-> For example, if DSPI controller register is BE, so I set big-endian in DT.
-> That means we should R/W the DSPI controller register with big-endian.
-> Then I can think all of the value we R/W to/from DSPI controller register, we can
-> Think they are the BE.
-> So that we can understand it easy.
+Regards,
 
-> That means no matter core is LE or BE, we both need get the value from DSPI register
-> with big endian.
+Tony
 
-That's not how regmap is intended to be used, the intention is that the
-driver will interact with native endian values and regmap will hide the
-endianness changes.  You could mask this with some cpu_to_be() and
-be_to_cpu() usage but I'm not sure it's a great idea or what it's buying
-you.
-
---ULkDCyeHsmlwbqED
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXNK/iAAoJECTWi3JdVIfQTtIH/jOoIqmqJRFrGFiiuOzvwcZl
-LuGO+au9/oAq6tWxVTSF+84WVzTstHVLFoX4xx2N356XPKstUf8V38gjuuAMP4n4
-hdrUVkr+R8iNLRsoHv2D0FV3cUiUHnGmMAkuuikwWHP1clCmQl6554HNtFYHMIHR
-APmo7YBG3sv+w5N/D7ztvBlabscdrUOBiz6W3xYmYmBCnkpq7o/7qGxbBB5oqVKJ
-tOGX2yMLVyxsMSVGLAaV835URmAApvvYwI9tTVpk4OjrF0Oys5vwLyHKcMCpFrh9
-ud2XyS1G9V+pseyMQkZFraeD9aBlXtlPvA+SE6RWcIiniGF1Kz/F3+DBfl37oIA=
-=rHFK
------END PGP SIGNATURE-----
-
---ULkDCyeHsmlwbqED--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
