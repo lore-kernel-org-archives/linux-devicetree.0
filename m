@@ -1,38 +1,66 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/4] add minimal bcm2835-sdram driver
-Date: Thu, 12 May 2016 16:50:54 +0200 (CEST)
-Message-ID: <1861597197.20753.36a104a6-5284-487f-b397-da7ff0407f1f.open-xchange@email.1und1.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835: add the bcm2835-sdram-controller
+ to the dt
+Date: Thu, 12 May 2016 16:56:59 +0200 (CEST)
+Message-ID: <73859954.21004.36a104a6-5284-487f-b397-da7ff0407f1f.open-xchange@email.1und1.de>
 References: <1463056732-5607-1-git-send-email-kernel@martin.sperl.org>
+ <1463056732-5607-4-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463056732-5607-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463056732-5607-4-git-send-email-kernel@martin.sperl.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kernel@martin.sperl.org
+Cc: Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hi,
 
-> kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org hat am 12. Mai 2016 um 14:38 geschrieben:
+> kernel@martin.sperl.org hat am 12. Mai 2016 um 14:38 geschrieben:
 > 
 > 
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> From: Martin Sperl <kernel@martin.sperl.org>
 > 
-> As the sdram clock is a critical clock to the system
-> the minimal bcm2835-sdram driver claims (and enables)
-> this clock and also exposes the corresponding sdram
-> registers via debugfs.
+> Add the bcm2835 sdram controller to the device tree.
+> 
+> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> ---
+>  arch/arm/boot/dts/bcm283x.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> index 8aaf193..9db9d97 100644
+> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> @@ -22,6 +22,12 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  
+> +		memory-controller@7e002000 {
+> +			compatible = "brcm,bcm2835-sdram";
+> +			reg = <0x7e002000 0x58>, <0x7e002800 0x58>;
 
-sounds like this driver should fix an clock handling issue. Unfortunately this
-isn't a solution in case the driver is disabled.
+where do you get these addresses?
 
-Does the GPU firmware handle the SDRAM controller or is it initialized by
-bootcode?
+According to register documentation [1] the adresses belong to the interrupt
+controller.
 
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maybe 0x7ee00000 is the right address.
+
+[1] - https://github.com/hermanhermitage/videocoreiv/wiki/Register-Documentation
+
+> +			clocks = <&clocks BCM2835_CLOCK_SDRAM>;
+> +		};
+> +
+>  		timer@7e003000 {
+>  			compatible = "brcm,bcm2835-system-timer";
+>  			reg = <0x7e003000 0x1000>;
+> -- 
+> 2.1.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
