@@ -1,69 +1,87 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
-Date: Thu, 12 May 2016 09:57:56 -0700
-Message-ID: <20160512165755.GR5995@atomide.com>
-References: <1461925297-9734-1-git-send-email-peter.ujfalusi@ti.com>
- <6ee9d67a-e907-715a-f3f5-d90a470314c3@ti.com>
- <20160504172634.GS5995@atomide.com>
- <572A38FD.9050801@ti.com>
- <20160505184609.GB5995@atomide.com>
- <2822D1C2B9B19F4A8261F756A13373F801BEF7B4@DFLE11.ent.ti.com>
- <CAPjucKb+4vd8Ar3MATCuTx+9R36PeB0hbvwDaAD1KTZFCiVJEA@mail.gmail.com>
- <2822D1C2B9B19F4A8261F756A13373F801BF86D2@DFLE11.ent.ti.com>
- <2822D1C2B9B19F4A8261F756A13373F801BF8703@DFLE11.ent.ti.com>
- <CAPjucKb2PLSZcD3YZ9xQk1F62ugFaGAkBBqMp5GmoWFd0H8Vfg@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V7 1/3] Documentation: DT: Add binding documentation for NVIDIA ADMA
+Date: Thu, 12 May 2016 18:02:22 +0100
+Message-ID: <1463072544-14906-2-git-send-email-jonathanh@nvidia.com>
+References: <1463072544-14906-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPjucKb2PLSZcD3YZ9xQk1F62ugFaGAkBBqMp5GmoWFd0H8Vfg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduard Gavin <egavin@iseebcn.com>
-Cc: "Menon, Nishanth" <nm@ti.com>, Enric Balletbo i Serra <eballetbo@iseebcn.com>, =?utf-8?Q?Agust=C3=AD?= Fontquerni <af@iseebcn.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463072544-14906-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Eduard Gavin <egavin@iseebcn.com> [160509 07:43]:
-> Dear Nishanth,
->   In igepV5 the LDO7 is connected to:
->     VDDA_DSIPORTA - ball AA33
->     VDDA_DSIPORTC - ball AE33
->     VDDA_HDMI - ball AN25
->   LDO4 is connected to:
->     VPP1 - ball AD9
+Add device-tree binding documentation for the Tegra210 Audio DMA
+controller.
 
-Thanks for the info, here's an updated patch with comments and now
-using 1.8V instead of the 2.0V omap5-board-common.dtsi.
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/dma/nvidia,tegra210-adma.txt          | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
 
-Regards,
-
-Tony
-
-8< -----------------
-From: Tony Lindgren <tony@atomide.com>
-Date: Mon, 9 May 2016 07:51:00 -0700
-Subject: [PATCH] ARM: dts: Fix ldo7 source for HDMI on igepv5
-
-Fix ldo7 source for HDMI on igepv5.
-
-Suggested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-
---- a/arch/arm/boot/dts/omap5-igep0050.dts
-+++ b/arch/arm/boot/dts/omap5-igep0050.dts
-@@ -35,6 +35,16 @@
- 	};
- };
- 
-+/*
-+ * LDO7 is used for HDMI: VDDA_DSIPORTA - ball AA33, VDDA_DSIPORTC - ball AE33
-+ * VDDA_HDMI - ball AN25. LDO4 is: VPP1 - ball AD9.
-+ */
-+&ldo7_reg {
-+	status = "okay";
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+};
+diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+new file mode 100644
+index 000000000000..1e1dc8f972e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+@@ -0,0 +1,55 @@
++* NVIDIA Tegra Audio DMA (ADMA) controller
 +
- &omap5_pmx_core {
- 	i2c4_pins: pinmux_i2c4_pins {
- 		pinctrl-single,pins = <
++The Tegra Audio DMA controller that is used for transferring data
++between system memory and the Audio Processing Engine (APE).
++
++Required properties:
++- compatible: Must be "nvidia,tegra210-adma".
++- reg: Should contain DMA registers location and length. This should be
++  a single entry that includes all of the per-channel registers in one
++  contiguous bank.
++- interrupt-parent: Phandle to the interrupt parent controller.
++- interrupts: Should contain all of the per-channel DMA interrupts in
++  ascending order with respect to the DMA channel index.
++- clocks: Must contain one entry for the ADMA module clock
++  (TEGRA210_CLK_D_AUDIO).
++- clock-names: Must contain the name "d_audio" for the corresponding
++  'clocks' entry.
++- #dma-cells : Must be 1. The first cell denotes the receive/transmit
++  request number and should be between 1 and the maximum number of
++  requests supported. This value corresponds to the RX/TX_REQUEST_SELECT
++  fields in the ADMA_CHn_CTRL register.
++
++
++Example:
++
++adma: dma@702e2000 {
++	compatible = "nvidia,tegra210-adma";
++	reg = <0x0 0x702e2000 0x0 0x2000>;
++	interrupt-parent = <&tegra_agic>;
++	interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&tegra_car TEGRA210_CLK_D_AUDIO>;
++	clock-names = "d_audio";
++	#dma-cells = <1>;
++};
+-- 
+2.1.4
