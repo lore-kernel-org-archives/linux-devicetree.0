@@ -1,65 +1,71 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 6/6] pinctrl: tegra: Add driver to configure voltage and
- power state of io pads
-Date: Thu, 12 May 2016 20:48:26 +0100
-Message-ID: <5734DE0A.5090600@nvidia.com>
-References: <1462191434-28933-1-git-send-email-ldewangan@nvidia.com>
- <1462191434-28933-7-git-send-email-ldewangan@nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: omap5-igep0050: Correct hdmi regulator
+Date: Thu, 12 May 2016 13:26:57 -0700
+Message-ID: <20160512202656.GU5995@atomide.com>
+References: <20160504172634.GS5995@atomide.com>
+ <572A38FD.9050801@ti.com>
+ <20160505184609.GB5995@atomide.com>
+ <2822D1C2B9B19F4A8261F756A13373F801BEF7B4@DFLE11.ent.ti.com>
+ <CAPjucKb+4vd8Ar3MATCuTx+9R36PeB0hbvwDaAD1KTZFCiVJEA@mail.gmail.com>
+ <2822D1C2B9B19F4A8261F756A13373F801BF86D2@DFLE11.ent.ti.com>
+ <2822D1C2B9B19F4A8261F756A13373F801BF8703@DFLE11.ent.ti.com>
+ <CAPjucKb2PLSZcD3YZ9xQk1F62ugFaGAkBBqMp5GmoWFd0H8Vfg@mail.gmail.com>
+ <20160512165755.GR5995@atomide.com>
+ <5734D733.9060400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462191434-28933-7-git-send-email-ldewangan@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <5734D733.9060400@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Eduard Gavin <egavin@iseebcn.com>, Enric Balletbo i Serra <eballetbo@iseebcn.com>, =?utf-8?Q?Agust=C3=AD?= Fontquerni <af@iseebcn.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 02/05/16 13:17, Laxman Dewangan wrote:
-> NVIDIA Tegra210 supports the IO pads which can operate at 1.8V
-> or 3.3V I/O voltage levels. Also the IO pads can be configured
-> for power down state if it is not used. SW needs to configure the
-> voltage level of IO pads based on IO rail voltage and its power
-> state based on platform usage.
+* Nishanth Menon <nm@ti.com> [160512 12:21]:
+> On 05/12/2016 11:57 AM, Tony Lindgren wrote:
+> > + * LDO7 is used for HDMI: VDDA_DSIPORTA - ball AA33, VDDA_DSIPORTC - ball AE33
+> > + * VDDA_HDMI - ball AN25. LDO4 is: VPP1 - ball AD9.
 > 
-> The voltage and power state configurations of pads are provided
-> through pin control frameworks. Add pin control driver for Tegra's
-> IO pads' voltage and power state configurations.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> 
-> ---
-> Changes from V1:
-> - Use the generic pincontrol property for low power enable/disable.
-> - sync with latest and remove all MODULE* macros
-> - Use renamed APIs form PMC
-> ---
->  drivers/pinctrl/tegra/Makefile                  |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra210-io-pad.c | 301 ++++++++++++++++++++++++
->  2 files changed, 302 insertions(+)
->  create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra210-io-pad.c
+> We should set ldo4_reg as 2v as well (default in omap5-board-common is
+> 1.8v). VPP1 should be 2v to prevent efuse from being messed up.
 
-[snip]
+Oh OK, here's the patch updated for ldo4.
 
-> +static int tegra_io_pad_pinconf_get(struct pinctrl_dev *pctldev,
-> +				    unsigned int pin, unsigned long *config)
-> +{
-> +	struct tegra_io_pads_info *tiopi = pinctrl_dev_get_drvdata(pctldev);
-> +	int param = pinconf_to_config_param(*config);
-> +	struct tegra_io_pads_cfg_info *pad_cfg = &tiopi->pads_cfg[pin];
-> +	int pad_id = pad_cfg->pad_id;
-> +	int arg = 0;
-> +	int ret;
-> +
-> +	switch (param) {
-> +	case TEGRA_IO_PAD_POWER_SOURCE_VOLTAGE:
-> +		ret = tegra_io_pads_get_configured_voltage(pad_id);
-> +		if (ret < 0)
-> +			return ret;
-> +		arg = (ret =  3300000) ? 1 : 0;
+Tony
 
-This should be (ret == 3300000).
+8< --------------------
+From: Tony Lindgren <tony@atomide.com>
+Date: Thu, 12 May 2016 09:51:51 -0700
+Subject: [PATCH] ARM: dts: Fix ldo7 source for HDMI on igepv5
 
-Cheers
-Jon
+Fix ldo7 source for HDMI on igepv5.
+
+Suggested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+--- a/arch/arm/boot/dts/omap5-igep0050.dts
++++ b/arch/arm/boot/dts/omap5-igep0050.dts
+@@ -35,6 +35,22 @@
+ 	};
+ };
+ 
++/* LDO4 is VPP1 - ball AD9 */
++&ldo4_reg {
++	regulator-min-microvolt = <2000000>;
++	regulator-max-microvolt = <2000000>;
++};
++
++/*
++ * LDO7 is used for HDMI: VDDA_DSIPORTA - ball AA33, VDDA_DSIPORTC - ball AE33,
++ * VDDA_HDMI - ball AN25
++ */
++&ldo7_reg {
++	status = "okay";
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
++};
++
+ &omap5_pmx_core {
+ 	i2c4_pins: pinmux_i2c4_pins {
+ 		pinctrl-single,pins = <
