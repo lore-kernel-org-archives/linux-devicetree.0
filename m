@@ -1,59 +1,120 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5 2/3] dmaengine: tegra-adma: Add support for Tegra210
- ADMA
-Date: Thu, 12 May 2016 11:37:48 +0530
-Message-ID: <20160512060748.GZ2274@localhost>
-References: <1461940758-25722-1-git-send-email-jonathanh@nvidia.com>
- <1461940758-25722-3-git-send-email-jonathanh@nvidia.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: Re: [PATCH 1/2] arm64: dts: NS2: Add all of the UARTs
+Date: Thu, 12 May 2016 14:16:46 +0800
+Message-ID: <57341FCE.6050403@huawei.com>
+References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1461940758-25722-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 29, 2016 at 03:39:17PM +0100, Jon Hunter wrote:
 
-> +static struct dma_async_tx_descriptor *tegra_adma_prep_slave_sg(
-> +	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
-> +	enum dma_transfer_direction direction, unsigned long flags,
-> +	void *context)
-> +{
-> +	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
+
+On 2016/5/12 6:56, Jon Mason wrote:
+> Add all of the UARTs present on NS2 and enable them in the SVK device
+> tree file.  Also, do some magic to make sure that uart3 is discovered as
+> ttyS0 (as that is the console UART).
+> 
+> Signed-off-by: Jon Mason <jonmason@broadcom.com>
+> ---
+>  arch/arm64/boot/dts/broadcom/ns2-svk.dts | 16 ++++++++++++++++
+>  arch/arm64/boot/dts/broadcom/ns2.dtsi    | 30 ++++++++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+> index 7cd3640..b062a44 100644
+> --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+> +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+> @@ -40,10 +40,14 @@
+>  
+>  	aliases {
+>  		serial0 = &uart3;
+> +		serial1 = &uart0;
+> +		serial2 = &uart1;
+> +		serial3 = &uart2;
+>  	};
+>  
+>  	chosen {
+>  		stdout-path = "serial0:115200n8";
+> +		bootargs = "earlycon=uart8250,mmio32,0x66130000";
+
+Hi Jon,
+
+I submit a patch[1], with it, we can use earlycon without option to enable early console
+for "snps,dw-apb-uart", could you help me to test it, thanks.
+
+BRs,
+Kefeng
+
+
+[1] https://lkml.org/lkml/2016/5/11/34
+
+>  	};
+>  
+>  	memory {
+> @@ -68,6 +72,18 @@
+>  	status = "ok";
+>  };
+>  
+> +&uart0 {
+> +	status = "ok";
+> +};
 > +
-> +	dev_warn(tdc2dev(tdc), "scatter-gather transfers are not supported\n");
+> +&uart1 {
+> +	status = "ok";
+> +};
 > +
-> +	return NULL;
-> +}
-
-we don't need a place holder, please remove this
-
-> +static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
-> +{
-> +	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
-> +	int ret;
+> +&uart2 {
+> +	status = "ok";
+> +};
 > +
-> +	ret = request_irq(tdc->irq, tegra_adma_isr, 0, dma_chan_name(dc), tdc);
-> +	if (ret) {
-> +		dev_err(tdc2dev(tdc), "failed to get interrupt for %s\n",
-> +			dma_chan_name(dc));
-> +		return ret;
-> +	}
-
-Okay why are we requesting and freeing up irq while allocating channels..?
-Btw since he usage is cyclic the sound core grabs the channel at start and
-never releases it
-
-> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
-> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
-> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-
-You should set only cyclic, btw why do you support only one. Cyclic is
-actually a special case for SLAVE, so ideally you should support slave
-too...
-
--- 
-~Vinod
+>  &uart3 {
+>  	status = "ok";
+>  };
+> diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> index 788ed8f..c77a9e8 100644
+> --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+> @@ -357,6 +357,36 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		uart0: serial@66100000 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x66100000 0x100>;
+> +			interrupts = <GIC_SPI 390 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&iprocslow>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@66110000 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x66110000 0x100>;
+> +			interrupts = <GIC_SPI 391 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&iprocslow>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@66120000 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x66120000 0x100>;
+> +			interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&iprocslow>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+>  		uart3: serial@66130000 {
+>  			compatible = "snps,dw-apb-uart";
+>  			reg = <0x66130000 0x100>;
+> 
