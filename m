@@ -1,65 +1,33 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 1/6] ARM: dts: r8a7794: add audio clocks
-Date: Thu, 12 May 2016 23:40:24 +0300
-Message-ID: <2753859.2OOnqVymyK@wasted.cogentembedded.com>
-References: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: dra7: Add gpmc dma channel
+Date: Thu, 12 May 2016 13:44:58 -0700
+Message-ID: <20160512204458.GX5995@atomide.com>
+References: <1462383835-10839-1-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2378837.cigT3tNQPe@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462383835-10839-1-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe  the external audio clocks (signals AUDIO_CLK[ABC]) required by
-the sound driver.  Boards that provide audio clocks need to  override the
-clock frequencies.
+* Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org> [160504 10:45]:
+> Add dma channel information to the gpmc.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> ---
+> This patch is based on top of linux-next where EDMA support for DRA7 has
+> been added.
 
-This patch is based on the commit 0d3dbde84a45 ("ARM: shmobile: r8a7791:
-add  audio clock on DTSI").
+Thanks applying into omap-for-v4.7/dt as a fix for the merge window.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Regards,
 
----
-Changes in version 3:
-- removed now redundant "clock-output-names" properties;
-- reformatted the changelog;
-- refreshed the patch.
-
- arch/arm/boot/dts/r8a7794.dtsi |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -920,6 +920,27 @@
- 			clock-frequency = <0>;
- 		};
- 
-+		/*
-+		 * The external audio clocks are configured  as 0 Hz fixed
-+		 * frequency clocks by default.  Boards that provide audio
-+		 * clocks should override them.
-+		 */
-+		audio_clka: audio_clka {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+		audio_clkb: audio_clkb {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+		audio_clkc: audio_clkc {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+
- 		/* Special CPG clocks */
- 		cpg_clocks: cpg_clocks@e6150000 {
- 			compatible = "renesas,r8a7794-cpg-clocks",
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
