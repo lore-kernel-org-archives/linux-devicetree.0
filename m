@@ -1,48 +1,52 @@
-From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Subject: [PATCH 1/1] devicetree: sunxi: Add OLinuXino Lime2 eMMC
- to the Makefile
-Date: Fri, 13 May 2016 21:57:16 +0200
-Message-ID: <1463169436-6170-1-git-send-email-oliver@schinagl.nl>
-Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+From: Trent Piepho <tpiepho-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
+Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller.
+Date: Fri, 13 May 2016 20:43:26 +0000
+Message-ID: <1463172208.9103.313.camel@rtred1test09.kymeta.local>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>
+	 <1452486886-8049-2-git-send-email-marex@denx.de>
+	 <1463097635.9103.301.camel@rtred1test09.kymeta.local>
+	 <57351ECE.2020009@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDC2JNWXZAJBBKXD3C4QKGQEMISR5DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57351ECE.2020009-ynQEQJNshbs@public.gmane.org>
+Content-Language: en-US
+Content-ID: <1CB3BCD547363E40B3A77DD6788E40CC-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-commit 27dd9af6bc000ab21fd ("ARM: dts: sunxi: Add a olinuxino-lime2-emmc")
-added the new emmc equipped lime2 but forgot its Makefile.
-
-This patch adds an entry to the Makefile.
-
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
----
-Changes since v1:
-  Added proper commit reference (again).
-Changes since v0:
-  Added proper commit reference.
- arch/arm/boot/dts/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 95c1923..07f4cf8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -695,6 +695,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-olimex-som-evb.dtb \
- 	sun7i-a20-olinuxino-lime.dtb \
- 	sun7i-a20-olinuxino-lime2.dtb \
-+	sun7i-a20-olinuxino-lime2-emmc.dtb \
- 	sun7i-a20-olinuxino-micro.dtb \
- 	sun7i-a20-orangepi.dtb \
- 	sun7i-a20-orangepi-mini.dtb \
--- 
-2.8.1
+T24gRnJpLCAyMDE2LTA1LTEzIGF0IDAyOjI0ICswMjAwLCBNYXJlayBWYXN1dCB3cm90ZToNCj4g
+T24gMDUvMTMvMjAxNiAwMjowMCBBTSwgVHJlbnQgUGllcGhvIHdyb3RlOg0KPiA+IE9uIE1vbiwg
+MjAxNi0wMS0xMSBhdCAwNTozNCArMDEwMCwgTWFyZWsgVmFzdXQgd3JvdGU6DQo+ID4+IEZyb206
+IEdyYWhhbSBNb29yZSA8Z3Jtb29yZS15enZQSUN1azJBQk1jZzRJSEswa0ZvSDZNYzRNQjBWeEBw
+dWJsaWMuZ21hbmUub3JnPg0KPiA+Pg0KPiA+PiBBZGQgc3VwcG9ydCBmb3IgdGhlIENhZGVuY2Ug
+UVNQSSBjb250cm9sbGVyLiBUaGlzIGNvbnRyb2xsZXIgaXMNCj4gPj4gcHJlc2VudCBpbiB0aGUg
+QWx0ZXJhIFNvQ0ZQR0EgU29DcyBhbmQgdGhpcyBkcml2ZXIgaGFzIGJlZW4gdGVzdGVkDQo+ID4+
+IG9uIHRoZSBDeWNsb25lIFYgU29DLg0KPiA+IA0KPiA+IEknbSB0cnlpbmcgdG8gdXNlIHRoaXMg
+ZHJpdmVyIHRoZSBBbGFyaWMgRGV2a2l0IGZvciBBbHRlcmEncyBBcnJpYTEwDQo+ID4gU29DLiAg
+SXQncyBub3Qgd29ya2luZyBzbyBmYXIuICBJbiB0aGUgY291cnNlIG9mIHRyeWluZyB0byBkZWJ1
+ZyBpdCwNCj4gPiBJJ3ZlIGZvdW5kIGEgZmV3IHRoaW5ncyB3aXRoIHRoZSBkcml2ZXIgaW4gdGhl
+IHNvY2ZwZ2EtNC4xLWx0c2kgYnJhbmNoLg0KPiANCj4gU28gYXJlIHlvdSB0cnlpbmcgdG8gZGVi
+dWcgdGhpcyBkcml2ZXIgb3Igc29tZSBvdGhlciBvdXQtb2YtdHJlZSBkcml2ZXI/DQo+IGJ0dy4g
+SSBwdXNoZWQgdGhlIGxhdGVzdCB2ZXJzaW9uIGhlcmU6DQo+IA0KPiBodHRwczovL2dpdC5rZXJu
+ZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9tYXJleC9saW51eC0yLjYuZ2l0L2xvZy8/aD1u
+ZXh0L2NhZGVuY2UtcXNwaQ0KDQpJJ20gdHJ5aW5nIHRvIHVzZSB0aGUgb3V0IG9mIHRyZWUgZHJp
+dmVyIGZyb20gQWx0ZXJhJ3MgbGF0ZXN0IGtlcm5lbCwNCmZyb20gaGVyZToNCmh0dHBzOi8vZ2l0
+aHViLmNvbS9hbHRlcmEtb3BlbnNvdXJjZS9saW51eC1zb2NmcGdhL3RyZWUvc29jZnBnYS00LjQN
+Cg0KQnV0IGl0J3Mgbm90IGEgdG90YWxseSBkaWZmZXJlbnQgZHJpdmVyLCBpdCdzIGp1c3QgYW4g
+b2xkZXIgdmVyc2lvbiBvZg0KdGhpcyBkcml2ZXIuICBJJ20gdGhpbmtpbmcgb2YgcG9ydGluZyBp
+biB0aGlzIHZlcnNpb24gc2luY2UgSSB0aGluayBpdCdzDQptdWNoIGltcHJvdmVkIChhZnRlciBW
+MTEgb25lIHdvdWxkIGhvcGUgc28pLiAgUmVhbGx5LCBBbHRlcmEgc2hvdWxkDQp1cGRhdGUgdGhl
+aXIgc3VwcG9ydGVkIGtlcm5lbCB3aXRoIHRoaXMgY29kZS4NCg0KQ29tbWVudHMgYWJvdXQgd2hh
+dCdzIG9uIHlvdXIgYnJhbmNoLg0KDQpDb21taXQgIkFSTTogc29jZnBnYTogQWRkIENhbmRlbmNl
+IFFTUEkgY29udHJvbGxlciBEVCBub2RlIiBvbmx5DQphZGRzIHRoZSBub2RlIGZvciBDeWNsb25l
+IDUuICBUaGlzIHNhbWUgRFQgbm9kZSBzaG91bGQgYWxzbyBiZSBhZGRlZCB0bw0KdGhlIHNvY2Zw
+Z2FfYXJyaWExMC5kdHNpIGZpbGUuDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
