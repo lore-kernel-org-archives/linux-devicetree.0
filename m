@@ -1,50 +1,73 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V2 0/2] drivers: i2c: qup: Some misc fixes
-Date: Fri, 13 May 2016 13:44:36 +0200
-Message-ID: <20160513114436.GH1778@katana>
-References: <1462534274-28925-1-git-send-email-sricharan@codeaurora.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v3 0/7] ARM/ASoC: OMAP3: Fix McBSP2/3
+	sidetone support
+Date: Fri, 13 May 2016 14:45:34 +0300
+Message-ID: <f7af7b30-563a-0048-9696-6ad0125d8f68@ti.com>
+References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
+ <69ff65ee-e5d1-09fb-fd91-8d7b4d8fdda4@ti.com>
+ <20160512164201.GQ5995@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Dx9iWuMxHO1cCoFc"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462534274-28925-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nkaje@codeaurora.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160512164201.GQ5995@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, paul@pwsan.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, jarkko.nikula@bitmer.com
 List-Id: devicetree@vger.kernel.org
 
+On 05/12/16 19:42, Tony Lindgren wrote:
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [160511 01:46]:
+>> Tony, Paul,
+>>
+>> On 04/29/16 13:53, Peter Ujfalusi wrote:
+>>> Hi,
+>>>
+>>> Based on the ongoing discussion on v2 (ARM: OMAP3: Fix McBSP2/3 hwmod s=
+etup for
+>>> sidetone) I have dropped the removal of the sidetone hwmod and only cor=
+rected
+>>> it. The series now includes all related changes needed to have correct =
+sidetone
+>>> support whenever we boot in legacy or in DT mode.
+>>>
+>>> This time the ASoC part have dependency on earlier patches so they can =
+not be
+>>> applied separately.
+>>
+>> How should we proceed from here? I don't want to start designing the ST
+>> separation infrastructure which would be based on this series, but if th=
+ere
+>> are outstanding issues found on this, I would need to go back to the dra=
+wing
+>> board.
+>> The separation will be mostly new code and code shuffle in ASoC, but for
+>> legacy I will need to build up something in arch as well, so I would nee=
+d at
+>> least one release cycle to start with things.
+> =
 
---Dx9iWuMxHO1cCoFc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Well looks like we have all the acks, so I can apply these. We have
+> not heard from Paul on this for a while, so let's wait few days for
+> that.
+> =
 
-On Fri, May 06, 2016 at 05:01:12PM +0530, Sricharan R wrote:
-> One for fixing the bug with CONFIG_DEBUG_SG enabled and another
-> to suspend the transfer for all errors instead of just for nack.
+> Meanwhile, Mark wanted to fix the subject for one of the patches, care
+> to repost that at least? Or the whole series with acks, could be a
+> pull request too against v4.6-rc1 :)
 
-You haven't stated what was changed in V2.
+Thanks, I'll wait for couple of days for Paul to review and I will prepare =
+v4
+and a pull request.
 
+-- =
 
---Dx9iWuMxHO1cCoFc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXNb4jAAoJEBQN5MwUoCm2LNMQAKVZxV7uA1RNk7Z1aIT3TzoX
-bb7+ZU2/Am9mreamhGOWCYCS0etyNGwY6msb1L0HAZX8iB3syC+L11cDUxJLCH5C
-kSY/g994r5I5NZggONmEjeIxQ+J+qXyqOKj1ewE2Q7x0W/8ZWsp03uhdc1wLL6TK
-n+ZUH8Cg5nbBFK04Z3sejBz91s1JmvzLP0LwSIJpNxLlsOOjfGJrX1V+FG7tNGxG
-HaSRV8pnc+38LU3ph3oSOt4D3hjX+G5qtAI8eWWYolHNTPtYGXnJrXx3500devrn
-dbBHCDeJr03fh1oLTP/AeqnoLzZ0MmSg5ucKDKQaT6fXBPnhzr3WnujLB+u6TN3+
-kGKAWtaFj/ayIEciKIkiR0WojT5fLVjH322vMLrDw+728zylkGewUSUgC5P+PnJB
-QAXHisiIrnJQkkqMaPXQ9PUJPchEHhorqsN18iAvoqZWZF+0AyR3PbALZF2SbtCC
-4CegQItlKxSr6zyLEsKkKsRW/+1Ywu4gg+h7qvICPzm5mIfM/cFr7cgotd5Tk70S
-VFXel7DK+Y/l0yd6A57c4ln2cPY7/U4jFsibPAbFdwdrOlBj1+fGmSZCmqEiU71z
-x8RabflG4iiOi7DQmiwF4Btt1doeiTY9mkPtHtHA+ofeuVRy15pJwua3aWTTdPC0
-JQzJr2TAH4rqDq+2egLb
-=Tp76
------END PGP SIGNATURE-----
-
---Dx9iWuMxHO1cCoFc--
+P=E9ter
