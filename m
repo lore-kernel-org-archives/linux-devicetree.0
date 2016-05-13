@@ -1,86 +1,75 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 2/2] ASoC: Add support for HifiBerry DAC
-Date: Fri, 13 May 2016 18:21:36 +0200
-Message-ID: <594EDBBD-1DCC-48D5-8872-A8FAB0E26D34@martin.sperl.org>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
- <1463130853-25096-3-git-send-email-kernel@martin.sperl.org>
- <20160513105409.GB22038@sirena.org.uk>
- <C139252A-23AC-4C37-A5E5-E0D7AF1DCC89@martin.sperl.org>
- <20160513132113.GP22038@sirena.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160513132113.GP22038@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, Rob Herring <robh+dt@kernel.org>, Florian Meier <florian.meier@koalo.de>, linux-rpi-kernel@lists.infradead.org
+From: "jeffrey.lin" <yajohn@gmail.com>
+Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
+Date: Sat, 14 May 2016 01:08:30 +0800
+Message-ID: <1463159310-17630-1-git-send-email-jeffrey.lin@rad-ic.com>
+References: <20160513041852.GA8932@dtor-ws>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160513041852.GA8932@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
+Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gMTMuMDUuMjAxNiwgYXQgMTU6MjEsIE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9y
-Zz4gd3JvdGU6Cj4gCj4gT24gRnJpLCBNYXkgMTMsIDIwMTYgYXQgMDI6MjA6NTdQTSArMDIwMCwg
-TWFydGluIFNwZXJsIHdyb3RlOgo+Pj4gT24gMTMuMDUuMjAxNiwgYXQgMTI6NTQsIE1hcmsgQnJv
-d24gPGJyb29uaWVAa2VybmVsLm9yZz4gd3JvdGU6Cj4gCj4+PiBZb3UgY291bGQgYWxtb3N0IHVz
-ZSBzaW1wbGUtY2FyZCBoZXJlIGJ1dCB0aGUgQkNMSyByYXRpbyByZXF1aXJlbWVudCBpcwo+Pj4g
-cHJvYmFibHkgYSBiaXQgbXVjaCwgSSdtIG5vdCBpbW1lZGlhdGVseSBzZWVpbmcgYSBuaWNlIHdh
-eSB0byBzcGVjaWZ5Cj4+PiB0aGUgcmF0aW8gdGhlcmUgc2luY2UgaXQgZGVwZW5kcyBvbiB0aGUg
-c2FtcGxlIHdpZHRoLgo+IAo+PiBBY3R1YWxseSBpdCBpcyBqdXN0OiA8c2FtcGxlLXdpZHRoPiAq
-IDxudW1iZXIgb2YgY2hhbm5lbHM+Cj4+IHdoZXJlIG51bWJlciBvZiBjaGFubmVscyBpcyBmaXhl
-ZCB0byAyIGZvciBiY20yODM1LWkycy4KPiAKPj4gU28gbWF5YmUgdGhhdCBhbHJlYWR5IGhhcHBl
-bnMgYXV0b21hdGljYWxseSBpbiB0aGUgZnJhbWV3b3JrPwo+IAo+IE5vLCBpdCdzIG5vdCBoYW5k
-bGVkLiAgTG90cyBvZiBkZXZpY2VzIGRvbid0IGNhcmUgb3IgaGF2ZSBkaWZmZXJlbnQKPiByZXF1
-aXJlbWVudHMgKGVnLCAyNTZmcykuICBUaGUgdHJpY2t5IGJpdCB3aXRoIHNwZWNpZnlpbmcgaXQg
-aXMgdGhhdCB0aGUKPiByYXRpbyBkZXBlbmRzIG9uIHRoZSBzYW1wbGUgd2lkdGggaGVyZSBidXQg
-aXQgbWlnaHQgZGVwZW5kIG9uIHNvbWV0aGluZwo+IGVsc2Ugd2l0aCBhbm90aGVyIGRldmljZSwg
-b3IgdGhlIG51bWJlciBvZiBjaGFubmVscyBtaWdodCB2YXJ5LiAgVGhhdAo+IHNob3VsZCBiZSBk
-b2FibGUgd2l0aCBEVCBidXQgaXQgZmVlbHMgbGlrZSBtb3JlIHRyb3VibGUgdGhhbiBpdCdzCj4g
-cmVhc29uYWJsZSB0byBhc2sgeW91IHRvIHRha2UgaGVyZS4KPiAKPj4gU29tZXRoaW5nIGxpa2Ug
-dGhpcyBjb3VsZCBnZXQgYWRkZWQgdG8gdGhlIGNvcmU/Cj4+IElzIHRoZXJlIGludGVyZXN0IGlu
-IGdldHRpbmcgc29tZXRoaW5nIGxpa2UgdGhpcz8KPiAKPj4gQ291bGQgbG9vayBsaWtlIHRoaXM6
-Cj4+IGJjbGstcmF0aW9zID0gCj4+ICAvKiBmb3IgOTZrSHogYXQgMTZiaXQvY2hhbm5lbCB1c2Ug
-YmNsay1yYXRpbyA0MCAqLwo+PiAgPDk2MDAwIDE2IDQwPiwgCj4+ICAvKiBmb3IgNDhrSHogYXQg
-MzJiaXQvY2hhbm5lbCB1c2UgYmNsay1yYXRpbyA4MCAqLwo+PiAgPDQ4MDAwIDE2IDgwPiwKPj4g
-IC8qIGZvciBhbnkgKG90aGVyKSBzYW1wbGUgZnJlcXVlbmN5IGF0IDE2IGJpdCB1c2UgYmNsay1y
-YXRpbyAzMiAqLwo+PiAgPDAgMTYgMzI+LAo+PiAgLyogZm9yIGFueSAob3RoZXIpIHNhbXBsZSBm
-cmVxdWVuY3kgYXQgMzIgYml0IHVzZSBiY2xrLXJhdGlvIDY0ICovCj4+ICA8MCAzMiA2ND47Cj4g
-Cj4+IGJ1dCB0aGVyZSBjb3VsZCBhbHNvIGJlIG90aGVyIGFwcHJvYWNoZXMgYXMgd2VsbCwKPj4g
-aG93IHRoaXMgY291bGQgZ2V0IGRlc2NyaWJlZCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4gCj4gWW91
-IG1heSB3ZWxsIGVuZCB1cCB3aXRoIHNvbWV0aGluZyBsaWtlIHRoYXQsIHllYWguCndvdWxkIHNv
-bWV0aGluZyBsaWtlIHRoaXMgYmUgYSBwb3NzaWJpbGl0eToKCnNvdW5kIHsKICBjb21wYXRpYmxl
-ID0gInNpbXBsZS1hdWRpby1jYXJkIjsKICBzaW1wbGUtYXVkaW8tY2FyZCxuYW1lID0gIkhpZmlC
-ZXJyeSBEQUMiOwouLi4KICAvKiBmb3IgMzJiaXRANDhrIHNldCBiY2xrIHNpemUgdG8gNDBiaXQv
-Y2hhbm5lbCA9IDgwYml0cyBlZmZlY3RpdmVseSAqLwogIGh3LXBhcmFtcy1maWx0ZXJAMCB7CiAg
-ICBtYXRjaC1yYXRlID0gPDQ4MDAwPjsKICAgIG1hdGNoLXNhbXBsZS1iaXRzID0gPDMyPjsKICAg
-IG1hdGNoLWNoYW5uZWxzID0gPDI+OwogICAgYWN0aW9uID0gInNldC1maXhlZC1iY2xrLXJhdGlv
-IjsKICAgIGFjdGlvbi12YWx1ZSA9IDw0MD47CiAgfTsKCiAgLyogZm9yIDE2Yml0QDk2ayBzZXQg
-YmNsayBzaXplIHRvIDIwYml0L2NoYW5uZWwgPSA0MGJpdHMgZWZmZWN0aXZlbHkgKi8KICBody1w
-YXJhbXMtZmlsdGVyQDEgewogICAgbWF0Y2gtcmF0ZSA9IDw5NjAwMD47CiAgICBtYXRjaC1zYW1w
-bGUtYml0cyA9IDwxNj47CiAgICBtYXRjaC1jaGFubmVscyA9IDwyPjsKICAgIGFjdGlvbiA9ICJz
-ZXQtZml4ZWQtYmNsay1yYXRpbyI7CiAgICBhY3Rpb24tdmFsdWUgPSA8NDA+OwogIH07CiAgLyog
-Zm9yIGFsbCBvdGhlcnMgdGFrZSBzYW1wbGVfYml0cyAqIGNoYW5uZWwgKi8KICBody1wYXJhbXMt
-ZmlsdGVyQDk5OSB7CiAgICBhY3Rpb24gPSAic2V0LWJjbGstcmF0aW8tbXVsdGlwbGUtc2FtcGxl
-LWJpdHMtY2hhbm5lbHMiOwogIH07Cn07CgpUaGUgdGl0bGUgb2Ygbm9kZXMgYW5kIHByb3BlcnRp
-ZXMgY2FuIGVhc2lseSBnZXQgY2hhbmdlZC4KQWRkaXRpb25hbCAibWF0Y2gtKuKAnSBwcm9wZXJ0
-aWVzIGNhbiBhbHNvIGdldCBhZGRlZCBlYXNpbHkuCgpUaGUgYmlnZ2VzdCBxdWVzdGlvbiBpcyBh
-Ym91dCAiYWN0aW9uIiBvciBtYXliZSDigJxhY3Rpb25z4oCdIAooaW4gdGhlIHNlbnNlIG9mIGFu
-IGFycmF5LCBzbyB0aGF0IHRoZXJlIGNhbiBiZSBtdWx0aXBsZSBhY3Rpb25zKT8KVGhlbiBpZiB0
-aGlzIHNob3VsZCByZW1haW4gYSBzdHJpbmcgb3Igc2hvdWxkIGl0IGJlIGFuIGlkCih0aGF0IHdl
-IHdvdWxkIG5lZWQgdG8gZGVmaW5lIGluIGFuIGluY2x1ZGUp4oCmCgpNb3JlIGFjdGlvbnMgY291
-bGQgZ2V0IGFkZGVkIGVhc2lseSAtIHRoZXJlIGNvdWxkIGV2ZW4gYmUgYQpmcmFtZXdvcmsgdGhh
-dCB3b3VsZCBhbGxvdyBkcml2ZXJzIHRvIHNwZWNpZnkgbW9yZSBhY3Rpb25zCmluc2lkZSBkaWZm
-ZXJlbnQgZHJpdmVycyB0aGF0IGFyZSBhc3NpZ25lZCBoZXJlLgoKSSB3b3VsZCB0aGluayB0aGF0
-IHRoZSDigJxmaXJzdOKAnSBvbmUgbWF0Y2hlcyAtIG9yZGVyIHdvdWxkIGJlCmVuZm9yY2VkIGJh
-c2VkIG9uIG5vZGUgbmFtZS4KClRoaXMgd291bGQganVzdCBnZXQgYWRkZWQgdG8gYXNvY19zaW1w
-bGVfY2FyZF9od19wYXJhbXMuCgpUaGlzIGRvZXMgbm90IHNlZW0gdG9vIGNvbXBsaWNhdGVkIHRv
-IGNyZWF0ZS4KClRoYW5rcywKCU1hcnRpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2Et
-cHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2Fsc2EtZGV2ZWwK
+Hi Dmitry:
+This patch you submitted had some problems. I still debug in progress. Should I comment the issues in this patch or create a new patch if I finish the issues?
+
+ >static int raydium_i2c_fastboot(struct i2c_client *client)
+ > {
+ >-	static const u8 boot_cmd[] = { 0x50, 0x00, 0x06, 0x20 };
+ >-	u8 buf[HEADER_SIZE];
+ >+	u8 buf[4]; // XXX FIXME why size 4 and not 1?
+Correct.Raydium direct access mode is word alignment, so that 4 bytes reading is correct but only lower bytes show the message I need.
+
+ >static int raydium_i2c_check_fw_status(struct raydium_data *ts)
+ >{
+ >	struct i2c_client *client = ts->client;
+ >-	static const u8 bl_area[] = {0x62, 0x6f, 0x6f, 0x74};
+ >-	static const u8 main_area[] = {0x66, 0x69, 0x72, 0x6d};
+ >-	u8 buf[HEADER_SIZE];
+ >+	static const u8 bl_area[] = { 0x62, 0x6f, 0x6f, 0x74 };
+ >+	static const u8 main_area[] = { 0x66, 0x69, 0x72, 0x6d };
+ >+	u8 buf[4];
+ > 	int error;
+ > 
+ >-	error = raydium_i2c_read(client, CMD_BOOT_READ, HEADER_SIZE,
+ >-		(void *)buf);
+ >+	error = raydium_i2c_read(client, RM_CMD_BOOT_READ, buf, sizeof(buf));
+ > 	if (!error) {
+ >+		// XXX FIXME: why do we compare only 1st bytes? Do we even
+ >+		// need 4-byte constants?
+One bytes comparison is fine. I'll change as below:
+
+static int raydium_i2c_check_fw_status(struct raydium_data *ts)
+{
+	struct i2c_client *client = ts->client;
+	static const u8 bl_ack = 0x62;
+	static const u8 main_ack = 0x66;
+	u8 buf[4];
+	int error;
+
+	error = raydium_i2c_read(client, RM_CMD_BOOT_READ, buf, sizeof(buf));
+	if (!error) {
+		// XXX FIXME: why do we compare only 1st bytes? Do we even
+		// need 4-byte constants?
+		if (buf[0] == bl_ack)
+			ts->boot_mode = RAYDIUM_TS_BLDR;
+		else if (buf[0] == main_ack)
+			ts->boot_mode = RAYDIUM_TS_MAIN;
+		return 0;
+
+>+	while (len) {
+>+		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
+> 
+>-		memcpy(&buf[DATA_STR], page + DATA_STR +
+>-			u8_idx*RAYDIUM_TRANS_BUFSIZE,
+>-			RAYDIUM_TRANS_BUFSIZE);
+>+		buf[BL_HEADER] = 0x0b;
+>+		// XXX FIXME: is this correct? Do we really want all pages
+>+		// after 1st to have 0xff? Should it be a counter?
+>+		// Why do we need both pages and packages within pages?
+>+		buf[BL_PAGE_STR] = page_idx ? 0 : 0xff;
+This is correct. Touch MCU need this index as start page.
+>+		buf[BL_PKG_IDX] = pkg_idx;
+This should be:
+		buf[BL_PKG_IDX] = pkg_idx++;
+>+		memcpy(&buf[BL_DATA_STR], data, xfer_len);
