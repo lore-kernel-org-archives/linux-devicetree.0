@@ -1,73 +1,92 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 0/7] ARM/ASoC: OMAP3: Fix McBSP2/3
-	sidetone support
-Date: Fri, 13 May 2016 14:45:34 +0300
-Message-ID: <f7af7b30-563a-0048-9696-6ad0125d8f68@ti.com>
-References: <1461927202-17677-1-git-send-email-peter.ujfalusi@ti.com>
- <69ff65ee-e5d1-09fb-fd91-8d7b4d8fdda4@ti.com>
- <20160512164201.GQ5995@atomide.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH V2 1/2] drivers: i2c: qup: Fix broken dma when
+ CONFIG_DEBUG_SG is enabled
+Date: Fri, 13 May 2016 13:47:17 +0200
+Message-ID: <20160513114716.GI1778@katana>
+References: <1462534274-28925-1-git-send-email-sricharan@codeaurora.org>
+ <1462534274-28925-2-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160512164201.GQ5995@atomide.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, paul@pwsan.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, jarkko.nikula@bitmer.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uJWb33pM2TcUAXIl"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462534274-28925-2-git-send-email-sricharan@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nkaje@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/16 19:42, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [160511 01:46]:
->> Tony, Paul,
->>
->> On 04/29/16 13:53, Peter Ujfalusi wrote:
->>> Hi,
->>>
->>> Based on the ongoing discussion on v2 (ARM: OMAP3: Fix McBSP2/3 hwmod s=
-etup for
->>> sidetone) I have dropped the removal of the sidetone hwmod and only cor=
-rected
->>> it. The series now includes all related changes needed to have correct =
-sidetone
->>> support whenever we boot in legacy or in DT mode.
->>>
->>> This time the ASoC part have dependency on earlier patches so they can =
-not be
->>> applied separately.
->>
->> How should we proceed from here? I don't want to start designing the ST
->> separation infrastructure which would be based on this series, but if th=
-ere
->> are outstanding issues found on this, I would need to go back to the dra=
-wing
->> board.
->> The separation will be mostly new code and code shuffle in ASoC, but for
->> legacy I will need to build up something in arch as well, so I would nee=
-d at
->> least one release cycle to start with things.
-> =
 
-> Well looks like we have all the acks, so I can apply these. We have
-> not heard from Paul on this for a while, so let's wait few days for
-> that.
-> =
+--uJWb33pM2TcUAXIl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Meanwhile, Mark wanted to fix the subject for one of the patches, care
-> to repost that at least? Or the whole series with acks, could be a
-> pull request too against v4.6-rc1 :)
+On Fri, May 06, 2016 at 05:01:13PM +0530, Sricharan R wrote:
+> With CONFIG_DEBUG_SG is enabled and when dma mode is used, below dump is =
+seen,=20
+>=20
+> ------------[ cut here ]------------=20
+> kernel BUG at include/linux/scatterlist.h:140!=20
+> Internal error: Oops - BUG: 0 [#1] PREEMPT SMP=20
+> Modules linked in:=20
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.4.0-00459-g9f087b9-dirty #7=
+=20
+> Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)=20
+> task: ffffffc036868000 ti: ffffffc036870000 task.ti: ffffffc036870000=20
+> PC is at qup_sg_set_buf.isra.13+0x138/0x154=20
+> LR is at qup_sg_set_buf.isra.13+0x50/0x154=20
+> pc : [<ffffffc0005a0ed8>] lr : [<ffffffc0005a0df0>] pstate: 60000145=20
+> sp : ffffffc0368735c0=20
+> x29: ffffffc0368735c0 x28: ffffffc036873752=20
+> x27: ffffffc035233018 x26: ffffffc000c4e000=20
+> x25: 0000000000000000 x24: 0000000000000004=20
+> x23: 0000000000000000 x22: ffffffc035233668=20
+> x21: ffffff80004e3000 x20: ffffffc0352e0018=20
+> x19: 0000004000000000 x18: 0000000000000028=20
+> x17: 0000000000000004 x16: ffffffc0017a39c8=20
+> x15: 0000000000001cdf x14: ffffffc0019929d8=20
+> x13: ffffffc0352e0018 x12: 0000000000000000=20
+> x11: 0000000000000001 x10: 0000000000000001=20
+> x9 : ffffffc0012b2d70 x8 : ffffff80004e3000=20
+> x7 : 0000000000000018 x6 : 0000000030000000=20
+> x5 : ffffffc00199f018 x4 : ffffffc035233018=20
+> x3 : 0000000000000004 x2 : 00000000c0000000=20
+> x1 : 0000000000000003 x0 : 0000000000000000=20
+>=20
+> Process swapper/0 (pid: 1, stack limit =3D 0xffffffc036870020)=20
+> Stack: (0xffffffc0368735c0 to 0xffffffc036874000)=20
+>=20
+> Change allocation of sg buffers from dma_coherent memory to kzalloc=20
+> to fix the issue.=20
 
-Thanks, I'll wait for couple of days for Paul to review and I will prepare =
-v4
-and a pull request.
+This description describes what you do. But not why it is the correct
+solution to the OOPS. The OOPS  neither describes it. Please add some
+more explanation.
 
--- =
+>=20
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Reviewed-by: Andy Gross <andy.gross@linaro.org>
 
-P=E9ter
+--uJWb33pM2TcUAXIl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXNb7EAAoJEBQN5MwUoCm2DksP/1J0Sc5DKbPZBAW9nt9Ifh9R
+Tfjsz0zwj3F+NcYcOB03ZsxvK6iXOUu/1OYBJDwWIbRbP98HJLyNlk5dHs2X6Vje
+POIEuzGFsyU2z5xdOBBl7TBjqzUBYP+X89ZSWIOMipoZAaz0OT95M3oSUYHg8XM4
+00/hWo2M/0PYIgZSWerZhR69pCbvWpXy+7pHERNCzj+5Ua5BJ+5+fPgcFdEdeK/T
+XEV1tSaOeVLgR63+61l0/IF/d08BL2mDVU2E4G230KdxAvu8+UzvPWoUavPDDg+I
+nJjOlTao2t2Ie4lqBN5/EWTuUMr1DRxTe1nAsFZdT11VgGrUA977lgR100d5oA+V
+Bf+gFSgXEnCGiRHXavXDCbQGA2+sxWR0a/BsDPBm5omUc9oLe2b+Fs+Wtc14iZ3M
+uA7HHYOQ7g4+6XaDYzrZy6E/F+eoAQwB1YzIB0p57Tuj64MGePL5rz1vz3neBSqC
+JID4k7RPXflF0ndSaBKx1KZpxXVEqoedYoyK53GC+0svDk9eg2t7b4TO9ZqE2wW+
+DSrCF7YLhZAhtPPVjwDB8nt2EpLTqfrtkVJm/1M0I3tXVCvYpKSYEiC68r3P+B7x
+HkPFqQ+mJ4zUXDRfAfoQUMRQeGJds8XhGrZCljtd1qP4vxN6SfB+MkncdffYYMk6
+43UyC40rLdrHYiJoEwXP
+=8RYs
+-----END PGP SIGNATURE-----
+
+--uJWb33pM2TcUAXIl--
