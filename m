@@ -1,52 +1,95 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: Re: [PATCH v2 0/3] input: rmi4: Regulator supply support
-Date: Thu, 12 May 2016 17:52:06 -0700
-Message-ID: <57352536.7040909@synaptics.com>
-References: <1462596008-21381-1-git-send-email-bjorn.andersson@linaro.org>
- <57312CFB.2040304@synaptics.com> <20160510154904.GI1256@tuxbot>
- <5733C088.1090700@synaptics.com> <20160512030524.GA1256@tuxbot>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: Re: [PATCH 1/2] arm64: dts: NS2: Add all of the UARTs
+Date: Fri, 13 May 2016 09:17:02 +0800
+Message-ID: <57352B0E.5070803@huawei.com>
+References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
+ <57341FCE.6050403@huawei.com>
+ <CAC3K-4qbkt3DCgd6qurNo3V+++x70bbFC--aunR0DbCTBvBNZg@mail.gmail.com>
+ <befabac6-aae2-fb3b-2faa-5463b7287b2a@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160512030524.GA1256@tuxbot>
-Sender: linux-input-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <befabac6-aae2-fb3b-2faa-5463b7287b2a@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/11/2016 08:05 PM, Bjorn Andersson wrote:
-> On Wed 11 May 16:30 PDT 2016, Andrew Duggan wrote:
->
->> Hi Bjorn,
+
+
+On 2016/5/13 0:52, Ray Jui wrote:
+> Hi Kefeng,
+> 
+> On 5/12/2016 7:46 AM, Jon Mason wrote:
 >>
->> On 05/10/2016 08:49 AM, Bjorn Andersson wrote:
-> [..]
->>> So either we duplicate the regulator support in spi/i2c or we make them
->>> optional in the core driver. Sounds like you prefer the prior, i.e. v1
->>> of my patch.
->> Yes, after all this I think it makes sense to put regulator support in the
->> spi/i2c transports like in your v1 patch. I essentially duplicated the irq
->> handling code in both transports so I would be ok with duplicating regulator
->> support too. It doesn't seem like that much code. But, if this is too much
->> duplication we could create some sort of common file and put the common irq
->> and regulator support functions which could be called in the transports.
->> Similar to how rmi_2d_sensor.c defines some common functions shared between
->> rmi_f11 and rmi_f12.
 >>
-> Sounds reasonable, I'm okay with this. Did you have any comments on the
-> implementation I had in v1?
+>> On Thu, May 12, 2016 at 2:16 AM, Kefeng Wang <wangkefeng.wang@huawei.com
+>> <mailto:wangkefeng.wang@huawei.com>> wrote:
+>>
+>>
+>>
+>>     On 2016/5/12 6:56, Jon Mason wrote:
+>>     > Add all of the UARTs present on NS2 and enable them in the SVK device
+>>     > tree file.  Also, do some magic to make sure that uart3 is discovered as
+>>     > ttyS0 (as that is the console UART).
+>>     >
+>>     > Signed-off-by: Jon Mason <jonmason@broadcom.com <mailto:jonmason@broadcom.com>>
+>>     > ---
+>>     >  arch/arm64/boot/dts/broadcom/ns2-svk.dts | 16 ++++++++++++++++
+>>     >  arch/arm64/boot/dts/broadcom/ns2.dtsi    | 30 ++++++++++++++++++++++++++++++
+>>     >  2 files changed, 46 insertions(+)
+>>     >
+>>     > diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+>>     > index 7cd3640..b062a44 100644
+>>     > --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+>>     > +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+>>     > @@ -40,10 +40,14 @@
+>>     >
+>>     >       aliases {
+>>     >               serial0 = &uart3;
+>>     > +             serial1 = &uart0;
+>>     > +             serial2 = &uart1;
+>>     > +             serial3 = &uart2;
+>>     >       };
+>>     >
+>>     >       chosen {
+>>     >               stdout-path = "serial0:115200n8";
+>>     > +             bootargs = "earlycon=uart8250,mmio32,0x66130000";
+>>
+>>     Hi Jon,
+>>
+>>     I submit a patch[1], with it, we can use earlycon without option to
+>>     enable early console
+>>     for "snps,dw-apb-uart", could you help me to test it, thanks.
+>>
+>>
+>> Adding your change and removing the line above does not cause earlycon
+>> to work for me.  Is there any additional changes necessary for this to work?
+>>
+>> Thanks,
+>> Jon
+>>
+> 
+> "OF_EARLYCON_DECLARE" doesn't seem to have a way to deal with DT properties? In the case of UART for NS2, it needs mmio32, configured with DT property "reg-io-width" set to 4. I don't think "OF_EARLYCON_DECLARE" is parsing that, which is likely the reason why it doesn't work for devices that required mmio32.
+> 
+It should work, I test this in Hisi D02 board, it uses same uart and same configuration.
 
-I tested on a device which has an always on regulators so I didn't add 
-anything to device tree for the device. But, it returned 0 when it 
-didn't find anything which seems to be the correct behavior. Is there an 
-easy way to avoid sleeping for 10ms when there are no regulators? Maybe 
-check if both the supplies .consumer pointer is null?
+early_init_dt_scan_chosen_serial()
+ for (match = __earlycon_table; match < __earlycon_table_end; match++)
+ 	......
+	of_setup_earlycon()
+		val = of_get_flat_dt_prop(node, "reg-io-width", NULL);  // will obtain the reg-io-width and set iotype=mmio32
+		err = match->setup(&early_console_dev, options);  // call early_serial8250_setup
 
-Andrew
+Could you check it again, thanks,
 
-> @Dmitry, do you want me to resend v1?
->
-> Regards,
-> Bjorn
+Kefeng
 
+
+> Thanks,
+> 
+> Ray
+> 
+> .
+> 
