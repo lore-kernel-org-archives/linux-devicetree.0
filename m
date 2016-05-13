@@ -1,108 +1,50 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] phy: add support for a reset-gpio specification
-Date: Fri, 13 May 2016 08:26:31 +0200
-Message-ID: <20160513062631.GA28415@pengutronix.de>
-References: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <4363f9c0-d447-5fc1-3ac9-382a172a7087@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4363f9c0-d447-5fc1-3ac9-382a172a7087@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de, "Andrew F . Davis" <afd@ti.com>, Nishanth Menon <nm@ti.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 3/4] ARM: bcm2835: add thermal node to device-tree of bcm283x
+Date: Fri, 13 May 2016 08:29:37 +0200
+Message-ID: <FA3695BE-D1A7-44E3-9714-08B6A002EB06@martin.sperl.org>
+References: <1463063738-11506-1-git-send-email-kernel@martin.sperl.org> <1463063738-11506-4-git-send-email-kernel@martin.sperl.org> <87posqamh9.fsf@eliezer.anholt.net>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <87posqamh9.fsf@eliezer.anholt.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Sergei,
 
-On Fri, May 13, 2016 at 12:41:47AM +0300, Sergei Shtylyov wrote:
-> On 05/12/2016 01:00 PM, Uwe Kleine-K=F6nig wrote:
->=20
-> >The framework only asserts (for now) that the reset gpio is not acti=
-ve.
-> >
-> >Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> >---
-> > Documentation/devicetree/bindings/net/phy.txt | 3 +++
-> > drivers/net/phy/phy_device.c                  | 8 ++++++++
-> > 2 files changed, 11 insertions(+)
-> >
-> >diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documen=
-tation/devicetree/bindings/net/phy.txt
-> >index bc1c3c8bf8fa..c00a9a894547 100644
-> >--- a/Documentation/devicetree/bindings/net/phy.txt
-> >+++ b/Documentation/devicetree/bindings/net/phy.txt
-> >@@ -35,6 +35,8 @@ Optional Properties:
-> > - broken-turn-around: If set, indicates the PHY device does not cor=
-rectly
-> >   release the turn around line low at the end of a MDIO transaction=
-=2E
-> >
-> >+- reset-gpios: Reference to a GPIO used to reset the phy.
-> >+
-> > Example:
-> >
-> > ethernet-phy@0 {
-> >@@ -42,4 +44,5 @@ ethernet-phy@0 {
-> > 	interrupt-parent =3D <40000>;
-> > 	interrupts =3D <35 1>;
-> > 	reg =3D <0>;
-> >+	reset-gpios =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
-> >  };
->=20
->    OK, the example has PHY ID specified in the "compatible" prop. It'=
-s a
-> vital detail, you should mention it somewhere...
+> On 13.05.2016, at 01:24, Eric Anholt <eric@anholt.net> wrote:
+> 
+> kernel@martin.sperl.org writes:
+> 
+>> From: Martin Sperl <kernel@martin.sperl.org>
+>> 
+>> Add the node for the thermal sensor of the bcm2835-soc
+>> to the device tree.
+>> 
+>> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+>> ---
+>> arch/arm/boot/dts/bcm283x.dtsi | 6 ++++++
+>> 1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+>> index 9db9d97..525f1f2 100644
+>> --- a/arch/arm/boot/dts/bcm283x.dtsi
+>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+>> @@ -159,6 +159,12 @@
+>> 			status = "disabled";
+>> 		};
+>> 
+>> +		thermal: thermal@0x7e212000 {
+>> +			compatible = "brcm,bcm2835-thermal";
+>> +			reg = <0x7e212000 0x8>;
+>> +			clocks = <&clocks BCM2835_CLOCK_TSENS>;
+>> +		};
+>> +
+> 
+> You could drop the "thermal: " here since nothing refers to it.  Either
+> way,
+Actually you will refer to it in the device tree for the bcm2837
+so that you can set a different compatible string.
 
-Something like that in the commit log:
-
-	Note that reset is only deasserted when the PHY ID is already
-	determined. If your phy doesn't support reading the PHY ID while
-	reset is asserted it's recommended to specify it in the
-	compatible string. Otherwise the device might fail to probe.
-
-> >diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devi=
-ce.c
-> >index e551f3a89cfd..7d666ab47271 100644
-> >--- a/drivers/net/phy/phy_device.c
-> >+++ b/drivers/net/phy/phy_device.c
-> [...]
-> >@@ -1569,9 +1570,16 @@ static int phy_probe(struct device *dev)
-> > 	struct device_driver *drv =3D phydev->mdio.dev.driver;
-> > 	struct phy_driver *phydrv =3D to_phy_driver(drv);
-> > 	int err =3D 0;
-> >+	struct gpio_descs *reset_gpios;
-> >
-> > 	phydev->drv =3D phydrv;
-> >
-> >+	/* take phy out of reset */
-> >+	reset_gpios =3D devm_gpiod_get_array_optional(dev, "reset",
-> >+						    GPIOD_OUT_LOW);
-> >+	if (IS_ERR(reset_gpios))
-> >+		return PTR_ERR(reset_gpios);
-> >+
->=20
->    It would have been logical to assert back the reset GPIO in phy_re=
-move(),
-
-Not necessarily. If you want to save some energy it might make sense. I=
-f
-you only focus on making the device work, ensuring that reset is not
-applied is enough.
-
-> no? Also, you'd need to store the GPIO permanently somewhere...
-
-I need to store it, iff I want to do something with the reset line
-later. Currently that's not the case.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
