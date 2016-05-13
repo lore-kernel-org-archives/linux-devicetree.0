@@ -1,75 +1,31 @@
-From: "jeffrey.lin" <yajohn@gmail.com>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Sat, 14 May 2016 01:08:30 +0800
-Message-ID: <1463159310-17630-1-git-send-email-jeffrey.lin@rad-ic.com>
-References: <20160513041852.GA8932@dtor-ws>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160513041852.GA8932@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org
-Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] Documentation: devictree: Add macb mdio bindings
+Date: Fri, 13 May 2016 19:36:22 +0200
+Message-ID: <20160513173622.GA7600@lunn.ch>
+References: <1463131568-36948-1-git-send-email-harinik@xilinx.com>
+ <1463131568-36948-2-git-send-email-harinik@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463131568-36948-2-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry:
-This patch you submitted had some problems. I still debug in progress. Should I comment the issues in this patch or create a new patch if I finish the issues?
+> +	mdio {
+> +		compatible = "cdns,macb-mdio";
+> +		reg = <0x0 0xff0b0000 0x0 0x1000>;
+> +		clocks = <&clk125>, <&clk125>, <&clk125>;
+> +		clock-names = "pclk", "hclk", "tx_clk";
+> +		ethernet_phyC: ethernet-phy@C {
+> +			reg = <C>;
 
- >static int raydium_i2c_fastboot(struct i2c_client *client)
- > {
- >-	static const u8 boot_cmd[] = { 0x50, 0x00, 0x06, 0x20 };
- >-	u8 buf[HEADER_SIZE];
- >+	u8 buf[4]; // XXX FIXME why size 4 and not 1?
-Correct.Raydium direct access mode is word alignment, so that 4 bytes reading is correct but only lower bytes show the message I need.
+I think that needs an 0x prefix.
 
- >static int raydium_i2c_check_fw_status(struct raydium_data *ts)
- >{
- >	struct i2c_client *client = ts->client;
- >-	static const u8 bl_area[] = {0x62, 0x6f, 0x6f, 0x74};
- >-	static const u8 main_area[] = {0x66, 0x69, 0x72, 0x6d};
- >-	u8 buf[HEADER_SIZE];
- >+	static const u8 bl_area[] = { 0x62, 0x6f, 0x6f, 0x74 };
- >+	static const u8 main_area[] = { 0x66, 0x69, 0x72, 0x6d };
- >+	u8 buf[4];
- > 	int error;
- > 
- >-	error = raydium_i2c_read(client, CMD_BOOT_READ, HEADER_SIZE,
- >-		(void *)buf);
- >+	error = raydium_i2c_read(client, RM_CMD_BOOT_READ, buf, sizeof(buf));
- > 	if (!error) {
- >+		// XXX FIXME: why do we compare only 1st bytes? Do we even
- >+		// need 4-byte constants?
-One bytes comparison is fine. I'll change as below:
-
-static int raydium_i2c_check_fw_status(struct raydium_data *ts)
-{
-	struct i2c_client *client = ts->client;
-	static const u8 bl_ack = 0x62;
-	static const u8 main_ack = 0x66;
-	u8 buf[4];
-	int error;
-
-	error = raydium_i2c_read(client, RM_CMD_BOOT_READ, buf, sizeof(buf));
-	if (!error) {
-		// XXX FIXME: why do we compare only 1st bytes? Do we even
-		// need 4-byte constants?
-		if (buf[0] == bl_ack)
-			ts->boot_mode = RAYDIUM_TS_BLDR;
-		else if (buf[0] == main_ack)
-			ts->boot_mode = RAYDIUM_TS_MAIN;
-		return 0;
-
->+	while (len) {
->+		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
-> 
->-		memcpy(&buf[DATA_STR], page + DATA_STR +
->-			u8_idx*RAYDIUM_TRANS_BUFSIZE,
->-			RAYDIUM_TRANS_BUFSIZE);
->+		buf[BL_HEADER] = 0x0b;
->+		// XXX FIXME: is this correct? Do we really want all pages
->+		// after 1st to have 0xff? Should it be a counter?
->+		// Why do we need both pages and packages within pages?
->+		buf[BL_PAGE_STR] = page_idx ? 0 : 0xff;
-This is correct. Touch MCU need this index as start page.
->+		buf[BL_PKG_IDX] = pkg_idx;
-This should be:
-		buf[BL_PKG_IDX] = pkg_idx++;
->+		memcpy(&buf[BL_DATA_STR], data, xfer_len);
+  Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
