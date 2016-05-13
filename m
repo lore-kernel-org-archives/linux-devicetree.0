@@ -1,59 +1,40 @@
-From: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH RESEND 2/2] regulator: mt6397: Add buck change mode
- regulator interface for mt6397
-Date: Fri, 13 May 2016 16:04:20 +0800
-Message-ID: <1463126660.2821.9.camel@mtksdaap41>
-References: <1462959090-2877-1-git-send-email-henryc.chen@mediatek.com>
- <1462959090-2877-3-git-send-email-henryc.chen@mediatek.com>
- <20160511145046.GI6261@sirena.org.uk>
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCHv2] devicetree: sunxi: Add OLinuXino Lime2
+ eMMC to the Makefile
+Date: Fri, 13 May 2016 10:07:07 +0200
+Message-ID: <57358B2B.1010703@schinagl.nl>
+References: <1463047851-2039-1-git-send-email-oliver@schinagl.nl>
+ <20160513074823.GA3733@lukather>
+Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160511145046.GI6261-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDC2JNWXZAJBBMUW224QKGQE4AR6KDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160513074823.GA3733@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+and now i'm embarrassed and ashamed. Teaches me not to rush things, 
+right? i'll correct it and take some time to do it right. sorry maxime!
 
-On Wed, 2016-05-11 at 15:50 +0100, Mark Brown wrote:
-> On Wed, May 11, 2016 at 05:31:30PM +0800, Henry Chen wrote:
-> 
-> > +The possible values for "regulator-supported-modes" are:
-> > +	0: PWM mode, mapping to regulator fast mode, allow the
-> > +	converter to remain in the PWM mode regardless of the load current, so
-> > +	that the noise spectrum of the converter can be minimized for certain
-> > +	highly-noise-sensitive handset applications.
-> > +	1: Auto mode, mapping to regulator normal mode, mode switch by current
-> > +	loading. At light load currents, the converter automatically enters
-> > +	PFM mode to save power and improve light load efficiency. At heavy
-> > +	load currents, the converter automatically enters PWM mode to minimiz
-> > +	the noise spectrum of the converter.
-> 
-> The details of how this maps onto Linux shouldn't be in the bindings.
-> 
-> > +				regulator-allow-change-mode;
-> > +				regulator-supported-modes = <0 1>;
-> 
-> These are problematic too as covered in my other mail. 
-> 
-> > -static struct regulator_ops mt6397_volt_range_ops = {
-> > +static const struct regulator_ops mt6397_volt_range_ops = {
-> 
-> The constification is fine but an unrelated change.  Otherwise this
-> looks fine from a code point of view, let's get that merged separately.
-
-Okay, although we didn't have conclusion and solution for regulator
-operation mode, as you said that we can get some patch merged
-separately, so I will resend the patch which clean up comments from
-you and Daniel.
+On 13-05-16 09:48, Maxime Ripard wrote:
+> Hi Olliver,
+>
+> On Thu, May 12, 2016 at 12:10:51PM +0200, Olliver Schinagl wrote:
+>> commit 27dd9af6bc (ARM: dts: sunxi: Add a olinuxino-lime2-emmc added the new
+>> emmc equipped) lime2 but forgot its Makefile.
+> This is still not the right commit format, the commit title should be
+> around double quotes. checkpatch both reports an error for this and
+> tells you what the proper format is, so please remember to use it
+> before you're sending a patch.
+>
+> Thanks!
+> Maxime
+>
