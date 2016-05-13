@@ -1,11 +1,13 @@
 From: Andy Gross <andy.gross@linaro.org>
-Subject: [Patch v5 0/8] Qualcomm SCM Rework
-Date: Thu, 12 May 2016 22:46:53 -0500
-Message-ID: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
+Subject: [Patch v5 4/8] firmware: qcom: scm: Generalize shared error map
+Date: Thu, 12 May 2016 22:46:57 -0500
+Message-ID: <1463111221-6963-5-git-send-email-andy.gross@linaro.org>
+References: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,65 +18,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@codeaurora.org>, jilai wang <jilaiw@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The following set of patches does a bit of rework on the existing
-Qualcomm SCM firmware.  The first couple of patches deals with turning
-the current SCM into a platform driver.  The next couple are cleanups
-that make adding the 64 support a little easier.  I added in a patch to
-convert the scm-32 to use DMA streaming APIs.
+This patch moves the qcom_scm_remap_error function to the include file
+where can be used by both the 32 and 64 bit versions of the code.
 
-I took Kumar's 64 bit support patch and modified it to use the arm_smccc
-calls.  This simplified things quite a bit.
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+---
+ drivers/firmware/qcom_scm-32.c | 17 -----------------
+ drivers/firmware/qcom_scm.h    | 16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 17 deletions(-)
 
-Lastly, there are a few DT patches to add the firmware node for a couple of the
-supported platforms.
-
-Changes from v4:
-  * Fix Documentation error
-  * Fix misc review comments
-
-Changes from v3:
-  * Added compatibles for the specific platforms requiring one clock.
-  * All other platforms will use the generic binding that requires 3 clocks.
-
-Changes from v2:
-  * Added use of streaming DMA APIs for scm-32.
-  * Changed DT binding to simplify compats.
-  * Removed Kconfig.platform change that selected QCOM_SCM for ARM64
-  * Fixed misc comments
-  * Changed init function to populate the device differently.
-  * Fixed missing of_node_put
-
-Changes from v1:
-  * Changed binding to reflect proper firmware node usage
-  * Added arch_initcall to populate the firmware device, if present
-  * Fixed various review comments
-  * Removed extraneous includes from SCM 64 file.
-
-
-Andy Gross (7):
-  dt/bindings: firmware: Add Qualcomm SCM binding
-  firmware: qcom: scm: Convert SCM to platform driver
-  firmware: qcom: scm: Use atomic SCM for cold boot
-  firmware: qcom: scm: Generalize shared error map
-  firmware: qcom: scm: Convert to streaming DMA APIS
-  dts: qcom: apq8084: Add SCM firmware node
-  arm64: dts: msm8916: Add SCM firmware node
-
-Kumar Gala (1):
-  firmware: qcom: scm: Add support for ARM64 SoCs
-
- .../devicetree/bindings/firmware/qcom,scm.txt      |  28 +++
- arch/arm/boot/dts/qcom-apq8084.dtsi                |   8 +
- arch/arm64/boot/dts/qcom/msm8916.dtsi              |   8 +
- drivers/firmware/qcom_scm-32.c                     | 271 ++++++++-------------
- drivers/firmware/qcom_scm-64.c                     | 199 ++++++++++++++-
- drivers/firmware/qcom_scm.c                        | 171 ++++++++++++-
- drivers/firmware/qcom_scm.h                        |  31 ++-
- 7 files changed, 523 insertions(+), 193 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
-
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 5be6a12..4388d13 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -168,23 +168,6 @@ static inline void *qcom_scm_get_response_buffer(const struct qcom_scm_response
+ 	return (void *)rsp + le32_to_cpu(rsp->buf_offset);
+ }
+ 
+-static int qcom_scm_remap_error(int err)
+-{
+-	pr_err("qcom_scm_call failed with error code %d\n", err);
+-	switch (err) {
+-	case QCOM_SCM_ERROR:
+-		return -EIO;
+-	case QCOM_SCM_EINVAL_ADDR:
+-	case QCOM_SCM_EINVAL_ARG:
+-		return -EINVAL;
+-	case QCOM_SCM_EOPNOTSUPP:
+-		return -EOPNOTSUPP;
+-	case QCOM_SCM_ENOMEM:
+-		return -ENOMEM;
+-	}
+-	return -EINVAL;
+-}
+-
+ static u32 smc(u32 cmd_addr)
+ {
+ 	int context_id;
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index 2cce75c..7dcc733 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -44,4 +44,20 @@ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+ #define QCOM_SCM_ERROR		-1
+ #define QCOM_SCM_INTERRUPTED	1
+ 
++static inline int qcom_scm_remap_error(int err)
++{
++	switch (err) {
++	case QCOM_SCM_ERROR:
++		return -EIO;
++	case QCOM_SCM_EINVAL_ADDR:
++	case QCOM_SCM_EINVAL_ARG:
++		return -EINVAL;
++	case QCOM_SCM_EOPNOTSUPP:
++		return -EOPNOTSUPP;
++	case QCOM_SCM_ENOMEM:
++		return -ENOMEM;
++	}
++	return -EINVAL;
++}
++
+ #endif
 -- 
 1.9.1
