@@ -1,72 +1,66 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzNdIEFSTTogZHRzOiBjbHBzNzExeDogQWRkIGJhc2lj?=
- =?UTF-8?B?IENpcnJ1cyBMb2dpYyBDREI4OTcxMiBEZXZlbG9wbWVudCBib2FyZA==?=
-Date: Fri, 13 May 2016 15:30:23 +0300
-Message-ID: <1463142623.38124260@f381.i.mail.ru>
-References: <1463138788-5390-1-git-send-email-shc_work@mail.ru>
- <1463138788-5390-4-git-send-email-shc_work@mail.ru>
- <9407200.bOeiVUkGKT@wuerfel>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: igep0020: Add SD card write-protect pin.
+Date: Fri, 13 May 2016 14:37:18 +0200
+Message-ID: <20160513123718.GA2841@localhost.localdomain>
+References: <1462568554-7868-1-git-send-email-enric.balletbo@collabora.com>
+ <1462568554-7868-2-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9407200.bOeiVUkGKT@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?UnVzc2VsbCBLaW5n?= <linux@armlinux.org.uk>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462568554-7868-2-git-send-email-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uCgo+INCf0Y/RgtC90LjRhtCwLCAxMyDQvNCw0Y8gMjAxNiwgMTU6MDAgKzAzOjAwINC+
-0YIgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gCj4gT24gRnJpZGF5IDEzIE1heSAy
-MDE2IDE0OjI2OjI4IEFsZXhhbmRlciBTaGl5YW4gd3JvdGU6Ci4uLgo+ID4gKwlzb2Mgewo+ID4g
-KwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiA+ICsJ
-CWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7Cj4gPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZp
-bnRjPjsKPiA+ICsJCXJhbmdlczsKPiAKPiBBbGwgY2hpbGQgZGV2aWNlcyBzZWVtIHRvIGJlIGlu
-IHRoZSAweDgwMDAwMDAwLTB4OTAwMDAwMDAKPiByYW5nZSwgbWF5YmUgc2V0IHRoZSByYW5nZXMg
-cHJvcGVydHkgYWNjb3JkaW5nbHk/CgpJIGRvIG5vdCBxdWl0ZSB1bmRlcnN0YW5kIHRoYXQgeW91
-IHdhbnQgdG8gY2hhbmdlIGhlcmUuCgo+IAo+ID4gKwkJY2xrczogY2xrc0A4MDAwMDAwMCB7Cj4g
-PiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ID4gKwkJCWNvbXBhdGlibGUgPSAiY2lycnVzLGNs
-cHM3MTF4LWNsayI7Cj4gPiArCQkJcmVnID0gPDB4ODAwMDAwMDAgMHhjMDAwPjsKPiA+ICsJCQlz
-dGFydHVwLWZyZXF1ZW5jeSA9IDw3MzcyODAwMD47Cj4gPiArCQl9OwouLi4KPiA+ICsJCWludGM6
-IGludGNAODAwMDAwMDAgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAiY2lycnVzLGNscHM3MTF4LWlu
-dGMiOwo+ID4gKwkJCXJlZyA9IDwweDgwMDAwMDAwIDB4NDAwMD47Cj4gPiArCQkJaW50ZXJydXB0
-LWNvbnRyb2xsZXI7Cj4gPiArCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiA+ICsJCX07Cj4g
-Cj4gQmV0dGVyIG1ha2UgdGhlIHJlZ2lzdGVyIHJhbmdlcyBub24tb3ZlcmxhcHBpbmcuIFRoaXMg
-YXBwZWFycwo+IHRvIHN0YXJ0IGF0IHRoZSBzYW1lIHBsYWNlIGFzIHRoZSAnY2xrcycgbm9kZS4K
-CkNMSyBkcml2ZXIgdXNlczoKI2RlZmluZSBDTFBTNzExWF9TWVNDT04xICgweDAxMDApCiNkZWZp
-bmUgQ0xQUzcxMVhfU1lTQ09OMiAoMHgxMTAwKQouLi4KI2RlZmluZSBDTFBTNzExWF9QTExSICgw
-eGE1YTgpCgpJUlFDSElQIGRyaXZlciB1c2VzOgojZGVmaW5lIENMUFM3MTFYX0lOVFNSMSAoMHgw
-MjQwKQouLi4KI2RlZmluZSBDTFBTNzExWF9JTlRTUjIgKDB4MTI0MCkKLi4uCiNkZWZpbmUgQ0xQ
-UzcxMVhfSU5UTVIzICgweDIyODApCgpTbyB0aGVyZSBpcyBubyB3YXkgdG8gZG8gYW55IGVsc2Uu
-Cgo+ID4gKwkJcG9ydGE6IGdwaW9AODAwMDAwMDAgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAiY2ly
-cnVzLGNscHM3MTF4LWdwaW8iOwo+ID4gKwkJCXJlZyA9IDwweDgwMDAwMDAwIDB4MSAweDgwMDAw
-MDQwIDB4MT47Cj4gPiArCQkJZ3Bpby1jb250cm9sbGVyOwo+ID4gKwkJCSNncGlvLWNlbGxzID0g
-PDI+Owo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJCXBvcnRiOiBncGlvQDgwMDAwMDAxIHsKPiA+ICsJ
-CQljb21wYXRpYmxlID0gImNpcnJ1cyxjbHBzNzExeC1ncGlvIjsKPiA+ICsJCQlyZWcgPSA8MHg4
-MDAwMDAwMSAweDEgMHg4MDAwMDA0MSAweDE+Owo+ID4gKwkJCWdwaW8tY29udHJvbGxlcjsKPiA+
-ICsJCQkjZ3Bpby1jZWxscyA9IDwyPjsKPiA+ICsJCX07Cj4gPiArCj4gPiArCQlwb3J0YzogZ3Bp
-b0A4MDAwMDAwMiB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJjaXJydXMsY2xwczcxMXgtZ3BpbyI7
-Cj4gPiArCQkJcmVnID0gPDB4ODAwMDAwMDIgMHgxIDB4ODAwMDAwNDIgMHgxPjsKPiA+ICsJCQln
-cGlvLWNvbnRyb2xsZXI7Cj4gPiArCQkJI2dwaW8tY2VsbHMgPSA8Mj47Cj4gPiArCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKPiA+ICsJCX07Cj4gPiArCj4gPiArCQlwb3J0ZDogZ3Bpb0A4MDAwMDAw
-MyB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJjaXJydXMsY2xwczcxMXgtZ3BpbyI7Cj4gPiArCQkJ
-cmVnID0gPDB4ODAwMDAwMDMgMHgxIDB4ODAwMDAwNDMgMHgxPjsKPiA+ICsJCQlncGlvLWNvbnRy
-b2xsZXI7Cj4gPiArCQkJI2dwaW8tY2VsbHMgPSA8Mj47Cj4gPiArCQl9Owo+IAo+IFRoZXNlIGFy
-ZSBhbGwganVzdCBzaW5nbGUgYnl0ZXMuIE15IGd1ZXNzIGlzIHRoYXQgdGhlcmUgaXMKPiBhY3R1
-YWxseSBvbmUgSVAgYmxvY2sgdGhhdCBjb250YWlucyBhbGwgdGhlIGdwaW9zLCBub3QKPiBmb3Vy
-IGlkZW50aWNhbCBibG9ja3MuCgpUaGVzZSBpcyBhIDgtYml0IHJlZ2lzdGVycyB3aXRoIGRpZmZl
-cmVudCBwcm9wZXJ0aWVzLCB3aGljaCBwYXJzZXMgaW4gdGhlCkdQSU8gZHJpdmVyIGRlcGVuZGlu
-ZyBvZiBhbGlhcyAoR1BJTyBjb3VudCwgaW52ZXJ0ZWQgbG9naWMgZXRjLikuCgpUaGFua3MuCgot
-LS0KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+Hi Enric!
+
+On Fri, May 06, 2016 at 11:02:34PM +0200, Enric Balletbo i Serra wrote:
+> A host device that supports write protection should refuse to write to
+> an SD card that is designated read-only when write-protect is set. This
+> is an optional feature of the SD specification.
+
+Does it ever work on any IGEPv2? I have similar patch in my repo and there
+is no difference when enabling write protection on SD card. Also schemantics
+shows GPIO29 constantly pulled up with a resistor. Is there any board
+revision with working WP? I'm just curious as patch is of course correct.
+
+Best regards,
+	ladis
+
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap3-igep0020-common.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-igep0020-common.dtsi b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
+> index d6f839c..b697106 100644
+> --- a/arch/arm/boot/dts/omap3-igep0020-common.dtsi
+> +++ b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
+> @@ -194,6 +194,12 @@
+>  			OMAP3630_CORE2_IOPAD(0x25f8, PIN_OUTPUT | MUX_MODE4) /* etk_d14.gpio_28 */
+>  		>;
+>  	};
+> +
+> +	mmc1_wp_pins: pinmux_mmc1_cd_pins {
+> +		pinctrl-single,pins = <
+> +			OMAP3630_CORE2_IOPAD(0x25fa, PIN_INPUT | MUX_MODE4)   /* etk_d15.gpio_29 */
+> +		>;
+> +	};
+>  };
+>  
+>  &i2c3 {
+> @@ -250,3 +256,8 @@
+>  		};
+>  	};
+>  };
+> +
+> +&mmc1 {
+> +	pinctrl-0 = <&mmc1_pins &mmc1_wp_pins>;
+> +	wp-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;	/* gpio_29 */
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
