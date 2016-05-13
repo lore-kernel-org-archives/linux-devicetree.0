@@ -1,151 +1,49 @@
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: Re: [PATCH 1/2] arm64: dts: NS2: Add all of the UARTs
-Date: Fri, 13 May 2016 10:09:37 +0800
-Message-ID: <57353761.5020409@huawei.com>
-References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
- <57341FCE.6050403@huawei.com>
- <CAC3K-4qbkt3DCgd6qurNo3V+++x70bbFC--aunR0DbCTBvBNZg@mail.gmail.com>
+From: Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal
+ implementation
+Date: Fri, 13 May 2016 02:29:03 +0000
+Message-ID: <DB5PR0401MB1928FE8EC4E862B1FF2F9BAE91740@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
+ <1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
+ <20160427152532.GX3217@sirena.org.uk>
+ <AM2PR04MB072250B43DE37A38E374679989700@AM2PR04MB0722.eurprd04.prod.outlook.com>
+ <20160509102840.GB6292@sirena.org.uk>
+ <AM2PR04MB0722180ABF5DB9406F56162B89700@AM2PR04MB0722.eurprd04.prod.outlook.com>
+ <20160512163131.GF6261@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAC3K-4qbkt3DCgd6qurNo3V+++x70bbFC--aunR0DbCTBvBNZg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Cc: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/12/2016 11:31 AM, Mark Brown wrote:
+> On Mon, May 09, 2016 at 10:58:08AM +0000, Yao Yuan wrote:
+> 
+>> For example, if DSPI controller register is BE, so I set big-endian in DT.
+>> That means we should R/W the DSPI controller register with big-endian.
+>> Then I can think all of the value we R/W to/from DSPI controller register, we can
+>> Think they are the BE.
+>> So that we can understand it easy.
+> 
+>> That means no matter core is LE or BE, we both need get the value from DSPI register
+>> with big endian.
+> 
+> That's not how regmap is intended to be used, the intention is that the
+> driver will interact with native endian values and regmap will hide the
+> endianness changes.  You could mask this with some cpu_to_be() and
+> be_to_cpu() usage but I'm not sure it's a great idea or what it's buying
+> you.
 
+I don't think that's what Yao Yuan meant.  The driver wants the I/O
+accessor to return native-endian values, just like any other driver.
 
-On 2016/5/12 22:46, Jon Mason wrote:
-> 
-> 
-> On Thu, May 12, 2016 at 2:16 AM, Kefeng Wang <wangkefeng.wang@huawei.com <mailto:wangkefeng.wang@huawei.com>> wrote:
-> 
-> 
-> 
->     On 2016/5/12 6:56, Jon Mason wrote:
->     > Add all of the UARTs present on NS2 and enable them in the SVK device
->     > tree file.  Also, do some magic to make sure that uart3 is discovered as
->     > ttyS0 (as that is the console UART).
->     >
->     > Signed-off-by: Jon Mason <jonmason@broadcom.com <mailto:jonmason@broadcom.com>>
->     > ---
->     >  arch/arm64/boot/dts/broadcom/ns2-svk.dts | 16 ++++++++++++++++
->     >  arch/arm64/boot/dts/broadcom/ns2.dtsi    | 30 ++++++++++++++++++++++++++++++
->     >  2 files changed, 46 insertions(+)
->     >
->     > diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
->     > index 7cd3640..b062a44 100644
->     > --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
->     > +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
->     > @@ -40,10 +40,14 @@
->     >
->     >       aliases {
->     >               serial0 = &uart3;
->     > +             serial1 = &uart0;
->     > +             serial2 = &uart1;
->     > +             serial3 = &uart2;
->     >       };
->     >
->     >       chosen {
->     >               stdout-path = "serial0:115200n8";
->     > +             bootargs = "earlycon=uart8250,mmio32,0x66130000";
-> 
->     Hi Jon,
-> 
->     I submit a patch[1], with it, we can use earlycon without option to enable early console
->     for "snps,dw-apb-uart", could you help me to test it, thanks.
-> 
-> 
-> Adding your change and removing the line above does not cause earlycon to work for me.  Is there any additional changes necessary for this to work?
-With my patch, the bootargs still need contain earlycon, but no need uart8250,mmio32,0x66130000;
+-Scott
 
-chosen {
-	stdout-path = "serial0:115200n8";
-	bootargs = "earlycon";
-}
-
-Hope it would work.
-
-BRs,
-Kefeng
-
-> 
-> Thanks,
-> Jon
->  
-> 
-> 
->     BRs,
->     Kefeng
-> 
-> 
->     [1] https://lkml.org/lkml/2016/5/11/34
-> 
->     >       };
->     >
->     >       memory {
->     > @@ -68,6 +72,18 @@
->     >       status = "ok";
->     >  };
->     >
->     > +&uart0 {
->     > +     status = "ok";
->     > +};
->     > +
->     > +&uart1 {
->     > +     status = "ok";
->     > +};
->     > +
->     > +&uart2 {
->     > +     status = "ok";
->     > +};
->     > +
->     >  &uart3 {
->     >       status = "ok";
->     >  };
->     > diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
->     > index 788ed8f..c77a9e8 100644
->     > --- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
->     > +++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
->     > @@ -357,6 +357,36 @@
->     >                       status = "disabled";
->     >               };
->     >
->     > +             uart0: serial@66100000 {
->     > +                     compatible = "snps,dw-apb-uart";
->     > +                     reg = <0x66100000 0x100>;
->     > +                     interrupts = <GIC_SPI 390 IRQ_TYPE_LEVEL_HIGH>;
->     > +                     clocks = <&iprocslow>;
->     > +                     reg-shift = <2>;
->     > +                     reg-io-width = <4>;
->     > +                     status = "disabled";
->     > +             };
->     > +
->     > +             uart1: serial@66110000 {
->     > +                     compatible = "snps,dw-apb-uart";
->     > +                     reg = <0x66110000 0x100>;
->     > +                     interrupts = <GIC_SPI 391 IRQ_TYPE_LEVEL_HIGH>;
->     > +                     clocks = <&iprocslow>;
->     > +                     reg-shift = <2>;
->     > +                     reg-io-width = <4>;
->     > +                     status = "disabled";
->     > +             };
->     > +
->     > +             uart2: serial@66120000 {
->     > +                     compatible = "snps,dw-apb-uart";
->     > +                     reg = <0x66120000 0x100>;
->     > +                     interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH>;
->     > +                     clocks = <&iprocslow>;
->     > +                     reg-shift = <2>;
->     > +                     reg-io-width = <4>;
->     > +                     status = "disabled";
->     > +             };
->     > +
->     >               uart3: serial@66130000 {
->     >                       compatible = "snps,dw-apb-uart";
->     >                       reg = <0x66130000 0x100>;
->     >
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
