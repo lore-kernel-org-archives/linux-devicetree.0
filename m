@@ -1,56 +1,41 @@
 From: Andy Gross <andy.gross@linaro.org>
-Subject: [Patch v5 1/8] dt/bindings: firmware: Add Qualcomm SCM binding
-Date: Thu, 12 May 2016 22:46:54 -0500
-Message-ID: <1463111221-6963-2-git-send-email-andy.gross@linaro.org>
+Subject: [Patch v5 8/8] arm64: dts: msm8916: Add SCM firmware node
+Date: Thu, 12 May 2016 22:47:01 -0500
+Message-ID: <1463111221-6963-9-git-send-email-andy.gross@linaro.org>
 References: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree support for the Qualcomm SCM firmware.
+This adds the devicetree node for the SCM firmware.
 
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Andy Gross <andy.gross@linaro.org>
 ---
- .../devicetree/bindings/firmware/qcom,scm.txt      | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/qcom,scm.txt
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-new file mode 100644
-index 0000000..3b4436e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -0,0 +1,28 @@
-+QCOM Secure Channel Manager (SCM)
-+
-+Qualcomm processors include an interface to communicate to the secure firmware.
-+This interface allows for clients to request different types of actions.  These
-+can include CPU power up/down, HDCP requests, loading of firmware, and other
-+assorted actions.
-+
-+Required properties:
-+- compatible: must contain one of the following:
-+ * "qcom,scm-apq8064" for APQ8064 platforms
-+ * "qcom,scm-msm8660" for MSM8660 platforms
-+ * "qcom,scm-msm8690" for MSM8690 platforms
-+ * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
-+- clocks: One to three clocks may be required based on compatible.
-+ * Only core clock required for "qcom,scm-apq8064", "qcom,scm-msm8660", and "qcom,scm-msm8960"
-+ * Core, iface, and bus clocks required for "qcom,scm"
-+- clock-names: Must contain "core" for the core clock, "iface" for the interface
-+  clock and "bus" for the bus clock per the requirements of the compatible.
-+
-+Example for MSM8916:
-+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 9681200..01c7b0c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -122,6 +122,14 @@
+ 		hwlocks = <&tcsr_mutex 3>;
+ 	};
+ 
 +	firmware {
 +		scm {
 +			compatible = "qcom,scm";
-+			clocks = <&gcc GCC_CRYPTO_CLK> , <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
++			clocks = <&gcc GCC_CRYPTO_CLK>, <&gcc GCC_CRYPTO_AXI_CLK>, <&gcc GCC_CRYPTO_AHB_CLK>;
 +			clock-names = "core", "bus", "iface";
 +		};
 +	};
++
+ 	soc: soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.9.1
