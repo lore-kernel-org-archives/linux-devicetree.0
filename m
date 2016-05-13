@@ -1,108 +1,195 @@
-From: Trent Piepho <tpiepho-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
  Flash Controller.
-Date: Fri, 13 May 2016 00:00:32 +0000
-Message-ID: <1463097635.9103.301.camel@rtred1test09.kymeta.local>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
-	 <1452486886-8049-2-git-send-email-marex@denx.de>
+Date: Fri, 13 May 2016 02:24:46 +0200
+Message-ID: <57351ECE.2020009@denx.de>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>	 <1452486886-8049-2-git-send-email-marex@denx.de> <1463097635.9103.301.camel@rtred1test09.kymeta.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452486886-8049-2-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
-Content-Language: en-US
-Content-ID: <AFBAC1D98F2C244B9C5BE72653E4C75C-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
+In-Reply-To: <1463097635.9103.301.camel-dVGoCQn2UwS33l2LyG1otL1RWLrjA2wiZkel5v8DVj8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+To: Trent Piepho <tpiepho-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
 Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE2LTAxLTExIGF0IDA1OjM0ICswMTAwLCBNYXJlayBWYXN1dCB3cm90ZToNCj4g
-RnJvbTogR3JhaGFtIE1vb3JlIDxncm1vb3JlLXl6dlBJQ3VrMkFCTWNnNElISzBrRm9INk1jNE1C
-MFZ4QHB1YmxpYy5nbWFuZS5vcmc+DQo+IA0KPiBBZGQgc3VwcG9ydCBmb3IgdGhlIENhZGVuY2Ug
-UVNQSSBjb250cm9sbGVyLiBUaGlzIGNvbnRyb2xsZXIgaXMNCj4gcHJlc2VudCBpbiB0aGUgQWx0
-ZXJhIFNvQ0ZQR0EgU29DcyBhbmQgdGhpcyBkcml2ZXIgaGFzIGJlZW4gdGVzdGVkDQo+IG9uIHRo
-ZSBDeWNsb25lIFYgU29DLg0KDQpJJ20gdHJ5aW5nIHRvIHVzZSB0aGlzIGRyaXZlciB0aGUgQWxh
-cmljIERldmtpdCBmb3IgQWx0ZXJhJ3MgQXJyaWExMA0KU29DLiAgSXQncyBub3Qgd29ya2luZyBz
-byBmYXIuICBJbiB0aGUgY291cnNlIG9mIHRyeWluZyB0byBkZWJ1ZyBpdCwNCkkndmUgZm91bmQg
-YSBmZXcgdGhpbmdzIHdpdGggdGhlIGRyaXZlciBpbiB0aGUgc29jZnBnYS00LjEtbHRzaSBicmFu
-Y2guDQpIb3dldmVyIG1vc3Qgb2YgdGhlbSBhcmUgaW4gY29kZSB0aGF0J3Mgbm90IHByZXNlbnQg
-aW4gdGhpcyBkcml2ZXIsDQp3aGljaCBpcyB0aGUgbmV3ZXN0IHBvc3Qgb2YgdGhlIGNvZGUgSSBj
-b3VsZCBmaW5kIHRvIHJlcGx5IHRvLg0KDQo+ICsJCQkJCSBDUVNQSV9SRUdfSVJRX1dBVEVSTUFS
-Swl8IFwNCj4gKwkJCQkJIENRU1BJX1JFR19JUlFfVU5ERVJGTE9XKQ0KPiArDQo+ICsjZGVmaW5l
-IENRU1BJX0lSUV9TVEFUVVNfTUFTSwkJMHgxRkZGRg0KPiArDQoNClBlcmhhcHMgYSBjb21tZW50
-Lg0KLyogd2FpdHMgZm9yIGFsbCBiaXRzIHNldCBpbiBtYXNrIHRvIGJlIHplcm8gKGNsZWFyPT1m
-YWxzZSkgb3Igb25lDQooY2xlYXI9PXRydWUpICovDQoNCj4gK3N0YXRpYyBpbnQgY3FzcGlfd2Fp
-dF9mb3JfYml0KHZvaWQgX19pb21lbSAqcmVnLCBjb25zdCB1MzIgbWFzaywgYm9vbCBjbGVhcikN
-Cj4gK3sNCj4gKwl1bnNpZ25lZCBsb25nIGVuZCA9IGppZmZpZXMgKyBtc2Vjc190b19qaWZmaWVz
-KENRU1BJX1RJTUVPVVRfTVMpOw0KPiArCXUzMiB2YWw7DQo+ICsNCj4gKwl3aGlsZSAoMSkgew0K
-PiArCQl2YWwgPSByZWFkbChyZWcpOw0KPiArCQlpZiAoY2xlYXIpDQo+ICsJCQl2YWwgPSB+dmFs
-Ow0KPiArCQl2YWwgJj0gbWFzazsNCj4gKw0KPiArCQlpZiAodmFsID09IG1hc2spDQo+ICsJCQly
-ZXR1cm4gMDsNCg0KU29tZXdoYXQgc2ltcGxlci4NCg0KaWYgKChyZWFkbChyZWcpICYgbWFzaykg
-PT0gKGNsZWFyID8gMCA6IG1hc2spKQ0KICAgICAgICByZXR1cm4gMDsNCg0KPiArDQo+ICsJCWlm
-ICh0aW1lX2FmdGVyKGppZmZpZXMsIGVuZCkpDQo+ICsJCQlyZXR1cm4gLUVUSU1FRE9VVDsNCg0K
-Tm90ZSB0aGF0IHRoZXJlIGlzIGEgaHlwZXJ2aXNvci92bS9sb25nIGhhcmRpcnEgZXRjLiBidWcg
-dGhhdCBjYW4gaGFwcGVuDQp3aXRob3V0IHRpbWVvdXRzIGxpa2UgdGhpcy4gIFdoYXQgaGFwcGVu
-cyBpcyBhZnRlciB0aGUgY2hlY2sgb2YgdGhlIGJpdHMNCmZhaWxzLCB0aGVyZSBpcyBhIHZlcnkg
-bG9uZyBkZWxheSBiZWZvcmUgdGhpcyB0YXNrIHJ1bnMgYWdhaW4uICBUaGlzIGNhbg0KYmUgZWFz
-eSBpZiBvbmUgaXMgcnVubmluZyB1bmRlciB2aXJ0dWFsaXphdGlvbi4gIFRoZSB0aGUgdGltZV9h
-ZnRlciBjYWxsDQpyZXBvcnRzIHRoZSB0aW1lb3V0IGV4cGlyZWQuICBCdXQgdGhlIGxhc3QgdGlt
-ZSBpdCB0aGUgYml0IHdhcyBjaGVja2VkLA0KYmVmb3JlIHRoZSBsb25nIGRlbGF5LCB3YXMgd2Vs
-bCBiZWZvcmUgdGhlIHRpbWVvdXQgZXhwaXJlZC4gIFRoZSB3YXkgdG8NCmF2b2lkIHRoaXMgaXMg
-dG8gYWx3YXlzIGJlIHN1cmUgdG8gY2hlY2sgdGhlIGNvbmRpdGlvbiBvbmNlIGFmdGVyIHRoZQ0K
-dGltZW91dCBleHBpcmVkLiAgVGhpcyBpcyBzdXJlIHRvIGdpdmUgdGhlIGZ1bGwgdGltZW91dC4N
-Cg0KDQo+ICsJfQ0KPiArfQ0KPiArDQoNCj4gKw0KPiArc3RhdGljIHVuc2lnbmVkIGludCBjYWxj
-dWxhdGVfdGlja3NfZm9yX25zKGNvbnN0IHVuc2lnbmVkIGludCByZWZfY2xrX2h6LA0KPiArCQkJ
-CQkgICBjb25zdCB1bnNpZ25lZCBpbnQgbnNfdmFsKQ0KPiArew0KPiArCXVuc2lnbmVkIGludCB0
-aWNrczsNCj4gKw0KPiArCXRpY2tzID0gcmVmX2Nsa19oeiAvIDEwMDA7CS8qIGtIeiAqLw0KVGhp
-cyBkaXZpc2lvbiBkb2Vzbid0IHJvdW5kIHVwLg0KDQo+ICsJdGlja3MgPSBESVZfUk9VTkRfVVAo
-dGlja3MgKiBuc192YWwsIDEwMDAwMDApOw0KQnV0IHRoaXMgb25lIGRvZXMuDQoNCj4gKw0KPiAr
-CXJldHVybiB0aWNrczsNCj4gK30NCj4gKw0KPiArc3RhdGljIHZvaWQgY3FzcGlfZGVsYXkoc3Ry
-dWN0IHNwaV9ub3IgKm5vciwgY29uc3QgdW5zaWduZWQgaW50IHNjbGtfaHopDQo+ICt7DQo+ICsJ
-c3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhICpmX3BkYXRhID0gbm9yLT5wcml2Ow0KPiArCXN0cnVj
-dCBjcXNwaV9zdCAqY3FzcGkgPSBmX3BkYXRhLT5jcXNwaTsNCg0KSXNuJ3QgdGhlIHNjbGtfaHog
-cGFyYW1ldGVyIG9mIHRoaXMgZnVuY3Rpb24gYWxyZWFkeSBhdmFpbGFibGUgaGVyZSBhcw0KY3Fz
-cGktPnNjbGs/DQoNCj4gKwl2b2lkIF9faW9tZW0gKmlvYmFzZSA9IGNxc3BpLT5pb2Jhc2U7DQo+
-ICsJY29uc3QgdW5zaWduZWQgaW50IHJlZl9jbGtfaHogPSBjcXNwaS0+bWFzdGVyX3JlZl9jbGtf
-aHo7DQo+ICsJdW5zaWduZWQgaW50IHRzaHNsLCB0Y2hzaCwgdHNsY2gsIHRzZDJkOw0KPiArCXVu
-c2lnbmVkIGludCByZWc7DQo+ICsJdW5zaWduZWQgaW50IHRzY2xrOw0KPiArDQo+ICsJLyogY2Fs
-Y3VsYXRlIHRoZSBudW1iZXIgb2YgcmVmIHRpY2tzIGZvciBvbmUgc2NsayB0aWNrICovDQo+ICsJ
-dHNjbGsgPSAocmVmX2Nsa19oeiArIHNjbGtfaHogLSAxKSAvIHNjbGtfaHo7DQoNCkRJVl9ST1VO
-RF9VUChyZWZfY2xrX2h6LCBzY2xrX2h6KTsNCg0KPiArDQo+ICsJdHNoc2wgPSBjYWxjdWxhdGVf
-dGlja3NfZm9yX25zKHJlZl9jbGtfaHosIGZfcGRhdGEtPnRzaHNsX25zKTsNCj4gKwkvKiB0aGlz
-IHBhcnRpY3VsYXIgdmFsdWUgbXVzdCBiZSBhdCBsZWFzdCBvbmUgc2NsayAqLw0KPiArCWlmICh0
-c2hzbCA8IHRzY2xrKQ0KPiArCQl0c2hzbCA9IHRzY2xrOw0KPiArDQo+ICsJdGNoc2ggPSBjYWxj
-dWxhdGVfdGlja3NfZm9yX25zKHJlZl9jbGtfaHosIGZfcGRhdGEtPnRjaHNoX25zKTsNCj4gKwl0
-c2xjaCA9IGNhbGN1bGF0ZV90aWNrc19mb3JfbnMocmVmX2Nsa19oeiwgZl9wZGF0YS0+dHNsY2hf
-bnMpOw0KPiArCXRzZDJkID0gY2FsY3VsYXRlX3RpY2tzX2Zvcl9ucyhyZWZfY2xrX2h6LCBmX3Bk
-YXRhLT50c2QyZF9ucyk7DQo+ICsNCj4gKwlyZWcgPSAodHNoc2wgJiBDUVNQSV9SRUdfREVMQVlf
-VFNIU0xfTUFTSykNCj4gKwkgICAgICAgPDwgQ1FTUElfUkVHX0RFTEFZX1RTSFNMX0xTQjsNCj4g
-KwlyZWcgfD0gKHRjaHNoICYgQ1FTUElfUkVHX0RFTEFZX1RDSFNIX01BU0spDQo+ICsJCTw8IENR
-U1BJX1JFR19ERUxBWV9UQ0hTSF9MU0I7DQo+ICsJcmVnIHw9ICh0c2xjaCAmIENRU1BJX1JFR19E
-RUxBWV9UU0xDSF9NQVNLKQ0KPiArCQk8PCBDUVNQSV9SRUdfREVMQVlfVFNMQ0hfTFNCOw0KPiAr
-CXJlZyB8PSAodHNkMmQgJiBDUVNQSV9SRUdfREVMQVlfVFNEMkRfTUFTSykNCj4gKwkJPDwgQ1FT
-UElfUkVHX0RFTEFZX1RTRDJEX0xTQjsNCj4gKwl3cml0ZWwocmVnLCBpb2Jhc2UgKyBDUVNQSV9S
-RUdfREVMQVkpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBjcXNwaV9jb25maWdfYmF1ZHJh
-dGVfZGl2KHN0cnVjdCBjcXNwaV9zdCAqY3FzcGksDQo+ICsJCQkJICAgICAgY29uc3QgdW5zaWdu
-ZWQgaW50IHNjbGtfaHopDQo+ICt7DQoNCnNjbGtfaHogaXMgYXZhaWxhYmxlIGFzIGNxc3BpLT5z
-Y2xrLg0KDQo+ICsJY29uc3QgdW5zaWduZWQgaW50IHJlZl9jbGtfaHogPSBjcXNwaS0+bWFzdGVy
-X3JlZl9jbGtfaHo7DQo+ICsJdm9pZCBfX2lvbWVtICpyZWdfYmFzZSA9IGNxc3BpLT5pb2Jhc2U7
-DQo+ICsJdW5zaWduZWQgaW50IHJlZzsNCj4gKwl1bnNpZ25lZCBpbnQgZGl2Ow0KPiArDQo+ICsJ
-cmVnID0gcmVhZGwocmVnX2Jhc2UgKyBDUVNQSV9SRUdfQ09ORklHKTsNCj4gKwlyZWcgJj0gfihD
-UVNQSV9SRUdfQ09ORklHX0JBVURfTUFTSyA8PCBDUVNQSV9SRUdfQ09ORklHX0JBVURfTFNCKTsN
-Cj4gKw0KPiArCWRpdiA9IHJlZl9jbGtfaHogLyBzY2xrX2h6Ow0KDQpTaG91bGQgdGhpcyByb3Vu
-ZCB1cCB0b28/DQoNCj4gKw0KPiArCS8qIFJlY2FsY3VsYXRlIHRoZSBiYXVkcmF0ZSBkaXZpc29y
-IGJhc2VkIG9uIFFTUEkgc3BlY2lmaWNhdGlvbi4gKi8NCj4gKwlpZiAoZGl2ID4gMzIpDQo+ICsJ
-CWRpdiA9IDMyOw0KPiArDQo+ICsJLyogQ2hlY2sgaWYgZXZlbiBudW1iZXIuICovDQo+ICsJaWYg
-KGRpdiAmIDEpDQo+ICsJCWRpdiA9IChkaXYgLyAyKTsNCj4gKwllbHNlDQo+ICsJCWRpdiA9IChk
-aXYgLyAyKSAtIDE7DQoNCldvdWxkbid0IHRoaXMgYmUgdGhlIHNhbWUgYXMgZGl2ID0gRElWX1JP
-VU5EX1VQKGRpdiwgMikgLSAxOw0KDQpUaGUgZW50aXJlIGRpdiBjYWxjdWxhdGlvbiBjb3VsZCBi
-ZSBkb25lIHdpdGg6DQoNCiAgIC8qIFJlZ2lzdGVyIHByb2dyYW1tZWQgd2l0aCBkaXZpZGVyIG1p
-bnVzIDEgKi8NCiAgIGRpdiA9IERJVl9ST1VORF9VUChyZWZfY2xrX2h6LCBzX2Nsa19oeiAqIDIp
-IC0gMTsNCiAgIGlmIChkaXYgPiAxNSkNCiAgICAgICAgZGl2ID0gMTU7DQoNCg0KPiArDQo+ICsJ
-ZGl2ID0gKGRpdiAmIENRU1BJX1JFR19DT05GSUdfQkFVRF9NQVNLKSA8PCBDUVNQSV9SRUdfQ09O
-RklHX0JBVURfTFNCOw0KPiArCXJlZyB8PSBkaXY7DQo+ICsJd3JpdGVsKHJlZywgcmVnX2Jhc2Ug
-KyBDUVNQSV9SRUdfQ09ORklHKTsNCj4gK30NCj4gKw0KDQo=
+On 05/13/2016 02:00 AM, Trent Piepho wrote:
+> On Mon, 2016-01-11 at 05:34 +0100, Marek Vasut wrote:
+>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>
+>>
+>> Add support for the Cadence QSPI controller. This controller is
+>> present in the Altera SoCFPGA SoCs and this driver has been tested
+>> on the Cyclone V SoC.
+> 
+> I'm trying to use this driver the Alaric Devkit for Altera's Arria10
+> SoC.  It's not working so far.  In the course of trying to debug it,
+> I've found a few things with the driver in the socfpga-4.1-ltsi branch.
+
+So are you trying to debug this driver or some other out-of-tree driver?
+btw. I pushed the latest version here:
+
+https://git.kernel.org/cgit/linux/kernel/git/marex/linux-2.6.git/log/?h=next/cadence-qspi
+
+> However most of them are in code that's not present in this driver,
+> which is the newest post of the code I could find to reply to.
+
+I will check the rest later, thanks!
+
+>> +					 CQSPI_REG_IRQ_WATERMARK	| \
+>> +					 CQSPI_REG_IRQ_UNDERFLOW)
+>> +
+>> +#define CQSPI_IRQ_STATUS_MASK		0x1FFFF
+>> +
+> 
+> Perhaps a comment.
+> /* waits for all bits set in mask to be zero (clear==false) or one
+> (clear==true) */
+> 
+>> +static int cqspi_wait_for_bit(void __iomem *reg, const u32 mask, bool clear)
+>> +{
+>> +	unsigned long end = jiffies + msecs_to_jiffies(CQSPI_TIMEOUT_MS);
+>> +	u32 val;
+>> +
+>> +	while (1) {
+>> +		val = readl(reg);
+>> +		if (clear)
+>> +			val = ~val;
+>> +		val &= mask;
+>> +
+>> +		if (val == mask)
+>> +			return 0;
+> 
+> Somewhat simpler.
+> 
+> if ((readl(reg) & mask) == (clear ? 0 : mask))
+>         return 0;
+> 
+>> +
+>> +		if (time_after(jiffies, end))
+>> +			return -ETIMEDOUT;
+> 
+> Note that there is a hypervisor/vm/long hardirq etc. bug that can happen
+> without timeouts like this.  What happens is after the check of the bits
+> fails, there is a very long delay before this task runs again.  This can
+> be easy if one is running under virtualization.  The the time_after call
+> reports the timeout expired.  But the last time it the bit was checked,
+> before the long delay, was well before the timeout expired.  The way to
+> avoid this is to always be sure to check the condition once after the
+> timeout expired.  This is sure to give the full timeout.
+> 
+> 
+>> +	}
+>> +}
+>> +
+> 
+>> +
+>> +static unsigned int calculate_ticks_for_ns(const unsigned int ref_clk_hz,
+>> +					   const unsigned int ns_val)
+>> +{
+>> +	unsigned int ticks;
+>> +
+>> +	ticks = ref_clk_hz / 1000;	/* kHz */
+> This division doesn't round up.
+> 
+>> +	ticks = DIV_ROUND_UP(ticks * ns_val, 1000000);
+> But this one does.
+> 
+>> +
+>> +	return ticks;
+>> +}
+>> +
+>> +static void cqspi_delay(struct spi_nor *nor, const unsigned int sclk_hz)
+>> +{
+>> +	struct cqspi_flash_pdata *f_pdata = nor->priv;
+>> +	struct cqspi_st *cqspi = f_pdata->cqspi;
+> 
+> Isn't the sclk_hz parameter of this function already available here as
+> cqspi->sclk?
+> 
+>> +	void __iomem *iobase = cqspi->iobase;
+>> +	const unsigned int ref_clk_hz = cqspi->master_ref_clk_hz;
+>> +	unsigned int tshsl, tchsh, tslch, tsd2d;
+>> +	unsigned int reg;
+>> +	unsigned int tsclk;
+>> +
+>> +	/* calculate the number of ref ticks for one sclk tick */
+>> +	tsclk = (ref_clk_hz + sclk_hz - 1) / sclk_hz;
+> 
+> DIV_ROUND_UP(ref_clk_hz, sclk_hz);
+> 
+>> +
+>> +	tshsl = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tshsl_ns);
+>> +	/* this particular value must be at least one sclk */
+>> +	if (tshsl < tsclk)
+>> +		tshsl = tsclk;
+>> +
+>> +	tchsh = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tchsh_ns);
+>> +	tslch = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tslch_ns);
+>> +	tsd2d = calculate_ticks_for_ns(ref_clk_hz, f_pdata->tsd2d_ns);
+>> +
+>> +	reg = (tshsl & CQSPI_REG_DELAY_TSHSL_MASK)
+>> +	       << CQSPI_REG_DELAY_TSHSL_LSB;
+>> +	reg |= (tchsh & CQSPI_REG_DELAY_TCHSH_MASK)
+>> +		<< CQSPI_REG_DELAY_TCHSH_LSB;
+>> +	reg |= (tslch & CQSPI_REG_DELAY_TSLCH_MASK)
+>> +		<< CQSPI_REG_DELAY_TSLCH_LSB;
+>> +	reg |= (tsd2d & CQSPI_REG_DELAY_TSD2D_MASK)
+>> +		<< CQSPI_REG_DELAY_TSD2D_LSB;
+>> +	writel(reg, iobase + CQSPI_REG_DELAY);
+>> +}
+>> +
+>> +static void cqspi_config_baudrate_div(struct cqspi_st *cqspi,
+>> +				      const unsigned int sclk_hz)
+>> +{
+> 
+> sclk_hz is available as cqspi->sclk.
+> 
+>> +	const unsigned int ref_clk_hz = cqspi->master_ref_clk_hz;
+>> +	void __iomem *reg_base = cqspi->iobase;
+>> +	unsigned int reg;
+>> +	unsigned int div;
+>> +
+>> +	reg = readl(reg_base + CQSPI_REG_CONFIG);
+>> +	reg &= ~(CQSPI_REG_CONFIG_BAUD_MASK << CQSPI_REG_CONFIG_BAUD_LSB);
+>> +
+>> +	div = ref_clk_hz / sclk_hz;
+> 
+> Should this round up too?
+> 
+>> +
+>> +	/* Recalculate the baudrate divisor based on QSPI specification. */
+>> +	if (div > 32)
+>> +		div = 32;
+>> +
+>> +	/* Check if even number. */
+>> +	if (div & 1)
+>> +		div = (div / 2);
+>> +	else
+>> +		div = (div / 2) - 1;
+> 
+> Wouldn't this be the same as div = DIV_ROUND_UP(div, 2) - 1;
+> 
+> The entire div calculation could be done with:
+> 
+>    /* Register programmed with divider minus 1 */
+>    div = DIV_ROUND_UP(ref_clk_hz, s_clk_hz * 2) - 1;
+>    if (div > 15)
+>         div = 15;
+> 
+> 
+>> +
+>> +	div = (div & CQSPI_REG_CONFIG_BAUD_MASK) << CQSPI_REG_CONFIG_BAUD_LSB;
+>> +	reg |= div;
+>> +	writel(reg, reg_base + CQSPI_REG_CONFIG);
+>> +}
+>> +
+> 
+
+
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
