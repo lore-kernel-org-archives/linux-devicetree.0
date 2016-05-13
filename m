@@ -1,60 +1,80 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 4/7] [media] ir-rx51: add DT support to driver
-Date: Fri, 13 May 2016 16:01:31 +0200
-Message-ID: <20160513140130.GA30391@earth>
-References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1462634508-24961-5-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160509200657.GA3379@rob-hp-laptop>
- <5730F8BA.5000402@gmail.com>
- <CAL_JsqJPZS1ne_xAuBFtCc5L1HKFJf0LDUJ7CRSFXhc3adkTfA@mail.gmail.com>
- <20160510021826.GE1129@earth>
- <20160511141429.GA5894@rob-hp-laptop>
- <5735710A.6060404@gmail.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v3 2/2] ASoC: codecs: add support for
+ TAS5720 digital amplifier
+Date: Fri, 13 May 2016 09:04:20 -0500
+Message-ID: <20160513140420.GH9174@borg.dal.design.ti.com>
+References: <1461615456-19510-1-git-send-email-dannenberg@ti.com>
+ <1461615456-19510-3-git-send-email-dannenberg@ti.com>
+ <20160426154313.GA3217@sirena.org.uk>
+ <20160426162240.GB2885@borg.dal.design.ti.com>
+ <20160426172936.GE3217@sirena.org.uk>
+ <20160426180105.GF2885@borg.dal.design.ti.com>
+ <20160513115540.GI22038@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <5735710A.6060404@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+In-Reply-To: <20160513115540.GI22038@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Mark, please see below...
 
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, May 13, 2016 at 12:55:40PM +0100, Mark Brown wrote:
+> On Tue, Apr 26, 2016 at 01:01:05PM -0500, Andreas Dannenberg wrote:
+> > On Tue, Apr 26, 2016 at 06:29:36PM +0100, Mark Brown wrote:
+> 
+> > > Is the device actually going to mess up if someone sends it something
+> > > else or is it just going to ignore the extra bits (given that it's doing
+> > > autodetection anyway).
+> 
+> > well in any of the left-justified modes (which are the only ones the
+> > driver supports) the device takes and processes as many bits as it can
+> > given the clock and divider settings. Any extra bits provided will get
+> > ignored, and the next sync happens on the frame sync signal and not by
+> > counting bits so there is no downside also as confirmed by some bench
+> > testing I did feeding in 32-bit long frames for one channel. This seems
+> > like a case of preferring tolerance over strictly enforcing
+> > datasheet-advertised bit-widths. Will take out the check code.
+> 
+> OK, accepting extra bits is fine.  You should set sig_bits in the DAI so
+> userspace can see what's going on if it cares.
 
-Hi,
+I just had a quick look to see what sig_bits does, yes this is a good
+addition. Will post a follow-up patch based on the driver that you
+already accepted into your tree.
 
-On Fri, May 13, 2016 at 09:15:38AM +0300, Ivaylo Dimitrov wrote:
-> I prefer the shorter "nokia,n900-ir", will resend the series with
-> it used, unless someone has concerns about it.
+(Btw I'm working on another codec driver and I don't stop getting
+positively surprised how flexible and powerful the overall ASoC
+framework is).
 
-Sounds fine to me.
+Regards,
+Andreas
 
--- Sebastian
-
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXNd43AAoJENju1/PIO/qab8gP/1lrfrGuc9dS4jSWF9n5FJ7i
-2eQlz+a1VJaUJtrO5hB7JchnRA+msyB1Dphx/M7q8iVO9NIbj6x3mFxDqHOBuuSy
-O1bvl2YZtDNBewbl1+eZD6vrDN2JtzrtNL49usQNpi/5GbSFRGIxCOVixrPJRnU9
-yT7OUi+p1GGTVS4CIPuP/+ccd37B0hknk4XpL+tbJx0MDr8XXqTY/K50p54GEA4R
-kdZeT7mLS2IwoLTXd3eipuWeT8aDlkGjIhQ5KLy1pe9Bob038PBsf7DnCHMzHWqJ
-Md38FuYVUMqLQvX0PR+zSe9y+gU5AfCKH9DmsFmg1BAtr7KQxP0D6deY7mkqXXBl
-8ShHBDpoKdV0U5ZPK0No0RbyEyHBKsY64pKfk9BspFwmBQqQ5qJiWUtozHR9oiBm
-NNcBpaCRaqpTFkpCKAG33enCXPibAw1PvgwMc4WLzAK1ERHo31DJAiqjeoxm+5mp
-lqplFpwUlOzfay//U69yeLv3BpfgorhSjTHU7CSO+Ahi6Hic7K/K5hVTMdfmU9AY
-9K8EsbWR+Ccc80gYbspwLWTdlL/5TDqjHJsI8FK3AGCcFHHXNwNNv+psuIi9cBsT
-lmtCf2JwODQ1S8U4TStvLfJbsmHhUs325iqJa+yF0JDHtHZ82OjMlTUYPTNqr4st
-vIri0L6UerStqgR2Upin
-=0WLL
------END PGP SIGNATURE-----
-
---liOOAslEiF7prFVr--
+> > Along these lines, earlier as I was rummaging through the existing
+> > drivers looking for a solution I could model after I noticed that
+> > most(?) ASoC codec drivers don't have any type of HW fault checking, at
+> > at least whatever drivers I looked at. Not sure why this is but given
+> > this discussion this seems like a general opportunity to make
+> > improvements.
+> 
+> There are some with over temperature handling (eg, wm8962) but it's
+> relatively uncommon for observable protection features to be implemented
+> in silicon and even rarer for the interrupts to be hooked up (and hence
+> useful to support in software) unless there is also accessory detection
+> in the device.  On older devices the required digital logic was often
+> excessively expensive and realistically only relatively high power
+> speaker drivers have much risk of something going wrong - things like
+> headphone outputs or smaller speaker drivers end up with protection from
+> their supplies collapsing well before the device is in physical danger.
