@@ -1,47 +1,52 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2] devicetree: sunxi: Add OLinuXino Lime2
- eMMC to the Makefile
-Date: Fri, 13 May 2016 09:48:23 +0200
-Message-ID: <20160513074823.GA3733@lukather>
-References: <1463047851-2039-1-git-send-email-oliver@schinagl.nl>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v11 0/3] PIC32MZDA Clock Driver
+Date: Fri, 13 May 2016 13:22:38 +0530
+Message-ID: <1463125961-10706-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BABa+tfk3PyYaZZW"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSMN224QKGQESKIT3UY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1463047851-2039-1-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sandeep Sheriker <sandeepsheriker.mallikarjun-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---BABa+tfk3PyYaZZW
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Clock bindings got acked and then essentially unacked, while the clock
+driver never made it upstream. In the meantime, the initial DTS file
+made it upstream. This latest patch series includes a patch to go back
+and correct the DTS files to reflect the new clock bindings in this
+patch series.
 
-Hi Olliver,
+Note: Please pull this complete series through the MIPS tree.
 
-On Thu, May 12, 2016 at 12:10:51PM +0200, Olliver Schinagl wrote:
-> commit 27dd9af6bc (ARM: dts: sunxi: Add a olinuxino-lime2-emmc added the new
-> emmc equipped) lime2 but forgot its Makefile.
+Purna Chandra Mandal (3):
+  dt/bindings/clk: Add PIC32 clock binding documentation.
+  clk: microchip: Add Microchip PIC32 clock driver.
+  MIPS: dts: pic32: Update dts to reflect new PIC32MZDA clk binding
 
-This is still not the right commit format, the commit title should be
-around double quotes. checkpatch both reports an error for this and
-tells you what the proper format is, so please remember to use it
-before you're sending a patch.
-
-Thanks!
-Maxime
+ .../devicetree/bindings/clock/microchip,pic32.txt  |   39 +
+ arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi        |  236 -----
+ arch/mips/boot/dts/pic32/pic32mzda.dtsi            |   63 +-
+ arch/mips/boot/dts/pic32/pic32mzda_sk.dts          |    5 +-
+ drivers/clk/Kconfig                                |    3 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/microchip/Makefile                     |    2 +
+ drivers/clk/microchip/clk-core.c                   | 1031 ++++++++++++++++++++
+ drivers/clk/microchip/clk-core.h                   |   84 ++
+ drivers/clk/microchip/clk-pic32mzda.c              |  275 ++++++
+ include/dt-bindings/clock/microchip,pic32-clock.h  |   42 +
+ 11 files changed, 1522 insertions(+), 259 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
+ delete mode 100644 arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi
+ create mode 100644 drivers/clk/microchip/Makefile
+ create mode 100644 drivers/clk/microchip/clk-core.c
+ create mode 100644 drivers/clk/microchip/clk-core.h
+ create mode 100644 drivers/clk/microchip/clk-pic32mzda.c
+ create mode 100644 include/dt-bindings/clock/microchip,pic32-clock.h
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---BABa+tfk3PyYaZZW--
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
