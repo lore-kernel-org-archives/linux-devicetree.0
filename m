@@ -1,53 +1,127 @@
-From: chunfeng yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH 3/6] dt-bindings: mtu3: add devicetree bindings
-Date: Fri, 13 May 2016 11:19:13 +0800
-Message-ID: <1463109553.11651.127.camel@mhfsdcap03>
-References: <1462868614-20602-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1462868614-20602-4-git-send-email-chunfeng.yun@mediatek.com>
-	 <20160511145409.GA23042@rob-hp-laptop>
-	 <1463037844.11651.118.camel@mhfsdcap03>
-	 <CAOGqxeUYEGKq5yhHbgcjPZtY06ZfDp2iCLZDqS3uyfCW523B4w@mail.gmail.com>
-	 <1463104820.11651.125.camel@mhfsdcap03>
-	 <CAL_JsqJKW_C-LtCchAMn5c_VHxBz6n3DBBRFn9hCXcaAbpZrUg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJKW_C-LtCchAMn5c_VHxBz6n3DBBRFn9hCXcaAbpZrUg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alan Cooper <alcooperx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Biao Huang <biao.huang@mediatek.com>, USB list <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-gpio@vger.ke
+From: Andy Gross <andy.gross@linaro.org>
+Subject: [Patch v5 3/8] firmware: qcom: scm: Use atomic SCM for cold boot
+Date: Thu, 12 May 2016 22:46:56 -0500
+Message-ID: <1463111221-6963-4-git-send-email-andy.gross@linaro.org>
+References: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463111221-6963-1-git-send-email-andy.gross@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, jilai wang <jilaiw@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-05-12 at 22:09 -0500, Rob Herring wrote:
-> On Thu, May 12, 2016 at 9:00 PM, chunfeng yun <chunfeng.yun@mediatek.com> wrote:
-> > Hi,
-> >
-> > On Thu, 2016-05-12 at 19:02 -0400, Alan Cooper wrote:
-> >> On Thu, May 12, 2016 at 3:24 AM, chunfeng yun <chunfeng.yun@mediatek.com> wrote:
-> >> >> > + - mediatek,enable-manual-drd : supports manual dual-role switch by sysfs
-> >> >> > +   interface; only used when receptacle is TYPE-A and also wants to support
-> >> >> > +   dual-role mode.
-> >> >>
-> >> >> sysfs is a Linux detail that doesn't apply to the binding. Does the
-> >> >> property mean "the IP block supports or doesn't support switching"  or
-> >> >> "I want to enable switching feature". Only the former belongs in DT.
-> >> >>
-> >> > It is the former case, and has little relation with sysfs interface.
-> >> > I will modify it later, sorry for my unclear description.
-> >>
-> >> Could the property name be just "enable-manual-drd" instead of
-> >> "mediatek,enable-manual-drd"? I expect to have to add this
-> >> functionality to our USB driver in the near future.
-> >
-> > Do you mean provide some APIs to in common USB driver?
-> 
-> Probably, but first just put the property in a common binding doc.
-> 
-Ok, I modify it later
+This patch changes the cold_set_boot_addr function to use atomic SCM
+calls.  cold_set_boot_addr required adding qcom_scm_call_atomic2 to
+support the two arguments going to the smc call.  Using atomic removes
+the need for memory allocation and instead places all arguments in
+registers.
 
-Thanks.
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+---
+ drivers/firmware/qcom_scm-32.c | 63 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 45 insertions(+), 18 deletions(-)
 
-> Rob
-
-
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 0883292..5be6a12 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -342,6 +342,41 @@ static s32 qcom_scm_call_atomic1(u32 svc, u32 cmd, u32 arg1)
+ 	return r0;
+ }
+ 
++/**
++ * qcom_scm_call_atomic2() - Send an atomic SCM command with two arguments
++ * @svc_id:	service identifier
++ * @cmd_id:	command identifier
++ * @arg1:	first argument
++ * @arg2:	second argument
++ *
++ * This shall only be used with commands that are guaranteed to be
++ * uninterruptable, atomic and SMP safe.
++ */
++static s32 qcom_scm_call_atomic2(u32 svc, u32 cmd, u32 arg1, u32 arg2)
++{
++	int context_id;
++
++	register u32 r0 asm("r0") = SCM_ATOMIC(svc, cmd, 2);
++	register u32 r1 asm("r1") = (u32)&context_id;
++	register u32 r2 asm("r2") = arg1;
++	register u32 r3 asm("r3") = arg2;
++
++	asm volatile(
++			__asmeq("%0", "r0")
++			__asmeq("%1", "r0")
++			__asmeq("%2", "r1")
++			__asmeq("%3", "r2")
++			__asmeq("%4", "r3")
++#ifdef REQUIRES_SEC
++			".arch_extension sec\n"
++#endif
++			"smc    #0      @ switch to secure world\n"
++			: "=r" (r0)
++			: "r" (r0), "r" (r1), "r" (r2), "r" (r3)
++			);
++	return r0;
++}
++
+ u32 qcom_scm_get_version(void)
+ {
+ 	int context_id;
+@@ -378,22 +413,6 @@ u32 qcom_scm_get_version(void)
+ }
+ EXPORT_SYMBOL(qcom_scm_get_version);
+ 
+-/*
+- * Set the cold/warm boot address for one of the CPU cores.
+- */
+-static int qcom_scm_set_boot_addr(u32 addr, int flags)
+-{
+-	struct {
+-		__le32 flags;
+-		__le32 addr;
+-	} cmd;
+-
+-	cmd.addr = cpu_to_le32(addr);
+-	cmd.flags = cpu_to_le32(flags);
+-	return qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
+-			&cmd, sizeof(cmd), NULL, 0);
+-}
+-
+ /**
+  * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
+  * @entry: Entry point function for the cpus
+@@ -423,7 +442,8 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
+ 			set_cpu_present(cpu, false);
+ 	}
+ 
+-	return qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
++	return qcom_scm_call_atomic2(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
++				    flags, virt_to_phys(entry));
+ }
+ 
+ /**
+@@ -439,6 +459,10 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
+ 	int ret;
+ 	int flags = 0;
+ 	int cpu;
++	struct {
++		__le32 flags;
++		__le32 addr;
++	} cmd;
+ 
+ 	/*
+ 	 * Reassign only if we are switching from hotplug entry point
+@@ -454,7 +478,10 @@ int __qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
+ 	if (!flags)
+ 		return 0;
+ 
+-	ret = qcom_scm_set_boot_addr(virt_to_phys(entry), flags);
++	cmd.addr = cpu_to_le32(virt_to_phys(entry));
++	cmd.flags = cpu_to_le32(flags);
++	ret = qcom_scm_call(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
++			    &cmd, sizeof(cmd), NULL, 0);
+ 	if (!ret) {
+ 		for_each_cpu(cpu, cpus)
+ 			qcom_scm_wb[cpu].entry = entry;
+-- 
+1.9.1
