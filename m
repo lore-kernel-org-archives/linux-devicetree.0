@@ -1,95 +1,42 @@
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: Re: [PATCH 1/2] arm64: dts: NS2: Add all of the UARTs
-Date: Fri, 13 May 2016 09:17:02 +0800
-Message-ID: <57352B0E.5070803@huawei.com>
-References: <1463007369-13071-1-git-send-email-jonmason@broadcom.com>
- <57341FCE.6050403@huawei.com>
- <CAC3K-4qbkt3DCgd6qurNo3V+++x70bbFC--aunR0DbCTBvBNZg@mail.gmail.com>
- <befabac6-aae2-fb3b-2faa-5463b7287b2a@broadcom.com>
+From: chunfeng yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 3/6] dt-bindings: mtu3: add devicetree bindings
+Date: Fri, 13 May 2016 10:00:20 +0800
+Message-ID: <1463104820.11651.125.camel@mhfsdcap03>
+References: <1462868614-20602-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <1462868614-20602-4-git-send-email-chunfeng.yun@mediatek.com>
+	 <20160511145409.GA23042@rob-hp-laptop>
+	 <1463037844.11651.118.camel@mhfsdcap03>
+	 <CAOGqxeUYEGKq5yhHbgcjPZtY06ZfDp2iCLZDqS3uyfCW523B4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <befabac6-aae2-fb3b-2faa-5463b7287b2a@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAOGqxeUYEGKq5yhHbgcjPZtY06ZfDp2iCLZDqS3uyfCW523B4w@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alan Cooper <alcooperx@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Biao Huang <biao.huang@mediatek.com>, USB list <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On 2016/5/13 0:52, Ray Jui wrote:
-> Hi Kefeng,
+On Thu, 2016-05-12 at 19:02 -0400, Alan Cooper wrote:
+> On Thu, May 12, 2016 at 3:24 AM, chunfeng yun <chunfeng.yun@mediatek.com> wrote:
+> >> > + - mediatek,enable-manual-drd : supports manual dual-role switch by sysfs
+> >> > +   interface; only used when receptacle is TYPE-A and also wants to support
+> >> > +   dual-role mode.
+> >>
+> >> sysfs is a Linux detail that doesn't apply to the binding. Does the
+> >> property mean "the IP block supports or doesn't support switching"  or
+> >> "I want to enable switching feature". Only the former belongs in DT.
+> >>
+> > It is the former case, and has little relation with sysfs interface.
+> > I will modify it later, sorry for my unclear description.
 > 
-> On 5/12/2016 7:46 AM, Jon Mason wrote:
->>
->>
->> On Thu, May 12, 2016 at 2:16 AM, Kefeng Wang <wangkefeng.wang@huawei.com
->> <mailto:wangkefeng.wang@huawei.com>> wrote:
->>
->>
->>
->>     On 2016/5/12 6:56, Jon Mason wrote:
->>     > Add all of the UARTs present on NS2 and enable them in the SVK device
->>     > tree file.  Also, do some magic to make sure that uart3 is discovered as
->>     > ttyS0 (as that is the console UART).
->>     >
->>     > Signed-off-by: Jon Mason <jonmason@broadcom.com <mailto:jonmason@broadcom.com>>
->>     > ---
->>     >  arch/arm64/boot/dts/broadcom/ns2-svk.dts | 16 ++++++++++++++++
->>     >  arch/arm64/boot/dts/broadcom/ns2.dtsi    | 30 ++++++++++++++++++++++++++++++
->>     >  2 files changed, 46 insertions(+)
->>     >
->>     > diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
->>     > index 7cd3640..b062a44 100644
->>     > --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
->>     > +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
->>     > @@ -40,10 +40,14 @@
->>     >
->>     >       aliases {
->>     >               serial0 = &uart3;
->>     > +             serial1 = &uart0;
->>     > +             serial2 = &uart1;
->>     > +             serial3 = &uart2;
->>     >       };
->>     >
->>     >       chosen {
->>     >               stdout-path = "serial0:115200n8";
->>     > +             bootargs = "earlycon=uart8250,mmio32,0x66130000";
->>
->>     Hi Jon,
->>
->>     I submit a patch[1], with it, we can use earlycon without option to
->>     enable early console
->>     for "snps,dw-apb-uart", could you help me to test it, thanks.
->>
->>
->> Adding your change and removing the line above does not cause earlycon
->> to work for me.  Is there any additional changes necessary for this to work?
->>
->> Thanks,
->> Jon
->>
-> 
-> "OF_EARLYCON_DECLARE" doesn't seem to have a way to deal with DT properties? In the case of UART for NS2, it needs mmio32, configured with DT property "reg-io-width" set to 4. I don't think "OF_EARLYCON_DECLARE" is parsing that, which is likely the reason why it doesn't work for devices that required mmio32.
-> 
-It should work, I test this in Hisi D02 board, it uses same uart and same configuration.
+> Could the property name be just "enable-manual-drd" instead of
+> "mediatek,enable-manual-drd"? I expect to have to add this
+> functionality to our USB driver in the near future.
 
-early_init_dt_scan_chosen_serial()
- for (match = __earlycon_table; match < __earlycon_table_end; match++)
- 	......
-	of_setup_earlycon()
-		val = of_get_flat_dt_prop(node, "reg-io-width", NULL);  // will obtain the reg-io-width and set iotype=mmio32
-		err = match->setup(&early_console_dev, options);  // call early_serial8250_setup
-
-Could you check it again, thanks,
-
-Kefeng
+Do you mean provide some APIs to in common USB driver?
 
 
-> Thanks,
-> 
-> Ray
-> 
-> .
-> 
+
