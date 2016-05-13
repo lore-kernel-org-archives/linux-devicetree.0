@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 06/23] ARM: dts: r8a7791: Fix W=1 dtc warnings
-Date: Fri, 13 May 2016 09:55:46 +0200
-Message-ID: <1463126163-29423-7-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 07/23] ARM: dts: r8a7793: Fix W=1 dtc warnings
+Date: Fri, 13 May 2016 09:55:47 +0200
+Message-ID: <1463126163-29423-8-git-send-email-geert+renesas@glider.be>
 References: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
@@ -13,49 +13,6 @@ List-Id: devicetree@vger.kernel.org
 Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit name, but no reg property
 Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,dvc/dvc@0 has a unit name, but no reg property
 Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,dvc/dvc@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,mix/mix@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,mix/mix@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@4 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@5 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@6 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@7 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@4 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@5 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@6 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@7 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@8 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@9 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@4 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@5 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@6 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@7 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@8 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ssi/ssi@9 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,dvc/dvc@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,dvc/dvc@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,mix/mix@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,mix/mix@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@4 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@5 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@6 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,ctu/ctu@7 has a unit name, but no reg property
 Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@0 has a unit name, but no reg property
 Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@1 has a unit name, but no reg property
 Warning (unit_address_vs_reg): Node /sound@ec500000/rcar_sound,src/src@2 has a unit name, but no reg property
@@ -82,35 +39,35 @@ name and reg property match the MPIDR values.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 79 +++++++++++++++++++++---------------------
- 1 file changed, 40 insertions(+), 39 deletions(-)
+ arch/arm/boot/dts/r8a7793.dtsi | 59 +++++++++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 29 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index db67e342c58566fa..03c515e4d2d7f046 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -72,6 +72,14 @@
- 			power-domains = <&sysc R8A7791_PD_CA15_CPU1>;
+diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
+index 76c8435f283ccf49..3556845088f42327 100644
+--- a/arch/arm/boot/dts/r8a7793.dtsi
++++ b/arch/arm/boot/dts/r8a7793.dtsi
+@@ -55,6 +55,14 @@
+ 					   < 375000 1000000>;
  			next-level-cache = <&L2_CA15>;
  		};
 +
 +		L2_CA15: cache-controller@0 {
 +			compatible = "cache";
 +			reg = <0>;
-+			power-domains = <&sysc R8A7791_PD_CA15_SCU>;
++			power-domains = <&sysc R8A7793_PD_CA15_SCU>;
 +			cache-unified;
 +			cache-level = <2>;
 +		};
  	};
  
  	thermal-zones {
-@@ -93,13 +101,6 @@
+@@ -76,13 +84,6 @@
  		};
  	};
  
 -	L2_CA15: cache-controller@0 {
 -		compatible = "cache";
--		power-domains = <&sysc R8A7791_PD_CA15_SCU>;
+-		power-domains = <&sysc R8A7793_PD_CA15_SCU>;
 -		cache-unified;
 -		cache-level = <2>;
 -	};
@@ -118,7 +75,7 @@ index db67e342c58566fa..03c515e4d2d7f046 100644
  	gic: interrupt-controller@f1001000 {
  		compatible = "arm,gic-400";
  		#interrupt-cells = <3>;
-@@ -1737,79 +1738,79 @@
+@@ -1343,63 +1344,63 @@
  		status = "disabled";
  
  		rcar_sound,dvc {
@@ -132,32 +89,6 @@ index db67e342c58566fa..03c515e4d2d7f046 100644
  				dmas = <&audma0 0xbe>;
  				dma-names = "tx";
  			};
- 		};
- 
- 		rcar_sound,mix {
--			mix0: mix@0 { };
--			mix1: mix@1 { };
-+			mix0: mix-0 { };
-+			mix1: mix-1 { };
- 		};
- 
- 		rcar_sound,ctu {
--			ctu00: ctu@0 { };
--			ctu01: ctu@1 { };
--			ctu02: ctu@2 { };
--			ctu03: ctu@3 { };
--			ctu10: ctu@4 { };
--			ctu11: ctu@5 { };
--			ctu12: ctu@6 { };
--			ctu13: ctu@7 { };
-+			ctu00: ctu-0 { };
-+			ctu01: ctu-1 { };
-+			ctu02: ctu-2 { };
-+			ctu03: ctu-3 { };
-+			ctu10: ctu-4 { };
-+			ctu11: ctu-5 { };
-+			ctu12: ctu-6 { };
-+			ctu13: ctu-7 { };
  		};
  
  		rcar_sound,src {
@@ -220,7 +151,7 @@ index db67e342c58566fa..03c515e4d2d7f046 100644
  				interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
  				dmas = <&audma0 0x97>, <&audma1 0xba>;
  				dma-names = "rx", "tx";
-@@ -1817,52 +1818,52 @@
+@@ -1407,52 +1408,52 @@
  		};
  
  		rcar_sound,ssi {
