@@ -1,81 +1,67 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: spi-fsl-dspi: replace regmap R/W with internal
- implementation
-Date: Fri, 13 May 2016 11:26:11 +0100
-Message-ID: <20160513102611.GC10264@sirena.org.uk>
-References: <1461744756-31481-1-git-send-email-yao.yuan@freescale.com>
- <1461744756-31481-2-git-send-email-yao.yuan@freescale.com>
- <20160427152532.GX3217@sirena.org.uk>
- <AM2PR04MB072250B43DE37A38E374679989700@AM2PR04MB0722.eurprd04.prod.outlook.com>
- <20160509102840.GB6292@sirena.org.uk>
- <DB5PR0401MB192850FBCBE79EBBC61ACA3A91740@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH 2/2] ASoC: Add support for HifiBerry DAC
+Date: Fri, 13 May 2016 11:54:09 +0100
+Message-ID: <20160513105409.GB22038@sirena.org.uk>
+References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
+ <1463130853-25096-3-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="w7PDEPdKQumQfZlR"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <DB5PR0401MB192850FBCBE79EBBC61ACA3A91740-GXldUsIPo7Z/SeJcUcAJq43W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
-Cc: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1463130853-25096-3-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---w7PDEPdKQumQfZlR
+--ZoaI/ZTpAVc4A5k6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 13, 2016 at 03:08:55AM +0000, Scott Wood wrote:
-> On 05/09/2016 05:29 AM, Mark Brown wrote:
+On Fri, May 13, 2016 at 09:14:13AM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
 
-> > Yes, if you find bugs in generic frameworks you should fix them rather
-> > than just open coding something. =20
+> +static int snd_rpi_hifiberry_dac_init(struct snd_soc_pcm_runtime *rtd)
+> +{
+> +	return 0;
+> +}
 
-> That's often true, but using regmap to handle endianness is like
-> swatting flies with a sledgehammer.  Regmap's code is quite (over?)
-> complicated (e.g. the (user-visible!) difference between
-> reg_format_endian and val_format_endian is quite confusing) and ideally
+Remove empty functions.  Either they are redundant or you really need to
+do something in them.
 
-This is the register map API, not the register API - many buses,
-including MMIO, have different endiannesses for their values and
-addresses so of course we need to let users control that.
+> +static struct snd_soc_dai_link snd_rpi_hifiberry_dac_dai[] = {
+> +{
+> +	.name		= "HifiBerry DAC",
+> +	.stream_name	= "HifiBerry DAC HiFi",
+> +	.cpu_dai_name	= "bcm2708-i2s.0",
+> +	.codec_dai_name	= "pcm5102a-hifi",
+> +	.platform_name	= "bcm2708-i2s.0",
+> +	.codec_name	= "pcm5102a-codec",
 
-> people who aren't getting actual value from a buggy and/or awkward
-> subsystem shouldn't be forced to use/fix it.  We're not talking about
-> massive duplication here.  We're talking about a set of simple I/O
-> wrappers (something that many drivers do) with an if-statement.
+I would expect all this to be done with DT references in a DT driver
+rather than hard coding static names - look at how simple-card does this.
+You could almost use simple-card here but the BCLK ratio requirement is
+probably a bit much, I'm not immediately seeing a nice way to specify
+the ratio there since it depends on the sample width.
 
-As far as I am aware any issues have been fixed by other users who
-reported the problems they were seeing (which hasn't happened here).
-When we encounter problems it is not OK to just bodge around the issue
-in a driver without reporting them.  That doesn't help other users and
-makes everything more fragile.
-
-If there were some history or other indication of real problems here the
-story would be different but if that's been happening it hasn't ever
-been communicated.  As it is it looks like people have been using the
-diagnostic tools (max_register is specified) and clock management
-provided by regmap and the way this has been communicated is causing me
-concern.
-
---w7PDEPdKQumQfZlR
+--ZoaI/ZTpAVc4A5k6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXNavCAAoJECTWi3JdVIfQhe0H/AmVfMJzVP14W2SsKcx0Awu4
-8H0CTUkyUaiu3NP51kR/BIfjtHgNNinKB5YLGe5Ma7n5j5mCBRQVCkfMY4WytNUo
-B9Oh/tvEkrugcwEfARalB1yIyb7k2EkX9CjRIk8iToFQPdBgVEEyt9Mez46jbiTm
-KHvfhARRaYH0LCKopq0q6mRlz+frxNgcWrk5rqJ6LDDGoL1MTw9OT9971xnJHSZf
-3aycq09X4iSCaH68DachVjv8NrKUYlDXp1K5SMT1gY3iepwl/MUAwrNoPtYvj60D
-EOLrtSDL7D5QGbYQS1VC1lCpd4PiWbq+iegAWxUM983xgBiseXZcu4YU615K9zg=
-=2Cje
+iQEcBAEBCAAGBQJXNbJQAAoJECTWi3JdVIfQhDoH/RpCW7sj6R/+V0JWdsDGc/Da
+K6AqQFCfmIxNXeAxzGme96oD2PMY1GcwsQICPtW+OpIx+2basIlMvwLucfJyE4Nr
+u3p/3mhyLJsrSsAD6Kz2h9DsOaG3JDZYlN22SrI0hWrFCYTesjyoKDx3jdwEmOCj
+4QooioiEEUPLsAtX+3jlKHRdRzc68cs7h294gJRIfCct7G2B7ra7kpBWmKgwevlR
+JtM2w8jw9tcJDplU0QGDMMxsiTsHaEqbQPQNphOhTPHLKIfhS9ZRN9z7SothDewG
+9wEeRv9g8OOOJjPf5fk1viXBWzgmBnqYIoSVQBI0j1pkwT8lL4IvZrhzMRq3MvI=
+=Vx1F
 -----END PGP SIGNATURE-----
 
---w7PDEPdKQumQfZlR--
+--ZoaI/ZTpAVc4A5k6--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
