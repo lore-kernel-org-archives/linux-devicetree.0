@@ -1,44 +1,53 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] Documentation: devictree: Add macb mdio bindings
-Date: Fri, 13 May 2016 19:43:00 +0200
-Message-ID: <20160513174300.GB7600@lunn.ch>
-References: <1463131568-36948-1-git-send-email-harinik@xilinx.com>
- <1463131568-36948-2-git-send-email-harinik@xilinx.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 10/14] usb: otg: add hcd companion support
+Date: Fri, 13 May 2016 13:13:19 -0500
+Message-ID: <CAL_JsqL+=Kx+1YLe4PpJ8Y9Ng0j0S_miVx5LALR4JFzdQvgY+w@mail.gmail.com>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com> <1463133808-10630-11-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463131568-36948-2-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463133808-10630-11-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Harini
+On Fri, May 13, 2016 at 5:03 AM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>
+> Since some host controller (e.g. EHCI) needs a companion host controller
+> (e.g. OHCI), this patch adds such a configuration to use it in the OTG
+> core.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Acked-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/generic.txt |  3 +++
+>  drivers/usb/common/usb-otg.c                      | 32 ++++++++++++++++-------
+>  include/linux/usb/otg.h                           |  7 ++++-
+>  3 files changed, 32 insertions(+), 10 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+> index f6866c1..1db1c33 100644
+> --- a/Documentation/devicetree/bindings/usb/generic.txt
+> +++ b/Documentation/devicetree/bindings/usb/generic.txt
+> @@ -27,6 +27,9 @@ Optional properties:
+>   - otg-controller: phandle to otg controller. Host or gadget controllers can
+>                         contain this property to link it to a particular OTG
+>                         controller.
+> + - hcd-needs-companion: must be present if otg controller is dealing with
+> +                       EHCI host controller that needs a companion OHCI host
+> +                       controller.
 
-Is this backward compatible? Will devices using the old binding still
-work?
+I thought the conclusion was this is not needed?
 
-  /* Disable RX and TX (XXX: Should we halt the transmission
-   * more gracefully?)
-    */
--   macb_writel(bp, NCR, 0);
-+   ctrl = macb_readl(bp, NCR);
-+   ctrl &= ~(MACB_BIT(RE) | MACB_BIT(TE));
-+   macb_writel(bp, NCR, ctrl);
- 
-	/* Clear the stats registers (XXX: Update stats first?) */
--	macb_writel(bp, NCR, MACB_BIT(CLRSTAT));
-+	ctrl |= MACB_BIT(CLRSTAT);
-+	macb_writel(bp, NCR, ctrl);
- 
-	/* Clear all status flags */
- 	macb_writel(bp, TSR, -1);
+One thing that is not clear here is otg-controller is a host or device
+property while hcd-needs-companion is an OTG controller property.
+These lists should be separated.
 
-It is not clear to me what this part has to do with MDIO.
-
-   Andrew
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
