@@ -1,86 +1,114 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] dt: add Atmel Captouch bindings
-Date: Fri, 13 May 2016 11:38:21 -0700
-Message-ID: <CAKdAkRSZq6pjx1aWfkyhV_=mPCQ=w_9hM0FsukZVQn19B5FFnA@mail.gmail.com>
-References: <1462932469-122552-1-git-send-email-grundler@chromium.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] phy: add support for a reset-gpio specification
+Date: Fri, 13 May 2016 22:10:40 +0300
+Message-ID: <658c33a1-3304-8b0c-abfd-9e2a8b556d29@cogentembedded.com>
+References: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <4363f9c0-d447-5fc1-3ac9-382a172a7087@cogentembedded.com>
+ <20160513062631.GA28415@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462932469-122552-1-git-send-email-grundler@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hung-yu Wu <hywu@google.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Grant Grundler <grundler@chromium.org>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160513062631.GA28415@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de, "Andrew F . Davis" <afd@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2016 at 7:07 PM, Grant Grundler <grundler@chromium.org> wrote:
-> From: Daniel Hung-yu Wu <hywu@google.com>
->
-> Add binding for Atmel Capacitive Touch Button device.
->
-> Signed-off-by: Daniel Hung-yu Wu <hywu@google.com>
-> Signed-off-by: Grant Grundler <grundler@chromium.org>
-> ---
->  .../devicetree/bindings/input/atmel,captouch.txt   | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/atmel,captouch.txt
->
-> I haven't posted the corresponding device driver and dtsi changes yet but will shortly.
->
-> V2: split Documentation/devicetree/bindings from driver patch
->     rename "atmel,atmegaxx_captouch" to "atmel,captouch" since it's irrelevant
->            which controller implements the register set/controller.
+Hello.
 
-Rob, are you OK with the new bindings? I'd like to merge the driver if
-there are no objections from DT folks...
+On 05/13/2016 09:26 AM, Uwe Kleine-K=F6nig wrote:
 
+>>> The framework only asserts (for now) that the reset gpio is not act=
+ive.
+>>>
+>>> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>>> ---
+>>> Documentation/devicetree/bindings/net/phy.txt | 3 +++
+>>> drivers/net/phy/phy_device.c                  | 8 ++++++++
+>>> 2 files changed, 11 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Docume=
+ntation/devicetree/bindings/net/phy.txt
+>>> index bc1c3c8bf8fa..c00a9a894547 100644
+>>> --- a/Documentation/devicetree/bindings/net/phy.txt
+>>> +++ b/Documentation/devicetree/bindings/net/phy.txt
+>>> @@ -35,6 +35,8 @@ Optional Properties:
+>>> - broken-turn-around: If set, indicates the PHY device does not cor=
+rectly
+>>>   release the turn around line low at the end of a MDIO transaction=
+=2E
+>>>
+>>> +- reset-gpios: Reference to a GPIO used to reset the phy.
+>>> +
+>>> Example:
+>>>
+>>> ethernet-phy@0 {
+>>> @@ -42,4 +44,5 @@ ethernet-phy@0 {
+>>> 	interrupt-parent =3D <40000>;
+>>> 	interrupts =3D <35 1>;
+>>> 	reg =3D <0>;
+>>> +	reset-gpios =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
+>>>  };
+>>
+>>    OK, the example has PHY ID specified in the "compatible" prop. It=
+'s a
+>> vital detail, you should mention it somewhere...
 >
-> V1: posted https://lkml.org/lkml/2016/5/3/613
+> Something like that in the commit log:
 >
-> diff --git a/Documentation/devicetree/bindings/input/atmel,captouch.txt b/Documentation/devicetree/bindings/input/atmel,captouch.txt
-> new file mode 100644
-> index 0000000..405d287
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/atmel,captouch.txt
-> @@ -0,0 +1,34 @@
-> +Device tree bindings for Atmel AtmegaXX capacitive touch sensor
-> +
-> +The node for this device must be a child of a I2C controller node, as the
-> +device communicates via I2C.
-> +
-> +Required properties:
-> +
-> +       compatible:     Must be "atmel,captouch".
-> +       reg:            The I2C slave address of the device.
-> +       interrupts:     Property describing the interrupt line the device
-> +                       is connected to. The device only has one interrupt
-> +                       source.
-> +       linux,keycodes: Specifies an array of numeric keycode values to
-> +                       be used for reporting button presses. The array can
-> +                       contain up to 8 entries.
-> +
-> +Optional properties:
-> +
-> +       autorepeat:     Enables the Linux input system's autorepeat
-> +                       feature on the input device.
-> +
-> +Example:
-> +
-> +       atmel_captouch@51 {
-> +               compatible = "atmel,captouch";
-> +               reg = <0x51>;
-> +               interrupt-parent = <&tlmm>;
-> +               interrupts = <67 IRQ_TYPE_EDGE_FALLING>;
-> +               linux,keycodes = <BTN_0>, <BTN_1>,
-> +                       <BTN_2>, <BTN_3>,
-> +                       <BTN_4>, <BTN_5>,
-> +                       <BTN_6>, <BTN_7>;
-> +               autorepeat;
-> +       };
-> --
-> 2.1.2
+> 	Note that reset is only deasserted when the PHY ID is already
+> 	determined. If your phy doesn't support reading the PHY ID while
+> 	reset is asserted it's recommended to specify it in the
+> 	compatible string. Otherwise the device might fail to probe.
+
+    Yes, that should do.
+
+>>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_dev=
+ice.c
+>>> index e551f3a89cfd..7d666ab47271 100644
+>>> --- a/drivers/net/phy/phy_device.c
+>>> +++ b/drivers/net/phy/phy_device.c
+>> [...]
+>>> @@ -1569,9 +1570,16 @@ static int phy_probe(struct device *dev)
+>>> 	struct device_driver *drv =3D phydev->mdio.dev.driver;
+>>> 	struct phy_driver *phydrv =3D to_phy_driver(drv);
+>>> 	int err =3D 0;
+>>> +	struct gpio_descs *reset_gpios;
+>>>
+>>> 	phydev->drv =3D phydrv;
+>>>
+>>> +	/* take phy out of reset */
+>>> +	reset_gpios =3D devm_gpiod_get_array_optional(dev, "reset",
+>>> +						    GPIOD_OUT_LOW);
+>>> +	if (IS_ERR(reset_gpios))
+>>> +		return PTR_ERR(reset_gpios);
+>>> +
+>>
+>>    It would have been logical to assert back the reset GPIO in phy_r=
+emove(),
+
+> Not necessarily. If you want to save some energy it might make sense.=
+ If
+
+    Yes, we'd like to do that. Florian (the phylib maintainer) even wan=
+ted=20
+asserting reset during the PM suspended state.
+
+> you only focus on making the device work, ensuring that reset is not
+> applied is enough.
+
+>> no? Also, you'd need to store the GPIO permanently somewhere...
 >
+> I need to store it, iff I want to do something with the reset line
+> later. Currently that's not the case.
 
+    Oops, I seem to somewhat muddled up here. Of course, you need to st=
+ore it=20
+if you intend to de-assert it later.
 
+> Best regards
+> Uwe
 
--- 
-Dmitry
+MBR, Sergei
