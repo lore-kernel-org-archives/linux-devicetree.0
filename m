@@ -1,50 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: wm8985: add device-tree support
-Date: Fri, 13 May 2016 12:27:14 +0100
-Message-ID: <20160513112714.GG22038@sirena.org.uk>
-References: <1463068730-18817-1-git-send-email-petr@barix.com>
- <1463068730-18817-2-git-send-email-petr@barix.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DWg365Y4B18r8evw"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463068730-18817-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH] drivers/of: Fix build warning in populate_node()
+Date: Fri, 13 May 2016 21:31:39 +1000
+Message-ID: <1463139099-23363-1-git-send-email-gwshan@linux.vnet.ibm.com>
+References: <CAMuHMdUnsDhTS5-C6_SvrqGb6hVTBZOz00=HBGhtqAQbwYv6hg@mail.gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUnsDhTS5-C6_SvrqGb6hVTBZOz00=HBGhtqAQbwYv6hg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, geert@linux-m68k.org, robherring2@gmail.com, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+Function populate_node() is used to unflatten FDT blob to device
+tree. It supports maximal 64 level of device nodes. There is one
+array @fpsizes[64] tracking the full name length of last unflattened
+device node in the corresponding level (index of element in the
+array - 1). Build warning is seen with CONFIG_FRAME_WARN=1024 like
+below on ARM64 as Geert reported. The issue can be reproduced on
+PPC64 as well.
 
---DWg365Y4B18r8evw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+  $ make drivers/of/fdt.o
+  drivers/of/fdt.c:443:1: warning: the frame size of 1136 bytes is \
+  larger than 1024 bytes [-Wframe-larger-than=]
 
-On Thu, May 12, 2016 at 05:58:50PM +0200, Petr Kulhavy wrote:
+This changes the data type of @fpsizes[i] from "unsigned long" to
+"unsigned int" to avoid the build warning. The return value type
+of populate_node() and its @fpsize argument is adjusted accordingly.
+With this applied, 256 bytes saved from the stack frame on ARM64 and
+PPC64 platforms and the above warning isn't seen.
 
->  	.driver = {
->  		.name = "wm8985",
-> +		.of_match_table = wm8985_of_match,
+Fixes: 9ffa9eb ("drivers/of: Avoid recursively calling unflatten_dt_node()")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+---
+ drivers/of/fdt.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-of_match_ptr()
-
---DWg365Y4B18r8evw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXNboOAAoJECTWi3JdVIfQ9ckH/iq4e/Eypl818sPrNeBhNsuu
-TINVdOSJAsosDnOt5iLPSveFMhLB/UDGe9EHUcD05owRIpAbA318qbYjjePH1bED
-H2jM6oTCiYm9vB45Gja4uTWxC2pUaa+TDCVTD8bomQjOFXXCWlygzADC/kRfk8NA
-rsD1Xr1wyEBrp0yRm0gJXiyjVCRJlOHxZQOYKvI/a37M6SHxpswPF/9Id7LXjbpG
-Sst1Jv7Tm1KoLbHtI21OFtmJGBVeJikcPNvmWA7VZ87tCSkIKC/9kMZ5yZNy/JTT
-bxX0jpL2mlyKPtdyK8tnxwkyou9jzoRlngcsC1lsRcRoJi4rgIiyePsnn9yHwFo=
-=drmN
------END PGP SIGNATURE-----
-
---DWg365Y4B18r8evw--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index c95054c..34344a8 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -264,13 +264,13 @@ static void populate_properties(const void *blob,
+ 		*pprev = NULL;
+ }
+ 
+-static unsigned long populate_node(const void *blob,
+-				   int offset,
+-				   void **mem,
+-				   struct device_node *dad,
+-				   unsigned long fpsize,
+-				   struct device_node **pnp,
+-				   bool dryrun)
++static unsigned int populate_node(const void *blob,
++				  int offset,
++				  void **mem,
++				  struct device_node *dad,
++				  unsigned int fpsize,
++				  struct device_node **pnp,
++				  bool dryrun)
+ {
+ 	struct device_node *np;
+ 	const char *pathp;
+@@ -397,7 +397,7 @@ static int unflatten_dt_nodes(const void *blob,
+ 	struct device_node *root;
+ 	int offset = 0, depth = 0;
+ #define FDT_MAX_DEPTH	64
+-	unsigned long fpsizes[FDT_MAX_DEPTH];
++	unsigned int fpsizes[FDT_MAX_DEPTH];
+ 	struct device_node *nps[FDT_MAX_DEPTH];
+ 	void *base = mem;
+ 	bool dryrun = !base;
+-- 
+2.1.0
