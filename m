@@ -1,27 +1,83 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH v11 0/3] PIC32MZDA Clock Driver
-Date: Fri, 13 May 2016 14:18:33 +0200
-Message-ID: <20160513121833.GC4215@linux-mips.org>
-References: <1463125961-10706-1-git-send-email-purna.mandal@microchip.com>
-Mime-Version: 1.0
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: Add support for HifiBerry DAC
+Date: Fri, 13 May 2016 14:20:57 +0200
+Message-ID: <C139252A-23AC-4C37-A5E5-E0D7AF1DCC89@martin.sperl.org>
+References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org> <1463130853-25096-3-git-send-email-kernel@martin.sperl.org> <20160513105409.GB22038@sirena.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Received: from localhost.localdomain ([127.0.0.1]:57774 "EHLO linux-mips.org"
-        rhost-flags-OK-OK-OK-FAIL) by eddie.linux-mips.org with ESMTP
-        id S27028601AbcEMMSjoi331 (ORCPT <rfc822;devicetree@vger.kernel.org>
-        + 2 others); Fri, 13 May 2016 14:18:39 +0200
-Content-Disposition: inline
-In-Reply-To: <1463125961-10706-1-git-send-email-purna.mandal@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Purna Chandra Mandal <purna.mandal@microchip.com>
-Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Joshua Henderson <joshua.henderson@microchip.com>, Pawel Moll <pawel.moll@arm.com>, Sandeep Sheriker <sandeepsheriker.mallikarjun@microchip.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160513105409.GB22038-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 13, 2016 at 01:22:38PM +0530, Purna Chandra Mandal wrote:
 
-Thanks for resolving the remaining issues.  As per discussion of the
-last version I've now queued the entire series for 4.7.
+> On 13.05.2016, at 12:54, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+> On Fri, May 13, 2016 at 09:14:13AM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+> 
+>> +static int snd_rpi_hifiberry_dac_init(struct snd_soc_pcm_runtime *rtd)
+>> +{
+>> +	return 0;
+>> +}
+> 
+> Remove empty functions.  Either they are redundant or you really need to
+> do something in them.
+> 
+Sure this can get removed.
 
-One step closer to full PIC32MZDA in-tree support!
+As said - it is just pushing the patches upstream,
+so I did not even touch it. 
 
-  Ralf
+>> +static struct snd_soc_dai_link snd_rpi_hifiberry_dac_dai[] = {
+>> +{
+>> +	.name		= "HifiBerry DAC",
+>> +	.stream_name	= "HifiBerry DAC HiFi",
+>> +	.cpu_dai_name	= "bcm2708-i2s.0",
+>> +	.codec_dai_name	= "pcm5102a-hifi",
+>> +	.platform_name	= "bcm2708-i2s.0",
+>> +	.codec_name	= "pcm5102a-codec",
+> 
+> I would expect all this to be done with DT references in a DT driver
+> rather than hard coding static names - look at how simple-card does this.
+> You could almost use simple-card here but the BCLK ratio requirement is
+> probably a bit much, I'm not immediately seeing a nice way to specify
+> the ratio there since it depends on the sample width.
+
+Actually it is just: <sample-width> * <number of channels>
+where number of channels is fixed to 2 for bcm2835-i2s.
+
+So maybe that already happens automatically in the framework?
+
+I will need to test it...
+
+I also know that some of the audio guys working on the rpi
+would like to be able to configure BCLK ratios based on both:
+sample frequency and sample_width.
+
+Basically they want to control the clock divider/clock parent
+trying to avoid fractional dividers.
+
+Something like this could get added to the core?
+Is there interest in getting something like this?
+
+Could look like this:
+bclk-ratios = 
+  /* for 96kHz at 16bit/channel use bclk-ratio 40 */
+  <96000 16 40>, 
+  /* for 48kHz at 32bit/channel use bclk-ratio 80 */
+  <48000 16 80>,
+  /* for any (other) sample frequency at 16 bit use bclk-ratio 32 */
+  <0 16 32>,
+  /* for any (other) sample frequency at 32 bit use bclk-ratio 64 */
+  <0 32 64>;
+
+but there could also be other approaches as well,
+how this could get described in the device tree.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
