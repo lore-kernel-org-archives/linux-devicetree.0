@@ -1,52 +1,33 @@
-From: Trent Piepho <tpiepho-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
-Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
- Flash Controller.
-Date: Fri, 13 May 2016 20:43:26 +0000
-Message-ID: <1463172208.9103.313.camel@rtred1test09.kymeta.local>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
-	 <1452486886-8049-2-git-send-email-marex@denx.de>
-	 <1463097635.9103.301.camel@rtred1test09.kymeta.local>
-	 <57351ECE.2020009@denx.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Fri, 13 May 2016 22:44:36 +0200
+Message-ID: <20160513204436.GC7600@lunn.ch>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <3641492.klKRrvS8tr@wasted.cogentembedded.com>
+ <20160512184233.GJ30822@pengutronix.de>
+ <5735995B.8030802@ti.com>
+ <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57351ECE.2020009-ynQEQJNshbs@public.gmane.org>
-Content-Language: en-US
-Content-ID: <1CB3BCD547363E40B3A77DD6788E40CC-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Roger Quadros <rogerq@ti.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE2LTA1LTEzIGF0IDAyOjI0ICswMjAwLCBNYXJlayBWYXN1dCB3cm90ZToNCj4g
-T24gMDUvMTMvMjAxNiAwMjowMCBBTSwgVHJlbnQgUGllcGhvIHdyb3RlOg0KPiA+IE9uIE1vbiwg
-MjAxNi0wMS0xMSBhdCAwNTozNCArMDEwMCwgTWFyZWsgVmFzdXQgd3JvdGU6DQo+ID4+IEZyb206
-IEdyYWhhbSBNb29yZSA8Z3Jtb29yZS15enZQSUN1azJBQk1jZzRJSEswa0ZvSDZNYzRNQjBWeEBw
-dWJsaWMuZ21hbmUub3JnPg0KPiA+Pg0KPiA+PiBBZGQgc3VwcG9ydCBmb3IgdGhlIENhZGVuY2Ug
-UVNQSSBjb250cm9sbGVyLiBUaGlzIGNvbnRyb2xsZXIgaXMNCj4gPj4gcHJlc2VudCBpbiB0aGUg
-QWx0ZXJhIFNvQ0ZQR0EgU29DcyBhbmQgdGhpcyBkcml2ZXIgaGFzIGJlZW4gdGVzdGVkDQo+ID4+
-IG9uIHRoZSBDeWNsb25lIFYgU29DLg0KPiA+IA0KPiA+IEknbSB0cnlpbmcgdG8gdXNlIHRoaXMg
-ZHJpdmVyIHRoZSBBbGFyaWMgRGV2a2l0IGZvciBBbHRlcmEncyBBcnJpYTEwDQo+ID4gU29DLiAg
-SXQncyBub3Qgd29ya2luZyBzbyBmYXIuICBJbiB0aGUgY291cnNlIG9mIHRyeWluZyB0byBkZWJ1
-ZyBpdCwNCj4gPiBJJ3ZlIGZvdW5kIGEgZmV3IHRoaW5ncyB3aXRoIHRoZSBkcml2ZXIgaW4gdGhl
-IHNvY2ZwZ2EtNC4xLWx0c2kgYnJhbmNoLg0KPiANCj4gU28gYXJlIHlvdSB0cnlpbmcgdG8gZGVi
-dWcgdGhpcyBkcml2ZXIgb3Igc29tZSBvdGhlciBvdXQtb2YtdHJlZSBkcml2ZXI/DQo+IGJ0dy4g
-SSBwdXNoZWQgdGhlIGxhdGVzdCB2ZXJzaW9uIGhlcmU6DQo+IA0KPiBodHRwczovL2dpdC5rZXJu
-ZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9tYXJleC9saW51eC0yLjYuZ2l0L2xvZy8/aD1u
-ZXh0L2NhZGVuY2UtcXNwaQ0KDQpJJ20gdHJ5aW5nIHRvIHVzZSB0aGUgb3V0IG9mIHRyZWUgZHJp
-dmVyIGZyb20gQWx0ZXJhJ3MgbGF0ZXN0IGtlcm5lbCwNCmZyb20gaGVyZToNCmh0dHBzOi8vZ2l0
-aHViLmNvbS9hbHRlcmEtb3BlbnNvdXJjZS9saW51eC1zb2NmcGdhL3RyZWUvc29jZnBnYS00LjQN
-Cg0KQnV0IGl0J3Mgbm90IGEgdG90YWxseSBkaWZmZXJlbnQgZHJpdmVyLCBpdCdzIGp1c3QgYW4g
-b2xkZXIgdmVyc2lvbiBvZg0KdGhpcyBkcml2ZXIuICBJJ20gdGhpbmtpbmcgb2YgcG9ydGluZyBp
-biB0aGlzIHZlcnNpb24gc2luY2UgSSB0aGluayBpdCdzDQptdWNoIGltcHJvdmVkIChhZnRlciBW
-MTEgb25lIHdvdWxkIGhvcGUgc28pLiAgUmVhbGx5LCBBbHRlcmEgc2hvdWxkDQp1cGRhdGUgdGhl
-aXIgc3VwcG9ydGVkIGtlcm5lbCB3aXRoIHRoaXMgY29kZS4NCg0KQ29tbWVudHMgYWJvdXQgd2hh
-dCdzIG9uIHlvdXIgYnJhbmNoLg0KDQpDb21taXQgIkFSTTogc29jZnBnYTogQWRkIENhbmRlbmNl
-IFFTUEkgY29udHJvbGxlciBEVCBub2RlIiBvbmx5DQphZGRzIHRoZSBub2RlIGZvciBDeWNsb25l
-IDUuICBUaGlzIHNhbWUgRFQgbm9kZSBzaG91bGQgYWxzbyBiZSBhZGRlZCB0bw0KdGhlIHNvY2Zw
-Z2FfYXJyaWExMC5kdHNpIGZpbGUuDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >Another issue is that on some boards we have one reset line tied to
+> >multiple PHYs.How do we prevent multiple resets being taking place when each of
+> >the PHYs are registered?
+> 
+>    My patch just doesn't address this case -- it's about the
+> individual resets only.
+
+This actually needs to be addresses a layer above. What you have is a
+bus reset, not a device reset. So the gpio line is associated to the
+mdio bus, not a PHY. Either your MDIO driver needs to handle the gpio
+line, or in __mdio_register(), before it starts looking at the
+children.
+
+	Andrew
