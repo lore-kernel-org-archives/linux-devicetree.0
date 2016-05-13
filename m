@@ -1,62 +1,37 @@
-From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 2/3] drm/mediatek: add support for Mediatek SoC MT2701
-Date: Fri, 13 May 2016 11:59:16 +0800
-Message-ID: <1463111956.12239.15.camel@mtksdaap41>
-References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
-	 <1463053795-55455-3-git-send-email-yt.shen@mediatek.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Fri, 13 May 2016 06:06:53 +0200
+Message-ID: <20160513040653.GA24461@lunn.ch>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <3641492.klKRrvS8tr@wasted.cogentembedded.com>
+ <20160512184233.GJ30822@pengutronix.de>
+ <f1fae99f-2464-8a42-deb8-c27cccf8df12@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463053795-55455-3-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f1fae99f-2464-8a42-deb8-c27cccf8df12@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, YT:
-
-On Thu, 2016-05-12 at 19:49 +0800, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>+	gpiod = fwnode_get_named_gpiod(&child->fwnode, "reset-gpios");
+> >>+	/* Deassert the reset signal */
+> >>+	if (!IS_ERR(gpiod))
+> >>+		gpiod_direction_output(gpiod, 0);
+> >
+> >This is wrong I think. You must only ignore -ENODEV, all other error
 > 
-> This patch add support for the Mediatek MT2701 DISP subsystem.
-> There is only one OVL engine in MT2701, and we have shadow
-> register support here.
+>    At least -ENOSYS should also be ignored (it's returned when
+> gpiolib is not configured), right? When does -ENODEV gets returned
+> (it's not easy to follow)?
 > 
-> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
+> >codes should be passed to the caller.
+> 
+>    The caller doesn't care anyway...
 
-> @@ -385,12 +422,16 @@ static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
->  		mtk_crtc->event = state->base.event;
->  		state->base.event = NULL;
->  	}
-> +
-> +	if (priv->data->shadow_register)
-> +		mtk_disp_mutex_acquire(mtk_crtc->mutex);
->  }
->  
-> @@ -409,6 +450,11 @@ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
->  	}
->  	if (pending_planes)
->  		mtk_crtc->pending_planes = true;
-> +
-> +	if (priv->data->shadow_register) {
-> +		mtk_crtc_ddp_config(crtc);
-> +		mtk_disp_mutex_release(mtk_crtc->mutex);
-> +	}
->  }
->  
+It should do. What if fwnode_get_named_gpiod() returns -EPROBE_DEFER
+because the GPIO driver has not been loaded yet?
 
-I think it's better to call mtk_disp_mutex_acquire() and
-mtk_disp_mutex_release() as near as possible to prevent mutex locked for
-a long time. All HW register access of this atomic setting is in
-mtk_crtc_ddp_config(), so it's better to move mtk_disp_mutex_acquire()
-just before mtk_crtc_ddp_config().
-
-Regards,
-CK
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Andrew
