@@ -1,60 +1,45 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3] ASoC: MAX9860: new driver
-Date: Fri, 13 May 2016 11:58:52 +0100
-Message-ID: <20160513105852.GC22038@sirena.org.uk>
-References: <1463124333-9489-1-git-send-email-peda@axentia.se>
+Subject: Re: [PATCH v5 3/6] regulator: rk808: Add regulator driver for RK818
+Date: Fri, 13 May 2016 12:20:56 +0100
+Message-ID: <20160513112055.GE22038@sirena.org.uk>
+References: <1462886340-7893-1-git-send-email-w.egorov@phytec.de>
+ <1462886340-7893-4-git-send-email-w.egorov@phytec.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="/2994txjAzEdQwm5"
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1463124333-9489-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Misbah Ullah Khan <Misbahk@danlawinc.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+In-Reply-To: <1462886340-7893-4-git-send-email-w.egorov@phytec.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Wadim Egorov <w.egorov@phytec.de>
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, lee.jones@linaro.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, dianders@chromium.org, zyw@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
 
---xo44VMWPx7vlQ2+2
+--/2994txjAzEdQwm5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, May 13, 2016 at 09:25:33AM +0200, Peter Rosin wrote:
+On Tue, May 10, 2016 at 03:18:57PM +0200, Wadim Egorov wrote:
+> Add support for the rk818 regulator. The regulator module consists
+> of 4 DCDCs, 9 LDOs, 1 switch and 1 BOOST converter which is used to
+> power OTG and HDMI5V.
 
-> +static int max9860_dai_startup(struct snd_pcm_substream *substream,
-> +			       struct snd_soc_dai *dai)
-> +{
-> +	struct snd_soc_codec *codec = dai->codec;
-> +	struct max9860_priv *max9860 = snd_soc_codec_get_drvdata(codec);
-> +
-> +	switch (max9860->fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-> +	case SND_SOC_DAIFMT_CBM_CFM:
-> +	case SND_SOC_DAIFMT_CBS_CFS:
-> +		return 0;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
+Acked-by: Mark Brown <broonie@kernel.org>
 
-This isn't the place to enforce restrictions on DAI format, do it in
-set_dai_fmt().
-
-Otherwise this looks good.
-
---xo44VMWPx7vlQ2+2
+--/2994txjAzEdQwm5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXNbNqAAoJECTWi3JdVIfQUksH/iRwuGnoUek3FCic4AgeNTZw
-FvcpVNAav8wSi0k9eCAesSHaUS7EHJGe195Ts0O29kkFclFVFFagShuRv4YQK9L4
-BeHp4dtYvytwXFhcPJvtskS3ATVhmLAc3CP6ETkCK9tRDaKcufEU2RjIdVJVdEIp
-x3R6Ykxw21aiBYItHk4sq4vuO5cUvGjx5/WQPGrPIfejjHwEBTL/QDKvPbSnaMvn
-wtPmJd3nBM5nQ9WwWMlNVdPx5saU0CuVc4ZumwUBpTOIVE5gGgYbo/7WjPaPb19d
-gBbOdNjOQcLd5rncz3/3RExOOzAWzByIiXQbHCw5ajCCgCv6VBazF71t3LsYklU=
-=4uVn
+iQEcBAEBCAAGBQJXNbiWAAoJECTWi3JdVIfQ82IH/0WRYTRTlQk/OPon4FIaa0IO
+oBFGlMS/tz6UgBysOleM8JPoDrX4wKImWQHYurbJ8IGOqpGfScZ7o1g5h79t05RQ
+HABbHNz+BDHg49foowhQGAKBW7enpzIkKEbsXEj/Bt76g5l3Mdoj9Gzn6HuJILM4
+HmGm05lSdLtxJE1zXZXcl74MqAWRgbVA9jw+KoHOMnSumLLHso1vue5A+UtvJImE
+Q5J9L1BGjCyxXfGXWq7JAFtBcPPokFv/A3vbdsLMlHfFHYkZLHR74IAXWM2IIiSh
+NoaM234W/hluaDT+P4ftX45ZInqqo6S8KbEznQsTAuKMWopfgeu2L27C4vqbXBg=
+=hJT+
 -----END PGP SIGNATURE-----
 
---xo44VMWPx7vlQ2+2--
+--/2994txjAzEdQwm5--
