@@ -1,86 +1,77 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 11/23] ARM: dts: armadillo800eva: Fix W=1 dtc warnings
-Date: Fri, 13 May 2016 09:55:51 +0200
-Message-ID: <1463126163-29423-12-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 02/23] ARM: dts: r8a73a4: Fix W=1 dtc warnings
+Date: Fri, 13 May 2016 09:55:42 +0200
+Message-ID: <1463126163-29423-3-git-send-email-geert+renesas@glider.be>
 References: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463126163-29423-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-Warning (unit_address_vs_reg): Node /regulator@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /regulator@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /regulator@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /regulator@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /i2c@2 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /cache-controller@1 has a unit name, but no reg property
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Move the cache-controller nodes under the cpus node, and make their
+unit names and reg properties match the MPIDR values.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/r8a73a4.dtsi | 34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-index 2c82dab2b6f45f9c..b3f0ac4b99bd5a3d 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-@@ -28,12 +28,12 @@
- 		stdout-path = &scifa1;
- 	};
- 
--	memory {
-+	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x40000000 0x20000000>;
- 	};
- 
--	reg_3p3v: regulator@0 {
-+	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-3.3V";
- 		regulator-min-microvolt = <3300000>;
-@@ -42,7 +42,7 @@
- 		regulator-boot-on;
- 	};
- 
--	vcc_sdhi0: regulator@1 {
-+	vcc_sdhi0: regulator-vcc-sdhi0 {
- 		compatible = "regulator-fixed";
- 
- 		regulator-name = "SDHI0 Vcc";
-@@ -53,7 +53,7 @@
- 		enable-active-high;
- 	};
- 
--	vccq_sdhi0: regulator@2 {
-+	vccq_sdhi0: regulator-vccq-sdhi0 {
- 		compatible = "regulator-gpio";
- 
- 		regulator-name = "SDHI0 VccQ";
-@@ -69,7 +69,7 @@
- 		enable-active-high;
- 	};
- 
--	reg_5p0v: regulator@3 {
-+	reg_5p0v: regulator-5p0v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-5.0V";
- 		regulator-min-microvolt = <5000000>;
-@@ -127,7 +127,7 @@
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 6954912a37537939..357d29d2c04b4c08 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -31,6 +31,24 @@
+ 			power-domains = <&pd_a2sl>;
+ 			next-level-cache = <&L2_CA15>;
  		};
++
++		L2_CA15: cache-controller@0 {
++			compatible = "cache";
++			reg = <0>;
++			clocks = <&cpg_clocks R8A73A4_CLK_Z>;
++			power-domains = <&pd_a3sm>;
++			cache-unified;
++			cache-level = <2>;
++		};
++
++		L2_CA7: cache-controller@100 {
++			compatible = "cache";
++			reg = <100>;
++			clocks = <&cpg_clocks R8A73A4_CLK_Z2>;
++			power-domains = <&pd_a3km>;
++			cache-unified;
++			cache-level = <2>;
++		};
  	};
  
--	i2c2: i2c@2 {
-+	i2c2: i2c2 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		compatible = "i2c-gpio";
+ 	ptm {
+@@ -46,22 +64,6 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ 
+-	L2_CA15: cache-controller@0 {
+-		compatible = "cache";
+-		clocks = <&cpg_clocks R8A73A4_CLK_Z>;
+-		power-domains = <&pd_a3sm>;
+-		cache-unified;
+-		cache-level = <2>;
+-	};
+-
+-	L2_CA7: cache-controller@1 {
+-		compatible = "cache";
+-		clocks = <&cpg_clocks R8A73A4_CLK_Z2>;
+-		power-domains = <&pd_a3km>;
+-		cache-unified;
+-		cache-level = <2>;
+-	};
+-
+ 	dbsc1: memory-controller@e6790000 {
+ 		compatible = "renesas,dbsc-r8a73a4";
+ 		reg = <0 0xe6790000 0 0x10000>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
