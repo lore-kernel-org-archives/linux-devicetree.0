@@ -1,51 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 18/23] ARM: dts: lager: Fix W=1 dtc warnings
-Date: Fri, 13 May 2016 14:40:31 +0300
-Message-ID: <749bd9bd-aeb9-49fe-b1f9-31da008ae696@cogentembedded.com>
-References: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
- <1463126163-29423-19-git-send-email-geert+renesas@glider.be>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH V2 0/2] drivers: i2c: qup: Some misc fixes
+Date: Fri, 13 May 2016 13:44:36 +0200
+Message-ID: <20160513114436.GH1778@katana>
+References: <1462534274-28925-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1463126163-29423-19-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Dx9iWuMxHO1cCoFc"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1462534274-28925-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nkaje@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/13/2016 10:55 AM, Geert Uytterhoeven wrote:
 
-> Warning (unit_address_vs_reg): Node /keyboard/button@1 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /keyboard/button@2 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /keyboard/button@3 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /keyboard/button@4 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /fixedregulator@0 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /regulator@1 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /regulator@2 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /regulator@3 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /regulator@4 has a unit name, but no reg property
-> Warning (unit_address_vs_reg): Node /i2c@8 has a unit name, but no reg property
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  arch/arm/boot/dts/r8a7790-lager.dts | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-> index 749ba02b6a53a9de..c01e27868083147a 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-[...]
-> @@ -119,7 +119,7 @@
->  		};
->  	};
->
-> -	fixedregulator3v3: fixedregulator@0 {
-> +	fixedregulator3v3: fixedregulator3v3 {
+--Dx9iWuMxHO1cCoFc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-    Likewise, could you drop "fixed"?
+On Fri, May 06, 2016 at 05:01:12PM +0530, Sricharan R wrote:
+> One for fixing the bug with CONFIG_DEBUG_SG enabled and another
+> to suspend the transfer for all errors instead of just for nack.
 
-[...]
+You haven't stated what was changed in V2.
 
-MBR, Sergei
+
+--Dx9iWuMxHO1cCoFc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXNb4jAAoJEBQN5MwUoCm2LNMQAKVZxV7uA1RNk7Z1aIT3TzoX
+bb7+ZU2/Am9mreamhGOWCYCS0etyNGwY6msb1L0HAZX8iB3syC+L11cDUxJLCH5C
+kSY/g994r5I5NZggONmEjeIxQ+J+qXyqOKj1ewE2Q7x0W/8ZWsp03uhdc1wLL6TK
+n+ZUH8Cg5nbBFK04Z3sejBz91s1JmvzLP0LwSIJpNxLlsOOjfGJrX1V+FG7tNGxG
+HaSRV8pnc+38LU3ph3oSOt4D3hjX+G5qtAI8eWWYolHNTPtYGXnJrXx3500devrn
+dbBHCDeJr03fh1oLTP/AeqnoLzZ0MmSg5ucKDKQaT6fXBPnhzr3WnujLB+u6TN3+
+kGKAWtaFj/ayIEciKIkiR0WojT5fLVjH322vMLrDw+728zylkGewUSUgC5P+PnJB
+QAXHisiIrnJQkkqMaPXQ9PUJPchEHhorqsN18iAvoqZWZF+0AyR3PbALZF2SbtCC
+4CegQItlKxSr6zyLEsKkKsRW/+1Ywu4gg+h7qvICPzm5mIfM/cFr7cgotd5Tk70S
+VFXel7DK+Y/l0yd6A57c4ln2cPY7/U4jFsibPAbFdwdrOlBj1+fGmSZCmqEiU71z
+x8RabflG4iiOi7DQmiwF4Btt1doeiTY9mkPtHtHA+ofeuVRy15pJwua3aWTTdPC0
+JQzJr2TAH4rqDq+2egLb
+=Tp76
+-----END PGP SIGNATURE-----
+
+--Dx9iWuMxHO1cCoFc--
