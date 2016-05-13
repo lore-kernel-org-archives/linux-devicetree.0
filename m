@@ -1,83 +1,129 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: Add support for HifiBerry DAC
-Date: Fri, 13 May 2016 14:21:13 +0100
-Message-ID: <20160513132113.GP22038@sirena.org.uk>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
- <1463130853-25096-3-git-send-email-kernel@martin.sperl.org>
- <20160513105409.GB22038@sirena.org.uk>
- <C139252A-23AC-4C37-A5E5-E0D7AF1DCC89@martin.sperl.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: clps711x: Add basic Cirrus Logic CDB89712 Development board
+Date: Fri, 13 May 2016 15:41:11 +0200
+Message-ID: <6057172.X40sTfvRlk@wuerfel>
+References: <1463138788-5390-1-git-send-email-shc_work@mail.ru> <9407200.bOeiVUkGKT@wuerfel> <1463142623.38124260@f381.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="THYEXwetZJOK3OLY"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <C139252A-23AC-4C37-A5E5-E0D7AF1DCC89-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+In-Reply-To: <1463142623.38124260-rm3phx5KyK5sdVUOrk1QfQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Friday 13 May 2016 15:30:23 Alexander Shiyan wrote:
+> Hello.
+>=20
+> > =D0=9F=D1=8F=D1=82=D0=BD=D0=B8=D1=86=D0=B0, 13 =D0=BC=D0=B0=D1=8F 2=
+016, 15:00 +03:00 =D0=BE=D1=82 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> >=20
+> > On Friday 13 May 2016 14:26:28 Alexander Shiyan wrote:
+> ...
+> > > +	soc {
+> > > +		#address-cells =3D <1>;
+> > > +		#size-cells =3D <1>;
+> > > +		compatible =3D "simple-bus";
+> > > +		interrupt-parent =3D <&intc>;
+> > > +		ranges;
+> >=20
+> > All child devices seem to be in the 0x80000000-0x90000000
+> > range, maybe set the ranges property accordingly?
+>=20
+> I do not quite understand that you want to change here.
 
---THYEXwetZJOK3OLY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I meant using the ranges property to describe the bus addresses
+without the 0x80000000 offset, like
 
-On Fri, May 13, 2016 at 02:20:57PM +0200, Martin Sperl wrote:
-> > On 13.05.2016, at 12:54, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+	ranges =3D <0 0x8000000 0xc000>;
 
-> > You could almost use simple-card here but the BCLK ratio requirement is
-> > probably a bit much, I'm not immediately seeing a nice way to specify
-> > the ratio there since it depends on the sample width.
+and then adapting the registers under the node to be based
+on the bus address.
 
-> Actually it is just: <sample-width> * <number of channels>
-> where number of channels is fixed to 2 for bcm2835-i2s.
 
-> So maybe that already happens automatically in the framework?
+> > > +		clks: clks@80000000 {
+> > > +			#clock-cells =3D <1>;
+> > > +			compatible =3D "cirrus,clps711x-clk";
+> > > +			reg =3D <0x80000000 0xc000>;
+> > > +			startup-frequency =3D <73728000>;
+> > > +		};
+> ...
+> > > +		intc: intc@80000000 {
+> > > +			compatible =3D "cirrus,clps711x-intc";
+> > > +			reg =3D <0x80000000 0x4000>;
+> > > +			interrupt-controller;
+> > > +			#interrupt-cells =3D <1>;
+> > > +		};
+> >=20
+> > Better make the register ranges non-overlapping. This appears
+> > to start at the same place as the 'clks' node.
+>=20
+> CLK driver uses:
+> #define CLPS711X_SYSCON1 (0x0100)
+> #define CLPS711X_SYSCON2 (0x1100)
+> ...
+> #define CLPS711X_PLLR (0xa5a8)
+>=20
+> IRQCHIP driver uses:
+> #define CLPS711X_INTSR1 (0x0240)
+> ...
+> #define CLPS711X_INTSR2 (0x1240)
+> ...
+> #define CLPS711X_INTMR3 (0x2280)
+>=20
+> So there is no way to do any else.
 
-No, it's not handled.  Lots of devices don't care or have different
-requirements (eg, 256fs).  The tricky bit with specifying it is that the
-ratio depends on the sample width here but it might depend on something
-else with another device, or the number of channels might vary.  That
-should be doable with DT but it feels like more trouble than it's
-reasonable to ask you to take here.
+It sounds like what you have is a large system controller that
+has registers everywhere. Could you use syscon to access the
+individual registers instead?
 
-> Something like this could get added to the core?
-> Is there interest in getting something like this?
+> > > +		porta: gpio@80000000 {
+> > > +			compatible =3D "cirrus,clps711x-gpio";
+> > > +			reg =3D <0x80000000 0x1 0x80000040 0x1>;
+> > > +			gpio-controller;
+> > > +			#gpio-cells =3D <2>;
+> > > +		};
+> > > +
+> > > +		portb: gpio@80000001 {
+> > > +			compatible =3D "cirrus,clps711x-gpio";
+> > > +			reg =3D <0x80000001 0x1 0x80000041 0x1>;
+> > > +			gpio-controller;
+> > > +			#gpio-cells =3D <2>;
+> > > +		};
+> > > +
+> > > +		portc: gpio@80000002 {
+> > > +			compatible =3D "cirrus,clps711x-gpio";
+> > > +			reg =3D <0x80000002 0x1 0x80000042 0x1>;
+> > > +			gpio-controller;
+> > > +			#gpio-cells =3D <2>;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		portd: gpio@80000003 {
+> > > +			compatible =3D "cirrus,clps711x-gpio";
+> > > +			reg =3D <0x80000003 0x1 0x80000043 0x1>;
+> > > +			gpio-controller;
+> > > +			#gpio-cells =3D <2>;
+> > > +		};
+> >=20
+> > These are all just single bytes. My guess is that there is
+> > actually one IP block that contains all the gpios, not
+> > four identical blocks.
+>=20
+> These is a 8-bit registers with different properties, which parses in=
+ the
+> GPIO driver depending of alias (GPIO count, inverted logic etc.).
 
-> Could look like this:
-> bclk-ratios =3D=20
->   /* for 96kHz at 16bit/channel use bclk-ratio 40 */
->   <96000 16 40>,=20
->   /* for 48kHz at 32bit/channel use bclk-ratio 80 */
->   <48000 16 80>,
->   /* for any (other) sample frequency at 16 bit use bclk-ratio 32 */
->   <0 16 32>,
->   /* for any (other) sample frequency at 32 bit use bclk-ratio 64 */
->   <0 32 64>;
+The alias should not influence the interpretation of the registers.
+If each byte in there behaves differently, it would be better to
+have separate "compatible" strings instead. I still don't see why
+you can't just have one device node for all the registers and
+then create multiple gpio_chip instances from that though.
 
-> but there could also be other approaches as well,
-> how this could get described in the device tree.
-
-You may well end up with something like that, yeah.
-
---THYEXwetZJOK3OLY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXNdTEAAoJECTWi3JdVIfQE/sH/3jsZxxvx8WOkOFvT8Vz+g+M
-o2hmUku704qdOQFfU3kDoGbYnBzqY5MZoeHWvz7s9jb4DTev0EjxG8+z0fwVMf2y
-XmlOH3RngXcZKRf7u050MLhaV3xJrJF9D0ImRBjhfmUjxdde47Ue4inpG5VJub77
-RU9A0QszN/g1wch0ZFeFvzgC7+TulfDcIKzZVtpN8mud+okNX+V2Pted8xzK/UMr
-waUxmUmf95AXW9amyy/sMCD/N3uPQzMzXYI2Sjq4E/Y86zDMrz/hOlkT0Rkn/f29
-BBZEaWJ7uyQ7AUXdZ7jiuZav2M1bd7eIBEcf12yPE+Yp6j+iOLyL7QUKZO61hEQ=
-=tr3C
------END PGP SIGNATURE-----
-
---THYEXwetZJOK3OLY--
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
