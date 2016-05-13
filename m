@@ -1,73 +1,52 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH] drivers/of: Fix build warning in populate_node()
-Date: Fri, 13 May 2016 21:31:39 +1000
-Message-ID: <1463139099-23363-1-git-send-email-gwshan@linux.vnet.ibm.com>
-References: <CAMuHMdUnsDhTS5-C6_SvrqGb6hVTBZOz00=HBGhtqAQbwYv6hg@mail.gmail.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUnsDhTS5-C6_SvrqGb6hVTBZOz00=HBGhtqAQbwYv6hg@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, geert@linux-m68k.org, robherring2@gmail.com, benh@kernel.crashing.org, mpe@ellerman.id.au, aik@ozlabs.ru, bhelgaas@google.com, grant.likely@linaro.org, panto@antoniou-consulting.com, frowand.list@gmail.com, Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 19/23] ARM: dts: marzen: Fix W=1 dtc warnings
+Date: Fri, 13 May 2016 14:38:29 +0300
+Message-ID: <9a8e0721-6489-f245-feda-e52badcdc557@cogentembedded.com>
+References: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
+ <1463126163-29423-20-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1463126163-29423-20-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Function populate_node() is used to unflatten FDT blob to device
-tree. It supports maximal 64 level of device nodes. There is one
-array @fpsizes[64] tracking the full name length of last unflattened
-device node in the corresponding level (index of element in the
-array - 1). Build warning is seen with CONFIG_FRAME_WARN=1024 like
-below on ARM64 as Geert reported. The issue can be reproduced on
-PPC64 as well.
+Hello.
 
-  $ make drivers/of/fdt.o
-  drivers/of/fdt.c:443:1: warning: the frame size of 1136 bytes is \
-  larger than 1024 bytes [-Wframe-larger-than=]
+On 5/13/2016 10:55 AM, Geert Uytterhoeven wrote:
 
-This changes the data type of @fpsizes[i] from "unsigned long" to
-"unsigned int" to avoid the build warning. The return value type
-of populate_node() and its @fpsize argument is adjusted accordingly.
-With this applied, 256 bytes saved from the stack frame on ARM64 and
-PPC64 platforms and the above warning isn't seen.
+> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+> Warning (unit_address_vs_reg): Node /fixedregulator@0 has a unit name, but no reg property
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/arm/boot/dts/r8a7779-marzen.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
+> index b795da6f5503d224..d9f3dba882f01181 100644
+> --- a/arch/arm/boot/dts/r8a7779-marzen.dts
+> +++ b/arch/arm/boot/dts/r8a7779-marzen.dts
+> @@ -28,12 +28,12 @@
+>  		stdout-path = &scif2;
+>  	};
+>
+> -	memory {
+> +	memory@60000000 {
+>  		device_type = "memory";
+>  		reg = <0x60000000 0x40000000>;
+>  	};
+>
+> -	fixedregulator3v3: fixedregulator@0 {
+> +	fixedregulator3v3: fixedregulator3v3 {
 
-Fixes: 9ffa9eb ("drivers/of: Avoid recursively calling unflatten_dt_node()")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
----
- drivers/of/fdt.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+    Could you drop "fixed" prefix from the name, while at it?
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c95054c..34344a8 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -264,13 +264,13 @@ static void populate_properties(const void *blob,
- 		*pprev = NULL;
- }
- 
--static unsigned long populate_node(const void *blob,
--				   int offset,
--				   void **mem,
--				   struct device_node *dad,
--				   unsigned long fpsize,
--				   struct device_node **pnp,
--				   bool dryrun)
-+static unsigned int populate_node(const void *blob,
-+				  int offset,
-+				  void **mem,
-+				  struct device_node *dad,
-+				  unsigned int fpsize,
-+				  struct device_node **pnp,
-+				  bool dryrun)
- {
- 	struct device_node *np;
- 	const char *pathp;
-@@ -397,7 +397,7 @@ static int unflatten_dt_nodes(const void *blob,
- 	struct device_node *root;
- 	int offset = 0, depth = 0;
- #define FDT_MAX_DEPTH	64
--	unsigned long fpsizes[FDT_MAX_DEPTH];
-+	unsigned int fpsizes[FDT_MAX_DEPTH];
- 	struct device_node *nps[FDT_MAX_DEPTH];
- 	void *base = mem;
- 	bool dryrun = !base;
--- 
-2.1.0
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "fixed-3.3V";
+>  		regulator-min-microvolt = <3300000>;
+
+MBR, Sergei
