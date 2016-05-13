@@ -1,67 +1,58 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: Add support for HifiBerry DAC
-Date: Fri, 13 May 2016 11:54:09 +0100
-Message-ID: <20160513105409.GB22038@sirena.org.uk>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org>
- <1463130853-25096-3-git-send-email-kernel@martin.sperl.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv2 00/28] ARM: OMAP2+: hwmod module clock type support
+Date: Fri, 13 May 2016 13:58:44 +0300
+Message-ID: <5735B364.9000504@ti.com>
+References: <1460632097-25727-1-git-send-email-t-kristo@ti.com>
+ <20160512233935.GN3492@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1463130853-25096-3-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160512233935.GN3492@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: tony@atomide.com, paul@pwsan.com, mturquette@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 13/05/16 02:39, Stephen Boyd wrote:
+> On 04/14, Tero Kristo wrote:
+>> Hi,
+>>
+>> v2 contains following changes in comparison to v1:
+>>
+>> - Patch ordering changed a bit, clk/ti, mach-omap2, dts patches are now
+>>    mostly grouped together, with the exception of the introduction of
+>>    clock helper API, which is needed by everything else. Please note
+>>    that the ordering must be preserved between mach-omap2/clk-driver/dts
+>>    to avoid boot problems.
+>> - Dropped hwmod data removal patches for now, this allows booting with
+>>    either new or old DTS data.
+>> - Fixed a typo in the hwmod clock driver timeout handling, the comparison
+>>    for timeout against ktime_us_delta was wrong causing too short
+>>    timeouts, this was apparent with cpuidle enabled on OMAP4
+>> - Added patch #6 to fetch hwmod main clock based on the hwmod name itself,
+>>    if found, ignore main_clk / clkctrl setup for the hwmod
+>> - Added patch #7 to fix issue in omap2 timer caused by patch #6, with
+>>    dynamic parsing of main clock, the hwmod must be setup before attempting
+>>    to access main_clk.
+>
+> What's the general design goal of this series? This cover letter
+> is more like a change and test log instead of an overall argument
+> for why the series should be merged so I'm left to piecing
+> together the commit text from the 28 different patches. I suspect
+> it's to get rid of DT_CLK macros and do something with hwmod in a
+> more generic way, but that's all I got.
 
---ZoaI/ZTpAVc4A5k6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry I think this was lost someone along the series, and looking back I 
+did not explain it that well at any point either.
 
-On Fri, May 13, 2016 at 09:14:13AM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+The major motivation of this series is to get rid of the hwmod database 
+from kernel eventually, Tony is working on an interconnect driver which 
+will provide most of the other functionality currently done by hwmod, 
+but he is going to depend on the clkctrl part being done with this 
+series. Another important aspect of the series is that hwmod clkctrl is 
+now done with proper clock nodes, which provides multiple benefits like 
+usecounting, better debugging capabilities, better hierarchy support etc.
 
-> +static int snd_rpi_hifiberry_dac_init(struct snd_soc_pcm_runtime *rtd)
-> +{
-> +	return 0;
-> +}
+-Tero
 
-Remove empty functions.  Either they are redundant or you really need to
-do something in them.
-
-> +static struct snd_soc_dai_link snd_rpi_hifiberry_dac_dai[] = {
-> +{
-> +	.name		= "HifiBerry DAC",
-> +	.stream_name	= "HifiBerry DAC HiFi",
-> +	.cpu_dai_name	= "bcm2708-i2s.0",
-> +	.codec_dai_name	= "pcm5102a-hifi",
-> +	.platform_name	= "bcm2708-i2s.0",
-> +	.codec_name	= "pcm5102a-codec",
-
-I would expect all this to be done with DT references in a DT driver
-rather than hard coding static names - look at how simple-card does this.
-You could almost use simple-card here but the BCLK ratio requirement is
-probably a bit much, I'm not immediately seeing a nice way to specify
-the ratio there since it depends on the sample width.
-
---ZoaI/ZTpAVc4A5k6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXNbJQAAoJECTWi3JdVIfQhDoH/RpCW7sj6R/+V0JWdsDGc/Da
-K6AqQFCfmIxNXeAxzGme96oD2PMY1GcwsQICPtW+OpIx+2basIlMvwLucfJyE4Nr
-u3p/3mhyLJsrSsAD6Kz2h9DsOaG3JDZYlN22SrI0hWrFCYTesjyoKDx3jdwEmOCj
-4QooioiEEUPLsAtX+3jlKHRdRzc68cs7h294gJRIfCct7G2B7ra7kpBWmKgwevlR
-JtM2w8jw9tcJDplU0QGDMMxsiTsHaEqbQPQNphOhTPHLKIfhS9ZRN9z7SothDewG
-9wEeRv9g8OOOJjPf5fk1viXBWzgmBnqYIoSVQBI0j1pkwT8lL4IvZrhzMRq3MvI=
-=Vx1F
------END PGP SIGNATURE-----
-
---ZoaI/ZTpAVc4A5k6--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
