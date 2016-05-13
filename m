@@ -1,83 +1,72 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: Add support for HifiBerry DAC
-Date: Fri, 13 May 2016 14:20:57 +0200
-Message-ID: <C139252A-23AC-4C37-A5E5-E0D7AF1DCC89@martin.sperl.org>
-References: <1463130853-25096-1-git-send-email-kernel@martin.sperl.org> <1463130853-25096-3-git-send-email-kernel@martin.sperl.org> <20160513105409.GB22038@sirena.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160513105409.GB22038-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzNdIEFSTTogZHRzOiBjbHBzNzExeDogQWRkIGJhc2lj?=
+ =?UTF-8?B?IENpcnJ1cyBMb2dpYyBDREI4OTcxMiBEZXZlbG9wbWVudCBib2FyZA==?=
+Date: Fri, 13 May 2016 15:30:23 +0300
+Message-ID: <1463142623.38124260@f381.i.mail.ru>
+References: <1463138788-5390-1-git-send-email-shc_work@mail.ru>
+ <1463138788-5390-4-git-send-email-shc_work@mail.ru>
+ <9407200.bOeiVUkGKT@wuerfel>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9407200.bOeiVUkGKT@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>
+Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?UnVzc2VsbCBLaW5n?= <linux@armlinux.org.uk>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-> On 13.05.2016, at 12:54, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> 
-> On Fri, May 13, 2016 at 09:14:13AM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
-> 
->> +static int snd_rpi_hifiberry_dac_init(struct snd_soc_pcm_runtime *rtd)
->> +{
->> +	return 0;
->> +}
-> 
-> Remove empty functions.  Either they are redundant or you really need to
-> do something in them.
-> 
-Sure this can get removed.
-
-As said - it is just pushing the patches upstream,
-so I did not even touch it. 
-
->> +static struct snd_soc_dai_link snd_rpi_hifiberry_dac_dai[] = {
->> +{
->> +	.name		= "HifiBerry DAC",
->> +	.stream_name	= "HifiBerry DAC HiFi",
->> +	.cpu_dai_name	= "bcm2708-i2s.0",
->> +	.codec_dai_name	= "pcm5102a-hifi",
->> +	.platform_name	= "bcm2708-i2s.0",
->> +	.codec_name	= "pcm5102a-codec",
-> 
-> I would expect all this to be done with DT references in a DT driver
-> rather than hard coding static names - look at how simple-card does this.
-> You could almost use simple-card here but the BCLK ratio requirement is
-> probably a bit much, I'm not immediately seeing a nice way to specify
-> the ratio there since it depends on the sample width.
-
-Actually it is just: <sample-width> * <number of channels>
-where number of channels is fixed to 2 for bcm2835-i2s.
-
-So maybe that already happens automatically in the framework?
-
-I will need to test it...
-
-I also know that some of the audio guys working on the rpi
-would like to be able to configure BCLK ratios based on both:
-sample frequency and sample_width.
-
-Basically they want to control the clock divider/clock parent
-trying to avoid fractional dividers.
-
-Something like this could get added to the core?
-Is there interest in getting something like this?
-
-Could look like this:
-bclk-ratios = 
-  /* for 96kHz at 16bit/channel use bclk-ratio 40 */
-  <96000 16 40>, 
-  /* for 48kHz at 32bit/channel use bclk-ratio 80 */
-  <48000 16 80>,
-  /* for any (other) sample frequency at 16 bit use bclk-ratio 32 */
-  <0 16 32>,
-  /* for any (other) sample frequency at 32 bit use bclk-ratio 64 */
-  <0 32 64>;
-
-but there could also be other approaches as well,
-how this could get described in the device tree.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8uCgo+INCf0Y/RgtC90LjRhtCwLCAxMyDQvNCw0Y8gMjAxNiwgMTU6MDAgKzAzOjAwINC+
+0YIgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT46Cj4gCj4gT24gRnJpZGF5IDEzIE1heSAy
+MDE2IDE0OjI2OjI4IEFsZXhhbmRlciBTaGl5YW4gd3JvdGU6Ci4uLgo+ID4gKwlzb2Mgewo+ID4g
+KwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiA+ICsJ
+CWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7Cj4gPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZp
+bnRjPjsKPiA+ICsJCXJhbmdlczsKPiAKPiBBbGwgY2hpbGQgZGV2aWNlcyBzZWVtIHRvIGJlIGlu
+IHRoZSAweDgwMDAwMDAwLTB4OTAwMDAwMDAKPiByYW5nZSwgbWF5YmUgc2V0IHRoZSByYW5nZXMg
+cHJvcGVydHkgYWNjb3JkaW5nbHk/CgpJIGRvIG5vdCBxdWl0ZSB1bmRlcnN0YW5kIHRoYXQgeW91
+IHdhbnQgdG8gY2hhbmdlIGhlcmUuCgo+IAo+ID4gKwkJY2xrczogY2xrc0A4MDAwMDAwMCB7Cj4g
+PiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ID4gKwkJCWNvbXBhdGlibGUgPSAiY2lycnVzLGNs
+cHM3MTF4LWNsayI7Cj4gPiArCQkJcmVnID0gPDB4ODAwMDAwMDAgMHhjMDAwPjsKPiA+ICsJCQlz
+dGFydHVwLWZyZXF1ZW5jeSA9IDw3MzcyODAwMD47Cj4gPiArCQl9OwouLi4KPiA+ICsJCWludGM6
+IGludGNAODAwMDAwMDAgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAiY2lycnVzLGNscHM3MTF4LWlu
+dGMiOwo+ID4gKwkJCXJlZyA9IDwweDgwMDAwMDAwIDB4NDAwMD47Cj4gPiArCQkJaW50ZXJydXB0
+LWNvbnRyb2xsZXI7Cj4gPiArCQkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiA+ICsJCX07Cj4g
+Cj4gQmV0dGVyIG1ha2UgdGhlIHJlZ2lzdGVyIHJhbmdlcyBub24tb3ZlcmxhcHBpbmcuIFRoaXMg
+YXBwZWFycwo+IHRvIHN0YXJ0IGF0IHRoZSBzYW1lIHBsYWNlIGFzIHRoZSAnY2xrcycgbm9kZS4K
+CkNMSyBkcml2ZXIgdXNlczoKI2RlZmluZSBDTFBTNzExWF9TWVNDT04xICgweDAxMDApCiNkZWZp
+bmUgQ0xQUzcxMVhfU1lTQ09OMiAoMHgxMTAwKQouLi4KI2RlZmluZSBDTFBTNzExWF9QTExSICgw
+eGE1YTgpCgpJUlFDSElQIGRyaXZlciB1c2VzOgojZGVmaW5lIENMUFM3MTFYX0lOVFNSMSAoMHgw
+MjQwKQouLi4KI2RlZmluZSBDTFBTNzExWF9JTlRTUjIgKDB4MTI0MCkKLi4uCiNkZWZpbmUgQ0xQ
+UzcxMVhfSU5UTVIzICgweDIyODApCgpTbyB0aGVyZSBpcyBubyB3YXkgdG8gZG8gYW55IGVsc2Uu
+Cgo+ID4gKwkJcG9ydGE6IGdwaW9AODAwMDAwMDAgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAiY2ly
+cnVzLGNscHM3MTF4LWdwaW8iOwo+ID4gKwkJCXJlZyA9IDwweDgwMDAwMDAwIDB4MSAweDgwMDAw
+MDQwIDB4MT47Cj4gPiArCQkJZ3Bpby1jb250cm9sbGVyOwo+ID4gKwkJCSNncGlvLWNlbGxzID0g
+PDI+Owo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJCXBvcnRiOiBncGlvQDgwMDAwMDAxIHsKPiA+ICsJ
+CQljb21wYXRpYmxlID0gImNpcnJ1cyxjbHBzNzExeC1ncGlvIjsKPiA+ICsJCQlyZWcgPSA8MHg4
+MDAwMDAwMSAweDEgMHg4MDAwMDA0MSAweDE+Owo+ID4gKwkJCWdwaW8tY29udHJvbGxlcjsKPiA+
+ICsJCQkjZ3Bpby1jZWxscyA9IDwyPjsKPiA+ICsJCX07Cj4gPiArCj4gPiArCQlwb3J0YzogZ3Bp
+b0A4MDAwMDAwMiB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJjaXJydXMsY2xwczcxMXgtZ3BpbyI7
+Cj4gPiArCQkJcmVnID0gPDB4ODAwMDAwMDIgMHgxIDB4ODAwMDAwNDIgMHgxPjsKPiA+ICsJCQln
+cGlvLWNvbnRyb2xsZXI7Cj4gPiArCQkJI2dwaW8tY2VsbHMgPSA8Mj47Cj4gPiArCQkJc3RhdHVz
+ID0gImRpc2FibGVkIjsKPiA+ICsJCX07Cj4gPiArCj4gPiArCQlwb3J0ZDogZ3Bpb0A4MDAwMDAw
+MyB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJjaXJydXMsY2xwczcxMXgtZ3BpbyI7Cj4gPiArCQkJ
+cmVnID0gPDB4ODAwMDAwMDMgMHgxIDB4ODAwMDAwNDMgMHgxPjsKPiA+ICsJCQlncGlvLWNvbnRy
+b2xsZXI7Cj4gPiArCQkJI2dwaW8tY2VsbHMgPSA8Mj47Cj4gPiArCQl9Owo+IAo+IFRoZXNlIGFy
+ZSBhbGwganVzdCBzaW5nbGUgYnl0ZXMuIE15IGd1ZXNzIGlzIHRoYXQgdGhlcmUgaXMKPiBhY3R1
+YWxseSBvbmUgSVAgYmxvY2sgdGhhdCBjb250YWlucyBhbGwgdGhlIGdwaW9zLCBub3QKPiBmb3Vy
+IGlkZW50aWNhbCBibG9ja3MuCgpUaGVzZSBpcyBhIDgtYml0IHJlZ2lzdGVycyB3aXRoIGRpZmZl
+cmVudCBwcm9wZXJ0aWVzLCB3aGljaCBwYXJzZXMgaW4gdGhlCkdQSU8gZHJpdmVyIGRlcGVuZGlu
+ZyBvZiBhbGlhcyAoR1BJTyBjb3VudCwgaW52ZXJ0ZWQgbG9naWMgZXRjLikuCgpUaGFua3MuCgot
+LS0KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
