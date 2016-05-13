@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 17/23] ARM: dts: kzm9g: Fix W=1 dtc warnings
-Date: Fri, 13 May 2016 09:55:57 +0200
-Message-ID: <1463126163-29423-18-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 11/23] ARM: dts: armadillo800eva: Fix W=1 dtc warnings
+Date: Fri, 13 May 2016 09:55:51 +0200
+Message-ID: <1463126163-29423-12-git-send-email-geert+renesas@glider.be>
 References: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1463126163-29423-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -15,18 +15,19 @@ Warning (unit_address_vs_reg): Node /regulator@0 has a unit name, but no reg pro
 Warning (unit_address_vs_reg): Node /regulator@1 has a unit name, but no reg property
 Warning (unit_address_vs_reg): Node /regulator@2 has a unit name, but no reg property
 Warning (unit_address_vs_reg): Node /regulator@3 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /i2c@2 has a unit name, but no reg property
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sh73a0-kzm9g.dts | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts b/arch/arm/boot/dts/sh73a0-kzm9g.dts
-index 9881adf1734e2b0c..36567cbf2e1c32dd 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
-@@ -43,12 +43,12 @@
- 		stdout-path = &scifa4;
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+index 2c82dab2b6f45f9c..b3f0ac4b99bd5a3d 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+@@ -28,12 +28,12 @@
+ 		stdout-path = &scifa1;
  	};
  
 -	memory {
@@ -35,38 +36,47 @@ index 9881adf1734e2b0c..36567cbf2e1c32dd 100644
  		reg = <0x40000000 0x20000000>;
  	};
  
--	reg_1p8v: regulator@0 {
-+	reg_1p8v: regulator-1p8v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-1.8V";
- 		regulator-min-microvolt = <1800000>;
-@@ -57,7 +57,7 @@
- 		regulator-boot-on;
- 	};
- 
--	reg_3p3v: regulator@1 {
+-	reg_3p3v: regulator@0 {
 +	reg_3p3v: regulator-3p3v {
  		compatible = "regulator-fixed";
  		regulator-name = "fixed-3.3V";
  		regulator-min-microvolt = <3300000>;
-@@ -66,7 +66,7 @@
+@@ -42,7 +42,7 @@
  		regulator-boot-on;
  	};
  
--	vmmc_sdhi0: regulator@2 {
-+	vmmc_sdhi0: regulator-vmmc-sdhi0 {
+-	vcc_sdhi0: regulator@1 {
++	vcc_sdhi0: regulator-vcc-sdhi0 {
  		compatible = "regulator-fixed";
+ 
  		regulator-name = "SDHI0 Vcc";
- 		regulator-min-microvolt = <3300000>;
-@@ -75,7 +75,7 @@
+@@ -53,7 +53,7 @@
  		enable-active-high;
  	};
  
--	vmmc_sdhi2: regulator@3 {
-+	vmmc_sdhi2: regulator-vmmc-sdhi2 {
+-	vccq_sdhi0: regulator@2 {
++	vccq_sdhi0: regulator-vccq-sdhi0 {
+ 		compatible = "regulator-gpio";
+ 
+ 		regulator-name = "SDHI0 VccQ";
+@@ -69,7 +69,7 @@
+ 		enable-active-high;
+ 	};
+ 
+-	reg_5p0v: regulator@3 {
++	reg_5p0v: regulator-5p0v {
  		compatible = "regulator-fixed";
- 		regulator-name = "SDHI2 Vcc";
- 		regulator-min-microvolt = <3300000>;
+ 		regulator-name = "fixed-5.0V";
+ 		regulator-min-microvolt = <5000000>;
+@@ -127,7 +127,7 @@
+ 		};
+ 	};
+ 
+-	i2c2: i2c@2 {
++	i2c2: i2c2 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		compatible = "i2c-gpio";
 -- 
 1.9.1
 
