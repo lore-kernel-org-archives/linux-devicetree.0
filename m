@@ -1,130 +1,50 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH 2/3] ARM: clps711x: Add basic DT support
-Date: Fri, 13 May 2016 14:26:27 +0300
-Message-ID: <1463138788-5390-3-git-send-email-shc_work@mail.ru>
-References: <1463138788-5390-1-git-send-email-shc_work@mail.ru>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: wm8985: add device-tree support
+Date: Fri, 13 May 2016 12:27:14 +0100
+Message-ID: <20160513112714.GG22038@sirena.org.uk>
+References: <1463068730-18817-1-git-send-email-petr@barix.com>
+ <1463068730-18817-2-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1463138788-5390-1-git-send-email-shc_work@mail.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DWg365Y4B18r8evw"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463068730-18817-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, plamen-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic support to run Cirrus Logic ARMv4T CPUs
-with device-tree support.
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- arch/arm/Kconfig                 |  2 ++
- arch/arm/mach-clps711x/Kconfig   |  7 +++++++
- arch/arm/mach-clps711x/common.c  | 14 ++++++++++++++
- arch/arm/mach-clps711x/devices.c |  6 ++++++
- arch/arm/mach-clps711x/devices.h |  1 +
- 5 files changed, 30 insertions(+)
+--DWg365Y4B18r8evw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index cdfa6c2..afc1eaf 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -357,10 +357,12 @@ config ARCH_CLPS711X
- 	select ARCH_REQUIRE_GPIOLIB
- 	select AUTO_ZRELADDR
- 	select CLKSRC_MMIO
-+	select CLKSRC_OF if OF
- 	select COMMON_CLK
- 	select CPU_ARM720T
- 	select GENERIC_CLOCKEVENTS
- 	select MFD_SYSCON
-+	select OF_IRQ if OF
- 	select SOC_BUS
- 	help
- 	  Support for Cirrus Logic 711x/721x/731x based boards.
-diff --git a/arch/arm/mach-clps711x/Kconfig b/arch/arm/mach-clps711x/Kconfig
-index f711498..3e11390 100644
---- a/arch/arm/mach-clps711x/Kconfig
-+++ b/arch/arm/mach-clps711x/Kconfig
-@@ -2,6 +2,13 @@ if ARCH_CLPS711X
- 
- menu "CLPS711X/EP721X/EP731X Implementations"
- 
-+config MACH_CLPS711X_DT
-+	bool "Device-tree support"
-+	select USE_OF
-+	help
-+	  Select this if you want to experiment device-tree with
-+	  ARMv4T Cirrus Logic chips.
-+
- config ARCH_AUTCPU12
- 	bool "AUTCPU12"
- 	help
-diff --git a/arch/arm/mach-clps711x/common.c b/arch/arm/mach-clps711x/common.c
-index bf62211..df0fdf8 100644
---- a/arch/arm/mach-clps711x/common.c
-+++ b/arch/arm/mach-clps711x/common.c
-@@ -23,12 +23,14 @@
- #include <linux/init.h>
- #include <linux/sizes.h>
- 
-+#include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- #include <asm/system_misc.h>
- 
- #include <mach/hardware.h>
- 
- #include "common.h"
-+#include "devices.h"
- 
- /*
-  * This maps the generic CLPS711x registers
-@@ -63,3 +65,15 @@ void clps711x_restart(enum reboot_mode mode, const char *cmd)
- {
- 	soft_restart(0);
- }
-+
-+static const char *clps711x_dt_compat[] __initconst = {
-+	"cirrus,clps711x",
-+	NULL
-+};
-+
-+DT_MACHINE_START(CLPS711X_DT, "Cirrus Logic CLPS711X (Device Tree Support)")
-+	.dt_compat	= clps711x_dt_compat,
-+	.map_io		= clps711x_map_io,
-+	.init_late	= clps711x_devices_init_dt,
-+	.restart	= clps711x_restart,
-+MACHINE_END
-diff --git a/arch/arm/mach-clps711x/devices.c b/arch/arm/mach-clps711x/devices.c
-index 77a9617..9ba5095 100644
---- a/arch/arm/mach-clps711x/devices.c
-+++ b/arch/arm/mach-clps711x/devices.c
-@@ -147,3 +147,9 @@ void __init clps711x_devices_init(void)
- 	clps711x_add_uart();
- 	clps711x_soc_init();
- }
-+
-+void __init clps711x_devices_init_dt(void)
-+{
-+	clps711x_add_cpuidle();
-+	clps711x_soc_init();
-+};
-diff --git a/arch/arm/mach-clps711x/devices.h b/arch/arm/mach-clps711x/devices.h
-index a5efc17..47378cd 100644
---- a/arch/arm/mach-clps711x/devices.h
-+++ b/arch/arm/mach-clps711x/devices.h
-@@ -10,3 +10,4 @@
-  */
- 
- void clps711x_devices_init(void);
-+void clps711x_devices_init_dt(void);
--- 
-2.4.9
+On Thu, May 12, 2016 at 05:58:50PM +0200, Petr Kulhavy wrote:
+
+>  	.driver = {
+>  		.name = "wm8985",
+> +		.of_match_table = wm8985_of_match,
+
+of_match_ptr()
+
+--DWg365Y4B18r8evw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXNboOAAoJECTWi3JdVIfQ9ckH/iq4e/Eypl818sPrNeBhNsuu
+TINVdOSJAsosDnOt5iLPSveFMhLB/UDGe9EHUcD05owRIpAbA318qbYjjePH1bED
+H2jM6oTCiYm9vB45Gja4uTWxC2pUaa+TDCVTD8bomQjOFXXCWlygzADC/kRfk8NA
+rsD1Xr1wyEBrp0yRm0gJXiyjVCRJlOHxZQOYKvI/a37M6SHxpswPF/9Id7LXjbpG
+Sst1Jv7Tm1KoLbHtI21OFtmJGBVeJikcPNvmWA7VZ87tCSkIKC/9kMZ5yZNy/JTT
+bxX0jpL2mlyKPtdyK8tnxwkyou9jzoRlngcsC1lsRcRoJi4rgIiyePsnn9yHwFo=
+=drmN
+-----END PGP SIGNATURE-----
+
+--DWg365Y4B18r8evw--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
