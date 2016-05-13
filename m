@@ -1,52 +1,60 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] arm64: dts: exynos: Use human-friendly symbols for timer
- interrupt flags
-Date: Fri, 13 May 2016 15:44:26 +0200
-Message-ID: <1463147066-8902-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 4/7] [media] ir-rx51: add DT support to driver
+Date: Fri, 13 May 2016 16:01:31 +0200
+Message-ID: <20160513140130.GA30391@earth>
+References: <1462634508-24961-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1462634508-24961-5-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <20160509200657.GA3379@rob-hp-laptop>
+ <5730F8BA.5000402@gmail.com>
+ <CAL_JsqJPZS1ne_xAuBFtCc5L1HKFJf0LDUJ7CRSFXhc3adkTfA@mail.gmail.com>
+ <20160510021826.GE1129@earth>
+ <20160511141429.GA5894@rob-hp-laptop>
+ <5735710A.6060404@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5735710A.6060404@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Replace hex flags with human-readable symbols from arm-gic.h header
-which makes it easier to recognize what is configured.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos7.dtsi | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index ca663dfe5189..8d7ce97c0ddb 100644
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -10,6 +10,7 @@
-  */
- 
- #include <dt-bindings/clock/exynos7-clk.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
- 	compatible = "samsung,exynos7";
-@@ -473,10 +474,14 @@
- 
- 		timer {
- 			compatible = "arm,armv8-timer";
--			interrupts = <1 13 0xff01>,
--				     <1 14 0xff01>,
--				     <1 11 0xff01>,
--				     <1 10 0xff01>;
-+			interrupts = <GIC_PPI 13
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_EDGE_RISING)>,
-+				     <GIC_PPI 14
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_EDGE_RISING)>,
-+				     <GIC_PPI 11
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_EDGE_RISING)>,
-+				     <GIC_PPI 10
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_EDGE_RISING)>;
- 		};
- 
- 		pmu_system_controller: system-controller@105c0000 {
--- 
-1.9.1
+Hi,
+
+On Fri, May 13, 2016 at 09:15:38AM +0300, Ivaylo Dimitrov wrote:
+> I prefer the shorter "nokia,n900-ir", will resend the series with
+> it used, unless someone has concerns about it.
+
+Sounds fine to me.
+
+-- Sebastian
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXNd43AAoJENju1/PIO/qab8gP/1lrfrGuc9dS4jSWF9n5FJ7i
+2eQlz+a1VJaUJtrO5hB7JchnRA+msyB1Dphx/M7q8iVO9NIbj6x3mFxDqHOBuuSy
+O1bvl2YZtDNBewbl1+eZD6vrDN2JtzrtNL49usQNpi/5GbSFRGIxCOVixrPJRnU9
+yT7OUi+p1GGTVS4CIPuP/+ccd37B0hknk4XpL+tbJx0MDr8XXqTY/K50p54GEA4R
+kdZeT7mLS2IwoLTXd3eipuWeT8aDlkGjIhQ5KLy1pe9Bob038PBsf7DnCHMzHWqJ
+Md38FuYVUMqLQvX0PR+zSe9y+gU5AfCKH9DmsFmg1BAtr7KQxP0D6deY7mkqXXBl
+8ShHBDpoKdV0U5ZPK0No0RbyEyHBKsY64pKfk9BspFwmBQqQ5qJiWUtozHR9oiBm
+NNcBpaCRaqpTFkpCKAG33enCXPibAw1PvgwMc4WLzAK1ERHo31DJAiqjeoxm+5mp
+lqplFpwUlOzfay//U69yeLv3BpfgorhSjTHU7CSO+Ahi6Hic7K/K5hVTMdfmU9AY
+9K8EsbWR+Ccc80gYbspwLWTdlL/5TDqjHJsI8FK3AGCcFHHXNwNNv+psuIi9cBsT
+lmtCf2JwODQ1S8U4TStvLfJbsmHhUs325iqJa+yF0JDHtHZ82OjMlTUYPTNqr4st
+vIri0L6UerStqgR2Upin
+=0WLL
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
