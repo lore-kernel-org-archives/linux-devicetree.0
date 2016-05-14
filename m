@@ -1,53 +1,60 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V18 0/3] dmaengine: add Qualcomm Technologies HIDMA driver
-Date: Sat, 14 May 2016 11:55:16 +0530
-Message-ID: <20160514062516.GL2274@localhost>
-References: <1462076728-14367-1-git-send-email-okaya@codeaurora.org>
+From: Michael Haas <haas@computerlinguist.org>
+Subject: Re: [PATCH v4 1/4] power: Add an axp20x-ac-power driver
+Date: Sat, 14 May 2016 09:31:27 +0200
+Message-ID: <f6aa4530-d033-824a-1122-437919500d63@computerlinguist.org>
+References: <1462511991-1911-1-git-send-email-haas@computerlinguist.org>
+ <1462511991-1911-2-git-send-email-haas@computerlinguist.org>
+ <CAGb2v674DpbHHx-ra6N4QMVDPfGbT30rn8hPt=X-f1no7jM4Xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1462076728-14367-1-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v674DpbHHx-ra6N4QMVDPfGbT30rn8hPt=X-f1no7jM4Xg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Hans De Goede <hdegoede@redhat.com>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons@linux-vserver.org>, devicetree <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 01, 2016 at 12:25:25AM -0400, Sinan Kaya wrote:
-> The Qualcomm Technologies HIDMA device has been designed
-> to support virtualization technology. The driver has been
-> divided into two to follow the hardware design.
-> 
-> 1. HIDMA Management driver
-> 2. HIDMA Channel driver
-> 
-> Each HIDMA HW consists of multiple channels. These channels
-> share some set of common parameters. These parameters are
-> initialized by the management driver during power up.
-> Same management driver is used for monitoring the execution
-> of the channels. Management driver can change the performance
-> behavior dynamically such as bandwidth allocation and
-> prioritization in the future.
-> 
-> The management driver is executed in host context and
-> is the main management entity for all channels provided by
-> the device.
-> 
-> ------------------------
-> What's new
-> ------------------------
-> - Get rid of hidma_ll_resume function
-> - Rename hidma_ll_pause to hidma_ll_disable
-> - Remove tx_status_list and attach the err_code and err_info to the TRE
-> - Create a hidma_handle_tre_completion function to make error path and
->   success path common.
-> - More style corrections
+On 05/09/2016 06:33 PM, Chen-Yu Tsai wrote:
 
-Applied, thanks
+>> +
+>> +       power->supply = devm_power_supply_register(&pdev->dev,
+>> +                                       &axp20x_ac_power_desc, &psy_cfg);
+>> +       if (IS_ERR(power->supply))
+>> +               return PTR_ERR(power->supply);
+>> +
+>> +       /* Request irqs after registering, as irqs may trigger immediately */
+>> +       for (i = 0; i < ARRAY_SIZE(irq_names); i++) {
+>> +               irq = platform_get_irq_byname(pdev, irq_names[i]);
+>> +               if (irq < 0) {
+>> +                       dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
+>> +                                irq_names[i], irq);
+>> +                       continue;
+>> +               }
+>> +               irq = regmap_irq_get_virq(axp20x->regmap_irqc, irq);
+>> +               r = devm_request_any_context_irq(&pdev->dev, irq,
+>> +                               axp20x_irq_ac_handler, 0, DRVNAME, power);
+>> +               if (r < 0)
+>> +                       dev_warn(&pdev->dev, "Error requesting %s IRQ: %d\n",
+>> +                                irq_names[i], r);
+> 
+> Won't missing IRQs hinder the usage of this driver / hardware?
+> A power supply isn't much use if the system isn't told when
+> it's gone.
+> 
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That's a good point. The real question is: how would you handle missing
+IRQs? I have looked at other uses of devm_request_any_context_irq, e.g.
+in rtc-pm8xxx.c [0]. These other users often return an error code in the
+probe function. That doesn't help the system, though: it still won't
+notice if the power is unplugged in addition to missing the driver
+completely.
+
+It's probably best to provide the remaining (functional) parts of the
+driver (reading from /sys/class..) even if the IRQs cannot be
+registered. The code is pretty much the same in  the axp20x-usb-power.
+
+Michael
+
+[0] http://lxr.free-electrons.com/source/drivers/rtc/rtc-pm8xxx.c#L490
+
