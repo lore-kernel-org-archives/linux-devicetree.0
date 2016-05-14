@@ -1,49 +1,37 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: axp22x.dtsi: Add reg_drivebus node
-Date: Sat, 14 May 2016 19:57:29 +0200
-Message-ID: <1463248650-16611-3-git-send-email-hdegoede@redhat.com>
-References: <1463248650-16611-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Paul Thomas <pthomas8589@gmail.com>
+Subject: Re: [PATCH v4 3/5] dmaengine: vdma: Add Support for Xilinx AXI Direct
+ Memory Access Engine
+Date: Sat, 14 May 2016 15:11:21 -0400
+Message-ID: <CAD56B7emtyPjHRXRoDPYORLCM5i5ZE5dW-B6rqkHpv7SF4KJrg@mail.gmail.com>
+References: <1460006985-14805-1-git-send-email-appanad@xilinx.com>
+	<1460006985-14805-4-git-send-email-appanad@xilinx.com>
+	<CAD56B7fQWeDZDtKz2BgzpWSCMVdAGyUTBjUiuVnZ_8j51-SpoA@mail.gmail.com>
+	<C246CAC1457055469EF09E3A7AC4E11A4A5813F2@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBGGO3W4QKGQELX5ZB4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1463248650-16611-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5813F2@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Anirudha Sarangi <anirudh@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a node describing the drivebus regulator which is an (optional)
-part of the axp221/axp223 pmic. Since this regulator may not be
-available at all depending on the board, mark it as disabled by
-default.
+On Fri, May 13, 2016 at 12:36 AM, Appana Durga Kedareswara Rao
+<appana.durga.rao@xilinx.com> wrote:
+> Hi Paul,
+>
+>>
+>> Nice Kedar!
+>>
+>> Is this getting applied? I would really like to see this get into the mainline.
+>
+> This patch got applied to the dma-next branch...
+> Here @ http://git.kernel.org/cgit/linux/kernel/git/vkoul/slave-dma.git/log/?h=next
+>
+> Thanks,
+> Kedar.
+>
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/axp22x.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+I see, thanks!
 
-diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
-index cbafca6..6903d471 100644
---- a/arch/arm/boot/dts/axp22x.dtsi
-+++ b/arch/arm/boot/dts/axp22x.dtsi
-@@ -141,6 +141,11 @@
- 			regulator-max-microvolt = <3000000>;
- 			regulator-name = "rtc_ldo";
- 		};
-+
-+		reg_drivebus: drivebus {
-+			regulator-name = "drivebus";
-+			status = "disabled";
-+		};
- 	};
- 
- 	usb_power_supply: usb_power_supply {
--- 
-2.7.4
+-Paul
