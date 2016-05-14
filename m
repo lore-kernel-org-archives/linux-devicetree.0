@@ -1,60 +1,69 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
-Date: Sat, 14 May 2016 21:50:16 +0200
-Message-ID: <20160514195016.GC26220@lunn.ch>
-References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
- <3641492.klKRrvS8tr@wasted.cogentembedded.com>
- <20160512184233.GJ30822@pengutronix.de>
- <5735995B.8030802@ti.com>
- <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
- <20160513204436.GC7600@lunn.ch>
- <1a44a737-2b81-625b-8edf-d1c3dfcdd619@cogentembedded.com>
- <20160513234410.GE7600@lunn.ch>
- <cc232c9e-ef25-482d-0978-cbdfe03bad22@cogentembedded.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v4 0/4] ASoC: MAX9860: new driver
+Date: Sat, 14 May 2016 23:09:37 +0200
+Message-ID: <1463260181-21344-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cc232c9e-ef25-482d-0978-cbdfe03bad22@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Roger Quadros <rogerq@ti.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Misbah Ullah Khan <Misbahk@danlawinc.com>, Kumar Gala <galak@codeaurora.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 14, 2016 at 10:36:38PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 05/14/2016 02:44 AM, Andrew Lunn wrote:
-> 
-> >>>>>Another issue is that on some boards we have one reset line tied to
-> >>>>>multiple PHYs.How do we prevent multiple resets being taking place when each of
-> >>>>>the PHYs are registered?
-> >>>>
-> >>>>  My patch just doesn't address this case -- it's about the
-> >>>>individual resets only.
-> >>>
-> >>>This actually needs to be addresses a layer above. What you have is a
-> >>>bus reset, not a device reset.
-> >>
-> >>   No.
-> >>   There's simply no such thing as a bus reset for the xMII/MDIO
-> >>busses, there's simply no reset signaling on them. Every device has
-> >>its own reset signal and its own timing requirements.
-> >
-> >Except in the case above, where two phys are sharing the same reset
-> >signal. So although it is not part of the mdio standard to have a bus
-> >reset, this is in effect what the gpio line is doing, resetting all
-> >devices on the bus. If you don't model that as a bus reset, how do you
-> >model it?
-> 
->    I'm not suggesting that the shared reset should be handled by my
-> patch. Contrariwise, I suggested to use the mii_bus::reset() method
+Hi!
 
-I think we miss understood each other somewhere.
+I kept the sidetone changes in separate patches since I don't know
+if I solved the DAPM-off issue cleanly enough. Also, a new driver may
+still have a chance to make 4.7, but maybe it's too late for the DAPM
+changes?
 
-Your code is great for one gpio reset line for one phy.
+Finally, I wonder if the device tree crowd prefers seeing the whole of
+a series such as this, or only the bindings patch?
 
-I think there could be similar code one layer above to handle one gpio
-line for multiple phys.
+Cheers,
+Peter
 
-     Andrew
+New in v4:
+- Split out the device tree bindings in its own patch.
+- Move format check from ->startup to ->set_fmt.
+- Don't spam the log on probe defer.
+- Follow-up patches for the backwards sidetone control.
+
+New in v3:
+- The updated bindings file went missing in v2. Sorry for the confusion.
+
+New in v2:
+- Add comment about fall through when Integer Clock Mode is not possible.
+- Drop export of max9860_probe.
+- Ignore clk docs and read the mclk rate w/o enabling the clock.
+- Manage the DVDDIO supply.
+
+Peter Rosin (4):
+  dt-bindings: sound: add bindings for the max9860 codec
+  ASoC: MAX9860: new driver
+  ASoC: dapm: support mixer controls with mute at non-zero value
+  ASoC: MAX9860: add sidetone mixer control
+
+ .../devicetree/bindings/sound/max9860.txt          |  28 +
+ MAINTAINERS                                        |   7 +
+ sound/soc/codecs/Kconfig                           |   6 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/max9860.c                         | 765 +++++++++++++++++++++
+ sound/soc/codecs/max9860.h                         | 162 +++++
+ sound/soc/soc-dapm.c                               |  38 +-
+ 7 files changed, 1005 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/max9860.txt
+ create mode 100644 sound/soc/codecs/max9860.c
+ create mode 100644 sound/soc/codecs/max9860.h
+
+-- 
+2.1.4
