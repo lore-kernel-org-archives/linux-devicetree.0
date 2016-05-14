@@ -1,135 +1,49 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: sun8i-a?3-q8-tablet.dts: Add full otg support
-Date: Sat, 14 May 2016 19:57:30 +0200
-Message-ID: <1463248650-16611-4-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 3/4] ARM: dts: axp22x.dtsi: Add reg_drivebus node
+Date: Sat, 14 May 2016 19:57:29 +0200
+Message-ID: <1463248650-16611-3-git-send-email-hdegoede@redhat.com>
 References: <1463248650-16611-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBGGO3W4QKGQELX5ZB4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1463248650-16611-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we've all the necessary bits in place we can enable
-full otg support on these tablets.
+Add a node describing the drivebus regulator which is an (optional)
+part of the axp221/axp223 pmic. Since this regulator may not be
+available at all depending on the board, mark it as disabled by
+default.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a23-q8-tablet.dts | 15 ---------------
- arch/arm/boot/dts/sun8i-a33-q8-tablet.dts | 15 ---------------
- arch/arm/boot/dts/sun8i-q8-common.dtsi    | 31 +++++++++++++++++++++++++++++++
- 3 files changed, 31 insertions(+), 30 deletions(-)
+ arch/arm/boot/dts/axp22x.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
-index 6062ea7..956320a 100644
---- a/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
-+++ b/arch/arm/boot/dts/sun8i-a23-q8-tablet.dts
-@@ -48,18 +48,3 @@
- 	model = "Q8 A23 Tablet";
- 	compatible = "allwinner,q8-a23", "allwinner,sun8i-a23";
- };
--
--/*
-- * FIXME for now we only support host mode and rely on u-boot to have
-- * turned on Vbus which is controlled by the axp223 pmic on the board.
-- *
-- * Once we have axp223 support we should switch to fully supporting otg.
-- */
--&usb_otg {
--	dr_mode = "host";
--	status = "okay";
--};
--
--&usbphy {
--	status = "okay";
--};
-diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
-index 44b3229..b0bc236 100644
---- a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
-@@ -48,18 +48,3 @@
- 	model = "Q8 A33 Tablet";
- 	compatible = "allwinner,q8-a33", "allwinner,sun8i-a33";
- };
--
--/*
-- * FIXME for now we only support host mode and rely on u-boot to have
-- * turned on Vbus which is controlled by the axp223 pmic on the board.
-- *
-- * Once we have axp223 support we should switch to fully supporting otg.
-- */
--&usb_otg {
--	dr_mode = "host";
--	status = "okay";
--};
--
--&usbphy {
--	status = "okay";
--};
-diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-index 346a49d..2e2cbf5 100644
---- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
-+++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-@@ -87,6 +87,13 @@
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+diff --git a/arch/arm/boot/dts/axp22x.dtsi b/arch/arm/boot/dts/axp22x.dtsi
+index cbafca6..6903d471 100644
+--- a/arch/arm/boot/dts/axp22x.dtsi
++++ b/arch/arm/boot/dts/axp22x.dtsi
+@@ -141,6 +141,11 @@
+ 			regulator-max-microvolt = <3000000>;
+ 			regulator-name = "rtc_ldo";
+ 		};
++
++		reg_drivebus: drivebus {
++			regulator-name = "drivebus";
++			status = "disabled";
++		};
  	};
-+
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH8";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
- };
  
- &r_rsb {
-@@ -98,6 +105,7 @@
- 		interrupt-parent = <&nmi_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
- 		eldoin-supply = <&reg_dcdc1>;
-+		x-powers,drivebus;
- 	};
- };
- 
-@@ -163,6 +171,11 @@
- 	regulator-name = "vcc-dram";
- };
- 
-+&reg_drivebus {
-+	regulator-name = "usb0-vbus";
-+	status = "okay";
-+};
-+
- &reg_rtc_ldo {
- 	regulator-name = "vcc-rtc";
- };
-@@ -176,3 +189,21 @@
- &simplefb_lcd {
- 	vcc-lcd-supply = <&reg_dc1sw>;
- };
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>;
-+	usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_drivebus>;
-+	status = "okay";
-+};
+ 	usb_power_supply: usb_power_supply {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
