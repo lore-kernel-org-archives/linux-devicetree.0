@@ -1,65 +1,106 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
-Date: Sun, 15 May 2016 00:46:20 +0300
-Message-ID: <34922ff9-e566-4829-a631-54ce07cbb325@cogentembedded.com>
-References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
- <3641492.klKRrvS8tr@wasted.cogentembedded.com>
- <20160512184233.GJ30822@pengutronix.de> <5735995B.8030802@ti.com>
- <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
- <20160513204436.GC7600@lunn.ch>
- <1a44a737-2b81-625b-8edf-d1c3dfcdd619@cogentembedded.com>
- <20160513234410.GE7600@lunn.ch>
- <cc232c9e-ef25-482d-0978-cbdfe03bad22@cogentembedded.com>
- <20160514195016.GC26220@lunn.ch>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Unclear BSD licensing (headers, MODULE_LICENSE, versions)
+Date: Sun, 15 May 2016 00:44:35 +0200
+Message-ID: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160514195016.GC26220@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Roger Quadros <rogerq@ti.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <florian@openwrt.org>, Dan Haab <dhaab@luxul.com>, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 05/14/2016 10:50 PM, Andrew Lunn wrote:
+I recently received a hint that it would be nice/expected to have DTS
+files licensed under BSD. I had no experience with BSD, so I started
+looking at this and the way kernel parts use it.
 
->>>>>>> Another issue is that on some boards we have one reset line tied to
->>>>>>> multiple PHYs.How do we prevent multiple resets being taking place when each of
->>>>>>> the PHYs are registered?
->>>>>>
->>>>>>  My patch just doesn't address this case -- it's about the
->>>>>> individual resets only.
->>>>>
->>>>> This actually needs to be addresses a layer above. What you have is a
->>>>> bus reset, not a device reset.
->>>>
->>>>   No.
->>>>   There's simply no such thing as a bus reset for the xMII/MDIO
->>>> busses, there's simply no reset signaling on them. Every device has
->>>> its own reset signal and its own timing requirements.
->>>
->>> Except in the case above, where two phys are sharing the same reset
->>> signal. So although it is not part of the mdio standard to have a bus
->>> reset, this is in effect what the gpio line is doing, resetting all
->>> devices on the bus. If you don't model that as a bus reset, how do you
->>> model it?
->>
->>    I'm not suggesting that the shared reset should be handled by my
->> patch. Contrariwise, I suggested to use the mii_bus::reset() method
->
-> I think we miss understood each other somewhere.
->
-> Your code is great for one gpio reset line for one phy.
->
-> I think there could be similar code one layer above to handle one gpio
-> line for multiple phys.
+Obviously Linux kernel is licensed under GPLv2, so all its code has to
+use GPLv2 compatible license. I found 3 BSD licenses in use by kernel
+code:
+1) BSD 3-clause license
+2) BSD 2-clause license
+3) Clear BSD license
 
-    Ah, you want me to recognize some MAC/MDIO bound prop (e.g. 
-"mdio-reset-gpios") in of_mdiobus_register()? I'll think about it now that my 
-patch needs fixing anyway...
+Unfortunately in many cases (of source files) I wasn't able to clearly
+determine used BSD license.
 
->      Andrew
+=46irst of all, an accepted ident "Dual BSD/GPL" doesn't specify BSD
+version. All I can read in include/linux/module.h is "[GNU Public
+License v2 or BSD license choice]". It could mean any (of GPLv2
+compatible) BSD versions.
 
-MBR, Sergei
+
+I guess ideally (in current situation) every file using "Dual BSD/GPL"
+should specify BSD license version in a header. However this isn't the
+case.
+
+1) Some "Dual BSD/GPL" sources mention GPL in a header forgetting about=
+ BSD.
+Can we treat such files as BSD-licensed at all? Few examples:
+arch/arm/mach-pxa/am300epd.c
+drivers/fmc/fmc-trivial.c
+drivers/net/ppp/ppp_deflate.c
+drivers/scsi/a100u2w.c
+drivers/xen/xen-scsiback.c
+
+2) Some "Dual BSD/GPL" sources don't specify BSD version in a header.
+E.g. all you can find in a header is "All rights reserved. Licensed
+under dual BSD/GPL license.". Two examples:
+drivers/char/pcmcia/cm4000_cs.c
+drivers/char/pcmcia/cm4040_cs.c
+
+
+Another problem is text of BSD license
+
+1) Some BSD 2-clause licensed sources don't link to its content.
+
+In case of GPLv2 some sources simply mention this license and refer to
+COPYING. Few examples:
+a) drivers/bcma/main.c
+"Licensed under the GNU/GPL. See COPYING for details."
+b) drivers/block/umem.c
+"This driver is released to the public under the terms of the GNU
+GENERAL PUBLIC LICENSE version 2
+c) drivers/mfd/tps6507x.c
+"For licencing details see kernel-base/COPYING"
+
+I believe the same could be done for BSD 2-clause license, however
+there is no file that can be pointed. It results in some sources
+specifying 2-clause license in a header without really providing the
+content. Example:
+arch/arm/boot/dts/lpc4350.dtsi
+
+2) Some BSD 3-clause or Clear BSD licensed sources don't provide needed=
+ text
+
+Many templates of BSD 3-clause license I found contain <organization>
+that should be replaced by a proper organization/company. That makes
+me suspect we can't have a generic text of BSD 3-clause or Clear BSD
+in any shared file like COPYING. However there are sources that
+specify one of above licenses without providing or linking its text.
+=46ew examples:
+arch/blackfin/mach-bf609/include/mach/anomaly.h
+drivers/block/zram/zram_drv.c
+
+
+I'm wondering how we could improve this situation. I got 2 main ideas:
+
+1) Extend MODULE_LICENSE
+We could add new acceptable entries specifying BSD version. We could
+try to improve checkpatch.pl to look for a full license in a header
+(it seems to be required as it has to provide <organization>). Maybe
+we could figure out (with some lawyers?) how to treat sources using
+"Dual BSD/GPL" mentioning GPL only (without BSD) in their header.
+
+2) Get clear rules on how to write a header
+If you find extending MODULE_LICENSE a bad idea, maybe we can simply
+help people write proper headers. Explain the problem, provide
+examples, maybe add some check in checkpatch.pl.
+
+What do you think about this?
+
+--=20
+Rafa=C5=82
