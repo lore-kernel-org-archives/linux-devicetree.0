@@ -1,69 +1,105 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 0/4] ASoC: MAX9860: new driver
-Date: Sat, 14 May 2016 23:09:37 +0200
-Message-ID: <1463260181-21344-1-git-send-email-peda@axentia.se>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Sun, 15 May 2016 00:14:29 +0300
+Message-ID: <8bfe965e-aae3-e7a7-ad49-c19ca72e623c@cogentembedded.com>
+References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
+ <3641492.klKRrvS8tr@wasted.cogentembedded.com>
+ <20160512184233.GJ30822@pengutronix.de>
+ <f1fae99f-2464-8a42-deb8-c27cccf8df12@cogentembedded.com>
+ <31707c49-1f61-8ab8-eb87-5ce4e235db7b@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Misbah Ullah Khan <Misbahk@danlawinc.com>, Kumar Gala <galak@codeaurora.org>, Peter Rosin <peda@axentia.se>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <31707c49-1f61-8ab8-eb87-5ce4e235db7b@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, f.fainelli@gmail.com
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hello.
 
-I kept the sidetone changes in separate patches since I don't know
-if I solved the DAPM-off issue cleanly enough. Also, a new driver may
-still have a chance to make 4.7, but maybe it's too late for the DAPM
-changes?
+On 05/13/2016 10:18 PM, Sergei Shtylyov wrote:
 
-Finally, I wonder if the device tree crowd prefers seeing the whole of
-a series such as this, or only the bindings patch?
+>>> [we already talked about this patch in #armlinux, I'm now just
+>>> forwarding my comments on the list. Background was that I sent an easier
+>>> and less complete patch with the same idea. See
+>>> http://patchwork.ozlabs.org/patch/621418/]
+>>>
+>>> [added Linus Walleij to Cc, there is a question for you/him below]
+>>>
+>>> On Fri, Apr 29, 2016 at 01:12:54AM +0300, Sergei Shtylyov wrote:
+>>>> --- net-next.orig/Documentation/devicetree/bindings/net/phy.txt
+>>>> +++ net-next/Documentation/devicetree/bindings/net/phy.txt
+>>>> @@ -35,6 +35,8 @@ Optional Properties:
+>>>>  - broken-turn-around: If set, indicates the PHY device does not correctly
+>>>>    release the turn around line low at the end of a MDIO transaction.
+>>>>
+>>>> +- reset-gpios: The GPIO phandle and specifier for the PHY reset signal.
+>>>> +
+>>>>  Example:
+>>>>
+>>>>  ethernet-phy@0 {
+>>>
+>>> This is great.
+>>>
+>>>> Index: net-next/drivers/net/phy/at803x.c
+>>>> ===================================================================
+>>>> --- net-next.orig/drivers/net/phy/at803x.c
+>>>> +++ net-next/drivers/net/phy/at803x.c
+>>>> @@ -65,7 +65,6 @@ MODULE_LICENSE("GPL");
+>>>> [...]
+>>>
+>>> My patch breaks this driver. I wasn't aware of it.
+>>
+>>    I tried to be as careful as I could but still it looks that I didn't
+>> succeed at that too...
+>
+>    Hm, I'm starting to forget the vital details about my patch...
+>
+>> [...]
+>>>> Index: net-next/drivers/net/phy/mdio_device.c
+>>>> ===================================================================
+>>>> --- net-next.orig/drivers/net/phy/mdio_device.c
+>>>> +++ net-next/drivers/net/phy/mdio_device.c
+>> [...]
+>>>> @@ -117,9 +126,16 @@ static int mdio_probe(struct device *dev
+>>>>      struct mdio_driver *mdiodrv = to_mdio_driver(drv);
+>>>>      int err = 0;
+>>>>
+>>>> -    if (mdiodrv->probe)
+>>>> +    if (mdiodrv->probe) {
+>>>> +        /* Deassert the reset signal */
+>>>> +        mdio_device_reset(mdiodev, 0);
+>>>> +
+>>>>          err = mdiodrv->probe(mdiodev);
+>>>>
+>>>> +        /* Assert the reset signal */
+>>>> +        mdio_device_reset(mdiodev, 1);
+>>>
+>>> I wonder if it's safe to do this in general. What if ->probe does
+>>> something with the phy that is lost by resetting but that is relied on
+>>> later?
+>>
+>>    Well, I thought that config_init() method is designed for that but indeed
+>> the LXT driver writes to BMCR in its probe() method and hence is broken.
+>> Thank you for noticing...
+>
+>    It's broken even without my patch. The phylib will cause a PHY soft reset
 
-Cheers,
-Peter
+    Only iff the config_init() method exists in the PHY driver...
 
-New in v4:
-- Split out the device tree bindings in its own patch.
-- Move format check from ->startup to ->set_fmt.
-- Don't spam the log on probe defer.
-- Follow-up patches for the backwards sidetone control.
+> when attaching to the PHY device, so all BMCR programming dpone in the probe()
+> method will be lost. My patch does make sense as is.
 
-New in v3:
-- The updated bindings file went missing in v2. Sorry for the confusion.
+    No, actually it doesn't. :-(
 
-New in v2:
-- Add comment about fall through when Integer Clock Mode is not possible.
-- Drop export of max9860_probe.
-- Ignore clk docs and read the mclk rate w/o enabling the clock.
-- Manage the DVDDIO supply.
+> Looks like I should alsolook into fixing lxt.c.
 
-Peter Rosin (4):
-  dt-bindings: sound: add bindings for the max9860 codec
-  ASoC: MAX9860: new driver
-  ASoC: dapm: support mixer controls with mute at non-zero value
-  ASoC: MAX9860: add sidetone mixer control
+    It took me to actually do a patch to understand my fault. Sigh... :-/
 
- .../devicetree/bindings/sound/max9860.txt          |  28 +
- MAINTAINERS                                        |   7 +
- sound/soc/codecs/Kconfig                           |   6 +
- sound/soc/codecs/Makefile                          |   2 +
- sound/soc/codecs/max9860.c                         | 765 +++++++++++++++++++++
- sound/soc/codecs/max9860.h                         | 162 +++++
- sound/soc/soc-dapm.c                               |  38 +-
- 7 files changed, 1005 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/max9860.txt
- create mode 100644 sound/soc/codecs/max9860.c
- create mode 100644 sound/soc/codecs/max9860.h
+> Florian, what do you think?
 
--- 
-2.1.4
+    Florian, is phy_init_hw() logic correct?
+
+MBR, Sergei
