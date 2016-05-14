@@ -1,60 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/4] dt-bindings: bus: Add documentation for Tegra210
- ACONNECT
-Date: Sat, 14 May 2016 09:22:08 -0500
-Message-ID: <20160514142208.GA1462@rob-hp-laptop>
-References: <1462880140-5938-1-git-send-email-jonathanh@nvidia.com>
- <1462880140-5938-2-git-send-email-jonathanh@nvidia.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: MAX9860: new driver
+Date: Sat, 14 May 2016 09:25:19 -0500
+Message-ID: <20160514142519.GA18477@rob-hp-laptop>
+References: <1462892797-1147-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1462880140-5938-2-git-send-email-jonathanh@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1462892797-1147-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 10, 2016 at 12:35:37PM +0100, Jon Hunter wrote:
-> Add binding documentation for the Tegra ACONNECT bus that is part of the
-> Audio Processing Engine (APE) on Tegra210. The ACONNECT bus is used to
-> access devices within the APE subsystem. The APE is located in a
-> separate power domain and so accesses made to the ACONNECT require the
-> power domain to be enabled as well as some platform specific clocks.
+On Tue, May 10, 2016 at 05:06:37PM +0200, Peter Rosin wrote:
+> This is a driver for the MAX9860 Mono Audio Voice Codec.
 > 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> https://datasheets.maximintegrated.com/en/ds/MAX9860.pdf
+> 
+> This driver does not support sidetone since the DVST register field is
+> backwards with the mute near the maximum level instead of the minimum.
+> 
+> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 > ---
->  .../bindings/bus/nvidia,tegra210-aconnect.txt      | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
-> new file mode 100644
-> index 000000000000..81668f588eca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
-> @@ -0,0 +1,45 @@
-> +NVIDIA Tegra ACONNECT Bus
-> +
-> +The Tegra ACONNECT bus is an AXI switch which is used to connnect various
-> +components inside the Audio Processing Engine (APE). All CPU accesses to
-> +the APE subsystem go through the ACONNECT via an APB to AXI wrapper.
-> +
-> +Required properties:
-> +- compatible: Must be "nvidia,tegra210-aconnect".
-> +- clocks: Must contain the entries for the APE clock (TEGRA210_CLK_APE),
-> +  and APE interface clock (TEGRA210_CLK_APB2APE).
-> +- clock-names: Must contain the names "ape" and "apb2ape" for the corresponding
-> +  'clocks' entries.
-> +- power-domains: Must contain a phandle that points to the audio powergate
-> +  (namely 'aud') for Tegra210.
-> +- #address-cells: The number of cells used to represent physical base addresses
-> +  in the aconnect address space. Should be 2.
-> +- #size-cells: The number of cells used to represent the size of an address
-> +  range in the aconnect address space. Should be 2.
+>  .../devicetree/bindings/sound/max9860.txt          |  27 +
 
-You forgot to update these. With that,
+It is preferred to have the binding in a separate patch. Otherwise,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Rob
+>  MAINTAINERS                                        |   7 +
+>  sound/soc/codecs/Kconfig                           |   6 +
+>  sound/soc/codecs/Makefile                          |   2 +
+>  sound/soc/codecs/max9860.c                         | 722 +++++++++++++++++++++
+>  sound/soc/codecs/max9860.h                         | 162 +++++
+>  6 files changed, 926 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/max9860.txt
+>  create mode 100644 sound/soc/codecs/max9860.c
+>  create mode 100644 sound/soc/codecs/max9860.h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
