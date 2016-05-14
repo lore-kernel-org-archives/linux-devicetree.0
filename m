@@ -1,105 +1,65 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
-Date: Sun, 15 May 2016 00:14:29 +0300
-Message-ID: <8bfe965e-aae3-e7a7-ad49-c19ca72e623c@cogentembedded.com>
-References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
- <3641492.klKRrvS8tr@wasted.cogentembedded.com>
- <20160512184233.GJ30822@pengutronix.de>
- <f1fae99f-2464-8a42-deb8-c27cccf8df12@cogentembedded.com>
- <31707c49-1f61-8ab8-eb87-5ce4e235db7b@cogentembedded.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v4 1/4] dt-bindings: sound: add bindings for the max9860 codec
+Date: Sat, 14 May 2016 23:09:38 +0200
+Message-ID: <1463260181-21344-2-git-send-email-peda@axentia.se>
+References: <1463260181-21344-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <31707c49-1f61-8ab8-eb87-5ce4e235db7b@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, f.fainelli@gmail.com
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463260181-21344-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Misbah Ullah Khan <Misbahk-RbfqNLLv1bh8UrSeD/g0lQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This adds the device tree binding documentation for the Maxim Integrated
+MAX9860 mono audio voice codec.
 
-On 05/13/2016 10:18 PM, Sergei Shtylyov wrote:
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ .../devicetree/bindings/sound/max9860.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/max9860.txt
 
->>> [we already talked about this patch in #armlinux, I'm now just
->>> forwarding my comments on the list. Background was that I sent an easier
->>> and less complete patch with the same idea. See
->>> http://patchwork.ozlabs.org/patch/621418/]
->>>
->>> [added Linus Walleij to Cc, there is a question for you/him below]
->>>
->>> On Fri, Apr 29, 2016 at 01:12:54AM +0300, Sergei Shtylyov wrote:
->>>> --- net-next.orig/Documentation/devicetree/bindings/net/phy.txt
->>>> +++ net-next/Documentation/devicetree/bindings/net/phy.txt
->>>> @@ -35,6 +35,8 @@ Optional Properties:
->>>>  - broken-turn-around: If set, indicates the PHY device does not correctly
->>>>    release the turn around line low at the end of a MDIO transaction.
->>>>
->>>> +- reset-gpios: The GPIO phandle and specifier for the PHY reset signal.
->>>> +
->>>>  Example:
->>>>
->>>>  ethernet-phy@0 {
->>>
->>> This is great.
->>>
->>>> Index: net-next/drivers/net/phy/at803x.c
->>>> ===================================================================
->>>> --- net-next.orig/drivers/net/phy/at803x.c
->>>> +++ net-next/drivers/net/phy/at803x.c
->>>> @@ -65,7 +65,6 @@ MODULE_LICENSE("GPL");
->>>> [...]
->>>
->>> My patch breaks this driver. I wasn't aware of it.
->>
->>    I tried to be as careful as I could but still it looks that I didn't
->> succeed at that too...
->
->    Hm, I'm starting to forget the vital details about my patch...
->
->> [...]
->>>> Index: net-next/drivers/net/phy/mdio_device.c
->>>> ===================================================================
->>>> --- net-next.orig/drivers/net/phy/mdio_device.c
->>>> +++ net-next/drivers/net/phy/mdio_device.c
->> [...]
->>>> @@ -117,9 +126,16 @@ static int mdio_probe(struct device *dev
->>>>      struct mdio_driver *mdiodrv = to_mdio_driver(drv);
->>>>      int err = 0;
->>>>
->>>> -    if (mdiodrv->probe)
->>>> +    if (mdiodrv->probe) {
->>>> +        /* Deassert the reset signal */
->>>> +        mdio_device_reset(mdiodev, 0);
->>>> +
->>>>          err = mdiodrv->probe(mdiodev);
->>>>
->>>> +        /* Assert the reset signal */
->>>> +        mdio_device_reset(mdiodev, 1);
->>>
->>> I wonder if it's safe to do this in general. What if ->probe does
->>> something with the phy that is lost by resetting but that is relied on
->>> later?
->>
->>    Well, I thought that config_init() method is designed for that but indeed
->> the LXT driver writes to BMCR in its probe() method and hence is broken.
->> Thank you for noticing...
->
->    It's broken even without my patch. The phylib will cause a PHY soft reset
+diff --git a/Documentation/devicetree/bindings/sound/max9860.txt b/Documentation/devicetree/bindings/sound/max9860.txt
+new file mode 100644
+index 000000000000..e0d4e95e31b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/max9860.txt
+@@ -0,0 +1,28 @@
++MAX9860 Mono Audio Voice Codec
++
++Required properties:
++
++  - compatible : "maxim,max9860"
++
++  - reg : the I2C address of the device
++
++  - AVDD-supply, DVDD-supply and DVDDIO-supply : power supplies for
++    the device, as covered in bindings/regulator/regulator.txt
++
++  - clock-names : Required element: "mclk".
++
++  - clocks : A clock specifier for the clock connected as MCLK.
++
++Examples:
++
++	max9860: max9860@10 {
++		compatible = "maxim,max9860";
++		reg = <0x10>;
++
++		AVDD-supply = <&reg_1v8>;
++		DVDD-supply = <&reg_1v8>;
++		DVDDIO-supply = <&reg_3v0>;
++
++		clock-names = "mclk";
++		clocks = <&pck2>;
++	};
+-- 
+2.1.4
 
-    Only iff the config_init() method exists in the PHY driver...
-
-> when attaching to the PHY device, so all BMCR programming dpone in the probe()
-> method will be lost. My patch does make sense as is.
-
-    No, actually it doesn't. :-(
-
-> Looks like I should alsolook into fixing lxt.c.
-
-    It took me to actually do a patch to understand my fault. Sigh... :-/
-
-> Florian, what do you think?
-
-    Florian, is phy_init_hw() logic correct?
-
-MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
