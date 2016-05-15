@@ -1,106 +1,80 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Unclear BSD licensing (headers, MODULE_LICENSE, versions)
-Date: Sun, 15 May 2016 00:44:35 +0200
-Message-ID: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
+From: Theodore Ts'o <tytso@mit.edu>
+Subject: Re: Unclear BSD licensing (headers, MODULE_LICENSE, versions)
+Date: Sat, 14 May 2016 22:43:27 -0400
+Message-ID: <20160515024327.GB7799@thunk.org>
+References: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <florian@openwrt.org>, Dan Haab <dhaab@luxul.com>, Hauke Mehrtens <hauke@hauke-m.de>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <florian@openwrt.org>, Dan Haab <dhaab@luxul.com>, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, May 15, 2016 at 12:44:35AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+>=20
+> I recently received a hint that it would be nice/expected to have DTS
+> files licensed under BSD. I had no experience with BSD, so I started
+> looking at this and the way kernel parts use it.
 
-I recently received a hint that it would be nice/expected to have DTS
-files licensed under BSD. I had no experience with BSD, so I started
-looking at this and the way kernel parts use it.
+There is a lot of sloppiness in some of the driver code.
+Unfortunately, fixing it is something that really has to be done by
+the copyright holder, or whoever submitted the kernel in the first
+place and who has clear knowledge of what the copyright holder had
+intended.
 
-Obviously Linux kernel is licensed under GPLv2, so all its code has to
-use GPLv2 compatible license. I found 3 BSD licenses in use by kernel
-code:
-1) BSD 3-clause license
-2) BSD 2-clause license
-3) Clear BSD license
+There is also a fairly wide range of seriousness of the various
+defects you've listed.  On one extreme, although it's true that some
+license, such as the ClearBSD license has <Organization> in its
+template, when the original code file you've referenced has in its head=
+er:
 
-Unfortunately in many cases (of source files) I wasn't able to clearly
-determine used BSD license.
+ * Copyright 2004-2012 Analog Devices Inc.
+ * Licensed under the Clear BSD license.
 
-=46irst of all, an accepted ident "Dual BSD/GPL" doesn't specify BSD
-version. All I can read in include/linux/module.h is "[GNU Public
-License v2 or BSD license choice]". It could mean any (of GPLv2
-compatible) BSD versions.
+=2E...tt's pretty obvious that Organization should be "Analog Devices I=
+nc".
 
+In other cases, it's pretty clear that someone copied the drivers from
+some out-of-tree distribution (e.g., "see kernel-base/COPYING...") and
+where finding the original distribution and then adding the Copyright
+permission statement is a pretty easy thing to do.  (And in case where
+a third party can easily show proof that the intent of the copyright
+holder is clearly expressed, that third party probably is able to
+submit a patch to fix up the source file.
 
-I guess ideally (in current situation) every file using "Dual BSD/GPL"
-should specify BSD license version in a header. However this isn't the
-case.
+> I'm wondering how we could improve this situation. I got 2 main ideas=
+:
+>=20
+> 1) Extend MODULE_LICENSE
+> We could add new acceptable entries specifying BSD version. We could
+> try to improve checkpatch.pl to look for a full license in a header
+> (it seems to be required as it has to provide <organization>). Maybe
+> we could figure out (with some lawyers?) how to treat sources using
+> "Dual BSD/GPL" mentioning GPL only (without BSD) in their header.
 
-1) Some "Dual BSD/GPL" sources mention GPL in a header forgetting about=
- BSD.
-Can we treat such files as BSD-licensed at all? Few examples:
-arch/arm/mach-pxa/am300epd.c
-drivers/fmc/fmc-trivial.c
-drivers/net/ppp/ppp_deflate.c
-drivers/scsi/a100u2w.c
-drivers/xen/xen-scsiback.c
+I'm not a fan of this approach.  MODULE_LICENSE puts a hint about the
+copyright license of a module where it can be found by the module
+loader.  This is useful to enforce things like GPL_SYMBOL_EXPORT, but
+I don't think we should try to make MODULE_LICESE to be more than
+that.
 
-2) Some "Dual BSD/GPL" sources don't specify BSD version in a header.
-E.g. all you can find in a header is "All rights reserved. Licensed
-under dual BSD/GPL license.". Two examples:
-drivers/char/pcmcia/cm4000_cs.c
-drivers/char/pcmcia/cm4040_cs.c
+> 2) Get clear rules on how to write a header
+> If you find extending MODULE_LICENSE a bad idea, maybe we can simply
+> help people write proper headers. Explain the problem, provide
+> examples, maybe add some check in checkpatch.pl.
 
+Adding more text about how to add a proper copyright notice and
+license permission statement to the SubmittingDrivers file seems like
+a good idea.
 
-Another problem is text of BSD license
+I doubt we can make checkpatch.pl smart enough to handle this
+situation cleanly.
 
-1) Some BSD 2-clause licensed sources don't link to its content.
+Cheers,
 
-In case of GPLv2 some sources simply mention this license and refer to
-COPYING. Few examples:
-a) drivers/bcma/main.c
-"Licensed under the GNU/GPL. See COPYING for details."
-b) drivers/block/umem.c
-"This driver is released to the public under the terms of the GNU
-GENERAL PUBLIC LICENSE version 2
-c) drivers/mfd/tps6507x.c
-"For licencing details see kernel-base/COPYING"
-
-I believe the same could be done for BSD 2-clause license, however
-there is no file that can be pointed. It results in some sources
-specifying 2-clause license in a header without really providing the
-content. Example:
-arch/arm/boot/dts/lpc4350.dtsi
-
-2) Some BSD 3-clause or Clear BSD licensed sources don't provide needed=
- text
-
-Many templates of BSD 3-clause license I found contain <organization>
-that should be replaced by a proper organization/company. That makes
-me suspect we can't have a generic text of BSD 3-clause or Clear BSD
-in any shared file like COPYING. However there are sources that
-specify one of above licenses without providing or linking its text.
-=46ew examples:
-arch/blackfin/mach-bf609/include/mach/anomaly.h
-drivers/block/zram/zram_drv.c
-
-
-I'm wondering how we could improve this situation. I got 2 main ideas:
-
-1) Extend MODULE_LICENSE
-We could add new acceptable entries specifying BSD version. We could
-try to improve checkpatch.pl to look for a full license in a header
-(it seems to be required as it has to provide <organization>). Maybe
-we could figure out (with some lawyers?) how to treat sources using
-"Dual BSD/GPL" mentioning GPL only (without BSD) in their header.
-
-2) Get clear rules on how to write a header
-If you find extending MODULE_LICENSE a bad idea, maybe we can simply
-help people write proper headers. Explain the problem, provide
-examples, maybe add some check in checkpatch.pl.
-
-What do you think about this?
-
---=20
-Rafa=C5=82
+						- Ted
