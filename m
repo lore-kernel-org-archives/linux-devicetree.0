@@ -1,134 +1,41 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: Unclear BSD licensing (headers, MODULE_LICENSE, versions)
-Date: Sun, 15 May 2016 11:58:43 +0200
-Message-ID: <CACna6rzY4O=mqDsfrCtVxuKnyWrNn+_HBW+jsQn3UnVXAzna7Q@mail.gmail.com>
-References: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
-	<20160515024327.GB7799@thunk.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
+Date: Sun, 15 May 2016 17:23:39 +0200
+Message-ID: <20160515152339.GA9021@lunn.ch>
+References: <3641492.klKRrvS8tr@wasted.cogentembedded.com>
+ <20160512184233.GJ30822@pengutronix.de>
+ <5735995B.8030802@ti.com>
+ <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
+ <20160513204436.GC7600@lunn.ch>
+ <1a44a737-2b81-625b-8edf-d1c3dfcdd619@cogentembedded.com>
+ <20160513234410.GE7600@lunn.ch>
+ <cc232c9e-ef25-482d-0978-cbdfe03bad22@cogentembedded.com>
+ <20160514195016.GC26220@lunn.ch>
+ <34922ff9-e566-4829-a631-54ce07cbb325@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160515024327.GB7799@thunk.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Theodore Ts'o <tytso@mit.edu>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <florian@openwrt.org>, Dan Haab <dhaab@luxul.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <34922ff9-e566-4829-a631-54ce07cbb325-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[Adding linux-doc@ which I probably should use from the beginning]
+> >I think there could be similar code one layer above to handle one gpio
+> >line for multiple phys.
+> 
+>    Ah, you want me to recognize some MAC/MDIO bound prop (e.g.
+> "mdio-reset-gpios") in of_mdiobus_register()? I'll think about it
+> now that my patch needs fixing anyway...
 
-On 15 May 2016 at 04:43, Theodore Ts'o <tytso@mit.edu> wrote:
-> On Sun, May 15, 2016 at 12:44:35AM +0200, Rafa=C5=82 Mi=C5=82ecki wro=
-te:
->>
->> I recently received a hint that it would be nice/expected to have DT=
-S
->> files licensed under BSD. I had no experience with BSD, so I started
->> looking at this and the way kernel parts use it.
->
-> There is a lot of sloppiness in some of the driver code.
-> Unfortunately, fixing it is something that really has to be done by
-> the copyright holder, or whoever submitted the kernel in the first
-> place and who has clear knowledge of what the copyright holder had
-> intended.
->
-> There is also a fairly wide range of seriousness of the various
-> defects you've listed.  On one extreme, although it's true that some
-> license, such as the ClearBSD license has <Organization> in its
-> template, when the original code file you've referenced has in its he=
-ader:
->
->  * Copyright 2004-2012 Analog Devices Inc.
->  * Licensed under the Clear BSD license.
->
-> ....tt's pretty obvious that Organization should be "Analog Devices I=
-nc".
->
-> In other cases, it's pretty clear that someone copied the drivers fro=
-m
-> some out-of-tree distribution (e.g., "see kernel-base/COPYING...") an=
-d
-> where finding the original distribution and then adding the Copyright
-> permission statement is a pretty easy thing to do.  (And in case wher=
-e
-> a third party can easily show proof that the intent of the copyright
-> holder is clearly expressed, that third party probably is able to
-> submit a patch to fix up the source file.
+Hi Sergi
 
-Thanks for your comments. I think I will try to contact authors of
-unclear drivers once we get requirements described a bit better.
-Hopefully at least some of them will respond.
+It does not need to be you implementing this, your hardware does not
+need it. However, if you do feel like doing it, great.
 
-
->> I'm wondering how we could improve this situation. I got 2 main idea=
-s:
->>
->> 1) Extend MODULE_LICENSE
->> We could add new acceptable entries specifying BSD version. We could
->> try to improve checkpatch.pl to look for a full license in a header
->> (it seems to be required as it has to provide <organization>). Maybe
->> we could figure out (with some lawyers?) how to treat sources using
->> "Dual BSD/GPL" mentioning GPL only (without BSD) in their header.
->
-> I'm not a fan of this approach.  MODULE_LICENSE puts a hint about the
-> copyright license of a module where it can be found by the module
-> loader.  This is useful to enforce things like GPL_SYMBOL_EXPORT, but
-> I don't think we should try to make MODULE_LICESE to be more than
-> that.
-
-OK, if others agree, I'm fine with leaving MODULE_LICENSE as is.
-
-
->> 2) Get clear rules on how to write a header
->> If you find extending MODULE_LICENSE a bad idea, maybe we can simply
->> help people write proper headers. Explain the problem, provide
->> examples, maybe add some check in checkpatch.pl.
->
-> Adding more text about how to add a proper copyright notice and
-> license permission statement to the SubmittingDrivers file seems like
-> a good idea.
->
-> I doubt we can make checkpatch.pl smart enough to handle this
-> situation cleanly.
-
-Thanks, I'll prepare & send patch updating SubmittingDrivers and maybe
-some related files (if needed).
-
-However there are some questions I need to ask first:
-
-
-1) Can we add COPYING-BSD-2-CLAUSE (or similar)?
-
-We already have GPL drivers with headers like:
-a) "Licensed under the GNU/GPL. See COPYING for details."
-b) "This driver is released to the public under the terms of the GNU
-GENERAL PUBLIC LICENSE version 2"
-
-Adding a similar file (e.g. COPYING-BSD-2-CLAUSE) would allow BSD
-drivers to reference it as well, e.g.:
-"Licensed under the BSD 2-clause. See COPYING-BSD-2-CLAUSE for details.=
-"
-or similar.
-As described earlier, there are some drivers /mentioning/ usage of BSD
-license (in a header or with MODULE_LICENSE) without providing its
-text at all.
-
-
-2) How about sharing BSD 3-clause license?
-
-Does it make sense to add anything like COPYING-BSD-3-CLAUSE? Should
-we leave <organization> in license text in such file? Or should we
-replace it with "author" as some drivers do? How drivers could
-reference such file? Would a simple
-"Licensed under the BSD 3-clause. See COPYING-BSD-3-CLAUSE for details.=
-"
-be enough? Or should it be more specific like "With <organization>
-being Foo Company"?
-
-Or maybe we shouldn't add anything like COPYING-BSD-3-CLAUSE at all
-and just require all drivers to attach whole text of BSD 3-clause
-license in a header?
-
-The same questions apply to Clear BSD license which also has
-<organization> in its text.
-
---=20
-Rafa=C5=82
+     Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
