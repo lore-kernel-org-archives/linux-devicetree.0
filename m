@@ -1,63 +1,134 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCHv2] i2c: rcar: add DMA support
-Date: Sun, 15 May 2016 08:52:04 +0200
-Message-ID: <20160515065204.GA1846@katana>
-References: <1463228228-32560-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: Unclear BSD licensing (headers, MODULE_LICENSE, versions)
+Date: Sun, 15 May 2016 11:58:43 +0200
+Message-ID: <CACna6rzY4O=mqDsfrCtVxuKnyWrNn+_HBW+jsQn3UnVXAzna7Q@mail.gmail.com>
+References: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
+	<20160515024327.GB7799@thunk.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1463228228-32560-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160515024327.GB7799@thunk.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Theodore Ts'o <tytso@mit.edu>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <florian@openwrt.org>, Dan Haab <dhaab@luxul.com>, Hauke Mehrtens <hauke@hauke-m.de>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+[Adding linux-doc@ which I probably should use from the beginning]
 
---VS++wcV0S1rZb1Fb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 15 May 2016 at 04:43, Theodore Ts'o <tytso@mit.edu> wrote:
+> On Sun, May 15, 2016 at 12:44:35AM +0200, Rafa=C5=82 Mi=C5=82ecki wro=
+te:
+>>
+>> I recently received a hint that it would be nice/expected to have DT=
+S
+>> files licensed under BSD. I had no experience with BSD, so I started
+>> looking at this and the way kernel parts use it.
+>
+> There is a lot of sloppiness in some of the driver code.
+> Unfortunately, fixing it is something that really has to be done by
+> the copyright holder, or whoever submitted the kernel in the first
+> place and who has clear knowledge of what the copyright holder had
+> intended.
+>
+> There is also a fairly wide range of seriousness of the various
+> defects you've listed.  On one extreme, although it's true that some
+> license, such as the ClearBSD license has <Organization> in its
+> template, when the original code file you've referenced has in its he=
+ader:
+>
+>  * Copyright 2004-2012 Analog Devices Inc.
+>  * Licensed under the Clear BSD license.
+>
+> ....tt's pretty obvious that Organization should be "Analog Devices I=
+nc".
+>
+> In other cases, it's pretty clear that someone copied the drivers fro=
+m
+> some out-of-tree distribution (e.g., "see kernel-base/COPYING...") an=
+d
+> where finding the original distribution and then adding the Copyright
+> permission statement is a pretty easy thing to do.  (And in case wher=
+e
+> a third party can easily show proof that the intent of the copyright
+> holder is clearly expressed, that third party probably is able to
+> submit a patch to fix up the source file.
 
-On Sat, May 14, 2016 at 02:17:08PM +0200, Niklas S=C3=B6derlund wrote:
-> Make it possible to transfer i2c message buffers via DMA.
-> Start/Stop/Sending_Slave_Address and some data is still handled using
-> the old state machine, it is sending the bulk of the data that is done
-> via DMA.
->=20
-> The first byte of a transmission and the last two bytes of reception are
-> sent/received using PIO. This is needed for the HW to have access to the
-> first byte before DMA transmit and to be able to set the STOP condition
-> for DMA reception.
->=20
-> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
-se>
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-Fixed a checkpatch warning (trailing */) and applied to for-next,
-thanks!
+Thanks for your comments. I think I will try to contact authors of
+unclear drivers once we get requirements described a bit better.
+Hopefully at least some of them will respond.
 
 
---VS++wcV0S1rZb1Fb
-Content-Type: application/pgp-signature; name="signature.asc"
+>> I'm wondering how we could improve this situation. I got 2 main idea=
+s:
+>>
+>> 1) Extend MODULE_LICENSE
+>> We could add new acceptable entries specifying BSD version. We could
+>> try to improve checkpatch.pl to look for a full license in a header
+>> (it seems to be required as it has to provide <organization>). Maybe
+>> we could figure out (with some lawyers?) how to treat sources using
+>> "Dual BSD/GPL" mentioning GPL only (without BSD) in their header.
+>
+> I'm not a fan of this approach.  MODULE_LICENSE puts a hint about the
+> copyright license of a module where it can be found by the module
+> loader.  This is useful to enforce things like GPL_SYMBOL_EXPORT, but
+> I don't think we should try to make MODULE_LICESE to be more than
+> that.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+OK, if others agree, I'm fine with leaving MODULE_LICENSE as is.
 
-iQIcBAEBAgAGBQJXOByUAAoJEBQN5MwUoCm23tUP/35G0Tmb9gBCeO/iHIxLZLn2
-xJdbCB3ExP1uVW59HRph5BW4HEA+sHdntdTXexREa0/r4pLE3PzOS/TCOx81ajBv
-0GnZKXuap/r/zOnFEaRv02KaBNby+pQlCamQeY+i7oBCiYVH2AcPwv/BwQ8V39uy
-Hz3UF+KIJcfVBS96F5Ci/ITu+dMzIjhxoYo2JEreFBjJLh14Kj84ZWzn+wUfqzPc
-hoCrj89NWortSeKruOCuPL67uJzbWmVe/RqooNGJsUpzmRB29RRKFpkxf/PrUapa
-XZHDpFpbkU3GoLj8JpqJC1esh08H4orUCnq5xY0Z+SuLYZuPLRrwDcmQtlBurIgF
-zCBWXrEMzDjbWwmCbXV5CFxh64uKewseqYpyKlzY1QzoFvU4kusSKINefOBfAFJp
-UbNCzm4r4Agv/AWZ4IlC1mb+WB+689/yEJIExFKYbwKkJXyBycKn6KL4UXZR02Wp
-CEzu2s4r8eo8brTTEj4uD346mU45K6F5HQnB2Jzr8jFJ+TXefx9S1+NpIGEfs/l5
-TgdhIMYmMi2oO5ldNf6NGDNdpcjRYefXhAHNyr6WJUauWeFc0Uhj+6/PIdignKsR
-2vY/nbQReRLFLVnOvgZGvb7e9GFEPIFY0QUGn167WY2XP2oW8osuAxJR2loTzIsi
-Tt1X05d8w+nkR2FSm+LH
-=SdPA
------END PGP SIGNATURE-----
 
---VS++wcV0S1rZb1Fb--
+>> 2) Get clear rules on how to write a header
+>> If you find extending MODULE_LICENSE a bad idea, maybe we can simply
+>> help people write proper headers. Explain the problem, provide
+>> examples, maybe add some check in checkpatch.pl.
+>
+> Adding more text about how to add a proper copyright notice and
+> license permission statement to the SubmittingDrivers file seems like
+> a good idea.
+>
+> I doubt we can make checkpatch.pl smart enough to handle this
+> situation cleanly.
+
+Thanks, I'll prepare & send patch updating SubmittingDrivers and maybe
+some related files (if needed).
+
+However there are some questions I need to ask first:
+
+
+1) Can we add COPYING-BSD-2-CLAUSE (or similar)?
+
+We already have GPL drivers with headers like:
+a) "Licensed under the GNU/GPL. See COPYING for details."
+b) "This driver is released to the public under the terms of the GNU
+GENERAL PUBLIC LICENSE version 2"
+
+Adding a similar file (e.g. COPYING-BSD-2-CLAUSE) would allow BSD
+drivers to reference it as well, e.g.:
+"Licensed under the BSD 2-clause. See COPYING-BSD-2-CLAUSE for details.=
+"
+or similar.
+As described earlier, there are some drivers /mentioning/ usage of BSD
+license (in a header or with MODULE_LICENSE) without providing its
+text at all.
+
+
+2) How about sharing BSD 3-clause license?
+
+Does it make sense to add anything like COPYING-BSD-3-CLAUSE? Should
+we leave <organization> in license text in such file? Or should we
+replace it with "author" as some drivers do? How drivers could
+reference such file? Would a simple
+"Licensed under the BSD 3-clause. See COPYING-BSD-3-CLAUSE for details.=
+"
+be enough? Or should it be more specific like "With <organization>
+being Foo Company"?
+
+Or maybe we shouldn't add anything like COPYING-BSD-3-CLAUSE at all
+and just require all drivers to attach whole text of BSD 3-clause
+license in a header?
+
+The same questions apply to Clear BSD license which also has
+<organization> in its text.
+
+--=20
+Rafa=C5=82
