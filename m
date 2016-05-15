@@ -1,80 +1,82 @@
-From: Theodore Ts'o <tytso@mit.edu>
-Subject: Re: Unclear BSD licensing (headers, MODULE_LICENSE, versions)
-Date: Sat, 14 May 2016 22:43:27 -0400
-Message-ID: <20160515024327.GB7799@thunk.org>
-References: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: clps711x: Add basic Cirrus Logic CDB89712
+ Development board
+Date: Sun, 15 May 2016 09:07:48 +0300
+Message-ID: <20160515090748.05db9e6cdff743f26bd6c1fb@mail.ru>
+References: <1463138788-5390-1-git-send-email-shc_work@mail.ru>
+	<9407200.bOeiVUkGKT@wuerfel>
+	<1463142623.38124260@f381.i.mail.ru>
+	<6057172.X40sTfvRlk@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=KOI8-R
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6ryZS1Q8=kBMMePAE_A377OReaYJdx8azZBrqG2jG+eMJg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <florian@openwrt.org>, Dan Haab <dhaab@luxul.com>, Hauke Mehrtens <hauke@hauke-m.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6057172.X40sTfvRlk@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 15, 2016 at 12:44:35AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
-:
+On Fri, 13 May 2016 15:41:11 +0200
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+
+> On Friday 13 May 2016 15:30:23 Alexander Shiyan wrote:
+> > Hello.
+> >=20
+> > > =F0=D1=D4=CE=C9=C3=C1, 13 =CD=C1=D1 2016, 15:00 +03:00 =CF=D4 Arn=
+d Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > >=20
+> > > On Friday 13 May 2016 14:26:28 Alexander Shiyan wrote:
+> > ...
+=2E..
+> > > > +		clks: clks@80000000 {
+> > > > +			#clock-cells =3D <1>;
+> > > > +			compatible =3D "cirrus,clps711x-clk";
+> > > > +			reg =3D <0x80000000 0xc000>;
+> > > > +			startup-frequency =3D <73728000>;
+> > > > +		};
+> > ...
+> > > > +		intc: intc@80000000 {
+> > > > +			compatible =3D "cirrus,clps711x-intc";
+> > > > +			reg =3D <0x80000000 0x4000>;
+> > > > +			interrupt-controller;
+> > > > +			#interrupt-cells =3D <1>;
+> > > > +		};
+> > >=20
+> > > Better make the register ranges non-overlapping. This appears
+> > > to start at the same place as the 'clks' node.
+> >=20
+> > CLK driver uses:
+> > #define CLPS711X_SYSCON1 (0x0100)
+> > #define CLPS711X_SYSCON2 (0x1100)
+> > ...
+> > #define CLPS711X_PLLR (0xa5a8)
+> >=20
+> > IRQCHIP driver uses:
+> > #define CLPS711X_INTSR1 (0x0240)
+> > ...
+> > #define CLPS711X_INTSR2 (0x1240)
+> > ...
+> > #define CLPS711X_INTMR3 (0x2280)
+> >=20
+> > So there is no way to do any else.
 >=20
-> I recently received a hint that it would be nice/expected to have DTS
-> files licensed under BSD. I had no experience with BSD, so I started
-> looking at this and the way kernel parts use it.
+> It sounds like what you have is a large system controller that
+> has registers everywhere. Could you use syscon to access the
+> individual registers instead?
 
-There is a lot of sloppiness in some of the driver code.
-Unfortunately, fixing it is something that really has to be done by
-the copyright holder, or whoever submitted the kernel in the first
-place and who has clear knowledge of what the copyright holder had
-intended.
+There are several problems:
+- The syscon driver must be initialized before any other devices,
+  including the interrupt controller and clk/clocksource subsystems.
+- A slight performance impact will be observed in the interrupt handler=
+=2E
+- SYSCON (regmap) is designed to use with equal the width of registers,
+  while we need to use different widths (8/16/32) for some subsystems.
 
-There is also a fairly wide range of seriousness of the various
-defects you've listed.  On one extreme, although it's true that some
-license, such as the ClearBSD license has <Organization> in its
-template, when the original code file you've referenced has in its head=
-er:
-
- * Copyright 2004-2012 Analog Devices Inc.
- * Licensed under the Clear BSD license.
-
-=2E...tt's pretty obvious that Organization should be "Analog Devices I=
-nc".
-
-In other cases, it's pretty clear that someone copied the drivers from
-some out-of-tree distribution (e.g., "see kernel-base/COPYING...") and
-where finding the original distribution and then adding the Copyright
-permission statement is a pretty easy thing to do.  (And in case where
-a third party can easily show proof that the intent of the copyright
-holder is clearly expressed, that third party probably is able to
-submit a patch to fix up the source file.
-
-> I'm wondering how we could improve this situation. I got 2 main ideas=
-:
->=20
-> 1) Extend MODULE_LICENSE
-> We could add new acceptable entries specifying BSD version. We could
-> try to improve checkpatch.pl to look for a full license in a header
-> (it seems to be required as it has to provide <organization>). Maybe
-> we could figure out (with some lawyers?) how to treat sources using
-> "Dual BSD/GPL" mentioning GPL only (without BSD) in their header.
-
-I'm not a fan of this approach.  MODULE_LICENSE puts a hint about the
-copyright license of a module where it can be found by the module
-loader.  This is useful to enforce things like GPL_SYMBOL_EXPORT, but
-I don't think we should try to make MODULE_LICESE to be more than
-that.
-
-> 2) Get clear rules on how to write a header
-> If you find extending MODULE_LICENSE a bad idea, maybe we can simply
-> help people write proper headers. Explain the problem, provide
-> examples, maybe add some check in checkpatch.pl.
-
-Adding more text about how to add a proper copyright notice and
-license permission statement to the SubmittingDrivers file seems like
-a good idea.
-
-I doubt we can make checkpatch.pl smart enough to handle this
-situation cleanly.
-
-Cheers,
-
-						- Ted
+--=20
+Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
