@@ -1,82 +1,63 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: clps711x: Add basic Cirrus Logic CDB89712
- Development board
-Date: Sun, 15 May 2016 09:07:48 +0300
-Message-ID: <20160515090748.05db9e6cdff743f26bd6c1fb@mail.ru>
-References: <1463138788-5390-1-git-send-email-shc_work@mail.ru>
-	<9407200.bOeiVUkGKT@wuerfel>
-	<1463142623.38124260@f381.i.mail.ru>
-	<6057172.X40sTfvRlk@wuerfel>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCHv2] i2c: rcar: add DMA support
+Date: Sun, 15 May 2016 08:52:04 +0200
+Message-ID: <20160515065204.GA1846@katana>
+References: <1463228228-32560-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=KOI8-R
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6057172.X40sTfvRlk@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1463228228-32560-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 May 2016 15:41:11 +0200
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-> On Friday 13 May 2016 15:30:23 Alexander Shiyan wrote:
-> > Hello.
-> >=20
-> > > =F0=D1=D4=CE=C9=C3=C1, 13 =CD=C1=D1 2016, 15:00 +03:00 =CF=D4 Arn=
-d Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> > >=20
-> > > On Friday 13 May 2016 14:26:28 Alexander Shiyan wrote:
-> > ...
-=2E..
-> > > > +		clks: clks@80000000 {
-> > > > +			#clock-cells =3D <1>;
-> > > > +			compatible =3D "cirrus,clps711x-clk";
-> > > > +			reg =3D <0x80000000 0xc000>;
-> > > > +			startup-frequency =3D <73728000>;
-> > > > +		};
-> > ...
-> > > > +		intc: intc@80000000 {
-> > > > +			compatible =3D "cirrus,clps711x-intc";
-> > > > +			reg =3D <0x80000000 0x4000>;
-> > > > +			interrupt-controller;
-> > > > +			#interrupt-cells =3D <1>;
-> > > > +		};
-> > >=20
-> > > Better make the register ranges non-overlapping. This appears
-> > > to start at the same place as the 'clks' node.
-> >=20
-> > CLK driver uses:
-> > #define CLPS711X_SYSCON1 (0x0100)
-> > #define CLPS711X_SYSCON2 (0x1100)
-> > ...
-> > #define CLPS711X_PLLR (0xa5a8)
-> >=20
-> > IRQCHIP driver uses:
-> > #define CLPS711X_INTSR1 (0x0240)
-> > ...
-> > #define CLPS711X_INTSR2 (0x1240)
-> > ...
-> > #define CLPS711X_INTMR3 (0x2280)
-> >=20
-> > So there is no way to do any else.
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, May 14, 2016 at 02:17:08PM +0200, Niklas S=C3=B6derlund wrote:
+> Make it possible to transfer i2c message buffers via DMA.
+> Start/Stop/Sending_Slave_Address and some data is still handled using
+> the old state machine, it is sending the bulk of the data that is done
+> via DMA.
 >=20
-> It sounds like what you have is a large system controller that
-> has registers everywhere. Could you use syscon to access the
-> individual registers instead?
+> The first byte of a transmission and the last two bytes of reception are
+> sent/received using PIO. This is needed for the HW to have access to the
+> first byte before DMA transmit and to be able to set the STOP condition
+> for DMA reception.
+>=20
+> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
+> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-There are several problems:
-- The syscon driver must be initialized before any other devices,
-  including the interrupt controller and clk/clocksource subsystems.
-- A slight performance impact will be observed in the interrupt handler=
-=2E
-- SYSCON (regmap) is designed to use with equal the width of registers,
-  while we need to use different widths (8/16/32) for some subsystems.
+Fixed a checkpatch warning (trailing */) and applied to for-next,
+thanks!
 
---=20
-Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--VS++wcV0S1rZb1Fb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXOByUAAoJEBQN5MwUoCm23tUP/35G0Tmb9gBCeO/iHIxLZLn2
+xJdbCB3ExP1uVW59HRph5BW4HEA+sHdntdTXexREa0/r4pLE3PzOS/TCOx81ajBv
+0GnZKXuap/r/zOnFEaRv02KaBNby+pQlCamQeY+i7oBCiYVH2AcPwv/BwQ8V39uy
+Hz3UF+KIJcfVBS96F5Ci/ITu+dMzIjhxoYo2JEreFBjJLh14Kj84ZWzn+wUfqzPc
+hoCrj89NWortSeKruOCuPL67uJzbWmVe/RqooNGJsUpzmRB29RRKFpkxf/PrUapa
+XZHDpFpbkU3GoLj8JpqJC1esh08H4orUCnq5xY0Z+SuLYZuPLRrwDcmQtlBurIgF
+zCBWXrEMzDjbWwmCbXV5CFxh64uKewseqYpyKlzY1QzoFvU4kusSKINefOBfAFJp
+UbNCzm4r4Agv/AWZ4IlC1mb+WB+689/yEJIExFKYbwKkJXyBycKn6KL4UXZR02Wp
+CEzu2s4r8eo8brTTEj4uD346mU45K6F5HQnB2Jzr8jFJ+TXefx9S1+NpIGEfs/l5
+TgdhIMYmMi2oO5ldNf6NGDNdpcjRYefXhAHNyr6WJUauWeFc0Uhj+6/PIdignKsR
+2vY/nbQReRLFLVnOvgZGvb7e9GFEPIFY0QUGn167WY2XP2oW8osuAxJR2loTzIsi
+Tt1X05d8w+nkR2FSm+LH
+=SdPA
+-----END PGP SIGNATURE-----
+
+--VS++wcV0S1rZb1Fb--
