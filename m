@@ -1,258 +1,253 @@
-From: "jeffrey.lin" <yajohn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Mon, 16 May 2016 23:46:51 +0800
-Message-ID: <1463413611-367-1-git-send-email-jeffrey.lin@rad-ic.com>
-References: <20160513041852.GA8932@dtor-ws>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160513041852.GA8932@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jeesw-iQTvn4YitUrQT0dZR+AlfA@public.gmane.org, bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: jeffrey.lin-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, roger.yang-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, KP.li-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, albert.shieh-s3Ivl27awEzQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm: tegra: initial support for apalis tk1
+Date: Mon, 16 May 2016 10:55:42 -0500
+Message-ID: <20160516155542.GA25949@rob-hp-laptop>
+References: <1463056032-25888-1-git-send-email-marcel.ziswiler@toradex.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1463056032-25888-1-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry:
-I've finished issues under the format you suggested as below.
+On Thu, May 12, 2016 at 02:27:12PM +0200, Marcel Ziswiler wrote:
+> This patch adds the device tree to support Toradex Apalis TK1 a
+> computer on module which can be used on different carrier boards.
+> 
+> The module consists of a Tegra TK1 SoC, a PMIC solution, 2 GB of DDR3L
+> RAM, a bunch of level shifters, an eMMC, a TMP451 temperature sensor
+> chip and an I210 gigabit Ethernet controller. Furthermore, there is an
+> SGTL5000 audio codec plus a Kinetis MK20DN512 companion micro
+> controller for analogue, CAN and resistive touch functionality which
+> are not yet supported. Anything that is not self contained on the
+> module is disabled by default.
+> 
+> The device tree for the Evaluation Board includes the module's device
+> tree and enables the supported peripherals of the carrier board (the
+> Evaluation Board supports almost all of them).
+> 
+> While at it also add the device tree binding documentation for Apalis
+> TK1 as well as for Colibri T30 which was missing so far.
 
->#define RM_RESET_MSG_ADDR	0x40000004
->#define RM_FASTBOOT_MSG_ADDR	0x50000620
+"While at it" and "also" are keywords for put in a separate patch.
 
->#define RM_MAX_READ_SIZE	63
-change maximum read size to 56 bytes
-#define RM_MAX_READ_SIZE	56
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> 
+> ---
+> 
+>  Documentation/devicetree/bindings/arm/tegra.txt |    4 +
+>  arch/arm/boot/dts/Makefile                      |    1 +
+>  arch/arm/boot/dts/tegra124-apalis-emc.dtsi      | 2462 +++++++++++++++++++++++
+>  arch/arm/boot/dts/tegra124-apalis-eval.dts      |  283 +++
+>  arch/arm/boot/dts/tegra124-apalis.dtsi          | 2058 +++++++++++++++++++
+>  5 files changed, 4808 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/tegra124-apalis-emc.dtsi
+>  create mode 100644 arch/arm/boot/dts/tegra124-apalis-eval.dts
+>  create mode 100644 arch/arm/boot/dts/tegra124-apalis.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+> index 73278c6..7709f3d 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
+> @@ -31,8 +31,12 @@ board-specific compatible values:
+>    nvidia,ventana
+>    nvidia,whistler
+>    toradex,apalis_t30
+> +  toradex,apalis_tk1
+>    toradex,apalis_t30-eval
+> +  toradex,apalis_tk1-eval
+>    toradex,colibri_t20-512
+> +  toradex,colibri_t30
+> +  toradex,colibri_t30-eval-v3
+>    toradex,iris
 
->#define RM_CONTACT_X_POS	1
->#define RM_CONTACT_Y_POS	3
->#define RM_CONTACT_PRESSURE_POS	5 // XXX - check - original was 4
-#define RM_CONTACT_PRESSURE_POS	5	/*FIXME, correct 5*/
+Please use '-' rather than '_' for new strings even if that's what 
+previous strings have. For ones that already in use in upstream dts 
+files, then keep the underscore.
 
->#define RM_BL_WRT_CMD_SIZE	3	/* bl flash wrt cmd size */
->#define RM_BL_WRT_PKG_SIZE	32	/* bl wrt pkg size */
->#define RM_BL_WRT_LEN		(RM_BL_WRT_PKG_SIZE + RM_BL_WRT_CMD_SIZE)
->#define RM_FW_PAGE_SIZE		128
->#define RM_MAX_FW_RETRIES	30
-additional maximum firmware size for protection
-#define RM_MAX_FW_SIZE		(0xD000)	/*define max firmware size*/
+>  
+>  Trusted Foundations
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 06b6c2d..3a13d4f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -793,6 +793,7 @@ dtb-$(CONFIG_ARCH_TEGRA_114_SOC) += \
+>  	tegra114-roth.dtb \
+>  	tegra114-tn7.dtb
+>  dtb-$(CONFIG_ARCH_TEGRA_124_SOC) += \
+> +	tegra124-apalis-eval.dtb \
+>  	tegra124-jetson-tk1.dtb \
+>  	tegra124-nyan-big.dtb \
+>  	tegra124-nyan-blaze.dtb \
+> diff --git a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
+> new file mode 100644
+> index 0000000..31b31ea
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
+> @@ -0,0 +1,2462 @@
+> +/*
+> + * Copyright 2016 Toradex AG
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/ {
+> +	clock@0,60006000 {
 
->static int raydium_i2c_read_message(struct i2c_client *client,
->				    u32 addr, void *data, size_t len)
->{
->	__be32 be_addr;
->	size_t xfer_len;
->	int error;
->	while (len) {
->		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
->
->		be_addr = cpu_to_be32(addr);
->
->		error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
->					 &be_addr, sizeof(be_addr));
->		if (!error)
->			error = raydium_i2c_read(client, addr & 0xff,
->						 data, xfer_len);
-Change as:
-		if (!error)
-			error = raydium_i2c_read(client, (be_addr >> 24) & 0xff,
-						 data, xfer_len);
+All these commas should be dropped. These have been fixed in -next and 
+will go into 4.7.
 
->static int raydium_i2c_send_message(struct i2c_client *client,
->				    u32 addr, const void *data, size_t len)
->{
->	__be32 be_addr = cpu_to_be32(addr);
->	int error;
->	error = raydium_i2c_send(client, RM_CMD_BANK_SWITCH,
->				 &be_addr, sizeof(be_addr));
->	if (!error)
->		error = raydium_i2c_send(client, addr & 0xff, data, len);
-Change as:
-		error = raydium_i2c_send(client, (be_addr >> 24) & 0xff,
-				data, len);
+> +		emc-timings-1 {
+> +			nvidia,ram-code = <1>;
+> +
+> +			timing-12750000 {
+> +				clock-frequency = <12750000>;
+> +				nvidia,parent-clock-frequency = <408000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-20400000 {
+> +				clock-frequency = <20400000>;
+> +				nvidia,parent-clock-frequency = <408000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-40800000 {
+> +				clock-frequency = <40800000>;
+> +				nvidia,parent-clock-frequency = <408000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-68000000 {
+> +				clock-frequency = <68000000>;
+> +				nvidia,parent-clock-frequency = <408000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-102000000 {
+> +				clock-frequency = <102000000>;
+> +				nvidia,parent-clock-frequency = <408000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-204000000 {
+> +				clock-frequency = <204000000>;
+> +				nvidia,parent-clock-frequency = <408000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-300000000 {
+> +				clock-frequency = <300000000>;
+> +				nvidia,parent-clock-frequency = <600000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_C>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-396000000 {
+> +				clock-frequency = <396000000>;
+> +				nvidia,parent-clock-frequency = <792000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_M>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-528000000 {
+> +				clock-frequency = <528000000>;
+> +				nvidia,parent-clock-frequency = <528000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-600000000 {
+> +				clock-frequency = <600000000>;
+> +				nvidia,parent-clock-frequency = <600000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_C_UD>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-792000000 {
+> +				clock-frequency = <792000000>;
+> +				nvidia,parent-clock-frequency = <792000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
+> +				clock-names = "emc-parent";
+> +			};
+> +			timing-924000000 {
+> +				clock-frequency = <924000000>;
+> +				nvidia,parent-clock-frequency = <924000000>;
+> +				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
+> +				clock-names = "emc-parent";
+> +			};
+> +		};
+> +	};
+> +
+> +	emc@0,7001b000 {
+> +		emc-timings-1 {
+> +			nvidia,ram-code = <1>;
+> +
+> +			timing-12750000 {
+> +				clock-frequency = <12750000>;
+> +
+> +				nvidia,emc-auto-cal-config = <0xa1430000>;
+> +				nvidia,emc-auto-cal-config2 = <0x00000000>;
+> +				nvidia,emc-auto-cal-config3 = <0x00000000>;
+> +				nvidia,emc-auto-cal-interval = <0x001fffff>;
+> +				nvidia,emc-bgbias-ctl0 = <0x00000008>;
+> +				nvidia,emc-cfg = <0x73240000>;
+> +				nvidia,emc-cfg-2 = <0x000008c5>;
+> +				nvidia,emc-ctt-term-ctrl = <0x00000802>;
+> +				nvidia,emc-mode-1 = <0x80100003>;
+> +				nvidia,emc-mode-2 = <0x80200008>;
+> +				nvidia,emc-mode-4 = <0x00000000>;
+> +				nvidia,emc-mode-reset = <0x80001221>;
+> +				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
+> +				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
+> +				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
+> +				nvidia,emc-zcal-cnt-long = <0x00000042>;
+> +				nvidia,emc-zcal-interval = <0x00000000>;
+> +
+> +				nvidia,emc-configuration = <
+> +					0x00000000
+> +					0x00000003
 
+This is a bit long. Do multiple values per line.
 
->static int raydium_i2c_fastboot(struct i2c_client *client)
->{
-	/*FIXME;Correct, direct access mode is word alignment*/
->	u8 buf[4];
->	int error;
->
->	error = raydium_i2c_read_message(client, RM_FASTBOOT_MSG_ADDR,
->					 buf, sizeof(buf));
-
->static int raydium_i2c_check_fw_status(struct raydium_data *ts)
->{
->	struct i2c_client *client = ts->client;
->	static const u8 bl_area[] = { 0x62, 0x6f, 0x6f, 0x74 };
->	static const u8 main_area[] = { 0x66, 0x69, 0x72, 0x6d };
->	u8 buf[4];
->	int error;
->
->	error = raydium_i2c_read(client, RM_CMD_BOOT_READ, buf, sizeof(buf));
->	if (!error) {
->		// XXX FIXME: why do we compare only 1st bytes? Do we even
->		// need 4-byte constants?
->		if (buf[0] == bl_area[0])
->			ts->boot_mode = RAYDIUM_TS_BLDR;
->		else if (buf[0] == main_area[0])
->			ts->boot_mode = RAYDIUM_TS_MAIN;
->		return 0;
->	}
->
->	return error;
->}
-Change as below,
-static int raydium_i2c_check_fw_status(struct raydium_data *ts)
-{
-	struct i2c_client *client = ts->client;
-	static const u8 bl_ack = 0x62;
-	static const u8 main_ack = 0x66;
-	u8 buf[4];
-	int error;
-
-	error = raydium_i2c_read(client, RM_CMD_BOOT_READ, buf, sizeof(buf));
-	if (!error) {
-		/*FIXME, changed as one byte comparison*/
-		if (buf[0] == bl_ack)
-			ts->boot_mode = RAYDIUM_TS_BLDR;
-		else if (buf[0] == main_ack)
-			ts->boot_mode = RAYDIUM_TS_MAIN;
-		return 0;
-	}
-
-	return error;
-}
-
->static int raydium_i2c_fw_write_page(struct i2c_client *client,
->				     u8 page_idx, void *data, size_t len)
->{
->	u8 buf[RM_BL_WRT_LEN];
->	u8 pkg_idx = 1;
->	size_t xfer_len;
->	int error;
->
->	while (len) {
->		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
->
->		buf[BL_HEADER] = 0x0b;
->		// XXX FIXME: is this correct? Do we really want all pages
->		// after 1st to have 0xff? Should it be a counter?
->		// Why do we need both pages and packages within pages?
->		buf[BL_PAGE_STR] = page_idx ? 0 : 0xff;
->		buf[BL_PKG_IDX] = pkg_idx;
->		memcpy(&buf[BL_DATA_STR], data, xfer_len);
->
->		error = raydium_i2c_write_object(client, buf, xfer_len,
->						 RAYDIUM_WAIT_READY);
->		if (error) {
->			dev_err(&client->dev,
->				"page write command failed for page %d, chunk %d: %d\n",
->				page_idx, pkg_idx, error);
->			return error;
->		}
->
->		msleep(20);
->
->		data += xfer_len;
->		len -= xfer_len;
->		pkg_idx++;
->	}
->
->	return error;
->}
-Because of need fully fill 128bytes in pages, so that function change as below:
-static int raydium_i2c_fw_write_page(struct i2c_client *client,
-				     u16 page_idx, const void *data, size_t len)
-{
-	u8 buf[RM_BL_WRT_LEN];
-	u8 pkg_idx = 1;
-	u8 div_cnt;
-	size_t xfer_len;
-	int error;
-	int i;
-
-	div_cnt = len % RM_BL_WRT_PKG_SIZE ?
-		len / RM_BL_WRT_PKG_SIZE + 1:len / RM_BL_WRT_PKG_SIZE;
-
-	for (i = 0; i < div_cnt; i++) {
-		xfer_len = min_t(size_t, len, RM_BL_WRT_PKG_SIZE);
-		buf[BL_HEADER] = RM_CMD_BOOT_PAGE_WRT;
-		/*FIXME,Touch MCU need zero index as start page*/
-		buf[BL_PAGE_STR] = page_idx ? 0xff : 0;
-		buf[BL_PKG_IDX] = pkg_idx++;
-
-		memcpy(&buf[BL_DATA_STR], data, xfer_len);
-
-		if (len == 0)
-			memset(buf + BL_DATA_STR, 0xff, RM_BL_WRT_PKG_SIZE);
-		else if (len < RM_BL_WRT_PKG_SIZE)
-			memset(buf + BL_DATA_STR + xfer_len, 0xff,
-			RM_BL_WRT_PKG_SIZE - xfer_len);
-
-		error = raydium_i2c_write_object(client, buf, RM_BL_WRT_LEN,
-						 RAYDIUM_WAIT_READY);
-		if (error) {
-			dev_err(&client->dev,
-				"page write command failed for page %d, chunk %d: %d\n",
-				page_idx, pkg_idx, error);
-			return error;
-		}
-		data += RM_BL_WRT_PKG_SIZE;
-		len -= RM_BL_WRT_PKG_SIZE;
-	}
-
-	return error;
-}
-
->static void raydium_mt_event(struct raydium_data *ts)
->{
->	int i;
->	int error;
-memory allocate
-	ts->report_data = kmalloc(ts->report_size, GFP_KERNEL);
-	if (!ts->report_data)
-		return;
->
->	error = raydium_i2c_read_message(ts->client, ts->data_bank_addr,
->					 ts->report_data, ts->report_size);
->	if (error) {
->		dev_err(&ts->client->dev, "%s: failed to read data: %d\n",
->			__func__, error);
->		return;
-		goto out_of_event;
->	}
->
->
->	for (i = 0; i < ts->report_size / ts->contact_size; i++) {
->		u8 *contact = &ts->report_data[ts->contact_size * i];
->		bool state = contact[RM_CONTACT_STATE_POS];
->		u8 wx, wy;
->
->		input_mt_slot(ts->input, i);
->		input_mt_report_slot_state(ts->input, MT_TOOL_FINGER, state);
->
->		if (!state)
->			continue;
->
->		input_report_abs(ts->input, ABS_MT_POSITION_X,
->				get_unaligned_le16(&contact[RM_CONTACT_X_POS]));
->		input_report_abs(ts->input, ABS_MT_POSITION_Y,
->				get_unaligned_le16(&contact[RM_CONTACT_Y_POS]));
->		input_report_abs(ts->input, ABS_MT_PRESSURE,
->				contact[RM_CONTACT_PRESSURE_POS]);
->
->		wx = contact[RM_CONTACT_WIDTH_X_POS];
->		wy = contact[RM_CONTACT_WIDTH_Y_POS];
->
->		input_report_abs(ts->input, ABS_MT_TOUCH_MAJOR, max(wx, wy));
->		input_report_abs(ts->input, ABS_MT_TOUCH_MINOR, min(wx, wy));
->	}
->
->	input_mt_sync_frame(ts->input);
->	input_sync(ts->input);
-out_of_event:
-	kfree(ts->report_data);
->}
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +					0x00000000
+> +					0x00000000
+> +					0x00000000
+> +					0x00000004
+> +					0x0000000a
+> +					0x00000005
