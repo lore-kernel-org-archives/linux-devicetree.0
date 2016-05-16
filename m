@@ -1,96 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Increase the size of GIC-400 mapped
- registers
-Date: Mon, 16 May 2016 17:12:57 +0900
-Message-ID: <20160516081257.GC4955@verge.net.au>
-References: <1461047395-6532-1-git-send-email-dirk.behme@de.bosch.com>
- <20160427233028.GA5155@verge.net.au>
- <5721A2A5.9010908@de.bosch.com>
- <20160428234345.GD18128@verge.net.au>
- <20160429113515.333c42ef@arm.com>
- <5728E470.7050408@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 05/23] ARM: dts: r8a7790: Fix W=1 dtc warnings
+Date: Mon, 16 May 2016 10:15:33 +0200
+Message-ID: <CAMuHMdXxNS309-wB3tsuBzps9vqYDvqq2bd=9H_XXemELvcFSA@mail.gmail.com>
+References: <1463126163-29423-1-git-send-email-geert+renesas@glider.be>
+	<1463126163-29423-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5728E470.7050408@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, julien.grall@arm.com, geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Pooya Keshavarzi <Pooya.Keshavarzi@de.bosch.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1463126163-29423-6-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
+On Fri, May 13, 2016 at 9:55 AM, Geert Uytterhoeven
+<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -127,6 +127,22 @@
+>                         power-domains = <&sysc R8A7790_PD_CA7_CPU3>;
+>                         next-level-cache = <&L2_CA7>;
+>                 };
+> +
+> +               L2_CA15: cache-controller@0 {
+> +                       compatible = "cache";
+> +                       reg = <0>;
+> +                       power-domains = <&sysc R8A7790_PD_CA15_SCU>;
+> +                       cache-unified;
+> +                       cache-level = <2>;
+> +               };
+> +
+> +               L2_CA7: cache-controller@100 {
+> +                       compatible = "cache";
+> +                       reg = <100>;
 
-On Tue, May 03, 2016 at 07:48:32PM +0200, Dirk Behme wrote:
-> Hi Simon,
-> 
-> On 29.04.2016 12:35, Marc Zyngier wrote:
-> >On Fri, 29 Apr 2016 09:43:45 +1000
-> >Simon Horman <horms@verge.net.au> wrote:
-> >
-> >>[Cc Mark Zyngier, linux-arm-kernel]
-> >>
-> >>Hi Dirk,
-> >>
-> >>On Thu, Apr 28, 2016 at 07:41:57AM +0200, Dirk Behme wrote:
-> >>>Hi Simon,
-> >>>
-> >>>On 28.04.2016 01:30, Simon Horman wrote:
-> >>>>Hi Dirk,
-> >>>>
-> >>>>I understand that there is an issue here but I'm not yet able
-> >>>>to convince myself that this is the correct solution.
-> >>>>
-> >>>>In revision r0p1 of the CoreLink GIC-400 Generic Interrupt Controller
-> >>>>Technical Reference Manual[1] I see in Section 3.2. "GIC-400 register map"
-> >>>>that the size of both the CPU interfaces and Virtual CPU interfaces are
-> >>>>0x2000 bytes. And assuming that the hardware follows the specification it
-> >>>>appears that DT is correctly describing the hardware.
-> >>>
-> >>>
-> >>>I think you are missing the details described by ARM in
-> >>>
-> >>>http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=21550029f709072aacf3b9
-> >>>
-> >>>
-> >>>Maybe Julien could help if you have some more doubts?
-> >>
-> >>I guess I am confused.
-> >>
-> >>I see that there is now handling of the case where the region size is
-> >>128Kbytes. But I'm still not seeing the bit which describes that the
-> >>GIC-400  has a region size of 128Kbytes. Perhaps the later is somehow
-> >>implied by the former. Or perhaps I need to check with the hw team.
-> >
-> >Please have a look at the SBSA document, and in particular the
-> >Appendix-F (registration and selling your soul required - only kidding):
-> >
-> >http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0029/index.html
-> >
-> >This requires that, in order for the two halves of GICV to be trappable
-> >*separately* by a hypervisor using 64kB pages at Stage-2, the two 4kB
-> >pages that describe that region are aliased as such:
-> >- the first 4kB page is aliased 16 times over a 64kB region
-> >- the second 4kB page is aliased 16 times over another contiguous 64kB
-> >   region
-> >
-> >This means that your GIC is indeed covering a 128kB region, with the
-> >mapping corresponding to the GICv2 memory map located at offset 0xf000
-> >from the base of that 128kB region. Also, this GICV requirement also
-> >applies to GICC (most likely because the two regions use the same
-> >decoding logic).
-> >
-> >The OS must of course be aware of this (see gic_check_eoimode in the
-> >GIC driver). Of course, almost nobody got that right (I only know of
-> >the APM Xgene-1 so far). If you actually did, great!
-> >
-> >Also, the ACPI spec fails to recognize this by not providing the length
-> >of the region, meaning that those who got it right with DT are likely
-> >to get it wrong with ACPI, and vice-versa.
-> >
-> >It's a wonderful world.
-> 
-> 
-> Could this patch be applied, then?
+Oops, <0x100>
 
-Yes I have now done so :)
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
