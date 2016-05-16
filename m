@@ -1,217 +1,267 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] arm64: dts: rockchip: add i2c nodes for rk3399
-Date: Mon, 16 May 2016 13:09:31 -0700
-Message-ID: <1463429371-10950-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, david.wu@rock-chips.com, jay.xu@rock-chips.com, briannorris@chromium.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] of: Support hashtable lookups for phandles
+Date: Mon, 16 May 2016 23:13:50 +0300
+Message-ID: <4BD4C1D6-D647-4029-A1E9-C432638C7072@konsulko.com>
+References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com> <1463417556-23087-3-git-send-email-pantelis.antoniou@konsulko.com> <CAL_Jsq+J4QF5jvUOF_J71W0YWswTBSu=RZkwy+=gR2F-dwq7XA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+J4QF5jvUOF_J71W0YWswTBSu=RZkwy+=gR2F-dwq7XA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Wu <david.wu@rock-chips.com>
+Hi Rob,
 
-We've got 9 (count em!) i2c controllers on rk3399, some of which are in
-the PMU power domain and some of which are normal peripherals.  Add them
-all to the main rk3399 dtsi file so future patches can turn them on in
-the board dts files.
+> On May 16, 2016, at 22:37 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
+:
+>=20
+> On Mon, May 16, 2016 at 11:52 AM, Pantelis Antoniou
+> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> When a device tree contains a lot of phandles, resolving one
+>> takes time because the original method uses a search against
+>> all nodes (not just the ones with phandles).
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>> ---
+>> drivers/of/base.c       | 41 ++++++++++++++++++++++++++++++++++++++-=
+--
+>> drivers/of/dynamic.c    |  8 ++++++++
+>> drivers/of/of_private.h | 33 +++++++++++++++++++++++++++++++++
+>> include/linux/of.h      |  2 ++
+>> 4 files changed, 81 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index 20bbc2f..436a088 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -27,6 +27,7 @@
+>> #include <linux/slab.h>
+>> #include <linux/string.h>
+>> #include <linux/proc_fs.h>
+>> +#include <linux/rhashtable.h>
+>>=20
+>> #include "of_private.h"
+>>=20
+>> @@ -41,6 +42,18 @@ static const char *of_stdout_options;
+>>=20
+>> struct kset *of_kset;
+>>=20
+>> +const struct rhashtable_params of_phandle_ht_params =3D {
+>=20
+> static
+>=20
 
-Note: by default we try to set the i2c clock rate to 200 MHz so that we
-can achieve good i2c functional clock rates.  200 MHz gives us the
-ability to make very close to 100 kHz / 400 kHz / 1 MHz rates.  If
-boards want to tune clock rates further they can always override.
-Possibly boards could want to tune this if:
-- they wanted to save an infinitesimal amount of power and they knew
-  their i2c bus was slow anyway.  Since we gate the functional clock
-  when the i2c bus is not active, power savings would only be while i2c
-  transfers were happening and probably won't be very big anyway.
-- they wanted to eek out a bit more speed by carefully tuning the source
-  clock to make divisions work out perfectly, accounting for the rise /
-  fall time measured on an actual board.
+No, it won=E2=80=99t work. The rhashtable API requires using this at ev=
+ery call.
 
-Note also that we still request 200 MHz for the PMU i2c busses even
-though we expect that we won't make that exactly (currently PPLL is 676
-MHz which gives us 169 MHz).
 
-Signed-off-by: David Wu <david.wu@rock-chips.com>
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-[dianders: wrote desc; put in assigned-clocks; reordered nodes]
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-Note: this patch is based upon David Wu's patch series to add rk3399
-support to i2c-rk3x.c and shouldn't land until at least device tree
-bindings land.
+>> +       .key_offset =3D offsetof(struct device_node, phandle), /* ba=
+se offset */
+>> +       .key_len =3D sizeof(phandle),
+>> +       .head_offset =3D offsetof(struct device_node, ht_node),
+>> +       .automatic_shrinking =3D true,
+>> +};
+>> +
+>> +struct rhashtable *of_phandle_ht;
+>> +
+>> +/* default is false */
+>> +bool of_phandle_ht_is_disabled;
+>=20
+> I think this should go. The unittest alone is not enough reason to ke=
+ep.
+>=20
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 144 +++++++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
+Hmm, OK.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 46f325a143b0..753a91728b4c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -54,6 +54,15 @@
- 	#size-cells = <2>;
- 
- 	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+		i2c6 = &i2c6;
-+		i2c7 = &i2c7;
-+		i2c8 = &i2c8;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-@@ -272,6 +281,96 @@
- 		};
- 	};
- 
-+	i2c1: i2c@ff110000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff110000 0x0 0x1000>;
-+		assigned-clocks = <&cru SCLK_I2C1>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&cru SCLK_I2C1>, <&cru PCLK_I2C1>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c1_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@ff120000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff120000 0x0 0x1000>;
-+		assigned-clocks = <&cru SCLK_I2C2>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&cru SCLK_I2C2>, <&cru PCLK_I2C2>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c3: i2c@ff130000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff130000 0x0 0x1000>;
-+		assigned-clocks = <&cru SCLK_I2C3>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&cru SCLK_I2C3>, <&cru PCLK_I2C3>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c3_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c5: i2c@ff140000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff140000 0x0 0x1000>;
-+		assigned-clocks = <&cru SCLK_I2C5>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&cru SCLK_I2C5>, <&cru PCLK_I2C5>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c5_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c6: i2c@ff150000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff150000 0x0 0x1000>;
-+		assigned-clocks = <&cru SCLK_I2C6>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&cru SCLK_I2C6>, <&cru PCLK_I2C6>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c6_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c7: i2c@ff160000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff160000 0x0 0x1000>;
-+		assigned-clocks = <&cru SCLK_I2C7>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&cru SCLK_I2C7>, <&cru PCLK_I2C7>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c7_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	uart0: serial@ff180000 {
- 		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
- 		reg = <0x0 0xff180000 0x0 0x100>;
-@@ -420,6 +519,51 @@
- 		status = "disabled";
- 	};
- 
-+	i2c0: i2c@ff3c0000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff3c0000 0x0 0x1000>;
-+		assigned-clocks = <&pmucru SCLK_I2C0_PMU>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&pmucru SCLK_I2C0_PMU>, <&pmucru PCLK_I2C0_PMU>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c0_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c4: i2c@ff3d0000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff3d0000 0x0 0x1000>;
-+		assigned-clocks = <&pmucru SCLK_I2C4_PMU>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&pmucru SCLK_I2C4_PMU>, <&pmucru PCLK_I2C4_PMU>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c4_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c8: i2c@ff3e0000 {
-+		compatible = "rockchip,rk3399-i2c";
-+		reg = <0x0 0xff3e0000 0x0 0x1000>;
-+		assigned-clocks = <&pmucru SCLK_I2C8_PMU>;
-+		assigned-clock-rates = <200000000>;
-+		clocks = <&pmucru SCLK_I2C8_PMU>, <&pmucru PCLK_I2C8_PMU>;
-+		clock-names = "i2c", "pclk";
-+		interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c8_xfer>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	pwm0: pwm@ff420000 {
- 		compatible = "rockchip,rk3399-pwm", "rockchip,rk3288-pwm";
- 		reg = <0x0 0xff420000 0x0 0x10>;
--- 
-2.8.0.rc3.226.g39d4020
+>> +
+>> /*
+>>  * Used to protect the of_aliases, to hold off addition of nodes to =
+sysfs.
+>>  * This mutex must be held whenever modifications are being made to =
+the
+>> @@ -162,6 +175,12 @@ int __of_attach_node_post(struct device_node *n=
+p)
+>>        struct property *pp;
+>>        int rc;
+>>=20
+>> +       if (of_phandle_ht_available()) {
+>=20
+> This can never be false as this function should only get called after=
+ init.
+>=20
+
+How about a BUG_ON() just in case something weird is going on?
+
+>> +               rc =3D of_phandle_ht_insert(np);
+>> +               WARN(rc, "insert to phandle hash fail @%s\n",
+>> +                               of_node_full_name(np));
+>> +       }
+>> +
+>>        if (!IS_ENABLED(CONFIG_SYSFS))
+>>                return 0;
+>>=20
+>> @@ -194,6 +213,17 @@ void __init of_core_init(void)
+>>        struct device_node *np;
+>>        int ret;
+>>=20
+>> +       of_phandle_ht =3D kzalloc(sizeof(*of_phandle_ht), GFP_KERNEL=
+);
+>> +       if (!of_phandle_ht) {
+>> +               pr_warn("devicetree: Failed to allocate hashtable\n"=
+);
+>> +               return;
+>> +       }
+>> +       ret =3D rhashtable_init(of_phandle_ht, &of_phandle_ht_params=
+);
+>> +       if (ret) {
+>> +               pr_warn("devicetree: Failed to initialize hashtable\=
+n");
+>> +               return;
+>> +       }
+>> +
+>>        /* Create the kset, and register existing nodes */
+>>        mutex_lock(&of_mutex);
+>>        of_kset =3D kset_create_and_add("devicetree", NULL, firmware_=
+kobj);
+>> @@ -1073,9 +1103,14 @@ struct device_node *of_find_node_by_phandle(p=
+handle handle)
+>>                return NULL;
+>>=20
+>>        raw_spin_lock_irqsave(&devtree_lock, flags);
+>> -       for_each_of_allnodes(np)
+>> -               if (np->phandle =3D=3D handle)
+>> -                       break;
+>> +       /* when we're ready use the hash table (and not disabled) */
+>> +       if (of_phandle_ht_available() && !of_phandle_ht_is_disabled)
+>=20
+> Just "if (of_phandle_ht)=E2=80=9D
+>=20
+
+OK
+
+
+>> +               np =3D of_phandle_ht_lookup(handle);
+>> +       else { /* fallback */
+>> +               for_each_of_allnodes(np)
+>> +                       if (np->phandle =3D=3D handle)
+>> +                               break;
+>> +       }
+>>        of_node_get(np);
+>>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>>        return np;
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index 34ca783..931b905 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -11,6 +11,7 @@
+>> #include <linux/slab.h>
+>> #include <linux/string.h>
+>> #include <linux/proc_fs.h>
+>> +#include <linux/rhashtable.h>
+>>=20
+>> #include "of_private.h"
+>>=20
+>> @@ -44,6 +45,13 @@ EXPORT_SYMBOL(of_node_put);
+>> void __of_detach_node_post(struct device_node *np)
+>> {
+>>        struct property *pp;
+>> +       int rc;
+>> +
+>> +       if (of_phandle_ht_available()) {
+>=20
+> Likewise, this can't be false either.
+>=20
+
+OK
+
+>> +               rc =3D of_phandle_ht_remove(np);
+>> +               WARN(rc, "remove from phandle hash fail @%s\n",
+>> +                               of_node_full_name(np));
+>> +       }
+>>=20
+>>        if (!IS_ENABLED(CONFIG_SYSFS))
+>>                return;
+>> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+>> index 10b0342..386ae71 100644
+>> --- a/drivers/of/of_private.h
+>> +++ b/drivers/of/of_private.h
+>> @@ -101,4 +101,37 @@ static inline int of_overlay_init(void)
+>> }
+>> #endif
+>>=20
+>> +extern const struct rhashtable_params of_phandle_ht_params;
+>> +extern struct rhashtable *of_phandle_ht;
+>> +
+>> +/* for unittest use */
+>> +extern bool of_phandle_ht_is_disabled;
+>> +
+>> +static inline bool of_phandle_ht_available(void)
+>> +{
+>> +       return of_phandle_ht !=3D NULL;
+>> +}
+>> +
+>> +static inline int of_phandle_ht_insert(struct device_node *np)
+>> +{
+>> +       if (!np || !np->phandle)
+>> +               return 0;
+>> +       return rhashtable_insert_fast(of_phandle_ht,
+>> +               &np->ht_node, of_phandle_ht_params);
+>> +}
+>> +
+>> +static inline int of_phandle_ht_remove(struct device_node *np)
+>> +{
+>> +       if (!np || !np->phandle)
+>> +               return 0;
+>> +       return rhashtable_remove_fast(of_phandle_ht,
+>> +               &np->ht_node, of_phandle_ht_params);
+>> +}
+>> +
+>> +static inline struct device_node *of_phandle_ht_lookup(phandle hand=
+le)
+>> +{
+>> +       return rhashtable_lookup_fast(of_phandle_ht,
+>> +                       &handle, of_phandle_ht_params);
+>> +}
+>> +
+>> #endif /* _LINUX_OF_PRIVATE_H */
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 18a8e59..9de9a3f 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -25,6 +25,7 @@
+>> #include <linux/notifier.h>
+>> #include <linux/property.h>
+>> #include <linux/list.h>
+>> +#include <linux/rhashtable.h>
+>>=20
+>> #include <asm/byteorder.h>
+>> #include <asm/errno.h>
+>> @@ -52,6 +53,7 @@ struct device_node {
+>>        phandle phandle;
+>>        const char *full_name;
+>>        struct fwnode_handle fwnode;
+>> +       struct rhash_head ht_node;
+>=20
+> Place next to .phandle as both will be accessed at the same time.
+>=20
+
+OK.
+
+>>=20
+>>        struct  property *properties;
+>>        struct  property *deadprops;    /* removed properties */
+>> --
+>> 1.7.12
+
+Regards
+
+=E2=80=94 Pantelis
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
