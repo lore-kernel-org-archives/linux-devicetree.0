@@ -1,254 +1,195 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 12/20] drm/sun4i: Add bridge support
-Date: Mon, 16 May 2016 15:12:15 +0200
-Message-ID: <CAKMK7uG-uq7XSqyesVnPtx0Ajx-FQjVKm_QzjEZgWJQDn8EkPA@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 13/20] drm/bridge: Add RGB to VGA bridge support
+Date: Mon, 16 May 2016 16:24:15 +0300
+Message-ID: <1773896.kpi58ilqqm@avalon>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
-	<1463402840-17062-13-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-14-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1463402840-17062-13-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463402840-17062-14-git-send-email-maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 16, 2016 at 2:47 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Our RGB bus can be either connected to a bridge or a panel. While the panel
-> support was already there, the bridge was not.
->
-> Fix that.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-For bridge support the only thing you need is to set
-drm_encoder->bridge. Why do you need to hand-roll your own bridge
-support? That pretty muchmeans you'll do it slightly differently (e.g.
-you don't bother with a lot of the calls), which will make sharing
-bridge drivers ever so harder. And also reviewing code, since using
-shared code but slightly differently is really confusing.
--Daniel
-
-> ---
->  drivers/gpu/drm/sun4i/sun4i_drv.c  |  4 +--
->  drivers/gpu/drm/sun4i/sun4i_rgb.c  | 56 +++++++++++++++++++++++++++-----------
->  drivers/gpu/drm/sun4i/sun4i_tcon.c | 48 ++++++++++++++++++++++++++++----
->  drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
->  4 files changed, 86 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> index 257d2b4f3645..1f9e00db747d 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> @@ -268,8 +268,8 @@ static int sun4i_drv_add_endpoints(struct device *dev,
->                 }
->
->                 /*
-> -                * If the node is our TCON, the first port is used for our
-> -                * panel, and will not be part of the
-> +                * If the node is our TCON, the first port is used for
-> +                * panel or bridges, and will not be part of the
->                  * component framework.
->                  */
->                 if (sun4i_drv_node_is_tcon(node)) {
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c b/drivers/gpu/drm/sun4i/sun4i_rgb.c
-> index b46d2c15dc95..c3c611b08269 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_rgb.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
-> @@ -161,7 +161,12 @@ static void sun4i_rgb_encoder_enable(struct drm_encoder *encoder)
->
->         DRM_DEBUG_DRIVER("Enabling RGB output\n");
->
-> -       drm_panel_enable(tcon->panel);
-> +       if (!IS_ERR(tcon->panel))
-> +               drm_panel_enable(tcon->panel);
-> +
-> +       if (!IS_ERR(tcon->bridge))
-> +               drm_bridge_enable(tcon->bridge);
-> +
->         sun4i_tcon_channel_enable(tcon, 0);
->  }
->
-> @@ -174,7 +179,12 @@ static void sun4i_rgb_encoder_disable(struct drm_encoder *encoder)
->         DRM_DEBUG_DRIVER("Disabling RGB output\n");
->
->         sun4i_tcon_channel_disable(tcon, 0);
-> -       drm_panel_disable(tcon->panel);
-> +
-> +       if (!IS_ERR(tcon->bridge))
-> +               drm_bridge_disable(tcon->bridge);
-> +
-> +       if (!IS_ERR(tcon->panel))
-> +               drm_panel_disable(tcon->panel);
->  }
->
->  static void sun4i_rgb_encoder_mode_set(struct drm_encoder *encoder,
-> @@ -216,10 +226,6 @@ int sun4i_rgb_init(struct drm_device *drm)
->         struct sun4i_rgb *rgb;
->         int ret;
->
-> -       /* If we don't have a panel, there's no point in going on */
-> -       if (IS_ERR(tcon->panel))
-> -               return -ENODEV;
-> -
->         rgb = devm_kzalloc(drm->dev, sizeof(*rgb), GFP_KERNEL);
->         if (!rgb)
->                 return -ENOMEM;
-> @@ -240,19 +246,37 @@ int sun4i_rgb_init(struct drm_device *drm)
->         /* The RGB encoder can only work with the TCON channel 0 */
->         rgb->encoder.possible_crtcs = BIT(0);
->
-> -       drm_connector_helper_add(&rgb->connector,
-> -                                &sun4i_rgb_con_helper_funcs);
-> -       ret = drm_connector_init(drm, &rgb->connector,
-> -                                &sun4i_rgb_con_funcs,
-> -                                DRM_MODE_CONNECTOR_Unknown);
-> -       if (ret) {
-> -               dev_err(drm->dev, "Couldn't initialise the rgb connector\n");
-> -               goto err_cleanup_connector;
-> +       if (!IS_ERR(tcon->panel)) {
-> +               drm_connector_helper_add(&rgb->connector,
-> +                                        &sun4i_rgb_con_helper_funcs);
-> +               ret = drm_connector_init(drm, &rgb->connector,
-> +                                        &sun4i_rgb_con_funcs,
-> +                                        DRM_MODE_CONNECTOR_Unknown);
-> +               if (ret) {
-> +                       dev_err(drm->dev, "Couldn't initialise the rgb connector\n");
-> +                       goto err_cleanup_connector;
-> +               }
-> +
-> +               drm_mode_connector_attach_encoder(&rgb->connector,
-> +                                                 &rgb->encoder);
-> +
-> +               ret = drm_panel_attach(tcon->panel, &rgb->connector);
-> +               if (ret) {
-> +                       dev_err(drm->dev, "Couldn't attach our panel\n");
-> +                       goto err_cleanup_connector;
-> +               }
->         }
->
-> -       drm_mode_connector_attach_encoder(&rgb->connector, &rgb->encoder);
-> +       if (!IS_ERR(tcon->bridge)) {
-> +               rgb->encoder.bridge = tcon->bridge;
-> +               tcon->bridge->encoder = &rgb->encoder;
->
-> -       drm_panel_attach(tcon->panel, &rgb->connector);
-> +               ret = drm_bridge_attach(drm, tcon->bridge);
-> +               if (ret) {
-> +                       dev_err(drm->dev, "Couldn't attach our bridge\n");
-> +                       goto err_cleanup_connector;
-> +               }
-> +       }
->
->         return 0;
->
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> index eed6a9e8d9a6..4618d98913b4 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -432,6 +432,40 @@ static struct drm_panel *sun4i_tcon_find_panel(struct device_node *node)
->         return of_drm_find_panel(remote) ?: ERR_PTR(-EPROBE_DEFER);
->  }
->
-> +static struct drm_bridge *sun4i_tcon_find_bridge(struct device_node *node)
-> +{
-> +       struct device_node *port, *remote, *child;
-> +       struct device_node *end_node = NULL;
-> +
-> +       /* Inputs are listed first, then outputs */
-> +       port = of_graph_get_port_by_id(node, 1);
-> +
-> +       /*
-> +        * Our first output is the RGB interface where the panel will
-> +        * be connected.
-> +        */
-> +       for_each_child_of_node(port, child) {
-> +               u32 reg;
-> +
-> +               of_property_read_u32(child, "reg", &reg);
-> +               if (reg == 0)
-> +                       end_node = child;
-> +       }
-> +
-> +       if (!end_node) {
-> +               DRM_DEBUG_DRIVER("Missing bridge endpoint\n");
-> +               return ERR_PTR(-ENODEV);
-> +       }
-> +
-> +       remote = of_graph_get_remote_port_parent(end_node);
-> +       if (!remote) {
-> +               DRM_DEBUG_DRIVER("Enable to parse remote node\n");
-> +               return ERR_PTR(-EINVAL);
-> +       }
-> +
-> +       return of_drm_find_bridge(remote) ?: ERR_PTR(-EPROBE_DEFER);
-> +}
-> +
->  static int sun4i_tcon_bind(struct device *dev, struct device *master,
->                            void *data)
->  {
-> @@ -485,8 +519,9 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
->         }
->
->         tcon->panel = sun4i_tcon_find_panel(dev->of_node);
-> -       if (IS_ERR(tcon->panel)) {
-> -               dev_info(dev, "No panel found... RGB output disabled\n");
-> +       tcon->bridge = sun4i_tcon_find_bridge(dev->of_node);
-> +       if (IS_ERR(tcon->panel) && IS_ERR(tcon->bridge)) {
-> +               dev_info(dev, "No panel or bridge found... RGB output disabled\n");
->                 return 0;
->         }
->
-> @@ -515,19 +550,22 @@ static struct component_ops sun4i_tcon_ops = {
->  static int sun4i_tcon_probe(struct platform_device *pdev)
->  {
->         struct device_node *node = pdev->dev.of_node;
-> +       struct drm_bridge *bridge;
->         struct drm_panel *panel;
->
->         /*
-> -        * The panel is not ready.
-> +        * Neither the bridge or the panel is ready.
->          * Defer the probe.
->          */
->         panel = sun4i_tcon_find_panel(node);
-> +       bridge = sun4i_tcon_find_bridge(node);
->
->         /*
->          * If we don't have a panel endpoint, just go on
->          */
-> -       if (PTR_ERR(panel) == -EPROBE_DEFER) {
-> -               DRM_DEBUG_DRIVER("Still waiting for our panel. Deferring...\n");
-> +       if ((PTR_ERR(panel) == -EPROBE_DEFER) &&
-> +           (PTR_ERR(bridge) == -EPROBE_DEFER)) {
-> +               DRM_DEBUG_DRIVER("Still waiting for our panel/bridge. Deferring...\n");
->                 return -EPROBE_DEFER;
->         }
->
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> index 0e0b11db401b..31069027d7fb 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> @@ -162,6 +162,7 @@ struct sun4i_tcon {
->         /* Platform adjustments */
->         bool                            has_mux;
->
-> +       struct drm_bridge               *bridge;
->         struct drm_panel                *panel;
->  };
->
-> --
-> 2.8.2
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+SGkgTWF4aW1lLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBNb25kYXkgMTYgTWF5IDIw
+MTYgMTQ6NDc6MTMgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBTb21lIGJvYXJkcyBoYXZlIGFuIGVu
+dGlyZWx5IHBhc3NpdmUgUkdCIHRvIFZHQSBicmlkZ2UsIGJhc2VkIG9uIGVpdGhlcgo+IERBQ3Mg
+b3IgcmVzaXN0b3IgbGFkZGVycy4KPiAKPiBUaG9zZSBtaWdodCBvciBtaWdodCBub3QgaGF2ZSBh
+biBpMmMgYnVzIHJvdXRlZCB0byB0aGUgVkdBIGNvbm5lY3RvciBpbgo+IG9yZGVyIHRvIGFjY2Vz
+cyB0aGUgc2NyZWVuIEVESURzLgo+IAo+IEFkZCBhIGJyaWRnZSB0aGF0IGRvZXNuJ3QgZG8gYW55
+dGhpbmcgYnV0IGV4cG9zZSB0aGUgbW9kZXMgYXZhaWxhYmxlIG9uIHRoZQo+IHNjcmVlbiwgZWl0
+aGVyIGJhc2VkIG9uIHRoZSBFRElEcyBpZiBhdmFpbGFibGUsIG9yIGJhc2VkIG9uIHRoZSBYR0EK
+PiBzdGFuZGFyZHMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJp
+cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS9kdW1iLXZnYS50eHQgICAgICAgICAgIHwgIDQwICsrKysrCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICA2ICsKPiAgZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLmMgICAgICAgICAgICAgICAgICB8IDE4NiArKysr
+KysrKysrKysrKysrKysKPiAgNCBmaWxlcyBjaGFuZ2VkLCAyMzMgaW5zZXJ0aW9ucygrKQo+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQKPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvZHVtYi12Z2EudHh0IGNyZWF0ZSBtb2RlCj4gMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvZHVtYi12Z2EuYwo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12Z2EudHh0Cj4gYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12Z2EudHh0IG5l
+dyBmaWxlCj4gbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjc1N2YwNGRlOTdmMwo+
+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvZHVtYi12Z2EudHh0Cj4gQEAgLTAsMCArMSw0MCBAQAo+ICtQYXNzaXZl
+IFJHQiB0byBWR0EgYnJpZGdlCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1Ro
+aXMgYmluZGluZyBpcyBhaW1lZCBmb3IgZW50aXJlbHkgcGFzc2l2ZSBSR0IgdG8gVkdBIGJyaWRn
+ZXMgdGhhdCBkbyBub3QKPiArcmVxdWlyZSBhbnkgY29uZmlndXJhdGlvbi4KPiArCj4gK1JlcXVp
+cmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSAiZHVtYi12Z2Et
+YnJpZGdlIgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArCj4gKy0gZGRjLWkyYy1idXM6
+IHBoYW5kbGUgdG8gdGhlIGkyYyBidXMgdXNlZCB0byBjb21tdW5pY2F0ZSB3aXRoIHRoZSBtb25p
+dG9yCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArCj4gK1RoaXMgZGV2aWNlIGhhcyBvbmUgdmlk
+ZW8gcG9ydC4gSXRzIGNvbm5lY3Rpb24gaXMgbW9kZWxsZWQgdXNpbmcgdGhlIE9GCj4gK2dyYXBo
+IGJpbmRpbmdzIHNwZWNpZmllZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Z3JhcGgudHh0Lgo+IFRoaXMgK2Nvbm5lY3Rpb24gaXMgbWVhbnQgdG8gYmUgdGhlIFJHQiBpbnB1
+dCBidXMuCgpTaG91bGQgdGhlIGJyaWRnZSBoYXZlIHR3byBwb3J0cywgb25lIGlucHV0IHBvcnQg
+Y29ubmVjdGVkIHRvIGEgZGlzcGxheSBlbmdpbmUgCmFuZCBvbmUgb3V0cHV0IHBvcnQgY29ubmVj
+dGVkIHRvIGEgVkdBIGNvbm5lY3RvciA/Cgo+ICsKPiArCj4gK0V4YW1wbGUKPiArLS0tLS0tLQo+
+ICsKPiArYnJpZGdlIHsKPiArICAgICAgICBjb21wYXRpYmxlID0gImR1bWItdmdhLWJyaWRnZSI7
+Cj4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAgI3NpemUtY2VsbHMg
+PSA8MD47Cj4gKwo+ICsgICAgICAgIHBvcnRAMCB7Cj4gKyAgICAgICAgICAgICAgICByZWcgPSA8
+MD47Cj4gKyAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAg
+ICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgIHZnYV9pbnB1
+dDogZW5kcG9pbnRAMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9vdXRfdmdh
+PjsKPiArICAgICAgICAgICAgICAgfTsKPiArICAgICAgICB9Owo+ICt9Owo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L0tjb25maWcKPiBpbmRleCA4Zjc0MjNmMThkYTUuLmNmMjc5OTU2Y2JlYyAxMDA2NDQKPiAtLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
+YnJpZGdlL0tjb25maWcKPiBAQCAtMTcsNiArMTcsMTIgQEAgY29uZmlnIERSTV9BTkFMT0dJWF9B
+Tlg3OFhYCj4gIAkgIHRoZSBIRE1JIG91dHB1dCBvZiBhbiBhcHBsaWNhdGlvbiBwcm9jZXNzb3Ig
+dG8gTXlEUAo+ICAJICBvciBEaXNwbGF5UG9ydC4KPiAKPiArY29uZmlnIERSTV9EVU1CX1ZHQQo+
+ICsJdHJpc3RhdGUgIkR1bWIgUkdCIHRvIFZHQSBCcmlkZ2Ugc3VwcG9ydCIKPiArCXNlbGVjdCBE
+Uk1fS01TX0hFTFBFUgo+ICsJaGVscAo+ICsJICBTdXBwb3J0IGZvciBwYXNzaXZlIFJHQiB0byBW
+R0EgYnJpZGdlcwo+ICsKPiAgY29uZmlnIERSTV9EV19IRE1JCj4gIAl0cmlzdGF0ZQo+ICAJc2Vs
+ZWN0IERSTV9LTVNfSEVMUEVSCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+TWFrZWZpbGUKPiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgaW5kZXggOTZiMTNi
+MzBlNmFiLi42M2YyMTEyMGU4ZjggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRn
+ZS9NYWtlZmlsZQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUKPiBAQCAt
+MSw2ICsxLDcgQEAKPiAgY2NmbGFncy15IDo9IC1JaW5jbHVkZS9kcm0KPiAKPiAgb2JqLSQoQ09O
+RklHX0RSTV9BTkFMT0dJWF9BTlg3OFhYKSArPSBhbmFsb2dpeC1hbng3OHh4Lm8KPiArb2JqLSQo
+Q09ORklHX0RSTV9EVU1CX1ZHQSkgKz0gZHVtYi12Z2Eubwo+ICBvYmotJChDT05GSUdfRFJNX0RX
+X0hETUkpICs9IGR3LWhkbWkubwo+ICBvYmotJChDT05GSUdfRFJNX0RXX0hETUlfQUhCX0FVRElP
+KSArPSBkdy1oZG1pLWFoYi1hdWRpby5vCj4gIG9iai0kKENPTkZJR19EUk1fTlhQX1BUTjM0NjAp
+ICs9IG54cC1wdG4zNDYwLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9k
+dW1iLXZnYS5jCj4gYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLmMgbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjI4NjRmYTUzNWJmOAo+IC0tLSAvZGV2
+L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLmMKPiBAQCAtMCww
+ICsxLDE4NiBAQAo+ICsKPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICsKPiArI2luY2x1
+ZGUgPGRybS9kcm1QLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4KPiAr
+I2luY2x1ZGUgPGRybS9kcm1fY3J0Yy5oPgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBl
+ci5oPgo+ICsKPiArc3RydWN0IGR1bWJfdmdhIHsKPiArCXN0cnVjdCBkcm1fYnJpZGdlCWJyaWRn
+ZTsKPiArCXN0cnVjdCBkcm1fY29ubmVjdG9yCWNvbm5lY3RvcjsKPiArCj4gKwlzdHJ1Y3QgaTJj
+X2FkYXB0ZXIJKmRkYzsKPiArfTsKPiArCj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IGR1bWJfdmdh
+ICoKPiArZHJtX2JyaWRnZV90b19kdW1iX3ZnYShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+
+ICt7Cj4gKwlyZXR1cm4gY29udGFpbmVyX29mKGJyaWRnZSwgc3RydWN0IGR1bWJfdmdhLCBicmlk
+Z2UpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBkdW1iX3ZnYSAqCj4gK2RybV9j
+b25uZWN0b3JfdG9fZHVtYl92Z2Eoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiAr
+ewo+ICsJcmV0dXJuIGNvbnRhaW5lcl9vZihjb25uZWN0b3IsIHN0cnVjdCBkdW1iX3ZnYSwgY29u
+bmVjdG9yKTsKPiArfQo+ICsKPiArc3RhdGljIGludCBkdW1iX3ZnYV9nZXRfbW9kZXMoc3RydWN0
+IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiArewo+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2Eg
+PSBkcm1fY29ubmVjdG9yX3RvX2R1bWJfdmdhKGNvbm5lY3Rvcik7Cj4gKwlzdHJ1Y3QgZWRpZCAq
+ZWRpZDsKPiArCWludCByZXQ7Cj4gKwo+ICsJaWYgKCF2Z2EtPmRkYykKPiArCQlnb3RvIGZhbGxi
+YWNrOwo+ICsKPiArCWVkaWQgPSBkcm1fZ2V0X2VkaWQoY29ubmVjdG9yLCB2Z2EtPmRkYyk7Cj4g
+KwlpZiAoIWVkaWQpIHsKPiArCQlEUk1fSU5GTygiRURJRCByZWFkb3V0IGZhaWxlZCwgZmFsbGlu
+ZyBiYWNrIHRvIHN0YW5kYXJkIG1vZGVzXG4iKTsKPiArCQlnb3RvIGZhbGxiYWNrOwo+ICsJfQo+
+ICsKPiArCWRybV9tb2RlX2Nvbm5lY3Rvcl91cGRhdGVfZWRpZF9wcm9wZXJ0eShjb25uZWN0b3Is
+IGVkaWQpOwo+ICsJcmV0dXJuIGRybV9hZGRfZWRpZF9tb2Rlcyhjb25uZWN0b3IsIGVkaWQpOwo+
+ICsKPiArZmFsbGJhY2s6Cj4gKwkvKgo+ICsJICogSW4gY2FzZSB3ZSBjYW5ub3QgcmV0cmlldmUg
+dGhlIEVESURzIChicm9rZW4gb3IgbWlzc2luZyBpMmMKPiArCSAqIGJ1cyksIGZhbGxiYWNrIG9u
+IHRoZSBYR0Egc3RhbmRhcmRzCj4gKwkgKi8KPiArCXJldCA9IGRybV9hZGRfbW9kZXNfbm9lZGlk
+KGNvbm5lY3RvciwgMTkyMCwgMTIwMCk7CgpUaGUgRFJNIGNvcmUgYWRkcyBtb2RlcyB1cCB0byAx
+MDI0eDc2OCBpbiAKZHJtX2hlbHBlcl9wcm9iZV9zaW5nbGVfY29ubmVjdG9yX21vZGVzKCkuIEkg
+d29uZGVyIGlmIGl0IHJlYWxseSBtYWtlcyBzZW5zZSAKdG8gb3ZlcnJpZGUgdGhhdCBpbiBkcml2
+ZXJzLCBjb21wYXJlZCB0byBpbmNyZWFzaW5nIHRoZSBtYXhpbXVtIHJlc29sdXRpb24gaW4gCnRo
+ZSBjb3JlLiBXaGF0IHdlIGNhbiByZWFzb25hYmxlIGV4cGVjdCBmcm9tIGEgVkdBIG1vbml0b3Ig
+ZG9lc24ndCByZWFsbHkgCmRlcGVuZCBvbiB3aGljaCBkaXNwbGF5IGVuZ2luZSBpdCBpcyBjb25u
+ZWN0ZWQgdG8uCgo+ICsJLyogQW5kIHByZWZlciBhIG1vZGUgcHJldHR5IG11Y2ggYW55b25lIGNh
+biBoYW5kbGUgKi8KPiArCWRybV9zZXRfcHJlZmVycmVkX21vZGUoY29ubmVjdG9yLCAxMDI0LCA3
+NjgpOwo+ICsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX2Vu
+Y29kZXIgKgo+ICtkdW1iX3ZnYV9iZXN0X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0b3IgKmNv
+bm5lY3RvcikKPiArewo+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2EgPSBkcm1fY29ubmVjdG9yX3Rv
+X2R1bWJfdmdhKGNvbm5lY3Rvcik7Cj4gKwo+ICsJcmV0dXJuIHZnYS0+YnJpZGdlLmVuY29kZXI7
+Cj4gK30KPiArCj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgZHVt
+Yl92Z2FfY29uX2hlbHBlcl9mdW5jcyA9IHsKPiArCS5nZXRfbW9kZXMJPSBkdW1iX3ZnYV9nZXRf
+bW9kZXMsCj4gKwkuYmVzdF9lbmNvZGVyCT0gZHVtYl92Z2FfYmVzdF9lbmNvZGVyLAo+ICt9Owo+
+ICsKPiArc3RhdGljIGVudW0gZHJtX2Nvbm5lY3Rvcl9zdGF0dXMKPiArZHVtYl92Z2FfY29ubmVj
+dG9yX2RldGVjdChzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLCBib29sIGZvcmNlKQo+
+ICt7Cj4gKwlyZXR1cm4gY29ubmVjdG9yX3N0YXR1c19jb25uZWN0ZWQ7CgpTaG91bGRuJ3QgdGhh
+dCBiZSBjb25uZWN0b3Jfc3RhdHVzX3Vua25vd24gaWYgeW91IGhhdmUgbm8gaW5mb3JtYXRpb24g
+YWJvdXQgCnRoZSBjb25uZWN0aW9uIHN0YXR1cyA/CgpXb3VsZCBpdCBtYWtlIHNlbnNlIHRvIGFk
+ZCBhbiBvcHRpb25hbCBHUElPLWJhc2VkIGNvbm5lY3Rpb24gZGV0ZWN0aW9uIHRvIHRoaXMgCmRy
+aXZlciA/Cgo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZAo+ICtkdW1iX3ZnYV9jb25uZWN0b3JfZGVz
+dHJveShzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ICt7Cj4gKwlkcm1fY29ubmVj
+dG9yX2NsZWFudXAoY29ubmVjdG9yKTsKPiArfQo+ICsKPiArc3RhdGljIHN0cnVjdCBkcm1fY29u
+bmVjdG9yX2Z1bmNzIGR1bWJfdmdhX2Nvbl9mdW5jcyA9IHsKPiArCS5kcG1zCQkJPSBkcm1fYXRv
+bWljX2hlbHBlcl9jb25uZWN0b3JfZHBtcywKPiArCS5kZXRlY3QJCQk9IGR1bWJfdmdhX2Nvbm5l
+Y3Rvcl9kZXRlY3QsCj4gKwkuZmlsbF9tb2RlcwkJPSBkcm1faGVscGVyX3Byb2JlX3NpbmdsZV9j
+b25uZWN0b3JfbW9kZXMsCj4gKwkuZGVzdHJveQkJPSBkdW1iX3ZnYV9jb25uZWN0b3JfZGVzdHJv
+eSwKPiArCS5yZXNldAkJCT0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX3Jlc2V0LAo+ICsJ
+LmF0b21pY19kdXBsaWNhdGVfc3RhdGUJPSBkcm1fYXRvbWljX2hlbHBlcl9jb25uZWN0b3JfZHVw
+bGljYXRlX3N0YXRlLAo+ICsJLmF0b21pY19kZXN0cm95X3N0YXRlCT0gZHJtX2F0b21pY19oZWxw
+ZXJfY29ubmVjdG9yX2Rlc3Ryb3lfc3RhdGUsCj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IGR1bWJf
+dmdhX2F0dGFjaChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlzdHJ1Y3QgZHVt
+Yl92Z2EgKnZnYSA9IGRybV9icmlkZ2VfdG9fZHVtYl92Z2EoYnJpZGdlKTsKPiArCWludCByZXQ7
+Cj4gKwo+ICsJaWYgKCFicmlkZ2UtPmVuY29kZXIpIHsKPiArCQlEUk1fRVJST1IoIk1pc3Npbmcg
+ZW5jb2RlclxuIik7Cj4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gKwl9Cj4gKwo+ICsJZHJtX2Nvbm5l
+Y3Rvcl9oZWxwZXJfYWRkKCZ2Z2EtPmNvbm5lY3RvciwKPiArCQkJCSAmZHVtYl92Z2FfY29uX2hl
+bHBlcl9mdW5jcyk7Cj4gKwlyZXQgPSBkcm1fY29ubmVjdG9yX2luaXQoYnJpZGdlLT5kZXYsICZ2
+Z2EtPmNvbm5lY3RvciwKPiArCQkJCSAmZHVtYl92Z2FfY29uX2Z1bmNzLCBEUk1fTU9ERV9DT05O
+RUNUT1JfVkdBKTsKPiArCWlmIChyZXQpIHsKPiArCQlEUk1fRVJST1IoIkZhaWxlZCB0byBpbml0
+aWFsaXplIGNvbm5lY3RvclxuIik7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwlkcm1f
+bW9kZV9jb25uZWN0b3JfYXR0YWNoX2VuY29kZXIoJnZnYS0+Y29ubmVjdG9yLAo+ICsJCQkJCSAg
+YnJpZGdlLT5lbmNvZGVyKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIHZv
+aWQgZHVtYl92Z2Ffbm9wKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpIHt9Owo+ICsKPiArc3Rh
+dGljIHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIGR1bWJfdmdhX2JyaWRnZV9mdW5jcyA9IHsKPiAr
+CS5hdHRhY2gJCT0gZHVtYl92Z2FfYXR0YWNoLAo+ICsJLmVuYWJsZQkJPSBkdW1iX3ZnYV9ub3As
+Cj4gKwkuZGlzYWJsZQk9IGR1bWJfdmdhX25vcCwKPiArCS5wcmVfZW5hYmxlCT0gZHVtYl92Z2Ff
+bm9wLAo+ICsJLnBvc3RfZGlzYWJsZQk9IGR1bWJfdmdhX25vcCwKPiArfTsKPiArCj4gK3N0YXRp
+YyBpbnQgZHVtYl92Z2FfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+
+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2E7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmRkYzsKPiAr
+Cj4gKwl2Z2EgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCp2Z2EpLCBHRlBfS0VS
+TkVMKTsKPiArCWlmICghdmdhKQo+ICsJCXJldHVybiAtRU5PTUVNOwo+ICsJcGxhdGZvcm1fc2V0
+X2RydmRhdGEocGRldiwgdmdhKTsKPiArCj4gKwlkZGMgPSBvZl9wYXJzZV9waGFuZGxlKHBkZXYt
+PmRldi5vZl9ub2RlLCAiZGRjLWkyYy1idXMiLCAwKTsKPiArCWlmIChkZGMpIHsKPiArCQl2Z2Et
+PmRkYyA9IG9mX2ZpbmRfaTJjX2FkYXB0ZXJfYnlfbm9kZShkZGMpOwoKWW91J3JlIGxlYWtpbmcg
+dGhlIHJlZmVyZW5jZSB0byB0aGUgSTJDIGFkYXB0ZXIuCgpBbHNvLCBzaG91bGRuJ3QgeW91IHVz
+ZSBvZl9nZXRfaTJjX2FkYXB0ZXJfYnlfbm9kZSgpID8gT3RoZXJ3aXNlIHlvdSB3b24ndCAKdGFr
+ZSBhIHJlZmVyZW5jZSB0byB0aGUgYWRhcHRlciBtb2R1bGUuCgo+ICsJCW9mX25vZGVfcHV0KGRk
+Yyk7Cj4gKwo+ICsJCWlmICghdmdhLT5kZGMpIHsKPiArCQkJZGV2X2VycigmcGRldi0+ZGV2LCAi
+Q291bGRuJ3QgcmV0cmlldmUgaTJjIGJ1c1xuIik7Cj4gKwkJCXJldHVybiAtRVBST0JFX0RFRkVS
+Owo+ICsJCX0KPiArCX0gZWxzZSB7Cj4gKwkJZGV2X2luZm8oJnBkZXYtPmRldiwKPiArCQkJICJO
+byBpMmMgYnVzIHNwZWNpZmllZC4uLiBEaXNhYmxpbmcgRURJRCByZWFkb3V0XG4iKTsKPiArCX0K
+PiArCj4gKwl2Z2EtPmJyaWRnZS5mdW5jcyA9ICZkdW1iX3ZnYV9icmlkZ2VfZnVuY3M7Cj4gKwl2
+Z2EtPmJyaWRnZS5vZl9ub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gKwo+ICsJcmV0dXJuIGRy
+bV9icmlkZ2VfYWRkKCZ2Z2EtPmJyaWRnZSk7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgZHVtYl92
+Z2FfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gK3sKPiArCXN0cnVjdCBk
+dW1iX3ZnYSAqdmdhID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7Cj4gKwo+ICsJZHJtX2Jy
+aWRnZV9yZW1vdmUoJnZnYS0+YnJpZGdlKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZHVtYl92Z2FfbWF0Y2hbXSA9IHsKPiAr
+CXsgLmNvbXBhdGlibGUgPSAiZHVtYi12Z2EtYnJpZGdlIiB9LAo+ICsJe30sCj4gK307Cj4gK01P
+RFVMRV9ERVZJQ0VfVEFCTEUob2YsIGR1bWJfdmdhX21hdGNoKTsKPiArCj4gK3N0cnVjdCBwbGF0
+Zm9ybV9kcml2ZXIgZHVtYl92Z2FfZHJpdmVyID0gewo+ICsJLnByb2JlCT0gZHVtYl92Z2FfcHJv
+YmUsCj4gKwkucmVtb3ZlCT0gZHVtYl92Z2FfcmVtb3ZlLAo+ICsJLmRyaXZlcgkJPSB7Cj4gKwkJ
+Lm5hbWUJCT0gImR1bWItdmdhLWJyaWRnZSIsCj4gKwkJLm9mX21hdGNoX3RhYmxlCT0gZHVtYl92
+Z2FfbWF0Y2gsCj4gKwl9LAo+ICt9Owo+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKGR1bWJfdmdh
+X2RyaXZlcik7Cj4gKwo+ICtNT0RVTEVfQVVUSE9SKCJNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlw
+YXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4iKTsKPiArTU9EVUxFX0RFU0NSSVBUSU9OKCJEdW1iIFJH
+QiB0byBWR0EgYnJpZGdlIGRyaXZlciIpOwo+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7CgotLSAK
+UmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
