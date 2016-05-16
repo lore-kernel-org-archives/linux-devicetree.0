@@ -1,88 +1,21 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v4 7/7] dt-bindings: drm/bridge: Update bindings for ADV7533
-Date: Mon, 16 May 2016 16:11:10 +0530
-Message-ID: <1463395270-3100-8-git-send-email-architt@codeaurora.org>
-References: <1457521038-5906-1-git-send-email-architt@codeaurora.org>
- <1463395270-3100-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1463395270-3100-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com, xinliang.liu@linaro.org
-Cc: treding@nvidia.com, linux-arm-msm@vger.kernel.org, srinivas.kandagatla@linaro.org, lars@metafoo.de, amit.kucheria@linaro.org, robdclark@gmail.com, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 2/3] mfd: axp20x: Extend axp22x_volatile_ranges
+Date: Mon, 16 May 2016 19:13:17 +0800
+Message-ID: <CAGb2v65nuj4Uh9jNSS4wk8CWkgN6iiuGR2vz4Kat=8QT68EE6Q@mail.gmail.com>
+References: <1463248289-16456-1-git-send-email-hdegoede@redhat.com> <1463248289-16456-2-git-send-email-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1463248289-16456-2-git-send-email-hdegoede@redhat.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Add description of ADV7533. Add the required and optional properties that
-are specific to it.
+On Sun, May 15, 2016 at 1:51 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+> The axp22x pmic has a bunch of volatile registers besides the interrupt
+> ones, extend axp22x_volatile_ranges with these.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Cc: devicetree@vger.kernel.org
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
- .../bindings/display/bridge/adi,adv7511.txt        | 26 +++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-index 96c25ee..6532a59 100644
---- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-@@ -1,13 +1,19 @@
--Analog Device ADV7511(W)/13 HDMI Encoders
-+Analog Device ADV7511(W)/13/33 HDMI Encoders
- -----------------------------------------
- 
--The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
-+The ADV7511, ADV7511W, ADV7513 and ADV7533 are HDMI audio and video transmitters
- compatible with HDMI 1.4 and DVI 1.0. They support color space conversion,
--S/PDIF, CEC and HDCP.
-+S/PDIF, CEC and HDCP. ADV7533 supports the DSI interface for input pixels, while
-+the others support RGB interface.
- 
- Required properties:
- 
--- compatible: Should be one of "adi,adv7511", "adi,adv7511w" or "adi,adv7513"
-+- compatible: Should be one of:
-+		"adi,adv7511"
-+		"adi,adv7511w"
-+		"adi,adv7513"
-+		"adi,adv7533"
-+
- - reg: I2C slave address
- 
- The ADV7511 supports a large number of input data formats that differ by their
-@@ -32,6 +38,11 @@ The following input format properties are required except in "rgb 1x" and
- - adi,input-justification: The input bit justification ("left", "evenly",
-   "right").
- 
-+The following properties are required for ADV7533:
-+
-+- adi,dsi-lanes: Number of DSI data lanes connected to the DSI host. It should
-+  be one of 1, 2, 3 or 4.
-+
- Optional properties:
- 
- - interrupts: Specifier for the ADV7511 interrupt
-@@ -42,13 +53,18 @@ Optional properties:
- - adi,embedded-sync: The input uses synchronization signals embedded in the
-   data stream (similar to BT.656). Defaults to separate H/V synchronization
-   signals.
-+- adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
-+  generator. The chip will rely on the sync signals in the DSI data lanes,
-+  rather than generate its own timings for HDMI output.
- 
- Required nodes:
- 
- The ADV7511 has two video ports. Their connections are modelled using the OF
- graph bindings specified in Documentation/devicetree/bindings/graph.txt.
- 
--- Video port 0 for the RGB or YUV input
-+- Video port 0 for the RGB, YUV or DSI input. In the case of ADV7533, the
-+  remote endpoint phandle should be a reference to a valid mipi_dsi_host device
-+  node.
- - Video port 1 for the HDMI output
- 
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Acked-by: Chen-Yu Tsai <wens@csie.org>
