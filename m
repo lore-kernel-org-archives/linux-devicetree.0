@@ -1,217 +1,148 @@
-From: David Mosberger-Tang <davidm@egauge.net>
-Subject: [PATCH] drivers: nvmem: atmel-secumod: New driver for Atmel Secumod
- nvram
-Date: Mon, 16 May 2016 14:17:10 -0600
-Message-ID: <1463429830-20539-1-git-send-email-davidm@egauge.net>
-References: <alpine.LNX.2.00.1605121505320.21379@nippy.intranet>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.LNX.2.00.1605121505320.21379@nippy.intranet>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, David Mosberger-Tang <davidm@egauge.net>, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v2 2/6] of: unittest: Add indirect overlay target test
+Date: Mon, 16 May 2016 23:18:08 +0300
+Message-ID: <1463429892-3369-3-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: David Mosberger <davidm@egauge.net>
----
- .../devicetree/bindings/nvmem/atmel-secumod.txt    |  46 ++++++++
- drivers/nvmem/atmel-secumod.c                      | 125 +++++++++++++++++++++
- 2 files changed, 171 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
- create mode 100644 drivers/nvmem/atmel-secumod.c
+Add a unittest for the indirect overlay target case.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
-new file mode 100644
-index 0000000..85db709
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/atmel-secumod.txt
-@@ -0,0 +1,46 @@
-+= Atmel Secumod device tree bindings =
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ drivers/of/unittest-data/testcases.dts      |  5 +++
+ drivers/of/unittest-data/tests-overlay.dtsi | 15 ++++++++
+ drivers/of/unittest.c                       | 60 +++++++++++++++++++++++++++++
+ 3 files changed, 80 insertions(+)
+
+diff --git a/drivers/of/unittest-data/testcases.dts b/drivers/of/unittest-data/testcases.dts
+index 12f7c3d..74e8805 100644
+--- a/drivers/of/unittest-data/testcases.dts
++++ b/drivers/of/unittest-data/testcases.dts
+@@ -75,5 +75,10 @@
+ 				target = <0x00000000>;
+ 			};
+ 		};
++		overlay16 {
++			fragment@0 {
++				target = <0x00000000 0x00000004>;
++			};
++		};
+ 	};
+ }; };
+diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
+index 02ba56c..ab32996 100644
+--- a/drivers/of/unittest-data/tests-overlay.dtsi
++++ b/drivers/of/unittest-data/tests-overlay.dtsi
+@@ -110,6 +110,12 @@
+ 						};
+ 					};
+ 				};
 +
-+This binding is intended to represent Atmel's Secumod which is found
-+in SAMA5D2 and perhaps others.
-+
-+Required properties:
-+- compatible: should be "atmel,sama5d2-secumod"
-+- reg: Should contain registers location and length of the RAM, followed
-+       by register location and length of the Secumod controller.
-+
-+= Data cells =
-+Are child nodes of secumod, bindings of which as described in
-+bindings/nvmem/nvmem.txt
-+
-+Example:
-+
-+    secumod@fc040000 {
-+            compatible = "atmel,sama5d2-secumod";
-+            reg = <0xf8044000 0x1420
-+                   0xfc040000 0x4000>;
-+            status = "okay";
-+
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+
-+            secram_auto_erasable@0000 {
-+                    reg = <0x0000 0x1000>;
-+            };
-+            secram@1000 {
-+                    reg = <0x1000 0x400>;
-+            };
-+            ram@1400 {
-+                    reg = <0x1400 0x20>;
-+            };
-+    };
-+
-+= Data consumers =
-+Are device nodes which consume nvmem data cells.
-+
-+For example:
-+
-+	ram {
-+		...
-+		nvmem-cells = <&ram>;
-+		nvmem-cell-names = "RAM";
-+	};
-diff --git a/drivers/nvmem/atmel-secumod.c b/drivers/nvmem/atmel-secumod.c
-new file mode 100644
-index 0000000..fda83c9
---- /dev/null
-+++ b/drivers/nvmem/atmel-secumod.c
-@@ -0,0 +1,125 @@
-+/*
-+ * Driver for SAMA5D2 secure module (SECUMOD).
-+ *
-+ * Copyright (C) 2016 eGauge Systems LLC
-+ *
-+ * David Mosberger <davidm@egauge.net>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+static struct regmap_config secumod_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4
-+};
-+
-+static struct nvmem_config econfig = {
-+	.name = "secumod",
-+	.owner = THIS_MODULE,
-+};
-+
-+/*
-+ * Security-module register definitions:
-+ */
-+#define SECUMOD_RAMRDY	0x0014
-+
-+/*
-+ * Since the secure module may need to automatically erase some of the
-+ * RAM, it may take a while for it to be ready.  As far as I know,
-+ * it's not documented how long this might take in the worst-case.
-+ */
-+static void
-+secumod_wait_ready (void *regs)
++				unittest16: test-unittest16 {
++					compatible = "unittest";
++					status = "disabled";
++					reg = <16>;
++				};
+ 			};
+ 		};
+ 
+@@ -325,5 +331,14 @@
+ 			};
+ 		};
+ 
++		/* test enable using indirect functionality */
++		overlay16 {
++			fragment@0 {
++				target = <&unittest17>, <&unittest16>;
++				__overlay__ {
++					status = "okay";
++				};
++			};
++		};
+ 	};
+ };
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index ff6939b..af4c571 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1921,6 +1921,64 @@ static inline void of_unittest_overlay_i2c_15(void) { }
+ 
+ #endif
+ 
++static void of_unittest_overlay_16(void)
 +{
-+	unsigned long start, stop;
++	int ret;
++	int overlay_nr = 16;
++	int unittest_nr = 16;
++	enum overlay_type ovtype = PDEV_OVERLAY;
++	int before = 0;
++	int after = 1;
++	struct device_node *np = NULL;
++	int id = -1;
 +
-+	start = jiffies;
-+	while (!(readl(regs + SECUMOD_RAMRDY) & 1))
-+		msleep_interruptible(1);
-+	stop = jiffies;
-+	if (stop != start)
-+		pr_info("nvmem-atmel-secumod: it took %u msec for SECUMOD "
-+			"to become ready...\n", jiffies_to_msecs(stop - start));
-+	else
-+		pr_info("nvmem-atmel-secumod: ready\n");
-+}
-+
-+static int secumod_remove(struct platform_device *pdev)
-+{
-+	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-+
-+	return nvmem_unregister(nvmem);
-+}
-+
-+static int secumod_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct nvmem_device *nvmem;
-+	struct regmap *regmap;
-+	void __iomem *base;
-+
-+	/*
-+	 * Map controller address temporarily so we can ensure that
-+	 * the hardware is ready:
-+	 */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	secumod_wait_ready(base);
-+	devm_iounmap(dev, base);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	secumod_regmap_config.max_register = resource_size(res) - 1;
-+
-+	regmap = devm_regmap_init_mmio(dev, base, &secumod_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "%s: regmap init failed\n", __func__);
-+		return PTR_ERR(regmap);
++	/* unittest device must not be in before state */
++	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
++		unittest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
++				overlay_path(overlay_nr),
++				unittest_path(unittest_nr, ovtype),
++				!before ? "enabled" : "disabled");
++		return;
 +	}
-+	econfig.dev = dev;
-+	nvmem = nvmem_register(&econfig);
-+	if (IS_ERR(nvmem))
-+		return PTR_ERR(nvmem);
 +
-+	platform_set_drvdata(pdev, nvmem);
++	np = of_find_node_by_path(overlay_path(overlay_nr));
++	if (np == NULL) {
++		unittest(0, "could not find overlay node @\"%s\"\n",
++				overlay_path(overlay_nr));
++		ret = -EINVAL;
++		goto out;
++	}
 +
-+	return 0;
++	/* unittest16 is at index #1 */
++	ret = of_overlay_create_target_index(np, 1);
++	if (ret < 0) {
++		unittest(0, "could not create overlay from \"%s\"\n",
++				overlay_path(overlay_nr));
++		goto out;
++	}
++	id = ret;
++	of_unittest_track_overlay(id);
++
++	ret = 0;
++
++out:
++	of_node_put(np);
++
++	if (ret)
++		return;
++
++	/* unittest device must be to set to after state */
++	if (of_unittest_device_exists(unittest_nr, ovtype) != after) {
++		unittest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
++				overlay_path(overlay_nr),
++				unittest_path(unittest_nr, ovtype),
++				!after ? "enabled" : "disabled");
++		return;
++	}
++
++	unittest(1, "overlay test %d passed\n", 16);
 +}
 +
-+static const struct of_device_id secumod_of_match[] = {
-+	{ .compatible = "atmel,sama5d2-secumod",},
-+	{/* sentinel */},
-+};
-+MODULE_DEVICE_TABLE(of, secumod_of_match);
+ static void __init of_unittest_overlay(void)
+ {
+ 	struct device_node *bus_np = NULL;
+@@ -1972,6 +2030,8 @@ static void __init of_unittest_overlay(void)
+ 	of_unittest_overlay_10();
+ 	of_unittest_overlay_11();
+ 
++	of_unittest_overlay_16();
 +
-+static struct platform_driver secumod_driver = {
-+	.probe = secumod_probe,
-+	.remove = secumod_remove,
-+	.driver = {
-+		.name = "atmel,sama5d2-secumod",
-+		.of_match_table = secumod_of_match,
-+	},
-+};
-+module_platform_driver(secumod_driver);
-+MODULE_AUTHOR("David Mosberger <davidm@egauge.net>");
-+MODULE_DESCRIPTION("Atmel Secumod driver");
-+MODULE_LICENSE("GPL v2");
+ #if IS_BUILTIN(CONFIG_I2C)
+ 	if (unittest(of_unittest_overlay_i2c_init() == 0, "i2c init failed\n"))
+ 		goto out;
 -- 
-1.9.1
+1.7.12
