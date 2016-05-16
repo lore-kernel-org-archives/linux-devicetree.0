@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 14/20] ARM: sun5i: a13: Add LCD pins
-Date: Mon, 16 May 2016 14:47:14 +0200
-Message-ID: <1463402840-17062-15-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 11/20] drm/sun4i: Convert to connector register helpers
+Date: Mon, 16 May 2016 14:47:11 +0200
+Message-ID: <1463402840-17062-12-git-send-email-maxime.ripard@free-electrons.com>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
@@ -10,37 +10,69 @@ To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquet
 Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The RGB bus can be used in several configurations, one of which being the
-RGB666.
-
-Add a pinctrl group for that case.
+Now that connector register helpers have been created, switch to them.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sun5i-a13.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 31 ++-----------------------------
+ 1 file changed, 2 insertions(+), 29 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
-index 263d46dbc7e6..79b5d513c142 100644
---- a/arch/arm/boot/dts/sun5i-a13.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-@@ -237,6 +237,16 @@
- &pio {
- 	compatible = "allwinner,sun5i-a13-pinctrl";
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index af62b24c39b1..257d2b4f3645 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -24,34 +24,6 @@
+ #include "sun4i_layer.h"
+ #include "sun4i_tcon.h"
  
-+	lcd_rgb666_pins: lcd_rgb666@0 {
-+		allwinner,pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
-+				 "PD10", "PD11", "PD12", "PD13", "PD14", "PD15",
-+				 "PD18", "PD19", "PD20", "PD21", "PD22", "PD23",
-+				 "PD24", "PD25", "PD26", "PD27";
-+		allwinner,function = "lcd0";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	uart1_pins_a: uart1@0 {
- 		allwinner,pins = "PE10", "PE11";
- 		allwinner,function = "uart1";
+-static int sun4i_drv_connector_plug_all(struct drm_device *drm)
+-{
+-	struct drm_connector *connector, *failed;
+-	int ret;
+-
+-	mutex_lock(&drm->mode_config.mutex);
+-	list_for_each_entry(connector, &drm->mode_config.connector_list, head) {
+-		ret = drm_connector_register(connector);
+-		if (ret) {
+-			failed = connector;
+-			goto err;
+-		}
+-	}
+-	mutex_unlock(&drm->mode_config.mutex);
+-	return 0;
+-
+-err:
+-	list_for_each_entry(connector, &drm->mode_config.connector_list, head) {
+-		if (failed == connector)
+-			break;
+-
+-		drm_connector_unregister(connector);
+-	}
+-	mutex_unlock(&drm->mode_config.mutex);
+-
+-	return ret;
+-}
+-
+ static int sun4i_drv_enable_vblank(struct drm_device *drm, unsigned int pipe)
+ {
+ 	struct sun4i_drv *drv = drm->dev_private;
+@@ -206,7 +178,7 @@ static int sun4i_drv_bind(struct device *dev)
+ 	if (ret)
+ 		goto free_drm;
+ 
+-	ret = sun4i_drv_connector_plug_all(drm);
++	ret = drm_connector_register_all(drm);
+ 	if (ret)
+ 		goto unregister_drm;
+ 
+@@ -223,6 +195,7 @@ static void sun4i_drv_unbind(struct device *dev)
+ {
+ 	struct drm_device *drm = dev_get_drvdata(dev);
+ 
++	drm_connector_unregister_all(drm);
+ 	drm_dev_unregister(drm);
+ 	drm_kms_helper_poll_fini(drm);
+ 	sun4i_framebuffer_free(drm);
 -- 
 2.8.2
 
