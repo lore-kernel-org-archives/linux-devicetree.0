@@ -1,53 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 2/2] memory: atmel-ebi: add DT bindings documentation
-Date: Mon, 16 May 2016 09:59:22 -0500
-Message-ID: <20160516145922.GA2133@rob-hp-laptop>
-References: <1462961588-23004-1-git-send-email-boris.brezillon@free-electrons.com>
- <1462961588-23004-3-git-send-email-boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v5 01/11] of: Add bindings of hw throttle for Tegra
+ soctherm
+Date: Mon, 16 May 2016 10:01:26 -0500
+Message-ID: <20160516150126.GA4530@rob-hp-laptop>
+References: <1462962026-19653-1-git-send-email-wni@nvidia.com>
+ <1462962026-19653-2-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1462961588-23004-3-git-send-email-boris.brezillon@free-electrons.com>
+In-Reply-To: <1462962026-19653-2-git-send-email-wni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Wei Ni <wni@nvidia.com>
+Cc: edubezval@gmail.com, thierry.reding@gmail.com, rui.zhang@intel.com, MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 11, 2016 at 12:13:08PM +0200, Boris Brezillon wrote:
-> The EBI (External Bus Interface) is used to access external peripherals
-> (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
-> Each device is assigned a CS line and an address range and can have its
-> own configuration (timings, access mode, bus width, ...).
-> This driver provides a generic DT binding to configure a device according
-> to its requirements.
-> For specific device controllers (like the NAND one) the SMC timings
-> should be configured by the controller driver through the matrix and smc
-> syscon regmaps.
+On Wed, May 11, 2016 at 06:20:16PM +0800, Wei Ni wrote:
+> Add HW throttle configuration sub-node for soctherm, which
+> is used to describe the throttle event, and worked as a
+> cooling device. The "hot" type trip in thermal zone can
+> be bound to this cooling device, and trigger the throttle
+> function.
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Signed-off-by: Wei Ni <wni@nvidia.com>
 > ---
->  .../bindings/memory-controllers/atmel,ebi.txt      | 136 +++++++++++++++++++++
->  1 file changed, 136 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> new file mode 100644
-> index 0000000..2fe9b5b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
-> @@ -0,0 +1,136 @@
-
-[...]
-
-> +Children device nodes are representing device connected to the EBI bus.
-> +
-> +Required device node properties:
-> +
-> +- #reg:			Contains the chip-select id, the offset and the length
-
-Still need to fix #reg.
-
-Otherwise,
+>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 121 ++++++++++++++++++++-
+>  1 file changed, 119 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
