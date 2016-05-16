@@ -1,126 +1,57 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v8 13/14] usb: gadget: udc: adapt to OTG core
-Date: Mon, 16 May 2016 12:51:53 +0300
-Message-ID: <57399839.90706@ti.com>
-References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
- <1463133808-10630-14-git-send-email-rogerq@ti.com>
- <20160516070249.GB24609@shlinux2.ap.freescale.net> <57398451.2060103@ti.com>
- <20160516092323.GD24609@shlinux2.ap.freescale.net>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: Re: [RFC 1/3] dt-bindings: drm/mediatek: Add display binding for
+ Mediatek SoC MT2701
+Date: Mon, 16 May 2016 18:27:02 +0800
+Message-ID: <1463394422.28394.5.camel@mtksdaap41>
+References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
+ <1463053795-55455-2-git-send-email-yt.shen@mediatek.com>
+ <1463065184.17225.2.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160516092323.GD24609-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463065184.17225.2.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, weiqing.kong@mediatek.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream@mediatek.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/05/16 12:23, Peter Chen wrote:
-> On Mon, May 16, 2016 at 11:26:57AM +0300, Roger Quadros wrote:
->> Hi,
->>
->> On 16/05/16 10:02, Peter Chen wrote:
->>> On Fri, May 13, 2016 at 01:03:27PM +0300, Roger Quadros wrote:
->>>> +
->>>> +static int usb_gadget_connect_control(struct usb_gadget *gadget, bool connect)
->>>> +{
->>>> +	struct usb_udc *udc;
->>>> +
->>>> +	mutex_lock(&udc_lock);
->>>> +	udc = usb_gadget_to_udc(gadget);
->>>> +	if (!udc) {
->>>> +		dev_err(gadget->dev.parent, "%s: gadget not registered.\n",
->>>> +			__func__);
->>>> +		mutex_unlock(&udc_lock);
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
->>>> +	if (connect) {
->>>> +		if (!gadget->connected)
->>>> +			usb_gadget_connect(udc->gadget);
->>>> +	} else {
->>>> +		if (gadget->connected) {
->>>> +			usb_gadget_disconnect(udc->gadget);
->>>> +			udc->driver->disconnect(udc->gadget);
->>>> +		}
->>>> +	}
->>>> +
->>>> +	mutex_unlock(&udc_lock);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>
->>> Since this is called for vbus interrupt, why not using
->>> usb_udc_vbus_handler directly, and call udc->driver->disconnect
->>> at usb_gadget_stop.
->>
->> We can't assume that this is always called for vbus interrupt so
->> I decided not to call usb_udc_vbus_handler.
->>
->> udc->vbus is really pointless for us. We keep vbus states in our
->> state machine and leave udc->vbus as ture always.
->>
->> Why do you want to move udc->driver->disconnect() to stop?
->> If USB controller disconnected from bus then the gadget driver
->> must be notified about the disconnect immediately. The controller
->> may or may not be stopped by the core.
->>
-> 
-> Then, would you give some comments when this API will be used?
-> I was assumed it is only used for drd state machine.
-
-drd_state machine didn't even need this API in the first place :).
-You guys wanted me to separate out start/stop and connect/disconnect for full OTG case.
-Won't full OTG state machine want to use this API? If not what would it use?
-
-cheers,
--roger
-
-> 
->>>
->>>>  	return 0;
->>>> @@ -660,9 +830,15 @@ static ssize_t usb_udc_softconn_store(struct device *dev,
->>>>  		return -EOPNOTSUPP;
->>>>  	}
->>>>  
->>>> +	/* In OTG mode we don't support softconnect, but b_bus_req */
->>>> +	if (udc->gadget->otg_dev) {
->>>> +		dev_err(dev, "soft-connect not supported in OTG mode\n");
->>>> +		return -EOPNOTSUPP;
->>>> +	}
->>>> +
->>>
->>> The soft-connect can be supported at dual-role mode currently, we can
->>> use b_bus_req entry once it is implemented later.
->>
->> Soft-connect should be done via sysfs handling within the OTG core.
->> This can be added later. I don't want anything outside the OTG core
->> to handle soft-connect behaviour as it will be hard to keep things
->> in sync.
->>
->> I can update the comment to something like this.
->>
->> /* In OTG/dual-role mode, soft-connect should be handled by OTG core */
-> 
-> Ok, let's Felipe decide it.
-> 
->>
->>>
->>>>  	if (sysfs_streq(buf, "connect")) {
->>>>  		usb_gadget_udc_start(udc);
->>>> -		usb_gadget_connect(udc->gadget);
->>>> +		usb_udc_connect_control(udc);
->>>
->>> This line seems to be not related with this patch.
->>>
->> Right. I'll remove it.
->>
->> cheers,
->> -roger
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgWWluZ2pvZSwKCk9uIFRodSwgMjAxNi0wNS0xMiBhdCAyMjo1OSArMDgwMCwgWWluZ2pvZSBD
+aGVuIHdyb3RlOgo+IE9uIFRodSwgMjAxNi0wNS0xMiBhdCAxOTo0OSArMDgwMCwgeXQuc2hlbkBt
+ZWRpYXRlay5jb20gd3JvdGU6Cj4gPiBGcm9tOiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNv
+bT4KPiA+IAo+ID4gQWRkIGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhl
+IGRpc3BsYXkgc3Vic3lzdGVtIGluCj4gPiBNZWRpYXRlayBTb0MgTVQyNzAxCj4gPiAKPiA+IFNp
+Z25lZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAg
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgICAgfCAgICAx
+ICsKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+IAo+ID4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21l
+ZGlhdGVrLGRpc3AudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKPiA+IGluZGV4IGRiNmU3N2UuLjUzYjNjYzMg
+MTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKPiA+IEBA
+IC00MCw2ICs0MCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgKGFsbCBmdW5jdGlvbiBibG9ja3Mp
+Ogo+ID4gIAkibWVkaWF0ZWssPGNoaXA+LWRwaSIgICAgICAgIC0gRFBJIGNvbnRyb2xsZXIsIHNl
+ZSBtZWRpYXRlayxkcGkudHh0Cj4gPiAgCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1tdXRleCIgLSBk
+aXNwbGF5IG11dGV4Cj4gPiAgCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1vZCIgICAgLSBvdmVyZHJp
+dmUKPiA+ICsJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLWJscyIgICAtIGJhY2tsaWdodAo+ID4gIC0g
+cmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgZnVuY3Rpb24gYmxv
+Y2sgcmVnaXN0ZXIgc3BhY2UKPiA+ICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFs
+IGZyb20gdGhlIGZ1bmN0aW9uIGJsb2NrIChyZXF1aXJlZCwgZXhjZXB0IGZvcgo+ID4gICAgbWVy
+Z2UgYW5kIHNwbGl0IGZ1bmN0aW9uIGJsb2NrcykuCj4gCj4gCj4gSGksCj4gCj4gVGhpcyBvbmUg
+aXMgaW4gY29uZmxpY3Qgd2l0aCAiU3VwcG9ydCBNZWRpYXRlayBTb2MgTVQyNzAxIGRpc3AgcHdt
+Igo+IHNlcmllcyBXZWlxaW5nIHNlbnQgbGFzdCB3ZWVrLCB3aGljaCBhZGQgZGlzcC1ibHMgc3Vw
+cG9ydCB0byBkaXNwbGF5IHB3bQo+IGRyaXZlci4KPiAKPiBKb2UuQwoKVGhhbmtzLCBJIHdpbGwg
+cmVtb3ZlIHRoaXMgcGFydCBhbmQgdXBkYXRlIGl0IGluIHRoZSBuZXh0IHZlcnNpb24uCgpSZWdh
+cmRzLAp5dC5zaGVuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
