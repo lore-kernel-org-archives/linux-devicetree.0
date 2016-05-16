@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v2 2/6] of: unittest: Add indirect overlay target test
-Date: Mon, 16 May 2016 23:18:08 +0300
-Message-ID: <1463429892-3369-3-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v2 3/6] doc: dt: Document the indirect overlay method.
+Date: Mon, 16 May 2016 23:18:09 +0300
+Message-ID: <1463429892-3369-4-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
@@ -10,139 +10,50 @@ To: Rob Herring <robherring2@gmail.com>
 Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a unittest for the indirect overlay target case.
+Add a description of the target index overlay method to the overlay
+documention file.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/unittest-data/testcases.dts      |  5 +++
- drivers/of/unittest-data/tests-overlay.dtsi | 15 ++++++++
- drivers/of/unittest.c                       | 60 +++++++++++++++++++++++++++++
- 3 files changed, 80 insertions(+)
+ Documentation/devicetree/overlay-notes.txt | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/unittest-data/testcases.dts b/drivers/of/unittest-data/testcases.dts
-index 12f7c3d..74e8805 100644
---- a/drivers/of/unittest-data/testcases.dts
-+++ b/drivers/of/unittest-data/testcases.dts
-@@ -75,5 +75,10 @@
- 				target = <0x00000000>;
- 			};
- 		};
-+		overlay16 {
-+			fragment@0 {
-+				target = <0x00000000 0x00000004>;
-+			};
-+		};
- 	};
- }; };
-diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
-index 02ba56c..ab32996 100644
---- a/drivers/of/unittest-data/tests-overlay.dtsi
-+++ b/drivers/of/unittest-data/tests-overlay.dtsi
-@@ -110,6 +110,12 @@
- 						};
- 					};
- 				};
-+
-+				unittest16: test-unittest16 {
-+					compatible = "unittest";
-+					status = "disabled";
-+					reg = <16>;
-+				};
- 			};
- 		};
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+index d418a6c..6995fc1 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -100,6 +100,10 @@ Finally, if you need to remove all overlays in one-go, just call
+ of_overlay_destroy_all() which will remove every single one in the correct
+ order.
  
-@@ -325,5 +331,14 @@
- 			};
- 		};
++If your board has multiple slots/places where a single overlay can work
++and each slot is defined by a node, you can use the
++of_overlay_create_target_index() method to select the target.
++
+ Overlay DTS Format
+ ------------------
  
-+		/* test enable using indirect functionality */
-+		overlay16 {
-+			fragment@0 {
-+				target = <&unittest17>, <&unittest16>;
-+				__overlay__ {
-+					status = "okay";
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index ff6939b..af4c571 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1921,6 +1921,64 @@ static inline void of_unittest_overlay_i2c_15(void) { }
+@@ -110,9 +114,11 @@ The DTS of an overlay should have the following format:
  
- #endif
+ 	fragment@0 {	/* first child node */
  
-+static void of_unittest_overlay_16(void)
-+{
-+	int ret;
-+	int overlay_nr = 16;
-+	int unittest_nr = 16;
-+	enum overlay_type ovtype = PDEV_OVERLAY;
-+	int before = 0;
-+	int after = 1;
-+	struct device_node *np = NULL;
-+	int id = -1;
-+
-+	/* unittest device must not be in before state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != before) {
-+		unittest(0, "overlay @\"%s\" with device @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!before ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	np = of_find_node_by_path(overlay_path(overlay_nr));
-+	if (np == NULL) {
-+		unittest(0, "could not find overlay node @\"%s\"\n",
-+				overlay_path(overlay_nr));
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	/* unittest16 is at index #1 */
-+	ret = of_overlay_create_target_index(np, 1);
-+	if (ret < 0) {
-+		unittest(0, "could not create overlay from \"%s\"\n",
-+				overlay_path(overlay_nr));
-+		goto out;
-+	}
-+	id = ret;
-+	of_unittest_track_overlay(id);
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(np);
-+
-+	if (ret)
-+		return;
-+
-+	/* unittest device must be to set to after state */
-+	if (of_unittest_device_exists(unittest_nr, ovtype) != after) {
-+		unittest(0, "overlay @\"%s\" failed to create @\"%s\" %s\n",
-+				overlay_path(overlay_nr),
-+				unittest_path(unittest_nr, ovtype),
-+				!after ? "enabled" : "disabled");
-+		return;
-+	}
-+
-+	unittest(1, "overlay test %d passed\n", 16);
-+}
-+
- static void __init of_unittest_overlay(void)
- {
- 	struct device_node *bus_np = NULL;
-@@ -1972,6 +2030,8 @@ static void __init of_unittest_overlay(void)
- 	of_unittest_overlay_10();
- 	of_unittest_overlay_11();
+-		target=<phandle>;	/* phandle target of the overlay */
++		/* phandle target of the overlay */
++		target=<phandle> [, <phandle>, ...];
+ 	or
+-		target-path="/path";	/* target path of the overlay */
++		/* target path of the overlay */
++		target-path="/path" [ , "/path", ...];
  
-+	of_unittest_overlay_16();
+ 		__overlay__ {
+ 			property-a;	/* add property-a to the target */
+@@ -131,3 +137,7 @@ Using the non-phandle based target method allows one to use a base DT which does
+ not contain a __symbols__ node, i.e. it was not compiled with the -@ option.
+ The __symbols__ node is only required for the target=<phandle> method, since it
+ contains the information required to map from a phandle to a tree location.
 +
- #if IS_BUILTIN(CONFIG_I2C)
- 	if (unittest(of_unittest_overlay_i2c_init() == 0, "i2c init failed\n"))
- 		goto out;
++Using a target index requires the use of a selector target on the call to
++of_overlay_create_target_index(). I.e. passing an index of 0 will select the
++target in the foo node, an index of 1 the bar node, etc.
 -- 
 1.7.12
