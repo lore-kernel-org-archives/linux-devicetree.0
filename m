@@ -1,41 +1,191 @@
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v2 0/6]  of: overlays: New target methods
-Date: Mon, 16 May 2016 23:18:06 +0300
-Message-ID: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v2 1/6] of: overlay: Implement target index support
+Date: Mon, 16 May 2016 23:18:07 +0300
+Message-ID: <1463429892-3369-2-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463429892-3369-1-git-send-email-pantelis.antoniou@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robherring2@gmail.com>
 Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset implements two new target methods.
+Some applications require applying the same overlay to a different
+target according to some external condition (for instance depending
+on the slot a card has been inserted, the overlay target is different).
 
-A target index method which allows selecting different
-targets according to an argument using an extended API and
-a target root method that fences the target only
-to a specific given root.
+The target index functionality use requires using the new
+of_overlay_create_target_index() API which uses an index argument.
 
-Documentation and unit-tests are included.
+The format changes as follow
 
-Changes since v1:
-* Addressed reviewer comments.
-* Converted target_indirect to target_index
+	fragment@0 {
+		target = <&foo_target>, <&bar_target>;
+	};
 
-Pantelis Antoniou (6):
-  of: overlay: Implement target index support
-  of: unittest: Add indirect overlay target test
-  doc: dt: Document the indirect overlay method.
-  of: overlay: Introduce target root capability.
-  of: unittest: Unit-tests for target root overlays.
-  doc: dt: Document the target root overlay method
+Calling of_overlay_create_target_index() with a 0 index selects
+the foo_target, while using an index of 1 selects the bar_target.
 
- Documentation/devicetree/overlay-notes.txt  |  22 ++-
- drivers/of/overlay.c                        | 158 +++++++++++++---
- drivers/of/unittest-data/testcases.dts      |  10 +
- drivers/of/unittest-data/tests-overlay.dtsi |  63 +++++++
- drivers/of/unittest.c                       | 273 ++++++++++++++++++++++++++++
- include/linux/of.h                          |  16 ++
- 6 files changed, 517 insertions(+), 25 deletions(-)
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ drivers/of/overlay.c | 65 ++++++++++++++++++++++++++++++++++++----------------
+ include/linux/of.h   |  8 +++++++
+ 2 files changed, 53 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index fdfc487..2efd4b7 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -75,6 +75,7 @@ struct of_overlay {
+ 	const struct attribute_group **attr_groups;
+ 	struct of_changeset cset;
+ 	struct kobject kobj;
++	int target_index;
+ };
+ 
+ /* master enable switch; once set to 0 can't be re-enabled */
+@@ -222,30 +223,29 @@ static int of_overlay_apply(struct of_overlay *ov)
+ 
+ /*
+  * Find the target node using a number of different strategies
+- * in order of preference
++ * in order of preference. Respects the target index if available.
+  *
+  * "target" property containing the phandle of the target
+  * "target-path" property containing the path of the target
+  */
+-static struct device_node *find_target_node(struct device_node *info_node)
++static struct device_node *find_target_node(struct of_overlay *ov,
++		struct device_node *info_node, int index)
+ {
+ 	const char *path;
+ 	u32 val;
+ 	int ret;
+ 
+ 	/* first try to go by using the target as a phandle */
+-	ret = of_property_read_u32(info_node, "target", &val);
++	ret = of_property_read_u32_index(info_node, "target", index, &val);
+ 	if (ret == 0)
+ 		return of_find_node_by_phandle(val);
+ 
+-	/* now try to locate by path */
+-	ret = of_property_read_string(info_node, "target-path", &path);
++	/* failed, try to locate by path */
++	ret = of_property_read_string_index(info_node, "target-path", index,
++			&path);
+ 	if (ret == 0)
+ 		return of_find_node_by_path(path);
+ 
+-	pr_err("%s: Failed to find target for node %p (%s)\n", __func__,
+-		info_node, info_node->name);
+-
+ 	return NULL;
+ }
+ 
+@@ -270,7 +270,7 @@ static int of_fill_overlay_info(struct of_overlay *ov,
+ 	if (ovinfo->overlay == NULL)
+ 		goto err_fail;
+ 
+-	ovinfo->target = find_target_node(info_node);
++	ovinfo->target = find_target_node(ov, info_node, ov->target_index);
+ 	if (ovinfo->target == NULL)
+ 		goto err_fail;
+ 
+@@ -473,17 +473,8 @@ static struct kobj_type of_overlay_ktype = {
+ 
+ static struct kset *ov_kset;
+ 
+-/**
+- * of_overlay_create() - Create and apply an overlay
+- * @tree:	Device node containing all the overlays
+- *
+- * Creates and applies an overlay while also keeping track
+- * of the overlay in a list. This list can be used to prevent
+- * illegal overlay removals.
+- *
+- * Returns the id of the created overlay, or a negative error number
+- */
+-int of_overlay_create(struct device_node *tree)
++static int __of_overlay_create(struct device_node *tree,
++		int target_index)
+ {
+ 	struct of_overlay *ov;
+ 	int err, id;
+@@ -498,6 +489,8 @@ int of_overlay_create(struct device_node *tree)
+ 		return -ENOMEM;
+ 	ov->id = -1;
+ 
++	ov->target_index = target_index;
++
+ 	INIT_LIST_HEAD(&ov->node);
+ 
+ 	of_changeset_init(&ov->cset);
+@@ -577,8 +570,40 @@ err_destroy_trans:
+ 
+ 	return err;
+ }
++
++/**
++ * of_overlay_create() - Create and apply an overlay
++ * @tree:	Device node containing all the overlays
++ *
++ * Creates and applies an overlay while also keeping track
++ * of the overlay in a list. This list can be used to prevent
++ * illegal overlay removals.
++ *
++ * Returns the id of the created overlay, or a negative error number
++ */
++int of_overlay_create(struct device_node *tree)
++{
++	return __of_overlay_create(tree, 0);
++}
+ EXPORT_SYMBOL_GPL(of_overlay_create);
+ 
++/**
++ * of_overlay_create_target_index() - Create and apply an overlay
++ * @tree:	Device node containing all the overlays
++ * @index:	Index to use in the target properties
++ *
++ * Creates and applies an overlay while also keeping track
++ * of the overlay in a list. This list can be used to prevent
++ * illegal overlay removals.
++ *
++ * Returns the id of the created overlay, or a negative error number
++ */
++int of_overlay_create_target_index(struct device_node *tree, int index)
++{
++	return __of_overlay_create(tree, index);
++}
++EXPORT_SYMBOL_GPL(of_overlay_create_target_index);
++
+ /* check whether the given node, lies under the given tree */
+ static int overlay_subtree_check(struct device_node *tree,
+ 		struct device_node *dn)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 97ac5c8..4548773 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1420,6 +1420,8 @@ int of_overlay_create(struct device_node *tree);
+ int of_overlay_destroy(int id);
+ int of_overlay_destroy_all(void);
+ 
++int of_overlay_create_target_index(struct device_node *tree, int index);
++
+ #else
+ 
+ static inline int of_overlay_create(struct device_node *tree)
+@@ -1437,6 +1439,12 @@ static inline int of_overlay_destroy_all(void)
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int of_overlay_create_target_index(struct device_node *tree,
++		int index)
++{
++	return -ENOTSUPP;
++}
++
+ #endif
+ 
+ #endif /* _LINUX_OF_H */
 -- 
 1.7.12
