@@ -1,63 +1,88 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: dt-bindings: add ibm,ppc4xx-gpio binding
-Date: Mon, 16 May 2016 10:27:46 -0500
-Message-ID: <20160516152746.GA13649@rob-hp-laptop>
-References: <c7b118c342c161954126e2e82cf1a0a6a127b4c2.1463002267.git.chunkeey@googlemail.com>
+Subject: Re: [PATCH] phy: add support for a reset-gpio specification
+Date: Mon, 16 May 2016 10:33:59 -0500
+Message-ID: <20160516153359.GA20923@rob-hp-laptop>
+References: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c7b118c342c161954126e2e82cf1a0a6a127b4c2.1463002267.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: linux-gpio@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Alistair Popple <alistair@popple.id.au>, Matt Porter <mporter@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <1463047233-18091-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de, "Andrew F . Davis" <afd@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 12, 2016 at 12:07:48AM +0200, Christian Lamparter wrote:
-> This patch adds binding information for IBM/AMCC/APM GPIO
-> Controllers of the PowerPC 4XX series and compatible SoCs.
-> 
-> The "PowerPC 405EP Embedded Processor Data Sheet" has the
-> following to say about the GPIO controllers: "
-> 
->  - Controller functions and GPIO registers are programmed
->    and accessed via memory-mapped OPB bus master accesses
-> 
->  - All GPIOs are pin-shared with other functions. DCRs control
->    whether a particular pin that has GPIO capabilities acts
->    as a GPIO or is used for another purpose.
-> 
->  - Each GPIO outputs is separately programmable to emulate
->    an open-drain driver (i.e. drives to zero, threestated if
->    output bit is 1)
-> 
-> "
-> The ppc4xx_gpio.c driver is part of the platform/sysdev drivers
-> in arch/powerpc/sysdev.
-> 
-> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+On Thu, May 12, 2016 at 12:00:33PM +0200, Uwe Kleine-K=F6nig wrote:
+> The framework only asserts (for now) that the reset gpio is not activ=
+e.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 > ---
-> I looked into arch/powerpc/sysdev/ppc4xx_gpio.c driver and
-> it doesn't have support for the tri-state logic (open drain
-> is disabled), but the hardware would support it.
-> (the #gpio-cells description suffers because of this, since
-> the high-z option isn't there).
-> 
-> Also there's another problem: There's no DCR pinmux driver?!
-> So sadly, there's not much information on how to use the DCRs
-> to control the which pin is muxed to the GPIO or to a SoC
-> function like the i2c.
-> 
-> This was all the valuable information I could find about the
-> hardware, so it is included it in the binding text, even
-> though there's no support for it... Is there anything else
-> to add?
-> ---
->  .../devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt   | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/ibm,ppc4xx-gpio.txt
+>  Documentation/devicetree/bindings/net/phy.txt | 3 +++
+>  drivers/net/phy/phy_device.c                  | 8 ++++++++
+>  2 files changed, 11 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Document=
+ation/devicetree/bindings/net/phy.txt
+> index bc1c3c8bf8fa..c00a9a894547 100644
+> --- a/Documentation/devicetree/bindings/net/phy.txt
+> +++ b/Documentation/devicetree/bindings/net/phy.txt
+> @@ -35,6 +35,8 @@ Optional Properties:
+>  - broken-turn-around: If set, indicates the PHY device does not corr=
+ectly
+>    release the turn around line low at the end of a MDIO transaction.
+> =20
+> +- reset-gpios: Reference to a GPIO used to reset the phy.
+> +
 
-Normally, we don't allow wildcards for compatible strings, but given 
-this is an established binding it is okay.
+And also active mode flag should be specified.
 
-Acked-by: Rob Herring <robh@kernel.org>
+>  Example:
+> =20
+>  ethernet-phy@0 {
+> @@ -42,4 +44,5 @@ ethernet-phy@0 {
+>  	interrupt-parent =3D <40000>;
+>  	interrupts =3D <35 1>;
+>  	reg =3D <0>;
+> +	reset-gpios =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
+>  };
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_devic=
+e.c
+> index e551f3a89cfd..7d666ab47271 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/io.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/of.h>
+> +#include <linux/gpio/consumer.h>
+> =20
+>  #include <asm/irq.h>
+> =20
+> @@ -1569,9 +1570,16 @@ static int phy_probe(struct device *dev)
+>  	struct device_driver *drv =3D phydev->mdio.dev.driver;
+>  	struct phy_driver *phydrv =3D to_phy_driver(drv);
+>  	int err =3D 0;
+> +	struct gpio_descs *reset_gpios;
+> =20
+>  	phydev->drv =3D phydrv;
+> =20
+> +	/* take phy out of reset */
+> +	reset_gpios =3D devm_gpiod_get_array_optional(dev, "reset",
+> +						    GPIOD_OUT_LOW);
+> +	if (IS_ERR(reset_gpios))
+> +		return PTR_ERR(reset_gpios);
+> +
+>  	/* Disable the interrupt if the PHY doesn't support it
+>  	 * but the interrupt is still a valid one
+>  	 */
+> --=20
+> 2.8.0.rc3
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
