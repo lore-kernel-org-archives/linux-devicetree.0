@@ -1,57 +1,88 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: Re: [RFC 1/3] dt-bindings: drm/mediatek: Add display binding for
- Mediatek SoC MT2701
-Date: Mon, 16 May 2016 18:27:02 +0800
-Message-ID: <1463394422.28394.5.camel@mtksdaap41>
-References: <1463053795-55455-1-git-send-email-yt.shen@mediatek.com>
- <1463053795-55455-2-git-send-email-yt.shen@mediatek.com>
- <1463065184.17225.2.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463065184.17225.2.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, weiqing.kong@mediatek.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream@mediatek.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH v4 7/7] dt-bindings: drm/bridge: Update bindings for ADV7533
+Date: Mon, 16 May 2016 16:11:10 +0530
+Message-ID: <1463395270-3100-8-git-send-email-architt@codeaurora.org>
+References: <1457521038-5906-1-git-send-email-architt@codeaurora.org>
+ <1463395270-3100-1-git-send-email-architt@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1463395270-3100-1-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com, xinliang.liu@linaro.org
+Cc: treding@nvidia.com, linux-arm-msm@vger.kernel.org, srinivas.kandagatla@linaro.org, lars@metafoo.de, amit.kucheria@linaro.org, robdclark@gmail.com, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWluZ2pvZSwKCk9uIFRodSwgMjAxNi0wNS0xMiBhdCAyMjo1OSArMDgwMCwgWWluZ2pvZSBD
-aGVuIHdyb3RlOgo+IE9uIFRodSwgMjAxNi0wNS0xMiBhdCAxOTo0OSArMDgwMCwgeXQuc2hlbkBt
-ZWRpYXRlay5jb20gd3JvdGU6Cj4gPiBGcm9tOiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNv
-bT4KPiA+IAo+ID4gQWRkIGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhl
-IGRpc3BsYXkgc3Vic3lzdGVtIGluCj4gPiBNZWRpYXRlayBTb0MgTVQyNzAxCj4gPiAKPiA+IFNp
-Z25lZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAg
-Li4uL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgICAgfCAgICAx
-ICsKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+IAo+ID4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21l
-ZGlhdGVrLGRpc3AudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKPiA+IGluZGV4IGRiNmU3N2UuLjUzYjNjYzMg
-MTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQKPiA+IEBA
-IC00MCw2ICs0MCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXMgKGFsbCBmdW5jdGlvbiBibG9ja3Mp
-Ogo+ID4gIAkibWVkaWF0ZWssPGNoaXA+LWRwaSIgICAgICAgIC0gRFBJIGNvbnRyb2xsZXIsIHNl
-ZSBtZWRpYXRlayxkcGkudHh0Cj4gPiAgCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1tdXRleCIgLSBk
-aXNwbGF5IG11dGV4Cj4gPiAgCSJtZWRpYXRlayw8Y2hpcD4tZGlzcC1vZCIgICAgLSBvdmVyZHJp
-dmUKPiA+ICsJIm1lZGlhdGVrLDxjaGlwPi1kaXNwLWJscyIgICAtIGJhY2tsaWdodAo+ID4gIC0g
-cmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgZnVuY3Rpb24gYmxv
-Y2sgcmVnaXN0ZXIgc3BhY2UKPiA+ICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFs
-IGZyb20gdGhlIGZ1bmN0aW9uIGJsb2NrIChyZXF1aXJlZCwgZXhjZXB0IGZvcgo+ID4gICAgbWVy
-Z2UgYW5kIHNwbGl0IGZ1bmN0aW9uIGJsb2NrcykuCj4gCj4gCj4gSGksCj4gCj4gVGhpcyBvbmUg
-aXMgaW4gY29uZmxpY3Qgd2l0aCAiU3VwcG9ydCBNZWRpYXRlayBTb2MgTVQyNzAxIGRpc3AgcHdt
-Igo+IHNlcmllcyBXZWlxaW5nIHNlbnQgbGFzdCB3ZWVrLCB3aGljaCBhZGQgZGlzcC1ibHMgc3Vw
-cG9ydCB0byBkaXNwbGF5IHB3bQo+IGRyaXZlci4KPiAKPiBKb2UuQwoKVGhhbmtzLCBJIHdpbGwg
-cmVtb3ZlIHRoaXMgcGFydCBhbmQgdXBkYXRlIGl0IGluIHRoZSBuZXh0IHZlcnNpb24uCgpSZWdh
-cmRzLAp5dC5zaGVuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Add description of ADV7533. Add the required and optional properties that
+are specific to it.
+
+Cc: devicetree@vger.kernel.org
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+---
+ .../bindings/display/bridge/adi,adv7511.txt        | 26 +++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+index 96c25ee..6532a59 100644
+--- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
++++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+@@ -1,13 +1,19 @@
+-Analog Device ADV7511(W)/13 HDMI Encoders
++Analog Device ADV7511(W)/13/33 HDMI Encoders
+ -----------------------------------------
+ 
+-The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
++The ADV7511, ADV7511W, ADV7513 and ADV7533 are HDMI audio and video transmitters
+ compatible with HDMI 1.4 and DVI 1.0. They support color space conversion,
+-S/PDIF, CEC and HDCP.
++S/PDIF, CEC and HDCP. ADV7533 supports the DSI interface for input pixels, while
++the others support RGB interface.
+ 
+ Required properties:
+ 
+-- compatible: Should be one of "adi,adv7511", "adi,adv7511w" or "adi,adv7513"
++- compatible: Should be one of:
++		"adi,adv7511"
++		"adi,adv7511w"
++		"adi,adv7513"
++		"adi,adv7533"
++
+ - reg: I2C slave address
+ 
+ The ADV7511 supports a large number of input data formats that differ by their
+@@ -32,6 +38,11 @@ The following input format properties are required except in "rgb 1x" and
+ - adi,input-justification: The input bit justification ("left", "evenly",
+   "right").
+ 
++The following properties are required for ADV7533:
++
++- adi,dsi-lanes: Number of DSI data lanes connected to the DSI host. It should
++  be one of 1, 2, 3 or 4.
++
+ Optional properties:
+ 
+ - interrupts: Specifier for the ADV7511 interrupt
+@@ -42,13 +53,18 @@ Optional properties:
+ - adi,embedded-sync: The input uses synchronization signals embedded in the
+   data stream (similar to BT.656). Defaults to separate H/V synchronization
+   signals.
++- adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
++  generator. The chip will rely on the sync signals in the DSI data lanes,
++  rather than generate its own timings for HDMI output.
+ 
+ Required nodes:
+ 
+ The ADV7511 has two video ports. Their connections are modelled using the OF
+ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+ 
+-- Video port 0 for the RGB or YUV input
++- Video port 0 for the RGB, YUV or DSI input. In the case of ADV7533, the
++  remote endpoint phandle should be a reference to a valid mipi_dsi_host device
++  node.
+ - Video port 1 for the HDMI output
+ 
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
