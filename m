@@ -1,141 +1,56 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v2 4/5] of: overlay: Pick up label symbols from overlays.
-Date: Mon, 16 May 2016 19:52:35 +0300
-Message-ID: <1463417556-23087-5-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/5] of: generic infrastructure fixes
+Date: Mon, 16 May 2016 19:52:31 +0300
+Message-ID: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Insert overlay symbols to the base tree when applied.
-This makes it possible to apply an overlay that references a label
-that a previously inserted overlay had.
+The first patch renames the *_node_sysfs methods to _node_post since
+this is more accurate when more work takes place besides sysfs
+tweaking when the next patch is using a hashtable for phandles.
+This is a win for very large blobs with a large number of phandles.
+Current we use an exhaustive search which is not optimal at all.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/of/overlay.c | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+The third patch adds a unittest/benchmark for hashed phandles
+along with figures about performance.
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index a274d65..89ebb70 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -8,6 +8,7 @@
-  * modify it under the terms of the GNU General Public License
-  * version 2 as published by the Free Software Foundation.
-  */
-+
- #undef DEBUG
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -514,6 +515,91 @@ static int of_free_overlay_info(struct of_overlay *ov)
- 	return 0;
- }
- 
-+static int of_overlay_add_symbols(
-+		struct device_node *tree,
-+		struct of_overlay *ov)
-+{
-+	struct of_overlay_info *ovinfo;
-+	struct device_node *root_sym = NULL;
-+	struct device_node *child = NULL;
-+	struct property *prop;
-+	const char *path, *s;
-+	char *new_path;
-+	int i, len, err;
-+
-+	/* both may fail (if no fixups are required) */
-+	root_sym = of_find_node_by_path("/__symbols__");
-+	child = of_get_child_by_name(tree, "__symbols__");
-+
-+	err = 0;
-+	/* do nothing if either is NULL */
-+	if (!root_sym || !child)
-+		goto out;
-+
-+	for_each_property_of_node(child, prop) {
-+
-+		/* skip properties added automatically */
-+		if (of_prop_cmp(prop->name, "name") == 0)
-+			continue;
-+
-+		err = of_property_read_string(child,
-+				prop->name, &path);
-+		if (err != 0) {
-+			pr_err("Could not find symbol '%s'\n", prop->name);
-+			continue;
-+		}
-+
-+		/* now find fragment index */
-+		s = path;
-+
-+		/* compare paths to find fragment index */
-+		for (i = 0, ovinfo = NULL, len = -1; i < ov->count; i++) {
-+			ovinfo = &ov->ovinfo_tab[i];
-+
-+			pr_debug("#%d: overlay->name=%s target->name=%s\n",
-+					i, ovinfo->overlay->full_name,
-+					ovinfo->target->full_name);
-+
-+			len = strlen(ovinfo->overlay->full_name);
-+			if (strncasecmp(path, ovinfo->overlay->full_name,
-+						len) == 0 && path[len] == '/')
-+				break;
-+		}
-+
-+		if (i >= ov->count)
-+			continue;
-+
-+		pr_debug("found target at #%d\n", i);
-+		new_path = kasprintf(GFP_KERNEL, "%s%s",
-+				ovinfo->target->full_name,
-+				path + len);
-+		if (!new_path) {
-+			pr_err("Failed to allocate propname for \"%s\"\n",
-+					prop->name);
-+			err = -ENOMEM;
-+			break;
-+		}
-+
-+		err = of_changeset_add_property_string(&ov->cset, root_sym,
-+				prop->name, new_path);
-+
-+		/* free always */
-+		kfree(new_path);
-+
-+		if (err) {
-+			pr_err("Failed to add property for \"%s\"\n",
-+					prop->name);
-+			break;
-+		}
-+	}
-+
-+out:
-+	of_node_put(child);
-+	of_node_put(root_sym);
-+
-+	return err;
-+}
-+
- static LIST_HEAD(ov_list);
- static DEFINE_IDR(ov_idr);
- 
-@@ -642,6 +728,13 @@ static int __of_overlay_create(struct device_node *tree,
- 		goto err_abort_trans;
- 	}
- 
-+	err = of_overlay_add_symbols(tree, ov);
-+	if (err) {
-+		pr_err("%s: of_overlay_add_symbols() failed for tree@%s\n",
-+				__func__, tree->full_name);
-+		goto err_abort_trans;
-+	}
-+
- 	/* apply the changeset */
- 	err = __of_changeset_apply(&ov->cset);
- 	if (err) {
+A long standing request of applied overlays populating
+the symbol list is implemented; this allows staggered overlay
+application with a symbol from a previous overlay being used
+by another after it.
+
+Finally a pr_fmt for the overlay files is used for
+uncluttering the printout a bit.
+
+Changes since v1:
+* Reworked phandle hash according to maintainer requests
+* Added unittest/benchmark for phandle hash
+* Reworked the overlay symbol patch
+* Added pr_fmt patch
+
+
+Pantelis Antoniou (5):
+  of: rename *_node_sysfs to _node_post
+  of: Support hashtable lookups for phandles
+  of: unittest: hashed phandles unitest
+  of: overlay: Pick up label symbols from overlays.
+  of: overlay: Add pr_fmt for clarity
+
+ drivers/of/base.c       |  45 +++++++++++--
+ drivers/of/dynamic.c    |  18 +++--
+ drivers/of/of_private.h |  37 ++++++++++-
+ drivers/of/overlay.c    | 173 ++++++++++++++++++++++++++++++++++++------------
+ drivers/of/unittest.c   |  72 +++++++++++++++++++-
+ include/linux/of.h      |   2 +
+ 6 files changed, 289 insertions(+), 58 deletions(-)
+
 -- 
 1.7.12
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
