@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 09/20] drm/sun4i: defer only if we didn't find our panel
-Date: Mon, 16 May 2016 14:47:09 +0200
-Message-ID: <1463402840-17062-10-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 06/20] drm/sun4i: allow dclk to modify its parent rate
+Date: Mon, 16 May 2016 14:47:06 +0200
+Message-ID: <1463402840-17062-7-git-send-email-maxime.ripard@free-electrons.com>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
@@ -10,51 +10,28 @@ To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquet
 Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Our code currently defers our probe on any error, even if we were not
-expecting to have one at all.
+The pixel clock being only a divider of its parent clock, depending on the
+resolution, it's expected to change its parent rate. Add that flag so that
+the clock framework knows it.
 
-Make sure we return -EPROBE_DEFER only when we were supposed to have a
-panel, but it's not probed yet.
-
-Fixes: 29e57fab97fc ("drm: sun4i: Add RGB output")
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_dotclock.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 9f19b0e08560..eed6a9e8d9a6 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -429,7 +429,7 @@ static struct drm_panel *sun4i_tcon_find_panel(struct device_node *node)
- 		return ERR_PTR(-EINVAL);
- 	}
+diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+index 1ddf6d7a7107..5b3463197c48 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
++++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+@@ -170,6 +170,7 @@ int sun4i_dclk_create(struct device *dev, struct sun4i_tcon *tcon)
+ 	init.ops = &sun4i_dclk_ops;
+ 	init.parent_names = &parent_name;
+ 	init.num_parents = 1;
++	init.flags = CLK_SET_RATE_PARENT;
  
--	return of_drm_find_panel(remote);
-+	return of_drm_find_panel(remote) ?: ERR_PTR(-EPROBE_DEFER);
- }
- 
- static int sun4i_tcon_bind(struct device *dev, struct device *master,
-@@ -522,12 +522,13 @@ static int sun4i_tcon_probe(struct platform_device *pdev)
- 	 * Defer the probe.
- 	 */
- 	panel = sun4i_tcon_find_panel(node);
--	if (IS_ERR(panel)) {
--		/*
--		 * If we don't have a panel endpoint, just go on
--		 */
--		if (PTR_ERR(panel) != -ENODEV)
--			return -EPROBE_DEFER;
-+
-+	/*
-+	 * If we don't have a panel endpoint, just go on
-+	 */
-+	if (PTR_ERR(panel) == -EPROBE_DEFER) {
-+		DRM_DEBUG_DRIVER("Still waiting for our panel. Deferring...\n");
-+		return -EPROBE_DEFER;
- 	}
- 
- 	return component_add(&pdev->dev, &sun4i_tcon_ops);
+ 	dclk->regmap = tcon->regs;
+ 	dclk->hw.init = &init;
 -- 
 2.8.2
 
