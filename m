@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 11/20] drm/sun4i: Convert to connector register helpers
-Date: Mon, 16 May 2016 14:47:11 +0200
-Message-ID: <1463402840-17062-12-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 18/20] ARM: multi_v7: enable VGA bridge
+Date: Mon, 16 May 2016 14:47:18 +0200
+Message-ID: <1463402840-17062-19-git-send-email-maxime.ripard@free-electrons.com>
 References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
@@ -10,69 +10,25 @@ To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquet
 Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that connector register helpers have been created, switch to them.
+Enable the RGB to VGA bridge driver in the defconfig
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c | 31 ++-----------------------------
- 1 file changed, 2 insertions(+), 29 deletions(-)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index af62b24c39b1..257d2b4f3645 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -24,34 +24,6 @@
- #include "sun4i_layer.h"
- #include "sun4i_tcon.h"
- 
--static int sun4i_drv_connector_plug_all(struct drm_device *drm)
--{
--	struct drm_connector *connector, *failed;
--	int ret;
--
--	mutex_lock(&drm->mode_config.mutex);
--	list_for_each_entry(connector, &drm->mode_config.connector_list, head) {
--		ret = drm_connector_register(connector);
--		if (ret) {
--			failed = connector;
--			goto err;
--		}
--	}
--	mutex_unlock(&drm->mode_config.mutex);
--	return 0;
--
--err:
--	list_for_each_entry(connector, &drm->mode_config.connector_list, head) {
--		if (failed == connector)
--			break;
--
--		drm_connector_unregister(connector);
--	}
--	mutex_unlock(&drm->mode_config.mutex);
--
--	return ret;
--}
--
- static int sun4i_drv_enable_vblank(struct drm_device *drm, unsigned int pipe)
- {
- 	struct sun4i_drv *drv = drm->dev_private;
-@@ -206,7 +178,7 @@ static int sun4i_drv_bind(struct device *dev)
- 	if (ret)
- 		goto free_drm;
- 
--	ret = sun4i_drv_connector_plug_all(drm);
-+	ret = drm_connector_register_all(drm);
- 	if (ret)
- 		goto unregister_drm;
- 
-@@ -223,6 +195,7 @@ static void sun4i_drv_unbind(struct device *dev)
- {
- 	struct drm_device *drm = dev_get_drvdata(dev);
- 
-+	drm_connector_unregister_all(drm);
- 	drm_dev_unregister(drm);
- 	drm_kms_helper_poll_fini(drm);
- 	sun4i_framebuffer_free(drm);
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 80591f3e867e..5987688dea81 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -536,6 +536,7 @@ CONFIG_DRM=y
+ CONFIG_DRM_I2C_ADV7511=m
+ # CONFIG_DRM_I2C_CH7006 is not set
+ # CONFIG_DRM_I2C_SIL164 is not set
++CONFIG_DRM_DUMB_VGA=m
+ CONFIG_DRM_NXP_PTN3460=m
+ CONFIG_DRM_PARADE_PS8622=m
+ CONFIG_DRM_NOUVEAU=m
 -- 
 2.8.2
 
