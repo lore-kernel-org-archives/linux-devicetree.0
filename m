@@ -1,78 +1,32 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 13/20] drm/bridge: Add RGB to VGA bridge support
-Date: Mon, 16 May 2016 09:07:18 -0500
-Message-ID: <CAL_JsqKMJ7X2MU7vF9n7_MmAUQJ2v+yKyazcmMurgbTxYGfw_Q@mail.gmail.com>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-14-git-send-email-maxime.ripard@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] of: dynamic: changeset prop-update revert fix
+Date: Mon, 16 May 2016 09:08:04 -0500
+Message-ID: <20160516140804.GA21849@rob-hp-laptop>
+References: <1462800045-10943-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1462800045-10943-2-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1463402840-17062-14-git-send-email-maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1462800045-10943-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXkgMTYsIDIwMTYgYXQgNzo0NyBBTSwgTWF4aW1lIFJpcGFyZAo8bWF4aW1lLnJp
-cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+IFNvbWUgYm9hcmRzIGhhdmUgYW4gZW50
-aXJlbHkgcGFzc2l2ZSBSR0IgdG8gVkdBIGJyaWRnZSwgYmFzZWQgb24gZWl0aGVyCj4gREFDcyBv
-ciByZXNpc3RvciBsYWRkZXJzLgo+Cj4gVGhvc2UgbWlnaHQgb3IgbWlnaHQgbm90IGhhdmUgYW4g
-aTJjIGJ1cyByb3V0ZWQgdG8gdGhlIFZHQSBjb25uZWN0b3IgaW4KPiBvcmRlciB0byBhY2Nlc3Mg
-dGhlIHNjcmVlbiBFRElEcy4KPgo+IEFkZCBhIGJyaWRnZSB0aGF0IGRvZXNuJ3QgZG8gYW55dGhp
-bmcgYnV0IGV4cG9zZSB0aGUgbW9kZXMgYXZhaWxhYmxlIG9uIHRoZQo+IHNjcmVlbiwgZWl0aGVy
-IGJhc2VkIG9uIHRoZSBFRElEcyBpZiBhdmFpbGFibGUsIG9yIGJhc2VkIG9uIHRoZSBYR0EKPiBz
-dGFuZGFyZHMuCj4KPiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJk
-QGZyZWUtZWxlY3Ryb25zLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L2R1bWItdmdhLnR4dCAgICAgICAgICAgfCAgNDAgKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKwo+ICBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMv
-Z3B1L2RybS9icmlkZ2UvZHVtYi12Z2EuYyAgICAgICAgICAgICAgICAgIHwgMTg2ICsrKysrKysr
-KysrKysrKysrKysrKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDIzMyBpbnNlcnRpb25zKCspCj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9icmlkZ2UvZHVtYi12Z2EudHh0Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL2R1bWItdmdhLmMKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12Z2EudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLnR4dAo+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi43NTdmMDRkZTk3ZjMKPiAtLS0g
-L2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL2R1bWItdmdhLnR4dAo+IEBAIC0wLDAgKzEsNDAgQEAKPiArUGFzc2l2ZSBSR0Ig
-dG8gVkdBIGJyaWRnZQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKwo+ICtUaGlzIGJp
-bmRpbmcgaXMgYWltZWQgZm9yIGVudGlyZWx5IHBhc3NpdmUgUkdCIHRvIFZHQSBicmlkZ2VzIHRo
-YXQgZG8gbm90Cj4gK3JlcXVpcmUgYW55IGNvbmZpZ3VyYXRpb24uCgpObyByZXNldCBvciBlbmFi
-bGUgbGluZXMgb3IgcmVndWxhdG9ycz8KCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsK
-PiArLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgImR1bWItdmdhLWJyaWRnZSIKPiArCj4gK09wdGlv
-bmFsIHByb3BlcnRpZXM6Cj4gKwo+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxlIHRvIHRoZSBpMmMg
-YnVzIHVzZWQgdG8gY29tbXVuaWNhdGUgd2l0aCB0aGUgbW9uaXRvcgoKVGhlIGkyYyBidXMgaXMg
-YSBwcm9wZXJ0eSBvZiB0aGUgY29ubmVjdG9yLCBub3QgdGhlIGJyaWRnZSBjaGlwLCBzbyBpdApi
-ZWxvbmdzIGluIGEgVkdBIGNvbm5lY3RvciBub2RlICh3aGljaCB3ZSBhbHJlYWR5IGhhdmUgYmlu
-ZGluZyBmb3IpLgoKSSB0aGluayBmb3IgdGhlIHJlYWxseSAiZHVtYiIgKG9yIHRyYW5zcGFyZW50
-IGNhc2UpLCB5b3Ugc2hvdWxkIG9ubHkKaGF2ZSBhIGNvbm5lY3Rvci4gRm9yIGFueXRoaW5nIG1v
-cmUgY29tcGxleCwgdGhlbiB5b3Ugc2hvdWxkIGhhdmUgYm90aAphIERBQyBhbmQgY29ubmVjdG9y
-IG5vZGUuCgpPbiB0aGUgZHJpdmVyIHNpZGUsIEkgdGhpbmsgd2UgY291bGQgaGFuZGxlIG11bHRp
-cGxlIGNvbm5lY3RvcnMgd2l0aCBhCnNpbmdsZSBkcml2ZXIuIElkZWFsbHksIHRoYXQgd291bGQg
-d29yayB3aXRoIGFueSBEUk0gZHJpdmVyIHRoYXQgaGFzIGEKY29ubmVjdG9yIG5vZGUuCgo+ICsK
-PiArUmVxdWlyZWQgbm9kZXM6Cj4gKwo+ICtUaGlzIGRldmljZSBoYXMgb25lIHZpZGVvIHBvcnQu
-IEl0cyBjb25uZWN0aW9uIGlzIG1vZGVsbGVkIHVzaW5nIHRoZSBPRgo+ICtncmFwaCBiaW5kaW5n
-cyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
-dC4gVGhpcwo+ICtjb25uZWN0aW9uIGlzIG1lYW50IHRvIGJlIHRoZSBSR0IgaW5wdXQgYnVzLgo+
-ICsKPiArCj4gK0V4YW1wbGUKPiArLS0tLS0tLQo+ICsKPiArYnJpZGdlIHsKPiArICAgICAgICBj
-b21wYXRpYmxlID0gImR1bWItdmdhLWJyaWRnZSI7Cj4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMg
-PSA8MT47Cj4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsgICAgICAgIHBvcnRA
-MCB7Cj4gKyAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+
-ICsKPiArICAgICAgICAgICAgICAgIHZnYV9pbnB1dDogZW5kcG9pbnRAMCB7Cj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgcmVt
-b3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9vdXRfdmdhPjsKPiArICAgICAgICAgICAgICAgfTsKPiAr
-ICAgICAgICB9Owo+ICt9OwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Mon, May 09, 2016 at 04:20:42PM +0300, Pantelis Antoniou wrote:
+> When reverting an update property changeset entry that created a
+> property the reverse operation is a remove property and not an update.
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/of/dynamic.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+
+I've applied this one.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
