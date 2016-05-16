@@ -1,94 +1,141 @@
-From: Grant Grundler <grundler@chromium.org>
-Subject: Re: [PATCH] dt: add Atmel Captouch bindings
-Date: Mon, 16 May 2016 09:50:58 -0700
-Message-ID: <CANEJEGv0F-8zD7s8_gmFhQ-o8EYoMHyRCWARg19kLT46GUZKZA@mail.gmail.com>
-References: <1462932469-122552-1-git-send-email-grundler@chromium.org>
-	<20160514145205.GA31009@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v2 4/5] of: overlay: Pick up label symbols from overlays.
+Date: Mon, 16 May 2016 19:52:35 +0300
+Message-ID: <1463417556-23087-5-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160514145205.GA31009@rob-hp-laptop>
+In-Reply-To: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Grant Grundler <grundler@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree <devicetree@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hung-yu Wu <hywu@google.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Matt Porter <mporter@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 14, 2016 at 7:52 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, May 10, 2016 at 07:07:48PM -0700, Grant Grundler wrote:
->> From: Daniel Hung-yu Wu <hywu@google.com>
->>
->> Add binding for Atmel Capacitive Touch Button device.
->>
->> Signed-off-by: Daniel Hung-yu Wu <hywu@google.com>
->> Signed-off-by: Grant Grundler <grundler@chromium.org>
->> ---
->>  .../devicetree/bindings/input/atmel,captouch.txt   | 34 ++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/input/atmel,captouch.txt
->>
->> I haven't posted the corresponding device driver and dtsi changes yet but will shortly.
->>
->> V2: split Documentation/devicetree/bindings from driver patch
->>     rename "atmel,atmegaxx_captouch" to "atmel,captouch" since it's irrelevant
->>            which controller implements the register set/controller.
->
-> Is there any notion of firmware versions though?
+Insert overlay symbols to the base tree when applied.
+This makes it possible to apply an overlay that references a label
+that a previously inserted overlay had.
 
-There currently is not. This is something we need to add - future patch.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ drivers/of/overlay.c | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
->
->>
->> V1: posted https://lkml.org/lkml/2016/5/3/613
->>
->> diff --git a/Documentation/devicetree/bindings/input/atmel,captouch.txt b/Documentation/devicetree/bindings/input/atmel,captouch.txt
->> new file mode 100644
->> index 0000000..405d287
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/atmel,captouch.txt
->> @@ -0,0 +1,34 @@
->> +Device tree bindings for Atmel AtmegaXX capacitive touch sensor
->> +
->> +The node for this device must be a child of a I2C controller node, as the
->> +device communicates via I2C.
->> +
->> +Required properties:
->> +
->> +     compatible:     Must be "atmel,captouch".
->> +     reg:            The I2C slave address of the device.
->> +     interrupts:     Property describing the interrupt line the device
->> +                     is connected to. The device only has one interrupt
->> +                     source.
->> +     linux,keycodes: Specifies an array of numeric keycode values to
->> +                     be used for reporting button presses. The array can
->> +                     contain up to 8 entries.
->> +
->> +Optional properties:
->> +
->> +     autorepeat:     Enables the Linux input system's autorepeat
->> +                     feature on the input device.
->> +
->> +Example:
->> +
->> +     atmel_captouch@51 {
->
-> No underscores in node names please.
-
-Aaahh! Sorry! you told me that before. Will post V3 with dash in node name.
-
-cheers,
-grant
-
->
->> +             compatible = "atmel,captouch";
->> +             reg = <0x51>;
->> +             interrupt-parent = <&tlmm>;
->> +             interrupts = <67 IRQ_TYPE_EDGE_FALLING>;
->> +             linux,keycodes = <BTN_0>, <BTN_1>,
->> +                     <BTN_2>, <BTN_3>,
->> +                     <BTN_4>, <BTN_5>,
->> +                     <BTN_6>, <BTN_7>;
->> +             autorepeat;
->> +     };
->> --
->> 2.1.2
->>
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index a274d65..89ebb70 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -8,6 +8,7 @@
+  * modify it under the terms of the GNU General Public License
+  * version 2 as published by the Free Software Foundation.
+  */
++
+ #undef DEBUG
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -514,6 +515,91 @@ static int of_free_overlay_info(struct of_overlay *ov)
+ 	return 0;
+ }
+ 
++static int of_overlay_add_symbols(
++		struct device_node *tree,
++		struct of_overlay *ov)
++{
++	struct of_overlay_info *ovinfo;
++	struct device_node *root_sym = NULL;
++	struct device_node *child = NULL;
++	struct property *prop;
++	const char *path, *s;
++	char *new_path;
++	int i, len, err;
++
++	/* both may fail (if no fixups are required) */
++	root_sym = of_find_node_by_path("/__symbols__");
++	child = of_get_child_by_name(tree, "__symbols__");
++
++	err = 0;
++	/* do nothing if either is NULL */
++	if (!root_sym || !child)
++		goto out;
++
++	for_each_property_of_node(child, prop) {
++
++		/* skip properties added automatically */
++		if (of_prop_cmp(prop->name, "name") == 0)
++			continue;
++
++		err = of_property_read_string(child,
++				prop->name, &path);
++		if (err != 0) {
++			pr_err("Could not find symbol '%s'\n", prop->name);
++			continue;
++		}
++
++		/* now find fragment index */
++		s = path;
++
++		/* compare paths to find fragment index */
++		for (i = 0, ovinfo = NULL, len = -1; i < ov->count; i++) {
++			ovinfo = &ov->ovinfo_tab[i];
++
++			pr_debug("#%d: overlay->name=%s target->name=%s\n",
++					i, ovinfo->overlay->full_name,
++					ovinfo->target->full_name);
++
++			len = strlen(ovinfo->overlay->full_name);
++			if (strncasecmp(path, ovinfo->overlay->full_name,
++						len) == 0 && path[len] == '/')
++				break;
++		}
++
++		if (i >= ov->count)
++			continue;
++
++		pr_debug("found target at #%d\n", i);
++		new_path = kasprintf(GFP_KERNEL, "%s%s",
++				ovinfo->target->full_name,
++				path + len);
++		if (!new_path) {
++			pr_err("Failed to allocate propname for \"%s\"\n",
++					prop->name);
++			err = -ENOMEM;
++			break;
++		}
++
++		err = of_changeset_add_property_string(&ov->cset, root_sym,
++				prop->name, new_path);
++
++		/* free always */
++		kfree(new_path);
++
++		if (err) {
++			pr_err("Failed to add property for \"%s\"\n",
++					prop->name);
++			break;
++		}
++	}
++
++out:
++	of_node_put(child);
++	of_node_put(root_sym);
++
++	return err;
++}
++
+ static LIST_HEAD(ov_list);
+ static DEFINE_IDR(ov_idr);
+ 
+@@ -642,6 +728,13 @@ static int __of_overlay_create(struct device_node *tree,
+ 		goto err_abort_trans;
+ 	}
+ 
++	err = of_overlay_add_symbols(tree, ov);
++	if (err) {
++		pr_err("%s: of_overlay_add_symbols() failed for tree@%s\n",
++				__func__, tree->full_name);
++		goto err_abort_trans;
++	}
++
+ 	/* apply the changeset */
+ 	err = __of_changeset_apply(&ov->cset);
+ 	if (err) {
+-- 
+1.7.12
