@@ -1,93 +1,146 @@
 From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH RFT 1/2] phylib: add device reset GPIO support
-Date: Mon, 16 May 2016 11:51:27 +0300
-Message-ID: <57398A0F.8070708@ti.com>
-References: <81129033.NXiOLTg1so@wasted.cogentembedded.com>
- <3641492.klKRrvS8tr@wasted.cogentembedded.com>
- <20160512184233.GJ30822@pengutronix.de> <5735995B.8030802@ti.com>
- <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
+Subject: Re: [PATCH v8 08/14] usb: otg: add OTG/dual-role core
+Date: Mon, 16 May 2016 12:00:06 +0300
+Message-ID: <57398C16.5050805@ti.com>
+References: <1463133808-10630-1-git-send-email-rogerq@ti.com>
+ <1463133808-10630-9-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <b9bcc192-f97b-304e-77b2-894c4528ddb6@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463133808-10630-9-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: peter.chen@freescale.com
+Cc: balbi@kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/05/16 22:36, Sergei Shtylyov wrote:
-> Hello.
+On 13/05/16 13:03, Roger Quadros wrote:
+> It provides APIs for the following tasks
 > 
-> On 05/13/2016 12:07 PM, Roger Quadros wrote:
+> - Registering an OTG/dual-role capable controller
+> - Registering Host and Gadget controllers to OTG core
+> - Providing inputs to and kicking the OTG state machine
 > 
-> [...]
+> Provide a dual-role device (DRD) state machine.
+> DRD mode is a reduced functionality OTG mode. In this mode
+> we don't support SRP, HNP and dynamic role-swap.
 > 
->>>> +}
->>>> +EXPORT_SYMBOL(mdio_device_reset);
->>>> +
->>>>  /**
->>>>   * mdio_probe - probe an MDIO device
->>>>   * @dev: device to probe
->>>> @@ -117,9 +126,16 @@ static int mdio_probe(struct device *dev
->>>>      struct mdio_driver *mdiodrv = to_mdio_driver(drv);
->>>>      int err = 0;
->>>>
->>>> -    if (mdiodrv->probe)
->>>> +    if (mdiodrv->probe) {
->>>> +        /* Deassert the reset signal */
->>>> +        mdio_device_reset(mdiodev, 0);
->>>> +
->>>>          err = mdiodrv->probe(mdiodev);
->>>>
->>>> +        /* Assert the reset signal */
->>>> +        mdio_device_reset(mdiodev, 1);
->>>
->>> I wonder if it's safe to do this in general. What if ->probe does
->>> something with the phy that is lost by resetting but that is relied on
->>> later?
->>
->> mdio_probe is called for non PHY devices only, right?
+> In DRD operation, the controller mode (Host or Peripheral)
+> is decided based on the ID pin status. Once a cable plug (Type-A
+> or Type-B) is attached the controller selects the state
+> and doesn't change till the cable in unplugged and a different
+> cable type is inserted.
 > 
->    Yes, those also can have a reset signal.
+> As we don't need most of the complex OTG states and OTG timers
+> we implement a lean DRD state machine in usb-otg.c.
+> The DRD state machine is only interested in 2 hardware inputs
+> 'id' and 'b_sess_vld'.
 > 
->> I'm a bit lost as to why we're de-asserting reset at multiple places. i.e.
->> mdio_probe(), phy_device_register(), phy_init_hw(), phy_probe(), of_mdiobus_register_phy().
-> 
->> Isn't it simpler to just de-assert it once at the topmost level?
-> 
->    I wasn't after simplicity here. The intent was to save some power putting the device at reset when it's not needed. Florian Fainelly (the phylib maintainer) actually wanted me to go even further with that and assert reset in phy_suspend() but it was too much for me.
-
-Is using RESET for power saving a standard practice? Isn't there some register interface for power saving?
-My concern here is that RESET does a number of things that might be undesired for normal operation.
-e.g. PHY's will use bootstrap settings on RESET and we need to ensure that bootstrap pins are always in
-the right setting before issuing a RESET.
-
-What happens to the PHY link? Is it lost while PHY RESET is asserted?
-Is this really desirable?
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  drivers/usb/common/Makefile  |    2 +-
+>  drivers/usb/common/usb-otg.c | 1042 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/core/Kconfig     |    4 +-
+>  include/linux/usb/gadget.h   |    2 +
+>  include/linux/usb/hcd.h      |    1 +
+>  include/linux/usb/otg-fsm.h  |    7 +
+>  include/linux/usb/otg.h      |  154 ++++++-
+>  7 files changed, 1206 insertions(+), 6 deletions(-)
+>  create mode 100644 drivers/usb/common/usb-otg.c
 
 
-> 
->> i.e. of_mdiobus_register_device() f and of_mdiobus_register_phy()?
->>
->> Also, how about issuing a reset pulse instead of just de-asserting it.
-> 
->    If it's already held at reset, my assumption is that it's enough time passed already.
-> 
->> This would tackle the case where PHY is in invalid state with reset already
->> de-asserted.
-> 
->     Good question. I haven't yet met such cases though.
-> 
->> Another issue is that on some boards we have one reset line tied to
->> multiple PHYs.How do we prevent multiple resets being taking place when each of
->> the PHYs are registered?
-> 
->    My patch just doesn't address this case -- it's about the individual resets only.
-> 
->> Do we just specify the reset line only for one PHY in
->> the DT or can we have the reset gpio in the mdio_bus node for such case?
-> 
->    I think there's mii_bus::reset() method for that case. Some Ethernet drivers even use it
-> (mostly instead of the code being suggested here).
-> 
+This patch causes the following build issues when CONFIG_USB_GADGET=m, CONFIG_USB=m,
+CONFIG_USB_COMMON=m and CONFIG_USB_OTG=y
+
+ERROR: "usb_otg_register_gadget" [drivers/usb/gadget/udc/udc-core.ko] undefined!
+ERROR: "usb_otg_unregister_gadget" [drivers/usb/gadget/udc/udc-core.ko] undefined!
+ERROR: "usb_otg_register_hcd" [drivers/usb/core/usbcore.ko] undefined!
+ERROR: "usb_otg_unregister_hcd" [drivers/usb/core/usbcore.ko] undefined!
+ERROR: "otg_statemachine" [drivers/usb/chipidea/ci_hdrc.ko] undefined!
+scripts/Makefile.modpost:91: recipe for target '__modpost' failed
+make[1]: *** [__modpost] Error 1
+Makefile:1141: recipe for target 'modules' failed
+make: *** [modules] Error 2
+make: *** Waiting for unfinished jobs....
+
+drivers/built-in.o: In function `drd_set_state':
+usb-otg.c:(.text+0x2b4242): undefined reference to `usb_otg_state_string'
+drivers/built-in.o: In function `drd_statemachine':
+(.text+0x2b4b4c): undefined reference to `usb_otg_state_string'
+Makefile:937: recipe for target 'vmlinux' failed
+
+I'll fix it up with the following diff.
+
+diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+index dca7856..16a5b55 100644
+--- a/drivers/usb/Makefile
++++ b/drivers/usb/Makefile
+@@ -59,5 +59,6 @@ obj-$(CONFIG_USB_RENESAS_USBHS)	+= renesas_usbhs/
+ obj-$(CONFIG_USB_GADGET)	+= gadget/
+ 
+ obj-$(CONFIG_USB_COMMON)	+= common/
++obj-$(CONFIG_USB_OTG)		+= common/
+ 
+ obj-$(CONFIG_USBIP_CORE)	+= usbip/
+diff --git a/drivers/usb/common/usb-otg.c b/drivers/usb/common/usb-otg.c
+index 77048aa..17e449e 100644
+--- a/drivers/usb/common/usb-otg.c
++++ b/drivers/usb/common/usb-otg.c
+@@ -56,6 +56,30 @@ static int usb_otg_hcd_is_primary_hcd(struct usb_hcd *hcd)
+ 	return hcd == hcd->primary_hcd;
+ }
+ 
++static const char *otg_state_string(enum usb_otg_state state)
++{
++	static const char *const names[] = {
++		[OTG_STATE_A_IDLE] = "a_idle",
++		[OTG_STATE_A_WAIT_VRISE] = "a_wait_vrise",
++		[OTG_STATE_A_WAIT_BCON] = "a_wait_bcon",
++		[OTG_STATE_A_HOST] = "a_host",
++		[OTG_STATE_A_SUSPEND] = "a_suspend",
++		[OTG_STATE_A_PERIPHERAL] = "a_peripheral",
++		[OTG_STATE_A_WAIT_VFALL] = "a_wait_vfall",
++		[OTG_STATE_A_VBUS_ERR] = "a_vbus_err",
++		[OTG_STATE_B_IDLE] = "b_idle",
++		[OTG_STATE_B_SRP_INIT] = "b_srp_init",
++		[OTG_STATE_B_PERIPHERAL] = "b_peripheral",
++		[OTG_STATE_B_WAIT_ACON] = "b_wait_acon",
++		[OTG_STATE_B_HOST] = "b_host",
++	};
++
++	if (state < 0 || state >= ARRAY_SIZE(names))
++		return "UNDEFINED";
++
++	return names[state];
++}
++
+ /**
+  * Check if the OTG device is in our wait list and return
+  * otg_wait_data, else NULL.
+@@ -433,7 +457,7 @@ static void drd_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
+ 
+ 	fsm->state_changed = 1;
+ 	dev_dbg(otg->dev, "otg: set state: %s\n",
+-		usb_otg_state_string(new_state));
++		otg_state_string(new_state));
+ 	switch (new_state) {
+ 	case OTG_STATE_B_IDLE:
+ 		drd_set_protocol(fsm, PROTO_UNDEF);
+@@ -449,7 +473,7 @@ static void drd_set_state(struct otg_fsm *fsm, enum usb_otg_state new_state)
+ 		break;
+ 	default:
+ 		dev_warn(otg->dev, "%s: otg: invalid state: %s\n",
+-			 __func__, usb_otg_state_string(new_state));
++			 __func__, otg_state_string(new_state));
+ 		break;
+ 	}
+ 
+@@ -507,7 +531,7 @@ int drd_statemachine(struct usb_otg *otg)
+ 
+ 	default:
+ 		dev_err(otg->dev, "%s: otg: invalid usb-drd state: %s\n",
+-			__func__, usb_otg_state_string(state));
++			__func__, otg_state_string(state));
+ 		break;
+ 	}
+ 
