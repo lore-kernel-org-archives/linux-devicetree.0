@@ -1,267 +1,52 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] of: Support hashtable lookups for phandles
-Date: Mon, 16 May 2016 23:13:50 +0300
-Message-ID: <4BD4C1D6-D647-4029-A1E9-C432638C7072@konsulko.com>
-References: <1463417556-23087-1-git-send-email-pantelis.antoniou@konsulko.com> <1463417556-23087-3-git-send-email-pantelis.antoniou@konsulko.com> <CAL_Jsq+J4QF5jvUOF_J71W0YWswTBSu=RZkwy+=gR2F-dwq7XA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+J4QF5jvUOF_J71W0YWswTBSu=RZkwy+=gR2F-dwq7XA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v10 0/8] add i2c driver supported for rk3399
+Date: Mon, 16 May 2016 13:17:38 -0700
+Message-ID: <CAD=FV=VqEpmODcnKOGb5P=Fu84c5pBOJXD9pfFMRc2aERfWmRg@mail.gmail.com>
+References: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1463407063-41218-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Brian Norris <briannorris@google.com>, David Riley <davidriley@google.com>, Tao Huang <huangtao@rock-chips.com>, Lin Huang <hl@rock-chips.com>, Jianqun Xu <xjq@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-> On May 16, 2016, at 22:37 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote=
-:
->=20
-> On Mon, May 16, 2016 at 11:52 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> When a device tree contains a lot of phandles, resolving one
->> takes time because the original method uses a search against
->> all nodes (not just the ones with phandles).
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> ---
->> drivers/of/base.c       | 41 ++++++++++++++++++++++++++++++++++++++-=
---
->> drivers/of/dynamic.c    |  8 ++++++++
->> drivers/of/of_private.h | 33 +++++++++++++++++++++++++++++++++
->> include/linux/of.h      |  2 ++
->> 4 files changed, 81 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index 20bbc2f..436a088 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -27,6 +27,7 @@
->> #include <linux/slab.h>
->> #include <linux/string.h>
->> #include <linux/proc_fs.h>
->> +#include <linux/rhashtable.h>
->>=20
->> #include "of_private.h"
->>=20
->> @@ -41,6 +42,18 @@ static const char *of_stdout_options;
->>=20
->> struct kset *of_kset;
->>=20
->> +const struct rhashtable_params of_phandle_ht_params =3D {
->=20
-> static
->=20
+On Mon, May 16, 2016 at 6:57 AM, David Wu <david.wu@rock-chips.com> wrote:
+> There are three points differert from others:
+>  - new method to caculate i2c timings for rk3399
+>  - pclk and function clk are separated at rk3399
+>  - add fast-plus mode supported for rk3399
+>
+> David Wu (8):
+>   i2c: rk3x: add documentation to fields in "struct rk3x_i2c"
+>   i2c: rk3x: use struct "rk3x_i2c_calced_timings"
+>   i2c: rk3x: Remove redundant rk3x_i2c_clean_ipd()
+>   i2c: rk3x: Change SoC data to not use array
+>   i2c: rk3x: Move spec timing data to "static const" structs
+>   dt-bindings: i2c: rk3x: add support for rk3399
+>   i2c: rk3x: add i2c support for rk3399 soc
+>   i2c: rk3x: support fast-mode plus for rk3399
+>
+>  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  16 +-
+>  drivers/i2c/busses/i2c-rk3x.c                      | 498 +++++++++++++++++----
+>  2 files changed, 434 insertions(+), 80 deletions(-)
 
-No, it won=E2=80=99t work. The rhashtable API requires using this at ev=
-ery call.
+I haven't put these on the scope or anything, but I have:
 
+* Tested that my i2c busses on rk3288-veyron still seem to work OK
+after these patches.
 
->> +       .key_offset =3D offsetof(struct device_node, phandle), /* ba=
-se offset */
->> +       .key_len =3D sizeof(phandle),
->> +       .head_offset =3D offsetof(struct device_node, ht_node),
->> +       .automatic_shrinking =3D true,
->> +};
->> +
->> +struct rhashtable *of_phandle_ht;
->> +
->> +/* default is false */
->> +bool of_phandle_ht_is_disabled;
->=20
-> I think this should go. The unittest alone is not enough reason to ke=
-ep.
->=20
+* Tested that my i2c busses on an rk3399 board seem to work after
+these patches (plus device tree changes).
 
-Hmm, OK.
+Thus, for the series:
 
->> +
->> /*
->>  * Used to protect the of_aliases, to hold off addition of nodes to =
-sysfs.
->>  * This mutex must be held whenever modifications are being made to =
-the
->> @@ -162,6 +175,12 @@ int __of_attach_node_post(struct device_node *n=
-p)
->>        struct property *pp;
->>        int rc;
->>=20
->> +       if (of_phandle_ht_available()) {
->=20
-> This can never be false as this function should only get called after=
- init.
->=20
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-How about a BUG_ON() just in case something weird is going on?
+...possibly could leave off the Tested-by tag for the last in the
+series since I have no Fast Mode Plus devices to test against.  ;)
 
->> +               rc =3D of_phandle_ht_insert(np);
->> +               WARN(rc, "insert to phandle hash fail @%s\n",
->> +                               of_node_full_name(np));
->> +       }
->> +
->>        if (!IS_ENABLED(CONFIG_SYSFS))
->>                return 0;
->>=20
->> @@ -194,6 +213,17 @@ void __init of_core_init(void)
->>        struct device_node *np;
->>        int ret;
->>=20
->> +       of_phandle_ht =3D kzalloc(sizeof(*of_phandle_ht), GFP_KERNEL=
-);
->> +       if (!of_phandle_ht) {
->> +               pr_warn("devicetree: Failed to allocate hashtable\n"=
-);
->> +               return;
->> +       }
->> +       ret =3D rhashtable_init(of_phandle_ht, &of_phandle_ht_params=
-);
->> +       if (ret) {
->> +               pr_warn("devicetree: Failed to initialize hashtable\=
-n");
->> +               return;
->> +       }
->> +
->>        /* Create the kset, and register existing nodes */
->>        mutex_lock(&of_mutex);
->>        of_kset =3D kset_create_and_add("devicetree", NULL, firmware_=
-kobj);
->> @@ -1073,9 +1103,14 @@ struct device_node *of_find_node_by_phandle(p=
-handle handle)
->>                return NULL;
->>=20
->>        raw_spin_lock_irqsave(&devtree_lock, flags);
->> -       for_each_of_allnodes(np)
->> -               if (np->phandle =3D=3D handle)
->> -                       break;
->> +       /* when we're ready use the hash table (and not disabled) */
->> +       if (of_phandle_ht_available() && !of_phandle_ht_is_disabled)
->=20
-> Just "if (of_phandle_ht)=E2=80=9D
->=20
-
-OK
-
-
->> +               np =3D of_phandle_ht_lookup(handle);
->> +       else { /* fallback */
->> +               for_each_of_allnodes(np)
->> +                       if (np->phandle =3D=3D handle)
->> +                               break;
->> +       }
->>        of_node_get(np);
->>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
->>        return np;
->> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->> index 34ca783..931b905 100644
->> --- a/drivers/of/dynamic.c
->> +++ b/drivers/of/dynamic.c
->> @@ -11,6 +11,7 @@
->> #include <linux/slab.h>
->> #include <linux/string.h>
->> #include <linux/proc_fs.h>
->> +#include <linux/rhashtable.h>
->>=20
->> #include "of_private.h"
->>=20
->> @@ -44,6 +45,13 @@ EXPORT_SYMBOL(of_node_put);
->> void __of_detach_node_post(struct device_node *np)
->> {
->>        struct property *pp;
->> +       int rc;
->> +
->> +       if (of_phandle_ht_available()) {
->=20
-> Likewise, this can't be false either.
->=20
-
-OK
-
->> +               rc =3D of_phandle_ht_remove(np);
->> +               WARN(rc, "remove from phandle hash fail @%s\n",
->> +                               of_node_full_name(np));
->> +       }
->>=20
->>        if (!IS_ENABLED(CONFIG_SYSFS))
->>                return;
->> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
->> index 10b0342..386ae71 100644
->> --- a/drivers/of/of_private.h
->> +++ b/drivers/of/of_private.h
->> @@ -101,4 +101,37 @@ static inline int of_overlay_init(void)
->> }
->> #endif
->>=20
->> +extern const struct rhashtable_params of_phandle_ht_params;
->> +extern struct rhashtable *of_phandle_ht;
->> +
->> +/* for unittest use */
->> +extern bool of_phandle_ht_is_disabled;
->> +
->> +static inline bool of_phandle_ht_available(void)
->> +{
->> +       return of_phandle_ht !=3D NULL;
->> +}
->> +
->> +static inline int of_phandle_ht_insert(struct device_node *np)
->> +{
->> +       if (!np || !np->phandle)
->> +               return 0;
->> +       return rhashtable_insert_fast(of_phandle_ht,
->> +               &np->ht_node, of_phandle_ht_params);
->> +}
->> +
->> +static inline int of_phandle_ht_remove(struct device_node *np)
->> +{
->> +       if (!np || !np->phandle)
->> +               return 0;
->> +       return rhashtable_remove_fast(of_phandle_ht,
->> +               &np->ht_node, of_phandle_ht_params);
->> +}
->> +
->> +static inline struct device_node *of_phandle_ht_lookup(phandle hand=
-le)
->> +{
->> +       return rhashtable_lookup_fast(of_phandle_ht,
->> +                       &handle, of_phandle_ht_params);
->> +}
->> +
->> #endif /* _LINUX_OF_PRIVATE_H */
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index 18a8e59..9de9a3f 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -25,6 +25,7 @@
->> #include <linux/notifier.h>
->> #include <linux/property.h>
->> #include <linux/list.h>
->> +#include <linux/rhashtable.h>
->>=20
->> #include <asm/byteorder.h>
->> #include <asm/errno.h>
->> @@ -52,6 +53,7 @@ struct device_node {
->>        phandle phandle;
->>        const char *full_name;
->>        struct fwnode_handle fwnode;
->> +       struct rhash_head ht_node;
->=20
-> Place next to .phandle as both will be accessed at the same time.
->=20
-
-OK.
-
->>=20
->>        struct  property *properties;
->>        struct  property *deadprops;    /* removed properties */
->> --
->> 1.7.12
-
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
